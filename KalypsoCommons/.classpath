@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="lib/joda-time/joda-time-2.0.jar" sourcepath="lib/joda-time/joda-time-2.0-sources.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/KalypsoCommons/lib/joda-time/joda-time-2.0-javadoc.jar!/"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="srcext"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_4/activation.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_4/jaxb-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_4/jaxb-impl.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_4/jaxb-xjc.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_4/jaxb1-impl.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_4/jsr173_1.0_api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.5/jsr173_1.0_api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.5/resolver.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.5/xbean_xpath.jar"/>
@@ -40,11 +41,10 @@
 	<classpathentry exported="true" kind="lib" path="lib/jgraph/jgraphx_1_5_1_11.jar" sourcepath="lib/jgraph/jpgrahpx_1_5_1_11-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/guava/guava-r09.jar" sourcepath="lib/guava/guava-src-r09.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/opencsv/opencsv-2.3.jar" sourcepath="lib/opencsv/opencsv-2.3.src.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_4/jaxb-api.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_4/activation.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_4/jaxb-impl.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_4/jaxb-xjc.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_4/jaxb1-impl.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_4/jsr173_1.0_api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/joda-time/joda-time-2.0.jar" sourcepath="lib/joda-time/joda-time-2.0-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/KalypsoCommons/lib/joda-time/joda-time-2.0-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>

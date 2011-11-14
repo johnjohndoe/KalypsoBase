@@ -87,6 +87,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 import org.kalypso.ui.editor.gmleditor.ui.GMLContentProvider;
 import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
@@ -323,7 +324,7 @@ public class GmlFileImportPage extends WizardPage
   private IStatus validateCurrentSelection( )
   {
     if( m_currentSelection == null || m_currentSelection.isEmpty() )
-      return StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.ui.wizard.gmlGmlFileImportPage.6" ) ); //$NON-NLS-1$
+      return new Status( IStatus.WARNING, KalypsoAddLayerPlugin.getId(), Messages.getString( "org.kalypso.ui.wizard.gmlGmlFileImportPage.6" ) ); //$NON-NLS-1$
 
     final Object[] objects = m_currentSelection.toArray();
     for( final Object object : objects )
@@ -334,7 +335,7 @@ public class GmlFileImportPage extends WizardPage
         final IFeatureType featureType = f.getFeatureType();
 
         if( !checkFeatureTypeValid( featureType ) )
-          return StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.ui.wizard.gmlGmlFileImportPage.7" ) ); //$NON-NLS-1$
+          return new Status( IStatus.WARNING, KalypsoAddLayerPlugin.getId(), Messages.getString( "org.kalypso.ui.wizard.gmlGmlFileImportPage.7" ) ); //$NON-NLS-1$
 
         return Status.OK_STATUS;
       }
@@ -344,12 +345,12 @@ public class GmlFileImportPage extends WizardPage
         final IRelationType associationRt = fate.getAssociationTypeProperty();
         final IFeatureType targetFeatureType = associationRt.getTargetFeatureType();
         if( !checkFeatureTypeValid( targetFeatureType ) )
-          return StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.ui.wizard.gmlGmlFileImportPage.8" ) ); //$NON-NLS-1$
+          return new Status( IStatus.WARNING, KalypsoAddLayerPlugin.getId(), Messages.getString( "org.kalypso.ui.wizard.gmlGmlFileImportPage.8" ) ); //$NON-NLS-1$
 
         return Status.OK_STATUS;
       }
 
-      return StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.ui.wizard.gmlGmlFileImportPage.9" ) ); //$NON-NLS-1$
+      return new Status( IStatus.WARNING, KalypsoAddLayerPlugin.getId(), Messages.getString( "org.kalypso.ui.wizard.gmlGmlFileImportPage.9" ) ); //$NON-NLS-1$
     }
 
     return Status.OK_STATUS;
