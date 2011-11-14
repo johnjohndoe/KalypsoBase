@@ -120,7 +120,7 @@ public final class DateUtilities
     return DATATYPE_FACTORY.newXMLGregorianCalendar( calendar );
   }
 
-  public static Object toXMLGregorianCalendar( final GregorianCalendar dateTime )
+  public static XMLGregorianCalendar toXMLGregorianCalendar( final GregorianCalendar dateTime )
   {
     return DATATYPE_FACTORY.newXMLGregorianCalendar( dateTime );
   }

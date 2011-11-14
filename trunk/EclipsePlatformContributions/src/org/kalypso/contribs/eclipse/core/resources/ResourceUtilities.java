@@ -254,7 +254,6 @@ public final class ResourceUtilities
    * @param path
    * @return platform URL
    */
-  @SuppressWarnings("restriction")
   public static String createURLSpec( final IPath path )
   {
     return PlatformURLResourceConnection.RESOURCE_URL_STRING + path.toString();
