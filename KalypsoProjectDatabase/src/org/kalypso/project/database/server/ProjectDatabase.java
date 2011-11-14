@@ -297,9 +297,6 @@ public class ProjectDatabase implements IProjectDatabase
 
   }
 
-  /**
-   * @see org.kalypso.project.database.sei.IProjectDatabase#acquireProjectEditLock(org.kalypso.project.database.sei.beans.KalypsoProjectBean)
-   */
   @Override
   public String acquireProjectEditLock( final String projectUnixName )
   {
@@ -311,7 +308,7 @@ public class ProjectDatabase implements IProjectDatabase
 
       final String ticket = String.format( "Ticket%d", Calendar.getInstance().getTime().hashCode() ); //$NON-NLS-1$
 
-      final DateFormat sdf = new SimpleDateFormat( "yyyy-mm-dd hh:mm:ss" ); //$NON-NLS-1$
+      final DateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd hh:mm:ss" ); //$NON-NLS-1$
       final String now = sdf.format( new Date() );
 
       final int updated = mySession.createQuery( String.format( "update KalypsoProjectBean set m_editLockTicket = '%s', edit_lock_date = '%s' where m_unixName = '%s'", ticket, now, projectUnixName ) ).executeUpdate(); //$NON-NLS-1$
