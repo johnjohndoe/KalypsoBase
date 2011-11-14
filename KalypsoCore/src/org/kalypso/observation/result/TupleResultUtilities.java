@@ -106,6 +106,11 @@ public class TupleResultUtilities
   public static IComponent findComponentById( final TupleResult result, final String id )
   {
     final IComponent[] components = result.getComponents();
+    return findComponentById( components, id );
+  }
+
+  public static IComponent findComponentById( final IComponent[] components, final String id )
+  {
     for( final IComponent comp : components )
     {
       if( comp.getId().equals( id ) )
