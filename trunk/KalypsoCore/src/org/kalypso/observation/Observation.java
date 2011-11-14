@@ -40,12 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.observation;
 
+import java.util.List;
+
+import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.observation.phenomenon.IPhenomenon;
 
 /**
  * @author schlienger
  */
-public class Observation<T> implements IObservation<T>
+public class Observation<T extends List< ? >> implements IObservation<T>
 {
   private String m_name;
 
@@ -132,5 +135,22 @@ public class Observation<T> implements IObservation<T>
   public void setPhenomenon( final IPhenomenon phenomenon )
   {
     m_phenomenon = phenomenon;
+  }
+
+  @Override
+  public void accept( final IObservationVisitor visitor )
+  {
+    final T result = getResult();
+    for( int i = 0; i < result.size(); i++ )
+    {
+      try
+      {
+        visitor.visit( result.get( i ) );
+      }
+      catch( final CancelVisitorException e )
+      {
+        return;
+      }
+    }
   }
 }

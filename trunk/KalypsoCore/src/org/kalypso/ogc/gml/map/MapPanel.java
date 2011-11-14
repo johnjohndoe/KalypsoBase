@@ -162,11 +162,11 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   private GM_Envelope m_wishBBox;
 
-  private final Collection<IMapPanelListener> m_mapPanelListeners = new HashSet<IMapPanelListener>();
+  private final Collection<IMapPanelListener> m_mapPanelListeners = Collections.synchronizedSet( new HashSet<IMapPanelListener>() );
 
-  private final Collection<IMapPanelPaintListener> m_paintListeners = new HashSet<IMapPanelPaintListener>();
+  private final Collection<IMapPanelPaintListener> m_paintListeners = Collections.synchronizedSet( new HashSet<IMapPanelPaintListener>() );
 
-  private final Map<IKalypsoTheme, IMapLayer> m_layers = new HashMap<IKalypsoTheme, IMapLayer>();
+  private final Map<IKalypsoTheme, IMapLayer> m_layers = Collections.synchronizedMap( new HashMap<IKalypsoTheme, IMapLayer>() );
 
   private final ExtentHistory m_extentHistory = new ExtentHistory( 200 );
 

@@ -112,7 +112,6 @@ public class CompareProfilesDialog extends EnhancedTitleAreaDialog
     } );
 
     final CompareProfileWrapper baseWrapper = m_provider.getBaseProfile();
-
     final ProfileChartComposite baseChartView = createChartView( baseWrapper, body, toolkit );
 
     final List<ProfileChartComposite> additionalChartViews = new ArrayList<ProfileChartComposite>();
