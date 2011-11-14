@@ -67,6 +67,7 @@ import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectAdd;
 import org.kalypso.model.wspm.core.profil.impl.marker.PointMarker;
+import org.kalypso.observation.IObservationVisitor;
 import org.kalypso.observation.phenomenon.IPhenomenon;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -760,5 +761,11 @@ public abstract class AbstractProfil implements IProfil
       return String.format( Messages.getString( "AbstractProfil_0" ), station ); //$NON-NLS-1$
 
     return super.toString();
+  }
+
+  @Override
+  public void accept( final IObservationVisitor visitor )
+  {
+    throw new UnsupportedOperationException();
   }
 }
