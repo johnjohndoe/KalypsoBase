@@ -262,6 +262,15 @@ public final class JTSAdapter
     return GeometryFactory.createGM_Position( coord.x, coord.y, coord.z );
   }
 
+  public static GM_Position[] wrap( final Coordinate[] coords )
+  {
+    final GM_Position[] poses = new GM_Position[coords.length];
+    for( int i = 0; i < poses.length; i++ )
+      poses[i] = wrap( coords[i] );
+
+    return poses;
+  }
+
   /**
    * Converts a <tt>GM_MultiPoint</tt> to a <tt>MultiPoint</tt>.
    * <p>
@@ -331,7 +340,7 @@ public final class JTSAdapter
    *          an array of <tt>GM_Position</tt> s
    * @return the corresponding <tt>LinearRing</tt> object
    */
-  private static LinearRing exportAsRing( final GM_Position[] positions )
+  public static LinearRing exportAsRing( final GM_Position[] positions )
   {
     final Coordinate[] coords = export( positions );
     return jtsFactory.createLinearRing( coords );
@@ -662,5 +671,4 @@ public final class JTSAdapter
 
     return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Triangle( new GM_Position[] { p1, p2, p3 }, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
   }
-
 }
