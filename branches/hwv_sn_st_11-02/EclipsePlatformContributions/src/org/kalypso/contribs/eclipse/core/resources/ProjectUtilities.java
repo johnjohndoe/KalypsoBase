@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.core.resources;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -177,4 +178,18 @@ public class ProjectUtilities
     return result.toArray( new IProject[result.size()] );
   }
 
+  /**
+   * This function reads the .project file of a project. <strong>Not tested!</strong>
+   * 
+   * @param directory
+   *          The directory of the project, which contains the .project file.
+   * @return An object, containing basic information about the project.
+   */
+  public static SimpleProjectInfo readProjectInfo( File directory ) throws CoreException
+  {
+    SimpleProjectInfo projectInfo = new SimpleProjectInfo( new File( directory, ".project" ) );
+    projectInfo.read();
+
+    return projectInfo;
+  }
 }
