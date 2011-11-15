@@ -51,6 +51,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.gmlschema.builder.GeometryPropertyBuilder;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -123,6 +124,11 @@ public final class GenericShapeDataFactory
       }
     }
 
+    /*
+     * FIXME: the field names have been truncated to 11 chars, so there might be ducplicates now -> we need to check and
+     * fix this here
+     */
+
     return fields.toArray( new IDBFValue[fields.size()] );
   }
 
@@ -134,12 +140,19 @@ public final class GenericShapeDataFactory
     if( property instanceof GeometryPropertyBuilder )
       return null;
 
-    if( property.isList() )
-      return null;
+    final IValuePropertyType vpt = (IValuePropertyType) property;
 
     final String fieldName = findFieldName( property );
 
-    final IValuePropertyType vpt = (IValuePropertyType) property;
+    /* Special handling for gml:name */
+    final QName propertyName = vpt.getQName();
+    if( Feature.QN_NAME.equals( propertyName ) )
+      return new DBFField( fieldName, FieldType.C, (byte) 127, (byte) 0 );
+
+    /* All other list cannot be exported */
+    if( vpt.isList() )
+      return null;
+
     final Class< ? > clazz = vpt.getValueClass();
 
     if( clazz == Integer.class )
@@ -181,7 +194,7 @@ public final class GenericShapeDataFactory
     final String localPart = property.getQName().getLocalPart();
     final int pos = localPart.lastIndexOf( '.' );
     if( pos < 0 )
-      return localPart;
+      return StringUtils.substring( localPart, 0, 11 );
 
     return localPart.substring( pos + 1, Math.min( pos + 12, localPart.length() ) );
   }

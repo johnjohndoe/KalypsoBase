@@ -44,6 +44,7 @@ import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.shape.ShapeDataException;
 import org.kalypso.shape.dbf.AbstractDBFValue;
 import org.kalypso.shape.dbf.IDBFField;
@@ -94,8 +95,13 @@ public class FeatureValue extends AbstractDBFValue
   public Object getValue( final Object element ) throws ShapeDataException
   {
     final Feature feature = (Feature) element;
+
     try
     {
+      /* Special handling for gml:name */
+      if( isGmlName( feature ) )
+        return feature.getName();
+
       return GMLXPathUtilities.query( m_path, feature );
     }
     catch( final GMLXPathException e )
@@ -103,5 +109,21 @@ public class FeatureValue extends AbstractDBFValue
       final String message = String.format( "Failed to evaluate xpath '%s' on feature '%s'.", m_path, feature );
       throw new ShapeDataException( message, e );
     }
+  }
+
+  private boolean isGmlName(final Feature feature ) throws GMLXPathException
+  {
+    if( m_path.getSegmentSize() != 1 )
+      return false;
+
+    final IFeatureType featureType = feature.getFeatureType();
+    final Object query = GMLXPathUtilities.query( m_path, featureType );
+    if( query instanceof IValuePropertyType )
+    {
+      if( Feature.QN_NAME.equals( ((IValuePropertyType) query).getQName() ) )
+        return true;
+    }
+
+    return false;
   }
 }
