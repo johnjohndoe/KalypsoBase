@@ -55,7 +55,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -178,7 +177,6 @@ public class RunCalculationTask extends Task
       public void run( )
       {
         final StatusDialog dlg = new StatusDialog( shell, status, "Modellrechnung" );
-        dlg.setShowTimeTime( false );
         dlg.open();
       }
     } );
