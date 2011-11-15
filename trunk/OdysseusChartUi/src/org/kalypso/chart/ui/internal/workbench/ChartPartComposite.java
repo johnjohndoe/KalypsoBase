@@ -151,15 +151,6 @@ public class ChartPartComposite implements IChartPart
     }
 
     m_chartModel.dispose();
-
-    if( m_chartComposite != null )
-    {
-      // FIXME: strange: is this necessary, should happen automatically if IChartComposite is disposed
-      // m_chartComposite is disposed when its parent Composite(m_Composite) is disposed
-      // m_chartComposite.getPlot().dispose();
-      m_chartComposite.dispose();
-      m_chartComposite = null;
-    }
   }
 
   public IChartModel getChartModel( )

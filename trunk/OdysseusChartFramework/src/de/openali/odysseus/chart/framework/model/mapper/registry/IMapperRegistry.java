@@ -46,4 +46,6 @@ public interface IMapperRegistry extends IEventProvider<IMapperRegistryEventList
   void accept( IAxisVisitor visitor );
 
   void accept( IMapperVisitor visitor );
+  
+  void clear();
 }
