@@ -58,6 +58,7 @@ public class ChartModel implements IChartModel
     m_settings.clearTitles();
 
     getLayerManager().clear();
+    getMapperRegistry().clear();
   }
 
   /**
@@ -102,15 +103,6 @@ public class ChartModel implements IChartModel
     // chart model is root element! so return null
     return null;
   }
-
-// /**
-// * @see de.openali.odysseus.chart.framework.model.IChartModel#getState()
-// */
-// @Override
-// public IChartModelState getState( )
-// {
-// return new ChartModelState( getLayerManager() );
-// }
 
   @Override
   public IBasicChartSettings getSettings( )
