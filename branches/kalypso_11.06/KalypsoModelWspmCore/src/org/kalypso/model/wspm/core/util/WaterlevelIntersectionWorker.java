@@ -137,8 +137,8 @@ public class WaterlevelIntersectionWorker
     final IComponent cHeight = m_profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
     final IComponent cWidth = m_profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
 
-    final Double[] widthValues = ProfilUtil.getDoubleValuesFor( m_profile, cWidth );
-    final Double[] heightValues = ProfilUtil.getDoubleValuesFor( m_profile, cHeight );
+    final Double[] widthValues = ProfilUtil.getDoubleValuesFor( m_profile, cWidth, false );
+    final Double[] heightValues = ProfilUtil.getDoubleValuesFor( m_profile, cHeight, false );
 
     Assert.isTrue( widthValues.length == heightValues.length );
 
