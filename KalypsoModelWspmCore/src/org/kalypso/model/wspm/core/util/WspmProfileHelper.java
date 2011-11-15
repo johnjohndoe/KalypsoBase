@@ -529,10 +529,13 @@ public final class WspmProfileHelper
     final double lastX = (Double) lastPoint.getValue( iBreite );
     final double lastY = (Double) lastPoint.getValue( iHoehe );
 
-    final Double[] breiteValues = ProfilUtil.getDoubleValuesFor( profil, cBreite );
+    final Double[] breiteValues = ProfilUtil.getDoubleValuesFor( profil, cBreite, false );
+    final Double[] heightValues = ProfilUtil.getDoubleValuesFor( profil, cHoehe, false );
+
+    // FIXME: cannot work: width/height may contain null, which leads to problems here
 
     final PolyLine wspLine = new PolyLine( new double[] { firstX, lastX }, new double[] { wspHoehe, wspHoehe }, 0.0001 );
-    final PolyLine profilLine = new PolyLine( breiteValues, ProfilUtil.getDoubleValuesFor( profil, cHoehe ), 0.0001 );
+    final PolyLine profilLine = new PolyLine( breiteValues, heightValues, 0.0001 );
 
     final double[] intersectionXs = profilLine.intersect( wspLine );
 
