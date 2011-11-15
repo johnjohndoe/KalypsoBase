@@ -63,9 +63,11 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree_impl.model.geometry.GM_PositionOrientation;
-import org.kalypsodeegree_impl.model.geometry.GM_PositionOrientation.TYPE;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.algorithm.CGAlgorithms;
+import com.vividsolutions.jts.geom.LinearRing;
 
 /**
  * @author Gernot Belger
@@ -256,18 +258,21 @@ public class GM_Object2Shape
     }
   }
 
-  private static GM_Curve[] orientCurves( final GM_SurfacePatch[] surfacePatch )
+  private static GM_Curve[] orientCurves( final GM_SurfacePatch[] surfacePatch ) throws ShapeDataException
   {
     final List<GM_Curve> curveList = new LinkedList<GM_Curve>();
     for( final GM_SurfacePatch element : surfacePatch )
     {
       try
       {
-        final GM_Position[] exteriorRing = element.getExteriorRing();
         // TODO: really necessary? why not also force positive orientation for interior rings below?
-        final GM_Position[] positions = GM_PositionOrientation.orient( exteriorRing, TYPE.NEGATIV );
+        final LinearRing exteriorRing = JTSAdapter.exportAsRing( element.getExteriorRing() );
+        if( !CGAlgorithms.isCCW( exteriorRing.getCoordinates() ) )
+          exteriorRing.reverse();
 
-        final GM_CurveSegment cs = GeometryFactory.createGM_CurveSegment( positions, element.getCoordinateSystem() );
+        final GM_Position[] poses = JTSAdapter.wrap( exteriorRing.getCoordinates() );
+
+        final GM_CurveSegment cs = GeometryFactory.createGM_CurveSegment( poses, element.getCoordinateSystem() );
         curveList.add( GeometryFactory.createGM_Curve( cs ) );
 
         final GM_Position[][] interiorRings = element.getInteriorRings();
@@ -281,9 +286,9 @@ public class GM_Object2Shape
           }
         }
       }
-      catch( final Exception e )
+      catch( final GM_Exception e )
       {
-        System.out.println( "SHPPolygon::" + e );
+        throw new ShapeDataException( e );
       }
     }
     return curveList.toArray( new GM_Curve[curveList.size()] );
