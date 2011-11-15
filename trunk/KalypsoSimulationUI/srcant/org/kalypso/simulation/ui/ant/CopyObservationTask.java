@@ -46,6 +46,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.xml.namespace.NamespaceContext;
+
 import org.apache.tools.ant.Project;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -62,6 +64,7 @@ import org.kalypso.simulation.core.ant.copyobservation.source.FeatureCopyObserva
 import org.kalypso.simulation.core.ant.copyobservation.target.CopyObservationTargetFactory;
 import org.kalypso.simulation.core.ant.copyobservation.target.ICopyObservationTarget;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * Ein Ant Task, der Zeitreihen-Links in GMLs kopiert. Die generelle Idee ist es, alle Features eines GML durchzugehen,
@@ -140,7 +143,10 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
 
     final Source[] srcs = m_sources.toArray( new Source[m_sources.size()] );
 
-    final ICopyObservationTarget obsTarget = CopyObservationTargetFactory.getLink( context, m_targetobservation, m_targetObservationDir, targetRange, forecastRange );
+    final NamespaceContext namespaceContext = null;
+    final GMLXPath targetPath = new GMLXPath( m_targetobservation, namespaceContext );
+
+    final ICopyObservationTarget obsTarget = CopyObservationTargetFactory.getLink( context, targetPath, m_targetObservationDir, targetRange, forecastRange );
     final ICopyObservationSource obsSource = new FeatureCopyObservationSource( context, srcs, m_tokens );
 
     return new CopyObservationFeatureVisitor( obsSource, obsTarget, m_metadata, logger );
