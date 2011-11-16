@@ -468,7 +468,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     boolean hasSelectionStyle = false;
     for( final IKalypsoStyle style : m_styles )
     {
-      addStyle( style );
+      addStyleInternal( style );
       if( style.isUsedForSelection() )
         hasSelectionStyle = true;
     }
@@ -488,7 +488,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     if( style != null )
     {
       m_defaultStyles.add( style );
-      addStyle( style );
+      addStyleInternal( style );
     }
   }
 
@@ -553,9 +553,6 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     return new GisTemplateFeatureTypeStyle( sldPoolableObjectType, usedForSelection ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object)
-   */
   @Override
   public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
   {
@@ -605,32 +602,32 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     return null;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#addStyle(org.kalypso.ogc.gml.KalypsoUserStyle)
-   */
   @Override
   public void addStyle( final IKalypsoStyle style )
+  {
+    m_styles.add( style );
+
+    addStyleInternal( style );
+  }
+
+  private void addStyleInternal( final IKalypsoStyle style )
   {
     style.addStyleListener( this );
 
     if( m_theme != null )
       m_theme.addStyle( style );
+
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#removeStyle(org.kalypso.ogc.gml.KalypsoUserStyle)
-   */
   @Override
   public void removeStyle( final IKalypsoStyle style )
   {
     if( m_theme != null )
       m_theme.removeStyle( style );
+
     style.dispose();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getStyles()
-   */
   @Override
   public IKalypsoStyle[] getStyles( )
   {
