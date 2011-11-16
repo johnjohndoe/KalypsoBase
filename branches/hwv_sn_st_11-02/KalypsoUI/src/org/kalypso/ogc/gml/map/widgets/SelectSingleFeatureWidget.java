@@ -156,7 +156,11 @@ public class SelectSingleFeatureWidget extends AbstractWidget implements MouseLi
   {
     super.activate( commandPoster, mapPanel );
 
-    mapPanel.getMapModell().addMapModelListener( m_mapModellListener );
+    final IMapModell mapModell = mapPanel.getMapModell();
+    if( mapModell == null )
+      return;
+
+    mapModell.addMapModelListener( m_mapModellListener );
 
     reinit();
   }
