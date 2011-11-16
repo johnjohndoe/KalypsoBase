@@ -92,7 +92,7 @@ import org.kalypso.zml.ui.table.selection.ZmlTableSelectionHandler;
  */
 public class ZmlTableComposite extends Composite implements IZmlColumnModelListener, IZmlTable
 {
-  private static final MutexRule MUTEX_TABLE_UPDATE = new MutexRule( "updating table" ); // $NON-NLS-1$
+  private static final MutexRule MUTEX_TABLE_UPDATE = new MutexRule( "Aktualisiere Tabelle" ); // $NON-NLS-1$
 
   protected TableViewer m_tableViewer;
 
