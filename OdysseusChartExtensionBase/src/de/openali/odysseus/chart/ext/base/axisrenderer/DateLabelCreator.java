@@ -45,12 +45,10 @@ import java.util.Date;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.CalendarFormat;
 
-;
-
 /**
  * @author alibu
  */
-public class DateLabelCreator  implements ILabelCreator
+public class DateLabelCreator implements ILabelCreator
 {
 
   CalendarFormat m_format;
