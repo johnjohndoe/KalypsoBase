@@ -74,9 +74,6 @@ public class ZmlTableMemento implements IZmlTableMemento
     m_providerListener = obsProviderListener;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.memento.IZmlTableMemento#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -95,9 +92,6 @@ public class ZmlTableMemento implements IZmlTableMemento
     m_elements.put( poolKey, provider );
   }
 
-  /**
-   * @see org.kalypso.hwv.ui.wizards.calculation.modelpages.layout.ILayoutPart#saveData(boolean)
-   */
   @Override
   public synchronized void store( ) throws CoreException
   {
