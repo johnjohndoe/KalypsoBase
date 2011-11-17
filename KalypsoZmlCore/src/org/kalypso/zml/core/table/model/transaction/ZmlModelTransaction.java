@@ -76,13 +76,12 @@ public class ZmlModelTransaction
       {
         t.printStackTrace();
       }
-
-      for( final IZmlModelColumn column : updated )
-      {
-        column.fireColumnChangedEvent();
-      }
     }
 
+    for( final IZmlModelColumn column : updated )
+    {
+      column.fireColumnChangedEvent();
+    }
   }
 
   public void add( final IZmlValueReference target, final Number value, final String source, final int status )
