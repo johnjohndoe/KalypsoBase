@@ -448,4 +448,9 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   {
     return m_focus;
   }
+
+  public TableViewer getViewer( )
+  {
+    return m_tableViewer;
+  }
 }
