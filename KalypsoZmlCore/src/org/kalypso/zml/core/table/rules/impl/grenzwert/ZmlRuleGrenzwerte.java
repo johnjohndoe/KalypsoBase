@@ -81,10 +81,6 @@ public class ZmlRuleGrenzwerte extends AbstractZmlTableRule
     return false;
   }
 
-  /**
-   * @see org.kalypso.zml.core.table.rules.impl.AbstractZmlTableRule#getCellStyle(org.kalypso.zml.core.table.binding.rule.ZmlRule,
-   *      org.kalypso.zml.core.table.model.references.IZmlValueReference)
-   */
   @Override
   public CellStyle getCellStyle( final ZmlRule rule, final IZmlValueReference reference ) throws CoreException
   {
@@ -105,10 +101,6 @@ public class ZmlRuleGrenzwerte extends AbstractZmlTableRule
     return rule.getPlainStyle();
   }
 
-  /**
-   * @see org.kalypso.zml.core.table.rules.impl.AbstractZmlTableRule#getLabel(org.kalypso.zml.core.table.binding.rule.ZmlRule,
-   *      org.kalypso.zml.core.table.model.references.IZmlValueReference)
-   */
   @Override
   public String getLabel( final ZmlRule rule, final IZmlValueReference reference )
   {
