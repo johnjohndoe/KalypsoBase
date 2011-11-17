@@ -40,77 +40,45 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.databinding.validation;
 
-import org.eclipse.core.databinding.validation.IValidator;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.commons.KalypsoCommonsPlugin;
+import org.kalypso.contribs.java.lang.NumberUtils;
 
 /**
- * A typed version of {@link IValidator}, implement in order to do a typed validation.<br/>
+ * This validator checks, if an integer was provided.
  * 
- * @author Gernot Belger
+ * @author Holger Albert
  */
-public abstract class TypedValidator<T> implements IValidator
+public class IntegerValidator extends TypedValidator<String>
 {
-  private final Class<T> m_type;
-
-  private final int m_severity;
-
-  private final String m_message;
-
   /**
    * The constructor.
    * 
-   * @param type
-   *          Class of type T for type safe cast.
    * @param severity
    *          Severity of IStatus, will be used to create validation failures.
    * @param message
    *          Will be used as message for a status, if validation fails.
    */
-  public TypedValidator( final Class<T> type, final int severity, final String message )
+  public IntegerValidator( final int severity, final String message )
   {
-    m_type = type;
-    m_severity = severity;
-    m_message = message;
+    super( String.class, severity, message );
   }
 
   /**
-   * Overwritten in order to do a typed validation.<br/>
-   * Implement {@link #doValidate(T)} instead.
-   * 
-   * @see org.eclipse.core.databinding.validation.IValidator#validate(java.lang.Object)
+   * @see org.kalypso.commons.databinding.validation.TypedValidator#doValidate(java.lang.Object)
    */
   @Override
-  public final IStatus validate( final Object value )
+  protected IStatus doValidate( final String value ) throws CoreException
   {
-    try
-    {
-      return doValidate( m_type.cast( value ) );
-    }
-    catch( final CoreException e )
-    {
-      return e.getStatus();
-    }
-  }
+    if( StringUtils.isBlank( value ) )
+      fail();
 
-  /**
-   * Helper to simply fail the validation.<br/>
-   * Creates a status from the severity, message given in the constructor of this class.
-   */
-  protected final void fail( ) throws CoreException
-  {
-    final Status status = new Status( m_severity, KalypsoCommonsPlugin.getID(), m_message );
-    throw new CoreException( status );
-  }
+    Integer integer = NumberUtils.parseQuietInteger( value );
+    if( integer == null )
+      fail();
 
-  /**
-   * Validate the given value.<br/>
-   * This method can either return an {@link IStatus} or throw an {@link CoreException} whose status will be returned to
-   * the validator.
-   * 
-   * @see #validate(Object)
-   */
-  protected abstract IStatus doValidate( T value ) throws CoreException;
+    return Status.OK_STATUS;
+  }
 }
