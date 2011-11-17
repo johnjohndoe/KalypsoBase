@@ -57,6 +57,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -154,11 +155,14 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
   {
     m_contextMenuManager.removeAll();
 
-    final Table table = m_table.getTableViewer().getTable();
+    final Table table = m_table.getViewer().getTable();
     if( table.isDisposed() )
       return;
 
-    final Point eventPoint = new Point( event.x, event.y );
+    final ScrollBar scrollBar = table.getHorizontalBar();
+    final int selection = scrollBar.getSelection();
+
+    final Point eventPoint = new Point( event.x + selection, event.y );
     final Point controlPoint = table.toControl( eventPoint );
 
     IExtendedZmlTableColumn column = findColumn( controlPoint );
