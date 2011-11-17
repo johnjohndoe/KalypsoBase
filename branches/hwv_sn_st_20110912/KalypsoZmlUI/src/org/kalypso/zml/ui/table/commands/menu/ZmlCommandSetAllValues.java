@@ -48,6 +48,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
@@ -59,9 +60,6 @@ import org.kalypso.zml.ui.table.model.IZmlTableColumn;
  */
 public class ZmlCommandSetAllValues extends AbstractHandler
 {
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
@@ -76,11 +74,16 @@ public class ZmlCommandSetAllValues extends AbstractHandler
 
       final IZmlTableColumn column = active.getColumn();
       final IZmlTableCell[] visibleCells = column.getCells();
+
+      final ZmlModelTransaction transaction = new ZmlModelTransaction();
+
       for( final IZmlTableCell cell : visibleCells )
       {
         final IZmlValueReference ref = cell.getValueReference();
-        ref.update( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
+        transaction.add( ref, targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
       }
+
+      transaction.execute();
 
       return Status.OK_STATUS;
     }

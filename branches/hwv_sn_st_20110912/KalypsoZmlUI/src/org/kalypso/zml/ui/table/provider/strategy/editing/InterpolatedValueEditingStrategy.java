@@ -101,10 +101,6 @@ public class InterpolatedValueEditingStrategy extends AbstractEditingStrategy
     return null;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy#setValue(org.kalypso.zml.ui.table.model.IZmlModelRow,
-   *      java.lang.String)
-   */
   @Override
   public void setValue( final IZmlModelRow element, final String value )
   {
@@ -115,7 +111,7 @@ public class InterpolatedValueEditingStrategy extends AbstractEditingStrategy
       final IZmlValueReference reference = row.get( getColumn().getColumnType().getType() );
 
       final Number targetValue = getTargetValue( value );
-      reference.update( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
+      reference.doUpdate( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
 
       final ExtendedZmlTableColumn column = getColumn();
       final IZmlTableCell cell = column.findCell( row );

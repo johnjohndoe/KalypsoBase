@@ -158,12 +158,12 @@ public class SumValueEditingStrategy extends AbstractEditingStrategy
 
     for( int index = startIndex; index <= endIndex; index++ )
     {
-      modelColumn.update( index, stepping, IntervalSourceHandler.SOURCE_INTERVAL_FITLER, KalypsoStati.BIT_USER_MODIFIED );
+      modelColumn.doUpdate( index, stepping, IntervalSourceHandler.SOURCE_INTERVAL_FITLER, KalypsoStati.BIT_USER_MODIFIED );
     }
   }
 
   private void updateOriginValue( final IZmlValueReference reference, final Number targetValue ) throws SensorException
   {
-    reference.update( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
+    reference.doUpdate( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
   }
 }

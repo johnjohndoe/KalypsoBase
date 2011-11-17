@@ -61,9 +61,6 @@ import org.kalypso.zml.ui.table.model.IZmlTableCell;
  */
 public class ZmlCommandPasteValue extends AbstractHandler
 {
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
@@ -79,7 +76,7 @@ public class ZmlCommandPasteValue extends AbstractHandler
       final String data = (String) clipboard.getContents( transfer );
 
       final double value = NumberUtils.parseDouble( data );
-      reference.update( value, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
+      reference.doUpdate( value, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
 
       return Status.OK_STATUS;
     }

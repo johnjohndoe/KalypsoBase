@@ -91,9 +91,9 @@ public class ZmlDataValueReference implements IZmlValueReference
   }
 
   @Override
-  public void update( final Number value, final String source, final Integer status ) throws SensorException
+  public void doUpdate( final Number value, final String source, final Integer status ) throws SensorException
   {
-    m_column.update( m_tupleModelIndex, value, source, status );
+    m_column.doUpdate( m_tupleModelIndex, value, source, status );
   }
 
   public String getIdentifier( )
@@ -133,18 +133,12 @@ public class ZmlDataValueReference implements IZmlValueReference
     return m_row;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.model.references.IZmlValueReference#getTupleModelIndex()
-   */
   @Override
   public Integer getModelIndex( )
   {
     return m_tupleModelIndex;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.model.references.IZmlValueReference#getModel()
-   */
   @Override
   public IZmlModel getModel( )
   {
