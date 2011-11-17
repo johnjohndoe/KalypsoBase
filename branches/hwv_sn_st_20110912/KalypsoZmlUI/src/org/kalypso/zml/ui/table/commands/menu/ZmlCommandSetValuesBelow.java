@@ -88,6 +88,8 @@ public class ZmlCommandSetValuesBelow extends AbstractHandler
         }
       }
 
+      transaction.execute();
+
       return Status.OK_STATUS;
     }
     catch( final SensorException e )
