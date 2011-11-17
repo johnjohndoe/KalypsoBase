@@ -89,7 +89,7 @@ public class ZmlCommandSetSelectedValues extends AbstractHandler
 
       for( int index = intervallStart; index <= intervallEnd; index++ )
       {
-        model.update( index, targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
+        model.doUpdate( index, targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
       }
 
       return Status.OK_STATUS;

@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,50 +38,48 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.commands.menu.adjust.pages;
+package org.kalypso.zml.core.table.model.transaction;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
+import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 
 /**
  * @author Dirk Kuch
  */
-public class ShiftDateRunnable implements ICoreRunnableWithProgress
+public class CopyValueRefrenceCommand implements IZmlModelUpdateCommand
 {
-  private final Integer m_offset;
+  private final IZmlValueReference m_source;
 
-  private final IZmlModelColumn m_column;
+  private final IZmlValueReference m_target;
 
-  private final IZmlTableCell[] m_cells;
-
-  public ShiftDateRunnable( final IZmlModelColumn column, final IZmlTableCell[] cells, final Integer offset )
+  public CopyValueRefrenceCommand( final IZmlValueReference source, final IZmlValueReference target )
   {
-    m_column = column;
-    m_cells = cells;
-    m_offset = offset;
+    m_source = source;
+    m_target = target;
   }
 
   @Override
-  public IStatus execute( final IProgressMonitor monitor )
+  public IZmlValueReference getTarget( )
   {
-    try
-    {
-      final ShiftDateValuesVisitor visitor = new ShiftDateValuesVisitor( m_cells, m_offset );
-      m_column.accept( visitor );
-
-      visitor.doFinish();
-    }
-    catch( final SensorException e )
-    {
-      return StatusUtilities.createExceptionalErrorStatus( "Anpassen fehlgeschlagen", e );
-    }
-
-    return Status.OK_STATUS;
+    return m_target;
   }
+
+  @Override
+  public Number getValue( ) throws SensorException
+  {
+    return m_source.getValue();
+  }
+
+  @Override
+  public String getDataSource( ) throws SensorException
+  {
+    return m_source.getDataSource();
+  }
+
+  @Override
+  public Integer getStatus( ) throws SensorException
+  {
+    return m_source.getStatus();
+  }
+
 }

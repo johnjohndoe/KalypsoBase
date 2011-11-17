@@ -103,6 +103,8 @@ public class ZmlCommandAdaptSelection extends AbstractHandler
       final AdaptValuesVisitor visitor = new AdaptValuesVisitor();
       transformed.accept( visitor, new ObservationRequest( dateRange ) );
       column.getModelColumn().accept( visitor );
+
+      visitor.doFinish();
     }
     catch( final SensorException e )
     {

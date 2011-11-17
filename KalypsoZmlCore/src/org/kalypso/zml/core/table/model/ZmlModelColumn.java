@@ -60,6 +60,7 @@ import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataListener;
 import org.kalypso.zml.core.table.model.data.ObservationZmlColumnDataHandler;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.transaction.IZmlModelUpdateCommand;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 
 /**
@@ -154,9 +155,6 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
     return getTupleModel().size();
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {
@@ -164,7 +162,24 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   }
 
   @Override
-  public void update( final int index, final Object value, final String source, final Integer status ) throws SensorException
+  public void doUpdate( final int index, final Object value, final String source, final Integer status ) throws SensorException
+  {
+    update( index, value, source, status );
+
+    fireColumnChangedEvent();
+  }
+
+  /**
+   * @see org.kalypso.zml.core.table.model.IZmlModelColumn#doUpdate(org.kalypso.zml.core.table.model.transaction.IZmlModelUpdateCommand)
+   */
+  @Override
+  public void doExecute( final IZmlModelUpdateCommand command ) throws SensorException
+  {
+    final IZmlValueReference target = command.getTarget();
+    update( target.getModelIndex(), command.getValue(), command.getDataSource(), command.getStatus() );
+  }
+
+  private void update( final int index, final Object value, final String source, final Integer status ) throws SensorException
   {
     final ITupleModel model = getTupleModel();
     final IAxis[] axes = model.getAxes();
@@ -199,10 +214,6 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
       }
     }
 
-    // FIXME improve update value handling
-    final IObservation observation = m_handler.getObservation();
-    observation.setValues( model );
-    observation.fireChangedEvent( this );
   }
 
   @Override
@@ -329,6 +340,26 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   public IZmlModel getModel( )
   {
     return m_model;
+  }
+
+  /**
+   * @see org.kalypso.zml.core.table.model.IZmlModelColumn#fireColumnChangedEvent()
+   */
+  @Override
+  public void fireColumnChangedEvent( )
+  {
+    try
+    {
+      // FIXME improve update value handling
+      final IObservation observation = m_handler.getObservation();
+      observation.setValues( getTupleModel() );
+      observation.fireChangedEvent( this );// TODO Auto-generated method stub
+
+    }
+    catch( final Exception ex )
+    {
+      ex.printStackTrace();
+    }
   }
 
 }

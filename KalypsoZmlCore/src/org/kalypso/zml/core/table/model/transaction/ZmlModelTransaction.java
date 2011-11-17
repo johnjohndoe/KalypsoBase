@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraﬂe 22
+ *  Denickestra√üe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,50 +38,56 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.commands.menu.adjust.pages;
+package org.kalypso.zml.core.table.model.transaction;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.ogc.sensor.SensorException;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
+import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 
 /**
  * @author Dirk Kuch
  */
-public class ShiftDateRunnable implements ICoreRunnableWithProgress
+public class ZmlModelTransaction
 {
-  private final Integer m_offset;
+  Set<IZmlModelUpdateCommand> m_commands = new LinkedHashSet<IZmlModelUpdateCommand>();
 
-  private final IZmlModelColumn m_column;
-
-  private final IZmlTableCell[] m_cells;
-
-  public ShiftDateRunnable( final IZmlModelColumn column, final IZmlTableCell[] cells, final Integer offset )
+  public void add( final IZmlModelUpdateCommand command )
   {
-    m_column = column;
-    m_cells = cells;
-    m_offset = offset;
+    m_commands.add( command );
   }
 
-  @Override
-  public IStatus execute( final IProgressMonitor monitor )
+  public void execute( )
   {
-    try
-    {
-      final ShiftDateValuesVisitor visitor = new ShiftDateValuesVisitor( m_cells, m_offset );
-      m_column.accept( visitor );
+    final Set<IZmlModelColumn> updated = new LinkedHashSet<IZmlModelColumn>();
 
-      visitor.doFinish();
-    }
-    catch( final SensorException e )
+    for( final IZmlModelUpdateCommand command : m_commands )
     {
-      return StatusUtilities.createExceptionalErrorStatus( "Anpassen fehlgeschlagen", e );
+      try
+      {
+        final IZmlValueReference target = command.getTarget();
+        final IZmlModelColumn targetColumn = target.getColumn();
+        updated.add( targetColumn );
+
+        targetColumn.doExecute( command );
+      }
+      catch( final Throwable t )
+      {
+        t.printStackTrace();
+      }
+
+      for( final IZmlModelColumn column : updated )
+      {
+        column.fireColumnChangedEvent();
+      }
     }
 
-    return Status.OK_STATUS;
+  }
+
+  public void add( final IZmlValueReference target, final Number value, final String source, final int status )
+  {
+    add( new UpdateReferenceCommand( target, value, source, status ) );
+
   }
 }
