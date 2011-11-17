@@ -57,6 +57,8 @@ public class StringEmptyValidator extends TypedValidator<String>
   public String DEFAULT_ERROR_MESSAGE = "Field must not be empty";
 
   /**
+   * The constructor.
+   * 
    * @param severity
    *          Severity of IStatus, will be used to create validation failures.
    * @param message
