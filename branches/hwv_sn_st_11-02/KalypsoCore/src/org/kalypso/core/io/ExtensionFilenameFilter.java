@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.core.util;
+package org.kalypso.core.io;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -74,10 +74,6 @@ public class ExtensionFilenameFilter implements FilenameFilter
   @Override
   public boolean accept( File dir, String name )
   {
-    /* Should not happen. */
-    if( name == null )
-      return false;
-
     /* Get the extension. */
     String extension = FilenameUtils.getExtension( name );
     if( extension == null || extension.length() == 0 )
