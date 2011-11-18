@@ -41,6 +41,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.IOUtils;
+import org.joda.time.Period;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
@@ -48,6 +49,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.metadata.IMetadataConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
@@ -145,6 +147,11 @@ public final class RequestFactory
     final MetadataList mdl = obs.getMetadataList();
     mdl.setProperty( IMetadataConstants.MD_NAME, request.getName() != null ? request.getName() : "<?>" ); //$NON-NLS-1$
     mdl.setProperty( IMetadataConstants.MD_ORIGIN, Messages.getString( "org.kalypso.ogc.sensor.request.RequestFactory.3" ) ); //$NON-NLS-1$
+
+    final Period timestep = request.getTimestep();
+    if( timestep != null )
+      MetadataHelper.setTimestep( mdl, timestep );
+
     return obs;
   }
 
