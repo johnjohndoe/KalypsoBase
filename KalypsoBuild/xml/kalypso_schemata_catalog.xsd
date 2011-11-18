@@ -18,4 +18,5 @@
   <!-- Prognose -->
   <nextCatalog catalog="platform:/resource/KalypsoHwvCore/etc/schemes/catalog.xml" />
   <nextCatalog catalog="platform:/resource/KalypsoHwvService/etc/schema/catalog.xml" />
+  <nextCatalog catalog="platform:/resource/KalypsoHwvProductSachsen/etc/schemes/catalog.xml" />
 </catalog>
