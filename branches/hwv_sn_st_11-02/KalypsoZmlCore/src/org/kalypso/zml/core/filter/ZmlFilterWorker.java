@@ -45,9 +45,9 @@ import java.net.URL;
 import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.filter.creators.IntervallFilterCreator;
 import org.kalypso.ogc.sensor.filter.creators.RoundFilterCreator;
 import org.kalypso.ogc.sensor.filter.filters.interval.IntervalDefinition;
-import org.kalypso.ogc.sensor.filter.filters.interval.IntervalFilter;
 import org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilterCreator;
 import org.kalypso.zml.core.filter.binding.IZmlFilter;
 import org.kalypso.zml.core.filter.binding.InterpolationZmlFilter;
@@ -60,8 +60,19 @@ import org.kalypso.zml.core.filter.binding.RoundZmlFilter;
  * 
  * @author Gernot Belger
  */
-public class ZmlFilterWorker
+public final class ZmlFilterWorker
 {
+  public static IObservation applyFilters( final IObservation source, final IZmlFilter... filters ) throws SensorException
+  {
+    return applyFilters( source, null, filters );
+  }
+
+  public static IObservation applyFilters( final IObservation source, final URL context, final IZmlFilter... filters ) throws SensorException
+  {
+    final ZmlFilterWorker worker = new ZmlFilterWorker( filters, context );
+    return worker.execute( source );
+  }
+
   /**
    * The context against all links will be resolved.
    */
@@ -69,12 +80,12 @@ public class ZmlFilterWorker
 
   private final IZmlFilter[] m_filter;
 
-  public ZmlFilterWorker( final IZmlFilter filter, final URL context )
+  private ZmlFilterWorker( final IZmlFilter filter, final URL context )
   {
     this( new IZmlFilter[] { filter }, context );
   }
 
-  public ZmlFilterWorker( final IZmlFilter[] filter, final URL context )
+  private ZmlFilterWorker( final IZmlFilter[] filter, final URL context )
   {
     m_filter = filter;
     m_context = context;
@@ -85,6 +96,11 @@ public class ZmlFilterWorker
    */
   public IObservation execute( final IObservation input ) throws SensorException
   {
+    // TODO: some filter might work with a null-base observation, so how can we know which one does?
+    // REMARK: for now, return null if we get null
+    if( input == null )
+      return null;
+
     IObservation result = input;
 
     // Apply all filters in the given order
@@ -114,7 +130,7 @@ public class ZmlFilterWorker
       final Integer defaultStatus = intervalZmlFilter.getDefaultStatus();
 
       final IntervalDefinition definition = new IntervalDefinition( field, amount, defaultValue, defaultStatus );
-      return new IntervalFilter( IntervalFilter.MODE.eSum, definition );
+      return IntervallFilterCreator.createFilter( definition, input, m_context );
     }
 
     if( filter instanceof RoundZmlFilter )
