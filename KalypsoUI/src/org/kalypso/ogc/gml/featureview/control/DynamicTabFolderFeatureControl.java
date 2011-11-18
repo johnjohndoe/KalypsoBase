@@ -179,9 +179,6 @@ public class DynamicTabFolderFeatureControl extends AbstractFeatureControl
   {
     final TabItem tabItem = new TabItem( m_tabFolder, SWT.NONE, index );
     final FeatureTabItem featureTabItem = new FeatureTabItem( tabItem, workspace, featureObject );
-// final Feature feature = featureTabItem.getFeature();
-// final String text = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
-// tabItem.setText( text );
 
     /* Delegate any events to the next higher level */
     final IFeatureControl featureControl = featureTabItem.createFeatureConrol( m_parentComposite );

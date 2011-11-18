@@ -119,7 +119,13 @@ public class FeatureTabItem
   public void updateControl( )
   {
     final Feature feature = getFeature();
-    final String text = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
+    // try to use feature name before annotation
+    final String name = feature.getName();
+    final String text;
+    if( name == null )
+      text = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
+    else
+      text = name;
     m_item.setText( text );
 
     m_fc.updateControl();
