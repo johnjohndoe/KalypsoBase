@@ -113,7 +113,9 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
     if( m_polygon != null )
       return;
 
-    final List<Coordinate> crds = new ArrayList<Coordinate>( buildPolygon() );
+    final List<Coordinate> buildPolygon = buildPolygon();
+
+    final List<Coordinate> crds = new ArrayList<Coordinate>( buildPolygon );
     if( crds.size() < 3 )
     {
       addStatus( IStatus.WARNING, "Invalid geometry (not enough points)", null ); //$NON-NLS-1$
