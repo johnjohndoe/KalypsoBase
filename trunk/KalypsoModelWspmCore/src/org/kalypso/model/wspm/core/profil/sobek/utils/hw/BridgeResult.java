@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.core.profil.sobek.utils.hw;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -85,6 +86,9 @@ public class BridgeResult extends HeightWidthResult
     final List<Coordinate> bridgeCrdList = new LinkedList<Coordinate>( m_lowerCrds );
     final Coordinate[] upperCrdArray = m_upperCrds.toArray( new Coordinate[m_upperCrds.size()] );
     final CoordinateSequence upperSeq = CoordinateArraySequenceFactory.instance().create( upperCrdArray );
+
+    if( lowerSeq.size() == 0 )
+      return Collections.emptyList();
 
     /* Build ring from lower/upper coordinates */
     cropLower( bridgeCrdList, upperSeq );
