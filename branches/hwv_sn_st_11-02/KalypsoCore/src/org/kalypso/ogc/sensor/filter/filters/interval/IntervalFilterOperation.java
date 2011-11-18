@@ -67,6 +67,7 @@ public class IntervalFilterOperation
     m_input = input;
     m_definition = definition;
     m_metadata = MetadataHelper.clone( m_input.getMetadataList() );
+    definition.setTimestep( m_metadata );
   }
 
   public IObservation execute( final DateRange range ) throws SensorException

@@ -43,6 +43,7 @@ package org.kalypso.ogc.sensor.filter.filters.interval;
 import java.net.URL;
 import java.util.Calendar;
 
+import org.eclipse.core.runtime.Assert;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
@@ -79,21 +80,18 @@ public class IntervalFilter extends AbstractObservationFilter
 
   private IObservation m_baseobservation = null;
 
-  private final MODE m_mode;
-
   private final IntervalDefinition m_definition;
 
   private MetadataList m_metadata;
 
-  public IntervalFilter( final MODE mode, final IntervalDefinition definition )
+  public IntervalFilter( final IntervalDefinition definition )
   {
-    m_mode = mode;
     m_definition = definition;
   }
 
   public IntervalFilter( final IntervallFilterType filter )
   {
-    this( MODE.getMode( filter ), new IntervalDefinition( filter ) );
+    this( new IntervalDefinition( filter ) );
   }
 
   @Override
@@ -101,17 +99,20 @@ public class IntervalFilter extends AbstractObservationFilter
   {
     m_baseobservation = baseObs;
 
+    Assert.isNotNull( m_baseobservation );
+
     super.initFilter( dummy, baseObs, context );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#getMetadataList()
-   */
   @Override
   public MetadataList getMetadataList( )
   {
     if( m_metadata == null )
-      return m_baseobservation.getMetadataList();
+    {
+      final MetadataList metadata = MetadataHelper.clone( m_baseobservation.getMetadataList() );
+      m_definition.setTimestep( metadata );
+      return metadata;
+    }
 
     return m_metadata;
   }
@@ -138,14 +139,11 @@ public class IntervalFilter extends AbstractObservationFilter
     final ITupleModel values = ObservationUtilities.requestBuffered( m_baseobservation, dateRange, Calendar.DAY_OF_MONTH, 2 );
 
     m_metadata = MetadataHelper.clone( m_baseobservation.getMetadataList() );
+    m_definition.setTimestep( m_metadata );
 
     final IntervalValuesOperation valuesOperation = new IntervalValuesOperation( values, m_metadata, m_definition );
     valuesOperation.execute( dateRange );
     return valuesOperation.getModel();
-
-// final Date from = dateRange == null ? null : dateRange.getFrom();
-// final Date to = dateRange == null ? null : dateRange.getTo();
-// return new IntervalTupleModel( m_mode, m_definition, m_metadata, values, from, to );
   }
 
   @Override

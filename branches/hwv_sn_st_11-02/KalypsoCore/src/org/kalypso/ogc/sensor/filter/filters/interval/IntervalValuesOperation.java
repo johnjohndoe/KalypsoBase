@@ -147,8 +147,6 @@ public class IntervalValuesOperation
   {
     final int amount = m_definition.getAmount();
     final int calendarField = m_definition.getCalendarField();
-    /* Directly update metadata with that timestep */
-    MetadataHelper.setTimestep( m_metadata, calendarField, amount );
 
     final IntervalIterator targetIterator = createTargetIterator( range, calendarField, amount );
 
