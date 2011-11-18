@@ -138,10 +138,7 @@ public class ChartFeatureControlFactory implements IExtensionsFeatureControlFact
       }
 
       final Feature chartFeature = ChartFeatureControl.getChartFeature( feature, pt );
-
-      ChartDataProvider.FEATURE_MAP.put( featureKeyName, chartFeature );
-
-      return new ChartFeatureControl( chartFeature, pt, ccl, chartTypes, configUrl, commands, chartProviderID );
+      return new ChartFeatureControl( featureKeyName, chartFeature, pt, ccl, chartTypes, configUrl, commands, chartProviderID );
     }
     catch( final Throwable e )
     {
