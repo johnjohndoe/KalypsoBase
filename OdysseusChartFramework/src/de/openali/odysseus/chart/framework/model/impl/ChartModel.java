@@ -1,5 +1,8 @@
 package de.openali.odysseus.chart.framework.model.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.kalypso.commons.java.lang.Arrays;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
@@ -27,6 +30,8 @@ public class ChartModel implements IChartModel
 
   protected final BasicChartSettings m_settings = new BasicChartSettings();
 
+  private Map<String, Object> m_dataMap = new HashMap<String, Object>();
+
   public ChartModel( )
   {
     getLayerManager().addListener( new ChartModelLayerEventListener( this ) );
@@ -38,7 +43,7 @@ public class ChartModel implements IChartModel
   @Override
   public void autoscale( final IAxis... axes )
   {
-    final AutoScaleVisitor visitor = new AutoScaleVisitor( this);
+    final AutoScaleVisitor visitor = new AutoScaleVisitor( this );
     // axes==null means all Axes
     for( final IAxis axis : Arrays.isEmpty( axes ) ? getMapperRegistry().getAxes() : axes )
     {
@@ -61,6 +66,7 @@ public class ChartModel implements IChartModel
   public void dispose( )
   {
     getLayerManager().accept( new DisposeLayersVisitor() );
+    m_dataMap.clear();
   }
 
   @Override
@@ -150,6 +156,24 @@ public class ChartModel implements IChartModel
   public IChartModel getModel( )
   {
     return this;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.IChartModel#getData(java.lang.String)
+   */
+  @Override
+  public Object getData( final String key )
+  {
+    return m_dataMap.get( key );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.IChartModel#getData(java.lang.String)
+   */
+  @Override
+  public Object setData( final String key, final Object value )
+  {
+    return m_dataMap.put( key, value );
   }
 
 }

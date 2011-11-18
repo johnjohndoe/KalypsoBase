@@ -23,5 +23,9 @@ public interface IChartModel extends ILayerContainer
 
   IBasicChartSettings getSettings( );
 
+  Object getData( String key );
+
+  Object setData( String key, Object value );
+
   // IChartModelState getState( );
 }
