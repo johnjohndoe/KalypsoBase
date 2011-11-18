@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="lib/guava/guava-10.0.1.jar" sourcepath="lib/guava/guava-10.0.1-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xstream/xstream-1.4.2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
@@ -28,7 +30,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/j3d-1_5_2/j3d-1_5_2/lib/ext/j3dcore.jar" sourcepath="lib/j3d-1_5_2/j3d-1_5_2-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/j3d-1_5_2/j3d-1_5_2/lib/ext/j3dutils.jar" sourcepath="lib/j3d-1_5_2/j3d-1_5_2-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/j3d-1_5_2/j3d-1_5_2/lib/ext/vecmath.jar" sourcepath="lib/j3d-1_5_2/vecmath-1_5_2-src.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/xstream/xstream-1.3.1.jar" sourcepath="lib/xstream/xstream-distribution-1.3.1-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/xalan-j/xalan_2_7_1.jar" sourcepath="lib/xalan-j/xalan-j_2_7_1-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/xalan-j/serializer.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xalan-j/xercesImpl.jar"/>
@@ -39,7 +40,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/itext-5.0.5/iText-5.0.5.jar" sourcepath="lib/itext-5.0.5/iText-src-5.0.5.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/pdf-renderer/PDFRenderer.jar" sourcepath="lib/pdf-renderer/PDFRenderer-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/jgraph/jgraphx_1_5_1_11.jar" sourcepath="lib/jgraph/jpgrahpx_1_5_1_11-src.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/guava/guava-r09.jar" sourcepath="lib/guava/guava-src-r09.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/opencsv/opencsv-2.3.jar" sourcepath="lib/opencsv/opencsv-2.3.src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/joda-time/joda-time-2.0.jar" sourcepath="lib/joda-time/joda-time-2.0-sources.jar">
 		<attributes>
