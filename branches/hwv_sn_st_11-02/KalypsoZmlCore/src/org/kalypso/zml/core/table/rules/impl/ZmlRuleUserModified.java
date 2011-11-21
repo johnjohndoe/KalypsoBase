@@ -56,18 +56,12 @@ public class ZmlRuleUserModified extends AbstractZmlTableRule
 {
   public static final String ID = "org.kalypso.zml.ui.core.rule.user.modified"; //$NON-NLS-1$
 
-  /**
-   * @see org.kalypso.zml.ui.core.rules.IZmlTableRule#getIdentifier()
-   */
   @Override
   public String getIdentifier( )
   {
     return ID;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.core.rules.IZmlTableRule#apply(org.kalypso.zml.ui.table.provider.ZmlValueReference)
-   */
   @SuppressWarnings("deprecation")
   @Override
   protected boolean doApply( final ZmlRule rule, final IZmlValueReference reference )
