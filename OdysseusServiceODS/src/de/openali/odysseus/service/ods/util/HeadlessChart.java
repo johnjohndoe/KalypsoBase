@@ -23,7 +23,7 @@ public class HeadlessChart
   /**
    * The chart composite.
    */
-  private IChartComposite m_chartComposite;
+  private ChartImageComposite m_chartComposite;
 
   /**
    * The constructor.
@@ -47,8 +47,8 @@ public class HeadlessChart
     if( m_shell != null && !m_shell.isDisposed() )
       m_shell.dispose();
 
-    if( m_chartComposite != null && !m_chartComposite.getPlot().isDisposed() )
-      m_chartComposite.getPlot().dispose();
+    if( m_chartComposite != null && !m_chartComposite.isDisposed() )
+      m_chartComposite.dispose();
 
     m_shell = null;
     m_chartComposite = null;

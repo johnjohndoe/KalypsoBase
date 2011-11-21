@@ -49,6 +49,7 @@ import org.eclipse.swt.dnd.ImageTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 
@@ -83,7 +84,7 @@ public class ExportClipboardHandler extends AbstractHandler
       final IChartComposite chartComposite = ChartHandlerUtilities.getChart( context );
 
       /* Create the image. */
-      final Rectangle bounds = chartComposite.getPlot().getBounds();
+      final Rectangle bounds = ((Composite)chartComposite).getBounds();
       final ChartPainter chartPainter = new ChartPainter( chartComposite.getChartModel(), bounds );
       final ImageData imageData = chartPainter.getImageData();
 

@@ -4,6 +4,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
+import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.impl.visitors.LayerTooltipVisitor;
@@ -70,7 +71,7 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
     if( model == null )
       return null;
 
-    final Point plotPoint = getChart().screen2plotPoint( screen );
+    final Point plotPoint = ChartHandlerUtilities.screen2plotPoint( screen, getChart().getPlotRect() );
 
     final ILayerManager layerManager = model.getLayerManager();
     final EditableChartLayerVisitor visitor = new EditableChartLayerVisitor();
@@ -93,10 +94,10 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
   {
     m_clickInfo = getHover( down );
     if( m_clickInfo == null )
-      m_clickInfo = new EditInfo( null, null, null, null, null, getChart().screen2plotPoint( down ) );
+      m_clickInfo = new EditInfo( null, null, null, null, null, ChartHandlerUtilities.screen2plotPoint( down, getChart().getPlotRect() ) );
 
     // offset from cursor relative to the given InfoObject Center
-    final Point pos = getChart().plotPoint2screen( m_clickInfo.getPosition() );
+    final Point pos = ChartHandlerUtilities.plotPoint2screen( m_clickInfo.getPosition(), getChart().getPlotRect() );
     m_deltaSnapX = down.x - pos.x;
     m_deltaSnapY = down.y - pos.y;
     m_startX = down.x;
@@ -132,7 +133,7 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
 
   private void doSetTooltip( final Point point )
   {
-    final LayerTooltipVisitor visitor = new LayerTooltipVisitor( getChart(), getChart().screen2plotPoint( point ) );
+    final LayerTooltipVisitor visitor = new LayerTooltipVisitor( getChart(), ChartHandlerUtilities.screen2plotPoint( point,getChart().getPlotRect() ) );
     final IChartModel model = getChart().getChartModel();
     model.getLayerManager().accept( visitor );
   }
@@ -142,7 +143,7 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
     if( m_editInfo == null && (Math.abs( move.x - m_startX ) > m_trashold || Math.abs( move.y - m_startY ) > m_trashold) )
       m_editInfo = m_clickInfo.clone();
 
-    final Point plotPoint = getChart().screen2plotPoint( new Point( move.x - m_deltaSnapX, move.y - m_deltaSnapY ) );
+    final Point plotPoint = ChartHandlerUtilities.screen2plotPoint( new Point( move.x - m_deltaSnapX, move.y - m_deltaSnapY ),getChart().getPlotRect() );
     doMouseMoveAction( plotPoint, m_editInfo == null ? m_clickInfo : m_editInfo );
   }
 
@@ -162,7 +163,7 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
     {
       if( m_editInfo != null )
       {
-        final Point plotPoint = getChart().screen2plotPoint( new Point( up.x - m_deltaSnapX, up.y - m_deltaSnapY ) );
+        final Point plotPoint = ChartHandlerUtilities.screen2plotPoint( new Point( up.x - m_deltaSnapX, up.y - m_deltaSnapY ),getChart().getPlotRect() );
         doMouseUpAction( plotPoint, m_editInfo );
       }
       else if( m_clickInfo != null )

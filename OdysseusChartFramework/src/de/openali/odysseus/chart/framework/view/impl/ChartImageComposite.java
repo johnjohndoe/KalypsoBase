@@ -247,16 +247,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     return m_editInfo;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.view.IChartComposite#getPlot()
-   */
-  @Deprecated
-  @Override
-  public Canvas getPlot( )
-  {
-    return this;
-  }
-
+  
   @Override
   public final Rectangle getPlotRect( )
   {
@@ -380,13 +371,13 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     m_tooltipPainter.paint( gc, m_tooltipInfo.getPosition() );
   }
 
-  @Override
-  public final Point plotPoint2screen( final Point plotPoint )
-  {
-    if( m_plotRect == null )
-      return plotPoint;
-    return new Point( plotPoint.x + m_plotRect.x, plotPoint.y + m_plotRect.y );
-  }
+//  @Override
+//  public final Point plotPoint2screen( final Point plotPoint )
+//  {
+//    if( m_plotRect == null )
+//      return plotPoint;
+//    return new Point( plotPoint.x + m_plotRect.x, plotPoint.y + m_plotRect.y );
+//  }
 
   private void registerListener( )
   {
@@ -397,14 +388,14 @@ public class ChartImageComposite extends Canvas implements IChartComposite
 
   }
 
-  @Override
-  public final Point screen2plotPoint( final Point screen )
-  {
-    if( m_plotRect == null )
-      return screen;
-
-    return new Point( screen.x - m_plotRect.x, screen.y - m_plotRect.y );
-  }
+//  @Override
+//  public final Point screen2plotPoint( final Point screen )
+//  {
+//    if( m_plotRect == null )
+//      return screen;
+//
+//    return new Point( screen.x - m_plotRect.x, screen.y - m_plotRect.y );
+//  }
 
   public void setChartModel( final IChartModel model )
   {
@@ -481,13 +472,13 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   }
 
   @Override
-  public void addChartEventListener( final IChartModelEventListener listener )
+  public void addListener( final IChartModelEventListener listener )
   {
     m_chartModelEventHandler.addListener( listener );
   }
 
   @Override
-  public void removeChartEventListener( final IChartModelEventListener listener )
+  public void removeListener( final IChartModelEventListener listener )
   {
     m_chartModelEventHandler.removeListener( listener );
   }
