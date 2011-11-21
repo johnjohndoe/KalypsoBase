@@ -243,7 +243,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
       if( isDateColumn( columnIndex ) )
         return m_sharedAxis;
 
-      return (m_columns.get( columnIndex - 1 ));
+      return m_columns.get( columnIndex - 1 );
     }
   }
 
@@ -426,7 +426,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
             if( statusAxis != null )
               model.set( ix, statusAxis, KalypsoStati.STATUS_USERMOD );
 
-            changeDataSource( observation, model, ix, IDataSourceItem.SOURCE_MANUAL_CHANGED );
+            changeDataSource( observation, model, ix, IDataSourceItem.SOURCE_MANUAL_CHANGED, valueAxis );
 
             // then set value
             model.set( ix, valueAxis, changedValue );
@@ -445,9 +445,9 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
     }
   }
 
-  private void changeDataSource( final IObservation observation, final ITupleModel model, final int index, final String source ) throws SensorException
+  private void changeDataSource( final IObservation observation, final ITupleModel model, final int index, final String source, final IAxis valueAxis ) throws SensorException
   {
-    final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( model.getAxes() );
+    final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( model.getAxes(), valueAxis );
     if( dataSourceAxis == null )
       return; // we didn't want to change the model
 

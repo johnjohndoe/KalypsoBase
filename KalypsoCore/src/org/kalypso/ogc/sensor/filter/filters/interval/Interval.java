@@ -42,10 +42,14 @@ package org.kalypso.ogc.sensor.filter.filters.interval;
 
 import java.util.Calendar;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.TupleModelDataSet;
 import org.kalypso.ogc.sensor.filter.filters.interval.IntervalFilter.MODE;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 
 /**
  * @author doemming
@@ -108,46 +112,27 @@ public class Interval
 
   final Calendar m_end;
 
-  private int[] m_status;
-
-  private double[] m_value;
-
-  private String[] m_sources;
-
-  public Interval( final Calendar start, final Calendar end, final double[] value, final int[] status, final String[] sources )
-  {
-    m_start = (Calendar) start.clone();
-    m_end = (Calendar) end.clone();
-    m_status = status == null ? null : status.clone();
-    m_value = value == null ? null : value.clone();
-    m_sources = sources;
-  }
-
-  private Interval( final Calendar start, final Calendar end )
-  {
-    this( start, end, (double[]) null, (int[]) null, null );
-  }
+  private TupleModelDataSet[] m_dataSets;
 
   // FIME: why do we have a Double/Integer constructor at all? The entries are not checked for null, so we could just
   // use primitive arrays
-  public Interval( final Calendar start, final Calendar end, final Double[] values, final Integer[] status, final String[] sources )
+  public Interval( final Calendar start, final Calendar end, final TupleModelDataSet[] dataSets )
   {
     m_start = start;
     m_end = end;
 
-    m_status = new int[status.length];
-    for( int i = 0; i < status.length; i++ )
+    m_dataSets = new TupleModelDataSet[ArrayUtils.getLength( dataSets )];
+    for( int index = 0; index < ArrayUtils.getLength( dataSets ); index++ )
     {
-      m_status[i] = status[i].intValue();
-    }
+      final TupleModelDataSet dataSet = dataSets[index];
 
-    m_value = new double[values.length];
-    for( int i = 0; i < values.length; i++ )
-    {
-      m_value[i] = values[i].doubleValue();
+      m_dataSets[index] = dataSet.clone();
     }
+  }
 
-    m_sources = sources;
+  private Interval( final Calendar start, final Calendar end )
+  {
+    this( start, end, new TupleModelDataSet[] {} );
   }
 
   public Calendar getEnd( )
@@ -160,29 +145,14 @@ public class Interval
     return (Calendar) m_start.clone();
   }
 
-  public int[] getStatus( )
+  public TupleModelDataSet[] getDataSets( )
   {
-    return m_status.clone();
+    return m_dataSets;
   }
 
-  public void setStatus( final int[] status )
+  public void setValue( final TupleModelDataSet[] dataSets )
   {
-    m_status = status.clone();
-  }
-
-  public double[] getValue( )
-  {
-    return m_value.clone();
-  }
-
-  public String[] getSources( )
-  {
-    return m_sources.clone();
-  }
-
-  public void setValue( final double[] value )
-  {
-    m_value = value.clone();
+    m_dataSets = TupleModelDataSet.clone( dataSets );
   }
 
   private long getDurationInMillis( )
@@ -218,24 +188,22 @@ public class Interval
     final Interval result = calcIntersectionInterval( matrix, other );
 
     // calculate interval values;
-    final double[] values = getValue();
     final double factor = calcFactorIntersect( result, mode );
-    for( int i = 0; i < values.length; i++ )
-      values[i] = factor * values[i];
-    result.setValue( values );
 
-    final int[] status = getStatus();
-    /* Bugfix: empty intervals never get a status */
-    if( result.getDurationInMillis() == 0 )
+    final TupleModelDataSet[] dataSets = TupleModelDataSet.clone( getDataSets() );
+
+    for( final TupleModelDataSet dataSet : dataSets )
     {
-      for( int i = 0; i < status.length; i++ )
-        status[i] = KalypsoStati.BIT_OK;
+      dataSet.setValue( dataSet.getValue().doubleValue() * factor );
+
+      /* Bugfix: empty intervals never get a status */
+      if( result.getDurationInMillis() == 0 )
+      {
+        dataSet.setStatus( KalypsoStati.BIT_OK );
+      }
     }
 
-    result.setStatus( status );
-
-    final String[] sources = getSources();
-    result.setSources( sources );
+    result.setValue( dataSets );
 
     return result;
   }
@@ -267,28 +235,34 @@ public class Interval
     }
   }
 
-  private void setSources( final String[] sources )
-  {
-    m_sources = sources.clone();
-  }
-
   public void merge( final Interval sourceInterval, final Interval intersection, final MODE mode )
   {
     final double factor = calcFactorMerge( intersection, mode );
-    for( int i = 0; i < intersection.getValue().length; i++ )
+
+    final TupleModelDataSet[] interSectionDataSets = intersection.getDataSets();
+    for( final TupleModelDataSet intersectionDataSet : interSectionDataSets )
     {
-      m_value[i] += factor * intersection.getValue()[i];
+      final TupleModelDataSet myDataSet = findDataSet( intersectionDataSet.getValueAxis() );
+
+      // m_value[i] += factor * intersection.getValue()[i];
+      myDataSet.setValue( myDataSet.getValue().doubleValue() + factor * intersectionDataSet.getValue().doubleValue() );
+      myDataSet.setStatus( myDataSet.getStatus() | intersectionDataSet.getStatus() );
+
+      if( !intersection.getStart().equals( intersection.getEnd() ) )
+        myDataSet.setSource( mergeSources( sourceInterval, myDataSet.getSource(), intersectionDataSet.getSource() ) );
+    }
+  }
+
+  private TupleModelDataSet findDataSet( final IAxis valueAxis )
+  {
+    for( final TupleModelDataSet dataSet : m_dataSets )
+    {
+      if( AxisUtils.isEqual( dataSet.getValueAxis(), valueAxis ) )
+        return dataSet;
+
     }
 
-    for( int i = 0; i < intersection.getStatus().length; i++ )
-    {
-      m_status[i] |= intersection.getStatus()[i];
-    }
-
-    if( intersection.getStart().equals( intersection.getEnd() ) )
-      return;
-
-    m_sources = mergeSources( sourceInterval );
+    return null;
   }
 
   private double calcFactorIntersect( final Interval other, final MODE mode )
@@ -328,41 +302,41 @@ public class Interval
     result.append( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.Intervall.0" ) + m_start.getTime().toString() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     result.append( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.Intervall.2" ) + m_end.getTime().toString() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     result.append( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.Intervall.4" ) + getDurationInMillis() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.Intervall.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    if( m_value != null )
+
+    final TupleModelDataSet[] dataSets = getDataSets();
+    for( final TupleModelDataSet dataSet : dataSets )
     {
       result.append( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.Intervall.6" ) ); //$NON-NLS-1$
-      for( final double element : m_value )
-      {
-        result.append( "  " + element ); //$NON-NLS-1$
-      }
 
-      result.append( "\n" ); //$NON-NLS-1$
+      final Double value = dataSet.getValue().doubleValue();
+      if( value != null )
+      {
+        result.append( "  " + value ); //$NON-NLS-1$
+      }
     }
-    if( m_status != null )
+    result.append( "\n" ); //$NON-NLS-1$
+
+    for( final TupleModelDataSet dataSet : dataSets )
     {
-      result.append( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.Intervall.9" ) ); //$NON-NLS-1$
-      for( final int status : m_status )
+      result.append( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.Intervall.6" ) ); //$NON-NLS-1$
+
+      final Integer status = Integer.valueOf( dataSet.getStatus() );
+      if( status != null )
       {
         result.append( "  " + status ); //$NON-NLS-1$
       }
-
-      result.append( "\n" ); //$NON-NLS-1$
     }
+    result.append( "\n" ); //$NON-NLS-1$
+
     return result.toString();
   }
 
-  private String[] mergeSources( final Interval other )
+  private String mergeSources( final Interval other, final String sourceBase, final String otherSource )
   {
-    final String[] mergedSources = new String[m_sources.length];
-    final String[] otherSources = other.getSources();
-
     if( isSame( other ) )
-      return otherSources;
+      return otherSource;
 
-    for( int i = 0; i < otherSources.length; i++ )
-      mergedSources[i] = IntervalSourceHandler.mergeSourceReference( m_sources[i], otherSources[i] );
-
-    return mergedSources;
+    return IntervalSourceHandler.mergeSourceReference( sourceBase, otherSource );
   }
 
   private boolean isSame( final Interval other )

@@ -149,11 +149,11 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
     return ObservationUtilities.findAxesByClasses( axes, new Class[] { Number.class, Boolean.class } );
   }
 
-  protected IAxis getDataSourceAxis( )
+  protected IAxis[] getDataSourceAxes( )
   {
     final IAxis[] axes = getBaseModel().getAxes();
 
-    return AxisUtils.findDataSourceAxis( axes );
+    return AxisUtils.findDataSourceAxes( axes );
   }
 
   protected Object[] getDefaultValues( final IAxis[] valueAxes ) throws SensorException

@@ -145,7 +145,7 @@ public class ZmlDataValueReference implements IZmlValueReference
   public String getDataSource( ) throws SensorException
   {
     final MetadataList metadata = m_column.getMetadata();
-    final IAxis axis = AxisUtils.findDataSourceAxis( m_column.getAxes() );
+    final IAxis axis = AxisUtils.findDataSourceAxis( m_column.getAxes(), m_column.getValueAxis() );
 
     final Object objIndex = m_column.get( m_tupleModelIndex, axis );
     if( objIndex instanceof Number )

@@ -42,6 +42,8 @@ package org.kalypso.ogc.sensor.filter.filters.interval;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.contribs.java.util.CalendarIterator;
@@ -50,7 +52,7 @@ import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.ITupleModel;
-import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.ogc.sensor.TupleModelDataSet;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.filters.interval.IntervalCalculationStack.PROCESSING_INSTRUCTION;
 import org.kalypso.ogc.sensor.filter.filters.interval.IntervalFilter.MODE;
@@ -248,7 +250,7 @@ public class IntervalTupleModel extends AbstractTupleModel
 
     final Calendar cal = iterator.next();
     if( stack.lastTargetCalendar.before( cal ) )
-      stack.targetInterval = new Interval( stack.lastTargetCalendar, cal, m_axes.getPlainValues(), m_axes.getPlainStatis(), m_axes.getPlainSources() );
+      stack.targetInterval = new Interval( stack.lastTargetCalendar, cal, m_axes.getPlainValues() );
     else
       stack.targetInterval = null;
 
@@ -276,7 +278,7 @@ public class IntervalTupleModel extends AbstractTupleModel
       // generate defaults
       // create dummy interval
       // FIXME: strange: empty interval?!
-      stack.srcInterval = new Interval( stack.lastSrcCalendar, srcCalIntervallEnd, m_axes.getDefaultValues(), m_axes.getDefaultStatis(), m_axes.getPlainSources() );
+      stack.srcInterval = new Interval( stack.lastSrcCalendar, srcCalIntervallEnd, m_axes.getDefaultValues() );
 
       stack.lastSrcCalendar = (Calendar) srcCalIntervallEnd.clone();
       // TODO m_to, defaults
@@ -298,23 +300,15 @@ public class IntervalTupleModel extends AbstractTupleModel
     if( srcCalIntervallEnd.before( firstSrcCal ) )
     {
       // we are before the source time series
-      stack.srcInterval = new Interval( stack.lastSrcCalendar, srcCalIntervallEnd, m_axes.getDefaultValues(), m_axes.getDefaultStatis(), m_axes.getPlainSources() );
+      stack.srcInterval = new Interval( stack.lastSrcCalendar, srcCalIntervallEnd, m_axes.getDefaultValues() );
       stack.lastSrcCalendar = srcCalIntervallEnd;
     }
     /* we are inside source time series */
     else
     {
-      final Double[] srcValues = getSourceValues( stack.srcRow );
-      final String[] dataSources = getDataSources( stack.srcRow );
-      // read current values from source time series
-      final Object[] srcStatusValues = ObservationUtilities.getElements( m_srcModel, stack.srcRow, m_axes.getStatusAxes() );
-      final Integer[] srcStati = new Integer[srcStatusValues.length];
-      for( int i = 0; i < srcStatusValues.length; i++ )
-      {
-        srcStati[i] = Integer.valueOf( ((Number) srcStatusValues[i]).intValue() );
-      }
+      final TupleModelDataSet[] srcValues = getSourceValues( stack.srcRow );
 
-      stack.srcInterval = new Interval( stack.lastSrcCalendar, srcCal, srcValues, srcStati, dataSources );
+      stack.srcInterval = new Interval( stack.lastSrcCalendar, srcCal, srcValues );
       stack.lastSrcCalendar = srcCal;
       stack.srcRow++;
     }
@@ -322,33 +316,26 @@ public class IntervalTupleModel extends AbstractTupleModel
     return PROCESSING_INSTRUCTION.eNothing;
   }
 
-  private String[] getDataSources( final int index ) throws SensorException
+  private TupleModelDataSet[] getSourceValues( final int index ) throws SensorException
   {
-    final Object[] srcDataSourceObjects = ObservationUtilities.getElements( m_srcModel, index, m_axes.getDataSourcesAxes() );
-    final String[] srcDataSources = new String[srcDataSourceObjects.length];
+    final DataSourceHandler handler = new DataSourceHandler( m_metadata );
 
-    for( int i = 0; i < srcDataSourceObjects.length; i++ )
+    final Set<TupleModelDataSet> sourceValues = new LinkedHashSet<TupleModelDataSet>();
+
+    for( final IAxis valueAxis : m_axes.getValueAxes() )
     {
-      final Number srcIndex = (Number) srcDataSourceObjects[i];
-      final String dataSourceIdentifier = m_handler.getDataSourceIdentifier( srcIndex.intValue() );
+      final IAxis statusAxis = m_axes.getStatusAxis( valueAxis );
+      final IAxis dataSourcesAxes = m_axes.getDataSourcesAxes( valueAxis );
 
-      srcDataSources[i] = dataSourceIdentifier;
+      final Number value = (Number) m_srcModel.get( index, valueAxis );
+      final Number status = (Number) m_srcModel.get( index, statusAxis );
+      final Number dataSourceIndex = (Number) m_srcModel.get( index, dataSourcesAxes );
+      final String dataSource = handler.getDataSourceIdentifier( dataSourceIndex.intValue() );
+
+      sourceValues.add( new TupleModelDataSet( valueAxis, value.doubleValue(), status.intValue(), dataSource ) );
     }
 
-    return srcDataSources;
-  }
-
-  private Double[] getSourceValues( final int index ) throws SensorException
-  {
-    final Object[] srcValuesObjects = ObservationUtilities.getElements( m_srcModel, index, m_axes.getValueAxes() );
-
-    final Double[] srcValues = new Double[srcValuesObjects.length];
-    for( int i = 0; i < srcValuesObjects.length; i++ )
-    {
-      srcValues[i] = (Double) srcValuesObjects[i];
-    }
-
-    return srcValues;
+    return sourceValues.toArray( new TupleModelDataSet[] {} );
   }
 
   private Calendar getFirstSrcCalendar( ) throws SensorException
@@ -370,29 +357,26 @@ public class IntervalTupleModel extends AbstractTupleModel
   private void updateModelfromIntervall( final ITupleModel model, final int targetRow, final Interval targetInterval ) throws SensorException
   {
     final Calendar cal = targetInterval.getEnd();
-    final int[] status = targetInterval.getStatus();
-    final double[] value = targetInterval.getValue();
-    final String[] sources = targetInterval.getSources();
+    final TupleModelDataSet[] targetDataSets = targetInterval.getDataSets();
 
     final Date time = cal.getTime();
     model.set( targetRow, m_axes.getDateAxis(), time );
 
-    final IAxis[] statusAxes = m_axes.getStatusAxes();
-    final IAxis[] valueAxes = m_axes.getValueAxes();
-    final IAxis[] dataSourceAxes = m_axes.getDataSourcesAxes();
-
-    for( int i = 0; i < statusAxes.length; i++ )
-      model.set( targetRow, statusAxes[i], Integer.valueOf( status[i] ) );
-
-    for( int i = 0; i < valueAxes.length; i++ )
-      model.set( targetRow, valueAxes[i], new Double( value[i] ) );
-
     final DataSourceHandler handler = new DataSourceHandler( m_metadata );
-    for( int i = 0; i < dataSourceAxes.length; i++ )
+
+    for( final TupleModelDataSet dataSet : targetDataSets )
     {
-      final int dataSource = handler.addDataSource( sources[i], sources[i] );
-      model.set( targetRow, dataSourceAxes[i], Integer.valueOf( dataSource ) );
+      final IAxis statusAxis = m_axes.getStatusAxis( dataSet.getValueAxis() );
+      final IAxis dataSourceAxis = m_axes.getDataSourcesAxes( dataSet.getValueAxis() );
+
+      model.set( targetRow, dataSet.getValueAxis(), dataSet.getValue() );
+      model.set( targetRow, statusAxis, dataSet.getStatus() );
+
+      final String dataSource = dataSet.getSource();
+      final int dataSourceIndex = handler.addDataSource( dataSource, dataSource );
+      model.set( targetRow, dataSourceAxis, dataSourceIndex );
     }
+
   }
 
   private static Calendar createCalendar( final Date date )
