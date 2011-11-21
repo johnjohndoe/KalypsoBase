@@ -56,6 +56,7 @@ import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.TupleModelDataSet;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
@@ -199,12 +200,14 @@ public class IntervalValuesOperation
      * source interval
      */
     final double factor = sourcePartDuration / sourceDuration;
-    final double[] values = sourceData.getValues();
-    final double[] partValues = new double[values.length];
-    for( int i = 0; i < partValues.length; i++ )
-      partValues[i] = values[i] * factor;
+    final TupleModelDataSet[] clonedValues = TupleModelDataSet.clone( sourceData.getDataSets() );
 
-    return new IntervalData( sourcePart, partValues, sourceData.getStati(), sourceData.getSource() );
+    for( final TupleModelDataSet clone : clonedValues )
+    {
+      clone.setValue( clone.getValue().doubleValue() * factor );
+    }
+
+    return new IntervalData( sourcePart, clonedValues );
   }
 
   private IntervalData merge( final IntervalData targetData, final IKeyValue<IntervalData, IntervalData>[] matchingSourceIntervals )

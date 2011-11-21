@@ -52,6 +52,7 @@ import org.kalypso.ogc.sensor.metadata.IMetadataConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
 import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
@@ -139,7 +140,8 @@ public final class RequestFactory
         axes.add( KalypsoStatusUtils.createStatusAxisFor( axis, true ) );
     }
 
-    axes.add( DataSourceHelper.createSourceAxis() );
+    final IAxis valueAxis = AxisUtils.findValueAxis( axes.toArray( new IAxis[] {} ) );
+    axes.add( DataSourceHelper.createSourceAxis( valueAxis ) );
 
     // create observation instance
     final SimpleObservation obs = new SimpleObservation( "", request.getName(), new MetadataList(), axes.toArray( new IAxis[axes.size()] ) ); //$NON-NLS-1$ //$NON-NLS-2$

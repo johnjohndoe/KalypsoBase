@@ -131,7 +131,7 @@ public class AntLauncher
       return null;
     for( int j = 0; j < arguments.length; j++ )
     {
-      if( arguments[j].equals( "-l" ) || arguments[j].equals( "-logfile" ) && j != arguments.length - 1 ) //$NON-NLS-1$ //$NON-NLS-2$
+      if( "-l".equals( arguments[j] ) || "-logfile".equals( arguments[j] ) && j != arguments.length - 1 ) //$NON-NLS-1$ //$NON-NLS-2$
       {
         final String logfile = arguments[j + 1];
         final File logFileFile = new File( logfile );

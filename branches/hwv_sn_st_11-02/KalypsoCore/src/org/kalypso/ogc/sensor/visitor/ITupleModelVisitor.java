@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.visitor;
 
+import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.ogc.sensor.SensorException;
 
 /**
@@ -47,5 +48,5 @@ import org.kalypso.ogc.sensor.SensorException;
  */
 public interface ITupleModelVisitor
 {
-  void visit( ITupleModelValueContainer container ) throws SensorException;
+  void visit( ITupleModelValueContainer container ) throws SensorException, CancelVisitorException;
 }

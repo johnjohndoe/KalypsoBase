@@ -70,9 +70,6 @@ import org.kalypso.zml.ui.table.model.IZmlTableColumn;
  */
 public class ZmlCommandDeleteStuetzstellen extends AbstractHandler
 {
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event )
   {
@@ -87,8 +84,6 @@ public class ZmlCommandDeleteStuetzstellen extends AbstractHandler
       final IZmlModelColumn modelColumn = column.getModelColumn();
       final ITupleModel model = modelColumn.getTupleModel();
 
-      final IAxis statusAxis = AxisUtils.findStatusAxis( model.getAxes() );
-      final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( model.getAxes() );
       final String src = String.format( "%s%s", IDataSourceItem.FILTER_SOURCE, InterpolationFilter.FILTER_ID ); //$NON-NLS-1$
       final DataSourceHandler dataSourceHandler = new DataSourceHandler( modelColumn.getMetadata() );
 
@@ -100,6 +95,10 @@ public class ZmlCommandDeleteStuetzstellen extends AbstractHandler
           final IZmlValueReference reference = cell.getValueReference();
           if( ZmlValues.isStuetzstelle( reference ) )
           {
+            final IAxis valueAxis = reference.getColumn().getValueAxis();
+            final IAxis statusAxis = AxisUtils.findStatusAxis( model.getAxes(), valueAxis );
+            final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( model.getAxes(), valueAxis );
+
             model.set( reference.getModelIndex(), statusAxis, KalypsoStati.BIT_OK );
             model.set( reference.getModelIndex(), dataSourceAxis, dataSourceHandler.addDataSource( src, src ) );
           }

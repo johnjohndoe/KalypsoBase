@@ -106,7 +106,7 @@ public class ViewWQRelationObjectContribution implements IObjectActionDelegate
         final IObservation obs = ZmlFactory.parseXML( url ); //$NON-NLS-1$
         obsName = obs.getName();
         wqTabelle = obs.getMetadataList().getProperty( ITimeseriesConstants.MD_WQ_TABLE );
-        wqWechmann = obs.getMetadataList().getProperty( ITimeseriesConstants.MD_WQWECHMANN );
+        wqWechmann = obs.getMetadataList().getProperty( ITimeseriesConstants.MD_WQ_WECHMANN );
         action.setEnabled( wqTabelle != null && !wqTabelle.isEmpty() );
       }
       catch( final Exception ignored )

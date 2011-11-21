@@ -40,14 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.datasource;
 
-import org.apache.commons.lang.ArrayUtils;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.impl.DefaultAxis;
-import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
@@ -97,24 +99,25 @@ public class DataSourceProxyObservation implements IObservation
     return m_metadata;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#getAxisList()
-   */
   @Override
   public IAxis[] getAxes( )
   {
-    final IAxis[] axes = m_observation.getAxes();
-    if( AxisUtils.findDataSourceAxis( axes ) == null )
+    final IAxis[] base = m_observation.getAxes();
+
+    final Set<IAxis> axes = new LinkedHashSet<IAxis>();
+    Collections.addAll( axes, base );
+
+    final IAxis[] valueAxes = AxisUtils.findValueAxes( base );
+    for( final IAxis valueAxis : valueAxes )
     {
-      return (IAxis[]) ArrayUtils.add( axes, new DefaultAxis( ITimeseriesConstants.TYPE_DATA_SRC, ITimeseriesConstants.TYPE_DATA_SRC, "", Integer.class, false ) );
+      final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( base, valueAxis );
+      if( Objects.isNull( dataSourceAxis ) )
+        axes.add( DataSourceHelper.createSourceAxis( valueAxis ) );
     }
 
-    return axes;
+    return axes.toArray( new IAxis[] {} );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
-   */
   @Override
   public ITupleModel getValues( final IRequest args ) throws SensorException
   {
@@ -131,64 +134,42 @@ public class DataSourceProxyObservation implements IObservation
     return model;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#setValues(org.kalypso.ogc.sensor.ITupleModel)
-   */
   @Override
   public void setValues( final ITupleModel values ) throws SensorException
   {
     m_observation.setValues( values );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservationEventProvider#addListener(org.kalypso.ogc.sensor.IObservationListener)
-   */
   @Override
   public void addListener( final IObservationListener listener )
   {
     m_observation.addListener( listener );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservationEventProvider#removeListener(org.kalypso.ogc.sensor.IObservationListener)
-   */
   @Override
   public void removeListener( final IObservationListener listener )
   {
     m_observation.removeListener( listener );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservationEventProvider#fireChangedEvent(java.lang.Object)
-   */
   @Override
   public void fireChangedEvent( final Object source )
   {
     m_observation.fireChangedEvent( source );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#getName()
-   */
   @Override
   public String getName( )
   {
     return m_observation.getName();
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#getHref()
-   */
   @Override
   public String getHref( )
   {
     return m_observation.getHref();
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#accept(org.kalypso.ogc.sensor.visitor.IObservationVisitor,
-   *      org.kalypso.ogc.sensor.request.IRequest)
-   */
   @Override
   public void accept( final IObservationVisitor visitor, final IRequest request ) throws SensorException
   {

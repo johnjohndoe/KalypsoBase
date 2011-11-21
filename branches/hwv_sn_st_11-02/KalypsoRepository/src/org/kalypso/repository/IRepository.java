@@ -54,7 +54,7 @@ import org.eclipse.core.runtime.IStatus;
 public interface IRepository extends IRepositoryItem
 {
   /**
-   * @return the classname of the factory that was used to create this repository
+   * @return the class name of the factory that was used to create this repository
    */
   String getFactory( );
 
@@ -85,10 +85,10 @@ public interface IRepository extends IRepositoryItem
   IStatus getStatus( String type );
 
   /**
-   * Returns true when this repository is in readonly mode. What this really means, depends on the client
+   * Returns true when this repository is in read-only mode. What this really means, depends on the client
    * implementation. Some repositories might only be viewed or browsed, while some others might be modified.
    * 
-   * @return readonly flag
+   * @return read-only flag
    */
   boolean isReadOnly( );
 

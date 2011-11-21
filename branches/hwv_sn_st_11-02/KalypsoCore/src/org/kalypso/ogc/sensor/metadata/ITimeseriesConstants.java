@@ -116,7 +116,7 @@ public interface ITimeseriesConstants extends IMetadataConstants
 
   String MD_WQ_TABLE = "WQ-Tabelle"; //$NON-NLS-1$
 
-  String MD_WQWECHMANN = "WQ-Parameter"; //$NON-NLS-1$
+  String MD_WQ_WECHMANN = "WQ-Parameter"; //$NON-NLS-1$
 
   /** AREA [m^2] */
   String TYPE_AREA = "A"; //$NON-NLS-1$
@@ -196,6 +196,10 @@ public interface ITimeseriesConstants extends IMetadataConstants
 
   /** Wasserstand gauge in m */
   String TYPE_WATERLEVEL_GAUGE_M = "W_GAUGE_M"; //$NON-NLS-1$
+
+  String TYPE_WECHMANN_FAKTOR_E = "WECHMANN_FAKTOR_E";
+
+  String TYPE_WECHMANN_SCHALTER_V = "WECHMANN_SCHALTER_V";
 
   /** Die Wurzeltiefe in einem Nutzungszyklus [dm] */
   String TYPE_WT = "WT"; //$NON-NLS-1$

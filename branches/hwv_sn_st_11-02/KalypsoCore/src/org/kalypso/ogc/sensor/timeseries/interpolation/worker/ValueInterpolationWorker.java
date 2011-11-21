@@ -118,7 +118,7 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
         stack.d1 = stack.d2;
         System.arraycopy( stack.v2, 0, stack.v1, 0, stack.v2.length );
 
-        /* If dataRange is specified, only interpolate values upto dateRane.to */
+        /* If dataRange is specified, only interpolate values up to dateRane.to */
         if( dateRange != null && calendar.getTime().after( dateRange.getTo() ) )
           break;
       }
@@ -186,10 +186,14 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
     return lastValidTuple;
   }
 
+  /**
+   * @param valueAxes
+   *          includes data_source axes, too
+   */
   private void appendTuple( final Object[] tuple, final Calendar calendar ) throws SensorException
   {
     final IAxis dateAxis = getDateAxis();
-    final IAxis dataSourceAxis = getDataSourceAxis();
+    final IAxis[] dataSourceAxes = getDataSourceAxes();
 
     final SimpleTupleModel interpolatedModel = getInterpolatedModel();
     final int datePosition = interpolatedModel.getPosition( dateAxis );
@@ -198,7 +202,7 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
     add[datePosition] = calendar.getTime();
 
     // FIXME: what to do, if data source is null ?!
-    if( dataSourceAxis != null )
+    for( final IAxis dataSourceAxis : dataSourceAxes )
     {
       final int dataSrcPosition = interpolatedModel.getPosition( dataSourceAxis );
       add[dataSrcPosition] = getDataSourceIndex();
@@ -299,12 +303,13 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
       return;
 
     // FIXME: what happens if dataSource is null? Shouldn't we add it?
-    final IAxis dataSourceAxis = getDataSourceAxis();
-    if( dataSourceAxis == null )
-      return;
+    final IAxis[] dataSourceAxes = getDataSourceAxes();
+    for( final IAxis dataSourceAxis : dataSourceAxes )
+    {
+      final int position = getInterpolatedModel().getPosition( dataSourceAxis );
+      tuple[position] = getDataSourceIndex();
+    }
 
-    final int position = getInterpolatedModel().getPosition( dataSourceAxis );
-    tuple[position] = getDataSourceIndex();
   }
 
   private void setStartValue( final LocalCalculationStack stack, final Calendar calendar ) throws SensorException

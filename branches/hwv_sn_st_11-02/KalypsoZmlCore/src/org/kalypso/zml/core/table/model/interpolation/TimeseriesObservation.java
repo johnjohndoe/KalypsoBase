@@ -88,8 +88,8 @@ public class TimeseriesObservation implements ITimeseriesObservation
 
     final IAxis[] axes = delegate.getAxes();
     m_dateAxis = AxisUtils.findDateAxis( axes );
-    m_statusAxis = AxisUtils.findStatusAxis( axes );
-    m_sourceAxis = AxisUtils.findDataSourceAxis( axes );
+    m_statusAxis = AxisUtils.findStatusAxis( axes, valueAxis );
+    m_sourceAxis = AxisUtils.findDataSourceAxis( axes, valueAxis );
   }
 
   @Override

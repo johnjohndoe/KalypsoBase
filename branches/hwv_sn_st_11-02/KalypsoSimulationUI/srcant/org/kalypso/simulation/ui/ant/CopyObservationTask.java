@@ -260,10 +260,6 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
     }
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.IErrorHandler#handleError(org.eclipse.swt.widgets.Shell,
-   *      org.eclipse.core.runtime.IStatus)
-   */
   @Override
   public final void handleError( final Shell shell, final IStatus status )
   {

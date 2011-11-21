@@ -132,9 +132,9 @@ public class AxisMapping
     return m_sourceMapping.get( destinationAxis );
   }
 
-  public IAxis getDataSourceAxis( )
+  public IAxis getDataSourceAxis( final IAxis valueAxis )
   {
-    return AxisUtils.findDataSourceAxis( m_destinationAxes );
+    return AxisUtils.findDataSourceAxis( m_destinationAxes, valueAxis );
   }
 
 }
