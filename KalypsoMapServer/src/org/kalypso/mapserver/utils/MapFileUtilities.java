@@ -447,9 +447,13 @@ public class MapFileUtilities
     if( bigMax != null )
       max = bigMax.doubleValue();
 
-    double buckets = Math.floor( (max - min) / 0.05 );
+    double bucketSize = 0.05;
+    double buckets = Math.floor( (max - min) / bucketSize );
     if( buckets < 2.0 )
       buckets = 2.0;
+
+    min -= bucketSize;
+    max += bucketSize;
 
     List<String> processing = layer.getProcessing();
     processing.add( String.format( Locale.PRC, "SCALE=%.2f %.2f", min, max ) );

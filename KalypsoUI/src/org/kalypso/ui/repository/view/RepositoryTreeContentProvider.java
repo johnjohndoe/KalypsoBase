@@ -105,7 +105,6 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
   public Object getParent( final Object element )
   {
     final IRepositoryItem item = testArg( element );
-
     if( item == null )
       return null;
 
