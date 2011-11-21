@@ -88,7 +88,6 @@ public class ObservationChooser extends AbstractViewer implements ISelectionProv
       {
         onTreeDoubleClick( event );
       }
-
     } );
   }
 
