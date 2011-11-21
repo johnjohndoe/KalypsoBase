@@ -101,7 +101,7 @@ import org.kalypso.zml.ui.table.selection.ZmlTableSelectionHandler;
  */
 public class ZmlTableComposite extends Composite implements IZmlColumnModelListener, IZmlTable
 {
-  private static final MutexRule MUTEX_TABLE_UPDATE = new MutexRule( "updating of time series table" ); // $NON-NLS-1$
+  private static final MutexRule MUTEX_TABLE_UPDATE = new MutexRule( "Aktualisiere Tabelle" ); // $NON-NLS-1$
 
   protected TableViewer m_tableViewer;
 
@@ -307,6 +307,12 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
       m_updateJob.setRule( MUTEX_TABLE_UPDATE );
       m_updateJob.schedule( 100 );
     }
+
+    /***
+     * if( m_tableViewer.getTable().isDisposed() ) return; m_pager.update(); for( final ExtendedZmlTableColumn column :
+     * m_columns ) { column.reset(); } m_tableViewer.refresh( true, true ); m_layout.tableChanged(); fireTableChanged();
+     * m_pager.reveal();
+     */
   }
 
   @Override

@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraﬂe 22
+ *  Denickestra√üe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,50 +38,22 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.commands.menu.adjust.pages;
+package org.kalypso.zml.core.table.model.transaction;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
+import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 
 /**
  * @author Dirk Kuch
  */
-public class ShiftDateRunnable implements ICoreRunnableWithProgress
+public interface IZmlModelUpdateCommand
 {
-  private final Integer m_offset;
+  IZmlValueReference getTarget( );
 
-  private final IZmlModelColumn m_column;
+  Number getValue( ) throws SensorException;
 
-  private final IZmlTableCell[] m_cells;
+  String getDataSource( ) throws SensorException;
 
-  public ShiftDateRunnable( final IZmlModelColumn column, final IZmlTableCell[] cells, final Integer offset )
-  {
-    m_column = column;
-    m_cells = cells;
-    m_offset = offset;
-  }
+  Integer getStatus( ) throws SensorException;
 
-  @Override
-  public IStatus execute( final IProgressMonitor monitor )
-  {
-    try
-    {
-      final ShiftDateValuesVisitor visitor = new ShiftDateValuesVisitor( m_cells, m_offset );
-      m_column.accept( visitor );
-
-      visitor.doFinish();
-    }
-    catch( final SensorException e )
-    {
-      return StatusUtilities.createExceptionalErrorStatus( "Anpassen fehlgeschlagen", e );
-    }
-
-    return Status.OK_STATUS;
-  }
 }

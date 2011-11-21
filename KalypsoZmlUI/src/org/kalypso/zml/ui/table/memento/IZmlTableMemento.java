@@ -38,50 +38,21 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.commands.menu.adjust.pages;
+package org.kalypso.zml.ui.table.memento;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.core.util.pool.IPoolableObjectType;
 
 /**
  * @author Dirk Kuch
  */
-public class ShiftDateRunnable implements ICoreRunnableWithProgress
+public interface IZmlTableMemento
 {
-  private final Integer m_offset;
+  void register( IPoolableObjectType poolKey, ILabeledObsProvider observationProvider );
 
-  private final IZmlModelColumn m_column;
+  void dispose( );
 
-  private final IZmlTableCell[] m_cells;
+  void store( ) throws CoreException;
 
-  public ShiftDateRunnable( final IZmlModelColumn column, final IZmlTableCell[] cells, final Integer offset )
-  {
-    m_column = column;
-    m_cells = cells;
-    m_offset = offset;
-  }
-
-  @Override
-  public IStatus execute( final IProgressMonitor monitor )
-  {
-    try
-    {
-      final ShiftDateValuesVisitor visitor = new ShiftDateValuesVisitor( m_cells, m_offset );
-      m_column.accept( visitor );
-
-      visitor.doFinish();
-    }
-    catch( final SensorException e )
-    {
-      return StatusUtilities.createExceptionalErrorStatus( "Anpassen fehlgeschlagen", e );
-    }
-
-    return Status.OK_STATUS;
-  }
+  ILabeledObsProvider[] findDirtyElements( );
 }

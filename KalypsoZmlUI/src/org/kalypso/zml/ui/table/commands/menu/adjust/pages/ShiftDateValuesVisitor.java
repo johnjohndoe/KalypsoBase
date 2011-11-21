@@ -51,6 +51,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 
@@ -60,6 +61,8 @@ import org.kalypso.zml.ui.table.model.IZmlTableCell;
 public class ShiftDateValuesVisitor implements IZmlModelColumnVisitor
 {
   Map<Date, Number> m_shift = new HashMap<Date, Number>();
+
+  ZmlModelTransaction m_transaction = new ZmlModelTransaction();
 
   public ShiftDateValuesVisitor( final IZmlTableCell[] selected, final Integer offset )
   {
@@ -84,15 +87,17 @@ public class ShiftDateValuesVisitor implements IZmlModelColumnVisitor
 
   }
 
-  /**
-   * @see org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor#visit(org.kalypso.zml.core.table.model.references.IZmlValueReference)
-   */
   @Override
   public void visit( final IZmlValueReference reference ) throws SensorException
   {
     final Number value = m_shift.get( reference.getIndexValue() );
     if( Objects.isNotNull( value ) )
-      reference.update( value, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
+      m_transaction.add( reference, value, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
 
+  }
+
+  public void doFinish( )
+  {
+    m_transaction.execute();
   }
 }

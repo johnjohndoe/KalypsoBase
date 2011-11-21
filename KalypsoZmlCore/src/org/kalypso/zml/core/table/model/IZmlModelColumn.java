@@ -48,6 +48,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.core.table.binding.DataColumn;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler;
+import org.kalypso.zml.core.table.model.transaction.IZmlModelUpdateCommand;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 
 /**
@@ -91,7 +92,11 @@ public interface IZmlModelColumn
 
   int size( ) throws SensorException;
 
-  void update( int index, Object value, final String source, final Integer status ) throws SensorException;
+  void doUpdate( int index, Object value, final String source, final Integer status ) throws SensorException;
+
+  void doExecute( IZmlModelUpdateCommand command ) throws SensorException;
+
+  void fireColumnChangedEvent( );
 
   void setIsIgnoreType( boolean ignore );
 
