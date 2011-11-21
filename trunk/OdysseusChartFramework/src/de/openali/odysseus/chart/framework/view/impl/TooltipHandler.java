@@ -7,6 +7,8 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Composite;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
@@ -28,18 +30,26 @@ public class TooltipHandler extends MouseAdapter implements MouseListener, Mouse
   public TooltipHandler( final IChartComposite chart )
   {
     m_chart = chart;
-    m_chart.getPlot().addMouseListener( this );
-    m_chart.getPlot().addMouseMoveListener( this );
+    ((Composite) m_chart).addMouseListener( this );
+    ((Composite) m_chart).addMouseMoveListener( this );
 
   }
 
   public void dispose( )
   {
-    if( !m_chart.getPlot().isDisposed() )
+    if( !((Composite) m_chart).isDisposed() )
     {
-      m_chart.getPlot().removeMouseListener( this );
-      m_chart.getPlot().removeMouseMoveListener( this );
+      ((Composite) m_chart).removeMouseListener( this );
+      ((Composite) m_chart).removeMouseMoveListener( this );
     }
+  }
+
+  private final Point screen2plotPoint( final Point screen, final Rectangle plotRect )
+  {
+    if( plotRect == null )
+      return screen;
+
+    return new Point( screen.x - plotRect.x, screen.y - plotRect.y );
   }
 
   /**
@@ -53,7 +63,7 @@ public class TooltipHandler extends MouseAdapter implements MouseListener, Mouse
       final IChartModel model = m_chart.getChartModel();
       if( model == null )
         return;
-      final Point point = m_chart.screen2plotPoint( new Point( e.x, e.y ) );
+      final Point point = screen2plotPoint( new Point( e.x, e.y ), m_chart.getPlotRect() );
 
       final ILayerManager manager = model.getLayerManager();
       final TooltipChartLayerVisitor visitor = new TooltipChartLayerVisitor();

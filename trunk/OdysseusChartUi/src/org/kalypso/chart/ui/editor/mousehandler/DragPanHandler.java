@@ -103,7 +103,6 @@ public class DragPanHandler extends AbstractChartDragHandler
         m_keyUp.x += 10;
       mouseMove( m_keyUp );
       getChart().invalidate();
-      getChart().getPlot().update();
     }
   }
 

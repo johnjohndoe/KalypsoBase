@@ -48,6 +48,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.commons.java.lang.Objects;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
@@ -107,7 +108,7 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
     final Point currentPos = EventUtils.getPoint( e );
     m_startPos = currentPos;
 
-    m_startPlot = getChart().screen2plotPoint( currentPos );
+    m_startPlot = ChartHandlerUtilities.screen2plotPoint( currentPos,getChart().getPlotRect() );
   }
 
   private int cursorFromButton( final MouseEvent e )
@@ -130,7 +131,7 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
     super.mouseMove( e );
 
     final Point currentPos = EventUtils.getPoint( e );
-    final Point currentPlot = getChart().screen2plotPoint( currentPos );
+    final Point currentPlot = ChartHandlerUtilities.screen2plotPoint( currentPos,getChart().getPlotRect() );
     getChart().setTooltipInfo( null );
     if( m_startPlot == null )
     {
@@ -221,7 +222,7 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
   private void doMouseUpAction( final MouseEvent e )
   {
     final Point currentPos = EventUtils.getPoint( e );
-    final Point currentPlot = getChart().screen2plotPoint( currentPos );
+    final Point currentPlot = ChartHandlerUtilities.screen2plotPoint( currentPos,getChart().getPlotRect() );
 
     final boolean isMoved = isMoved( currentPos );
     if( !isMoved )

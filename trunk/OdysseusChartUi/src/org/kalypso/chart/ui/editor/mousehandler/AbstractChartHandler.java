@@ -65,11 +65,13 @@ public abstract class AbstractChartHandler implements IChartDragHandler
   @Override
   public void mouseMove( final MouseEvent e )
   {
-
-    final Canvas plot = getChart().getPlot();
-    final Cursor swtCursor = m_cursor == -1 ? null : plot.getDisplay().getSystemCursor( m_cursor );
-    if( plot.getCursor() != plot.getDisplay().getSystemCursor( m_cursor ) )
-      plot.setCursor( swtCursor );
+    if( getChart() instanceof Canvas )
+    {
+      final Canvas plot = (Canvas) getChart();
+      final Cursor swtCursor = m_cursor == -1 ? null : plot.getDisplay().getSystemCursor( m_cursor );
+      if( plot.getCursor() != plot.getDisplay().getSystemCursor( m_cursor ) )
+        plot.setCursor( swtCursor );
+    }
   }
 
   /**

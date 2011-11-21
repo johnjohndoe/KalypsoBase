@@ -119,7 +119,7 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
     {
       final IChartComposite chart = m_chartPart.getChartComposite();
       if( chart != null )
-        chart.removeChartEventListener( m_chartListener );
+        chart.removeListener( m_chartListener );
     }
 
     super.dispose();
@@ -196,7 +196,7 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
     {
       final IChartComposite chartComposite = m_chartPart.getChartComposite();
       if( chartComposite != null )
-        chartComposite.removeChartEventListener( m_chartListener );
+        chartComposite.removeListener( m_chartListener );
     }
 
     m_chartPart = adapter;
@@ -209,7 +209,7 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
       else
       {
         m_chartModel = chart.getChartModel();
-        chart.addChartEventListener( m_chartListener );
+        chart.addListener( m_chartListener );
       }
     }
 
