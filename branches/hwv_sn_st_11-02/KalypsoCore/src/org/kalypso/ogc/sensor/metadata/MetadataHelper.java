@@ -346,4 +346,24 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
 
     return;
   }
+
+  /**
+   * Read the time zone from the metadata of an {@link org.kalypso.observation.IObservation}.
+   * 
+   * @return The timezone of <code>defaultTimezone</code>, if no timezone is defined.
+   */
+  public static TimeZone getTimeZone( final MetadataList metadata, final String defaultTimezoneName )
+  {
+    final String timezoneName = metadata.getProperty( ITimeseriesConstants.MD_TIMEZONE );
+
+    if( StringUtils.isBlank( timezoneName ) )
+    {
+      if( StringUtils.isBlank( defaultTimezoneName ) )
+        return null;
+
+      return TimeZone.getTimeZone( defaultTimezoneName );
+    }
+
+    return TimeZone.getTimeZone( timezoneName );
+  }
 }
