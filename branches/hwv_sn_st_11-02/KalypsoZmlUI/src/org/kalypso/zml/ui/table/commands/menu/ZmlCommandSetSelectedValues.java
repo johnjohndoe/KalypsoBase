@@ -48,13 +48,13 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.interpolation.ZmlInterpolationWorker;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
@@ -101,14 +101,18 @@ public class ZmlCommandSetSelectedValues extends AbstractHandler
         final DateRange daterange = ZmlCommandUtils.findDateRange( cells );
         final IZmlModelColumn modelColumn = column.getModelColumn();
 
+        final ZmlModelTransaction transaction = new ZmlModelTransaction();
+
         modelColumn.accept( new IZmlModelColumnVisitor()
         {
           @Override
-          public void visit( final IZmlValueReference ref ) throws SensorException
+          public void visit( final IZmlValueReference ref )
           {
-            ref.update( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
+            transaction.add( ref, targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
           }
         }, daterange );
+
+        transaction.execute();
       }
 
       try

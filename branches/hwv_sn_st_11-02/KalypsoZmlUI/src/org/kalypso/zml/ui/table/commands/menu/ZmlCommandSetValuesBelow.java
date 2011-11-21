@@ -56,6 +56,7 @@ import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.interpolation.ZmlInterpolationWorker;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
@@ -100,6 +101,8 @@ public class ZmlCommandSetValuesBelow extends AbstractHandler
         final Number targetValue = reference.getValue();
         final Date base = reference.getIndexValue();
 
+        final ZmlModelTransaction transaction = new ZmlModelTransaction();
+
         final IZmlModelColumn modelColumn = column.getModelColumn();
         modelColumn.accept( new IZmlModelColumnVisitor()
         {
@@ -110,9 +113,11 @@ public class ZmlCommandSetValuesBelow extends AbstractHandler
             if( current.before( base ) || current.equals( base ) )
               return;
 
-            ref.update( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
+            transaction.add( ref, targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
           }
         } );
+
+        transaction.execute();
       }
 
       try

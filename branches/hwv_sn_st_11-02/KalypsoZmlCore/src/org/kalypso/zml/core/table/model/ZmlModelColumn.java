@@ -61,6 +61,7 @@ import org.kalypso.zml.core.table.binding.DataColumn;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataListener;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.transaction.IZmlModelUpdateCommand;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 
 /**
@@ -170,17 +171,31 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
     return getTupleModel().size();
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {
     return getIdentifier();
   }
 
+    @Override
+  public void doUpdate( final int index, final Object value, final String source, final Integer status ) throws SensorException
+  {
+    update( index, value, source, status );
+
+    fireColumnChangedEvent();
+  }
+
+  /**
+   * @see org.kalypso.zml.core.table.model.IZmlModelColumn#doUpdate(org.kalypso.zml.core.table.model.transaction.IZmlModelUpdateCommand)
+   */
   @Override
-  public void update( final int modelIndex, final Object value, final String source, final Integer status ) throws SensorException
+  public void doExecute( final IZmlModelUpdateCommand command ) throws SensorException
+  {
+    final IZmlValueReference target = command.getTarget();
+    update( target.getModelIndex(), command.getValue(), command.getDataSource(), command.getStatus() );
+  }
+
+  private void update( final int index, final Object value, final String source, final Integer status ) throws SensorException
   {
     final ITupleModel model = getTupleModel();
     final IAxis[] axes = model.getAxes();
@@ -188,15 +203,33 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
     for( final IAxis axis : axes )
     {
       if( AxisUtils.isDataSrcAxis( axis ) )
-        updateDataSourceColumn( model, axis, modelIndex, source );
+      {
+        // FIXME - user modified triggered interpolated state?!?
+        final DataSourceHandler handler = new DataSourceHandler( getMetadata() );
+        final int sourceIndex;
+        if( Objects.isNull( source ) )
+          sourceIndex = handler.addDataSource( IDataSourceItem.SOURCE_UNKNOWN, IDataSourceItem.SOURCE_UNKNOWN );
+        else
+          sourceIndex = handler.addDataSource( source, source );
+
+        model.set( index, axis, sourceIndex );
+      }
       else if( AxisUtils.isStatusAxis( axis ) )
-        updateStatusColumn( model, axis, modelIndex, status );
+      {
+        if( Objects.isNull( status ) )
+          model.set( index, axis, KalypsoStati.BIT_OK );
+
+        model.set( index, axis, status );
+      }
       else if( isTargetAxis( axis ) )
-        updateTargetColumn( model, axis, modelIndex, value );
+      {
+        if( Objects.isNull( value ) )
+          model.set( index, axis, Double.NaN );
+
+        model.set( index, axis, value );
+      }
     }
 
-    final IObservation observation = m_handler.getObservation();
-    observation.fireChangedEvent( source );
   }
 
   private void updateTargetColumn( final ITupleModel model, final IAxis axis, final int modelIndex, final Object value ) throws SensorException
@@ -417,5 +450,26 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
 
     fireColumnChanged();
   }
+  
+  /**
+   * @see org.kalypso.zml.core.table.model.IZmlModelColumn#fireColumnChangedEvent()
+   */
+  @Override
+  public void fireColumnChangedEvent( )
+  {
+    try
+    {
+      // FIXME improve update value handling
+      final IObservation observation = m_handler.getObservation();
+      observation.setValues( getTupleModel() );
+      observation.fireChangedEvent( this );// TODO Auto-generated method stub
+
+    }
+    catch( final Exception ex )
+    {
+      ex.printStackTrace();
+    }
+  }
+  
 
 }
