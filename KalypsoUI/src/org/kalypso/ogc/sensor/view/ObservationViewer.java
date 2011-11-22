@@ -38,6 +38,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
@@ -59,7 +60,7 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceListSelectionDialog;
-import org.kalypso.contribs.eclipse.ui.views.propertysheet.SimplePropertySheetViewer;
+import org.kalypso.contribs.eclipse.ui.views.propertysheet.utils.PropertySheetUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
@@ -103,7 +104,7 @@ public class ObservationViewer extends Composite
 
   Button showRadioButton;
 
-  private SimplePropertySheetViewer m_mdViewer;
+  private TableViewer m_mdViewer;
 
   private final DiagView m_diagView = new DiagView();
 
@@ -404,7 +405,7 @@ public class ObservationViewer extends Composite
     final SashForm form = new SashForm( parent, SWT.VERTICAL );
 
     // METADATA
-    m_mdViewer = new SimplePropertySheetViewer( form );
+    m_mdViewer = PropertySheetUtilities.createDetailsViewer( form );
 
     // TABLE
     m_table = new ObservationTable( m_tableView, false, false );
