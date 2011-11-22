@@ -187,7 +187,6 @@ public class MapFileUtilities
    */
   public static void saveInASCII( Map map, OutputStream outputStream, String encoding ) throws ParserConfigurationException, JAXBException, SAXException, IOException, TransformerException
   {
-
     /* the input stream. */
     InputStream inputStream = null;
 
