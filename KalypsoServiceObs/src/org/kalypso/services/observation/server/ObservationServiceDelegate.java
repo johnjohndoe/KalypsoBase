@@ -570,7 +570,6 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
         return null;
 
       final IObservation obs = (IObservation) item.getAdapter( IObservation.class );
-
       if( obs == null )
         return null;
 
