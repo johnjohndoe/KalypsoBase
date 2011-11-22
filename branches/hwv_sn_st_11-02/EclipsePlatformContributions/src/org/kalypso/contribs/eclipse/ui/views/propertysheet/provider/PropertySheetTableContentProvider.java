@@ -38,10 +38,9 @@
  v.doemming@tuhh.de
  
  ------------------------------------------------------------------------------------ */
-package org.kalypso.contribs.eclipse.ui.views.propertysheet;
+package org.kalypso.contribs.eclipse.ui.views.propertysheet.provider;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
@@ -60,7 +59,6 @@ public class PropertySheetTableContentProvider implements IStructuredContentProv
   @Override
   public void dispose( )
   {
-    // empty
   }
 
   /**
@@ -70,7 +68,6 @@ public class PropertySheetTableContentProvider implements IStructuredContentProv
   @Override
   public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
   {
-    ((PropertySheetTableLabelProvider) ((TableViewer) viewer).getLabelProvider()).setPropertySource( (IPropertySource) newInput );
   }
 
   /**
