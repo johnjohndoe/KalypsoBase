@@ -43,7 +43,7 @@ package de.openali.odysseus.chart.framework.view;
 /**
  * @author Dirk Kuch
  */
-public interface IPlotDragHandler
+public interface IPlotDragHandlerDelegate
 {
   void setActiveHandler( IChartDragHandler handler );
 
