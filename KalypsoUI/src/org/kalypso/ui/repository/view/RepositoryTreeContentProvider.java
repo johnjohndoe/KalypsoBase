@@ -62,7 +62,7 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
 {
   private IRepositoryContainerListener m_containerListener;
 
-  private IRepositoryListener m_repositoryListener;
+  protected IRepositoryListener m_repositoryListener;
 
   /**
    * Helper
@@ -83,10 +83,10 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
   @Override
   public Object[] getChildren( final Object parentElement )
   {
-    final IRepositoryItem item = testArg( parentElement );
-
     try
     {
+      final IRepositoryItem item = testArg( parentElement );
+
       return item.getChildren();
     }
     catch( final RepositoryException e )
@@ -104,12 +104,12 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
   @Override
   public Object getParent( final Object element )
   {
-    final IRepositoryItem item = testArg( element );
-    if( item == null )
-      return null;
-
     try
     {
+      final IRepositoryItem item = testArg( element );
+      if( item == null )
+        return null;
+
       return item.getParent();
     }
     catch( final RepositoryException e )
@@ -127,10 +127,10 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
   @Override
   public boolean hasChildren( final Object element )
   {
-    final IRepositoryItem item = testArg( element );
-
     try
     {
+      final IRepositoryItem item = testArg( element );
+
       return item.hasChildren();
     }
     catch( final RepositoryException e )
@@ -173,14 +173,11 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
     if( oldInput instanceof IRepositoryContainer )
     {
       final IRepositoryContainer con = (IRepositoryContainer) oldInput;
-
       con.removeRepositoryContainerListener( m_containerListener );
 
       final IRepository[] repositories = con.getRepositories();
       for( final IRepository ar : repositories )
-      {
         ar.removeRepositoryListener( m_repositoryListener );
-      }
     }
 
     /* attach new IRepositoryContainerLister to new repository input! */
@@ -217,9 +214,7 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
       };
 
       con.addRepositoryContainerListener( m_containerListener );
-
       m_containerListener.onRepositoryContainerChanged();
     }
-
   }
 }

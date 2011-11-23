@@ -130,8 +130,19 @@ public final class RepositoryItems
   public static String getParentItemId( final String identifier )
   {
     final RETokenizer tokenizer = new RETokenizer( PATTERN_PARENT_ITEM_TOKINZER, identifier );
+    String token = tokenizer.nextToken();
 
-    return tokenizer.nextToken();
+    /**
+     * identifier is encoded like psicompact://HN.1_ES.02PG...501010 -> remove all ending '.'
+     */
+    while( token.endsWith( "." ) ) //$NON-NLS-1$
+      token = token.substring( 0, token.length() - 1 );
+
+    /** psicompact://HN */
+    if( StringUtils.equals( identifier, token ) )
+      return null;
+
+    return token;
   }
 
 //  private static final Pattern PATTERN_PLAIN_ID_TOKENIZER = new Pattern( ".*\\://" ); //$NON-NLS-1$
