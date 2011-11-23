@@ -42,7 +42,7 @@ package org.kalypso.chart.ui.editor.mousehandler;
 
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.IChartDragHandler;
-import de.openali.odysseus.chart.framework.view.IPlotDragHandler;
+import de.openali.odysseus.chart.framework.view.IPlotDragHandlerDelegate;
 import de.openali.odysseus.chart.framework.view.IPlotHandler;
 
 /**
@@ -50,7 +50,7 @@ import de.openali.odysseus.chart.framework.view.IPlotHandler;
  * 
  * @author burtscher1
  */
-public class PlotDragHandlerDelegate implements IPlotDragHandler
+public class PlotDragHandlerDelegate implements IPlotDragHandlerDelegate
 {
   private IChartDragHandler m_handler;
 
