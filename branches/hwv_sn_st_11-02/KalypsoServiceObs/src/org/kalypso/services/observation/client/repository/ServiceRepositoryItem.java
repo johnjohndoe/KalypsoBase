@@ -43,12 +43,17 @@ package org.kalypso.services.observation.client.repository;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.IRepositoryItemVisitor;
 import org.kalypso.repository.RepositoryException;
+import org.kalypso.repository.utils.Repositories;
+import org.kalypso.repository.utils.RepositoryItems;
 import org.kalypso.repository.utils.RepositoryVisitors;
 import org.kalypso.services.observation.sei.IObservationService;
 import org.kalypso.services.observation.sei.ItemBean;
@@ -61,18 +66,36 @@ public class ServiceRepositoryItem implements IRepositoryItem
 {
   private final ItemBean m_bean;
 
-  private final ServiceRepositoryItem m_parent;
+  private IRepositoryItem m_parent;
 
   private final IObservationService m_srv;
 
   private final IRepository m_rep;
 
-  public ServiceRepositoryItem( final IObservationService srv, final ItemBean bean, final ServiceRepositoryItem parent, final IRepository rep )
+  public ServiceRepositoryItem( final IObservationService srv, final ItemBean bean, final IRepositoryItem parent, final IRepository rep )
   {
     m_rep = rep;
     m_srv = srv;
     m_bean = bean;
     m_parent = parent;
+  }
+
+  @Override
+  public boolean equals( Object obj )
+  {
+    if( obj instanceof IRepositoryItem )
+      return RepositoryItems.equals( this, (IRepositoryItem) obj );
+
+    return super.equals( obj );
+  }
+
+  @Override
+  public int hashCode( )
+  {
+    HashCodeBuilder builder = new HashCodeBuilder();
+    builder.append( RepositoryItems.getPlainId( getIdentifier() ) );
+
+    return builder.toHashCode();
   }
 
   /**
@@ -90,7 +113,25 @@ public class ServiceRepositoryItem implements IRepositoryItem
   @Override
   public final IRepositoryItem getParent( )
   {
-    return m_parent;
+    try
+    {
+      if( Objects.isNotNull( m_parent ) )
+        return m_parent;
+
+      String identifier = getIdentifier();
+      String parentId = RepositoryItems.getParentItemId( identifier );
+      if( StringUtils.isEmpty( parentId ) )
+        m_parent = m_rep;
+      else
+        m_parent = Repositories.findEquivalentItem( m_rep, parentId );
+
+      return m_parent;
+    }
+    catch( RepositoryException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   /**
@@ -220,5 +261,4 @@ public class ServiceRepositoryItem implements IRepositoryItem
   {
     RepositoryVisitors.accept( this, visitor );
   }
-
 }
