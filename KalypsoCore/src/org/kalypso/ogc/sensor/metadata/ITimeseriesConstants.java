@@ -197,7 +197,7 @@ public interface ITimeseriesConstants extends IMetadataConstants
   /** Wasserstand gauge in m */
   String TYPE_WATERLEVEL_GAUGE_M = "W_GAUGE_M"; //$NON-NLS-1$
 
-  String TYPE_WECHMANN_FAKTOR_E = "WECHMANN_FAKTOR_E";
+  String TYPE_WECHMANN_E = "WECHMANN_E";
 
   String TYPE_WECHMANN_SCHALTER_V = "WECHMANN_SCHALTER_V";
 
