@@ -94,13 +94,13 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
   private String m_targetTo;
 
   /**
-   * Wir benutzt, um den entsprechenden Metadata-Eintrag in den Zeitreiehen zu generieren Default mit -1 damit getestet
+   * Wird benutzt, um den entsprechenden Metadata-Eintrag in den Zeitreihen zu generieren Default mit -1 damit getestet
    * werden kann ob die Eigenschaft gesetzt wurde.
    */
   private String m_forecastFrom = null;
 
   /**
-   * Wird benutzt, um den entsprechenden Metadata-Eintrag in den Zeitreiehen zu generieren Default mit -1 damit getestet
+   * Wird benutzt, um den entsprechenden Metadata-Eintrag in den Zeitreihen zu generieren Default mit -1 damit getestet
    * werden kann ob die Eigenschaft gesetzt wurde.
    */
   private String m_forecastTo = null;
