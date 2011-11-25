@@ -118,6 +118,8 @@ public class UrlResolver implements IUrlResolver
     }
     else if( relativeURL.startsWith( "REMOTE=" ) ) //$NON-NLS-1$
     {
+      // TODO Replace with "project:" case.
+      // TODO This case here does not work anymore, because of variable resolving.
       /* @hack scenario data manager - project database global gml fragment */
       if( relativeURL.contains( "${PROJECT}" ) ) //$NON-NLS-1$
       {

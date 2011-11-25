@@ -59,6 +59,7 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.core.variables.VariableUtils;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -162,11 +163,15 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     super( layerName, layerType.getLinktype(), mapModel );
 
     m_selectionManager = selectionManager;
-    final String source = layerType.getHref();
+
+    final String href = layerType.getHref();
+    final String source = VariableUtils.resolveVariablesQuietly( href );
     final String type = layerType.getLinktype();
     final String featurePath = layerType.getFeaturePath();
+
     m_layerKey = new PoolableObjectType( type, source, context );
     m_featurePath = featurePath;
+
     setType( type.toUpperCase() );
 
     if( layerType instanceof StyledLayerType )
@@ -928,9 +933,9 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
         startLoading();
     }
     else // HM: this will probably cause problems, as the theme is not really loaded
-      // But else, the stuff waiting for the map to load will wait forever...
-      if( !checkPoolListener )
-        m_loaded = true;
+    // But else, the stuff waiting for the map to load will wait forever...
+    if( !checkPoolListener )
+      m_loaded = true;
 
     super.setVisible( visible );
   }

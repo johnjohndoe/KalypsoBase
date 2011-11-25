@@ -276,4 +276,16 @@ public class UrlUtilities implements IUrlResolver
     }
   }
 
+  public static URL parseQuietUrl( String spec )
+  {
+    try
+    {
+      return new URL( spec );
+    }
+    catch( MalformedURLException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
+  }
 }
