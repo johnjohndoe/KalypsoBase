@@ -129,6 +129,7 @@ public final class RepositoryItems
 
   public static String getParentItemId( final String identifier )
   {
+    // TODO Move to repository implementation...
     final RETokenizer tokenizer = new RETokenizer( PATTERN_PARENT_ITEM_TOKINZER, identifier );
     String token = tokenizer.nextToken();
 
