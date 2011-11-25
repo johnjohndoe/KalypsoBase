@@ -377,9 +377,6 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
     }
   }
 
-  /**
-   * @see org.kalypso.services.sensor.IObservationService#getServiceVersion()
-   */
   @Override
   public final int getServiceVersion( )
   {

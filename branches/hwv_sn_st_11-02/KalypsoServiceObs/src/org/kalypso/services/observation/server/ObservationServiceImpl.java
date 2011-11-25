@@ -165,9 +165,6 @@ public class ObservationServiceImpl implements IObservationService
       delegate.clearTempData( dataId );
   }
 
-  /**
-   * @see org.kalypso.services.observation.sei.IObservationService#getServiceVersion()
-   */
   @Override
   public int getServiceVersion( ) throws RemoteException
   {
