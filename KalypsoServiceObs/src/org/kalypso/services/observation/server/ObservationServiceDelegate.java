@@ -584,9 +584,6 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
     }
   }
 
-  /**
-   * @see org.kalypso.services.sensor.IObservationService#getServiceVersion()
-   */
   @Override
   public final int getServiceVersion( )
   {
