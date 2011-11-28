@@ -81,6 +81,8 @@ public interface IRepositoryService
    */
   ItemBean findItem( final String id ) throws RepositoryException;
 
+  ItemBean getParent( final String identifier ) throws RepositoryException;
+
   void makeItem( String identifier ) throws RepositoryException;
 
   void deleteItem( String identifier ) throws RepositoryException;

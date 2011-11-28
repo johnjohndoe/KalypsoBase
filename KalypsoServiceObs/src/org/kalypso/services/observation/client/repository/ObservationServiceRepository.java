@@ -44,6 +44,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.repository.AbstractRepository;
@@ -51,6 +52,7 @@ import org.kalypso.repository.IModifyableRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.IWriteableRepository;
 import org.kalypso.repository.RepositoryException;
+import org.kalypso.repository.utils.RepositoryItems;
 import org.kalypso.services.observation.KalypsoServiceObs;
 import org.kalypso.services.observation.sei.IObservationService;
 import org.kalypso.services.observation.sei.ItemBean;
@@ -115,7 +117,7 @@ public class ObservationServiceRepository extends AbstractRepository implements 
       return id;
   }
 
-  private IObservationService getService( )
+  IObservationService getService( )
   {
     final IObservationService srv = KalypsoServiceObs.getDefault().getObservationService( getName() );
     if( srv != null )
@@ -159,7 +161,7 @@ public class ObservationServiceRepository extends AbstractRepository implements 
 
       final ItemBean[] beans = service.getChildren( ROOT_ITEM );
       for( final ItemBean bean : beans )
-        items.add( beanToItem( service, bean ) );
+        items.add( beanToItem( bean ) );
 
       /** @hack single repository? skip one hierarchy level and return children of repository item */
       if( items.size() == 1 )
@@ -173,12 +175,12 @@ public class ObservationServiceRepository extends AbstractRepository implements 
     }
   }
 
-  private IRepositoryItem beanToItem( final IObservationService service, final ItemBean bean )
+  private IRepositoryItem beanToItem( final ItemBean bean )
   {
     if( bean.getModifyable() )
-      return new ModifyableServiceRepositoryItem( service, bean, null, this );
+      return new ModifyableServiceRepositoryItem( bean, null, this );
 
-    return new ServiceRepositoryItem( service, bean, null, this );
+    return new ServiceRepositoryItem( bean, null, this );
   }
 
   /**
@@ -197,9 +199,6 @@ public class ObservationServiceRepository extends AbstractRepository implements 
     }
   }
 
-  /**
-   * @see org.kalypso.repository.IRepository#findItem(java.lang.String)
-   */
   @Override
   public final IRepositoryItem findItem( final String identifier ) throws RepositoryException
   {
@@ -208,12 +207,9 @@ public class ObservationServiceRepository extends AbstractRepository implements 
     if( bean == null )
       return null;
 
-    return beanToItem( service, bean );
+    return beanToItem( bean );
   }
 
-  /**
-   * @see org.kalypso.repository.IModifyableRepository#createItem(java.lang.String)
-   */
   @Override
   public final void makeItem( final String identifier ) throws RepositoryException
   {
@@ -256,4 +252,17 @@ public class ObservationServiceRepository extends AbstractRepository implements 
     getService().setItemData( getServiceId( identifier ), data );
   }
 
+  IRepositoryItem getParent( final String identifier ) throws RepositoryException
+  {
+    ItemBean parentBean = getService().getParent( identifier );
+    if( parentBean == null )
+      return null;
+
+    /** item bean == IRepository? */
+    String parentIdentifier = parentBean.getId();
+    if( StringUtils.isEmpty( RepositoryItems.getPlainId( parentIdentifier ) ) )
+      return this;
+
+    return beanToItem( parentBean );
+  }
 }

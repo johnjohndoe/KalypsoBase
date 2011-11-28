@@ -43,7 +43,6 @@ package org.kalypso.services.observation.client.repository;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IObservation;
@@ -52,7 +51,6 @@ import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.IRepositoryItemVisitor;
 import org.kalypso.repository.RepositoryException;
-import org.kalypso.repository.utils.Repositories;
 import org.kalypso.repository.utils.RepositoryItems;
 import org.kalypso.repository.utils.RepositoryVisitors;
 import org.kalypso.services.observation.sei.IObservationService;
@@ -68,14 +66,11 @@ public class ServiceRepositoryItem implements IRepositoryItem
 
   private IRepositoryItem m_parent;
 
-  private final IObservationService m_srv;
+  private final ObservationServiceRepository m_rep;
 
-  private final IRepository m_rep;
-
-  public ServiceRepositoryItem( final IObservationService srv, final ItemBean bean, final IRepositoryItem parent, final IRepository rep )
+  public ServiceRepositoryItem( final ItemBean bean, final IRepositoryItem parent, final ObservationServiceRepository rep )
   {
     m_rep = rep;
-    m_srv = srv;
     m_bean = bean;
     m_parent = parent;
   }
@@ -98,18 +93,12 @@ public class ServiceRepositoryItem implements IRepositoryItem
     return builder.toHashCode();
   }
 
-  /**
-   * @see org.kalypso.repository.IRepositoryItem#getName()
-   */
   @Override
   public final String getName( )
   {
     return m_bean.getName();
   }
 
-  /**
-   * @see org.kalypso.repository.IRepositoryItem#getParent()
-   */
   @Override
   public final IRepositoryItem getParent( )
   {
@@ -118,14 +107,12 @@ public class ServiceRepositoryItem implements IRepositoryItem
       if( Objects.isNotNull( m_parent ) )
         return m_parent;
 
-      String identifier = getIdentifier();
-      String parentId = RepositoryItems.getParentItemId( identifier );
-      if( StringUtils.isEmpty( parentId ) )
-        m_parent = m_rep;
-      else
-        m_parent = Repositories.findEquivalentItem( m_rep, parentId );
+      final String identifier = getIdentifier();
+      final IRepositoryItem parent = m_rep.getParent( identifier );
 
-      return m_parent;
+      m_parent = parent;
+
+      return parent;
     }
     catch( RepositoryException e )
     {
@@ -134,15 +121,12 @@ public class ServiceRepositoryItem implements IRepositoryItem
     }
   }
 
-  /**
-   * @see org.kalypso.repository.IRepositoryItem#hasChildren()
-   */
   @Override
   public final boolean hasChildren( ) throws RepositoryException
   {
     try
     {
-      return m_srv.hasChildren( m_bean );
+      return m_rep.getService().hasChildren( m_bean );
     }
     catch( final RepositoryException e )
     {
@@ -150,26 +134,25 @@ public class ServiceRepositoryItem implements IRepositoryItem
     }
   }
 
-  /**
-   * @see org.kalypso.repository.IRepositoryItem#getChildren()
-   */
   @Override
   public final IRepositoryItem[] getChildren( ) throws RepositoryException
   {
     try
     {
+      final IObservationService service = m_rep.getService();
+
       final List<IRepositoryItem> items = new ArrayList<IRepositoryItem>();
-      final ItemBean[] beans = m_srv.getChildren( m_bean );
+      final ItemBean[] beans = service.getChildren( m_bean );
 
       for( final ItemBean bean : beans )
       {
         if( bean.getModifyable() )
         {
-          items.add( new ModifyableServiceRepositoryItem( m_srv, bean, this, m_rep ) );
+          items.add( new ModifyableServiceRepositoryItem( bean, this, m_rep ) );
         }
         else
         {
-          items.add( new ServiceRepositoryItem( m_srv, bean, this, m_rep ) );
+          items.add( new ServiceRepositoryItem( bean, this, m_rep ) );
         }
       }
 
@@ -191,12 +174,13 @@ public class ServiceRepositoryItem implements IRepositoryItem
     {
       try
       {
-        final ObservationBean bean = m_srv.adaptItem( m_bean );
+        IObservationService service = m_rep.getService();
+        final ObservationBean bean = service.adaptItem( m_bean );
 
         if( bean == null )
           return null;
 
-        return new ServiceRepositoryObservation( m_srv, bean );
+        return new ServiceRepositoryObservation( service, bean );
       }
       catch( final SensorException e )
       {
@@ -244,13 +228,10 @@ public class ServiceRepositoryItem implements IRepositoryItem
     return true;
   }
 
-  /**
-   * @see org.kalypso.repository.IRepositoryItem#isMultipleSourceItem()
-   */
   @Override
   public boolean isMultipleSourceItem( ) throws RepositoryException
   {
-    return m_srv.isMultipleSourceItem( getIdentifier() );
+    return m_rep.getService().isMultipleSourceItem( getIdentifier() );
   }
 
   /**

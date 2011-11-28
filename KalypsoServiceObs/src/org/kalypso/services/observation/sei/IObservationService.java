@@ -78,5 +78,4 @@ public interface IObservationService extends IRepositoryService
    *          the id of the DataBean that the client did receive after calling readData( String )
    */
   void clearTempData( final String dataId ) throws SensorException;
-
 }
