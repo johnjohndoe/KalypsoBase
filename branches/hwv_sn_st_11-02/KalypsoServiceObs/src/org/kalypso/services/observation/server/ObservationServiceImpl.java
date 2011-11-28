@@ -395,4 +395,17 @@ public class ObservationServiceImpl implements IObservationService
 
     return new StatusBean( IStatus.ERROR, KalypsoServiceObs.ID, "Service not available. IObservationService delegate is null." );
   }
+
+  @Override
+  public ItemBean getParent( String identifier ) throws RepositoryException
+  {
+    /* Get the observation service delegate. */
+    final IObservationService delegate = getDelegate();
+
+    /* If it is existing, delegate to it. */
+    if( delegate != null )
+      return delegate.getParent( identifier );
+
+    return null;
+  }
 }
