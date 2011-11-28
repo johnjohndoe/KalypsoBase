@@ -63,7 +63,7 @@ import org.kalypso.template.types.StyledLayerType;
 // themes.
 public class CascadingLayerKalypsoTheme extends AbstractCascadingLayerTheme
 {
-  public CascadingLayerKalypsoTheme( final I10nString layerName, final CascadingLayer layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel ) throws CoreException 
+  public CascadingLayerKalypsoTheme( final I10nString layerName, final CascadingLayer layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel ) throws CoreException
   {
     super( layerName, layerType.getLinktype(), mapModel );
 
@@ -136,7 +136,7 @@ public class CascadingLayerKalypsoTheme extends AbstractCascadingLayerTheme
     for( final IKalypsoTheme theme : themes )
     {
       final String layerId = id + "_" + count++;
-      final JAXBElement< ? extends StyledLayerType> layerElement = GisTemplateHelper.configureLayer( theme, layerId, getFullExtent(), srsName, new SubProgressMonitor( monitor, 1 ) );
+      final JAXBElement< ? extends StyledLayerType> layerElement = GisTemplateLayerHelper.configureLayer( theme, layerId, getFullExtent(), srsName, new SubProgressMonitor( monitor, 1 ) );
       layers.add( layerElement );
     }
   }
