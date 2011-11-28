@@ -158,14 +158,19 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
   private final List<IKalypsoStyle> m_defaultStyles = new ArrayList<IKalypsoStyle>();
 
+  /**
+   * The unmodified href. This href will be saved again to the map.
+   */
+  private String m_href;
+
   public GisTemplateFeatureTheme( final I10nString layerName, final LayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel )
   {
     super( layerName, layerType.getLinktype(), mapModel );
 
     m_selectionManager = selectionManager;
+    m_href = layerType.getHref();
 
-    final String href = layerType.getHref();
-    final String source = VariableUtils.resolveVariablesQuietly( href );
+    final String source = VariableUtils.resolveVariablesQuietly( m_href );
     final String type = layerType.getLinktype();
     final String featurePath = layerType.getFeaturePath();
 
@@ -333,7 +338,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     final ObjectFactory extentFac = new ObjectFactory();
     final PoolableObjectType key = m_layerKey;
     layer.setId( id );
-    layer.setHref( key.getLocation() );
+    layer.setHref( m_href );
     layer.setLinktype( key.getType() );
     layer.setActuate( "onRequest" ); //$NON-NLS-1$
     layer.setType( "simple" ); //$NON-NLS-1$

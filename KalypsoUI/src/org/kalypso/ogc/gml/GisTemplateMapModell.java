@@ -317,7 +317,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell, IT
           usedIds.add( id );
         }
 
-        final JAXBElement< ? extends StyledLayerType> layerElement = GisTemplateHelper.configureLayer( theme, id, bbox, srsName, new SubProgressMonitor( monitor, 1000 ) );
+        final JAXBElement< ? extends StyledLayerType> layerElement = GisTemplateLayerHelper.configureLayer( theme, id, bbox, srsName, new SubProgressMonitor( monitor, 1000 ) );
         if( layerElement != null )
         {
           layerList.add( layerElement );
