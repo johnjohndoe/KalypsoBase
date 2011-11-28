@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.afgui.wizards;
 
+import java.util.List;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -69,7 +71,7 @@ import org.kalypso.module.welcome.INewProjectWizard;
 /**
  * Basic wizard implementation for the various workflow/scenario based projects.<br>
  * Normally, only the location of the project-template (-zip) should be enough.<br>
- * 
+ *
  * @author Gernot Belger
  */
 public class NewProjectWizard extends BasicNewProjectResourceWizard implements INewProjectWizard, INewProjectHandler
@@ -271,7 +273,11 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
     if( nature == null )
       return;
 
-    final IScenario caze = nature.getCaseManager().getCases().get( 0 );
+    final List<IScenario> cases = nature.getCaseManager().getCases();
+    if( cases.size() == 0 )
+      return;
+
+    final IScenario caze = cases.get( 0 );
 
     if( m_activateScenario )
       KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().setCurrentCase( caze );
