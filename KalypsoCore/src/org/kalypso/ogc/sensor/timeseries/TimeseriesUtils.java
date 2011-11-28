@@ -75,6 +75,7 @@ import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
@@ -621,7 +622,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
    *          the type of the axis for which to convert the alarm-level
    * @throws WQException
    */
-  public static Double convertAlarmLevel( final IObservation obs, final String axisType, final Double alarmLevel, final Date date ) throws SensorException, WQException
+  public static Double convertAlarmLevel( final IObservation obs, final ITupleModel model, final Integer index, final String axisType, final Double alarmLevel ) throws SensorException, WQException
   {
     if( axisType.equals( ITimeseriesConstants.TYPE_WATERLEVEL ) )
       return alarmLevel;
@@ -629,7 +630,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
     final IWQConverter converter = WQFactory.createWQConverter( obs );
 
     if( axisType.equals( ITimeseriesConstants.TYPE_RUNOFF ) || axisType.equals( ITimeseriesConstants.TYPE_VOLUME ) )
-      return new Double( converter.computeQ( date, alarmLevel.doubleValue() ) );
+      return new Double( converter.computeQ( model, index, alarmLevel.doubleValue() ) );
 
     throw new WQException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieUtils.22" ) + axisType + Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieUtils.23" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
