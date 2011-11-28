@@ -76,7 +76,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
   }
 
   @Override
-  public boolean equals( Object obj )
+  public boolean equals( final Object obj )
   {
     if( obj instanceof IRepositoryItem )
       return RepositoryItems.equals( this, (IRepositoryItem) obj );
@@ -87,7 +87,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
   @Override
   public int hashCode( )
   {
-    HashCodeBuilder builder = new HashCodeBuilder();
+    final HashCodeBuilder builder = new HashCodeBuilder();
     builder.append( RepositoryItems.getPlainId( getIdentifier() ) );
 
     return builder.toHashCode();
@@ -114,7 +114,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
 
       return parent;
     }
-    catch( RepositoryException e )
+    catch( final RepositoryException e )
     {
       e.printStackTrace();
       return null;
@@ -174,7 +174,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
     {
       try
       {
-        IObservationService service = m_rep.getService();
+        final IObservationService service = m_rep.getService();
         final ObservationBean bean = service.adaptItem( m_bean );
 
         if( bean == null )

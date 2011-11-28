@@ -40,14 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.repository.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import jregex.Pattern;
-import jregex.RETokenizer;
-
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
@@ -57,93 +49,9 @@ import org.kalypso.repository.IRepositoryItem;
  */
 public final class RepositoryItems
 {
-  public static final int PARAMETER_START_BORDER = 4;
-
-  public static final String ZRXP_ITEM_IDENTIFIER = "Zrxp_"; //$NON-NLS-1$
-
-  private static final Pattern ZRXP_ITEM_PATTERN = new Pattern( "^[\\w\\d_]+\\.Zrxp_.*" ); //$NON-NLS-1$
-
-  public static final int ZRXP_PRIORITY_ITEM_OFFSET = 10;
 
   private RepositoryItems( )
   {
-  }
-
-  /**
-   * @return parameter from identifier
-   */
-  public static String getParameterType( final String identifier )
-  {
-    final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
-    if( parts.length < PARAMETER_START_BORDER )
-      return null;
-
-// final StringBuffer parameter = new StringBuffer();
-// for( int i = PARAMETER_START_BORDER - 1; i < parts.length; i++ )
-// {
-// parameter.append( parts[i] + "." );
-// }
-//
-// return StringUtilities.chomp( parameter.toString() );
-
-    // becaus q.prognose is type of q!
-    return parts[PARAMETER_START_BORDER - 1];
-  }
-
-  /**
-   * @param qualified
-   *          means:
-   * 
-   *          <pre>
-   * some zml-proxy://[1].[2].[3].[4] will be qualified / interpreted as followed
-   *             ------- 1 ------ --- 2 ----- - 3 -- - 4 -
-   * zml-proxy://HVZ_Modelle_Elbe.Elbe_Prio_1.560051.W
-   * will be classified as
-   * zml-proxy://[HVZ_Modelle_Elbe].[Elbe_Prio_1].[560051].[W]
-   * and the parent is
-   * zml-proxy://[HVZ_Modelle_Elbe].[Elbe_Prio_1].[560051]
-   *             ------- 1 ------ --- 2 ----- - 3 -- --- 4 ---
-   * zml-proxy://HVZ_Modelle_Elbe.Elbe_Prio_1.560051.W.Prognose
-   * will be classified as
-   * zml-proxy://[HVZ_Modelle_Elbe].[Elbe_Prio_1].[560051].[W.Prognose]
-   * and the parent is
-   * zml-proxy://[HVZ_Modelle_Elbe].[Elbe_Prio_1].[560051]
-   * </pre>
-   */
-  public static String getParentItemId( final String identifier, final int qualified )
-  {
-    final String[] parts = getQualifiedItemParts( identifier, qualified );
-    if( parts.length == 1 )
-      return Repositories.getRepositoryId( identifier );
-
-    String parent = ""; //$NON-NLS-1$
-    for( int i = 0; i < parts.length - 1; i++ )
-    {
-      parent += parts[i] + "."; //$NON-NLS-1$
-    }
-
-    return StringUtils.chop( parent );
-  }
-
-  private static final Pattern PATTERN_PARENT_ITEM_TOKINZER = new Pattern( "\\.[\\w\\d_]*$" ); //$NON-NLS-1$
-
-  public static String getParentItemId( final String identifier )
-  {
-    // TODO Move to repository implementation...
-    final RETokenizer tokenizer = new RETokenizer( PATTERN_PARENT_ITEM_TOKINZER, identifier );
-    String token = tokenizer.nextToken();
-
-    /**
-     * identifier is encoded like psicompact://HN.1_ES.02PG...501010 -> remove all ending '.'
-     */
-    while( token.endsWith( "." ) ) //$NON-NLS-1$
-      token = StringUtils.chop( token );
-
-    /** psicompact://HN */
-    if( StringUtils.equals( identifier, token ) )
-      return null;
-
-    return token;
   }
 
 //  private static final Pattern PATTERN_PLAIN_ID_TOKENIZER = new Pattern( ".*\\://" ); //$NON-NLS-1$
@@ -174,108 +82,6 @@ public final class RepositoryItems
     return parts[0];
   }
 
-  /**
-   * see {@link RepositoryItemUtlis.resolveItemIdPart}
-   */
-  public static String[] getQualifiedItemParts( final String identifier, final int qualified )
-  {
-    final List<String> partsQualified = new ArrayList<String>();
-
-    String concat = ""; //$NON-NLS-1$
-
-    final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
-    for( int i = 0; i < parts.length; i++ )
-    {
-      if( i < qualified - 1 )
-      {
-        partsQualified.add( parts[i] );
-      }
-      else
-      {
-        concat += parts[i] + "."; //$NON-NLS-1$
-      }
-    }
-    if( !concat.isEmpty() )
-      partsQualified.add( StringUtils.chop( concat ) );
-
-    return partsQualified.toArray( new String[] {} );
-  }
-
-  public static String getStationKennziffer( final IRepositoryItem item )
-  {
-    return getStationKennziffer( item.getIdentifier() );
-  }
-
-  public static String getStationKennziffer( final String identifier )
-  {
-    final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
-    if( parts.length >= 3 )
-      return parts[2];
-
-    return null;
-  }
-
-  public static String getModel( final IRepositoryItem item )
-  {
-    return getModel( item.getIdentifier() );
-  }
-
-  private static String getModel( final String identifier )
-  {
-    final String[] parts = getPlainId( identifier ).split( "\\." ); //$NON-NLS-1$
-    if( !ArrayUtils.isEmpty( parts ) )
-    {
-      return parts[0];
-    }
-
-    return null;
-  }
-
-  public static boolean isEqualStationKennziffer( final String id1, final String id2 )
-  {
-    final String station1 = getStationKennziffer( id1 );
-    final String station2 = getStationKennziffer( id2 );
-
-    return StringUtils.equalsIgnoreCase( station1, station2 );
-  }
-
-  public static boolean isEqualType( final String id1, final String id2 )
-  {
-    final String type1 = getParameterType( id1 );
-    final String type2 = getParameterType( id2 );
-
-    return StringUtils.equalsIgnoreCase( type1, type2 );
-  }
-
-  public static boolean isStationItem( final String identifier )
-  {
-    final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
-
-    return parts.length == 3;
-  }
-
-  /**
-   * @return wiski://HVZ_Modelle_Elbe.Elbe_Prio_1 -> will return true
-   */
-  public static boolean isGroupItem( final IRepositoryItem item )
-  {
-    final String identifier = item.getIdentifier();
-    final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
-
-    return parts.length == 2;
-  }
-
-  /**
-   * @return wiski://HVZ_Modelle_Elbe -> will return true
-   */
-  public static boolean isModelItem( final IRepositoryItem item )
-  {
-    final String identifier = item.getIdentifier();
-    final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
-
-    return parts.length == 1;
-  }
-
   public static boolean isPlainId( final String identifier )
   {
     if( identifier.startsWith( IDataSourceItem.FILTER_SOURCE ) )
@@ -284,59 +90,9 @@ public final class RepositoryItems
     return !identifier.contains( "://" ); //$NON-NLS-1$
   }
 
-  private static final Pattern PATTERN_IS_FORECAST = new Pattern( "[\\w\\d_]+\\.[\\w\\d]+_Prog_[\\w\\d_]+(\\..*)?" ); //$NON-NLS-1$
-
-  private static final Pattern PATTERN_FORECAST_END = new Pattern( ".+.Prognose[\\d]?" ); //$NON-NLS-1$
-
-  public static boolean isForecastItem( final IRepositoryItem item )
-  {
-    return isForecastItem( item.getIdentifier() );
-  }
-
-  public static boolean isForecastItem( final String identifier )
-  {
-    if( isForecastGroupItem( identifier ) )
-      return true;
-
-    final String plain = getPlainId( identifier );
-
-    return PATTERN_FORECAST_END.matches( plain );
-  }
-
-  public static boolean isForecastGroupItem( final IRepositoryItem item )
-  {
-    return isForecastGroupItem( item.getIdentifier() );
-  }
-
-  public static boolean isForecastGroupItem( final String identifier )
-  {
-    /**
-     * the group has to be forecast, not the station value itself's
-     */
-    // like: HVZ_Modelle_Bode.Bode_Prog_Neu_Pegel.579040
-    final String plain = getPlainId( identifier );
-
-    return PATTERN_IS_FORECAST.matches( plain );
-  }
-
   public static boolean isRepositoryItem( final String identifier )
   {
     return identifier.contains( "://" ); //$NON-NLS-1$
-  }
-
-  public static boolean isVirtual( final String identifier )
-  {
-    return identifier.toLowerCase().contains( ".virtuell." ); //$NON-NLS-N$
-  }
-
-  public static boolean isZrxpItem( final IRepositoryItem item )
-  {
-    return isZrxpItem( item.getIdentifier() );
-  }
-
-  public static boolean isZrxpItem( final String identifier )
-  {
-    return ZRXP_ITEM_PATTERN.matches( getPlainId( identifier ) );
   }
 
   /**
@@ -358,27 +114,6 @@ public final class RepositoryItems
     return replaceIdentifier( baseItem.getIdentifier(), destinationRepository.getIdentifier() );
   }
 
-  public static String resolveItemIdPart( final String identifier, final int qualified )
-  {
-    final String[] parts = getQualifiedItemParts( identifier, qualified );
-    final String part = parts[parts.length - 1];
-
-    return getPlainId( part );
-  }
-
-  public static String resolveItemIdPart( final String identifier )
-  {
-    final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
-    final String part = parts[parts.length - 1];
-
-    return getPlainId( part );
-  }
-
-  public static boolean isVirtual( final IRepositoryItem item )
-  {
-    return isVirtual( item.getIdentifier() );
-  }
-
   public static boolean equals( final IRepositoryItem item1, final IRepositoryItem item2 )
   {
     return getPlainId( item1.getIdentifier() ).equalsIgnoreCase( getPlainId( item2.getIdentifier() ) );
@@ -389,22 +124,6 @@ public final class RepositoryItems
     final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
 
     return parts.length;
-  }
-
-  public static boolean isForecastSourceItem( final IRepositoryItem item )
-  {
-    return isForecastSourceItem( item.getIdentifier() );
-  }
-
-  public static boolean isForecastSourceItem( final String identifier )
-  {
-    /**
-     * id is encoded like: HVZ_Modelle_Elbe.Elbe_Prio_1.553060.W.Prognose.201108010700 ?
-     */
-    final String plain = getPlainId( identifier );
-    final Pattern pattern = new Pattern( ".*\\.(\\d){12}$" ); //$NON-NLS-1$
-
-    return pattern.matches( plain );
   }
 
 }
