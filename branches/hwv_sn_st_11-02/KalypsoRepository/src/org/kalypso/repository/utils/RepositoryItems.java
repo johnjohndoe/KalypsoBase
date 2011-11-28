@@ -137,7 +137,7 @@ public final class RepositoryItems
      * identifier is encoded like psicompact://HN.1_ES.02PG...501010 -> remove all ending '.'
      */
     while( token.endsWith( "." ) ) //$NON-NLS-1$
-      token = token.substring( 0, token.length() - 1 );
+      token = StringUtils.chop( token );
 
     /** psicompact://HN */
     if( StringUtils.equals( identifier, token ) )
