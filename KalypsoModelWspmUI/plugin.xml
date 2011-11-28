@@ -558,6 +558,10 @@
              name="%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction">
              <description>%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction.description</description>
        </wizard>
+       <!--
+        FIXME: import does not belong to 'Tools' Wizard
+        
+        FIXME: both wizard are visible everywhere
         <wizard
               class="org.kalypso.model.wspm.ui.profil.wizard.landuse.ImportLanduseShapeWizard"
               icon="icons/obj16/landuse.import.png"
@@ -565,12 +569,14 @@
               name="Import landuse shape">
              <description>Landuse shapes can be used to assign roughness and vegetation classes on profiles</description>
        </wizard>
+       
         <wizard
               class="org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.ApplyLanduseShapeWizard"
               icon="icons/obj16/landuse.apply.png"
               id="org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.ApplyLanduseShapeWizard"
-              name="Apply lanuse shape">
+              name="Apply landuse shape">
         </wizard>
+        -->
     </extension>
 
     <extension point="org.kalypso.contribs.eclipsercp.wizardEnablement">
