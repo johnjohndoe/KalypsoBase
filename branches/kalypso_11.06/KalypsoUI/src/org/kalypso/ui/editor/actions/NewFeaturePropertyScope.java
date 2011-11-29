@@ -40,16 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.actions;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Properties;
 
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.kalypso.commons.command.ICommand;
-import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.core.catalog.FeatureTypePropertiesCatalog;
-import org.kalypso.core.catalog.IFeatureTypePropertiesConstants;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -57,7 +55,6 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureProperty;
 
@@ -118,21 +115,30 @@ class NewFeaturePropertyScope implements INewScope
     if( !checkSingleInlinedFeature() )
       return;
 
-    if( !checkFullList( newMenuManager ) )
-      return;
+    final IAction[] actions = createActions();
+    for( final IAction action : actions )
+      newMenuManager.add( action );
+  }
+
+  @Override
+  public IAction[] createActions( )
+  {
+    final Collection<IAction> actions = new ArrayList<IAction>();
+
+    if( !checkFullList( actions ) )
+      return new IAction[0];
 
     final IFeatureType featureType = m_targetRelation.getTargetFeatureType();
 
     final IGMLSchema contextSchema = m_parentFeature.getWorkspace().getGMLSchema();
     final IFeatureType[] featureTypes = GMLSchemaUtilities.getSubstituts( featureType, contextSchema, false, true );
     for( final IFeatureType ft : featureTypes )
-      newMenuManager.add( new NewFeatureAction( this, ft ) );
+      actions.add( new NewFeatureAction( m_workspace, m_parentFeature, m_targetRelation, ft, m_selectionManager ) );
 
-    /* Not yet implemented, makes no sense to show it for now ... */
-    // newMenuManager.add( new NewFeatureFromExternalSchemaAction() );
+    return actions.toArray( new IAction[actions.size()] );
   }
 
-  private boolean checkFullList( final IMenuManager newMenuManager )
+  private boolean checkFullList( final Collection<IAction> actions )
   {
     if( !m_targetRelation.isList() )
       return true;
@@ -146,7 +152,7 @@ class NewFeaturePropertyScope implements INewScope
       return true;
 
     // Add an action which indicates, that the list is full
-    newMenuManager.add( new ListFullAction( maxOccurs ) );
+    actions.add( new ListFullAction( maxOccurs ) );
     return false;
   }
 
@@ -159,16 +165,5 @@ class NewFeaturePropertyScope implements INewScope
   private boolean hasInlinableFeatures( )
   {
     return m_targetRelation.isInlineAble();
-  }
-
-  void createNewFeature( final IFeatureType featureType ) throws Exception
-  {
-    final Properties uiProperties = FeatureTypePropertiesCatalog.getProperties( m_workspace.getContext(), featureType.getQName() );
-    final String depthStr = uiProperties.getProperty( IFeatureTypePropertiesConstants.FEATURE_CREATION_DEPTH );
-    // TODO: move 0 into constants
-    final int depth = NumberUtils.parseQuietInt( depthStr, 0 );
-
-    final ICommand command = new AddFeatureCommand( m_workspace, featureType, m_parentFeature, m_targetRelation, 0, null, m_selectionManager, depth );
-    m_workspace.postCommand( command );
   }
 }
