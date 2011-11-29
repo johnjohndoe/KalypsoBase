@@ -215,7 +215,7 @@ public class ProjectInfoComposite extends Composite
 
     final IKalypsoModule module = moduleID == null ? null : ModuleExtensions.getKalypsoModule( moduleID );
     if( module == null )
-      m_typeText.setText( "<Unbekannter Modelltyp>" );
+      m_typeText.setText( Messages.getString("ProjectInfoComposite.8") ); //$NON-NLS-1$
     else
       m_typeText.setText( module.getHeader() );
   }
