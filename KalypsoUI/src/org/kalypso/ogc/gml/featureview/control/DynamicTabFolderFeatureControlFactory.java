@@ -58,5 +58,4 @@ public class DynamicTabFolderFeatureControlFactory implements IFeatureControlFac
 
     return new DynamicTabFolderFeatureControl( parentComposite, feature, rt );
   }
-
 }
