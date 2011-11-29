@@ -1,28 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns:map="http://org.kalypso.updateObservationMapping" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:obslink="obslink.zml.kalypso.org" targetNamespace="http://org.kalypso.updateObservationMapping" elementFormDefault="qualified" version="1.0">
-	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd" />
-	<import namespace="obslink.zml.kalypso.org" schemaLocation="obslink.xsd" />
-
 	<annotation>
 		<appinfo xmlns:kapp="org.kalypso.appinfo">
 			<kapp:gmlVersion>2.1.2</kapp:gmlVersion>
 		</appinfo>
 	</annotation>
-
-	<!-- Root Element & Type -->
+	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd" />
+	<import namespace="obslink.zml.kalypso.org" schemaLocation="obslink.xsd" />
 	<element name="MappingCollection" type="map:MappingCollectionType" />
 	<complexType name="MappingCollectionType">
 		<complexContent>
 			<restriction base="gml:AbstractFeatureCollectionType">
 				<sequence>
 					<element name="mappingMember" type="map:MappingAssociationType" minOccurs="0" maxOccurs="unbounded" />
-					<element name="Configuration" type="map:ConfigurationType" minOccurs="0" maxOccurs="1" />
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-
-	<!-- Mapping Association Type -->
 	<complexType name="MappingAssociationType">
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
@@ -32,20 +26,6 @@
 			</restriction>
 		</complexContent>
 	</complexType>
-
-	<!-- Configuration Type -->
-	<complexType name="ConfigurationType">
-		<complexContent>
-			<extension base="gml:AbstractFeatureType">
-				<sequence>
-					<element name="sourceMember" type="map:SourcePropertyType" minOccurs="1" maxOccurs="unbounded" />
-					<element name="Target" type="map:TargetType" minOccurs="1" maxOccurs="1" />
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
-
-	<!-- Mapping Observation Element & Type -->
 	<element name="MappingObservation" type="map:MappingObservationType" substitutionGroup="gml:_Feature" />
 	<complexType name="MappingObservationType">
 		<complexContent>
@@ -147,36 +127,6 @@
 					<element name="remote7" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
 					<element name="remote8" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
 					<element name="remote9" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
-
-	<!-- Source Property Type -->
-	<complexType name="SourcePropertyType">
-		<sequence minOccurs="0">
-			<element ref="map:Source" />
-		</sequence>
-	</complexType>
-
-	<!-- Source Element & Type -->
-	<element name="Source" type="map:SourceType" />
-	<complexType name="SourceType">
-		<complexContent>
-			<extension base="gml:AbstractFeatureType">
-				<sequence>
-					<element name="sourceLink" type="string" minOccurs="1" maxOccurs="1" />
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
-
-	<!-- Target Type -->
-	<complexType name="TargetType">
-		<complexContent>
-			<extension base="gml:AbstractFeatureType">
-				<sequence>
-					<element name="targetLink" type="string" minOccurs="1" maxOccurs="1" />
 				</sequence>
 			</extension>
 		</complexContent>
