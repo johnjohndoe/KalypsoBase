@@ -148,4 +148,18 @@ public class WechmannSet
 
     return m_mapQ.get( ds[i] );
   }
+
+  public WechmannParams getMin( )
+  {
+    return m_mapW.values().iterator().next();
+  }
+
+  public WechmannParams getMax( )
+  {
+    final WechmannParams[] values = m_mapW.values().toArray( new WechmannParams[] {} );
+    if( ArrayUtils.isEmpty( values ) )
+      return null;
+
+    return values[values.length - 1];
+  }
 }
