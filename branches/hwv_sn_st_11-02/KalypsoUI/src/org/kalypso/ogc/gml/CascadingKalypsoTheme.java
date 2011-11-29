@@ -63,8 +63,6 @@ import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.gismapview.Gismapview;
-import org.kalypso.template.types.LayerType;
-import org.kalypso.template.types.ObjectFactory;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -117,7 +115,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
 
     m_mapViewRefUrl = layerType.getHref();
 
-    GisTemplateFeatureTheme.configureProperties( this, layerType );
+    GisTemplateLayerHelper.updateProperties( layerType, this );
 
     final URL url = CascadingKalypsoTheme.resolveUrl( context, m_mapViewRefUrl );
     setInnerMapModel( new GisTemplateMapModell( url, mapModel.getCoordinatesSystem(), mapModel.getProject(), selectionManager )
@@ -175,32 +173,6 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
       m_file.getWorkspace().removeResourceChangeListener( m_resourceChangeListener );
 
     super.dispose();
-  }
-
-  public void fillLayerType( final LayerType layer, final String id, final boolean isVisible )
-  {
-    layer.setId( id );
-    layer.setHref( m_mapViewRefUrl );
-    layer.setLinktype( "gmt" ); //$NON-NLS-1$
-    layer.setActuate( "onRequest" ); //$NON-NLS-1$
-    layer.setType( "simple" ); //$NON-NLS-1$
-    if( layer instanceof StyledLayerType )
-    {
-      final StyledLayerType styledLayerType = (StyledLayerType) layer;
-      styledLayerType.setName( getName().getKey() );
-      styledLayerType.setVisible( isVisible );
-      styledLayerType.getDepends();
-
-      final ObjectFactory extentFac = new ObjectFactory();
-
-      final String legendIcon = getLegendIcon();
-      if( legendIcon != null )
-        styledLayerType.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
-
-      styledLayerType.setShowChildren( extentFac.createStyledLayerTypeShowChildren( shouldShowLegendChildren() ) );
-
-      GisTemplateFeatureTheme.fillProperties( this, extentFac, styledLayerType );
-    }
   }
 
   /**

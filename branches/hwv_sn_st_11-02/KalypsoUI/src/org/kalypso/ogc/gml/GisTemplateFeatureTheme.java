@@ -78,9 +78,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.types.LayerType;
-import org.kalypso.template.types.ObjectFactory;
 import org.kalypso.template.types.StyledLayerType;
-import org.kalypso.template.types.StyledLayerType.Property;
 import org.kalypso.template.types.StyledLayerType.Style;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -184,7 +182,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       m_hasStyles = true;
       final StyledLayerType mapLayerType = (StyledLayerType) layerType;
       initStyles( context, mapLayerType );
-      GisTemplateFeatureTheme.configureProperties( this, mapLayerType );
+      GisTemplateLayerHelper.updateProperties( mapLayerType, this );
     }
     else
       m_hasStyles = false;
@@ -221,6 +219,11 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     }
   }
 
+  public List<IKalypsoStyle> getStyleList( )
+  {
+    return m_styles;
+  }
+
   private void startLoading( )
   {
     try
@@ -235,13 +238,6 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.4" ), e ); //$NON-NLS-1$
       setStatus( status );
     }
-  }
-
-  public static void configureProperties( final IKalypsoTheme theme, final StyledLayerType mapLayerType )
-  {
-    final List<Property> propertyList = mapLayerType.getProperty();
-    for( final Property property : propertyList )
-      theme.setProperty( property.getName(), property.getValue() );
   }
 
   /**
@@ -331,57 +327,6 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     if( m_theme != null )
       return m_theme.getFullExtent();
     return null;
-  }
-
-  public void fillLayerType( final LayerType layer, final String id, final boolean isVisible )
-  {
-    final ObjectFactory extentFac = new ObjectFactory();
-    final PoolableObjectType key = m_layerKey;
-    layer.setId( id );
-    layer.setHref( m_href );
-    layer.setLinktype( key.getType() );
-    layer.setActuate( "onRequest" ); //$NON-NLS-1$
-    layer.setType( "simple" ); //$NON-NLS-1$
-    layer.setFeaturePath( m_featurePath );
-    if( layer instanceof StyledLayerType )
-    {
-      final StyledLayerType styledLayerType = (StyledLayerType) layer;
-      styledLayerType.setName( getName().getKey() );
-      styledLayerType.setVisible( isVisible );
-      styledLayerType.getDepends();
-
-      final String legendIcon = getLegendIcon();
-      if( legendIcon != null )
-        styledLayerType.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
-
-      styledLayerType.setShowChildren( extentFac.createStyledLayerTypeShowChildren( shouldShowLegendChildren() ) );
-
-      final List<Style> stylesList = styledLayerType.getStyle();
-      for( final IKalypsoStyle style : m_styles )
-      {
-        final Style styleType = extentFac.createStyledLayerTypeStyle();
-        style.fillStyleType( stylesList, styleType );
-      }
-
-      GisTemplateFeatureTheme.fillProperties( this, extentFac, styledLayerType );
-    }
-  }
-
-  public static void fillProperties( final AbstractKalypsoTheme theme, final ObjectFactory extentFac, final StyledLayerType styledLayerType )
-  {
-    final List<Property> propertyList = styledLayerType.getProperty();
-    final String[] propertyNames = theme.getPropertyNames();
-    for( final String name : propertyNames )
-    {
-      final Property property = extentFac.createStyledLayerTypeProperty();
-      property.setName( name );
-      final String value = theme.getProperty( name, null );
-      if( value != null )
-      {
-        property.setValue( value );
-        propertyList.add( property );
-      }
-    }
   }
 
   /**
@@ -587,6 +532,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   {
     if( m_theme != null )
       return m_theme.getWorkspace();
+
     return null;
   }
 
@@ -598,6 +544,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   {
     if( m_theme != null )
       return m_theme.getFeatureType();
+
     return null;
   }
 
@@ -609,6 +556,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   {
     if( m_theme != null )
       return m_theme.getFeaturePath();
+
     return null;
   }
 
@@ -626,7 +574,6 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
     if( m_theme != null )
       m_theme.addStyle( style );
-
   }
 
   @Override
@@ -643,6 +590,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   {
     if( m_theme != null )
       return m_theme.getStyles();
+
     return new IKalypsoStyle[0];
   }
 
@@ -688,6 +636,16 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
         return false;
 
     return m_loaded;
+  }
+
+  /**
+   * This function returns the unmodified href. This href will be saved again to the map.
+   * 
+   * @return The unmodified href. This href will be saved again to the map.
+   */
+  public String getHref( )
+  {
+    return m_href;
   }
 
   public IPoolableObjectType getLayerKey( )
@@ -983,5 +941,4 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   {
     fireVisibilityChanged( newVisibility );
   }
-
 }
