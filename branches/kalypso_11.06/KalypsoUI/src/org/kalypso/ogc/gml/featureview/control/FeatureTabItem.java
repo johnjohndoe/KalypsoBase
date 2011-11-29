@@ -40,15 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.TabItem;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.annotation.IAnnotation;
+import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.featureview.maker.IFeatureviewFactory;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * Helper class that wraps a tabItem as a feature conrol.
@@ -59,7 +63,7 @@ public class FeatureTabItem
 {
   private static final String DATA_ME = "me";
 
-  private final TabItem m_item;
+  private final CTabItem m_item;
 
   private final Object m_featureObject;
 
@@ -67,18 +71,17 @@ public class FeatureTabItem
 
   private FeatureComposite m_fc;
 
-  public static FeatureTabItem get( final TabItem tabItem )
+  public static FeatureTabItem get( final CTabItem tabItem )
   {
     return (FeatureTabItem) tabItem.getData( DATA_ME );
   }
 
-  public FeatureTabItem( final TabItem item, final GMLWorkspace workspace, final Object featureObject )
+  public FeatureTabItem( final CTabItem item, final GMLWorkspace workspace, final Object featureObject )
   {
     m_item = item;
     m_workspace = workspace;
     m_featureObject = featureObject;
     m_item.setData( DATA_ME, this );
-
   }
 
   public IFeatureControl createFeatureConrol( final IFeatureComposite parentComposite )
@@ -120,15 +123,34 @@ public class FeatureTabItem
   {
     final Feature feature = getFeature();
     // try to use feature name before annotation
-    final String name = feature.getName();
-    final String text;
-    if( name == null )
-      text = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
-    else
-      text = name;
-    m_item.setText( text );
+    // FIXME: makes no sense. The annotation should win, this is standard Kalypso behaviour.
+    // Instead we might implement a parameter on the feature control, that can override this behaviour.
+// final String name = feature.getName();
+// final String text;
+// if( name == null )
+    final String text = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
+// else
+// text = name;
+
+    /* Ensure minimum length */
+    final String paddedText = StringUtils.rightPad( text, 8 );
+
+    /* Ensure maximum length */
+    final String abreviatedText = StringUtils.abbreviate( paddedText, 20 );
+
+    m_item.setText( abreviatedText );
 
     m_fc.updateControl();
   }
 
+  public ICommand deleteFeature( )
+  {
+    if( m_featureObject instanceof XLinkedFeature_Impl )
+      throw new UnsupportedOperationException();
+
+    if( m_featureObject instanceof Feature )
+      return new DeleteFeatureCommand( getFeature() );
+
+    throw new UnsupportedOperationException();
+  }
 }

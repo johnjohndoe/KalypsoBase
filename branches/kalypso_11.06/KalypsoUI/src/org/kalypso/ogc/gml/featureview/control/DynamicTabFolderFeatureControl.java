@@ -40,18 +40,39 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabFolder2Adapter;
+import org.eclipse.swt.custom.CTabFolder2Listener;
+import org.eclipse.swt.custom.CTabFolderEvent;
+import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Group;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
+import org.kalypso.contribs.eclipse.jface.action.DelegateAction;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.editor.actions.INewScope;
+import org.kalypso.ui.editor.actions.NewScopeFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -61,9 +82,36 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class DynamicTabFolderFeatureControl extends AbstractFeatureControl
 {
-  private TabFolder m_tabFolder;
+  private static final String DATA_ADD_ITEM = "addItem"; //$NON-NLS-1$
+
+  private CTabFolder m_tabFolder;
 
   private final IFeatureComposite m_parentComposite;
+
+  private int m_currentSelection = -1;
+
+  private final CTabFolder2Listener m_tabFolderListener = new CTabFolder2Adapter()
+  {
+    @Override
+    public void close( final CTabFolderEvent event )
+    {
+      final boolean doClose = handleTabClosed( (CTabItem) event.item );
+      event.doit = doClose;
+    }
+  };
+
+  private final SelectionListener m_tabSelectionListener = new SelectionAdapter()
+  {
+    @Override
+    public void widgetSelected( final SelectionEvent e )
+    {
+      e.doit = handleTabSelected( (CTabItem) e.item );
+    }
+  };
+
+  private boolean m_showClose;
+
+  private INewScope m_newScope;
 
   public DynamicTabFolderFeatureControl( final IFeatureComposite parentComposite, final Feature feature, final IRelationType rt )
   {
@@ -72,9 +120,6 @@ public class DynamicTabFolderFeatureControl extends AbstractFeatureControl
     m_parentComposite = parentComposite;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -83,36 +128,20 @@ public class DynamicTabFolderFeatureControl extends AbstractFeatureControl
     super.dispose();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#addModifyListener(org.eclipse.swt.events.ModifyListener)
-   */
-  @Override
-  public void addModifyListener( final ModifyListener l )
-  {
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#removeModifyListener(org.eclipse.swt.events.ModifyListener)
-   */
-  @Override
-  public void removeModifyListener( final ModifyListener l )
-  {
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
-   */
   @Override
   public Control createControl( final Composite parent, final int style )
   {
-    m_tabFolder = new TabFolder( parent, style );
+    m_showClose = (style & SWT.CLOSE) != 0;
+
+    m_tabFolder = new CTabFolder( parent, style & ~SWT.CLOSE );
+
+    m_tabFolder.addCTabFolder2Listener( m_tabFolderListener );
+    m_tabFolder.addSelectionListener( m_tabSelectionListener );
+
     updateControl();
     return m_tabFolder;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#isValid()
-   */
   @Override
   public boolean isValid( )
   {
@@ -122,6 +151,9 @@ public class DynamicTabFolderFeatureControl extends AbstractFeatureControl
   @Override
   public void updateControl( )
   {
+    // REMARK: save current selection here before changing anything
+    final int currentSelection = m_currentSelection;
+
     if( m_tabFolder == null || m_tabFolder.isDisposed() )
       return;
 
@@ -142,7 +174,26 @@ public class DynamicTabFolderFeatureControl extends AbstractFeatureControl
     }
 
     final FeatureList featureList = (FeatureList) property;
-    destroyObsoleteItems( featureList );
+
+    if( hasObsoleteItems( featureList ) )
+    {
+      // As soon as the list changed, we need to destroy everything, else
+      // some artifacts remain.
+      destroyAllItems();
+    }
+    else
+      destroyAddItem();
+
+    final CommandableWorkspace cmdWorkspace = new CommandableWorkspace( workspace )
+    {
+      @Override
+      public void postCommand( final ICommand command ) throws Exception
+      {
+        DynamicTabFolderFeatureControl.this.fireFeatureChange( command );
+      }
+    };
+
+    m_newScope = NewScopeFactory.createPropertyScope( featureList, cmdWorkspace, null );
 
     // Destroy or add
     int count = 0;
@@ -152,7 +203,7 @@ public class DynamicTabFolderFeatureControl extends AbstractFeatureControl
 
       final FeatureTabItem featureItem = getFeatureItem( count );
       final Object tabObject = featureItem == null ? null : featureItem.getFeatureObject();
-      
+
       if( object.equals( tabObject ) )
       {
         featureItem.updateControl();
@@ -165,6 +216,84 @@ public class DynamicTabFolderFeatureControl extends AbstractFeatureControl
 
       count++;
     }
+
+    /* Add 'add' item, if adding is allowed */
+    createAddItem();
+
+    /* Select, else nothing is visible. Also keep old selection to avoid strange effects. */
+    if( m_tabFolder.getItemCount() > 0 )
+    {
+      if( currentSelection < 0 )
+        m_tabFolder.setSelection( 0 );
+      else if( currentSelection < m_tabFolder.getItemCount() )
+        m_tabFolder.setSelection( currentSelection );
+    }
+  }
+
+  private void destroyAddItem( )
+  {
+    if( m_tabFolder.isDisposed() )
+      return;
+
+    final CTabItem[] items = m_tabFolder.getItems();
+    for( final CTabItem tabItem : items )
+    {
+      if( tabItem.getData( DATA_ADD_ITEM ) != null )
+        tabItem.dispose();
+    }
+  }
+
+  private void createAddItem( )
+  {
+    // FIXME: also consider maxOccurency etc. here
+    if( !m_showClose )
+      return;
+
+    final CTabItem addItem = new CTabItem( m_tabFolder, SWT.NONE );
+    addItem.setData( DATA_ADD_ITEM, new Object() );
+    addItem.setShowClose( false );
+
+    final Image addImage = ImageProvider.IMAGE_FEATURE_NEW.createImage();
+    addItem.setImage( addImage );
+
+    addItem.addDisposeListener( new DisposeListener()
+    {
+      @Override
+      public void widgetDisposed( final DisposeEvent e )
+      {
+        addImage.dispose();
+      }
+    } );
+
+    /* Content */
+    final Group tabContent = new Group( m_tabFolder, SWT.NONE );
+    tabContent.setText( "Create New Element" );
+    GridLayoutFactory.swtDefaults().applyTo( tabContent );
+    addItem.setControl( tabContent );
+
+    final IAction[] actions = m_newScope.createActions();
+    for( final IAction action : actions )
+    {
+      final IAction delegateAction = new DelegateAction( action )
+      {
+        @Override
+        public void runWithEvent( final Event event )
+        {
+          super.runWithEvent( event );
+
+          if( event.doit )
+            setCurrentSelection( 0 );
+        }
+      };
+
+      ActionHyperlink.createHyperlink( null, tabContent, SWT.NONE, delegateAction );
+    }
+  }
+
+  protected void setCurrentSelection( final int i )
+  {
+    m_tabFolder.setSelection( i );
+    m_currentSelection = i;
   }
 
   private FeatureTabItem getFeatureItem( final int index )
@@ -177,7 +306,8 @@ public class DynamicTabFolderFeatureControl extends AbstractFeatureControl
 
   private FeatureTabItem createItem( final int index, final GMLWorkspace workspace, final Object featureObject )
   {
-    final TabItem tabItem = new TabItem( m_tabFolder, SWT.NONE, index );
+    final CTabItem tabItem = new CTabItem( m_tabFolder, SWT.NONE, index );
+    tabItem.setShowClose( m_showClose );
     final FeatureTabItem featureTabItem = new FeatureTabItem( tabItem, workspace, featureObject );
 
     /* Delegate any events to the next higher level */
@@ -200,16 +330,25 @@ public class DynamicTabFolderFeatureControl extends AbstractFeatureControl
     return featureTabItem;
   }
 
-  private void destroyObsoleteItems( final FeatureList featureList )
+  private boolean hasObsoleteItems( final FeatureList featureList )
   {
-    final TabItem[] items = m_tabFolder.getItems();
-    for( final TabItem tabItem : items )
+    final CTabItem[] items = m_tabFolder.getItems();
+
+    final Collection<Object> objects = new ArrayList<Object>();
+
+    for( final CTabItem tabItem : items )
     {
-      final FeatureTabItem wrapper = FeatureTabItem.get( tabItem );
-      final Object featureObject = wrapper.getFeatureObject();
-      if( !featureList.contains( featureObject ) )
-        wrapper.destroy();
+      if( tabItem.getData( DATA_ADD_ITEM ) == null )
+      {
+        final FeatureTabItem wrapper = FeatureTabItem.get( tabItem );
+        final Object featureObject = wrapper.getFeatureObject();
+        objects.add( featureObject );
+      }
     }
+
+    final Collection<Object> allFeatureItems = new ArrayList<Object>( featureList );
+
+    return !allFeatureItems.equals( objects );
   }
 
   private void destroyAllItems( )
@@ -217,11 +356,40 @@ public class DynamicTabFolderFeatureControl extends AbstractFeatureControl
     if( m_tabFolder.isDisposed() )
       return;
 
-    final TabItem[] items = m_tabFolder.getItems();
-    for( final TabItem tabItem : items )
+    final CTabItem[] items = m_tabFolder.getItems();
+    for( final CTabItem tabItem : items )
     {
       final FeatureTabItem wrapper = FeatureTabItem.get( tabItem );
-      wrapper.destroy();
+      if( wrapper != null )
+        wrapper.destroy();
+      else
+        tabItem.dispose();
     }
+  }
+
+  protected boolean handleTabClosed( final CTabItem item )
+  {
+    final FeatureTabItem featureItem = FeatureTabItem.get( item );
+
+    // ask user for deletion
+    final String message = String.format( "Delete '%s'?", item.getText() );
+    final boolean doDelete = MessageDialog.openConfirm( m_tabFolder.getShell(), "Delete Feature", message );
+    if( !doDelete )
+      return false;
+
+    // delete feature
+    final ICommand command = featureItem.deleteFeature();
+    fireFeatureChange( command );
+
+    return true;
+  }
+
+  protected boolean handleTabSelected( final CTabItem item )
+  {
+    m_currentSelection = m_tabFolder.indexOf( item );
+
+    System.out.println( "current selection: " + m_currentSelection );
+
+    return true;
   }
 }
