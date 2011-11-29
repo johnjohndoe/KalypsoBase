@@ -52,6 +52,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.observation.result.ComponentUtilities;
@@ -512,8 +513,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   @Override
   public void removeYourself( )
   {
-    // override this method
-    throw new UnsupportedOperationException();
+    throw new UnsupportedOperationException( Messages.getString( "org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme.0" ) ); //$NON-NLS-1$
   }
 
   public void setLineStyle( final ILineStyle lineStyle )
