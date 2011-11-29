@@ -45,6 +45,7 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.IProfileFeatureProvider;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypsodeegree.model.feature.Feature;
@@ -59,6 +60,8 @@ public class ProfileAndResults
   private final IProfileFeature m_profile;
 
   private final Object m_result;
+
+  private final CommandableWorkspace m_workspace;
 
   public static ProfileAndResults search( final IFeatureSelection selection )
   {
@@ -85,7 +88,9 @@ public class ProfileAndResults
               profileMember.setProfileType( "org.kalypso.model.wspm.tuhh.profiletype" ); //$NON-NLS-1$
             }
 
-            return new ProfileAndResults( profileMember, result );
+            final CommandableWorkspace workspace = eft.getWorkspace();
+
+            return new ProfileAndResults( profileMember, workspace, result );
           }
         }
       }
@@ -130,9 +135,10 @@ public class ProfileAndResults
     return null;
   }
 
-  public ProfileAndResults( final IProfileFeature profile, final Object result )
+  public ProfileAndResults( final IProfileFeature profile, final CommandableWorkspace workspace, final Object result )
   {
     m_profile = profile;
+    m_workspace = workspace;
     m_result = result;
   }
 
@@ -141,9 +147,13 @@ public class ProfileAndResults
     return m_profile;
   }
 
+  public CommandableWorkspace getWorkspace( )
+  {
+    return m_workspace;
+  }
+
   public Object getResult( )
   {
     return m_result;
   }
-
 }
