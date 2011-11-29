@@ -111,10 +111,14 @@ public class WechmannGroup implements IWQConverter
     final IAxis dateAxis = AxisUtils.findDateAxis( model.getAxes() );
     final Date date = (Date) model.get( index, dateAxis );
 
-    final double e = getValue( model, index, ITimeseriesConstants.TYPE_WECHMANN_E );
-    final double v = getValue( model, index, ITimeseriesConstants.TYPE_WECHMANN_SCHALTER_V );
+    // FIXME
+    // final double e = getValue( model, index, ITimeseriesConstants.TYPE_WECHMANN_E );
+    // final double v = getValue( model, index, ITimeseriesConstants.TYPE_WECHMANN_SCHALTER_V );
 
     final WechmannParams params = getFor( date ).getForQ( q );
+
+    // FIXME
+    // return WechmannFunction.computeW( params, q ) + e * v;
     return WechmannFunction.computeW( params, q );
   }
 
@@ -138,8 +142,6 @@ public class WechmannGroup implements IWQConverter
 
   /**
    * Returns 0.0, if W is too big for current validity
-   * 
-   * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#computeQ(java.util.Date, double)
    */
   @Override
   public double computeQ( final ITupleModel model, final Integer index, final double w ) throws WQException, SensorException
@@ -147,14 +149,19 @@ public class WechmannGroup implements IWQConverter
     final IAxis dateAxis = AxisUtils.findDateAxis( model.getAxes() );
     final Date date = (Date) model.get( index, dateAxis );
 
-    final double e = getValue( model, index, ITimeseriesConstants.TYPE_WECHMANN_E );
-    final double v = getValue( model, index, ITimeseriesConstants.TYPE_WECHMANN_SCHALTER_V );
+    // FIXME
+    // final double e = getValue( model, index, ITimeseriesConstants.TYPE_WECHMANN_E );
+    // final double v = getValue( model, index, ITimeseriesConstants.TYPE_WECHMANN_SCHALTER_V );
 
-    final WechmannParams params = getFor( date ).getForW( w );
+    // final double w2 = w - e * v;
+
+    final double w2 = w;
+
+    final WechmannParams params = getFor( date ).getForW( w2 );
     if( params == null )
       return 0.0;
 
-    return WechmannFunction.computeQ( params, w );
+    return WechmannFunction.computeQ( params, w2 );
   }
 
   /**
