@@ -64,9 +64,16 @@ import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
  */
 public class AdaptValuesVisitor implements IObservationVisitor, IZmlModelColumnVisitor
 {
-  Map<Date, Number> m_values = new HashMap<Date, Number>();
+  private Map<Date, Number> m_values = new HashMap<Date, Number>();
 
-  ZmlModelTransaction m_transaction = new ZmlModelTransaction();
+  private ZmlModelTransaction m_transaction = new ZmlModelTransaction();
+
+  private final IAxis m_targetAxis;
+
+  public AdaptValuesVisitor( final IAxis targetAxis )
+  {
+    m_targetAxis = targetAxis;
+  }
 
   @Override
   public void visit( final IObservationValueContainer container )
@@ -97,6 +104,8 @@ public class AdaptValuesVisitor implements IObservationVisitor, IZmlModelColumnV
       if( Objects.isNull( value ) )
         return;
 
+      // FIXME: use target axes instead!
+      
       m_transaction.add( reference, value, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
     }
     catch( final SensorException e )
