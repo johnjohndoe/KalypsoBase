@@ -52,7 +52,6 @@ import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.gismapview.CascadingLayer;
-import org.kalypso.template.types.ObjectFactory;
 import org.kalypso.template.types.StyledLayerType;
 
 /**
@@ -67,7 +66,7 @@ public class CascadingLayerKalypsoTheme extends AbstractCascadingLayerTheme
   {
     super( layerName, layerType.getLinktype(), mapModel );
 
-    GisTemplateFeatureTheme.configureProperties( this, layerType );
+    GisTemplateLayerHelper.updateProperties( layerType, this );
 
     final GisTemplateMapModell innerMapModell = new GisTemplateMapModell( context, mapModel.getCoordinatesSystem(), mapModel.getProject(), selectionManager )
     {
@@ -101,34 +100,9 @@ public class CascadingLayerKalypsoTheme extends AbstractCascadingLayerTheme
     super.dispose();
   }
 
-  public void fillLayerType( final CascadingLayer layer, final String id, final boolean isVisible, final String srsName, final IProgressMonitor monitor ) throws CoreException
+  public void fillLayerList( final List<JAXBElement< ? extends StyledLayerType>> layers, final String id, final String srsName, final IProgressMonitor monitor ) throws CoreException
   {
-    layer.setId( id );
-    layer.setLinktype( "gmt" ); //$NON-NLS-1$
-    layer.setActuate( "onRequest" ); //$NON-NLS-1$
-    layer.setType( "simple" ); //$NON-NLS-1$
-
-    layer.setName( getName().getKey() );
-    layer.setVisible( isVisible );
-    layer.getDepends();
-
-    final ObjectFactory extentFac = new ObjectFactory();
-
-    final String legendIcon = getLegendIcon();
-    if( legendIcon != null )
-      layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
-
-    layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( shouldShowLegendChildren() ) );
-
-    final List<JAXBElement< ? extends StyledLayerType>> layers = layer.getLayer();
-
-    fillLayerList( layers, getInnerMapModel(), id, srsName, monitor );
-
-    GisTemplateFeatureTheme.fillProperties( this, extentFac, layer );
-  }
-
-  private void fillLayerList( final List<JAXBElement< ? extends StyledLayerType>> layers, final IMapModell innerMapModel, final String id, final String srsName, final IProgressMonitor monitor ) throws CoreException
-  {
+    final IMapModell innerMapModel = getInnerMapModel();
     final IKalypsoTheme[] themes = innerMapModel.getAllThemes();
     monitor.beginTask( "", themes.length ); //$NON-NLS-1$
 

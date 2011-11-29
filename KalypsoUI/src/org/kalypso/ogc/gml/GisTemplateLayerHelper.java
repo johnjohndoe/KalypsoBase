@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
+import java.util.List;
+
 import javax.xml.bind.JAXBElement;
 
 import org.eclipse.core.runtime.CoreException;
@@ -66,6 +68,13 @@ public class GisTemplateLayerHelper
    */
   private GisTemplateLayerHelper( )
   {
+  }
+
+  public static void updateProperties( final StyledLayerType layer, final IKalypsoTheme theme )
+  {
+    final List<Property> propertyList = layer.getProperty();
+    for( final Property property : propertyList )
+      theme.setProperty( property.getName(), property.getValue() );
   }
 
   public static JAXBElement< ? extends StyledLayerType> configureLayer( final IKalypsoTheme theme, final String id, final GM_Envelope bbox, final String srsName, final IProgressMonitor monitor ) throws CoreException
@@ -102,15 +111,48 @@ public class GisTemplateLayerHelper
 
   private static JAXBElement< ? extends StyledLayerType> configureCascadingLayerKalypsoTheme( final CascadingLayerKalypsoTheme theme, final String id, final String srsName, final IProgressMonitor monitor ) throws CoreException
   {
-    final CascadingLayer cascadingLayer = GisTemplateHelper.OF_GISMAPVIEW.createCascadingLayer();
-    theme.fillLayerType( cascadingLayer, id, theme.isVisible(), srsName, monitor );
-    return TemplateUtilities.OF_GISMAPVIEW.createCascadingLayer( cascadingLayer );
+    final CascadingLayer layer = GisTemplateHelper.OF_GISMAPVIEW.createCascadingLayer();
+    layer.setId( id );
+    layer.setLinktype( "gmt" ); //$NON-NLS-1$
+    layer.setActuate( "onRequest" ); //$NON-NLS-1$
+    layer.setType( "simple" ); //$NON-NLS-1$
+    layer.setName( theme.getName().getKey() );
+    layer.setVisible( theme.isVisible() );
+    layer.getDepends();
+
+    /* Configure the legend. */
+    configureLegend( theme, layer );
+
+    /* Configure the layer list. */
+    theme.fillLayerList( layer.getLayer(), id, srsName, monitor );
+
+    /* Configure the properties. */
+    configureProperties( theme, layer );
+
+    return TemplateUtilities.OF_GISMAPVIEW.createCascadingLayer( layer );
   }
 
   private static JAXBElement< ? extends StyledLayerType> configureGisTemplateFeatureTheme( final GisTemplateFeatureTheme theme, final String id )
   {
     final StyledLayerType layer = GisTemplateHelper.OF_TEMPLATE_TYPES.createStyledLayerType();
-    theme.fillLayerType( layer, id, theme.isVisible() );
+    layer.setId( id );
+    layer.setHref( theme.getHref() );
+    layer.setLinktype( theme.getLayerKey().getType() );
+    layer.setActuate( "onRequest" ); //$NON-NLS-1$
+    layer.setType( "simple" ); //$NON-NLS-1$
+    layer.setFeaturePath( theme.getFeaturePath() );
+    layer.setName( theme.getName().getKey() );
+    layer.setVisible( theme.isVisible() );
+
+    /* Configure the legend. */
+    configureLegend( theme, layer );
+
+    /* Configure the styles. */
+    configureStyle( theme, layer );
+
+    /* Configure the properties. */
+    configureProperties( theme, layer );
+
     return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
   }
 
@@ -126,14 +168,162 @@ public class GisTemplateLayerHelper
     layer.setActuate( "onRequest" ); //$NON-NLS-1$
     layer.setType( "simple" ); //$NON-NLS-1$
 
-    final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
+    /* Configure the legend. */
+    configureLegend( theme, layer );
 
+    /* Configure the style. */
+    configureStyle( theme, layer );
+
+    return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
+  }
+
+  private static JAXBElement< ? extends StyledLayerType> configureKalypsoPictureTheme( final KalypsoPictureTheme theme, final String id )
+  {
+    final StyledLayerType layer = GisTemplateHelper.OF_TEMPLATE_TYPES.createStyledLayerType();
+    layer.setName( theme.getName().getKey() );
+    layer.setFeaturePath( "" ); //$NON-NLS-1$
+    layer.setVisible( theme.isVisible() );
+    layer.setId( id );
+    layer.setHref( theme.getSource() );
+    layer.setLinktype( theme.getType() );
+    layer.setActuate( "onRequest" ); //$NON-NLS-1$
+    layer.setType( "simple" ); //$NON-NLS-1$
+
+    /* Configure the legend. */
+    configureLegend( theme, layer );
+
+    return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
+  }
+
+  private static JAXBElement< ? extends StyledLayerType> configureCascadingKalypsoTheme( final CascadingKalypsoTheme theme, final String id, final GM_Envelope bbox, final String srsName, final IProgressMonitor monitor ) throws CoreException
+  {
+    final StyledLayerType layer = GisTemplateHelper.OF_TEMPLATE_TYPES.createStyledLayerType();
+    layer.setId( id );
+    layer.setHref( theme.getMapViewRefUrl() );
+    layer.setLinktype( "gmt" ); //$NON-NLS-1$
+    layer.setActuate( "onRequest" ); //$NON-NLS-1$
+    layer.setType( "simple" ); //$NON-NLS-1$
+    layer.setName( theme.getName().getKey() );
+    layer.setVisible( theme.isVisible() );
+
+    /* Configure the legend. */
+    configureLegend( theme, layer );
+
+    /* Configure the properties. */
+    configureProperties( theme, layer );
+
+    theme.createGismapTemplate( bbox, srsName, monitor );
+
+    return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
+  }
+
+  private static JAXBElement< ? extends StyledLayerType> configureKalypsoLegendTheme( final KalypsoLegendTheme theme, final String id )
+  {
+    final StyledLayerType layer = GisTemplateHelper.OF_TEMPLATE_TYPES.createStyledLayerType();
+    layer.setName( theme.getName().getKey() );
+    layer.setFeaturePath( "" ); //$NON-NLS-1$
+    layer.setVisible( theme.isVisible() );
+    layer.setId( id );
+    layer.setHref( "" ); //$NON-NLS-1$
+    layer.setLinktype( "legend" ); //$NON-NLS-1$
+
+    /* Configure the legend. */
+    configureLegend( theme, layer );
+
+    /* Configure the properties. */
+    configureProperties( theme, layer );
+
+    return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
+  }
+
+  private static JAXBElement< ? extends StyledLayerType> configureKalypsoScaleTheme( final KalypsoScaleTheme theme, final String id )
+  {
+    final StyledLayerType layer = GisTemplateHelper.OF_TEMPLATE_TYPES.createStyledLayerType();
+    layer.setName( theme.getName().getKey() );
+    layer.setVisible( theme.isVisible() );
+    layer.setId( id ); //$NON-NLS-1$
+    layer.setLinktype( "scale" ); //$NON-NLS-1$
+
+    /* Configure the legend. */
+    configureLegend( theme, layer );
+
+    return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
+  }
+
+  private static JAXBElement< ? extends StyledLayerType> configureKalypsoImageTheme( final KalypsoImageTheme theme, final String id )
+  {
+    final StyledLayerType layer = GisTemplateHelper.OF_TEMPLATE_TYPES.createStyledLayerType();
+    layer.setName( theme.getName().getKey() );
+    layer.setFeaturePath( "" ); //$NON-NLS-1$
+    layer.setVisible( theme.isVisible() );
+    layer.setId( id );
+    layer.setHref( "" ); //$NON-NLS-1$
+    layer.setLinktype( "image" ); //$NON-NLS-1$
+
+    /* Configure the legend. */
+    configureLegend( theme, layer );
+
+    /* Configure the properties. */
+    configureProperties( theme, layer );
+
+    return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
+  }
+
+  private static JAXBElement< ? extends StyledLayerType> configureKalypsoTextTheme( final KalypsoTextTheme theme, final String id )
+  {
+    final StyledLayerType layer = GisTemplateHelper.OF_TEMPLATE_TYPES.createStyledLayerType();
+    layer.setName( theme.getName().getKey() );
+    layer.setFeaturePath( "" ); //$NON-NLS-1$
+    layer.setVisible( theme.isVisible() );
+    layer.setId( id );
+    layer.setHref( "" ); //$NON-NLS-1$
+    layer.setLinktype( "text" ); //$NON-NLS-1$
+
+    /* Configure the legend. */
+    configureLegend( theme, layer );
+
+    /* Configure the properties. */
+    configureProperties( theme, layer );
+
+    return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
+  }
+
+  private static JAXBElement< ? extends StyledLayerType> configureViaType( final IKalypsoTheme theme, final String id, final GM_Envelope bbox, final String srsName )
+  {
+    /* Get the type. */
+    final String type = theme.getType();
+
+    /* Return null for unknown themes, else we produce invalid XML. */
+    final IKalypsoThemeFactory themeFactory = ThemeFactoryExtension.getThemeFactory( type );
+    if( themeFactory == null )
+      return null;
+
+    return themeFactory.configureLayer( theme, id, bbox, srsName );
+  }
+
+  private static void configureLegend( final AbstractKalypsoTheme theme, final StyledLayerType layer )
+  {
+    final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
     final String legendIcon = theme.getLegendIcon();
     if( legendIcon != null )
       layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
-
     layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( theme.shouldShowLegendChildren() ) );
+  }
 
+  private static void configureStyle( final GisTemplateFeatureTheme theme, final StyledLayerType layer )
+  {
+    final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
+    final List<Style> stylesList = layer.getStyle();
+    for( final IKalypsoStyle style : theme.getStyleList() )
+    {
+      final Style styleType = extentFac.createStyledLayerTypeStyle();
+      style.fillStyleType( stylesList, styleType );
+    }
+  }
+
+  private static void configureStyle( final KalypsoWMSTheme theme, final StyledLayerType layer )
+  {
+    final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
     final Style[] oldStyles = theme.getStyles();
     for( final Style oldStyle : oldStyles )
     {
@@ -150,44 +340,11 @@ public class GisTemplateLayerHelper
 
       layer.getStyle().add( newStyle );
     }
-
-    return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
   }
 
-  private static JAXBElement< ? extends StyledLayerType> configureKalypsoPictureTheme( final KalypsoPictureTheme theme, final String id )
+  private static void configureProperties( final AbstractKalypsoTheme theme, final StyledLayerType layer )
   {
-    final StyledLayerType layer = GisTemplateHelper.OF_TEMPLATE_TYPES.createStyledLayerType();
-    theme.fillLayerType( layer, id, theme.isVisible() );
-    return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
-  }
-
-  private static JAXBElement< ? extends StyledLayerType> configureCascadingKalypsoTheme( final CascadingKalypsoTheme theme, final String id, final GM_Envelope bbox, final String srsName, final IProgressMonitor monitor ) throws CoreException
-  {
-    final StyledLayerType layer = GisTemplateHelper.OF_TEMPLATE_TYPES.createStyledLayerType();
-    theme.fillLayerType( layer, id, theme.isVisible() );
-    theme.createGismapTemplate( bbox, srsName, monitor );
-    return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
-  }
-
-  private static JAXBElement< ? extends StyledLayerType> configureKalypsoLegendTheme( final KalypsoLegendTheme theme, final String id )
-  {
-    final StyledLayerType layer = GisTemplateHelper.OF_TEMPLATE_TYPES.createStyledLayerType();
-    layer.setName( theme.getName().getKey() );
-    layer.setFeaturePath( "" ); //$NON-NLS-1$
-    layer.setVisible( theme.isVisible() );
-    layer.setId( id );
-    layer.setHref( "" ); //$NON-NLS-1$
-    layer.setLinktype( "legend" ); //$NON-NLS-1$
-
-    final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
-
-    final String legendIcon = theme.getLegendIcon();
-    if( legendIcon != null )
-      layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
-
-    layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( theme.shouldShowLegendChildren() ) );
-
-    /* Update the properties. */
+    /* Get the property names. */
     String[] propertyNames = theme.getPropertyNames();
     for( String propertyName : propertyNames )
     {
@@ -196,96 +353,5 @@ public class GisTemplateLayerHelper
       property.setValue( theme.getProperty( propertyName, null ) );
       layer.getProperty().add( property );
     }
-
-    return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
-  }
-
-  private static JAXBElement< ? extends StyledLayerType> configureKalypsoScaleTheme( final KalypsoScaleTheme theme, final String id )
-  {
-    final StyledLayerType layer = GisTemplateHelper.OF_TEMPLATE_TYPES.createStyledLayerType();
-    layer.setName( theme.getName().getKey() );
-    layer.setVisible( theme.isVisible() );
-    layer.setId( id ); //$NON-NLS-1$
-    layer.setLinktype( "scale" ); //$NON-NLS-1$
-
-    final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
-
-    final String legendIcon = theme.getLegendIcon();
-    if( legendIcon != null )
-      layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
-
-    layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( theme.shouldShowLegendChildren() ) );
-    return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
-  }
-
-  private static JAXBElement< ? extends StyledLayerType> configureKalypsoImageTheme( final KalypsoImageTheme theme, final String id )
-  {
-    final StyledLayerType layer = GisTemplateHelper.OF_TEMPLATE_TYPES.createStyledLayerType();
-    layer.setName( theme.getName().getKey() );
-    layer.setFeaturePath( "" ); //$NON-NLS-1$
-    layer.setVisible( theme.isVisible() );
-    layer.setId( id );
-    layer.setHref( "" ); //$NON-NLS-1$
-    layer.setLinktype( "image" ); //$NON-NLS-1$
-
-    final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
-    final String legendIcon = theme.getLegendIcon();
-    if( legendIcon != null )
-      layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
-    layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( theme.shouldShowLegendChildren() ) );
-
-    /* Update the properties. */
-    String[] propertyNames = theme.getPropertyNames();
-    for( String propertyName : propertyNames )
-    {
-      Property property = TemplateUtilities.OF_TEMPLATE_TYPES.createStyledLayerTypeProperty();
-      property.setName( propertyName );
-      property.setValue( theme.getProperty( propertyName, null ) );
-      layer.getProperty().add( property );
-    }
-
-    return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
-  }
-
-  private static JAXBElement< ? extends StyledLayerType> configureKalypsoTextTheme( final KalypsoTextTheme theme, final String id )
-  {
-    final StyledLayerType layer = GisTemplateHelper.OF_TEMPLATE_TYPES.createStyledLayerType();
-    layer.setName( theme.getName().getKey() );
-    layer.setFeaturePath( "" ); //$NON-NLS-1$
-    layer.setVisible( theme.isVisible() );
-    layer.setId( id );
-    layer.setHref( "" ); //$NON-NLS-1$
-    layer.setLinktype( "text" ); //$NON-NLS-1$
-
-    final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
-    final String legendIcon = theme.getLegendIcon();
-    if( legendIcon != null )
-      layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
-    layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( theme.shouldShowLegendChildren() ) );
-
-    /* Update the properties. */
-    String[] propertyNames = theme.getPropertyNames();
-    for( String propertyName : propertyNames )
-    {
-      Property property = TemplateUtilities.OF_TEMPLATE_TYPES.createStyledLayerTypeProperty();
-      property.setName( propertyName );
-      property.setValue( theme.getProperty( propertyName, null ) );
-      layer.getProperty().add( property );
-    }
-
-    return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
-  }
-
-  private static JAXBElement< ? extends StyledLayerType> configureViaType( final IKalypsoTheme theme, final String id, final GM_Envelope bbox, final String srsName )
-  {
-    /* Get the type. */
-    final String type = theme.getType();
-
-    /* Return null for unknown themes, else we produce invalid XML. */
-    final IKalypsoThemeFactory themeFactory = ThemeFactoryExtension.getThemeFactory( type );
-    if( themeFactory == null )
-      return null;
-
-    return themeFactory.configureLayer( theme, id, bbox, srsName );
   }
 }
