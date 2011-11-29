@@ -165,7 +165,7 @@ public class PropertyContentHandler extends AbstractGmlContentHandler implements
     final IPropertyType pt = featureType.getProperty( qname );
     if( pt == null )
     {
-      final String msg = String.format( "Found unknwon property '%s' for FeatureType '%s'", qname, featureType.getQName() );
+      final String msg = String.format( "Found unknown property '%s' for FeatureType '%s'", qname, featureType.getQName() );
       throw new SAXException( msg );
     }
 
