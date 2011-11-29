@@ -29,31 +29,50 @@
  */
 package org.kalypso.ui.editor.actions;
 
+import java.util.Properties;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Event;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.core.catalog.FeatureTypeImageCatalog;
+import org.kalypso.core.catalog.FeatureTypePropertiesCatalog;
+import org.kalypso.core.catalog.IFeatureTypePropertiesConstants;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author kuepfer
  */
 public class NewFeatureAction extends Action
 {
-  private final NewFeaturePropertyScope m_scope;
-
   private final IFeatureType m_featureType;
 
-  public NewFeatureAction( final NewFeaturePropertyScope scope, final IFeatureType featureType )
-  {
-    m_scope = scope;
+  private final CommandableWorkspace m_workspace;
 
+  private final Feature m_parentFeature;
+
+  private final IRelationType m_targetRelation;
+
+  private final IFeatureSelectionManager m_selectionManager;
+
+  public NewFeatureAction( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType targetRelation, final IFeatureType featureType, final IFeatureSelectionManager selectionManager )
+  {
+    m_workspace = workspace;
+    m_parentFeature = parentFeature;
+    m_targetRelation = targetRelation;
     m_featureType = featureType;
+    m_selectionManager = selectionManager;
 
     final String actionLabel = FeatureActionUtilities.newFeatureActionLabel( featureType );
     setText( actionLabel );
@@ -76,7 +95,7 @@ public class NewFeatureAction extends Action
   {
     try
     {
-      m_scope.createNewFeature( m_featureType );
+      createNewFeature();
     }
     catch( final Exception e )
     {
@@ -87,4 +106,14 @@ public class NewFeatureAction extends Action
     }
   }
 
+  void createNewFeature( ) throws Exception
+  {
+    final Properties uiProperties = FeatureTypePropertiesCatalog.getProperties( m_workspace.getContext(), m_featureType.getQName() );
+    final String depthStr = uiProperties.getProperty( IFeatureTypePropertiesConstants.FEATURE_CREATION_DEPTH );
+
+    final int depth = NumberUtils.parseQuietInt( depthStr, 0 );
+
+    final ICommand command = new AddFeatureCommand( m_workspace, m_featureType, m_parentFeature, m_targetRelation, 0, null, m_selectionManager, depth );
+    m_workspace.postCommand( command );
+  }
 }
