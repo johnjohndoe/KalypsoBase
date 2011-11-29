@@ -143,8 +143,8 @@ public class DateRange implements Comparable<DateRange>
     if( !Objects.isNull( getTo() ) )
       return getTo().compareTo( date ) >= 0;
 
-      // from and to is null -> so return true
-      return true;
+    // from and to is null -> so return true
+    return true;
   }
 
   /**
@@ -161,8 +161,8 @@ public class DateRange implements Comparable<DateRange>
     if( !Objects.isNull( getTo() ) )
       return getTo().compareTo( date ) > 0;
 
-      // from and to is null -> so return true
-      return true;
+    // from and to is null -> so return true
+    return true;
   }
 
   /**
@@ -192,6 +192,9 @@ public class DateRange implements Comparable<DateRange>
       return null;
 
     final Calendar cal = Calendar.getInstance();
+    cal.set( Calendar.SECOND, 0 );
+    cal.set( Calendar.MILLISECOND, 0 );
+
     final Date d2 = cal.getTime();
     cal.add( Calendar.DAY_OF_YEAR, -pastDays );
     final Date d1 = cal.getTime();
