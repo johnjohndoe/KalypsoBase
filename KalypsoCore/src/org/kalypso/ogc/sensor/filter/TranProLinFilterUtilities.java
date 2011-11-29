@@ -52,12 +52,12 @@ public final class TranProLinFilterUtilities
     throw new UnsupportedOperationException();
   }
 
-  public static void transformAndWrite( final IObservation baseObservation, final DateRange range, final double operandBegin, final double operandEnd, final String operator, final String axisTypes, final int statusToMerge, final File resultFile, final String name ) throws SensorException
+  public static void transformAndWrite( final IObservation baseObservation, final DateRange range, final double operandBegin, final double operandEnd, final String operator, final String axisTypes, final File resultFile, final String name ) throws SensorException
   {
     if( resultFile == null )
       return; // nothing to do
 
-    final IObservation resultObservation = transform( baseObservation, range, operandBegin, operandEnd, operator, axisTypes, statusToMerge );
+    final IObservation resultObservation = transform( baseObservation, range, operandBegin, operandEnd, operator, axisTypes );
     final MetadataList metadataList = resultObservation.getMetadataList();
     final String oldName = metadataList.getProperty( IMetadataConstants.MD_NAME );
     metadataList.setProperty( IMetadataConstants.MD_NAME, name );
@@ -67,9 +67,9 @@ public final class TranProLinFilterUtilities
     metadataList.setProperty( IMetadataConstants.MD_NAME, oldName );
   }
 
-  public static IObservation transform( final IObservation baseObservation, final DateRange range, final double operandBegin, final double operandEnd, final String operator, final String axisTypes, final int statusToMerge ) throws SensorException
+  public static IObservation transform( final IObservation baseObservation, final DateRange range, final double operandBegin, final double operandEnd, final String operator, final String axisTypes ) throws SensorException
   {
-    final TranProLinFilter filter = new TranProLinFilter( range, operator, operandBegin, operandEnd, statusToMerge, axisTypes );
+    final TranProLinFilter filter = new TranProLinFilter( range, operator, operandBegin, operandEnd, axisTypes );
     filter.initFilter( null, baseObservation, null );
     return AutoProxyFactory.getInstance().proxyObservation( filter );
   }

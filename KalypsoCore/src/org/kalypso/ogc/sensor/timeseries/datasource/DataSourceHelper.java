@@ -120,6 +120,11 @@ public final class DataSourceHelper
 
   public static String getDataSourceName( final IAxis valueAxis )
   {
-    return String.format( "_dataSource_%s", valueAxis.getType() ); //$NON-NLS-1$
+    return getDataSourceName( valueAxis.getType() );
+  }
+
+  public static String getDataSourceName( final String axisType )
+  {
+    return String.format( "_dataSource_%s", axisType ); //$NON-NLS-1$
   }
 }
