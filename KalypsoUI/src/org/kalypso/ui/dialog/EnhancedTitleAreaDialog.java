@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.dialogs;
+package org.kalypso.ui.dialog;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -46,7 +46,7 @@ import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * @author Dirk Kuch
@@ -61,7 +61,7 @@ public class EnhancedTitleAreaDialog extends TitleAreaDialog
 
   protected Point getScreenSize( final String parameter )
   {
-    final IDialogSettings settings = KalypsoZmlUI.getDefault().getDialogSettings();
+    final IDialogSettings settings = KalypsoGisPlugin.getDefault().getDialogSettings();
     final String sizeString = settings.get( parameter );
     if( sizeString == null || sizeString.trim().isEmpty() )
       return new Point( 640, 480 );
@@ -73,13 +73,10 @@ public class EnhancedTitleAreaDialog extends TitleAreaDialog
 
   public void setScreenSize( final String parameter, final Point size )
   {
-    final IDialogSettings settings = KalypsoZmlUI.getDefault().getDialogSettings();
+    final IDialogSettings settings = KalypsoGisPlugin.getDefault().getDialogSettings();
     settings.put( parameter, String.format( "%d,%d", size.x, size.y ) );
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.TitleAreaDialog#setErrorMessage(java.lang.String)
-   */
   @Override
   public void setErrorMessage( final String newErrorMessage )
   {
@@ -98,9 +95,6 @@ public class EnhancedTitleAreaDialog extends TitleAreaDialog
     super.setErrorMessage( newErrorMessage );
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.TitleAreaDialog#setMessage(java.lang.String)
-   */
   @Override
   public void setMessage( final String newMessage )
   {
