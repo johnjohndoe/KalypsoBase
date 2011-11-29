@@ -44,11 +44,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import javax.activation.MimeType;
-import javax.activation.MimeTypeParseException;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.URIUtil;
+import org.kalypso.commons.java.activation.MimeTypeUtils;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -111,14 +111,6 @@ public class Image extends Feature_Impl
     if( StringUtils.isBlank( property ) )
       return null;
 
-    try
-    {
-      return new MimeType( property );
-    }
-    catch( final MimeTypeParseException e )
-    {
-      e.printStackTrace();
-      return null;
-    }
+    return MimeTypeUtils.createQuit( property );
   }
 }
