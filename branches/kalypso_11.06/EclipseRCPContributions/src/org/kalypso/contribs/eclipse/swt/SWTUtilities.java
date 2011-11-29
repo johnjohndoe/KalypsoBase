@@ -95,6 +95,7 @@ public final class SWTUtilities
     SWT_MAP.put( "SWT.SMOOTH", SWT.SMOOTH ); //$NON-NLS-1$
     SWT_MAP.put( "SWT.SEPARATOR", SWT.SEPARATOR ); //$NON-NLS-1$
     SWT_MAP.put( "SWT.SEARCH", SWT.SEARCH ); //$NON-NLS-1$
+    SWT_MAP.put( "SWT.CLOSE", SWT.CLOSE ); //$NON-NLS-1$
 
     SWT_MAP.put( "ExpandableComposite.CLIENT_INDENT", ExpandableComposite.CLIENT_INDENT ); //$NON-NLS-1$
     SWT_MAP.put( "ExpandableComposite.COMPACT", ExpandableComposite.COMPACT ); //$NON-NLS-1$
