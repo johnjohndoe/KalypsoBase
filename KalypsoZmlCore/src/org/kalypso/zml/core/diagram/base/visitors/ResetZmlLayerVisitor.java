@@ -81,7 +81,7 @@ public class ResetZmlLayerVisitor extends AbstractChartLayerVisitor
     if( Objects.isNull( container ) )
       return true;
 
-    return Boolean.valueOf( container.getParameterValue( "cleanLayerOnRefresh", "true" ) );
+    return Boolean.valueOf( container.getParameterValue( "cleanLayerOnRefresh", "true" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private void reset( final IZmlLayer layer )
