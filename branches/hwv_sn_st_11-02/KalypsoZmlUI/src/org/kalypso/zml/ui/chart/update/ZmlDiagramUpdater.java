@@ -41,6 +41,7 @@
 package org.kalypso.zml.ui.chart.update;
 
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.zml.core.diagram.base.provider.observation.AsynchronousObservationProvider;
 import org.kalypso.zml.core.diagram.base.zml.MultipleTsLink;
 import org.kalypso.zml.core.diagram.base.zml.TSLinkWithName;
@@ -97,16 +98,28 @@ public class ZmlDiagramUpdater implements Runnable
       for( int index = 0; index < links.length; index++ )
       {
         final TSLinkWithName link = links[index];
-        final AsynchronousObservationProvider provider = new AsynchronousObservationProvider( link, multiple.getType() );
 
-        update( layers, provider, index, link.getName() );
+        try
+        {
 
-        provider.dispose();
+          final AsynchronousObservationProvider provider = new AsynchronousObservationProvider( link, multiple.getType() );
+          update( layers, provider, index, link.getName() );
+          provider.dispose();
+
+// final SynchronousObservationProvider synchrone = new SynchronousObservationProvider( link.getContext(),
+// link.getHref() );
+// update( layers, synchrone, index, link.getName() );
+        }
+        catch( final Exception e )
+        {
+          e.printStackTrace();
+        }
+
       }
     }
   }
 
-  private void update( final IZmlLayer[] layers, final AsynchronousObservationProvider provider, final int index, final String labelDescriptor )
+  private void update( final IZmlLayer[] layers, final IObsProvider provider, final int index, final String labelDescriptor )
   {
     for( final IZmlLayer baseLayer : layers )
     {

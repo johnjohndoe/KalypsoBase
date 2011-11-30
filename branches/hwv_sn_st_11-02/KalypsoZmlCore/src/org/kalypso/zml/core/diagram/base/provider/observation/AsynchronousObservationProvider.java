@@ -70,18 +70,12 @@ public class AsynchronousObservationProvider extends PooledObsProvider
     m_type = type;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.template.IObsProvider#copy()
-   */
   @Override
   public IObsProvider copy( )
   {
     return new AsynchronousObservationProvider( m_link, m_type );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.provider.AbstractObsProvider#getObservation()
-   */
   @Override
   public IObservation getObservation( )
   {

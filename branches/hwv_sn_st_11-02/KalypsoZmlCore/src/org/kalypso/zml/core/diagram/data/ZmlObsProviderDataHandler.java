@@ -76,9 +76,6 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
       onObservationLoaded();
     }
 
-    /**
-     * @see org.kalypso.ogc.sensor.template.IObsProviderListener#observationChangedX(java.lang.Object)
-     */
     @Override
     public void observationChanged( final Object source )
     {
@@ -141,9 +138,6 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
     m_layer.onObservationChanged();
   }
 
-  /**
-   * @see org.kalypso.zml.ui.chart.data.IZmlLayerDataHandler#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -172,18 +166,12 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
     return handler.getArguments( observation.getMetadataList() );
   }
 
-  /**
-   * @see org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler#getTargetAxisId()
-   */
   @Override
   public String getTargetAxisId( )
   {
     return m_targetAxisId;
   }
 
-  /**
-   * @see org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler#getObservation()
-   */
   @Override
   public IObservation getObservation( )
   {

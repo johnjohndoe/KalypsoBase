@@ -42,7 +42,6 @@ package org.kalypso.ogc.sensor.provider;
 
 import java.net.URL;
 
-import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -111,7 +110,6 @@ public class PooledObsProvider extends AbstractObsProvider implements IPoolListe
   @Override
   public final void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {
-
     if( !m_isDisposed )
     {
       setObservation( (IObservation) newValue );
