@@ -315,6 +315,7 @@ public final class StatusUtilities
 
   /**
    * Creates a warning-status with given message and null throwable.
+   * 
    * @deprecated
    */
   @Deprecated
@@ -563,6 +564,25 @@ public final class StatusUtilities
     final IStatus[] children1 = status1.getChildren();
     final IStatus[] children2 = status2.getChildren();
     return Arrays.equals( children1, children2 );
+  }
+
+  public static IStatus toSimpleStatus( final IStatus status )
+  {
+    if( status instanceof MultiStatus )
+    {
+      final MultiStatus simple = new MultiStatus( status.getPlugin(), status.getCode(), status.getMessage(), null );
+
+      final MultiStatus multiple = (MultiStatus) status;
+      final IStatus[] children = multiple.getChildren();
+      for( final IStatus child : children )
+      {
+        simple.add( toSimpleStatus( child ) );
+      }
+
+      return simple;
+    }
+
+    return new Status( status.getSeverity(), status.getPlugin(), status.getMessage() );
   }
 
 }
