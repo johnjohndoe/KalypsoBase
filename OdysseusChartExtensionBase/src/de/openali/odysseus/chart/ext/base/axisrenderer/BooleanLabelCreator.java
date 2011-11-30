@@ -48,10 +48,6 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 public class BooleanLabelCreator implements ILabelCreator
 {
 
-  /**
-   * @see de.openali.odysseus.chart.ext.base.axisrenderer.ILabelCreator#getLabel(java.lang.Number,
-   *      de.openali.odysseus.chart.framework.model.data.IDataRange)
-   */
   @Override
   public String getLabel( final Number value, final IDataRange<Number> range )
   {
@@ -64,12 +60,8 @@ public class BooleanLabelCreator implements ILabelCreator
     return String.format( "%d", value.intValue() );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.ext.base.axisrenderer.ILabelCreator#getLabel(java.lang.Number[], int,
-   *      de.openali.odysseus.chart.framework.model.data.IDataRange)
-   */
   @Override
-  public String getLabel( Number[] ticks, int i, IDataRange<Number> range )
+  public String getLabel( final Number[] ticks, final int i, final IDataRange<Number> range )
   {
     try
     {
