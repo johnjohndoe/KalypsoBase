@@ -177,7 +177,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
     return getIdentifier();
   }
 
-    @Override
+  @Override
   public void doUpdate( final int index, final Object value, final String source, final Integer status ) throws SensorException
   {
     update( index, value, source, status );
@@ -230,47 +230,6 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
       }
     }
 
-  }
-
-  private void updateTargetColumn( final ITupleModel model, final IAxis axis, final int modelIndex, final Object value ) throws SensorException
-  {
-    if( Objects.isNull( value ) )
-      model.set( modelIndex, axis, Double.NaN );
-    else
-    {
-      final Object existing = model.get( modelIndex, axis );
-
-      if( Objects.notEqual( existing, value ) )
-        model.set( modelIndex, axis, value );
-    }
-  }
-
-  private void updateStatusColumn( final ITupleModel model, final IAxis axis, final int modelIndex, final Integer status ) throws SensorException
-  {
-    if( Objects.isNull( status ) )
-      model.set( modelIndex, axis, KalypsoStati.BIT_OK );
-    else
-    {
-      final Object existing = model.get( modelIndex, axis );
-      if( Objects.notEqual( existing, status ) )
-        model.set( modelIndex, axis, status );
-    }
-  }
-
-  private void updateDataSourceColumn( final ITupleModel model, final IAxis axis, final int modelIndex, final String source ) throws SensorException
-  {
-    final Object existing = model.get( modelIndex, axis );
-
-    // FIXME - user modified triggered interpolated state?!?
-    final DataSourceHandler handler = new DataSourceHandler( getMetadata() );
-    final int sourceIndex;
-    if( Objects.isNull( source ) )
-      sourceIndex = handler.addDataSource( IDataSourceItem.SOURCE_UNKNOWN, IDataSourceItem.SOURCE_UNKNOWN );
-    else
-      sourceIndex = handler.addDataSource( source, source );
-
-    if( Objects.notEqual( existing, sourceIndex ) )
-      model.set( modelIndex, axis, sourceIndex );
   }
 
   @Override
@@ -450,7 +409,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
 
     fireColumnChanged();
   }
-  
+
   /**
    * @see org.kalypso.zml.core.table.model.IZmlModelColumn#fireColumnChangedEvent()
    */
@@ -470,6 +429,5 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
       ex.printStackTrace();
     }
   }
-  
 
 }

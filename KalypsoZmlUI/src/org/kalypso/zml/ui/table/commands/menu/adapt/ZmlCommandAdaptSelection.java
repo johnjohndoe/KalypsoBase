@@ -52,11 +52,8 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.TranProLinFilterUtilities;
-import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
-import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.wq.WQTimeserieProxy;
-import org.kalypso.ogc.sensor.timeseries.wq.test.WQObservationFilterTest;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.IZmlTable;
@@ -103,12 +100,12 @@ public class ZmlCommandAdaptSelection extends AbstractHandler
       final IZmlValueReference reference = selected[0].getValueReference();
       final IZmlModelColumn tableColumn = reference.getColumn();
       final IAxis axis = findTransformAxisType( tableColumn );
-      
+
       final IObservation transformed = transform( column, selected, range, axis );
 
       final DateRange dateRange = new DateRange( begin, end );
 
-      final AdaptValuesVisitor visitor = new AdaptValuesVisitor( axis );
+      final AdaptValuesVisitor visitor = new AdaptValuesVisitor( axis.getType() );
       transformed.accept( visitor, new ObservationRequest( dateRange ) );
       column.getModelColumn().accept( visitor );
 
@@ -144,7 +141,7 @@ public class ZmlCommandAdaptSelection extends AbstractHandler
       final WQTimeserieProxy wqObservation = (WQTimeserieProxy) observation;
       final IAxis destAxis = wqObservation.getDestAxis();
       final IAxis srcAxis = wqObservation.getSrcAxis();
-      
+
       if( valueAxis == destAxis )
         return srcAxis;
 
@@ -171,13 +168,13 @@ public class ZmlCommandAdaptSelection extends AbstractHandler
 
     final ITupleModel tupleModel1 = reference1.getColumn().getTupleModel();
     final ITupleModel tupleModel2 = reference2.getColumn().getTupleModel();
-    
+
     final int index1 = reference1.getModelIndex();
     final int index2 = reference2.getModelIndex();
-    
-    final double value1 = ((Number)tupleModel1.get( index1, axis )).doubleValue();
-    final double value2 = ((Number)tupleModel2.get( index2, axis )).doubleValue();
-    
+
+    final double value1 = ((Number) tupleModel1.get( index1, axis )).doubleValue();
+    final double value2 = ((Number) tupleModel2.get( index2, axis )).doubleValue();
+
     return value2 - value1;
   }
 }

@@ -52,6 +52,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.runtime.Assert;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 
 /**
  * @author Dirk Kuch
@@ -156,8 +157,12 @@ public class MultipleTsLink
 
   public String getType( )
   {
+    /** special handling for boolean polders */
+    if( StringUtils.containsIgnoreCase( getIdentifier(), ITimeseriesConstants.TYPE_POLDER_CONTROL ) ) //$NON-NLS-1$
+      return ITimeseriesConstants.TYPE_POLDER_CONTROL; //$NON-NLS-1$
+
     /** convention: type is encode in identifier of the time series link - like W, W_MODELL or Q, Q_MODELL */
-    final RETokenizer tokenizer = new RETokenizer( new Pattern( "_.*" ), getIdentifier() );
+    final RETokenizer tokenizer = new RETokenizer( new Pattern( "_.*" ), getIdentifier() ); //$NON-NLS-1$
     return tokenizer.nextToken();
   }
 
