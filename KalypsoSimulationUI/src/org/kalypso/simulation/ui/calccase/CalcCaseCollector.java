@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.calccase;
 
@@ -49,20 +49,24 @@ import org.eclipse.core.resources.IResourceVisitor;
 
 /**
  * Collects CalcCases in the Workspace
- * 
+ *
  * @author tgu
  */
 public class CalcCaseCollector implements IResourceVisitor
 {
   private final Collection<IResource> m_calcCases = new ArrayList<IResource>();
 
-  /**
-   * @see org.eclipse.core.resources.IResourceVisitor#visit(org.eclipse.core.resources.IResource)
-   */
+  private final String m_controlPath;
+
+  public CalcCaseCollector( final String controlPath )
+  {
+    m_controlPath = controlPath;
+  }
+
   @Override
   public boolean visit( final IResource resource )
   {
-    if( resource.getType() == IResource.FOLDER && ModelNature.isCalcCalseFolder( (IFolder) resource ) )
+    if( resource.getType() == IResource.FOLDER && ModelNature.isCalcCalseFolder( (IFolder) resource, m_controlPath ) )
     {
       m_calcCases.add( resource );
       return false;

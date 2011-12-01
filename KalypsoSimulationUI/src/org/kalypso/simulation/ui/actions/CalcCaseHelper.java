@@ -62,7 +62,7 @@ import org.kalypso.simulation.ui.i18n.Messages;
 
 /**
  * Helper Klasse für die Calc-Case Actions
- * 
+ *
  * @author belger
  */
 public class CalcCaseHelper
@@ -75,20 +75,20 @@ public class CalcCaseHelper
   /**
    * Lässt den Benutzer aus einer Liste von Rechenfällen auswählen Es werden alle Rechenfälle angezeigt, welche sich in
    * oder unterhalb der angegebenen Selection von Resourcen befinden.
-   * 
+   *
    * @param shell
    * @param selection
    * @param title
    * @param message
    * @return null bei Abbruch
    */
-  public static IFolder[] chooseCalcCases( final Shell shell, final ISelection selection, final String title, final String message )
+  public static IFolder[] chooseCalcCases( final Shell shell, final ISelection selection, final String title, final String message, final String controlPath )
   {
     // rausfinden, ob selection ok ist
     if( !(selection instanceof IStructuredSelection) )
       return null;
 
-    final CalcCaseCollector visitor = new CalcCaseCollector();
+    final CalcCaseCollector visitor = new CalcCaseCollector( controlPath );
     try
     {
       final IStructuredSelection structsel = (IStructuredSelection) selection;
