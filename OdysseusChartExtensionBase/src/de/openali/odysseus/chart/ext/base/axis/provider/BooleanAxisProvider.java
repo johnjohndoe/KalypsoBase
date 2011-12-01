@@ -38,38 +38,37 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.openali.odysseus.chart.ext.base.axisrenderer;
+package de.openali.odysseus.chart.ext.base.axis.provider;
 
-import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.ext.base.axis.BooleanAxis;
+import de.openali.odysseus.chart.ext.base.axis.ScreenCoordinateAxis;
+import de.openali.odysseus.chart.factory.provider.AbstractAxisProvider;
+import de.openali.odysseus.chart.framework.model.data.impl.StringDataOperator;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 
 /**
  * @author alibu
  */
-public class BooleanLabelCreator implements ILabelCreator
+public class BooleanAxisProvider extends AbstractAxisProvider
 {
 
   @Override
-  public String getLabel( final Number value, final IDataRange<Number> range )
+  public IAxis getAxis( )
   {
-    if( value.intValue() == 0 )
-      return "zu";
-    else if( value.intValue() == 1 )
-      return "auf";
+    final IAxis axis = new BooleanAxis( getId(), getPosition(), getDataClass() );
+    if( getValueArray() != null )
+    {
+      final StringDataOperator sdo = new StringDataOperator( getValueArray() );
+      axis.addDataOperator( String.class, sdo );
+    }
 
-    return String.format( "%d", value.intValue() ); //$NON-NLS-1$
+    return axis;
   }
 
   @Override
-  public String getLabel( final Number[] ticks, final int i, final IDataRange<Number> range )
+  public IAxis getScreenAxis( final String identifier, final POSITION position )
   {
-    try
-    {
-      return getLabel( ticks[i], range );
-    }
-    catch( final ArrayIndexOutOfBoundsException e )
-    {
-      e.printStackTrace();
-      return "";
-    }
+    return new ScreenCoordinateAxis( identifier, position );
   }
 }
