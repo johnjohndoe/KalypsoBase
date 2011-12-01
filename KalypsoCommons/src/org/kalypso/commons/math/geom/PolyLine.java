@@ -47,7 +47,7 @@ public class PolyLine
    * @param delta
    *          used for double comparison
    */
-  public PolyLine( final Point2D[] points, final double delta )
+  public PolyLine( Point2D[] points, double delta )
   {
     m_delta = delta;
 
@@ -62,7 +62,7 @@ public class PolyLine
    * @param delta
    *          used for double comparison
    */
-  public PolyLine( final double[] x, final double[] y, final double delta )
+  public PolyLine( double[] x, double[] y, double delta )
   {
     m_delta = delta;
 
@@ -77,7 +77,7 @@ public class PolyLine
    * @param delta
    *          used for double comparison
    */
-  public PolyLine( final Double[] x, final Double[] y, final double delta )
+  public PolyLine( Double[] x, Double[] y, double delta )
   {
     m_delta = delta;
 
@@ -92,7 +92,7 @@ public class PolyLine
    * @param delta
    *          used for double comparison
    */
-  public PolyLine( final int[] x, final int[] y, final double delta )
+  public PolyLine( int[] x, int[] y, double delta )
   {
     m_delta = delta;
 
@@ -127,9 +127,9 @@ public class PolyLine
    * @param y
    *          Y coordinates
    */
-  public void setPoints( final double[] x, final double[] y )
+  public void setPoints( double[] x, double[] y )
   {
-    final Point2D[] pts = new Point2D.Double[x.length];
+    Point2D[] pts = new Point2D.Double[x.length];
 
     for( int i = 0; i < pts.length; i++ )
       pts[i] = new Point2D.Double( x[i], y[i] );
@@ -145,9 +145,9 @@ public class PolyLine
    * @param y
    *          Y coordinates
    */
-  public void setPoints( final Double[] x, final Double[] y )
+  public void setPoints( Double[] x, Double[] y )
   {
-    final Point2D[] pts = new Point2D.Double[x.length];
+    Point2D[] pts = new Point2D.Double[x.length];
 
     for( int i = 0; i < pts.length; i++ )
       pts[i] = new Point2D.Double( x[i].doubleValue(), y[i].doubleValue() );
@@ -163,9 +163,9 @@ public class PolyLine
    * @param y
    *          Y coordinates
    */
-  public void setPoints( final int[] x, final int[] y )
+  public void setPoints( int[] x, int[] y )
   {
-    final Point2D[] pts = new Point2D.Double[x.length];
+    Point2D[] pts = new Point2D.Double[x.length];
 
     for( int i = 0; i < pts.length; i++ )
       pts[i] = new Point2D.Double( x[i], y[i] );
@@ -181,7 +181,7 @@ public class PolyLine
    * @param to
    * @return
    */
-  public PolyLine shorten( final double from, final double to )
+  public PolyLine shorten( double from, double to )
   {
     int begin = 0;
     int end = m_x.length - 1;
@@ -213,16 +213,16 @@ public class PolyLine
     else
       end++;
 
-    final boolean noX1 = Double.compare( newX1, Double.NaN ) == 0;
-    final boolean noX2 = Double.compare( newX2, Double.NaN ) == 0;
+    boolean noX1 = Double.compare( newX1, Double.NaN ) == 0;
+    boolean noX2 = Double.compare( newX2, Double.NaN ) == 0;
 
-    final int lengthToCopy = end - begin;
-    final int lengthToMake = lengthToCopy + (noX1 ? 0 : 1) + (noX2 ? 0 : 1);
+    int lengthToCopy = end - begin;
+    int lengthToMake = lengthToCopy + (noX1 ? 0 : 1) + (noX2 ? 0 : 1);
 
-    final double[] x = new double[lengthToMake];
-    final double[] y = new double[lengthToMake];
+    double[] x = new double[lengthToMake];
+    double[] y = new double[lengthToMake];
 
-    final int whereToBegin = noX1 ? 0 : 1;
+    int whereToBegin = (noX1 ? 0 : 1);
 
     System.arraycopy( m_x, begin, x, whereToBegin, lengthToCopy );
     System.arraycopy( m_y, begin, y, whereToBegin, lengthToCopy );
@@ -251,7 +251,7 @@ public class PolyLine
    *          - for which to find a Y
    * @return - either existing Y or linear interpolated Y
    */
-  public double getYFor( final double X )
+  public double getYFor( double X )
   {
     return getYFor( X, false );
   }
@@ -267,7 +267,7 @@ public class PolyLine
    *          extrapoliert, bei false wird die PolyLine wagerecht mit der Höhe des ersten/letzten Punktes fortgesetzt.
    * @return Interpoliert y-Wert für X
    */
-  public double getYFor( final double X, final boolean bExtrapol )
+  public double getYFor( double X, boolean bExtrapol )
   {
     int pos = Arrays.binarySearch( m_x, X );
 
@@ -293,18 +293,18 @@ public class PolyLine
       }
 
       // linear Interpolieren
-      final double x1 = m_x[pos - 1];
-      final double y1 = m_y[pos - 1];
-      final double x2 = m_x[pos];
-      final double y2 = m_y[pos];
+      double x1 = m_x[pos - 1];
+      double y1 = m_y[pos - 1];
+      double x2 = m_x[pos];
+      double y2 = m_y[pos];
 
       try
       {
-        final LinearEquation eq = new LinearEquation( x1, y1, x2, y2 );
+        LinearEquation eq = new LinearEquation( x1, y1, x2, y2 );
 
         return eq.computeY( X );
       }
-      catch( final LinearEquation.SameXValuesException e )
+      catch( LinearEquation.SameXValuesException e )
       {
         return y1;
       }
@@ -322,7 +322,7 @@ public class PolyLine
    * @return
    * @see PolyLine#getYFor(double, boolean)
    */
-  public Point2D getPointFor( final double X, final boolean bExtrapol )
+  public Point2D getPointFor( double X, boolean bExtrapol )
   {
     int pos = Arrays.binarySearch( m_x, X );
 
@@ -348,18 +348,18 @@ public class PolyLine
       }
 
       // linear Interpolieren
-      final double x1 = m_x[pos - 1];
-      final double y1 = m_y[pos - 1];
-      final double x2 = m_x[pos];
-      final double y2 = m_y[pos];
+      double x1 = m_x[pos - 1];
+      double y1 = m_y[pos - 1];
+      double x2 = m_x[pos];
+      double y2 = m_y[pos];
 
       try
       {
-        final LinearEquation eq = new LinearEquation( x1, y1, x2, y2 );
+        LinearEquation eq = new LinearEquation( x1, y1, x2, y2 );
 
         return new Point2D.Double( X, eq.computeY( X ) );
       }
-      catch( final LinearEquation.SameXValuesException e )
+      catch( LinearEquation.SameXValuesException e )
       {
         return new Point2D.Double( x1, y1 );
       }
@@ -389,10 +389,10 @@ public class PolyLine
    * @throws IllegalArgumentException
    *           if mode is not valid
    */
-  public static double area( final PolyLine p1, final PolyLine p2, final int mode )
+  public static double area( PolyLine p1, PolyLine p2, int mode )
   {
     // mode verification
-    if( mode != OVER && mode != UNDER && mode != ALL )
+    if( (mode != OVER) && (mode != UNDER) && (mode != ALL) )
       throw new IllegalArgumentException( Messages.getString( "org.kalypso.commons.math.geom.PolyLine.0" ) ); //$NON-NLS-1$
 
     // if no refined coordinates are given, we compute them here
@@ -409,33 +409,33 @@ public class PolyLine
 
     double area = 0;
 
-    final DoubleComparator dc = new DoubleComparator( p1.m_delta );
+    DoubleComparator dc = new DoubleComparator( p1.m_delta );
 
-    for( int i = 0 /* startX */; i < xe.length - 1 /* ( stopX - 1 ) */; i++ )
+    for( int i = 0 /* startX */; i < (xe.length - 1) /* ( stopX - 1 ) */; i++ )
     {
-      final double x1 = xe[i];
-      final double x2 = xe[i + 1];
+      double x1 = xe[i];
+      double x2 = xe[i + 1];
 
       /*
        * TRICKY: compute area only when points' placement verifies mode.
        */
-      final double y11 = p1.getYFor( x1 );
-      final double y12 = p2.getYFor( x1 );
-      final double y21 = p1.getYFor( x2 );
-      final double y22 = p2.getYFor( x2 );
+      double y11 = p1.getYFor( x1 );
+      double y12 = p2.getYFor( x1 );
+      double y21 = p1.getYFor( x2 );
+      double y22 = p2.getYFor( x2 );
 
       // if( ( ( mode == OVER ) && ( ( y11 - y12 ) >= -Y_PREC ) &&
       // ( ( y21 - y22 ) >= -Y_PREC ) ) ||
       // ( ( mode == UNDER ) && ( ( y12 - y11 ) >= -Y_PREC ) &&
       // ( ( y22 - y21 ) >= -Y_PREC ) ) || ( mode == ALL ) )
-      if( mode == OVER && dc.compare( y11, y12 ) >= 0 && dc.compare( y21, y22 ) >= 0 || mode == UNDER && dc.compare( y12, y11 ) >= 0 && dc.compare( y22, y21 ) >= 0 || mode == ALL )
+      if( ((mode == OVER) && (dc.compare( y11, y12 ) >= 0) && (dc.compare( y21, y22 ) >= 0)) || ((mode == UNDER) && (dc.compare( y12, y11 ) >= 0) && (dc.compare( y22, y21 ) >= 0)) || (mode == ALL) )
       {
-        final Point2D pt11 = new Point2D.Double( x1, y11 );
-        final Point2D pt12 = new Point2D.Double( x1, y12 );
-        final Point2D pt21 = new Point2D.Double( x2, y21 );
-        final Point2D pt22 = new Point2D.Double( x2, y22 );
+        Point2D pt11 = new Point2D.Double( x1, y11 );
+        Point2D pt12 = new Point2D.Double( x1, y12 );
+        Point2D pt21 = new Point2D.Double( x2, y21 );
+        Point2D pt22 = new Point2D.Double( x2, y22 );
 
-        final Trapeze trap = new Trapeze( pt11, pt12, pt21, pt22 );
+        Trapeze trap = new Trapeze( pt11, pt12, pt21, pt22 );
         area += trap.area();
       }
     }
@@ -450,40 +450,40 @@ public class PolyLine
    *          PolyLine to intersect
    * @return x-Values where this and other intersect
    */
-  public double[] intersect( final PolyLine other )
+  public double[] intersect( PolyLine other )
   {
     // we expect no more than maximum of points intersections
-    final double[] xe = new double[getX().length * other.getX().length];
+    double[] xe = new double[getX().length * other.getX().length];
     int xPos = 0;
 
-    final DoubleComparator dc = new DoubleComparator( m_delta );
+    DoubleComparator dc = new DoubleComparator( m_delta );
 
     // declared here for object creation reduction in loops, LinearEquation.setPoints() is used
-    final LinearEquation l1 = new LinearEquation();
-    final LinearEquation l2 = new LinearEquation();
+    LinearEquation l1 = new LinearEquation();
+    LinearEquation l2 = new LinearEquation();
 
     // find crossings
-    for( int i = 0; i < m_x.length - 1; i++ )
+    for( int i = 0; i < (m_x.length - 1); i++ )
     {
-      final double x11 = m_x[i];
-      final double y11 = m_y[i];
-      final double x12 = m_x[i + 1];
-      final double y12 = m_y[i + 1];
+      double x11 = m_x[i];
+      double y11 = m_y[i];
+      double x12 = m_x[i + 1];
+      double y12 = m_y[i + 1];
 
       try
       {
         l1.setPoints( x11, y11, x12, y12 );
       }
-      catch( final LinearEquation.SameXValuesException e )
+      catch( LinearEquation.SameXValuesException e )
       {
         // x-coords are the same
         continue;
       }
 
-      final int startJ = Math.max( 0, Math.abs( Arrays.binarySearch( other.m_x, x11 ) ) - 2 );
-      final int stopJ = Math.min( other.m_x.length, Math.abs( Arrays.binarySearch( other.m_x, x12 ) ) + 2 );
+      int startJ = Math.max( 0, Math.abs( Arrays.binarySearch( other.m_x, x11 ) ) - 2 );
+      int stopJ = Math.min( other.m_x.length, Math.abs( Arrays.binarySearch( other.m_x, x12 ) ) + 2 );
 
-      for( int j = startJ; j < stopJ - 1; j++ )
+      for( int j = startJ; j < (stopJ - 1); j++ )
       {
         try
         {
@@ -491,16 +491,16 @@ public class PolyLine
           l2.setPoints( other.m_x[j], other.m_y[j], other.m_x[j + 1], other.m_y[j + 1] );
 
           // intersect the two segments
-          final double x = l1.solve( l2 );
+          double x = l1.solve( l2 );
 
-          if( dc.compare( x11, x ) <= 0 && dc.compare( x, x12 ) <= 0 )
+          if( (dc.compare( x11, x ) <= 0) && (dc.compare( x, x12 ) <= 0) )
             xe[xPos++] = x;
         }
-        catch( final NoSuchElementException ignored )
+        catch( NoSuchElementException ignored )
         {
           // no intersection found, continue
         }
-        catch( final LinearEquation.SameXValuesException ile )
+        catch( LinearEquation.SameXValuesException ile )
         {
           // x1 == x2, continue
         }
@@ -508,7 +508,7 @@ public class PolyLine
     }
 
     // copy to shorten array
-    final double[] x = new double[xPos];
+    double[] x = new double[xPos];
     System.arraycopy( xe, 0, x, 0, xPos );
 
     return x;
@@ -523,10 +523,10 @@ public class PolyLine
    * @param mode
    * @return
    */
-  public static PolyLine[] intersectAsPolyLines( final PolyLine pMaster, final PolyLine pOther, final int mode )
+  public static PolyLine[] intersectAsPolyLines( PolyLine pMaster, PolyLine pOther, int mode )
   {
     // intersections between Geleande and WSP line
-    final double[] xis = pMaster.intersect( pOther );
+    double[] xis = pMaster.intersect( pOther );
     Arrays.sort( xis );
 
     // add extremum to intersections
@@ -557,11 +557,11 @@ public class PolyLine
     final Vector<PolyLine> vPols = new Vector<PolyLine>( ints.length );
 
     // for each intersection
-    for( int i = 0; i < ints.length - 1; i++ )
+    for( int i = 0; i < (ints.length - 1); i++ )
     {
       if( isModeVerified( mode, pMaster, pOther, ints[i], ints[i + 1] ) )
       {
-        final PolyLine sp = pOther.shorten( ints[i], ints[i + 1] );
+        PolyLine sp = pOther.shorten( ints[i], ints[i + 1] );
 
         vPols.add( sp );
       }
@@ -578,28 +578,28 @@ public class PolyLine
   public static double[] refinePolylines( final PolyLine p1, final PolyLine p2 )
   {
     // crossings between p1 and p2
-    final double[] interx = p1.intersect( p2 );
+    double[] interx = p1.intersect( p2 );
 
     // get all points from the union (on X) (use double[] instead of SortedSet because of
     // performance)
-    final double[] xe = new double[Math.max( p1.getX().length, p2.getX().length ) * 2 + interx.length];
+    double[] xe = new double[(Math.max( p1.getX().length, p2.getX().length ) * 2) + interx.length];
 
     int xPos = 0;
 
     // first line
-    for( final double element : p1.m_x )
-      xe[xPos++] = element;
+    for( int i = 0; i < p1.m_x.length; i++ )
+      xe[xPos++] = p1.m_x[i];
 
     // second line
-    for( final double element : p2.m_x )
-      xe[xPos++] = element;
+    for( int i = 0; i < p2.m_x.length; i++ )
+      xe[xPos++] = p2.m_x[i];
 
     // intersection points
-    for( final double element : interx )
-      xe[xPos++] = element;
+    for( int i = 0; i < interx.length; i++ )
+      xe[xPos++] = interx[i];
 
     // fit size
-    final double[] x = new double[xPos];
+    double[] x = new double[xPos];
     System.arraycopy( xe, 0, x, 0, xPos );
 
     return x;
@@ -620,13 +620,13 @@ public class PolyLine
    *           when mode is not one of ALL, OVER, UNDER.
    * @see PolyLine.ALL, OVER, UNDER)
    */
-  public static PolyGone[] spaceBetween( final PolyLine p1, final PolyLine p2, final int mode )
+  public static PolyGone[] spaceBetween( final PolyLine p1, final PolyLine p2, int mode )
   {
     if( mode == PolyLine.ALL )
 
       return new PolyGone[] { buildPolyGone( p1, p2 ) };
 
-    else if( mode == PolyLine.OVER || mode == PolyLine.UNDER )
+    else if( (mode == PolyLine.OVER) || (mode == PolyLine.UNDER) )
     {
       // look for intersections, sort and remove duplicates
       double[] xis = p1.intersect( p2 );
@@ -650,12 +650,12 @@ public class PolyLine
        */
 
       // add extremum to intersections
-      final Range r1 = p1.xExtremum();
-      final Range r2 = p2.xExtremum();
+      Range r1 = p1.xExtremum();
+      Range r2 = p2.xExtremum();
 
-      final Range r = Range.mergeWide( r1, r2 );
+      Range r = Range.mergeWide( r1, r2 );
 
-      final double[] ints = new double[xis.length + 2];
+      double[] ints = new double[xis.length + 2];
       ints[0] = r.getFrom();
       ints[ints.length - 1] = r.getTo();
       System.arraycopy( xis, 0, ints, 1, xis.length );
@@ -663,12 +663,12 @@ public class PolyLine
       final Vector<PolyGone> vPols = new Vector<PolyGone>( ints.length );
 
       // for each intersection
-      for( int i = 0; i < ints.length - 1; i++ )
+      for( int i = 0; i < (ints.length - 1); i++ )
       {
         if( isModeVerified( mode, p1, p2, ints[i], ints[i + 1] ) )
         {
-          final PolyLine sp1 = p1.shorten( ints[i], ints[i + 1] );
-          final PolyLine sp2 = p2.shorten( ints[i], ints[i + 1] );
+          PolyLine sp1 = p1.shorten( ints[i], ints[i + 1] );
+          PolyLine sp2 = p2.shorten( ints[i], ints[i + 1] );
 
           vPols.add( buildPolyGone( sp1, sp2 ) );
         }
@@ -687,10 +687,10 @@ public class PolyLine
    * @param p2
    * @return
    */
-  public static PolyGone buildPolyGone( final PolyLine p1, final PolyLine p2 )
+  public static PolyGone buildPolyGone( PolyLine p1, PolyLine p2 )
   {
     // create a polygone with the first polyline
-    final PolyGone p = new PolyGone( p1.getX(), p1.getY() );
+    PolyGone p = new PolyGone( p1.getX(), p1.getY() );
 
     // add the points of the second polyline (starting at the end: inver = true)
     p.addPoints( p2, true );
@@ -707,24 +707,24 @@ public class PolyLine
    * @param p2
    * @return
    */
-  private static boolean isModeVerified( final int mode, final PolyLine p1, final PolyLine p2 )
+  private static boolean isModeVerified( int mode, PolyLine p1, PolyLine p2 )
   {
-    final DoubleComparator dc = new DoubleComparator( p1.m_delta );
+    DoubleComparator dc = new DoubleComparator( p1.m_delta );
 
-    if( p1.m_y.length == 0 || p2.m_y.length == 0 )
+    if( (p1.m_y.length == 0) || (p2.m_y.length == 0) )
       return false;
 
     double[] xs = refinePolylines( p1, p2 );
     Arrays.sort( xs );
     xs = org.kalypso.contribs.java.util.Arrays.removeDupicates( xs, p1.getDelta() );
 
-    for( final double element : xs )
+    for( int i = 0; i < xs.length; i++ )
     {
       // compare the points at this X-coordinate of both polylines
-      final double y1 = p1.getYFor( element );
-      final double y2 = p2.getYFor( element );
+      double y1 = p1.getYFor( xs[i] );
+      double y2 = p2.getYFor( xs[i] );
 
-      if( mode == ALL || mode == PolyLine.OVER && dc.compare( y1, y2 ) > 0 || mode == PolyLine.UNDER && dc.compare( y1, y2 ) < 0 )
+      if( (mode == ALL) || ((mode == PolyLine.OVER) && (dc.compare( y1, y2 ) > 0)) || ((mode == PolyLine.UNDER) && (dc.compare( y1, y2 ) < 0)) )
 
         return true;
     }
@@ -742,11 +742,11 @@ public class PolyLine
    * @param xTo
    * @return
    */
-  private static boolean isModeVerified( final int mode, final PolyLine p1, final PolyLine p2, final double xFrom, final double xTo )
+  private static boolean isModeVerified( int mode, PolyLine p1, PolyLine p2, double xFrom, double xTo )
   {
-    final DoubleComparator dc = new DoubleComparator( p1.m_delta );
+    DoubleComparator dc = new DoubleComparator( p1.m_delta );
 
-    if( p1.m_y.length == 0 || p2.m_y.length == 0 )
+    if( (p1.m_y.length == 0) || (p2.m_y.length == 0) )
       return false;
 
     /*
@@ -754,13 +754,13 @@ public class PolyLine
      * time, for instance if y1 == y2 at x, then we will return false if mode == OVER or UNDER. This could be improved,
      * for instance by trying more that one x-coord.
      */
-    final double x = (xTo - xFrom) / 2 + xFrom;
+    double x = ((xTo - xFrom) / 2) + xFrom;
 
-    final double y1 = p1.getYFor( x );
-    final double y2 = p2.getYFor( x );
+    double y1 = p1.getYFor( x );
+    double y2 = p2.getYFor( x );
 
     // compare the points at this X-coordinate of both polylines
-    if( mode == ALL || mode == PolyLine.OVER && dc.compare( y1, y2 ) > 0 || mode == PolyLine.UNDER && dc.compare( y1, y2 ) < 0 )
+    if( (mode == ALL) || ((mode == PolyLine.OVER) && (dc.compare( y1, y2 ) > 0)) || ((mode == PolyLine.UNDER) && (dc.compare( y1, y2 ) < 0)) )
       return true;
 
     return false;
@@ -784,7 +784,7 @@ public class PolyLine
    * @param xr
    * @return
    */
-  public boolean withinXRange( final Range xr )
+  public boolean withinXRange( Range xr )
   {
     return xExtremum().within( xr );
   }
@@ -800,7 +800,7 @@ public class PolyLine
   {
     double length = 0;
 
-    for( int i = 0; i < m_y.length - 1; i++ )
+    for( int i = 0; i < (m_y.length - 1); i++ )
       length += PointUtilities.segmentLength( m_x[i], m_y[i], m_x[i + 1], m_y[i + 1] );
 
     return length;
@@ -852,7 +852,7 @@ public class PolyLine
   @Override
   public String toString( )
   {
-    final StringBuffer buf = new StringBuffer();
+    StringBuffer buf = new StringBuffer();
 
     for( int i = 0; i < m_x.length; i++ )
       buf.append( m_x[i] ).append( ", " ).append( m_y[i] ).append( "\n" ); //$NON-NLS-1$ //$NON-NLS-2$

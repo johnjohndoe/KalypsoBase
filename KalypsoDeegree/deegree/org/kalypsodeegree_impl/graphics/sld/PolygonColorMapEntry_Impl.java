@@ -58,7 +58,7 @@ public class PolygonColorMapEntry_Impl implements PolygonColorMapEntry
 
   private final Stroke m_stroke;
 
-  public PolygonColorMapEntry_Impl( final Fill fill, final Stroke stroke, final ParameterValueType label, final ParameterValueType from, final ParameterValueType to )
+  public PolygonColorMapEntry_Impl( Fill fill, Stroke stroke, ParameterValueType label, ParameterValueType from, ParameterValueType to )
   {
     m_fill = fill;
     m_label = label;
@@ -118,14 +118,14 @@ public class PolygonColorMapEntry_Impl implements PolygonColorMapEntry
    * @see org.kalypsodeegree.graphics.sld.PolygonColorMapEntry#getFrom()
    */
   @Override
-  public double getFrom( final Feature feature )
+  public double getFrom( Feature feature )
   {
     String val = null;
     try
     {
       val = m_from.evaluate( feature );
     }
-    catch( final FilterEvaluationException e )
+    catch( FilterEvaluationException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -140,14 +140,14 @@ public class PolygonColorMapEntry_Impl implements PolygonColorMapEntry
    * @see org.kalypsodeegree.graphics.sld.PolygonColorMapEntry#getLabel()
    */
   @Override
-  public String getLabel( final Feature feature )
+  public String getLabel( Feature feature )
   {
     String val = null;
     try
     {
       val = m_label.evaluate( feature );
     }
-    catch( final FilterEvaluationException e )
+    catch( FilterEvaluationException e )
     {
       e.printStackTrace();
     }
@@ -158,14 +158,14 @@ public class PolygonColorMapEntry_Impl implements PolygonColorMapEntry
    * @see org.kalypsodeegree.graphics.sld.PolygonColorMapEntry#getTo()
    */
   @Override
-  public double getTo( final Feature feature )
+  public double getTo( Feature feature )
   {
     String val = null;
     try
     {
       val = m_to.evaluate( feature );
     }
-    catch( final FilterEvaluationException e )
+    catch( FilterEvaluationException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();

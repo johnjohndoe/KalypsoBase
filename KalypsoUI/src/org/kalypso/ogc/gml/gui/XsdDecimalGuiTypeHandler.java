@@ -50,7 +50,6 @@ import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * Handler for displaying the big decimals.
@@ -60,38 +59,46 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 public class XsdDecimalGuiTypeHandler extends XsdBaseGuiTypeHandler
 {
   /**
+   * The constructor.
+   * 
    * @param handler
-   *          The base type handler.
+   *            The base type handler.
    */
   public XsdDecimalGuiTypeHandler( final XsdBaseTypeHandler< ? > handler )
   {
     super( handler );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.gui.XsdBaseGuiTypeHandler#createFeatureModifier(org.kalypso.gmlschema.property.IPropertyType,
+   *      org.kalypso.ogc.gml.selection.IFeatureSelectionManager,
+   *      org.kalypso.ogc.gml.featureview.IFeatureChangeListener, java.lang.String)
+   */
   @Override
-  public IFeatureModifier createFeatureModifier( final GMLXPath propertyPath, final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format )
+  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format )
   {
-    final String fmt = buildFormat( ftp, format );
-
-    return super.createFeatureModifier( propertyPath, ftp, selectionManager, fcl, fmt );
-  }
-
-  private String buildFormat( final IPropertyType ftp, final String format )
-  {
-    if( format != null )
-      return format;
-
-    // bit of a HACK: set format according to fraction digits, if any are set.
-    // Maybe change this later to support fraction digits within the modifier stuff
-    final IValuePropertyType vpt = (IValuePropertyType) ftp;
-    final IRestriction[] restrictions = vpt.getRestriction();
-    final Integer fractionDigits = RestrictionUtilities.findFractionDigits( restrictions );
-    if( fractionDigits == null )
-      return null;
+    final String fmt;
+    if( format == null )
+    {
+      // bit of a HACK: set format according to fraction digits, if any are set.
+      // Maybe change this later to support fraction digits within the modifier stuff
+      final IValuePropertyType vpt = (IValuePropertyType) ftp;
+      final IRestriction[] restrictions = vpt.getRestriction();
+      final Integer fractionDigits = RestrictionUtilities.findFractionDigits( restrictions );
+      if( fractionDigits == null )
+        fmt = null;
+      else
+        fmt = "%." + fractionDigits + "f"; //$NON-NLS-1$ //$NON-NLS-2$
+    }
     else
-      return "%." + fractionDigits + "f"; //$NON-NLS-1$ //$NON-NLS-2$
+      fmt = format;
+
+    return super.createFeatureModifier( ftp, selectionManager, fcl, fmt );
   }
 
+  /**
+   * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+   */
   @Override
   public String getText( final Object element )
   {

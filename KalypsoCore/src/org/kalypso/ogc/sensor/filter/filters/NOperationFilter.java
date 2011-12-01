@@ -84,9 +84,9 @@ public class NOperationFilter extends AbstractObservationFilter
       throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.NOperationFilter.4" ) + operator + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.NOperationFilter.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  public NOperationFilter( final int operation, final IObservation baseObservation, final IObservation[] innerObservations ) throws SensorException
+  public NOperationFilter( final int operation, final IObservation[] innerObservations ) throws SensorException
   {
-    super.initFilter( null, baseObservation, null );
+    super.initFilter( null, innerObservations[0], null );
 
     m_operation = operation;
     m_innerObservations = innerObservations;

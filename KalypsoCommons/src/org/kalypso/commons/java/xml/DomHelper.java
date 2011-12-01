@@ -79,11 +79,11 @@ public class DomHelper
       case Node.ELEMENT_NODE:
       {
         buffer.append( "<" ).append( node.getNodeName() ).append( ">" ); //$NON-NLS-1$ //$NON-NLS-2$
-
+        
         final NodeList nodes = node.getChildNodes();
         for( int i = 0; i < nodes.getLength(); i++ )
           recursiveCollectChildren( nodes.item( i ), buffer );
-
+        
         buffer.append( "</" ).append( node.getNodeName() ).append( ">" ); //$NON-NLS-1$ //$NON-NLS-2$
 
         break;
@@ -100,10 +100,8 @@ public class DomHelper
   /**
    * Loads a document from an InputStream. Closes the stream once finished.
    * 
-   * @param ins
-   *          -
-   * @throws DomLoadException
-   *           -
+   * @param ins -
+   * @throws DomLoadException -
    */
   public static Document loadDocument( final InputStream ins ) throws DomLoadException
   {
@@ -114,7 +112,7 @@ public class DomHelper
 
       return db.parse( ins );
     }
-    catch( final Exception e ) // generic exception caught for simplicity
+    catch( Exception e ) // generic exception caught for simplicity
     {
       throw new DomLoadException( e );
     }
@@ -127,10 +125,8 @@ public class DomHelper
   /**
    * Loads a document from an InputSource.
    * 
-   * @param ins
-   *          -
-   * @throws DomLoadException
-   *           -
+   * @param ins -
+   * @throws DomLoadException -
    */
   public static Document loadDocument( final InputSource ins ) throws DomLoadException
   {
@@ -141,7 +137,7 @@ public class DomHelper
 
       return db.parse( ins );
     }
-    catch( final Exception e ) // generic exception caught for simplicity
+    catch( Exception e ) // generic exception caught for simplicity
     {
       throw new DomLoadException( e );
     }
@@ -150,13 +146,13 @@ public class DomHelper
   /**
    * @see DomHelper#loadDocument(InputStream)
    */
-  public static Document loadDocument( final URL xmlURL ) throws DomLoadException
+  public static Document loadDocument( URL xmlURL ) throws DomLoadException
   {
     try
     {
       return loadDocument( xmlURL.openStream() );
     }
-    catch( final IOException e )
+    catch( IOException e )
     {
       throw new DomLoadException( e );
     }
@@ -182,17 +178,17 @@ public class DomHelper
       super();
     }
 
-    public DomLoadException( final String message )
+    public DomLoadException( String message )
     {
       super( message );
     }
 
-    public DomLoadException( final String message, final Throwable cause )
+    public DomLoadException( String message, Throwable cause )
     {
       super( message, cause );
     }
 
-    public DomLoadException( final Throwable cause )
+    public DomLoadException( Throwable cause )
     {
       super( cause );
     }

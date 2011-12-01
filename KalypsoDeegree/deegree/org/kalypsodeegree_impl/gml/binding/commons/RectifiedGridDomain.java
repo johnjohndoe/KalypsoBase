@@ -129,18 +129,18 @@ public class RectifiedGridDomain
   }
 
   public GM_Surface< ? extends GM_SurfacePatch> getGM_Surface( final String crs ) throws Exception
-  {
+      {
     return RectifiedGridDomain.calculateSurface( m_origin, m_offsetX, m_offsetY, 0, 0, getNumColumns(), getNumRows(), crs );
-  }
+      }
 
   private static GM_Surface< ? extends GM_SurfacePatch> calculateSurface( final GM_Point origin, final OffsetVector offsetX, final OffsetVector offsetY, final int minX, final int minY, final int maxX, final int maxY, final String cs ) throws Exception
-  {
+      {
     final GM_Position originPos = origin.getPosition();
 
     final GM_Position pos0 = offsetY.move( offsetX.move( originPos, minX ), minY );
-    final GM_Position pos1 = offsetX.move( pos0, maxX - minX - 1 );
-    final GM_Position pos2 = offsetY.move( pos1, maxY - minY - 1 );
-    final GM_Position pos3 = offsetY.move( pos0, maxY - minY - 1 );
+    final GM_Position pos1 = offsetX.move( pos0, (maxX - minX) - 1 );
+    final GM_Position pos2 = offsetY.move( pos1, (maxY - minY) - 1 );
+    final GM_Position pos3 = offsetY.move( pos0, (maxY - minY) - 1 );
     final GM_Position[] ring = new GM_Position[] { pos0, pos1, pos2, pos3, pos0 };
     final String originCrs = origin.getCoordinateSystem();
     final GM_Surface< ? extends GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( ring, null, originCrs );
@@ -150,7 +150,7 @@ public class RectifiedGridDomain
 
     final IGeoTransformer geoTrans = GeoTransformerFactory.getGeoTransformer( cs );
     return (GM_Surface< ? >) geoTrans.transform( surface );
-  }
+      }
 
   public String getCoordinateSystem( )
   {
@@ -159,7 +159,7 @@ public class RectifiedGridDomain
 
   public GM_Point getOrigin( final String cs ) throws Exception
   {
-    if( cs == null || m_origin.getCoordinateSystem().equals( cs ) )
+    if( (cs == null) || m_origin.getCoordinateSystem().equals( cs ) )
       return m_origin;
 
     final IGeoTransformer geoTrans = GeoTransformerFactory.getGeoTransformer( cs );
@@ -182,7 +182,7 @@ public class RectifiedGridDomain
     final double[] low = m_gridRange.getLow();
     final double[] high = m_gridRange.getHigh();
     final double numColumns = high[0] - low[0];
-    return new Double( numColumns ).intValue();
+    return (new Double( numColumns )).intValue();
   }
 
   /**
@@ -193,7 +193,7 @@ public class RectifiedGridDomain
     final double[] low = m_gridRange.getLow();
     final double[] high = m_gridRange.getHigh();
     final double numRows = high[1] - low[1];
-    return new Double( numRows ).intValue();
+    return (new Double( numRows )).intValue();
   }
 
   /**
@@ -202,7 +202,7 @@ public class RectifiedGridDomain
    */
   public double getOffsetX( final String cs ) throws Exception
   {
-    if( cs == null || m_origin.getCoordinateSystem().equals( cs ) )
+    if( (cs == null) || m_origin.getCoordinateSystem().equals( cs ) )
       return m_offsetX.getGeoX();
 
     // ???
@@ -215,7 +215,7 @@ public class RectifiedGridDomain
    */
   public double getOffsetY( final String cs ) throws Exception
   {
-    if( cs == null || m_origin.getCoordinateSystem().equals( cs ) )
+    if( (cs == null) || m_origin.getCoordinateSystem().equals( cs ) )
       return m_offsetY.getGeoY();
 
     // ???
@@ -238,9 +238,9 @@ public class RectifiedGridDomain
   }
 
   public GM_Surface< ? extends GM_SurfacePatch> getGM_Surface( final int lowX, final int lowY, final int highX, final int highY, final String cs ) throws Exception
-  {
+      {
     return RectifiedGridDomain.calculateSurface( m_origin, m_offsetX, m_offsetY, lowX, lowY, highX, highY, cs );
-  }
+      }
 
   /**
    * get low and high (GridRange) of the RectifiedGridCoverage for the given envelope
@@ -260,10 +260,10 @@ public class RectifiedGridDomain
     final GM_Envelope envelope = getGM_Envelope( cs );
     final GM_Position origin = envelope.getMin();
 
-    if( env.getMin().getX() - origin.getX() > 0 )
+    if( (env.getMin().getX() - origin.getX()) > 0 )
       lowX = (int) ((env.getMin().getX() - origin.getX()) / getOffsetX( cs ));
 
-    if( env.getMin().getY() - origin.getY() > 0 )
+    if( (env.getMin().getY() - origin.getY()) > 0 )
       lowY = (int) ((env.getMin().getY() - origin.getY()) / getOffsetY( cs ));
 
     int highX = (int) ((env.getMax().getX() - origin.getX()) / getOffsetX( cs ));

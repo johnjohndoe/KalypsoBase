@@ -43,4 +43,42 @@ public abstract class AbstractAxisProvider extends AbstractChartComponentProvide
   {
     return m_valueArray;
   }
+
+// /**
+// * default behaviour: return original xml type; implement, if changes shall be saved
+// *
+// * @see org.kalypso.chart.factory.provider.IAxisProvider#getXMLType(org.kalypso.chart.framework.model.mapper.IAxis)
+// */
+// public AxisType getXMLType( IAxis axis )
+// {
+// AxisType at = (AxisType) getAxisType().copy();
+//
+// Class< ? > clazz = axis.getDataClass();
+// IDataRange<Number> numericRange = axis.getNumericRange();
+//
+// if( Calendar.class.isAssignableFrom( clazz ) )
+// {
+// AxisDateRangeType range = at.getDateRange();
+// IDataOperator<Calendar> dop = axis.getDataOperator( Calendar.class );
+// range.setMinValue( dop.numericToLogical( numericRange.getMin() ) );
+// range.setMaxValue( dop.numericToLogical( numericRange.getMax() ) );
+// }
+// else if( Number.class.isAssignableFrom( clazz ) )
+// {
+// System.out.println( at );
+// AxisNumberRangeType range = at.getNumberRange();
+// IDataOperator<Number> dop = axis.getDataOperator( Number.class );
+// range.setMinValue( dop.numericToLogical( numericRange.getMin() ).doubleValue() );
+// range.setMaxValue( dop.numericToLogical( numericRange.getMax() ).doubleValue() );
+// }
+// else if( String.class.isAssignableFrom( clazz ) )
+// {
+// AxisStringRangeType range = at.getStringRange();
+// IDataOperator<String> dop = axis.getDataOperator( String.class );
+// range.setMinValue( dop.numericToLogical( numericRange.getMin() ) );
+// range.setMaxValue( dop.numericToLogical( numericRange.getMax() ) );
+// }
+// return at;
+// }
+
 }

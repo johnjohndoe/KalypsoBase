@@ -58,19 +58,20 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface Font
 {
-  int STYLE_NORMAL = java.awt.Font.PLAIN;
 
-  int STYLE_ITALIC = java.awt.Font.ITALIC;
+  public static final int STYLE_NORMAL = java.awt.Font.PLAIN;
 
-  int STYLE_OBLIQUE = java.awt.Font.ITALIC;
+  public static final int STYLE_ITALIC = java.awt.Font.ITALIC;
 
-  int WEIGHT_NORMAL = java.awt.Font.PLAIN;
+  public static final int STYLE_OBLIQUE = java.awt.Font.ITALIC;
 
-  int WEIGHT_BOLD = java.awt.Font.BOLD;
+  public static final int WEIGHT_NORMAL = java.awt.Font.PLAIN;
 
-  int SIZE_DEFAULT = 10;
+  public static final int WEIGHT_BOLD = java.awt.Font.BOLD;
 
-  Color COLOR_DEFAULT = new Color( 127, 127, 127 );
+  public static final int SIZE_DEFAULT = 10;
+
+  public static final Color COLOR_DEFAULT = new Color( 127, 127, 127 );
 
   /**
    * Returns the (evaluated) value of the font's CssParameter 'font-family'.

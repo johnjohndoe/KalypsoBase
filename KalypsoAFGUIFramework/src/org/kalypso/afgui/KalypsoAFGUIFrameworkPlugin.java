@@ -3,7 +3,7 @@ package org.kalypso.afgui;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -14,7 +14,6 @@ import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -32,7 +31,6 @@ import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.afgui.scenarios.TaskExecutionAuthority;
 import org.kalypso.afgui.scenarios.TaskExecutor;
 import org.kalypso.afgui.views.WorkflowView;
-import org.kalypso.commons.java.lang.Objects;
 import org.osgi.framework.BundleContext;
 
 import de.renew.workflow.base.ITask;
@@ -126,14 +124,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
           if( !forced && m_taskExecutionAuthority.canStopTask( m_taskExecutor.getActiveTask() ) )
           {
             // IMPORTAN: only close views on workflow perspective
-            final IWorkbenchWindow window = workbench2.getActiveWorkbenchWindow();
-            if( Objects.isNull( window ) )
-              return true;
-
-            final IWorkbenchPage activePage = window.getActivePage();
-            if( Objects.isNull( activePage ) )
-              return true;
-
+            final IWorkbenchPage activePage = workbench2.getActiveWorkbenchWindow().getActivePage();
             final IPerspectiveDescriptor perspective = activePage.getPerspective();
             if( !ObjectUtils.equals( perspective.getId(), Perspective.ID ) )
               return true;
@@ -176,7 +167,6 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
       {
         final IWorkbench workbench = PlatformUI.getWorkbench();
         final IEvaluationService evalService = (IEvaluationService) workbench.getService( IEvaluationService.class );
-        // FIXME: must be called in ui thread
         evalService.addSourceProvider( m_szenarioSourceProvider );
 
         new WorkspaceJob( "" ) //$NON-NLS-1$
@@ -298,9 +288,9 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 
     // Then execute default task
     final IWorkflow workflow = ScenarioHelper.findWorkflow( caze, nature );
-    // lazy check and insurance for backwards compatibility
+    //lazy check and insurance for backwards compatibility 
     ScenarioHelper.ensureBackwardsCompatibility( caze, nature );
-
+    
     final ITask defaultTask = workflow == null ? null : workflow.getDefaultTask();
     if( defaultTask != null )
     {

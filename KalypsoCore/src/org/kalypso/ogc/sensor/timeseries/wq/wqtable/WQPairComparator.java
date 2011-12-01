@@ -7,7 +7,7 @@ import java.util.Comparator;
  * 
  * @author schlienger
  */
-public final class WQPairComparator implements Comparator<WQPair>
+public class WQPairComparator implements Comparator<WQPair>
 {
   public static final int W = 0;
 

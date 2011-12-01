@@ -69,8 +69,7 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypso.ui.editor.actions.INewScope;
-import org.kalypso.ui.editor.actions.NewScopeFactory;
+import org.kalypso.ui.editor.actions.NewFeatureScope;
 
 /**
  * Helper class for {@link org.eclipse.ui.IWorkbenchPart}s, which show a map.
@@ -136,7 +135,7 @@ public class MapPartHelper
       /* Add a 'new' menu corresponding to the theme's feature type. */
       final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) activeTheme;
       final CommandableWorkspace workspace = theme.getWorkspace();
-      final INewScope scope = NewScopeFactory.createPropertyScope( theme.getFeatureList(), workspace, selectionManager );
+      final NewFeatureScope scope = new NewFeatureScope( workspace, theme.getFeatureList(), selectionManager );
       manager.add( scope.createMenu() );
 
       /* Also add specific theme actions. */

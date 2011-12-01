@@ -78,7 +78,7 @@ public class KalypsoAuthPlugin extends AbstractUIPlugin
     final ResourceBundle bundle = KalypsoAuthPlugin.getDefault().getResourceBundle();
     try
     {
-      return bundle != null ? bundle.getString( key ) : key;
+      return (bundle != null) ? bundle.getString( key ) : key;
     }
     catch( final MissingResourceException e )
     {

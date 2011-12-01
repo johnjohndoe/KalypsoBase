@@ -42,7 +42,7 @@ package org.kalypso.zml.ui.table.provider.strategy.labeling;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.ui.table.model.ZmlTableColumn;
+import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -50,7 +50,7 @@ import org.kalypso.zml.ui.table.model.ZmlTableColumn;
 public class IndexValueLabelingStrategy extends AbstractValueLabelingStrategy implements IZmlLabelStrategy
 {
 
-  public IndexValueLabelingStrategy( final ZmlTableColumn column )
+  public IndexValueLabelingStrategy( final ExtendedZmlTableColumn column )
   {
     super( column );
   }

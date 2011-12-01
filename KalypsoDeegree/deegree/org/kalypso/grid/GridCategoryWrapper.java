@@ -85,10 +85,10 @@ public class GridCategoryWrapper implements Comparable<GridCategoryWrapper>
 
   public void dispose( )
   {
-    final IGeoGrid[] grids = gridList.toArray( new IGeoGrid[] {} );
+    IGeoGrid[] grids = gridList.toArray( new IGeoGrid[] {} );
     gridList.clear();
 
-    for( final IGeoGrid geoGrid : grids )
+    for( IGeoGrid geoGrid : grids )
     {
       geoGrid.dispose();
     }

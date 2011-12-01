@@ -40,5 +40,12 @@
          </qname>
       </listener>
    </extension>
+   <extension
+         point="org.kalypso.deegree.featureBinding">
+      <feature
+            class="org.kalypso.model.wspm.schema.gml.binding.RunOffEvent"
+            qname="{org.kalypso.model.wspmrunoff}RunOffEvent">
+      </feature>
+   </extension>
 
 </plugin>

@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.themes;
 
-import java.net.URL;
-
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.commons.java.lang.Objects;
@@ -50,14 +48,13 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
-import org.kalypso.zml.core.diagram.data.IZmlLayerProvider;
-import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractBarLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolygonFigure;
+import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
@@ -79,36 +76,15 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
 
   private final IStyleSet m_styleSet;
 
-  public ZmlBarLayer( final IZmlLayerProvider layerProvider, final IStyleSet styleSet, final URL context )
+  protected ZmlBarLayer( final ILayerProvider layerProvider, final IStyleSet styleSet )
   {
     super( layerProvider, null );
     m_styleSet = styleSet;
-
-    setup( context );
   }
 
-  @Override
-  public IZmlLayerProvider getProvider( )
-  {
-    return (IZmlLayerProvider) super.getProvider();
-  }
-
-  private void setup( final URL context )
-  {
-    final IZmlLayerProvider provider = getProvider();
-    final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( this, provider.getTargetAxisId() );
-    try
-    {
-      handler.load( provider, context );
-    }
-    catch( final Throwable t )
-    {
-      t.printStackTrace();
-    }
-
-    setDataHandler( handler );
-  }
-
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractBarLayer#dispose()
+   */
   @Override
   public void dispose( )
   {
@@ -118,6 +94,9 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
     super.dispose();
   }
 
+  /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#onObservationChanged()
+   */
   @Override
   public void onObservationChanged( )
   {
@@ -136,18 +115,27 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
     return m_legend.createLegendEntries( getPolygonFigure() );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
+   */
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Number> getDomainRange( )
   {
     return m_range.getDomainRange();
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
+   */
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     return m_range.getTargetRange();
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
+   */
   @Override
   public void paint( final GC gc )
   {
@@ -175,12 +163,18 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
     }
   }
 
+  /**
+   * @see org.kalypso.zml.ui.chart.layer.themes.IZmlLayer#getDataHandler()
+   */
   @Override
   public IZmlLayerDataHandler getDataHandler( )
   {
     return m_handler;
   }
 
+  /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#setDataHandler(org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler)
+   */
   @Override
   public void setDataHandler( final IZmlLayerDataHandler handler )
   {
@@ -190,6 +184,9 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
     m_handler = handler;
   }
 
+  /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#setLabelDescriptor(java.lang.String)
+   */
   @Override
   public void setLabelDescriptor( final String labelDescriptor )
   {
@@ -209,6 +206,9 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
     return ObservationTokenHelper.replaceTokens( m_labelDescriptor, observation, getDataHandler().getValueAxis() );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractBarLayer#getAreaStyle()
+   */
   @Override
   protected IAreaStyle getAreaStyle( )
   {

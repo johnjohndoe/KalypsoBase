@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.i18n;
 
+import java.net.URL;
 import java.util.List;
 import java.util.Locale;
 
@@ -52,7 +53,7 @@ public interface ITranslator
 {
   String getId( );
 
-  void configure( ITranslatorContext context, List<Element> configuration );
+  void configure( URL context, List<Element> any );
 
   List<Element> getConfiguration( );
 

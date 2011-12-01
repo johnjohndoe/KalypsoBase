@@ -47,7 +47,7 @@ import java.io.InputStream;
 import junit.framework.Assert;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs.FileObject;
 import org.junit.Test;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -80,21 +80,21 @@ public class VFSAcceptCertificate
     System.setProperty( "javax.net.ssl.trustStore", "C:/Albert/Temp/Projekte/InformDSS/Zertifikate/Server/truststore.jks" );
     System.setProperty( "javax.net.ssl.trustStorePassword", "key4ssl" );
 
-    final FileObject remoteFile = VFSUtilities.checkProxyFor( "https://WebDAV:webdav@informdss.bafg.de/webdav/results/CalcJob-0-1210650775870/simulation.log" );
+    FileObject remoteFile = VFSUtilities.checkProxyFor( "https://WebDAV:webdav@informdss.bafg.de/webdav/results/CalcJob-0-1210650775870/simulation.log" );
 
     KalypsoServiceWPSDebug.DEBUG.printf( "Sending request ...\n" );
 
-    final File file = new File( FileUtilities.TMP_DIR, "vfs_test.tmp" );
-    final FileObject localFile = VFSUtilities.getManager().toFileObject( file );
+    File file = new File( FileUtilities.TMP_DIR, "vfs_test.tmp" );
+    FileObject localFile = VFSUtilities.getManager().toFileObject( file );
     Assert.assertNotNull( localFile );
 
     VFSUtilities.copyFileTo( remoteFile, localFile );
 
-    final InputStream inputStream = localFile.getContent().getInputStream();
+    InputStream inputStream = localFile.getContent().getInputStream();
 
     Assert.assertNotNull( inputStream );
 
-    final String content = IOUtils.toString( inputStream );
+    String content = IOUtils.toString( inputStream );
 
     KalypsoServiceWPSDebug.DEBUG.printf( "Content:\n" );
     KalypsoServiceWPSDebug.DEBUG.printf( content + "\n" );

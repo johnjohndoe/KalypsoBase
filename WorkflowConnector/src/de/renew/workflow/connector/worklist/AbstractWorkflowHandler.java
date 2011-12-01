@@ -52,7 +52,7 @@ import de.renew.workflow.connector.WorkflowConnectorPlugin;
 
 /**
  * @author Stefan Kurzbach
- * 
+ *
  */
 public abstract class AbstractWorkflowHandler extends AbstractHandler implements IWorklistChangeListener, IExecutableExtension
 {

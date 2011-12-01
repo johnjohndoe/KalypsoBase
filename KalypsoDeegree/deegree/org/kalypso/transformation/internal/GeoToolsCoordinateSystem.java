@@ -57,7 +57,7 @@ public class GeoToolsCoordinateSystem implements ICoordinateSystem
   /**
    * The code for the coordinate system (e.g. 'EPSG:31467').
    */
-  private final String m_code;
+  private String m_code;
 
   /**
    * The geo tools coordinate system.
@@ -76,7 +76,7 @@ public class GeoToolsCoordinateSystem implements ICoordinateSystem
    * @param code
    *          The code for the coordinate system (e.g. 'EPSG:31467').
    */
-  public GeoToolsCoordinateSystem( final String code )
+  public GeoToolsCoordinateSystem( String code )
   {
     m_code = code;
     m_coordinateSystem = null;
@@ -133,7 +133,7 @@ public class GeoToolsCoordinateSystem implements ICoordinateSystem
    * @param code
    *          The code for the coordinate system (e.g. 'EPSG:31467').
    */
-  private void init( final String code )
+  private void init( String code )
   {
     try
     {
@@ -143,7 +143,7 @@ public class GeoToolsCoordinateSystem implements ICoordinateSystem
       /* Store OK. */
       m_initStatus = new Status( IStatus.OK, KalypsoDeegreePlugin.getID(), "OK" );
     }
-    catch( final Exception ex )
+    catch( Exception ex )
     {
       /* Store the error. */
       m_initStatus = new Status( IStatus.ERROR, KalypsoDeegreePlugin.getID(), ex.getLocalizedMessage(), ex );

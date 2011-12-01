@@ -84,7 +84,7 @@ public class UndoRedoDelegate extends AbstractGisEditorActionDelegate implements
     final JobExclusiveCommandTarget target = new JobExclusiveCommandTarget( workspace, null );
     final ISchedulingRule schedulingRule = target.getSchedulingRule();
 
-    if( m_undo && workspace.canUndo() || !m_undo && workspace.canRedo() )
+    if( (m_undo && workspace.canUndo()) || (!m_undo && workspace.canRedo()) )
       new CommandJob( null, workspace, schedulingRule, null, m_undo ? CommandJob.UNDO : CommandJob.REDO );
 
     refreshAction( action, getSelection() );

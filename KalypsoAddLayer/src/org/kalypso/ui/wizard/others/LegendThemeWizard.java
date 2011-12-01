@@ -91,13 +91,13 @@ public class LegendThemeWizard extends AbstractOtherThemeWizard implements IKaly
    *      java.lang.String)
    */
   @Override
-  protected ICommand createCommand( final IKalypsoLayerModell mapModell, final String themeName )
+  protected ICommand createCommand( IKalypsoLayerModell mapModell, String themeName )
   {
     /* Create the add theme command. */
-    final AddThemeCommand command = new AddThemeCommand( mapModell, themeName, "legend", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    AddThemeCommand command = new AddThemeCommand( mapModell, themeName, "legend", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     /* Add the selected properties. */
-    final Map<String, String> properties = m_legendThemeWizardPage.getProperties();
+    Map<String, String> properties = m_legendThemeWizardPage.getProperties();
     if( properties != null && properties.size() > 0 )
       command.addProperties( properties );
 

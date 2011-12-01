@@ -45,7 +45,7 @@ import java.util.Date;
 
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.contribs.java.util.CalendarIterator;
-import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
@@ -56,10 +56,8 @@ import org.kalypso.ogc.sensor.filter.filters.interval.IntervalCalculationStack.P
 import org.kalypso.ogc.sensor.filter.filters.interval.IntervalFilter.MODE;
 import org.kalypso.ogc.sensor.impl.AbstractTupleModel;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
-import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
-import org.kalypso.repository.IDataSourceItem;
 
 /**
  * @author doemming
@@ -77,26 +75,28 @@ public class IntervalTupleModel extends AbstractTupleModel
 
   private final ITupleModel m_intervallModel;
 
-  private final IntervalDefinition m_definition;
+  protected final double m_defaultValue;
 
-  private final IntervalAxesValues m_axes;
+  protected final int m_defaultStatus;
+
+  private final IntervalCalendar m_calendar;
+
+  private final IntervalModelAxes m_axes;
 
   private final MetadataList m_metadata;
 
-  private final DataSourceHandler m_handler;
-
-  public IntervalTupleModel( final MODE mode, final IntervalDefinition definition, final MetadataList metadata, final ITupleModel srcModel, final Date from, final Date to ) throws SensorException
+  public IntervalTupleModel( final MODE mode, final IntervalCalendar calendar, final MetadataList metadata, final ITupleModel srcModel, final Date from, final Date to, final double defaultValue, final int defaultStatus ) throws SensorException
   {
     super( srcModel.getAxes() );
 
     m_mode = mode;
-    m_definition = definition;
+    m_calendar = calendar;
     m_metadata = metadata;
-    m_handler = new DataSourceHandler( m_metadata );
-
     m_srcModel = srcModel;
+    m_defaultValue = defaultValue;
+    m_defaultStatus = defaultStatus;
 
-    m_axes = new IntervalAxesValues( m_handler, srcModel.getAxes(), definition.getDefaultValue(), definition.getDefaultStatus() );
+    m_axes = new IntervalModelAxes( getAxes() );
 
     final IAxisRange sourceModelRange = getSourceModelRange( srcModel, m_axes.getDateAxis() );
 
@@ -143,7 +143,10 @@ public class IntervalTupleModel extends AbstractTupleModel
     if( m_from == null || m_to == null )
       return createTuppleModell( axisList, 0 );
 
-    m_definition.adjustStart( m_from );
+    // correct from
+    final String startCalendarField = m_calendar.getStartCalendarField();
+    if( startCalendarField != null && !startCalendarField.trim().isEmpty() )
+      m_from.set( CalendarUtilities.getCalendarField( startCalendarField ), m_calendar.getStartCalendarValue() );
 
     return doInitModell();
   }
@@ -152,11 +155,7 @@ public class IntervalTupleModel extends AbstractTupleModel
   {
     // create empty model
     final IAxis[] axisList = getAxes();
-
-    final int targetStepField = m_definition.getCalendarField();
-    final int targetStepAmount = m_definition.getAmount();
-
-    final CalendarIterator iterator = new CalendarIterator( m_from, m_to, targetStepField, targetStepAmount );
+    final CalendarIterator iterator = new CalendarIterator( m_from, m_to, m_calendar.getCalendarField(), m_calendar.getAmount() );
     final int stepCount = iterator.size();
 
     Assert.isTrue( stepCount > 0, String.format( "Empty intervall tuple model. Check from (%s)/to(%s).", m_from, m_to ) );
@@ -164,7 +163,7 @@ public class IntervalTupleModel extends AbstractTupleModel
     final int rows = stepCount - 1;
     final ITupleModel intervalModel = createTuppleModell( axisList, rows );
 
-    final IntervalCalculationStack stack = new IntervalCalculationStack();
+    final IntervalCalculationStack stack = new IntervalCalculationStack( m_axes.getValueAxes(), m_axes.getStatusAxes(), m_defaultValue, m_defaultStatus );
 
     // initialize target
     stack.lastTargetCalendar = iterator.next(); // TODO hasNext() ?
@@ -230,8 +229,6 @@ public class IntervalTupleModel extends AbstractTupleModel
       }
     }
 
-    MetadataHelper.setTimestep( m_metadata, targetStepField, targetStepAmount );
-
     return intervalModel;
   }
 
@@ -249,7 +246,7 @@ public class IntervalTupleModel extends AbstractTupleModel
 
     final Calendar cal = iterator.next();
     if( stack.lastTargetCalendar.before( cal ) )
-      stack.targetInterval = new Interval( stack.lastTargetCalendar, cal, m_axes.getPlainValues(), m_axes.getPlainStatis(), m_axes.getPlainSources() );
+      stack.targetInterval = new Interval( stack.lastTargetCalendar, cal, stack.getPlainValues(), stack.getPlainStatis(), stack.getPlainSources() );
     else
       stack.targetInterval = null;
 
@@ -269,7 +266,7 @@ public class IntervalTupleModel extends AbstractTupleModel
     // REMARK: not really a problem, because this is only used in the case if we are
     // after the last real source intervall -> interval length is irrelevant in that case
     // FIXME: no! it is used and produces real errors...!
-    srcCalIntervallEnd.add( m_definition.getCalendarField(), m_definition.getAmount() );
+    srcCalIntervallEnd.add( m_calendar.getCalendarField(), m_calendar.getAmount() );
 
     // if we are after the source time series
     if( stack.srcRow >= srcMaxRows )
@@ -277,7 +274,7 @@ public class IntervalTupleModel extends AbstractTupleModel
       // generate defaults
       // create dummy interval
       // FIXME: strange: empty interval?!
-      stack.srcInterval = new Interval( stack.lastSrcCalendar, srcCalIntervallEnd, m_axes.getDefaultValues(), m_axes.getDefaultStatis(), m_axes.getPlainSources() );
+      stack.srcInterval = new Interval( stack.lastSrcCalendar, srcCalIntervallEnd, stack.defaultValues, stack.defaultStatis, stack.getPlainSources() );
 
       stack.lastSrcCalendar = (Calendar) srcCalIntervallEnd.clone();
       // TODO m_to, defaults
@@ -299,7 +296,7 @@ public class IntervalTupleModel extends AbstractTupleModel
     if( srcCalIntervallEnd.before( firstSrcCal ) )
     {
       // we are before the source time series
-      stack.srcInterval = new Interval( stack.lastSrcCalendar, srcCalIntervallEnd, m_axes.getDefaultValues(), m_axes.getDefaultStatis(), m_axes.getPlainSources() );
+      stack.srcInterval = new Interval( stack.lastSrcCalendar, srcCalIntervallEnd, stack.defaultValues, stack.defaultStatis, stack.getPlainSources() );
       stack.lastSrcCalendar = srcCalIntervallEnd;
     }
     /* we are inside source time series */
@@ -325,20 +322,17 @@ public class IntervalTupleModel extends AbstractTupleModel
 
   private String[] getDataSources( final int index ) throws SensorException
   {
-    final IAxis[] dataSourcesAxes = m_axes.getDataSourcesAxes();
+    final DataSourceHandler handler = new DataSourceHandler( m_metadata );
 
-    final Object[] srcDataSourceObjects = ObservationUtilities.getElements( m_srcModel, index, dataSourcesAxes );
+    final Object[] srcDataSourceObjects = ObservationUtilities.getElements( m_srcModel, index, m_axes.getDataSourcesAxes() );
     final String[] srcDataSources = new String[srcDataSourceObjects.length];
 
     for( int i = 0; i < srcDataSourceObjects.length; i++ )
     {
       final Number srcIndex = (Number) srcDataSourceObjects[i];
-      final String dataSourceIdentifier = m_handler.getDataSourceIdentifier( srcIndex.intValue() );
+      final String dataSourceIdentifier = handler.getDataSourceIdentifier( srcIndex.intValue() );
 
-      if( dataSourceIdentifier == null )
-        srcDataSources[i] = IDataSourceItem.SOURCE_UNKNOWN;
-      else
-        srcDataSources[i] = dataSourceIdentifier;
+      srcDataSources[i] = dataSourceIdentifier;
     }
 
     return srcDataSources;
@@ -403,7 +397,7 @@ public class IntervalTupleModel extends AbstractTupleModel
 
   private static Calendar createCalendar( final Date date )
   {
-    final Calendar result = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
+    final Calendar result = Calendar.getInstance();
     result.setTime( date );
     return result;
   }

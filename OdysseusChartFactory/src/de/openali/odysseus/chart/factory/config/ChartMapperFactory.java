@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.factory.config;
 
-import java.awt.Insets;
 import java.net.URL;
 import java.util.Calendar;
 
@@ -48,7 +47,6 @@ import org.apache.xmlbeans.GDuration;
 
 import de.openali.odysseus.chart.factory.config.parameters.impl.AxisDirectionParser;
 import de.openali.odysseus.chart.factory.config.parameters.impl.AxisPositionParser;
-import de.openali.odysseus.chart.factory.config.resolver.ChartTypeResolver;
 import de.openali.odysseus.chart.factory.provider.IAxisProvider;
 import de.openali.odysseus.chart.factory.provider.IAxisRendererProvider;
 import de.openali.odysseus.chart.factory.util.AxisUtils;
@@ -69,10 +67,6 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry
 import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
-import de.openali.odysseus.chart.framework.model.style.ITextStyle;
-import de.openali.odysseus.chart.framework.util.img.ChartLabelRendererFactory;
-import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
-import de.openali.odysseus.chartconfig.x020.AbstractStyleType;
 import de.openali.odysseus.chartconfig.x020.AxisDateRangeType;
 import de.openali.odysseus.chartconfig.x020.AxisDurationRangeType;
 import de.openali.odysseus.chartconfig.x020.AxisNumberRangeRestrictionType;
@@ -88,8 +82,6 @@ import de.openali.odysseus.chartconfig.x020.PositionType;
 import de.openali.odysseus.chartconfig.x020.ReferencableType;
 import de.openali.odysseus.chartconfig.x020.ReferencingType;
 import de.openali.odysseus.chartconfig.x020.ScreenAxisType;
-import de.openali.odysseus.chartconfig.x020.TextStyleType;
-import de.openali.odysseus.chartconfig.x020.TitleType;
 
 /**
  * @author Dirk Kuch
@@ -159,25 +151,7 @@ public class ChartMapperFactory extends AbstractChartFactory
             axis.setData( CONFIGURATION_TYPE_KEY, axisType ); // save configuration type so it can be used for saving to
 // chartfile
             axis.setDirection( getAxisDirection( axisType ) );
-            final TitleType[] titles = axisType.isSetLabels() ? axisType.getLabels().getTitleTypeArray() : new TitleType[] {};
-            final ChartTypeResolver chartTypeResolver = ChartTypeResolver.getInstance();
-            for( final TitleType title : titles )
-            {
-              try
-              {
-                final AbstractStyleType styleType = chartTypeResolver.findStyleType( title.getStyleref(), getContext() );
-                final ITextStyle style = StyleFactory.createTextStyle( (TextStyleType) styleType );
-                final TitleTypeBean titleBean = StyleHelper.getTitleTypeBean( axis.getPosition(), title, style );
-                axis.addLabel( titleBean );
-
-              }
-              catch( final Throwable t )
-              {
-                t.printStackTrace();
-              }
-            }
-            if( axisType.isSetLabel() )
-              axis.addLabel( ChartLabelRendererFactory.getAxisLabelType( axis.getPosition(), axisType.getLabel(), new Insets( 1, 1, 1, 1 ), null ) );
+            axis.setLabel( axisType.getLabel() );
             axis.setPreferredAdjustment( getAxisAdjustment( axisType ) );
             axis.setNumericRange( getAxisRange( axis, axisType ) );
             axis.setRangeRestriction( getRangeRestriction( axisType ) );
@@ -185,36 +159,49 @@ public class ChartMapperFactory extends AbstractChartFactory
 
             mapperRegistry.addMapper( axis );
 
+            /**
+             * Renderer nur erzeugen, wenn es noch keinen für die Achse gibt
+             */
             final ReferencingType rendererRef = axisType.getRendererRef();
-            final AxisRendererType rendererType = (AxisRendererType) getResolver().resolveReference( AxisUtils.getIdentifier( rendererRef ) );
-            if( rendererType != null )
+            IAxisRenderer axisRenderer = findRenderer( mapperRegistry.getAxes(), AxisUtils.getIdentifier( rendererRef ) );
+
+            if( axisRenderer != null )
             {
-              final String providerId = rendererType.getProvider().getEpid();
-              final IAxisRendererProvider axisRendererProvider;
-              // Hack due older kod-files with this malformed renderer-id still exists
-              if( "de.openali.odysseus.chart.ext.test.axisrenderer.provider.GenericNumberAxisRendererProvider".equals( providerId ) ) //$NON-NLS-1$
-                axisRendererProvider = getLoader().getExtension( IAxisRendererProvider.class, "de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider" ); //$NON-NLS-1$
-              else
-                axisRendererProvider = getLoader().getExtension( IAxisRendererProvider.class, providerId );
-              final String rendererTypeId = rendererType.getId();
-              // TODO global style set
-              final IStyleSet styleSet = StyleFactory.createStyleSet( rendererType.getStyles(), baseTypes, getContext() );
-              final IParameterContainer parameterContainer = createParameterContainer( rendererTypeId, rendererType.getProvider() );
-
-              axisRendererProvider.init( getModel(), rendererTypeId, parameterContainer, getContext(), styleSet );
-
-              try
+              /** exists? so assign axis renderer */
+              axis.setRenderer( axisRenderer );
+            }
+            else
+            {
+              final AxisRendererType rendererType = (AxisRendererType) getResolver().resolveReference( AxisUtils.getIdentifier( rendererRef ) );
+              if( rendererType != null )
               {
-                final IAxisRenderer axisRenderer = axisRendererProvider.getAxisRenderer( axis.getPosition() );
-                axisRenderer.setData( ChartFactory.AXISRENDERER_PROVIDER_KEY, axisRendererProvider );
-                // save configuration type so it can be used for saving to chart file
-                axisRenderer.setData( CONFIGURATION_TYPE_KEY, rendererType );
+                final String providerId = rendererType.getProvider().getEpid();
+                final IAxisRendererProvider axisRendererProvider;
+                // Hack due older kod-files with this malformed renderer-id still exists
+                if( "de.openali.odysseus.chart.ext.test.axisrenderer.provider.GenericNumberAxisRendererProvider".equals( providerId ) ) //$NON-NLS-1$
+                  axisRendererProvider = getLoader().getExtension( IAxisRendererProvider.class, "de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider" ); //$NON-NLS-1$
+                else
+                  axisRendererProvider = getLoader().getExtension( IAxisRendererProvider.class, providerId );
+                final String rendererTypeId = rendererType.getId();
+                // TODO global style set
+                final IStyleSet styleSet = StyleFactory.createStyleSet( rendererType.getStyles(), baseTypes, getContext() );
+                final IParameterContainer parameterContainer = createParameterContainer( rendererTypeId, rendererType.getProvider() );
 
-                axis.setRenderer( axisRenderer );
-              }
-              catch( final ConfigurationException e )
-              {
-                e.printStackTrace();
+                axisRendererProvider.init( getModel(), rendererTypeId, parameterContainer, getContext(), styleSet );
+
+                try
+                {
+                  axisRenderer = axisRendererProvider.getAxisRenderer();
+                  axisRenderer.setData( ChartFactory.AXISRENDERER_PROVIDER_KEY, axisRendererProvider );
+                  // save configuration type so it can be used for saving to chart file
+                  axisRenderer.setData( CONFIGURATION_TYPE_KEY, rendererType );
+
+                  axis.setRenderer( axisRenderer );
+                }
+                catch( final ConfigurationException e )
+                {
+                  e.printStackTrace();
+                }
               }
             }
 
@@ -285,8 +272,7 @@ public class ChartMapperFactory extends AbstractChartFactory
     {
       final PreferredAdjustment pa = at.getPreferredAdjustment();
 
-      aa = new AxisAdjustment( pa.getBefore(), pa.getRange(), pa.getAfter(), pa.getFixMinRange() == null ? 0.0 : pa.getFixMinRange(), pa.getFixMaxRange() == null ? Double.MAX_VALUE
-          : pa.getFixMaxRange() );
+      aa = new AxisAdjustment( pa.getBefore(), pa.getRange(), pa.getAfter(),pa.getFixMinRange()==null?0.0:pa.getFixMinRange(),pa.getFixMaxRange()==null?Double.MAX_VALUE: pa.getFixMaxRange());
     }
     else
       aa = new AxisAdjustment( 0, 1, 0 );
@@ -391,16 +377,16 @@ public class ChartMapperFactory extends AbstractChartFactory
       return Number.class;
   }
 
-// private IAxisRenderer findRenderer( final IAxis[] axes, final String rendererID )
-// {
-// for( final IAxis axis : axes )
-// {
-// final IAxisRenderer renderer = axis.getRenderer();
-// if( renderer != null && renderer.getId().equals( rendererID ))
-// return renderer;
-// }
-// return null;
-// }
+  private IAxisRenderer findRenderer( final IAxis[] axes, final String rendererID )
+  {
+    for( final IAxis axis : axes )
+    {
+      final IAxisRenderer renderer = axis.getRenderer();
+      if( renderer != null && renderer.getId().equals( rendererID ) )
+        return renderer;
+    }
+    return null;
+  }
 
   public void addMapper( final MapperType type, final ReferencableType... baseTypes )
   {

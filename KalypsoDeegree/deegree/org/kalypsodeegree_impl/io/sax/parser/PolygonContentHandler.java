@@ -82,11 +82,6 @@ public class PolygonContentHandler extends GMLElementContentHandler implements I
 
   private final ISurfaceHandler<GM_Polygon> m_surfaceHandler;
 
-  public PolygonContentHandler( final XMLReader xmlReader, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContentHandler, final String defaultSrs )
-  {
-    this( xmlReader, null, resultEater, parentContentHandler, defaultSrs );
-  }
-
   public PolygonContentHandler( final XMLReader xmlReader, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContentHandler )
   {
     this( xmlReader, null, resultEater, parentContentHandler, null );
@@ -180,4 +175,56 @@ public class PolygonContentHandler extends GMLElementContentHandler implements I
     else
       m_interiorRings.add( ring.getPositions() );
   }
+
+  // / FIXME Tricky: we need to handle to different events of the same kind at once...
+
+// /**
+// * @see org.kalypsodeegree_impl.io.sax.parser.IPositionHandler#handle(org.kalypsodeegree.model.geometry.GM_Position[],
+// java.lang.String)
+// */
+// @Override
+// public void handle( final GM_Position[] positions, final String srs ) throws SAXParseException
+// {
+// for( final GM_Position position : positions )
+// {
+// /* check srsDimension */
+// if( m_srsDimension != null && position.getCoordinateDimension() != m_srsDimension )
+// {
+// throw new SAXParseException( "The position " + position.toString() +
+// "in this gml:LineString does not have the number of coordinates specified in 'srsDimension': " + m_srsDimension,
+// m_locator );
+// }
+//
+// m_positions.add( position );
+// }
+// }
+
+// /**
+// * @see org.kalypsodeegree_impl.io.sax.parser.ICoordinatesHandler#handle(java.util.List)
+// */
+// @Override
+// public void handle( final List<Double[]> element ) throws SAXParseException
+// {
+// for( final Double[] tuple : element )
+// {
+// final int tupleSize = tuple.length;
+//
+// /* check srsDimension */
+// if( m_srsDimension != null && tupleSize != m_srsDimension )
+// {
+// throw new SAXParseException( "The position " + tuple.toString() +
+// "in this gml:LineString does not have the number of coordinates specified in 'srsDimension': " + m_srsDimension,
+// m_locator );
+// }
+//
+// if( tuple.length == 2 )
+// {
+// m_positions.add( GeometryFactory.createGM_Position( tuple[0], tuple[1] ) );
+// }
+// else
+// {
+// m_positions.add( GeometryFactory.createGM_Position( tuple[0], tuple[1], tuple[2] ) );
+// }
+// }
+// }
 }

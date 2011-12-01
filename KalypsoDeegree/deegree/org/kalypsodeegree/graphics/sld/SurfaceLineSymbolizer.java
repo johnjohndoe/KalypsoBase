@@ -59,7 +59,7 @@ public interface SurfaceLineSymbolizer extends Symbolizer
    * Sets the LineColorMap
    * 
    * @param colorMap
-   *          the color map for the iso-lines
+   *            the color map for the iso-lines
    */
   void setColorMap( LineColorMap colorMap );
 

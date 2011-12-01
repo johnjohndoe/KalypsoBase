@@ -69,7 +69,7 @@ public class ImageCanvas2 extends Canvas
 
   public ImageCanvas2( final Composite parent, final int style )
   {
-    super( parent, style | SWT.DOUBLE_BUFFERED );
+    super( parent, style );
 
     final Canvas myCanvas = this;
 
@@ -88,11 +88,11 @@ public class ImageCanvas2 extends Canvas
         }
       }
     };
-    addPaintListener( m_paintListener );
+    this.addPaintListener( m_paintListener );
 
     /* handle mouse move events */
-    final Cursor cursorHand = new Cursor( getDisplay(), SWT.CURSOR_HAND );
-    final Cursor cursorDefault = new Cursor( getDisplay(), SWT.CURSOR_ARROW );
+    final Cursor cursorHand = new Cursor( this.getDisplay(), SWT.CURSOR_HAND );
+    final Cursor cursorDefault = new Cursor( this.getDisplay(), SWT.CURSOR_ARROW );
 
     m_mouseMoveListener = new MouseMoveListener()
     {
@@ -144,10 +144,10 @@ public class ImageCanvas2 extends Canvas
       }
     };
 
-    addMouseMoveListener( m_mouseMoveListener );
+    this.addMouseMoveListener( m_mouseMoveListener );
 
     /* mouse listener */
-    addMouseListener( new MouseAdapter()
+    this.addMouseListener( new MouseAdapter()
     {
       /**
        * @see org.eclipse.swt.events.MouseAdapter#mouseUp(org.eclipse.swt.events.MouseEvent)
@@ -217,8 +217,8 @@ public class ImageCanvas2 extends Canvas
   @Override
   public void dispose( )
   {
-    removePaintListener( m_paintListener );
-    removeMouseMoveListener( m_mouseMoveListener );
+    this.removePaintListener( m_paintListener );
+    this.removeMouseMoveListener( m_mouseMoveListener );
 
     super.dispose();
   }

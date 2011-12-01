@@ -44,9 +44,9 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class XElementFormAttribute extends AbstractXElement
 {
-  private final String m_attribute;
+  private String m_attribute;
 
-  public XElementFormAttribute( final String condition )
+  public XElementFormAttribute( String condition )
   {
     m_attribute = condition.replaceFirst( "@", "" ).trim();
   }
@@ -55,7 +55,7 @@ public class XElementFormAttribute extends AbstractXElement
    * @see org.kalypsodeegree_impl.model.feature.xpath.AbstractXElement#evaluateOther(java.lang.Object, boolean)
    */
   @Override
-  public Object evaluateOther( final Object context, final boolean featureTypeLevel )
+  public Object evaluateOther( Object context, boolean featureTypeLevel )
   {
     // TODO Auto-generated method stub
     return null;
@@ -65,7 +65,7 @@ public class XElementFormAttribute extends AbstractXElement
    * @see org.kalypsodeegree_impl.model.feature.xpath.AbstractXElement#evaluateFeature(org.kalypsodeegree.model.feature.Feature)
    */
   @Override
-  public Object evaluateFeature( final Feature contextFE, final boolean featureTypeLevel )
+  public Object evaluateFeature( Feature contextFE, boolean featureTypeLevel )
   {
     if( featureTypeLevel )
     {

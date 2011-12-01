@@ -68,6 +68,10 @@ public class NoDataLayerVisibilityVisitor implements IChartLayerVisitor
   }
 
   // <Parameter name="hideOnMultiSelect" value="true" />
+
+  /**
+   * @see org.kalypso.zml.core.diagram.base.AbstractExternalChartModelVisitor#accept(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+   */
   @Override
   public void visit( final IChartLayer layer )
   {
@@ -100,9 +104,6 @@ public class NoDataLayerVisibilityVisitor implements IChartLayerVisitor
       return false;
 
     final IZmlLayerDataHandler handler = layer.getDataHandler();
-    if( Objects.isNull( handler ) )
-      return false;
-
     final IObservation observation = handler.getObservation();
     if( Objects.isNull( observation ) )
       return false;
@@ -120,6 +121,9 @@ public class NoDataLayerVisibilityVisitor implements IChartLayerVisitor
     return false;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#doFinialize()
+   */
   @Override
   public void doFinialize( )
   {

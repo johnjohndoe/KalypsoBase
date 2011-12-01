@@ -71,7 +71,8 @@ public class ImportImageSourceWizard extends Wizard implements IKalypsoDataImpor
       final String name = m_page.getSourcePath().removeFileExtension().lastSegment();
       final String type = m_page.getFileType();
       final String source = m_page.getSource( context );
-      final AddThemeCommand command = new AddThemeCommand( m_mapModel, name, type, source + "#" + m_page.getCSName() ); //$NON-NLS-1$
+      final AddThemeCommand command = new AddThemeCommand( m_mapModel, name, type, null, source
+          + "#" + m_page.getCSName() ); //$NON-NLS-1$
       m_outlineviewer.postCommand( command, null );
     }
     return true;
@@ -99,8 +100,10 @@ public class ImportImageSourceWizard extends Wizard implements IKalypsoDataImpor
   public void addPages( )
   {
     m_page = new ImportImageWizardPage( "imageimport", Messages.getString( "org.kalypso.ui.wizard.image.ImportImageSourceWizard.3" ), ImageProvider.IMAGE_KALYPSO_ICON_BIG ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_page.setProjectSelection( m_mapModel.getProject() );
-
+    if( m_outlineviewer != null )
+    {
+      m_page.setProjectSelection( m_mapModel.getProject() );
+    }
     addPage( m_page );
   }
 

@@ -53,9 +53,8 @@ import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
 import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaFactory;
-import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -263,7 +262,7 @@ public class DBaseFile
       // seek the position of the field definition data.
       // This information appears after the first 32 byte
       // table information, and lives in 32 byte chunks.
-      m_rafDbf.seek( (i - 1) * 32 + 32 );
+      m_rafDbf.seek( ((i - 1) * 32) + 32 );
 
       b = null;
 
@@ -413,7 +412,7 @@ public class DBaseFile
     try
     {
       // TODO: comment! Why is this all needed etc.?
-      final URL resource = getClass().getResource( "resources/shapeCustomTemplate.xsd" );
+      URL resource = getClass().getResource( "resources/shapeCustomTemplate.xsd" );
       String schemaString = UrlUtilities.toString( resource, "UTF-8" );
 
       schemaString = schemaString.replaceAll( Pattern.quote( "${CUSTOM_NAMESPACE_SUFFIX}" ), m_suffix );
@@ -425,11 +424,7 @@ public class DBaseFile
 
       // TODO: why write this file to disk? Why not directly parse the schema from it and add the schema to the cache?
       FileUtils.writeStringToFile( tempFile, schemaString, "UTF8" );
-      // final GMLSchema schema = GMLSchemaFactory.createGMLSchema( "3.1.1", tempFile.toURI().toURL() );
-
-      final GMLSchemaCatalog catalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-      final GMLSchema schema = catalog.getSchema( "3.1.1", tempFile.toURI().toURL() );
-
+      final GMLSchema schema = GMLSchemaFactory.createGMLSchema( "3.1.1", tempFile.toURI().toURL() );
       return GMLSchemaFactory.createFeatureType( m_propertyCustomFeatureMember, ftp, schema, new QName( SHP_NAMESPACE_URI, "_Shape" ) );
     }
     catch( final IOException e )
@@ -437,11 +432,11 @@ public class DBaseFile
       // should not happen
       throw new IllegalStateException( e );
     }
-// catch( final GMLSchemaException e )
-// {
-// // should not happen
-// throw new IllegalStateException( e );
-// }
+    catch( final GMLSchemaException e )
+    {
+      // should not happen
+      throw new IllegalStateException( e );
+    }
   }
 
   public IFeatureType getFeatureType( )
@@ -454,8 +449,8 @@ public class DBaseFile
   {
     switch( m_defaultFileShapeType )
     {
-    // remember: the geometry classes must be the same
-    // as the one used by the marshalling type handlers
+      // remember: the geometry classes must be the same
+      // as the one used by the marshalling type handlers
       case ShapeConst.SHAPE_TYPE_POINT:
         return GeometryUtilities.getPointClass();
       case ShapeConst.SHAPE_TYPE_MULTIPOINT:
@@ -541,10 +536,10 @@ public class DBaseFile
 
       // seek the starting offset of the current record,
       // as indicated by record_number
-      long pos = file_datap + (record_number - 1) * file_datalength;
+      long pos = file_datap + ((record_number - 1) * file_datalength);
 
       // read data from cache if the requested part of the dbase file is within it
-      if( pos >= m_startIndex && pos + column.position + column.size < m_startIndex + m_cacheSize )
+      if( (pos >= m_startIndex) && ((pos + column.position + column.size) < (m_startIndex + m_cacheSize)) )
       {
         pos = pos - m_startIndex;
       }

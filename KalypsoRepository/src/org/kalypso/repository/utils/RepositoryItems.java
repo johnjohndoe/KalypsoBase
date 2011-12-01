@@ -46,8 +46,8 @@ import java.util.List;
 import jregex.Pattern;
 import jregex.RETokenizer;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
@@ -134,23 +134,22 @@ public final class RepositoryItems
     return tokenizer.nextToken();
   }
 
-//  private static final Pattern PATTERN_PLAIN_ID_TOKENIZER = new Pattern( ".*\\://" ); //$NON-NLS-1$
+  private static final Pattern PATTERN_PLAIN_ID_TOKENIZER = new Pattern( ".*\\://" ); //$NON-NLS-1$
 
   /**
    * @return "plain" item id without "protocol" (the original source, like zml-proxy://, datastore://)
    */
   public static String getPlainId( final String identifier )
   {
-    final int indexOf = identifier.indexOf( "://" );
-    if( indexOf == -1 )
+    if( isPlainId( identifier ) )
       return identifier;
 
-    final String protocol = identifier.substring( 0, indexOf + 3 );
+    if( PATTERN_PLAIN_ID_TOKENIZER.matches( identifier ) )
+      return ""; // "plain id" of an IRepository
 
-    if( IDataSourceItem.FILTER_SOURCE.equals( protocol ) )
-      return identifier;
+    final RETokenizer tokenizer = new RETokenizer( PATTERN_PLAIN_ID_TOKENIZER, identifier );
 
-    return identifier.substring( indexOf + 3 );
+    return tokenizer.nextToken();
   }
 
   /**

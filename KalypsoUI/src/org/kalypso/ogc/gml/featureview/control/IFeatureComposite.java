@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
-import java.net.URL;
-
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.ogc.gml.featureview.maker.IFeatureviewFactory;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
@@ -59,9 +57,4 @@ public interface IFeatureComposite
 
   boolean isShowOk( );
 
-  /**
-   * Returns the context, i.e. the resource location, where the feature view template was loaded from. Feature controls
-   * might need to resolve relative paths against this context.
-   */
-  URL getFeatureviewContext( );
 }

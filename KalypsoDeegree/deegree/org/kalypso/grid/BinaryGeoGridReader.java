@@ -83,8 +83,8 @@ public class BinaryGeoGridReader extends AbstractDelegatingGeoGrid
   {
     super( inputGrid );
 
-    File fileFromUrl = ResourceUtilities.findJavaFileFromURL( pUrl );
     /* Tries to find a file from the given url. */
+    File fileFromUrl = ResourceUtilities.findJavaFileFromURL( pUrl );
     if( fileFromUrl == null )
       fileFromUrl = FileUtils.toFile( pUrl );
 
@@ -93,7 +93,7 @@ public class BinaryGeoGridReader extends AbstractDelegatingGeoGrid
     // skip header
     /* Read header */
     m_gridStream.skip( 12 );
-    final byte[] lScaleBuff = new byte[4];
+    byte[] lScaleBuff = new byte[4];
     read( lScaleBuff, 1 );
     m_scale = ByteUtils.readBEInt( lScaleBuff, 0 );
 
@@ -102,13 +102,13 @@ public class BinaryGeoGridReader extends AbstractDelegatingGeoGrid
       m_linesTotal = getSizeY();
       m_lineLen = getSizeX() * 4;
     }
-    catch( final GeoGridException e )
+    catch( GeoGridException e )
     {
       e.printStackTrace();
     }
 
     // block_size is set to "optimal" size of the buffer from start on
-    m_linesInBlock = BLOCK_SIZE / m_lineLen;
+    m_linesInBlock = (BLOCK_SIZE / m_lineLen);
 
     if( m_linesInBlock >= m_linesTotal )
       m_linesInBlock = m_linesTotal;
@@ -140,7 +140,7 @@ public class BinaryGeoGridReader extends AbstractDelegatingGeoGrid
     {
       m_gridStream.close();
     }
-    catch( final IOException e )
+    catch( IOException e )
     {
       e.printStackTrace();
     }
@@ -153,7 +153,7 @@ public class BinaryGeoGridReader extends AbstractDelegatingGeoGrid
     close();
   }
 
-  private void read( final byte[] blockData, final int items ) throws IOException
+  private void read( byte[] blockData, int items ) throws IOException
   {
     m_gridStream.read( blockData, 0, items * 4 );
   }
@@ -164,7 +164,7 @@ public class BinaryGeoGridReader extends AbstractDelegatingGeoGrid
     {
       m_gridStream.read( m_blockData, 0, BLOCK_SIZE );
     }
-    catch( final IOException e )
+    catch( IOException e )
     {
       e.printStackTrace();
     }
@@ -192,6 +192,9 @@ public class BinaryGeoGridReader extends AbstractDelegatingGeoGrid
 
     final BigDecimal decimal = new BigDecimal( BigInteger.valueOf( z ), m_scale );
     final double value = decimal.doubleValue();
+
+    if( value <= 0.0 )
+      return Double.NaN;
 
     return value;
   }

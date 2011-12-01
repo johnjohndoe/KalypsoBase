@@ -60,9 +60,6 @@ import org.kalypso.ogc.gml.outline.nodes.ILegendProvider;
 import org.kalypso.ogc.gml.wms.loader.images.KalypsoImageLoader;
 import org.kalypso.ogc.gml.wms.provider.images.AbstractDeegreeImageProvider;
 import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
-import org.kalypso.template.types.LayerType;
-import org.kalypso.template.types.StyledLayerType;
-import org.kalypso.template.types.StyledLayerType.Style;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -79,17 +76,12 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   /**
    * The source string. Do not remove this, because it is needed, when the template is saved.
    */
-  private final String m_source;
-
-  /**
-   * The layer.
-   */
-  private final LayerType m_layer;
+  private String m_source;
 
   /**
    * This variable stores the image provider.
    */
-  private final IKalypsoImageProvider m_provider;
+  private IKalypsoImageProvider m_provider;
 
   /**
    * This variable stores the legend, if any.
@@ -122,12 +114,11 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
    * @param mapModel
    *          The map modell.
    */
-  public KalypsoWMSTheme( final String source, final String linktype, final I10nString themeName, final LayerType layerType, final IKalypsoImageProvider imageProvider, final IMapModell mapModel )
+  public KalypsoWMSTheme( final String source, final String linktype, final I10nString themeName, final IKalypsoImageProvider imageProvider, final IMapModell mapModel )
   {
     super( themeName, linktype.toUpperCase(), mapModel );
 
     m_source = source;
-    m_layer = layerType;
     m_provider = imageProvider;
     m_legend = null;
   }
@@ -138,10 +129,17 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   @Override
   public GM_Envelope getFullExtent( )
   {
-    // should not block! If capabilities are not yet loaded, return null
+    if( m_maxEnvLocalSRS == null )
+      m_maxEnvLocalSRS = m_provider.getFullExtent();
+
     return m_maxEnvLocalSRS;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
+   *      org.eclipse.core.runtime.IProgressMonitor)
+   */
   @Override
   public IStatus paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
   {
@@ -151,28 +149,15 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
     setStatus( AbstractKalypsoTheme.PAINT_STATUS );
 
-    // HACK: initialize the max-extend on first paint, because paint is the only method that is allowed to block
-    // FIXME: we should refaktor4 the whole image provider: it should immediately start loading the capas in a sepearate
-    // thread and should inform the theme when it has finished.
-    if( m_maxEnvLocalSRS == null )
-      m_maxEnvLocalSRS = m_provider.getFullExtent();
-
     final int width = (int) p.getDestWidth();
     final int height = (int) p.getDestHeight();
     final GM_Envelope extent = p.getSourceRect();
-
-    // FIXME: no job needed here, directly call image provider
     final KalypsoImageLoader loader = new KalypsoImageLoader( getLabel(), m_provider, width, height, extent );
-
     final IStatus status = loader.run( monitor );
     if( status.isOK() )
     {
       final Image buffer = loader.getBuffer();
-      /* HINT: The image loading can take a few seconds. */
-      /* HINT: If the theme was switched invisible during these seconds, it will still be drawn, until the next repaint. */
-      /* HINT: Hopefully this will avoid this. */
-      if( isVisible() )
-        g.drawImage( buffer, 0, 0, null );
+      g.drawImage( buffer, 0, 0, null );
     }
 
     setStatus( status );
@@ -327,29 +312,17 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     return ((AbstractDeegreeImageProvider) m_provider).getLastRequest();
   }
 
-  public org.eclipse.swt.graphics.Image getLegendGraphic( final Font font ) throws CoreException
+  public org.eclipse.swt.graphics.Image getLegendGraphic( Font font ) throws CoreException
   {
     if( m_provider == null || !(m_provider instanceof ILegendProvider) )
       return null;
 
     if( m_legend == null )
     {
-      final ILegendProvider legendProvider = (ILegendProvider) m_provider;
-      m_legend = legendProvider.getLegendGraphic( null, false, font );
+      ILegendProvider legendProvider = (ILegendProvider) m_provider;
+      m_legend = legendProvider.getLegendGraphic( null, font );
     }
 
     return m_legend;
-  }
-
-  public Style[] getStyles( )
-  {
-    if( m_layer == null )
-      return new Style[] {};
-
-    if( !(m_layer instanceof StyledLayerType) )
-      return new Style[] {};
-
-    final StyledLayerType styledLayer = (StyledLayerType) m_layer;
-    return styledLayer.getStyle().toArray( new Style[] {} );
   }
 }

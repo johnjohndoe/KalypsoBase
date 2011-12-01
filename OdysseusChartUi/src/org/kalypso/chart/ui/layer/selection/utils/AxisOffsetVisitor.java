@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.layer.selection.utils;
 
+import org.apache.commons.lang.NotImplementedException;
+
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
@@ -60,7 +62,7 @@ public class AxisOffsetVisitor implements IAxisVisitor
     m_position = position;
 
     if( !ORIENTATION.HORIZONTAL.equals( m_position.getOrientation() ) )
-      throw new UnsupportedOperationException();
+      throw new NotImplementedException();
   }
 
   /**

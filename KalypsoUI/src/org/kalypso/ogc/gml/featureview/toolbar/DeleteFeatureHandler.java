@@ -58,8 +58,6 @@ import org.kalypso.ui.editor.actions.FeatureActionUtilities;
 import org.kalypso.ui.editor.actions.TableFeatureControlUtils;
 
 /**
- * FIXME: merge with the other DeleteFeatureCommand in gml ui
- * 
  * @author Dirk Kuch
  */
 public class DeleteFeatureHandler extends AbstractTableFeatureControlHandler

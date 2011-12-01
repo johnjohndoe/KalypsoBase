@@ -40,12 +40,12 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
@@ -53,11 +53,11 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
  * 
  * @author Patrice Congo
  */
-public class Polynomial1D extends Feature_Impl implements IPolynomial1D
+public class Polynomial1D extends AbstractFeatureBinder implements IPolynomial1D
 {
-  public Polynomial1D( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public Polynomial1D( final Feature polFeature )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    super( polFeature, QNAME );
   }
 
   /**
@@ -90,7 +90,7 @@ public class Polynomial1D extends Feature_Impl implements IPolynomial1D
   @SuppressWarnings("unchecked")
   public double[] getCoefficients( )
   {
-    final List<Double> coefs = (List<Double>) getProperty( QNAME_PROP_COEFFICIENTS );
+    final List<Double> coefs = (List<Double>) getFeature().getProperty( QNAME_PROP_COEFFICIENTS );
     if( coefs == null )
       return new double[0];
 
@@ -105,15 +105,15 @@ public class Polynomial1D extends Feature_Impl implements IPolynomial1D
 
     if( coefficients != null )
     {
-      for( final double coefficient : coefficients )
-        list.add( coefficient );
+      for( int i = 0; i < coefficients.length; i++ )
+        list.add( coefficients[i] );
     }
 
-    setProperty( QNAME_PROP_COEFFICIENTS, list );
+    getFeature().setProperty( QNAME_PROP_COEFFICIENTS, list );
   }
 
   @Override
-  public boolean equals( final Object obj )
+  public boolean equals( Object obj )
   {
     if( this == obj )
     {
@@ -121,8 +121,8 @@ public class Polynomial1D extends Feature_Impl implements IPolynomial1D
     }
     else if( obj instanceof IPolynomial1D )
     {
-      final double thisCoefs[] = getCoefficients();
-      final double compCoefs[] = ((IPolynomial1D) obj).getCoefficients();
+      double thisCoefs[] = getCoefficients();
+      double compCoefs[] = ((IPolynomial1D) obj).getCoefficients();
       int i = thisCoefs.length;
       if( i != compCoefs.length )
       {
@@ -150,7 +150,7 @@ public class Polynomial1D extends Feature_Impl implements IPolynomial1D
   {
     final StringBuffer buf = new StringBuffer( 64 );
     buf.append( "Polynomial1D" );
-    final String id = getId();
+    final String id = getFeature().getId();
     if( id != null )
     {
       buf.append( '.' );
@@ -183,7 +183,7 @@ public class Polynomial1D extends Feature_Impl implements IPolynomial1D
   @Override
   public double getRangeMin( )
   {
-    final Double property = (Double) getProperty( QNAME_PROP_MINRANGE );
+    final Double property = (Double) getFeature().getProperty( QNAME_PROP_MINRANGE );
     if( property == null )
       return Double.NEGATIVE_INFINITY;
 
@@ -196,7 +196,7 @@ public class Polynomial1D extends Feature_Impl implements IPolynomial1D
   @Override
   public double getRangeMax( )
   {
-    final Double property = (Double) getProperty( QNAME_PROP_MAXRANGE );
+    final Double property = (Double) getFeature().getProperty( QNAME_PROP_MAXRANGE );
     if( property == null )
       return Double.POSITIVE_INFINITY;
 
@@ -209,8 +209,8 @@ public class Polynomial1D extends Feature_Impl implements IPolynomial1D
   @Override
   public void setRange( final double from, final double to )
   {
-    setProperty( QNAME_PROP_MINRANGE, Double.isNaN( from ) ? null : from );
-    setProperty( QNAME_PROP_MAXRANGE, Double.isNaN( to ) ? null : to );
+    getFeature().setProperty( QNAME_PROP_MINRANGE, Double.isNaN( from ) ? null : from );
+    getFeature().setProperty( QNAME_PROP_MAXRANGE, Double.isNaN( to ) ? null : to );
   }
 
   /**
@@ -221,7 +221,7 @@ public class Polynomial1D extends Feature_Impl implements IPolynomial1D
   {
     final Feature ref = refForId( domainId );
 
-    setProperty( QNAME_PROP_DOMAIN_PHENOMENON, ref );
+    getFeature().setProperty( QNAME_PROP_DOMAIN_PHENOMENON, ref );
   }
 
   /**
@@ -232,15 +232,15 @@ public class Polynomial1D extends Feature_Impl implements IPolynomial1D
   {
     final Feature ref = refForId( rangeId );
 
-    setProperty( QNAME_PROP_RANGE_PHENOMENON, ref );
+    getFeature().setProperty( QNAME_PROP_RANGE_PHENOMENON, ref );
   }
 
   private Feature refForId( final String domainId )
   {
-    final IRelationType relation = (IRelationType) getFeatureType().getProperty( QNAME_PROP_DOMAIN_PHENOMENON );
-    final IFeatureType featureType = getWorkspace().getGMLSchema().getFeatureType( new QName( NS.SWE, "Phenomenon" ) );
+    final IRelationType relation = (IRelationType) getFeature().getFeatureType().getProperty( QNAME_PROP_DOMAIN_PHENOMENON );
+    final IFeatureType featureType = getFeature().getWorkspace().getGMLSchema().getFeatureType( new QName( NS.SWE, "Phenomenon" ) );
 
-    final Feature ref = new XLinkedFeature_Impl( this, relation, featureType, domainId, null, null, null, null, null );
+    final Feature ref = new XLinkedFeature_Impl( getFeature(), relation, featureType, domainId, null, null, null, null, null );
     return ref;
   }
 
@@ -250,7 +250,7 @@ public class Polynomial1D extends Feature_Impl implements IPolynomial1D
   @Override
   public String getDomainPhenomenon( )
   {
-    final Feature feature = this;
+    final Feature feature = getFeature();
     final Object property = feature.getProperty( QNAME_PROP_DOMAIN_PHENOMENON );
     return propertyToId( property );
   }
@@ -261,7 +261,7 @@ public class Polynomial1D extends Feature_Impl implements IPolynomial1D
   @Override
   public String getRangePhenomenon( )
   {
-    final Feature feature = this;
+    final Feature feature = getFeature();
     final Object property = feature.getProperty( QNAME_PROP_RANGE_PHENOMENON );
     return propertyToId( property );
   }

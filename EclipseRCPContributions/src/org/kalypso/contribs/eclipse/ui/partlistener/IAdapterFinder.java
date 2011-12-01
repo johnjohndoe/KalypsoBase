@@ -57,5 +57,5 @@ public interface IAdapterFinder<C>
    * <p>
    * If nothing is found, always call {@link AdapterPartListener#setAdapter(null, null)}.
    */
-  void findAdapterPart( final IWorkbenchPage page, final AdapterPartListener<C> listener );
+  public void findAdapterPart( final IWorkbenchPage page, final AdapterPartListener<C> listener );
 }

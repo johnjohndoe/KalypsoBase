@@ -40,17 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.dialog.compare;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChart;
@@ -79,7 +79,9 @@ public class SwitchProfileButtonDialog extends Composite
     m_chartView = chartView;
     m_profiles = profiles;
 
-    setLayout( Layouts.createGridLayout( 4 ) );
+    final GridLayout layout = new GridLayout( 4, false );
+    layout.marginHeight = layout.marginWidth = 0;
+    this.setLayout( layout );
 
     final FormToolkit toolkit = new FormToolkit( parent.getDisplay() );
     render( toolkit );
@@ -98,10 +100,10 @@ public class SwitchProfileButtonDialog extends Composite
 
     m_label.setLayoutData( data );
 
-    final Button back = toolkit.createButton( this, Messages.getString( "SwitchProfileButtonDialog_1" ), SWT.PUSH ); //$NON-NLS-1$
+    final Button back = toolkit.createButton( this, Messages.getString("SwitchProfileButtonDialog_1") , SWT.PUSH ); //$NON-NLS-1$
     back.setLayoutData( getButtonLayoutData() );
 
-    final Button next = toolkit.createButton( this, Messages.getString( "SwitchProfileButtonDialog_2" ), SWT.PUSH ); //$NON-NLS-1$
+    final Button next = toolkit.createButton( this, Messages.getString("SwitchProfileButtonDialog_2") , SWT.PUSH ); //$NON-NLS-1$
     next.setLayoutData( getButtonLayoutData() );
 
     back.addSelectionListener( new SelectionAdapter()
@@ -141,13 +143,11 @@ public class SwitchProfileButtonDialog extends Composite
 
   protected void setProfile( final IProfil profile )
   {
-    m_chartView.setProfil( profile, null );
+    m_chartView.setProfil( profile,null );
 
-    final IChartComposite chart = m_chartView.getChartComposite();
+    final IChartComposite chart = m_chartView.getChart();
     if( chart != null )
-    {
       ChartUtilities.maximize( chart.getChartModel() );
-    }
 
     m_label.setText( getProfileLabel() );
     this.layout();
@@ -164,7 +164,7 @@ public class SwitchProfileButtonDialog extends Composite
     final IProfil profil = m_chartView.getProfil();
     final double station = profil.getStation();
 
-    final String msg = String.format( Messages.getString( "SwitchProfileButtonDialog_3" ), station, getIndex() + 1, m_profiles.length ); //$NON-NLS-1$
+    final String msg = String.format( Messages.getString("SwitchProfileButtonDialog_3") , station, getIndex() + 1, m_profiles.length ); //$NON-NLS-1$
     return msg;
   }
 

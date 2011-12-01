@@ -45,6 +45,7 @@ import org.kalypso.gmlschema.types.IGmlContentHandler;
 
 /**
  * @author Felipe Maximino
+ *
  */
 public interface IPropertyHandler extends IGmlContentHandler
 {

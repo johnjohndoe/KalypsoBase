@@ -42,25 +42,20 @@ package org.kalypso.ogc.gml.painter;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.graphics.displayelements.ILabelPlacementStrategy;
 
 /**
  * @author Dirk Kuch
  */
 public interface IStylePaintable
 {
+  void paint( DisplayElement displayElement, IProgressMonitor monitor ) throws CoreException;
+
   GM_Envelope getBoundingBox( );
 
   Double getScale( );
 
   boolean shouldPaintFeature( Feature feature );
-
-  ILabelPlacementStrategy createLabelStrategy( );
-
-  void paintLabels( ILabelPlacementStrategy strategy );
-
-  void paint( Feature feature, Symbolizer symbolizer, IProgressMonitor newChild ) throws CoreException;
 }

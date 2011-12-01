@@ -132,7 +132,7 @@ public class Difference
     {
       final Difference other = (Difference) obj;
 
-      return m_delStart == other.m_delStart && m_delEnd == other.m_delEnd && m_addStart == other.m_addStart && m_addEnd == other.m_addEnd;
+      return (m_delStart == other.m_delStart && m_delEnd == other.m_delEnd && m_addStart == other.m_addStart && m_addEnd == other.m_addEnd);
     }
     else
     {

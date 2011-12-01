@@ -65,6 +65,7 @@ import org.eclipse.ui.internal.WorkbenchMessages;
 
 /**
  * A wizard page, that lets the user choose from a tree. <br>
+ * TODO: move into contrib plug-ins
  * 
  * @author Gernot Belger
  */
@@ -74,7 +75,7 @@ public class TreeSelectionPage extends WizardPage implements IWizardPage
   /**
    * Collection of buttons created by the <code>createButton</code> method.
    */
-  private final HashMap<Integer, Button> m_buttons = new HashMap<Integer, Button>();
+  private final HashMap<Integer, Button> buttons = new HashMap<Integer, Button>();
 
   static String SELECT_ALL_TITLE = WorkbenchMessages.SelectionDialog_selectLabel;
 
@@ -94,12 +95,12 @@ public class TreeSelectionPage extends WizardPage implements IWizardPage
 
   private CheckboxTreeViewer m_viewer;
 
-  public TreeSelectionPage( final String pageName, final ITreeContentProvider contentProvider, final IBaseLabelProvider labelProvider )
+  public TreeSelectionPage( String pageName, final ITreeContentProvider contentProvider, final IBaseLabelProvider labelProvider )
   {
     this( pageName, null, null, contentProvider, labelProvider );
   }
 
-  public TreeSelectionPage( final String pageName, final String title, final ImageDescriptor titleImage, final ITreeContentProvider contentProvider, final IBaseLabelProvider labelProvider )
+  public TreeSelectionPage( String pageName, String title, ImageDescriptor titleImage, final ITreeContentProvider contentProvider, final IBaseLabelProvider labelProvider )
   {
     super( pageName, title, titleImage );
     m_contentProvider = contentProvider;
@@ -120,7 +121,7 @@ public class TreeSelectionPage extends WizardPage implements IWizardPage
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  public void createControl( final Composite parent )
+  public void createControl( Composite parent )
   {
     initializeDialogUnits( parent );
 
@@ -142,8 +143,8 @@ public class TreeSelectionPage extends WizardPage implements IWizardPage
     //
     if( m_checkedElements != null )
     {
-      for( final Object checkedElement : m_checkedElements )
-        viewer.expandToLevel( checkedElement, 0 );
+      for( int i = 0; i < m_checkedElements.length; i++ )
+        viewer.expandToLevel( m_checkedElements[i], 0 );
 
       viewer.setCheckedElements( m_checkedElements );
     }
@@ -164,7 +165,7 @@ public class TreeSelectionPage extends WizardPage implements IWizardPage
     return m_viewer;
   }
 
-  protected void updateState( final CheckboxTreeViewer viewer )
+  protected void updateState( CheckboxTreeViewer viewer )
   {
     m_checkedElements = viewer.getCheckedElements();
     m_grayedElements = viewer.getGrayedElements();
@@ -183,25 +184,25 @@ public class TreeSelectionPage extends WizardPage implements IWizardPage
    * @param composite
    *          org.eclipse.swt.widgets.Composite
    */
-  private void addSelectionButtons( final Composite composite, final CheckboxTreeViewer viewer )
+  private void addSelectionButtons( Composite composite, final CheckboxTreeViewer viewer )
   {
-    final Composite buttonComposite = new Composite( composite, SWT.RIGHT );
+    Composite buttonComposite = new Composite( composite, SWT.RIGHT );
 
-    final GridLayout layout = new GridLayout();
+    GridLayout layout = new GridLayout();
     layout.numColumns = 2;
     buttonComposite.setLayout( layout );
-    final GridData data = new GridData( GridData.HORIZONTAL_ALIGN_END | GridData.GRAB_HORIZONTAL );
+    GridData data = new GridData( GridData.HORIZONTAL_ALIGN_END | GridData.GRAB_HORIZONTAL );
     data.grabExcessHorizontalSpace = true;
     composite.setData( data );
 
-    final Button selectButton = createButton( buttonComposite, IDialogConstants.SELECT_ALL_ID, SELECT_ALL_TITLE, false );
+    Button selectButton = createButton( buttonComposite, IDialogConstants.SELECT_ALL_ID, SELECT_ALL_TITLE, false );
 
     final ITreeContentProvider treeContentProvider = m_contentProvider;
 
     selectButton.addSelectionListener( new SelectionAdapter()
     {
       @Override
-      public void widgetSelected( final SelectionEvent e )
+      public void widgetSelected( SelectionEvent e )
       {
         handleSelectAll( viewer, treeContentProvider );
       }
@@ -211,7 +212,7 @@ public class TreeSelectionPage extends WizardPage implements IWizardPage
     deselectButton.addSelectionListener( new SelectionAdapter()
     {
       @Override
-      public void widgetSelected( final SelectionEvent e )
+      public void widgetSelected( SelectionEvent e )
       {
         handleDeselectAll( viewer, treeContentProvider );
       }
@@ -239,28 +240,28 @@ public class TreeSelectionPage extends WizardPage implements IWizardPage
    *          <code>true</code> if the button is to be the default button, and <code>false</code> otherwise
    * @return the new button
    */
-  protected Button createButton( final Composite parent, final int id, final String label, final boolean defaultButton )
+  protected Button createButton( Composite parent, int id, String label, boolean defaultButton )
   {
     // increment the number of columns in the button bar
     ((GridLayout) parent.getLayout()).numColumns++;
-    final Button button = new Button( parent, SWT.PUSH );
+    Button button = new Button( parent, SWT.PUSH );
     button.setText( label );
     button.setFont( JFaceResources.getDialogFont() );
     button.setData( new Integer( id ) );
     if( defaultButton )
     {
-      final Shell shell = parent.getShell();
+      Shell shell = parent.getShell();
       if( shell != null )
       {
         shell.setDefaultButton( button );
       }
     }
-    m_buttons.put( new Integer( id ), button );
+    buttons.put( new Integer( id ), button );
     setButtonLayoutData( button );
     return button;
   }
 
-  public void setChecked( final Object[] initiallyChecked )
+  public void setChecked( Object[] initiallyChecked )
   {
     m_checkedElements = initiallyChecked;
   }
@@ -275,7 +276,7 @@ public class TreeSelectionPage extends WizardPage implements IWizardPage
     return m_grayedElements;
   }
 
-  public void setGrayed( final Object[] initiallyGrayed )
+  public void setGrayed( Object[] initiallyGrayed )
   {
     m_grayedElements = initiallyGrayed;
   }
@@ -289,8 +290,9 @@ public class TreeSelectionPage extends WizardPage implements IWizardPage
     viewer.expandAll();
 
     final Object[] items = treeContentProvider.getElements( viewer.getInput() );
-    for( final Object item : items )
+    for( int i = 0; i < items.length; i++ )
     {
+      Object item = items[i];
       viewer.setSubtreeChecked( item, true );
     }
 
@@ -306,8 +308,9 @@ public class TreeSelectionPage extends WizardPage implements IWizardPage
     viewer.expandAll();
 
     final Object[] items = treeContentProvider.getElements( viewer.getInput() );
-    for( final Object item : items )
+    for( int i = 0; i < items.length; i++ )
     {
+      Object item = items[i];
       viewer.setSubtreeChecked( item, false );
     }
 

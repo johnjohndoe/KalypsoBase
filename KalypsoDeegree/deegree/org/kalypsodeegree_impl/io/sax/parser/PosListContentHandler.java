@@ -159,10 +159,6 @@ public class PosListContentHandler extends GMLElementContentHandler
 
   private void verifyCoordsSize( final int coordsSize, final String coordsString ) throws SAXParseException
   {
-    /* Special case: the empty geometry, no dimension check possible, i.e. it is always valid. */
-    if( coordsSize == 0 )
-      return;
-
     if( coordsSize % m_checkedCrsDimension != 0 )
       throwSAXParseException( "The number of coords in posList( " + coordsSize + " ) element doesn't respect the srsDimension attribute: " + m_checkedCrsDimension + " in " + coordsString );
 
@@ -179,7 +175,7 @@ public class PosListContentHandler extends GMLElementContentHandler
         positions.add( GeometryFactory.createGM_Position( doubles[i++], doubles[i++] ) );
     }
     else
-    // dimension = 3
+      // dimension = 3
     {
       for( int i = 0; i < coordsSize; )
         positions.add( GeometryFactory.createGM_Position( doubles[i++], doubles[i++], doubles[i++] ) );

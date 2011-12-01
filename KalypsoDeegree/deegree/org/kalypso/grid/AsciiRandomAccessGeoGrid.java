@@ -57,13 +57,14 @@ import com.vividsolutions.jts.geom.Coordinate;
  * <p>
  * In order to achieve this, the line start positions are read on instantiation (slow!).
  * </p>
- * If any value is accessed, the corresponding line is parsed from the file and the value is returned. </p>
+ * If any value is accessed, the corresponding line is parsed from the file and the value is returned.
+ * </p>
  * <p>
  * If a value of the same line is accessed, this is quick, as the last lines is always hold im memory.
  * </p>
  * TODO: still slow, how to improve performance? <br>
  * TODO: overide the walk method in order to make sure, that we iterate thorugh lines, not columns
- * 
+ *
  * @author Dejan Antanaskovic
  * @author Thomas Jung
  * @author Gernot Belger
@@ -147,7 +148,7 @@ public class AsciiRandomAccessGeoGrid extends AbstractGeoGrid implements IGeoGri
         case '\r':
           eol = true;
           final long cur = m_randomAccessFile.getFilePointer();
-          if( m_randomAccessFile.read() != '\n' )
+          if( (m_randomAccessFile.read()) != '\n' )
           {
             m_randomAccessFile.seek( cur );
           }
@@ -158,7 +159,7 @@ public class AsciiRandomAccessGeoGrid extends AbstractGeoGrid implements IGeoGri
       }
     }
 
-    if( c == -1 && count == 0 )
+    if( (c == -1) && (count == 0) )
     {
       return false;
     }

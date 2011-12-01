@@ -80,7 +80,7 @@ public class ViewWQRelationHandler extends AbstractHandler
     if( obs == null )
       return Status.OK_STATUS;
 
-    final String propTable = obs.getMetadataList().getProperty( ITimeseriesConstants.MD_WQ_TABLE );
+    final String propTable = obs.getMetadataList().getProperty( ITimeseriesConstants.MD_WQTABLE );
     if( propTable == null )
       return Status.OK_STATUS;
 
@@ -90,7 +90,7 @@ public class ViewWQRelationHandler extends AbstractHandler
       final WQTableSet set = WQTableFactory.parse( new InputSource( reader ) );
       reader.close();
 
-      final WQRelationDialog dlg = new WQRelationDialog( shell, Messages.getString( "org.kalypso.ogc.sensor.view.actions.ViewWQRelationHandler.0" ) + obs.getName(), set ); //$NON-NLS-1$
+      final WQRelationDialog dlg = new WQRelationDialog( shell, Messages.getString("org.kalypso.ogc.sensor.view.actions.ViewWQRelationHandler.0") + obs.getName(), set ); //$NON-NLS-1$
       dlg.open();
     }
     catch( final WQException e )

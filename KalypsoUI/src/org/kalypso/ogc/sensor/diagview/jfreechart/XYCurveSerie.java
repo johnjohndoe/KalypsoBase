@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview.jfreechart;
 
@@ -108,7 +108,7 @@ class XYCurveSerie extends Series
       logger.warning( Messages.getString( "org.kalypso.ogc.sensor.diagview.jfreechart.XYCurveSerie.0" ) + m_curve.getName() ); //$NON-NLS-1$
     else
     {
-      m_values = m_curve.getValues();
+      m_values = obs.getValues( m_curve.getArguments() );
 
       if( m_values != null )
       {

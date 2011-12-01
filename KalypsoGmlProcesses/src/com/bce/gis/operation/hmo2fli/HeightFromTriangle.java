@@ -21,7 +21,7 @@ public class HeightFromTriangle
   public HeightFromTriangle( final LinearRing triangle )
   {
     if( triangle.getNumPoints() != 4 )
-      throw new IllegalArgumentException( Messages.getString( "com.bce.gis.operation.hmo2fli.HeightFromTriangle.0" ) ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString("com.bce.gis.operation.hmo2fli.HeightFromTriangle.0") ); //$NON-NLS-1$
 
     m_triangle = triangle;
     m_pir = new SimplePointInRing( triangle );
@@ -30,7 +30,7 @@ public class HeightFromTriangle
   public double getHeight( final Coordinate c )
   {
     if( m_triangle.getNumPoints() != 4 )
-      throw new IllegalArgumentException( Messages.getString( "com.bce.gis.operation.hmo2fli.HeightFromTriangle.1" ) ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString("com.bce.gis.operation.hmo2fli.HeightFromTriangle.1") ); //$NON-NLS-1$
 
     // Check if point is inside Triangle, if not return immediuately
     // TODO: not always necessary?
@@ -61,8 +61,7 @@ public class HeightFromTriangle
      * if( nx * nx + ny * ny + nz * nz <= eps * eps ) { log( 1, "Normalenvektor ist zu klein (Dreieck %d)\n", t->n ); };
      */
     /*
-     * if( nz == 0.0 && nx * nx + ny * ny > eps*eps ) { log( 1, "Dreieck steht Kopf: nx=%f ny=%f nz=%f\n", nx, ny, nz );
-     * };
+     * if( nz == 0.0 && nx * nx + ny * ny > eps*eps ) { log( 1, "Dreieck steht Kopf: nx=%f ny=%f nz=%f\n", nx, ny, nz ); };
      */
 
     final double k = nx * x1 + ny * y1 + nz * z1;

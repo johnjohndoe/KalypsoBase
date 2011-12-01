@@ -56,9 +56,10 @@ import org.kalypso.zml.filters.NOperationFilterType;
 public class NOperationFilterCreator implements IFilterCreator
 {
   @Override
-  public IObservationFilter createFilter( final AbstractFilterType aft, final IObservation baseObs, final URL context ) throws SensorException
+  public IObservationFilter createFilter( AbstractFilterType aft, IObservation baseObs, final URL context )
+      throws SensorException
   {
-    final NOperationFilterType filter = (NOperationFilterType) aft;
+    final NOperationFilterType filter = (NOperationFilterType)aft;
 
     final List<JAXBElement< ? extends AbstractFilterType>> filters = filter.getFilter();
     final IObservation[] innerObs = FilterCreatorHelper.resolveFilters( filters, baseObs, context );

@@ -31,8 +31,6 @@ package org.kalypso.contribs.eclipse.core.resources;
 
 import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.eclipse.core.internal.resources.PlatformURLResourceConnection;
@@ -54,7 +52,6 @@ import org.kalypso.contribs.eclipse.core.runtime.PathUtils;
  * 
  * @author schlienger (14.06.2005)
  */
-@SuppressWarnings("restriction")
 public final class ResourceUtilities
 {
   private ResourceUtilities( )
@@ -140,11 +137,9 @@ public final class ResourceUtilities
     return ResourcesPlugin.getWorkspace().getRoot().getProject( projectName );
   }
 
+  @SuppressWarnings("restriction")
   public static IPath findPathFromURL( final URL u )
   {
-    if( u == null )
-      return null;
-
     final String utostring = u.toString();
     final String urlpath;
     final int ix = utostring.indexOf( '?' );
@@ -216,7 +211,11 @@ public final class ResourceUtilities
    */
   public static URL createURL( final IResource resource ) throws MalformedURLException
   {
-    final String strUrl = createURLSpec( resource );
+    String strUrl = createURLSpec( resource.getFullPath() );
+
+    if( resource instanceof IContainer )
+      strUrl += '/';
+
     return new URL( strUrl );
   }
 
@@ -236,24 +235,13 @@ public final class ResourceUtilities
     }
   }
 
-  public static String createURLSpec( final IResource resource )
-  {
-    if( resource == null )
-      return null;
-
-    final IPath fullPath = resource.getFullPath();
-    if( resource instanceof IContainer )
-      return createURLSpec( fullPath ) + '/';
-    else
-      return createURLSpec( fullPath );
-  }
-
   /**
    * Creates the string representation of an URL given an IPath.
    * 
    * @param path
    * @return platform URL
    */
+  @SuppressWarnings("restriction")
   public static String createURLSpec( final IPath path )
   {
     return PlatformURLResourceConnection.RESOURCE_URL_STRING + path.toString();
@@ -395,11 +383,5 @@ public final class ResourceUtilities
   public static IPath makeRelativ( final IFile parentFile, final IFile childFile )
   {
     return makeRelativ( parentFile.getParent(), childFile );
-  }
-
-  public static URI toURI( final IResource resource ) throws URISyntaxException
-  {
-    final String urlSpec = createURLSpec( resource );
-    return new URI( urlSpec );
   }
 }

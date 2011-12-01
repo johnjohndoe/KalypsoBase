@@ -41,12 +41,9 @@
 package org.kalypso.contribs.eclipse.ui.forms;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.IMessage;
 import org.eclipse.ui.forms.widgets.Form;
-import org.kalypso.contribs.eclipse.EclipsePlatformContributionsPlugin;
 
 /**
  * Helper methods for {@link org.eclipse.ui.forms.IMessage}.
@@ -61,21 +58,12 @@ public final class MessageUtilitites
   public static class StatusMessage implements IMessage
   {
     private final IStatus m_status;
-
     private final Object m_key;
-
-    private final Control m_control;
 
     public StatusMessage( final Object key, final IStatus status )
     {
-      this( key, status, null );
-    }
-
-    public StatusMessage( final Object key, final IStatus status, final Control control )
-    {
       m_key = key;
       m_status = status;
-      m_control = control;
     }
 
     /**
@@ -84,7 +72,7 @@ public final class MessageUtilitites
     @Override
     public Control getControl( )
     {
-      return m_control;
+      return null;
     }
 
     /**
@@ -140,19 +128,12 @@ public final class MessageUtilitites
 
   /**
    * Converts an {@link IStatus} to an {@link org.eclipse.ui.forms.IMessage} (including its children) and sets it a
-   * message to the given form.<br/>
-   * If the status isOK(), the message will be cleared.
+   * message to the given form.
    */
   public static void setMessage( final Form form, final IStatus status )
   {
     if( form.isDisposed() )
       return;
-
-    if( status.isOK() )
-    {
-      form.setMessage( null );
-      return;
-    }
 
     final IMessage msg = convertStatus( status );
     final IMessage[] msgChildren = convertStatus( status.getChildren() );
@@ -170,7 +151,7 @@ public final class MessageUtilitites
     return msgs;
   }
 
-  public static IMessage convertStatus( final IStatus status )
+  private static IMessage convertStatus( final IStatus status )
   {
     return new StatusMessage( status, status );
   }
@@ -186,50 +167,21 @@ public final class MessageUtilitites
     switch( severity )
     {
       case IStatus.OK:
-        return IMessageProvider.NONE;
+        return IMessage.NONE;
       case IStatus.INFO:
-        return IMessageProvider.INFORMATION;
+        return IMessage.INFORMATION;
       case IStatus.WARNING:
-        return IMessageProvider.WARNING;
+        return IMessage.WARNING;
       case IStatus.ERROR:
-        return IMessageProvider.ERROR;
+        return IMessage.ERROR;
       case IStatus.CANCEL:
-        return IMessageProvider.INFORMATION;
+        return IMessage.INFORMATION;
 
       default:
         throw new IllegalArgumentException( "Unknown status severity: " + severity ); //$NON-NLS-1$
     }
+
   }
 
-  /**
-   * Converts the type of an {@link IMessage} to the severity of an {@link IStatus}.
-   * 
-   * @see IStatus#getSeverity()
-   * @see IMessage#getMessageType()
-   */
-  public static int convertMessageSeverity( final int type )
-  {
-    switch( type )
-    {
-      case IMessageProvider.NONE:
-        return IStatus.OK;
 
-      case IMessageProvider.INFORMATION:
-        return IStatus.INFO;
-      case IMessageProvider.WARNING:
-        return IStatus.WARNING;
-      case IMessageProvider.ERROR:
-        return IStatus.ERROR;
-
-      default:
-        throw new IllegalArgumentException( "Unknown message type: " + type ); //$NON-NLS-1$
-    }
-  }
-
-  public static IStatus convertMessage( final IMessageProvider message )
-  {
-    final int severity = convertMessageSeverity( message.getMessageType() );
-    final String msg = message.getMessage();
-    return new Status( severity, EclipsePlatformContributionsPlugin.getID(), msg );
-  }
 }

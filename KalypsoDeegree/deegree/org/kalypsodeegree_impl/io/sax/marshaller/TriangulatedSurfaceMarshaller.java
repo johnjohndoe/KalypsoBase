@@ -53,7 +53,7 @@ import org.xml.sax.XMLReader;
  * @author Gernot Belger
  * @author Felipe Maximino - Refaktoring
  */
-public class TriangulatedSurfaceMarshaller extends AbstractSurfaceMarshaller<GM_Triangle>
+public class TriangulatedSurfaceMarshaller extends SurfaceMarshaller<GM_Triangle>
 {
   private static final String TAG_TRIANGULATED_SURFACE = "TriangulatedSurface";
 

@@ -42,17 +42,19 @@ package org.kalypso.gml.ui.commands.exportshape;
 
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.shape.dbf.IDBFField;
+import org.kalypso.shape.ShapeDataException;
+import org.kalypso.shape.dbf.IDBFValue;
 
 /**
  * @author Gernot Belger
  */
-public class FieldNameEditingSupport extends FieldEditingSupport
+public class FieldNameEditingSupport extends EditingSupport
 {
   private final TextCellEditor m_cellEditor;
 
@@ -97,10 +99,17 @@ public class FieldNameEditingSupport extends FieldEditingSupport
   @Override
   protected Object getValue( final Object element )
   {
-    final IDBFField field = getField( element );
-    if( field == null )
-      return null;
-    return field.getName();
+    // TODO: connect to column label provider
+    try
+    {
+      final IDBFValue value = (IDBFValue) element;
+      return value.getField().getName();
+    }
+    catch( final ShapeDataException e )
+    {
+      e.printStackTrace();
+      return e.getLocalizedMessage();
+    }
   }
 
   /**
@@ -109,10 +118,8 @@ public class FieldNameEditingSupport extends FieldEditingSupport
   @Override
   protected void setValue( final Object element, final Object value )
   {
-// final IDBFField field = getField( element );
-// if( field == null )
-// return;
-//
-// field.setName( ObjectUtils.toString( field, StringUtils.EMPTY ) );
+    // TODO Auto-generated method stub
+
   }
+
 }

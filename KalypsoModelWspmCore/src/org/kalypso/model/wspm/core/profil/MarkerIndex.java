@@ -82,9 +82,7 @@ public class MarkerIndex
         {
           final IRecord record = profil.getResult().get( pointPos );
           if( !m_recordIndex.containsKey( record ) )
-          {
             m_recordIndex.put( record, new ArrayList<IMarker>() );
-          }
 
           final Collection<IMarker> recordMarkers = m_recordIndex.get( record );
           recordMarkers.add( marker );
@@ -92,9 +90,7 @@ public class MarkerIndex
 
         final int severity = marker.getAttribute( IMarker.SEVERITY, IMarker.SEVERITY_INFO );
         if( !m_severityIndex.containsKey( severity ) )
-        {
           m_severityIndex.put( severity, new ArrayList<IMarker>() );
-        }
         final Collection<IMarker> severityMarkers = m_severityIndex.get( severity );
         severityMarkers.add( marker );
 
@@ -136,7 +132,7 @@ public class MarkerIndex
     return markers.toArray( new IMarker[markers.size()] );
   }
 
-  public final boolean hasMarkers( )
+  final public boolean hasMarkers( )
   {
     return m_markers.length > 0;
   }

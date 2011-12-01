@@ -67,7 +67,7 @@ public interface PointSymbolizer extends Symbolizer
    * 
    * @return the graphic of the point
    */
-  Graphic getGraphic( );
+  Graphic getGraphic();
 
   /**
    * Sets the Graphic for the Point.

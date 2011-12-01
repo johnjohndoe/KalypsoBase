@@ -41,12 +41,10 @@
 package org.kalypso.gml.ui.commands.importgrid;
 
 import java.io.File;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -54,17 +52,12 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWizard;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.gml.ui.i18n.Messages;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
@@ -74,55 +67,17 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
  * 
  * @author Gernot Belger
  */
-public class AddRectifiedGridCoveragesWizard extends Wizard implements IWorkbenchWizard
+public class AddRectifiedGridCoveragesWizard extends Wizard
 {
   private PageSelectGeodataFiles m_pageSelect;
 
-  private ICoverageCollection m_coverages;
+  private final ICoverageCollection m_coverages;
 
-  private IContainer m_gridFolder;
+  private final IContainer m_gridFolder;
 
-  private boolean m_allowUserChangeGridFolder;
+  private final boolean m_allowUserChangeGridFolder;
 
   private ICoverage[] m_newCoverages;
-
-  public AddRectifiedGridCoveragesWizard( )
-  {
-
-    final IDialogSettings settings = DialogSettingsUtils.getDialogSettings( KalypsoGmlUIPlugin.getDefault(), "ImportRectifiedGridCoverageWizardSettings" ); //$NON-NLS-1$
-    setDialogSettings( settings );
-    setNeedsProgressMonitor( true );
-
-    setWindowTitle( Messages.getString( "org.kalypso.gml.ui.wizard.grid.AddRectifiedGridCoveragesWizard.1" ) ); //$NON-NLS-1$
-  }
-
-  @Override
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
-  {
-    final Object firstElement = selection.getFirstElement();
-
-    final ICoverageCollection cc = findCoverageCollection( firstElement );
-    if( cc == null )
-      throw new IllegalStateException( Messages.getString( "org.kalypso.gml.ui.handler.ImportGridHandler0" ), null ); //$NON-NLS-1$
-
-    // Choose target folder
-    final URL gmlContext = cc.getWorkspace().getContext();
-    final IFile gmlFile = ResourceUtilities.findFileFromURL( gmlContext );
-    final IContainer gmlFolder = gmlFile == null ? null : gmlFile.getParent();
-
-    init( cc, gmlFolder, true );
-  }
-
-  private ICoverageCollection findCoverageCollection( final Object firstElement )
-  {
-    if( firstElement instanceof Feature )
-    {
-      final Feature fate = (Feature) firstElement;
-      return (ICoverageCollection) fate.getAdapter( ICoverageCollection.class );
-    }
-
-    return null;
-  }
 
   /**
    * @param gridFolder
@@ -131,11 +86,17 @@ public class AddRectifiedGridCoveragesWizard extends Wizard implements IWorkbenc
    *          If <code>false</code>, the entry field for the grid folder is hidden Resets to <code>true</code>, if
    *          'gridFolder' is null..
    */
-  public void init( final ICoverageCollection coverages, final IContainer gridFolder, final boolean allowUserChangeGridFolder )
+  public AddRectifiedGridCoveragesWizard( final ICoverageCollection coverages, final IContainer gridFolder, final boolean allowUserChangeGridFolder )
   {
     m_coverages = coverages;
     m_gridFolder = gridFolder;
     m_allowUserChangeGridFolder = allowUserChangeGridFolder;
+
+    final IDialogSettings settings = PluginUtilities.getDialogSettings( KalypsoGmlUIPlugin.getDefault(), "ImportRectifiedGridCoverageWizardSettings" ); //$NON-NLS-1$
+    setDialogSettings( settings );
+    setNeedsProgressMonitor( true );
+
+    setWindowTitle( Messages.getString( "org.kalypso.gml.ui.wizard.grid.AddRectifiedGridCoveragesWizard.1" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -177,7 +138,7 @@ public class AddRectifiedGridCoveragesWizard extends Wizard implements IWorkbenc
           for( final File gridFile : selectedFiles )
             newCoverages.add( ImportGridUtilities.importGrid( coverageCollection, gridFile, gridFile.getName(), crs, gridFolder, null, progress.newChild( 1, SubMonitor.SUPPRESS_NONE ) ) );
 
-          final IFeatureBindingCollection<ICoverage> coverages = coverageCollection.getCoverages();
+          IFeatureBindingCollection<ICoverage> coverages = coverageCollection.getCoverages();
           setCoverages( coverages.toArray( new ICoverage[coverages.size()] ) );
 
           return Status.OK_STATUS;

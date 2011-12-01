@@ -127,7 +127,7 @@ public class GMLSchemaLoaderWithLocalCache
     }
     catch( final GMLSchemaException e )
     {
-      throw new SAXParseException( "Unknown schema for namespace: " + namespace, null ); //$NON-NLS-1$
+      throw new SAXParseException( "Unknown schema for namespace: " + namespace, null );
     }
   }
 
@@ -159,11 +159,9 @@ public class GMLSchemaLoaderWithLocalCache
     // the main schema is the schema defining the root elements namespace
     // REMARK: schemaLocationHint only used for main schema
     final GMLSchema gmlSchema = loadSchema( uri, null, schemaLocationString, locationHint, context );
-    m_version = gmlSchema == null ? null : gmlSchema.getGMLVersion();
+    final String version = gmlSchema == null ? null : gmlSchema.getGMLVersion();
     if( gmlSchema != null )
-    {
       m_localSchemaCache.put( uri, gmlSchema );
-    }
 
     // Also force all dependent schemas (i.e. for which xmlns entries exist) as dependency into
     // the main schema.
@@ -177,14 +175,14 @@ public class GMLSchemaLoaderWithLocalCache
       // But atts.getURI gives empty string for xmlns entries.
       // so we ask for the qname
       final String qname = atts.getQName( i );
-      if( qname != null && qname.startsWith( "xmlns:" ) ) //$NON-NLS-1$
+      if( qname != null && qname.startsWith( "xmlns:" ) )
       {
         final String xmlnsUri = atts.getValue( i );
         // HM: are there any other possible namespaces we do NOT want to load?
-        if( !xmlnsUri.equals( uri ) && !xmlnsUri.equals( NS.XSD ) )
+        if( !xmlnsUri.equals( NS.XSD ) )
         {
           // make sure that all dependent schemas are loaded
-          final GMLSchema additionalSchema = loadSchema( xmlnsUri, m_version, schemaLocationString, locationHint, context );
+          final GMLSchema additionalSchema = loadSchema( xmlnsUri, version, schemaLocationString, locationHint, context );
           if( gmlSchema != null )
           {
             gmlSchema.addAdditionalSchema( additionalSchema );
@@ -224,8 +222,8 @@ public class GMLSchemaLoaderWithLocalCache
        */
       if( schema == null )
       {
-        schemaNotFoundExceptions.addException( new SAXException( "Schema unknown. Unable to load schema with namespace: " + uri + " (schemaLocationHint was " + schemaLocationHint //$NON-NLS-1$ //$NON-NLS-2$
-            + ") (schemaLocation was " + schemaLocationString + "): ", e ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        schemaNotFoundExceptions.addException( new SAXException( "Schema unknown. Could not load schema with namespace: " + uri + " (schemaLocationHint was " + schemaLocationHint
+            + ") (schemaLocation was " + schemaLocationString + "): ", e ) );
       }
     }
 
@@ -238,8 +236,8 @@ public class GMLSchemaLoaderWithLocalCache
     if( schema == null )
     {
       if( schemaNotFoundExceptions.isEmpty() )
-        throw new SAXException( "Schema unknown. Unable to load schema with namespace: " + uri + " (schemaLocationHint was " + schemaLocationHint + ") (schemaLocation was " + schemaLocationString //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-            + ")" ); //$NON-NLS-1$
+        throw new SAXException( "Schema unknown. Could not load schema with namespace: " + uri + " (schemaLocationHint was " + schemaLocationHint + ") (schemaLocation was " + schemaLocationString
+            + ")" );
       else
         throw new SAXException( schemaNotFoundExceptions );
     }
@@ -259,7 +257,7 @@ public class GMLSchemaLoaderWithLocalCache
       }
       catch( final GMLSchemaException e )
       {
-        final String msg = String.format( "Failed to load schema (namespace=%s) from it's schemaLocation: %s", uri, schemaLocation ); //$NON-NLS-1$
+        final String msg = String.format( "Could not load schema (namespace=%s) from it's schemaLocation: %s", uri, schemaLocation );
         throw new SAXException( msg, e );
       }
     }
@@ -270,8 +268,6 @@ public class GMLSchemaLoaderWithLocalCache
   public void setSchemaLocation( final Map<String, URL> schemaLocations )
   {
     if( schemaLocations != null )
-    {
       m_schemaLocations.putAll( schemaLocations );
-    }
   }
 }

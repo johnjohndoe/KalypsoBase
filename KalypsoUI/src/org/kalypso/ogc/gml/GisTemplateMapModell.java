@@ -50,6 +50,7 @@ import java.util.List;
 import javax.xml.bind.JAXBElement;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -60,7 +61,6 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.KalypsoCommonsExtensions;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.commons.i18n.ITranslator;
-import org.kalypso.commons.i18n.ITranslatorContext;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.themes.KalypsoLegendTheme;
@@ -83,7 +83,7 @@ import org.w3c.dom.Element;
 /**
  * @author Gernot Belger
  */
-public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell, ITranslatorContext
+public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
 {
   private final IFeatureSelectionManager m_selectionManager;
 
@@ -145,7 +145,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell, IT
 
     final ITranslator translator = KalypsoCommonsExtensions.createTranslator( translatorElement.getId() );
     if( translator != null )
-      translator.configure( this, translatorElement.getAny() );
+      translator.configure( m_context, translatorElement.getAny() );
     return translator;
   }
 
@@ -211,7 +211,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell, IT
 
     final IKalypsoThemeFactory themeFactory = ThemeFactoryExtension.getThemeFactory( linktype );
     if( themeFactory == null )
-      throw new UnsupportedOperationException( Messages.getString( "org.kalypso.ogc.gml.GisTemplateMapModell.1", layerName.getValue(), linktype ) ); //$NON-NLS-1$
+      throw new NotImplementedException( Messages.getString( "org.kalypso.ogc.gml.GisTemplateMapModell.1", layerName.getValue(), linktype ) ); //$NON-NLS-1$
 
     final IKalypsoTheme theme = themeFactory.createTheme( layerName, layerType, context, this, m_selectionManager );
     if( theme instanceof AbstractKalypsoTheme )
@@ -222,8 +222,8 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell, IT
     }
 
     /* Read the properties. */
-    final List<Property> properties = layerType.getProperty();
-    for( final Property property : properties )
+    List<Property> properties = layerType.getProperty();
+    for( Property property : properties )
       theme.setProperty( property.getName(), property.getValue() );
 
     return theme;
@@ -311,10 +311,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell, IT
       {
         String id = theme.getId();
         if( id == null || id.length() == 0 )
-        {
           id = MapUtilities.getNewId( usedIds );
-          usedIds.add( id );
-        }
 
         final JAXBElement< ? extends StyledLayerType> layerElement = GisTemplateHelper.configureLayer( theme, id, bbox, srsName, new SubProgressMonitor( monitor, 1000 ) );
         if( layerElement != null )
@@ -477,19 +474,12 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell, IT
     theme.dispose();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#swapThemes(org.kalypso.ogc.gml.IKalypsoTheme,
-   *      org.kalypso.ogc.gml.IKalypsoTheme)
-   */
   @Override
   public void swapThemes( final IKalypsoTheme theme1, final IKalypsoTheme theme2 )
   {
     m_modell.swapThemes( theme1, theme2 );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoLayerModell#getContext()
-   */
   @Override
   public URL getContext( )
   {
@@ -527,6 +517,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell, IT
   public void insertTheme( final IKalypsoTheme theme, final int position )
   {
     m_modell.insertTheme( theme, position );
+
   }
 
   /**
@@ -592,21 +583,5 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell, IT
   public boolean isLoaded( )
   {
     return m_isLoaded;
-  }
-
-  /**
-   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-   */
-  @SuppressWarnings("rawtypes")
-  @Override
-  public Object getAdapter( final Class adapter )
-  {
-    if( adapter.equals( IMapModell.class ) )
-      return this;
-
-    if( adapter.equals( GisTemplateMapModell.class ) )
-      return this;
-
-    return null;
   }
 }

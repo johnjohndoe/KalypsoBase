@@ -57,7 +57,7 @@ import java.util.logging.Logger;
 
 import javax.swing.table.AbstractTableModel;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -189,7 +189,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
         // tableColumn.setPreferredWidth( col.getWidth() );
       }
 
-      final ITupleModel tupModel = col.getValues();
+      final ITupleModel tupModel = obs.getValues( col.getArguments() );
 
       // fill shared column values
       for( int r = 0; r < tupModel.size(); r++ )
@@ -243,7 +243,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
       if( isDateColumn( columnIndex ) )
         return m_sharedAxis;
 
-      return m_columns.get( columnIndex - 1 );
+      return (m_columns.get( columnIndex - 1 ));
     }
   }
 
@@ -325,7 +325,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
         try
         {
           final TableViewColumn col = m_columns.get( columnIndex - 1 );
-          final ITupleModel values = col.getValues();
+          final ITupleModel values = col.getObservation().getValues( col.getArguments() );
           final int ix = values.indexOf( key, col.getKeyAxis() );
           if( ix != -1 )
             return values.get( ix, col.getValueAxis() );
@@ -518,8 +518,9 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
 
       final TableViewColumn col = m_columns.get( column );
       try
-      {
-        final ITupleModel values = col.getValues();
+      {// FIXME: this will reload the timeserie on every step....!
+        // FIXME: col.getTupleModel()!
+        final ITupleModel values = col.getObservation().getValues( col.getArguments() );
         final Object key = m_sharedModel.toArray()[row];
         final int ix = values.indexOf( key, col.getKeyAxis() );
         if( ix != -1 )

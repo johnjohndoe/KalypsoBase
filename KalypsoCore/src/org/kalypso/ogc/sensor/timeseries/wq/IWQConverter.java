@@ -11,10 +11,10 @@ import java.util.Date;
 public interface IWQConverter
 {
   /** Converts from 'from' to 'to' */
-  double computeW( final Date date, final double q ) throws WQException;
+  double computeW( final Date date, final double Q ) throws WQException;
 
   /** Converts from 'to' to 'from' */
-  double computeQ( final Date date, final double w ) throws WQException;
+  double computeQ( final Date date, final double W ) throws WQException;
 
   String getFromType( );
 

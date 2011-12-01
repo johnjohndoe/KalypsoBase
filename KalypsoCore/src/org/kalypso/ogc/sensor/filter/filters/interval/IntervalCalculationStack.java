@@ -40,13 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters.interval;
 
+import java.util.Arrays;
 import java.util.Calendar;
+
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
 
 /**
  * @author Dirk Kuch
  */
 public class IntervalCalculationStack
 {
+
   protected enum PROCESSING_INSTRUCTION
   {
     eNothing,
@@ -70,6 +75,15 @@ public class IntervalCalculationStack
     }
   }
 
+  public IntervalCalculationStack( final IAxis[] valueAxes, final IAxis[] statusAxes, final double defaultValue, final int defaultStatus )
+  {
+    defaultValues = new double[valueAxes.length];
+    defaultStatis = new int[statusAxes.length];
+
+    Arrays.fill( defaultValues, defaultValue );
+    Arrays.fill( defaultStatis, defaultStatus );
+  }
+
   public Calendar lastTargetCalendar = null;
 
   public Calendar lastSrcCalendar = null;
@@ -81,4 +95,32 @@ public class IntervalCalculationStack
   public Interval srcInterval = null;
 
   public int srcRow = 0;
+
+  public final double[] defaultValues;
+
+  public final int[] defaultStatis;
+
+  public int[] getPlainStatis( )
+  {
+    final int[] statis = new int[defaultStatis.length];
+    Arrays.fill( statis, KalypsoStati.BIT_OK );
+
+    return statis;
+  }
+
+  public double[] getPlainValues( )
+  {
+    final double[] values = new double[defaultValues.length];
+    Arrays.fill( values, 0d );
+
+    return values;
+  }
+
+  public String[] getPlainSources( )
+  {
+    final String[] sources = new String[defaultValues.length];
+    Arrays.fill( sources, IntervalSourceHandler.SOURCE_INITIAL_VALUE );
+
+    return sources;
+  }
 }

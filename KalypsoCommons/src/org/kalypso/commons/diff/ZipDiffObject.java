@@ -38,6 +38,7 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 /**
+ *
  * @author doemming
  */
 public class ZipDiffObject extends AbstractDiffObject
@@ -50,6 +51,7 @@ public class ZipDiffObject extends AbstractDiffObject
   /**
    * @throws IOException
    * @throws ZipException
+   *
    */
   public ZipDiffObject( final File zipFile ) throws ZipException, IOException
   {
@@ -64,6 +66,7 @@ public class ZipDiffObject extends AbstractDiffObject
   }
 
   /**
+   *
    * @see org.kalypso.commons.diff.IDiffObject#exists(java.lang.String)
    */
   @Override
@@ -73,6 +76,7 @@ public class ZipDiffObject extends AbstractDiffObject
   }
 
   /**
+   *
    * @see org.kalypso.commons.diff.IDiffObject#getDiffComparator(java.lang.String)
    */
   @Override
@@ -84,6 +88,7 @@ public class ZipDiffObject extends AbstractDiffObject
       return new IDiffComparator()
       {
         /**
+         *
          * @see org.kalypso.commons.diff.IDiffComparator#diff(org.kalypso.commons.diff.IDiffLogger, java.lang.Object,
          *      java.lang.Object)
          */
@@ -98,6 +103,7 @@ public class ZipDiffObject extends AbstractDiffObject
   }
 
   /**
+   *
    * @param path
    * @return entry from path
    */
@@ -107,6 +113,7 @@ public class ZipDiffObject extends AbstractDiffObject
   }
 
   /**
+   *
    * @see org.kalypso.commons.diff.IDiffObject#getContent(java.lang.String)
    */
   @Override
@@ -122,7 +129,7 @@ public class ZipDiffObject extends AbstractDiffObject
    * @see org.kalypso.commons.diff.IDiffObject#getPathes()
    */
   @Override
-  public String[] getPathes( )
+  public String[] getPathes()
   {
     return m_pathes.keySet().toArray( new String[m_pathes.size()] );
   }

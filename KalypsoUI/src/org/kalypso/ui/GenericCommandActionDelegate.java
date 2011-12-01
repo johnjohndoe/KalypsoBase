@@ -58,7 +58,6 @@ import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IContributionManager;
@@ -181,7 +180,7 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
    *      java.lang.String, java.lang.Object)
    */
   @Override
-  @SuppressWarnings({ "unchecked", "unused" })//$NON-NLS-1$ //$NON-NLS-2$
+  @SuppressWarnings( { "unchecked", "unused" }) //$NON-NLS-1$ //$NON-NLS-2$
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data ) throws CoreException
   {
     if( data instanceof String )
@@ -303,7 +302,7 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
       {
         final IStatus status = StatusUtilities.statusFromThrowable( e );
         KalypsoGisPlugin.getDefault().getLog().log( status );
-        ErrorDialog.openError( event.display.getActiveShell(), action.getText(), Messages.getString( "org.kalypso.ui.GenericCommandActionDelegate.3" ), status ); //$NON-NLS-1$
+        ErrorDialog.openError( event.display.getActiveShell(), action.getText(), Messages.getString("org.kalypso.ui.GenericCommandActionDelegate.3"), status ); //$NON-NLS-1$
       }
     }
   }
@@ -363,8 +362,8 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
     final String actionId = m_action.getId();
     final IActionBars actionBars = m_actionBars;
 
-    final UIJob job = new UpdateActionbarsJob( Messages.getString( "org.kalypso.ui.GenericCommandActionDelegate.5" ), actionBars, actionId, enabledState ); //$NON-NLS-1$
-    job.setPriority( Job.INTERACTIVE );
+    final UIJob job = new UpdateActionbarsJob( Messages.getString("org.kalypso.ui.GenericCommandActionDelegate.5"), actionBars, actionId, enabledState ); //$NON-NLS-1$
+    job.setPriority( UIJob.INTERACTIVE );
 // job.schedule();
     job.schedule( 200 );
     // TODO: just delay, when the map view gets the focus by pressing an already existing button.

@@ -40,9 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
+
 /**
  * A listener for events from {@link IKalypsoUserStyle}.
- * 
+ *
  * @author Gernot Belger
  */
 public interface IKalypsoStyleListener

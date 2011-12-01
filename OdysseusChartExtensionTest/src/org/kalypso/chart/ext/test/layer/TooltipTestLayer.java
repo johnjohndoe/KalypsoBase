@@ -97,7 +97,7 @@ public class TooltipTestLayer extends AbstractChartLayer implements ITooltipChar
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Number> getDomainRange( )
   {
     return new DataRange<Number>( 0, 1 );
   }
@@ -106,7 +106,7 @@ public class TooltipTestLayer extends AbstractChartLayer implements ITooltipChar
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     return new DataRange<Number>( 0, 1 );
   }

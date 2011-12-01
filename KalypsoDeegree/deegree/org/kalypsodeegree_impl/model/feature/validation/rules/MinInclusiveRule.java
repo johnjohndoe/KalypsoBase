@@ -51,7 +51,7 @@ public class MinInclusiveRule implements IRule
    */
   public Number m_checkagainst;
 
-  public MinInclusiveRule( final Number checkagainst )
+  public MinInclusiveRule( Number checkagainst )
   {
     super();
     m_checkagainst = checkagainst;
@@ -63,20 +63,20 @@ public class MinInclusiveRule implements IRule
    * @see org.kalypso.ogc.gml.util.Rule#isValid(java.lang.Object)
    */
   @Override
-  public IStatus isValid( final Object object )
+  public IStatus isValid( Object object )
   {
-    Status status = new Status( IStatus.CANCEL, Platform.PI_RUNTIME, IStatus.CANCEL, "Wert muss größer oder gleich " + m_checkagainst.toString() + " sein.", null );
+    Status status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "Wert muss größer oder gleich " + m_checkagainst.toString() + " sein.", null );
 
     /* If the object does not exist or is no number, return true. */
-    if( object == null || !(object instanceof Number) )
-      return new Status( IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "MinInclusiveRule: Validation OK (null).", null );
+    if( (object == null) || (!(object instanceof Number)) )
+      return new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "MinInclusiveRule: Validation OK (null).", null );
 
     /* Cast in a number. It must be one, because a restriction for a minimum could only work with numbers. */
-    final Number number = (Number) object;
+    Number number = (Number) object;
 
     if( number.floatValue() >= m_checkagainst.floatValue() )
     {
-      status = new Status( IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "MinInclusiveRule: Validation OK.", null );
+      status = new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "MinInclusiveRule: Validation OK.", null );
     }
 
     return status;
@@ -88,7 +88,7 @@ public class MinInclusiveRule implements IRule
    * @param checkagainst
    *          The min value.
    */
-  public void setCheckParameter( final Number checkagainst )
+  public void setCheckParameter( Number checkagainst )
   {
     m_checkagainst = checkagainst;
   }

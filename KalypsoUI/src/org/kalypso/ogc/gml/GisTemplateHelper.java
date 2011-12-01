@@ -93,7 +93,6 @@ import org.kalypso.template.gistreeview.Gistreeview;
 import org.kalypso.template.types.ExtentType;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.template.types.StyledLayerType.Property;
-import org.kalypso.template.types.StyledLayerType.Style;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
@@ -294,7 +293,7 @@ public final class GisTemplateHelper
       try
       {
         final String targetSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-        if( orgSRSName != null && !orgSRSName.equals( targetSRS ) )
+        if( (orgSRSName != null) && !orgSRSName.equals( targetSRS ) )
         {
           // if srs attribute exists and it is not the target srs we have to convert it
           final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( targetSRS );
@@ -372,7 +371,7 @@ public final class GisTemplateHelper
 
       final Object property = feature.getProperty( rt );
       String typeName = ""; //$NON-NLS-1$
-      if( strictType && property instanceof List< ? > )
+      if( strictType && (property instanceof List< ? >) )
       {
         final List< ? > list = (List< ? >) property;
         if( !list.isEmpty() )
@@ -439,7 +438,8 @@ public final class GisTemplateHelper
     if( theme instanceof CascadingLayerKalypsoTheme )
     {
       final CascadingLayer cascadingLayer = OF_GISMAPVIEW.createCascadingLayer();
-      final CascadingLayerKalypsoTheme cascadingKalypsoTheme = (CascadingLayerKalypsoTheme) theme;
+
+      final CascadingLayerKalypsoTheme cascadingKalypsoTheme = ((CascadingLayerKalypsoTheme) theme);
       cascadingKalypsoTheme.fillLayerType( cascadingLayer, id, theme.isVisible(), srsName, monitor ); //$NON-NLS-1$
       return TemplateUtilities.OF_GISMAPVIEW.createCascadingLayer( cascadingLayer );
     }
@@ -464,31 +464,13 @@ public final class GisTemplateHelper
       layer.setType( "simple" ); //$NON-NLS-1$
 
       final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
-      final KalypsoWMSTheme wmsTheme = (KalypsoWMSTheme) theme;
+      final AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
 
-      final String legendIcon = wmsTheme.getLegendIcon();
+      final String legendIcon = abstractKalypsoTheme.getLegendIcon();
       if( legendIcon != null )
         layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
 
-      layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( wmsTheme.shouldShowLegendChildren() ) );
-
-      final Style[] oldStyles = wmsTheme.getStyles();
-      for( final Style oldStyle : oldStyles )
-      {
-        final Style newStyle = extentFac.createStyledLayerTypeStyle();
-        newStyle.setActuate( oldStyle.getActuate() );
-        newStyle.setArcrole( oldStyle.getArcrole() );
-        newStyle.setHref( oldStyle.getHref() );
-        newStyle.setLinktype( oldStyle.getLinktype() );
-        newStyle.setRole( oldStyle.getRole() );
-        newStyle.setShow( oldStyle.getShow() );
-        newStyle.setStyle( oldStyle.getStyle() );
-        newStyle.setTitle( oldStyle.getTitle() );
-        newStyle.setType( oldStyle.getType() );
-
-        layer.getStyle().add( newStyle );
-      }
-
+      layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowLegendChildren() ) );
       return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
     }
     else if( theme instanceof KalypsoPictureTheme )
@@ -498,7 +480,7 @@ public final class GisTemplateHelper
     }
     else if( theme instanceof CascadingKalypsoTheme )
     {
-      final CascadingKalypsoTheme cascadingKalypsoTheme = (CascadingKalypsoTheme) theme;
+      final CascadingKalypsoTheme cascadingKalypsoTheme = ((CascadingKalypsoTheme) theme);
       cascadingKalypsoTheme.fillLayerType( layer, id, theme.isVisible() ); //$NON-NLS-1$
 
       cascadingKalypsoTheme.createGismapTemplate( bbox, srsName, monitor );
@@ -511,10 +493,11 @@ public final class GisTemplateHelper
       layer.setVisible( theme.isVisible() );
       layer.setId( id );
       layer.setHref( "" ); //$NON-NLS-1$
+
       layer.setLinktype( "legend" ); //$NON-NLS-1$
 
       final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
-      final AbstractKalypsoTheme abstractKalypsoTheme = (AbstractKalypsoTheme) theme;
+      final AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
 
       final String legendIcon = abstractKalypsoTheme.getLegendIcon();
       if( legendIcon != null )
@@ -523,10 +506,10 @@ public final class GisTemplateHelper
       layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowLegendChildren() ) );
 
       /* Update the properties. */
-      final String[] propertyNames = ((KalypsoLegendTheme) theme).getPropertyNames();
-      for( final String propertyName : propertyNames )
+      String[] propertyNames = ((KalypsoLegendTheme) theme).getPropertyNames();
+      for( String propertyName : propertyNames )
       {
-        final Property property = TemplateUtilities.OF_TEMPLATE_TYPES.createStyledLayerTypeProperty();
+        Property property = TemplateUtilities.OF_TEMPLATE_TYPES.createStyledLayerTypeProperty();
         property.setName( propertyName );
         property.setValue( theme.getProperty( propertyName, null ) );
         layer.getProperty().add( property );
@@ -542,7 +525,7 @@ public final class GisTemplateHelper
       layer.setLinktype( "scale" ); //$NON-NLS-1$
 
       final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
-      final AbstractKalypsoTheme abstractKalypsoTheme = (AbstractKalypsoTheme) theme;
+      final AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
 
       final String legendIcon = abstractKalypsoTheme.getLegendIcon();
       if( legendIcon != null )
@@ -562,17 +545,17 @@ public final class GisTemplateHelper
       layer.setLinktype( "image" ); //$NON-NLS-1$
 
       final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
-      final AbstractKalypsoTheme abstractKalypsoTheme = (AbstractKalypsoTheme) theme;
+      final AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
       final String legendIcon = abstractKalypsoTheme.getLegendIcon();
       if( legendIcon != null )
         layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
       layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowLegendChildren() ) );
 
       /* Update the properties. */
-      final String[] propertyNames = ((KalypsoImageTheme) theme).getPropertyNames();
-      for( final String propertyName : propertyNames )
+      String[] propertyNames = ((KalypsoImageTheme) theme).getPropertyNames();
+      for( String propertyName : propertyNames )
       {
-        final Property property = TemplateUtilities.OF_TEMPLATE_TYPES.createStyledLayerTypeProperty();
+        Property property = TemplateUtilities.OF_TEMPLATE_TYPES.createStyledLayerTypeProperty();
         property.setName( propertyName );
         property.setValue( theme.getProperty( propertyName, null ) );
         layer.getProperty().add( property );
@@ -591,17 +574,17 @@ public final class GisTemplateHelper
       layer.setLinktype( "text" ); //$NON-NLS-1$
 
       final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
-      final AbstractKalypsoTheme abstractKalypsoTheme = (AbstractKalypsoTheme) theme;
+      final AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
       final String legendIcon = abstractKalypsoTheme.getLegendIcon();
       if( legendIcon != null )
         layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
       layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowLegendChildren() ) );
 
       /* Update the properties. */
-      final String[] propertyNames = ((KalypsoTextTheme) theme).getPropertyNames();
-      for( final String propertyName : propertyNames )
+      String[] propertyNames = ((KalypsoTextTheme) theme).getPropertyNames();
+      for( String propertyName : propertyNames )
       {
-        final Property property = TemplateUtilities.OF_TEMPLATE_TYPES.createStyledLayerTypeProperty();
+        Property property = TemplateUtilities.OF_TEMPLATE_TYPES.createStyledLayerTypeProperty();
         property.setName( propertyName );
         property.setValue( theme.getProperty( propertyName, null ) );
         layer.getProperty().add( property );
@@ -642,4 +625,5 @@ public final class GisTemplateHelper
 
     bis.close();
   }
+
 }

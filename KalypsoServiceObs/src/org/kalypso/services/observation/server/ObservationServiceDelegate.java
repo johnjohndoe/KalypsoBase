@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.services.observation.server;
 
@@ -45,13 +45,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.util.Hashtable;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Properties;
-import java.util.Set;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -61,11 +60,10 @@ import javax.activation.FileDataSource;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.eclipse.core.runtime.IStatus;
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.eclipse.ui.services.IDisposable;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -84,8 +82,8 @@ import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.conf.RepositoryConfigUtils;
 import org.kalypso.repository.conf.RepositoryFactoryConfig;
 import org.kalypso.repository.factory.IRepositoryFactory;
-import org.kalypso.repository.utils.Repositories;
 import org.kalypso.repository.utils.RepositoryItems;
+import org.kalypso.repository.utils.Repositories;
 import org.kalypso.services.observation.KalypsoServiceObs;
 import org.kalypso.services.observation.ObservationServiceUtils;
 import org.kalypso.services.observation.i18n.Messages;
@@ -94,8 +92,8 @@ import org.kalypso.services.observation.sei.IObservationService;
 import org.kalypso.services.observation.sei.ItemBean;
 import org.kalypso.services.observation.sei.ObservationBean;
 import org.kalypso.services.observation.sei.RepositoryBean;
-import org.kalypso.services.observation.sei.StatusBean;
 import org.kalypso.zml.request.Request;
+import org.xml.sax.InputSource;
 
 /**
  * Kalypso Observation Service.
@@ -413,6 +411,38 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
       m_logger.warning( Messages.getString( "org.kalypso.services.observation.server.ObservationServiceDelegate.1", dataId ) ); //$NON-NLS-1$
   }
 
+  @Override
+  public final void writeData( final ObservationBean obean, final DataHandler odb ) throws SensorException
+  {
+    try
+    {
+      init();
+
+      final IRepositoryItem item = itemFromBean( obean );
+
+      final IObservation obs = (IObservation) item.getAdapter( IObservation.class );
+
+      if( obs == null )
+      {
+        final RemoteException e = new RemoteException( "No observation for " + obean.getId() ); //$NON-NLS-1$
+        m_logger.throwing( getClass().getName(), "writeData", e ); //$NON-NLS-1$
+        throw e;
+      }
+
+      final IObservation zml = ZmlFactory.parseXML( new InputSource( odb.getInputStream() ), null );
+
+      synchronized( obs )
+      {
+        obs.setValues( zml.getValues( null ) );
+      }
+    }
+    catch( final Throwable e ) // generic exception caught for simplicity
+    {
+      m_logger.throwing( getClass().getName(), "writeData", e ); //$NON-NLS-1$
+      throw new SensorException( e.getLocalizedMessage(), e );
+    }
+  }
+
   /**
    * @throws NoSuchElementException
    *           if item and/or repository not found
@@ -470,17 +500,17 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
     if( parent == null )
       return m_repositories.size() > 0;
 
-    try
-    {
-      final IRepositoryItem item = itemFromBean( parent );
+      try
+      {
+        final IRepositoryItem item = itemFromBean( parent );
 
-      return item.hasChildren();
-    }
-    catch( final RepositoryException e )
-    {
-      m_logger.throwing( getClass().getName(), "hasChildren", e ); //$NON-NLS-1$
-      throw e;
-    }
+        return item.hasChildren();
+      }
+      catch( final RepositoryException e )
+      {
+        m_logger.throwing( getClass().getName(), "hasChildren", e ); //$NON-NLS-1$
+        throw e;
+      }
   }
 
   /**
@@ -623,14 +653,14 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
         item = rep;
       else
         try
-        {
+      {
           item = rep.findItem( id );
-        }
-        catch( final RepositoryException e )
-        {
-          m_logger.throwing( getClass().getName(), "findItem", e ); //$NON-NLS-1$
-          throw e;
-        }
+      }
+      catch( final RepositoryException e )
+      {
+        m_logger.throwing( getClass().getName(), "findItem", e ); //$NON-NLS-1$
+        throw e;
+      }
 
       if( item == null )
         continue;
@@ -704,7 +734,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
             modifyable.setData( (Serializable) serializable );
           }
           else
-            throw new UnsupportedOperationException();
+            throw new NotImplementedException();
 
         }
       }
@@ -745,19 +775,5 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
     }
 
     return false;
-  }
-
-  @Override
-  public StatusBean getStatus( final String type )
-  {
-    final Set<IStatus> stati = new LinkedHashSet<IStatus>();
-    for( final IRepository repository : m_repositories )
-    {
-      stati.add( repository.getStatus( type ) );
-    }
-
-    final IStatus status = StatusUtilities.createStatus( stati, "Repository states" );
-
-    return new StatusBean( status.getSeverity(), status.getPlugin(), status.getMessage() );
   }
 }

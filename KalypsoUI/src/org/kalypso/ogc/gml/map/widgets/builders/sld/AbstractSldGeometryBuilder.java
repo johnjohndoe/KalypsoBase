@@ -47,7 +47,8 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -116,7 +117,7 @@ public abstract class AbstractSldGeometryBuilder implements ISldGeometryBuilder
         final Document document = XMLTools.parse( inputStream );
         inputStream.close();
 
-        final Symbolizer symbolizer = SLDFactory.createSymbolizer( null, document.getDocumentElement() );
+        final Symbolizer symbolizer = SLDFactory.createSymbolizer( null, document.getDocumentElement(), 0.0, Double.MAX_VALUE );
         m_symbolizers.add( symbolizer );
       }
       catch( final Exception e )
@@ -256,7 +257,7 @@ public abstract class AbstractSldGeometryBuilder implements ISldGeometryBuilder
         return symbolizer;
     }
 
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 
   /**

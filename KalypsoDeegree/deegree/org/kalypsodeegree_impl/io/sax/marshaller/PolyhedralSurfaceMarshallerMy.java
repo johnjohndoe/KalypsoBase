@@ -51,7 +51,7 @@ import org.xml.sax.XMLReader;
  * @author Gernot Belger
  * @author Felipe Maximino - Refaktoring
  */
-public class PolyhedralSurfaceMarshallerMy extends AbstractSurfaceMarshaller<GM_Polygon>
+public class PolyhedralSurfaceMarshallerMy extends SurfaceMarshaller<GM_Polygon>
 {
   private static final String TAG_POLYHEDRAL_SURFACE = "PolyhedralSurface";
 

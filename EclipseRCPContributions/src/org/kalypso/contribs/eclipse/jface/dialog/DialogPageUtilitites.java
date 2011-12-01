@@ -41,14 +41,14 @@
 package org.kalypso.contribs.eclipse.jface.dialog;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.dialogs.DialogPage;
 
 /**
  * This class contains static utility methods for help with the {@link org.eclipse.jface.dialogs.DialogPage}.
  * 
  * @author Gernot Belger
  */
-public final class DialogPageUtilitites
+public class DialogPageUtilitites
 {
   /** Translate the {@link IStatus}-severity codes to {@link org.eclipse.jface.dialogs.DialogPage}-message-codes. */
   public static int severityToMessagecode( final IStatus status )
@@ -56,20 +56,20 @@ public final class DialogPageUtilitites
     switch( status.getSeverity() )
     {
       case IStatus.INFO:
-        return IMessageProvider.INFORMATION;
+        return DialogPage.INFORMATION;
 
       case IStatus.WARNING:
-        return IMessageProvider.WARNING;
+        return DialogPage.WARNING;
 
       case IStatus.ERROR:
-        return IMessageProvider.ERROR;
+        return DialogPage.ERROR;
 
       case IStatus.OK:
         // fall through
       case IStatus.CANCEL:
         // fall through
       default:
-        return IMessageProvider.NONE;
+        return DialogPage.NONE;
     }
   }
 }

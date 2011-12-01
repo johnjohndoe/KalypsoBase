@@ -105,4 +105,5 @@ class ColorMapEntryNode extends AbstractThemeNode<ColorMapEntry>
     return resolveI18nString( label );
   }
 
+
 }

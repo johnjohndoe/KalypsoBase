@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,11 +36,12 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.java.swing.table;
 
 import java.awt.Component;
+import java.text.NumberFormat;
 
 import javax.swing.JLabel;
 import javax.swing.JTable;
@@ -49,25 +50,27 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 public class NumberTableCellRenderer extends DefaultTableCellRenderer
 {
-  private final String m_format;
+  private final NumberFormat m_nf = NumberFormat.getInstance();
 
-  public NumberTableCellRenderer( final String format )
+  public NumberTableCellRenderer(final int maximumFractionDigits  )
   {
-    m_format = format;
+    m_nf.setMaximumFractionDigits( maximumFractionDigits );
   }
-
+  
+  /**
+   * @see javax.swing.table.DefaultTableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object,
+   *      boolean, boolean, int, int)
+   */
   @Override
-  public Component getTableCellRendererComponent( final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row, final int column )
+  public Component getTableCellRendererComponent( final JTable table, final Object value, final boolean isSelected, final boolean hasFocus,
+      final int row, final int column )
   {
-    final JLabel label = (JLabel) super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column );
-
+    final JLabel label = (JLabel)super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column );
+    
     label.setHorizontalAlignment( SwingConstants.RIGHT );
-
+    
     if( value != null )
-    {
-      final String text = String.format( m_format, value );
-      label.setText( text );
-    }
+      label.setText( m_nf.format( value ) );
 
     return label;
   }

@@ -92,27 +92,21 @@ public class KalypsoLegendTheme extends AbstractImageTheme
   protected String[] m_themeIds;
 
   /**
-   * The font size.
-   */
-  protected int m_fontSize;
-
-  /**
    * The constructor
    * 
    * @param name
    *          The name of the theme.
-   * @param mapModel
-   *          The map model to use.
+   * @param mapModell
+   *          The map modell to use.
    */
-  public KalypsoLegendTheme( final I10nString name, final IMapModell mapModel )
+  public KalypsoLegendTheme( I10nString name, IMapModell mapModell )
   {
-    super( name, "legend", mapModel ); //$NON-NLS-1$
+    super( name, "legend", mapModell ); //$NON-NLS-1$
 
     /* Initialize. */
     m_backgroundColor = null;
     m_insets = -1;
     m_themeIds = null;
-    m_fontSize = -1;
   }
 
   /**
@@ -144,7 +138,7 @@ public class KalypsoLegendTheme extends AbstractImageTheme
       initFromProperties();
 
       /* Create the nodes. */
-      final IThemeNode rootNode = NodeFactory.createRootNode( getMapModell(), null );
+      IThemeNode rootNode = NodeFactory.createRootNode( getMapModell(), null );
       final IThemeNode[] nodes = rootNode.getChildren();
 
       /* Monitor. */
@@ -172,10 +166,10 @@ public class KalypsoLegendTheme extends AbstractImageTheme
             }
 
             /* Create the legend. */
-            final LegendExporter legendExporter = new LegendExporter();
-            image[0] = legendExporter.exportLegends( m_themeIds, nodes, display, new Insets( m_insets, m_insets, m_insets, m_insets ), m_backgroundColor.getRGB(), -1, -1, true, m_fontSize, subMonitor );
+            LegendExporter legendExporter = new LegendExporter();
+            image[0] = legendExporter.exportLegends( m_themeIds, nodes, display, new Insets( m_insets, m_insets, m_insets, m_insets ), m_backgroundColor.getRGB(), -1, -1, true, subMonitor );
           }
-          catch( final CoreException ex )
+          catch( CoreException ex )
           {
             image[0] = null;
 
@@ -193,7 +187,7 @@ public class KalypsoLegendTheme extends AbstractImageTheme
       monitor.subTask( "Konvertiere Legende..." );
 
       /* Convert to an AWT image. */
-      final BufferedImage awtImage = ImageConverter.convertToAWT( image[0].getImageData() );
+      BufferedImage awtImage = ImageConverter.convertToAWT( image[0].getImageData() );
       image[0].dispose();
 
       /* Monitor. */
@@ -205,7 +199,7 @@ public class KalypsoLegendTheme extends AbstractImageTheme
       monitor.subTask( "Zeichne Rahmen..." );
 
       /* Draw a border in the AWT image. */
-      final Graphics2D graphics = (Graphics2D) awtImage.getGraphics();
+      Graphics2D graphics = (Graphics2D) awtImage.getGraphics();
       graphics.setColor( Color.BLACK );
       graphics.setStroke( new BasicStroke( 2.0f ) );
       graphics.drawRect( 0, 0, awtImage.getWidth(), awtImage.getHeight() );
@@ -235,7 +229,6 @@ public class KalypsoLegendTheme extends AbstractImageTheme
     m_backgroundColor = null;
     m_insets = -1;
     m_themeIds = null;
-    m_fontSize = -1;
 
     super.dispose();
   }
@@ -250,24 +243,22 @@ public class KalypsoLegendTheme extends AbstractImageTheme
     m_backgroundColor = new org.eclipse.swt.graphics.Color( Display.getCurrent(), 255, 255, 255 );
     m_insets = 10;
     m_themeIds = new String[] {};
-    m_fontSize = 10;
 
     /* Get the properties. */
-    final String horizontalProperty = getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, null );
-    final String verticalProperty = getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, null );
-    final String backgroundColorProperty = getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR, null );
-    final String insetsProperty = getProperty( LegendUtilities.THEME_PROPERTY_INSETS, null );
-    final String themeIdsProperty = getProperty( LegendUtilities.THEME_PROPERTY_THEME_IDS, null );
-    final String fontSizeProperty = getProperty( LegendUtilities.THEME_PROPERTY_FONT_SIZE, null );
+    String horizontalProperty = getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, null );
+    String verticalProperty = getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, null );
+    String backgroundColorProperty = getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR, null );
+    String insetsProperty = getProperty( LegendUtilities.THEME_PROPERTY_INSETS, null );
+    String themeIdsProperty = getProperty( LegendUtilities.THEME_PROPERTY_THEME_IDS, null );
 
     /* Check the horizontal and vertical position. */
-    final int horizontal = PositionUtilities.checkHorizontalPosition( horizontalProperty );
-    final int vertical = PositionUtilities.checkVerticalPosition( verticalProperty );
+    int horizontal = PositionUtilities.checkHorizontalPosition( horizontalProperty );
+    int vertical = PositionUtilities.checkVerticalPosition( verticalProperty );
     if( horizontal != -1 && vertical != -1 )
       updatePosition( horizontal, vertical );
 
     /* Check the background color. */
-    final org.eclipse.swt.graphics.Color backgroundColor = ThemeUtilities.checkBackgroundColor( Display.getCurrent(), backgroundColorProperty );
+    org.eclipse.swt.graphics.Color backgroundColor = ThemeUtilities.checkBackgroundColor( Display.getCurrent(), backgroundColorProperty );
     if( backgroundColor != null )
     {
       m_backgroundColor.dispose();
@@ -275,18 +266,13 @@ public class KalypsoLegendTheme extends AbstractImageTheme
     }
 
     /* Check the insets. */
-    final int insets = LegendUtilities.checkInsets( insetsProperty );
+    int insets = LegendUtilities.checkInsets( insetsProperty );
     if( insets >= 1 && insets <= 25 )
       m_insets = insets;
 
     /* Check the theme ids. */
-    final List<String> themeIds = LegendUtilities.verifyThemeIds( getMapModell(), themeIdsProperty );
+    List<String> themeIds = LegendUtilities.verifyThemeIds( getMapModell(), themeIdsProperty );
     if( themeIds != null && themeIds.size() > 0 )
       m_themeIds = themeIds.toArray( new String[] {} );
-
-    /* Check the font size. */
-    final int fontSize = LegendUtilities.checkFontSize( fontSizeProperty );
-    if( fontSize >= 1 && fontSize <= 25 )
-      m_fontSize = fontSize;
   }
 }

@@ -40,35 +40,30 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands.menu;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.ogc.sensor.DateRange;
-import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.repository.IDataSourceItem;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.interpolation.ZmlInterpolationWorker;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
-import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
-import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlCommandSetSelectedValues extends AbstractHandler
 {
+  /**
+   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+   */
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
@@ -79,55 +74,27 @@ public class ZmlCommandSetSelectedValues extends AbstractHandler
       final IZmlTableSelectionHandler selection = table.getSelectionHandler();
       final IZmlTableCell active = selection.findActiveCellByPosition();
       final IZmlTableColumn column = active.getColumn();
+      final IZmlValueReference reference = active.getValueReference();
+      final Number targetValue = reference.getValue();
 
-      final IZmlTableCell[] cells = column.getSelectedCells();
+      final IZmlTableCell[] selected = column.getSelectedCells();
+      final IZmlTableCell[] intervall = ZmlCommandUtils.findIntervall( selected );
+      if( ArrayUtils.isEmpty( intervall ) )
+        return Status.CANCEL_STATUS;
 
-      final IZmlEditingStrategy strategy = column.getEditingStrategy();
-      if( strategy.isAggregated() )
+      final int intervallStart = intervall[0].getValueReference().getModelIndex();
+      final int intervallEnd = intervall[1].getValueReference().getModelIndex();
+
+      final IZmlModelColumn model = column.getModelColumn();
+
+      for( int index = intervallStart; index <= intervallEnd; index++ )
       {
-        final ZmlLabelProvider provider = new ZmlLabelProvider( active.getRow().getModelRow(), column, new ZmlRule[] {} );
-        final String targetValue = provider.getText();
-
-        for( final IZmlTableCell cell : cells )
-        {
-          strategy.setValue( cell.getRow().getModelRow(), targetValue );
-        }
-      }
-      else
-      {
-        final IZmlValueReference reference = active.getValueReference();
-        final Number targetValue = reference.getValue();
-
-        final DateRange daterange = ZmlCommandUtils.findDateRange( cells );
-        final IZmlModelColumn modelColumn = column.getModelColumn();
-
-        modelColumn.accept( new IZmlModelColumnVisitor()
-        {
-          @Override
-          public void visit( final IZmlValueReference ref ) throws SensorException
-          {
-            ref.update( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
-          }
-        }, daterange );
-      }
-
-      try
-      {
-        /**
-         * reinterpolate complete observation because of table view filter (like 12h view, stueztstellen ansicht, etc)
-         */
-        final IObservation observation = column.getModelColumn().getObservation();
-        final ZmlInterpolationWorker interpolationWorker = new ZmlInterpolationWorker( observation );
-        interpolationWorker.execute( new NullProgressMonitor() );
-      }
-      catch( final CoreException e )
-      {
-        e.printStackTrace();
+        model.update( index, targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
       }
 
       return Status.OK_STATUS;
     }
-    catch( final Exception e )
+    catch( final SensorException e )
     {
       throw new ExecutionException( "Aktualisieren der selektierten Werte fehlgeschlagen.", e );
     }

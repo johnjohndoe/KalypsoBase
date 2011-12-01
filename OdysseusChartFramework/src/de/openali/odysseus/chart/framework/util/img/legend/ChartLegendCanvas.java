@@ -42,6 +42,7 @@ package de.openali.odysseus.chart.framework.util.img.legend;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
@@ -60,7 +61,7 @@ public class ChartLegendCanvas implements IChartLegendCanvas
 
   public ChartLegendCanvas( final IChartModel model, final Rectangle size )
   {
-    this( model, new DefaultChartLegendConfig( size ) );
+    this( model, new DefaultChartLegendConfig( size.width ) );
   }
 
   public ChartLegendCanvas( final IChartModel model, final IChartLegendConfig config )
@@ -70,17 +71,17 @@ public class ChartLegendCanvas implements IChartLegendCanvas
     m_config = config;
   }
 
-  public Rectangle getSize( )
+  public Point getSize( )
   {
     if( m_model == null )
-      return new Rectangle( 0, 0, 0, 0 );
+      return new Point( 0, 0 );
 
     if( m_model.getBehaviour().isHideLegend() )
-      return new Rectangle( 0, 0, 0, 0 );
+      return new Point( 0, 0 );
 
     final IChartLegendRenderer legendRenderer = m_model.getSettings().getLegendRenderer();
     if( legendRenderer == null )
-      return new Rectangle( 0, 0, 0, 0 );
+      return new Point( 0, 0 );
 
     return legendRenderer.calculateSize( this, m_config );
   }

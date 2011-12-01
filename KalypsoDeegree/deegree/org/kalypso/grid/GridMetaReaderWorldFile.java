@@ -61,7 +61,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * {@link IGridMetaReader} implementation for World-Files.
- * 
+ *
  * @author Dirk Kuch
  */
 public class GridMetaReaderWorldFile implements IGridMetaReader
@@ -102,7 +102,7 @@ public class GridMetaReaderWorldFile implements IGridMetaReader
       final String msg = String.format( "Failed to access world file %s: %s", m_worldFile, e.toString() );
       return StatusUtilities.createStatus( IStatus.ERROR, msg, e );
     }
-    finally
+   finally
     {
       IOUtils.closeQuietly( is );
     }
@@ -171,7 +171,7 @@ public class GridMetaReaderWorldFile implements IGridMetaReader
   @Override
   public RectifiedGridDomain getCoverage( final OffsetVector offsetX, final OffsetVector offsetY, final Double[] upperLeftCorner, final String crs ) throws Exception
   {
-    if( offsetX == null || offsetY == null || upperLeftCorner == null || upperLeftCorner.length != 2 || crs == null )
+    if( (offsetX == null) || (offsetY == null) || (upperLeftCorner == null) || (upperLeftCorner.length != 2) || (crs == null) )
       throw new IllegalStateException();
 
     final RenderedOp image = JAI.create( "url", m_image );

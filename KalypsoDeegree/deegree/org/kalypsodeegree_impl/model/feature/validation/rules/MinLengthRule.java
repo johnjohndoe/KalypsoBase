@@ -51,7 +51,7 @@ public class MinLengthRule implements IRule
    */
   private int m_min;
 
-  public MinLengthRule( final int min )
+  public MinLengthRule( int min )
   {
     super();
     m_min = min;
@@ -63,39 +63,39 @@ public class MinLengthRule implements IRule
    * @see org.kalypso.ogc.gml.util.IRule#isValid(java.lang.Object)
    */
   @Override
-  public IStatus isValid( final Object object )
+  public IStatus isValid( Object object )
   {
-    Status status = new Status( IStatus.CANCEL, Platform.PI_RUNTIME, IStatus.CANCEL, "Die Zeichenkette muß mindestens " + Integer.toString( m_min ) + " Zeichen lang sein.", null );
+    Status status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "Die Zeichenkette muß mindestens " + Integer.toString( m_min ) + " Zeichen lang sein.", null );
 
     /* If the object does not exist, return true. */
     if( object == null )
-      return new Status( IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "MinLengthRule: Validation OK (null).", null );
+      return new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "MinLengthRule: Validation OK (null).", null );
 
     /* The object given should be a char[] or a String. */
     if( object instanceof char[] )
     {
-      final char[] text = (char[]) object;
+      char[] text = (char[]) object;
 
       if( text.length >= m_min )
       {
         /* The text is greater or equal then the allowed minimum. Everything is ok. */
-        status = new Status( IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "MinLengthRule: Validation OK.", null );
+        status = new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "MinLengthRule: Validation OK.", null );
       }
     }
     else if( object instanceof String )
     {
-      final String text = (String) object;
+      String text = (String) object;
 
       if( text.length() >= m_min )
       {
         /* The text is greater or equal then the allowed minimum. Everything is ok. */
-        status = new Status( IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "MinLengthRule: Validation OK.", null );
+        status = new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "MinLengthRule: Validation OK.", null );
       }
     }
     else
     {
       /* If it is no char[] or String, return true. */
-      status = new Status( IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "MinLengthRule: Validation OK.", null );
+      status = new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "MinLengthRule: Validation OK.", null );
     }
 
     return status;
@@ -117,7 +117,7 @@ public class MinLengthRule implements IRule
    * @param min
    *          The minimum.
    */
-  public void setMin( final int min )
+  public void setMin( int min )
   {
     m_min = min;
   }

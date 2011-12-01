@@ -35,8 +35,6 @@
  */
 package org.kalypsodeegree_impl.model.geometry;
 
-import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -51,8 +49,6 @@ import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree.model.geometry.GM_Triangle;
-import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
@@ -66,7 +62,6 @@ import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.geom.PrecisionModel;
-import com.vividsolutions.jts.triangulate.ConformingDelaunayTriangulationBuilder;
 
 /**
  * Adapter between deegree- <tt>GM_Object</tt> s and JTS- <tt>Geometry<tt> objects.
@@ -78,26 +73,17 @@ import com.vividsolutions.jts.triangulate.ConformingDelaunayTriangulationBuilder
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider</a>
  * @version $Revision$ $Date$
  */
-public final class JTSAdapter
+public class JTSAdapter
 {
-  private static final String EPSG = "EPSG:"; //$NON-NLS-1$
-
-  private static final String EPSG_FORMAT = "EPSG:%d"; //$NON-NLS-1$
-
-  public static final int DEFAULT_SRID = 0;
+  // precision model that is used for all JTS-Geometries
+  public static PrecisionModel pm = new PrecisionModel();
 
   // factory for creating JTS-Geometries
-  public static com.vividsolutions.jts.geom.GeometryFactory jtsFactory = new com.vividsolutions.jts.geom.GeometryFactory( new PrecisionModel(), DEFAULT_SRID );
-
-  private JTSAdapter( )
-  {
-    throw new UnsupportedOperationException();
-  }
+  public static com.vividsolutions.jts.geom.GeometryFactory jtsFactory = new com.vividsolutions.jts.geom.GeometryFactory( pm, 0 );
 
   /**
-   * Converts a <tt>GM_Object</tt> to a corresponding JTS- <tt>Geometry</tt> object.<br/>
-   * Also converts the coordinate system of the given geometry into the corresponding SRID and sets it into the jts
-   * geometry.<br/>
+   * Converts a <tt>GM_Object</tt> to a corresponding JTS- <tt>Geometry</tt> object.
+   * <p>
    * Currently, the following conversions are supported:
    * <ul>
    * <li>GM_Point -> Point
@@ -117,19 +103,6 @@ public final class JTSAdapter
    *           if type unsupported or conversion failed
    */
   public static Geometry export( final GM_Object gmObject ) throws GM_Exception
-  {
-    final Geometry export = doExport( gmObject );
-    if( export == null )
-      return null;
-
-    final String srs = gmObject.getCoordinateSystem();
-    final int srid = toSrid( srs );
-    export.setSRID( srid );
-
-    return export;
-  }
-
-  protected static Geometry doExport( final GM_Object gmObject ) throws GM_Exception
   {
     if( gmObject == null )
       return null;
@@ -216,20 +189,6 @@ public final class JTSAdapter
   public static GM_Object wrap( final Geometry geometry ) throws GM_Exception
   {
     return wrap( geometry, null );
-  }
-
-  /**
-   * Same as {@link #wrap(Geometry, srs)}, but tries to fetch the srs from the given geometry (it's srid).<br/>
-   * The srid of the Geometry will be converted to <code>EPSG:srid</code>.
-   */
-  public static GM_Object wrapWithSrid( final Geometry geometry ) throws GM_Exception
-  {
-    if( geometry == null )
-      return null;
-
-    final int srid = geometry.getSRID();
-    final String srs = toSrs( srid );
-    return wrap( geometry, srs );
   }
 
   /**
@@ -542,7 +501,7 @@ public final class JTSAdapter
     final GM_MultiPrimitive multi = new GM_MultiPrimitive_Impl( crs );
     for( int i = 0; i < collection.getNumGeometries(); i++ )
     {
-      multi.add( wrap( collection.getGeometryN( i ) ) );
+      multi.setObjectAt( wrap( collection.getGeometryN( i ) ), i );
     }
     return multi;
   }
@@ -594,73 +553,6 @@ public final class JTSAdapter
   {
     final Coordinate[] crds = export( positions );
     return jtsFactory.createLineString( crds );
-  }
-
-  /**
-   * Converts an srid into a EPSG code by simply prefixing the srid by 'EPSG:'<br/>
-   * A srid of '0' is considered to be invalid and <code>null</code> is returned in that case.
-   */
-  public static String toSrs( final int srid )
-  {
-    /* srid of 0 means 'not set' */
-    if( srid == 0 )
-      return null;
-
-    return String.format( EPSG_FORMAT, srid );
-  }
-
-  /**
-   * Converts the coordinate code to an srid.<br>
-   * Currently, only srs of the form 'EPSG:srid' are converted. Everything else gets the SRID of 0.
-   */
-  public static int toSrid( final String srs )
-  {
-    if( srs == null )
-      return DEFAULT_SRID;
-
-    final String srsUpper = srs.toUpperCase();
-    if( srsUpper.toUpperCase().startsWith( EPSG ) )
-      return NumberUtils.parseQuietInt( srsUpper.substring( EPSG.length() ), DEFAULT_SRID );
-
-    return DEFAULT_SRID;
-  }
-
-  public static GM_TriangulatedSurface toSurface( final ConformingDelaunayTriangulationBuilder builder, final String coordinateSystem ) throws GM_Exception
-  {
-    final Geometry triangles = builder.getTriangles( new com.vividsolutions.jts.geom.GeometryFactory() );
-    final GM_TriangulatedSurface surface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( coordinateSystem );
-
-    for( int index = 0; index < triangles.getNumGeometries(); index++ )
-    {
-      try
-      {
-        final Geometry geometry = triangles.getGeometryN( index );
-        if( !(geometry instanceof Polygon) )
-          continue;
-
-        final GM_Triangle triangle = toTriangle( (Polygon) geometry );
-        surface.add( triangle );
-      }
-      catch( final GM_Exception e )
-      {
-        e.printStackTrace();
-      }
-    }
-
-    return surface;
-  }
-
-  private static GM_Triangle toTriangle( final Polygon polygon ) throws GM_Exception
-  {
-    final Coordinate[] coordinates = polygon.getCoordinates();
-    if( coordinates.length != 4 )
-      return null;
-
-    final GM_Position p1 = JTSAdapter.wrap( coordinates[0] );
-    final GM_Position p2 = JTSAdapter.wrap( coordinates[1] );
-    final GM_Position p3 = JTSAdapter.wrap( coordinates[2] );
-
-    return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Triangle( new GM_Position[] { p1, p2, p3 }, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
   }
 
 }

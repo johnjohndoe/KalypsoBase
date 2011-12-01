@@ -37,6 +37,7 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -44,7 +45,6 @@ import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.view.ObservationChooser;
 import org.kalypso.repository.IRepositoryItem;
@@ -113,8 +113,7 @@ public class DumpExtendedHandler extends AbstractHandler
     final ICoreRunnableWithProgress runnable = new RepositoryDumper( directory, item );
 
     final IStatus status = ProgressUtilities.busyCursorWhile( runnable );
-    final StatusDialog2 sdialog = new StatusDialog2( shell, status, Messages.getString( "org.kalypso.ogc.sensor.view.DumpStructureHandler.1" ), Messages.getString( "org.kalypso.ogc.sensor.view.DumpExtendedHandler.6" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    sdialog.open();
+    ErrorDialog.openError( shell, Messages.getString( "org.kalypso.ogc.sensor.view.DumpStructureHandler.1" ), Messages.getString( "org.kalypso.ogc.sensor.view.DumpExtendedHandler.6" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return null;
   }

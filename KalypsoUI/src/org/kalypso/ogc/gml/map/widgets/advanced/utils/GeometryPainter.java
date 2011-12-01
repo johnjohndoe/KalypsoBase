@@ -48,7 +48,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -151,7 +152,7 @@ public class GeometryPainter
         }
       }
       else
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
 
     }
 
@@ -173,6 +174,7 @@ public class GeometryPainter
 
       awtPoints.add( awt );
     }
+
 
     final Color original = g.getColor();
     g.setColor( color );
@@ -232,7 +234,7 @@ public class GeometryPainter
     g.drawPolygon( poly );
 
     g.setColor( original );
-
+    
   }
 
   public static void highlightPoints( final Graphics graphics, final IMapPanel mapPanel, final Geometry geometry, final IPointHighLighter highlighter )

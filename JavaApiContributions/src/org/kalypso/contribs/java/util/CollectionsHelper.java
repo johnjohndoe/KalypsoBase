@@ -46,20 +46,20 @@ import java.util.Map;
 
 /**
  * @author ig
+ *
  */
 public class CollectionsHelper
 {
-  private CollectionsHelper( )
-  {
+  private CollectionsHelper(){
   }
-
+  
   public static <E, T> Map<E, T> joinListsToMap( final List<E> listKeys, final List<T> listValues )
   {
     if( listKeys == null || listValues == null || listKeys.size() != listValues.size() )
     {
       return null;
     }
-    final Map<E, T> lMapRes = new HashMap<E, T>();
+    Map<E, T> lMapRes = new HashMap<E, T>();
     for( int i = 0; i < listKeys.size(); i++ )
     {
       lMapRes.put( listKeys.get( i ), listValues.get( i ) );

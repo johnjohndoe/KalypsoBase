@@ -107,7 +107,7 @@ public class IndexFile
   /**
    * Construct a IndexFile from a file name.
    */
-  public IndexFile( final String url ) throws IOException
+  public IndexFile( String url ) throws IOException
   {
 
     /*
@@ -132,7 +132,7 @@ public class IndexFile
   /**
    * Construct a IndexFile from a file name.
    */
-  public IndexFile( final String url, final String rwflag ) throws IOException
+  public IndexFile( String url, String rwflag ) throws IOException
   {
 
     // delet file if it exists
@@ -166,10 +166,10 @@ public class IndexFile
    * method: writeHeader(int filelength, byte shptype,SHPEnvelope mbr) <BR>
    * Writes a header into the index file. <BR>
    */
-  public void writeHeader( final int shptype, final SHPEnvelope mbr ) throws IOException
+  public void writeHeader( int shptype, SHPEnvelope mbr ) throws IOException
   {
 
-    final byte[] header = new byte[ShapeConst.SHAPE_FILE_HEADER_LENGTH];
+    byte[] header = new byte[ShapeConst.SHAPE_FILE_HEADER_LENGTH];
 
     ByteUtils.writeBEInt( header, 0, ShapeConst.SHAPE_FILE_CODE );
     ByteUtils.writeBEInt( header, 24, filelength );
@@ -199,10 +199,10 @@ public class IndexFile
   private void setIndexArray( ) throws IOException
   {
 
-    final byte[] recBuf = new byte[INDEX_RECORD_LENGTH];
+    byte[] recBuf = new byte[INDEX_RECORD_LENGTH];
     long rafPos = ShapeConst.SHAPE_FILE_HEADER_LENGTH;
     int iaIndex = 0;
-    final ArrayList indexArrayVector = new ArrayList( 10000 );
+    ArrayList indexArrayVector = new ArrayList( 10000 );
 
     rafShx.seek( rafPos );
 
@@ -210,7 +210,7 @@ public class IndexFile
     while( rafShx.read( recBuf, 0, INDEX_RECORD_LENGTH ) != -1 )
     {
 
-      final IndexRecord ir = new IndexRecord( recBuf );
+      IndexRecord ir = new IndexRecord( recBuf );
 
       // set ArrayVector item as index record
       indexArrayVector.add( ir );
@@ -261,7 +261,7 @@ public class IndexFile
    * methode: getRecordOffset (int RecNo) <BR>
    * function to get Record offset by Record number <BR>
    */
-  public int getRecordOffset( final int RecNo )
+  public int getRecordOffset( int RecNo )
   {
     // ck: Hier darf der index arry nicht null sein??
     if( RecNo >= 0 )// && indexArray.length != 0)
@@ -281,7 +281,7 @@ public class IndexFile
    * method: getRecordLength (int RecNo) <BR>
    * function to get Record Length by Record number <BR>
    */
-  public int getRecordLength( final int RecNo )
+  public int getRecordLength( int RecNo )
   {
 
     if( RecNo >= 0 && indexArray.length != 0 )
@@ -300,7 +300,7 @@ public class IndexFile
    * method: getIndexRecord (int RecNo) <BR>
    * function to get Index Record by Record number <BR>
    */
-  public IndexRecord getIndexRecord( final int RecNo )
+  public IndexRecord getIndexRecord( int RecNo )
   {
     IndexRecord ir = new IndexRecord();
 
@@ -313,7 +313,7 @@ public class IndexFile
   /**
    * appends an index record to the indexfile
    */
-  public void appendRecord( final IndexRecord record, final SHPEnvelope mbr ) throws IOException
+  public void appendRecord( IndexRecord record, SHPEnvelope mbr ) throws IOException
   {
 
     offset = rafShx.length();

@@ -53,7 +53,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 /**
  * This is the most straight implementation of the layer interface: it just calls the theme to render itself, no
  * buffering or tiling happens.
- * 
+ *
  * @author Gernot Belger
  */
 public class DirectMapLayer extends AbstractMapLayer

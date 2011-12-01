@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.gistableeditor.actions;
 
@@ -45,7 +45,6 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 public final class ColumnAction extends Action
 {
@@ -53,17 +52,18 @@ public final class ColumnAction extends Action
 
   private final LayerTableViewer m_viewer;
 
+  private final String m_propertyName;
+
   private final String m_alignment;
 
   private final String m_format;
 
-  private final GMLXPath m_propertyPath;
-
-  public ColumnAction( final ICommandTarget commandTarget, final LayerTableViewer viewer, final GMLXPath propertyPath, final IAnnotation annotation )
+  public ColumnAction( final ICommandTarget commandTarget, final LayerTableViewer viewer, final String propertyName,
+      final IAnnotation annotation )
   {
-    super( propertyPath.toString() );
+    super( propertyName );
 
-    final int columnID = viewer.getColumnID( propertyPath );
+    final int columnID = viewer.getColumnID( propertyName );
 
     m_alignment = viewer.getColumnAlignment( columnID );
     m_format = viewer.getColumnFormat( columnID );
@@ -73,16 +73,18 @@ public final class ColumnAction extends Action
 
     m_commandTarget = commandTarget;
     m_viewer = viewer;
-    m_propertyPath = propertyPath;
-
-    final boolean columnExists = viewer.hasColumn( propertyPath );
-    setChecked( columnExists );
+    m_propertyName = propertyName;
+    setChecked( viewer.hasColumn( propertyName ) );
   }
 
+  /**
+   * @see org.eclipse.jface.action.IAction#run()
+   */
   @Override
   public void run( )
   {
-    final SetColumnVisibleCommand setColumnVisibleCommand = new SetColumnVisibleCommand( m_viewer, m_propertyPath, m_alignment, m_format, isChecked() );
+    final SetColumnVisibleCommand setColumnVisibleCommand = new SetColumnVisibleCommand( m_viewer, m_propertyName,
+        m_alignment, m_format, isChecked() );
 
     m_commandTarget.postCommand( setColumnVisibleCommand, null );
   }

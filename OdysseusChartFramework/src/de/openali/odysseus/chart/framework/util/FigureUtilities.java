@@ -1,9 +1,5 @@
 package de.openali.odysseus.chart.framework.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.swt.graphics.Point;
 
 public final class FigureUtilities
@@ -20,15 +16,13 @@ public final class FigureUtilities
    */
   public static int[] pointArrayToIntArray( final Point[] points )
   {
-    final List<Integer> intList = new ArrayList<Integer>();
-    for( final Point point : points )
+    final int[] intArray = new int[points.length * 2];
+    for( int i = 0; i < points.length; i++ )
     {
-      if( point == null )
-        continue;
-      intList.add( point.x );
-      intList.add( point.y );
+      intArray[i * 2] = points[i].x;
+      intArray[(i * 2) + 1] = points[i].y;
     }
-    return ArrayUtils.toPrimitive( intList.toArray( new Integer[] {} ) );
+    return intArray;
   }
 
   /**
@@ -119,8 +113,8 @@ public final class FigureUtilities
     for( int i = 0; i < translated.length; i++ )
     {
       final Point oldPoint = translated[i];
-      final int resizedX = (int) ((float) oldPoint.x / (float) max.x * width);
-      final int resizedY = (int) ((float) oldPoint.y / (float) max.y * height);
+      final int resizedX = (int) (((float) oldPoint.x / (float) max.x) * width);
+      final int resizedY = (int) (((float) oldPoint.y / (float) max.y) * height);
       resizedPolygon[i] = new Point( resizedX, resizedY );
     }
     return resizedPolygon;

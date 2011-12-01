@@ -42,14 +42,13 @@
 package org.kalypso.metadoc;
 
 /**
- * This interface lists all possible modes that can be defined for the modes-attribute when creating an extension of
- * org.kalypso.metadoc.exportTarget.
+ * This interface lists all possible modes that can be defined for the modes-attribute when
+ * creating an extension of org.kalypso.metadoc.exportTarget.
  * 
  * @author schlienger
  */
 public interface IExportTargetModes
 {
   public static String MODE_WIZARD = "wizard";
-
   public static String MODE_EXPERT = "expert";
 }

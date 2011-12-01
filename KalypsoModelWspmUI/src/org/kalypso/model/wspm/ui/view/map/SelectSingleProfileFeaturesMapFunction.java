@@ -59,7 +59,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 
 /**
  * Selects features in a map. Chooses from all themes of a certain QName (and its substitutes).
- * 
+ *
  * @author Holger Albert
  */
 public class SelectSingleProfileFeaturesMapFunction extends SelectFeaturesMapFunction implements IRectangleMapFunction
@@ -94,9 +94,7 @@ public class SelectSingleProfileFeaturesMapFunction extends SelectFeaturesMapFun
             final SelectProfileDialog dialog = new SelectProfileDialog( shell, wrappersToSelect );
 
             if( Window.OK == dialog.open() )
-            {
               selectionChanger.changeSelection( selectionManager, wrappers, dialog.getSelectedCrossSection() );
-            }
 
             return Status.OK_STATUS;
           }
@@ -104,9 +102,7 @@ public class SelectSingleProfileFeaturesMapFunction extends SelectFeaturesMapFun
         }.schedule();
       }
       else
-      {
         getSelectionChanger().changeSelection( getSelectionManager(), wrappers, wrappersToSelect );
-      }
 
     }
 

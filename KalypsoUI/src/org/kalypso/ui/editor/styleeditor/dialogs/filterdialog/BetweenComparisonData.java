@@ -52,43 +52,46 @@ public class BetweenComparisonData extends AbstractComparisonData
 
   private String upper = null;
 
-  public String getLower( )
+  public String getLower()
   {
     return lower;
   }
 
-  public void setLower( final String m_lower )
+  public void setLower( String m_lower )
   {
-    lower = m_lower.trim();
+    this.lower = m_lower.trim();
   }
 
-  public String getUpper( )
+  public String getUpper()
   {
     return upper;
   }
 
-  public void setUpper( final String m_upper )
+  public void setUpper( String m_upper )
   {
-    upper = m_upper.trim();
+    this.upper = m_upper.trim();
   }
 
   @Override
   public boolean verify( ) throws FilterDialogException
   {
-    if( lower == null || lower.trim().length() == 0 || upper == null || upper.trim().length() == 0 || propertyName == null )
+    if( lower == null || lower.trim().length() == 0 || upper == null || upper.trim().length() == 0
+        || propertyName == null )
     {
       throw new FilterDialogException( new FilterDialogError( null, MessageBundle.STYLE_EDITOR_FILTER_ERROR_INCOMPLETE ) );
     }
     try
     {
-      final double lowerDouble = Double.parseDouble( lower );
-      final double upperDouble = Double.parseDouble( upper );
+      double lowerDouble = Double.parseDouble( lower );
+      double upperDouble = Double.parseDouble( upper );
       if( lowerDouble > upperDouble )
-        throw new FilterDialogException( new FilterDialogError( null, MessageBundle.STYLE_EDITOR_FILTER_ERROR_LOWERBOUNDARY_EXCEEDS_UPPERBOUNDARY ) );
+        throw new FilterDialogException( new FilterDialogError( null,
+            MessageBundle.STYLE_EDITOR_FILTER_ERROR_LOWERBOUNDARY_EXCEEDS_UPPERBOUNDARY ) );
     }
-    catch( final NumberFormatException e )
+    catch( NumberFormatException e )
     {
-      throw new FilterDialogException( new FilterDialogError( null, MessageBundle.STYLE_EDITOR_FILTER_ERROR_LOWER_UPPER + MessageBundle.STYLE_EDITOR_ERROR_NUMBER ) );
+      throw new FilterDialogException( new FilterDialogError( null, MessageBundle.STYLE_EDITOR_FILTER_ERROR_LOWER_UPPER
+          + MessageBundle.STYLE_EDITOR_ERROR_NUMBER ) );
     }
     return true;
 

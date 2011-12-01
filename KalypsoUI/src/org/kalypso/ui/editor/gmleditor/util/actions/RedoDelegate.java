@@ -45,7 +45,7 @@ package org.kalypso.ui.editor.gmleditor.util.actions;
  */
 public class RedoDelegate extends UndoRedoDelegate
 {
-  public RedoDelegate( )
+  public RedoDelegate()
   {
     super( false );
   }

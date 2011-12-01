@@ -65,7 +65,6 @@ public class DataOperatorHelper
   @SuppressWarnings("rawtypes")
   private final Map<Class< ? >, IDataOperator> m_dataOperators = new HashMap<Class< ? >, IDataOperator>();
 
-  @SuppressWarnings("unchecked")
   public DataOperatorHelper( )
   {
     m_dataOperators.put( Number.class, new NumberDataOperator( new NumberComparator() ) );

@@ -30,6 +30,7 @@
 package org.kalypso.commons.math;
 
 /**
+ * 
  * Interface for a math operation
  * 
  * @author doemming

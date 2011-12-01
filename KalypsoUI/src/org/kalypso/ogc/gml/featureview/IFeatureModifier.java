@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview;
 
@@ -46,30 +46,25 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * @author Gernot Belger
  */
 public interface IFeatureModifier extends ICellEditorValidator
 {
-  void dispose( );
+  public void dispose();
 
-  String getLabel( Feature f );
+  public String getLabel( final Feature f );
 
-  Image getImage( Feature f );
+  public Image getImage( final Feature f );
 
   /**
-   * Returns the feature's value edited by this modifier. This object will be given to the cell modifier.
+   * macht aus dem Feature ein (anzeigbares) Objekt
    * 
    * @param f
    * @return object
    */
-  Object getProperty( Feature f );
-
-  IPropertyType getPropertyType( );
-
-  GMLXPath getPropertyPath( );
+  public Object getValue( final Feature f );
 
   /**
    * macht aus dem (editierten) Objekt ein Object, welches dem Feature wieder als Property gesetzt werden kann
@@ -78,7 +73,12 @@ public interface IFeatureModifier extends ICellEditorValidator
    * @param value
    * @return object
    */
-  Object parseInput( Feature f, Object value );
+  public Object parseInput( final Feature f, final Object value );
 
-  CellEditor createCellEditor( Composite parent );
+  public CellEditor createCellEditor( final Composite parent );
+
+  public IPropertyType getFeatureTypeProperty();
+
+  /** Compares two object using the represantation by this modifier. Used to determine, if a feature should really be changed. */
+  public boolean equals( final Object newData, final Object oldData );
 }

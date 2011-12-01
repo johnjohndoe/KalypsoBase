@@ -47,8 +47,9 @@ import org.kalypso.core.KalypsoCorePlugin;
 
 /**
  * Exceptionklasse für Exceptions innerhalb diesesPakets.
- * 
+ *
  * @author Schlienger
+ *
  */
 public class LoaderException extends CoreException
 {

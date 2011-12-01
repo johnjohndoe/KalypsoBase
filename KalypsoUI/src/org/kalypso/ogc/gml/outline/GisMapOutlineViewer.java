@@ -53,11 +53,9 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerTooltipListener;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
-import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
 import org.kalypso.ogc.gml.outline.nodes.NodeFactory;
-import org.kalypso.ogc.gml.outline.nodes.NodeFinder;
 import org.kalypso.ogc.gml.outline.nodes.ThemeNodeCheckStateProvider;
 import org.kalypso.ogc.gml.outline.nodes.ThemeNodeContentProvider;
 import org.kalypso.ogc.gml.outline.nodes.ThemeNodeLabelProvider;
@@ -245,21 +243,5 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
   public void setCompact( final boolean compact )
   {
     m_contentProvider.setCompact( compact );
-  }
-
-  /**
-   * This function searches the content of the viewer for a node, which contains the given theme.
-   * 
-   * @param theme
-   *          The theme.
-   * @return The node or null.
-   */
-  public IThemeNode findNode( final IKalypsoTheme theme )
-  {
-    if( m_input == null )
-      return null;
-
-    final NodeFinder finder = new NodeFinder( m_input );
-    return finder.find( theme );
   }
 }

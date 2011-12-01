@@ -66,7 +66,7 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
 {
   private final FeatureList m_list;
 
-  private final Properties m_properties;
+  private final Properties m_propertyMap;
 
   private final IFeatureType m_featureType;
 
@@ -95,11 +95,11 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
    *          <li>count</li>
    *          </ul>
    */
-  public AddFeaturesToFeaturelist( final FeatureList list, final Properties mappings, final IFeatureType featureType, final String fromID, final String toID, final String handleExisting, final String fid, final String targetFeatureType )
+  public AddFeaturesToFeaturelist( final FeatureList list, final Properties propertyMap, final IFeatureType featureType, final String fromID, final String toID, final String handleExisting, final String fid, final String targetFeatureType )
   {
     m_list = list;
     m_featureType = featureType;
-    m_properties = mappings;
+    m_propertyMap = propertyMap;
     m_fromID = fromID;
     m_handleExisting = handleExisting;
     m_fid = fid;
@@ -127,7 +127,7 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
       if( targetFeature == null )
         return true;
 
-      FeatureHelper.copyProperties( f, targetFeature, m_properties );
+      FeatureHelper.copyProperties( f, targetFeature, m_propertyMap );
 
       // den fid-hash aktuell halten
       m_fidHash.put( targetFeature.getId(), targetFeature );
@@ -170,9 +170,9 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
 
   public static Object findSourceID( final Feature sourceFeature, final String fromID )
   {
-    if( "#FID#".equals( fromID ) )
+    if( "#FID#".equals( fromID ))
       return sourceFeature.getId();
-
+    
     final IFeatureType sourceFT = sourceFeature.getFeatureType();
     final IPropertyType idPT = sourceFT.getProperty( fromID );
     final Object property = sourceFeature.getProperty( idPT );
@@ -215,7 +215,7 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
     int count = -1;
     while( true )
     {
-      final String replace = count == -1 ? "" : "" + count;
+      final String replace = count == -1 ? "" : ("" + count);
       final String fid = fidhelp.replaceAll( "\\Q" + REPLACE_COUNT + "\\E", replace );
 
       if( m_fidHash.get( fid ) == null )

@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates;
 
@@ -45,7 +45,7 @@ import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -126,7 +126,7 @@ public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvanc
       final Feature[] features = m_dataProvider.query( getSurface( point ), mode );
       if( features.length > 0 )
         highlightUnderlyingGeometries( features, g, mode );
-
+      
     }
     catch( final GM_Exception e )
     {
@@ -153,12 +153,12 @@ public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvanc
     try
     {
       final Document document = getDocument( mode );
-      final Symbolizer symbolizer = SLDFactory.createSymbolizer( null, document.getDocumentElement() );
+      final Symbolizer symbolizer = SLDFactory.createSymbolizer( null, document.getDocumentElement(), 0.0, Double.MAX_VALUE );
       final GeoTransform projection = getWidget().getIMapPanel().getProjection();
 
       for( final Feature feature : features )
       {
-        final DisplayElement lde = DisplayElementFactory.buildDisplayElement( feature, symbolizer, null );
+        final DisplayElement lde = DisplayElementFactory.buildDisplayElement( feature, symbolizer );
         lde.paint( g, projection, new NullProgressMonitor() );
       }
     }

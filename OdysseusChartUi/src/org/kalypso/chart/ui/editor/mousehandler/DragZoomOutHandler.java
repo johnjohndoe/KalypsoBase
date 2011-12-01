@@ -43,7 +43,6 @@ package org.kalypso.chart.ui.editor.mousehandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.impl.visitors.ZoomOutVisitor;
@@ -71,8 +70,7 @@ public class DragZoomOutHandler extends AbstractChartDragHandler
   {
     try
     {
-      final Rectangle plotRect = getChart().getPlotRect();
-      final ZoomOutVisitor visitor = new ZoomOutVisitor( ChartHandlerUtilities.screen2plotPoint( editInfo.getPosition(),plotRect ), ChartHandlerUtilities.screen2plotPoint( end,plotRect ) );
+      final ZoomOutVisitor visitor = new ZoomOutVisitor( getChart().screen2plotPoint( editInfo.getPosition() ), getChart().screen2plotPoint( end ) );
 
       final IChartModel model = getChart().getChartModel();
       model.getMapperRegistry().accept( visitor );
@@ -93,7 +91,7 @@ public class DragZoomOutHandler extends AbstractChartDragHandler
     setCursor( SWT.CURSOR_CROSS );
 
     final Point start = editInfo.getPosition();
-    final Point pos = ChartHandlerUtilities.plotPoint2screen( end ,getChart().getPlotRect());
+    final Point pos = getChart().plotPoint2screen( end );
     getChart().setDragArea( new Rectangle( start.x, start.y, pos.x - start.x, pos.y - start.y ) );
   }
 

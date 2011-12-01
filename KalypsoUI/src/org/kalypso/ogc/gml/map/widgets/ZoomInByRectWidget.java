@@ -50,7 +50,7 @@ import org.kalypso.ogc.gml.widgets.AbstractWidget;
 /**
  * This class performs a zoomin event. It will be performed by setting the map boundaries to the rectangle selected by
  * the client or centering the map onto the point the user had mouse-clicked to.
- * 
+ *
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @author doemming
  */

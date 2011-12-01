@@ -50,8 +50,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ListDialog;
 import org.kalypso.chart.ui.IChartPart;
-import org.kalypso.commons.java.lang.Arrays;
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.i18n.Messages;
@@ -73,23 +71,28 @@ public class AddLayerHandler extends AbstractHandler
   @Override
   public final Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final IViewPart view = getView();
-    if( Objects.isNull( view ) )
-      return null;
+    // find chartview
 
-    final ProfilChartModel model = getProfileChartModel( view );
-    if( Objects.isNull( model ) )
-      return null;
-
-    final IProfil profil = model.getProfil();
+    final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+    final IViewPart view = activePage == null ? null : activePage.findView( "org.kalypso.model.wspm.ui.view.chart.ChartView" ); //$NON-NLS-1$
+    final IChartPart chartPart = view == null ? null : (IChartPart) view.getAdapter( IChartPart.class );
+    final IChartComposite chartComp = chartPart == null ? null : chartPart.getChartComposite();
+    final IChartModel chartModel = chartComp == null ? null : chartComp.getChartModel();
+    final ProfilChartModel profChartModel = chartModel instanceof ProfilChartModel ? (ProfilChartModel) chartModel : null;
+    final IProfil profil = profChartModel == null ? null : profChartModel.getProfil();
     if( profil == null )
+    {
       return null;
+    }
 
     final IProfilLayerProvider layerProvider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( profil.getType() );
     if( layerProvider == null )
-      return null; // TODO: show error message
+    {
+      // TODO: show error message
+      return null;
+    }
 
-    final LayerDescriptor[] layerDescriptors = layerProvider.getAddableLayers( model );
+    final LayerDescriptor[] layerDescriptors = layerProvider.getAddableLayers( profChartModel );
 
     final ListDialog dialog = new ListDialog( null );
     dialog.setAddCancelButton( true );
@@ -104,19 +107,19 @@ public class AddLayerHandler extends AbstractHandler
       }
     } );
     dialog.setInput( layerDescriptors );
-    dialog.setMessage( Messages.getString( "org.kalypso.model.wspm.ui.view.legend.AddLayerHandler.0" ) ); //$NON-NLS-1$
+    dialog.setMessage( Messages.getString("org.kalypso.model.wspm.ui.view.legend.AddLayerHandler.0") ); //$NON-NLS-1$
     dialog.setTitle( view.getTitle() ); //$NON-NLS-1$
 
     dialog.open();
 
     final Object[] result = dialog.getResult();
-    if( Arrays.isEmpty( result ) )
+    if( result == null || result.length != 1 )
       return null;
 
     final LayerDescriptor layerToAdd = (LayerDescriptor) result[0];
     try
     {
-      layerProvider.addLayerToProfile( profil, layerToAdd.getId() );
+      layerProvider.addLayerToProfile( profChartModel.getProfil(), layerToAdd.getId() );
     }
     catch( final Exception e )
     {
@@ -124,31 +127,5 @@ public class AddLayerHandler extends AbstractHandler
       throw new ExecutionException( e.getLocalizedMessage() );
     }
     return null;
-  }
-
-  private ProfilChartModel getProfileChartModel( final IViewPart view )
-  {
-    final IChartPart part = (IChartPart) view.getAdapter( IChartPart.class );
-    if( Objects.isNull( part ) )
-      return null;
-
-    final IChartComposite composite = part.getChartComposite();
-    if( Objects.isNull( composite ) )
-      return null;
-
-    final IChartModel model = composite.getChartModel();
-    if( model instanceof ProfilChartModel )
-      return (ProfilChartModel) model;
-
-    return null;
-  }
-
-  private IViewPart getView( )
-  {
-    final IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-    if( Objects.isNull( page ) )
-      return null;
-
-    return page.findView( "org.kalypso.model.wspm.ui.view.chart.ChartView" ); //$NON-NLS-1$
   }
 }

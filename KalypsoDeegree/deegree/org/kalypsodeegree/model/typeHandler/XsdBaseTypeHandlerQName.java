@@ -37,6 +37,7 @@ package org.kalypsodeegree.model.typeHandler;
 
 import javax.xml.namespace.QName;
 
+
 /**
  * @author Dirk Kuch
  */

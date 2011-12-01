@@ -57,6 +57,6 @@ public interface IAdvancedEditWidget
   Point getOriginPoint( );
 
   IAdvancedEditWidgetSnappedPoint[] getSnappedPointsAtOrigin( );
-
+  
   boolean isLeftMouseButtonPressed( );
 }

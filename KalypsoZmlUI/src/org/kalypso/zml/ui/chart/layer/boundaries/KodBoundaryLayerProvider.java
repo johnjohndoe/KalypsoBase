@@ -84,6 +84,9 @@ public class KodBoundaryLayerProvider implements IBoundaryLayerProvider
     m_charts = loader.getCharts();
   }
 
+  /**
+   * @see org.kalypso.hwv.core.chart.provider.style.boundary.IBoundaryLayerProvider#getBoundaries()
+   */
   @Override
   public IMetadataLayerBoundary[] getBoundaries( )
   {

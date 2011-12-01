@@ -75,6 +75,7 @@ public final class DateUtilities
     // not intended to be instantiated
   }
 
+
   /**
    * @return the minimum Date that the Calendar can deliver.
    */
@@ -114,13 +115,13 @@ public final class DateUtilities
       return null;
 
     final TimeZone timeZone = TimeZone.getTimeZone( "UTC" );
-    final GregorianCalendar calendar = (GregorianCalendar) Calendar.getInstance( timeZone );
+    final GregorianCalendar calendar = (GregorianCalendar) GregorianCalendar.getInstance( timeZone );
     calendar.setTime( date );
 
     return DATATYPE_FACTORY.newXMLGregorianCalendar( calendar );
   }
 
-  public static XMLGregorianCalendar toXMLGregorianCalendar( final GregorianCalendar dateTime )
+  public static Object toXMLGregorianCalendar( final GregorianCalendar dateTime )
   {
     return DATATYPE_FACTORY.newXMLGregorianCalendar( dateTime );
   }
@@ -141,7 +142,7 @@ public final class DateUtilities
 
   public static long getDifferenceInMinutes( final Calendar c1, final Calendar c2 )
   {
-    final long difference = c1.getTimeInMillis() - c2.getTimeInMillis();
+    long difference = (c1.getTimeInMillis() - c2.getTimeInMillis());
     return difference / 1000 / 60;
   }
 
@@ -155,30 +156,31 @@ public final class DateUtilities
     return getDifferenceInHours( c1, c2 ) / 24.0;
   }
 
+
   /**
    * Supports {@link Date}, {@link Calendar}, {@link XMLGregorianCalendar}.
    */
-  public static Date toDate( final Object protoDate )
+  public static Date toDate( Object protoDate )
   {
     if( protoDate instanceof Date )
       return (Date) protoDate;
-
+    
     if( protoDate instanceof Calendar )
       return ((Calendar) protoDate).getTime();
-
+    
     if( protoDate instanceof XMLGregorianCalendar )
-      return toDate( (XMLGregorianCalendar) protoDate );
-
+      return toDate( (XMLGregorianCalendar)protoDate );
+    
     return null;
   }
 
-  public static boolean isLeapYear( final Calendar calendar )
+
+  public static boolean isLeapYear( Calendar calendar )
   {
     boolean lBoolRes = false;
-    if( calendar != null && calendar.isSet( Calendar.YEAR ) )
-    {
-      final int lIntYear = calendar.get( Calendar.YEAR );
-      lBoolRes = lIntYear % 4 == 0 && lIntYear % 100 != 0 || lIntYear % 400 == 0 ? true : false;
+    if( calendar != null && calendar.isSet( Calendar.YEAR ) ){
+      int lIntYear = calendar.get( Calendar.YEAR );
+      lBoolRes = ( (lIntYear % 4 == 0 && lIntYear % 100 != 0) || (lIntYear % 400 == 0) ) ? true : false;
     }
     return lBoolRes;
   }

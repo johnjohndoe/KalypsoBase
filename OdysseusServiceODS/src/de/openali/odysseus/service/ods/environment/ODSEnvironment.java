@@ -8,13 +8,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.apache.commons.lang3.ArrayUtils;
+import javax.servlet.ServletContext;
+
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.xmlbeans.XmlException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.eclipse.osgi.FrameworkUtilities;
-import org.kalypso.ogc.core.exceptions.OWSException;
-import org.kalypso.ogc.core.operations.IOGCOperation;
+import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 
 import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
 import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
@@ -31,7 +31,9 @@ import de.openali.odysseus.service.ods.util.IODSConstants;
 import de.openali.odysseus.service.ods.x020.ChartOfferingType;
 import de.openali.odysseus.service.odsimpl.x020.ODSConfigurationDocument;
 import de.openali.odysseus.service.odsimpl.x020.SceneType;
+import de.openali.odysseus.service.ows.extension.IOWSOperation;
 
+@SuppressWarnings("restriction")
 public class ODSEnvironment implements IODSEnvironment
 {
   private ODSConfigurationLoader m_ocl;
@@ -42,9 +44,11 @@ public class ODSEnvironment implements IODSEnvironment
 
   private File m_configFile;
 
-  private Status m_status;
+  private final Status m_status;
 
   private File m_tmpDir;
+
+  private final ServletContext m_context;
 
   private String m_defaultSceneID;
 
@@ -52,8 +56,9 @@ public class ODSEnvironment implements IODSEnvironment
 
   private static Map<String, List<IODSChart>> m_scenes = new TreeMap<String, List<IODSChart>>();
 
-  private ODSEnvironment( )
+  private ODSEnvironment( final ServletContext context )
   {
+    m_context = context;
     try
     {
       checkPaths();
@@ -74,10 +79,10 @@ public class ODSEnvironment implements IODSEnvironment
    *          if set to true, the Environment is newly created instead of reused; useful for testing configuration files
    * @return a singleton instance of ODSEnvironment
    */
-  public synchronized static ODSEnvironment getInstance( final boolean reset )
+  public synchronized static ODSEnvironment getInstance( final ServletContext context, final boolean reset )
   {
-    if( m_instance == null || reset )
-      m_instance = new ODSEnvironment();
+    if( (m_instance == null) || reset )
+      m_instance = new ODSEnvironment( context );
     return m_instance;
   }
 
@@ -86,9 +91,6 @@ public class ODSEnvironment implements IODSEnvironment
     return m_exception;
   }
 
-  /**
-   * @see de.openali.odysseus.service.ods.environment.IODSEnvironment#getConfigLoader()
-   */
   @Override
   public ODSConfigurationLoader getConfigLoader( )
   {
@@ -102,26 +104,22 @@ public class ODSEnvironment implements IODSEnvironment
 
   public void checkTmpDir( ) throws IOException
   {
-    final File tmpDir = new File( System.getProperties().getProperty( "java.io.tmpdir" ) );
-    if( tmpDir == null || !tmpDir.exists() )
+    final File tmpDir = (File) m_context.getAttribute( "javax.servlet.context.tempdir" );
+    if( (tmpDir == null) || !tmpDir.exists() )
       throw new FileNotFoundException( "Path to config file doesn't exist: " + tmpDir.getAbsolutePath() );
-
     if( !tmpDir.canWrite() )
       throw new IOException( "TmpDir is not writable: " + tmpDir.getAbsolutePath() );
-
     if( !tmpDir.canRead() )
       throw new IOException( "TmpDir is not readable: " + tmpDir.getAbsolutePath() );
-
     m_tmpDir = tmpDir;
   }
 
   private void checkConfigDir( ) throws IOException
   {
-    final String pathString = FrameworkUtilities.getProperty( IODSConstants.ODS_CONFIG_PATH_KEY, IODSConstants.ODS_CONFIG_PATH_DEFAULT );
+    final String pathString = FrameworkProperties.getProperty( IODSConstants.ODS_CONFIG_PATH_KEY, IODSConstants.ODS_CONFIG_PATH_DEFAULT );
     final File path = new File( pathString );
     if( !path.exists() )
       throw new FileNotFoundException( "Path to config file doesn't exist: " + path.getAbsolutePath() );
-
     if( !path.canRead() )
       throw new IOException( "Config dir is not readable: " + path.getAbsolutePath() );
 
@@ -130,14 +128,12 @@ public class ODSEnvironment implements IODSEnvironment
 
   private void checkConfigFile( ) throws IOException
   {
-    final String fileString = FrameworkUtilities.getProperty( IODSConstants.ODS_CONFIG_FILENAME_KEY, IODSConstants.ODS_CONFIG_FILENAME_DEFAULT );
+    final String fileString = FrameworkProperties.getProperty( IODSConstants.ODS_CONFIG_FILENAME_KEY, IODSConstants.ODS_CONFIG_FILENAME_DEFAULT );
     final File file = new File( getConfigDir(), fileString );
     if( !file.exists() )
       throw new FileNotFoundException( "Configuration File doesn't exist: " + file.getAbsolutePath() );
-
     if( !file.canRead() )
       throw new IOException( "Cannot read config file: " + fileString );
-
     m_configFile = file;
   }
 
@@ -148,7 +144,7 @@ public class ODSEnvironment implements IODSEnvironment
     final SceneType defaultScene = m_ocl.getConfigurationDocument().getODSConfiguration().getScenes().getDefaultScene();
 
     // Default Scene muss extra hinzugefügt werden
-    final SceneType[] sceneArray = ArrayUtils.addAll( nonDefaultScenes, new SceneType[] { defaultScene } );
+    final SceneType[] sceneArray = (SceneType[]) ArrayUtils.addAll( nonDefaultScenes, new SceneType[] { defaultScene } );
 
     String chartFilePath = null;
     String sceneIds = "";
@@ -160,13 +156,12 @@ public class ODSEnvironment implements IODSEnvironment
     }
 
     // Überprüfen, ob Datei vorhanden
-    if( chartFilePath == null || chartFilePath.trim().equals( "" ) )
-      throw new ConfigurationException( "Scene '" + sceneID + "' not found; use one of " + sceneIds );
 
+    if( (chartFilePath == null) || chartFilePath.trim().equals( "" ) )
+      throw new ConfigurationException( "Scene '" + sceneID + "' not found; use one of " + sceneIds );
     final File chartFile = new File( getConfigDir(), chartFilePath );
     if( !chartFile.exists() )
       throw new FileNotFoundException( "ChartEile does not exist: " + chartFile.getAbsolutePath() );
-
     return chartFile;
   }
 
@@ -177,9 +172,10 @@ public class ODSEnvironment implements IODSEnvironment
     checkTmpDir();
   }
 
-  private void createScenes( ) throws ConfigurationException, IOException, XmlException, OWSException
+  private void createScenes( ) throws ConfigurationException, IOException, XmlException
   {
     final String[] sceneIds = m_ocl.getSceneIds();
+
     for( final String sceneId : sceneIds )
     {
       final File chartFile = getChartFile( sceneId );
@@ -198,54 +194,43 @@ public class ODSEnvironment implements IODSEnvironment
           ChartFactory.configureChartModel( model, ccl, ccl.getChartIds()[0], ChartExtensionLoader.getInstance(), getConfigDir().toURI().toURL() );
 
           final CapabilitiesLoader cl = new CapabilitiesLoader( this );
+
           final ChartOfferingType chartOffering = cl.createChartOffering( model, sceneId );
           sceneCharts.add( new ODSChart( ccl, chartOffering ) );
-        }
 
+        }
         m_scenes.put( sceneId, sceneCharts );
+
       }
     }
   }
 
-  /**
-   * @see de.openali.odysseus.service.ods.environment.IODSEnvironment#getStatus()
-   */
   @Override
   public Status getStatus( )
   {
     return m_status;
   }
 
-  /**
-   * @see de.openali.odysseus.service.ods.environment.IODSEnvironment#getOperations()
-   */
   @Override
-  public IOGCOperation[] getOperations( )
+  public IOWSOperation[] getOperations( )
   {
+    // TODO Auto-generated method stub
     return null;
   }
 
-  /**
-   * @see de.openali.odysseus.service.ods.environment.IODSEnvironment#getScenes()
-   */
   @Override
   public Map<String, List<IODSChart>> getScenes( )
   {
     return m_scenes;
   }
 
-  /**
-   * @see de.openali.odysseus.service.ods.environment.IODSEnvironment#getServiceUrl()
-   */
   @Override
   public String getServiceUrl( )
   {
+    // TODO Auto-generated method stub
     return null;
   }
 
-  /**
-   * @see de.openali.odysseus.service.ods.environment.IODSEnvironment#getConfigDir()
-   */
   @Override
   public File getConfigDir( )
   {
@@ -257,83 +242,61 @@ public class ODSEnvironment implements IODSEnvironment
     return m_configFile;
   }
 
-  /**
-   * @see de.openali.odysseus.service.ods.environment.IODSEnvironment#getTmpDir()
-   */
   @Override
   public File getTmpDir( )
   {
     return m_tmpDir;
   }
 
-  /**
-   * @see de.openali.odysseus.service.ods.environment.IODSEnvironment#getDefaultSceneId()
-   */
   @Override
   public String getDefaultSceneId( )
   {
     return m_defaultSceneID;
   }
 
-  /**
-   * @see de.openali.odysseus.service.ods.environment.IODSEnvironment#validateChartId(java.lang.String,
-   *      java.lang.String)
-   */
   @Override
   public boolean validateChartId( final String sceneId, final String chartId )
   {
-    if( !validateSceneId( sceneId ) )
-      return false;
-
-    final ChartConfigurationDocument sceneById = m_ocl.getSceneById( sceneId );
-    final ChartType[] chartArray = sceneById.getChartConfiguration().getChartArray();
-    for( final ChartType c : chartArray )
+    if( validateSceneId( sceneId ) )
     {
-      if( c.getId().equals( chartId ) )
-        return true;
+      final ChartConfigurationDocument sceneById = m_ocl.getSceneById( sceneId );
+      final ChartType[] chartArray = sceneById.getChartConfiguration().getChartArray();
+      for( final ChartType c : chartArray )
+        if( c.getId().equals( chartId ) )
+          return true;
     }
 
     return false;
   }
 
-  /**
-   * @see de.openali.odysseus.service.ods.environment.IODSEnvironment#validateLayerId(java.lang.String,
-   *      java.lang.String, java.lang.String)
-   */
   @Override
   public boolean validateLayerId( final String sceneId, final String chartId, final String layerId )
   {
-    if( !validateSceneId( sceneId ) || !validateChartId( sceneId, chartId ) )
-      return false;
-
-    final ChartConfigurationDocument sceneById = m_ocl.getSceneById( sceneId );
-    final ChartType[] chartArray = sceneById.getChartConfiguration().getChartArray();
-    for( final ChartType c : chartArray )
+    if( validateSceneId( sceneId ) && validateChartId( sceneId, chartId ) )
     {
-      if( c.getId().equals( chartId ) )
-      {
-        final LayerType[] layerArray = c.getLayers().getLayerArray();
-        for( final LayerType l : layerArray )
+      final ChartConfigurationDocument sceneById = m_ocl.getSceneById( sceneId );
+      final ChartType[] chartArray = sceneById.getChartConfiguration().getChartArray();
+      for( final ChartType c : chartArray )
+        if( c.getId().equals( chartId ) )
         {
-          if( l.getId().equals( layerId ) )
-            return true;
+          final LayerType[] layerArray = c.getLayers().getLayerArray();
+          for( final LayerType l : layerArray )
+            if( l.getId().equals( layerId ) )
+              return true;
         }
-      }
     }
 
     return false;
   }
 
-  /**
-   * @see de.openali.odysseus.service.ods.environment.IODSEnvironment#validateSceneId(java.lang.String)
-   */
   @Override
   public boolean validateSceneId( final String sceneId )
   {
+
     for( final String sId : m_ocl.getSceneIds() )
       if( sceneId.equals( sId ) )
         return true;
-
     return false;
   }
+
 }

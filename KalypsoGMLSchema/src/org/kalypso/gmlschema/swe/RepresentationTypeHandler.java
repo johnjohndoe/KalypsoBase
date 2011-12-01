@@ -305,8 +305,7 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
   }
 
   /**
-   * @see org.kalypso.gmlschema.types.SimpleDOMTypeHandler#internalMarshall(java.lang.Object, org.w3c.dom.Document,
-   *      java.net.URL)
+   * @see org.kalypso.gmlschema.types.SimpleDOMTypeHandler#internalMarshall(java.lang.Object, org.w3c.dom.Document, java.net.URL)
    */
   @Override
   protected Node internalMarshall( final Object value, final Document document, final URL context )
@@ -387,7 +386,7 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
   private static void handleFrame( final RepresentationType type, final Document doc, final Element elt )
   {
     final String frame = type.getFrame();
-    if( frame != null && frame.length() > 0 )
+    if( (frame != null) && (frame.length() > 0) )
     {
       final Element eltFrame = doc.createElementNS( NS.SWE, "frame" ); //$NON-NLS-1$
       eltFrame.setAttribute( "frame", frame ); //$NON-NLS-1$

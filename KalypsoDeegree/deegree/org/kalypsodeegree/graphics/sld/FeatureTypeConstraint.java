@@ -55,7 +55,7 @@ public interface FeatureTypeConstraint
    * 
    * @return the name of the feature type
    */
-  String getFeatureTypeName( );
+  String getFeatureTypeName();
 
   /**
    * sets the name of the feature type
@@ -70,7 +70,7 @@ public interface FeatureTypeConstraint
    * 
    * @return the filter of the FeatureTypeConstraints
    */
-  Filter getFilter( );
+  Filter getFilter();
 
   /**
    * sets a feature-filter as defined in WFS specifications.
@@ -85,7 +85,7 @@ public interface FeatureTypeConstraint
    * 
    * @return the extent for filtering the feature type
    */
-  Extent[] getExtents( );
+  Extent[] getExtents();
 
   /**
    * sets the extent for filtering the feature type

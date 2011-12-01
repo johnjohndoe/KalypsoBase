@@ -51,7 +51,7 @@ import org.kalypso.gmlschema.xml.ElementWithOccurs;
 
 /**
  * TODO: insert type comment here
- * 
+ *
  * @author doemming
  */
 public abstract class RelationContentType implements IRelationContentType, IInitialize
@@ -181,7 +181,7 @@ public abstract class RelationContentType implements IRelationContentType, IInit
         }
 
       }
-        break;
+      break;
     }
   }
 

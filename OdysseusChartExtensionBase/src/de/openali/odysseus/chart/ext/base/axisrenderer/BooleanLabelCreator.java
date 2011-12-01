@@ -45,7 +45,7 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 /**
  * @author alibu
  */
-public class BooleanLabelCreator implements ILabelCreator
+public class BooleanLabelCreator extends AbstractLabelCreator implements ILabelCreator
 {
 
   /**
@@ -62,23 +62,5 @@ public class BooleanLabelCreator implements ILabelCreator
       return "auf";
 
     return String.format( "%d", value.intValue() );
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.ext.base.axisrenderer.ILabelCreator#getLabel(java.lang.Number[], int,
-   *      de.openali.odysseus.chart.framework.model.data.IDataRange)
-   */
-  @Override
-  public String getLabel( final Number[] ticks, final int i, final IDataRange<Number> range )
-  {
-    try
-    {
-      return getLabel( ticks[i], range );
-    }
-    catch( final ArrayIndexOutOfBoundsException e )
-    {
-      e.printStackTrace();
-      return "";
-    }
   }
 }

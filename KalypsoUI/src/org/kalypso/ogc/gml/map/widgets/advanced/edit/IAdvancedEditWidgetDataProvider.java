@@ -65,8 +65,8 @@ public interface IAdvancedEditWidgetDataProvider
    */
   Feature[] query( GM_Point point, double range ) throws GM_Exception;
 
-  Map<Geometry, Feature> resolveJtsGeometries( Feature[] features );
-
+  Map<Geometry, Feature> resolveJtsGeometries( Feature[] features ); 
+ 
   Geometry resolveJtsGeometry( Feature feature );
 
 }

@@ -92,17 +92,17 @@ public class TrianglePolyFileData
     return m_holeList;
   }
 
-  public void setNodeList( final List<TriangleVertex> nodeList )
+  public void setNodeList( List<TriangleVertex> nodeList )
   {
     m_nodeList = nodeList;
   }
 
-  public void setSegmentList( final List<TriangleSegment> segmentList )
+  public void setSegmentList( List<TriangleSegment> segmentList )
   {
     m_segmentList = segmentList;
   }
 
-  public void setHoleList( final List<TriangleHole> holeList )
+  public void setHoleList( List<TriangleHole> holeList )
   {
     m_holeList = holeList;
   }
@@ -139,7 +139,7 @@ public class TrianglePolyFileData
 
   public String getHoleHeader( )
   {
-    final Integer size = m_holeList.size();
+    Integer size = m_holeList.size();
     return size.toString();
   }
 

@@ -70,7 +70,7 @@ public class ThemeTableContentProvider implements ITreeContentProvider
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
   @Override
-  public Object[] getChildren( final Object parentElement )
+  public Object[] getChildren( Object parentElement )
   {
     if( parentElement instanceof IMapModell )
       return ((IMapModell) parentElement).getAllThemes();
@@ -85,7 +85,7 @@ public class ThemeTableContentProvider implements ITreeContentProvider
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
    */
   @Override
-  public Object getParent( final Object element )
+  public Object getParent( Object element )
   {
     if( element instanceof IKalypsoTheme )
       return ((IKalypsoTheme) element).getMapModell();
@@ -97,7 +97,7 @@ public class ThemeTableContentProvider implements ITreeContentProvider
    * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
    */
   @Override
-  public boolean hasChildren( final Object element )
+  public boolean hasChildren( Object element )
   {
     if( m_input == null )
       return false;
@@ -115,7 +115,7 @@ public class ThemeTableContentProvider implements ITreeContentProvider
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getElements(java.lang.Object)
    */
   @Override
-  public Object[] getElements( final Object inputElement )
+  public Object[] getElements( Object inputElement )
   {
     if( m_input == null )
       return new Object[] {};
@@ -137,7 +137,7 @@ public class ThemeTableContentProvider implements ITreeContentProvider
    *      java.lang.Object)
    */
   @Override
-  public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
+  public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
   {
     /* Reset the old input. */
     m_input = null;

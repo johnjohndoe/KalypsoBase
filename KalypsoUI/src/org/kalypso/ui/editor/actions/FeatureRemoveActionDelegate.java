@@ -112,7 +112,7 @@ public class FeatureRemoveActionDelegate implements IActionDelegate2
   public void runWithEvent( final IAction action, final Event event )
   {
     /* We are in the ui-thread so we get a shell here. */
-    final Shell shell = event.display.getActiveShell();
+    Shell shell = event.display.getActiveShell();
     if( shell == null )
       return;
 
@@ -120,29 +120,29 @@ public class FeatureRemoveActionDelegate implements IActionDelegate2
       return;
 
     /* Get all selected features. */
-    final EasyFeatureWrapper[] allFeatures = m_selection.getAllFeatures();
+    EasyFeatureWrapper[] allFeatures = m_selection.getAllFeatures();
 
     /* Build the delete command. */
-    final DeleteFeatureCommand command = TableFeatureControlUtils.deleteFeaturesFromSelection( allFeatures, shell );
+    DeleteFeatureCommand command = TableFeatureControlUtils.deleteFeaturesFromSelection( allFeatures, shell );
     if( command != null )
     {
       try
       {
         /* At least one selected feature must exist, otherwise the command would be null. */
-        final CommandableWorkspace workspace = allFeatures[0].getWorkspace();
+        CommandableWorkspace workspace = allFeatures[0].getWorkspace();
         workspace.postCommand( command );
       }
-      catch( final Exception e )
+      catch( Exception e )
       {
         e.printStackTrace();
 
-        final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "", e ); //$NON-NLS-1$
+        IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "", e ); //$NON-NLS-1$
 
-        ErrorDialog.openError( shell, action.getText(), Messages.getString( "org.kalypso.ui.editor.actions.FeatureRemoveActionDelegate.5" ), status ); //$NON-NLS-1$
+        ErrorDialog.openError( shell, action.getText(), Messages.getString("org.kalypso.ui.editor.actions.FeatureRemoveActionDelegate.5"), status ); //$NON-NLS-1$
       }
       finally
       {
-        final Feature[] features = FeatureSelectionHelper.getFeatures( m_selection );
+        Feature[] features = FeatureSelectionHelper.getFeatures( m_selection );
         m_selection.getSelectionManager().changeSelection( features, new EasyFeatureWrapper[0] );
       }
     }

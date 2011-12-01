@@ -82,11 +82,6 @@ public class LineStringContentHandler extends GMLElementContentHandler implement
     this( reader, null, resultEater, parentContentHandler, null );
   }
 
-  public LineStringContentHandler( final XMLReader reader, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContentHandler, final String defaultSrs )
-  {
-    this( reader, null, resultEater, parentContentHandler, defaultSrs );
-  }
-
   public LineStringContentHandler( final XMLReader reader, final ICurveHandler lineStringHandler, final String defaultSrs )
   {
     this( reader, lineStringHandler, null, lineStringHandler, defaultSrs );
@@ -161,8 +156,8 @@ public class LineStringContentHandler extends GMLElementContentHandler implement
     {
       final int size = m_positions.size();
 
-      if( size == 1 )
-        throwSAXParseException( "A gml:LineString must contain either 0 or at least two positions!" );
+      if( size < 2 )
+        throwSAXParseException( "A gml:LineString must contain at least two positions!" );
 
       return GeometryFactory.createGM_Curve( m_positions.toArray( new GM_Position[m_positions.size()] ), m_activeSrs );
     }

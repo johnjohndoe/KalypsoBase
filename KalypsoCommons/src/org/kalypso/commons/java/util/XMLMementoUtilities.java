@@ -42,6 +42,7 @@ package org.kalypso.commons.java.util;
 
 /**
  * @author kuepfer
+ *
  */
 public class XMLMementoUtilities
 {

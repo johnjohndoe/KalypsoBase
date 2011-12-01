@@ -42,7 +42,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.swt.graphics.GC;
-import org.kalypso.contribs.java.net.IUrlResolver2;
 
 /**
  * The ExternalGraphic element allows a reference to be made to an external graphic file with a Web URL. The
@@ -58,6 +57,7 @@ import org.kalypso.contribs.java.net.IUrlResolver2;
  */
 public interface ExternalGraphic
 {
+
   /**
    * the Format sub-element identifies the expected document MIME type of a successful fetch.
    * 
@@ -70,7 +70,7 @@ public interface ExternalGraphic
    * format of an ExternalGraphic.
    * 
    * @param format
-   *          Format of the external graphic
+   *            Format of the external graphic
    */
   void setFormat( final String format );
 
@@ -88,7 +88,7 @@ public interface ExternalGraphic
    * ExternalGraphic.
    * 
    * @param onlineResource
-   *          URL of the external graphic
+   *            URL of the external graphic
    */
   void setOnlineResource( final String onlineResource );
 
@@ -107,6 +107,4 @@ public interface ExternalGraphic
 
   void paint( final GC gc );
 
-  /** Returns the resolver (aka context) against which the online resource is resolved */
-  IUrlResolver2 getResolver( );
 }

@@ -41,7 +41,7 @@ import org.kalypso.repository.utils.Repositories;
  */
 public class RepositoryTest extends TestCase
 {
-  public void testRepositoryUtils( )
+  public void testRepositoryUtils()
   {
     assertEquals( Repositories.getRepositoryId( "test://foo.bar" ), "test://" ); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -50,7 +50,7 @@ public class RepositoryTest extends TestCase
       Repositories.getRepositoryId( "test:foo.bar" ); //$NON-NLS-1$
       fail( "Exception should be thrown" ); //$NON-NLS-1$
     }
-    catch( final IllegalArgumentException e )
+    catch( IllegalArgumentException e )
     {
       // ok
     }

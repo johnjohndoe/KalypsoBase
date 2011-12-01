@@ -83,15 +83,11 @@ class RoughnessStylePainter implements IStylePainter
   private void doPaint( final IStylePaintable paintable, final IProgressMonitor monitor ) throws CoreException
   {
     final Rule[] rules = m_style.getRules();
-    final Double scale = paintable.getScale();
 
     // collect ALL roughness rules and put them in the filter
     final RoughnessRule lRoughRule = new RoughnessRule();
     for( final Rule rule : rules )
-    {
-      if( scale == null || rule.doesScaleConstraintApply( scale ) )
-        lRoughRule.put( rule.getTitle(), rule );
-    }
+      lRoughRule.put( rule.getTitle(), rule );
 
     final IStylePainter rulePainter = StylePainterFactory.create( lRoughRule, m_features );
     rulePainter.paint( paintable, monitor );

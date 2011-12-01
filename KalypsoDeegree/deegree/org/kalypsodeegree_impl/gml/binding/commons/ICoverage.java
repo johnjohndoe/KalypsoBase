@@ -45,5 +45,5 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface ICoverage extends Feature
 {
-  QName QNAME = new QName( NS.GML3, "_Coverage" );
+  public final static QName QNAME = new QName( NS.GML3, "_Coverage" );
 }

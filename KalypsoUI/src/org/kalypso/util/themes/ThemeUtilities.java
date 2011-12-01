@@ -40,11 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.util.themes;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.ogc.gml.IKalypsoTheme;
 
 /**
  * This class provides functions for {@link org.kalypso.ogc.gml.IKalypsoTheme}s.
@@ -65,33 +64,18 @@ public class ThemeUtilities
   {
   }
 
-  public static Color checkBackgroundColor( final Display display, final String backgroundColorProperty )
+  public static Color checkBackgroundColor( Display display, String backgroundColorProperty )
   {
-    final String[] backgroundColor = StringUtils.split( backgroundColorProperty, ";" );
+    String[] backgroundColor = StringUtils.split( backgroundColorProperty, ";" );
     if( backgroundColor != null && backgroundColor.length == 3 )
     {
-      final Integer r = NumberUtils.parseQuietInteger( backgroundColor[0] );
-      final Integer g = NumberUtils.parseQuietInteger( backgroundColor[1] );
-      final Integer b = NumberUtils.parseQuietInteger( backgroundColor[2] );
+      Integer r = NumberUtils.parseQuietInteger( backgroundColor[0] );
+      Integer g = NumberUtils.parseQuietInteger( backgroundColor[1] );
+      Integer b = NumberUtils.parseQuietInteger( backgroundColor[2] );
       if( r != null && g != null && b != null )
         return new Color( display, r.intValue(), g.intValue(), b.intValue() );
     }
 
-    return null;
-  }
-
-  public static IKalypsoTheme findFirstVisible( final IKalypsoTheme[] themes )
-  {
-    for( final IKalypsoTheme theme : themes )
-    {
-      /* Return the first visible theme. */
-      if( theme.isVisible() )
-        return theme;
-
-      /* If the current theme is not visible, check the next one. */
-    }
-
-    /* No visible theme was found. */
     return null;
   }
 }

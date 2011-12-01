@@ -67,9 +67,7 @@ public class PointMarkerSetPoint implements IProfilChange
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
     if( hint != null )
-    {
       hint.setMarkerMoved();
-    }
 
     m_oldPosition = m_pointMarker.setPoint( m_newPosition );
 

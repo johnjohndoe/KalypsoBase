@@ -47,7 +47,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 /**
  * @author Gernot Belger
  */
-public final class TreeViewerUtilities
+public class TreeViewerUtilities
 {
   private TreeViewerUtilities( )
   {

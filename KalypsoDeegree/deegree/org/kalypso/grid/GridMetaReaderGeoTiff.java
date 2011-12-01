@@ -47,6 +47,7 @@ import javax.media.jai.JAI;
 import javax.media.jai.RenderedOp;
 import javax.media.jai.TiledImage;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.geotiff.image.jai.GeoTIFFDirectory;
@@ -64,7 +65,7 @@ import com.sun.media.jai.codec.SeekableStream;
 
 /**
  * {@link IGridMetaReader} implementation for Geo-Tiffs.
- * 
+ *
  * @author Dirk Kuch
  */
 public class GridMetaReaderGeoTiff implements IGridMetaReader
@@ -149,7 +150,7 @@ public class GridMetaReaderGeoTiff implements IGridMetaReader
       /* determine pixel is area or point */
       final RASTER_TYPE rasterType = RASTER_TYPE.getRasterType( directory );
       if( RASTER_TYPE.ePixelIsPoint.equals( rasterType ) )
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
 
       /* get tie points */
       m_tiepoints = directory.getTiepoints();
@@ -160,7 +161,7 @@ public class GridMetaReaderGeoTiff implements IGridMetaReader
       /* get transformationMatrix */
       final double[] transformationMatrix = directory.getTransformationMatrix();
       if( transformationMatrix != null )
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
 
       stream.close();
 
@@ -197,8 +198,8 @@ public class GridMetaReaderGeoTiff implements IGridMetaReader
   @Override
   public RectifiedGridDomain getCoverage( final OffsetVector offsetX, final OffsetVector offsetY, final Double[] upperLeftCorner, final String crs ) throws Exception
   {
-    if( offsetX == null || offsetY == null || upperLeftCorner == null || upperLeftCorner.length != 2 || crs == null )
-      throw new IllegalStateException();
+    if( (offsetX == null) || (offsetY == null) || (upperLeftCorner == null) || (upperLeftCorner.length != 2) || (crs == null) )
+      throw (new IllegalStateException());
 
     final RenderedOp image = JAI.create( "url", m_urlImage );
     final TiledImage tiledImage = new TiledImage( image, true );

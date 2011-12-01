@@ -52,27 +52,18 @@ public interface IFeatureTypePropertiesConstants
   //
 
   /** How many levels of children should be created if a feature is created (-1 means infinite, 0 means none) */
-  String FEATURE_CREATION_DEPTH = "feature.creationDepth"; //$NON-NLS-1$
+  public final static String FEATURE_CREATION_DEPTH = "feature.creationDepth"; //$NON-NLS-1$
 
-  String FEATURE_CREATION_DEPTH_DEFAULT = "0"; //$NON-NLS-1$
+  public final static String FEATURE_CREATION_DEPTH_DEFAULT = "0"; //$NON-NLS-1$
 
   //
   // GmlTree Constants
   //
 
   /** Show children of this element, defaults to true */
-  String GMLTREE_SHOW_CHILDREN = "gmltree.showChildren"; //$NON-NLS-1$
+  public final static String GMLTREE_SHOW_CHILDREN = "gmltree.showChildren"; //$NON-NLS-1$
 
-  /** Show new menu on this feature element, defaults to true */
-  String GMLTREE_NEW_MENU_ON_FEATURE = "gmltree.showNewMenuOnFeature"; //$NON-NLS-1$
-
-  /** Show new menu of sub-features for this feature element, defaults to false */
-  String GMLTREE_NEW_MENU_SHOW_SUB_FEATURES = "gmltree.showNewMenuSubFeatures"; //$NON-NLS-1$
-
-  /** Prohibit the 'duplicate' menu of a feature, defaults to true */
-  String GMLTREE_SHOW_DUPLICATION_MENU = "gmltree.showDuplicateMenu"; //$NON-NLS-1$
-
-  String GMLTREE_SHOW_CHILDREN_DEFAULT = "true"; //$NON-NLS-1$
+  public final static String GMLTREE_SHOW_CHILDREN_DEFAULT = "true"; //$NON-NLS-1$
 
   //
   // Map Constants
@@ -82,5 +73,5 @@ public interface IFeatureTypePropertiesConstants
    * Extension id of a {@link org.kalypso.ogc.gml.IKalypsoThemeInfo} registered with the
    * <code>org.kalypso.core.themeInfo</code> extension-point.
    */
-  String THEME_INFO_ID = "map.themeInfoId"; //$NON-NLS-1$
+  public static final String THEME_INFO_ID = "map.themeInfoId"; //$NON-NLS-1$
 }

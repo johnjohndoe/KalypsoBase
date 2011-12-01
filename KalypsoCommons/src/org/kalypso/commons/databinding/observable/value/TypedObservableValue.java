@@ -40,11 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.databinding.observable.value;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.databinding.observable.Diffs;
 import org.eclipse.core.databinding.observable.value.AbstractObservableValue;
 import org.eclipse.core.databinding.observable.value.ValueDiff;
-import org.eclipse.core.runtime.Assert;
 
 /**
  * @author Gernot Albert
@@ -56,48 +55,43 @@ public abstract class TypedObservableValue<SOURCE, VALUE> extends AbstractObserv
 
   private final Class<VALUE> m_valueType;
 
-  public TypedObservableValue( final SOURCE source, final Class<VALUE> valueType )
+  public TypedObservableValue( SOURCE source, Class<VALUE> valueType )
   {
-    Assert.isNotNull( source );
-    Assert.isNotNull( valueType );
-
     m_source = source;
     m_valueType = valueType;
   }
 
-  protected SOURCE getSource( )
-  {
-    return m_source;
-  }
-
+  /**
+   * @see org.eclipse.core.databinding.observable.value.IObservableValue#getValueType()
+   */
   @Override
   public Class<VALUE> getValueType( )
   {
     return m_valueType;
   }
 
+  /**
+   * @see org.eclipse.core.databinding.observable.value.AbstractObservableValue#doGetValue()
+   */
   @Override
-  protected final VALUE doGetValue( )
+  protected VALUE doGetValue( )
   {
     return doGetValueTyped( m_source );
   }
 
+  /**
+   * @see org.eclipse.core.databinding.observable.value.AbstractObservableValue#doSetValue(java.lang.Object)
+   */
   @Override
-  protected final void doSetValue( final Object value )
+  protected void doSetValue( Object value )
   {
-    final VALUE typedValue = m_valueType.cast( value );
-    final VALUE currentValue = doGetValue();
-    if( valueEquals( typedValue, currentValue ) )
+    Object currentValue = doGetValue();
+    if( ObjectUtils.equals( value, currentValue ) )
       return;
 
-    doSetValueTyped( m_source, typedValue );
+    doSetValueTyped( m_source, m_valueType.cast( value ) );
 
-    final ValueDiff diff = Diffs.createValueDiff( currentValue, value );
+    ValueDiff diff = Diffs.createValueDiff( currentValue, value );
     fireValueChange( diff );
-  }
-
-  protected boolean valueEquals( final VALUE value1, final VALUE value2 )
-  {
-    return ObjectUtils.equals( value1, value2 );
   }
 }

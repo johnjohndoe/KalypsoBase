@@ -44,11 +44,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -64,7 +63,7 @@ import org.kalypso.ogc.gml.map.themes.KalypsoLegendTheme;
 /**
  * @author Gernot Belger
  */
-abstract class AbstractThemeNode<T> extends PlatformObject implements IThemeNode
+abstract class AbstractThemeNode<T> implements IThemeNode
 {
   /**
    * The border, left free in the image.
@@ -327,11 +326,11 @@ abstract class AbstractThemeNode<T> extends PlatformObject implements IThemeNode
   }
 
   /**
-   * @see org.kalypso.ogc.gml.outline.nodes.ILegendProvider#getLegendGraphic(java.lang.String[], boolean,
+   * @see org.kalypso.ogc.gml.outline.nodes.ILegendProvider#getLegendGraphic(java.lang.String[],
    *      org.eclipse.swt.graphics.Font)
    */
   @Override
-  public Image getLegendGraphic( final String[] whiteList, final boolean onlyVisible, final Font font ) throws CoreException
+  public Image getLegendGraphic( final String[] whiteList, final Font font ) throws CoreException
   {
     /* Legend themes should not provide itself for a legend. */
     if( m_element instanceof KalypsoLegendTheme )
@@ -348,11 +347,8 @@ abstract class AbstractThemeNode<T> extends PlatformObject implements IThemeNode
     final IThemeNode[] children = getChildrenCompact();
     for( final IThemeNode childNode : children )
     {
-      if( onlyVisible && !childNode.isChecked( childNode ) )
-        continue;
-
       /* Get the legend. */
-      final Image legendGraphic = childNode.getLegendGraphic( whiteList, onlyVisible, font );
+      final Image legendGraphic = childNode.getLegendGraphic( whiteList, font );
       if( legendGraphic != null )
         legends.add( legendGraphic );
     }
@@ -415,7 +411,7 @@ abstract class AbstractThemeNode<T> extends PlatformObject implements IThemeNode
    *          The list of ids of allowed themes.
    * @return True, if the current theme is allowed. False otherwise.
    */
-  protected boolean checkWhiteList( final String[] whiteList )
+  protected boolean checkWhiteList( String[] whiteList )
   {
     /* The theme ids, which are allowed. */
     List<String> themeIds = null;

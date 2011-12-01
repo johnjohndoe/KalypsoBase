@@ -69,7 +69,7 @@ import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -333,6 +333,7 @@ public final class ZmlFactory
 
   private static IObservation fetchZmlFromRepository( final IRepository repository, final String itemId ) throws RepositoryException
   {
+// final IRepositoryItem item = RepositoryUtils.findEquivalentItem( repository, itemId );
     final IRepositoryItem item = repository.findItem( itemId );
     if( item == null )
       throw new RepositoryException( String.format( "Unknown ID: %s", itemId ) );
@@ -513,8 +514,10 @@ public final class ZmlFactory
    * Create an XML-Observation ready for marshalling.
    * 
    * @param timezone
-   *          the time zone into which dates should be converted before serialised
+   *          the time zone into which dates should be converted before serialized
+   * @deprecated Use one of the writeXXX methods.
    */
+  @Deprecated
   public static Observation createXML( final IObservation obs, final IRequest args ) throws FactoryException
   {
     try
@@ -698,7 +701,13 @@ public final class ZmlFactory
     return StringUtils.chop( buffer.toString() );
   }
 
-  private static Marshaller getMarshaller( ) throws JAXBException
+  /**
+   * @deprecated Do not use any more, except from this class.<br>
+   *             Introduce and use helper methods in this class instead (for streams, files, etc.). We should especially
+   *             use an {@link javax.xml.stream.XMLStreamWriter} configured with standard namespaces to write zml.
+   */
+  @Deprecated
+  public static Marshaller getMarshaller( ) throws JAXBException
   {
     return JaxbUtilities.createMarshaller( JC, true, null, ZML_PREFIX_MAPPER );
   }
@@ -721,18 +730,7 @@ public final class ZmlFactory
    */
   public static void writeToFile( final IObservation obs, final IFile file ) throws SensorException, CoreException
   {
-    writeToFile( obs, file, null );
-  }
-
-  /**
-   * Helper method for simply writing the observation to an IFile
-   * 
-   * @throws SensorException
-   *           if an IOException or a FactoryException is thrown internally
-   */
-  public static void writeToFile( final IObservation obs, final IFile file, final IRequest request ) throws SensorException, CoreException
-  {
-    writeToFile( obs, file.getLocation().toFile(), request );
+    writeToFile( obs, file.getLocation().toFile(), null );
     file.refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
   }
 

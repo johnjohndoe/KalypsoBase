@@ -44,6 +44,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -54,7 +55,7 @@ import java.util.logging.Logger;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 
-import org.eclipse.core.runtime.IStatus;
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.eclipse.ui.services.IDisposable;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -76,8 +77,8 @@ import org.kalypso.repository.RepositoryRegistry;
 import org.kalypso.repository.conf.RepositoryConfigUtils;
 import org.kalypso.repository.conf.RepositoryFactoryConfig;
 import org.kalypso.repository.factory.IRepositoryFactory;
-import org.kalypso.repository.utils.Repositories;
 import org.kalypso.repository.utils.RepositoryItems;
+import org.kalypso.repository.utils.Repositories;
 import org.kalypso.services.observation.KalypsoServiceObs;
 import org.kalypso.services.observation.ObservationServiceUtils;
 import org.kalypso.services.observation.sei.DataBean;
@@ -85,8 +86,8 @@ import org.kalypso.services.observation.sei.IObservationService;
 import org.kalypso.services.observation.sei.ItemBean;
 import org.kalypso.services.observation.sei.ObservationBean;
 import org.kalypso.services.observation.sei.RepositoryBean;
-import org.kalypso.services.observation.sei.StatusBean;
 import org.kalypso.zml.request.Request;
+import org.xml.sax.InputSource;
 
 /**
  * Kalypso Observation Service Fassade.
@@ -267,6 +268,36 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
     if( file != null )
     {
       file.delete();
+    }
+  }
+
+  @Override
+  public final void writeData( final ObservationBean obean, final DataHandler odb ) throws SensorException
+  {
+    try
+    {
+      final IRepositoryItem item = itemFromBean( obean );
+
+      final IObservation obs = (IObservation) item.getAdapter( IObservation.class );
+
+      if( obs == null )
+      {
+        final RemoteException e = new RemoteException( "No observation for " + obean.getId() ); //$NON-NLS-1$
+        m_logger.throwing( getClass().getName(), "writeData", e ); //$NON-NLS-1$
+        throw e;
+      }
+
+      final IObservation zml = ZmlFactory.parseXML( new InputSource( odb.getInputStream() ), null );
+
+      synchronized( obs )
+      {
+        obs.setValues( zml.getValues( null ) );
+      }
+    }
+    catch( final Throwable e ) // generic exception caught for simplicity
+    {
+      m_logger.throwing( getClass().getName(), "writeData", e ); //$NON-NLS-1$
+      throw new SensorException( e.getLocalizedMessage(), e );
     }
   }
 
@@ -454,7 +485,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
         }
         else
         {
-          throw new UnsupportedOperationException();
+          throw new NotImplementedException();
         }
       }
     }
@@ -490,11 +521,5 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
     }
 
     return false;
-  }
-
-  @Override
-  public StatusBean getStatus( final String type )
-  {
-    return new StatusBean( IStatus.OK, KalypsoServiceObs.ID, "" );
   }
 }

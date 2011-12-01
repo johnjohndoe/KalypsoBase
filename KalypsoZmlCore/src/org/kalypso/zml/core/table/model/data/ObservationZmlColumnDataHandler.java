@@ -85,8 +85,7 @@ public class ObservationZmlColumnDataHandler extends AbstractZmlColumnDataHandle
       m_observation.removeListener( this );
 
     m_observation = observation;
-    if( Objects.isNotNull( m_observation ) )
-      m_observation.addListener( this );
+    m_observation.addListener( this );
 
     fireObservationChanged();
   }

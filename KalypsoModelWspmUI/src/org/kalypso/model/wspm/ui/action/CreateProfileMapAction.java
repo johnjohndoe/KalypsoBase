@@ -10,29 +10,29 @@ import java.util.Set;
 
 import javax.xml.bind.JAXBException;
 
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorRegistry;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.ui.actions.ActionDelegate;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.resources.StringStorage;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -40,47 +40,65 @@ import org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.ogc.gml.GisTemplateHelper;
+import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.template.gismapview.Gismapview;
+import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureProperty;
 
-public class CreateProfileMapAction extends AbstractHandler
+public class CreateProfileMapAction extends ActionDelegate
 {
-  @Override
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
-  {
-    final IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelectionChecked( event );
-    final Shell shell = HandlerUtil.getActiveShellChecked( event );
+  private IFeatureSelection m_selection;
 
+  /**
+   * @see org.eclipse.ui.actions.ActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
+   *      org.eclipse.jface.viewers.ISelection)
+   */
+  @Override
+  public void selectionChanged( final IAction action, final ISelection selection )
+  {
+    m_selection = selection instanceof IFeatureSelection ? (IFeatureSelection) selection : null;
+
+    if( action != null )
+      action.setEnabled( m_selection != null );
+  }
+
+  /**
+   * @see org.eclipse.ui.actions.ActionDelegate#runWithEvent(org.eclipse.jface.action.IAction,
+   *      org.eclipse.swt.widgets.Event)
+   */
+  @Override
+  public void runWithEvent( final IAction action, final Event event )
+  {
     /* retrieve selected profile-collections, abort if none */
     final Map<Feature, IRelationType> selectedFeatures = new HashMap<Feature, IRelationType>();
-    for( final Object selectedObject : selection.toList() )
+    for( final Object selectedObject : m_selection.toList() )
     {
-      if( selectedObject instanceof IFeatureProperty )
+      if( selectedObject instanceof FeatureAssociationTypeElement )
       {
-        final IFeatureProperty fate = (IFeatureProperty) selectedObject;
+        final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) selectedObject;
         final Feature parentFeature = fate.getParentFeature();
 
-        selectedFeatures.put( parentFeature, fate.getPropertyType() );
+        selectedFeatures.put( parentFeature, fate.getAssociationTypeProperty() );
       }
     }
+
+    final Shell shell = event.display.getActiveShell();
 
     if( selectedFeatures.size() == 0 )
     {
       MessageDialog.openWarning( shell, org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.action.CreateProfileMapAction.0" ), org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.action.CreateProfileMapAction.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      return null;
+      return;
     }
 
     final IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
     createAndOpenMap( activePart, selectedFeatures );
-
-    return null;
   }
 
   public static void createAndOpenMap( final IWorkbenchPart activePart, final Map<Feature, IRelationType> selectedProfiles )
   {
+
     final UIJob uijob = new UIJob( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.action.CreateProfileMapAction.2" ) ) //$NON-NLS-1$
     {
       @Override
@@ -103,7 +121,7 @@ public class CreateProfileMapAction extends AbstractHandler
           final IEditorRegistry editorRegistry = workbench.getEditorRegistry();
           final IEditorDescriptor editorDescription = editorRegistry.findEditor( GisMapEditor.ID );
 
-          final IEditorInput input = new StorageEditorInput( new StringStorage( mapTemplate, storagePath ) );
+          final IFileEditorInput input = new StorageEditorInput( new StringStorage( mapTemplate, storagePath ) );
 
           page.openEditor( input, editorDescription.getId(), true );
         }
@@ -121,7 +139,7 @@ public class CreateProfileMapAction extends AbstractHandler
     uijob.schedule();
   }
 
-  static IPath guessPath( final IWorkbenchPart part, final String storageName, final Map<Feature, IRelationType> selectedProfiles ) throws CoreException
+  static IPath guessPath( final IWorkbenchPart part, final String storageName, Map<Feature, IRelationType> selectedProfiles ) throws CoreException
   {
     if( part instanceof IEditorPart )
     {
@@ -137,18 +155,19 @@ public class CreateProfileMapAction extends AbstractHandler
         }
       }
     }
-
-    final Set<Entry<Feature, IRelationType>> entrySet = selectedProfiles.entrySet();
-    for( final Entry<Feature, IRelationType> entry : entrySet )
+    
+    Set<Entry<Feature, IRelationType>> entrySet = selectedProfiles.entrySet();
+    for( Entry<Feature, IRelationType> entry : entrySet )
     {
-      final Feature feature = entry.getKey();
-      final GMLWorkspace workspace = feature.getWorkspace();
+      Feature feature = entry.getKey();
+      GMLWorkspace workspace = feature.getWorkspace();
       if( workspace != null )
       {
-        final URL context = workspace.getContext();
+        URL context = workspace.getContext();
         if( context != null )
         {
-
+          
+          
         }
       }
     }
@@ -171,9 +190,7 @@ public class CreateProfileMapAction extends AbstractHandler
     {
       final Gismapview gismapview = GisTemplateHelper.createGisMapView( selectedProfiles, true );
       if( title != null )
-      {
         gismapview.setName( title );
-      }
       final StringWriter stringWriter = new StringWriter();
       GisTemplateHelper.saveGisMapView( gismapview, stringWriter, "UTF8" ); //$NON-NLS-1$
       stringWriter.close();
@@ -191,4 +208,5 @@ public class CreateProfileMapAction extends AbstractHandler
       throw new CoreException( status );
     }
   }
+
 }

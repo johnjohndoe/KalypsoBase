@@ -45,7 +45,7 @@ package org.kalypso.repository;
  */
 public interface IDataSourceItem
 {
-  String FILTER_SOURCE = "filter://";
+  public static final String FILTER_SOURCE = "filter://";
 
   String MD_DATA_SOURCE_ITEM = "Datenabruf_Quelle";
 

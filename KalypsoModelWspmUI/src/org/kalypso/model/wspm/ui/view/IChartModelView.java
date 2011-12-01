@@ -44,8 +44,9 @@ import de.openali.odysseus.chart.framework.model.IChartModel;
 
 /**
  * @author kimwerner
+ *
  */
 public interface IChartModelView
 {
-  IChartModel getChartModel( );
+public IChartModel getChartModel();
 }

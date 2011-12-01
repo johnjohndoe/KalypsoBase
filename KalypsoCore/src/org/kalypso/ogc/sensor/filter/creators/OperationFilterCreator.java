@@ -53,10 +53,11 @@ import org.kalypso.zml.filters.OperationFilterType;
 public class OperationFilterCreator implements IFilterCreator
 {
   @Override
-  public IObservationFilter createFilter( final AbstractFilterType aft, final IObservation baseObs, final URL context ) throws SensorException
+  public IObservationFilter createFilter( AbstractFilterType aft, IObservation baseObs, final URL context )
+      throws SensorException
   {
-    final OperationFilterType filter = (OperationFilterType) aft;
-    final OperationFilter operationFilter = new OperationFilter( filter );
+    OperationFilterType filter = (OperationFilterType)aft;
+    OperationFilter operationFilter = new OperationFilter( filter );
 
     final IObservation filteredObs = FilterCreatorHelper.resolveFilter( filter.getFilter().getValue(), baseObs, context );
     operationFilter.initFilter( filteredObs, filteredObs, context );

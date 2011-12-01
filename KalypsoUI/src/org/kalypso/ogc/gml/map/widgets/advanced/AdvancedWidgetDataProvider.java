@@ -51,7 +51,7 @@ import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidg
 public abstract class AdvancedWidgetDataProvider implements IAdvancedSelectionWidgetDataProvider
 {
   Set<IAdvancedWidgetChangeListener> m_listeners = new LinkedHashSet<IAdvancedWidgetChangeListener>();
-
+  
   /**
    * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDataProvider#addSelectionChangeListener(org.kalypso.ogc.gml.map.widgets.advanced.IAdvancedWidgetChangeListener)
    */
@@ -60,7 +60,7 @@ public abstract class AdvancedWidgetDataProvider implements IAdvancedSelectionWi
   {
     m_listeners.add( listener );
   }
-
+  
   /**
    * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDataProvider#removeSelectionChangeListener(org.kalypso.ogc.gml.map.widgets.advanced.IAdvancedWidgetChangeListener)
    */
@@ -69,7 +69,7 @@ public abstract class AdvancedWidgetDataProvider implements IAdvancedSelectionWi
   {
     m_listeners.remove( listener );
   }
-
+  
   public void fireSelectionChanged( )
   {
     for( final IAdvancedWidgetChangeListener listener : m_listeners )

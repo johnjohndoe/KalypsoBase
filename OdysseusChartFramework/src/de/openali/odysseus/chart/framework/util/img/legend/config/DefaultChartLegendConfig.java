@@ -41,7 +41,6 @@
 package de.openali.odysseus.chart.framework.util.img.legend.config;
 
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
@@ -53,15 +52,15 @@ public class DefaultChartLegendConfig implements IChartLegendConfig
 {
   private final ITextStyle m_style = StyleUtils.getDefaultTextStyle();
 
-  private final Rectangle m_rectangle;
+  private final int m_width;
 
   private final Point m_iconSize = new Point( 9, 9 );
 
   private final Point m_itemSpacer = new Point( 10, 8 );
 
-  public DefaultChartLegendConfig( final Rectangle rectangle )
+  public DefaultChartLegendConfig( final int width )
   {
-    m_rectangle = rectangle;
+    m_width = width;
   }
 
   /**
@@ -101,9 +100,9 @@ public class DefaultChartLegendConfig implements IChartLegendConfig
    * @see de.openali.odysseus.chart.framework.util.img.legend.config.IChartLegendConfig#getMaximumWidth()
    */
   @Override
-  public Rectangle getMaximumWidth( )
+  public int getMaximumWidth( )
   {
-    return m_rectangle;
+    return m_width;
   }
 
 }

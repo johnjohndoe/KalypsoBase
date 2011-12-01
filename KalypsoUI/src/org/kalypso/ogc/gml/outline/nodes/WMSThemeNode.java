@@ -62,32 +62,32 @@ public class WMSThemeNode extends KalypsoThemeNode<KalypsoWMSTheme>
    * @param theme
    *          The wms theme.
    */
-  public WMSThemeNode( final IThemeNode parent, final KalypsoWMSTheme theme )
+  public WMSThemeNode( IThemeNode parent, KalypsoWMSTheme theme )
   {
     super( parent, theme );
   }
 
   /**
-   * @see org.kalypso.ogc.gml.outline.nodes.AbstractThemeNode#getLegendGraphic(java.lang.String[], boolean,
+   * @see org.kalypso.ogc.gml.outline.nodes.AbstractThemeNode#getLegendGraphic(java.lang.String[],
    *      org.eclipse.swt.graphics.Font)
    */
   @Override
-  public Image getLegendGraphic( final String[] whiteList, final boolean onlyVisible, final Font font ) throws CoreException
+  public Image getLegendGraphic( String[] whiteList, Font font ) throws CoreException
   {
     /* Check, if this theme is allowed. */
     if( !checkWhiteList( whiteList ) )
       return null;
 
     /* Get the wms theme. */
-    final KalypsoWMSTheme element = getElement();
+    KalypsoWMSTheme element = getElement();
 
     /* Ask the theme for a legend. */
-    final Image legendGraphic = element.getLegendGraphic( font );
+    Image legendGraphic = element.getLegendGraphic( font );
 
     /* Clone this image, the returned image will be disposed outside! */
     if( legendGraphic != null )
       return new Image( font.getDevice(), legendGraphic, SWT.IMAGE_COPY );
 
-    return super.getLegendGraphic( whiteList, onlyVisible, font );
+    return super.getLegendGraphic( whiteList, font );
   }
 }

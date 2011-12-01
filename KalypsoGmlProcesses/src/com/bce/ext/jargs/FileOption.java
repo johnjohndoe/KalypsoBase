@@ -38,7 +38,7 @@ public class FileOption extends Option
     final File f = new File( arg );
 
     if( m_bfileMustExist && !f.exists() )
-      throw new IllegalOptionValueException( this, Messages.getString( "com.bce.ext.jargs.FileOption.0" ) + f.getAbsolutePath() + Messages.getString( "com.bce.ext.jargs.FileOption.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new IllegalOptionValueException( this, Messages.getString("com.bce.ext.jargs.FileOption.0") + f.getAbsolutePath() + Messages.getString("com.bce.ext.jargs.FileOption.1") ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return f;
   }

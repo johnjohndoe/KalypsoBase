@@ -38,8 +38,8 @@ package org.kalypsodeegree.graphics.sld;
 import java.util.Map;
 
 /**
- * This is the top level interface of <tt>Fill</tt> and <tt>Stroke</tt> defining the methods <tt>getGraphicFill()</tt>
- * and <tt>getCssParameters()</tt> that are common to both.
+ * This is the top level interface of <tt>Fill</tt> and <tt>Stroke</tt> defining the methods
+ * <tt>getGraphicFill()</tt> and <tt>getCssParameters()</tt> that are common to both.
  * <p>
  * 
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
@@ -47,6 +47,7 @@ import java.util.Map;
  */
 public interface Drawing
 {
+
   /**
    * The GraphicFill element both indicates that a stipple-fill repeated graphic will be used and specifies the fill
    * graphic.
@@ -55,7 +56,14 @@ public interface Drawing
    */
   GraphicFill getGraphicFill( );
 
-  void setGraphicFill( final GraphicFill graphicFill );
+  /**
+   * The GraphicFill element both indicates that a stipple-fill repeated graphic will be used and specifies the fill
+   * graphic.
+   * 
+   * @param graphicFill
+   *            the GraphicFill-Element
+   */
+  void setGraphicFill( GraphicFill graphicFill );
 
   /**
    * A simple SVG/CSS2 styling parameters are given with the CssParameter element.
@@ -64,12 +72,19 @@ public interface Drawing
    * This method is for technical use. The user should access the specialized methods of the derived classes.
    * 
    * @return the CssParameters
-   * @deprecated Use {#getParameter} instead
    */
-  @Deprecated
-  Map<String, CssParameter> getCssParameters( );
+  Map getCssParameters( );
 
-  CssParameter getParameter( final String key );
+  /**
+   * A simple SVG/CSS2 styling parameters are given with the CssParameter element.
+   * <p>
+   * </p>
+   * This method sets CssParameters.
+   * 
+   * @param cssParameters
+   *            the CssParameters
+   */
+  void setCssParameters( Map cssParameters );
 
   /**
    * A simple SVG/CSS2 styling parameters are given with the CssParameter element.
@@ -79,11 +94,11 @@ public interface Drawing
    * <p>
    * 
    * @param key
-   *          the key of the object to insert
+   *            the key of the object to insert
    * @param value
-   *          the value of the object to insert
+   *            the value of the object to insert
    */
-  void addCssParameter( String key, CssParameter value );
+  void addCssParameter( Object key, Object value );
 
   /**
    * A simple SVG/CSS2 styling parameters are given with the CssParameter element.
@@ -91,8 +106,8 @@ public interface Drawing
    * </p>
    * This method removes a CssParameter from a given set of CssParameters.
    * 
-   * @param key
-   *          the key of the object to remove
+   * @param value
+   *            the key of the object to remove
    */
-  void removeCssParameter( String key );
+  void removeCssParameter( Object value );
 }

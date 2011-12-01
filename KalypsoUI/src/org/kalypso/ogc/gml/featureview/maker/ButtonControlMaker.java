@@ -66,7 +66,7 @@ public class ButtonControlMaker extends AbstractValueControlMaker
    * @see org.kalypso.ogc.gml.featureview.maker.AbstractValueControlMaker#createControlType(org.kalypso.gmlschema.property.IPropertyType)
    */
   @Override
-  protected JAXBElement< ? extends ControlType> createControlType( final Feature feature, final IFeatureType ft, final IPropertyType fpt, final GridDataType griddata )
+  protected JAXBElement< ? extends ControlType> createControlType( Feature feature, IFeatureType ft, final IPropertyType fpt, final GridDataType griddata )
   {
     final Button button = TemplateUtilities.OF_FEATUREVIEW.createButton();
     button.setStyle( "SWT.PUSH" ); //$NON-NLS-1$

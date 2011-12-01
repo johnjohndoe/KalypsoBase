@@ -58,7 +58,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 public class ComplexJob implements ISimulation
 {
   public static final String ID = "org.kalypso.service.wps.complexJob"; //$NON-NLS-1$
-
   /**
    * The model specification.
    */
@@ -89,7 +88,7 @@ public class ComplexJob implements ISimulation
    *      org.kalypso.simulation.core.ISimulationResultEater, org.kalypso.simulation.core.ISimulationMonitor)
    */
   @Override
-  public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
+  public void run( File tmpdir, ISimulationDataProvider inputProvider, ISimulationResultEater resultEater, ISimulationMonitor monitor ) throws SimulationException
   {
     /* Get the literal. */
     final GMLWorkspace gmlWorkspace = (GMLWorkspace) inputProvider.getInputForID( INPUT_WORKSPACE );

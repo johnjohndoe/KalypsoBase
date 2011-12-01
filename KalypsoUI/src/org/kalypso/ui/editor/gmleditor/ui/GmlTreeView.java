@@ -110,10 +110,10 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
         final Object obj = selection.getFirstElement();
-        if( obj instanceof LinkedFeatureElement )
+        if( obj instanceof LinkedFeatureElement2 )
         {
           // Jump to linked element
-          final Feature feature = ((LinkedFeatureElement) obj).getDecoratedFeature();
+          final Feature feature = ((LinkedFeatureElement2) obj).getDecoratedFeature();
           final StructuredSelection ss = new StructuredSelection( feature );
           treeViewer.setSelection( ss, true );
           treeViewer.expandToLevel( feature, 1 );
@@ -192,7 +192,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     final TreeViewer treeViewer = m_treeViewer;
     // must be sync, if not we get a racing condition with handleModelChange
     final Control control = treeViewer.getControl();
-    if( control == null || control.isDisposed() )
+    if( (control == null) || control.isDisposed() )
       return;
 
     final GMLContentProvider contentProvider = m_contentProvider;
@@ -269,11 +269,11 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     for( final Object treeElement : selectedTreeItems )
     {
       Feature feature = null;
-      if( treeElement instanceof LinkedFeatureElement )
-        feature = ((LinkedFeatureElement) treeElement).getDecoratedFeature();
+      if( treeElement instanceof LinkedFeatureElement2 )
+        feature = ((LinkedFeatureElement2) treeElement).getDecoratedFeature();
       else if( treeElement instanceof Feature )
         feature = (Feature) treeElement;
-      if( feature != null && !selectedFeatures.contains( feature ) )
+      if( (feature != null) && !selectedFeatures.contains( feature ) )
         selectedFeatures.add( feature );
     }
     return selectedFeatures.toArray( new Feature[selectedFeatures.size()] );
@@ -388,7 +388,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
         m_workspace = null;
       }
 
-      m_workspace = (CommandableWorkspace) newValue;
+      m_workspace = ((CommandableWorkspace) newValue);
       if( m_workspace != null )
         m_workspace.addModellListener( this );
 
@@ -396,7 +396,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
       final TreeViewer treeViewer = m_treeViewer;
       final Control control = treeViewer.getControl();
-      if( control == null || control.isDisposed() )
+      if( (control == null) || control.isDisposed() )
         return;
 
       final GMLContentProvider contentProvider = m_contentProvider;
@@ -445,7 +445,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
             if( !control.isDisposed() )
             {
               final Object[] elements = contentProvider.getElements( m_workspace );
-              if( elements != null && elements.length > 0 )
+              if( (elements != null) && (elements.length > 0) )
                 treeViewer.setSelection( new StructuredSelection( elements[0] ) );
             }
           }
@@ -661,7 +661,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     if( m_workspace != null )
     {
       final KeyInfo info = m_pool.getInfo( m_workspace );
-      return info != null && info.isDirty();
+      return (info != null) && info.isDirty();
     }
 
     return false;
@@ -719,10 +719,5 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
     m_key = new PoolableObjectType( linktype, href, context );
     m_pool.addPoolListener( this, m_key );
-  }
-
-  public GMLContentProvider getContentProvider( )
-  {
-    return m_contentProvider;
   }
 }

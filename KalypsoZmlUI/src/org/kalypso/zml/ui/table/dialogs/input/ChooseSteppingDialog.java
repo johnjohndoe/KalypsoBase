@@ -44,7 +44,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -79,10 +79,10 @@ public class ChooseSteppingDialog extends TitleAreaDialog
   {
     super( parentShell );
 
-    m_current = current.getDate();
+    this.m_current = current.getDate();
 
-    m_steppings = steppings;
-    m_toolkit = toolkit;
+    this.m_steppings = steppings;
+    this.m_toolkit = toolkit;
   }
 
   /**
@@ -108,13 +108,13 @@ public class ChooseSteppingDialog extends TitleAreaDialog
     final Composite composite = (Composite) super.createDialogArea( parent );
     composite.setLayout( new GridLayout() );
 
-    if( ArrayUtils.isEmpty( m_steppings ) )
+    if( ArrayUtils.isEmpty( this.m_steppings ) )
     {
-      m_toolkit.createLabel( composite, "Keine gültiegen Zeitschrittweiten gefunden" );
+      this.m_toolkit.createLabel( composite, "Keine gültiegen Zeitschrittweiten gefunden" );
       return composite;
     }
 
-    m_toolkit.createLabel( composite, "Zeitschrittweite" );
+    this.m_toolkit.createLabel( composite, "Zeitschrittweite" );
     final ComboViewer viewer = new ComboViewer( composite, SWT.BORDER | SWT.READ_ONLY | SWT.SINGLE );
     viewer.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
@@ -126,7 +126,7 @@ public class ChooseSteppingDialog extends TitleAreaDialog
         final Integer step = (Integer) element;
 
         final Calendar calendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
-        calendar.setTime( m_current );
+        calendar.setTime( ChooseSteppingDialog.this.m_current );
         calendar.add( Calendar.HOUR_OF_DAY, step );
 
         final SimpleDateFormat sdf = new SimpleDateFormat( "dd.MM.yyyy HH:mm" ); //$NON-NLS-1$
@@ -135,7 +135,7 @@ public class ChooseSteppingDialog extends TitleAreaDialog
       }
     } );
     viewer.setContentProvider( new ArrayContentProvider() );
-    viewer.setInput( m_steppings );
+    viewer.setInput( this.m_steppings );
 
     viewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
@@ -143,19 +143,19 @@ public class ChooseSteppingDialog extends TitleAreaDialog
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-        m_selection = (Integer) selection.getFirstElement();
+        ChooseSteppingDialog.this.m_selection = (Integer) selection.getFirstElement();
       }
     } );
 
-    viewer.setSelection( new StructuredSelection( m_steppings[0] ) );
+    viewer.setSelection( new StructuredSelection( this.m_steppings[0] ) );
 
-    m_toolkit.adapt( composite );
+    this.m_toolkit.adapt( composite );
 
     return composite;
   }
 
   public Integer getOffset( )
   {
-    return m_selection;
+    return this.m_selection;
   }
 }

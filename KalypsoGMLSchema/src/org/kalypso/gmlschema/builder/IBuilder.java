@@ -49,15 +49,15 @@ public interface IBuilder
   public Object[] build( final GMLSchema gmlSchema, final Object typeObject ) throws GMLSchemaException;
 
   /**
-   * returns <code>true</code> if this builder is intended to build something for the given <code>object</code> in this
-   * build run named <code>namedPass</code>
+   * returns <code>true</code> if this builder is intended to build something for the given <code>object</code> in
+   * this build run named <code>namedPass</code>
    * 
    * @param gmlSchema
-   *          current schema
+   *            current schema
    * @param object
-   *          object to build something for
+   *            object to build something for
    * @param namedPass
-   *          name of the current build run
+   *            name of the current build run
    * @return true if builder can build something for this object
    */
   public boolean isBuilderFor( final GMLSchema gmlSchema, final Object object, final String namedPass ) throws GMLSchemaException;

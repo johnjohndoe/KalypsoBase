@@ -158,7 +158,7 @@ public class MapModell implements IMapModell
       {
         if( visitedTheme instanceof IMapModell )
         {
-          final IMapModell innerModell = (IMapModell) visitedTheme;
+          final IMapModell innerModell = ((IMapModell) visitedTheme);
           innerModell.internalActivate( theme );
         }
         return true;
@@ -243,7 +243,9 @@ public class MapModell implements IMapModell
     fireThemeAdded( theme );
 
     if( m_activeTheme == null )
+    {
       activateTheme( theme );
+    }
   }
 
   /**
@@ -284,7 +286,8 @@ public class MapModell implements IMapModell
         children[i - 1] = Status.OK_STATUS;
     }
 
-    return new MultiStatus( KalypsoCorePlugin.getID(), -1, children, "", null ); //$NON-NLS-1$
+    final MultiStatus multiStatus = new MultiStatus( KalypsoCorePlugin.getID(), -1, children, "", null ); //$NON-NLS-1$
+    return multiStatus;
   }
 
   @Override
@@ -438,8 +441,8 @@ public class MapModell implements IMapModell
   {
     final boolean recurse = ktv.visit( theme );
 
-    if( recurse && depth != FeatureVisitor.DEPTH_ZERO )
-      if( theme instanceof IMapModell && depth == IKalypsoThemeVisitor.DEPTH_INFINITE )
+    if( recurse && (depth != FeatureVisitor.DEPTH_ZERO) )
+      if( (theme instanceof IMapModell) && (depth == IKalypsoThemeVisitor.DEPTH_INFINITE) )
       {
         final IMapModell innerModel = (IMapModell) theme;
         innerModel.accept( ktv, depth );

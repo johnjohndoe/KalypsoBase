@@ -6,7 +6,6 @@ import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.layer.IChartComponentProvider;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
@@ -21,7 +20,7 @@ public interface IAxisRendererProvider extends IChartComponentProvider
   /**
    * @return axis created by the AxisProvider
    */
-  IAxisRenderer getAxisRenderer( final POSITION position ) throws ConfigurationException;
+  IAxisRenderer getAxisRenderer( ) throws ConfigurationException;
 
   void init( final IChartModel model, final String id, final IParameterContainer parameters, final URL context, final IStyleSet styleSet );
 
