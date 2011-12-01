@@ -51,13 +51,12 @@ public class BooleanLabelCreator implements ILabelCreator
   @Override
   public String getLabel( final Number value, final IDataRange<Number> range )
   {
-
     if( value.intValue() == 0 )
       return "zu";
     else if( value.intValue() == 1 )
       return "auf";
 
-    return String.format( "%d", value.intValue() );
+    return String.format( "%d", value.intValue() ); //$NON-NLS-1$
   }
 
   @Override
