@@ -83,8 +83,6 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
 
   private boolean m_ignore = false;
 
-  private boolean m_active = true;
-
   public ZmlModelColumn( final IZmlModel model, final String identifier, final DataColumn type )
   {
     m_model = model;
@@ -128,7 +126,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
       m_handler = handler;
       m_handler.addListener( this );
 
-      setActive( true );
+      fireColumnChanged();
     }
 
   }
@@ -136,7 +134,8 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   public void purge( )
   {
     m_handler.dispose();
-    setActive( false );
+
+    fireColumnChanged();
   }
 
   @Override
@@ -310,12 +309,10 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   @Override
   public void eventObservationLoaded( )
   {
-    setActive( true );
-
     fireColumnChanged();
   }
 
-  private void fireColumnChanged( )
+  public void fireColumnChanged( )
   {
     final IZmlModelColumnListener[] listeners = m_listeners.toArray( new IZmlModelColumnListener[] {} );
     for( final IZmlModelColumnListener listener : listeners )
@@ -400,17 +397,13 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
     if( m_ignore )
       return false;
 
-    return m_active;
-  }
+    final IZmlModelColumnDataHandler handler = getDataHandler();
+    if( Objects.isNull( handler ) )
+      return false;
 
-  public void setActive( final boolean active )
-  {
-    if( Objects.equal( m_active, active ) )
-      return;
+    final IObservation observation = handler.getObservation();
 
-    m_active = active;
-
-    fireColumnChanged();
+    return Objects.isNotNull( observation );
   }
 
   /**

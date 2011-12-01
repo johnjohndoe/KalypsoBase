@@ -143,7 +143,6 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
     for( final ZmlModelColumn column : columns )
     {
       column.purge();
-      column.setActive( false );
     }
 
     fireModelChanged();
