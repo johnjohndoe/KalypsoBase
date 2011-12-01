@@ -53,16 +53,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SafeRunner;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.core.runtime.SafeRunnable;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.catalog.CatalogUtilities;
 import org.kalypso.core.util.pool.IPoolListener;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.KeyComparator;
@@ -71,11 +65,9 @@ import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.i18n.Messages;
 import org.kalypso.loader.ILoader;
-import org.kalypso.loader.ISaveUrnLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.loader.SldLoader;
 import org.kalypso.template.types.StyledLayerType.Style;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.xml.Marshallable;
 
 /**
@@ -260,68 +252,7 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
     return info.isDirty();
   }
 
-  /**
-   * Asks the user to save the style and saves it.<br/>
-   * Must be called in the display thread.
-   */
   @Override
-  public IStatus save( final Shell shell )
-  {
-    final KeyInfo info = getPoolInfo();
-    final String title = String.format( "Save Style" );
-
-    if( info.isSaveable() )
-    {
-      final String msg = checkIsCatalogStyle( info );
-
-      if( !MessageDialog.openConfirm( shell, title, msg ) )
-        return Status.CANCEL_STATUS;
-
-      /* If regular saveable, just save */
-      final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
-      {
-        @Override
-        public IStatus execute( final IProgressMonitor monitor )
-        {
-          try
-          {
-            info.saveObject( monitor );
-            return Status.OK_STATUS;
-          }
-          catch( final LoaderException e )
-          {
-            e.printStackTrace();
-            return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), "Failed to save style" );
-          }
-        }
-      };
-
-      return ProgressUtilities.busyCursorWhile( operation );
-    }
-
-    final String msg = "This style cannot be saved.";
-    return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), msg );
-  }
-
-  private String checkIsCatalogStyle( final KeyInfo info )
-  {
-    final ILoader loader = info.getLoader();
-    final IPoolableObjectType key = info.getKey();
-
-    final String location = key.getLocation();
-    if( CatalogUtilities.isCatalogResource( location ) )
-    {
-      if( loader instanceof ISaveUrnLoader && !((ISaveUrnLoader) loader).isUserSaved( key ) )
-        return "This is a globally registered style. Save this style as user style?\nIf a style is saved as user style, "
-            + "the user style will replace the global style wherever used. You can reset the user style in the style editor.";
-    }
-
-    return String.format( "Save Style '%s'?", getLabel() );
-  }
-
-  @Override
-  @Deprecated
-  // FIXME: remove
   public void save( final IProgressMonitor monitor ) throws CoreException
   {
     try
@@ -445,56 +376,6 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
     }
   }
 
-  @Override
-  public boolean isResetable( )
-  {
-    final KeyInfo info = getPoolInfo();
-
-    if( !info.isSaveable() )
-      return false;
-
-    final ILoader loader = info.getLoader();
-    final IPoolableObjectType key = info.getKey();
-
-    final String location = key.getLocation();
-    if( !CatalogUtilities.isCatalogResource( location ) )
-      return false;
-
-    if( loader instanceof ISaveUrnLoader )
-    {
-      if( isDirty() )
-        return true;
-
-      if( ((ISaveUrnLoader) loader).isUserSaved( key ) )
-        return true;
-    }
-
-    return false;
-  }
-
-  @Override
-  public IStatus reset( final Shell shell )
-  {
-    if( !isResetable() )
-      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), "Unable to reset this style." );
-
-    final KeyInfo info = getPoolInfo();
-    final ISaveUrnLoader loader = (ISaveUrnLoader) info.getLoader();
-
-    final IPoolableObjectType key = info.getKey();
-    loader.resetUserStyle( key );
-    info.reload( true );
-    return Status.OK_STATUS;
-  }
-
-  @Override
-  public boolean isCatalogStyle( )
-  {
-    final KeyInfo info = getPoolInfo();
-    final IPoolableObjectType key = info.getKey();
-    final String location = key.getLocation();
-    return CatalogUtilities.isCatalogResource( location );
-  }
-
   abstract protected String getStyleName( );
+
 }

@@ -41,7 +41,7 @@ public class DiffVisitor implements IDiffVisitor
 
   private final IDiffObject m_base;
 
-  private final Hashtable<Integer, List<String>> m_log = new Hashtable<Integer, List<String>>();
+  private Hashtable<Integer, List<String>> m_log = new Hashtable<Integer, List<String>>();
 
   /**
    *  
@@ -82,7 +82,7 @@ public class DiffVisitor implements IDiffVisitor
     }
     logger.block();
     logger.log( IDiffComparator.DIFF_INFO, path );
-    final boolean result = differ.diff( logger, content1, content2 );
+    boolean result = differ.diff( logger, content1, content2 );
     logger.unblock( result );
     return result;
   }

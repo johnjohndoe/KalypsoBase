@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -23,6 +23,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.Job;
@@ -243,6 +244,17 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
       @Override
       protected IStatus run( final IProgressMonitor monitor )
       {
+        try
+        {
+          // TODO: do not do this! If something is out of sync, thats a bug!
+          final IFolder cazeFolder = scenario.getFolder();
+          cazeFolder.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
+        }
+        catch( final Throwable th )
+        {
+          th.printStackTrace();
+        }
+
         final List<IStatus> statusList = new ArrayList<IStatus>();
         final Map<String, IScenarioDatum> locationMap = ScenarioDataExtension.getScenarioDataMap( dataSetScope );
         if( locationMap != null )
@@ -706,10 +718,12 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
    */
   public boolean waitForModelToLoad( final String id, final int maxWaitTimeInMillis ) throws InterruptedException
   {
+    final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+
     int waitTime = 0;
     while( true )
     {
-      if( isLoaded( id ) )
+      if( dataProvider.isLoaded( id ) )
         return true;
 
       Thread.sleep( WAIT_TIME );
@@ -721,8 +735,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
   }
 
   @Override
-  public String toString( )
-  {
+  public String toString(){
     return "Active data set scope: [ " + m_dataSetScope + " ]";
   }
 }

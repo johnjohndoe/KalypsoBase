@@ -51,8 +51,6 @@ public interface MessageBundle
 
   String STYLE_EDITOR_STYLE = Messages.getString( "org.kalypso.ui.editor.styleeditor.MessageBundle.2" ); //$NON-NLS-1$
 
-  String STYLE_EDITOR_RESET_STYLE = "Resets the user defined style";
-
   String STYLE_EDITOR_SAVE_STYLE = Messages.getString( "org.kalypso.ui.editor.styleeditor.MessageBundle.3" ); //$NON-NLS-1$
 
   String STYLE_EDITOR_RULE = Messages.getString( "org.kalypso.ui.editor.styleeditor.MessageBundle.4" ); //$NON-NLS-1$

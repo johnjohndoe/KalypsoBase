@@ -4,7 +4,6 @@ import java.util.Map;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.commands.IElementUpdater;
@@ -22,10 +21,12 @@ public class ZoomPanMaximizeCommandHandler extends AbstractHandler implements IE
   ZoomPanMaximizeHandler m_handler;
 
   @Override
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
+  public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final IChartComposite chart = ChartHandlerUtilities.getChartChecked( context );
+    final IChartComposite chart = ChartHandlerUtilities.getChart( context );
+    if( chart == null )
+      return Status.CANCEL_STATUS;
 
     final IPlotHandler plotHandler = chart.getPlotHandler();
     m_handler = new ZoomPanMaximizeHandler( chart, getDirection( event ) );

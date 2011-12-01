@@ -66,7 +66,7 @@ public class ObservationPropertySource implements IPropertySource
    * @see org.eclipse.ui.views.properties.IPropertySource#getEditableValue()
    */
   @Override
-  public Object getEditableValue( )
+  public Object getEditableValue()
   {
     if( m_observation == null )
       return null;
@@ -77,20 +77,20 @@ public class ObservationPropertySource implements IPropertySource
    * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyDescriptors()
    */
   @Override
-  public IPropertyDescriptor[] getPropertyDescriptors( )
+  public IPropertyDescriptor[] getPropertyDescriptors()
   {
     if( m_descriptors == null && m_observation != null )
     {
-      final MetadataList md = m_observation.getMetadataList();
+      MetadataList md = m_observation.getMetadataList();
 
       m_descriptors = new IPropertyDescriptor[md.size()];
 
-      final Object[] keys = md.keySet().toArray();
-      // Arrays.sort( keys );
+      Object[] keys = md.keySet().toArray();
+      //Arrays.sort( keys );
 
       for( int i = 0; i < keys.length; i++ )
       {
-        final String key = keys[i].toString();
+        String key = keys[i].toString();
         m_descriptors[i] = new TextPropertyDescriptor( key, key );
       }
     }
@@ -102,7 +102,7 @@ public class ObservationPropertySource implements IPropertySource
    * @see org.eclipse.ui.views.properties.IPropertySource#getPropertyValue(java.lang.Object)
    */
   @Override
-  public Object getPropertyValue( final Object id )
+  public Object getPropertyValue( Object id )
   {
     if( m_observation == null )
       return null;
@@ -113,7 +113,7 @@ public class ObservationPropertySource implements IPropertySource
    * @see org.eclipse.ui.views.properties.IPropertySource#isPropertySet(java.lang.Object)
    */
   @Override
-  public boolean isPropertySet( final Object id )
+  public boolean isPropertySet( Object id )
   {
     // not relevant
     return true;
@@ -123,17 +123,17 @@ public class ObservationPropertySource implements IPropertySource
    * @see org.eclipse.ui.views.properties.IPropertySource#resetPropertyValue(java.lang.Object)
    */
   @Override
-  public void resetPropertyValue( final Object id )
+  public void resetPropertyValue( Object id )
   {
-    // not relevant
+  // not relevant
   }
 
   /**
    * @see org.eclipse.ui.views.properties.IPropertySource#setPropertyValue(java.lang.Object, java.lang.Object)
    */
   @Override
-  public void setPropertyValue( final Object id, final Object value )
+  public void setPropertyValue( Object id, Object value )
   {
-    // not relevant
+  // not relevant
   }
 }

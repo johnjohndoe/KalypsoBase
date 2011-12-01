@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.datasource;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
@@ -70,7 +70,7 @@ public class AddDataSourceModelHandler extends AbstractDataSourceModelHandler
 
     final ITupleModel baseModel = getModel();
     IAxis[] baseAxes = baseModel.getAxes();
-    baseAxes = ArrayUtils.add( baseAxes, dataSourceAxis );
+    baseAxes = (IAxis[]) ArrayUtils.add( baseAxes, dataSourceAxis );
 
     final SimpleTupleModel model = new SimpleTupleModel( baseAxes );
     final int dataSourceIndex = ArrayUtils.indexOf( baseAxes, dataSourceAxis );

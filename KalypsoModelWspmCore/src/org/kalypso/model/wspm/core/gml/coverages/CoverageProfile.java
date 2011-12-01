@@ -44,10 +44,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
@@ -157,33 +156,23 @@ public final class CoverageProfile
   private static IRecord createPoint( final IProfil profile, final Coordinate coordinate, final double breite )
   {
     /* The needed components. */
-    final IComponent cRechtswert = profile.getPointPropertyFor( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT );
-    final IComponent cHochwert = profile.getPointPropertyFor( IWspmPointProperties.POINT_PROPERTY_HOCHWERT );
-    final IComponent cBreite = profile.getPointPropertyFor( IWspmPointProperties.POINT_PROPERTY_BREITE );
-    final IComponent cHoehe = profile.getPointPropertyFor( IWspmPointProperties.POINT_PROPERTY_HOEHE );
-    final IComponent cRauheit = profile.getPointPropertyFor( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS );
+    final IComponent cRechtswert = profile.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    final IComponent cHochwert = profile.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+    final IComponent cBreite = profile.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_BREITE );
+    final IComponent cHoehe = profile.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOEHE );
+    final IComponent cRauheit = profile.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
 
     /* add components if necessary */
     if( !profile.hasPointProperty( cRechtswert ) )
-    {
       profile.addPointProperty( cRechtswert );
-    }
     if( !profile.hasPointProperty( cHochwert ) )
-    {
       profile.addPointProperty( cHochwert );
-    }
     if( !profile.hasPointProperty( cBreite ) )
-    {
       profile.addPointProperty( cBreite );
-    }
     if( !profile.hasPointProperty( cHoehe ) )
-    {
       profile.addPointProperty( cHoehe );
-    }
     if( !profile.hasPointProperty( cRauheit ) )
-    {
       profile.addPointProperty( cRauheit );
-    }
 
     /* get index for component */
     final int iRechtswert = profile.indexOfProperty( cRechtswert );
@@ -227,7 +216,7 @@ public final class CoverageProfile
     final int insertPositition = insertSign < 0 ? 0 : profile.getPoints().length - 1;
 
     final IRecord point = profile.getPoint( insertPositition );
-    final int iBreite = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE );
+    final int iBreite = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
     double breite = (Double) point.getValue( iBreite );
 
     final List<IRecord> newRecords = new ArrayList<IRecord>( newPoints.length );
@@ -239,13 +228,9 @@ public final class CoverageProfile
       {
         final double distance = lastCrd.distance( coordinate );
         if( insertSign < 0 )
-        {
           breite -= distance;
-        }
         else
-        {
           breite += distance;
-        }
 
         final IRecord newPoint = createPoint( profile, coordinate, breite );
         newRecords.add( newPoint );
@@ -261,9 +246,7 @@ public final class CoverageProfile
       result.addAll( 0, newRecords );
     }
     else
-    {
       result.addAll( newRecords );
-    }
   }
 
   public static IProfil convertLinestringToEmptyProfile( final GM_Curve curve, final String profileType ) throws GM_Exception

@@ -41,7 +41,8 @@
 package org.kalypso.commons.browser.actions;
 
 /**
- * Simple html provider interface. Used to get a specific adapter to get html from a editor or view. </p>
+ * Simple html provider interface. Used to get a specific adapter to get html from a editor or view.
+ * </p>
  * 
  * @author Gernot Belger
  */

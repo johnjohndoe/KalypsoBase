@@ -61,7 +61,7 @@ public class XsdDecimalGuiTypeHandler extends XsdBaseGuiTypeHandler
 {
   /**
    * @param handler
-   *          The base type handler.
+   *            The base type handler.
    */
   public XsdDecimalGuiTypeHandler( final XsdBaseTypeHandler< ? > handler )
   {

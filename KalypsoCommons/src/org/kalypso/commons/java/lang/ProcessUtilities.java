@@ -81,33 +81,33 @@ public class ProcessUtilities
    *          The evironment variables that should be set. May be ones to be replaced or new ones. May be null.
    * @return The environment for the process.
    */
-  public static String[] createEnvironment( final Map<String, String> chgEnv )
+  public static String[] createEnvironment( Map<String, String> chgEnv )
   {
     /* Get the environment variables. */
-    final Map<String, String> sysEnv = System.getenv();
+    Map<String, String> sysEnv = System.getenv();
 
     /* Rebuild the environment variables in a new map. */
-    final Map<String, String> newEnv = new HashMap<String, String>();
-    for( final String key : sysEnv.keySet() )
+    Map<String, String> newEnv = new HashMap<String, String>();
+    for( String key : sysEnv.keySet() )
       newEnv.put( key, sysEnv.get( key ) );
 
     /* Change with the given environment variables. */
     if( chgEnv != null && chgEnv.size() > 0 )
     {
       /* Existing ones will be replaced, the others will be added. */
-      for( final String key : chgEnv.keySet() )
+      for( String key : chgEnv.keySet() )
         newEnv.put( key, chgEnv.get( key ) );
     }
 
     /* Build an array. */
-    final List<String> listEnv = new ArrayList<String>();
-    for( final String key : newEnv.keySet() )
+    List<String> listEnv = new ArrayList<String>();
+    for( String key : newEnv.keySet() )
       listEnv.add( String.format( "%s=%s", key, newEnv.get( key ) ) );
 
     return listEnv.toArray( new String[] {} );
   }
 
-  public static int executeProcess( final String[] cmdLine, final String[] env, final File directory, final long timeout, final boolean doNotAskOnTimeout, IProgressMonitor monitor ) throws TimeoutException, IOException
+  public static int executeProcess( String[] cmdLine, String[] env, File directory, long timeout, boolean doNotAskOnTimeout, IProgressMonitor monitor ) throws TimeoutException, IOException
   {
     /* If no monitor was given, create a null progress monitor. */
     if( monitor == null )
@@ -122,15 +122,15 @@ public class ProcessUtilities
       monitor.subTask( "" );
 
       /* Execute the process. */
-      final Process exec = Runtime.getRuntime().exec( cmdLine, env, directory );
+      Process exec = Runtime.getRuntime().exec( cmdLine, env, directory );
 
       /* Create the input streams. */
-      final InputStream errorStream = exec.getErrorStream();
-      final InputStream inputStream = exec.getInputStream();
+      InputStream errorStream = exec.getErrorStream();
+      InputStream inputStream = exec.getInputStream();
 
       /* Create the stream gooblers. */
-      final StreamGobbler error = new StreamGobbler( errorStream, "Report: ERROR_STREAM", true );
-      final StreamGobbler input = new StreamGobbler( inputStream, "Report: INPUT_STREAM", true );
+      StreamGobbler error = new StreamGobbler( errorStream, "Report: ERROR_STREAM", true );
+      StreamGobbler input = new StreamGobbler( inputStream, "Report: INPUT_STREAM", true );
 
       /* Start the stream gobblers. */
       error.start();
@@ -147,7 +147,7 @@ public class ProcessUtilities
           exitValue = exec.exitValue();
           break;
         }
-        catch( final RuntimeException e )
+        catch( RuntimeException e )
         {
           /* The process has not yet finished. */
         }
@@ -179,7 +179,7 @@ public class ProcessUtilities
         {
           Thread.sleep( 100 );
         }
-        catch( final InterruptedException ex )
+        catch( InterruptedException ex )
         {
           /* Should not happen. */
           ex.printStackTrace();
@@ -226,11 +226,11 @@ public class ProcessUtilities
       public void run( )
       {
         /* The title. */
-        final String title = "Prozessausführung";
+        String title = "Prozessausführung";
 
         /* The message. */
-        final String message = String.format( "Das Timeout von %s Minuten wurde überschritten.", String.valueOf( timeout / 1000 / 60 ) );
-        final String message1 = String.format( "Möchten Sie noch einmal %s Minuten warten?", String.valueOf( WAITING_TIME / 1000 / 60 ) );
+        String message = String.format( "Das Timeout von %s Minuten wurde überschritten.", String.valueOf( timeout / 1000 / 60 ) );
+        String message1 = String.format( "Möchten Sie noch einmal %s Minuten warten?", String.valueOf( WAITING_TIME / 1000 / 60 ) );
 
         /* Open the question. */
         result[0] = MessageDialog.openQuestion( display.getActiveShell(), title, String.format( "%s%n%s", message, message1 ) );

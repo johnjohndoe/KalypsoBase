@@ -48,7 +48,7 @@ import org.kalypso.gmlschema.xml.Occurs;
 /**
  * Represents a geometry property.<br>
  * Support properties hat reference to several geometries (choice).
- * 
+ *
  * @author Gernot Belger
  */
 public class GeometryPropertyType extends AbstractPropertyTypeFromElement implements IValuePropertyType
@@ -62,7 +62,7 @@ public class GeometryPropertyType extends AbstractPropertyTypeFromElement implem
   private final Class< ? > m_valueClass;
 
   private final static IMarshallingTypeHandler TH_GMOBJECT = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( new QName( NS.GML3, "_Geometry" ) ); //$NON-NLS-1$
-
+  
   public GeometryPropertyType( final IGMLSchema gmlSchema, final Element element, final QName[] geometries, final Occurs occurs, final IFeatureType featureType )
   {
     super( gmlSchema, featureType, element, occurs, null );
@@ -82,7 +82,7 @@ public class GeometryPropertyType extends AbstractPropertyTypeFromElement implem
   }
 
   private IMarshallingTypeHandler[] findTypeHandler( final QName[] geometries )
-  {
+  { 
     final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 
     final IMarshallingTypeHandler[] handlers = new IMarshallingTypeHandler[geometries.length];

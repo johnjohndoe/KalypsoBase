@@ -48,7 +48,7 @@ import java.util.Set;
 
 import javax.xml.bind.JAXBElement;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.CascadingLayerKalypsoTheme;
@@ -125,16 +125,16 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
     m_properties = properties;
   }
 
-  public void addProperties( final Map<String, String> map )
+  public void addProperties( Map<String, String> map )
   {
-    final Set<Entry<String, String>> entries = map.entrySet();
-    for( final Entry<String, String> entry : entries )
+    Set<Entry<String, String>> entries = map.entrySet();
+    for( Entry<String, String> entry : entries )
     {
-      final Property property = new Property();
+      Property property = new Property();
       property.setName( entry.getKey() );
       property.setValue( entry.getValue() );
 
-      m_properties = ArrayUtils.add( m_properties, property );
+      m_properties = (Property[]) ArrayUtils.add( m_properties, property );
     }
   }
 
@@ -311,5 +311,6 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
 
     return layer;
   }
+
 
 }

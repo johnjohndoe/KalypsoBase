@@ -233,7 +233,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
     if( newValue == oldValue )
       return;
 
-    if( newValue == null && oldValue != null || !newValue.equals( oldValue ) )
+    if( (newValue == null && oldValue != null) || !newValue.equals( oldValue ) )
     {
       m_ignoreNextUpdate = true;
       fireFeatureChange( new ChangeFeatureCommand( feature, pt, newValue ) );

@@ -40,21 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.factory.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import jregex.Pattern;
 import jregex.RETokenizer;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
-import de.openali.odysseus.chartconfig.x020.AxisDateRangeType;
-import de.openali.odysseus.chartconfig.x020.AxisDurationRangeType;
-import de.openali.odysseus.chartconfig.x020.AxisNumberRangeType;
-import de.openali.odysseus.chartconfig.x020.AxisStringRangeType;
-import de.openali.odysseus.chartconfig.x020.AxisType;
 import de.openali.odysseus.chartconfig.x020.ReferencingType;
 
 /**
@@ -81,51 +71,4 @@ public final class AxisUtils
     return StringUtils.chomp( tokenizer.nextToken() );
   }
 
-  /**
-   * Searches all axes that are configured for autoscaling.
-   */
-  public static IAxis[] findAutoscaleAxes( final AxisType[] axes, final IMapperRegistry mapperRegistry )
-  {
-    final List<IAxis> autoscaledAxes = new ArrayList<IAxis>();
-
-    for( final AxisType axisType : axes )
-    {
-      Object min = null;
-      Object max = null;
-
-      if( axisType.isSetDateRange() )
-      {
-        final AxisDateRangeType range = axisType.getDateRange();
-        min = range.getMinValue();
-        max = range.getMaxValue();
-      }
-      else if( axisType.isSetDurationRange() )
-      {
-        final AxisDurationRangeType range = axisType.getDurationRange();
-        min = range.getMinValue();
-        max = range.getMaxValue();
-      }
-      else if( axisType.isSetStringRange() )
-      {
-        final AxisStringRangeType range = axisType.getStringRange();
-        min = range.getMinValue();
-        max = range.getMaxValue();
-      }
-      else if( axisType.isSetNumberRange() )
-      {
-        final AxisNumberRangeType range = axisType.getNumberRange();
-        min = range.getMinValue();
-        max = range.getMaxValue();
-        if( Double.isNaN( (Double) min ) )
-          min = null;
-        if( Double.isNaN( (Double) max ) )
-          max = null;
-      }
-
-      if( min == null || max == null )
-        autoscaledAxes.add( mapperRegistry.getAxis( axisType.getId() ) );
-    }
-
-    return autoscaledAxes.toArray( new IAxis[autoscaledAxes.size()] );
-  }
 }

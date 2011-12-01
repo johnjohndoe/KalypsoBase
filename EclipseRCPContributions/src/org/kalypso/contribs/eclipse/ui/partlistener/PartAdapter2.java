@@ -54,7 +54,7 @@ public class PartAdapter2 implements IPartListener2
    * @see org.eclipse.ui.IPartListener2#partActivated(org.eclipse.ui.IWorkbenchPartReference)
    */
   @Override
-  public void partActivated( final IWorkbenchPartReference partRef )
+  public void partActivated( IWorkbenchPartReference partRef )
   {
     // does nothing
   }
@@ -63,7 +63,7 @@ public class PartAdapter2 implements IPartListener2
    * @see org.eclipse.ui.IPartListener2#partBroughtToTop(org.eclipse.ui.IWorkbenchPartReference)
    */
   @Override
-  public void partBroughtToTop( final IWorkbenchPartReference partRef )
+  public void partBroughtToTop( IWorkbenchPartReference partRef )
   {
     // does nothing
   }
@@ -72,7 +72,7 @@ public class PartAdapter2 implements IPartListener2
    * @see org.eclipse.ui.IPartListener2#partClosed(org.eclipse.ui.IWorkbenchPartReference)
    */
   @Override
-  public void partClosed( final IWorkbenchPartReference partRef )
+  public void partClosed( IWorkbenchPartReference partRef )
   {
     // does nothing
   }
@@ -81,7 +81,7 @@ public class PartAdapter2 implements IPartListener2
    * @see org.eclipse.ui.IPartListener2#partDeactivated(org.eclipse.ui.IWorkbenchPartReference)
    */
   @Override
-  public void partDeactivated( final IWorkbenchPartReference partRef )
+  public void partDeactivated( IWorkbenchPartReference partRef )
   {
     // does nothing
   }
@@ -90,7 +90,7 @@ public class PartAdapter2 implements IPartListener2
    * @see org.eclipse.ui.IPartListener2#partOpened(org.eclipse.ui.IWorkbenchPartReference)
    */
   @Override
-  public void partOpened( final IWorkbenchPartReference partRef )
+  public void partOpened( IWorkbenchPartReference partRef )
   {
     // does nothing
   }
@@ -99,7 +99,7 @@ public class PartAdapter2 implements IPartListener2
    * @see org.eclipse.ui.IPartListener2#partHidden(org.eclipse.ui.IWorkbenchPartReference)
    */
   @Override
-  public void partHidden( final IWorkbenchPartReference partRef )
+  public void partHidden( IWorkbenchPartReference partRef )
   {
     // does nothing
   }
@@ -108,7 +108,7 @@ public class PartAdapter2 implements IPartListener2
    * @see org.eclipse.ui.IPartListener2#partVisible(org.eclipse.ui.IWorkbenchPartReference)
    */
   @Override
-  public void partVisible( final IWorkbenchPartReference partRef )
+  public void partVisible( IWorkbenchPartReference partRef )
   {
     // does nothing
   }
@@ -117,7 +117,7 @@ public class PartAdapter2 implements IPartListener2
    * @see org.eclipse.ui.IPartListener2#partInputChanged(org.eclipse.ui.IWorkbenchPartReference)
    */
   @Override
-  public void partInputChanged( final IWorkbenchPartReference partRef )
+  public void partInputChanged( IWorkbenchPartReference partRef )
   {
     // does nothing
   }

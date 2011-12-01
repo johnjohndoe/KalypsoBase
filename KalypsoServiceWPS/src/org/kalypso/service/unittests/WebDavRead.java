@@ -49,10 +49,10 @@ import junit.framework.Assert;
 import junit.framework.JUnit4TestAdapter;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.impl.DefaultFileSystemManager;
-import org.apache.commons.vfs2.provider.local.DefaultLocalFileProvider;
-import org.apache.commons.vfs2.provider.webdav.WebdavFileProvider;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.impl.DefaultFileSystemManager;
+import org.apache.commons.vfs.provider.local.DefaultLocalFileProvider;
+import org.apache.commons.vfs.provider.webdav.WebdavFileProvider;
 import org.junit.Test;
 import org.kalypso.commons.java.io.FileUtilities;
 
@@ -69,16 +69,16 @@ public class WebDavRead
   @Test
   public void testWebDavRead( ) throws IOException
   {
-    final DefaultFileSystemManager manager = new DefaultFileSystemManager();
+    DefaultFileSystemManager manager = new DefaultFileSystemManager();
     manager.addProvider( "webdav", new WebdavFileProvider() );
     manager.addProvider( "file", new DefaultLocalFileProvider() );
     manager.init();
 
-    final FileObject davFile = manager.resolveFile( "webdav://albert:gnimfe@ibpm.bjoernsen.de/dav/pub/Test/test.txt" );
+    FileObject davFile = manager.resolveFile( "webdav://albert:gnimfe@ibpm.bjoernsen.de/dav/pub/Test/test.txt" );
     Assert.assertNotNull( davFile );
 
-    final File file = new File( FileUtilities.TMP_DIR, "davRead.txt" );
-    final FileObject tmpFile = manager.toFileObject( file );
+    File file = new File( FileUtilities.TMP_DIR, "davRead.txt" );
+    FileObject tmpFile = manager.toFileObject( file );
     Assert.assertNotNull( tmpFile );
 
     InputStream is = null;

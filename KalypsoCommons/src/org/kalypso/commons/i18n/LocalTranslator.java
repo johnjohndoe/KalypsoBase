@@ -87,7 +87,7 @@ public class LocalTranslator implements ITranslator, IExecutableExtension
    * @see org.kalypso.commons.i18n.ITranslator#configure(org.kalypso.commons.i18n.ITranslatorContext, java.util.List)
    */
   @Override
-  public void configure( final ITranslatorContext context, final List<Element> any )
+  public void configure( ITranslatorContext context, List<Element> any )
   {
     m_bundle = ResourceBundleUtils.loadResourceBundle( context.getContext() );
   }

@@ -50,5 +50,5 @@ import org.kalypso.model.wspm.core.profil.IProfil;
  */
 public interface IProfilSource
 {
-  IProfil[] read( final String profileTyp, final Reader reader ) throws IOException;
+  public IProfil[] read(final String profileTyp, final Reader reader ) throws IOException;
 }

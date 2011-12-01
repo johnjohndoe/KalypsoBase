@@ -55,7 +55,7 @@ public class PolynomDataContainer implements IDataContainer<Number, Number>
 
   private final IPolynomial1D[] m_polyArray;
 
-  public PolynomDataContainer( final IPolynomial1D[] polyArray )
+  public PolynomDataContainer( IPolynomial1D[] polyArray )
   {
     m_polyArray = polyArray;
   }
@@ -83,14 +83,10 @@ public class PolynomDataContainer implements IDataContainer<Number, Number>
       final double rangeNormMax = Math.max( rangeMin, rangeMax );
 
       if( rangeNormMin < min )
-      {
         min = rangeNormMin;
-      }
 
       if( rangeNormMax > max )
-      {
         max = rangeNormMax;
-      }
     }
 
     IDataRange<Number> dataRange = null;
@@ -123,24 +119,18 @@ public class PolynomDataContainer implements IDataContainer<Number, Number>
     {
       final IPolynomial1D poly = PolynomialUtilities.getPoly( m_polyArray, pos );
       if( poly == null )
-      {
         continue;
-      }
 
       final double value = poly.computeResult( pos );
 
       if( value < min )
-      {
         min = value;
-      }
 
       if( value > max )
-      {
         max = value;
-      }
     }
     // 10% Toleranz
-    final double range = Math.abs( max - min );
+    double range = Math.abs( max - min );
 
     if( range != 0 )
     {
@@ -163,7 +153,7 @@ public class PolynomDataContainer implements IDataContainer<Number, Number>
       }
     }
 
-    final IDataRange<Number> dataRange = new ComparableDataRange<Number>( new Number[] { min, max } );
+    IDataRange<Number> dataRange = new ComparableDataRange<Number>( new Number[] { min, max } );
     return dataRange;
   }
 

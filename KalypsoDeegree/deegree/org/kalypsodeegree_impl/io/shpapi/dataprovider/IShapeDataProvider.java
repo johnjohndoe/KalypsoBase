@@ -57,7 +57,7 @@ public interface IShapeDataProvider
 
   public void setFeatures( final Feature[] features );
 
-  public GM_Object getGeometry( final int index ) throws Exception;
+  public GM_Object getGeometry( final int index );
 
   public Object getFeatureProperty( int featureIndex, IPropertyType propertyType );
 }

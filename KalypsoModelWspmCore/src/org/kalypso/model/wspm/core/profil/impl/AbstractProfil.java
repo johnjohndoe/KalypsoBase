@@ -48,7 +48,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
@@ -106,19 +106,10 @@ public abstract class AbstractProfil implements IProfil
 
   private MarkerIndex m_markerIndex;
 
-  private final Object m_source;
-
-  public AbstractProfil( final String type, final TupleResult result, final Object source )
+  public AbstractProfil( final String type, final TupleResult result )
   {
     m_type = type;
-    m_source = source;
     setResult( result );
-  }
-
-  @Override
-  public Object getSource( )
-  {
-    return m_source;
   }
 
   @Override
@@ -292,9 +283,7 @@ public abstract class AbstractProfil implements IProfil
 
     for( final IRecord record : getResult() )
       if( getPointMarkerFor( record ).length > 0 )
-      {
         records.add( record );
-      }
     return records.toArray( new IRecord[] {} );
   }
 
@@ -341,9 +330,7 @@ public abstract class AbstractProfil implements IProfil
     {
       final Object value = record.getValue( index );
       if( value != null )
-      {
         markers.add( new PointMarker( markerColumn, record ) );
-      }
     }
     return markers.toArray( new IProfilPointMarker[] {} );
   }
@@ -360,9 +347,7 @@ public abstract class AbstractProfil implements IProfil
     {
       final int index = getResult().indexOfComponent( marker );
       if( record.getValue( index ) != null )
-      {
         pointMarkers.add( new PointMarker( marker, record ) );
-      }
     }
     return pointMarkers.toArray( new PointMarker[] {} );
   }
@@ -391,9 +376,7 @@ public abstract class AbstractProfil implements IProfil
 
     for( final IComponent component : properties )
       if( provider.isMarker( component.getId() ) )
-      {
         marker.add( component );
-      }
     return marker.toArray( new IComponent[] {} );
   }
 
@@ -442,7 +425,6 @@ public abstract class AbstractProfil implements IProfil
   @Override
   public IRecord[] getPoints( final int startPoint, final int endPoint )
   {
-    // TODO visitor pattern
     final int size = endPoint - startPoint + 1;
     final IRecord[] subList = new IRecord[size];
     for( int i = 0; i < size; i++ )
@@ -477,14 +459,11 @@ public abstract class AbstractProfil implements IProfil
   @Override
   public <T extends IProfileObject> T[] getProfileObjects( final Class<T> clazz )
   {
-    // TODO visitor
     final List<T> objects = new ArrayList<T>();
     for( final IProfileObject object : m_profileObjects )
     {
       if( clazz.isInstance( object ) )
-      {
         objects.add( (T) object );
-      }
     }
 
     return objects.toArray( (T[]) Array.newInstance( clazz, objects.size() ) );
@@ -602,7 +581,7 @@ public abstract class AbstractProfil implements IProfil
   {
     final Object oldValue = marker.getValue();
 
-    final IComponent id = marker.getComponent();
+    final IComponent id = marker.getId();
     final Object defaultValue = id.getDefaultValue();
     marker.setValue( defaultValue );
 
@@ -650,9 +629,8 @@ public abstract class AbstractProfil implements IProfil
   @Override
   public void setActivePoint( final IRecord point )
   {
-    if( m_activePoint == point )
-      return;
     m_activePoint = point;
+
     final ProfilChangeHint hint = new ProfilChangeHint();
     hint.setActivePointChanged();
     fireProfilChanged( hint, new IProfilChange[] { new ActiveObjectEdit( this, point, m_activePointProperty ) } );
@@ -737,9 +715,7 @@ public abstract class AbstractProfil implements IProfil
     Assert.isNotNull( result );
 
     if( m_result != null )
-    {
       m_result.removeChangeListener( m_tupleResultListener );
-    }
 
     m_result = result;
 

@@ -56,7 +56,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.DoubleComparator;
-import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
@@ -77,12 +77,8 @@ import org.kalypsodeegree.model.geometry.GM_Position;
  * @author Gernot Belger
  * @author kimwerner
  */
-public final class DA50Importer
+public class DA50Importer
 {
-  private DA50Importer( )
-  {
-  }
-
   /**
    * @param bRefFirst
    *          Where to apply the reference: if true, the start-point is applied to the first point of the profile, else
@@ -90,7 +86,7 @@ public final class DA50Importer
    * @param srsName
    *          The coordinate system code.
    */
-  public static FeatureChange[] importDA50( final File da50File, final FeatureList profileFeatures, final boolean bRefFirst, final String srsName ) throws CoreException
+  public static FeatureChange[] importDA50( final File da50File, final FeatureList profileFeatures, final boolean bRefFirst, String srsName ) throws CoreException
   {
     final List<FeatureChange> changes = new ArrayList<FeatureChange>();
 
@@ -104,9 +100,7 @@ public final class DA50Importer
       /* Index features by station */
       final Map<Double, DA50Entry> entryMap = new TreeMap<Double, DA50Entry>( new DoubleComparator( Math.pow( 10, -IProfileFeature.STATION_SCALE ) ) );
       for( final DA50Entry entry : entries )
-      {
         entryMap.put( entry.station, entry );
-      }
 
       /* Apply d50 information to profiles */
       for( final Object o : profileFeatures )
@@ -153,7 +147,9 @@ public final class DA50Importer
     double vy = endPos.getY() - startPos.getY();
     final double vl = Math.sqrt( vx * vx + vy * vy );
     if( vl == 0.0 )
+    {
       throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.model.wspm.core.imports.DA50Importer.1", entry.station ) ) ); //$NON-NLS-1$
+    }
 
     // den Vektor normieren
     vx /= vl;
@@ -166,14 +162,12 @@ public final class DA50Importer
 
     final IRecord firstPP = points[0];
     final IRecord lastPP = points[points.length - 1];
-    final Double firstBreite = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, firstPP );
-    final Double lastBreite = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, lastPP );
+    final Double firstBreite = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, firstPP );
+    final Double lastBreite = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, lastPP );
 
     double yOffset = 0;
     if( bRefFirst )
-    {
       yOffset = firstBreite;
-    }
 
     final double yFirst = firstBreite - yOffset;
     final double rwFirst = startPos.getX() + yFirst * vx;
@@ -183,17 +177,13 @@ public final class DA50Importer
     final double rwLast = startPos.getX() + yLast * vx;
     final double hwLast = startPos.getY() + yLast * vy;
 
-    final IComponent cRechtswert = profil.getPointPropertyFor( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT );
-    final IComponent cHochwert = profil.getPointPropertyFor( IWspmPointProperties.POINT_PROPERTY_HOCHWERT );
+    final IComponent cRechtswert = profil.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    final IComponent cHochwert = profil.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
 
     if( !profil.hasPointProperty( cRechtswert ) )
-    {
       profil.addPointProperty( cRechtswert );
-    }
     if( !profil.hasPointProperty( cHochwert ) )
-    {
       profil.addPointProperty( cHochwert );
-    }
 
     final int iHochwert = profil.indexOfProperty( cHochwert );
     final int iRechtswert = profil.indexOfProperty( cRechtswert );
@@ -208,7 +198,7 @@ public final class DA50Importer
    * @param srsName
    *          The coordinate system code.
    */
-  private static DA50Entry[] readDA50( final LineNumberReader lnr, final String srsName ) throws IOException, CoreException
+  private static DA50Entry[] readDA50( final LineNumberReader lnr, String srsName ) throws IOException, CoreException
   {
     final List<DA50Entry> result = new ArrayList<DA50Entry>();
 
@@ -218,17 +208,13 @@ public final class DA50Importer
     {
       final String line = lnr.readLine();
       if( line == null )
-      {
         break;
-      }
 
       try
       {
 
         if( line.length() < 60 || !line.startsWith( "50" ) ) //$NON-NLS-1$
-        {
           continue;
-        }
 
         // Station auslesen und mit 0en auff�llen, sonst klappt das umrechnen in m nicht immer
         // CString help_str = str.Mid( 9,9 );
@@ -237,9 +223,7 @@ public final class DA50Importer
         final String stationString = line.substring( 9, 18 ).trim();
         final StringBuffer stationBuf = new StringBuffer( stationString );
         for( int i = stationString.length() - 9; i < 0; i++ )
-        {
           stationBuf.append( '0' );
-        }
 
         // int temp = 0;
         // sscanf( help_str, "%d", &temp );

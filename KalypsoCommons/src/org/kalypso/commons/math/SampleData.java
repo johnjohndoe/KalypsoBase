@@ -44,7 +44,10 @@ import java.util.Date;
 import java.util.TreeMap;
 
 /**
- * @author alex_burtscher Klasse zum Erzeugen von Beispieldaten für das Chart
+ * @author alex_burtscher
+ * Klasse zum Erzeugen von Beispieldaten für das Chart
+ * 
+ * 
  */
 public class SampleData
 {
@@ -53,38 +56,38 @@ public class SampleData
     final Double[][] data = new Double[size][2];
     for( int i = 0; i < data.length; i++ )
     {
-      data[i][0] = new Double( 1 + 100 / data.length * i );
-      data[i][1] = ((double) i + 1) / data.length * Math.sin( 16 * Math.PI / size * i / 2 );
+      data[i][0] = new Double(1+ (100/data.length) * i );
+      data[i][1] = ((double) i + 1) / data.length * Math.sin( 16 * Math.PI / size * i/2 );
     }
     return data;
   }
 
-  public static Double[][] createRandomPoints( final int size )
+  public static Double[][] createRandomPoints( int size )
   {
     final Double[][] data = new Double[size][2];
     for( int i = 0; i < data.length; i++ )
     {
-      data[i][0] = new Double( 1 + 100 / data.length * i );
+      data[i][0] = new Double(1+ (100/data.length) * i );
       data[i][1] = new Double( (int) (Math.random() * 10) );
     }
     return data;
   }
 
-  public static TreeMap<Date, Double> createRandomDatePoints( final int size )
+  public static TreeMap<Date, Double> createRandomDatePoints( int size )
   {
     final TreeMap<Date, Double> data = new TreeMap<Date, Double>();
-
-    final long now = System.currentTimeMillis();
-
-    final long dayInMillis = 1000 * 60 * 60 * 24;
-
-    final long start = now - size * dayInMillis;
-
+    
+    long now=System.currentTimeMillis();
+    
+    long dayInMillis=1000*60*60*24;
+    
+    long start=now-size*dayInMillis;
+    
     for( int i = 0; i < size; i++ )
     {
-      final Date date = new Date( start + i * dayInMillis );
-      final Double val = new Double( (int) (Math.random() * 10) );
-      data.put( date, val );
+      Date date=new Date(start+i*dayInMillis);
+      Double val=new Double( (int) (Math.random() * 10) );
+      data.put(date, val);
     }
     return data;
   }

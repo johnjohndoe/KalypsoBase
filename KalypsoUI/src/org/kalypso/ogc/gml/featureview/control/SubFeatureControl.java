@@ -2,11 +2,11 @@ package org.kalypso.ogc.gml.featureview.control;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -55,18 +55,25 @@ public class SubFeatureControl extends AbstractFeatureControl
       m_selector = null;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
+   */
   @Override
-  public Control createControl( final FormToolkit toolkit, final Composite parent, final int style )
+  public Control createControl( final Composite parent, final int style )
   {
     if( m_container == null )
     {
       // on first call to createControl the container is set up
       m_container = new Composite( parent, style );
+
       // FIXME: actually we'd like to use a FillLayout, but there are still buggy Feature-Controls out
       // there that set their own layoutData to grid-data....
-      GridLayoutFactory.fillDefaults().applyTo( m_container );
-
-      applyToolkit( toolkit, m_container );
+      // ACTUALLY; the layout element of the corresponding view-element is used...
+      final GridLayout layout = new GridLayout( 1, false );
+      layout.marginWidth = 0;
+      layout.marginHeight = 0;
+      m_container.setLayout( layout );
+      // m_container.setLayout( new FillLayout() );
     }
 
     try
@@ -114,8 +121,8 @@ public class SubFeatureControl extends AbstractFeatureControl
       }
     } );
 
-    m_fc.createControl( toolkit, m_container, SWT.NONE );
-    // FIXME we should set the layout here, but the FeatureComposite does it itself, which it shouldn't
+    m_fc.createControl( m_container, SWT.NONE );
+
     return m_container;
   }
 
@@ -142,9 +149,6 @@ public class SubFeatureControl extends AbstractFeatureControl
     return featureToSet;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -164,12 +168,17 @@ public class SubFeatureControl extends AbstractFeatureControl
     {
       // re-create control
       m_fc.dispose();
-      createControl( null, m_container, m_container.getStyle() );
+      createControl( null, m_container.getStyle() );
       m_container.layout();
     }
 
     // Is updateControl always necessary?
     m_fc.updateControl();
+
+    // FIXME we should set the layout here, but the FeatureComposite does it itself, which it shouldn't
+
+    // FIXME:
+
   }
 
   /**

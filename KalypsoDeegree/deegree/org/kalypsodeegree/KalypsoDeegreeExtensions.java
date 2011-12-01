@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- *
+ * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- *
+ * 
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -51,7 +51,6 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.ExtensionUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
@@ -67,7 +66,7 @@ import org.kalypsodeegree_impl.model.feature.GmlWorkspaceListener;
 
 /**
  * Helper class to read extension-points of this plugin.
- *
+ * 
  * @author Gernot Belger
  */
 public class KalypsoDeegreeExtensions
@@ -124,8 +123,7 @@ public class KalypsoDeegreeExtensions
 
     if( !FUNCTION_MAP.containsKey( id ) )
     {
-      final String message = String.format( "No function property with id: %s", id );
-      final IStatus status = new Status( IStatus.ERROR, KalypsoDeegreePlugin.getID(), message );
+      final IStatus status = StatusUtilities.createErrorStatus( "No function property with id: " + id );
       throw new CoreException( status );
     }
 
@@ -201,7 +199,7 @@ public class KalypsoDeegreeExtensions
 
   /**
    * Get all listeners which are associated with the given qname.
-   *
+   * 
    * @param qname
    *          If null, the listeners are returned which are not associated with any qname.
    */
@@ -328,11 +326,6 @@ public class KalypsoDeegreeExtensions
   {
     final Map<String, IConfigurationElement> functions = getFunctionExpressionElements();
     final IConfigurationElement configurationElement = functions.get( name );
-    if( configurationElement == null )
-    {
-      return null;
-    }
-
     return (IFunctionExpression) configurationElement.createExecutableExtension( "class" );
   }
 

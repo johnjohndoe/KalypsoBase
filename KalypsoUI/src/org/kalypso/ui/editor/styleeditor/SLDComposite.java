@@ -40,7 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -71,8 +71,6 @@ public class SLDComposite extends Composite
       updateControl();
     }
   };
-
-  private final ResetUserStyleAction m_resetAction = new ResetUserStyleAction( this );
 
   private final SaveStyleAction m_saveAction = new SaveStyleAction( this );
 
@@ -110,12 +108,21 @@ public class SLDComposite extends Composite
     body.setLayout( new FillLayout() );
 
     final IToolBarManager toolBarManager = m_form.getToolBarManager();
-    toolBarManager.add( m_resetAction );
+    m_saveAction.setEnabled( false );
     toolBarManager.add( m_saveAction );
     toolBarManager.update( true );
 
     setKalypsoStyle( null, null, -1 );
   }
+
+// public IKalypsoStyle getKalypsoStyle( )
+// {
+// if( m_input == null )
+// return null;
+//
+// final IStyleContext context = m_input.getContext();
+// return context.getKalypsoStyle();
+// }
 
   public IFeatureType getFeatureType( )
   {
@@ -176,22 +183,10 @@ public class SLDComposite extends Composite
       return null;
 
     /* Use config with default values */
-    final IStyleEditorConfig config = createConfiguration( style );
+    final IStyleEditorConfig config = new StyleEditorConfig();
 
     final FeatureTypeStyle fts = findFeatureTypeStyle( style, styleToSelect );
     return new FeatureTypeStyleInput( fts, style, styleToSelect, featureType, config );
-  }
-
-  private StyleEditorConfig createConfiguration( final IKalypsoStyle style )
-  {
-    final StyleEditorConfig config = new StyleEditorConfig();
-
-    if( style.isCatalogStyle() )
-    {
-      config.setFeatureTypeStyleCompositeShowProperties( false );
-    }
-
-    return config;
   }
 
   private FeatureTypeStyle findFeatureTypeStyle( final IKalypsoStyle style, final int styleToSelect )
@@ -216,18 +211,10 @@ public class SLDComposite extends Composite
 
   protected void updateControl( )
   {
-    updateActions();
+    m_saveAction.update();
 
-    if( m_style == null )
-      m_form.setText( MessageBundle.STYLE_EDITOR_NO_STYLE_FOR_EDITOR );
-    else
-    {
-      final String formTitle = m_style.getTitle();
-      if( formTitle == null )
-        m_form.setText( "<Unknown Title>" );
-      else
-        m_form.setText( formTitle );
-    }
+    final String formTitle = m_style == null ? MessageBundle.STYLE_EDITOR_NO_STYLE_FOR_EDITOR : m_style.getTitle();
+    m_form.setText( formTitle );
 
     if( m_styleComposite != null )
       m_styleComposite.updateControl();
@@ -242,11 +229,5 @@ public class SLDComposite extends Composite
   public IKalypsoStyle getKalypsoStyle( )
   {
     return m_style;
-  }
-
-  public void updateActions( )
-  {
-    m_saveAction.update();
-    m_resetAction.update();
   }
 }

@@ -42,6 +42,7 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.i18n.Messages;
 
 /**
+ * 
  * @author kuepfer
  */
 public class EditFeature implements IActionDelegate
@@ -53,23 +54,23 @@ public class EditFeature implements IActionDelegate
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
   @Override
-  public void run( final IAction action )
+  public void run( IAction action )
   {
-    if( m_selection != null && action.isEnabled() )
-    {
-      final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-      final IWorkbenchPage page = window.getActivePage();
-      try
-      {
-        page.showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_ACTIVATE ); //$NON-NLS-1$
-      }
-      catch( final PartInitException e )
-      {
-        e.printStackTrace();
-        final Shell shell = window.getShell();
-        ErrorDialog.openError( shell, Messages.getString( "org.kalypso.ui.editor.gmleditor.util.actions.EditFeature.1" ), Messages.getString( "org.kalypso.ui.editor.gmleditor.util.actions.EditFeature.2" ), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
-      }
-    }
+   if( m_selection!= null && action.isEnabled() )
+   {
+     final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+     final IWorkbenchPage page = window.getActivePage();
+     try
+     {
+       page.showView( "org.kalypso.featureview.views.FeatureView", null, IWorkbenchPage.VIEW_ACTIVATE ); //$NON-NLS-1$
+     }
+     catch( final PartInitException e )
+     {
+       e.printStackTrace();
+       final Shell shell = window.getShell();
+       ErrorDialog.openError( shell, Messages.getString("org.kalypso.ui.editor.gmleditor.util.actions.EditFeature.1"), Messages.getString("org.kalypso.ui.editor.gmleditor.util.actions.EditFeature.2"), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
+     }
+   }
 
   }
 
@@ -78,12 +79,12 @@ public class EditFeature implements IActionDelegate
    *      org.eclipse.jface.viewers.ISelection)
    */
   @Override
-  public void selectionChanged( final IAction action, final ISelection selection )
+  public void selectionChanged( IAction action, ISelection selection )
   {
     action.setEnabled( false );
     if( selection instanceof IStructuredSelection )
     {
-      m_selection = (IStructuredSelection) selection;
+      m_selection = (IStructuredSelection)selection;
       action.setEnabled( true );
     }
   }

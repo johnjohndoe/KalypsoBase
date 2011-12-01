@@ -54,7 +54,7 @@ public interface LegendGraphic
    * 
    * @return graphic
    */
-  Graphic getGraphic( );
+  Graphic getGraphic();
 
   /**
    * Sets the graphic for the LegendGraphic.

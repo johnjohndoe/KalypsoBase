@@ -46,5 +46,5 @@ public interface IScenarioManager extends ICaseManager<IScenario>
    */
   void persist( final IProgressMonitor monitor ) throws CoreException;
 
-  IScenario cloneScenario( final String name, final IScenario toClone ) throws CoreException;
+   IScenario cloneScenario( final String name, final IScenario toClone ) throws CoreException;
 }

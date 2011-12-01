@@ -74,7 +74,7 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
   {
 
     final Insets inset = new Insets( screen.y, screen.x, 0, screen.width - screen.x - axis.getScreenHeight() );
-    if( gc == null || axis == null || ticks == null || ticks.length < 1 )
+    if( (gc == null) || (axis == null) || (ticks == null) || ticks.length < 1 )
       return;
     getTickLineStyle().apply( gc );
     final IChartLabelRenderer labelRenderer = getTickLabelRenderer();
@@ -108,13 +108,13 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
       // hide cut
       if( isHideCut() )
       {
-        if( isIntervallLabeledTick() || tickPos + textSize.x > 0 && tickPos + textSize.x + textSize.width < axis.getScreenHeight() )
-          labelRenderer.paint( gc, new Rectangle( tickPos, getLineStyle().getWidth() + getGap() + getTickLength() + inset.top, tickDistance, -1 ) );
+        if( isIntervallLabeledTick() || (tickPos + textSize.x > 0 && tickPos + textSize.x + textSize.width < axis.getScreenHeight()) )
+          labelRenderer.paint( gc, new Rectangle( tickPos, (getLineStyle().getWidth() + getGap() + getTickLength() + inset.top), tickDistance, -1 ) );
       }
       else
       {
         if( tickPos + textSize.x > -inset.left && tickPos + textSize.x + textSize.width < axis.getScreenHeight() + inset.right )
-          labelRenderer.paint( gc, new Rectangle( tickPos, getLineStyle().getWidth() + getGap() + getTickLength() + inset.top, tickDistance, -1 ) );
+          labelRenderer.paint( gc, new Rectangle( tickPos, (getLineStyle().getWidth() + getGap() + getTickLength() + inset.top), tickDistance, -1 ) );
       }
 
     }
@@ -214,13 +214,13 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
   @Override
   public void paint( final GC gc, final IAxis axis, final Rectangle screen )
   {
-    if( screen.width > 0 && screen.height > 0 && axis.isVisible() )
+    if( (screen.width > 0) && (screen.height > 0) && axis.isVisible() )
     {
       final int oldAlias = gc.getAntialias();
       gc.setAntialias( SWT.OFF );
       getLineStyle().apply( gc );
       // gc.drawLine( screen.x, getGap() + screen.y, screen.width, getGap() + screen.y );
-      final int posY = getGap() + screen.y + getLineStyle().getWidth() / 2 - 1/* Pixel */;
+      final int posY = getGap() + screen.y + (getLineStyle().getWidth() / 2) - 1/* Pixel */;
       gc.drawLine( 0, posY, axis.getScreenHeight(), posY );
       gc.setAntialias( oldAlias );
       drawTicks( gc, screen, axis, getTicks( axis, gc ) );

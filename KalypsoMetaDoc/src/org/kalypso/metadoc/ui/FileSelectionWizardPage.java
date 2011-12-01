@@ -203,7 +203,7 @@ public class FileSelectionWizardPage extends WizardPage implements IConfiguratio
    * @param value
    *          java.lang.String
    */
-  protected void addDestinationItem( final String value )
+  protected void addDestinationItem( String value )
   {
     m_destinationNameField.add( value );
   }
@@ -278,7 +278,7 @@ public class FileSelectionWizardPage extends WizardPage implements IConfiguratio
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( final SelectionEvent e )
+      public void widgetSelected( SelectionEvent e )
       {
         handleDestinationBrowseButtonPressed();
       }
@@ -307,7 +307,7 @@ public class FileSelectionWizardPage extends WizardPage implements IConfiguratio
 
     dialog.setText( "Datei speichern" );
     final String currentSourceString = getDestinationValue();
-    final int lastSeparatorIndex = currentSourceString.lastIndexOf( File.separator );
+    int lastSeparatorIndex = currentSourceString.lastIndexOf( File.separator );
     if( lastSeparatorIndex != -1 )
     {
       dialog.setFilterPath( currentSourceString.substring( 0, lastSeparatorIndex ) );
@@ -350,8 +350,8 @@ public class FileSelectionWizardPage extends WizardPage implements IConfiguratio
 
       // destination
       setDestinationValue( directoryNames[0] );
-      for( final String directoryName : directoryNames )
-        addDestinationItem( directoryName );
+      for( int i = 0; i < directoryNames.length; i++ )
+        addDestinationItem( directoryNames[i] );
     }
   }
 

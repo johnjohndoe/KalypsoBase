@@ -2,16 +2,16 @@ package org.kalypso.simulation.core;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.simulation.core.i18n.Messages;
 
 public class SimulationMonitorAdaptor implements IProgressMonitor
 {
   private final ISimulationMonitor m_monitor;
 
-  private double m_worked;
+  private int m_worked;
 
-  private double m_totalWork;
+  private int m_totalWork;
 
   public SimulationMonitorAdaptor( final ISimulationMonitor monitor )
   {
@@ -23,7 +23,6 @@ public class SimulationMonitorAdaptor implements IProgressMonitor
   {
     m_totalWork = totalWork;
     m_monitor.setMessage( name );
-    m_monitor.setProgress( 0 );
   }
 
   public void done( final IStatus status )
@@ -35,7 +34,7 @@ public class SimulationMonitorAdaptor implements IProgressMonitor
   @Override
   public void done( )
   {
-    done( new Status( IStatus.OK, KalypsoSimulationCorePlugin.getID(), -1, Messages.getString( "org.kalypso.simulation.core.SimulationMonitorAdaptor.0" ), null ) ); //$NON-NLS-1$
+    done( StatusUtilities.createOkStatus( Messages.getString( "org.kalypso.simulation.core.SimulationMonitorAdaptor.0" ) ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -71,7 +70,7 @@ public class SimulationMonitorAdaptor implements IProgressMonitor
   @Override
   public void worked( final int work )
   {
-    m_monitor.setProgress( (int) (100 * (m_worked += work) / m_totalWork) );
+    m_monitor.setProgress( (m_worked += work) / m_totalWork );
   }
 
 }

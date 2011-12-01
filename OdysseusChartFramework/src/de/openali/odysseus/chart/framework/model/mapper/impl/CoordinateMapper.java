@@ -46,7 +46,6 @@ import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
-import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
 import de.openali.odysseus.chart.framework.util.resource.IPair;
 import de.openali.odysseus.chart.framework.util.resource.Pair;
 
@@ -62,13 +61,11 @@ public class CoordinateMapper implements ICoordinateMapper
 
   private final ORIENTATION m_ori;
 
-  private final DataOperatorHelper m_doh;
-
   public CoordinateMapper( final IAxis domain, final IAxis target )
   {
     m_domainAxis = domain;
     m_targetAxis = target;
-    m_doh = new DataOperatorHelper();
+
     m_ori = m_domainAxis.getPosition().getOrientation();
   }
 
@@ -108,8 +105,8 @@ public class CoordinateMapper implements ICoordinateMapper
   @SuppressWarnings({ "unchecked", "rawtypes" })
   public Point logicalToScreen( final Object domainValue, final Object targetValue )
   {
-    final IDataOperator dop = m_doh.getDataOperator( domainValue.getClass() );
-    final IDataOperator top = m_doh.getDataOperator( targetValue.getClass() );
+    final IDataOperator dop = getDomainAxis().getDataOperator( domainValue.getClass() );
+    final IDataOperator top = getTargetAxis().getDataOperator( targetValue.getClass() );
 
     return numericToScreen( dop.logicalToNumeric( domainValue ), top.logicalToNumeric( targetValue ) );
   }

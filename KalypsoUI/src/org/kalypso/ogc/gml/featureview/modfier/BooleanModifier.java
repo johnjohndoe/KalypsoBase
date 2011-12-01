@@ -100,8 +100,8 @@ public class BooleanModifier extends AbstractFeatureModifier
   public String getLabel( final Feature f )
   {
     return null;
-// final Boolean b = (Boolean) getValue( f );
-// return String.valueOf( b );
+//    final Boolean b = (Boolean) getValue( f );
+//    return String.valueOf( b );
   }
 
   @Override

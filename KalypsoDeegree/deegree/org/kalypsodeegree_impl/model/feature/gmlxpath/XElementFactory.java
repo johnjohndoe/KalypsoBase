@@ -108,12 +108,12 @@ public class XElementFactory
         if( value1 instanceof Boolean )
           b1 = ((Boolean) value1).booleanValue();
         else
-          b1 = value1 != null;
+          b1 = (value1 != null);
         boolean b2;
         if( value2 instanceof Boolean )
           b2 = ((Boolean) value2).booleanValue();
         else
-          b2 = value2 != null;
+          b2 = (value2 != null);
         return b1 || b2;
       }
     };
@@ -127,12 +127,12 @@ public class XElementFactory
         if( value1 instanceof Boolean )
           b1 = ((Boolean) value1).booleanValue();
         else
-          b1 = value1 != null;
+          b1 = (value1 != null);
         boolean b2;
         if( value2 instanceof Boolean )
           b2 = ((Boolean) value2).booleanValue();
         else
-          b2 = value2 != null;
+          b2 = (value2 != null);
         return b1 && b2;
       }
     };

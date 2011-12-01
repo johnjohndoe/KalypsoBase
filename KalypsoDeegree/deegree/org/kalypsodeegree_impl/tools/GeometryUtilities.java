@@ -45,7 +45,7 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.j3d.geom.TriangulationUtils;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
@@ -77,8 +77,9 @@ import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
+import com.vividsolutions.jts.simplify.DouglasPeuckerLineSimplifier;
 
 /**
  * @author doemming
@@ -102,7 +103,7 @@ public final class GeometryUtilities
       return (GM_Position) basePoint.clone();
     final double[] p2 = directionPoint.getAsArray();
     final double factor = distanceFromBasePoint / distance;
-    final double[] newPos = new double[p1.length];
+    final double newPos[] = new double[p1.length];
     // for( int i = 0; i < newPos.length; i++ )
     for( int i = 0; i < 2; i++ )
       newPos[i] = p1[i] + (p2[i] - p1[i]) * factor;
@@ -557,49 +558,49 @@ public final class GeometryUtilities
   }
 
   public static Class< ? extends GM_Object> getPointClass( )
-  {
+      {
     return GM_Point.class;
-  }
+      }
 
   public static Class< ? extends GM_Object> getMultiPointClass( )
-  {
+      {
     return GM_MultiPoint.class;
-  }
+      }
 
   public static Class< ? extends GM_Object> getLineStringClass( )
-  {
+      {
     return GM_Curve.class;
-  }
+      }
 
   public static Class< ? extends GM_Object> getCurveClass( )
-  {
+      {
     return GM_Curve.class;
-  }
+      }
 
   public static Class< ? extends GM_Object> getMultiLineStringClass( )
-  {
+      {
     return GM_MultiCurve.class;
-  }
+      }
 
   public static Class< ? extends GM_Object> getSurfaceClass( )
-  {
+      {
     return GM_Surface.class;
-  }
+      }
 
   public static Class< ? extends GM_Object> getPolygonClass( )
-  {
+      {
     return GM_Surface.class;
-  }
+      }
 
   public static Class< ? extends GM_Object> getMultiPolygonClass( )
-  {
+      {
     return GM_MultiSurface.class;
-  }
+      }
 
   public static Class< ? extends GM_Object> getUndefinedGeometryClass( )
-  {
+      {
     return GM_Object.class;
-  }
+      }
 
   public static boolean isGeometry( final Object o )
   {
@@ -661,10 +662,10 @@ public final class GeometryUtilities
       final GM_Position b = positions[i];
       final GM_Position c = positions[i + 1];
       area += (b.getY() - a.getY()) * (a.getX() - c.getX()) // bounding rectangle
-          - ((a.getX() - b.getX()) * (b.getY() - a.getY())//
-              + (b.getX() - c.getX()) * (b.getY() - c.getY())//
+      - ((a.getX() - b.getX()) * (b.getY() - a.getY())//
+          + (b.getX() - c.getX()) * (b.getY() - c.getY())//
           + (a.getX() - c.getX()) * (c.getY() - a.getY())//
-          ) / 2d;
+      ) / 2d;
     }
     return area;
   }
@@ -725,13 +726,15 @@ public final class GeometryUtilities
   public static GM_Curve getThinnedCurve( final GM_Curve curve, final Double epsThinning ) throws GM_Exception
   {
     final LineString line = (LineString) JTSAdapter.export( curve );
-    final LineString simplifiedLine = (LineString) DouglasPeuckerSimplifier.simplify( line, epsThinning );
-    final GM_Curve thinnedCurve = (GM_Curve) JTSAdapter.wrap( simplifiedLine );
+    final Coordinate[] coordinates = line.getCoordinates();
 
+    final Coordinate[] simplifiedCrds = DouglasPeuckerLineSimplifier.simplify( coordinates, epsThinning );
+    final LineString simplifiedLine = line.getFactory().createLineString( simplifiedCrds );
+    final GM_Curve thinnedCurve = (GM_Curve) JTSAdapter.wrap( simplifiedLine );
     return thinnedCurve;
   }
 
-  public static GM_Envelope grabEnvelopeFromDistance( final GM_Point position, final double grabDistance )
+  public static final GM_Envelope grabEnvelopeFromDistance( final GM_Point position, final double grabDistance )
   {
     final double posX = position.getX();
     final double posY = position.getY();
@@ -822,31 +825,6 @@ public final class GeometryUtilities
   }
 
   /**
-   * Returns either the given qnames or all geometry qname's of the given feature.
-   */
-  public static QName[] getGeometryQNames( final Feature feature, final QName[] geomQNames )
-  {
-    if( feature == null )
-      return geomQNames;
-
-    if( geomQNames == null )
-    {
-      final IValuePropertyType[] properties = feature.getFeatureType().getAllGeomteryProperties();
-      return toQNames( properties );
-    }
-
-    return geomQNames;
-  }
-
-  private static QName[] toQNames( final IValuePropertyType[] properties )
-  {
-    final QName[] result = new QName[properties.length];
-    for( int i = 0; i < properties.length; i++ )
-      result[i] = properties[i].getQName();
-    return result;
-  }
-
-/**
    * Same as
    * {@link #findNearestFeature(GM_Point, double, FeatureList, QName, QName[]), but with an array of Featurelists.
    *
@@ -1000,7 +978,7 @@ public final class GeometryUtilities
   /**
    * Convert the given bounding box into a {@link GM_Curve}
    */
-  public static GM_Curve toGM_Curve( final GM_Envelope bBox, final String crs )
+  public static final GM_Curve toGM_Curve( final GM_Envelope bBox, final String crs )
   {
     try
     {
@@ -1047,7 +1025,7 @@ public final class GeometryUtilities
     /* - add second curve's positions to positions list */
     final GM_Position[] positions2 = curves[0].getAsLineString().getPositions();
 
-    if( !selfIntersected )
+    if( selfIntersected != true )
     {
       // not twisted: curves are oriented in the same direction, so we add the second curve's positions in the
       // opposite direction in order to get a non-self-intersected polygon.
@@ -1280,10 +1258,10 @@ public final class GeometryUtilities
       final double y1 = ring[i].getY() - transY;
       final double x2 = ring[j].getX() - transX;
       final double y2 = ring[j].getY() - transY;
-      ai = x1 * y2 - x2 * y1;
+      ai = (x1 * y2) - (x2 * y1);
       atmp += ai;
-      xtmp += (x2 + x1) * ai;
-      ytmp += (y2 + y1) * ai;
+      xtmp += ((x2 + x1) * ai);
+      ytmp += ((y2 + y1) * ai);
     }
 
     if( atmp != 0 )
@@ -1376,4 +1354,5 @@ public final class GeometryUtilities
 
     return result.toArray( store );
   }
+
 }

@@ -153,10 +153,4 @@ public interface IMapPanel extends ISelectionProvider
    * The current state of this map as an image. No selected items nor widget-stuff.
    */
   BufferedImage getMapImage( );
-
-  // REMARK: most probably we should always return the complete selection; filtering by themes does not make so much
-  // sense
-  // However, we use this flag for the moment to keep this backwards compatible and avoid side effekt.
-  // TODO: try this out when we are fare from deploying
-  void setUseFullSelection( boolean useFullSelection );
 }

@@ -44,7 +44,7 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 
@@ -143,8 +143,8 @@ public class DateRange implements Comparable<DateRange>
     if( !Objects.isNull( getTo() ) )
       return getTo().compareTo( date ) >= 0;
 
-    // from and to is null -> so return true
-    return true;
+      // from and to is null -> so return true
+      return true;
   }
 
   /**
@@ -161,8 +161,8 @@ public class DateRange implements Comparable<DateRange>
     if( !Objects.isNull( getTo() ) )
       return getTo().compareTo( date ) > 0;
 
-    // from and to is null -> so return true
-    return true;
+      // from and to is null -> so return true
+      return true;
   }
 
   /**
@@ -283,8 +283,7 @@ public class DateRange implements Comparable<DateRange>
 
   /**
    * Returns the length of this range in milliseconds.<br/>
-   * Negative, if to lies before from.<br/>
-   * {@link Long#MAX_VALUE} if one of to or from is <code>null</code>.
+   * Negative, if to lies before from.<br/> {@link Long#MAX_VALUE} if one of to or from is <code>null</code>.
    */
   public long getLength( )
   {

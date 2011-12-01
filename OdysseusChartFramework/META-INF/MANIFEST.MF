@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: OdysseusChartFramework Plug-in
 Bundle-SymbolicName: de.openali.odysseus.chart.framework;singleton:=true
-Bundle-Version: 11.6.3.qualifier
-Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.swt;visibility:=reexport,
+Bundle-Version: 11.6.2.qualifier
+Require-Bundle: org.eclipse.swt;visibility:=reexport,
+ org.eclipse.core.runtime,
  org.kalypso.commons
 Export-Package: de.openali.odysseus.chart.framework,
  de.openali.odysseus.chart.framework.exception,
@@ -20,7 +20,6 @@ Export-Package: de.openali.odysseus.chart.framework,
  de.openali.odysseus.chart.framework.model.figure.impl,
  de.openali.odysseus.chart.framework.model.impl,
  de.openali.odysseus.chart.framework.model.impl.settings,
- de.openali.odysseus.chart.framework.model.impl.utils,
  de.openali.odysseus.chart.framework.model.impl.visitors,
  de.openali.odysseus.chart.framework.model.layer,
  de.openali.odysseus.chart.framework.model.layer.impl,
@@ -47,4 +46,4 @@ Export-Package: de.openali.odysseus.chart.framework,
 Bundle-Activator: de.openali.odysseus.chart.framework.OdysseusChartFramework
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: kalypsobase.sourceforge.net
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

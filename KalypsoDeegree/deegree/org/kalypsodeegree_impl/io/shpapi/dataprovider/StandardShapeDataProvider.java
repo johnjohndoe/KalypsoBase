@@ -37,6 +37,7 @@ package org.kalypsodeegree_impl.io.shpapi.dataprovider;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
@@ -61,12 +62,9 @@ public class StandardShapeDataProvider implements IShapeDataProvider
 
   private IPropertyType m_geometryPropertyType;
 
-  private final String m_targetSRS;
-
-  public StandardShapeDataProvider( final Feature[] features, final String targetSRS )
+  public StandardShapeDataProvider( final Feature[] features )
   {
     m_features = features;
-    m_targetSRS = targetSRS;
 
     getStandardParameter( features );
   }
@@ -165,14 +163,19 @@ public class StandardShapeDataProvider implements IShapeDataProvider
 
   }
 
+  /**
+   * @see org.kalypsodeegree_impl.io.shpapi.IShapeDataProvider#getGeometry(int)
+   */
   @Override
-  public GM_Object getGeometry( final int index ) throws Exception
+  public GM_Object getGeometry( final int index )
   {
-    final GM_Object geom = (GM_Object) m_features[index].getProperty( getGeometryPropertyType() );
-    if( geom == null )
-      return null;
+    // FIXME nofdp IDSS deploy - hotfix (importing isar app dataset)
+    Feature feature = m_features[index];
+    IValuePropertyType[] properties = feature.getFeatureType().getAllGeomteryProperties();
 
-    return geom.transform( m_targetSRS );
+    return (GM_Object) feature.getProperty( properties[0].getQName() );
+
+// return (GM_Object) m_features[index].getProperty( getGeometryPropertyType() );
   }
 
   /**

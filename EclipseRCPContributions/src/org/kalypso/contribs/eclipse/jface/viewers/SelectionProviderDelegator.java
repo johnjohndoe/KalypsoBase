@@ -63,7 +63,7 @@ public class SelectionProviderDelegator implements ISelectionProvider, ISelectio
 {
   private ISelectionProvider m_delegate = null;
 
-  private final List<ISelectionChangedListener> m_listener = new ArrayList<ISelectionChangedListener>( 5 );
+  private List<ISelectionChangedListener> m_listener = new ArrayList<ISelectionChangedListener>( 5 );
 
   public SelectionProviderDelegator( )
   {
@@ -81,7 +81,7 @@ public class SelectionProviderDelegator implements ISelectionProvider, ISelectio
       m_delegate.removeSelectionChangedListener( this );
       m_delegate = null;
     }
-
+    
     m_listener.clear();
   }
 

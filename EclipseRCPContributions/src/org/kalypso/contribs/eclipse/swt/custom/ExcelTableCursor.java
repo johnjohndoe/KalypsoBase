@@ -526,7 +526,7 @@ public class ExcelTableCursor extends TableCursor
     if( columnProperties == null || columnProperties.length == 0 )
       return false;
 
-    final String property = (String) columnProperties[column];
+    final String property = columnProperties[column].toString();
     final ICellModifier modifier = m_viewer.getCellModifier();
     if( modifier == null )
       return false;
@@ -542,11 +542,8 @@ public class ExcelTableCursor extends TableCursor
     if( DEBUG )
       System.out.println( "stopEditing" );
 
-    if( isDisposed() )
-      return;
-
     // leaf cell
-    if( cellEditorControl != null && !cellEditorControl.isDisposed() )
+    if( cellEditorControl != null )
     {
       cellEditorControl.removeKeyListener( m_keyListenerOnCell );
       cellEditorControl.removeTraverseListener( m_dontTraverseListener );

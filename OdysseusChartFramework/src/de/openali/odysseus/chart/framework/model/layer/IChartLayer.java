@@ -28,7 +28,7 @@ public interface IChartLayer extends ILayerContainer, IEventProvider<ILayerEvent
    */
   String getDescription( );
 
-  IDataRange< ? > getDomainRange( );
+  IDataRange<Number> getDomainRange( );
 
   ILegendEntry[] getLegendEntries( );
 
@@ -38,7 +38,7 @@ public interface IChartLayer extends ILayerContainer, IEventProvider<ILayerEvent
    * @param domainIntervall
    *          shrinks the TargetRange, pass null to retrieve full dataRange
    */
-  IDataRange< ? > getTargetRange( IDataRange< ? > domainIntervall );
+  IDataRange<Number> getTargetRange( IDataRange<Number> domainIntervall );
 
   /**
    * @return the layers title
@@ -103,6 +103,4 @@ public interface IChartLayer extends ILayerContainer, IEventProvider<ILayerEvent
   void setFilter( IChartLayerFilter... filters );
 
   IChartLayerFilter[] getFilters( );
-
-  boolean isAutoScale( );
 }

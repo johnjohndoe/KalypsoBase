@@ -56,9 +56,9 @@ public interface IViewerComparator
    * This function can be used to init this comparator with some parameter.
    * 
    * @param parent
-   *          The parent feature.
+   *            The parent feature.
    * @param params
-   *          The map containing the parameter names (keys) and parameter values (value).
+   *            The map containing the parameter names (keys) and parameter values (value).
    */
   public void init( Feature parent, Map<String, String> params );
 }

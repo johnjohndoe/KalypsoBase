@@ -70,7 +70,7 @@ public class KalypsoServiceObs extends Plugin
     // register the observation webservice url stream handler
     final OcsURLStreamHandler handler = new OcsURLStreamHandler();
 
-    final Dictionary<String, Object> properties = new Hashtable<String, Object>( 1 );
+    final Dictionary<Object, Object> properties = new Hashtable<Object, Object>( 1 );
     properties.put( URLConstants.URL_HANDLER_PROTOCOL, new String[] { ObservationServiceRepository.ID } );
     context.registerService( URLStreamHandlerService.class.getName(), handler, properties );
   }

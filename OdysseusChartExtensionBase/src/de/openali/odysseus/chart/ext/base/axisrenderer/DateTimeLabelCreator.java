@@ -5,8 +5,8 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraï¿½e 22
- *  21073 Hamburg, Germany 
+ *  Denickestraße 22
+ *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
  *  and
@@ -40,8 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.ext.base.axisrenderer;
 
+import java.util.TimeZone;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.joda.time.DurationField;
+import org.joda.time.chrono.GregorianChronology;
+import org.joda.time.tz.FixedDateTimeZone;
 import org.kalypso.core.KalypsoCorePlugin;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -49,7 +54,7 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 /**
  * @author kimwerner
  */
-public class DateTimeLabelCreator implements ILabelCreator
+public class DateTimeLabelCreator  implements ILabelCreator
 {
   private final IDateTimeAxisFieldProvider m_dateTimeFieldProvider;
 
@@ -65,10 +70,12 @@ public class DateTimeLabelCreator implements ILabelCreator
   @Override
   public String getLabel( final Number value, final IDataRange<Number> range )
   {
-// ChartLayerUtils.addTimezoneOffset(
+//    final TimeZone kalypsoTZ = KalypsoCorePlugin.getDefault().getTimeZone();
+//    final FixedDateTimeZone jodaTZ = new FixedDateTimeZone( kalypsoTZ.getID(), null, kalypsoTZ.getOffset(  value.longValue() ), kalypsoTZ.getOffset(  value.longValue() ) );
+//  
     final IDateTimeAxisField axisField = m_dateTimeFieldProvider.getDateTimeAxisField( range );
-    final DateTimeZone zone = DateTimeZone.forTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
-    final DateTime dateTime = new DateTime( value.longValue(), zone );
+    final DateTimeZone jodaTZ = DateTimeZone.forTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
+    final DateTime dateTime = new DateTime( value.longValue(), jodaTZ );
 
     return dateTime.toString( axisField.getFormatString() );
   }

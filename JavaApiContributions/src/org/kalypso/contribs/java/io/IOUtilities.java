@@ -67,9 +67,9 @@ public class IOUtilities
    *          The url.
    * @return The created input stream.
    */
-  public static InputStream getInputStream( final URL url ) throws IOException
+  public static InputStream getInputStream( URL url ) throws IOException
   {
-    final String file = url.getFile();
+    String file = url.getFile();
     if( file != null && file.endsWith( ".gz" ) )
       return new GZIPInputStream( url.openStream() );
 

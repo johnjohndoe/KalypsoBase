@@ -315,7 +315,7 @@ public final class MapModellHelper
     GM_Envelope result = null;
     for( final IKalypsoTheme kalypsoTheme : themes )
     {
-      if( predicate == null || predicate.decide( kalypsoTheme ) )
+      if( (predicate == null) || predicate.decide( kalypsoTheme ) )
       {
         final GM_Envelope boundingBox = kalypsoTheme.getFullExtent();
         if( result == null )

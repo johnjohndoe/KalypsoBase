@@ -58,11 +58,12 @@ public class PointThemePredicate extends LineThemePredicater implements IKalypso
 {
   private static final QName[] ACCEPTED_GEOMETRIES = new QName[] { GMLConstants.QN_MULTI_POINT, GMLConstants.QN_POINT };
 
+
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate#decide(org.kalypso.ogc.gml.IKalypsoTheme)
    */
   @Override
-  public boolean decide( final IKalypsoTheme theme )
+  public boolean decide(final IKalypsoTheme theme )
   {
     if( theme instanceof IKalypsoFeatureTheme )
     {

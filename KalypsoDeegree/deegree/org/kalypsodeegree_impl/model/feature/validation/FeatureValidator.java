@@ -54,16 +54,16 @@ import org.kalypsodeegree.model.feature.validation.IFeatureRule;
  */
 public class FeatureValidator
 {
-  private final IFeatureMarkerCollector m_collector;
+  private IFeatureMarkerCollector m_collector;
 
   public FeatureValidator( final IFeatureMarkerCollector collector )
   {
     m_collector = collector;
   }
 
-  /**
-   * TODO: progressmonitor
-   */
+/**
+ * TODO: progressmonitor
+ */  
   public void validateFeature( final Feature feature ) throws CoreException
   {
     m_collector.reset();
@@ -82,7 +82,7 @@ public class FeatureValidator
       {
         rule.validate( feature, m_collector );
       }
-      catch( final Throwable e )
+      catch( Throwable e )
       {
         final IStatus status = StatusUtilities.statusFromThrowable( e );
         multiStatus.add( status );

@@ -62,58 +62,61 @@ import org.kalypso.simulation.ui.i18n.Messages;
 
 /**
  * Helper Klasse für die Calc-Case Actions
- * 
+ *
  * @author belger
  */
 public class CalcCaseHelper
 {
-  private CalcCaseHelper( )
+  private CalcCaseHelper()
   {
-    // wird nicht instantiiert
+  // wird nicht instantiiert
   }
 
   /**
    * Lässt den Benutzer aus einer Liste von Rechenfällen auswählen Es werden alle Rechenfälle angezeigt, welche sich in
    * oder unterhalb der angegebenen Selection von Resourcen befinden.
-   * 
+   *
    * @param shell
    * @param selection
    * @param title
+   *
    * @param message
    * @return null bei Abbruch
    */
-  public static IFolder[] chooseCalcCases( final Shell shell, final ISelection selection, final String title, final String message )
+  public static IFolder[] chooseCalcCases( final Shell shell, final ISelection selection, final String title,
+      final String message )
   {
     // rausfinden, ob selection ok ist
-    if( !(selection instanceof IStructuredSelection) )
+    if( !( selection instanceof IStructuredSelection ) )
       return null;
 
     final CalcCaseCollector visitor = new CalcCaseCollector();
     try
     {
-      final IStructuredSelection structsel = (IStructuredSelection) selection;
-      for( final Iterator< ? > sIt = structsel.iterator(); sIt.hasNext(); )
+      final IStructuredSelection structsel = (IStructuredSelection)selection;
+      for( final Iterator<?> sIt = structsel.iterator(); sIt.hasNext(); )
       {
         final Object sel = sIt.next();
         if( sel instanceof IContainer )
-          ((IContainer) sel).accept( visitor );
+          ( (IContainer)sel ).accept( visitor );
       }
     }
     catch( final CoreException e )
     {
       e.printStackTrace();
 
-      ErrorDialog.openError( shell, title, Messages.getString( "org.kalypso.simulation.ui.actions.CalcCaseHelper.0" ), e.getStatus() ); //$NON-NLS-1$
+      ErrorDialog.openError( shell, title, Messages.getString("org.kalypso.simulation.ui.actions.CalcCaseHelper.0"), e.getStatus() ); //$NON-NLS-1$
     }
 
     final IFolder[] calcCases = visitor.getCalcCases();
     if( calcCases.length == 0 )
     {
-      MessageDialog.openInformation( shell, title, Messages.getString( "org.kalypso.simulation.ui.actions.CalcCaseHelper.1" ) ); //$NON-NLS-1$
+      MessageDialog.openInformation( shell, title, Messages.getString("org.kalypso.simulation.ui.actions.CalcCaseHelper.1") ); //$NON-NLS-1$
       return null;
     }
 
-    final ListSelectionDialog dlg = new ListSelectionDialog( shell, calcCases, new ArrayContentProvider(), new WorkbenchLabelProvider(), message );
+    final ListSelectionDialog dlg = new ListSelectionDialog( shell, calcCases, new ArrayContentProvider(),
+        new WorkbenchLabelProvider(), message );
     dlg.setInitialSelections( calcCases );
     if( dlg.open() == Window.CANCEL )
       return null;

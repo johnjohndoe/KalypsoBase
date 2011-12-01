@@ -20,13 +20,13 @@ class Vector
 
   Vector( final double pDoubleU, final double pDoubleV )
   {
-    u = pDoubleU;
-    v = pDoubleV;
+    this.u = pDoubleU;
+    this.v = pDoubleV;
   }
 
   double dotProduct( final Vector pVector )
   {
-    return u * pVector.u + v * pVector.v;
+    return u * pVector.u + this.v * pVector.v;
   }
 
   static double dotProduct( final RealPoint p1, final RealPoint p2, final RealPoint p3 )
@@ -43,7 +43,7 @@ class Vector
 
   double crossProduct( final Vector pVector )
   {
-    return u * pVector.v - v * pVector.u;
+    return u * pVector.v - this.v * pVector.u;
   }
 
   static double crossProduct( final RealPoint p1, final RealPoint p2, final RealPoint p3 )
@@ -63,9 +63,8 @@ class Vector
     u = p2.getX() - p1.getX();
     v = p2.getY() - p1.getY();
   }
-
-  double getLength( )
-  {
+  
+  double getLength(){
     return Math.sqrt( dotProduct( new Vector( u, v ) ) );
   }
 }

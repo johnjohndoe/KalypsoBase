@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
@@ -53,6 +53,10 @@ import de.openali.odysseus.chart.framework.model.impl.visitors.AutoScaleVisitor;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
+import de.openali.odysseus.chart.framework.util.img.ChartTitleTester;
+import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
+import de.openali.odysseus.chartconfig.x020.TitleType;
 
 /**
  * @author kimwerner
@@ -78,19 +82,13 @@ public class ProfilChartModel extends ChartModel
     public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
     {
       if( hint.isObjectChanged() )
-      {
         updateLayers();
-      }
       else if( hint.isPointPropertiesChanged() )
-      {
         handlePropertyOrBuildingChanged( changes );
-      }
       else
       {
         for( final IChartLayer layer : getLayerManager().getLayers() )
-        {
           ((IProfilChartLayer) layer).onProfilChanged( hint, changes );
-        }
       }
     }
   };
@@ -124,7 +122,7 @@ public class ProfilChartModel extends ChartModel
     {
       m_profil.addProfilListener( m_profilListener );
       m_layerProvider.registerAxis( getMapperRegistry() );
-      // getSettings().addTitles( ChartTitleTester.getTitleTypes() );
+     // getSettings().addTitles( ChartTitleTester.getTitleTypes() );
       updateLayers();
     }
   }
@@ -135,7 +133,7 @@ public class ProfilChartModel extends ChartModel
   @Override
   public void autoscale( final IAxis... axes )
   {
-    final AutoScaleVisitor visitor = new AutoScaleVisitor( this );
+    final AutoScaleVisitor visitor = new AutoScaleVisitor( this, false );
 
     // TODO ?!? auto scaled axes will be updated when?!? strange behaviour
     final IAxis[] autoscaledAxes = ArrayUtils.isEmpty( axes ) ? getMapperRegistry().getAxes() : axes;
@@ -149,9 +147,7 @@ public class ProfilChartModel extends ChartModel
   public void dispose( )
   {
     if( m_profil != null )
-    {
       m_profil.removeProfilListener( m_profilListener );
-    }
   }
 
   public final IProfilChartLayer getLayer( final String layerID )

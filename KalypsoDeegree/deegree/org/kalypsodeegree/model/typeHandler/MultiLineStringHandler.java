@@ -47,7 +47,6 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler2;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree_impl.io.sax.marshaller.MultiLineStringMarshaller;
 import org.kalypsodeegree_impl.io.sax.parser.MultiLineStringContentHandler;
@@ -70,7 +69,7 @@ public class MultiLineStringHandler implements IMarshallingTypeHandler2
   @Override
   public IGmlContentHandler createContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final UnmarshallResultEater resultEater )
   {
-    return new MultiLineStringContentHandler( reader, resultEater, parentContentHandler, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+    return new MultiLineStringContentHandler( reader, resultEater, parentContentHandler );
   }
 
   /**

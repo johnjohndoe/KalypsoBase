@@ -50,26 +50,26 @@ import org.eclipse.swt.widgets.Display;
 /**
  * @author kimwerner
  */
-public final class ProfilMarkerIconFactory
+public class ProfilMarkerIconFactory
 {
   private ProfilMarkerIconFactory( )
   {
     // HelperClass
   }
 
-  public static Image createImage16( final ImageRegistry imageRegistry, final String[] markers, final Image sourceImage )
+  public static Image createImage16( final ImageRegistry imageRegistry, String[] markers, Image sourceImage )
   {
 
     final Image image = imageRegistry.get( markers[0] );
 
-    final GC gc = new GC( sourceImage );
+    GC gc = new GC( sourceImage );
 // try
 // {final Color c = new Color(sourceImage.getDevice(),255,0,0);
 // gc.setForeground(c);
 // gc.drawLine( 2,2,8,8);
-    final RGB[] bs = image.getImageData().getRGBs();
-    final RGB rgb = bs[1];
-    final Color c = new Color( Display.getCurrent() != null ? Display.getCurrent() : Display.getDefault(), rgb );
+    RGB[] bs = image.getImageData().getRGBs();
+    RGB rgb = bs[1];
+    Color c = new Color( Display.getCurrent() != null ? Display.getCurrent() : Display.getDefault(), rgb );
     gc.setForeground( c );
     gc.drawLine( 2, 2, 8, 8 );
     // gc.drawImage( image, 6, 0 );

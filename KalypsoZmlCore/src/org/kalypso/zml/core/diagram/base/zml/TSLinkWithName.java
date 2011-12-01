@@ -45,14 +45,17 @@ import java.awt.Color;
 import java.awt.Stroke;
 import java.net.URL;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 
+/**
+ * @author belger
+ */
 public class TSLinkWithName
 {
   private final String m_identifier;

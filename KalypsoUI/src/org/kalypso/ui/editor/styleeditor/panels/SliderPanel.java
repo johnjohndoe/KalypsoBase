@@ -60,13 +60,14 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * @author F.Lindemann
+ *  
  */
 public class SliderPanel
 {
 
   private Composite composite = null;
 
-  private final EventListenerList listenerList = new EventListenerList();
+  private EventListenerList listenerList = new EventListenerList();
 
   private int min = 0;
 
@@ -88,11 +89,11 @@ public class SliderPanel
 
   private double selection = 0.0;
 
-  public SliderPanel( final Composite parent, final String m_label, final int minimum, final int maximum, final int inc, final int m_format, final double value )
+  public SliderPanel( Composite parent, String m_label, int minimum, int maximum, int inc, int m_format, double value )
   {
     composite = new Composite( parent, SWT.NULL );
-    final FormLayout compositeLayout = new FormLayout();
-    final GridData compositeData = new GridData();
+    FormLayout compositeLayout = new FormLayout();
+    GridData compositeData = new GridData();
     compositeData.widthHint = 195;
     composite.setLayoutData( compositeData );
     composite.setLayout( compositeLayout );
@@ -105,12 +106,12 @@ public class SliderPanel
 
     setLabel( m_label );
     setFormat( m_format );
-    min = minimum * 100;
-    max = (maximum - minimum) * 100;
+    this.min = minimum * 100;
+    this.max = ( maximum - minimum ) * 100;
     if( inc >= maximum )
-      increment = max / 10;
+      this.increment = max / 10;
     else
-      increment = inc * 100;
+      this.increment = inc * 100;
     init();
 
     if( value != -1 && value <= maximum )
@@ -119,32 +120,32 @@ public class SliderPanel
       setSelection( maximum );
   }
 
-  public void setSelection( final double m_selection )
+  public void setSelection( double m_selection )
   {
-    selection = m_selection;
+    this.selection = m_selection;
     if( format == DECIMAL )
-      text.setText( "" + (selection + min / 100.00) ); //$NON-NLS-1$
+      text.setText( "" + ( selection + ( min / 100.00 ) ) ); //$NON-NLS-1$
     else
-      text.setText( "" + (int) (selection + min / 100.00) ); //$NON-NLS-1$
-    slider.setSelection( (int) (selection * 100) );
+      text.setText( "" + (int)( selection + ( min / 100.00 ) ) ); //$NON-NLS-1$
+    slider.setSelection( (int)( selection * 100 ) );
   }
 
-  public void addPanelListener( final PanelListener pl )
+  public void addPanelListener( PanelListener pl )
   {
     listenerList.add( PanelListener.class, pl );
   }
 
-  private void init( )
+  private void init()
   {
     text.setBackground( new Color( null, new RGB( 255, 255, 255 ) ) );
 
-    final FormData textData = new FormData();
+    FormData textData = new FormData();
     textData.height = 10;
     textData.width = 20;
     textData.left = new FormAttachment( 340, 1000, 0 );
     textData.top = new FormAttachment( 120, 1000, 0 );
     text.setLayoutData( textData );
-    final FormData sliderData = new FormData();
+    FormData sliderData = new FormData();
     sliderData.height = 17;
     sliderData.width = 90;
     sliderData.left = new FormAttachment( 540, 1000, 0 );
@@ -155,44 +156,44 @@ public class SliderPanel
     slider.addMouseListener( new MouseListener()
     {
       @Override
-      public void mouseDoubleClick( final MouseEvent e )
+      public void mouseDoubleClick( MouseEvent e )
       {
-        // nothing
+      // nothing
       }
 
       @Override
-      public void mouseDown( final MouseEvent e )
+      public void mouseDown( MouseEvent e )
       {
-        // nothing
+      // nothing
       }
 
       @Override
-      public void mouseUp( final MouseEvent e )
+      public void mouseUp( MouseEvent e )
       {
-        setSelection( getSlider().getSelection() / 100.00 );
+        setSelection( ( getSlider().getSelection() ) / 100.00 );
         fire();
       }
     } );
     slider.addSelectionListener( new SelectionListener()
     {
       @Override
-      public void widgetSelected( final SelectionEvent e )
+      public void widgetSelected( SelectionEvent e )
       {
         if( getFormat() == INTEGER )
-          setSelection( ((Slider) e.getSource()).getSelection() / 100 );
+          setSelection( ( ( (Slider)e.getSource() ).getSelection() ) / 100 );
         else
-          setSelection( ((Slider) e.getSource()).getSelection() / 100.0 );
+          setSelection( ( ( (Slider)e.getSource() ).getSelection() ) / 100.0 );
       }
 
       @Override
-      public void widgetDefaultSelected( final SelectionEvent e )
+      public void widgetDefaultSelected( SelectionEvent e )
       {
         widgetSelected( e );
       }
     } );
 
-    final Label fillColorLabel = new Label( composite, SWT.NULL );
-    final FormData fillColorLabelLData = new FormData();
+    Label fillColorLabel = new Label( composite, SWT.NULL );
+    FormData fillColorLabelLData = new FormData();
     fillColorLabelLData.height = 15;
     fillColorLabelLData.width = 242;
     fillColorLabelLData.left = new FormAttachment( 0, 1000, 0 );
@@ -201,83 +202,83 @@ public class SliderPanel
     fillColorLabel.setText( label );
   }
 
-  protected void fire( )
+  protected void fire()
   {
-    final Object[] listeners = listenerList.getListenerList();
+    Object[] listeners = listenerList.getListenerList();
     for( int i = listeners.length - 2; i >= 0; i -= 2 )
     {
       if( listeners[i] == PanelListener.class )
       {
-        final PanelEvent event = new PanelEvent( this );
-        ((PanelListener) listeners[i + 1]).valueChanged( event );
+        PanelEvent event = new PanelEvent( this );
+        ( (PanelListener)listeners[i + 1] ).valueChanged( event );
       }
     }
   }
 
-  public double getSelection( )
+  public double getSelection()
   {
     if( format == DECIMAL )
-      return selection + min / 100.00;
-    return (int) (selection + min / 100.00);
+      return ( selection + ( min / 100.00 ) );
+    return (int)( selection + ( min / 100.00 ) );
   }
 
-  public int getFormat( )
+  public int getFormat()
   {
     return format;
   }
 
-  public void setFormat( final int m_format )
+  public void setFormat( int m_format )
   {
-    format = m_format;
+    this.format = m_format;
   }
 
-  public int getIncrement( )
+  public int getIncrement()
   {
     return increment;
   }
 
-  public void setIncrement( final int m_increment )
+  public void setIncrement( int m_increment )
   {
-    increment = m_increment;
+    this.increment = m_increment;
   }
 
-  public String getLabel( )
+  public String getLabel()
   {
     return label;
   }
 
-  public void setLabel( final String m_label )
+  public void setLabel( String m_label )
   {
-    label = m_label;
+    this.label = m_label;
   }
 
-  public int getMax( )
+  public int getMax()
   {
     return max;
   }
 
-  public void setMax( final int m_max )
+  public void setMax( int m_max )
   {
-    max = m_max;
+    this.max = m_max;
   }
 
-  public int getMin( )
+  public int getMin()
   {
     return min;
   }
 
-  public void setMin( final int m_min )
+  public void setMin( int m_min )
   {
-    min = m_min;
+    this.min = m_min;
   }
 
-  public Slider getSlider( )
+  public Slider getSlider()
   {
     return slider;
   }
 
-  public void setSlider( final Slider m_slider )
+  public void setSlider( Slider m_slider )
   {
-    slider = m_slider;
+    this.slider = m_slider;
   }
 }

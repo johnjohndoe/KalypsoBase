@@ -170,7 +170,7 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
     final Object oldData = feature.getProperty( pt );
 
     // nur ändern, wenn sich wirklich was geändert hat
-    if( newData == null && oldData != null || newData != null && !newData.equals( oldData ) )
+    if( (newData == null && oldData != null) || (newData != null && !newData.equals( oldData )) )
       return new ChangeFeatureCommand( feature, pt, newData );
 
     return null;

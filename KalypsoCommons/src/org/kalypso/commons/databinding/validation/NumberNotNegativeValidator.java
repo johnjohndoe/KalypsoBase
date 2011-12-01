@@ -51,7 +51,7 @@ import org.eclipse.core.runtime.Status;
  */
 public class NumberNotNegativeValidator extends TypedValidator<Number>
 {
-  public static final String DEFAULT_MESSAGE = "Value should not be negative.";
+  private static final String DEFAULT_MESSAGE = "Value should not be negative.";
 
   /**
    * Same as {@link #NumberNotNegativeValidator(int, String)}, but uses a default message.

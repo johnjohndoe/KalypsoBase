@@ -54,7 +54,7 @@ public class FilterConstructionException extends XMLParsingException
    * @param msg
    *          the detail message
    */
-  public FilterConstructionException( final String msg )
+  public FilterConstructionException( String msg )
   {
     super( msg );
   }

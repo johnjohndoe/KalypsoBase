@@ -46,10 +46,14 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Set;
 import java.util.TimeZone;
 
 import javax.xml.bind.DatatypeConverter;
@@ -107,7 +111,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   public static final String ID = KalypsoSimulationUIPlugin.getID() + ".ModelNature"; //$NON-NLS-1$
 
-  private static final String METADATA_FILE = ".metadata.ini"; //$NON-NLS-1$
+  private static final String METADATA_FILE = ".metadata"; //$NON-NLS-1$
 
   public static final String LOCAL_NAME = ".local"; //$NON-NLS-1$
 
@@ -264,7 +268,15 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       final IFile launchFile = getLaunchFile( launchName );
       final Properties userProperties = createVariablesForAntLaunch( folder );
       if( antProps != null )
-        userProperties.putAll( antProps );
+      {
+        for( final Entry<String, Object> entry : antProps.entrySet() )
+        {
+          final String key = entry.getKey();
+          final Object value = entry.getValue();
+          if( value instanceof String )
+            userProperties.put( key, value );
+        }
+      }
 
       // add user-variables to variable-manager (so they can also be used within the launch-file
       userVariables = registerValueVariablesFromProperties( svm, userProperties );
@@ -322,19 +334,20 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   private static IValueVariable[] registerValueVariablesFromProperties( final IStringVariableManager svm, final Properties properties )
   {
-    final IValueVariable[] variables = new IValueVariable[properties.size()];
-    int count = 0;
-    for( final Map.Entry<Object, Object> entry : properties.entrySet() )
-    {
-      final String name = (String) entry.getKey();
-      final String value = (String) entry.getValue();
+    final Set<String> keys = properties.stringPropertyNames();
 
-      final IValueVariable valueVariable = svm.newValueVariable( name, value, true, value );
-      variables[count++] = valueVariable;
+    final Collection<IValueVariable> variables = new ArrayList<IValueVariable>( keys.size() );
+
+    for( final String key : keys )
+    {
+      final String value = properties.getProperty( key );
+
+      final IValueVariable valueVariable = svm.newValueVariable( key, value, true, value );
+      variables.add( valueVariable );
 
       try
       {
-        final IValueVariable existingVariable = svm.getValueVariable( name );
+        final IValueVariable existingVariable = svm.getValueVariable( key );
         if( existingVariable == null )
         {
           // add each variable separatedly, because it may have allready been registered
@@ -347,13 +360,13 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       }
       catch( final CoreException e )
       {
-        System.out.println( "Variable already exists: " + name ); //$NON-NLS-1$
+        System.out.println( "Variable already exists: " + key ); //$NON-NLS-1$
         e.printStackTrace();
         // ignore it, its already there -> ?
       }
     }
 
-    return variables;
+    return variables.toArray( new IValueVariable[variables.size()] );
   }
 
   private Properties createVariablesForAntLaunch( final IContainer folder ) throws CoreException
@@ -529,7 +542,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   /**
    * Returns a metadatum associated with this nature.
-   *
+   * 
    * @param key
    *          One of the METADATA_KEY_ conmstants.
    * @return The value of the given key; or <code>null</code> if not set.
@@ -567,7 +580,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   /**
    * stellt fest, ob es sich um einen gültigen Zeitpunkt für den Start der Prognose handelt
-   *
+   * 
    * @param cal
    * @return true when time is valid
    */
@@ -589,7 +602,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   /**
    * Load the calculation and read the value for the given property
-   *
+   * 
    * @param calcCase
    * @param propertyName
    *          name of the property to read value for

@@ -42,11 +42,9 @@ package org.kalypso.contribs.eclipse.jface.viewers;
 
 import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.viewers.IContentProvider;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -82,23 +80,6 @@ public final class ViewerUtilities
     }
   }
 
-  public static void execute( final Viewer viewer, final Runnable runner, final boolean async )
-  {
-    if( viewer == null )
-      return;
-
-    final Control control = viewer.getControl();
-    if( control == null || control.isDisposed() )
-      return;
-
-    final Display display = control.getDisplay();
-
-    if( async )
-      display.asyncExec( runner );
-    else
-      display.syncExec( runner );
-  }
-
   /**
    * Sets the input of a {@link Viewer}in the display thread of its underlying control. Does nothing if the viewer is
    * null, or its control is disposed.
@@ -111,6 +92,13 @@ public final class ViewerUtilities
    */
   public static void setInput( final Viewer viewer, final Object input, final boolean async )
   {
+    if( viewer == null )
+      return;
+
+    final Control control = viewer.getControl();
+    if( control == null || control.isDisposed() )
+      return;
+
     final Runnable runner = new Runnable()
     {
       @Override
@@ -121,7 +109,11 @@ public final class ViewerUtilities
       }
     };
 
-    execute( viewer, runner, async );
+    final Display display = control.getDisplay();
+    if( async )
+      display.asyncExec( runner );
+    else
+      display.syncExec( runner );
   }
 
   /**
@@ -136,6 +128,13 @@ public final class ViewerUtilities
    */
   public static void refresh( final Viewer viewer, final boolean async )
   {
+    if( viewer == null )
+      return;
+
+    final Control control = viewer.getControl();
+    if( control == null || control.isDisposed() )
+      return;
+
     final Runnable runner = new Runnable()
     {
       @Override
@@ -145,12 +144,23 @@ public final class ViewerUtilities
           viewer.refresh();
       }
     };
+    final Display display = control.getDisplay();
 
-    execute( viewer, runner, async );
+    if( async )
+      display.asyncExec( runner );
+    else
+      display.syncExec( runner );
   }
 
   public static void refresh( final StructuredViewer viewer, final Object element, final boolean async )
   {
+    if( viewer == null )
+      return;
+
+    final Control control = viewer.getControl();
+    if( control == null || control.isDisposed() )
+      return;
+
     final Runnable runner = new Runnable()
     {
       @Override
@@ -161,36 +171,38 @@ public final class ViewerUtilities
       }
     };
 
-    execute( viewer, runner, async );
+    final Display display = control.getDisplay();
+
+    if( async )
+      display.asyncExec( runner );
+    else
+      display.syncExec( runner );
   }
 
   public static void update( final StructuredViewer viewer, final Object[] elements, final String[] properties, final boolean async )
   {
-    final Runnable runner = new Runnable()
+    if( viewer != null )
     {
-      @Override
-      public void run( )
+      final Control control = viewer.getControl();
+      if( control != null && !control.isDisposed() )
       {
-        if( !viewer.getControl().isDisposed() )
-          viewer.update( elements, properties );
+        final Runnable runner = new Runnable()
+        {
+          @Override
+          public void run( )
+          {
+            if( !viewer.getControl().isDisposed() )
+              viewer.update( elements, properties );
+          }
+        };
+
+        final Display display = control.getDisplay();
+
+        if( async )
+          display.asyncExec( runner );
+        else
+          display.syncExec( runner );
       }
-    };
-
-    execute( viewer, runner, async );
-  }
-
-  public static void setSelection( final TreeViewer viewer, final ISelection selection, final boolean reveal, final boolean async )
-  {
-    final Runnable runner = new Runnable()
-    {
-      @Override
-      public void run( )
-      {
-        if( !viewer.getControl().isDisposed() )
-          viewer.setSelection( selection, reveal );
-      }
-    };
-
-    execute( viewer, runner, async );
+    }
   }
 }

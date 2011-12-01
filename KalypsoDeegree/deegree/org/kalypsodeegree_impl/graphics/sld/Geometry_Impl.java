@@ -78,12 +78,12 @@ public class Geometry_Impl implements Geometry, Marshallable
    * sets the name of the geometry property
    * 
    * @param propertyName
-   *          the name of the geometry property
+   *            the name of the geometry property
    */
   @Override
   public void setPropertyName( final PropertyName propertyName )
   {
-    m_propertyName = propertyName;
+    this.m_propertyName = propertyName;
   }
 
   // /**
@@ -101,8 +101,8 @@ public class Geometry_Impl implements Geometry, Marshallable
   /**
    * // * sets the <GMLGeometry> // * // *
    * 
-   * @param geometryAsGML
-   *          // * the GMLGeometry //
+   * @param geometryAsGML // *
+   *            the GMLGeometry //
    */
   // public void setGeometryAsGML( GMLGeometry geometryAsGML )
   // {

@@ -94,27 +94,27 @@ public final class LineProperties
     m_dash = dash;
   }
 
-  public String getName( )
+  public String getName()
   {
     return m_name;
   }
 
-  public Color getColor( )
+  public Color getColor()
   {
     return m_color;
   }
 
-  public Integer getSize( )
+  public Integer getSize()
   {
     return m_size;
   }
 
-  public DashType getDash( )
+  public DashType getDash()
   {
     return m_dash;
   }
 
-  public Stroke getStroke( )
+  public Stroke getStroke()
   {
     if( m_size == LineProperties.SIZE_UNDEF && m_dash == LineProperties.DASH_UNDEF )
       return STROKE_UNDEF;
@@ -140,8 +140,10 @@ public final class LineProperties
     if( items.length == 0 )
       return null;
 
-    for( final LineProperties properties : items )
+    for( int i = 0; i < items.length; i++ )
     {
+      final LineProperties properties = items[i];
+
       final String curveName = properties.getName();
       final Color curveColor = properties.getColor();
       final Integer curveSize = properties.getSize();

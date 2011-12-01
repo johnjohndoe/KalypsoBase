@@ -83,7 +83,7 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
   @Override
   public void addPages( )
   {
-    m_page = new GmlFileImportPage( "GML:importPage", Messages.getString( "org.kalypso.ui.wizard.gml.KalypsoGmlImportWizard.0" ), ImageProvider.IMAGE_UTIL_UPLOAD_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_page = new GmlFileImportPage( "GML:importPage", Messages.getString("org.kalypso.ui.wizard.gml.KalypsoGmlImportWizard.0"), ImageProvider.IMAGE_UTIL_UPLOAD_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
     m_page.setProjectSelection( m_mapModel.getProject() );
 
     addPage( m_page );
@@ -108,7 +108,7 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
       KalypsoAddLayerPlugin.getDefault().getLog().log( status );
-      ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.ui.wizard.gml.KalypsoGmlImportWizard.1" ), status ); //$NON-NLS-1$
+      ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.ui.wizard.gml.KalypsoGmlImportWizard.1"), status ); //$NON-NLS-1$
       return false;
     }
 
@@ -200,7 +200,7 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
   @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
-    setWindowTitle( Messages.getString( "org.kalypso.ui.wizard.gml.KalypsoGmlImportWizard.2" ) ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString("org.kalypso.ui.wizard.gml.KalypsoGmlImportWizard.2") ); //$NON-NLS-1$
   }
 
   /**

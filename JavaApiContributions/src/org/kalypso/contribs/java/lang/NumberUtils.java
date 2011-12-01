@@ -138,7 +138,9 @@ public final class NumberUtils
    * Tries to parse a {@link BigDecimal}.<br>
    * The decimal separator may be one of '.' or ','.
    * 
-   * @return A new BigDecimal parsed from the indicated string. <code>null</code>, if the string is not parseable.
+   * @return A new BigDecimal parsed from the indicated string. <code>null</code>.
+   * @throws NumberFormatException
+   *           if the string is not parseable.
    * @see BigDecimal
    */
   public static BigDecimal parseQuietDecimal( final String string )

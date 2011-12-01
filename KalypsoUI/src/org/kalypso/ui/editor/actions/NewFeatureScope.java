@@ -40,77 +40,89 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.actions;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
+import java.util.Properties;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
-import org.kalypso.gmlschema.property.IPropertyType;
+import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.kalypso.commons.command.ICommand;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.IGMLSchema;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
+import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.catalogs.FeatureTypePropertiesCatalog;
 import org.kalypso.ui.catalogs.IFeatureTypePropertiesConstants;
+import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
+import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 
 /**
  * @author Gernot Belger
  */
-public class NewFeatureScope implements INewScope
+public class NewFeatureScope
 {
-  private final Collection<NewFeaturePropertyScope> m_scopes = new ArrayList<NewFeaturePropertyScope>();
+  private final IRelationType m_targetRelation;
 
-  public NewFeatureScope( final CommandableWorkspace workspace, final Feature feature, final IFeatureSelectionManager selectionManager )
+  private final Feature m_parentFeature;
+
+  private final CommandableWorkspace m_workspace;
+
+  private final IFeatureSelectionManager m_selectionManager;
+
+  public NewFeatureScope( final CommandableWorkspace workspace, final FeatureList featureList, final IFeatureSelectionManager selectionManager )
   {
-    buildSubScopes( workspace, feature, selectionManager );
+    m_selectionManager = selectionManager;
+    m_targetRelation = featureList.getParentFeatureTypeProperty();
+    m_parentFeature = featureList.getParentFeature();
+    m_workspace = workspace;
   }
 
-  private void buildSubScopes( final CommandableWorkspace workspace, final Feature feature, final IFeatureSelectionManager selectionManager )
+  public NewFeatureScope( final FeatureAssociationTypeElement fate, final CommandableWorkspace workspace, final IFeatureSelectionManager selectionManager )
   {
-    if( showOwnScopeMenu( feature ) )
+    m_selectionManager = selectionManager;
+    m_targetRelation = fate.getAssociationTypeProperty();
+    m_parentFeature = fate.getParentFeature();
+    m_workspace = workspace;
+  }
+
+  public NewFeatureScope( final IFeatureSelection selection, final IFeatureSelectionManager selectionManager )
+  {
+    m_selectionManager = selectionManager;
+
+    final Feature feature = FeatureSelectionHelper.getFirstFeature( selection );
+
+    if( feature == null )
     {
-      // Create sister elements
-      final Feature parentFeature = feature.getOwner();
-      final IRelationType targetRelation = feature.getParentRelation();
-      addScope( parentFeature, targetRelation, workspace, selectionManager );
+      m_parentFeature = null;
+      m_targetRelation = null;
+      m_workspace = null;
     }
-
-    // FIXME: it would be nice in many cases to also have the new-items for sub-features in the menu
-    // But we need to be able to tweak which ones are visible. Also we need to
-    // hide sub-features that make no sense.
-    // TODO: implement correctly
-    if( showSubScopes( feature ) )
+    else
     {
-      final IPropertyType[] properties = feature.getFeatureType().getProperties();
-      for( final IPropertyType pt : properties )
-      {
-        if( pt instanceof IRelationType )
-        {
-          final IRelationType rt = (IRelationType) pt;
-          addScope( feature, rt, workspace, selectionManager );
-        }
-      }
+      m_parentFeature = feature.getOwner();
+      m_targetRelation = feature.getParentRelation();
+      m_workspace = selectionManager.getWorkspace( feature );
     }
   }
 
-  private void addScope( final Feature parentFeature, final IRelationType targetRelation, final CommandableWorkspace workspace, final IFeatureSelectionManager selectionManager )
+  public IRelationType getTargetRelation( )
   {
-    final NewFeaturePropertyScope scope = new NewFeaturePropertyScope( parentFeature, targetRelation, workspace, selectionManager );
-    m_scopes.add( scope );
+    return m_targetRelation;
   }
 
-  private boolean showSubScopes( final Feature feature )
+  public boolean isValid( )
   {
-    return FeatureTypePropertiesCatalog.isPropertyOn( feature, IFeatureTypePropertiesConstants.GMLTREE_NEW_MENU_SHOW_SUB_FEATURES );
+    return m_targetRelation != null && m_workspace != null;
   }
 
-  private static boolean showOwnScopeMenu( final Feature feature )
-  {
-    return FeatureTypePropertiesCatalog.isPropertyOn( feature, IFeatureTypePropertiesConstants.GMLTREE_NEW_MENU_ON_FEATURE );
-  }
-
-  @Override
   public IMenuManager createMenu( )
   {
     final IMenuManager newMenuManager = new MenuManager( Messages.getString( "org.kalypso.ui.editor.actions.FeatureActionUtilities.7" ) ); //$NON-NLS-1$
@@ -118,10 +130,84 @@ public class NewFeatureScope implements INewScope
     return newMenuManager;
   }
 
-  @Override
-  public void addMenuItems( final IMenuManager menuManager )
+  public void addMenuItems( final IMenuManager newMenuManager )
   {
-    for( final NewFeaturePropertyScope scope : m_scopes )
-      scope.addMenuItemWithoutAddition( menuManager );
+    if( !isValid() )
+      return;
+
+    if( !hasInlinableFeatures() )
+      return;
+
+    if( !checkSingleInlinedFeature() )
+      return;
+
+    if( !checkFullList( newMenuManager ) )
+      return;
+
+    final IFeatureType featureType = m_targetRelation.getTargetFeatureType();
+
+    final IGMLSchema contextSchema = m_parentFeature.getWorkspace().getGMLSchema();
+    final IFeatureType[] featureTypes = GMLSchemaUtilities.getSubstituts( featureType, contextSchema, false, true );
+    for( final IFeatureType ft : featureTypes )
+      newMenuManager.add( new NewFeatureAction( this, ft ) );
+
+    newMenuManager.add( new Separator( "additions" ) ); //$NON-NLS-1$
+    newMenuManager.add( new NewFeatureFromExternalSchemaAction() );
   }
+
+  private boolean checkFullList( final IMenuManager newMenuManager )
+  {
+    if( !m_targetRelation.isList() )
+      return true;
+
+    final List< ? > list = (List< ? >) m_parentFeature.getProperty( m_targetRelation );
+    if( list == null )
+      return true;
+
+    final int maxOccurs = m_targetRelation.getMaxOccurs();
+    if( maxOccurs == -1 || list.size() < maxOccurs )
+      return true;
+
+    // Add an action which indicates, that the list is full
+    newMenuManager.add( new ListFullAction( maxOccurs ) );
+    return false;
+  }
+
+  private boolean checkSingleInlinedFeature( )
+  {
+    /* Direct properties (maxoccurs = 1) can only be added if not already there. */
+    return m_targetRelation.isList() || m_parentFeature.getProperty( m_targetRelation ) == null;
+  }
+
+  private boolean hasInlinableFeatures( )
+  {
+    return m_targetRelation.isInlineAble();
+  }
+
+  public void createNewFeature( final IFeatureType featureType ) throws Exception
+  {
+    final Properties uiProperties = FeatureTypePropertiesCatalog.getProperties( m_workspace.getContext(), featureType.getQName() );
+    final String depthStr = uiProperties.getProperty( IFeatureTypePropertiesConstants.FEATURE_CREATION_DEPTH, IFeatureTypePropertiesConstants.FEATURE_CREATION_DEPTH_DEFAULT );
+    final int depth = Integer.parseInt( depthStr );
+
+    final ICommand command = new AddFeatureCommand( m_workspace, featureType, m_parentFeature, m_targetRelation, 0, null, m_selectionManager, depth );
+    m_workspace.postCommand( command );
+  }
+
+  /**
+   * Bit HACKY: used for the GML-Tree to create the correct New-Scope.
+   */
+  public static NewFeatureScope createFromTreeSelection( final CommandableWorkspace workspace, final IStructuredSelection selection, final IFeatureSelectionManager selectionManager )
+  {
+    final Object elementInScope = selection.getFirstElement();
+
+    if( elementInScope instanceof FeatureAssociationTypeElement )
+      return new NewFeatureScope( (FeatureAssociationTypeElement) elementInScope, workspace, selectionManager );
+
+    if( selection instanceof IFeatureSelection )
+      return new NewFeatureScope( (IFeatureSelection) selection, selectionManager );
+
+    return null;
+  }
+
 }

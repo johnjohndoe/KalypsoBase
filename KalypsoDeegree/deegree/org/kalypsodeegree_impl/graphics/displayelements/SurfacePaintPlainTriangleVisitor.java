@@ -135,7 +135,7 @@ public class SurfacePaintPlainTriangleVisitor<T extends GM_SurfacePatch> impleme
           // meanValue = meanValue + VAL_EPS;
           // else if( meanValue - maxValue < VAL_EPS )
           // meanValue = meanValue - VAL_EPS;
-
+          
           /* get the color from the color model and paint the triangle */
 
           // TODO: check if triangle is too small (i.e. < stroke.width) and paint it as one point
@@ -372,7 +372,7 @@ public class SurfacePaintPlainTriangleVisitor<T extends GM_SurfacePatch> impleme
 
   private boolean triangleLiesInsideColorClass( final double min, final double max, final double from, final double to )
   {
-    if( from <= min && min <= to || from <= max && max <= to || min <= from && to <= max )
+    if( (from <= min && min <= to) || (from <= max && max <= to) || (min <= from && to <= max) )
       return true;
     else
       return false;

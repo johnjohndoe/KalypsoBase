@@ -44,8 +44,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.observation.result.ITupleResultChangedListener.TYPE;
 import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;

@@ -46,5 +46,4 @@ package org.kalypsodeegree.graphics.displayelements;
  * @version $Revision$ $Date$
  */
 public interface PolygonDisplayElement extends GeometryDisplayElement
-{
-}
+{}

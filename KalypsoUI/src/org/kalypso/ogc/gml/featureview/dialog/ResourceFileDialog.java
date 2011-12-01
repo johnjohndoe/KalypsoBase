@@ -51,9 +51,9 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class ResourceFileDialog implements IFeatureDialog
 {
-  private final Feature m_feature;
+  private Feature m_feature;
 
-  private final IPropertyType m_ftp;
+  private IPropertyType m_ftp;
 
   private FeatureChange m_change;
 
@@ -64,22 +64,22 @@ public class ResourceFileDialog implements IFeatureDialog
   }
 
   @Override
-  public int open( final Shell shell )
+  public int open( Shell shell )
   {
     final GMLWorkspace workspace = m_feature.getWorkspace();
     final IFile gmlFile = ResourceUtilities.findFileFromURL( workspace.getContext() );
-    final IWorkspaceRoot workspaceRoot = gmlFile.getWorkspace().getRoot();
+    IWorkspaceRoot workspaceRoot = gmlFile.getWorkspace().getRoot();
     IResource resultFile = null;
     resultFile = getResourceFile();
     if( resultFile == null )
       resultFile = workspaceRoot;
-    final KalypsoResourceSelectionDialog selectionDialog = new KalypsoResourceSelectionDialog( shell, resultFile, "", null, workspaceRoot, new ResourceSelectionValidator() ); //$NON-NLS-1$
+    KalypsoResourceSelectionDialog selectionDialog = new KalypsoResourceSelectionDialog( shell, resultFile, "", null, workspaceRoot, new ResourceSelectionValidator() ); //$NON-NLS-1$
     final int open;
     selectionDialog.open();
-    final Object[] result = selectionDialog.getResult();
+    Object[] result = selectionDialog.getResult();
     if( result != null )
     {
-      final Path resultPath = (Path) result[0];
+      Path resultPath = (Path) result[0];
 
       m_change = new FeatureChange( m_feature, m_ftp, ResourceUtilities.findFileFromPath( resultPath ) );
       open = Window.OK;
@@ -112,7 +112,7 @@ public class ResourceFileDialog implements IFeatureDialog
   @Override
   public String getLabel( )
   {
-    String label = Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.ResourceFileDialog.choose" ); //$NON-NLS-1$
+    String label = Messages.getString("org.kalypso.ogc.gml.featureview.dialog.ResourceFileDialog.choose"); //$NON-NLS-1$
     if( getResourceFile() != null )
       label = getResourceFile().toString();
     return label;

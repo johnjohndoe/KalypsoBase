@@ -38,8 +38,8 @@ package org.kalypsodeegree_impl.model.feature.gmlxpath;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -75,8 +75,8 @@ public class GMLXPath
    * creates a GMLXPath from a string
    * 
    * @param namespaceContext
-   *          The context against which qname's within the path are resolved. Not to implementors: the xpath does not
-   *          store a reference to this context and uses it only within the constructor.
+   *            The context against which qname's within the path are resolved. Not to implementors: the xpath does not
+   *            store a reference to this context and uses it only within the constructor.
    */
   public GMLXPath( final String path, final NamespaceContext namespaceContext )
   {

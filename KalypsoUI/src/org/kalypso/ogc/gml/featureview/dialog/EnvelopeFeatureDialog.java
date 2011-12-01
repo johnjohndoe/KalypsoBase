@@ -60,11 +60,11 @@ public class EnvelopeFeatureDialog implements IFeatureDialog
 {
   private FeatureChange m_change = null;
 
-  private final Feature m_feature;
+  private Feature m_feature;
 
-  private final IValuePropertyType m_ftp;
+  private IValuePropertyType m_ftp;
 
-  public EnvelopeFeatureDialog( final Feature feature, final IValuePropertyType ftp )
+  public EnvelopeFeatureDialog( Feature feature, IValuePropertyType ftp )
   {
     m_feature = feature;
     m_ftp = ftp;
@@ -74,7 +74,7 @@ public class EnvelopeFeatureDialog implements IFeatureDialog
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#open(org.eclipse.swt.widgets.Shell)
    */
   @Override
-  public int open( final Shell shell )
+  public int open( Shell shell )
   {
     GM_Envelope envelope = (GM_Envelope) m_feature.getProperty( m_ftp );
 
@@ -84,9 +84,9 @@ public class EnvelopeFeatureDialog implements IFeatureDialog
     else
       values = new Double[] { envelope.getMin().getX(), envelope.getMin().getY(), envelope.getMax().getX(), envelope.getMax().getY() };
 
-    final EnvelopeDialog dialog = new EnvelopeDialog( shell, values );
+    EnvelopeDialog dialog = new EnvelopeDialog( shell, values );
 
-    final int open = dialog.open();
+    int open = dialog.open();
     if( open == Window.OK )
     {
       values = dialog.getValues();
@@ -103,7 +103,7 @@ public class EnvelopeFeatureDialog implements IFeatureDialog
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#collectChanges(java.util.Collection)
    */
   @Override
-  public void collectChanges( final Collection<FeatureChange> c )
+  public void collectChanges( Collection<FeatureChange> c )
   {
     if( c != null && m_change != null )
       c.add( m_change );

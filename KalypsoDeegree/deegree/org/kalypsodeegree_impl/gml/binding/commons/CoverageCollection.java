@@ -60,7 +60,7 @@ public class CoverageCollection extends Feature_Impl implements ICoverageCollect
 
   public static ICoverageCollection createCoverageCollection( final URL context, final IFeatureProviderFactory providerFactory ) throws GMLSchemaException
   {
-    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( ICoverageCollection.QNAME, context, providerFactory );
+    GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( ICoverageCollection.QNAME, context, providerFactory );
     return (ICoverageCollection) workspace.getRootFeature();
   }
 

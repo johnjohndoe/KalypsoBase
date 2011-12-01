@@ -34,10 +34,9 @@ import java.io.StringReader;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
 import org.xml.sax.InputSource;
@@ -47,15 +46,20 @@ import org.xml.sax.InputSource;
  */
 public class ZmlInlineTypeHandler extends XsdBaseTypeHandler<IObservation>
 {
+  public static final String NAMESPACE = "inline.zml.kalypso.org"; //$NON-NLS-1$
+
   protected final String[] m_axisTypes;
 
-  public ZmlInlineTypeHandler( final QName name, final String[] axisTypes )
+  public ZmlInlineTypeHandler( final String name, final String[] axisTypes, final Class<IObservation> clazz )
   {
-    super( name, IObservation.class );
+    super( new QName( NAMESPACE, name ), clazz );
 
     m_axisTypes = axisTypes;
   }
 
+  /**
+   * @see org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler#convertToXMLString(java.lang.Object)
+   */
   @Override
   public String convertToXMLString( final IObservation value )
   {
@@ -99,12 +103,11 @@ public class ZmlInlineTypeHandler extends XsdBaseTypeHandler<IObservation>
   }
 
   /**
-   * Creates the axes for this kind of observation.<br/>
-   * The first axis MUST be the key axis.
+   * @return axistypes as String[]
    */
-  public IAxis[] createAxes( )
+  public String[] getAxisTypes( )
   {
-    return TimeseriesUtils.createDefaultAxes( m_axisTypes, true );
+    return m_axisTypes;
   }
 
   /**
@@ -124,4 +127,32 @@ public class ZmlInlineTypeHandler extends XsdBaseTypeHandler<IObservation>
   {
     throw new UnsupportedOperationException();
   }
+
+  // TODO: these do NOT belong here!
+  public interface TA extends IObservation
+  {
+    String[] axis = new String[] { ITimeseriesConstants.TYPE_HOURS, ITimeseriesConstants.TYPE_NORM };
+  }
+
+  public interface WtKcLai extends IObservation
+  {
+    String[] axis = new String[] { ITimeseriesConstants.TYPE_DATE, ITimeseriesConstants.TYPE_LAI, ITimeseriesConstants.TYPE_WT, ITimeseriesConstants.TYPE_KC };
+  }
+
+  public interface WVQ extends IObservation
+  {
+    String[] axis = new String[] { ITimeseriesConstants.TYPE_NORMNULL, ITimeseriesConstants.TYPE_VOLUME, ITimeseriesConstants.TYPE_RUNOFF, ITimeseriesConstants.TYPE_RUNOFF_Q2,
+        ITimeseriesConstants.TYPE_RUNOFF_Q3 };
+  }
+
+  public interface TN extends IObservation
+  {
+    String[] axis = new String[] { ITimeseriesConstants.TYPE_MIN, ITimeseriesConstants.TYPE_RAINFALL };
+  }
+
+  public interface QQ extends IObservation
+  {
+    String[] axis = new String[] { ITimeseriesConstants.TYPE_RUNOFF, ITimeseriesConstants.TYPE_RUNOFF_RHB };
+  }
+
 }

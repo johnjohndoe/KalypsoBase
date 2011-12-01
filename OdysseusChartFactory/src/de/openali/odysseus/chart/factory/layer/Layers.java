@@ -45,8 +45,6 @@ import org.kalypso.commons.java.lang.Objects;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
-import de.openali.odysseus.chartconfig.x020.LayerType;
-import de.openali.odysseus.chartconfig.x020.LayersType;
 
 /**
  * @author Dirk Kuch
@@ -78,19 +76,6 @@ public final class Layers
       return false;
 
     return true;
-  }
-
-  public static void remove( final LayersType layersType, final LayerType remove )
-  {
-    final LayerType[] layers = layersType.getLayerArray();
-    for( int index = 0; index < layers.length; index++ )
-    {
-      if( Objects.equal( layers[index], remove ) )
-      {
-        layersType.removeLayer( index );
-        return;
-      }
-    }
   }
 
 }

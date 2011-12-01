@@ -57,7 +57,7 @@ public interface LabelPlacement
    * 
    * @return the pointplacement for the label
    */
-  PointPlacement getPointPlacement( );
+  PointPlacement getPointPlacement();
 
   /**
    * Sets the PointPlacement for the Label.
@@ -73,7 +73,7 @@ public interface LabelPlacement
    * 
    * @return the lineplacement for the label
    */
-  LinePlacement getLinePlacement( );
+  LinePlacement getLinePlacement();
 
   /**
    * sets <LinePlacement>

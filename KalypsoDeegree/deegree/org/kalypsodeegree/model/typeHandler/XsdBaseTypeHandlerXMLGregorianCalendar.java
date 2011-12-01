@@ -38,6 +38,7 @@ package org.kalypsodeegree.model.typeHandler;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+
 /**
  * @author Dirk Kuch
  */
@@ -78,7 +79,7 @@ public class XsdBaseTypeHandlerXMLGregorianCalendar extends XsdBaseTypeHandler<X
   @Override
   public int compare( final XMLGregorianCalendar o1, final XMLGregorianCalendar o2 )
   {
-    if( o1 == null && o2 == null )
+    if( (o1 == null) && (o2 == null) )
     {
       return 0; // equals
     }

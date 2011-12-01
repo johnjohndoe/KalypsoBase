@@ -41,7 +41,6 @@
 package org.kalypso.ogc.gml.wms.loader;
 
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.core.runtime.CoreException;
@@ -58,21 +57,15 @@ public interface ICapabilitiesLoader
    * This function inits this loader. It must be called before calling getCapabilitiesStream().
    * 
    * @param baseURL
-   *          The service URL.
+   *            The service URL.
    */
   public void init( URL baseURL );
-
-  /**
-   * The url that is actually used to accessed the capabilities document.<br/>
-   * Can be used to show error message and for debug purposes.
-   */
-  public URL getCapabilitiesURL( ) throws MalformedURLException;
 
   /**
    * This function loads the capabilities and returns the Stream of them.
    * 
    * @param monitor
-   *          A progress monitor.
+   *            A progress monitor.
    * @return The input stream of the capabilities.
    */
   public InputStream getCapabilitiesStream( IProgressMonitor monitor ) throws CoreException;

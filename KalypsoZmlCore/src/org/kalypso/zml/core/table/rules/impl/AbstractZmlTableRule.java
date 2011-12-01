@@ -1,3 +1,5 @@
+package org.kalypso.zml.core.table.rules.impl;
+
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -38,8 +40,6 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-
-package org.kalypso.zml.core.table.rules.impl;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.ogc.sensor.SensorException;

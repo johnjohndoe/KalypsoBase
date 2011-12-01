@@ -60,7 +60,6 @@ import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.NullOutputStream;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
@@ -457,7 +456,7 @@ public class ZipUtilities
   /**
    * returns the {@link InputStream} for the first found file in the given zipped file
    */
-  public static InputStream getInputStreamForFirstFile( final URL zipFileURL ) throws IOException, URISyntaxException
+  public static InputStream getInputStreamForFirstFile( final URL zipFileURL ) throws IOException
   {
     return getInputStreamForSingleFile( zipFileURL, null );
   }
@@ -465,18 +464,33 @@ public class ZipUtilities
   /**
    * returns the {@link InputStream} for the file with given name in the given zipped file
    */
-  public static InputStream getInputStreamForSingleFile( final URL zipFileURL, final String zippedFile ) throws IOException, URISyntaxException
+  public static InputStream getInputStreamForSingleFile( final URL zipFileURL, final String zippedFile ) throws IOException
   {
-    final ZipFile zf = new ZipFile( new File( zipFileURL.toURI() ) );
-
+    ZipFile zf = null;
+    try
+    {
+      zf = new ZipFile( new File( zipFileURL.toURI() ) );
+    }
+    catch( final URISyntaxException e )
+    {
+      e.printStackTrace();
+    }
+    catch( final ZipException e )
+    {
+      e.printStackTrace();
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+    }
     final Enumeration< ? > entries = zf.entries();
+    ZipEntry ze;
     while( entries.hasMoreElements() )
     {
-      final ZipEntry ze = (ZipEntry) entries.nextElement();
-      if( !ze.isDirectory() && (StringUtils.isBlank( zippedFile ) || zippedFile.equalsIgnoreCase( ze.getName() )) )
+      ze = (ZipEntry) entries.nextElement();
+      if( !ze.isDirectory() && (zippedFile == null || "".equals( zippedFile ) || zippedFile.equalsIgnoreCase( ze.getName() )) ) //$NON-NLS-1$
       {
         final long size = ze.getSize();
-        // FIXME: why this size check: dubios!
         if( size > 0 )
         {
           return zf.getInputStream( ze );
@@ -509,18 +523,6 @@ public class ZipUtilities
 
   public static void pack( final File archiveTarget, final File packDir ) throws ZipException, IOException
   {
-    pack( archiveTarget, packDir, new IFileFilter()
-    {
-      @Override
-      public boolean accept( final File file )
-      {
-        return true;
-      }
-    } );
-  }
-
-  public static void pack( final File archiveTarget, final File packDir, final IFileFilter filter ) throws ZipException, IOException
-  {
     if( !packDir.isDirectory() )
     {
       return;
@@ -535,7 +537,7 @@ public class ZipUtilities
 
     for( final File file : files )
     {
-      processFiles( packDir, file, out, filter );
+      processFiles( packDir, file, out );
     }
     out.close();
 
@@ -543,11 +545,8 @@ public class ZipUtilities
     bos.close();
   }
 
-  private static void processFiles( final File packDir, final File file, final ZipOutputStream out, final IFileFilter filter ) throws IOException
+  private static void processFiles( final File packDir, final File file, final ZipOutputStream out ) throws IOException
   {
-    if( !filter.accept( file ) )
-      return;
-
     if( file.isDirectory() )
     {
       final ZipEntry e = new ZipEntry( convertFileName( packDir, file ) + "/" ); //$NON-NLS-1$
@@ -557,12 +556,11 @@ public class ZipUtilities
       final File[] files = file.listFiles();
       for( final File f : files )
       {
-        processFiles( packDir, f, out, filter );
+        processFiles( packDir, f, out );
       }
     }
     else
     {
-
       final BufferedInputStream bis = new BufferedInputStream( new FileInputStream( file ) );
 
       final ZipEntry e = new ZipEntry( convertFileName( packDir, file ) );
@@ -652,7 +650,6 @@ public class ZipUtilities
       saveEntry( zf, targetDir, target );
       System.out.println( ". unpacked" ); //$NON-NLS-1$
     }
-    zf.close();
   }
 
 }

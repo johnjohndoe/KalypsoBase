@@ -41,8 +41,8 @@
 
 package org.kalypso.ui.editor.styleeditor.rule;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -51,7 +51,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog;
@@ -109,7 +108,7 @@ public class RuleComposite extends Composite
 
   private Control createPropertiesControl( final FormToolkit toolkit, final Composite parent )
   {
-    final Section section = toolkit.createSection( parent, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE | Section.DESCRIPTION );
+    final Section section = toolkit.createSection( parent, Section.TITLE_BAR | Section.TWISTIE | Section.DESCRIPTION );
 
     section.setText( "Rule Properties" );
     section.setDescription( "This section allows to edit general properties of the rule." );
@@ -122,7 +121,7 @@ public class RuleComposite extends Composite
 
   private Control createSymbolizerTabs( final FormToolkit toolkit, final Composite parent )
   {
-    final Section tabsSection = toolkit.createSection( parent, ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED | Section.DESCRIPTION );
+    final Section tabsSection = toolkit.createSection( parent, Section.TITLE_BAR | Section.EXPANDED | Section.DESCRIPTION );
 
     tabsSection.setText( "Symbolizers" );
     tabsSection.setDescription( "Add, remove or edit the symbolizers of the rule." );

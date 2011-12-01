@@ -103,7 +103,7 @@ public class DefaultProcess implements IProcess
       sandbox = FileUtilities.createNewTempDir( tempDirName );
 
     m_command = findCommand( sandbox, executable );
-
+    
     final List<String> commandLine = new ArrayList<String>();
     commandLine.add( m_command.getAbsolutePath() );
 
@@ -169,15 +169,13 @@ public class DefaultProcess implements IProcess
 
     try
     {
-      try
-      {
+      try{
         m_command.setExecutable( true, false );
       }
-      catch( final Throwable e )
-      {
+      catch (Throwable e) {
         KalypsoCommonsPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
       }
-
+      
       process = m_processBuilder.start();
 
       procCtrlThread = new ProcessControlJob( process, cancelable, m_timeout );

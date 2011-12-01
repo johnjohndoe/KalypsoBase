@@ -51,16 +51,11 @@ import org.eclipse.jface.resource.ImageDescriptor;
 /**
  * @author Gernot Belger
  */
-public final class FeatureTypeImageCatalog
+public class FeatureTypeImageCatalog extends FeatureTypeCatalog
 {
   private static final String BASETYPE = "swtimage"; //$NON-NLS-1$
 
-  private static Map<String, ImageDescriptor> IMAGE_DESRIPTOR_CACHE = new HashMap<String, ImageDescriptor>();
-
-  private FeatureTypeImageCatalog( )
-  {
-    throw new UnsupportedOperationException();
-  }
+  private static Map<String, ImageDescriptor> m_imageDescriptorCache = new HashMap<String, ImageDescriptor>();
 
   public static ImageDescriptor getImage( final URL context, final QName qname )
   {
@@ -69,13 +64,13 @@ public final class FeatureTypeImageCatalog
     final String qnameStr = qname == null ? "null" : qname.toString(); //$NON-NLS-1$
     final String cacheKey = contextStr + '#' + qnameStr;
 
-    if( IMAGE_DESRIPTOR_CACHE.containsKey( cacheKey ) )
-      return IMAGE_DESRIPTOR_CACHE.get( cacheKey );
+    if( m_imageDescriptorCache.containsKey( cacheKey ) )
+      return m_imageDescriptorCache.get( cacheKey );
 
     /* Search for image descriptor in catalog or local url */
-    final URL imgUrl = FeatureTypeCatalog.getURL( BASETYPE, context, qname );
+    final URL imgUrl = getURL( BASETYPE, context, qname );
     final ImageDescriptor newId = imgUrl == null ? null : ImageDescriptor.createFromURL( imgUrl );
-    IMAGE_DESRIPTOR_CACHE.put( cacheKey, newId );
+    m_imageDescriptorCache.put( cacheKey, newId );
     return newId;
   }
 }

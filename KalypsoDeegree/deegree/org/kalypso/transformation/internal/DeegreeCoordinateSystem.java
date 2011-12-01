@@ -56,7 +56,7 @@ public class DeegreeCoordinateSystem implements ICoordinateSystem
   /**
    * The code for the coordinate system (e.g. 'EPSG:31467').
    */
-  private final String m_code;
+  private String m_code;
 
   /**
    * The deegree coordinate system.
@@ -75,7 +75,7 @@ public class DeegreeCoordinateSystem implements ICoordinateSystem
    * @param code
    *          The code for the coordinate system (e.g. 'EPSG:31467').
    */
-  public DeegreeCoordinateSystem( final String code )
+  public DeegreeCoordinateSystem( String code )
   {
     m_code = code;
     m_coordinateSystem = null;
@@ -132,12 +132,12 @@ public class DeegreeCoordinateSystem implements ICoordinateSystem
    * @param code
    *          The code for the coordinate system (e.g. 'EPSG:31467').
    */
-  private void init( final String code )
+  private void init( String code )
   {
     try
     {
       /* In case it is asked often, it is better to used the cached crs factory. */
-      final CachedCRSFactory factory = CachedCRSFactory.getInstance();
+      CachedCRSFactory factory = CachedCRSFactory.getInstance();
 
       /* Create the deegree coordinate system. */
       m_coordinateSystem = factory.create( code );
@@ -145,7 +145,7 @@ public class DeegreeCoordinateSystem implements ICoordinateSystem
       /* Store OK. */
       m_initStatus = new Status( IStatus.OK, KalypsoDeegreePlugin.getID(), "OK" );
     }
-    catch( final Exception ex )
+    catch( Exception ex )
     {
       /* Store the error. */
       m_initStatus = new Status( IStatus.ERROR, KalypsoDeegreePlugin.getID(), ex.getLocalizedMessage(), ex );

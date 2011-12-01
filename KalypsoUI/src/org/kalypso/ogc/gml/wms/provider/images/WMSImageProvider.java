@@ -69,7 +69,7 @@ public class WMSImageProvider extends AbstractDeegreeImageProvider
    * @see org.kalypso.ogc.gml.wms.provider.AbstractDeegreeImageProvider#getRemoteService(org.deegree.ogcwebservices.wms.capabilities.WMSCapabilities)
    */
   @Override
-  protected RemoteWMService getRemoteService( final WMSCapabilities capabilities )
+  protected RemoteWMService getRemoteService( WMSCapabilities capabilities )
   {
     return new RemoteWMService( capabilities );
   }

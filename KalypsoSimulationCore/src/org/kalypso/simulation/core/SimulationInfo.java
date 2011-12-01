@@ -73,7 +73,7 @@ public class SimulationInfo implements Serializable, ISimulationMonitor
   /**
    * Beschreibung des Job-Zustandes, falls Status der Fehlerstatus: die Fehlermeldung
    */
-  private String m_message = Messages.getString( "org.kalypso.simulation.core.SimulationInfo.0" ); //$NON-NLS-1$
+  private String m_message = Messages.getString("org.kalypso.simulation.core.SimulationInfo.0"); //$NON-NLS-1$
 
   /**
    * Wird vom Client nach erfolgter Berechnung dargestellt. Dient dazu, dem Benutzer ggfls. Hinweise auf Logdateien im
@@ -168,7 +168,7 @@ public class SimulationInfo implements Serializable, ISimulationMonitor
     return m_type;
   }
 
-  public final void setType( final String type )
+  public final void setType( String type )
   {
     m_type = type;
   }
@@ -197,7 +197,7 @@ public class SimulationInfo implements Serializable, ISimulationMonitor
     return m_finishText;
   }
 
-  public void setFinishText( final String finishText )
+  public void setFinishText( String finishText )
   {
     m_finishText = finishText;
   }

@@ -58,7 +58,7 @@ import org.kalypso.simulation.core.KalypsoSimulationCorePlugin;
  */
 public class LocalURLCatalog implements IUrlCatalog
 {
-  private final MultiUrlCatalog m_catalog;
+  private MultiUrlCatalog m_catalog;
 
   public LocalURLCatalog( )
   {

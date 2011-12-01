@@ -91,11 +91,11 @@ public class ParallelBinaryGridProcessor
             }
           }
         }
-        catch( final IOException e )
+        catch( IOException e )
         {
           e.printStackTrace();
         }
-        catch( final InterruptedException e )
+        catch( InterruptedException e )
         {
           e.printStackTrace();
         }
@@ -106,7 +106,7 @@ public class ParallelBinaryGridProcessor
 
   protected class CalculationJob extends Thread
   {
-    private final ParallelBinaryGridProcessor m_manager;
+    private ParallelBinaryGridProcessor m_manager;
 
     private ParallelBinaryGridProcessorBean m_bean;
 
@@ -128,11 +128,11 @@ public class ParallelBinaryGridProcessor
         {
           operate();
         }
-        catch( final GeoGridException e )
+        catch( GeoGridException e )
         {
           e.printStackTrace();
         }
-        catch( final Exception e )
+        catch( Exception e )
         {
           e.printStackTrace();
         }
@@ -160,7 +160,7 @@ public class ParallelBinaryGridProcessor
 
   private final CalculationWriterThread m_writer_thread;
 
-  public ParallelBinaryGridProcessor( final SequentialBinaryGeoGridReader inputGridReader, final SequentialBinaryGeoGridWriter outputGridWriter )
+  public ParallelBinaryGridProcessor( SequentialBinaryGeoGridReader inputGridReader, SequentialBinaryGeoGridWriter outputGridWriter )
   {
     m_reader = inputGridReader;
     m_writer = outputGridWriter;
@@ -180,7 +180,7 @@ public class ParallelBinaryGridProcessor
 
     try
     {
-      for( int i = 0; i < m_jobs.length; i++ )
+      for( int i = 0; i < (m_jobs.length); i++ )
       {
         m_jobs[i] = new CalculationJob( this );
         m_jobs[i].start();
@@ -188,7 +188,7 @@ public class ParallelBinaryGridProcessor
 
       m_writer_thread.start();
 
-      for( int i = 0; i < m_jobs.length; i++ )
+      for( int i = 0; i < (m_jobs.length); i++ )
       {
         m_jobs[i].join();
       }
@@ -201,7 +201,7 @@ public class ParallelBinaryGridProcessor
 
       m_writer.close();
     }
-    catch( final InterruptedException e )
+    catch( InterruptedException e )
     {
       e.printStackTrace();
     }
@@ -209,7 +209,7 @@ public class ParallelBinaryGridProcessor
 
   public synchronized ParallelBinaryGridProcessorBean getNextDataset( )
   {
-    final ParallelBinaryGridProcessorBean lBean = m_reader.getNextBlock();
+    ParallelBinaryGridProcessorBean lBean = m_reader.getNextBlock();
 
     if( lBean != null )
     {

@@ -73,6 +73,4 @@ public interface IObservation<T>
   T getResult( );
 
   void setResult( T values );
-
-  void accept( IObservationVisitor visitor );
 }

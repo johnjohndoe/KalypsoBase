@@ -72,7 +72,7 @@ class FieldFormatterString extends FieldFormatter
    * @see org.kalypso.shape.dbf.FieldFormatter#fromString(java.lang.String)
    */
   @Override
-  public Object fromString( final String asString )
+  public Object fromString( final String asString ) 
   {
     return asString;
   }

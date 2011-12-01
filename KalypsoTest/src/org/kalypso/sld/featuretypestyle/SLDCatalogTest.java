@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.sld.featuretypestyle;
 
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -91,15 +92,15 @@ public class SLDCatalogTest extends TestCase
   protected void setUp( ) throws Exception
   {
     super.setUp();
-
-    m_manager = KalypsoCorePlugin.getDefault().getCatalogManager();
+    
+    m_manager =  KalypsoCorePlugin.getDefault().getCatalogManager();
     m_catalogSLD = KalypsoCorePlugin.getDefault().getSLDCatalog();
 
-// final File repository = new File( "C:/TMP/sld_repository" );
-// m_manager = CatalogManager.getDefault( repository );
-// m_manager.register( new URNGeneratorFeatureTypeStyle() );
-// m_manager.register( new URNGeneratorIFeatureType() );
-// m_catalogSLD = new CatalogSLD( m_manager, repository );
+//    final File repository = new File( "C:/TMP/sld_repository" );
+//    m_manager = CatalogManager.getDefault( repository );
+//    m_manager.register( new URNGeneratorFeatureTypeStyle() );
+//    m_manager.register( new URNGeneratorIFeatureType() );
+//    m_catalogSLD = new CatalogSLD( m_manager, repository );
   }
 
   /**
@@ -128,14 +129,14 @@ public class SLDCatalogTest extends TestCase
     final IUrlResolver2 resolver = new IUrlResolver2()
     {
 
-      @Override
       public URL resolveURL( final String href ) throws MalformedURLException
       {
         return UrlResolverSingleton.resolveUrl( styleURL, href );
       }
     };
     // load SLD
-    final StyledLayerDescriptor sld = SLDFactory.createSLD( styleURL );
+    final InputStreamReader reader = new InputStreamReader( styleURL.openStream() );
+    final StyledLayerDescriptor sld = SLDFactory.createSLD( resolver, reader );
     final NamedLayer[] namedLayers = sld.getNamedLayers();
     final Style[] styles = namedLayers[0].getStyles();
     for( final Style style : styles )
@@ -160,7 +161,6 @@ public class SLDCatalogTest extends TestCase
           final URI store = m_catalogSLD.getStore();
           final IUrlResolver2 resolver2 = new IUrlResolver2()
           {
-            @Override
             public URL resolveURL( final String href ) throws MalformedURLException
             {
               return UrlResolverSingleton.resolveUrl( store.toURL(), href );

@@ -69,7 +69,7 @@ public class GM_SurfaceInterpolation_Impl implements GM_SurfaceInterpolation, Se
    */
   public GM_SurfaceInterpolation_Impl( final int surfaceInterpolation ) throws GM_Exception
   {
-    if( surfaceInterpolation > GM_SurfaceInterpolation.TRIANGULATEDSOLINE || surfaceInterpolation < GM_SurfaceInterpolation.NONE )
+    if( (surfaceInterpolation > GM_SurfaceInterpolation.TRIANGULATEDSOLINE) || (surfaceInterpolation < GM_SurfaceInterpolation.NONE) )
     {
       throw new GM_Exception( "invalid surface interpolation" );
     }
@@ -96,7 +96,7 @@ public class GM_SurfaceInterpolation_Impl implements GM_SurfaceInterpolation, Se
       System.out.println( "GM_SurfaceInterpolation_Impl.clone: " + ex );
     }
 
-    throw new IllegalStateException();
+    throw (new IllegalStateException());
   }
 
   /**
@@ -105,6 +105,6 @@ public class GM_SurfaceInterpolation_Impl implements GM_SurfaceInterpolation, Se
   @Override
   public boolean equals( final Object other )
   {
-    return other instanceof GM_SurfaceInterpolation_Impl && ((GM_SurfaceInterpolation) other).getValue() == m_surfaceInterpolation;
+    return (other instanceof GM_SurfaceInterpolation_Impl) && (((GM_SurfaceInterpolation) other).getValue() == m_surfaceInterpolation);
   }
 }

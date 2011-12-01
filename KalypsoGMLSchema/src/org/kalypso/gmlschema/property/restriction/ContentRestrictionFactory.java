@@ -47,14 +47,13 @@ import org.kalypso.gmlschema.annotation.IAnnotation;
 
 /**
  * represents restriction on a simple content
- * 
+ *
  * @author doemming
  */
 public class ContentRestrictionFactory
 {
   /**
-   * @param simpleQName
-   *          Non-<code>null</code>, if the restirction is defined by an top-level simple type.
+   * @param simpleQName Non-<code>null</code>, if the restirction is defined by an top-level simple type. 
    */
   public static IRestriction[] createRestrictions( final QName simpleQName, final Restriction restriction, final GMLSchema schema, final QName[] qnames )
   {
@@ -75,7 +74,7 @@ public class ContentRestrictionFactory
         map.put( stringValue, annotation );
       }
 
-      result.add( new EnumerationRestriction( map, simpleQName ) );
+      result.add( new EnumerationRestriction( map ,simpleQName) );
     }
 
     final Pattern[] patternArray = restriction.getPatternArray();
@@ -176,7 +175,7 @@ public class ContentRestrictionFactory
 
   /**
    * TODO: change to big decimal
-   * 
+   *
    * @param facet
    */
   private static double doubleValue( final Facet facet )

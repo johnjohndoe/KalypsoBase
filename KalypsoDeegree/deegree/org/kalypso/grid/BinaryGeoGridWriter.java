@@ -45,6 +45,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.deegree.model.spatialschema.ByteUtils;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 
@@ -80,8 +81,6 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
 
   private int m_amountBlocks;
 
-  private int m_blocksFlushed;
-
   private final int m_sizeX;
 
   private final int m_sizeY;
@@ -112,7 +111,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
     m_lineLen = getSizeX() * 4;
 
     // block_size is set to "optimal" size of the buffer from start on
-    m_linesInBlock = BLOCK_SIZE / m_lineLen;
+    m_linesInBlock = (BLOCK_SIZE / m_lineLen);
 
     if( m_linesInBlock >= m_linesTotal )
       m_linesInBlock = m_linesTotal;
@@ -134,7 +133,6 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
 
     writeNaN( m_blockData, m_itemsInBlock );
 
-    m_blocksFlushed = 0;
   }
 
   @Override
@@ -162,7 +160,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
 
     try
     {
-      if( m_blocksFlushed < m_amountBlocks )
+      if( m_blockEnd <= m_linesTotal )
       {
         flushBlock();
       }
@@ -203,14 +201,10 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
     {
       e.printStackTrace();
     }
-    m_blocksFlushed++;
     m_blockStart += m_linesInBlock;
     m_blockEnd += m_linesInBlock;
-
-    if( m_blocksFlushed >= m_amountBlocks )
-      return;
-    if( m_blockEnd >= m_linesTotal )
-      m_itemsInBlock = (m_linesTotal - m_blockStart) * m_lineLen / 4;
+    if( m_blockEnd > m_linesTotal )
+      m_itemsInBlock = (m_linesTotal - m_blockStart + 1) * m_lineLen / 4;
 
     writeNaN( m_blockData, m_itemsInBlock );
   }
@@ -219,7 +213,6 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   public void setValue( final int x, final int y, final double value )
   {
     if( y < m_blockStart )
-      // FIXME: Log it!
       return;
 
     if( y > m_blockEnd )
@@ -230,7 +223,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
     final int index = (y - m_blockStart) * (m_lineLen / 4) + x;
 
     int intVal;
-    if( !Double.isNaN( value ) )
+    if( Double.isNaN( value ) != true )
     {
       final BigDecimal scaled = BigDecimal.valueOf( value ).setScale( m_scale, BigDecimal.ROUND_HALF_UP );
       intVal = scaled.unscaledValue().intValue();
@@ -258,7 +251,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public double getValue( final int x, final int y )
   {
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 
   @Override
@@ -314,6 +307,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public void saveStatistically( )
   {
+    // TODO Auto-generated method stub
 
   }
 
@@ -324,6 +318,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public void setStatistically( final BigDecimal min, final BigDecimal max )
   {
+    // TODO Auto-generated method stub
     close();
   }
 
@@ -334,7 +329,8 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public GM_Surface< ? > getCell( final int x, final int y, final String targetCRS )
   {
-    throw new UnsupportedOperationException();
+    // TODO Auto-generated method stub
+    return null;
   }
 
   /**
@@ -344,7 +340,8 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public Envelope getEnvelope( )
   {
-    throw new UnsupportedOperationException();
+    // TODO Auto-generated method stub
+    return null;
   }
 
   /**
@@ -354,7 +351,8 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public Coordinate getOffsetX( )
   {
-    throw new UnsupportedOperationException();
+    // TODO Auto-generated method stub
+    return null;
   }
 
   /**
@@ -364,7 +362,8 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public Coordinate getOffsetY( )
   {
-    throw new UnsupportedOperationException();
+    // TODO Auto-generated method stub
+    return null;
   }
 
   /**
@@ -374,7 +373,8 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public Coordinate getOrigin( )
   {
-    throw new UnsupportedOperationException();
+    // TODO Auto-generated method stub
+    return null;
   }
 
   /**
@@ -384,7 +384,8 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public String getSourceCRS( )
   {
-    throw new UnsupportedOperationException();
+    // TODO Auto-generated method stub
+    return null;
   }
 
   /**
@@ -393,7 +394,8 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public GM_Surface< ? > getSurface( final String targetCRS )
   {
-    throw new UnsupportedOperationException();
+    // TODO Auto-generated method stub
+    return null;
   }
 
   /**
@@ -403,7 +405,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public double getValueChecked( final int x, final int y )
   {
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 
   /**
@@ -413,6 +415,6 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public double getValue( final Coordinate crd )
   {
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 }

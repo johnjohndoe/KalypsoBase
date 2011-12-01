@@ -72,8 +72,8 @@ public interface Rule
    * Sets the name attribute's value of the rule.
    * 
    * @param name
-   *          the name of the rule
-   *          <p>
+   *            the name of the rule
+   *            <p>
    */
   void setName( String name );
 
@@ -88,8 +88,8 @@ public interface Rule
    * Sets the title attribute's value of the rule.
    * 
    * @param title
-   *          the title of the rule
-   *          <p>
+   *            the title of the rule
+   *            <p>
    */
   void setTitle( String title );
 
@@ -104,7 +104,7 @@ public interface Rule
    * Sets the abstract attribute's value of the Rule.
    * 
    * @param description
-   *          the abstract of the rule
+   *            the abstract of the rule
    */
   void setAbstract( String description );
 
@@ -119,7 +119,7 @@ public interface Rule
    * Sets the LegendGraphic element
    * 
    * @param legendGraphic
-   *          the legendGraphic of the rule
+   *            the legendGraphic of the rule
    */
   void setLegendGraphic( LegendGraphic legendGraphic );
 
@@ -135,7 +135,7 @@ public interface Rule
    * Sets the Filter.
    * 
    * @param filter
-   *          the filter element
+   *            the filter element
    */
   void setFilter( Filter filter );
 
@@ -151,7 +151,7 @@ public interface Rule
    * sets the <ElseFilter>
    * 
    * @param elseFilter
-   *          an elseFilter
+   *            an elseFilter
    */
   void setElseFilter( boolean elseFilter );
 
@@ -216,7 +216,7 @@ public interface Rule
    * Sets a set of <Symbolizer>s.
    * 
    * @param symbolizers
-   *          symbolizers for the rule
+   *            symbolizers for the rule
    */
   void setSymbolizers( Symbolizer[] symbolizers );
 
@@ -224,7 +224,7 @@ public interface Rule
    * Adds a <Symbolizer>to a set of Symbolizers.
    * 
    * @param symbolizer
-   *          symbolizer to add
+   *            symbolizer to add
    */
   void addSymbolizer( Symbolizer symbolizer );
 
@@ -232,7 +232,7 @@ public interface Rule
    * Removes a <Symbolizer>from a set of Symbolizers.
    * 
    * @param symbolizer
-   *          symbolizer to remove
+   *            symbolizer to remove
    */
   void removeSymbolizer( Symbolizer symbolizer );
 }

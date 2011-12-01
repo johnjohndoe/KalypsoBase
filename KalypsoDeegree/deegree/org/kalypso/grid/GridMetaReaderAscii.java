@@ -54,7 +54,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * {@link IGridMetaReader} implementation for ESRI Ascii Grids.
- * 
+ *
  * @author Dirk Kuch
  */
 public class GridMetaReaderAscii implements IGridMetaReader
@@ -88,7 +88,6 @@ public class GridMetaReaderAscii implements IGridMetaReader
     }
 
   }
-
   /**
    * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getPhiX()
    */
@@ -177,8 +176,8 @@ public class GridMetaReaderAscii implements IGridMetaReader
   @Override
   public RectifiedGridDomain getCoverage( final OffsetVector offsetX, final OffsetVector offsetY, final Double[] upperLeftCorner, final String crs ) throws Exception
   {
-    if( offsetX == null || offsetY == null || upperLeftCorner == null || upperLeftCorner.length != 2 || crs == null )
-      throw new IllegalStateException();
+    if( (offsetX == null) || (offsetY == null) || (upperLeftCorner == null) || (upperLeftCorner.length != 2) || (crs == null) )
+      throw (new IllegalStateException());
 
     final double[] lows = new double[] { 0, 0 };
     final double[] highs = new double[] { m_domain.getNumColumns(), m_domain.getNumRows() };

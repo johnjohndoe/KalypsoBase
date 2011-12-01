@@ -74,7 +74,7 @@ public class FeatureTemplateView extends ViewPart
 
   public FeatureTemplateView( )
   {
-    this( SWT.V_SCROLL | SWT.H_SCROLL );
+    this( SWT.V_SCROLL | SWT.H_SCROLL);
   }
 
   public FeatureTemplateView( final int style )

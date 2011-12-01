@@ -37,6 +37,7 @@ package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
@@ -134,10 +135,10 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
     if( other == this )
       return true;
 
-    if( super.equals( other ) && other instanceof GM_Point )
+    if( super.equals( other ) && (other instanceof GM_Point) )
     {
       final GM_Point p = (GM_Point) other;
-      boolean flagEq = Math.abs( getX() - p.getX() ) < GM_Position.MUTE && Math.abs( getY() - p.getY() ) < GM_Position.MUTE;
+      boolean flagEq = (Math.abs( getX() - p.getX() ) < GM_Position.MUTE) && (Math.abs( getY() - p.getY() ) < GM_Position.MUTE);
       if( getCoordinateDimension() == 3 )
       {
         final double z1 = getZ();
@@ -146,7 +147,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
         if( Double.isNaN( z1 ) && Double.isNaN( z2 ) )
           flagEq = flagEq && true;
         else
-          flagEq = flagEq && Math.abs( z1 - z2 ) < GM_Position.MUTE;
+          flagEq = flagEq && (Math.abs( z1 - z2 ) < GM_Position.MUTE);
       }
       return flagEq;
     }
@@ -362,7 +363,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
   protected GM_Point calculateCentroid( )
   {
     // We implement getCentroid ourself's, so this should never be called
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 
   @Override
@@ -372,7 +373,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
 
     for( int i = 0; i < getCoordinateDimension(); i++ )
     {
-      ret += getAsArray()[i] + " ";
+      ret += (getAsArray()[i] + " ");
     }
 
     return ret;
@@ -389,7 +390,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
     if( sourceCRS == null || sourceCRS.equalsIgnoreCase( targetCRS ) )
       return this;
 
-    final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( targetCRS );
+    IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( targetCRS );
     return geoTransformer.transform( this );
   }
 }

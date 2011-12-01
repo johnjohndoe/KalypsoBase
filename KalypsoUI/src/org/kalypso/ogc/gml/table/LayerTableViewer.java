@@ -48,8 +48,8 @@ import java.util.List;
 
 import javax.xml.namespace.NamespaceContext;
 
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -1052,7 +1052,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     if( row != null && row.getData() instanceof Feature )
     {
       final Feature focusedFeature = row == null ? null : (Feature) row.getData();
-      final IFeatureModifier modifier = column < 0 || m_modifier == null || column > m_modifier.length - 1 ? null : m_modifier[column];
+      final IFeatureModifier modifier = (column < 0 || m_modifier == null || column > m_modifier.length - 1) ? null : m_modifier[column];
 
       final IPropertyType focusedProperty = modifier == null ? null : modifier.getPropertyType();
 

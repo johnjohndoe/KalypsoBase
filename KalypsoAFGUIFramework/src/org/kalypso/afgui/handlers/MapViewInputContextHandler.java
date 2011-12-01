@@ -52,7 +52,7 @@ public class MapViewInputContextHandler extends AbstractHandler
   {
     m_url = properties.getProperty( KalypsoContextHandlerFactory.PARAM_INPUT );
 
-    Assert.isNotNull( m_url, Messages.getString( "org.kalypso.afgui.handlers.MapViewInputContextHandler.0" ) ); //$NON-NLS-1$
+    Assert.isNotNull( m_url, Messages.getString("org.kalypso.afgui.handlers.MapViewInputContextHandler.0") ); //$NON-NLS-1$
   }
 
   /**
@@ -87,7 +87,7 @@ public class MapViewInputContextHandler extends AbstractHandler
       }
       catch( final CoreException e )
       {
-        throw new ExecutionException( Messages.getString( "org.kalypso.afgui.handlers.MapViewInputContextHandler.3" ) ); //$NON-NLS-1$
+        throw new ExecutionException( Messages.getString("org.kalypso.afgui.handlers.MapViewInputContextHandler.3") ); //$NON-NLS-1$
       }
     }
     /* current scenario relative location */
@@ -97,11 +97,11 @@ public class MapViewInputContextHandler extends AbstractHandler
       final IFolder folder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
       if( folder == null )
       {
-        throw new ExecutionException( Messages.getString( "org.kalypso.afgui.handlers.MapViewInputContextHandler.4" ) ); //$NON-NLS-1$
+        throw new ExecutionException( Messages.getString("org.kalypso.afgui.handlers.MapViewInputContextHandler.4") ); //$NON-NLS-1$
       }
       else if( m_url == null )
       {
-        throw new ExecutionException( Messages.getString( "org.kalypso.afgui.handlers.MapViewInputContextHandler.5" ) ); //$NON-NLS-1$
+        throw new ExecutionException( Messages.getString("org.kalypso.afgui.handlers.MapViewInputContextHandler.5") ); //$NON-NLS-1$
       }
 
       // find file in active scenario folder
@@ -115,7 +115,7 @@ public class MapViewInputContextHandler extends AbstractHandler
 
     if( view == null || !(view instanceof MapView) )
     {
-      throw new ExecutionException( Messages.getString( "org.kalypso.afgui.handlers.MapViewInputContextHandler.6" ) ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString("org.kalypso.afgui.handlers.MapViewInputContextHandler.6") ); //$NON-NLS-1$
     }
     else
     {

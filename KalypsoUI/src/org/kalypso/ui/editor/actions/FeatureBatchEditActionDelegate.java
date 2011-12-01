@@ -129,9 +129,9 @@ public class FeatureBatchEditActionDelegate implements IActionDelegate
 
         if( m_focusedProperty != null && focusedFeature != null )
         {
-          final Object value = focusedFeature.getProperty( m_focusedProperty );
+          Object value =  focusedFeature.getProperty( m_focusedProperty );
           if( value instanceof Number )
-            m_focusedValue = ((Number) value).doubleValue();
+            m_focusedValue = ((Number)value).doubleValue();
         }
       }
       else

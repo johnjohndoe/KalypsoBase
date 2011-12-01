@@ -29,6 +29,7 @@
  */
 package org.kalypso.commons.diff;
 
+
 /**
  * @author doemming
  */

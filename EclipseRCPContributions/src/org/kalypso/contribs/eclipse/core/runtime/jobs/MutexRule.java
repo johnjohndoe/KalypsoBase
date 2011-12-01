@@ -15,7 +15,7 @@ public class MutexRule implements ISchedulingRule
    * This name is only used in the to string function, if given. If it is null or empty, the normal toString() will be
    * done.
    */
-  private final String m_name;
+  private String m_name;
 
   /**
    * The constructor.
@@ -32,7 +32,7 @@ public class MutexRule implements ISchedulingRule
    *          This name is only used in the to string function, if given. If it is null or empty, the normal toString()
    *          will be done.
    */
-  public MutexRule( final String name )
+  public MutexRule( String name )
   {
     m_name = name;
   }

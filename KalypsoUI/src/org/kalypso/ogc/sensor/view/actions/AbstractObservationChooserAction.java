@@ -58,7 +58,8 @@ public abstract class AbstractObservationChooserAction extends org.kalypso.contr
   /**
    * Creates a new instance of the class.
    */
-  public AbstractObservationChooserAction( final ObservationChooser explorer, final String text, final ImageDescriptor image, final String tooltipText )
+  public AbstractObservationChooserAction( final ObservationChooser explorer, final String text,
+      final ImageDescriptor image, final String tooltipText )
   {
     super( text, image, tooltipText );
 
@@ -68,7 +69,7 @@ public abstract class AbstractObservationChooserAction extends org.kalypso.contr
   /**
    * @return repository explorer
    */
-  public ObservationChooser getExplorer( )
+  public ObservationChooser getExplorer()
   {
     return m_explorer;
   }
@@ -76,7 +77,7 @@ public abstract class AbstractObservationChooserAction extends org.kalypso.contr
   /**
    * @return the resource viewer
    */
-  protected TreeViewer getViewer( )
+  protected TreeViewer getViewer()
   {
     return m_explorer.getViewer();
   }
@@ -84,7 +85,7 @@ public abstract class AbstractObservationChooserAction extends org.kalypso.contr
   /**
    * @return the shell to use within actions.
    */
-  protected Shell getShell( )
+  protected Shell getShell()
   {
     return m_explorer.getShell();
   }
@@ -92,7 +93,7 @@ public abstract class AbstractObservationChooserAction extends org.kalypso.contr
   /**
    * @return the repository container
    */
-  protected IRepositoryContainer getRepositoryContainer( )
+  protected IRepositoryContainer getRepositoryContainer()
   {
     return m_explorer.getRepositoryContainer();
   }

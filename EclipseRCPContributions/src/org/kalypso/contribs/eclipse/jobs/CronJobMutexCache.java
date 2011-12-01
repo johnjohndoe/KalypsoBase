@@ -56,7 +56,7 @@ public class CronJobMutexCache
   /**
    * The cache of mutexes.
    */
-  private final Map<String, ISchedulingRule> m_mutexes;
+  private Map<String, ISchedulingRule> m_mutexes;
 
   /**
    * The constructor.
@@ -74,7 +74,7 @@ public class CronJobMutexCache
    *          The mutex string.
    * @return The mutex for the given mutex string.
    */
-  public synchronized ISchedulingRule getMutex( final String mutexString )
+  public synchronized ISchedulingRule getMutex( String mutexString )
   {
     if( !m_mutexes.containsKey( mutexString ) )
       m_mutexes.put( mutexString, new MutexRule( mutexString ) );

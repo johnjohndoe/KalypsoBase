@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoFeatureView Plug-in
 Bundle-SymbolicName: org.kalypso.featureview; singleton:=true
-Bundle-Version: 11.6.3.qualifier
+Bundle-Version: 11.6.2.qualifier
 Bundle-Activator: org.kalypso.featureview.KalypsoFeatureViewPlugin
 Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-Localization: plugin
@@ -12,4 +12,4 @@ Export-Package: org.kalypso.featureview,
 Require-Bundle: org.kalypso.deegree,
  org.kalypso.ui
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

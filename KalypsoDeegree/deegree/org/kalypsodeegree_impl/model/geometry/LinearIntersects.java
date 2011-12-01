@@ -61,7 +61,7 @@ class LinearIntersects
 
     for( int i = 0; i < p1.length; i++ )
     {
-      d += (p1[i] - p2[i]) * (p1[i] - p2[i]);
+      d += ((p1[i] - p2[i]) * (p1[i] - p2[i]));
     }
 
     return Math.sqrt( d ) < mute;
@@ -77,7 +77,7 @@ class LinearIntersects
 
     final GM_Position[] points = curve.getPositions();
 
-    for( int i = 0; i < points.length - 1; i++ )
+    for( int i = 0; i < (points.length - 1); i++ )
     {
       if( linesIntersect( points[i].getX(), points[i].getY(), points[i + 1].getX(), points[i + 1].getY(), point.getX() - mute, point.getY() - mute, point.getX() + mute, point.getY() - mute )
           || linesIntersect( points[i].getX(), points[i].getY(), points[i + 1].getX(), points[i + 1].getY(), point.getX() + mute, point.getY() - mute, point.getX() + mute, point.getY() + mute )
@@ -109,9 +109,9 @@ class LinearIntersects
     final GM_Position[] other = curve2.getPositions();
     boolean inter = false;
 
-    for( int i = 0; i < points.length - 1; i++ )
+    for( int i = 0; i < (points.length - 1); i++ )
     {
-      for( int j = 0; j < other.length - 1; j++ )
+      for( int j = 0; j < (other.length - 1); j++ )
       {
         if( linesIntersect( points[i].getX(), points[i].getY(), points[i + 1].getX(), points[i + 1].getY(), other[j].getX(), other[j].getY(), other[j + 1].getX(), other[j + 1].getY() ) )
         {
@@ -303,7 +303,7 @@ class LinearIntersects
     final int cnt1 = curve1.getNumberOfCurveSegments();
     final int cnt2 = curve2.getNumberOfCurveSegments();
 
-    for( int i = 0; i < cnt1 && !inter; i++ )
+    for( int i = 0; (i < cnt1) && !inter; i++ )
     {
       for( int j = 0; j < cnt2; j++ )
       {
@@ -384,17 +384,17 @@ class LinearIntersects
     PX -= X1;
     PY -= Y1;
 
-    double ccw = PX * Y2 - PY * X2;
+    double ccw = (PX * Y2) - (PY * X2);
 
     if( ccw == 0.0 )
     {
-      ccw = PX * X2 + PY * Y2;
+      ccw = (PX * X2) + (PY * Y2);
 
       if( ccw > 0.0 )
       {
         PX -= X2;
         PY -= Y2;
-        ccw = PX * X2 + PY * Y2;
+        ccw = (PX * X2) + (PY * Y2);
 
         if( ccw < 0.0 )
         {
@@ -403,18 +403,18 @@ class LinearIntersects
       }
     }
 
-    return ccw < 0.0 ? -1 : ccw > 0.0 ? 1 : 0;
+    return (ccw < 0.0) ? (-1) : ((ccw > 0.0) ? 1 : 0);
   }
 
   /**
    * Tests if the line segment from (x1,&nbsp;y1) to (x2,&nbsp;y2) intersects the line segment from (x3,&nbsp;y3) to
    * (x4,&nbsp;y4).
    * 
-   * @return <code>true</code> if the first specified line segment and the second specified line segment intersect each
-   *         other; <code>false</code> otherwise.
+   * @return <code>true</code> if the first specified line segment and the second specified line segment intersect
+   *         each other; <code>false</code> otherwise.
    */
   protected static boolean linesIntersect( final double x1, final double y1, final double x2, final double y2, final double x3, final double y3, final double x4, final double y4 )
   {
-    return relativeCCW( x1, y1, x2, y2, x3, y3 ) * relativeCCW( x1, y1, x2, y2, x4, y4 ) <= 0 && relativeCCW( x3, y3, x4, y4, x1, y1 ) * relativeCCW( x3, y3, x4, y4, x2, y2 ) <= 0;
+    return ((relativeCCW( x1, y1, x2, y2, x3, y3 ) * relativeCCW( x1, y1, x2, y2, x4, y4 ) <= 0) && (relativeCCW( x3, y3, x4, y4, x1, y1 ) * relativeCCW( x3, y3, x4, y4, x2, y2 ) <= 0));
   }
 }

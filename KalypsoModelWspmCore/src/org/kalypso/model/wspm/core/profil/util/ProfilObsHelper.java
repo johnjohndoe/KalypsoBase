@@ -52,12 +52,8 @@ import org.kalypso.observation.result.TupleResult;
  * @author kimwerner, kuch
  */
 
-public final class ProfilObsHelper
+public class ProfilObsHelper
 {
-  private ProfilObsHelper( )
-  {
-  }
-
   /**
    * @deprecated Use {@link IProfil#hasPointProperty(String)} instead.
    */
@@ -99,4 +95,9 @@ public final class ProfilObsHelper
     return null;
   }
 
+  
+
+ 
+  
+  
 }

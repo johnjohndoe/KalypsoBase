@@ -58,8 +58,6 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
  */
 public class PoolGmlWorkspaceProvider extends AbstractGmlWorkspaceProvider implements ILoadStartable
 {
-  public static final IStatus LOADING_STATUS = new Status( IStatus.INFO, KalypsoCorePlugin.getID(), "Loading..." );
-
   private final IPoolListener m_poolListener = new IPoolListener()
   {
     @Override
@@ -106,7 +104,8 @@ public class PoolGmlWorkspaceProvider extends AbstractGmlWorkspaceProvider imple
   @Override
   public void startLoading( )
   {
-    setWorkspace( null, LOADING_STATUS );
+    final IStatus loadingStatus = new Status( IStatus.INFO, KalypsoCorePlugin.getID(), Messages.getString( "org.kalypso.ogc.gml.PoolGmlWorkspaceProvider.0" ) ); //$NON-NLS-1$
+    setWorkspace( null, loadingStatus );
 
     try
     {
@@ -144,32 +143,12 @@ public class PoolGmlWorkspaceProvider extends AbstractGmlWorkspaceProvider imple
     return m_poolKey;
   }
 
-  private KeyInfo getInfo( )
+  public void save( final IProgressMonitor monitor ) throws CoreException
   {
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
     final KeyInfo info = pool.getInfoForKey( m_poolKey );
-    return info;
-  }
-
-  public void save( final IProgressMonitor monitor ) throws CoreException
-  {
-    final KeyInfo info = getInfo();
     if( info.isDirty() )
       info.saveObject( monitor );
   }
 
-  public boolean isDirty( )
-  {
-    final KeyInfo info = getInfo();
-    if( info == null )
-      return false;
-
-    return info.isDirty();
-  }
-
-  public void reload( final boolean evenIfDirty )
-  {
-    final KeyInfo info = getInfo();
-    info.reload( evenIfDirty );
-  }
 }

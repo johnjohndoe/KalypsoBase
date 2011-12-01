@@ -67,7 +67,7 @@ public class MarkerIconMapperProvider extends AbstractMapperProvider
   {
     final LinkedHashMap<String, ImageDescriptor> string2Image = new LinkedHashMap<String, ImageDescriptor>();
 
-    final Map<String, String> mapping = getParameterContainer().getParameterMap( "mapping" ); // $NON-NLS-1$
+    final Map<String, String> mapping = getParameterContainer().getParameterMap( "mapping" );
     for( final Entry<String, String> e : mapping.entrySet() )
     {
       // ImageLoader il = new ImageLoader();

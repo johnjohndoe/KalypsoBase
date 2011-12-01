@@ -42,6 +42,7 @@ package org.kalypso.commons.time;
 
 import java.util.Calendar;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.joda.time.Period;
 
 /**
@@ -90,7 +91,7 @@ public final class PeriodUtils
       case Calendar.AM_PM:
       case Calendar.ERA:
       default:
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
   }
 }

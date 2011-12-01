@@ -69,10 +69,10 @@ public class CGIServlet extends CGI
    * @see javax.servlet.GenericServlet#getInitParameter(java.lang.String)
    */
   @Override
-  public String getInitParameter( final String name )
+  public String getInitParameter( String name )
   {
     /* If the parameter has a value, always return it. */
-    final String initParameter = super.getInitParameter( name );
+    String initParameter = super.getInitParameter( name );
     if( initParameter != null )
       return initParameter;
 
@@ -82,8 +82,8 @@ public class CGIServlet extends CGI
 
     try
     {
-      final URL cgibinResourceBase = Platform.getInstallLocation().getURL();
-      final File file = FileUtils.toFile( cgibinResourceBase );
+      URL cgibinResourceBase = Platform.getInstallLocation().getURL();
+      File file = FileUtils.toFile( cgibinResourceBase );
 
       if( !"ENV_PROJ_LIB".equals( name ) )
         return file.toString();
@@ -91,7 +91,7 @@ public class CGIServlet extends CGI
       return new File( file, "cgi-bin" ).toString();
 
     }
-    catch( final Exception ex )
+    catch( Exception ex )
     {
       ex.printStackTrace();
       return null;
@@ -104,9 +104,9 @@ public class CGIServlet extends CGI
   @Override
   public Enumeration< ? > getInitParameterNames( )
   {
-    final Set<String> results = new HashSet<String>();
+    Set<String> results = new HashSet<String>();
 
-    final Enumeration< ? > initParameterNames = super.getInitParameterNames();
+    Enumeration< ? > initParameterNames = super.getInitParameterNames();
     while( initParameterNames.hasMoreElements() )
     {
       results.add( (String) initParameterNames.nextElement() );

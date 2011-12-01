@@ -40,11 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.factory.util;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang.StringUtils;
 import org.apache.xmlbeans.XmlException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.w3c.dom.Node;
 
 import de.openali.odysseus.chart.factory.OdysseusChartFactory;
@@ -178,10 +178,10 @@ public final class LayerTypeHelper
     }
     catch( final XmlException e )
     {
-      OdysseusChartFactory.getDefault().getLog().log( new Status( IStatus.ERROR, OdysseusChartFactory.PLUGIN_ID, e.getLocalizedMessage(), e ) );
+      OdysseusChartFactory.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
 
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 
   public static ILayerProvider getLayerTypeProvider( final IExtensionLoader loader, final LayerType layerType )

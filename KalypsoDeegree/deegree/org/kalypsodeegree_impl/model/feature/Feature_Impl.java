@@ -322,7 +322,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   @Override
   public void setWorkspace( final GMLWorkspace workspace )
   {
-    if( m_parent == null || m_parent == workspace )
+    if( (m_parent == null) || (m_parent == workspace) )
     {
       m_parent = workspace;
     }
@@ -482,7 +482,7 @@ public class Feature_Impl extends PlatformObject implements Feature
       return;
 
     final IRelationType rt = getParentRelation();
-    if( rt != null && rt.isList() )
+    if( (rt != null) && rt.isList() )
     {
       // rt relation type and this relation type can differ (different feature workspaces!)
       final IRelationType relation = (IRelationType) parent.getFeatureType().getProperty( rt.getQName() );

@@ -47,7 +47,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.xml.bind.Marshaller;
-import javax.xml.namespace.QName;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.IOUtils;
@@ -83,8 +82,6 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.IExportableObjectFactory;
@@ -93,8 +90,6 @@ import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.IFeaturesProvider;
 import org.kalypso.ogc.gml.IFeaturesProviderListener;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
-import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
-import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypso.ogc.gml.table.ILayerTableInput;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
@@ -104,7 +99,7 @@ import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.template.gistableview.Gistableview.Layer;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.editor.AbstractWorkbenchPart;
+import org.kalypso.ui.editor.AbstractEditorPart;
 import org.kalypso.ui.editor.gistableeditor.actions.ColumnAction;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -119,10 +114,10 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
  * <p>
  * Zeigt das ganze als Tabelendarstellung, die einzelnen Datenquellen k?nnen potentiell editiert werden
  * </p>
- *
+ * 
  * @author belger
  */
-public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart, ISelectionProvider, IExportableObjectFactory
+public class GisTableEditor extends AbstractEditorPart implements IEditorPart, ISelectionProvider, IExportableObjectFactory
 {
   private final IFeatureChangeListener m_fcl = new IFeatureChangeListener()
   {
@@ -367,38 +362,9 @@ public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart
     final IPropertyType[] ftps = featureType.getProperties();
     for( final IPropertyType element : ftps )
     {
-      if( isColumnShowable( element ) )
-      {
-        final GMLXPath columnPath = new GMLXPath( element.getQName() );
-        manager.add( new ColumnAction( this, m_layerTable, columnPath, element.getAnnotation() ) );
-      }
+      final GMLXPath columnPath = new GMLXPath( element.getQName() );
+      manager.add( new ColumnAction( this, m_layerTable, columnPath, element.getAnnotation() ) );
     }
-  }
-
-  private boolean isColumnShowable( final IPropertyType type )
-  {
-    final QName typeName = type.getQName();
-
-    if( Feature.QN_NAME.equals( typeName ) )
-      return true;
-
-    if( Feature.QN_BOUNDED_BY.equals( typeName ) )
-      return false;
-
-    if( type instanceof IValuePropertyType )
-    {
-      final IValuePropertyType vpt = (IValuePropertyType) type;
-      if( vpt.isGeometry() )
-      {
-        /* Do not show geometries without type handler */
-        final ITypeRegistry<IGuiTypeHandler> registry = GuiTypeRegistrySingleton.getTypeRegistry();
-        final IGuiTypeHandler typeHandler = registry.getTypeHandlerFor( vpt );
-        if( typeHandler == null )
-          return false;
-      }
-    }
-
-    return true;
   }
 
   /**

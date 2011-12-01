@@ -44,7 +44,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -67,13 +66,13 @@ import de.renew.workflow.connector.WorkflowConnectorPlugin;
  */
 public abstract class AbstractCaseManager<T extends ICase> implements ICaseManager<T>
 {
-  public static final String METADATA_FOLDER = ".metadata"; //$NON-NLS-1$
+  public static final String METADATA_FOLDER = ".metadata";
 
-  public static final String METADATA_FILENAME = "cases.xml"; //$NON-NLS-1$
+  public static final String METADATA_FILENAME = "cases.xml";
 
   private final JAXBContext m_jc;
 
-  private final List<ICaseManagerListener<T>> m_listeners = Collections.synchronizedList( new ArrayList<ICaseManagerListener<T>>() );
+  private final List<ICaseManagerListener<T>> m_listeners = new ArrayList<ICaseManagerListener<T>>();
 
   private ICaseList m_cases;
 
@@ -82,8 +81,6 @@ public abstract class AbstractCaseManager<T extends ICase> implements ICaseManag
   protected final IProject m_project;
 
   private final IFile m_metaDataFile;
-
-  private IStatus m_status = Status.OK_STATUS;
 
   /**
    * Initializes the {@link ICaseManager} on the given project
@@ -96,38 +93,28 @@ public abstract class AbstractCaseManager<T extends ICase> implements ICaseManag
    *              <li>The metadata folder is not accessible.</li>
    *              <li>There is a problem loading the database.</li>
    */
-  public AbstractCaseManager( final IProject project, final JAXBContext jc )
+  public AbstractCaseManager( final IProject project, final JAXBContext jc ) throws CoreException
   {
     m_jc = jc;
     m_project = project;
 
     final IFolder folder = project.getFolder( METADATA_FOLDER );
-    m_metaDataFile = folder.getFile( METADATA_FILENAME );
-    /* Prepare for exception: case-list with not cases */
-    m_cases = new CaseListHandler( new CaseList(), m_project );
-
-    try
+    if( !folder.exists() )
     {
-      if( !folder.exists() )
+      try
+      {
         folder.create( false, true, null );
-      loadModel();
+      }
+      catch( final CoreException e )
+      {
+        // ignore
+        e.printStackTrace();
+      }
     }
-    catch( final CoreException e )
-    {
-      // ignore
-      // evil: if this fails, the next step wil fail too, so we could also throw the exception...
-      e.printStackTrace();
-      m_status = e.getStatus();
-    }
-  }
 
-  /**
-   * @see de.renew.workflow.connector.cases.ICaseManager#getStatus()
-   */
-  @Override
-  public IStatus getStatus( )
-  {
-    return m_status;
+    final IFile metadataFile = folder.getFile( METADATA_FILENAME );
+    m_metaDataFile = metadataFile;
+    loadModel();
   }
 
   private void loadModel( ) throws CoreException
@@ -148,7 +135,7 @@ public abstract class AbstractCaseManager<T extends ICase> implements ICaseManag
       }
       catch( final Throwable e )
       {
-        final IStatus status = new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, "", e );
+        final IStatus status = new Status( Status.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, "", e );
         throw new CoreException( status );
       }
     }
@@ -229,7 +216,7 @@ public abstract class AbstractCaseManager<T extends ICase> implements ICaseManag
         }
         catch( final Exception e )
         {
-          return new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, "", e );
+          return new Status( Status.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, "", e );
         }
         finally
         {

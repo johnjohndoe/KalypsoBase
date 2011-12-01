@@ -192,7 +192,7 @@ public class Gml3EnvelopeGuiTypeHandler extends LabelProvider implements IGuiTyp
     final GM_Envelope envelope = (GM_Envelope) element;
 
     final String result = new Double( envelope.getMin().getX() ).toString() + ";" + new Double( envelope.getMin().getY() ).toString() + ";" + new Double( envelope.getMax().getX() ).toString() + ";" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        + new Double( envelope.getMax().getY() ).toString();
+    + new Double( envelope.getMax().getY() ).toString();
 
     return result;
   }

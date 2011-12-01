@@ -58,11 +58,9 @@ import org.kalypsodeegree.model.typeHandler.LineStringHandler;
 import org.kalypsodeegree.model.typeHandler.MultiLineStringHandler;
 import org.kalypsodeegree.model.typeHandler.MultiPointHandler;
 import org.kalypsodeegree.model.typeHandler.MultiPolygonHandler;
-import org.kalypsodeegree.model.typeHandler.MultiSurfaceHandler;
 import org.kalypsodeegree.model.typeHandler.PointHandler;
 import org.kalypsodeegree.model.typeHandler.PolygonHandler;
 import org.kalypsodeegree.model.typeHandler.PolyhedralSurfaceHandler;
-import org.kalypsodeegree.model.typeHandler.SurfaceHandler;
 import org.kalypsodeegree.model.typeHandler.TriangulatedSurfaceHandler;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerBigDecimal;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerBigInteger;
@@ -89,7 +87,7 @@ import org.kalypsodeegree_impl.tools.GMLConstants;
 /**
  * @author doemming
  */
-public final class TypeHandlerUtilities
+public class TypeHandlerUtilities
 {
   /**
    * simple type handler of build-in XMLSCHEMA types <br>
@@ -103,8 +101,7 @@ public final class TypeHandlerUtilities
     try
     {
       // FIXE/HACK: force to use the jdk-implementation of DataFactory, else the one in org.apache.xerces is used.
-      // If we do not do this, two different implementations of XMLGregorianCalendar will be used, which will cause
-      // exceptions when comparing them (this is a xerces bug...)
+      // If we do not do this, two different implementations of XMLGregorianCalendar will be used, which will cause exceptions when comparaing them (this is a xerces bug...)
       final DatatypeFactory dataTypeFactory = DatatypeFactory.newInstance( "com.sun.org.apache.xerces.internal.jaxp.datatype.DatatypeFactoryImpl", TypeHandlerUtilities.class.getClassLoader() );
       // final DatatypeFactory dataTypeFactory = DatatypeFactory.newInstance();
 
@@ -239,7 +236,7 @@ public final class TypeHandlerUtilities
       @Override
       public JAXBContext getJaxBContextForGMLVersion( final String gmlVersion )
       {
-        if( gmlVersion == null || gmlVersion.startsWith( "2" ) )
+        if( (gmlVersion == null) || gmlVersion.startsWith( "2" ) )
         {
           return KalypsoOGC2xJAXBcontext.getContext();
         }
@@ -252,12 +249,10 @@ public final class TypeHandlerUtilities
     };
 
     // Basic GML 3 types
-    // TODO: implements as sax handlers
     registry.registerTypeHandler( new GM_EnvelopeBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "BoundingShapeType" ), GM_Envelope.class, false ) );
 
     // Geometries
-    // TODO: probably not needed, as soon as all geometries are parsed with sax: these are just properties pointing to a
-    // gm_object
+    // TODO: probably not needed, as soon as all geometries are parsed with sax: these are just properties pointing to a gm_object
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_GEOMETRY, GMLConstants.QN_GEOMETRY, GM_Object.class, true ) );
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_LOCATION, GMLConstants.QN_LOCATION, GM_Object.class, true ) );
 
@@ -267,15 +262,20 @@ public final class TypeHandlerUtilities
     // - Surface from SurfaceType
     // - Surface from PolygonType
 
+    // registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider,
+// GMLConstants.QN_SURFACE, GMLConstants.QN_SURFACE, GM_Surface.class, true ) );
+    // registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider,
+// GMLConstants.QN_POLYGON, GMLConstants.QN_POLYGON, GM_Surface.class, true ) );
+// registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider,
+// GMLConstants.QN_MULTI_POLYGON, GMLConstants.QN_MULTI_POLYGON, GM_MultiSurface.class, true ) );
+
     registry.registerTypeHandler( new PointHandler() );
     registry.registerTypeHandler( new MultiPointHandler() );
 
     registry.registerTypeHandler( new LineStringHandler() );
     registry.registerTypeHandler( new MultiLineStringHandler() );
 
-    registry.registerTypeHandler( new SurfaceHandler() );
     registry.registerTypeHandler( new PolygonHandler() );
-    registry.registerTypeHandler( new MultiSurfaceHandler() );
     registry.registerTypeHandler( new MultiPolygonHandler() );
 
     registry.registerTypeHandler( new TriangulatedSurfaceHandler() );

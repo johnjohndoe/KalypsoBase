@@ -56,7 +56,7 @@ public class Sleak
 
   public void open( )
   {
-    display = ChartUtilities.getDisplay();
+    display = Display.getCurrent();
     shell = new Shell( display );
     shell.setText( "S-Leak" );
     list = new List( shell, SWT.BORDER | SWT.V_SCROLL );
@@ -128,8 +128,9 @@ public class Sleak
   void refreshLabel( )
   {
     int colors = 0, cursors = 0, fonts = 0, gcs = 0, images = 0, regions = 0;
-    for( final Object object : objects )
+    for( int i = 0; i < objects.length; i++ )
     {
+      final Object object = objects[i];
       if( object instanceof Color )
       {
         colors++;
@@ -225,9 +226,9 @@ public class Sleak
     list.removeAll();
     text.setText( "" );
     canvas.redraw();
-    for( final Object object : objects )
+    for( int i = 0; i < objects.length; i++ )
     {
-      list.add( objectName( object ) );
+      list.add( objectName( objects[i] ) );
     }
     refreshLabel();
     layout();
@@ -291,8 +292,9 @@ public class Sleak
       final String lf = text.getLineDelimiter();
       final StringBuffer buffer = new StringBuffer();
 
-      for( final FontData data : array )
+      for( int i = 0; i < array.length; i++ )
       {
+        final FontData data = array[i];
         String style = "NORMAL";
         final int bits = data.getStyle();
         if( bits != 0 )

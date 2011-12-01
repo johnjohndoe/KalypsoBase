@@ -47,7 +47,7 @@ import java.util.TreeSet;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -127,7 +127,7 @@ class SpatialComposite extends AbstractFilterComposite
   {
     if( m_oldGeometryOp == null && m_newGeometryOp == null )
     {
-      m_errorMessageReciever.setErrorMessage( Messages.getString( "org.kalypso.ogc.gml.filterdialog.widgets.SpatialComposite.0" ) ); //$NON-NLS-1$
+      m_errorMessageReciever.setErrorMessage( Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.SpatialComposite.0") ); //$NON-NLS-1$
       return;
     }
     final String opsName = m_operation.getOperatorName();
@@ -135,7 +135,7 @@ class SpatialComposite extends AbstractFilterComposite
     // possible oprations (they have been initialized when calling the factory)
     m_supportedOpsLable = new Label( this, SWT.NULL );
     // m_supportedOpsLable.setLayoutData( new GridData() );
-    m_supportedOpsLable.setText( Messages.getString( "org.kalypso.ogc.gml.filterdialog.widgets.SpatialComposite.1" ) ); //$NON-NLS-1$
+    m_supportedOpsLable.setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.SpatialComposite.1") ); //$NON-NLS-1$
     m_supportedOpsCombo = new Combo( this, SWT.FILL | SWT.DROP_DOWN );
     // m_supportedOpsCombo.setLayout( new GridLayout() );
     final GridData data1 = new GridData( GridData.FILL_HORIZONTAL );
@@ -164,7 +164,7 @@ class SpatialComposite extends AbstractFilterComposite
     } );
     // set Geometry
     m_spatialLabel = new Label( this, SWT.NULL );
-    m_spatialLabel.setText( Messages.getString( "org.kalypso.ogc.gml.filterdialog.widgets.SpatialComposite.2" ) ); //$NON-NLS-1$
+    m_spatialLabel.setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.SpatialComposite.2") ); //$NON-NLS-1$
 
     final Combo combo = new Combo( this, SWT.FILL | SWT.DROP_DOWN | SWT.READ_ONLY );
     final GridData data = new GridData( GridData.FILL_HORIZONTAL );
@@ -197,7 +197,7 @@ class SpatialComposite extends AbstractFilterComposite
     // get
     m_geomLable = new Label( this, SWT.NONE );
     // m_geomLable.setLayoutData( new GridData() );
-    m_geomLable.setText( Messages.getString( "org.kalypso.ogc.gml.filterdialog.widgets.SpatialComposite.3" ) ); //$NON-NLS-1$
+    m_geomLable.setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.SpatialComposite.3") ); //$NON-NLS-1$
     m_geomOpsCombo = new Combo( this, SWT.FILL | SWT.DROP_DOWN | SWT.READ_ONLY );
     m_geomOpsCombo.setLayoutData( new GridData() );
     if( m_oldGeometryOp != null )
@@ -322,7 +322,7 @@ class SpatialComposite extends AbstractFilterComposite
     catch( final Exception e )
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
-      ErrorDialog.openError( getShell(), Messages.getString( "org.kalypso.ogc.gml.filterdialog.widgets.SpatialComposite.6" ), e.getMessage(), status ); //$NON-NLS-1$
+      ErrorDialog.openError( getShell(), Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.SpatialComposite.6"), e.getMessage(), status ); //$NON-NLS-1$
       return false;
     }
     return true;

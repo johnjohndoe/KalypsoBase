@@ -87,10 +87,10 @@ public class PoolView extends ViewPart implements ITableLabelProvider
 
     public PoolViewColumn( final String txt, final IMemento memento )
     {
-      text = txt;
+      this.text = txt;
 
       final Integer mementoWidth = memento == null ? null : memento.getInteger( txt );
-      width = mementoWidth == null ? 100 : mementoWidth.intValue();
+      this.width = mementoWidth == null ? 100 : mementoWidth.intValue();
     }
 
     public abstract String getValue( final KeyInfo info );
@@ -126,11 +126,11 @@ public class PoolView extends ViewPart implements ITableLabelProvider
     final TableViewer viewer = m_viewer;
     final ResourcePool pool = m_pool;
 
-    if( m_pool == null || viewer == null )
+    if( (m_pool == null) || (viewer == null) )
       return;
 
     final Table table = viewer.getTable();
-    if( table != null && !table.isDisposed() )
+    if( (table != null) && !table.isDisposed() )
       table.getDisplay().asyncExec( new Runnable()
       {
         @Override
@@ -169,7 +169,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
       public void open( final OpenEvent event )
       {
         final ISelection selection = event.getSelection();
-        if( !selection.isEmpty() && selection instanceof IStructuredSelection )
+        if( !selection.isEmpty() && (selection instanceof IStructuredSelection) )
         {
           final KeyInfo info = (KeyInfo) ((IStructuredSelection) selection).getFirstElement();
 

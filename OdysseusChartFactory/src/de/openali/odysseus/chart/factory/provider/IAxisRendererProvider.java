@@ -21,7 +21,7 @@ public interface IAxisRendererProvider extends IChartComponentProvider
   /**
    * @return axis created by the AxisProvider
    */
-  IAxisRenderer getAxisRenderer( final POSITION position ) throws ConfigurationException;
+  IAxisRenderer getAxisRenderer(final POSITION position ) throws ConfigurationException;
 
   void init( final IChartModel model, final String id, final IParameterContainer parameters, final URL context, final IStyleSet styleSet );
 

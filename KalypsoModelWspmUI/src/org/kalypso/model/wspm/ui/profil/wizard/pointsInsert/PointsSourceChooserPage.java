@@ -74,7 +74,7 @@ public class PointsSourceChooserPage extends WizardPage
 
   public PointsSourceChooserPage( )
   {
-    super( "pointsSourceChooser", org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.PointsSourceChooserPage.0" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( "pointsSourceChooser", org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.PointsSourceChooserPage.0"), null ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -86,9 +86,7 @@ public class PointsSourceChooserPage extends WizardPage
     final String sourceID = getDialogSettings().get( DLG_SETTINGS_SOURCE_ID );
 
     if( sourceID == null )
-    {
       m_selectedSource = m_sources.length == 0 ? null : m_sources[0];
-    }
     else
     {
       for( final IPointsSource source : m_sources )
@@ -104,7 +102,7 @@ public class PointsSourceChooserPage extends WizardPage
     final Composite panel = new Composite( parent, SWT.NONE );
     panel.setLayout( new GridLayout( 2, false ) );
 
-    new Label( panel, SWT.NONE ).setText( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.PointsSourceChooserPage.1" ) ); //$NON-NLS-1$
+    new Label( panel, SWT.NONE ).setText( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.PointsSourceChooserPage.1") ); //$NON-NLS-1$
 
     final ComboViewer comboViewer = new ComboViewer( panel, SWT.DROP_DOWN | SWT.READ_ONLY );
     comboViewer.setContentProvider( new ArrayContentProvider() );
@@ -129,14 +127,10 @@ public class PointsSourceChooserPage extends WizardPage
     m_sourceStack.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true, 2, 1 ) );
 
     for( final IPointsSource source : m_sources )
-    {
       source.createControl( m_sourceStack );
-    }
 
     if( m_sources.length > 0 )
-    {
       comboViewer.setSelection( new StructuredSelection( m_selectedSource ) );
-    }
 
     setControl( panel );
   }

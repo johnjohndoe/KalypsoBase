@@ -68,7 +68,7 @@ public class LegendThemeWizardPage extends WizardPage
   /**
    * The map modell.
    */
-  private final IKalypsoLayerModell m_mapModell;
+  private IKalypsoLayerModell m_mapModell;
 
   /**
    * The selected properties.
@@ -83,7 +83,7 @@ public class LegendThemeWizardPage extends WizardPage
    * @param mapModell
    *          The map modell.
    */
-  public LegendThemeWizardPage( final String pageName, final IKalypsoLayerModell mapModell )
+  public LegendThemeWizardPage( String pageName, IKalypsoLayerModell mapModell )
   {
     super( pageName );
 
@@ -106,7 +106,7 @@ public class LegendThemeWizardPage extends WizardPage
    * @param mapModell
    *          The map modell.
    */
-  public LegendThemeWizardPage( final String pageName, final String title, final ImageDescriptor titleImage, final IKalypsoLayerModell mapModell )
+  public LegendThemeWizardPage( String pageName, String title, ImageDescriptor titleImage, IKalypsoLayerModell mapModell )
   {
     super( pageName, title, titleImage );
 
@@ -120,14 +120,14 @@ public class LegendThemeWizardPage extends WizardPage
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  public void createControl( final Composite parent )
+  public void createControl( Composite parent )
   {
     /* Create the main composite. */
-    final Composite main = new Composite( parent, SWT.NONE );
+    Composite main = new Composite( parent, SWT.NONE );
     main.setLayout( new GridLayout( 1, false ) );
 
     /* Create the legend composite. */
-    final LegendComposite legendComposite = new LegendComposite( main, SWT.NONE, m_mapModell, null );
+    LegendComposite legendComposite = new LegendComposite( main, SWT.NONE, m_mapModell, null );
     legendComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     legendComposite.addLegendChangedListener( new ILegendChangedListener()
     {
@@ -136,18 +136,18 @@ public class LegendThemeWizardPage extends WizardPage
        *      int, int, org.eclipse.swt.graphics.Color, int, java.lang.String[], int)
        */
       @Override
-      public void legendPropertyChanged( final Properties properties, final int horizontal, final int vertical, final Color backgroundColor, final int insets, final String[] themeIds, final int fontSize )
+      public void legendPropertyChanged( Properties properties, int horizontal, int vertical, Color backgroundColor, int insets, String[] themeIds, int fontSize )
       {
         /* Store the properties. */
         m_properties.clear();
 
         /* Get the properties. */
-        final String horizontalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
-        final String verticalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
-        final String backgroundColorProperty = properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
-        final String insetsProperty = properties.getProperty( LegendUtilities.THEME_PROPERTY_INSETS );
-        final String themeIdsProperty = properties.getProperty( LegendUtilities.THEME_PROPERTY_THEME_IDS );
-        final String fontSizeProperty = properties.getProperty( LegendUtilities.THEME_PROPERTY_FONT_SIZE );
+        String horizontalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
+        String verticalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
+        String backgroundColorProperty = properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
+        String insetsProperty = properties.getProperty( LegendUtilities.THEME_PROPERTY_INSETS );
+        String themeIdsProperty = properties.getProperty( LegendUtilities.THEME_PROPERTY_THEME_IDS );
+        String fontSizeProperty = properties.getProperty( LegendUtilities.THEME_PROPERTY_FONT_SIZE );
 
         /* Set the properties. */
         m_properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );

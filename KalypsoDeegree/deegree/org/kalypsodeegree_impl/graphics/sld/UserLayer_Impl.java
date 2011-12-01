@@ -63,7 +63,7 @@ public class UserLayer_Impl extends Layer_Impl implements UserLayer, Marshallabl
   /**
    * constructor initializing the class with the <UserLayer>
    */
-  UserLayer_Impl( final String name, final LayerFeatureConstraints layerFeatureConstraints, final Style[] userStyles, final RemoteOWS remoteOWS )
+  UserLayer_Impl( String name, LayerFeatureConstraints layerFeatureConstraints, Style[] userStyles, RemoteOWS remoteOWS )
   {
     super( name, layerFeatureConstraints, userStyles );
     setRemoteOWS( remoteOWS );
@@ -76,7 +76,7 @@ public class UserLayer_Impl extends Layer_Impl implements UserLayer, Marshallabl
    * @return the RemoteOWS
    */
   @Override
-  public RemoteOWS getRemoteOWS( )
+  public RemoteOWS getRemoteOWS()
   {
     return remoteOWS;
   }
@@ -88,13 +88,13 @@ public class UserLayer_Impl extends Layer_Impl implements UserLayer, Marshallabl
    *          the RemoteOWS
    */
   @Override
-  public void setRemoteOWS( final RemoteOWS remoteOWS )
+  public void setRemoteOWS( RemoteOWS remoteOWS )
   {
     this.remoteOWS = remoteOWS;
   }
 
   @Override
-  public String toString( )
+  public String toString()
   {
     String ret = getClass().getName() + "\n";
     ret = "remoteOWS = " + remoteOWS + "\n";
@@ -108,23 +108,23 @@ public class UserLayer_Impl extends Layer_Impl implements UserLayer, Marshallabl
    * @return xml representation of the UserLayer
    */
   @Override
-  public String exportAsXML( )
+  public String exportAsXML()
   {
     Debug.debugMethodBegin();
 
-    final StringBuffer sb = new StringBuffer( 5000 );
+    StringBuffer sb = new StringBuffer( 5000 );
     sb.append( "<UserLayer>" );
     sb.append( "<Name>" ).append( name ).append( "</Name>" );
     if( remoteOWS != null )
     {
-      sb.append( ((Marshallable) remoteOWS).exportAsXML() );
+      sb.append( ( (Marshallable)remoteOWS ).exportAsXML() );
     }
 
-    sb.append( ((Marshallable) layerFeatureConstraints).exportAsXML() );
+    sb.append( ( (Marshallable)layerFeatureConstraints ).exportAsXML() );
 
     for( int i = 0; i < styles.size(); i++ )
     {
-      sb.append( ((Marshallable) styles.get( i )).exportAsXML() );
+      sb.append( ( (Marshallable)styles.get( i ) ).exportAsXML() );
     }
     sb.append( "</UserLayer>" );
 

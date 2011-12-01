@@ -20,17 +20,17 @@ public class StringValidityKey
     m_validity = validity;
   }
 
-  public Date getValidity( )
+  public Date getValidity()
   {
     return m_validity;
   }
 
-  public String getString( )
+  public String getString()
   {
     return m_string;
   }
 
-  public static Comparator<StringValidityKey> createComparatorForStringCompareOnly( )
+  public static Comparator<StringValidityKey> createComparatorForStringCompareOnly()
   {
     return new StringComparator();
   }

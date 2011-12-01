@@ -69,7 +69,7 @@ import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -515,7 +515,7 @@ public final class ZmlFactory
    * @param timezone
    *          the time zone into which dates should be converted before serialised
    */
-  public static Observation createXML( final IObservation obs, final IRequest args ) throws FactoryException
+  private static Observation createXML( final IObservation obs, final IRequest args ) throws FactoryException
   {
     try
     {
@@ -572,7 +572,7 @@ public final class ZmlFactory
       // sort axes, this is not needed from a XML view, but very useful when comparing marshaled files (e.g.
       // JUnit-Test)
       final TreeSet<IAxis> sortedAxis = new TreeSet<IAxis>( new Comparator<IAxis>()
-      {
+          {
         @Override
         public int compare( final IAxis a1, final IAxis a2 )
         {
@@ -594,7 +594,7 @@ public final class ZmlFactory
           }
           return type1.compareTo( type2 );
         }
-      } );
+          } );
 
       for( final IAxis axis : obs.getAxes() )
       {

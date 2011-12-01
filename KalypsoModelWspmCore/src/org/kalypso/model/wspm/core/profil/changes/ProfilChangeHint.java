@@ -59,10 +59,10 @@ public class ProfilChangeHint
 
   private boolean m_markerMoved = false;
 
-  private boolean m_profilePropertyChanged = false;
+  private boolean m_ProfilPropertyChanged = false;
 
   private boolean m_activePointChanged = false;
-
+  
   private boolean m_activePropertyChanged = false;
 
   public void setObjectChanged( )
@@ -159,12 +159,12 @@ public class ProfilChangeHint
    */
   public boolean isProfilPropertyChanged( )
   {
-    return m_profilePropertyChanged;
+    return m_ProfilPropertyChanged;
   }
 
   public void setProfilPropertyChanged( final boolean profilPropertyChanged )
   {
-    m_profilePropertyChanged = profilPropertyChanged;
+    m_ProfilPropertyChanged = profilPropertyChanged;
   }
 
   public void setActivePointChanged( )
@@ -172,11 +172,8 @@ public class ProfilChangeHint
     m_activePointChanged = true;
   }
 
-  /**
-   * true, if the active point or the active property of the profil changes.
-   * 
-   * @return
-   */
+  /** true, if the active point or the active property of the profil changes. 
+   * @return */
   public boolean isActivePointChanged( )
   {
     return m_activePointChanged;
@@ -187,7 +184,7 @@ public class ProfilChangeHint
     return m_activePropertyChanged;
   }
 
-  public void setActivePropertyChanged( final boolean activePropertyChanged )
+  public void setActivePropertyChanged( boolean activePropertyChanged )
   {
     m_activePropertyChanged = activePropertyChanged;
   }

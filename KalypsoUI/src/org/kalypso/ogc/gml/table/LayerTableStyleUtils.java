@@ -43,7 +43,7 @@ package org.kalypso.ogc.gml.table;
 import java.net.URL;
 import java.util.WeakHashMap;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;

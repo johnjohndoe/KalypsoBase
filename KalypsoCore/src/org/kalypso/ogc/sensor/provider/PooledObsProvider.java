@@ -42,6 +42,7 @@ package org.kalypso.ogc.sensor.provider;
 
 import java.net.URL;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.KalypsoCorePlugin;

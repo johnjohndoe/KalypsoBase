@@ -8,7 +8,7 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.gml.util.TabularSourceType;
@@ -123,6 +123,7 @@ public abstract class AbstractTabularFeatureReader
     }
     return columns;
   }
+
 
   private GMLWorkspace createWorkspace( )
   {

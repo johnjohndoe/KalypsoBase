@@ -48,10 +48,10 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 public interface IKalypsoThemeVisitor
 {
   /** Do not recurse, visit all top-level themes. */
-  int DEPTH_ZERO = 0;
+  final static int DEPTH_ZERO = 0;
 
   /** Recursevly visit sub-themes of cascading themes. */
-  int DEPTH_INFINITE = 1;
+  final static int DEPTH_INFINITE = 1;
 
   boolean visit( final IKalypsoTheme theme );
 }

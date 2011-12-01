@@ -41,12 +41,8 @@
 package org.kalypso.ui.preferences;
 
 import java.util.Arrays;
-import java.util.Set;
 import java.util.TimeZone;
-import java.util.TreeSet;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -82,38 +78,18 @@ public class KalypsoGeneralPreferencePage extends FieldEditorPreferencePage impl
   public void createFieldEditors( )
   {
     // fetch list of timezone names and sort it
-    final String[] ids = getAvailableTimezones();
+    final String[] ids = TimeZone.getAvailableIDs();
+    Arrays.sort( ids );
 
-    final String label = Messages.getString( "org.kalypso.ui.preferences.KalypsoGeneralPreferencePage.3" ); //$NON-NLS-1$
-    final String tooltipText = Messages.getString( "org.kalypso.ui.preferences.KalypsoGeneralPreferencePage.4" ); //$NON-NLS-1$
-    m_timeZoneFieldEditor = new ComboStringFieldEditor( IKalypsoCorePreferences.DISPLAY_TIMEZONE, label, tooltipText, getFieldEditorParent(), false, ids );
+    m_timeZoneFieldEditor = new ComboStringFieldEditor( IKalypsoCorePreferences.DISPLAY_TIMEZONE, //
+    Messages.getString( "org.kalypso.ui.preferences.KalypsoGeneralPreferencePage.3" ),//$NON-NLS-1$
+    Messages.getString( "org.kalypso.ui.preferences.KalypsoGeneralPreferencePage.4" ), getFieldEditorParent(), false, ids );//$NON-NLS-1$
     addField( m_timeZoneFieldEditor );
   }
 
-  protected String[] getAvailableTimezones( )
-  {
-    final String[] ids = TimeZone.getAvailableIDs();
-    final Set<String> allIDs = new TreeSet<String>( Arrays.asList( ids ) );
-
-    /* Remove ETC/GMT... */
-    final Predicate notEtcGmt = new Predicate()
-    {
-      @Override
-      public boolean evaluate( final Object object )
-      {
-        final String value = (String) object;
-        return !value.startsWith( "Etc/" ); //$NON-NLS-1$
-      }
-    };
-    CollectionUtils.filter( allIDs, notEtcGmt );
-
-    /* Add GMT+/- */
-    for( int i = -11; i < 12; i++ )
-      allIDs.add( String.format( "GMT%+d", i ) ); //$NON-NLS-1$
-
-    return allIDs.toArray( new String[allIDs.size()] );
-  }
-
+  /**
+   * @see org.eclipse.jface.preference.FieldEditorPreferencePage#initialize()
+   */
   @Override
   protected void initialize( )
   {

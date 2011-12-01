@@ -52,7 +52,7 @@ import org.kalypso.ogc.sensor.tableview.TableViewColumn;
 /**
  * Captures mouse clicks on a table header, with the intention of triggering a click. Adapted from code by jcommons
  * posted on http://www.jfree.org/jcommon/.
- * 
+ *
  * @author Gernot Belger
  */
 public class ColumnHeaderListener extends MouseAdapter
@@ -63,7 +63,7 @@ public class ColumnHeaderListener extends MouseAdapter
   /**
    * Handle a mouse press event - if the user is NOT resizing a column and NOT dragging a column then give visual
    * feedback that the column header has been pressed.
-   * 
+   *
    * @param e
    *          the mouse event.
    */
@@ -73,7 +73,7 @@ public class ColumnHeaderListener extends MouseAdapter
     if( e.getButton() != MouseEvent.BUTTON1 )
       return;
 
-    final JTableHeader header = (JTableHeader) e.getComponent();
+    final JTableHeader header = (JTableHeader)e.getComponent();
 
     if( header.getResizingColumn() == null )
     { // resizing takes precedence over sorting
@@ -83,7 +83,7 @@ public class ColumnHeaderListener extends MouseAdapter
         if( m_pressedColumn == null )
           return;
 
-        final ColumnHeaderRenderer renderer = (ColumnHeaderRenderer) m_pressedColumn.getHeaderRenderer();
+        final ColumnHeaderRenderer renderer = (ColumnHeaderRenderer)m_pressedColumn.getHeaderRenderer();
 
         renderer.setPressedColumn( m_pressedColumn.getModelIndex() );
         header.repaint();
@@ -96,7 +96,7 @@ public class ColumnHeaderListener extends MouseAdapter
 
   /**
    * This event is ignored (not required).
-   * 
+   *
    * @param e
    *          the mouse event.
    */
@@ -111,27 +111,27 @@ public class ColumnHeaderListener extends MouseAdapter
     if( column == null )
       return;
 
-    final ColumnHeaderRenderer renderer = (ColumnHeaderRenderer) column.getHeaderRenderer();
-    final TableViewColumn tvc = (TableViewColumn) column.getHeaderValue();
+    final ColumnHeaderRenderer renderer = (ColumnHeaderRenderer)column.getHeaderRenderer();
+    final TableViewColumn tvc = (TableViewColumn)column.getHeaderValue();
     renderer.openDialog( tvc );
   }
 
   /**
    * When the user releases the mouse button, we attempt to sort the table.
-   * 
+   *
    * @param e
    *          the mouse event.
    */
   @Override
   public void mouseReleased( final MouseEvent e )
   {
-    final JTableHeader header = (JTableHeader) e.getComponent();
+    final JTableHeader header = (JTableHeader)e.getComponent();
 
     if( header.getResizingColumn() == null )
     { // resizing takes precedence over sorting
       if( m_pressedColumn != null )
       {
-        final ColumnHeaderRenderer renderer = (ColumnHeaderRenderer) m_pressedColumn.getHeaderRenderer();
+        final ColumnHeaderRenderer renderer = (ColumnHeaderRenderer)m_pressedColumn.getHeaderRenderer();
 
         renderer.setPressedColumn( -1 ); // clear
         header.repaint();
@@ -146,7 +146,7 @@ public class ColumnHeaderListener extends MouseAdapter
   public void mouseEntered( final MouseEvent evt )
   {
     final TableColumn column = findColumn( evt );
-    final JTableHeader header = (JTableHeader) evt.getSource();
+    final JTableHeader header = (JTableHeader)evt.getSource();
     header.setToolTipText( getToolTip( column ) );
   }
 
@@ -155,14 +155,14 @@ public class ColumnHeaderListener extends MouseAdapter
     if( column == null )
       return null;
 
-    final ColumnHeaderRenderer renderer = (ColumnHeaderRenderer) column.getHeaderRenderer();
-    final TableViewColumn tvc = (TableViewColumn) column.getHeaderValue();
+    final ColumnHeaderRenderer renderer = (ColumnHeaderRenderer)column.getHeaderRenderer();
+    final TableViewColumn tvc = (TableViewColumn)column.getHeaderValue();
     return renderer.getTooltip( tvc );
   }
 
   private TableColumn findColumn( final MouseEvent e )
   {
-    final JTableHeader header = (JTableHeader) e.getComponent();
+    final JTableHeader header = (JTableHeader)e.getComponent();
 
     final int columnIndex = header.columnAtPoint( e.getPoint() );
     if( columnIndex == -1 )

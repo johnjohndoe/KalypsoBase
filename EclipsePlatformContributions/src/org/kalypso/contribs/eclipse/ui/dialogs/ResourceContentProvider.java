@@ -90,9 +90,9 @@ public class ResourceContentProvider extends BaseResourceContentProvider impleme
     if( m_allowedResourceExtensions == null )
       return true;
     boolean returnValue = false;
-    for( final String allowedResourceExtension : m_allowedResourceExtensions )
+    for( final String m_allowedResourceExtension : m_allowedResourceExtensions )
     {
-      if( extension.equals( allowedResourceExtension ) )
+      if( extension.equals( m_allowedResourceExtension ) )
       {
         returnValue = true;
       }

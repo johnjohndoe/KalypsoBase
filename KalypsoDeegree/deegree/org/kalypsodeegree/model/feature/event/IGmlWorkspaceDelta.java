@@ -80,13 +80,12 @@ public interface IGmlWorkspaceDelta
 
   /**
    * Delta kind constant (bit mask) indicating that the feature has been changed.
-   * <p>
-   * This may be the case if
+   * <p>This may be the case if
    * <ul>
-   * <li>a value of a property was set</li>
-   * <li>the list value of a property has changed (an item was added or removed)</li>
-   * </ul>
-   * . If this flag is set, {@link #getProperty()} returns the changed property.
+   *    <li>a value of a property was set</li>
+   *    <li>the list value of a property has changed (an item was added or removed)</li>
+   * </ul>.
+   * If this flag is set, {@link #getProperty()} returns the changed property.    
    * 
    * @see IResourceDelta#getKind()
    */
@@ -130,8 +129,8 @@ public interface IGmlWorkspaceDelta
    * 
    * @return the affected property or null
    */
-  public IPropertyType getProperty( );
-
+  public IPropertyType getProperty();
+  
   /**
    * Finds and returns the descendent delta of all features identified by the given qname in this delta, or
    * <code>null</code> if no such descendent exists.

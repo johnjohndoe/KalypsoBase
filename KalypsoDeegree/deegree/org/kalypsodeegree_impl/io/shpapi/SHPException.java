@@ -41,14 +41,14 @@ public class SHPException extends Exception
 {
   private String message = "org.kalypsodeegree_impl.io.shpapi.SHPException";
 
-  public SHPException( final String s )
+  public SHPException( String s )
   {
     super( s );
     message = s;
   }
 
   @Override
-  public String toString( )
+  public String toString()
   {
     return message + "\n" + getLocalizedMessage();
   }

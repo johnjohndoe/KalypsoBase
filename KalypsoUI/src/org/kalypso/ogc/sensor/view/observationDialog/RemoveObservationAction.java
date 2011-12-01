@@ -43,30 +43,45 @@ package org.kalypso.ogc.sensor.view.observationDialog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.sensor.view.ObservationViewerDialog;
 
 /**
  * @author Gernot Belger
  */
 public class RemoveObservationAction extends AbstractObservationAction
 {
+  public RemoveObservationAction( final ObservationViewerDialog dialog )
+  {
+    super( dialog );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.view.observationDialog.AbstractObservationAction#getLabel()
+   */
   @Override
   protected String getLabel( )
   {
     return Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.1" );//$NON-NLS-1$ 
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.view.observationDialog.AbstractObservationAction#getTooltip()
+   */
   @Override
   protected String getTooltip( )
   {
     return Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.2" );//$NON-NLS-1$ 
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.view.observationDialog.AbstractObservationAction#run()
+   */
   @Override
-  protected IStatus execute( )
+  protected IStatus run( )
   {
-    final ObservationViewer viewer = getViewer();
-    viewer.setInput( null, viewer.getShow() );
+    getDialog().setInput( null );
 
     return Status.OK_STATUS;
   }
+
 }

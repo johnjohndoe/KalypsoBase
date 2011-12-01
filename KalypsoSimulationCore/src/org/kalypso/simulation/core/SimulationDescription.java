@@ -80,7 +80,7 @@ public class SimulationDescription implements Serializable
     return m_id;
   }
 
-  public final void setId( final String id )
+  public final void setId( String id )
   {
     m_id = id;
   }

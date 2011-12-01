@@ -15,7 +15,7 @@ import de.renew.workflow.base.ITaskGroup;
 
 /**
  * @author Stefan Kurzbach
- * 
+ *
  */
 public class WorkflowLabelProvider extends ColumnLabelProvider
 {

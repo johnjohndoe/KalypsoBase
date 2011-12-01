@@ -43,7 +43,7 @@ package org.kalypso.zml.ui.chart.layer.themes;
 import java.net.URL;
 import java.util.Date;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.commons.java.lang.Objects;
@@ -59,7 +59,6 @@ import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
-import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.TextFigure;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
@@ -122,7 +121,7 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
   }
 
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Number> getDomainRange( )
   {
     if( ArrayUtils.isEmpty( m_descriptors ) )
       return null;
@@ -142,7 +141,7 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
   }
 
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     if( ArrayUtils.isEmpty( m_descriptors ) )
       return null;
@@ -169,11 +168,10 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
     {
       final Point centerPoint = getCoordinateMapper().numericToScreen( descriptor.getValue().getDomain(), descriptor.getValue().getTarget() );
 
-      final PointFigure pf = new PointFigure();
-      pf.setStyle( descriptor.getPointStyle() );
-      pf.setPoints( new Point[] { centerPoint } );
+      getPointFigure().setStyle( descriptor.getPointStyle() );
+      getPointFigure().setPoints( new Point[] { centerPoint } );
 
-      pf.paint( gc );
+      getPointFigure().paint( gc );
 
       if( descriptor.isShowLabel() )
       {

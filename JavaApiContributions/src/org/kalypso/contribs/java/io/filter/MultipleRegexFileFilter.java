@@ -72,7 +72,7 @@ public class MultipleRegexFileFilter implements java.io.FileFilter
    * @param patterns
    *          String regex pattern unqualified filename must match to be included.
    */
-  public MultipleRegexFileFilter( final String[] patterns, final boolean bFilterDirs, final boolean bShowDirs, final boolean bIgnoreCase )
+  public MultipleRegexFileFilter( final String[] patterns, boolean bFilterDirs, boolean bShowDirs, boolean bIgnoreCase )
   {
     m_bFilterDirs = bFilterDirs;
     m_bShowDir = bShowDirs;
@@ -80,7 +80,7 @@ public class MultipleRegexFileFilter implements java.io.FileFilter
     setPatterns( patterns, bIgnoreCase );
   }
 
-  public void setPatterns( final String[] patterns, final boolean bIgnoreCase )
+  public void setPatterns( String[] patterns, boolean bIgnoreCase )
   {
     if( patterns == null )
     {
@@ -91,7 +91,7 @@ public class MultipleRegexFileFilter implements java.io.FileFilter
 
     m_patterns = new Pattern[patterns.length];
 
-    final int flags = bIgnoreCase ? Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE : 0;
+    int flags = bIgnoreCase ? (Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE) : 0;
 
     for( int patternID = 0; patternID < patterns.length; patternID++ )
       m_patterns[patternID] = Pattern.compile( patterns[patternID], flags );
@@ -105,7 +105,7 @@ public class MultipleRegexFileFilter implements java.io.FileFilter
    * @return True if and only if the name should be included in the file list; false otherwise.
    */
   @Override
-  public boolean accept( final File file )
+  public boolean accept( File file )
   {
     if( m_patterns == null )
       return false;
@@ -118,11 +118,11 @@ public class MultipleRegexFileFilter implements java.io.FileFilter
     if( file.isDirectory() && !m_bFilterDirs )
       return true;
 
-    final String name = file.getName();
+    String name = file.getName();
 
-    for( final Pattern m_pattern : m_patterns )
+    for( int patternID = 0; patternID < m_patterns.length; patternID++ )
     {
-      if( m_pattern.matcher( name ).matches() == true )
+      if( m_patterns[patternID].matcher( name ).matches() == true )
         return true;
     }
 

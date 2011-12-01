@@ -67,11 +67,11 @@ public class PolygonPatchContentHandler extends GMLElementContentHandler impleme
   private GM_Ring m_ring;
 
   public PolygonPatchContentHandler( final XMLReader reader, final IPolygonHandler polygonHandler, final String defaultSrs )
-  {
+  { 
     super( reader, NS.GML3, ELEMENT_POLYGON_PATCH, defaultSrs, polygonHandler );
 
     m_polygonHandler = polygonHandler;
-  }
+  }  
 
   /**
    * @see org.kalypsodeegree_impl.io.sax.GMLElementContentHandler#doEndElement(java.lang.String, java.lang.String,
@@ -113,7 +113,7 @@ public class PolygonPatchContentHandler extends GMLElementContentHandler impleme
   protected void doStartElement( final String uri, final String localName, final String name, final Attributes atts )
   {
     final String activeSrs = ContentHandlerUtils.parseSrsFromAttributes( atts, m_defaultSrs );
-// m_srsDimension = ContentHandlerUtils.parseSrsDimensionFromAttributes( atts );
+//    m_srsDimension = ContentHandlerUtils.parseSrsDimensionFromAttributes( atts );
 
     final GMLPropertySequenceContentHandler choiceContentHandler = new GMLPropertySequenceContentHandler( getXMLReader(), this, this, activeSrs, new PolygonSpecification() );
     setDelegate( choiceContentHandler );

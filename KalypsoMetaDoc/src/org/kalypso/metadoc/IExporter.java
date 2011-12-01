@@ -48,34 +48,34 @@ import org.kalypso.contribs.java.lang.ISupplier;
 import org.kalypso.metadoc.ui.ExportableTreeItem;
 
 /**
- * Exporters can create one or more {@link org.kalypso.metadoc.IExportableObject} and export them to some
- * {@link org.kalypso.metadoc.IExportTarget}. This is actually used as a wrapper over
- * {@link org.kalypso.metadoc.IExportableObjectFactory} which is exhibited as an extension point
- * (org.kalypso.metadoc.exporter)
+ * Exporters can create one or more {@link org.kalypso.metadoc.IExportableObject} and export them to some {@link org.kalypso.metadoc.IExportTarget}. This is actually used as a
+ * wrapper over {@link org.kalypso.metadoc.IExportableObjectFactory} which is exhibited as an extension point (org.kalypso.metadoc.exporter)
  * 
  * @author schlienger
  */
 public interface IExporter extends IExecutableExtension
 {
   /** used as label */
-  public String getName( );
+  public String getName();
 
   /** used as tooltip */
-  public String getDescription( );
-
+  public String getDescription();
+  
   /** used as icon */
-  public ImageDescriptor getImageDescriptor( );
+  public ImageDescriptor getImageDescriptor();
 
   /**
-   * Init this exporter with context dependent data. The supplier object is used to get the data on a per key basis.
+   * Init this exporter with context dependent data. The supplier object is used
+   * to get the data on a per key basis.
    * <p>
-   * For instance, a GIS-Exporter will probably want to have a list of features. It would get it by doing the following:
+   * For instance, a GIS-Exporter will probably want to have a list of features. It would
+   * get it by doing the following:
    * <code>
    * 	features = supplier.supply( "featureList" );
    * </code>
    */
   public void init( final ISupplier supplier ) throws CoreException;
-
+  
   /**
    * Allows clients to override the name defined in the extension.
    */

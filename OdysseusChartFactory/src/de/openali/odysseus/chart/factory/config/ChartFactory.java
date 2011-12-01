@@ -31,6 +31,8 @@ public final class ChartFactory
 
   public static final String AXISRENDERER_PROVIDER_KEY = "de.openali.odysseus.chart.factory.axisrendererprovider";
 
+// public static final String MAPPER_PROVIDER_KEY = "de.openali.odysseus.chart.factory.mapperprovider";
+
   public static void configureChartModel( final IChartModel model, final ChartConfigurationLoader configurationLoader, final String configChartName, final IExtensionLoader extLoader, final URL context ) throws ConfigurationException
   {
     // ChartConfig auslesen
@@ -65,8 +67,8 @@ public final class ChartFactory
       try
       {
         final AbstractStyleType styleType = chartTypeResolver.findStyleType( type.getStyleref(), context );
-        final ITextStyle style = StyleFactory.createTextStyle( styleType == null ? null : (TextStyleType) styleType );
-        final TitleTypeBean title = StyleHelper.getTitleTypeBean( type, style );
+        final ITextStyle style = StyleFactory.createTextStyle( (TextStyleType) styleType );
+        final TitleTypeBean title = StyleHelper.getTitleTypeBean(type, style );
         model.getSettings().addTitles( title );
       }
       catch( final Throwable t )
@@ -89,8 +91,6 @@ public final class ChartFactory
     final ChartLayerFactory layerFactory = new ChartLayerFactory( model, extendedResolver, extLoader, context, mapperFactory );
     layerFactory.build( chartType );
 
-    // TODO: restore zoom-Factor here, instead of maximise
-    model.autoscale( null );// null means maximise chart
     chartTypeResolver.clear();
   }
 }

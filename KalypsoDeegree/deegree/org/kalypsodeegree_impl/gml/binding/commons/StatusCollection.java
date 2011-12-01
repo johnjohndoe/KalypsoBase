@@ -41,26 +41,26 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * A collection of geo status objects.
  * 
  * @author Gernot Belger
  */
-public class StatusCollection extends Feature_Impl implements IStatusCollection
+public class StatusCollection extends FeatureWrapperCollection<IGeoStatus> implements IStatusCollection
 {
-  private final IFeatureBindingCollection<IGeoStatus> m_statusCollection = new FeatureBindingCollection<IGeoStatus>( this, IGeoStatus.class, QNAME_PROP_STATUS_MEMBER );
-
-  public StatusCollection( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  /**
+   * The constructor.
+   * 
+   * @param featureCol
+   */
+  public StatusCollection( final Feature featureCol )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    super( featureCol, IGeoStatus.class, QNAME_PROP_STATUS_MEMBER );
   }
 
   /**
@@ -111,7 +111,7 @@ public class StatusCollection extends Feature_Impl implements IStatusCollection
   public IGeoStatus createGeoStatus( final int severity, final String pluginId, final int code, final String message, final Throwable exception, final GM_Object location, final Date time )
   {
     /* Add a new feature. */
-    final IGeoStatus geoStatus = m_statusCollection.addNew( IGeoStatus.QNAME );
+    final IGeoStatus geoStatus = addNew( IGeoStatus.QNAME );
 
     /* Set its properties. */
     geoStatus.setSeverity( severity );
@@ -130,28 +130,10 @@ public class StatusCollection extends Feature_Impl implements IStatusCollection
     return geoStatus;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection#contains(org.eclipse.core.runtime.IStatus)
-   */
-  @Override
-  public boolean contains( final IStatus simulationStatus )
-  {
-    return m_statusCollection.contains( simulationStatus );
-  }
-
-  /**
-   * @see org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection#isEmpty()
-   */
-  @Override
-  public boolean isEmpty( )
-  {
-    return m_statusCollection.isEmpty();
-  }
-
   private IGeoStatus createMultiGeoStatus( final IStatus status, final GM_Object location, final Date time )
   {
     /* Add a new feature. */
-    final IGeoStatus multiGeoStatus = m_statusCollection.addNew( IGeoStatus.QNAME );
+    final IGeoStatus multiGeoStatus = addNew( IGeoStatus.QNAME );
 
     /* Set its properties. */
     multiGeoStatus.setSeverity( status.getSeverity() );
@@ -169,8 +151,8 @@ public class StatusCollection extends Feature_Impl implements IStatusCollection
 
     /* Get the children. */
     final IStatus[] children = status.getChildren();
-    for( final IStatus element : children )
-      addToMultiGeoStatus( multiGeoStatus, element, location, time );
+    for( int i = 0; i < children.length; i++ )
+      addToMultiGeoStatus( multiGeoStatus, children[i], location, time );
 
     return multiGeoStatus;
   }
@@ -178,11 +160,10 @@ public class StatusCollection extends Feature_Impl implements IStatusCollection
   private void addToMultiGeoStatus( final IGeoStatus parent, final IStatus status, final GM_Object location, final Date time )
   {
     /* If the given status is no multi status, simply add a new geo status and return. */
-    final IFeatureBindingCollection<IGeoStatus> childrenCollection = parent.getChildrenCollection();
     if( !status.isMultiStatus() )
     {
       /* Add a new feature. */
-      final IGeoStatus geoStatus = childrenCollection.addNew( IGeoStatus.QNAME );
+      final IGeoStatus geoStatus = parent.addNew( IGeoStatus.QNAME );
 
       /* Set its properties. */
       geoStatus.setSeverity( status.getSeverity() );
@@ -202,7 +183,7 @@ public class StatusCollection extends Feature_Impl implements IStatusCollection
     }
 
     /* Add a new feature. */
-    final IGeoStatus multiGeoStatus = childrenCollection.addNew( IGeoStatus.QNAME );
+    final IGeoStatus multiGeoStatus = parent.addNew( IGeoStatus.QNAME );
 
     /* Set its properties. */
     multiGeoStatus.setSeverity( status.getSeverity() );
@@ -220,14 +201,14 @@ public class StatusCollection extends Feature_Impl implements IStatusCollection
 
     /* Get the children. */
     final IStatus[] children = status.getChildren();
-    for( final IStatus element : children )
-      addToMultiGeoStatus( multiGeoStatus, element, location, time );
+    for( int i = 0; i < children.length; i++ )
+      addToMultiGeoStatus( multiGeoStatus, children[i], location, time );
   }
 
   private IGeoStatus createMultiGeoStatus( final IGeoStatus geoStatus )
   {
     /* Add a new feature. */
-    final IGeoStatus multiGeoStatus = m_statusCollection.addNew( IGeoStatus.QNAME );
+    final IGeoStatus multiGeoStatus = addNew( IGeoStatus.QNAME );
 
     /* Set its properties. */
     multiGeoStatus.setSeverity( geoStatus.getSeverity() );
@@ -246,21 +227,19 @@ public class StatusCollection extends Feature_Impl implements IStatusCollection
 
     /* Get the children. */
     final IStatus[] children = geoStatus.getChildren();
-    for( final IStatus element : children )
-      addToMultiGeoStatus( multiGeoStatus, (IGeoStatus) element );
+    for( int i = 0; i < children.length; i++ )
+      addToMultiGeoStatus( multiGeoStatus, (IGeoStatus) children[i] );
 
     return multiGeoStatus;
   }
 
   private void addToMultiGeoStatus( final IGeoStatus parent, final IGeoStatus geoStatus )
   {
-    final IFeatureBindingCollection<IGeoStatus> childrenCollection = parent.getChildrenCollection();
-
     /* If the given geo status is no multi geo status, simply add a new geo status and return. */
     if( !geoStatus.isMultiStatus() )
     {
       /* Add a new feature. */
-      final IGeoStatus children = childrenCollection.addNew( IGeoStatus.QNAME );
+      final IGeoStatus children = parent.addNew( IGeoStatus.QNAME );
 
       /* Set its properties. */
       children.setSeverity( geoStatus.getSeverity() );
@@ -281,7 +260,7 @@ public class StatusCollection extends Feature_Impl implements IStatusCollection
     }
 
     /* Add a new feature. */
-    final IGeoStatus multiGeoStatus = childrenCollection.addNew( IGeoStatus.QNAME );
+    final IGeoStatus multiGeoStatus = parent.addNew( IGeoStatus.QNAME );
 
     /* Set its properties. */
     multiGeoStatus.setSeverity( geoStatus.getSeverity() );
@@ -300,21 +279,21 @@ public class StatusCollection extends Feature_Impl implements IStatusCollection
 
     /* Get the children. */
     final IStatus[] children = geoStatus.getChildren();
-    for( final IStatus element : children )
-      addToMultiGeoStatus( multiGeoStatus, (IGeoStatus) element );
+    for( int i = 0; i < children.length; i++ )
+      addToMultiGeoStatus( multiGeoStatus, (IGeoStatus) children[i] );
   }
 
   public final IStatus toStatus( )
   {
     final List<IStatus> children = new ArrayList<IStatus>();
 
-    final FeatureList list = m_statusCollection.getFeatureList();
+    final FeatureList list = this.getWrappedList();
     for( final Object object : list )
     {
-      if( !(object instanceof GeoStatus) )
+      if( !(object instanceof Feature) )
         continue;
 
-      final GeoStatus status = (GeoStatus) object;
+      final GeoStatus status = new GeoStatus( (Feature) object );
       children.add( status );
     }
 
@@ -324,11 +303,6 @@ public class StatusCollection extends Feature_Impl implements IStatusCollection
       return children.get( 0 );
 
     return StatusUtilities.createStatus( children, "Multistatus" );
-  }
-
-  public final IFeatureBindingCollection<IGeoStatus> getStati( )
-  {
-    return m_statusCollection;
   }
 
 }

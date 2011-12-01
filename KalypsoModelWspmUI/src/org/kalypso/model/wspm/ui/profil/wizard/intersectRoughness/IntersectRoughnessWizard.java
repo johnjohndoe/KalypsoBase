@@ -2,107 +2,107 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard.intersectRoughness;
 
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.model.wspm.core.gml.assignment.AssignmentBinder;
+import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.profil.wizard.ProfileHandlerUtils;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
-import org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.worker.ApplyLanduseWorker;
-import org.kalypso.model.wspm.ui.profil.wizard.utils.FeatureThemeWizardUtilitites;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author Gernot Belger
  */
-public class IntersectRoughnessWizard extends Wizard implements IWorkbenchWizard
+public class IntersectRoughnessWizard extends Wizard
 {
   private final GMLLabelProvider m_chooserPageLabelProvider = new GMLLabelProvider();
 
   private ArrayChooserPage m_profileChooserPage;
 
-  protected IntersectRoughnessPage m_roughnessIntersectPage;
+  private IntersectRoughnessPage m_roughnessIntersectPage;
 
-  private ProfileSelection m_profileSelection;
+  private final ProfileSelection m_profileSelection;
 
-  private IKalypsoFeatureTheme m_theme;
+  private final IKalypsoFeatureTheme m_theme;
 
-  public IntersectRoughnessWizard( )
+  public IntersectRoughnessWizard( final IKalypsoFeatureTheme theme, final ProfileSelection profileSelection )
   {
-    setWindowTitle( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard.0" ) ); //$NON-NLS-1$
-    setNeedsProgressMonitor( true );
-    setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
-  }
-
-  @Override
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
-  {
-    /* retrieve selected profiles, abort if none */
-    final IKalypsoFeatureTheme theme = FeatureThemeWizardUtilitites.findTheme( selection );
-    final ProfileSelection profileSelection = ProfileHandlerUtils.getSelectionChecked( selection );
-
     m_theme = theme;
     m_profileSelection = profileSelection;
+
+    setWindowTitle( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard.0" ) ); //$NON-NLS-1$
+    setNeedsProgressMonitor( true );
+    setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
   }
 
+
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#addPages()
+   */
   @Override
   public void addPages( )
   {
@@ -138,8 +138,14 @@ public class IntersectRoughnessWizard extends Wizard implements IWorkbenchWizard
   public boolean performFinish( )
   {
     final Object[] choosen = m_profileChooserPage.getChoosen();
-    if( ArrayUtils.isEmpty( choosen ) )
+    if( choosen.length == 0 )
       return true;
+
+    final FeatureList polygoneFeatures = m_roughnessIntersectPage.getPolygoneFeatures();
+    final IPropertyType polygoneGeomType = m_roughnessIntersectPage.getPolygoneGeomProperty();
+    final IPropertyType polygoneValueType = m_roughnessIntersectPage.getPolygoneValueProperty();
+    final IPath assignmentPath = m_roughnessIntersectPage.getAssignmentPath();
+    final IProfilePointFilter pointFilters = m_roughnessIntersectPage.getSelectedPointFilter();
 
     final IKalypsoFeatureTheme theme = m_theme;
     final ICoreRunnableWithProgress runnable = new ICoreRunnableWithProgress()
@@ -151,15 +157,19 @@ public class IntersectRoughnessWizard extends Wizard implements IWorkbenchWizard
 
         try
         {
+          /* Load assignment */
+          monitor.subTask( Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard.4" ) ); //$NON-NLS-1$
+          final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+          final IFile assignmentFile = workspace.getRoot().getFile( assignmentPath );
+          final URL assignmentUrl = ResourceUtilities.createURL( assignmentFile );
+
+          final GMLWorkspace assignmentWorkspace = GmlSerializer.createGMLWorkspace( assignmentUrl, null );
+          final AssignmentBinder assignment = new AssignmentBinder( assignmentWorkspace );
           monitor.worked( 1 );
 
-          final IntersectRoughnessesLanduseDelegate delegate = new IntersectRoughnessesLanduseDelegate( m_roughnessIntersectPage, (IProfileFeature[]) choosen );
-
-          final ApplyLanduseWorker worker = new ApplyLanduseWorker( delegate );
-          getContainer().run( false, false, worker );
-
-          final FeatureChange[] changes = worker.getChanges();
-          if( !ArrayUtils.isEmpty( changes ) )
+          final RoughnessIntersector intersector = new RoughnessIntersector( choosen, polygoneFeatures, polygoneGeomType, polygoneValueType, assignment, pointFilters );
+          final FeatureChange[] changes = intersector.intersect( new SubProgressMonitor( monitor, choosen.length ) );
+          if( changes.length > 0 )
           {
             final GMLWorkspace gmlworkspace = changes[0].getFeature().getWorkspace();
             final ICommand command = new ChangeFeaturesCommand( gmlworkspace, changes );

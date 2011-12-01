@@ -58,17 +58,15 @@ import java.util.TreeSet;
 
 import javax.jws.WebService;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemManager;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemManager;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.kalypso.commons.io.VFSUtilities;
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.IProjectDataBaseServerConstant;
 import org.kalypso.project.database.KalypsoProjectDatabase;
@@ -81,24 +79,18 @@ import org.kalypso.project.database.server.trigger.TriggerHelper;
 /**
  * @author Dirk Kuch
  */
-@WebService(endpointInterface = "org.kalypso.project.database.sei.IProjectDatabase")//$NON-NLS-1$
+@WebService(endpointInterface = "org.kalypso.project.database.sei.IProjectDatabase")
 public class ProjectDatabase implements IProjectDatabase
 {
-  private static SessionFactory FACTORY = null;
+  private SessionFactory m_factory = null;
 
   public ProjectDatabase( )
   {
-    if( Objects.isNull( FACTORY ) )
-      init();
-  }
-
-  private void init( )
-  {
     try
     {
-      // FIXME: better error handling needed if factory cannot be created -> lots of NPE later
+
       final String property = System.getProperty( IProjectDataBaseServerConstant.HIBERNATE_CONFIG_FILE );
-      if( Strings.isNotEmpty( property ) ) //$NON-NLS-1$
+      if( property != null && !"".equals( property.trim() ) ) //$NON-NLS-1$
       {
         AnnotationConfiguration configure = null;
 
@@ -106,10 +98,10 @@ public class ProjectDatabase implements IProjectDatabase
         {
           final URL url = new URL( property );
           configure = new AnnotationConfiguration().configure( url );
+
           configure.addAnnotatedClass( KalypsoProjectBean.class );
           configure.addAnnotatedClass( KalypsoProjectBeanPrimaryKey.class );
-
-          FACTORY = configure.buildSessionFactory();
+          m_factory = configure.buildSessionFactory();
         }
         catch( final Exception ex )
         {
@@ -128,8 +120,9 @@ public class ProjectDatabase implements IProjectDatabase
 
   public void dispose( ) // NO_Ufinal CD
   {
-    if( FACTORY != null )
-      FACTORY.close();
+    if( m_factory != null )
+      m_factory.close();
+
   }
 
   /**
@@ -141,7 +134,7 @@ public class ProjectDatabase implements IProjectDatabase
     synchronized( this )
     {
       /** Getting the Session Factory and session */
-      final Session session = FACTORY.getCurrentSession();
+      final Session session = m_factory.getCurrentSession();
 
       /** Starting the Transaction */
       final Transaction tx = session.beginTransaction();
@@ -167,7 +160,7 @@ public class ProjectDatabase implements IProjectDatabase
       {
         final TreeMap<Integer, KalypsoProjectBean> myBeans = new TreeMap<Integer, KalypsoProjectBean>();
 
-        final Session mySession = FACTORY.getCurrentSession();
+        final Session mySession = m_factory.getCurrentSession();
         final Transaction myTx = mySession.beginTransaction();
         final List< ? > beans = mySession.createQuery( String.format( "from KalypsoProjectBean where m_unixName = '%s'  ORDER by m_projectVersion", project ) ).list(); //$NON-NLS-1$
         myTx.commit();
@@ -187,7 +180,7 @@ public class ProjectDatabase implements IProjectDatabase
         final KalypsoProjectBean head = myBeans.get( keys[keys.length - 1] );
 
         KalypsoProjectBean[] values = myBeans.values().toArray( new KalypsoProjectBean[] {} );
-        values = ArrayUtils.remove( values, values.length - 1 ); // remove last entry -> cycle!
+        values = (KalypsoProjectBean[]) ArrayUtils.remove( values, values.length - 1 ); // remove last entry -> cycle!
 
         // TODO check needed? - order by clauses
         Arrays.sort( values, new Comparator<KalypsoProjectBean>()
@@ -217,7 +210,7 @@ public class ProjectDatabase implements IProjectDatabase
     synchronized( this )
     {
       /** Getting the Session Factory and session */
-      final Session session = FACTORY.getCurrentSession();
+      final Session session = m_factory.getCurrentSession();
 
       /** Starting the Transaction */
       final Transaction tx = session.beginTransaction();
@@ -226,7 +219,7 @@ public class ProjectDatabase implements IProjectDatabase
       final List< ? > projects = session.createQuery( String.format( "from KalypsoProjectBean where m_unixName = '%s' ORDER by m_projectVersion desc", projectUnixName ) ).list(); //$NON-NLS-1$
       tx.commit();
 
-      if( projects.isEmpty() )
+      if( projects.size() <= 0 )
         return null;
 
       /* determine head */
@@ -267,7 +260,7 @@ public class ProjectDatabase implements IProjectDatabase
         /* store project bean in database */
         bean.setCreationDate( Calendar.getInstance().getTime() );
 
-        final Session session = FACTORY.getCurrentSession();
+        final Session session = m_factory.getCurrentSession();
         final Transaction tx = session.beginTransaction();
         session.save( bean );
 
@@ -313,12 +306,12 @@ public class ProjectDatabase implements IProjectDatabase
     synchronized( this )
     {
       // TODO lock already acquired
-      final Session mySession = FACTORY.getCurrentSession();
+      final Session mySession = m_factory.getCurrentSession();
       final Transaction myTx = mySession.beginTransaction();
 
       final String ticket = String.format( "Ticket%d", Calendar.getInstance().getTime().hashCode() ); //$NON-NLS-1$
 
-      final DateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" ); //$NON-NLS-1$
+      final DateFormat sdf = new SimpleDateFormat( "yyyy-mm-dd hh:mm:ss" ); //$NON-NLS-1$
       final String now = sdf.format( new Date() );
 
       final int updated = mySession.createQuery( String.format( "update KalypsoProjectBean set m_editLockTicket = '%s', edit_lock_date = '%s' where m_unixName = '%s'", ticket, now, projectUnixName ) ).executeUpdate(); //$NON-NLS-1$
@@ -350,7 +343,7 @@ public class ProjectDatabase implements IProjectDatabase
     synchronized( this )
     {
       // TODO lock already released
-      final Session mySession = FACTORY.getCurrentSession();
+      final Session mySession = m_factory.getCurrentSession();
       final Transaction myTx = mySession.beginTransaction();
 
       mySession.createQuery( String.format( "update KalypsoProjectBean set m_editLockTicket = '' where m_unixName = '%s' and m_editLockTicket = '%s'", projectUnixName, ticketId ) ).executeUpdate(); //$NON-NLS-1$
@@ -376,17 +369,14 @@ public class ProjectDatabase implements IProjectDatabase
   @Override
   public String[] getProjectTypes( )
   {
-    if( FACTORY == null )
-      return new String[] {};
-
     /** Getting the Session Factory and session */
-    final Session session = FACTORY.getCurrentSession();
+    final Session session = m_factory.getCurrentSession();
 
     /** Starting the Transaction */
     final Transaction tx = session.beginTransaction();
 
     /* list of project types */
-    final List<String> projects = session.createQuery( "Select distinct m_projectType from KalypsoProjectBean ORDER by m_projectType" ).list();
+    final List<String> projects = session.createQuery( "Select distinct m_projectType from KalypsoProjectBean ORDER by m_projectType" ).list(); //$NON-NLS-1$
     tx.commit();
 
     return projects.toArray( new String[] {} );
@@ -428,7 +418,7 @@ public class ProjectDatabase implements IProjectDatabase
   {
     synchronized( this )
     {
-      return ProjectDatabaseHelper.removeBean( FACTORY.getCurrentSession(), bean );
+      return ProjectDatabaseHelper.removeBean( m_factory.getCurrentSession(), bean );
     }
   }
 
@@ -440,7 +430,7 @@ public class ProjectDatabase implements IProjectDatabase
   {
     synchronized( this )
     {
-      final Session mySession = FACTORY.getCurrentSession();
+      final Session mySession = m_factory.getCurrentSession();
       final Transaction myTx = mySession.beginTransaction();
 
       final String unixName = bean.getUnixName();
@@ -459,7 +449,7 @@ public class ProjectDatabase implements IProjectDatabase
   {
     synchronized( this )
     {
-      final Session mySession = FACTORY.getCurrentSession();
+      final Session mySession = m_factory.getCurrentSession();
       final Transaction myTx = mySession.beginTransaction();
 
       mySession.createQuery( String.format( "update KalypsoProjectBean set m_description = '%s' where m_unixName = '%s'", description, bean.getUnixName() ) ).executeUpdate(); //$NON-NLS-1$

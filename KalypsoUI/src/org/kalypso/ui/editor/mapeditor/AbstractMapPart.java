@@ -45,7 +45,7 @@ import java.net.URL;
 
 import javax.swing.SwingUtilities;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -89,7 +89,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapPanelProvider;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.editor.AbstractWorkbenchPart;
+import org.kalypso.ui.editor.AbstractEditorPart;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
@@ -104,7 +104,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 // TODO: Why is it right here to inherit from AbstractEdtiorPart even when used within a View? Please comment on that.
 // (SK) This might have to be looked at. GisMapEditor used to implement AbstractEditorPart for basic gml editor
 // functionality (save when dirty, command target).
-public abstract class AbstractMapPart extends AbstractWorkbenchPart implements IMapPanelProvider
+public abstract class AbstractMapPart extends AbstractEditorPart implements IMapPanelProvider
 {
   // TODO: we probably should move this elsewhere
   public static final String MAP_COMMAND_CATEGORY = "org.kalypso.ogc.gml.map.category"; //$NON-NLS-1$
@@ -487,7 +487,7 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
     }
   }
 
-  public GisTemplateMapModell getMapModell( )
+  protected GisTemplateMapModell getMapModell( )
   {
     return m_mapModell;
   }

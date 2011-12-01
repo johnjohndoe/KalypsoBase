@@ -40,22 +40,53 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui;
 
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.gmlschema.types.ITypeHandlerFactory;
 import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.TypeRegistryException;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.gui.GuiTypeHandlerUtilities;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypso.ogc.gml.gui.TimeseriesLinkGuiTypeHandler;
+import org.kalypso.ogc.gml.gui.ZmlInlineGuiTypeHandler;
+import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
+import org.kalypso.ogc.sensor.IObservation;
 
 /**
  * @author kurzbach
  */
 public class KalypsoGuiTypeHandlerFactory implements ITypeHandlerFactory<IGuiTypeHandler>
 {
+  /**
+   * @see org.kalypso.gmlschema.types.ITypeHandlerFactory#registerTypeHandlers(org.kalypso.gmlschema.types.ITypeRegistry)
+   */
   @Override
-  public void registerTypeHandlers( final ITypeRegistry<IGuiTypeHandler> guiRegistry ) throws TypeRegistryException
+  public void registerTypeHandlers( final ITypeRegistry<IGuiTypeHandler> guiRegistry )
   {
-    GuiTypeHandlerUtilities.registerXSDSimpleTypeHandler( guiRegistry );
-    guiRegistry.registerTypeHandler( new TimeseriesLinkGuiTypeHandler() );
+    try
+    {
+      final ZmlInlineTypeHandler wvqInline = new ZmlInlineTypeHandler( "ZmlInlineWVQType", ZmlInlineTypeHandler.WVQ.axis, IObservation.class ); //$NON-NLS-1$
+      final ZmlInlineTypeHandler taInline = new ZmlInlineTypeHandler( "ZmlInlineTAType", ZmlInlineTypeHandler.TA.axis, IObservation.class ); //$NON-NLS-1$
+      final ZmlInlineTypeHandler wtKcLaiInline = new ZmlInlineTypeHandler( "ZmlInlineIdealKcWtLaiType", ZmlInlineTypeHandler.WtKcLai.axis, IObservation.class ); //$NON-NLS-1$
+      final ZmlInlineTypeHandler tnInline = new ZmlInlineTypeHandler( "ZmlInlineTNType", ZmlInlineTypeHandler.TN.axis, IObservation.class ); //$NON-NLS-1$
+      final ZmlInlineTypeHandler qqInline = new ZmlInlineTypeHandler( "ZmlInlineQQType", ZmlInlineTypeHandler.QQ.axis, IObservation.class ); //$NON-NLS-1$
+
+      GuiTypeHandlerUtilities.registerXSDSimpleTypeHandler( guiRegistry );
+      guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wvqInline ) );
+      guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( taInline ) );
+      guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( wtKcLaiInline ) );
+      guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( tnInline ) );
+      guiRegistry.registerTypeHandler( new ZmlInlineGuiTypeHandler( qqInline ) );
+      guiRegistry.registerTypeHandler( new TimeseriesLinkGuiTypeHandler() );
+    }
+    catch( final Exception e ) // generic exception caught for simplicity
+    {
+      e.printStackTrace();
+      // this method is also used in headless mode
+      if( PlatformUI.isWorkbenchRunning() )
+      {
+        MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString("org.kalypso.ui.KalypsoGuiTypeHandlerFactory.4"), e.getLocalizedMessage() ); //$NON-NLS-1$
+      }
+    }
   }
 }

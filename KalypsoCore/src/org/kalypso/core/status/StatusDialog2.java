@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.core.status;
 
@@ -49,20 +49,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * StatusDialog using {@link StatusComposite} to display a detailed multi state.<br/>
- * FIXME: we should merge with the StatusDialog: <br>
- * TODOs:<br/>
- * - better exception control<br/>
- * - handle standard case: message + one status<br/>
+ * StatusDialog using {@link StatusComposite} to display a detailed multi state
  * 
  * @author Dirk Kuch
  */
 public class StatusDialog2 extends AbstractStatusDialog
 {
-  /**
-   * Makes not much sense, repeats the same message twice -> we need an extra helper for that
-   */
-  @Deprecated
   public StatusDialog2( final Shell parentShell, final IStatus status, final String dialogTitle )
   {
     super( parentShell, status, dialogTitle );
@@ -73,6 +65,9 @@ public class StatusDialog2 extends AbstractStatusDialog
     super( parentShell, status, dialogTitle, dialogMessage );
   }
 
+  /**
+   * @see org.eclipse.jface.dialogs.MessageDialog#createCustomArea(org.eclipse.swt.widgets.Composite)
+   */
   @Override
   protected Control createCustomArea( final Composite parent )
   {

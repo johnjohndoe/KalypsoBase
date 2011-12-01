@@ -40,20 +40,14 @@ import java.math.BigInteger;
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
 /**
  * @author Patrice Congo
  */
-public class Polynomial2D extends Feature_Impl implements IPolynomial2D
+public class Polynomial2D extends AbstractFeatureBinder implements IPolynomial2D
 {
-  public Polynomial2D( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
-  {
-    super( parent, parentRelation, ft, id, propValues );
-  }
-
   public static final QName QNAME = new QName( NS.COMMON_MATH, "Polynomial2D" );
 
   public static final QName QNAME_PROP_DEGREEX = new QName( NS.COMMON_MATH, "degreeX" );
@@ -62,13 +56,18 @@ public class Polynomial2D extends Feature_Impl implements IPolynomial2D
 
   public static final QName QNAME_PROP_COEFFICIENTS = new QName( NS.COMMON_MATH, "coefficients" );
 
+  public Polynomial2D( final Feature polFeature )
+  {
+    super( polFeature, QNAME );
+  }
+
   @Override
   public PolynomialConfigState checkConsistency( )
   {
     return null;
   }
 
-  public static final PolynomialConfigState checkConsistency( final int degreeX, final int degreeY, final double[] coefficients )
+  public static final PolynomialConfigState checkConsistency( int degreeX, int degreeY, double[] coefficients )
   {
     if( coefficients == null )
     {
@@ -98,7 +97,7 @@ public class Polynomial2D extends Feature_Impl implements IPolynomial2D
   }
 
   @Override
-  public double evaluate( final double inputX, final double inputY )
+  public double evaluate( double inputX, double inputY )
   {
     throw new RuntimeException( "not supported" );
   }
@@ -106,11 +105,11 @@ public class Polynomial2D extends Feature_Impl implements IPolynomial2D
   @Override
   public double[] getCoefficients( ) throws IllegalFeatureState
   {
-    final Object coefs = getProperty( QNAME_PROP_COEFFICIENTS );
+    Object coefs = getFeature().getProperty( QNAME_PROP_COEFFICIENTS );
     if( coefs instanceof String )
     {
-      final String[] subStrings = ((String) coefs).split( " " );// "/s+");
-      final double doubles[] = new double[subStrings.length];
+      String[] subStrings = ((String) coefs).split( " " );// "/s+");
+      double doubles[] = new double[subStrings.length];
       for( int i = 0; i < subStrings.length; i++ )
       {
         doubles[i] = Double.parseDouble( subStrings[i] );
@@ -119,12 +118,12 @@ public class Polynomial2D extends Feature_Impl implements IPolynomial2D
     }
     else
     {
-      throw new IllegalFeatureState( this, QNAME_PROP_COEFFICIENTS, coefs );
+      throw new IllegalFeatureState( getFeature(), QNAME_PROP_COEFFICIENTS, coefs );
     }
   }
 
   @Override
-  public void setCefficients( final double[] coefficients ) throws IllegalArgumentException
+  public void setCefficients( double[] coefficients ) throws IllegalArgumentException
   {
 
   }
@@ -136,7 +135,7 @@ public class Polynomial2D extends Feature_Impl implements IPolynomial2D
   }
 
   @Override
-  public void setDegreeX( final int degreeX )
+  public void setDegreeX( int degreeX )
   {
     setDegree( degreeX, QNAME_PROP_DEGREEX );
   }
@@ -148,12 +147,12 @@ public class Polynomial2D extends Feature_Impl implements IPolynomial2D
   }
 
   @Override
-  public void setDegreeY( final int degreeY )
+  public void setDegreeY( int degreeY )
   {
     setDegree( degreeY, QNAME_PROP_DEGREEY );
   }
 
-  private final void setDegree( final int degree, final QName degreeQName ) throws IllegalArgumentException
+  private final void setDegree( int degree, QName degreeQName ) throws IllegalArgumentException
   {
 
     if( degree <= 0 )
@@ -161,45 +160,45 @@ public class Polynomial2D extends Feature_Impl implements IPolynomial2D
       throw new IllegalArgumentException();
     }
 
-    setProperty( degreeQName, new Integer( degree ) );
+    getFeature().setProperty( degreeQName, new Integer( degree ) );
   }
 
-  private final int getDegree( final QName degreeQName ) throws IllegalFeatureState
+  private final int getDegree( QName degreeQName ) throws IllegalFeatureState
   {
-    final Object dx = getProperty( degreeQName );
+    Object dx = getFeature().getProperty( degreeQName );
     if( dx instanceof BigInteger )
     {
       return ((BigInteger) dx).intValue();
     }
     else
     {
-      final StringBuffer buf = new StringBuffer( 128 );
+      StringBuffer buf = new StringBuffer( 128 );
       buf.append( degreeQName );
       buf.append( " must be and integer but got:" );
       buf.append( dx == null ? null : dx.getClass() );
       buf.append( "with the value:" );
       buf.append( dx );
-      throw new IllegalFeatureState( buf.toString(), this, degreeQName, dx );
+      throw new IllegalFeatureState( buf.toString(), getFeature(), degreeQName, dx );
 
     }
 
   }
 
   @Override
-  public void setPolynomParameters( final int degreeX, final int degreeY, final double[] coefficients ) throws IllegalArgumentException
+  public void setPolynomParameters( int degreeX, int degreeY, double[] coefficients ) throws IllegalArgumentException
   {
     if( PolynomialConfigState.CONSISTENCY_OK != checkConsistency( degreeX, degreeY, coefficients ) )
     {
       throw new IllegalArgumentException();
     }
 
-    final StringBuffer buf = new StringBuffer( 128 );
-    for( final double coef : coefficients )
+    StringBuffer buf = new StringBuffer( 128 );
+    for( double coef : coefficients )
     {
       buf.append( coef );
       buf.append( ' ' );
     }
-    setProperty( QNAME_PROP_COEFFICIENTS, buf.toString() );
+    getFeature().setProperty( QNAME_PROP_COEFFICIENTS, buf.toString() );
   }
 
 }

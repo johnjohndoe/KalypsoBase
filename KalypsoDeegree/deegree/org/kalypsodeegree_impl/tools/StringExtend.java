@@ -56,7 +56,7 @@ public class StringExtend
    *          if it's true all occurences of the string to be replaced will be replaced. else only the first occurence
    *          will be replaced.
    */
-  public static String replace( final String target, final String from, final String to, final boolean all )
+  public static String replace( String target, String from, String to, boolean all )
   {
     int start = target.indexOf( from );
 
@@ -65,9 +65,9 @@ public class StringExtend
       return target;
     }
 
-    final int lf = from.length();
-    final char[] targetChars = target.toCharArray();
-    final StringBuffer buffer = new StringBuffer( target.length() );
+    int lf = from.length();
+    char[] targetChars = target.toCharArray();
+    StringBuffer buffer = new StringBuffer( target.length() );
     int copyFrom = 0;
 
     while( start != -1 )
@@ -89,9 +89,11 @@ public class StringExtend
   }
 
   /**
-   * replaces all special german letters (umlaute) draft version
+   * replaces all special german letters (umlaute)
+   * 
+   * draft version
    */
-  public static String HTMLEncode( final String source )
+  public static String HTMLEncode( String source )
   {
     String target = null;
     target = StringExtend.replace( source, "ä", "&auml;", true );
@@ -116,7 +118,7 @@ public class StringExtend
    *          if it's true all string that are already within the resulting array will be deleted, so that there will
    *          only be one copy of them.
    */
-  public static String[] toArray( final String s, final String delimiter, final boolean deleteDoubles )
+  public static String[] toArray( String s, String delimiter, boolean deleteDoubles )
   {
     if( s == null )
     {
@@ -128,15 +130,15 @@ public class StringExtend
       return null;
     }
 
-    final StringTokenizer st = new StringTokenizer( s, delimiter );
+    StringTokenizer st = new StringTokenizer( s, delimiter );
 
-    final ArrayList vec = new ArrayList();
+    ArrayList vec = new ArrayList();
 
     for( int i = 0; st.hasMoreTokens(); i++ )
     {
-      final String t = st.nextToken();
+      String t = st.nextToken();
 
-      if( t != null && t.length() > 0 )
+      if( ( t != null ) && ( t.length() > 0 ) )
       {
         vec.add( t.trim() );
       }
@@ -148,7 +150,7 @@ public class StringExtend
       return null;
     }
 
-    String[] kw = (String[]) vec.toArray( new String[vec.size()] );
+    String[] kw = (String[])vec.toArray( new String[vec.size()] );
 
     if( deleteDoubles )
     {
@@ -165,7 +167,7 @@ public class StringExtend
    *          stringarray to transform
    * @param delimiter
    */
-  public static String arrayToString( final String[] s, final char delimiter )
+  public static String arrayToString( String[] s, char delimiter )
   {
     String res = "";
 
@@ -173,7 +175,7 @@ public class StringExtend
     {
       res = res + s[i];
 
-      if( i < s.length - 1 )
+      if( i < ( s.length - 1 ) )
       {
         res = res + delimiter;
       }
@@ -189,7 +191,7 @@ public class StringExtend
    *          stringarray to transform
    * @param delimiter
    */
-  public static String arrayToString( final double[] s, final char delimiter )
+  public static String arrayToString( double[] s, char delimiter )
   {
     String res = "";
 
@@ -197,7 +199,7 @@ public class StringExtend
     {
       res = res + s[i];
 
-      if( i < s.length - 1 )
+      if( i < ( s.length - 1 ) )
       {
         res = res + delimiter;
       }
@@ -213,7 +215,7 @@ public class StringExtend
    *          stringarray to transform
    * @param delimiter
    */
-  public static String arrayToString( final int[] s, final char delimiter )
+  public static String arrayToString( int[] s, char delimiter )
   {
     String res = "";
 
@@ -221,7 +223,7 @@ public class StringExtend
     {
       res = res + s[i];
 
-      if( i < s.length - 1 )
+      if( i < ( s.length - 1 ) )
       {
         res = res + delimiter;
       }
@@ -238,7 +240,7 @@ public class StringExtend
    * @param mark
    *          string to remove from begin and end of <code>s</code>
    */
-  public static String validateString( String s, final String mark )
+  public static String validateString( String s, String mark )
   {
     if( s == null )
     {
@@ -268,9 +270,9 @@ public class StringExtend
   /**
    * deletes all double entries from the submitted array
    */
-  public static String[] deleteDoubles( final String[] s )
+  public static String[] deleteDoubles( String[] s )
   {
-    final ArrayList vec = new ArrayList();
+    ArrayList vec = new ArrayList();
 
     for( int i = 0; i < s.length; i++ )
     {
@@ -280,7 +282,7 @@ public class StringExtend
       }
     }
 
-    return (String[]) vec.toArray( new String[vec.size()] );
+    return (String[])vec.toArray( new String[vec.size()] );
   }
 
   /**
@@ -291,9 +293,9 @@ public class StringExtend
    * @param s
    *          string to remove
    */
-  public static String[] removeFromArray( final String[] target, final String s )
+  public static String[] removeFromArray( String[] target, String s )
   {
-    final ArrayList vec = new ArrayList();
+    ArrayList vec = new ArrayList();
 
     for( int i = 0; i < target.length; i++ )
     {
@@ -303,7 +305,7 @@ public class StringExtend
       }
     }
 
-    return (String[]) vec.toArray( new String[vec.size()] );
+    return (String[])vec.toArray( new String[vec.size()] );
   }
 
   /**
@@ -314,7 +316,7 @@ public class StringExtend
    * @param value
    *          string to check if it within the array
    */
-  public static boolean contains( final String[] target, String value )
+  public static boolean contains( String[] target, String value )
   {
     if( target == null )
     {
@@ -331,9 +333,9 @@ public class StringExtend
       value = value.substring( 0, value.length() - 1 );
     }
 
-    for( final String element : target )
+    for( int i = 0; i < target.length; i++ )
     {
-      if( value.equalsIgnoreCase( element ) )
+      if( value.equalsIgnoreCase( target[i] ) )
       {
         return true;
       }
@@ -345,7 +347,7 @@ public class StringExtend
   /**
    * countString count the occurrences of token into target
    */
-  public static int countString( final String target, final String token )
+  public static int countString( String target, String token )
   {
     int start = target.indexOf( token );
     int count = 0;
@@ -362,7 +364,7 @@ public class StringExtend
   /**
    * Extract all the string that begin with "start" and end with "end" and store it into an array of String
    */
-  public static String[] extractString( final String target, final String startString, final String end )
+  public static String[] extractString( String target, String startString, String end )
   {
     int start = target.indexOf( startString );
 
@@ -371,8 +373,8 @@ public class StringExtend
       return null;
     }
 
-    final int count = countString( target, startString );
-    final String[] subString = new String[count];
+    int count = countString( target, startString );
+    String[] subString = new String[count];
 
     for( int i = 0; i < count; i++ )
     {
@@ -387,9 +389,9 @@ public class StringExtend
    * extract a string contained between startDel and endDel, you can remove t he delimiters if set true the parameters
    * delStart and delEnd
    */
-  public static String extractArray( final String target, final String startDel, final String endDel, final boolean delStart, final boolean delEnd )
+  public static String extractArray( String target, String startDel, String endDel, boolean delStart, boolean delEnd )
   {
-    final int start = target.indexOf( startDel );
+    int start = target.indexOf( startDel );
 
     if( start == -1 )
     {
@@ -422,7 +424,7 @@ public class StringExtend
   /**
    * convert the array of string like [(x1,y1),(x2,y2)...] into an array of double [x1,y1,x2,y2...]
    */
-  public static double[] toArrayDouble( final String s, final String delimiter )
+  public static double[] toArrayDouble( String s, String delimiter )
   {
     if( s == null )
     {
@@ -434,25 +436,25 @@ public class StringExtend
       return null;
     }
 
-    final StringTokenizer st = new StringTokenizer( s, delimiter );
+    StringTokenizer st = new StringTokenizer( s, delimiter );
 
-    final ArrayList vec = new ArrayList( st.countTokens() );
+    ArrayList vec = new ArrayList( st.countTokens() );
 
     for( int i = 0; st.hasMoreTokens(); i++ )
     {
-      final String t = st.nextToken().replace( ' ', '+' );
+      String t = st.nextToken().replace( ' ', '+' );
 
-      if( t != null && t.length() > 0 )
+      if( ( t != null ) && ( t.length() > 0 ) )
       {
         vec.add( t.trim() );
       }
     }
 
-    final double[] array = new double[vec.size()];
+    double[] array = new double[vec.size()];
 
     for( int i = 0; i < vec.size(); i++ )
     {
-      array[i] = Double.parseDouble( (String) vec.get( i ) );
+      array[i] = Double.parseDouble( (String)vec.get( i ) );
     }
 
     return array;
@@ -461,15 +463,15 @@ public class StringExtend
   /**
    * transforms an array of StackTraceElements into a String
    */
-  public static String stackTraceToString( final StackTraceElement[] se )
+  public static String stackTraceToString( StackTraceElement[] se )
   {
-    final StringBuffer sb = new StringBuffer();
-    for( final StackTraceElement element : se )
+    StringBuffer sb = new StringBuffer();
+    for( int i = 0; i < se.length; i++ )
     {
-      sb.append( element.getClassName() + " " );
-      sb.append( element.getFileName() + " " );
-      sb.append( element.getMethodName() + "(" );
-      sb.append( element.getLineNumber() + ")\n" );
+      sb.append( se[i].getClassName() + " " );
+      sb.append( se[i].getFileName() + " " );
+      sb.append( se[i].getMethodName() + "(" );
+      sb.append( se[i].getLineNumber() + ")\n" );
     }
     return sb.toString();
   }
@@ -477,10 +479,10 @@ public class StringExtend
   /**
    * gets the stacktrace array from the passed Excption and transforms it into a String
    */
-  public static String stackTraceToString( final Exception e )
+  public static String stackTraceToString( Exception e )
   {
-    final StackTraceElement[] se = e.getStackTrace();
-    final StringBuffer sb = new StringBuffer();
+    StackTraceElement[] se = e.getStackTrace();
+    StringBuffer sb = new StringBuffer();
     sb.append( e.getMessage() ).append( "\n" );
     sb.append( e.getClass().getName() ).append( "\n" );
     for( int i = 0; i < se.length; i++ )

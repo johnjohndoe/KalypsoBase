@@ -44,7 +44,7 @@ import java.io.File;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.core.i18n.Messages;
 
 /**
@@ -52,11 +52,6 @@ import org.kalypso.core.i18n.Messages;
  */
 public final class CatalogUtilities
 {
-  private CatalogUtilities( )
-  {
-    throw new UnsupportedOperationException();
-  }
-
   /**
    * contract: a catalog URN is builded like this:<br>
    * baseURN="ogc:sld:"<br>
@@ -74,17 +69,17 @@ public final class CatalogUtilities
   {
     if( !catalogURN.endsWith( ":" ) ) //$NON-NLS-1$
       throw new UnsupportedOperationException( Messages.getString( "org.kalypso.core.catalog.CatalogUtilities.5" ) + catalogURN ); //$NON-NLS-1$
-
     if( ":".equals( catalogURN ) ) //$NON-NLS-1$
       return CATALOG_FILE_NAME;
-
     final String path = catalogURN.replace( ':', File.separator.charAt( 0 ) );
     if( path.endsWith( File.separator ) )
       return path + CATALOG_FILE_NAME;
-
     return path + File.separator + CATALOG_FILE_NAME;
   }
 
+  /** 
+   *   
+   */
   public static String createCatalogURN( final String baseURN )
   {
     if( !baseURN.endsWith( ":" ) ) //$NON-NLS-1$
@@ -160,16 +155,5 @@ public final class CatalogUtilities
       result.append( urnSection );
     }
     return result.toString();
-  }
-
-  /**
-   * @return <code>true</code> iff the given path is a catalog resource, i.e. starts with 'urn:'
-   */
-  public static boolean isCatalogResource( final String location )
-  {
-    if( location == null )
-      return false;
-
-    return location.startsWith( "urn:" ); //$NON-NLS-1$
   }
 }

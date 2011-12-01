@@ -15,10 +15,6 @@ public interface IStyle extends Cloneable
    */
   Object getData( String identifier );
 
-  @Deprecated
-  /**
-   * @deprecated
-   */
   String getTitle( );
 
   boolean isVisible( );
@@ -30,10 +26,6 @@ public interface IStyle extends Cloneable
    */
   void setData( String identifier, Object data );
 
-  @Deprecated
-  /**
-   * @deprecated
-   */
   void setTitle( String title );
 
   void setVisible( boolean isVisible );

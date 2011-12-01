@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.databinding.observable.value;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.databinding.observable.Diffs;
 import org.eclipse.core.databinding.observable.value.AbstractObservableValue;
 import org.eclipse.core.databinding.observable.value.ValueDiff;
@@ -70,18 +70,27 @@ public abstract class TypedObservableValue<SOURCE, VALUE> extends AbstractObserv
     return m_source;
   }
 
+  /**
+   * @see org.eclipse.core.databinding.observable.value.IObservableValue#getValueType()
+   */
   @Override
   public Class<VALUE> getValueType( )
   {
     return m_valueType;
   }
 
+  /**
+   * @see org.eclipse.core.databinding.observable.value.AbstractObservableValue#doGetValue()
+   */
   @Override
   protected final VALUE doGetValue( )
   {
     return doGetValueTyped( m_source );
   }
 
+  /**
+   * @see org.eclipse.core.databinding.observable.value.AbstractObservableValue#doSetValue(java.lang.Object)
+   */
   @Override
   protected final void doSetValue( final Object value )
   {

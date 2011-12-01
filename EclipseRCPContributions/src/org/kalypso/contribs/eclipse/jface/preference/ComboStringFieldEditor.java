@@ -66,20 +66,18 @@ public class ComboStringFieldEditor extends FieldEditor
   /**
    * Constructor
    * 
-   * @param readOnly
-   *          if true, the user cannot enter a non existing value
-   * @param items
-   *          the list of items that the combo contains
+   * @param readOnly if true, the user cannot enter a non existing value
+   * @param items the list of items that the combo contains
    */
   public ComboStringFieldEditor( final String name, final String labelText, final String tooltipText, final Composite parent, final boolean readOnly, final String[] items )
   {
     assert items != null;
     assert tooltipText != null;
-
+    
     m_tooltipText = tooltipText;
     m_readOnly = readOnly;
     m_items = items;
-
+    
     init( name, labelText );
     createControl( parent );
   }
@@ -88,7 +86,7 @@ public class ComboStringFieldEditor extends FieldEditor
    * @see org.eclipse.jface.preference.FieldEditor#adjustForNumColumns(int)
    */
   @Override
-  protected void adjustForNumColumns( final int numColumns )
+  protected void adjustForNumColumns( int numColumns )
   {
     if( m_combo != null )
       ((GridData) m_combo.getLayoutData()).horizontalSpan = numColumns - 1;
@@ -98,11 +96,11 @@ public class ComboStringFieldEditor extends FieldEditor
    * @see org.eclipse.jface.preference.FieldEditor#doFillIntoGrid(org.eclipse.swt.widgets.Composite, int)
    */
   @Override
-  protected void doFillIntoGrid( final Composite parent, final int numColumns )
+  protected void doFillIntoGrid( Composite parent, int numColumns )
   {
     final Label lbl = getLabelControl( parent );
     lbl.setToolTipText( m_tooltipText );
-
+    
     final Combo combo = getComboControl( parent );
     final GridData gd = new GridData( GridData.FILL_HORIZONTAL );
     gd.horizontalSpan = numColumns - 1;
@@ -131,7 +129,7 @@ public class ComboStringFieldEditor extends FieldEditor
     }
     else
       checkParent( m_combo, parent );
-
+    
     return m_combo;
   }
 

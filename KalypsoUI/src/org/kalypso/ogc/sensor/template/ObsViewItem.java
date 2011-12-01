@@ -171,7 +171,7 @@ public abstract class ObsViewItem implements IObsProviderListener, IViewable
    * Return true if this item is concerned by the list of hidden axis-types
    * 
    * @param hiddenTypes
-   *          list of axis-types that the user does not want to see
+   *            list of axis-types that the user does not want to see
    */
   public abstract boolean shouldBeHidden( final Set<String> hiddenTypes );
 }

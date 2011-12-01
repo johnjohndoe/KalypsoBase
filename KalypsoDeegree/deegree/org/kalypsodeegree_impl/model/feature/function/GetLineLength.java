@@ -129,7 +129,7 @@ public class GetLineLength extends FeaturePropertyFunction
         final GMLWorkspace workspace = feature.getWorkspace();
         final Object obj = GMLXPathUtilities.query( path, workspace );
 
-        if( obj instanceof Number )
+        if( (obj instanceof Number) )
         {
           final Number fractionDigitNumber = (Number) obj;
           fractionDigitsCount = fractionDigitNumber.intValue();

@@ -51,7 +51,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * @version 12.6.2001
  * @author Andreas Poth
  */
-public final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_MultiCurve, Serializable
+final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_MultiCurve, Serializable
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 2730942874409216686L;

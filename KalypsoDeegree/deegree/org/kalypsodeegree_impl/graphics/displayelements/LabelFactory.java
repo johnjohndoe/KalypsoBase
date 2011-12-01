@@ -46,7 +46,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.displayelements.Label;
@@ -443,10 +443,10 @@ public class LabelFactory
     final List<Label> pick = new ArrayList<Label>( 100 );
 
     final int n = labels.size();
-    for( int j = n / 2; j < n; j += gap + 1 )
+    for( int j = n / 2; j < n; j += (gap + 1) )
       pick.add( labels.get( j ) );
 
-    for( int j = n / 2 - (gap + 1); j > 0; j -= gap + 1 )
+    for( int j = n / 2 - (gap + 1); j > 0; j -= (gap + 1) )
       pick.add( labels.get( j ) );
 
     return pick.toArray( new Label[pick.size()] );
@@ -595,10 +595,10 @@ public class LabelFactory
         minY = y2;
         maxY = y1;
       }
-      x = -p / 2 - Math.sqrt( p / 2 * (p / 2) - q );
+      x = -p / 2 - Math.sqrt( (p / 2) * (p / 2) - q );
       if( x < minX || x > maxX )
       {
-        x = -p / 2 + Math.sqrt( p / 2 * (p / 2) - q );
+        x = -p / 2 + Math.sqrt( (p / 2) * (p / 2) - q );
       }
       y = (x - x1) * u + y1;
     }
@@ -618,10 +618,10 @@ public class LabelFactory
       final double p = -2 * y0;
       final double q = y0 * y0 + (x1 - x0) * (x1 - x0) - d * d;
 
-      y = -p / 2 - Math.sqrt( p / 2 * (p / 2) - q );
+      y = -p / 2 - Math.sqrt( (p / 2) * (p / 2) - q );
       if( y < minY || y > maxY )
       {
-        y = -p / 2 + Math.sqrt( p / 2 * (p / 2) - q );
+        y = -p / 2 + Math.sqrt( (p / 2) * (p / 2) - q );
       }
     }
     return new int[] { (int) (x + 0.5), (int) (y + 0.5) };

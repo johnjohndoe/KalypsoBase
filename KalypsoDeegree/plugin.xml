@@ -101,7 +101,8 @@
               id="org.kalypsodeegree_impl.model.feature.validation.SchemaRestrictionFeatureRule"
               name="Schema restrictions Rule"/>
      </extension>
-     <extension
+
+   <extension
          id="org.kalypso.deegree.featureCommonsAdapterFactory"
          name="Kalypso Deegree Commons Adapter Factory"
          point="org.eclipse.core.runtime.adapters">
@@ -124,7 +125,29 @@
          </adapter>
       </factory>
    </extension>
-  
+   <extension
+         point="org.kalypso.deegree.functionExpression">
+      <function
+            class="org.kalypsodeegree_impl.filterencoding.FeatureTypeFunctionExpression"
+            label="FeatureType-Name"
+            name="org.kalypso.deeegree.functionExpression.featureTypeName">
+      </function>
+      <function
+            class="org.kalypsodeegree_impl.filterencoding.ParentFeatureFunctionExpression"
+            label="Parent Feature"
+            name="parentFeature">
+      </function>
+      <function
+            class="org.kalypsodeegree_impl.filterencoding.ListPropertyToStringExpression"
+            label="ListPropert toString"
+            name="org.kalypsodeegree_impl.filterencoding.ListPropertyToStringExpression">
+      </function>
+      <function
+            class="org.kalypsodeegree_impl.filterencoding.ListSizeExpression"
+            label="List-Size Expression"
+            name="org.kalypsodeegree_impl.filterencoding.ListSizeExpression">
+      </function>
+   </extension>
    <extension
          point="org.kalypso.gmlschema.typeHandlers">
       <typeHandler
@@ -201,27 +224,5 @@
                catalog="deegree/org/kalypsodeegree_impl/gml/schema/schemata/catalog.xml">
          </nextCatalog>
       </catalogContribution>
-   </extension>
-   <extension
-         point="org.kalypso.deegree.featureBinding">
-      <feature
-            class="org.kalypsodeegree_impl.gml.binding.math.Polynomial1D"
-            qname="{org.kalypso.gml.common.math}Polynomial1D">
-      </feature>
-      <feature
-            class="org.kalypsodeegree_impl.gml.binding.math.Polynomial2D"
-            qname="{org.kalypso.gml.common.math}Polynomial2D">
-      </feature>
-   </extension>
-   <extension
-        point="org.kalypso.deegree.featureBinding">
-     <feature
-           class="org.kalypsodeegree_impl.gml.binding.commons.GeoStatus"
-           qname="{org.kalypso.gml.common}Status">
-     </feature>
-     <feature
-           class="org.kalypsodeegree_impl.gml.binding.commons.StatusCollection"
-           qname="{org.kalypso.gml.common}StatusCollection">
-     </feature>
    </extension>
 </plugin>

@@ -76,22 +76,22 @@ public class TextUtilities
   {
   }
 
-  public static String checkText( final String textProperty )
+  public static String checkText( String textProperty )
   {
     // TODO Perhaps we want to validate the text?
     return textProperty;
   }
 
-  public static int checkFontSize( final String fontSizeProperty )
+  public static int checkFontSize( String fontSizeProperty )
   {
-    final Integer fontSize = NumberUtils.parseQuietInteger( fontSizeProperty );
+    Integer fontSize = NumberUtils.parseQuietInteger( fontSizeProperty );
     if( fontSize != null && fontSize.intValue() > 0 )
       return fontSize.intValue();
 
     return -1;
   }
 
-  public static boolean checkTransparency( final String transparencyProperty )
+  public static boolean checkTransparency( String transparencyProperty )
   {
     if( transparencyProperty != null && transparencyProperty.length() > 0 )
       return Boolean.parseBoolean( transparencyProperty );
@@ -106,15 +106,15 @@ public class TextUtilities
    */
   public static Properties getDefaultProperties( )
   { /* Create the properties object. */
-    final Properties properties = new Properties();
+    Properties properties = new Properties();
 
     /* Serialize the properties. */
-    final String horizontalProperty = String.format( Locale.PRC, "%d", PositionUtilities.RIGHT );
-    final String verticalProperty = String.format( Locale.PRC, "%d", PositionUtilities.BOTTOM );
-    final String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", 255, 255, 255 );
-    final String textProperty = "";
-    final String fontSizeProperty = "-1";
-    final String transparencyProperty = "false";
+    String horizontalProperty = String.format( Locale.PRC, "%d", PositionUtilities.RIGHT );
+    String verticalProperty = String.format( Locale.PRC, "%d", PositionUtilities.BOTTOM );
+    String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", 255, 255, 255 );
+    String textProperty = "";
+    String fontSizeProperty = "-1";
+    String transparencyProperty = "false";
 
     /* Add the properties. */
     properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );

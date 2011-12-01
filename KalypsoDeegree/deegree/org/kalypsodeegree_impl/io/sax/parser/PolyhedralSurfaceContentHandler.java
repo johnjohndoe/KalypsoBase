@@ -74,18 +74,13 @@ public class PolyhedralSurfaceContentHandler extends GMLElementContentHandler im
     this( reader, resultEater, null );
   }
 
-  public PolyhedralSurfaceContentHandler( final XMLReader reader, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContentHandler, final String defaultSrs )
+  public PolyhedralSurfaceContentHandler( final XMLReader reader, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContentHandler )
   {
-    super( reader, NS.GML3, ELEMENT_POLYHEDRAL_SURFACE, defaultSrs, parentContentHandler );
+    super( reader, NS.GML3, ELEMENT_POLYHEDRAL_SURFACE, parentContentHandler );
 
     m_resultEater = resultEater;
 
     m_polyhedralSurface = null;
-  }
-
-  public PolyhedralSurfaceContentHandler( final XMLReader reader, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContentHandler )
-  {
-    this( reader, resultEater, parentContentHandler, null );
   }
 
   /**

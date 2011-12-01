@@ -74,7 +74,7 @@ public interface Mark
    * value is "square"..
    * 
    * @param wellKnownName
-   *          the WK-Name of the mark
+   *            the WK-Name of the mark
    */
   void setWellKnownName( String wellKnownName );
 
@@ -91,7 +91,7 @@ public interface Mark
    * Sets the Fill
    * 
    * @param fill
-   *          the fill of the mark
+   *            the fill of the mark
    */
   void setFill( Fill fill );
 
@@ -109,7 +109,7 @@ public interface Mark
    * Sets the <Stroke>
    * 
    * @param stroke
-   *          the stroke of the mark
+   *            the stroke of the mark
    */
   void setStroke( Stroke stroke );
 

@@ -64,8 +64,8 @@ public class FeatureTypeCatalog
     final String urn = createUrn( catalogTypeBasename, qname );
 
     final String uri = getLocation( urn );
-    // if we got no uri or an urn do nothing, we need a real url
-    if( uri == null || uri.startsWith( "urn" ) ) //$NON-NLS-1$
+    // if we got no uri or an urn do nothing, we need a real url 
+    if( uri == null || uri.startsWith( "urn" )) //$NON-NLS-1$
       return null;
 
     try
@@ -88,7 +88,7 @@ public class FeatureTypeCatalog
     final ICatalog baseCatalog = catalogManager.getBaseCatalog();
     if( baseCatalog == null )
       return null;
-
+    
     return baseCatalog.resolve( urn, urn );
   }
 
