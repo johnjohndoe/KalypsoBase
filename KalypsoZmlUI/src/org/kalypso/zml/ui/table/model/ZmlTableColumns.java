@@ -44,6 +44,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
@@ -86,7 +87,7 @@ public final class ZmlTableColumns
 
   private static String[] toIdentifiers( final IZmlModelColumn[] columns )
   {
-    if( ArrayUtils.isEmpty( columns ) )
+    if( Arrays.isEmpty( columns ) )
       return new String[] {};
 
     final Set<String> identifiers = new HashSet<String>();
