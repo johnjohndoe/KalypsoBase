@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model.data;
 
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
@@ -89,13 +90,13 @@ public class ObsProviderZmlColumnDataHandler extends AbstractZmlColumnDataHandle
 
   }
 
-  /**
-   * @see org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler#getModel()
-   */
   @Override
   public ITupleModel getModel( ) throws SensorException
   {
     final IObservation observation = getObservation();
+    if( Objects.isNull( observation ) )
+      return null;
+
     return observation.getValues( null );
   }
 

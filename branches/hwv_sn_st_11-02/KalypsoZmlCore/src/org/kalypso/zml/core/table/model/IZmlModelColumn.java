@@ -106,4 +106,9 @@ public interface IZmlModelColumn
 
   boolean isActive( );
 
+  void setLableTokenizer( String titleTokenizer );
+
+  String getLabelTokenizer( );
+
+  boolean isLabeled( );
 }
