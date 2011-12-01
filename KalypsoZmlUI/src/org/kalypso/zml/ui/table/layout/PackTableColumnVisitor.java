@@ -81,16 +81,13 @@ public class PackTableColumnVisitor extends AbstractTableColumnPackVisitor
     {
       hide( tableColumn );
     }
-    else
+    /** only update headers of data column types */
+    if( updateHeader( column ) )
     {
-      /** only update headers of data column types */
-      if( updateHeader( column ) )
-      {
-        final String label = modelColumn.getLabel();
-        tableColumn.setText( label );
+      final String label = modelColumn.getLabel();
+      tableColumn.setText( label );
 
-        pack( tableColumn, columnType, label, modelColumn.isActive() );
-      }
+      pack( tableColumn, columnType, label, modelColumn.isActive() );
     }
   }
 
