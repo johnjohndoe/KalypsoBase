@@ -267,6 +267,9 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   public IAxis[] getAxes( )
   {
     final IObservation observation = m_handler.getObservation();
+    if( Objects.isNull( observation ) )
+      return new IAxis[] {};
+
     return observation.getAxes();
   }
 
