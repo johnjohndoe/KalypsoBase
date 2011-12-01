@@ -80,12 +80,15 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
 
   private SteuerparameterWizardPage m_createControlPage;
 
-  protected IFolder m_newFolderHandle;
+  private IFolder m_newFolderHandle;
 
-  /**
-   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
-   *      org.eclipse.jface.viewers.IStructuredSelection)
-   */
+  private final String m_controlPath;
+
+  public NewCalculationCaseWizard( final String controlPath )
+  {
+    m_controlPath = controlPath;
+  }
+
   @Override
   public void init( final IWorkbench workbench, final IStructuredSelection currentSelection )
   {
@@ -102,17 +105,13 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
   {
     super.addPages();
     m_createFolderPage = new NewCalculationCaseCreateFolderPage( Messages.getString( "org.kalypso.simulation.ui.wizards.createCalcCase.NewCalculationCaseWizard.1" ), getSelection() ); //$NON-NLS-1$
-    m_createControlPage = new SteuerparameterWizardPage( m_createFolderPage, ImageProvider.IMAGE_KALYPSO_ICON_BIG, false )
+    m_createControlPage = new SteuerparameterWizardPage( m_createFolderPage, ImageProvider.IMAGE_KALYPSO_ICON_BIG, false, m_controlPath )
     {
-      /**
-       * @see org.kalypso.simulation.ui.wizards.createCalcCase.SteuerparameterWizardPage#createControl(org.eclipse.swt.widgets.Composite)
-       */
       @Override
       public void createControl( final Composite parent )
       {
-        m_newFolderHandle = createCalculationCase();
-
-        setFolder( m_newFolderHandle );
+        final IFolder newFolderHandle = handleCreateControl();
+        setFolder( newFolderHandle );
 
         super.createControl( parent );
       }
@@ -124,9 +123,13 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
     addPage( m_createControlPage );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.IWizard#performFinish()
-   */
+  protected IFolder handleCreateControl( )
+  {
+    m_newFolderHandle = createCalculationCase();
+
+    return m_newFolderHandle;
+  }
+
   @Override
   public boolean performFinish( )
   {
@@ -271,7 +274,7 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
 
   /**
    * Creates a folder resource given the folder handle.
-   * 
+   *
    * @param folderHandle
    *          the folder handle to create a folder resource for
    * @param monitor

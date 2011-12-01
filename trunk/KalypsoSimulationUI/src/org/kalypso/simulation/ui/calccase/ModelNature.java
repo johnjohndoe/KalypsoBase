@@ -111,6 +111,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   public static final String LOCAL_NAME = ".local"; //$NON-NLS-1$
 
+  // FIXME: move to hwv
   public static final String CONTROL_NAME = ".calculation"; //$NON-NLS-1$
 
   public static final String CONTROL_TEMPLATE_NAME = ".calculation.template"; //$NON-NLS-1$
@@ -243,9 +244,18 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     return "???"; //$NON-NLS-1$
   }
 
+  /**
+   * @deprecated Use only for HWV plugins; should be moved there.
+   */
+  @Deprecated
   public static boolean isCalcCalseFolder( final IContainer folder )
   {
-    final IResource calcFile = folder.findMember( CONTROL_NAME );
+    return isCalcCalseFolder( folder, CONTROL_NAME );
+  }
+
+  public static boolean isCalcCalseFolder( final IContainer folder, final String controlPath )
+  {
+    final IResource calcFile = folder.findMember( controlPath );
 
     return calcFile != null && calcFile.exists() && calcFile instanceof IFile;
   }
@@ -544,14 +554,14 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     return m_project.getFolder( MODELLTYP_FOLDER );
   }
 
-  public GMLWorkspace loadOrCreateControl( final IContainer folder ) throws CoreException
+  public GMLWorkspace loadOrCreateControl( final IContainer folder, final String controlPath ) throws CoreException
   {
     try
     {
       if( folder == null )
         throw new IllegalArgumentException();
 
-      final IFile controlFile = folder.getFile( new Path( CONTROL_NAME ) );
+      final IFile controlFile = folder.getFile( new Path( controlPath ) );
       final String gmlPath = controlFile.getFullPath().toString();
       final URL gmlURL = new URL( "platform:/resource/" + gmlPath ); //$NON-NLS-1$
 
@@ -598,7 +608,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   public Object loadCalculationAndReadProperty( final IContainer calcCase, final String propertyName ) throws CoreException
   {
     // load .calculation, dont create one if not existent
-    final GMLWorkspace workspace = loadOrCreateControl( calcCase );
+    final GMLWorkspace workspace = loadOrCreateControl( calcCase, CONTROL_NAME );
     if( workspace == null )
       return null;
 

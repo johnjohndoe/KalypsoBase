@@ -17,13 +17,6 @@
                id="org.kalypso.simulation.ui.menu.debug">
             <groupMarker name="start"/>
          </menu>
-         <action
-               label="%org.kalypso.action.debug.testCalcCase.label"
-               class="org.kalypso.simulation.ui.actions.TestCalculationDelegate"
-               tooltip="%org.kalypso.action.debug.testCalcCase.tooltip"
-               style="push"
-               menubarPath="org.kalypso.simulation.ui.menu.debug/start"
-               id="org.kalypso.action.debug.testCalcCase"/>
       </actionSet>
    </extension>
    

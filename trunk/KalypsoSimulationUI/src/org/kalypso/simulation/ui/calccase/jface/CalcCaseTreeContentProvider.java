@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.calccase.jface;
 
@@ -55,16 +55,13 @@ import org.kalypso.simulation.ui.calccase.ModelNature;
 /**
  * TreeContentProvider to show calc cases in form of a tree. Show s all subdirectories of the input element (which must
  * be a {@link org.eclipse.core.resources.IFolder}which are calc cases.
- * 
+ *
  * @author belger
  */
 public class CalcCaseTreeContentProvider implements ITreeContentProvider
 {
-  private final CalcCaseCollector m_collector = new CalcCaseCollector();
+  private final CalcCaseCollector m_collector = new CalcCaseCollector( ModelNature.CONTROL_NAME );
 
-  /**
-   * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
-   */
   @Override
   public Object[] getChildren( final Object parentElement )
   {
