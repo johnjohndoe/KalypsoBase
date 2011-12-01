@@ -64,10 +64,10 @@ public class ShapeUtils
    *          the offset into the buffer where the int resides
    * @return the point read from the buffer at the offset location
    */
-  public static SHPPoint readPoint( final byte[] b, final int off )
+  public static SHPPoint readPoint( byte[] b, int off )
   {
 
-    final SHPPoint point = new SHPPoint( b, off );
+    SHPPoint point = new SHPPoint( b, off );
 
     return point;
 
@@ -83,10 +83,10 @@ public class ShapeUtils
    *          the offset into the buffer where the int resides
    * @return the z-value of the lowest and highest point (zmin and zmax) as doubles.
    */
-  public static SHPZRange readZRange( final byte[] b, final int off )
+  public static SHPZRange readZRange( byte[] b, int off )
   {
-    final double minZ = ByteUtils.readLEDouble( b, off );
-    final double maxZ = ByteUtils.readLEDouble( b, off + 8 );
+    double minZ = ByteUtils.readLEDouble( b, off );
+    double maxZ = ByteUtils.readLEDouble( b, off + 8 );
 
     return new SHPZRange( minZ, maxZ );
   }
@@ -101,13 +101,13 @@ public class ShapeUtils
    *          the offset into the buffer where the int resides
    * @return the point read from the buffer at the offset location
    */
-  public static SHPEnvelope readBox( final byte[] b, final int off )
+  public static SHPEnvelope readBox( byte[] b, int off )
   {
 
-    final SHPEnvelope bb = new SHPEnvelope();
+    SHPEnvelope bb = new SHPEnvelope();
 
-    final SHPPoint min = readPoint( b, off );
-    final SHPPoint max = readPoint( b, off + 16 );
+    SHPPoint min = readPoint( b, off );
+    SHPPoint max = readPoint( b, off + 16 );
 
     bb.west = min.getX();
     bb.south = min.getY();
@@ -131,7 +131,7 @@ public class ShapeUtils
    *          the point to write
    * @return the number of bytes written
    */
-  public static int writePoint( final byte[] b, final int off, final double x, final double y )
+  public static int writePoint( byte[] b, int off, final double x, final double y )
   {
 
     int nBytes = ByteUtils.writeLEDouble( b, off, x );
@@ -155,7 +155,7 @@ public class ShapeUtils
    *          the bounding box to write
    * @return the number of bytes written
    */
-  public static int writeBox( final byte[] b, final int off, SHPEnvelope box )
+  public static int writeBox( byte[] b, int off, SHPEnvelope box )
   {
     if( box == null )
       box = new SHPEnvelope();
@@ -185,10 +185,10 @@ public class ShapeUtils
    *          the Z-Range to write
    * @return the number of bytes written
    */
-  public static int writeZRange( final byte[] b, final int off, final SHPZRange zrange )
+  public static int writeZRange( byte[] b, int off, SHPZRange zrange )
   {
 
-    final SHPZRange zr = new SHPZRange( zrange.getMinZ(), zrange.getMaxZ() );
+    SHPZRange zr = new SHPZRange( zrange.getMinZ(), zrange.getMaxZ() );
     zr.setMinZ( zrange.getMinZ() );
     zr.setMaxZ( zrange.getMaxZ() );
 

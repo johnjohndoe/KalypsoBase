@@ -98,14 +98,12 @@ public class FeatureviewHelper implements IFeatureviewFactory
     return m_shouldShowButton;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.featureview.maker.IFeatureviewFactory#get(org.kalypso.gmlschema.feature.IFeatureType,
+   *      org.kalypsodeegree.model.feature.Feature)
+   */
   @Override
-  public FeatureviewTypeWithContext get( final IFeatureType featureType, final Feature feature )
-  {
-    final FeatureviewType featureview = createFeatureview( featureType, feature );
-    return new FeatureviewTypeWithContext( featureview, null );
-  }
-
-  private FeatureviewType createFeatureview( final IFeatureType featureType, final Feature feature )
+  public FeatureviewType get( final IFeatureType featureType, final Feature feature )
   {
     if( featureType != null && feature != null )
       return getWithContent( featureType, feature );

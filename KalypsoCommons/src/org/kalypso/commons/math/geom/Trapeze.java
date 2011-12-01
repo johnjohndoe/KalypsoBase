@@ -32,7 +32,7 @@ public class Trapeze
    * @param L2
    * @see setLines(Line2D L1, Line2D L2)
    */
-  public Trapeze( final Line2D L1, final Line2D L2 )
+  public Trapeze( Line2D L1, Line2D L2 )
   {
     m_p11 = L1.getP1();
     m_p12 = L1.getP2();
@@ -50,7 +50,7 @@ public class Trapeze
    * @param p22
    * @see setPoints(Point2D p11, Point2D p12, Point2D p21, Point2D p22)
    */
-  public Trapeze( final Point2D p11, final Point2D p12, final Point2D p21, final Point2D p22 )
+  public Trapeze( Point2D p11, Point2D p12, Point2D p21, Point2D p22 )
   {
     m_p11 = p11;
     m_p12 = p12;
@@ -67,18 +67,18 @@ public class Trapeze
    */
   public double height( )
   {
-    if( m_p11 == null || m_p21 == null )
+    if( (m_p11 == null) || (m_p21 == null) )
       throw new IllegalStateException( Messages.getString( "org.kalypso.commons.math.geom.Trapeze.0" ) ); //$NON-NLS-1$
 
     if( m_p11.getX() == m_p12.getX() )
       return Math.abs( m_p11.getX() - m_p21.getX() );
     try
     {
-      final LinearEquation eq = new LinearEquation( m_p11, m_p12 );
+      LinearEquation eq = new LinearEquation( m_p11, m_p12 );
 
       return eq.distance( m_p21 );
     }
-    catch( final SameXValuesException e )
+    catch( SameXValuesException e )
     {
       // sollte nicht der fall sein weil wir der test explizit vorher machen
       return 0;
@@ -92,14 +92,14 @@ public class Trapeze
    */
   public double area( )
   {
-    if( m_p11 == null || m_p12 == null || m_p21 == null || m_p22 == null )
+    if( (m_p11 == null) || (m_p12 == null) || (m_p21 == null) || (m_p22 == null) )
       throw new IllegalStateException( Messages.getString( "org.kalypso.commons.math.geom.Trapeze.1" ) ); //$NON-NLS-1$
 
-    final double d1 = PointUtilities.distance( m_p11, m_p12 );
-    final double d2 = PointUtilities.distance( m_p21, m_p22 );
-    final double h = height();
+    double d1 = PointUtilities.distance( m_p11, m_p12 );
+    double d2 = PointUtilities.distance( m_p21, m_p22 );
+    double h = height();
 
-    return (d1 + d2) * h / 2;
+    return ((d1 + d2) * h) / 2;
   }
 
   /**
@@ -108,7 +108,7 @@ public class Trapeze
   @Override
   public String toString( )
   {
-    final StringBuffer buf = new StringBuffer();
+    StringBuffer buf = new StringBuffer();
 
     buf.append( m_p11 + "|" + m_p12 + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     buf.append( "-------------------------------------------------\n" ); //$NON-NLS-1$

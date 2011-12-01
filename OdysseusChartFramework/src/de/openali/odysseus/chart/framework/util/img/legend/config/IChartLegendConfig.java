@@ -41,7 +41,6 @@
 package de.openali.odysseus.chart.framework.util.img.legend.config;
 
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 
@@ -58,5 +57,5 @@ public interface IChartLegendConfig
 
   Point getItemSpacer( );
 
-  Rectangle getMaximumWidth( );
+  int getMaximumWidth( );
 }

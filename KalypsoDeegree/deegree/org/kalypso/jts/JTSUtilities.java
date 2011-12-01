@@ -52,9 +52,9 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.Assert;
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -146,7 +146,7 @@ public final class JTSUtilities
     for( int i = 0; i < coordinates.length - 1; i++ )
     {
       /* Get the coordinates to the current one + 1. */
-      final Coordinate[] coords = ArrayUtils.subarray( coordinates, 0, i + 2 );
+      final Coordinate[] coords = (Coordinate[]) ArrayUtils.subarray( coordinates, 0, i + 2 );
 
       /* Create a new line with the coordinates. */
       final LineString ls = factory.createLineString( coords );
@@ -733,15 +733,9 @@ public final class JTSUtilities
    */
   public static LineString addPointsToLine( final LineString line, final List<Point> originalPoints )
   {
-    return addPointsToLine( line, originalPoints.toArray( new Point[] {} ) );
-  }
-
-  public static LineString addPointsToLine( final LineString line, final Point... originalPoints )
-  {
-
     /* Clone the whole list. */
-    final List<Point> clonedPoints = new ArrayList<Point>();
-    for( final Point originalPoint : originalPoints )
+    List<Point> clonedPoints = new ArrayList<Point>();
+    for( Point originalPoint : originalPoints )
       clonedPoints.add( (Point) originalPoint.clone() );
 
     /* Check for intersection. */
@@ -795,8 +789,8 @@ public final class JTSUtilities
       }
 
       /* Add all points. */
-      final List<CoordinatePair> coordinatePairs = getCoordinatePairs( startCoord, toAdd );
-      for( final CoordinatePair coordinatePair : coordinatePairs )
+      List<CoordinatePair> coordinatePairs = getCoordinatePairs( startCoord, toAdd );
+      for( CoordinatePair coordinatePair : coordinatePairs )
         newCoordinates.add( coordinatePair.getSecondCoordinate() );
 
       /* Remove all added points. */
@@ -875,7 +869,7 @@ public final class JTSUtilities
       return factory.createLineString( myCoordinates.toArray( new Coordinate[] {} ) );
     }
 
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 
   /**
@@ -1338,17 +1332,8 @@ public final class JTSUtilities
       /* Get the coordinate pair. */
       final CoordinatePair coordinatePair = coordinatePairs.get( i );
 
-      final double d = coordinatePair.getDistance();
-      if( 0.0 == d )
-      {
-        final Coordinate second = coordinatePair.getSecondCoordinate();
-        coordinate.z = second.z;
-
-        return;
-      }
-
       /* Get the distance of the coordinate to the coordinate of the point. */
-      final double distance = 1 / d;
+      final double distance = 1 / coordinatePair.getDistance();
 
       /* First add it to the sum of distances. */
       sumDistances = sumDistances + distance;
@@ -1365,7 +1350,7 @@ public final class JTSUtilities
       final Double distance = distances.get( i );
 
       /* Calculate the factor. */
-      final double factor = distance.doubleValue() / sumDistances;
+      final double factor = (distance.doubleValue() / sumDistances);
 
       /* Add it to the list of factors. */
       factors.add( new Double( factor ) );
@@ -1385,7 +1370,7 @@ public final class JTSUtilities
       final Double factor = factors.get( i );
 
       /* Calculate the new z coordinate. */
-      newZ = newZ + coordinatePair.getSecondCoordinate().z * factor.doubleValue();
+      newZ = newZ + (coordinatePair.getSecondCoordinate().z * factor.doubleValue());
     }
 
     /* Set the new z coordinate. */
@@ -1442,7 +1427,7 @@ public final class JTSUtilities
    *          {@value #TOLERANCE}) will be used.
    * @return The point, if one could be found or null.
    */
-  public static Point findPointInLine( final LineString line, final Point point, double distance )
+  public static Point findPointInLine( LineString line, Point point, double distance )
   {
     /* Check for intersection. */
     if( point.distance( line ) >= TOLERANCE )
@@ -1453,14 +1438,14 @@ public final class JTSUtilities
       distance = TOLERANCE;
 
     /* Find the line segment, this point is in. */
-    final LineSegment segment = findLineSegment( line, point );
+    LineSegment segment = findLineSegment( line, point );
     if( segment == null )
       return null;
 
     /* Check the distance to the reference point. */
-    final Coordinate referenceCoordinate = point.getCoordinate();
-    final double distance0 = segment.getCoordinate( 0 ).distance( referenceCoordinate );
-    final double distance1 = segment.getCoordinate( 1 ).distance( referenceCoordinate );
+    Coordinate referenceCoordinate = point.getCoordinate();
+    double distance0 = segment.getCoordinate( 0 ).distance( referenceCoordinate );
+    double distance1 = segment.getCoordinate( 1 ).distance( referenceCoordinate );
     Coordinate closestCoordinate = null;
     if( distance0 <= distance1 )
       closestCoordinate = segment.getCoordinate( 0 );
@@ -1469,69 +1454,10 @@ public final class JTSUtilities
 
     if( closestCoordinate.distance( referenceCoordinate ) <= distance )
     {
-      final GeometryFactory factory = new GeometryFactory( line.getPrecisionModel(), line.getSRID() );
+      GeometryFactory factory = new GeometryFactory( line.getPrecisionModel(), line.getSRID() );
       return factory.createPoint( closestCoordinate );
     }
 
     return null;
-  }
-
-  /**
-   * This function finds the points via the NEAREST rule. Method was copied from InformDSS class AbstractGeoMeasure
-   * 
-   * @return The list of affected points. Always with size = 2.
-   */
-  public static Point findNearestProjectionPoints( final Polygon polygone, final Point point )
-  {
-    final Coordinate base = point.getCoordinate();
-
-    double distance = Double.MAX_VALUE;
-    Coordinate ptr = null;
-
-    /* Get the exterior ring. */
-    final LineString ring = polygone.getExteriorRing();
-    final Coordinate[] coordinates = ring.getCoordinates();
-
-    for( final Coordinate coordinate : coordinates )
-    {
-      final double d = coordinate.distance( base );
-      if( d < distance )
-      {
-        ptr = coordinate;
-        distance = d;
-      }
-    }
-
-    if( Objects.isNull( ptr ) )
-      return null;
-
-    final GeometryFactory factory = new GeometryFactory( point.getPrecisionModel(), point.getSRID() );
-    return factory.createPoint( ptr );
-  }
-
-  public static Coordinate[] replace( final Coordinate[] coordinates, final Coordinate old, final Coordinate set )
-  {
-    final List<Coordinate> replaced = new ArrayList<Coordinate>();
-    for( final Coordinate coordinate : coordinates )
-    {
-      if( coordinate.equals( old ) )
-        replaced.add( set );
-      else
-        replaced.add( coordinate );
-    }
-
-    return replaced.toArray( new Coordinate[] {} );
-  }
-
-  public static double distanceZ( final Coordinate c1, final Coordinate c2 )
-  {
-    if( Double.isNaN( c1.z ) || Double.isNaN( c2.z ) )
-      throw new IllegalStateException();
-
-    final double dx = c1.x - c2.x;
-    final double dy = c1.y - c2.y;
-    final double dz = c1.z - c2.z;
-
-    return Math.sqrt( dx * dx + dy * dy + dz * dz );
   }
 }

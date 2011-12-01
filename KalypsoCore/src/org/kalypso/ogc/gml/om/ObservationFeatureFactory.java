@@ -195,48 +195,46 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
       if( handler == null )
         continue;
+      try
+      {
+        Object value = null;
+        if( "null".equals( token ) ) //$NON-NLS-1$
+          value = null;
+        else // TODO fabrication method needed!
+        if( handler instanceof XsdBaseTypeHandlerString )
+        {
+          final XsdBaseTypeHandlerString myHandler = (XsdBaseTypeHandlerString) handler;
+          value = myHandler.convertToJavaValue( URLDecoder.decode( token, "UTF-8" ) ); //$NON-NLS-1$
+        }
+        else if( handler instanceof XsdBaseTypeHandlerXMLGregorianCalendar )
+        {
+          final XsdBaseTypeHandlerXMLGregorianCalendar myHandler = (XsdBaseTypeHandlerXMLGregorianCalendar) handler;
+          value = myHandler.convertToJavaValue( URLDecoder.decode( token, "UTF-8" ) ); //$NON-NLS-1$
+        }
+        else
+        {
 
-      final Object value = convertToJavaValue( token, handler );
-      record.setValue( nb, value );
+          value = handler.convertToJavaValue( token );
+        }
+
+        record.setValue( nb, value );
+      }
+      catch( final NumberFormatException e )
+      {
+        e.printStackTrace();
+        // TODO: set null here: Problem: the other components can't handle null now, they should
+        record.setValue( nb, null );
+      }
+      catch( final UnsupportedEncodingException e )
+      {
+        e.printStackTrace();
+        record.setValue( nb, null );
+      }
       nb++;
       nb = nb % components.length;
     }
 
     return tupleResult;
-  }
-
-  private static Object convertToJavaValue( final String token, final XsdBaseTypeHandler< ? > handler )
-  {
-    try
-    {
-      if( "null".equals( token ) ) //$NON-NLS-1$
-        return null;
-
-      if( handler instanceof XsdBaseTypeHandlerString )
-      {
-        final XsdBaseTypeHandlerString myHandler = (XsdBaseTypeHandlerString) handler;
-        return myHandler.convertToJavaValue( URLDecoder.decode( token, "UTF-8" ) ); //$NON-NLS-1$
-      }
-
-      if( handler instanceof XsdBaseTypeHandlerXMLGregorianCalendar )
-      {
-        final XsdBaseTypeHandlerXMLGregorianCalendar myHandler = (XsdBaseTypeHandlerXMLGregorianCalendar) handler;
-        return myHandler.convertToJavaValue( URLDecoder.decode( token, "UTF-8" ) ); //$NON-NLS-1$
-      }
-
-      return handler.convertToJavaValue( token );
-    }
-    catch( final NumberFormatException e )
-    {
-      e.printStackTrace();
-      // TODO: set null here: Problem: the other components can't handle null now, they should
-      return null;
-    }
-    catch( final UnsupportedEncodingException e )
-    {
-      e.printStackTrace();
-      return null;
-    }
   }
 
   /**
@@ -372,10 +370,16 @@ public class ObservationFeatureFactory implements IAdapterFactory
     changes.add( new FeatureChange( targetObsFeature, featureType.getProperty( Feature.QN_NAME ), Collections.singletonList( source.getName() ) ) );
     changes.add( new FeatureChange( targetObsFeature, featureType.getProperty( Feature.QN_DESCRIPTION ), source.getDescription() ) );
 
+    // TODO: at the moment, only referenced phenomenons are supported
     final IRelationType phenPt = (IRelationType) featureType.getProperty( ObservationFeatureFactory.OM_OBSERVED_PROP );
     final IPhenomenon phenomenon = source.getPhenomenon();
-    final Object phenonemonFeature = toFeaturePhenonemon( phenomenon, targetObsFeature, phenPt );
-    changes.add( new FeatureChange( targetObsFeature, phenPt, phenonemonFeature ) );
+    final Object phenomenonRef;
+    if( phenomenon == null )
+      phenomenonRef = null;
+    else
+      phenomenonRef = FeatureHelper.createLinkToID( phenomenon.getID(), targetObsFeature, phenPt, phenPt.getTargetFeatureType() );
+
+    changes.add( new FeatureChange( targetObsFeature, phenPt, phenomenonRef ) );
 
     final TupleResult result = source.getResult();
 
@@ -391,35 +395,6 @@ public class ObservationFeatureFactory implements IAdapterFactory
     changes.add( new FeatureChange( targetObsFeature, featureType.getProperty( ObservationFeatureFactory.OM_RESULT ), strResult ) );
 
     return changes.toArray( new FeatureChange[changes.size()] );
-  }
-
-  private static Object toFeaturePhenonemon( final IPhenomenon phenomenon, final Feature targetObsFeature, final IRelationType phenPt )
-  {
-    if( phenomenon == null )
-      return null;
-
-    final String id = phenomenon.getID();
-
-    final Object phenomenonRef = FeatureHelper.createLinkToID( id, targetObsFeature, phenPt, phenPt.getTargetFeatureType() );
-    if( phenomenonRef == null || phenomenonRef instanceof String )
-      return phenomenonRef;
-
-    if( phenomenonRef instanceof XLinkedFeature_Impl )
-    {
-      // check if link exists, if not, we create an inline phenonemon
-      if( ((XLinkedFeature_Impl) phenomenonRef).getFeatureId() != null )
-      {
-        return phenomenonRef;
-      }
-
-      final org.kalypso.deegree.binding.swe.Phenomenon phenonemonFeature = (org.kalypso.deegree.binding.swe.Phenomenon) FeatureFactory.createFeature( targetObsFeature, phenPt, id, phenPt.getTargetFeatureType(), true );
-      phenonemonFeature.setName( phenomenon.getName() );
-      phenonemonFeature.setDescription( phenomenon.getDescription() );
-
-      return phenonemonFeature;
-    }
-
-    return null;
   }
 
   /**

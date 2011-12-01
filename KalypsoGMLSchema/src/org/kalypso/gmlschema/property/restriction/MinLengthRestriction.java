@@ -42,13 +42,14 @@ package org.kalypso.gmlschema.property.restriction;
 
 /**
  * @author doemming
+ *
  */
 public class MinLengthRestriction implements IRestriction
 {
 
   private final int m_minLenth;
 
-  public MinLengthRestriction( final int minLength )
+  public MinLengthRestriction( int minLength )
   {
     m_minLenth = minLength;
   }

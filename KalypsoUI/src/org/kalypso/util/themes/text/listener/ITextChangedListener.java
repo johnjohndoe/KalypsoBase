@@ -64,10 +64,6 @@ public interface ITextChangedListener
    *          The background color.
    * @param text
    *          The text, which should be shown.
-   * @param fontSize
-   *          The font size.
-   * @param transparency
-   *          True, if the transparency is switched on.
    */
-  public void textPropertyChanged( Properties properties, int horizontal, int vertical, Color backgroundColor, String text, int fontSize, boolean transparency );
+  public void textPropertyChanged( Properties properties, int horizontal, int vertical, Color backgroundColor, String text );
 }

@@ -227,5 +227,5 @@ public interface Deegree2Feature
   /**
    * Signals that the envelopes of the geometry properties have been updated.
    */
-  void setEnvelopesUpdated( );
+  public void setEnvelopesUpdated( );
 }

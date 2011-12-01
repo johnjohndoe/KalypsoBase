@@ -39,5 +39,5 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 public interface IGMLWorkspaceModellEvent
 {
-  public GMLWorkspace getGMLWorkspace( );
+  public GMLWorkspace getGMLWorkspace();
 }

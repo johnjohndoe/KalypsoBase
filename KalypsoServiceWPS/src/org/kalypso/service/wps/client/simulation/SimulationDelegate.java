@@ -61,9 +61,10 @@ import net.opengeospatial.wps.SupportedCRSsType;
 import net.opengeospatial.wps.SupportedComplexDataType;
 
 import org.apache.commons.httpclient.util.URIUtil;
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
-import org.apache.commons.vfs2.FileSystemManager;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemException;
+import org.apache.commons.vfs.FileSystemManager;
+import org.apache.commons.vfs.FileSystemManagerWrapper;
 import org.eclipse.core.internal.boot.PlatformURLHandler;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -76,7 +77,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.net.UrlUtilities;
-import org.kalypso.commons.vfs.FileSystemManagerWrapper;
 import org.kalypso.contribs.eclipse.core.resources.CollectFilesVisitor;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -232,8 +232,6 @@ public class SimulationDelegate
    */
   private void copyInputFile( final IFile ifile ) throws WPSException
   {
-    if( SERVER_INPUT_LOCAL.equals( m_input ) )
-      return;
     try
     {
       /* Get the relative path of the file. */
@@ -273,30 +271,21 @@ public class SimulationDelegate
         {
           // do not use server directory, but calculate in calcCaseFolder
           KalypsoServiceWPSDebug.DEBUG.printf( "Local calculation! Using calcCaseFolder as input directory.\n" ); //$NON-NLS-1$
-
-          // the "calculate in calcCaseFolder" leads to creation of redundant data in each calculation in project folder
-          // so we are now using for local case already existing data from the project and not copied in this temporary
-// folder
-          // but for the case that we do need a copied data, we should create correct temp directory and
-          // not additional directory in the project.
-          //File rootTmpDirectory = FileUtilities.createNewTempDir( "SimulationLocalInput_" );  //$NON-NLS-1$
-          // m_serverTmpDirectory = m_fsManager.toFileObject( rootTmpDirectory );
-
-          // final String calcCaseFolderLocation = m_calcCaseFolder.getLocationURI().toString();
-          // m_serverTmpDirectory = VFSUtilities.checkProxyFor( calcCaseFolderLocation, m_fsManager );
+          final String calcCaseFolderLocation = m_calcCaseFolder.getLocationURI().toString();
+          m_serverTmpDirectory = VFSUtilities.checkProxyFor( calcCaseFolderLocation, m_fsManager );
         }
         else
         {
           /* Get the directory for server access. */
           final FileObject serverDirectory = VFSUtilities.checkProxyFor( m_input, m_fsManager );
           m_serverTmpDirectory = VFSUtilities.createTempDirectory( "Simulation_", serverDirectory, m_fsManager ); //$NON-NLS-1$
+
           if( !m_serverTmpDirectory.exists() )
           {
             KalypsoServiceWPSDebug.DEBUG.printf( "Creating folder " + m_serverTmpDirectory.getName().getPath() + " ...\n" ); //$NON-NLS-1$ //$NON-NLS-2$
             m_serverTmpDirectory.createFolder();
           }
         }
-
       }
     }
     catch( final WPSException e )
@@ -426,8 +415,7 @@ public class SimulationDelegate
     {
       try
       {
-        if( m_serverTmpDirectory != null )
-          m_serverTmpDirectory.close();
+        m_serverTmpDirectory.close();
       }
       catch( final FileSystemException e )
       {
@@ -533,7 +521,7 @@ public class SimulationDelegate
             wpsInputs.put( identifier.getValue(), hexString );
             continue;
           }
-          else if( protocol == null || protocol.equals( "project" ) || protocol.equals( "platform" ) ) //$NON-NLS-1$ //$NON-NLS-2$
+          else if( (protocol == null) || protocol.equals( "project" ) || protocol.equals( "platform" ) ) //$NON-NLS-1$ //$NON-NLS-2$
           {
             /* If protocol is null or protocol is "project", it is a local file resource. */
             /*
@@ -547,7 +535,7 @@ public class SimulationDelegate
 
             final IProject project = m_calcCaseFolder.getProject();
             final IResource inputResource;
-            if( protocol != null && protocol.equals( PlatformURLHandler.PROTOCOL ) )
+            if( (protocol != null) && protocol.equals( PlatformURLHandler.PROTOCOL ) )
             {
               final IContainer baseresource = project.getWorkspace().getRoot();
               final String path = ResourceUtilities.findPathFromURL( new URL( inputPath ) ).toPortableString();
@@ -578,17 +566,7 @@ public class SimulationDelegate
             /* Build the URL for this input. */
             /* Resource will be copied to server later (for example see SimulationDelegate.copyInputFiles). */
             final String relativePathTo = inputResource.getFullPath().makeRelative().toString();
-
-            /**
-             * just put the existing resource to the inputs and DO NOT copy it in case of local calculation!! also
-             * prevent the creation of redundant data in base project folder
-             */
-            FileObject destination = fsManager.toFileObject( inputResource.getLocation().toFile() );
-            if( !SERVER_INPUT_LOCAL.equals( m_input ) )
-            {
-              destination = fsManager.resolveFile( m_serverTmpDirectory, relativePathTo );
-            }
-
+            final FileObject destination = fsManager.resolveFile( m_serverTmpDirectory, relativePathTo );
             final String serverUrl = WPSUtilities.convertInternalToServer( destination.getURL().toExternalForm(), m_input );
             wpsInputs.put( identifier.getValue(), new URI( URIUtil.encodePath( serverUrl ) ) );
           }

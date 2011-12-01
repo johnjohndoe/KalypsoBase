@@ -43,7 +43,7 @@ package org.kalypso.ogc.sensor.view.actions;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;

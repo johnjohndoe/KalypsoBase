@@ -29,17 +29,16 @@
  */
 package org.kalypso.ui.editor.gmleditor.ui;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.runtime.PlatformObject;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureProperty;
 
 /**
  * @author kuepfer
  */
-public class FeatureAssociationTypeElement extends PlatformObject implements IFeatureProperty
+public class FeatureAssociationTypeElement extends PlatformObject
 {
   private final IRelationType m_featureAssociattionTypeProp;
 
@@ -51,16 +50,11 @@ public class FeatureAssociationTypeElement extends PlatformObject implements IFe
     m_featureAssociattionTypeProp = property;
   }
 
-  @Override
   public Feature getParentFeature( )
   {
     return m_parent;
   }
 
-  /**
-   * @deprecated Use {@link #getPropertyType()} instead.
-   */
-  @Deprecated
   public IRelationType getAssociationTypeProperty( )
   {
     return m_featureAssociattionTypeProp;
@@ -76,7 +70,7 @@ public class FeatureAssociationTypeElement extends PlatformObject implements IFe
    * @see java.lang.Object#equals(java.lang.Object)
    */
   @Override
-  public boolean equals( final Object obj )
+  public boolean equals( Object obj )
   {
     return EqualsBuilder.reflectionEquals( this, obj );
   }
@@ -89,11 +83,5 @@ public class FeatureAssociationTypeElement extends PlatformObject implements IFe
   public int hashCode( )
   {
     return HashCodeBuilder.reflectionHashCode( this );
-  }
-
-  @Override
-  public IRelationType getPropertyType( )
-  {
-    return m_featureAssociattionTypeProp;
   }
 }

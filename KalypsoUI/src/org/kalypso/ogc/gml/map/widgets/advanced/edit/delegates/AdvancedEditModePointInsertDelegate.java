@@ -49,8 +49,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.kalypso.commons.java.lang.Objects;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.i18n.Messages;
@@ -66,7 +66,6 @@ import org.kalypso.ogc.gml.map.widgets.advanced.edit.IAdvancedEditWidgetGeometry
 import org.kalypso.ogc.gml.map.widgets.advanced.edit.IAdvancedEditWidgetResult;
 import org.kalypso.ogc.gml.map.widgets.advanced.utils.GeometryPainter;
 import org.kalypso.ogc.gml.map.widgets.advanced.utils.IPointHighLighter;
-import org.kalypso.ui.KalypsoUIDebug;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -86,17 +85,19 @@ import com.vividsolutions.jts.geom.Polygon;
 public class AdvancedEditModePointInsertDelegate implements IAdvancedEditWidgetDelegate
 {
 
-  protected static final Color COLOR_VERTEX = new Color( 0x36, 0x7c, 0xc7 );
+  private static final Color COLOR_VERTEX = new Color( 0x36, 0x7c, 0xc7 );
 
   static final IPointHighLighter POSSIBLE_VERTEX_POINT = new IPointHighLighter()
   {
+    Color cVertex = COLOR_VERTEX;
+
+    final int size = 14;
+
     @Override
     public void draw( final Graphics g, final java.awt.Point point )
     {
-      final int size = 14;
-
       final Color original = g.getColor();
-      g.setColor( COLOR_VERTEX );
+      g.setColor( cVertex );
       g.fillOval( point.x - size / 2, point.y - size / 2, size, size );
       g.setColor( original );
     }
@@ -139,7 +140,7 @@ public class AdvancedEditModePointInsertDelegate implements IAdvancedEditWidgetD
 
       /* find underlying geometry */
       final IAdvancedEditWidgetGeometry underlying = DelegateHelper.findUnderlyingGeometry( mapGeometries, jtsPoint );
-      if( Objects.isNull( underlying ) )
+      if( underlying == null )
       {
         m_lastPossibleVertexPoints = null;
       }
@@ -154,16 +155,13 @@ public class AdvancedEditModePointInsertDelegate implements IAdvancedEditWidgetD
           GeometryPainter.highlightPoints( g, m_widget.getIMapPanel(), new Geometry[] { m_lastPossibleVertexPoints[0].getGeometry() }, POSSIBLE_VERTEX_POINT );
         }
 
-        if( KalypsoUIDebug.DEBUG_ADVANCED_EDIT_WIDGETS.isEnabled() )
-        {
-          /* debug */
-          for( final IAdvancedEditWidgetResult result : m_lastPossibleVertexPoints )
-          {
-            final Polygon geometry = (Polygon) m_provider.resolveJtsGeometry( result.getFeature() );
-            GeometryPainter.drawPolygon( m_widget.getIMapPanel(), g, geometry, new Color( 255, 255, 255 ), new Color( 0xa3, 0xc3, 0xc9, 0x80 ) );
-          }
-        }
-
+// /* debug */
+// for( final IAdvancedEditWidgetResult result : m_lastPossibleVertexPoints )
+// {
+// final Polygon geometry = (Polygon) m_provider.resolveJtsGeometry( result.getFeature());
+// GeometryPainter.drawPolygon( m_widget.getIMapPanel(), g, geometry, new Color( 255, 255, 255 ), new Color( 0xa3, 0xc3,
+        // 0xc9, 0x80 ) );
+// }
       }
 
     }
@@ -192,6 +190,7 @@ public class AdvancedEditModePointInsertDelegate implements IAdvancedEditWidgetD
         continue;
       }
 
+
       final Polygon polygon = (Polygon) geometry;
       final LineString ring = polygon.getExteriorRing();
 
@@ -199,7 +198,7 @@ public class AdvancedEditModePointInsertDelegate implements IAdvancedEditWidgetD
       if( resnapped != null )
       {
         // System.out.println( String.format( "distance %f", resnapped.distance( snapped ) ) );
-
+        
         // add old snap point!
         results.add( new AdvancedEditWidgetResult( entry.getValue(), snapped ) );
       }
@@ -211,11 +210,11 @@ public class AdvancedEditModePointInsertDelegate implements IAdvancedEditWidgetD
   private Point findPossibleVertexPointOnEdge( final IAdvancedEditWidgetGeometry underlying )
   {
     final Geometry geometry = underlying.getUnderlyingGeometry();
-    if( Objects.isNull( geometry ) )
+    if( geometry == null )
       return null;
 
     if( !(geometry instanceof Polygon) )
-      throw new UnsupportedOperationException();
+      throw new NotImplementedException();
 
     final Polygon polygon = (Polygon) geometry;
     final LineString ring = polygon.getExteriorRing();
@@ -231,7 +230,7 @@ public class AdvancedEditModePointInsertDelegate implements IAdvancedEditWidgetD
   @Override
   public String getToolTip( )
   {
-    return Messages.getString( "org.kalypso.ogc.gml.map.widgets.advanced.edit.delegates.AdvancedEditModePointInsertDelegate.0" ); //$NON-NLS-1$
+    return Messages.getString("org.kalypso.ogc.gml.map.widgets.advanced.edit.delegates.AdvancedEditModePointInsertDelegate.0"); //$NON-NLS-1$
   }
 
   /**

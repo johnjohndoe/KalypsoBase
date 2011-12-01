@@ -39,7 +39,7 @@
  *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.schema.gml;
-
+        
 import java.util.Map;
 
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -60,6 +60,7 @@ public class ProfileThroughputLocationCreator extends FeaturePropertyFunction
   public void init( final Map<String, String> properties )
   {
   }
+
 
   /**
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#setValue(org.kalypsodeegree.model.feature.Feature,

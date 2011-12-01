@@ -48,9 +48,6 @@ import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
@@ -80,50 +77,20 @@ public abstract class AbstractFeatureControl implements IFeatureControl
     m_ftp = ftp;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#dispose()
+   */
   @Override
   public void dispose( )
   {
     m_changelisteners.clear();
   }
 
-  @Override
-  public Control createControl( final FormToolkit toolkit, final Composite parent, final int style )
-  {
-    final Control control = createControl( parent, style );
-    applyToolkit( toolkit, control );
-    return control;
-  }
-
-  @SuppressWarnings("unused")
-  protected Control createControl( final Composite parent, final int style )
-  {
-    // Implementors need either to overwrite #createControl( toolkit.. ) or overwrite this method.
-    throw new IllegalStateException();
-  }
-
-  protected void applyToolkit( final FormToolkit toolkit, final Control control )
-  {
-    if( toolkit == null )
-      return;
-
-    if( control instanceof Composite )
-    {
-      final Composite panel = (Composite) control;
-      toolkit.adapt( panel );
-
-      final Control[] children = panel.getChildren();
-      for( final Control child : children )
-        applyToolkit( toolkit, child );
-    }
-    else
-      toolkit.adapt( control, true, true );
-  }
-
   /**
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#getFeature()
    */
   @Override
-  public Feature getFeature( )
+  public final Feature getFeature( )
   {
     return m_feature;
   }

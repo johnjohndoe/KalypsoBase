@@ -64,7 +64,6 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.io.shpapi.DBaseFile;
@@ -83,7 +82,7 @@ import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 public final class ShapeSerializer
 {
   /** The default charset of a shape (really the .dbf) is IBM850. */
-  private static final String SHAPE_DEFAULT_CHARSET_IBM850 = "IBM850"; //$NON-NLS-1$
+  private static final String SHAPE_DEFAULT_CHARSET_IBM850 = "IBM850";
 
   public static final String SHP_NAMESPACE_URI = DBaseFile.SHP_NAMESPACE_URI;
 
@@ -93,7 +92,7 @@ public final class ShapeSerializer
 
   private static final QName PROPERTY_NAME = new QName( SHP_NAMESPACE_URI, "name" ); //$NON-NLS-1$
 
-  private static final QName PROPERTY_TYPE = new QName( SHP_NAMESPACE_URI, "type" ); //$NON-NLS-1$
+  private static final QName PROPERTY_TYPE = new QName( SHP_NAMESPACE_URI, "type" ); //$NON-NLS-1$ 
 
   public static final String PROPERTY_GEOM = "GEOM";//$NON-NLS-1$
 
@@ -112,28 +111,7 @@ public final class ShapeSerializer
    *             instead.
    */
   @Deprecated
-  public static void serialize( final GMLWorkspace workspace, final String filenameBase, final String targetSrs ) throws GmlSerializeException
-  {
-    serialize( workspace, filenameBase, null, targetSrs );
-  }
-
-  /**
-   * @deprecated Use {@link org.kalypso.shape.ShapeWriter} and {@link org.kalypso.shape.deegree.GenericShapeDataFactory}
-   *             instead.
-   */
-  @Deprecated
-  public static void serialize( final GMLWorkspace workspace, final String filenameBase, final IShapeDataProvider shapeDataProvider ) throws GmlSerializeException
-  {
-    final String defaultSrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-    serialize( workspace, filenameBase, shapeDataProvider, defaultSrs );
-  }
-
-  /**
-   * @deprecated Use {@link org.kalypso.shape.ShapeWriter} and {@link org.kalypso.shape.deegree.GenericShapeDataFactory}
-   *             instead.
-   */
-  @Deprecated
-  private static void serialize( final GMLWorkspace workspace, final String filenameBase, IShapeDataProvider shapeDataProvider, final String targetSrs ) throws GmlSerializeException
+  public static void serialize( final GMLWorkspace workspace, final String filenameBase, IShapeDataProvider shapeDataProvider ) throws GmlSerializeException
   {
     final Feature rootFeature = workspace.getRootFeature();
     final List<Feature> features = (List<Feature>) rootFeature.getProperty( PROPERTY_FEATURE_MEMBER );
@@ -145,7 +123,7 @@ public final class ShapeSerializer
       // if no dataProvider is set take the StandardProvider
       if( shapeDataProvider == null )
       {
-        shapeDataProvider = new StandardShapeDataProvider( features.toArray( new Feature[features.size()] ), targetSrs );
+        shapeDataProvider = new StandardShapeDataProvider( features.toArray( new Feature[features.size()] ) );
       }
 
       shapeFile.writeShape( shapeDataProvider );
@@ -264,7 +242,7 @@ public final class ShapeSerializer
     }
     catch( final CoreException e )
     {
-      throw new GmlSerializeException( "Abbruch durch Benutzer", e );
+      throw new GmlSerializeException( "Abbruch durch Benutzer" );
     }
     catch( final Exception e )
     {

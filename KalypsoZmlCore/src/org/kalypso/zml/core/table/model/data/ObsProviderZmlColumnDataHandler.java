@@ -86,7 +86,6 @@ public class ObsProviderZmlColumnDataHandler extends AbstractZmlColumnDataHandle
   {
     m_provider.removeListener( m_observationProviderListener );
     m_provider.dispose();
-
   }
 
   /**

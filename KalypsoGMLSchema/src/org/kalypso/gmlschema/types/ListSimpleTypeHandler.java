@@ -52,7 +52,7 @@ import org.xml.sax.XMLReader;
 
 /**
  * Type handler for list-simple types.
- * 
+ *
  * @author Gernot Belger
  */
 public class ListSimpleTypeHandler implements ISimpleMarshallingTypeHandler<List< ? >>
@@ -79,12 +79,12 @@ public class ListSimpleTypeHandler implements ISimpleMarshallingTypeHandler<List
 
     final List<Object> list = new ArrayList<Object>();
 
-    final StringTokenizer st = new StringTokenizer( xmlString );
-    while( st.hasMoreTokens() )
+    final StringTokenizer st = new StringTokenizer( xmlString );    
+    while ( st.hasMoreTokens() )
     {
       final String token = st.nextToken();
       final Object object = m_baseTypeHandler.convertToJavaValue( token );
-      list.add( object );
+      list.add( object );  
     }
 
     return list;

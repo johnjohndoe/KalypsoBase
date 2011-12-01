@@ -51,10 +51,11 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.i18n.Messages;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
+import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.graphics.displayelements.ILabelPlacementStrategy;
+import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 
 /**
  * @author Gernot Belger
@@ -80,11 +81,9 @@ class RulePainter implements IStylePainter
   {
     final SubMonitor progress = SubMonitor.convert( monitor, STRING_PAINTING_RULE, 100 ); //$NON-NLS-1$
 
-    ProgressUtilities.worked( progress, 5 );
+    ProgressUtilities.worked( progress, 15 );
 
     final SubMonitor loopProgress = progress.newChild( 85 ).setWorkRemaining( m_features.size() );
-
-    final ILabelPlacementStrategy strategy = paintable.createLabelStrategy();
 
     for( final Feature feature : m_features )
     {
@@ -92,20 +91,18 @@ class RulePainter implements IStylePainter
       // However: be careful, too many exceptions are a performance problem, so we should stop after some dozens
 
       final SubMonitor childProgress = loopProgress.newChild( 1 );
-      paintFeature( paintable, feature, childProgress, strategy );
+      paintFeature( paintable, feature, childProgress );
       ProgressUtilities.done( childProgress );
     }
-
-    if( strategy != null )
-      paintable.paintLabels( strategy );
-    progress.worked( 10 );
 
     ProgressUtilities.done( progress );
   }
 
-  private void paintFeature( final IStylePaintable paintable, final Feature feature, final IProgressMonitor monitor, final ILabelPlacementStrategy strategy ) throws CoreException
+  private void paintFeature( final IStylePaintable paintable, final Feature feature, final IProgressMonitor monitor ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, STRING_PAINTING_FEATURES, 100 ); //$NON-NLS-1$
+
+    final Double scale = paintable.getScale();
 
     /* Check for selection */
     try
@@ -116,7 +113,15 @@ class RulePainter implements IStylePainter
       {
         final Symbolizer[] symbolizers = m_rule.getSymbolizers();
         for( final Symbolizer symbolizer : symbolizers )
-          paintable.paint( feature, symbolizer, progress.newChild( 100 ) );
+        {
+          final DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, symbolizer );
+          // TODO: should'nt there be at least some debug output if this happens?
+          if( displayElement != null )
+          {
+            if( scale == null || displayElement.doesScaleConstraintApply( scale ) )
+              paintable.paint( displayElement, progress.newChild( 100 ) );
+          }
+        }
       }
     }
     catch( final CoreException e )

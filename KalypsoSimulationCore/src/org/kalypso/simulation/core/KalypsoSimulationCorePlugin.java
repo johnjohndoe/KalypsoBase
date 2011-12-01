@@ -29,7 +29,7 @@ public class KalypsoSimulationCorePlugin extends Plugin
    * This method is called upon plug-in activation
    */
   @Override
-  public void start( final BundleContext context ) throws Exception
+  public void start( BundleContext context ) throws Exception
   {
     super.start( context );
   }
@@ -38,7 +38,7 @@ public class KalypsoSimulationCorePlugin extends Plugin
    * This method is called when the plug-in is stopped
    */
   @Override
-  public void stop( final BundleContext context ) throws Exception
+  public void stop( BundleContext context ) throws Exception
   {
     super.stop( context );
     plugin = null;
@@ -72,7 +72,7 @@ public class KalypsoSimulationCorePlugin extends Plugin
   {
     final ISimulationService[] services = KalypsoSimulationCorePlugin.getDefault().getSimulationServices();
 
-    final MultiStatus status = new MultiStatus( KalypsoSimulationCorePlugin.getID(), 0, Messages.getString( "org.kalypso.simulation.core.KalypsoSimulationCorePlugin.0" ), null ); //$NON-NLS-1$
+    final MultiStatus status = new MultiStatus( KalypsoSimulationCorePlugin.getID(), 0, Messages.getString("org.kalypso.simulation.core.KalypsoSimulationCorePlugin.0"), null ); //$NON-NLS-1$
     for( final ISimulationService service : services )
     {
       try
@@ -86,12 +86,12 @@ public class KalypsoSimulationCorePlugin extends Plugin
       }
       catch( final SimulationException e )
       {
-        status.add( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.simulation.core.KalypsoSimulationCorePlugin.1" ) ) ); //$NON-NLS-1$
+        status.add( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.simulation.core.KalypsoSimulationCorePlugin.1") ) ); //$NON-NLS-1$
       }
     }
 
     if( status.isOK() )
-      throw new CoreException( StatusUtilities.createInfoStatus( Messages.getString( "org.kalypso.simulation.core.KalypsoSimulationCorePlugin.2" ) + typeID ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createInfoStatus( Messages.getString("org.kalypso.simulation.core.KalypsoSimulationCorePlugin.2") + typeID ) ); //$NON-NLS-1$
     else
       throw new CoreException( status );
   }

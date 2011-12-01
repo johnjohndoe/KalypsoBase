@@ -42,9 +42,9 @@ package org.kalypsodeegree_impl.model.feature.gmlxpath.xelement;
  */
 public class XElementFormString implements IXElement
 {
-  private final String m_string;
+  private String m_string;
 
-  public XElementFormString( final String condition )
+  public XElementFormString( String condition )
   {
     final String string = condition.trim();
     if( string.charAt( 0 ) != '\'' && string.charAt( string.length() - 1 ) != '\'' )
@@ -56,7 +56,7 @@ public class XElementFormString implements IXElement
    * @see org.kalypsodeegree_impl.model.feature.xpath.IXElement#evaluate(java.lang.Object, boolean)
    */
   @Override
-  public Object evaluate( final Object context, final boolean featureTypeLevel )
+  public Object evaluate( Object context, boolean featureTypeLevel )
   {
     return m_string;
   }

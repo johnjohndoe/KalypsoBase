@@ -87,7 +87,7 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
 {
-  private static final int HEADER_SIZE = 4 * 4;
+  private final static int HEADER_SIZE = 4 * 4;
 
   public static final int NO_DATA = Integer.MIN_VALUE;
 
@@ -248,7 +248,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
     return new BigDecimal( BigInteger.valueOf( intVal ), m_scale );
   }
 
-  private int readInt( ) throws IOException
+  private final int readInt( ) throws IOException
   {
     m_randomAccessFile.read( m_intBuffer );
     return ByteUtils.readBEInt( m_intBuffer, 0 );
@@ -265,7 +265,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
     }
   }
 
-  private void writeInt( final int value ) throws IOException
+  private final void writeInt( final int value ) throws IOException
   {
     ByteUtils.writeBEInt( m_intBuffer, 0, value );
     m_randomAccessFile.write( m_intBuffer );

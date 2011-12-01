@@ -49,6 +49,9 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
  */
 public abstract class AbstractZmlChartLayerFilter implements IChartLayerFilter
 {
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter#isFiltered(java.lang.Object)
+   */
   @Override
   public final boolean isFiltered( final Object object )
   {

@@ -50,6 +50,8 @@ import org.kalypso.contribs.java.net.AbstractUrlCatalog;
  */
 public class DeegreeUrlCatalog extends AbstractUrlCatalog
 {
+  private static final String NAMESPACE_DWD_RCM = "org.kalypso.dwd.rcm"; //$NON-NLS-1$
+
   private static final String NAMESPACE_ZML_OBSLINK = "obslink.zml.kalypso.org"; //$NON-NLS-1$
 
   private static final String NAMESPACE_ZML_INLINE = "inline.zml.kalypso.org"; //$NON-NLS-1$
@@ -61,6 +63,9 @@ public class DeegreeUrlCatalog extends AbstractUrlCatalog
   protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> catalog, final Map<String, String> prefixes )
   {
     // schemas related close to ogc have been moved to URLCatalogOGC
+    catalog.put( NAMESPACE_DWD_RCM, myClass.getResource( "dwd/v0.1/rainfallCatchmentModel.xsd" ) ); //$NON-NLS-1$
+    prefixes.put( NAMESPACE_DWD_RCM, "rcm" ); //$NON-NLS-1$
+
     catalog.put( NAMESPACE_ZML_OBSLINK, getClass().getResource( "obslink/obslink.xsd" ) ); //$NON-NLS-1$
     prefixes.put( NAMESPACE_ZML_OBSLINK, "obslink" ); //$NON-NLS-1$
 

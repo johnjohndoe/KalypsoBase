@@ -16,7 +16,6 @@ import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IContributionManager;
@@ -137,7 +136,7 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
    *      java.lang.String, java.lang.Object)
    */
   @Override
-  @SuppressWarnings({ "unchecked", "unused" })
+  @SuppressWarnings( { "unchecked", "unused" })
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data ) throws CoreException
   {
     if( data instanceof String )
@@ -257,7 +256,7 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
       }
       catch( final Throwable e )
       {
-        final Status status = new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, SWT.OK, "Fehler", e );
+        final Status status = new Status( Status.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, SWT.OK, "Fehler", e );
         WorkflowConnectorPlugin.getDefault().getLog().log( status );
         ErrorDialog.openError( event.display.getActiveShell(), action.getText(), "Kommando konnte nicht ausgeführt werden.", status );
       }
@@ -282,7 +281,7 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
         command.define( m_commandId, m_commandId, commandService.getCategory( "de.renew.workflow.tasks.category" ) );
 
       final ArrayList<Parameterization> parameters = new ArrayList<Parameterization>();
-      for( final String parmName : m_parameterMap.keySet() )
+      for( String parmName : m_parameterMap.keySet() )
       {
         if( PARAM_COMMAND_ID.equals( parmName ) )
           continue;
@@ -320,7 +319,7 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
     final IActionBars actionBars = m_actionBars;
 
     final UIJob job = new UpdateActionbarsJob( "Update Action-Bars", actionBars, actionId, enabledState );
-    job.setPriority( Job.INTERACTIVE );
+    job.setPriority( UIJob.INTERACTIVE );
     job.schedule( 200 );
   }
 }

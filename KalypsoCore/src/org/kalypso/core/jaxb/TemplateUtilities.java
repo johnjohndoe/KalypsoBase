@@ -41,8 +41,6 @@
 package org.kalypso.core.jaxb;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -50,17 +48,13 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 
-import org.kalypso.commons.KalypsoCommonsExtensions;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.bind.NamespacePrefixMap;
 import org.kalypso.commons.bind.SchemaCache;
-import org.kalypso.commons.i18n.ITranslator;
-import org.kalypso.commons.i18n.ITranslatorContext;
 import org.kalypso.core.KalypsoCoreDebug;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.template.gismapview.ObjectFactory;
 import org.kalypso.template.gistableview.Gistableview.Layer;
-import org.kalypso.template.types.I18NTranslatorType;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -70,7 +64,7 @@ import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 
 /**
  * Utility class for handling with the 'template' binding schemata.
- * 
+ *
  * @author Gernot Belger
  */
 public final class TemplateUtilities
@@ -97,8 +91,6 @@ public final class TemplateUtilities
   /* GisTreeView */
   public static final JAXBContext JC_GISTREEVIEW = JaxbUtilities.createQuiet( org.kalypso.template.gistreeview.ObjectFactory.class );
 
-  public static final org.kalypso.template.gistreeview.ObjectFactory OF_GISTREEVIEW = new org.kalypso.template.gistreeview.ObjectFactory();
-
   /* Featureview */
   public static final JAXBContext JC_FEATUREVIEW = JaxbUtilities.createQuiet( org.kalypso.template.featureview.ObjectFactory.class );
 
@@ -116,6 +108,8 @@ public final class TemplateUtilities
   {
     return SCHEMA_CACHE.getSchema( "featureview.xsd" ); //$NON-NLS-1$
   }
+
+
 
   public static synchronized Schema getGismapviewSchema( )
   {
@@ -195,69 +189,5 @@ public final class TemplateUtilities
     final Element rootElement = doc.createElementNS( "gistableview.template.kalypso.org", "filter" );
     rootElement.appendChild( filterElement );
     layer.setFilter( rootElement );
-  }
-
-  public static Marshaller createGistreeviewMarshaller( final String encoding ) throws JAXBException
-  {
-    final Marshaller marshaller = JaxbUtilities.createMarshaller( TemplateUtilities.JC_GISTREEVIEW );
-    marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-    marshaller.setProperty( Marshaller.JAXB_ENCODING, encoding );
-    return marshaller;
-  }
-
-  public static Unmarshaller createGistreeviewUnmarshaller( ) throws JAXBException
-  {
-    final Unmarshaller unmarshaller = TemplateUtilities.JC_GISTREEVIEW.createUnmarshaller();
-    return unmarshaller;
-  }
-
-  public static ITranslator createTranslator( final I18NTranslatorType translatorElement, final URL context )
-  {
-    if( translatorElement == null )
-      return null;
-
-    final ITranslator translator = KalypsoCommonsExtensions.createTranslator( translatorElement.getId() );
-    if( translator != null )
-    {
-      final ITranslatorContext translatorContext = new ITranslatorContext()
-      {
-
-        @Override
-        public Object getAdapter( final Class adapter )
-        {
-          // TODO Auto-generated method stub
-
-          return null;
-        }
-
-        @Override
-        public URL getContext( )
-        {
-          return context;
-        }
-      };
-
-      translator.configure( translatorContext, translatorElement.getAny() );
-    }
-
-    return translator;
-  }
-
-  public static I18NTranslatorType createTranslatorType( final ITranslator i10nTranslator )
-  {
-    if( i10nTranslator == null )
-      return null;
-
-    final String id = i10nTranslator.getId();
-    /* Fake translator, return nothing */
-    if( id == null )
-      return null;
-
-    final I18NTranslatorType translator = OF_TEMPLATE_TYPES.createI18NTranslatorType();
-    translator.setId( id );
-    final List<Element> configuration = i10nTranslator.getConfiguration();
-    if( configuration != null )
-      translator.getAny().addAll( configuration );
-    return translator;
   }
 }

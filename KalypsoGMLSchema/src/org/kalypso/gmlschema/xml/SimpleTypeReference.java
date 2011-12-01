@@ -34,6 +34,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelSimpleType;
 import org.kalypso.gmlschema.GMLSchema;
 
 /**
+ * 
  * representation of a simpletype reference to a xml schema simpletype
  * 
  * @author doemming
@@ -43,13 +44,13 @@ public class SimpleTypeReference extends TypeReference
 
   private final TopLevelSimpleType m_simpleType;
 
-  public SimpleTypeReference( final GMLSchema gmlSchema, final TopLevelSimpleType simpleType )
+  public SimpleTypeReference( GMLSchema gmlSchema, TopLevelSimpleType simpleType )
   {
     super( gmlSchema );
     m_simpleType = simpleType;
   }
 
-  public SimpleType getSimpleType( )
+  public SimpleType getSimpleType()
   {
     return m_simpleType;
   }

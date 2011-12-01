@@ -99,11 +99,11 @@ public class TextPropertyPage extends PropertyPage implements IWorkbenchProperty
    * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  protected Control createContents( final Composite parent )
+  protected Control createContents( Composite parent )
   {
     /* The content. */
-    final Composite content = new Composite( parent, SWT.NONE );
-    final GridLayout contentLayout = new GridLayout( 1, false );
+    Composite content = new Composite( parent, SWT.NONE );
+    GridLayout contentLayout = new GridLayout( 1, false );
     contentLayout.marginHeight = 0;
     contentLayout.marginWidth = 0;
     content.setLayout( contentLayout );
@@ -158,12 +158,10 @@ public class TextPropertyPage extends PropertyPage implements IWorkbenchProperty
       return super.performOk();
 
     /* Get the properties. */
-    final String horizontalProperty = m_properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
-    final String verticalProperty = m_properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
-    final String backgroundColorProperty = m_properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
-    final String textProperty = m_properties.getProperty( TextUtilities.THEME_PROPERTY_TEXT );
-    final String fontSizeProperty = m_properties.getProperty( TextUtilities.THEME_PROPERTY_FONT_SIZE );
-    final String transparencyProperty = m_properties.getProperty( TextUtilities.THEME_PROPERTY_TRANSPARENCY );
+    String horizontalProperty = m_properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
+    String verticalProperty = m_properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
+    String backgroundColorProperty = m_properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
+    String textProperty = m_properties.getProperty( TextUtilities.THEME_PROPERTY_TEXT );
 
     /* Set the properties. */
     if( horizontalProperty != null && horizontalProperty.length() > 0 )
@@ -174,10 +172,6 @@ public class TextPropertyPage extends PropertyPage implements IWorkbenchProperty
       m_theme.setProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR, backgroundColorProperty );
     if( textProperty != null && textProperty.length() > 0 )
       m_theme.setProperty( TextUtilities.THEME_PROPERTY_TEXT, textProperty );
-    if( fontSizeProperty != null && fontSizeProperty.length() > 0 )
-      m_theme.setProperty( TextUtilities.THEME_PROPERTY_FONT_SIZE, fontSizeProperty );
-    if( transparencyProperty != null && transparencyProperty.length() > 0 )
-      m_theme.setProperty( TextUtilities.THEME_PROPERTY_TRANSPARENCY, transparencyProperty );
 
     return super.performOk();
   }
@@ -188,30 +182,27 @@ public class TextPropertyPage extends PropertyPage implements IWorkbenchProperty
    * @param parent
    *          The parent composite.
    */
-  private void createContentsInternal( final Composite parent )
+  private void createContentsInternal( Composite parent )
   {
     /* Store the parent. */
     m_parent = parent;
 
     /* Create the main composite. */
     m_main = new Composite( parent, SWT.NONE );
-    final GridLayout mainLayout = new GridLayout( 1, false );
-    mainLayout.marginHeight = 0;
-    mainLayout.marginWidth = 0;
-    m_main.setLayout( mainLayout );
+    m_main.setLayout( new GridLayout( 1, false ) );
     m_main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Create the text composite. */
-    final TextComposite textComposite = new TextComposite( m_main, SWT.NONE, m_properties );
+    TextComposite textComposite = new TextComposite( m_main, SWT.NONE, m_properties );
     textComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     textComposite.addTextChangedListener( new ITextChangedListener()
     {
       /**
        * @see org.kalypso.util.themes.text.listener.ITextChangedListener#textPropertyChanged(java.util.Properties, int,
-       *      int, org.eclipse.swt.graphics.Color, java.lang.String, int, boolean)
+       *      int, org.eclipse.swt.graphics.Color, java.lang.String)
        */
       @Override
-      public void textPropertyChanged( final Properties properties, final int horizontal, final int vertical, final org.eclipse.swt.graphics.Color backgroundColor, final String text, final int fontSize, final boolean transparency )
+      public void textPropertyChanged( Properties properties, int horizontal, int vertical, org.eclipse.swt.graphics.Color backgroundColor, String text )
       {
         /* Update the properties object. */
         m_properties = properties;
@@ -225,14 +216,14 @@ public class TextPropertyPage extends PropertyPage implements IWorkbenchProperty
   private void init( )
   {
     /* Get the element. */
-    final IAdaptable element = getElement();
+    IAdaptable element = getElement();
 
     /* Get the node. */
-    final IThemeNode node = (IThemeNode) (element instanceof IThemeNode ? element : element.getAdapter( IThemeNode.class ));
+    IThemeNode node = (IThemeNode) (element instanceof IThemeNode ? element : element.getAdapter( IThemeNode.class ));
 
     /* Get the theme. */
-    final Object nodeElement = node.getElement();
-    final IKalypsoTheme theme = nodeElement instanceof IKalypsoTheme ? (IKalypsoTheme) nodeElement : null;
+    Object nodeElement = node.getElement();
+    IKalypsoTheme theme = (nodeElement instanceof IKalypsoTheme) ? (IKalypsoTheme) nodeElement : null;
 
     /* Store the members. */
     m_theme = theme;
@@ -241,12 +232,12 @@ public class TextPropertyPage extends PropertyPage implements IWorkbenchProperty
     if( m_theme instanceof KalypsoTextTheme )
     {
       /* Cast. */
-      final KalypsoTextTheme textTheme = (KalypsoTextTheme) m_theme;
+      KalypsoTextTheme textTheme = (KalypsoTextTheme) m_theme;
 
       /* Get the properties of the text theme. */
-      final Properties textProperties = new Properties();
-      final String[] propertyNames = textTheme.getPropertyNames();
-      for( final String propertyName : propertyNames )
+      Properties textProperties = new Properties();
+      String[] propertyNames = textTheme.getPropertyNames();
+      for( String propertyName : propertyNames )
         textProperties.put( propertyName, textTheme.getProperty( propertyName, null ) );
 
       /* Store the member. */

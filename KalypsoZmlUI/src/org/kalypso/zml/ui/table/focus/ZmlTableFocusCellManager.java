@@ -21,7 +21,7 @@ public final class ZmlTableFocusCellManager extends TableViewerFocusCellManager
 
   ZmlTableFocusCellManager( final IZmlTable table, final FocusCellHighlighter focusDrawingDelegate, final CellNavigationStrategy navigationStrategy )
   {
-    super( table.getViewer(), focusDrawingDelegate, navigationStrategy );
+    super( table.getTableViewer(), focusDrawingDelegate, navigationStrategy );
     m_table = table;
   }
 

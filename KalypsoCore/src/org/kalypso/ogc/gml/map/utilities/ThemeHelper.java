@@ -43,7 +43,7 @@ package org.kalypso.ogc.gml.map.utilities;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 
 /**

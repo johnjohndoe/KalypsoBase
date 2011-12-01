@@ -52,7 +52,7 @@ public class WspmUrlCatalog extends AbstractUrlCatalog implements IWspmConstants
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
    */
   @Override
-  protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> catalog, final Map<String, String> prefixes )
+  protected void fillCatalog( final Class<?> myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
   {
     catalog.put( NS_WSPM, myClass.getResource( "schemata/wspm.xsd" ) ); //$NON-NLS-1$
     prefixes.put( NS_WSPM, "wspm" ); //$NON-NLS-1$
@@ -80,9 +80,6 @@ public class WspmUrlCatalog extends AbstractUrlCatalog implements IWspmConstants
 
     catalog.put( NS_WSPM_BOUNDARY, myClass.getResource( "schemata/floodBoundary.xsd" ) ); //$NON-NLS-1$
     prefixes.put( NS_WSPM_BOUNDARY, "boundary" ); //$NON-NLS-1$
-
-    catalog.put( NS_WSPM_CLASSIFICATIONS, myClass.getResource( "schemata/wspmClassifications.xsd" ) ); //$NON-NLS-1$
-    prefixes.put( NS_WSPM_CLASSIFICATIONS, "wspmClasses" ); //$NON-NLS-1$
 
   }
 }

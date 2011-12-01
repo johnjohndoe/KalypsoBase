@@ -7,41 +7,42 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
+ * 
  * @author doemming
  */
 public class NodeList_Impl implements NodeList
 {
   private final List<Node> nodes = new ArrayList<Node>();
 
-  public NodeList_Impl( )
+  public NodeList_Impl()
   {
-    // nothing
+  // nothing
   }
 
-  public NodeList_Impl( final NodeList nl )
+  public NodeList_Impl( NodeList nl )
   {
     add( nl );
   }
 
   @Override
-  public int getLength( )
+  public int getLength()
   {
     return nodes.size();
   }
 
-  public void add( final NodeList nl )
+  public void add( NodeList nl )
   {
     for( int i = 0; i < nl.getLength(); i++ )
       nodes.add( nl.item( i ) );
   }
 
-  public void add( final Node node )
+  public void add( Node node )
   {
     nodes.add( node );
   }
 
   @Override
-  public Node item( final int pos )
+  public Node item( int pos )
   {
     return nodes.get( pos );
   }

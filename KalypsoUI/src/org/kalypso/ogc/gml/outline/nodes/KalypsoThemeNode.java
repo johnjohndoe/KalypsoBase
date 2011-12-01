@@ -43,7 +43,7 @@ package org.kalypso.ogc.gml.outline.nodes;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -61,6 +61,7 @@ import org.kalypso.core.catalog.CatalogManager;
 import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeListener;
+import org.kalypso.ogc.gml.IKalypsoThemeProvider;
 import org.kalypso.ogc.gml.KalypsoThemeAdapter;
 import org.kalypso.ogc.gml.command.EnableThemeCommand;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -68,7 +69,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 /**
  * @author Gernot Belger
  */
-public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode<T>
+public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode<T> implements IKalypsoThemeProvider
 {
   private final IKalypsoThemeListener m_themeListener = new KalypsoThemeAdapter()
   {
@@ -115,24 +116,26 @@ public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode
     if( externIcon != null )
     {
       final Display display = PlatformUI.getWorkbench().getDisplay();
-
+      
       if( display != null && !display.isDisposed() )
       {
-        // set to be asynchronously to prevent graphic is disposed exception.
-        // indirectly was leading to a deadlock in some situations
-        display.asyncExec( new Runnable()
+        display.syncExec( new Runnable()
         {
           @Override
           public void run( )
           {
             externIcon.dispose();
-          }
+          } 
         } );
       }
     }
     super.dispose();
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoThemeProvider#getTheme()
+   */
+  @Override
   public T getTheme( )
   {
     return getElement();
@@ -275,9 +278,6 @@ public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.outline.nodes.IThemeNode#getLabel()
-   */
   @Override
   public String getLabel( )
   {
@@ -360,14 +360,5 @@ public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode
       return null;
 
     return new EnableThemeCommand( theme, visible );
-  }
-
-  @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
-  {
-    if( IKalypsoTheme.class.equals( adapter ) )
-      return getTheme();
-
-    return super.getAdapter( adapter );
   }
 }

@@ -51,7 +51,7 @@ public abstract class CatchThread extends Thread
    * @see java.lang.Runnable#run()
    */
   @Override
-  public final void run( )
+  public final void run()
   {
     try
     {
@@ -64,9 +64,9 @@ public abstract class CatchThread extends Thread
     }
   }
 
-  protected abstract void runIntern( ) throws Throwable;
+  protected abstract void runIntern() throws Throwable;
 
-  public Throwable getThrown( )
+  public Throwable getThrown()
   {
     return m_throwable;
   }

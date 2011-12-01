@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.java.util;
 
@@ -143,17 +143,6 @@ public final class CalendarUtilities
     return field.getAbbreviation();
   }
 
-  /**
-   * Returns the {@link String} representation of a calendar field (the name of the corresponding constant in
-   * {@link Calendar}.<br/>
-   * The returned {@link String} is suitable to be used in {@link #getCalendarField(String)}.
-   */
-  public static String getName( final int fieldValue )
-  {
-    final FIELD field = fieldForField( fieldValue );
-    return field.name();
-  }
-
   private static FIELD fieldForField( final int fieldValue )
   {
     switch( fieldValue )
@@ -195,5 +184,4 @@ public final class CalendarUtilities
         throw new IllegalArgumentException( "Unknown field: " + fieldValue );
     }
   }
-
 }

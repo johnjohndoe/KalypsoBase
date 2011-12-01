@@ -43,6 +43,8 @@ package org.kalypso.ogc.gml.map.widgets.advanced.edit;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.NotImplementedException;
+
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
@@ -92,7 +94,7 @@ public class AdvancedEditWidgetHelper
       return -1;
     }
     else
-      throw new UnsupportedOperationException();
+      throw new NotImplementedException();
   }
 
   public static int resolveNeighbor( final LineString ring, final Point current, final int index, final DIRECTION direction )
@@ -125,7 +127,7 @@ public class AdvancedEditWidgetHelper
         return resolveNeighbor( ring, current, ring.getNumPoints() - 1, direction );
     }
 
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 
   public static Polygon resolveResultPolygon( final Polygon polygon, final int indexCurrent, final Point moved )

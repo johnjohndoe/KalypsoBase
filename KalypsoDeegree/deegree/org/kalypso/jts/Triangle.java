@@ -54,7 +54,8 @@ public class Triangle extends Polygon
 {
   final static LinearRing[] EMPTY_HOLES = new LinearRing[] {};
 
-  public Triangle( final Coordinate c0, final Coordinate c1, final Coordinate c2, @SuppressWarnings("hiding") final GeometryFactory factory )
+  public Triangle( final Coordinate c0, final Coordinate c1, final Coordinate c2, @SuppressWarnings("hiding")
+  final GeometryFactory factory )
   {
     super( factory.createLinearRing( new Coordinate[] { c0, c1, c2, c0 } ), EMPTY_HOLES, factory );
   }

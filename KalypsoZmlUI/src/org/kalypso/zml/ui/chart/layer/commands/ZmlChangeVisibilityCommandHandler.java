@@ -54,6 +54,9 @@ public class ZmlChangeVisibilityCommandHandler extends ChangeVisibilityCommandHa
 {
   public static final String IDENTIFIER = "org.kalypso.zml.ui.chart.layer.commands.change.visibility"; // $NON-NLS-1$
 
+  /**
+   * @see org.kalypso.chart.ui.editor.commandhandler.ChangeVisibilityCommandHandler#callAdditionalVisitors(de.openali.odysseus.chart.framework.model.layer.ILayerManager)
+   */
   @Override
   protected void callAdditionalVisitors( final ILayerManager layerManager )
   {

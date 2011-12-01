@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.java.util;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -235,7 +234,7 @@ public final class Arrays
   {
     final StringBuffer buf = new StringBuffer();
 
-    for( int i = 0; i < ds.length - 1; i++ )
+    for( int i = 0; i < (ds.length - 1); i++ )
       buf.append( ds[i] ).append( ", " );
 
     if( ds.length > 0 )
@@ -248,7 +247,7 @@ public final class Arrays
   {
     final StringBuffer buf = new StringBuffer();
 
-    for( int i = 0; i < is.length - 1; i++ )
+    for( int i = 0; i < (is.length - 1); i++ )
       buf.append( is[i] ).append( ", " );
 
     if( is.length > 0 )
@@ -261,7 +260,7 @@ public final class Arrays
   {
     final StringBuffer buf = new StringBuffer();
 
-    for( int i = 0; i < os.length - 1; i++ )
+    for( int i = 0; i < (os.length - 1); i++ )
       buf.append( os[i] ).append( ", " );
 
     if( os.length > 0 )
@@ -388,7 +387,7 @@ public final class Arrays
 
     while( i < da.length )
     {
-      while( i < da.length - 1 && dc.compare( da[i], da[i + 1] ) == 0 )
+      while( (i < (da.length - 1)) && (dc.compare( da[i], da[i + 1] ) == 0) )
         i++;
 
       dtmp[itmp] = da[i];
@@ -567,12 +566,5 @@ public final class Arrays
     final HashSet<Object> set = new HashSet<Object>( java.util.Arrays.asList( array2 ) );
 
     return globalSet.equals( set );
-  }
-
-  public static <T> T[] toArray( final Collection< ? extends T> c, final Class< ? extends T> type )
-  {
-    @SuppressWarnings("unchecked")
-    final T[] newArray = (T[]) Array.newInstance( type, c.size() );
-    return c.toArray( newArray );
   }
 }

@@ -101,7 +101,7 @@ public class DateRangeInputControl extends Composite
     this( parent, style, struct.useRange, struct.from, struct.to, struct.days, struct.df );
   }
 
-  public DateRangeInputControl( final Composite parent, final int style, final boolean useRange, final Date from, final Date to, final int days, final DateFormat df )
+  public DateRangeInputControl( final Composite parent, final int style, boolean useRange, Date from, Date to, int days, DateFormat df )
   {
     super( parent, style );
 
@@ -148,7 +148,7 @@ public class DateRangeInputControl extends Composite
     m_txtFrom.addModifyListener( new ModifyListener()
     {
       @Override
-      public void modifyText( final ModifyEvent e )
+      public void modifyText( ModifyEvent e )
       {
         m_from = parseForDate( m_txtFrom.getText() );
       }
@@ -160,7 +160,7 @@ public class DateRangeInputControl extends Composite
     m_txtTo.addModifyListener( new ModifyListener()
     {
       @Override
-      public void modifyText( final ModifyEvent e )
+      public void modifyText( ModifyEvent e )
       {
         m_to = parseForDate( m_txtTo.getText() );
       }
@@ -250,7 +250,7 @@ public class DateRangeInputControl extends Composite
     {
       return m_df.parse( str );
     }
-    catch( final ParseException e )
+    catch( ParseException e )
     {
       return null;
     }

@@ -77,12 +77,7 @@ public class RepositoryLabelProvider extends LabelProvider
       {
         final IRepositoryItem item = (IRepositoryItem) element;
         if( RepositoryItems.isVirtual( item.getIdentifier() ) )
-        {
-// if( item.hasChildren() )
-// return IMG_FOLDER;
-
           return IMG_VIRTUAL_ITEM;
-        }
         else if( item.hasChildren() )
           return IMG_FOLDER;
         else if( item.getParent() == null )

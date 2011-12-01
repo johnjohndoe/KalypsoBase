@@ -17,7 +17,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
@@ -108,7 +107,7 @@ public class DTriangulationForJTS
       final double widthx = argmaxx - argminx;
       final double widthy = argmaxy - argminy;
 
-      final Pnt lowerLeftPnt1 = new Pnt( argminx - 1.5 * dx, argminy - dy, 0 );
+      final Pnt lowerLeftPnt1 = new Pnt( argminx - (1.5 * dx), argminy - dy, 0 );
 
       // Create a rectangular boundary
       final GeometryFactory gf = new GeometryFactory();
@@ -134,18 +133,18 @@ public class DTriangulationForJTS
       argmaxy = envelopeInternal.getMaxY();
     }
 
-    dx = argmaxx - argminx;
-    dy = argmaxy - argminy;
+    this.dx = argmaxx - argminx;
+    this.dy = argmaxy - argminy;
     // -- the initial simplex must contain all points
     // -- take the bounding box, move the diagonals (sidewards)
     // the meeting point will be the mirrored bbox-center on the top edge
-    initialTriangle = new Simplex( new Pnt[] { new Pnt( argminx - 1.5 * dx, argminy - dy ), // lower left
-        new Pnt( argmaxx + 1.5 * dx, argminy - dy ), // lower right
-        new Pnt( argminx + dx / 2.0, argmaxy + 1.5 * dy ) } ); // center, top
+    this.initialTriangle = new Simplex( new Pnt[] { new Pnt( argminx - (1.5 * dx), argminy - dy ), // lower left
+        new Pnt( argmaxx + (1.5 * dx), argminy - dy ), // lower right
+        new Pnt( argminx + (dx / 2.0), argmaxy + 1.5 * dy ) } ); // center, top
 
-    lowerLeftPnt = new Pnt( argminx - 1.5 * dx, argminy - dy, 0 );
-    dt = new DelaunayTriangulation( initialTriangle );
-    addPoints( pointList );
+    this.lowerLeftPnt = new Pnt( argminx - (1.5 * dx), argminy - dy, 0 );
+    this.dt = new DelaunayTriangulation( initialTriangle );
+    this.addPoints( pointList );
   }
 
   public void addPoints( final List<Point> pointList )
@@ -400,7 +399,7 @@ public class DTriangulationForJTS
     final GeometryFactory gf = new GeometryFactory();
     final List<Point> points = new ArrayList<Point>();
 
-    for( final Iterator otherIt = initialTriangle.iterator(); otherIt.hasNext(); )
+    for( final Iterator otherIt = this.initialTriangle.iterator(); otherIt.hasNext(); )
     {
       final Pnt pt = (Pnt) otherIt.next();
       final Coordinate coord = new Coordinate( pt.coord( 0 ), pt.coord( 1 ) );
@@ -434,7 +433,7 @@ public class DTriangulationForJTS
     // -- do union of all edges and use the polygonizer to create polygons from it
     if( debug )
       System.out.println( "get voronoi egdes" );
-    final List<LineString> edges = drawAllVoronoi();
+    final List<LineString> edges = this.drawAllVoronoi();
     if( debug )
       System.out.println( "merge voronoi egdes to multiLineString" );
     Geometry mls = edges.get( 0 );
@@ -466,64 +465,30 @@ public class DTriangulationForJTS
     return finalPolys;
   }
 
-  /**
-   * resolves triangles and updates / sets the z-values of those triangles
-   * 
-   * @param positions
-   *          positions containing x,y,z coordinates
-   */
-  public GM_Triangle[] getAllTrianglesWithZValues( final GM_Position[] positions, final String crs ) throws GM_Exception
+  public List<GM_Triangle> getAllTrianglesWithZValues( final GM_Position[] ring, final String crs ) throws GM_Exception
   {
-    final List<GM_Triangle> resultTriangles = new ArrayList<GM_Triangle>();
+    final List<GM_Triangle> triangles = getAllTriangles( crs );
 
-    final List<GM_Triangle> baseTriangles = getAllTriangles( crs );
-
-    for( final GM_Triangle baseTriangle : baseTriangles )
+    for( final GM_Triangle triangle : triangles )
     {
-      final GM_Position[] ring = toPositionZ( positions, baseTriangle.getExteriorRing() );
-      if( ArrayUtils.isEmpty( ring ) )
-        continue;
-
-      final GM_Triangle triangle = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Triangle( ring, crs );
-      resultTriangles.add( triangle );
-    }
-
-    return resultTriangles.toArray( new GM_Triangle[] {} );
-  }
-
-  public static GM_Position[] toPositionZ( final GM_Position[] positions, final GM_Position[] ring )
-  {
-    if( ArrayUtils.isEmpty( ring ) || ring.length != 4 )
-      return new GM_Position[] {};
-
-    final List<GM_Position> replaced = new ArrayList<GM_Position>();
-    for( int i = 0; i < 3; i++ )
-    {
-      final GM_Position ptr = ring[i];
-      final GM_Position position = find( positions, ptr );
-      if( position == null )
+      final GM_Position[] positions = triangle.getExteriorRing();
+      for( int i = 0; i < positions.length; i++ )
       {
-        // FIXME
-        replaced.add( org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Position( ptr.getX(), ptr.getY(), 1.0 ) );
-// replaced.add( ptr );
+        GM_Position position = positions[i];
+        // FIXME: somethings wrong here....
+        for( final GM_Position element : ring )
+        {
+          final GM_Position ringPos = ring[i];
+          if( position.getDistance( ringPos ) < 0.01 )
+          {
+            position = ringPos;
+            break;
+          }
+        }
       }
-
-      else
-        replaced.add( position );
     }
+    return triangles;
 
-    return replaced.toArray( new GM_Position[] {} );
-  }
-
-  public static GM_Position find( final GM_Position[] positions, final GM_Position base )
-  {
-    for( final GM_Position position : positions )
-    {
-      if( position.getDistance( base ) < 0.5 )
-        return position;
-    }
-
-    return null;
   }
 
 }

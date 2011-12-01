@@ -113,7 +113,7 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
      * this place.
      */
   }
-
+  
   /**
    * @see org.kalypso.simulation.core.ISimulationDataProvider#getInputForID(java.lang.String)
    */
@@ -122,8 +122,8 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
   {
     final Object input = m_inputList.get( id );
     if( input == null )
-      throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationDataProvider.0", id ), null ); //$NON-NLS-1$
-
+      throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationDataProvider.0", id), null ); //$NON-NLS-1$
+    
     if( input instanceof ComplexValueType )
       return parseComplexValue( (ComplexValueType) input );
     else if( input instanceof LiteralValueType )
@@ -163,7 +163,7 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
         }
         catch( final URISyntaxException e2 )
         {
-          throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationDataProvider.1" ), e2 ); //$NON-NLS-1$
+          throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationDataProvider.1"), e2 ); //$NON-NLS-1$
         }
       }
     }
@@ -219,17 +219,17 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
       try
       {
         final String schema = complexValue.getSchema();
-        if( schema == null || schema.isEmpty() )
+        if( schema == null || schema.isEmpty())
         {
           return GmlSerializer.createGMLWorkspace( inputSource, null, null, null );
         }
-
+        
         final URL schemaLocationHint = new URL( schema );
         return GmlSerializer.createGMLWorkspace( inputSource, schemaLocationHint, null, null );
       }
       catch( final Exception e )
       {
-        throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationDataProvider.2" ), e ); //$NON-NLS-1$
+        throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationDataProvider.2"), e ); //$NON-NLS-1$
       }
     }
     else
@@ -247,7 +247,7 @@ public class WPSSimulationDataProvider implements ISimulationDataProvider
       }
       catch( final IOException e )
       {
-        throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationDataProvider.3" ), e ); //$NON-NLS-1$
+        throw new SimulationException( Messages.getString("org.kalypso.service.wps.utils.simulation.WPSSimulationDataProvider.3"), e ); //$NON-NLS-1$
       }
     }
   }

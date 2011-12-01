@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model.data;
 
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -49,7 +48,7 @@ import java.util.Set;
  */
 public abstract class AbstractZmlColumnDataHandler implements IZmlModelColumnDataHandler
 {
-  private final Set<IZmlModelColumnDataListener> m_listeners = Collections.synchronizedSet( new LinkedHashSet<IZmlModelColumnDataListener>() );
+  private final Set<IZmlModelColumnDataListener> m_listeners = new LinkedHashSet<IZmlModelColumnDataListener>();
 
   protected final void fireObservationChanged( )
   {
@@ -60,16 +59,13 @@ public abstract class AbstractZmlColumnDataHandler implements IZmlModelColumnDat
     }
   }
 
+  /**
+   * @see org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler#addListener(org.kalypso.zml.core.table.model.data.IZmlModelColumnDataListener)
+   */
   @Override
   public final void addListener( final IZmlModelColumnDataListener listener )
   {
     m_listeners.add( listener );
-  }
-
-  @Override
-  public final void removeListener( final IZmlModelColumnDataListener listener )
-  {
-    m_listeners.remove( listener );
   }
 
 }

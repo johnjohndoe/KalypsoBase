@@ -66,7 +66,7 @@ public class DateRangeInputWizardPage extends WizardPage
 
   private DateRangeInputControl m_control;
 
-  public DateRangeInputWizardPage( )
+  public DateRangeInputWizardPage()
   {
     super( "DateRangeInputWizardPage" ); //$NON-NLS-1$
 
@@ -74,7 +74,7 @@ public class DateRangeInputWizardPage extends WizardPage
   }
 
   @Override
-  public void createControl( final Composite parent )
+  public void createControl( Composite parent )
   {
     try
     {
@@ -84,17 +84,17 @@ public class DateRangeInputWizardPage extends WizardPage
 
       setControl( m_control );
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
       e.printStackTrace();
       throw new IllegalStateException( e.getLocalizedMessage() );
     }
 
-    setTitle( Messages.getString( "org.kalypso.ogc.sensor.view.wizard.DateRangeInputWizardPage.1" ) ); //$NON-NLS-1$
-    setDescription( Messages.getString( "org.kalypso.ogc.sensor.view.wizard.DateRangeInputWizardPage.2" ) ); //$NON-NLS-1$
+    setTitle( Messages.getString("org.kalypso.ogc.sensor.view.wizard.DateRangeInputWizardPage.1") ); //$NON-NLS-1$
+    setDescription( Messages.getString("org.kalypso.ogc.sensor.view.wizard.DateRangeInputWizardPage.2") ); //$NON-NLS-1$
   }
 
-  public DateRange getDateRange( )
+  public DateRange getDateRange()
   {
     if( m_control != null )
     {
@@ -124,7 +124,7 @@ public class DateRangeInputWizardPage extends WizardPage
     }
 
     // else inform user about invalid input
-    MessageDialog.openInformation( getShell(), Messages.getString( "org.kalypso.ogc.sensor.view.wizard.DateRangeInputWizardPage.3" ), Messages.getString( "org.kalypso.ogc.sensor.view.wizard.DateRangeInputWizardPage.4" ) + err ); //$NON-NLS-1$ //$NON-NLS-2$
+    MessageDialog.openInformation( getShell(), Messages.getString("org.kalypso.ogc.sensor.view.wizard.DateRangeInputWizardPage.3"), Messages.getString("org.kalypso.ogc.sensor.view.wizard.DateRangeInputWizardPage.4") + err ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return null;
   }

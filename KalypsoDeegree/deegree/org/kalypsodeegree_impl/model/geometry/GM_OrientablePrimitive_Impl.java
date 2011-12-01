@@ -62,13 +62,13 @@ abstract class GM_OrientablePrimitive_Impl extends GM_Primitive_Impl implements 
    * the constructor sets the curves orientation
    * 
    * @param crs
-   *          spatial reference system of the geometry
+   *            spatial reference system of the geometry
    * @param orientation
-   *          orientation of the curve ('+'|'-')
+   *            orientation of the curve ('+'|'-')
    * @exception GM_Exception
-   *              will be thrown if orientation is invalid
+   *                will be thrown if orientation is invalid
    */
-  protected GM_OrientablePrimitive_Impl( final String crs, final char orientation ) throws GM_Exception
+  protected GM_OrientablePrimitive_Impl( String crs, char orientation ) throws GM_Exception
   {
     super( crs );
     setOrientation( orientation );
@@ -89,14 +89,14 @@ abstract class GM_OrientablePrimitive_Impl extends GM_Primitive_Impl implements 
    * sets the curves orientation
    * 
    * @param orientation
-   *          orientation of the curve ('+'|'-')
+   *            orientation of the curve ('+'|'-')
    * @exception GM_Exception
-   *              will be thrown if orientation is invalid
+   *                will be thrown if orientation is invalid
    */
   @Override
-  public void setOrientation( final char orientation ) throws GM_Exception
+  public void setOrientation( char orientation ) throws GM_Exception
   {
-    if( orientation != '+' && orientation != '-' )
+    if( (orientation != '+') && (orientation != '-') )
     {
       throw new GM_Exception( orientation + " isn't a valid direction" );
     }

@@ -43,14 +43,14 @@ package org.kalypso.commons.java.lang;
 import jregex.Pattern;
 import jregex.RETokenizer;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Dirk Kuch
  */
 public final class Strings
 {
-  public static String LINE_SEPARATOR = System.getProperties().getProperty( "line.separator", "\n\r" ); //$NON-NLS-1$ //$NON-NLS-2$
+  public static String LINE_SEPARATOR = System.getProperties().getProperty( "line.separator", "\n\r" );
 
   private Strings( )
   {
@@ -87,18 +87,12 @@ public final class Strings
     return StringUtils.chop( s );
   }
 
-  /**
-   * @deprecated use {@link StringUtils}.equals()
-   */
   @Deprecated
   public static boolean isEqual( final String s1, final String s2 )
   {
     return StringUtils.equals( s1, s2 );
   }
 
-  /**
-   * @deprecated use {@link StringUtils}.equalsIgnoreCase()
-   */
   @Deprecated
   public static boolean isEqualIgnoreCase( final String s1, final String s2 )
   {
@@ -119,16 +113,5 @@ public final class Strings
       return null;
 
     return working;
-  }
-
-  public static boolean containsEqualIgnoreCase( final String[] strings, final String string )
-  {
-    for( final String s : strings )
-    {
-      if( StringUtils.equalsIgnoreCase( s, string ) )
-        return true;
-    }
-
-    return false;
   }
 }

@@ -47,7 +47,6 @@ import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.Text;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.XMLTools;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.w3c.dom.Node;
 
 /**
@@ -68,9 +67,7 @@ public class TextFeatureControlFactory implements IFeatureControlFactory
 
     final String format = getFormat( textType );
 
-    final GMLXPath propertyPath = vpt == null ? null : new GMLXPath( vpt.getQName() );
-
-    final TextFeatureControl tfc = new TextFeatureControl( feature, propertyPath, vpt, format );
+    final TextFeatureControl tfc = new TextFeatureControl( feature, vpt, format );
     tfc.setEditable( textType.isEditable() );
 
     return tfc;
@@ -83,8 +80,9 @@ public class TextFeatureControlFactory implements IFeatureControlFactory
       return (String) objFormat;
 
     if( objFormat instanceof Node )
-      return XMLTools.getStringValue( (Node) objFormat );
+      return XMLTools.getStringValue( ((Node) objFormat) );
 
     return null;
   }
+
 }

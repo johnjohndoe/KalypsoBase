@@ -40,12 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.internal.pair;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.commons.pair.IKeyValue;
 
 /**
- * Default implementation of {@link IKeyValue}.<br/>
- * {@link DefaultKeyValue} pairs are equal, iff values are equal.
+ * Default implementation of {@link IKeyValue}.<br/> {@link DefaultKeyValue} pairs are equal, iff values are equal.
  * 
  * @author Gernot Belger
  */

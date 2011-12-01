@@ -1,5 +1,7 @@
 package org.kalypso.kml.export.utils;
 
+import org.apache.commons.lang.NotImplementedException;
+
 import de.micromata.opengis.kml.v_2_2_0.Folder;
 
 public class FolderUtil
@@ -7,7 +9,7 @@ public class FolderUtil
 
   public static void removeEmptyFolders( final Folder folderType )
   {
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
 // final List<JAXBElement< ? extends AbstractFeatureType>> features = folderType.getAbstractFeatureGroup();
 // final Object[] myFeatures = features.toArray();
 //
@@ -32,7 +34,7 @@ public class FolderUtil
 
   private static boolean isEmptyFolder( final Folder base )
   {
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
 // final List<JAXBElement< ? extends AbstractFeatureType>> features = base.getAbstractFeatureGroup();
 //
 // boolean isEmpty = true;

@@ -109,19 +109,17 @@ public class FeaturemappingSourceHandler implements ISourceHandler
   private Properties readProperties( final MappingType mapping )
   {
     final Properties properties = new Properties();
-
     final List<MappingType.Map> mapList = mapping.getMap();
     for( final org.kalypso.gml.util.MappingType.Map map : mapList )
       properties.setProperty( map.getFrom(), map.getTo() );
-
     return properties;
   }
 
-  private FeatureVisitor createVisitorAndFilter( final MappingType mapping, final FeatureList toFeatures, final IFeatureType toFeatureType, final String fromID, final String toID, final Properties mappings ) throws GmlConvertException
+  private FeatureVisitor createVisitorAndFilter( final MappingType mapping, final FeatureList toFeatures, final IFeatureType toFeatureType, final String fromID, final String toID, final Properties properties ) throws GmlConvertException
   {
     final Filter filter = readFilter( mapping );
 
-    final FeatureVisitor visitor = createVisitor( mapping, toFeatures, toFeatureType, fromID, toID, mappings );
+    final FeatureVisitor visitor = createVisitor( mapping, toFeatures, toFeatureType, fromID, toID, properties );
 
     if( filter == null )
       return visitor;
@@ -129,7 +127,7 @@ public class FeaturemappingSourceHandler implements ISourceHandler
     return new FilteredFeatureVisitor( visitor, filter );
   }
 
-  private FeatureVisitor createVisitor( final MappingType mapping, final FeatureList toFeatures, final IFeatureType toFeatureType, final String fromID, final String toID, final Properties mappings ) throws GmlConvertException
+  private FeatureVisitor createVisitor( final MappingType mapping, final FeatureList toFeatures, final IFeatureType toFeatureType, final String fromID, final String toID, final Properties properties ) throws GmlConvertException
   {
     if( mapping instanceof AddFeaturesMappingType )
     {
@@ -137,10 +135,10 @@ public class FeaturemappingSourceHandler implements ISourceHandler
       final String handleExisting = addType.getHandleExisting().value();
       final String fID = addType.getFid();
       final String targetFeatureType = addType.getTargetFeatureType();
-      return new AddFeaturesToFeaturelist( toFeatures, mappings, toFeatureType, fromID, toID, handleExisting, fID, targetFeatureType );
+      return new AddFeaturesToFeaturelist( toFeatures, properties, toFeatureType, fromID, toID, handleExisting, fID, targetFeatureType );
     }
     else if( mapping instanceof ChangeFeaturesMappingType )
-      return new ChangeFeaturesFromFeaturelist( toFeatures, mappings, fromID, toID );
+      return new ChangeFeaturesFromFeaturelist( toFeatures, properties, fromID, toID );
     else
       throw new GmlConvertException( Messages.getString( "org.kalypso.ogc.gml.convert.source.FeaturemappingSourceHandler.0" ) + mapping.getClass().getName() ); //$NON-NLS-1$
   }

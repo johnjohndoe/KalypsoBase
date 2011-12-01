@@ -47,21 +47,21 @@ public class KalypsoOpenFilterDialogActionDelegate extends AbstractGisEditorActi
     Feature fGeom = null;
     if( sGeomOp instanceof Feature )
     {
-      fGeom = (Feature) sGeomOp;
+      fGeom = ((Feature) sGeomOp);
     }
     IFeatureType ft = null;
     IKalypsoFeatureTheme selectedTheme = null;
     FeatureList visableFeatures = null;
     if( sFtOutline instanceof IKalypsoFeatureTheme )
     {
-      selectedTheme = (IKalypsoFeatureTheme) sFtOutline;
+      selectedTheme = ((IKalypsoFeatureTheme) sFtOutline);
       visableFeatures = selectedTheme.getFeatureListVisible( selectedTheme.getFullExtent() );
       ft = selectedTheme.getFeatureType();
     }
 
     final WidgetActionPart part = getPart();
     final Shell shell = part == null ? null : part.getSite().getShell();
-    final FilterDialog dialog = new FilterDialog( shell, null, null, fGeom, null, true );
+    final FilterDialog dialog = new FilterDialog( shell, ft, null, null, fGeom, null, true );
     int open = -1;
     if( ft != null )
       open = dialog.open();

@@ -23,13 +23,13 @@ public abstract class AbstractInternalStatusJob
     switch( status )
     {
       case OK:
-        m_status = StatusUtilities.createOkStatus( message );
+        m_status = StatusUtilities.createOkStatus( message, new Object[0] );
         break;
       case INFO:
-        m_status = StatusUtilities.createInfoStatus( message );
+        m_status = StatusUtilities.createInfoStatus( message, new Object[0] );
         break;
       default:
-        m_status = StatusUtilities.createErrorStatus( message );
+        m_status = StatusUtilities.createErrorStatus( message, new Object[0] );
         break;
     }
   }

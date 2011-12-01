@@ -20,13 +20,14 @@ import de.openali.odysseus.service.odsimpl.x020.ScenesType;
 import de.openali.odysseus.service.odsimpl.x020.ServiceParametersType;
 
 /**
- * Class which handles the configurations for the service and the individual scenes; if a scene does not define its own
- * ServiceProvider- and ServiceIdentification-Elements, they are inherited from the global configuration.
+ * class which handles the configurations for the service and the individual scenes; if a scene does not define its own
+ * ServiceProvider- and ServiceIdentification-Elements, they are inherited from the global configuration
  * 
- * @author Alexander Burtscher
+ * @author burtscher1
  */
 public class ODSConfigurationLoader
 {
+
   private ODSConfigurationDocument m_ocd = null;
 
   private String m_defaultSceneId;
@@ -113,13 +114,14 @@ public class ODSConfigurationLoader
     }
     catch( final XmlException e )
     {
+      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     catch( final IOException e )
     {
+      // TODO Auto-generated catch block
       e.printStackTrace();
     }
-
     if( chartConfigDoc != null )
       m_scenes.put( sceneId, chartConfigDoc );
   }
@@ -144,9 +146,8 @@ public class ODSConfigurationLoader
   public synchronized ChartConfigurationDocument getSceneById( final String sceneId )
   {
     String usedSceneId = sceneId;
-    if( sceneId == null || sceneId.trim().equals( "" ) )
+    if( (sceneId == null) || sceneId.trim().equals( "" ) )
       usedSceneId = m_defaultSceneId;
-
     return m_scenes.get( usedSceneId );
   }
 
@@ -182,4 +183,5 @@ public class ODSConfigurationLoader
   {
     return m_serviceProvider;
   }
+
 }

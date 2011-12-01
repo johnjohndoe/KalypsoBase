@@ -9,7 +9,7 @@ import junit.framework.TestCase;
  */
 public class UnitConversionTest extends TestCase
 {
-  public void testKelvinCelsiusConverter( )
+  public void testKelvinCelsiusConverter()
   {
     final KelvinCelsiusConverter conv = KelvinCelsiusConverter.getInstance();
 
@@ -21,7 +21,7 @@ public class UnitConversionTest extends TestCase
     assertTrue( Double.compare( conv.convert( conv.reverse( c ) ), c ) == 0 );
   }
 
-  public void testNoConverter( )
+  public void testNoConverter()
   {
     final NoConverter conv = NoConverter.getInstance();
 
@@ -31,7 +31,7 @@ public class UnitConversionTest extends TestCase
     assertTrue( Double.compare( conv.convert( conv.reverse( value ) ), value ) == 0 );
   }
 
-  public void testSIConverter( )
+  public void testSIConverter()
   {
     final SIConverter conv1 = new SIConverter( "m", "cm" ); //$NON-NLS-1$ //$NON-NLS-2$
     assertTrue( Double.compare( conv1.convert( 1 ), 100 ) == 0 );

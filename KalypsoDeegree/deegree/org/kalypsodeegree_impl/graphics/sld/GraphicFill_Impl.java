@@ -57,14 +57,14 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 public class GraphicFill_Impl implements GraphicFill, Marshallable
 {
-  private final Graphic m_graphic;
+  private Graphic graphic = null;
 
   /**
    * constructor initializing the class with the <GraphicFill>
    */
-  GraphicFill_Impl( final Graphic graphic )
+  GraphicFill_Impl( Graphic graphic )
   {
-    m_graphic = graphic;
+    setGraphic( graphic );
   }
 
   /**
@@ -75,9 +75,20 @@ public class GraphicFill_Impl implements GraphicFill, Marshallable
    * @return graphic
    */
   @Override
-  public Graphic getGraphic( )
+  public Graphic getGraphic()
   {
-    return m_graphic;
+    return graphic;
+  }
+
+  /**
+   * sets <Graphic>
+   * 
+   * @param graphic
+   */
+  @Override
+  public void setGraphic( Graphic graphic )
+  {
+    this.graphic = graphic;
   }
 
   /**
@@ -86,13 +97,13 @@ public class GraphicFill_Impl implements GraphicFill, Marshallable
    * @return xml representation of the GraphicFill
    */
   @Override
-  public String exportAsXML( )
+  public String exportAsXML()
   {
     Debug.debugMethodBegin();
 
-    final StringBuffer sb = new StringBuffer( 1000 );
+    StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<GraphicFill>" );
-    sb.append( ((Marshallable) m_graphic).exportAsXML() );
+    sb.append( ( (Marshallable)graphic ).exportAsXML() );
     sb.append( "</GraphicFill>" );
 
     Debug.debugMethodEnd();

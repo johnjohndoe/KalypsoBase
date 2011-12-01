@@ -40,12 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.internal.pair;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
- * Default implementation of {@link IKeyValue}.<br/>
- * {@link DefaultKeyValue} pairs are equal, iff key AND value are equal.
+ * Default implementation of {@link IKeyValue}.<br/> {@link DefaultKeyValue} pairs are equal, iff key AND value are equal.
  * 
  * @author Gernot Belger
  */

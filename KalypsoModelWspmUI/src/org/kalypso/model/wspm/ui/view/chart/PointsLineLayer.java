@@ -87,17 +87,17 @@ public class PointsLineLayer extends AbstractProfilLayer
 
     final Point newPoint = verifyPos( dragStartData.getPosition(), newPos );
     final Integer index = (Integer) dragStartData.getData();
-
-    final Point next = toScreen( getNextNonNull( index ) );
-    final Point previous = toScreen( getPreviousNonNull( index ) );
+    final IRecord[] profilPoints = getProfil().getPoints();
+    final Point next = index == profilPoints.length - 1 ? newPoint : toScreen( profilPoints[index + 1] );
+    final Point previous = index == 0 ? newPoint : toScreen( profilPoints[index - 1] );
 
     final PolylineFigure lineFigure = new PolylineFigure();
     lineFigure.setPoints( new Point[] { previous, newPoint, next } );
-    lineFigure.setStyle( getLineStyleHover() );
+    lineFigure.setStyle( getLineStyle_hover() );
 
     final PointFigure pointFigure = new PointFigure();
 
-    pointFigure.setStyle( getPointStyleHover() );
+    pointFigure.setStyle( getPointStyle_hover() );
     pointFigure.setPoints( new Point[] { newPoint } );
 
     final IPaintable dragFigure = new IPaintable()
@@ -129,7 +129,7 @@ public class PointsLineLayer extends AbstractProfilLayer
       return;
 
     final Point newPoint = verifyPos( dragStartData.getPosition(), point );
-    final Integer pos = dragStartData.getData() instanceof Integer ? (Integer) dragStartData.getData() : -1;
+    final Integer pos = dragStartData.getData() instanceof Integer ? (Integer) (dragStartData.getData()) : -1;
     if( pos > -1 )
     {
       final IProfil profil = getProfil();
@@ -196,9 +196,7 @@ public class PointsLineLayer extends AbstractProfilLayer
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     if( hint.isPointsChanged() || hint.isPointValuesChanged() )
-    {
       getEventHandler().fireLayerContentChanged( this );
-    }
   }
 
   /**
@@ -231,13 +229,9 @@ public class PointsLineLayer extends AbstractProfilLayer
         points.add( p );
 
         if( i == active )
-        {
           activePoint = p;
-        }
         else if( i > active && activePoint2 == null )
-        {
           activePoint2 = p;
-        }
       }
     }
     final Point[] pointsArray = points.toArray( new Point[points.size()] );
@@ -249,7 +243,7 @@ public class PointsLineLayer extends AbstractProfilLayer
 
     if( activePoint != null && activePoint2 != null )
     {
-      pf.setStyle( getLineStyleActive() );
+      pf.setStyle( getLineStyle_active() );
       pf.setPoints( new Point[] { activePoint, activePoint2 } );
       pf.paint( gc );
     }
@@ -261,13 +255,13 @@ public class PointsLineLayer extends AbstractProfilLayer
     pf2.paint( gc );
     if( activePoint != null )
     {
-      pf2.setStyle( getPointStyleActive() );
+      pf2.setStyle( getPointStyle_active() );
       pf2.setPoints( new Point[] { activePoint } );
       pf2.paint( gc );
     }
   }
 
-  private Point verifyPos( final Point oldPos, final Point newPos )
+  private final Point verifyPos( final Point oldPos, final Point newPos )
   {
     final Object o = getData( IProfilChartLayer.VIEW_DATA_KEY );
     if( o != null )

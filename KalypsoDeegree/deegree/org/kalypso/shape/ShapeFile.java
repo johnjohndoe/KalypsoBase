@@ -19,7 +19,7 @@
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- *
+ * 
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -39,9 +39,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
+import org.kalypso.shape.dbf.DBFField;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.dbf.DBaseFile;
-import org.kalypso.shape.dbf.IDBFField;
 import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypso.shape.geometry.SHPEnvelope;
 import org.kalypso.shape.shp.SHPException;
@@ -64,12 +64,6 @@ import org.kalypso.shape.shx.SHXRecord;
  */
 public class ShapeFile
 {
-  public static final String EXTENSION_DBF = ".dbf";
-
-  public static final String EXTENSION_SHX = ".shx";
-
-  public static final String EXTENSION_SHP = ".shp";
-
   private final String m_filePath;
 
   private final DBaseFile m_dbf;
@@ -86,11 +80,11 @@ public class ShapeFile
   /**
    * Create a new shape file and opens it for writing.<br>
    */
-  public static ShapeFile create( final String basePath, final ShapeType shapeType, final Charset charset, final IDBFField[] fields ) throws IOException, DBaseException
+  public static ShapeFile create( final String basePath, final ShapeType shapeType, final Charset charset, final DBFField[] fields ) throws IOException, DBaseException
   {
-    SHPFile.create( new File( basePath + EXTENSION_SHP ), shapeType ).close();
-    SHXFile.create( new File( basePath + EXTENSION_SHX ), shapeType ).close();
-    DBaseFile.create( new File( basePath + EXTENSION_DBF ), fields, charset ).close();
+    SHPFile.create( new File( basePath + ".shp" ), shapeType ).close();
+    SHXFile.create( new File( basePath + ".shx" ), shapeType ).close();
+    DBaseFile.create( new File( basePath + ".dbf" ), fields, charset ).close();
 
     return new ShapeFile( basePath, charset, FileMode.WRITE );
   }
@@ -105,9 +99,9 @@ public class ShapeFile
   {
     m_filePath = filePath;
 
-    m_shp = new SHPFile( new File( filePath + EXTENSION_SHP ), mode );
-    m_shx = new SHXFile( new File( filePath + EXTENSION_SHX ), mode );
-    m_dbf = new DBaseFile( new File( filePath + EXTENSION_DBF ), mode, charset );
+    m_shp = new SHPFile( new File( filePath + ".shp" ), mode );
+    m_shx = new SHXFile( new File( filePath + ".shx" ), mode );
+    m_dbf = new DBaseFile( new File( filePath + ".dbf" ), mode, charset );
 // m_rti = initRTreeFile( filePath + ".rti" );
   }
 
@@ -124,14 +118,6 @@ public class ShapeFile
 // return null;
 // }
 // }
-
-  public void accept( final IShapeFileVisitor visitor ) throws DBaseException, IOException
-  {
-    for( int index = 0; index < getNumRecords(); index++ )
-    {
-      visitor.visit( getRow( index ) );
-    }
-  }
 
   public void close( ) throws IOException
   {
@@ -205,7 +191,7 @@ public class ShapeFile
     return m_dbf.getRecord( rowNo );
   }
 
-  public IDBFField[] getFields( )
+  public DBFField[] getFields( )
   {
     return m_dbf.getFields();
   }

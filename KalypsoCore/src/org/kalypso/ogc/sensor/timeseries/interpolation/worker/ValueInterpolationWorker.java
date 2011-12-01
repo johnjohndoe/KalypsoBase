@@ -101,9 +101,6 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
     {
       final DateRange dateRange = getDateRange();
       final IAxis[] valueAxes = getValueAxes();
-
-      // FIXME: timezone is missing! So we might get unexpected timesteps
-      // Which one to use here? We cannot change it globally, in order to make it backwards compatible
       final Calendar calendar = Calendar.getInstance();
 
       final LocalCalculationStack stack = new LocalCalculationStack( valueAxes.length );

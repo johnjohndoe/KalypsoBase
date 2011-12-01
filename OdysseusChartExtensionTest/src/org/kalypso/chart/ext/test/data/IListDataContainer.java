@@ -46,6 +46,7 @@ import de.openali.odysseus.chart.framework.model.data.IDataContainer;
 
 /**
  * @author alibu
+ * 
  */
 public interface IListDataContainer<T_domain, T_target> extends IDataContainer<T_domain, T_target>
 {

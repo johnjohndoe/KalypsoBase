@@ -53,7 +53,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsPlugin;
+import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
 
 /**
  * @author Gernot Belger
@@ -68,8 +68,7 @@ public class CompositeOperation extends AbstractOperation implements ICompositeO
   }
 
   /**
-   * @see org.eclipse.core.commands.operations.AbstractOperation#execute(org.eclipse.core.runtime.IProgressMonitor,
-   *      org.eclipse.core.runtime.IAdaptable)
+   * @see org.eclipse.core.commands.operations.AbstractOperation#execute(org.eclipse.core.runtime.IProgressMonitor, org.eclipse.core.runtime.IAdaptable)
    */
   @Override
   public IStatus execute( final IProgressMonitor monitor, final IAdaptable info ) throws ExecutionException
@@ -91,8 +90,7 @@ public class CompositeOperation extends AbstractOperation implements ICompositeO
   }
 
   /**
-   * @see org.eclipse.core.commands.operations.AbstractOperation#redo(org.eclipse.core.runtime.IProgressMonitor,
-   *      org.eclipse.core.runtime.IAdaptable)
+   * @see org.eclipse.core.commands.operations.AbstractOperation#redo(org.eclipse.core.runtime.IProgressMonitor, org.eclipse.core.runtime.IAdaptable)
    */
   @Override
   public IStatus redo( final IProgressMonitor monitor, final IAdaptable info ) throws ExecutionException
@@ -114,8 +112,7 @@ public class CompositeOperation extends AbstractOperation implements ICompositeO
   }
 
   /**
-   * @see org.eclipse.core.commands.operations.AbstractOperation#undo(org.eclipse.core.runtime.IProgressMonitor,
-   *      org.eclipse.core.runtime.IAdaptable)
+   * @see org.eclipse.core.commands.operations.AbstractOperation#undo(org.eclipse.core.runtime.IProgressMonitor, org.eclipse.core.runtime.IAdaptable)
    */
   @Override
   public IStatus undo( final IProgressMonitor monitor, final IAdaptable info ) throws ExecutionException

@@ -56,7 +56,7 @@ import org.xml.sax.XMLReader;
 /**
  * a generic type-handler for GM_Object geometries based on a binding-type-handler<br>
  * is wraps binding geometries to GM_Object geometries
- * 
+ *
  * @author Andreas von Dömming
  */
 public class GenericGM_ObjectBindingTypeHandler extends GenericBindingTypeHandler

@@ -56,18 +56,18 @@ public interface IStatusCollector extends Collection<IStatus>
   /**
    * Convienience method that adds an error status to this collection.
    */
-  IStatus add( int severity, String msg );
+  void add( int severity, String msg );
 
   /**
    * Convienience method that adds an error status to this collection, using {@link String#format(String, Object...)} to
    * format the message.
    */
-  IStatus add( int severity, String msgFormat, Throwable exception, Object... formatParameters );
+  void add( int severity, String msgFormat, Throwable exception, Object... formatParameters );
 
   /**
    * Convienience method that adds an error status to this collection.
    */
-  IStatus add( int severity, String msg, Throwable exception );
+  void add( int severity, String msg, Throwable exception );
 
   /**
    * Returns all collected stati.

@@ -45,11 +45,7 @@ import org.kalypso.contribs.eclipse.core.runtime.Debug;
 /**
  * @author Gernot Belger
  */
-public final class KalypsoModelWspmUIDebug
+public class KalypsoModelWspmUIDebug
 {
-  public static final Debug DEBUG_VALIDATION_MARKER = new Debug( KalypsoModelWspmUIPlugin.getDefault(), "/debug/validationMarkers/table" ); //$NON-NLS-1$
-
-  private KalypsoModelWspmUIDebug( )
-  {
-  }
+  public final static Debug DEBUG_VALIDATION_MARKER = new Debug( KalypsoModelWspmUIPlugin.getDefault(), "/debug/validationMarkers/table" ); //$NON-NLS-1$
 }

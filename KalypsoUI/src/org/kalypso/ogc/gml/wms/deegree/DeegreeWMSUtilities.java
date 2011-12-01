@@ -47,7 +47,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
@@ -65,7 +64,6 @@ import org.deegree.owscommon_new.Operation;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.net.Proxy;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.Arrays;
@@ -120,27 +118,16 @@ public class DeegreeWMSUtilities
       /* Load the capabilities xml. */
       doc.load( inputStream, XMLFragment.DEFAULT_URL );
 
-      inputStream.close();
-
       /* Create the capabilities. */
       final WMSCapabilities capabilities = (WMSCapabilities) doc.parseCapabilities();
       if( capabilities == null )
-      {
-        final String messsage = Messages.getString( "org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities.0" ); //$NON-NLS-1$
-        throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), messsage ) );
-      }
+        throw new Exception( Messages.getString( "org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities.0" ) ); //$NON-NLS-1$
 
       return capabilities;
     }
-    catch( final CoreException ex )
-    {
-      throw ex;
-    }
     catch( final Exception ex )
     {
-      // FIXME: we need better error handling
-      final String message = "Failed to load capabilities document";
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), message, ex ) );
+      throw new CoreException( StatusUtilities.statusFromThrowable( ex ) );
     }
     finally
     {
@@ -204,11 +191,9 @@ public class DeegreeWMSUtilities
    *          The requested envelope in the local coordinate system.
    * @param localSRS
    *          The local coordinate system.
-   * @param sldBody
-   *          This is the content of a SLD, if we want the server to render the image with a specific style.
    * @return The get map request.
    */
-  public static GetMap createGetMapRequest( final WMSCapabilities capabilities, final String negotiatedSRS, final String themeName, final String[] layers, final String[] styles, final int width, final int height, final GM_Envelope requestedEnvLocalSRS, final String localSRS, final String sldBody ) throws CoreException
+  public static GetMap createGetMapRequest( final WMSCapabilities capabilities, final String negotiatedSRS, final String themeName, final String[] layers, final String[] styles, final int width, final int height, final GM_Envelope requestedEnvLocalSRS, final String localSRS ) throws CoreException
   {
     try
     {
@@ -232,7 +217,7 @@ public class DeegreeWMSUtilities
       wmsParameter.put( "SRS", negotiatedSRS ); //$NON-NLS-1$
 
       final IGeoTransformer gt = GeoTransformerFactory.getGeoTransformer( negotiatedSRS );
-      final GM_Envelope requestedEnvLocalCRS = GeometryFactory.createGM_Envelope( requestedEnvLocalSRS.getMinX(), requestedEnvLocalSRS.getMinY(), requestedEnvLocalSRS.getMaxX(), requestedEnvLocalSRS.getMaxY(), localSRS );
+      GM_Envelope requestedEnvLocalCRS = GeometryFactory.createGM_Envelope( requestedEnvLocalSRS.getMinX(), requestedEnvLocalSRS.getMinY(), requestedEnvLocalSRS.getMaxX(), requestedEnvLocalSRS.getMaxY(), localSRS );
       final GM_Envelope targetEnvRemoteSRS = gt.transform( requestedEnvLocalCRS );
 
       if( targetEnvRemoteSRS.getMax().getX() - targetEnvRemoteSRS.getMin().getX() <= 0 )
@@ -249,15 +234,8 @@ public class DeegreeWMSUtilities
 
       /* Create the GetMap request. */
       final GetMap request = GetMap.create( wmsParameter );
-      if( sldBody == null || sldBody.length() == 0 )
-        return request;
 
-      /* HACK: Recreate the request, using vendor specific parameters. */
-      /* HACK: SLD_BODY is not handled correctly in deegree2. */
-      final Map<String, String> vendorSpecificParameter = new HashMap<String, String>();
-      vendorSpecificParameter.put( "SLD_BODY", sldBody );
-
-      return GetMap.create( request.getVersion(), request.getId(), request.getLayers(), request.getElevation(), request.getSampleDimension(), request.getFormat(), request.getWidth(), request.getHeight(), request.getSrs(), request.getBoundingBox(), request.getTransparency(), request.getBGColor(), request.getExceptions(), request.getTime(), request.getSLD_URL(), request.getStyledLayerDescriptor(), vendorSpecificParameter );
+      return request;
     }
     catch( final Exception ex )
     {

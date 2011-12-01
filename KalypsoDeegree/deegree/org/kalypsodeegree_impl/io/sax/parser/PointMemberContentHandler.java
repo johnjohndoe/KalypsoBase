@@ -54,35 +54,33 @@ import org.xml.sax.XMLReader;
  */
 public class PointMemberContentHandler extends GMLElementContentHandler implements IPointHandler
 {
-  public static final String ELEMENT_POINT_MEMBER = "pointMember";
+  public static final String ELEMENT_POINT_MEMBER = "pointMember";  
 
-  private final IPointHandler m_pointHandler;
+  private final IPointHandler m_pointHandler;  
 
   public PointMemberContentHandler( final XMLReader reader, final IGmlContentHandler parent, final IPointHandler pointHandler, final String defaultSrs )
   {
     super( reader, NS.GML3, ELEMENT_POINT_MEMBER, defaultSrs, parent );
 
-    m_pointHandler = pointHandler;
+    m_pointHandler = pointHandler;    
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doEndElement(java.lang.String,
-   *      java.lang.String, java.lang.String)
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doEndElement(java.lang.String, java.lang.String, java.lang.String)
    */
   @Override
   protected void doEndElement( final String uri, final String localName, final String name )
   {
 
-  }
+  } 
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doStartElement(java.lang.String,
-   *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doStartElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
   protected void doStartElement( final String uri, final String localName, final String name, final Attributes atts )
   {
-    // TODO: verify if this property has an xlink
+    //TODO: verify if this property has an xlink
     setDelegate( new PointContentHandler( getXMLReader(), this, m_defaultSrs ) );
   }
 
@@ -92,6 +90,6 @@ public class PointMemberContentHandler extends GMLElementContentHandler implemen
   @Override
   public void handle( final GM_Point element ) throws SAXException
   {
-    m_pointHandler.handle( element );
+    m_pointHandler.handle( element );    
   }
 }

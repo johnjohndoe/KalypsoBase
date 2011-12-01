@@ -45,8 +45,8 @@ package org.kalypsodeegree_impl.io.shpapi;
  * 13.01.2000 ap: all variables except reBuffer removed <BR>
  * 16.08.2000 ap: field enevlope added <BR>
  * 16.08.2000 ap: method getEnvelope() added <BR>
- * 26.01.2007 Thomas Jung: method getZRange() added <BR>
- * * <!---------------------------------------------------------------------------->
+ * 26.01.2007 Thomas Jung: method getZRange() added <BR> *
+ * <!---------------------------------------------------------------------------->
  * 
  * @author Andreas Poth
  * @version 16.08.2000

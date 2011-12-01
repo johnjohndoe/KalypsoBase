@@ -72,7 +72,7 @@ public class TemplateStorage implements IEncodedStorage
   /**
    * @return Returns the context
    */
-  public URL getContext( )
+  public URL getContext()
   {
     return m_context;
   }
@@ -80,7 +80,7 @@ public class TemplateStorage implements IEncodedStorage
   /**
    * @return Returns the file
    */
-  public IFile getFile( )
+  public IFile getFile()
   {
     return m_file;
   }
@@ -88,7 +88,7 @@ public class TemplateStorage implements IEncodedStorage
   /**
    * @return Returns the href
    */
-  public String getHref( )
+  public String getHref()
   {
     return m_href;
   }
@@ -97,7 +97,7 @@ public class TemplateStorage implements IEncodedStorage
    * @see org.eclipse.core.resources.IStorage#getContents()
    */
   @Override
-  public InputStream getContents( ) throws CoreException
+  public InputStream getContents() throws CoreException
   {
     return m_file.getContents();
   }
@@ -106,7 +106,7 @@ public class TemplateStorage implements IEncodedStorage
    * @see org.eclipse.core.resources.IStorage#getFullPath()
    */
   @Override
-  public IPath getFullPath( )
+  public IPath getFullPath()
   {
     return m_file.getFullPath();
   }
@@ -115,7 +115,7 @@ public class TemplateStorage implements IEncodedStorage
    * @see org.eclipse.core.resources.IStorage#getName()
    */
   @Override
-  public String getName( )
+  public String getName()
   {
     return m_file.getName();
   }
@@ -124,7 +124,7 @@ public class TemplateStorage implements IEncodedStorage
    * @see org.eclipse.core.resources.IStorage#isReadOnly()
    */
   @Override
-  public boolean isReadOnly( )
+  public boolean isReadOnly()
   {
     return false;
   }
@@ -133,7 +133,7 @@ public class TemplateStorage implements IEncodedStorage
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
   @Override
-  public Object getAdapter( final Class adapter )
+  public Object getAdapter( Class adapter )
   {
     return null;
   }
@@ -142,7 +142,7 @@ public class TemplateStorage implements IEncodedStorage
    * @see org.eclipse.core.resources.IEncodedStorage#getCharset()
    */
   @Override
-  public String getCharset( ) throws CoreException
+  public String getCharset() throws CoreException
   {
     return m_file.getCharset();
   }

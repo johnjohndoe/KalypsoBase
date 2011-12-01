@@ -66,8 +66,6 @@ public interface ILegendChangedListener
    *          The insets.
    * @param themeIds
    *          The ids of the selected themes.
-   * @param fontSize
-   *          The font size.
    */
-  public void legendPropertyChanged( Properties properties, int horizontal, int vertical, Color backgroundColor, int insets, String[] themeIds, int fontSize );
+  public void legendPropertyChanged( Properties properties, int horizontal, int vertical, Color backgroundColor, int insets, String[] themeIds );
 }

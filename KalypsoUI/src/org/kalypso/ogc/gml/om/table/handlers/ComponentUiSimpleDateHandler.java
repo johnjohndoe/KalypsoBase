@@ -47,7 +47,7 @@ import java.util.Date;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
@@ -99,7 +99,7 @@ public class ComponentUiSimpleDateHandler extends AbstractComponentUiHandler
   @Override
   public void doSetValue( final IRecord record, final Object value )
   {
-    if( value == null || value.toString().trim().length() == 0 )
+    if( (value == null) || (value.toString().trim().length() == 0) )
       setValue( record, null );
     else
       setValue( record, parseValue( value.toString() ) );
@@ -133,7 +133,7 @@ public class ComponentUiSimpleDateHandler extends AbstractComponentUiHandler
     final int index = getComponent();
     final Object oldValue = record.getValue( index );
 
-    if( !ObjectUtils.equals( value, oldValue ) )
+    if( !ObjectUtils.equals(value, oldValue ) )
       record.setValue( getComponent(), value );
   }
 

@@ -76,7 +76,7 @@ public class XsdBaseTypeHandlerDouble extends XsdBaseTypeHandler<Double>
   @Override
   public int compare( final Double o1, final Double o2 )
   {
-    if( o1 == null && o2 == null )
+    if( (o1 == null) && (o2 == null) )
     {
       return 0; // equals
     }

@@ -56,7 +56,8 @@ import net.opengeospatial.wps.InputDescriptionType;
 import net.opengeospatial.wps.OutputDescriptionType;
 import net.opengeospatial.wps.ProcessDescriptionType;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -120,7 +121,7 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
         return WPS040ObjectFactoryUtilities.buildProcessDescriptions( processDescriptions );
 
       case V100:
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
     return null;
   }
@@ -180,14 +181,14 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
           outputDescriptions.add( outputDescription );
         }
 
-        final String title = "Kalypso Simulation";
+        final String title = identifier;
         final String abstrakt = null;
         final boolean storeSupported = true;
         final boolean statusSupported = true;
         return getProcessDescription( identifier, title, abstrakt, inputDescriptions, outputDescriptions, storeSupported, statusSupported );
 
       case V100:
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
 
     }
     return null;
@@ -209,7 +210,7 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
         return WPS040ObjectFactoryUtilities.buildProcessDescriptionType( code, title, abstrakt, metaDatas, version, dataInputs, processOutputs, storeSupported, statusSupported );
 
       case V100:
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
     return null;
   }
@@ -248,7 +249,7 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
         return WPS040ObjectFactoryUtilities.buildOutputDescriptionType( outputCode, outputTitle, outputAbstrakt, outputFormChoice );
 
       case V100:
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
     return null;
   }
@@ -289,7 +290,7 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
         return WPS040ObjectFactoryUtilities.buildInputDescriptionType( inputCode, inputTitle, inputAbstrakt, inputFormChoice, minOccurs );
 
       case V100:
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
     return null;
   }
@@ -311,7 +312,7 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
         break;
 
       case V100:
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
 
     }
     return inputDescriptions;

@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypsodeegree_impl.tools.GMLConstants;
@@ -57,9 +57,9 @@ import org.xml.sax.XMLReader;
  * <p>
  * The GML default values for tuple and coordinate separators and decimal indicator are:
  * <ul>
- * <li>tuple separator: " "</li>
- * <li>coordinate separator: ","</li>
- * <li>decimal indicator: "."</li>
+ *  <li>tuple separator: " " </li>
+ *  <li>coordinate separator: "," </li>
+ *  <li>decimal indicator: "." </li>
  * </ul>
  * 
  * @author Felipe Maximino
@@ -72,7 +72,7 @@ public class CoordinatesContentHandler extends GMLElementContentHandler
 
   private final ICoordinatesHandler m_coordinatesHandler;
 
-  /* separator for coordinate values */
+  /* separator for coordinate values */ 
   private String m_cs;
 
   /* tuples separator */
@@ -89,31 +89,29 @@ public class CoordinatesContentHandler extends GMLElementContentHandler
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doEndElement(java.lang.String,
-   *      java.lang.String, java.lang.String)
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doEndElement(java.lang.String, java.lang.String, java.lang.String)
    */
   @Override
   protected void doEndElement( final String uri, final String localName, final String name ) throws SAXException
   {
     final List<Double[]> coordinates = endCoordinates();
-    m_coordinatesHandler.handle( coordinates );
+    m_coordinatesHandler.handle( coordinates );    
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doStartElement(java.lang.String,
-   *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doStartElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
   protected void doStartElement( final String uri, final String localName, final String name, final Attributes atts )
   {
     m_cs = ContentHandlerUtils.parseCsFromAttributes( atts, GMLConstants.DEFAULT_CS );
     m_ts = ContentHandlerUtils.parseTsFromAttributes( atts, GMLConstants.DEFAULT_TS );
-    m_decimal = ContentHandlerUtils.parseDecimalFromAttributes( atts, GMLConstants.DEFAULT_DECIMAL );
+    m_decimal = ContentHandlerUtils.parseDecimalFromAttributes( atts, GMLConstants.DEFAULT_DECIMAL );    
   }
 
   private List<Double[]> endCoordinates( )
   {
-    final String coordinatesString = m_coordBuffer == null ? "" : m_coordBuffer.toString();
+    final String coordinatesString = m_coordBuffer == null ? "" : m_coordBuffer.toString(); 
     final String[] tuples = StringUtils.split( coordinatesString, m_ts );
     return parseCoordinates( tuples );
   }
@@ -132,7 +130,7 @@ public class CoordinatesContentHandler extends GMLElementContentHandler
       }
 
       coordinates.add( values );
-    }
+    } 
 
     return Collections.unmodifiableList( coordinates );
   }

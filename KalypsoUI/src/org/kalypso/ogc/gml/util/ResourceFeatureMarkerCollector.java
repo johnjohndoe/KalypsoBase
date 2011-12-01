@@ -76,7 +76,7 @@ public class ResourceFeatureMarkerCollector implements IFeatureMarkerCollector
   @Override
   public void createMarker( final Feature feature, final IPropertyType property, final boolean isSevere, final String message, final String location, final String resolutionPluginId, final Object[] resolutionMarkers ) throws CoreException
   {
-    final String debugMsg = Messages.getString( "org.kalypso.ogc.gml.util.ResourceFeatureMarkerCollector.0", feature.getId(), property == null ? "null" //$NON-NLS-1$ //$NON-NLS-2$
+    final String debugMsg =  Messages.getString("org.kalypso.ogc.gml.util.ResourceFeatureMarkerCollector.0", feature.getId(), property == null ? "null" //$NON-NLS-1$ //$NON-NLS-2$
         : property.getQName().toString(), isSevere, message, location );
     System.out.println( debugMsg );
 
@@ -86,7 +86,7 @@ public class ResourceFeatureMarkerCollector implements IFeatureMarkerCollector
     // pointPos=%d", isSevere, message, location, pointPos );
     // System.out.println( debugMsg );
     // }
-    //
+    //    
     // final String resSerialised = m_xstream.toXML( resolutionMarkers );
 
     if( m_resource != null )

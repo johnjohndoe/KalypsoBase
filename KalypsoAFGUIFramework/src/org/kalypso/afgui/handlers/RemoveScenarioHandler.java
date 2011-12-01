@@ -74,7 +74,7 @@ public class RemoveScenarioHandler extends AbstractHandler
               MessageDialog.openInformation( shell, Messages.getString( "org.kalypso.afgui.handlers.RemoveScenarioHandler.4" ), Messages.getString( "org.kalypso.afgui.handlers.RemoveScenarioHandler.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
               return Status.CANCEL_STATUS;
             }
-            else if( MessageDialog.openConfirm( shell, Messages.getString( "org.kalypso.afgui.handlers.RemoveScenarioHandler.7" ), Messages.getString( "org.kalypso.afgui.handlers.RemoveScenarioHandler.8" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
+            else if( MessageDialog.openConfirm( shell, Messages.getString("org.kalypso.afgui.handlers.RemoveScenarioHandler.7"), Messages.getString("org.kalypso.afgui.handlers.RemoveScenarioHandler.8") ) ) //$NON-NLS-1$ //$NON-NLS-2$
             {
               final UIJob runnable = new UIJob( shell.getDisplay(), Messages.getString( "org.kalypso.afgui.handlers.RemoveScenarioHandler.6" ) ) //$NON-NLS-1$
               {

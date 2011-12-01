@@ -244,7 +244,7 @@ public class Interval
   {
     switch( matrix )
     {
-    // REMARK: not using getters for start/end as cloning the calendars is a performance hot spot of this class.
+      // REMARK: not using getters for start/end as cloning the calendars is a performance hot spot of this class.
 
       case STATUS_INTERSECTION_START:
         return new Interval( m_start, other.m_end );
@@ -290,6 +290,7 @@ public class Interval
 
     m_sources = mergeSources( sourceInterval );
   }
+
 
   private double calcFactorIntersect( final Interval other, final MODE mode )
   {
@@ -358,6 +359,7 @@ public class Interval
 
     if( isSame( other ) )
       return otherSources;
+
 
     for( int i = 0; i < otherSources.length; i++ )
       mergedSources[i] = IntervalSourceHandler.mergeSourceReference( m_sources[i], otherSources[i] );

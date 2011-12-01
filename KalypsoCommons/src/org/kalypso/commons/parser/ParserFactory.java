@@ -89,7 +89,7 @@ public class ParserFactory
       args[0] = formatSpec;
     }
 
-    return (IParser) m_objFactory.getObjectInstance( type, IParser.class, args );
+    return (IParser)m_objFactory.getObjectInstance( type, IParser.class, args );
   }
 
   /**

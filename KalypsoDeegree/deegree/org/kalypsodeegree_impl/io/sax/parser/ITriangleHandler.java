@@ -48,5 +48,5 @@ import org.kalypsodeegree.model.geometry.GM_Triangle;
  */
 public interface ITriangleHandler extends IGMLElementHandler<GM_Triangle>
 {
-
+  
 }

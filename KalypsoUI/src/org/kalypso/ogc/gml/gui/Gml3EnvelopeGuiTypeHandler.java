@@ -65,7 +65,6 @@ import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypso.template.featureview.Text;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -142,22 +141,30 @@ public class Gml3EnvelopeGuiTypeHandler extends LabelProvider implements IGuiTyp
     return factory.createComposite( composite );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureModifier(org.kalypso.gmlschema.property.IPropertyType,
+   *      org.kalypso.ogc.gml.selection.IFeatureSelectionManager,
+   *      org.kalypso.ogc.gml.featureview.IFeatureChangeListener, java.lang.String)
+   */
   @Override
-  public IFeatureModifier createFeatureModifier( final GMLXPath propertyPath, final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format )
+  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format )
   {
     // if we get a ClassCastExxception here, something is very wrong
     final IValuePropertyType vpt = (IValuePropertyType) ftp;
 
-    final Class< ? > valueClass = getValueClass();
+    final Class valueClass = getValueClass();
 
     if( Boolean.class == valueClass )
-      return new BooleanModifier( propertyPath, vpt );
+      return new BooleanModifier( vpt );
 
-    return new StringModifier( propertyPath, vpt, format );
+    return new StringModifier( vpt, format );
   }
 
+  /**
+   * @see org.kalypso.gmlschema.types.ITypeHandler#getValueClass()
+   */
   @Override
-  public Class< ? > getValueClass( )
+  public Class getValueClass( )
   {
     return GM_Envelope.class;
   }

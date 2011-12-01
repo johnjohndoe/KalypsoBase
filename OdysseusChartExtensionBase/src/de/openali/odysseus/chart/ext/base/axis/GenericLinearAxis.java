@@ -1,12 +1,13 @@
 package de.openali.odysseus.chart.ext.base.axis;
 
 import de.openali.odysseus.chart.ext.base.axisrenderer.AxisRendererConfig;
-import de.openali.odysseus.chart.ext.base.axisrenderer.ExtendedAxisRenderer;
+import de.openali.odysseus.chart.ext.base.axisrenderer.GenericAxisRenderer;
 import de.openali.odysseus.chart.ext.base.axisrenderer.GenericNumberTickCalculator;
 import de.openali.odysseus.chart.ext.base.axisrenderer.NumberLabelCreator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
+import de.openali.odysseus.chart.framework.util.ChartUtilities;
 
 /**
  * logical and numerical range are identical;
@@ -18,17 +19,17 @@ public class GenericLinearAxis extends AbstractAxis
 
   public GenericLinearAxis( final String id, final POSITION pos )
   {
-    super( id, pos, Number.class, new ExtendedAxisRenderer( id + "_RENDERER", pos, new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), new AxisRendererConfig() ) );//$NON-NLS-1$ //$NON-NLS-2$
+    super( id, pos, Number.class, new GenericAxisRenderer( id + "_RENDERER", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), new AxisRendererConfig() ) );//$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public GenericLinearAxis( final String id, final POSITION pos, final AxisRendererConfig config )
   {
-    super( id, pos, Number.class, new ExtendedAxisRenderer( id + "_RENDERER", pos, new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), config ) );//$NON-NLS-1$ //$NON-NLS-2$
+    super( id, pos, Number.class, new GenericAxisRenderer( id + "_RENDERER", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), config ) );//$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public GenericLinearAxis( final String id, final POSITION pos, final Class< ? > clazz )
   {
-    super( id, pos, clazz, new ExtendedAxisRenderer( id + "_RENDERER", pos, new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), new AxisRendererConfig() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( id, pos, clazz, new GenericAxisRenderer( id + "_RENDERER", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), new AxisRendererConfig() ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public GenericLinearAxis( final String id, final POSITION pos, final Class< ? > clazz, final IAxisRenderer renderer )
@@ -57,8 +58,12 @@ public class GenericLinearAxis extends AbstractAxis
   @Override
   public int normalizedToScreen( final double normValue )
   {
+    double myNormValue = normValue;
     final int range = getScreenHeight();
-    return (int) (range * (isInverted() ? 1 - normValue : normValue));
+    if( ChartUtilities.isInverseScreenCoords( this ) )
+      myNormValue = 1 - myNormValue;
+    final int screenValue = (int) (range * myNormValue);
+    return screenValue;
   }
 
   public double numericToNormalized( final Number value )
@@ -92,7 +97,10 @@ public class GenericLinearAxis extends AbstractAxis
     if( range == 0 )
       return 0;
     final double normValue = (double) screenValue / range;
-    return isInverted() ? 1 - normValue : normValue;
+    if( ChartUtilities.isInverseScreenCoords( this ) )
+      return 1 - normValue;
+
+    return normValue;
   }
 
   /**

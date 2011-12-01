@@ -30,7 +30,7 @@ import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.featureview.Featuretemplate.Layer;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;
 
-import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
+import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 
 /**
  * Loads a template file in the current feature view. Requires that the current context contains the feature view. Use a
@@ -67,7 +67,7 @@ public class FeatureViewInputContextHandler extends AbstractHandler
     m_gmlPath = properties.getProperty( PARAM_GML, null );
     m_viewTitle = properties.getProperty( PARAM_VIEW_TITLE, null );
 
-    Assert.isTrue( m_featureViewInput != null || m_gmlPath != null, Messages.getString( "org.kalypso.afgui.handlers.FeatureViewInputContextHandler.2" ) ); //$NON-NLS-1$
+    Assert.isTrue( m_featureViewInput != null || m_gmlPath != null, Messages.getString("org.kalypso.afgui.handlers.FeatureViewInputContextHandler.2") ); //$NON-NLS-1$
   }
 
   /**
@@ -78,7 +78,7 @@ public class FeatureViewInputContextHandler extends AbstractHandler
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
-    final IFolder szenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+    final IFolder szenarioFolder = (IFolder) context.getVariable( CaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
     // TODO: that is strange and probably bug-prone. Why not just use scenario-relative paths for the .gft file?
     final IFolder folder = m_featureViewInput == null ? null : SzenarioDataProvider.findModelContext( szenarioFolder, m_featureViewInput );
     // TODO: directly throw exceptions if something is missing
@@ -93,16 +93,16 @@ public class FeatureViewInputContextHandler extends AbstractHandler
     final IViewPart view = page == null ? null : page.findView( FeatureTemplateView.ID );
 
     if( !(view instanceof FeatureTemplateView) )
-      throw new ExecutionException( Messages.getString( "org.kalypso.afgui.handlers.FeatureViewInputContextHandler.3" ) ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString("org.kalypso.afgui.handlers.FeatureViewInputContextHandler.3") ); //$NON-NLS-1$
 
     final String gmlPath = m_gmlPath;
     if( file == null && gmlPath == null )
-      throw new ExecutionException( Messages.getString( "org.kalypso.afgui.handlers.FeatureViewInputContextHandler.4" ) + m_featureViewInput ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString("org.kalypso.afgui.handlers.FeatureViewInputContextHandler.4") + m_featureViewInput ); //$NON-NLS-1$
 
     final FeatureTemplateView featureView = (FeatureTemplateView) view;
     final String viewTitle = m_viewTitle;
 
-    final UIJob job = new UIJob( Messages.getString( "org.kalypso.afgui.handlers.FeatureViewInputContextHandler.5" ) ) //$NON-NLS-1$
+    final UIJob job = new UIJob( Messages.getString("org.kalypso.afgui.handlers.FeatureViewInputContextHandler.5") ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -116,7 +116,7 @@ public class FeatureViewInputContextHandler extends AbstractHandler
           {
             // if we have a gmlPath we create a pseudo template here
             template = GisTemplateHelper.OF_FEATUREVIEW.createFeaturetemplate();
-            template.setName( Messages.getString( "org.kalypso.afgui.handlers.FeatureViewInputContextHandler.6" ) ); //$NON-NLS-1$
+            template.setName( Messages.getString("org.kalypso.afgui.handlers.FeatureViewInputContextHandler.6") ); //$NON-NLS-1$
             final Layer layer = GisTemplateHelper.OF_FEATUREVIEW.createFeaturetemplateLayer();
             layer.setHref( gmlPath );
             layer.setLinktype( "gml" ); //$NON-NLS-1$

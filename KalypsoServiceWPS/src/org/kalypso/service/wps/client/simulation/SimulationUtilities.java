@@ -76,12 +76,12 @@ public class SimulationUtilities
    * 
    * @return An URL, if the path is an URL (and additionally no file URL), otherwise null.
    */
-  public static URL isURL( final String path )
+  public static URL isURL( String path )
   {
     try
     {
       /* Check if it is an real URL. */
-      final URL url = new URL( path );
+      URL url = new URL( path );
 
       /* If it is a file URL, it is no remote URL. */
       if( url.getProtocol().equals( "file" ) ) //$NON-NLS-1$
@@ -95,7 +95,7 @@ public class SimulationUtilities
 
       return url;
     }
-    catch( final MalformedURLException e )
+    catch( MalformedURLException e )
     {
       /* No need to give feedback on this error, because it was expected, if the path was no real URL. */
     }
@@ -113,9 +113,9 @@ public class SimulationUtilities
    *          The url.
    * @return The contents of the URL as hex string.
    */
-  public static Object toComplexValueContent( final URL url ) throws IOException
+  public static Object toComplexValueContent( URL url ) throws IOException
   {
-    final byte[] bytes = UrlUtilities.toByteArray( url );
+    byte[] bytes = UrlUtilities.toByteArray( url );
     return DatatypeConverter.printHexBinary( bytes );
   }
 
@@ -126,7 +126,7 @@ public class SimulationUtilities
    */
   public static String getDefaultServiceEndpoint( ) throws CoreException
   {
-    final String endPoint = System.getProperty( WPSRequest.SYSTEM_PROP_WPS_ENDPOINT );
+    String endPoint = System.getProperty( WPSRequest.SYSTEM_PROP_WPS_ENDPOINT );
     if( endPoint == null )
       throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationUtilities.7", WPSRequest.SYSTEM_PROP_WPS_ENDPOINT ), null ) ); //$NON-NLS-1$
 
@@ -142,11 +142,11 @@ public class SimulationUtilities
    *          The input of the model data.
    * @return The found input or null, if none is found for that ID.
    */
-  public static Input findInput( final String ID, final List<Input> inputList )
+  public static Input findInput( String ID, List<Input> inputList )
   {
     for( int i = 0; i < inputList.size(); i++ )
     {
-      final Input input = inputList.get( i );
+      Input input = inputList.get( i );
       if( input.getId().equals( ID ) )
         return input;
     }
@@ -163,11 +163,11 @@ public class SimulationUtilities
    *          The output of the model data.
    * @return The found output or null, if none is found for that ID.
    */
-  public static Output findOutput( final String ID, final List<Output> outputList )
+  public static Output findOutput( String ID, List<Output> outputList )
   {
     for( int i = 0; i < outputList.size(); i++ )
     {
-      final Output output = outputList.get( i );
+      Output output = outputList.get( i );
       if( output.getId().equals( ID ) )
         return output;
     }
@@ -180,9 +180,9 @@ public class SimulationUtilities
    * 
    * @return The protocol of the given path or null.
    */
-  public static String getProtocol( final String path )
+  public static String getProtocol( String path )
   {
-    final int index = path.indexOf( ':' );
+    int index = path.indexOf( ':' );
     if( index == -1 )
       return null;
 

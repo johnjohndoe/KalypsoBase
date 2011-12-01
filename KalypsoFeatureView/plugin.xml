@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
+
      <extension
          point="org.eclipse.ui.views">
       <view
@@ -26,17 +27,5 @@
                id="org.kalypso.featureview.saveAsTemplateAction"/>
       </viewContribution>
    </extension>
-   <extension point="org.eclipse.ui.menus">
-      <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.featureview.views.FeatureView">
-         <command commandId="org.kalyso.gml.ui.command.deleteFeature" style="push">
-            <visibleWhen checkEnabled="true"/>
-         </command>
-         <command commandId="org.kalyso.gml.ui.command.featureUp" style="push">
-            <visibleWhen checkEnabled="true"/>
-         </command>
-         <command commandId="org.kalyso.gml.ui.command.featureDown" style="push">
-            <visibleWhen checkEnabled="true"/>
-         </command>
-      </menuContribution>
-   </extension>
+
 </plugin>

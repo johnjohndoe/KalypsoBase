@@ -37,13 +37,12 @@ package org.kalypsodeegree_impl.graphics.sld;
 
 import java.util.Map;
 
-import org.kalypsodeegree.graphics.sld.CssParameter;
 import org.kalypsodeegree.graphics.sld.Drawing;
 import org.kalypsodeegree.graphics.sld.GraphicFill;
 
 /**
- * This is the top level interface of <tt>Fill</tt> and <tt>Stroke</tt> defining the methods <tt>getGraphicFill()</tt>
- * and <tt>getCssParameters()</tt> that are common to both.
+ * This is the top level interface of <tt>Fill</tt> and <tt>Stroke</tt> defining the methods
+ * <tt>getGraphicFill()</tt> and <tt>getCssParameters()</tt> that are common to both.
  * <p>
  * 
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
@@ -52,17 +51,17 @@ import org.kalypsodeegree.graphics.sld.GraphicFill;
  */
 public class Drawing_Impl implements Drawing
 {
-  private GraphicFill m_graphicFill;
+  protected GraphicFill graphicFill = null;
 
-  private final Map<String, CssParameter> m_cssParams;
+  protected Map cssParams = null;
 
   /**
    * Constructs a new instance of <tt>Drawing_Impl</tt>.
    */
-  Drawing_Impl( final Map<String, CssParameter> cssParams, final GraphicFill graphicFill )
+  Drawing_Impl( final Map cssParams, final GraphicFill graphicFill )
   {
-    m_cssParams = cssParams;
-    m_graphicFill = graphicFill;
+    this.cssParams = cssParams;
+    this.graphicFill = graphicFill;
   }
 
   /**
@@ -74,13 +73,20 @@ public class Drawing_Impl implements Drawing
   @Override
   public GraphicFill getGraphicFill( )
   {
-    return m_graphicFill;
+    return graphicFill;
   }
 
+  /**
+   * The GraphicFill element both indicates that a stipple-fill repeated graphic will be used and specifies the fill
+   * graphic.
+   * 
+   * @param graphicFill
+   *            the GraphicFill-Element
+   */
   @Override
   public void setGraphicFill( final GraphicFill graphicFill )
   {
-    m_graphicFill = graphicFill;
+    this.graphicFill = graphicFill;
   }
 
   /**
@@ -92,15 +98,24 @@ public class Drawing_Impl implements Drawing
    * @return the CssParameters
    */
   @Override
-  public Map<String, CssParameter> getCssParameters( )
+  public Map getCssParameters( )
   {
-    return m_cssParams;
+    return cssParams;
   }
 
+  /**
+   * A simple SVG/CSS2 styling parameters are given with the CssParameter element.
+   * <p>
+   * </p>
+   * This method sets CssParameters.
+   * 
+   * @param cssParameters
+   *            the CssParameters
+   */
   @Override
-  public CssParameter getParameter( final String key )
+  public void setCssParameters( final Map cssParameters )
   {
-    return m_cssParams.get( key );
+    this.cssParams = cssParameters;
   }
 
   /**
@@ -109,14 +124,14 @@ public class Drawing_Impl implements Drawing
    * <p>
    * 
    * @param key
-   *          the key of the object to insert
+   *            the key of the object to insert
    * @param value
-   *          the value of the object to insert
+   *            the value of the object to insert
    */
   @Override
-  public void addCssParameter( final String key, final CssParameter value )
+  public void addCssParameter( final Object key, final Object value )
   {
-    m_cssParams.put( key, value );
+    cssParams.put( key, value );
   }
 
   /**
@@ -125,12 +140,12 @@ public class Drawing_Impl implements Drawing
    * This method adds a CssParameter to a given set of CssParameters.
    * 
    * @param key
-   *          the key of the object to remove
+   *            the key of the object to remove
    */
   @Override
-  public void removeCssParameter( final String key )
+  public void removeCssParameter( final Object key )
   {
-    m_cssParams.remove( key );
+    cssParams.remove( key );
   }
 
 }

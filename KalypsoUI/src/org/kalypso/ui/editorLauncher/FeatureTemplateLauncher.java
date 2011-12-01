@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editorLauncher;
 
@@ -77,7 +77,7 @@ public class FeatureTemplateLauncher implements IDefaultTemplateLauncher
    * @see org.kalypso.ui.editorLauncher.IDefaultTemplateLauncher#getFilename()
    */
   @Override
-  public String getFilename( )
+  public String getFilename()
   {
     return "<Standard Feature Editor>.gft"; //$NON-NLS-1$
   }
@@ -86,7 +86,7 @@ public class FeatureTemplateLauncher implements IDefaultTemplateLauncher
    * @see org.kalypso.ui.editorLauncher.IDefaultTemplateLauncher#getEditor()
    */
   @Override
-  public IEditorDescriptor getEditor( )
+  public IEditorDescriptor getEditor()
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IEditorRegistry editorRegistry = workbench.getEditorRegistry();
@@ -107,12 +107,12 @@ public class FeatureTemplateLauncher implements IDefaultTemplateLauncher
       final ObjectFactory factory = new ObjectFactory();
       final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
       final Layer layer = factory.createFeaturetemplateLayer();
-      LayerTypeUtilities.initLayerType( layer, file, null );
+      LayerTypeUtilities.initLayerType( layer, file );
 
       final Featuretemplate featuretemplate = factory.createFeaturetemplate();
       featuretemplate.setLayer( layer );
 
-      final Marshaller marshaller = JaxbUtilities.createMarshaller( jc );
+      final Marshaller marshaller = JaxbUtilities.createMarshaller( jc);
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
       final StringWriter w = new StringWriter();

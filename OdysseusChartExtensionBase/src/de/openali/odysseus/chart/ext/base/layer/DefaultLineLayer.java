@@ -11,11 +11,9 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.ITabularDataContainer;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
-import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
-import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
-import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
  * @author alibu
@@ -23,14 +21,9 @@ import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 public class DefaultLineLayer extends AbstractLineLayer
 {
 
-  private final ITabularDataContainer< ? , ? > m_dataContainer;
-  public DefaultLineLayer( final ILayerProvider provider, final ITabularDataContainer< ? , ? > data, final IStyleSet styleSet )
-  {
-    super( provider,styleSet );
-    m_dataContainer = data;
+  private final ITabularDataContainer m_dataContainer;
 
-  }
-  public DefaultLineLayer( final ILayerProvider provider, final ITabularDataContainer< ? , ? > data, final ILineStyle lineStyle, final IPointStyle pointStyle )
+  public DefaultLineLayer( final ILayerProvider provider, final ITabularDataContainer data, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
     super( provider, lineStyle, pointStyle );
     m_dataContainer = data;
@@ -43,39 +36,80 @@ public class DefaultLineLayer extends AbstractLineLayer
   @Override
   public void paint( final GC gc )
   {
-    final ITabularDataContainer< ? , ? > dataContainer = getDataContainer();
-    if( dataContainer == null )
+    final ITabularDataContainer dataContainer = getDataContainer();
+    if( dataContainer != null )
     {
-      Logger.logWarning( Logger.TOPIC_LOG_GENERAL, "Layer " + getIdentifier() + "is unable to open data." );
-      return;
-    }
-    dataContainer.open();
+      dataContainer.open();
 
-    final Object[] domainData = dataContainer.getDomainValues();
-    final Object[] targetData = dataContainer.getTargetValues();
+      final Object[] domainData = dataContainer.getDomainValues();
+      final Object[] targetData = dataContainer.getTargetValues();
 
-    if( domainData.length > 0 )
-    {
-      final IDataRange<Number> dr = getDomainAxis().getNumericRange();
-      final Number max = dr.getMax();
-      final Number min = dr.getMin();
-      final ICoordinateMapper coordinateMapper = getCoordinateMapper();
-      final int screenMin = coordinateMapper.numericToScreen( min, 0 ).x;
-      final int screenMax = coordinateMapper.numericToScreen( max, 0 ).x;
-      final ArrayList<Point> path = new ArrayList<Point>();
-      for( int i = 0; i < domainData.length; i++ )
+      if( domainData.length > 0 )
       {
-        final Object domVal = domainData[i];
-        final Object targetVal = targetData[i];
-        final Point screen = getCoordinateMapper().logicalToScreen( domVal, targetVal );
-        if( screen.x > screenMin && screen.x < screenMax )
-          path.add( screen );
+
+        final IDataOperator dopDomain = getDomainAxis().getDataOperator( domainData[0].getClass() );
+        final IDataRange<Number> dr = getDomainAxis().getNumericRange();
+        final IDataOperator dopTarget = getTargetAxis().getDataOperator( targetData[0].getClass() );
+
+        final Number max = dr.getMax();
+        final Number min = dr.getMin();
+
+        final ArrayList<Point> path = new ArrayList<Point>();
+
+        final ORIENTATION ori = getDomainAxis().getPosition().getOrientation();
+        for( int i = 0; i < domainData.length; i++ )
+        {
+          // nur zeichnen, wenn linie innerhalb des Sichtbarkeitsintervalls liegt
+          boolean setPoint = false;
+          final Object domVal = domainData[i];
+
+          if( dopDomain.logicalToNumeric( domVal ).doubleValue() > min.doubleValue() && dopDomain.logicalToNumeric( domVal ).doubleValue() < max.doubleValue() )
+          {
+            setPoint = true;
+          }
+          else if( dopDomain.logicalToNumeric( domVal ).doubleValue() < min.doubleValue() && i < domainData.length - 1 )
+          {
+            final Object next = domainData[i + 1];
+            if( dopDomain.logicalToNumeric( next ).doubleValue() > min.doubleValue() )
+            {
+              setPoint = true;
+            }
+          }
+          else if( dopDomain.logicalToNumeric( domVal ).doubleValue() > max.doubleValue() && i > 0 )
+          {
+            final Object prev = domainData[i - 1];
+            if( dopDomain.logicalToNumeric( prev ).doubleValue() < max.doubleValue() )
+            {
+              setPoint = true;
+            }
+
+          }
+
+          if( setPoint )
+          {
+            final Object targetVal = targetData[i];
+            final int domScreen = getDomainAxis().numericToScreen( dopDomain.logicalToNumeric( domVal ) );
+            final int valScreen = getTargetAxis().numericToScreen( dopTarget.logicalToNumeric( targetVal ) );
+            // Koordinaten switchen
+            final Point unswitched = new Point( domScreen, valScreen );
+            path.add( new Point( ori.getX( unswitched ), ori.getY( unswitched ) ) );
+          }
+        }
+        drawLine( gc, path );
+        drawPoints( gc, path );
       }
-      paint( gc, path.toArray( new Point[] {} ) );
+      else
+      {
+        Logger.logWarning( Logger.TOPIC_LOG_GENERAL, "Layer " + getIdentifier() + " has no data to draw." );
+      }
+    }
+    else
+    {
+      Logger.logWarning( Logger.TOPIC_LOG_GENERAL, "Layer " + getIdentifier() + " has not yet been opened" );
     }
   }
 
-  protected ITabularDataContainer< ? , ? > getDataContainer( )
+  protected ITabularDataContainer getDataContainer( )
   {
     return m_dataContainer;
   }
@@ -84,14 +118,12 @@ public class DefaultLineLayer extends AbstractLineLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
   @Override
-  public IDataRange< ? > getDomainRange( )
+  @SuppressWarnings("unchecked")
+  public IDataRange<Number> getDomainRange( )
   {
-
     final IDataRange domainRange = m_dataContainer.getDomainRange();
-    if( domainRange == null )
-      return null;
     final Object max = domainRange.getMax();
-    final IDataOperator dop = new DataOperatorHelper().getDataOperator( getDomainAxis().getDataClass() );
+    final IDataOperator dop = getDomainAxis().getDataOperator( max.getClass() );
     return new DataRange<Number>( dop.logicalToNumeric( domainRange.getMin() ), dop.logicalToNumeric( domainRange.getMax() ) );
   }
 
@@ -99,14 +131,12 @@ public class DefaultLineLayer extends AbstractLineLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  @SuppressWarnings("unchecked")
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
-
     final IDataRange targetRange = m_dataContainer.getTargetRange();
-    if( targetRange == null )
-      return null;
     final Object max = targetRange.getMax();
-    final IDataOperator top = new DataOperatorHelper().getDataOperator( getTargetAxis().getDataClass() );
+    final IDataOperator top = getTargetAxis().getDataOperator( max.getClass() );
     return new DataRange<Number>( top.logicalToNumeric( targetRange.getMin() ), top.logicalToNumeric( targetRange.getMax() ) );
   }
 

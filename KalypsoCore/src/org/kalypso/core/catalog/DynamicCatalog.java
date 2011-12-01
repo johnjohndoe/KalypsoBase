@@ -510,9 +510,9 @@ public class DynamicCatalog implements ICatalog
             {
               final DelegateURI delegateURI = (DelegateURI) item;
               final String uriStartString = delegateURI.getUriStartString();
-              if( systemID != null && systemID.startsWith( uriStartString ) //
+              if( (systemID != null && systemID.startsWith( uriStartString )) //
                   || //
-                  publicID != null && publicID.startsWith( uriStartString ) )
+                  (publicID != null && publicID.startsWith( uriStartString )) )
               {
                 final String catalogHref = delegateURI.getCatalog();
                 collector = internResolveDelegate( catalogHref, systemID, publicID, collector, doCollectURN, supportPattern, resolveContext );

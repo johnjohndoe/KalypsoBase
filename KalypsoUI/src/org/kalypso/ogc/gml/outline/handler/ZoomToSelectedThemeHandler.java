@@ -39,7 +39,6 @@
  *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline.handler;
-
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -72,12 +71,12 @@ public class ZoomToSelectedThemeHandler extends AbstractHandler
     final IKalypsoTheme[] selectedThemes = MapHandlerUtils.getSelectedThemes( selection );
 
     if( selectedThemes.length == 0 )
-      throw new ExecutionException( Messages.getString( "org.kalypso.ogc.gml.outline.ZoomToSelectedThemeHandler.2" ) ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.outline.ZoomToSelectedThemeHandler.2") ); //$NON-NLS-1$
 
     final GM_Envelope zoomBox = MapModellHelper.calculateExtent( selectedThemes, null );
     if( zoomBox == null )
     {
-      MessageDialog.openWarning( shell, Messages.getString( "org.kalypso.ogc.gml.outline.ZoomToSelectedThemeHandler.1" ), Messages.getString( "org.kalypso.ogc.gml.outline.ZoomToSelectedLayer.0" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      MessageDialog.openWarning( shell, Messages.getString("org.kalypso.ogc.gml.outline.ZoomToSelectedThemeHandler.1"), Messages.getString( "org.kalypso.ogc.gml.outline.ZoomToSelectedLayer.0" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return null;
     }
 

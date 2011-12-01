@@ -10,6 +10,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Transform;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
@@ -19,38 +20,13 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATI
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
-import de.openali.odysseus.chart.framework.util.ChartUtilities;
 import de.openali.odysseus.chart.framework.util.InsetsHelper;
-import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
  * @author burtscher
  */
 public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 {
-
-  /**
-   * @see de.openali.odysseus.chart.ext.base.axisrenderer.AbstractGenericAxisRenderer#getLabelInsets()
-   */
-  @Override
-  public Insets getLabelInsets( )
-  {
-
-    if( super.getLabelInsets() == null )
-      return getAxisConfig().labelInsets;
-    return super.getLabelInsets();
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.ext.base.axisrenderer.AbstractGenericAxisRenderer#getTickLabelInsets()
-   */
-  @Override
-  public Insets getTickLabelInsets( )
-  {
-    if( super.getTickLabelInsets() == null )
-      return getAxisConfig().tickLabelInsets;
-    return super.getTickLabelInsets();
-  }
 
   private ITickCalculator m_tickCalculator;
 
@@ -66,36 +42,12 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 
   public GenericAxisRenderer( final String id, final ILabelCreator labelCreator, final ITickCalculator tickCalculator, final AxisRendererConfig config )
   {
-    this( id, config.tickLength, config.tickLabelInsets, config.labelInsets, config.axisInsets.top, labelCreator, tickCalculator, config.minTickInterval, config.hideCut, config.fixedWidth, config.axisLineStyle, config.labelStyle, config.tickLineStyle, config.tickLabelStyle, config.labelPosition );
+    this( id, config.tickLength, config.tickLabelInsets, config.labelInsets, config.gap, labelCreator, tickCalculator, config.minTickInterval, config.hideCut, config.fixedWidth, config.axisLineStyle, config.labelStyle, config.tickLineStyle, config.tickLabelStyle, config.labelPosition );
   }
 
   public GenericAxisRenderer( final String id, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, final ILabelCreator labelCreator, final ITickCalculator tickCalculator, final Number minTickInterval, final boolean hideCut, final int fixedWidth, final ILineStyle axisLineStyle, final ITextStyle labelStyle, final ILineStyle tickLineStyle, final ITextStyle tickLabelStyle, final ALIGNMENT labelPosition )
   {
     this( id, tickLength, tickLabelInsets, labelInsets, gap, labelCreator, tickCalculator, minTickInterval, hideCut, fixedWidth, axisLineStyle, labelStyle, tickLineStyle, tickLabelStyle, 0, labelPosition );
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.ext.base.axisrenderer.AbstractGenericAxisRenderer#getLineStyle()
-   */
-  @Override
-  public ILineStyle getLineStyle( )
-  {
-    final ILineStyle lineStyle = super.getLineStyle();
-    if( lineStyle != null )
-      return lineStyle;
-    return StyleUtils.getDefaultLineStyle();
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.ext.base.axisrenderer.AbstractGenericAxisRenderer#getTickLineStyle()
-   */
-  @Override
-  public ILineStyle getTickLineStyle( )
-  {
-    final ILineStyle lineStyle = super.getTickLineStyle();
-    if( lineStyle != null )
-      return lineStyle;
-    return StyleUtils.getDefaultLineStyle();
   }
 
   /**
@@ -127,28 +79,6 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     setHideCut( hideCut );
     setFixedWidth( fixedWidth );
     setLabelPosition( labelPosition );
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.ext.base.axisrenderer.AbstractGenericAxisRenderer#getLabelStyle()
-   */
-  @Override
-  public ITextStyle getLabelStyle( )
-  {
-    final ITextStyle textStyle = super.getLabelStyle();
-    if( textStyle != null )
-      return textStyle;
-    return StyleUtils.getDefaultTextStyle();
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.ext.base.axisrenderer.AbstractGenericAxisRenderer#getTickLabelStyle()
-   */
-  @Override
-  public ITextStyle getTickLabelStyle( )
-  {
-    // TODO Auto-generated method stub
-    return super.getTickLabelStyle();
   }
 
   public Point calcTickLabelSize( final GC gc, final IAxis axis )
@@ -303,7 +233,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
   private void drawTicks( final GC gc, final IAxis axis, final int startX, final int startY, final Number[] ticks, final int offset )
   {
 
-    if( gc == null || axis == null || ticks == null || ticks.length < 1 )
+    if( (gc == null) || (axis == null) || (ticks == null) || ticks.length < 1 )
       return;
 
     final int tickLength = getTickLength();
@@ -321,7 +251,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 
     final ITextStyle tickLabelStyle = getTickLabelStyle();
     final ILineStyle tickLineStyle = getTickLineStyle();
-    final int tickScreenDistance = (screenMax - screenMin) / ticks.length == 1 ? 1 : ticks.length - 1;
+    final int tickScreenDistance = (screenMax - screenMin) / ticks.length == 1 ? 1 : (ticks.length - 1);
 
     for( int i = 0; i < ticks.length; i++ )
     {
@@ -347,7 +277,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
         x2 = x1;
         y1 = startY;
         // textX = tickPos- labelSize.x / 2 + offset;
-        textX = (int) (tickPos - Math.round( labelSize.x * m_labelPosition.doubleValue() ) + offset);
+        textX = tickPos - getLabelPosition( labelSize.x, tickScreenDistance, m_labelPosition ) + offset;
         // BOTTOM
         if( axis.getPosition() == POSITION.BOTTOM )
         {
@@ -363,7 +293,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
         // Nicht zeichnen, wenn 1. Text abgeschnitten & hideCut angegeben oder 2. Tick ausserhalb der AxisRange
         if( x1 < screenMin + offset || x1 > screenMax + offset )
           drawTick = false;
-        if( (m_hideCut || !drawTick) && (textX < screenMin || textX + labelSize.x > screenMax) )
+        if( (m_hideCut||!drawTick) && ((textX < screenMin) || ((textX + labelSize.x) > screenMax)) )
           drawTickLabel = false;
       }
       // VERTICAL
@@ -373,7 +303,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
         y1 = tickPos + offset;
         y2 = y1;
         // textY = tickPos - labelSize.y / 2 + offset;
-        textY = (int) (y1 - Math.round( labelSize.y * m_labelPosition.doubleValue() ));
+        textY = y1 - getLabelPosition( labelSize.y, tickScreenDistance, m_labelPosition );
 
         // LEFT
         if( axis.getPosition() == POSITION.LEFT )
@@ -393,7 +323,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 // drawTick = false;
         if( y1 < screenMin + offset || y1 > screenMax + offset )
           drawTick = false;
-        if( (m_hideCut || !drawTick) && (textY < screenMin || textY + labelSize.y > screenMax) )
+        if( (m_hideCut||!drawTick) && ((textY < screenMin) || ((textY + labelSize.y) > screenMax)) )
           drawTickLabel = false;
 
       }
@@ -439,7 +369,8 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 
     // Testutensilien erzeugen
 
-    final Display dev = ChartUtilities.getDisplay();
+    final Display dev = PlatformUI.getWorkbench().getDisplay();
+// final Display dev = Display.getCurrent();
     final Image img = new Image( dev, 1, 1 );
     final GC gc = new GC( img );
 
@@ -493,7 +424,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     return m_fixedWidth;
   }
 
-  protected ILabelCreator getLabelCreator( )
+  public ILabelCreator getLabelCreator( )
   {
     return m_labelCreator;
   }
@@ -503,23 +434,23 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     return m_labelPosition;
   }
 
-// final int getLabelPosition( final int labelWidth, final ALIGNMENT labelPosition )
-// {
-// switch( labelPosition )
-// {
-// case LEFT:
-// return labelWidth;
-// case RIGHT:
-// return 0;
-// case TOP:
-// return 0;
-// case BOTTOM:
-// return labelWidth;
-// case CENTER:
-// return labelWidth / 2;
-// }
-// throw new IllegalArgumentException( labelPosition.name() );
-// }
+  final int getLabelPosition( final int labelWidth, final int tickScreenDistance, final ALIGNMENT labelPosition )
+  {
+    switch( labelPosition )
+    {
+      case LEFT:
+        return labelWidth;
+      case RIGHT:
+        return 0;
+      case CENTERED_HORIZONTAL:
+        return labelWidth / 2;
+      case INTERVALL_CENTERED:
+        return (labelWidth - tickScreenDistance) / 2;
+      case TICK_CENTERED:
+        return labelWidth / 2;
+    }
+    throw new IllegalArgumentException( labelPosition.name() );
+  }
 
   public Number getMinTickInterval( )
   {
@@ -534,7 +465,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     return p;
   }
 
-  protected ITickCalculator getTickCalculator( )
+  public ITickCalculator getTickCalculator( )
   {
     return m_tickCalculator;
   }
@@ -555,7 +486,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
   @Override
   public void paint( final GC gc, final IAxis axis, final Rectangle screen )
   {
-    if( screen.width > 0 && screen.height > 0 && axis.isVisible() )
+    if( (screen.width > 0) && (screen.height > 0) && axis.isVisible() )
     {
 
       gc.setBackground( gc.getDevice().getSystemColor( SWT.COLOR_GRAY ) );
@@ -563,7 +494,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 
       // draw axis line
       final int[] coords = createAxisSegment( axis, screen );
-      assert coords != null && coords.length == 4;
+      assert (coords != null) && (coords.length == 4);
       drawAxisLine( gc, coords[0], coords[1], coords[2], coords[3] );
 
       int offset = 0;

@@ -46,7 +46,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.StringTokenizer;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.IStatus;
@@ -56,11 +55,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
-import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
@@ -94,7 +91,7 @@ public class PasteFromClipboardHandler extends AbstractHandler
     String trstring = null;
     try
     {
-      trstring = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getContents( this ).getTransferData( DataFlavor.stringFlavor );
+      trstring = (String) (Toolkit.getDefaultToolkit().getSystemClipboard().getContents( this ).getTransferData( DataFlavor.stringFlavor ));
       // if clipboard content is not text or that content is empty, pop error message
       if( trstring == null || trstring.trim().length() == 0 )
       {
@@ -150,71 +147,67 @@ public class PasteFromClipboardHandler extends AbstractHandler
   private IRecord[] parseRecords( final Shell shell, final String trstring, final TupleResult tupleResult, final IComponent[] components, final XsdBaseTypeHandler< ? >[] typeHandlers, final TupleResultContentProvider contentProvider )
   {
     final Collection<IRecord> records = new ArrayList<IRecord>();
-    final IStatusCollector stati = new StatusCollector( KalypsoGisPlugin.getId() );
+    final Collection<IStatus> stati = new ArrayList<IStatus>();
 
     final StringTokenizer st1 = new StringTokenizer( trstring, "\n" ); //$NON-NLS-1$
     int ordinalNumber = 0;
     while( st1.hasMoreTokens() )
     {
-      final String line = st1.nextToken();
-      if( line.startsWith( LastLineLabelProvider.DUMMY_ELEMENT_TEXT ) )
+      final String nextToken = st1.nextToken();
+      if( nextToken.startsWith( LastLineLabelProvider.DUMMY_ELEMENT_TEXT ) )
         break;
 
       ++ordinalNumber;
 
-      addRecord( tupleResult, records, components, typeHandlers, ordinalNumber, line, contentProvider, stati );
+      final IRecord record = tupleResult.createRecord();
+
+      // Prepare for parse exception: fill row with default values
+      for( int i = 0; i < components.length; i++ )
+      {
+        final XsdBaseTypeHandler< ? > handler = typeHandlers[i];
+        final IComponent component = components[i];
+        if( component.getId().equals( "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#OrdinalNumber" ) ) //$NON-NLS-1$
+          record.setValue( i, handler.convertToJavaValue( new Integer( ordinalNumber ).toString() ) );
+        else
+          record.setValue( i, component.getDefaultValue() );
+      }
+
+      // directly add record: we may get empty lines when parsing fails, but better than nothing
+      records.add( record );
+
+      final StringTokenizer st2 = new StringTokenizer( nextToken, "\t" ); //$NON-NLS-1$
+      for( int i = 0; st2.hasMoreTokens(); i++ )
+      {
+        final String token = st2.nextToken();
+
+        try
+        {
+          final IComponentUiHandler compHandler = contentProvider.getHandler( "" + i ); //$NON-NLS-1$
+          if( compHandler != null )
+            compHandler.setValue( record, compHandler.parseValue( token ) );
+        }
+        catch( final Exception e )
+        {
+          final String msg =  Messages.getString("org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.8", ordinalNumber, e.getLocalizedMessage() ); //$NON-NLS-1$
+          final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, msg, e );
+          stati.add( status );
+        }
+      }
     }
 
     // TODO: move error handling out of this method
     if( stati.size() > 0 )
     {
       final IStatus[] array = stati.toArray( new IStatus[stati.size()] );
-      final MultiStatus multiStatus = new MultiStatus( KalypsoGisPlugin.getId(), -1, array, Messages.getString( "org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.6" ), null ); //$NON-NLS-1$
+      final MultiStatus multiStatus = new MultiStatus( KalypsoGisPlugin.getId(), -1, array, Messages.getString("org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.6"), null ); //$NON-NLS-1$
       if( !multiStatus.isOK() )
       {
-        final int open = new StatusDialog( shell, multiStatus, Messages.getString( "org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.7" ), new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0 ).open(); //$NON-NLS-1$
-        if( open != Window.OK )
+        final int open = new StatusDialog( shell, multiStatus, Messages.getString("org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.7"), new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0 ).open(); //$NON-NLS-1$
+        if( open != StatusDialog.OK )
           return null;
       }
     }
 
     return records.toArray( new IRecord[records.size()] );
-  }
-
-  private void addRecord( final TupleResult tupleResult, final Collection<IRecord> records, final IComponent[] components, final XsdBaseTypeHandler< ? >[] typeHandlers, final int ordinalNumber, final String line, final TupleResultContentProvider contentProvider, final IStatusCollector stati )
-  {
-    final IRecord record = tupleResult.createRecord();
-
-    // Prepare for parse exception: fill row with default values
-    for( int i = 0; i < components.length; i++ )
-    {
-      final XsdBaseTypeHandler< ? > handler = typeHandlers[i];
-      final IComponent component = components[i];
-      // FIXME: arrg: this is really, really bad, whoever did that.... grrrrr.... just causing work to other people....!
-      if( component.getId().equals( "urn:ogc:gml:dict:kalypso:model:1d2d:timeserie:components#OrdinalNumber" ) ) //$NON-NLS-1$
-        record.setValue( i, handler.convertToJavaValue( new Integer( ordinalNumber ).toString() ) );
-      else
-        record.setValue( i, component.getDefaultValue() );
-    }
-
-    // directly add record: we may get empty lines when parsing fails, but better than nothing
-    records.add( record );
-
-    final String[] tokens = StringUtils.split( line, '\t' );
-    for( int j = 0; j < tokens.length; j++ )
-    {
-      final String token = tokens[j];
-      try
-      {
-        final IComponentUiHandler compHandler = contentProvider.getHandler( "" + j ); //$NON-NLS-1$
-        if( compHandler != null )
-          compHandler.setValue( record, compHandler.parseValue( token ) );
-      }
-      catch( final Exception e )
-      {
-        final String msg = Messages.getString( "org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.8", ordinalNumber, e.getLocalizedMessage() ); //$NON-NLS-1$
-        stati.add( IStatus.ERROR, msg, e );
-      }
-    }
   }
 }

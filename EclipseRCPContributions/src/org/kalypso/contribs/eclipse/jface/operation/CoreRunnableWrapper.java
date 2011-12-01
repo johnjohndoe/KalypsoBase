@@ -50,7 +50,6 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 
 /**
  * This class wraps a {@link ICoreRunnableWithProgress} in a {@link IRunnableWithProgress}.
- * 
  * @author Gernot Belger
  */
 public final class CoreRunnableWrapper implements IRunnableWithProgress

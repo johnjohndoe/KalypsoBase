@@ -199,7 +199,7 @@ public class LineBufferAsPolygon extends FeaturePropertyFunction
       }
       final Object obj = GMLXPathUtilities.query( path, workspace );
 
-      if( obj instanceof Number )
+      if( (obj instanceof Number) )
       {
         final Number widthNumber = (Number) obj;
         widthValue = widthNumber.doubleValue();
@@ -481,7 +481,7 @@ public class LineBufferAsPolygon extends FeaturePropertyFunction
       }
       obj = GMLXPathUtilities.query( path, workspace );
 
-      if( obj instanceof GM_Curve )
+      if( (obj instanceof GM_Curve) )
         polyline = (GM_Curve) obj;
     }
     catch( final GMLXPathException e )

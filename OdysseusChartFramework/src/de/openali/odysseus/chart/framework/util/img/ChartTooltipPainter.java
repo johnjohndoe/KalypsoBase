@@ -49,15 +49,12 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
-import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.FONTSTYLE;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.FONTWEIGHT;
-import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
 import de.openali.odysseus.chart.framework.model.style.impl.TextStyle;
-import de.openali.odysseus.chart.framework.util.ChartUtilities;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
@@ -78,17 +75,12 @@ public class ChartTooltipPainter
     titleType.setInsets( new Insets( 2, 2, 2, 2 ) );
     titleType.setRotation( 0 );
     final FontData fontData = JFaceResources.getTextFont().getFontData()[0];
-    final Display display = ChartUtilities.getDisplay();
-    final RGB rgbFill = display.getSystemColor( SWT.COLOR_INFO_BACKGROUND ).getRGB();
-    final RGB rgbText = display.getSystemColor( SWT.COLOR_INFO_FOREGROUND ).getRGB();
+    final RGB rgbFill = PlatformUI.getWorkbench().getDisplay().getSystemColor( SWT.COLOR_INFO_BACKGROUND ).getRGB();
+    final RGB rgbText = PlatformUI.getWorkbench().getDisplay().getSystemColor( SWT.COLOR_INFO_FOREGROUND ).getRGB();
     titleType.setTextStyle( new TextStyle( fontData.getHeight(), fontData.getName(), rgbText, rgbFill, FONTSTYLE.NORMAL, FONTWEIGHT.NORMAL, ALIGNMENT.LEFT, 255, true ) );
 
     m_labelRenderer = new GenericChartLabelRenderer( titleType );
-    final IAreaStyle borderStyle = StyleUtils.getDefaultAreaStyle();
-    borderStyle.getStroke().setColor( new RGB( 0, 0, 0 ) );
-    borderStyle.getStroke().setWidth( 1 );
-    borderStyle.setFill( new ColorFill( rgbFill ) );
-    m_labelRenderer.setBorderStyle( borderStyle );
+    m_labelRenderer.setBorderLine( StyleUtils.getDefaultLineStyle() );
   }
 
   public IChartLabelRenderer getLabelRenderer( )
@@ -103,14 +95,14 @@ public class ChartTooltipPainter
   public void paint( final GC gcw, final Point mousePos )
   {
 
-    final Rectangle toolsize = getLabelRenderer().getSize();
-    if( toolsize.width == 0 || toolsize.height == 0 )
+    final Point toolsize = getLabelRenderer().getSize();
+    if( toolsize.x == 0 || toolsize.y == 0 )
       return;
 
     final Rectangle clippRect = gcw.getClipping();
     /*
      * Positionieren der Tooltip-Box: der ideale Platz liegt 3 Pixel rechts über dem Mauszeiger. Wenn rechts nicht
-     * genügend Platz ist, dann wird er nach links verschoben. Der Startpunkt soll dabei immer im sichtbaren Bereich
+     * genï¿½gend Platz ist, dann wird er nach links verschoben. Der Startpunkt soll dabei immer im sichtbaren Bereich
      * liegen.
      */
     ALIGNMENT posX = ALIGNMENT.LEFT;
@@ -118,22 +110,15 @@ public class ChartTooltipPainter
     int offsetX = 3/* Pixel */;
     int offsetY = -3/* Pixel */;
 
-    final boolean mirrorX = toolsize.width + offsetX + mousePos.x > clippRect.x + clippRect.width;
-    final boolean mirrorY = toolsize.height - offsetY - mousePos.y > clippRect.y;
-    if( mirrorX )
+    if( toolsize.x + offsetX + mousePos.x > clippRect.x + clippRect.width )
     {
       posX = ALIGNMENT.RIGHT;
       offsetX = -3;
     }
-    if( mirrorY )
+    if( toolsize.y - offsetY - mousePos.y > clippRect.y )
     {
       posY = ALIGNMENT.TOP;
       offsetY = 3;
-      if( toolsize.width < offsetX + mousePos.x )
-      {
-        posX = ALIGNMENT.RIGHT;
-        offsetX = -3;
-      }
     }
 
     getLabelRenderer().getTitleTypeBean().setTextAnchorX( posX );

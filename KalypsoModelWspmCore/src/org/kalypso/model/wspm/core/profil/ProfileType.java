@@ -47,19 +47,21 @@ package org.kalypso.model.wspm.core.profil;
  */
 public class ProfileType
 {
-  public final String m_id;
+  public final String id;
 
-  public final String m_label;
+  public final String label;
 
-  public final String m_description;
+  public final String description;
 
-  public final IProfilPointPropertyProvider m_pointProvider;
+  public final IProfilPointPropertyProvider pointProvider;
 
+  @SuppressWarnings("hiding") //$NON-NLS-1$
   public ProfileType( final String id, final String label, final String description, final IProfilPointPropertyProvider pointProvider )
   {
-    m_id = id;
-    m_label = label;
-    m_description = description;
-    m_pointProvider = pointProvider;
+    this.id = id;
+    this.label = label;
+    this.description = description;
+    this.pointProvider = pointProvider;
   }
+
 }

@@ -41,7 +41,6 @@
 package org.kalypso.transformation.ui;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -49,7 +48,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.deegree.i18n.Messages;
+import org.kalypso.i18n.Messages;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypso.transformation.crs.ICoordinateSystem;
 
@@ -63,7 +62,7 @@ public class CRSInitializeJob extends Job
   /**
    * The codes of the coordinate systems, to initialize.
    */
-  private final String[] m_codes;
+  private String[] m_codes;
 
   /**
    * A hash of the coordinate systems.
@@ -78,7 +77,7 @@ public class CRSInitializeJob extends Job
    * @param codes
    *          The codes of the coordinate systems, to initialize.
    */
-  public CRSInitializeJob( final String name, final String[] codes )
+  public CRSInitializeJob( String name, String[] codes )
   {
     super( name );
 
@@ -103,7 +102,7 @@ public class CRSInitializeJob extends Job
       monitor.subTask( Messages.getString( "org.kalypso.transformation.ui.CRSInitializeJob.1" ) ); //$NON-NLS-1$
 
       /* This function may take a long time, because it is calling internally another long running function. */
-      final HashMap<String, ICoordinateSystem> coordHash = CRSHelper.getCoordHash( m_codes );
+      HashMap<String, ICoordinateSystem> coordHash = CRSHelper.getCoordHash( m_codes );
 
       /* Monitor. */
       monitor.worked( 50 );
@@ -117,7 +116,7 @@ public class CRSInitializeJob extends Job
 
       return Status.OK_STATUS;
     }
-    catch( final Exception ex )
+    catch( Exception ex )
     {
       return StatusUtilities.statusFromThrowable( ex );
     }
@@ -133,7 +132,7 @@ public class CRSInitializeJob extends Job
    * 
    * @return The hash of the coordinate systems.
    */
-  public Map<String, ICoordinateSystem> getCoordHash( )
+  public HashMap<String, ICoordinateSystem> getCoordHash( )
   {
     return m_coordHash;
   }

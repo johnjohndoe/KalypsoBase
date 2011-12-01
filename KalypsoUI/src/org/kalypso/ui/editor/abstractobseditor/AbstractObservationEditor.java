@@ -67,14 +67,14 @@ import org.kalypso.ogc.sensor.template.PseudoTemplateEditorInput;
 import org.kalypso.ogc.sensor.template.TemplateStorage;
 import org.kalypso.template.obsdiagview.Obsdiagview;
 import org.kalypso.template.obstableview.Obstableview;
-import org.kalypso.ui.editor.AbstractWorkbenchPart;
+import org.kalypso.ui.editor.AbstractEditorPart;
 
 /**
  * AbstractObsEditor
  * 
  * @author schlienger
  */
-public abstract class AbstractObservationEditor extends AbstractWorkbenchPart implements IEditorPart, IObsViewEventListener
+public abstract class AbstractObservationEditor extends AbstractEditorPart implements IEditorPart, IObsViewEventListener
 {
   private final ObsView m_view;
 

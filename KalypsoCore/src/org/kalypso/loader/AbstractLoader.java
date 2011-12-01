@@ -68,6 +68,9 @@ public abstract class AbstractLoader implements ILoader
     m_status = status;
   }
 
+  /**
+   * @see org.kalypso.loader.ILoader#getResources(org.kalypso.core.util.pool.IPoolableObjectType)
+   */
   @Override
   public final IResource[] getResources( final IPoolableObjectType key )
   {
@@ -88,5 +91,5 @@ public abstract class AbstractLoader implements ILoader
     return new IResource[0];
   }
 
-  protected abstract IResource[] getResourcesInternal( final IPoolableObjectType key ) throws MalformedURLException;
+  protected abstract IResource[] getResourcesInternal( final IPoolableObjectType key ) throws MalformedURLException, IllegalArgumentException;
 }

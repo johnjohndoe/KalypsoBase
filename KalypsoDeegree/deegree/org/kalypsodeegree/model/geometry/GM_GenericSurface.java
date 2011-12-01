@@ -36,6 +36,7 @@
 
 package org.kalypsodeegree.model.geometry;
 
+
 /**
  * The interface defines the basis of surfaces and surface patches
  * <p>

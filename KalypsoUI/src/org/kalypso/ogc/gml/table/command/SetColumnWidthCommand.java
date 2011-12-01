@@ -64,14 +64,14 @@ public class SetColumnWidthCommand implements ICommand
     m_tableColumn = tableColumn;
 
     m_newWidth = width;
-    m_oldWidth = ((Integer) tableColumn.getData( LayerTableViewer.COLUMN_PROP_WIDTH )).intValue();
+    m_oldWidth = ( (Integer)tableColumn.getData( LayerTableViewer.COLUMN_PROP_WIDTH ) ).intValue();
   }
 
   /**
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
   @Override
-  public boolean isUndoable( )
+  public boolean isUndoable()
   {
     return true;
   }
@@ -80,7 +80,7 @@ public class SetColumnWidthCommand implements ICommand
    * @see org.kalypso.commons.command.ICommand#process()
    */
   @Override
-  public void process( ) throws Exception
+  public void process() throws Exception
   {
     setWidth( m_newWidth, false );
   }
@@ -89,7 +89,7 @@ public class SetColumnWidthCommand implements ICommand
    * @see org.kalypso.commons.command.ICommand#redo()
    */
   @Override
-  public void redo( ) throws Exception
+  public void redo() throws Exception
   {
     setWidth( m_newWidth, true );
   }
@@ -98,7 +98,7 @@ public class SetColumnWidthCommand implements ICommand
    * @see org.kalypso.commons.command.ICommand#undo()
    */
   @Override
-  public void undo( ) throws Exception
+  public void undo() throws Exception
   {
     setWidth( m_oldWidth, true );
   }
@@ -107,9 +107,9 @@ public class SetColumnWidthCommand implements ICommand
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
   @Override
-  public String getDescription( )
+  public String getDescription()
   {
-    return Messages.getString( "org.kalypso.ogc.gml.table.celleditors.SetColumnWidthCommand.0" ); //$NON-NLS-1$
+    return Messages.getString("org.kalypso.ogc.gml.table.celleditors.SetColumnWidthCommand.0"); //$NON-NLS-1$
   }
 
   private void setWidth( final int width, final boolean bSetControlWidth )
@@ -120,7 +120,7 @@ public class SetColumnWidthCommand implements ICommand
       m_tableColumn.getDisplay().asyncExec( new Runnable()
       {
         @Override
-        public void run( )
+        public void run()
         {
           tableColumn.setData( LayerTableViewer.COLUMN_PROP_WIDTH, new Integer( width ) );
           if( bSetControlWidth )

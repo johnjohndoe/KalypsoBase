@@ -47,7 +47,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
@@ -73,7 +73,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  */
 public abstract class AbstractKalypsoTheme extends PlatformObject implements IKalypsoTheme
 {
-  protected static interface IListenerRunnable
+  private static interface IListenerRunnable
   {
     void visit( final IKalypsoThemeListener l );
   }
@@ -126,8 +126,6 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    */
   private String m_id;
 
-  private GM_Envelope m_activeEnvelope;
-
   /**
    * The constructor.
    * 
@@ -155,7 +153,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * Runns the given runnable on every listener in a safe way.
    */
-  protected void acceptListenersRunnable( final IListenerRunnable r )
+  private void acceptListenersRunnable( final IListenerRunnable r )
   {
     final IKalypsoThemeListener[] listeners = m_listeners.toArray( new IKalypsoThemeListener[m_listeners.size()] );
     for( final IKalypsoThemeListener l : listeners )
@@ -552,7 +550,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    * @see org.kalypso.ogc.gml.IKalypsoTheme#setId(java.lang.String)
    */
   @Override
-  public void setId( final String id )
+  public void setId( String id )
   {
     m_id = id;
   }
@@ -564,15 +562,5 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   public String getId( )
   {
     return m_id;
-  }
-
-  /**
-   * TODO bad idea - handling an envelope from the outside of a theme. must be part of the implementing theme
-   * (encapsulation of classes!)
-   */
-  @Override
-  public void setActiveEnvelope( final GM_Envelope boundingBox )
-  {
-    m_activeEnvelope = boundingBox;
   }
 }

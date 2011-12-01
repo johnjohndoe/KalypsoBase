@@ -49,16 +49,16 @@ import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.model.ZmlTableColumn;
+import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
 public abstract class AbstractValueLabelingStrategy implements IZmlLabelStrategy
 {
-  private final ZmlTableColumn m_column;
+  private final ExtendedZmlTableColumn m_column;
 
-  public AbstractValueLabelingStrategy( final ZmlTableColumn column )
+  public AbstractValueLabelingStrategy( final ExtendedZmlTableColumn column )
   {
     m_column = column;
   }
@@ -92,7 +92,7 @@ public abstract class AbstractValueLabelingStrategy implements IZmlLabelStrategy
     return m_column.getTable();
   }
 
-  protected ZmlTableColumn getColumn( )
+  protected ExtendedZmlTableColumn getColumn( )
   {
     return m_column;
   }

@@ -40,16 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.core.element;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
-import org.kalypso.zml.core.diagram.base.provider.observation.AsynchronousObservationProvider;
-import org.kalypso.zml.core.diagram.base.zml.TSLinkWithName;
 import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.core.provider.observation.AsynchronousObservationProvider;
+import org.kalypso.zml.ui.core.zml.TSLinkWithName;
 import org.kalypso.zml.ui.core.zml.ZmlAxisUtils;
 
 /**

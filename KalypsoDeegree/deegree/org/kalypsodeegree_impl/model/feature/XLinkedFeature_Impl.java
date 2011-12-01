@@ -37,8 +37,8 @@ package org.kalypsodeegree_impl.model.feature;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.deegree.model.spatialschema.GeometryException;
 import org.eclipse.core.runtime.PlatformObject;
 import org.kalypso.gmlschema.annotation.IAnnotation;
@@ -543,6 +543,9 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
     NamedFeatureHelper.setDescription( getFeature(), desc );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getLocation()
+   */
   @Override
   public GM_Object getLocation( )
   {
@@ -553,6 +556,9 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
     return null;
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setLocation(org.kalypsodeegree.model.geometry.GM_Object)
+   */
   @Override
   public void setLocation( final GM_Object location )
   {

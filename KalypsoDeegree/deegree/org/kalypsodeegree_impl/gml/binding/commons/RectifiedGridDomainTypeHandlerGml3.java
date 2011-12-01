@@ -78,7 +78,7 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getClassName()
    */
   @Override
-  public Class< ? > getValueClass( )
+  public Class getValueClass( )
   {
     return RectifiedGridDomain.class;
   }
@@ -109,9 +109,9 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
     final Element e_gridEnvelope = document.createElementNS( NS.GML3, "gml:GridEnvelope" );
     final GridRange gridRange = gridDomain.getGridRange();
     final double[] lows = gridRange.getLow();
-    final String stringLows = new String( new Double( lows[0] ).intValue() + " " + new Double( lows[1] ).intValue() );
+    final String stringLows = new String( (new Double( lows[0] )).intValue() + " " + (new Double( lows[1] )).intValue() );
     final double[] highs = gridRange.getHigh();
-    final String stringHighs = new String( new Double( highs[0] ).intValue() + " " + new Double( highs[1] ).intValue() );
+    final String stringHighs = new String( (new Double( highs[0] )).intValue() + " " + (new Double( highs[1] )).intValue() );
     final Element e_low = document.createElementNS( NS.GML3, "gml:low" );
     e_low.appendChild( document.createTextNode( stringLows ) );
     final Element e_high = document.createElementNS( NS.GML3, "gml:high" );
@@ -266,4 +266,5 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
   {
     return false;
   }
+
 }

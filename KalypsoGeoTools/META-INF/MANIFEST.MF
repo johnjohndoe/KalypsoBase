@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoGeoTools Plug-in
 Bundle-SymbolicName: org.kalypso.geotools;singleton:=true
-Bundle-Version: 11.6.3.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-Version: 10.10.1.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib/geotools-2.7-M2/commons-pool-1.5.4.jar,

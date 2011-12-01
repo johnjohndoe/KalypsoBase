@@ -41,8 +41,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.CssParameter;
@@ -73,8 +71,10 @@ import org.kalypsodeegree_impl.tools.Debug;
  * <li>stroke-arrow-alignment (start | middle | end)
  * <li>stroke-arrow-size
  * <p>
- * <h1>stroke-arrow-type</h1> An Arrow will be placed on a line or its line segments
- * <h1>stroke-arrow-alignment</h1> where on a line or its line segments the arrow will be placed: start, middle, end
+ * <h1>stroke-arrow-type</h1>
+ * An Arrow will be placed on a line or its line segments
+ * <h1>stroke-arrow-alignment</h1>
+ * where on a line or its line segments the arrow will be placed: start, middle, end
  * 
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
@@ -82,7 +82,7 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.graphics.sld.Stroke, Marshallable
 {
-  private GraphicStroke m_graphicStroke = null;
+  private GraphicStroke graphicStroke = null;
 
   private Color color = null;
 
@@ -103,22 +103,19 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    */
   protected Stroke_Impl( )
   {
-    super( new HashMap<String, CssParameter>(), null );
+    super( new HashMap(), null );
   }
 
   /**
    * Constructs a new <tt>Stroke_Impl<tt>.
    * <p>
-   * 
-   * @param cssParams
-   *          keys are <tt>Strings<tt> (see above), values are <tt>CssParameters</tt>
+   * @param cssParams keys are <tt>Strings<tt> (see above), values are
+   *                  <tt>CssParameters</tt>
    */
-  public Stroke_Impl( final Map<String, CssParameter> cssParams, final GraphicStroke graphicStroke, final GraphicFill graphicFill )
+  public Stroke_Impl( final Map cssParams, final GraphicStroke graphicStroke, final GraphicFill graphicFill )
   {
     super( cssParams, graphicFill );
-
-    m_graphicStroke = graphicStroke;
-
+    this.graphicStroke = graphicStroke;
     try
     {
       extractSimpleColor();
@@ -141,7 +138,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    */
   private void extractSimpleColor( ) throws FilterEvaluationException
   {
-    final CssParameter cssParam = getParameter( CSS_STROKE );
+    final CssParameter cssParam = (CssParameter) cssParams.get( "stroke" );
     if( cssParam != null )
     {
       final Object[] o = cssParam.getValue().getComponents();
@@ -165,19 +162,19 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
   }
 
   /**
-   * FIXME: does not belong here<br/>
    * returns true if the passed CssParameter contain a simple value
    */
   private boolean isSimple( final CssParameter cssParam )
   {
+    boolean simple = true;
     final Object[] o = cssParam.getValue().getComponents();
     for( final Object element : o )
-    {
       if( element instanceof Expression )
-        return false;
-    }
-
-    return true;
+      {
+        simple = false;
+        break;
+      }
+    return simple;
   }
 
   /**
@@ -186,7 +183,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    */
   private void extractSimpleOpacity( ) throws FilterEvaluationException
   {
-    final CssParameter cssParam = getParameter( CSS_OPACITY );
+    final CssParameter cssParam = (CssParameter) cssParams.get( "stroke-opacity" );
     if( cssParam != null )
       if( isSimple( cssParam ) )
       {
@@ -200,7 +197,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
           throw new FilterEvaluationException( "Given value for parameter 'stroke-opacity' ('" + o[0] + "') has invalid format!" );
         }
 
-        if( smplOpacity < 0.0 || smplOpacity > 1.0 )
+        if( (smplOpacity < 0.0) || (smplOpacity > 1.0) )
           throw new FilterEvaluationException( "Value for parameter 'stroke-opacity' (given: '" + o[0] + "') must be between 0.0 and 1.0!" );
       }
   }
@@ -211,7 +208,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    */
   private void extractSimpleWidth( ) throws FilterEvaluationException
   {
-    final CssParameter cssParam = getParameter( CSS_WIDTH );
+    final CssParameter cssParam = (CssParameter) cssParams.get( "stroke-width" );
     if( cssParam != null )
       if( isSimple( cssParam ) )
       {
@@ -235,7 +232,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    */
   private void extractSimpleLineJoin( ) throws FilterEvaluationException
   {
-    final CssParameter cssParam = getParameter( CSS_LINEJOIN );
+    final CssParameter cssParam = (CssParameter) cssParams.get( "stroke-linejoin" );
     if( cssParam != null )
       if( isSimple( cssParam ) )
       {
@@ -258,7 +255,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    */
   private void extractSimpleLineCap( ) throws FilterEvaluationException
   {
-    final CssParameter cssParam = getParameter( CSS_LINECAP );
+    final CssParameter cssParam = (CssParameter) cssParams.get( "stroke-linecap" );
     if( cssParam != null )
       if( isSimple( cssParam ) )
       {
@@ -281,49 +278,44 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    */
   private void extractSimpleDasharray( ) throws FilterEvaluationException
   {
-    final CssParameter cssParam = getParameter( CSS_DASHARRAY );
-    if( cssParam == null )
-      return;
-
-    if( !isSimple( cssParam ) )
-      return;
-
-    final Object[] o = cssParam.getValue().getComponents();
-    if( o.length == 0 )
-      return;
-
-    final String value = ((String) o[0]).trim();
-    final StringTokenizer st = new StringTokenizer( value, ",; " );
-    final int count = st.countTokens();
-    float[] dashArray;
-    if( count % 2 == 0 )
-      dashArray = new float[count];
-    else
-      dashArray = new float[count * 2];
-
-    int k = 0;
-    while( st.hasMoreTokens() )
-    {
-      final String s = st.nextToken();
-      try
+    final CssParameter cssParam = (CssParameter) cssParams.get( "stroke-dasharray" );
+    if( cssParam != null )
+      if( isSimple( cssParam ) )
       {
-        dashArray[k++] = Float.parseFloat( s );
-      }
-      catch( final NumberFormatException e )
-      {
-        throw new FilterEvaluationException( "List of values for parameter 'stroke-dashoffset' " + "contains an invalid token: '" + s + "'!" );
-      }
-    }
+        final Object[] o = cssParam.getValue().getComponents();
+        final String value = ((String) o[0]).trim();
+        final StringTokenizer st = new StringTokenizer( value, ",; " );
+        final int count = st.countTokens();
+        float[] dashArray;
 
-    // odd number of values -> the pattern must be repeated twice
-    if( count % 2 == 1 )
-    {
-      int j = 0;
-      while( k < count * 2 )
-        dashArray[k++] = dashArray[j++];
-    }
+        if( (count % 2) == 0 )
+          dashArray = new float[count];
+        else
+          dashArray = new float[count * 2];
 
-    smplDashArray = dashArray;
+        int k = 0;
+        while( st.hasMoreTokens() )
+        {
+          final String s = st.nextToken();
+          try
+          {
+            dashArray[k++] = Float.parseFloat( s );
+          }
+          catch( final NumberFormatException e )
+          {
+            throw new FilterEvaluationException( "List of values for parameter 'stroke-dashoffset' " + "contains an invalid token: '" + s + "'!" );
+          }
+        }
+
+        // odd number of values -> the pattern must be repeated twice
+        if( (count % 2) == 1 )
+        {
+          int j = 0;
+          while( k < count * 2 )
+            dashArray[k++] = dashArray[j++];
+        }
+        smplDashArray = dashArray;
+      }
   }
 
   /**
@@ -332,7 +324,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    */
   private void extractSimpleDashOffset( ) throws FilterEvaluationException
   {
-    final CssParameter cssParam = getParameter( CSS_DASHOFFSET );
+    final CssParameter cssParam = (CssParameter) cssParams.get( "stroke-dashoffset" );
     if( cssParam != null )
       if( isSimple( cssParam ) )
       {
@@ -358,20 +350,20 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
   @Override
   public GraphicStroke getGraphicStroke( )
   {
-    return m_graphicStroke;
+    return graphicStroke;
   }
 
   /**
    * The GraphicStroke element both indicates that a repeated-linear-graphic stroke type will be used.
    * 
    * @param graphicStroke
-   *          the graphicStroke element
-   *          <p>
+   *            the graphicStroke element
+   *            <p>
    */
   @Override
   public void setGraphicStroke( final GraphicStroke graphicStroke )
   {
-    m_graphicStroke = graphicStroke;
+    this.graphicStroke = graphicStroke;
   }
 
   /**
@@ -383,10 +375,10 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
+   *            specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
-   *           if the evaluation fails
+   *             if the evaluation fails
    */
   @Override
   public Color getStroke( final Feature feature ) throws FilterEvaluationException
@@ -396,7 +388,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
     if( color == null )
     {
       // evaluate color depending on the passed feature's properties
-      final CssParameter cssParam = getParameter( CSS_STROKE );
+      final CssParameter cssParam = (CssParameter) cssParams.get( "stroke" );
 
       if( cssParam != null )
       {
@@ -419,16 +411,17 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
   }
 
   /**
-   * @see org.kalypsodeegree_impl.graphics.sld.Stroke_Impl#getStroke(Feature) <p>
+   * @see org.kalypsodeegree_impl.graphics.sld.Stroke_Impl#getStroke(Feature)
+   *      <p>
    * @param stroke
-   *          the stroke to be set
+   *            the stroke to be set
    */
   @Override
   public void setStroke( final Color stroke )
   {
-    color = stroke;
-    final CssParameter strokeColor = StyleFactory.createCssParameter( CSS_STROKE, StyleFactory.getColorAsHex( stroke ) );
-    getCssParameters().put( CSS_STROKE, strokeColor );
+    this.color = stroke;
+    final CssParameter strokeColor = StyleFactory.createCssParameter( "stroke", StyleFactory.getColorAsHex( stroke ) );
+    cssParams.put( "stroke", strokeColor );
   }
 
   /**
@@ -439,17 +432,17 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
+   *            specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
-   *           if the evaluation fails
+   *             if the evaluation fails
    */
   @Override
   public double getOpacity( final Feature feature ) throws FilterEvaluationException
   {
     if( smplOpacity < 0 )
     {
-      final CssParameter cssParam = getParameter( CSS_OPACITY );
+      final CssParameter cssParam = (CssParameter) cssParams.get( "stroke-opacity" );
 
       if( cssParam != null )
       {
@@ -459,7 +452,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
         try
         {
           final double opacity = Double.parseDouble( value );
-          if( opacity < 0.0 || opacity > 1.0 )
+          if( (opacity < 0.0) || (opacity > 1.0) )
             throw new FilterEvaluationException( "Value for parameter 'stroke-opacity' (given: '" + value + "') must be between 0.0 and 1.0!" );
           return opacity;
         }
@@ -476,9 +469,10 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
   }
 
   /**
-   * @see org.kalypsodeegree_impl.graphics.sld.Stroke_Impl#getOpacity(Feature) <p>
+   * @see org.kalypsodeegree_impl.graphics.sld.Stroke_Impl#getOpacity(Feature)
+   *      <p>
    * @param opacity
-   *          the opacity to be set for the stroke
+   *            the opacity to be set for the stroke
    */
   @Override
   public void setOpacity( double opacity )
@@ -487,9 +481,9 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
       opacity = 1;
     else if( opacity < 0 )
       opacity = 0;
-    smplOpacity = opacity;
-    final CssParameter strokeOp = StyleFactory.createCssParameter( CSS_OPACITY, "" + opacity );
-    addCssParameter( CSS_OPACITY, strokeOp );
+    this.smplOpacity = opacity;
+    final CssParameter strokeOp = StyleFactory.createCssParameter( "stroke-opacity", "" + opacity );
+    cssParams.put( "stroke-opacity", strokeOp );
   }
 
   /**
@@ -500,10 +494,10 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
+   *            specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
-   *           if the evaluation fails
+   *             if the evaluation fails
    */
   @Override
   public double getWidth( final Feature feature ) throws FilterEvaluationException
@@ -513,7 +507,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
     if( smplWidth < 0 )
     {
       // evaluate smplWidth depending on the passed feature's properties
-      final CssParameter cssParam = getParameter( CSS_WIDTH );
+      final CssParameter cssParam = (CssParameter) cssParams.get( "stroke-width" );
 
       if( cssParam != null )
       {
@@ -539,18 +533,19 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
   }
 
   /**
-   * @see org.kalypsodeegree_impl.graphics.sld.Stroke_Impl#getWidth(Feature) <p>
+   * @see org.kalypsodeegree_impl.graphics.sld.Stroke_Impl#getWidth(Feature)
+   *      <p>
    * @param width
-   *          the width to be set for the stroke
+   *            the width to be set for the stroke
    */
   @Override
   public void setWidth( double width )
   {
     if( width <= 0 )
       width = 1;
-    smplWidth = width;
-    final CssParameter strokeWi = StyleFactory.createCssParameter( CSS_WIDTH, "" + width );
-    addCssParameter( CSS_WIDTH, strokeWi );
+    this.smplWidth = width;
+    final CssParameter strokeWi = StyleFactory.createCssParameter( "stroke-width", "" + width );
+    cssParams.put( "stroke-width", strokeWi );
   }
 
   /**
@@ -560,10 +555,10 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
+   *            specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
-   *           if the evaluation fails
+   *             if the evaluation fails
    */
   @Override
   public int getLineJoin( final Feature feature ) throws FilterEvaluationException
@@ -572,7 +567,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
 
     if( smplLineJoin < 0 )
     {
-      final CssParameter cssParam = getParameter( CSS_LINEJOIN );
+      final CssParameter cssParam = (CssParameter) cssParams.get( "stroke-linejoin" );
 
       if( cssParam != null )
       {
@@ -595,9 +590,10 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
   }
 
   /**
-   * @see org.kalypsodeegree_impl.graphics.sld.Stroke_Impl#getLineJoin(Feature) <p>
+   * @see org.kalypsodeegree_impl.graphics.sld.Stroke_Impl#getLineJoin(Feature)
+   *      <p>
    * @param lineJoin
-   *          the lineJoin to be set for the stroke
+   *            the lineJoin to be set for the stroke
    */
   @Override
   public void setLineJoin( int lineJoin )
@@ -616,8 +612,8 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
       join = "bevel";
     }
     smplLineJoin = lineJoin;
-    final CssParameter strokeLJ = StyleFactory.createCssParameter( CSS_LINEJOIN, join );
-    addCssParameter( CSS_LINEJOIN, strokeLJ );
+    final CssParameter strokeLJ = StyleFactory.createCssParameter( "stroke-linejoin", join );
+    cssParams.put( "stroke-linejoin", strokeLJ );
   }
 
   /**
@@ -627,20 +623,20 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
+   *            specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
-   *           if the evaluation fails
+   *             if the evaluation fails
    */
   @Override
   public int getLineCap( final Feature feature ) throws FilterEvaluationException
   {
     int lineCap = LC_DEFAULT;
 
-    if( smplLineCap < 0 )
+    if( smplLineJoin < 0 )
     {
 
-      final CssParameter cssParam = getParameter( CSS_LINECAP );
+      final CssParameter cssParam = (CssParameter) cssParams.get( "stroke-linecap" );
 
       if( cssParam != null )
       {
@@ -663,9 +659,10 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
   }
 
   /**
-   * @see org.kalypsodeegree_impl.graphics.sld.Stroke_Impl#getLineCap(Feature) <p>
+   * @see org.kalypsodeegree_impl.graphics.sld.Stroke_Impl#getLineCap(Feature)
+   *      <p>
    * @param lineCap
-   *          lineCap to be set for the stroke
+   *            lineCap to be set for the stroke
    */
   @Override
   public void setLineCap( int lineCap )
@@ -684,8 +681,8 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
       lineCap = Stroke.LC_SQUARE;
     }
     smplLineCap = lineCap;
-    final CssParameter strokeCap = StyleFactory.createCssParameter( CSS_LINECAP, cap );
-    addCssParameter( CSS_LINECAP, strokeCap );
+    final CssParameter strokeCap = StyleFactory.createCssParameter( "stroke-linecap", cap );
+    cssParams.put( "stroke-linecap", strokeCap );
   }
 
   /**
@@ -698,15 +695,15 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    * <p>
    * 
    * @param feature
-   *          the encoded pattern
+   *            the encoded pattern
    * @throws FilterEvaluationException
-   *           if the eevaluation fails or the encoded pattern is erroneous
+   *             if the eevaluation fails or the encoded pattern is erroneous
    * @return the decoded pattern as an array of float-values (null if the parameter was not specified)
    */
   @Override
   public float[] getDashArray( final Feature feature ) throws FilterEvaluationException
   {
-    final CssParameter cssParam = getParameter( CSS_DASHARRAY );
+    final CssParameter cssParam = (CssParameter) cssParams.get( "stroke-dasharray" );
 
     float[] dashArray = null;
     if( smplDashArray == null )
@@ -719,7 +716,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
       final StringTokenizer st = new StringTokenizer( value, ",; " );
       final int count = st.countTokens();
 
-      if( count % 2 == 0 )
+      if( (count % 2) == 0 )
         dashArray = new float[count];
       else
         dashArray = new float[count * 2];
@@ -739,10 +736,10 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
       }
 
       // odd number of values -> the pattern must be repeated twice
-      if( count % 2 == 1 )
+      if( (count % 2) == 1 )
       {
         int j = 0;
-        while( i < count * 2 - 1 )
+        while( i < ((count * 2) - 1) )
           dashArray[i++] = dashArray[j++];
       }
     }
@@ -753,19 +750,23 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
   }
 
   /**
-   * @see org.kalypsodeegree_impl.graphics.sld.Stroke_Impl#getDashArray(Feature) <p>
+   * @see org.kalypsodeegree_impl.graphics.sld.Stroke_Impl#getDashArray(Feature)
+   *      <p>
    * @param dashArray
-   *          the dashArray to be set for the Stroke
+   *            the dashArray to be set for the Stroke
    */
   @Override
   public void setDashArray( final float[] dashArray )
   {
     if( dashArray != null )
     {
-      final String s = StringUtils.join( ArrayUtils.toObject( dashArray ), ',' );
+      String s = "";
+      for( int i = 0; i < dashArray.length - 1; i++ )
+        s = s + dashArray[i] + ",";
+      s = s + dashArray[dashArray.length - 1];
       smplDashArray = dashArray;
-      final CssParameter strokeDash = StyleFactory.createCssParameter( CSS_DASHARRAY, s );
-      addCssParameter( CSS_DASHARRAY, strokeDash );
+      final CssParameter strokeDash = StyleFactory.createCssParameter( "stroke-dasharray", s );
+      cssParams.put( "stroke-dasharray", strokeDash );
     }
   }
 
@@ -775,10 +776,10 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
+   *            specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
-   *           if the evaluation fails
+   *             if the evaluation fails
    */
   @Override
   public float getDashOffset( final Feature feature ) throws FilterEvaluationException
@@ -787,7 +788,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
 
     if( smplDashOffset < 0 )
     {
-      final CssParameter cssParam = getParameter( CSS_DASHOFFSET );
+      final CssParameter cssParam = (CssParameter) cssParams.get( "stroke-dashoffset" );
       if( cssParam != null )
       {
         final String value = cssParam.getValue( feature );
@@ -814,7 +815,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    * <p>
    * 
    * @param dashOffset
-   *          the dashOffset to be set for the Stroke
+   *            the dashOffset to be set for the Stroke
    */
   @Override
   public void setDashOffset( float dashOffset )
@@ -822,9 +823,8 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
     if( dashOffset < 0 )
       dashOffset = 0;
     smplDashOffset = dashOffset;
-    final CssParameter strokeDashOff = StyleFactory.createCssParameter( CSS_DASHOFFSET, "" + dashOffset );
-    final Map<String, CssParameter> cssParams = getCssParameters();
-    cssParams.put( CSS_DASHOFFSET, strokeDashOff );
+    final CssParameter strokeDashOff = StyleFactory.createCssParameter( "stroke-dashoffset", "" + dashOffset );
+    cssParams.put( "stroke-dashoffset", strokeDashOff );
   }
 
   /**
@@ -840,16 +840,13 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
     final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<Stroke>" );
 
-    final GraphicFill graphicFill = getGraphicFill();
     if( graphicFill != null )
       sb.append( ((Marshallable) graphicFill).exportAsXML() );
-    else if( m_graphicStroke != null )
-      sb.append( ((Marshallable) m_graphicStroke).exportAsXML() );
-
-    final Map<String, CssParameter> cssParams = getCssParameters();
-    final Iterator<CssParameter> iterator = cssParams.values().iterator();
+    else if( graphicStroke != null )
+      sb.append( ((Marshallable) graphicStroke).exportAsXML() );
+    final Iterator iterator = cssParams.values().iterator();
     while( iterator.hasNext() )
-      sb.append( iterator.next().exportAsXML() );
+      sb.append( ((Marshallable) iterator.next()).exportAsXML() );
 
     sb.append( "</Stroke>" );
 

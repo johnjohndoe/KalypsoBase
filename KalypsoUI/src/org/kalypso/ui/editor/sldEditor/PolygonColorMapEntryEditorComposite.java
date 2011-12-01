@@ -82,7 +82,7 @@ public class PolygonColorMapEntryEditorComposite extends Composite
     strokeEditor.addModifyListener( new IStrokeModifyListener()
     {
       @Override
-      public void onStrokeChanged( final Object source, final Stroke stroke )
+      public void onStrokeChanged( Object source, Stroke stroke )
       {
         contentChanged();
       }
@@ -93,7 +93,7 @@ public class PolygonColorMapEntryEditorComposite extends Composite
     m_fillEditor.addModifyListener( new IFillModifyListener()
     {
       @Override
-      public void onFillChanged( final Object source, final Fill fill )
+      public void onFillChanged( Object source, Fill fill )
       {
         contentChanged();
       }

@@ -73,7 +73,6 @@ import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypso.template.featureview.Text;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * This is a gui type handler for the color-type in commons.xsd
@@ -222,7 +221,7 @@ public class ColorGuiTypeHandler extends LabelProvider implements IGuiTypeHandle
     }
     else
     {
-      final PaletteData paletteData = new PaletteData( new RGB[] { new RGB( 64, 64, 64 ), (RGB) element } );
+      final PaletteData paletteData = new PaletteData( new RGB[] { new RGB( 64, 64, 64 ), ((RGB) element) } );
       final ImageData imageData = new ImageData( 24, 13, 1, paletteData );
       for( int x = 2; x < 23; x++ )
         for( int y = 1; y < 12; y++ )
@@ -234,8 +233,13 @@ public class ColorGuiTypeHandler extends LabelProvider implements IGuiTypeHandle
     return image;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureModifier(org.kalypso.gmlschema.property.IPropertyType,
+   *      org.kalypso.ogc.gml.selection.IFeatureSelectionManager,
+   *      org.kalypso.ogc.gml.featureview.IFeatureChangeListener, java.lang.String)
+   */
   @Override
-  public IFeatureModifier createFeatureModifier( final GMLXPath propertyPath, final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format )
+  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format )
   {
     // if we get a ClassCastExxception here, something is very wrong
     final IValuePropertyType vpt = (IValuePropertyType) ftp;
@@ -244,12 +248,15 @@ public class ColorGuiTypeHandler extends LabelProvider implements IGuiTypeHandle
 
     if( RGB.class == valueClass )
     {
-      return new ColorModifier( propertyPath, vpt );
+      return new ColorModifier( vpt );
     }
 
-    return new StringModifier( propertyPath, vpt, format );
+    return new StringModifier( vpt, format );
   }
 
+  /**
+   * @see org.kalypso.gmlschema.types.ITypeHandler#getTypeName()
+   */
   @Override
   public QName getTypeName( )
   {

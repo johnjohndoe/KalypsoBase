@@ -51,6 +51,7 @@ import org.eclipse.swt.widgets.Shell;
  * This implementation of {@link org.eclipse.jface.wizard.IWizardContainer} is just a
  * {@link org.eclipse.swt.widgets.Composite}.
  * 
+ * 
  * @author belger
  */
 public class WizardComposite extends Composite implements IWizardContainer2
@@ -73,7 +74,7 @@ public class WizardComposite extends Composite implements IWizardContainer2
   @Override
   public void updateSize( )
   {
-    //
+    //  
   }
 
   /**
@@ -98,9 +99,9 @@ public class WizardComposite extends Composite implements IWizardContainer2
    * @see org.eclipse.jface.wizard.IWizardContainer#showPage(org.eclipse.jface.wizard.IWizardPage)
    */
   @Override
-  public void showPage( final IWizardPage page )
+  public void showPage( IWizardPage page )
   {
-    //
+    //  
   }
 
   /**
@@ -109,7 +110,7 @@ public class WizardComposite extends Composite implements IWizardContainer2
   @Override
   public void updateButtons( )
   {
-    //
+    //  
   }
 
   /**
@@ -118,7 +119,7 @@ public class WizardComposite extends Composite implements IWizardContainer2
   @Override
   public void updateMessage( )
   {
-    //
+    //  
   }
 
   /**
@@ -127,7 +128,7 @@ public class WizardComposite extends Composite implements IWizardContainer2
   @Override
   public void updateTitleBar( )
   {
-    //
+    //  
   }
 
   /**
@@ -136,7 +137,7 @@ public class WizardComposite extends Composite implements IWizardContainer2
   @Override
   public void updateWindowTitle( )
   {
-    //
+    //  
   }
 
   /**
@@ -144,10 +145,10 @@ public class WizardComposite extends Composite implements IWizardContainer2
    *      org.eclipse.jface.operation.IRunnableWithProgress)
    */
   @Override
-  public void run( final boolean fork, final boolean cancelable, final IRunnableWithProgress runnable )
+  public void run( boolean fork, boolean cancelable, IRunnableWithProgress runnable )
   // throws InvocationTargetException, InterruptedException
   {
-    //
+    //  
   }
 
 }

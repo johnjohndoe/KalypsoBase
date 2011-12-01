@@ -47,7 +47,6 @@ import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.ISources;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.kalypso.contribs.eclipse.jface.viewers.SelectionProviderAdapter;
@@ -71,17 +70,12 @@ public class OpenStyleDialogHandler extends AbstractHandler
 
     try
     {
-      final IViewPart view = window.getActivePage().showView( "org.kalypso.ui.editor.mapeditor.views.styleeditor" );
-      // Might be an ErrorView instead
-      if( view instanceof StyleEditorViewPart )
-      {
-        final StyleEditorViewPart part = (StyleEditorViewPart) view; //$NON-NLS-1$
-        part.selectionChanged( new SelectionChangedEvent( new SelectionProviderAdapter(), selection ) );
-      }
+      final StyleEditorViewPart part = (StyleEditorViewPart) window.getActivePage().showView( "org.kalypso.ui.editor.mapeditor.views.styleeditor" ); //$NON-NLS-1$
+      part.selectionChanged( new SelectionChangedEvent( new SelectionProviderAdapter(), selection ) );
     }
     catch( final PartInitException e )
     {
-      throw new ExecutionException( Messages.getString( "org.kalypso.ogc.gml.outline.handler.OpenStyleDialogHandler.0" ), e ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.outline.handler.OpenStyleDialogHandler.0"), e ); //$NON-NLS-1$
     }
 
     return null;

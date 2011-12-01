@@ -56,6 +56,7 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
+import org.kalypso.ogc.sensor.view.ObservationViewerDialog;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree_impl.gml.schema.SpecialPropertyMapper;
 
@@ -64,31 +65,46 @@ import org.kalypsodeegree_impl.gml.schema.SpecialPropertyMapper;
  */
 public class ClipboardExportAction extends AbstractObservationAction
 {
+  private final Clipboard m_clipboard;
+
+  public ClipboardExportAction( final ObservationViewerDialog dialog, final Clipboard clipboard )
+  {
+    super( dialog );
+    m_clipboard = clipboard;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.view.observationDialog.AbstractObservationAction#getLabel()
+   */
   @Override
   protected String getLabel( )
   {
     return Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.10" ); //$NON-NLS-1$
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.view.observationDialog.AbstractObservationAction#getTooltip()
+   */
   @Override
   protected String getTooltip( )
   {
     return Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.11" ); //$NON-NLS-1$
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.view.observationDialog.AbstractObservationAction#run()
+   */
   @Override
-  protected IStatus execute( )
+  protected IStatus run( )
   {
-    final ObservationViewer viewer = getViewer();
-    final Object input = viewer.getInput();
+    final Object input = getDialog().getInput();
     if( !(input instanceof IObservation) )
       return Status.OK_STATUS;
 
     try
     {
-      final Clipboard clipboard = viewer.getClipboard();
       final String content = createClipboardStringFrom( (IObservation) input, null );
-      clipboard.setContents( new Object[] { content }, new Transfer[] { TextTransfer.getInstance() } );
+      m_clipboard.setContents( new Object[] { content }, new Transfer[] { TextTransfer.getInstance() } );
     }
     catch( final SensorException e )
     {

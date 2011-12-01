@@ -73,6 +73,9 @@ public class GisTemplateFeatureTypeStyle extends AbstractTemplateStyle implement
     return StyleFactory.createFeatureTypeStyle( "dummyStyle", title, abstr, null, new Rule[] {} );//$NON-NLS-1$
   }
 
+  /**
+   * @see org.kalypsodeegree.xml.Marshallable#exportAsXML()
+   */
   @Override
   public String exportAsXML( )
   {
@@ -136,36 +139,54 @@ public class GisTemplateFeatureTypeStyle extends AbstractTemplateStyle implement
     m_style.addSemanticTypeIdentifier( semanticTypeIdentifier );
   }
 
+  /**
+   * @see org.kalypsodeegree.graphics.sld.FeatureTypeStyle#getFeatureTypeName()
+   */
   @Override
   public QName getFeatureTypeName( )
   {
     return m_style.getFeatureTypeName();
   }
 
+  /**
+   * @see org.kalypsodeegree.graphics.sld.FeatureTypeStyle#getRule(java.lang.String)
+   */
   @Override
   public Rule getRule( final String ruleName )
   {
     return m_style.getRule( ruleName );
   }
 
+  /**
+   * @see org.kalypsodeegree.graphics.sld.FeatureTypeStyle#getRules()
+   */
   @Override
   public Rule[] getRules( )
   {
     return m_style.getRules();
   }
 
+  /**
+   * @see org.kalypsodeegree.graphics.sld.FeatureTypeStyle#getSemanticTypeIdentifier()
+   */
   @Override
   public String[] getSemanticTypeIdentifier( )
   {
     return m_style.getSemanticTypeIdentifier();
   }
 
+  /**
+   * @see org.kalypsodeegree.graphics.sld.FeatureTypeStyle#removeRule(org.kalypsodeegree.graphics.sld.Rule)
+   */
   @Override
   public void removeRule( final Rule rule )
   {
     m_style.removeRule( rule );
   }
 
+  /**
+   * @see org.kalypsodeegree.graphics.sld.FeatureTypeStyle#removeSemanticTypeIdentifier(java.lang.String)
+   */
   @Override
   public void removeSemanticTypeIdentifier( final String semanticTypeIdentifier )
   {
@@ -181,18 +202,27 @@ public class GisTemplateFeatureTypeStyle extends AbstractTemplateStyle implement
     m_style.setFeatureTypeName( featureTypeQName );
   }
 
+  /**
+   * @see org.kalypsodeegree.graphics.sld.FeatureTypeStyle#setRules(org.kalypsodeegree.graphics.sld.Rule[])
+   */
   @Override
   public void setRules( final Rule[] rules )
   {
     m_style.setRules( rules );
   }
 
+  /**
+   * @see org.kalypsodeegree.graphics.sld.FeatureTypeStyle#setSemanticTypeIdentifier(java.lang.String[])
+   */
   @Override
   public void setSemanticTypeIdentifier( final String[] semanticTypeIdentifiers )
   {
     m_style.setSemanticTypeIdentifier( semanticTypeIdentifiers );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.AbstractTemplateStyle#handleObjectLoaded(java.lang.Object)
+   */
   @Override
   protected void handleObjectLoaded( final Object newValue )
   {
@@ -211,9 +241,14 @@ public class GisTemplateFeatureTypeStyle extends AbstractTemplateStyle implement
     m_style = (FeatureTypeStyle) newValue;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.AbstractTemplateStyle#getStyleName()
+   */
   @Override
   protected String getStyleName( )
   {
     return null;
   }
+
+
 }

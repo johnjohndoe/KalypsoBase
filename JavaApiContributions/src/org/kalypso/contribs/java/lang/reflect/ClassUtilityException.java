@@ -52,17 +52,17 @@ public class ClassUtilityException extends Exception
     super();
   }
 
-  public ClassUtilityException( final String message )
+  public ClassUtilityException( String message )
   {
     super( message );
   }
 
-  public ClassUtilityException( final String message, final Throwable cause )
+  public ClassUtilityException( String message, Throwable cause )
   {
     super( message, cause );
   }
 
-  public ClassUtilityException( final Throwable cause )
+  public ClassUtilityException( Throwable cause )
   {
     super( cause );
   }

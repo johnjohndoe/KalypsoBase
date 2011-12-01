@@ -44,7 +44,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 
-import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 
 /**
  * @author kimwerner
@@ -52,7 +52,7 @@ import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 public interface IChartLabelRenderer
 {
 
-  IAreaStyle getBorderStyle( );
+  ILineStyle getBorderLine( );
 
   TitleTypeBean getTitleTypeBean( );
 
@@ -62,10 +62,10 @@ public interface IChartLabelRenderer
 
   void paint( final GC gc, final Rectangle fixedWidth );
 
-  void setBorderStyle( final IAreaStyle borderStyle );
+  void setBorderLine( final ILineStyle borderLine );
 
   void setTitleTypeBean( final TitleTypeBean titleTypeBean );
 
-  Rectangle getSize( );
+  Point getSize( );
 
 }

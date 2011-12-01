@@ -47,8 +47,6 @@ import java.util.Properties;
 import java.util.Vector;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypso.repository.utils.RepositoryVisitors;
 
@@ -89,12 +87,6 @@ public abstract class AbstractRepository implements IRepository
 
     m_listeners = new Vector<IRepositoryListener>();
     m_properties = new Properties();
-  }
-
-  @Override
-  public IStatus getStatus( final String type )
-  {
-    return Status.OK_STATUS;
   }
 
   /**

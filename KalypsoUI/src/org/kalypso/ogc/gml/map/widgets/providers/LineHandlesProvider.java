@@ -64,9 +64,9 @@ public class LineHandlesProvider implements IHandlesProvider
    * @see org.kalypso.informdss.manager.util.widgets.providers.IHandlesProvider#collectHandles(org.kalypsodeegree.model.feature.Feature)
    */
   @Override
-  public List<IHandle> collectHandles( final Feature feature, final int radius )
+  public List<IHandle> collectHandles( Feature feature, int radius )
   {
-    final ArrayList<IHandle> list = new ArrayList<IHandle>();
+    ArrayList<IHandle> list = new ArrayList<IHandle>();
 
     final IValuePropertyType[] allGeomteryProperties = feature.getFeatureType().getAllGeomteryProperties();
     for( final IValuePropertyType type : allGeomteryProperties )
@@ -78,17 +78,17 @@ public class LineHandlesProvider implements IHandlesProvider
         /* Only handles for a line are returned. */
         if( object instanceof GM_Curve )
         {
-          final GM_Curve curve = (GM_Curve) object;
-          final int numberOfCurveSegments = curve.getNumberOfCurveSegments();
+          GM_Curve curve = (GM_Curve) object;
+          int numberOfCurveSegments = curve.getNumberOfCurveSegments();
 
           for( int i = 0; i < numberOfCurveSegments; i++ )
           {
             /* One segment of a curve. It can contain several points. */
-            final GM_CurveSegment curveSegment = curve.getCurveSegmentAt( i );
+            GM_CurveSegment curveSegment = curve.getCurveSegmentAt( i );
 
-            final GM_Position[] positions = curveSegment.getPositions();
+            GM_Position[] positions = curveSegment.getPositions();
 
-            for( final GM_Position position : positions )
+            for( GM_Position position : positions )
             {
               /* Add the points of every segment to the list of handles. */
               list.add( new Handle( position, feature, type, radius ) );
@@ -96,7 +96,7 @@ public class LineHandlesProvider implements IHandlesProvider
           }
         }
       }
-      catch( final GM_Exception e )
+      catch( GM_Exception e )
       {
         // TODO
       }

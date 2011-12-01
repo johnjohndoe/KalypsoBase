@@ -49,16 +49,20 @@ import org.kalypso.zml.ui.chart.layer.themes.ZmlForecastLayer;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlForecastLayerProvider extends AbstractLayerProvider
+public class ZmlForecastLayerProvider extends AbstractLayerProvider implements ILayerProvider
 {
   public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlForecastLayerProvider";
 
+  /**
+   * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
+   */
   @Override
   public IChartLayer getLayer( final URL context ) throws ConfigurationException
   {

@@ -53,7 +53,7 @@ public class FileCacheTest extends TestCase
   protected static class StringComparator implements Comparator<String>
   {
     @Override
-    public int compare( final String s1, final String s2 )
+    public int compare( String s1, String s2 )
     {
       return s1.compareTo( s2 );
     }

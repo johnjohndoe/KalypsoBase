@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class KalypsoWizardDialog extends WizardDialog
 {
-  public KalypsoWizardDialog( final Shell parentShell, final IWizard newWizard )
+  public KalypsoWizardDialog( Shell parentShell, IWizard newWizard )
   {
     super( parentShell, newWizard );
 

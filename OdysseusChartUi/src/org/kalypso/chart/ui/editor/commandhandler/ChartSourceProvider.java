@@ -102,6 +102,14 @@ public class ChartSourceProvider extends AbstractSourceProvider
   private final IServiceLocator m_serviceLocator;
 
   /**
+   * Creates a new {@link ChartSourceProvider} on the given service locator.
+   */
+  public ChartSourceProvider( final IServiceLocator serviceLocator )
+  {
+    this( serviceLocator, null );
+  }
+
+  /**
    * Creates a new {@link ChartSourceProvider} on the given chart.<br>
    * Initializes it state with the given parameters.
    */
@@ -117,7 +125,7 @@ public class ChartSourceProvider extends AbstractSourceProvider
     registerServiceWithSources( serviceLocator, IMenuService.class );
 
     m_chartContext = contextService.activateContext( CHART_CONTEXT );
-
+    
     // FIXME: check other source providers; they should do the same -> refaktor into helper class
     refreshUIelements();
   }
@@ -140,17 +148,17 @@ public class ChartSourceProvider extends AbstractSourceProvider
   @Override
   public void dispose( )
   {
-    m_chart = null;
-
-    fireSourceChanged();
-
     // unregister the registered source provider
     for( final IServiceWithSources service : m_registeredServices )
       service.removeSourceProvider( this );
 
+// m_mapPanel.removeMapPanelListener( m_mapPanelListener );
+// m_mapPanelListener.onMapModelChanged( m_mapPanel, m_mapPanel.getMapModell(), null );
+
+    m_chart = null;
+
     if( m_chartContext != null )
       m_chartContext.getContextService().deactivateContext( m_chartContext );
-
   }
 
   /**
@@ -230,10 +238,4 @@ public class ChartSourceProvider extends AbstractSourceProvider
     }
   }
 
-  public void setChart( final IChartComposite chart )
-  {
-    m_chart = chart;
-
-    fireSourceChanged();
-  }
 }

@@ -58,6 +58,5 @@ public class WizardContainerAdapter implements IWizardContainerListener
    */
   @Override
   public void onWizardChanged( final IWizard newwizard, final int reason )
-  {
-  }
+  {}
 }

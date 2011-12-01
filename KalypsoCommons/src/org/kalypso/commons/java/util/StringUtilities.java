@@ -45,7 +45,7 @@ import java.awt.Font;
 import java.util.Map.Entry;
 import java.util.Properties;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.internal.i18n.Messages;
 
 /**
@@ -247,7 +247,7 @@ public final class StringUtilities
           && !Character.isWhitespace( str.charAt( i + lineLength ) ) )
       {
         curLineLength = lineLength - 3;
-        while( curLineLength > 0 && !Character.isWhitespace( str.charAt( i + curLineLength ) ) )
+        while( (curLineLength > 0) && !Character.isWhitespace( str.charAt( i + curLineLength ) ) )
           curLineLength--;
 
         if( curLineLength == 0 )

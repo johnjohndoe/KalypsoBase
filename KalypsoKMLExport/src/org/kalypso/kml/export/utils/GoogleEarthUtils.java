@@ -1,5 +1,6 @@
 package org.kalypso.kml.export.utils;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -70,7 +71,7 @@ public class GoogleEarthUtils
     // east = max.getY
     final GM_Point southEast = (GM_Point) transformer.transform( GeometryFactory.createGM_Point( max, srcCRS ) );
 
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
 
 // // set google earth boundaries
 // final LatLonAltBoxType latLonBox = factory.createLatLonAltBoxType();

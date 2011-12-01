@@ -153,10 +153,10 @@ public class DiagViewCurve extends ObsViewItem
 
     public AlarmLevel( final double val, final String lbl )
     {
-      value = val;
-      label = lbl;
+      this.value = val;
+      this.label = lbl;
 
-      color = TimeseriesUtils.getColorForAlarmLevel( lbl );
+      this.color = TimeseriesUtils.getColorForAlarmLevel( lbl );
     }
 
     @Override

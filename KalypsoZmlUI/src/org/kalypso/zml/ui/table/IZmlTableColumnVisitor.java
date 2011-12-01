@@ -40,12 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table;
 
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
 public interface IZmlTableColumnVisitor
 {
-  void visit( IZmlTableColumn column );
+  void visit( IExtendedZmlTableColumn column );
 }

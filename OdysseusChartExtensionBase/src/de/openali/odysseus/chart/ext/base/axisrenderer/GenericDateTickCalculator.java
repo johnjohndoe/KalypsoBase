@@ -41,8 +41,7 @@
 package de.openali.odysseus.chart.ext.base.axisrenderer;
 
 import java.util.HashSet;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.LinkedList;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
@@ -141,9 +140,9 @@ public class GenericDateTickCalculator implements ITickCalculator
       minLogInterval = minDisplayInterval.longValue();
 
     // letzten Tagesbeginn VOR dem Startdatum
-    final long normmin = (logicalMin / DAYS_IN_MS - 1) * DAYS_IN_MS;
+    final long normmin = ((logicalMin / DAYS_IN_MS) - 1) * DAYS_IN_MS;
     // erster Tagesbeginn NACH dem Startdatum
-    final long normmax = (logicalMax / DAYS_IN_MS + 1) * DAYS_IN_MS;
+    final long normmax = ((logicalMax / DAYS_IN_MS) + 1) * DAYS_IN_MS;
 
     // Collection für Ticks
     final HashSet<Long> ticks = new HashSet<Long>();
@@ -169,8 +168,7 @@ public class GenericDateTickCalculator implements ITickCalculator
       oldi = i;
     }
 
-    // final LinkedList<Number> realticks = new LinkedList<Number>();
-    final SortedSet<Number> realticks = new TreeSet<Number>();
+    final LinkedList<Number> realticks = new LinkedList<Number>();
     for( final Long tick : ticks )
     {
       final long ticklv = tick.longValue();

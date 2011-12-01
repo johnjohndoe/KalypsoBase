@@ -52,12 +52,18 @@ public class ZmlBlockChartLegendRenderer extends BlockChartLegendRenderer
 {
   public static final String IDENTIFIER = "org.kalypso.zml.ui.chart.legend.renderer.block"; //$NON-NLS-1$
 
+  /**
+   * @see de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegendRenderer#getIdentifier()
+   */
   @Override
   public String getIdentifier( )
   {
     return IDENTIFIER; //$NON-NLS-1$
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.util.img.legend.renderer.DefaultChartLegendRenderer#getLayers(de.openali.odysseus.chart.framework.model.IChartModel)
+   */
   @Override
   protected IChartLayer[] getLayers( final IChartModel model )
   {

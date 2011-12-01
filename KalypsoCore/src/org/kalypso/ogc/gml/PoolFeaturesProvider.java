@@ -80,6 +80,7 @@ public class PoolFeaturesProvider extends AbstractFeaturesProvider implements IL
 
   private IFeaturesProvider m_delegate = null;
 
+
   public PoolFeaturesProvider( final IPoolableObjectType poolKey, final String featurePath )
   {
     m_workspaceProvider = new PoolGmlWorkspaceProvider( poolKey );
@@ -197,15 +198,5 @@ public class PoolFeaturesProvider extends AbstractFeaturesProvider implements IL
   public void save( final IProgressMonitor monitor ) throws CoreException
   {
     m_workspaceProvider.save( monitor );
-  }
-
-  public boolean isDirty( )
-  {
-    return m_workspaceProvider.isDirty();
-  }
-
-  public void reload( final boolean evenIfDirty )
-  {
-    m_workspaceProvider.reload( evenIfDirty );
   }
 }

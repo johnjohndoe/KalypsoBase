@@ -48,6 +48,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.Form;
@@ -56,7 +58,6 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
-import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.listeners.MapPanelAdapter;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
@@ -79,15 +80,22 @@ public class MapForm extends Form
    */
   public static MapForm createMapForm( final Composite parent )
   {
-    final FormToolkit formToolkit = ToolkitUtils.createToolkit( parent );
-
+    final FormToolkit formToolkit = new FormToolkit( parent.getDisplay() );
     final MapForm form = new MapForm( parent, SWT.NONE );
     formToolkit.adapt( form, false, false );
-    formToolkit.decorateFormHeading( form );
     form.setFont( JFaceResources.getHeaderFont() );
     form.setSeparatorVisible( true );
     final Composite body = form.getBody();
     body.setLayout( new FillLayout() );
+
+    form.addDisposeListener( new DisposeListener()
+    {
+      @Override
+      public void widgetDisposed( final DisposeEvent e )
+      {
+        formToolkit.dispose();
+      }
+    } );
 
     return form;
   }
@@ -139,12 +147,15 @@ public class MapForm extends Form
 
         final String oldMessage = getMessage();
         final boolean ok = status.isOK();
-        MessageUtilitites.setMessage( MapForm.this, status );
+        if( ok )
+          setMessage( null );
+        else
+          MessageUtilitites.setMessage( MapForm.this, status );
         // TODO: add hyperlink listener if sub-messages exist. Show these sub-messages on click
         // Same for tooltip support
 
         // If visibility of header changed, send resize event, else the map has not the right extent
-        if( source instanceof ComponentListener && (oldMessage == null && !ok || oldMessage != null && ok) )
+        if( source instanceof ComponentListener && ((oldMessage == null && !ok) || (oldMessage != null && ok)) )
           ((ComponentListener) source).componentResized( null );
 
         return Status.OK_STATUS;

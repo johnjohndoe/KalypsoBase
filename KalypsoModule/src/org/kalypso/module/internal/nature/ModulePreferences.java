@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.module.internal.nature;
 
@@ -93,15 +93,7 @@ public class ModulePreferences implements IModulePreferences
   @Override
   public String getModule( )
   {
-    try
-    {
-      return m_node.get( PREFERENCE_MODULE, null );
-    }
-    catch( final IllegalStateException e )
-    {
-      // This might happen when the project is removed from the welcome page
-      return null;
-    }
+    return m_node.get( PREFERENCE_MODULE, null );
   }
 
   /**

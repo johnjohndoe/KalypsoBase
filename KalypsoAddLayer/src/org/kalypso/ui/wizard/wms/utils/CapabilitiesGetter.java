@@ -45,7 +45,7 @@ public class CapabilitiesGetter implements ICoreRunnableWithProgress
    * This function starts the loading of the capabilities.
    * 
    * @param monitor
-   *          A progress monitor.
+   *            A progress monitor.
    * @return A status containing the result.
    */
   @Override
@@ -55,7 +55,7 @@ public class CapabilitiesGetter implements ICoreRunnableWithProgress
      * This image provider should do nothing, but create the necessary image loader, so we need not to provide anything,
      * except the providerID.
      */
-    final IKalypsoImageProvider imageProvider = KalypsoWMSUtilities.getImageProvider( "", null, null, "", m_providerID, null ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IKalypsoImageProvider imageProvider = KalypsoWMSUtilities.getImageProvider( "", null, null, "", m_providerID ); //$NON-NLS-1$ //$NON-NLS-2$
 
     /* Get the loader. */
     final ICapabilitiesLoader loader = imageProvider.getLoader();

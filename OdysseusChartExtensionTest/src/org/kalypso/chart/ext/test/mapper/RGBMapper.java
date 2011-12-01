@@ -56,13 +56,14 @@ import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
 
 /**
  * @author alibu
+ * 
  */
 public class RGBMapper extends AbstractRetinalMapper
 {
 
   private final Map<Number, RGB> m_rgbMap;
 
-  public RGBMapper( final String id, final Map<Number, RGB> rgbMap )
+  public RGBMapper( String id, Map<Number, RGB> rgbMap )
   {
     super( id );
     m_rgbMap = rgbMap;
@@ -71,7 +72,7 @@ public class RGBMapper extends AbstractRetinalMapper
   /**
    * @see de.openali.odysseus.chart.framework.model.mapper.IMapper#numericToScreen(java.lang.Object)
    */
-  public RGB numericToScreen( final Number value )
+  public RGB numericToScreen( Number value )
   {
     return m_rgbMap.get( value );
   }
@@ -81,37 +82,37 @@ public class RGBMapper extends AbstractRetinalMapper
    *      de.openali.odysseus.chart.framework.model.style.IStyle)
    */
   @Override
-  public IStyle numericToScreen( final Number value, final IStyle bluePrintStlye )
+public IStyle numericToScreen( Number value, IStyle bluePrintStlye )
   {
-    final RGB rgb = m_rgbMap.get( value );
+    RGB rgb = m_rgbMap.get( value );
     // Falls der Wert nicht gemappt werden kann, dann wird ein unsichtbarer Style zurückgegeben
     if( rgb == null )
     {
       Logger.logWarning( Logger.TOPIC_LOG_MAPPER, "No mapping for value '" + value.toString() + "' - returning invisible Style" );
-      final IStyle copy = bluePrintStlye.clone();
+      IStyle copy = bluePrintStlye.clone();
       copy.setVisible( false );
       return copy;
     }
 
-    final IStyle newStyle = null;
+    IStyle newStyle = null;
     if( bluePrintStlye instanceof IAreaStyle )
     {
-      final IAreaStyle copy = ((IAreaStyle) bluePrintStlye).clone();
+      IAreaStyle copy = ((IAreaStyle) bluePrintStlye).clone();
       copy.setFill( new ColorFill( rgb ) );
     }
     else if( bluePrintStlye instanceof ILineStyle )
     {
-      final ILineStyle copy = ((ILineStyle) bluePrintStlye).clone();
+      ILineStyle copy = ((ILineStyle) bluePrintStlye).clone();
       copy.setColor( rgb );
     }
     else if( bluePrintStlye instanceof IPointStyle )
     {
-      final IPointStyle copy = ((IPointStyle) bluePrintStlye).clone();
+      IPointStyle copy = ((IPointStyle) bluePrintStlye).clone();
       copy.setInlineColor( rgb );
     }
     else if( bluePrintStlye instanceof ITextStyle )
     {
-      final ITextStyle copy = ((ITextStyle) bluePrintStlye).clone();
+      ITextStyle copy = ((ITextStyle) bluePrintStlye).clone();
       copy.setTextColor( rgb );
     }
     return newStyle;
@@ -121,7 +122,7 @@ public class RGBMapper extends AbstractRetinalMapper
    * @see de.openali.odysseus.chart.framework.model.mapper.IMapper#getDataOperator(java.lang.Class)
    */
   @Override
-  public <T> IDataOperator<T> getDataOperator( final Class<T> clazz )
+  public <T> IDataOperator<T> getDataOperator( Class<T> clazz )
   {
     // TODO Auto-generated method stub
     return null;

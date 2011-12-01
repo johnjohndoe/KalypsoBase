@@ -46,7 +46,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -132,9 +132,7 @@ public class ProfilePointFilterComposite extends ListSelectionComposite implemen
     }
 
     if( m_dialogSettings != null )
-    {
       m_dialogSettings.put( SETTINGS_FILTER_IDS, ids );
-    }
   }
 
   /**
@@ -157,9 +155,7 @@ public class ProfilePointFilterComposite extends ListSelectionComposite implemen
     for( final IProfilePointFilter filter : m_filters )
     {
       if( ArrayUtils.contains( idArray, filter.getId() ) )
-      {
         checkedFilters.add( filter );
-      }
     }
 
     setCheckedElements( checkedFilters.toArray( new IProfilePointFilter[checkedFilters.size()] ) );
@@ -248,9 +244,7 @@ public class ProfilePointFilterComposite extends ListSelectionComposite implemen
     for( final IRecord point : points )
     {
       if( accept( profile, point ) )
-      {
         filteredPoints.add( point );
-      }
     }
 
     return filteredPoints.toArray( new IRecord[filteredPoints.size()] );

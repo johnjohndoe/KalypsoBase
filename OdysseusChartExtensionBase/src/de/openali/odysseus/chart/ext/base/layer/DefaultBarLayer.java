@@ -86,7 +86,7 @@ public class DefaultBarLayer extends AbstractBarLayer
   }
 
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     // muss als minimalen Wert 0 zurückgeben, weil die Bars bis dahin laufen
     final IDataRange targetRange = getDataContainer().getTargetRange();
@@ -102,7 +102,7 @@ public class DefaultBarLayer extends AbstractBarLayer
    */
   @Override
   @SuppressWarnings("unchecked")
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Number> getDomainRange( )
   {
     final IDataRange domainRange = getDataContainer().getDomainRange();
     final Object max = domainRange.getMax();

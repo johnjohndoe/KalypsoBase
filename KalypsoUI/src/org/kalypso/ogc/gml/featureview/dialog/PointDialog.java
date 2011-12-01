@@ -54,7 +54,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.i18n.Messages;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
@@ -75,7 +74,7 @@ public class PointDialog extends Dialog
 
   private Text m_text[];
 
-  public PointDialog( final Shell parent, final double[] values, final String cs )
+  public PointDialog( Shell parent, double[] values, String cs )
   {
     super( parent );
 
@@ -87,33 +86,33 @@ public class PointDialog extends Dialog
    * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  protected Control createDialogArea( final Composite parent )
+  protected Control createDialogArea( Composite parent )
   {
     /* Create a own composite for placing controls. */
-    final Composite panel = (Composite) super.createDialogArea( parent );
+    Composite panel = (Composite) super.createDialogArea( parent );
 
     /* Configuring the composite. */
-    final Shell shell = panel.getShell();
+    Shell shell = panel.getShell();
     shell.setText( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.PointDialog.data" ) ); //$NON-NLS-1$
 
     /* The label for the input data. */
-    final Label label = new Label( panel, SWT.NONE );
+    Label label = new Label( panel, SWT.NONE );
     label.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     label.setText( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.PointDialog.fillin" ) ); //$NON-NLS-1$
     label.setAlignment( SWT.LEFT );
 
     /* A new group for the labels and texts. */
-    final Group group = new Group( panel, SWT.NONE );
+    Group group = new Group( panel, SWT.NONE );
     group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Configuring the group. */
     group.setLayout( new GridLayout( 2, true ) );
 
-    final Display display = shell.getDisplay();
-    final Color badColor = display.getSystemColor( SWT.COLOR_RED );
-    final Color goodColor = display.getSystemColor( SWT.COLOR_BLACK );
+    Display display = shell.getDisplay();
+    Color badColor = display.getSystemColor( SWT.COLOR_RED );
+    Color goodColor = display.getSystemColor( SWT.COLOR_BLACK );
 
-    final DoubleModifyListener doubleModifyListener = new DoubleModifyListener( goodColor, badColor );
+    DoubleModifyListener doubleModifyListener = new DoubleModifyListener( goodColor, badColor );
 
     m_label = new Label[m_values.length];
     m_text = new Text[m_values.length];
@@ -139,20 +138,23 @@ public class PointDialog extends Dialog
     }
 
     /* The label for the input data. */
-    final Label label1 = new Label( panel, SWT.NONE );
+    Label label1 = new Label( panel, SWT.NONE );
     label1.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     label1.setText( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.PointDialog.fillincs" ) ); //$NON-NLS-1$
     label1.setAlignment( SWT.LEFT );
 
     /* A new composite for the coordinate system panel. */
-    final Composite combo_composite = new Composite( panel, SWT.NONE );
+    Composite combo_composite = new Composite( panel, SWT.NONE );
     combo_composite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Configuring the group. */
-    combo_composite.setLayout( Layouts.createGridLayout() );
+    GridLayout gridLayout = new GridLayout( 1, false );
+    gridLayout.marginHeight = 0;
+    gridLayout.marginWidth = 0;
+    combo_composite.setLayout( gridLayout );
 
     /* The coordinate system panel. */
-    final CRSSelectionPanel crsPanel = new CRSSelectionPanel( combo_composite, SWT.NONE );
+    CRSSelectionPanel crsPanel = new CRSSelectionPanel( combo_composite, SWT.NONE );
     crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     if( getCS_CoordinateSystem() != null )
@@ -164,7 +166,7 @@ public class PointDialog extends Dialog
        * @see org.kalypso.transformation.ui.CRSSelectionListener#selectionChanged(java.lang.String)
        */
       @Override
-      protected void selectionChanged( final String selectedCRS )
+      protected void selectionChanged( String selectedCRS )
       {
         setCS( selectedCRS );
       }
@@ -178,12 +180,12 @@ public class PointDialog extends Dialog
    */
   public void checkModified( )
   {
-    getButton( IDialogConstants.OK_ID ).setEnabled( true );
+    this.getButton( IDialogConstants.OK_ID ).setEnabled( true );
 
     for( int i = 0; i < m_text.length; i++ )
     {
       if( !NumberUtils.isDouble( m_text[i].getText() ) )
-        getButton( IDialogConstants.OK_ID ).setEnabled( false );
+        this.getButton( IDialogConstants.OK_ID ).setEnabled( false );
     }
   }
 
@@ -201,9 +203,9 @@ public class PointDialog extends Dialog
    * This function sets the values.
    * 
    * @param values
-   *          The values.
+   *            The values.
    */
-  public void setValues( final double[] values )
+  public void setValues( double[] values )
   {
     m_values = values;
   }
@@ -222,9 +224,9 @@ public class PointDialog extends Dialog
    * This function sets the cs.
    * 
    * @param cs
-   *          The cs.
+   *            The cs.
    */
-  public void setCS( final String cs )
+  public void setCS( String cs )
   {
     m_cs = cs;
   }

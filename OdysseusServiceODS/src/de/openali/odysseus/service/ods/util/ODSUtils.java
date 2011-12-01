@@ -48,10 +48,11 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 
 /**
- * @author Alexander Burtscher
+ * @author burtscher1
  */
 public class ODSUtils
 {
+
   private static final String SYMBOL_FILE_SUFFIX = ".png";
 
   private static final int SWT_IMAGE_TYPE = SWT.IMAGE_PNG;
@@ -63,7 +64,6 @@ public class ODSUtils
     System.out.println( "Loading symbol file " + symbolFile.getAbsolutePath() );
     if( !symbolFile.exists() )
       throw new FileNotFoundException();
-
     final ImageData[] id = il.load( symbolFile.getAbsolutePath() );
     return id[0];
   }
@@ -83,4 +83,5 @@ public class ODSUtils
     System.out.println( "Writing symbol file " + symbolFile.getAbsolutePath() );
     il.save( symbolFile.getAbsolutePath(), SWT_IMAGE_TYPE );
   }
+
 }

@@ -53,6 +53,10 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
  */
 public class ActiveThemeTester extends PropertyTester
 {
+  /**
+   * @see org.eclipse.core.expressions.IPropertyTester#test(java.lang.Object, java.lang.String, java.lang.Object[],
+   *      java.lang.Object)
+   */
   @Override
   public boolean test( final Object receiver, final String property, final Object[] args, final Object expectedValue )
   {

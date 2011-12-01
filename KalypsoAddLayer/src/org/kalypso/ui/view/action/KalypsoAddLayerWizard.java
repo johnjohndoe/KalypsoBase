@@ -60,30 +60,45 @@ public class KalypsoAddLayerWizard extends Wizard
 {
   private final GisMapOutlinePage m_outlineviewer;
 
-  private final IWorkbench m_workbench;
+  private IWorkbench m_workbench;
 
   private final IStructuredSelection m_selection;
 
   /**
    * Returns the import wizards that are available for invocation.
    */
-  public KalypsoAddLayerWizard( final GisMapOutlinePage outlineviewer, final IStructuredSelection selection, final IWorkbench workbench )
+  public KalypsoAddLayerWizard( final GisMapOutlinePage outlineviewer, final IStructuredSelection selection )
   {
     m_outlineviewer = outlineviewer;
     m_selection = selection;
-    m_workbench = workbench;
-
-    setWindowTitle( Messages.getString( "org.kalypso.ui.view.action.KalypsoAddLayerWizard.2" ) ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString("org.kalypso.ui.view.action.KalypsoAddLayerWizard.2") ); //$NON-NLS-1$
     setDefaultPageImageDescriptor( WorkbenchImages.getImageDescriptor( IWorkbenchGraphicConstants.IMG_WIZBAN_IMPORT_WIZ ) );
     setNeedsProgressMonitor( true );
+// setDialogSettings( PluginUtilities.getDialogSettings( KalypsoAddLayerPlugin.getDefault(), "addLayerWizard" ) );
+  }
 
-    final String message = Messages.getString( "org.kalypso.ui.view.action.KalypsoAddLayerWizard.0" ); //$NON-NLS-1$
-    final KalypsoWizardSelectionPage page = new KalypsoWizardSelectionPage( m_workbench, m_selection, getAvailableWizards(), message, m_outlineviewer );
-    page.setDescription( Messages.getString( "org.kalypso.ui.view.action.KalypsoAddLayerWizard.1" ) ); //$NON-NLS-1$
+  /**
+   * Creates the wizard's pages lazily.
+   */
+  @Override
+  public void addPages( )
+  {
+    final KalypsoWizardSelectionPage page = new KalypsoWizardSelectionPage( m_workbench, m_selection, getAvailableImportWizards(), Messages.getString("org.kalypso.ui.view.action.KalypsoAddLayerWizard.0"), m_outlineviewer ); //$NON-NLS-1$
+    page.setDescription( Messages.getString("org.kalypso.ui.view.action.KalypsoAddLayerWizard.1") ); //$NON-NLS-1$
     addPage( page );
   }
 
-  private static AdaptableList getAvailableWizards( )
+  /**
+   * This method must be overwritten to only get import wizards that are declared in the org.kalypo.ui plugin. Further
+   * the WizardsRegistryReader must be encapsuled in KalypsoWizardsRegistryReader to make shure only wizards from
+   * org.kalypso.ui are read. And not as specified from the Workbench ui -> see WizardsRegistryReader.
+   */
+  protected AdaptableList getAvailableImportWizards( )
+  {
+    return getAvailableWizards();
+  }
+
+  public static AdaptableList getAvailableWizards( )
   {
     final String pluginId = KalypsoAddLayerPlugin.getId();
     final String plugInpointId = KalypsoAddLayerPlugin.PL_IMPORT;
@@ -94,5 +109,10 @@ public class KalypsoAddLayerWizard extends Wizard
   public boolean performFinish( )
   {
     return true;
+  }
+
+  public void init( final IWorkbench workbench )
+  {
+    m_workbench = workbench;
   }
 }

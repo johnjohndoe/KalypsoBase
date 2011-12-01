@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.core.profil.reparator;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IMarkerResolution2;
 import org.kalypso.model.wspm.core.profil.IProfil;
-
 /**
  * @author kimwerner
  */

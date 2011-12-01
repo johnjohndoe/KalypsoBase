@@ -56,6 +56,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
+import org.kalypso.ogc.gml.wms.provider.images.AbstractDeegreeImageProvider;
 import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoAddLayerPlugin;
@@ -109,12 +110,12 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
     m_modell = null;
 
     /* Get the dialog settings. */
-    final IDialogSettings dialogSettings = getDialogSettings();
+    IDialogSettings dialogSettings = getDialogSettings();
 
     /* If not available, add a section inside the settings of the plugin. */
     if( dialogSettings == null )
     {
-      final IDialogSettings settings = KalypsoAddLayerPlugin.getDefault().getDialogSettings();
+      IDialogSettings settings = KalypsoAddLayerPlugin.getDefault().getDialogSettings();
 
       /* Cannot do anything, if even the plugin has no settings. */
       if( settings == null )
@@ -142,25 +143,25 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
     /* Finishes the work on this page (dialog settings). */
     m_page.finish();
 
-    final IKalypsoLayerModell mapModell = m_modell;
+    IKalypsoLayerModell mapModell = m_modell;
     if( mapModell != null )
       try
       {
-        final boolean isMulti = m_page.isMultiLayer();
+        boolean isMulti = m_page.isMultiLayer();
         if( isMulti )
         {
-          final StringBuffer source = new StringBuffer( IKalypsoImageProvider.KEY_URL + "=" + m_page.getBaseURL().toString() ); //$NON-NLS-1$
-          final StringBuffer layers = new StringBuffer( IKalypsoImageProvider.KEY_LAYERS + "=" ); //$NON-NLS-1$
-          final StringBuffer styles = new StringBuffer( IKalypsoImageProvider.KEY_STYLES + "=" ); //$NON-NLS-1$
-          final StringBuffer provider = new StringBuffer( IKalypsoImageProvider.KEY_PROVIDER + "=" ); //$NON-NLS-1$
+          StringBuffer source = new StringBuffer( IKalypsoImageProvider.KEY_URL + "=" + m_page.getBaseURL().toString() ); //$NON-NLS-1$
+          StringBuffer layers = new StringBuffer( IKalypsoImageProvider.KEY_LAYERS + "=" ); //$NON-NLS-1$
+          StringBuffer styles = new StringBuffer( IKalypsoImageProvider.KEY_STYLES + "=" ); //$NON-NLS-1$
+          StringBuffer provider = new StringBuffer( IKalypsoImageProvider.KEY_PROVIDER + "=" ); //$NON-NLS-1$
 
-          final Layer[] layerArray = m_page.getLayersList();
+          Layer[] layerArray = m_page.getLayersList();
           for( int i = 0; i < layerArray.length; i++ )
           {
-            final Layer layer = layerArray[i];
-            final String layerName = layer.getName();
+            Layer layer = layerArray[i];
+            String layerName = layer.getName();
             String styleName;
-            final Style[] styles2 = layer.getStyles();
+            Style[] styles2 = layer.getStyles();
             if( styles2.length > 0 )
               styleName = styles2[0].getName();
             else
@@ -174,28 +175,28 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
             }
           }
 
-          final String providerID = m_page.getProviderID();
+          String providerID = m_page.getProviderID();
           if( providerID != null )
             provider.append( providerID );
 
-          final String layerName = "Multi" + source; //$NON-NLS-1$
+          String layerName = "Multi" + source; //$NON-NLS-1$
           source.append( "#" ).append( layers.toString() ); //$NON-NLS-1$
           source.append( "#" ).append( styles.toString() ); //$NON-NLS-1$
           source.append( "#" ).append( provider.toString() ); //$NON-NLS-1$
 
-          final AddThemeCommand command = new AddThemeCommand( mapModell, layerName, "wms", source.toString() ); //$NON-NLS-1$
+          AddThemeCommand command = new AddThemeCommand( mapModell, layerName, "wms", null, source.toString() ); //$NON-NLS-1$
           m_outlineviewer.postCommand( command, null );
         }
         else
         {
-          final Layer[] layerArray = m_page.getLayersList();
-          for( final Layer layer : layerArray )
+          Layer[] layerArray = m_page.getLayersList();
+          for( Layer layer : layerArray )
           {
-            final StringBuffer source = new StringBuffer( IKalypsoImageProvider.KEY_URL + "=" + m_page.getBaseURL().toString() ); //$NON-NLS-1$
+            StringBuffer source = new StringBuffer( IKalypsoImageProvider.KEY_URL + "=" + m_page.getBaseURL().toString() ); //$NON-NLS-1$
 
-            final String layerName = layer.getName();
+            String layerName = layer.getName();
             String styleName;
-            final Style[] styles2 = layer.getStyles();
+            Style[] styles2 = layer.getStyles();
             if( styles2.length > 0 )
               styleName = styles2[0].getName();
             else
@@ -205,18 +206,18 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
             if( providerID == null )
               providerID = ""; //$NON-NLS-1$
 
-            final String layerTitle = layer.getTitle();
-            source.append( "#" ).append( IKalypsoImageProvider.KEY_LAYERS ).append( "=" ).append( layerName ); //$NON-NLS-1$ //$NON-NLS-2$
-            source.append( "#" ).append( IKalypsoImageProvider.KEY_STYLES ).append( "=" ).append( styleName ); //$NON-NLS-1$ //$NON-NLS-2$
-            source.append( "#" ).append( IKalypsoImageProvider.KEY_PROVIDER ).append( "=" ).append( providerID ); //$NON-NLS-1$ //$NON-NLS-2$
+            String layerTitle = layer.getTitle();
+            source.append( "#" ).append( AbstractDeegreeImageProvider.KEY_LAYERS ).append( "=" ).append( layerName ); //$NON-NLS-1$ //$NON-NLS-2$
+            source.append( "#" ).append( AbstractDeegreeImageProvider.KEY_STYLES ).append( "=" ).append( styleName ); //$NON-NLS-1$ //$NON-NLS-2$
+            source.append( "#" ).append( AbstractDeegreeImageProvider.KEY_PROVIDER ).append( "=" ).append( providerID ); //$NON-NLS-1$ //$NON-NLS-2$
 
-            final AddThemeCommand command = new AddThemeCommand( mapModell, layerTitle, "wms", source.toString() ); //$NON-NLS-1$
+            AddThemeCommand command = new AddThemeCommand( mapModell, layerTitle, "wms", null, source.toString() ); //$NON-NLS-1$
             m_outlineviewer.postCommand( command, null );
           }
 
         }
       }
-      catch( final Exception e )
+      catch( Exception e )
       {
         e.printStackTrace();
       }
@@ -228,15 +229,15 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
    *      org.eclipse.jface.viewers.IStructuredSelection)
    */
   @Override
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
+  public void init( IWorkbench workbench, IStructuredSelection selection )
   {
     // read service catalog file
-    final InputStream is = getClass().getResourceAsStream( "resources/kalypsoOWS.catalog" ); //$NON-NLS-1$
+    InputStream is = getClass().getResourceAsStream( "resources/kalypsoOWS.catalog" ); //$NON-NLS-1$
     try
     {
       readCatalog( is );
     }
-    catch( final IOException e )
+    catch( IOException e )
     {
       e.printStackTrace();
 
@@ -251,7 +252,7 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
   @Override
   public void addPages( )
   {
-    m_page = new ImportWmsWizardPage( "WmsImportPage", Messages.getString( "org.kalypso.ui.wizard.wms.ImportWmsSourceWizard.0" ), ImageProvider.IMAGE_UTIL_UPLOAD_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_page = new ImportWmsWizardPage( "WmsImportPage", Messages.getString("org.kalypso.ui.wizard.wms.ImportWmsSourceWizard.0"), ImageProvider.IMAGE_UTIL_UPLOAD_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
     addPage( m_page );
   }
 
@@ -259,7 +260,7 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
    * @see org.kalypso.ui.wizard.data.IKalypsoDataImportWizard#setOutlineViewer(org.kalypso.ogc.gml.outline.GisMapOutlineViewer)
    */
   @Override
-  public void setCommandTarget( final ICommandTarget commandTarget )
+  public void setCommandTarget( ICommandTarget commandTarget )
   {
     m_outlineviewer = commandTarget;
   }
@@ -270,17 +271,17 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
     return m_catalog;
   }
 
-  public void readCatalog( final InputStream is ) throws IOException
+  public void readCatalog( InputStream is ) throws IOException
   {
     m_catalog.clear();
 
     // use properties to parse catalog: dont do everything yourself
     // fixes bug with '=' inside of URLs
-    final Properties properties = new Properties();
+    Properties properties = new Properties();
     properties.load( is );
 
-    final Set<Entry<Object, Object>> name = properties.entrySet();
-    for( final Entry<Object, Object> entry : name )
+    Set<Entry<Object, Object>> name = properties.entrySet();
+    for( Entry<Object, Object> entry : name )
     {
       if( entry.getKey().toString().startsWith( KalypsoServiceConstants.WMS_LINK_TYPE ) )
         m_catalog.add( entry.getValue().toString() );
@@ -300,7 +301,7 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
    * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setMapModel(org.kalypso.ogc.gml.IKalypsoLayerModell)
    */
   @Override
-  public void setMapModel( final IKalypsoLayerModell modell )
+  public void setMapModel( IKalypsoLayerModell modell )
   {
     m_modell = modell;
   }

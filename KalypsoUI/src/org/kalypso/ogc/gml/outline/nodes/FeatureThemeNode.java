@@ -198,9 +198,8 @@ public class FeatureThemeNode extends KalypsoThemeNode<IKalypsoFeatureTheme> imp
       }
       else if( object instanceof FeatureTypeStyleNode )
       {
-        final FeatureTypeStyleNode fts = (FeatureTypeStyleNode) object;
-        final String ftsName = fts.getStyle().getName();
-        if( ftsName != null && ftsName.equals( styleName ) )
+        final FeatureTypeStyleNode fts = ((FeatureTypeStyleNode) object);
+        if( fts.getStyle().getName().equals( styleName ) )
           return fts;
       }
     }
@@ -209,11 +208,11 @@ public class FeatureThemeNode extends KalypsoThemeNode<IKalypsoFeatureTheme> imp
   }
 
   /**
-   * @see org.kalypso.ogc.gml.outline.nodes.AbstractThemeNode#getLegendGraphic(java.lang.String[], boolean,
+   * @see org.kalypso.ogc.gml.outline.nodes.AbstractThemeNode#getLegendGraphic(java.lang.String[],
    *      org.eclipse.swt.graphics.Font)
    */
   @Override
-  public Image getLegendGraphic( final String[] whiteList, final boolean onlyVisible, final Font font )
+  public Image getLegendGraphic( final String[] whiteList, final Font font )
   {
     /* Check, if this theme is allowed. */
     if( !checkWhiteList( whiteList ) )
@@ -264,9 +263,7 @@ public class FeatureThemeNode extends KalypsoThemeNode<IKalypsoFeatureTheme> imp
       }
 
       /* Draw the text. */
-      final String legendText = legendElement.getText();
-      if( legendText != null )
-        gc.drawString( legendText, BORDER + ICON_SIZE + GAP + legendElement.getLevel() * (ICON_SIZE + GAP), heightSoFar, true );
+      gc.drawString( legendElement.getText(), BORDER + (ICON_SIZE + GAP) + legendElement.getLevel() * (ICON_SIZE + GAP), heightSoFar, true );
 
       // TODO:
       // Images should be disposed here.

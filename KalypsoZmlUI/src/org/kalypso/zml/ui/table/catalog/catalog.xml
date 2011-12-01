@@ -7,11 +7,6 @@
   <catalog:system systemId="urn:org:kalypso:zml:ui:table:icon:warned:value" uri="icons/warning.png" />
   <catalog:system systemId="urn:org:kalypso:zml:ui:table:icon:wq:conflict" uri="icons/conflict.png" />
 
-  <catalog:system systemId="urn:org:kalypso:zml:ui:table:icon:wq:boundary:deviation:lower" uri="icons/1downarrow.png" />
-  <catalog:system systemId="urn:org:kalypso:zml:ui:table:icon:wq:boundary:deviation:upper" uri="icons/1uparrow.png" />
-  <catalog:system systemId="urn:org:kalypso:zml:ui:table:icon:wq:boundary:deviation:lower:extreme" uri="icons/2downarrow.png" />
-  <catalog:system systemId="urn:org:kalypso:zml:ui:table:icon:wq:boundary:deviation:upper:extreme" uri="icons/2uparrow.png" />
-
   <catalog:system systemId="urn:org:kalypso:zml:ui:table:icon:info" uri="icons/idea.png" />
   <catalog:system systemId="urn:org:kalypso:zml:ui:table:icon:hint" uri="icons/hint.png" />
 

@@ -54,9 +54,6 @@ public interface IZmlTableCell extends IZmlTableObject
 
   IZmlValueReference getValueReference( );
 
-  /**
-   * @return row index
-   */
   int getIndex( );
 
   IZmlTableCell findPreviousCell( );

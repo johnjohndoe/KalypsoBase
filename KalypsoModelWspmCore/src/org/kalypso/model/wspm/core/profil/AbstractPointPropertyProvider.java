@@ -61,7 +61,7 @@ public abstract class AbstractPointPropertyProvider implements IProfilPointPrope
   @Override
   public IProfil createProfil( )
   {
-    return createProfil( new TupleResult(), this );
+    return createProfil( new TupleResult() );
   }
 
   /**

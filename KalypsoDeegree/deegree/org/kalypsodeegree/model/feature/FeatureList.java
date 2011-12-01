@@ -46,12 +46,12 @@ import org.kalypsodeegree.model.sort.JMSpatialIndex;
 /**
  * @author Gernot Belger
  */
-public interface FeatureList extends List, JMSpatialIndex, IFeatureProperty
+public interface FeatureList extends List, JMSpatialIndex
 {
   /**
    * Gets ALL features in this list. Resolves any links.
    */
-  Feature[] toFeatures( );
+  public Feature[] toFeatures( );
 
   /**
    * Visit all Features in the list.
@@ -59,88 +59,85 @@ public interface FeatureList extends List, JMSpatialIndex, IFeatureProperty
    * @param depth
    *          One of {@link FeatureVisitor#DEPTH_INFINITE}...
    */
-  void accept( FeatureVisitor visitor, int depth );
+  public void accept( FeatureVisitor visitor, int depth );
 
   /** Visit all Features in the list. */
-  void accept( FeatureVisitor visitor );
+  public void accept( FeatureVisitor visitor );
 
   /**
    * The feature containing this list.
    * 
    * @return The parent feature, <code>null</code> if the list has no parent feature.
    */
-  @Override
-  Feature getParentFeature( );
+  public Feature getParentFeature( );
 
   /**
    * This method returns the property-type of the parent feature that denotes this list.
    * 
    * @return Property of parent feature that contains this list or <code>null</code>, if this list has no parent.
-   * @deprecated Use {@link #getPropertyType()} instead.
    */
-  @Deprecated
-  IRelationType getParentFeatureTypeProperty( );
+  public IRelationType getParentFeatureTypeProperty( );
 
   /**
    * Returns the first element of the list.
    * 
    * @return <code>null</code> if the list is empty.
    */
-  Object first( );
+  public Object first( );
 
   /**
    * Find all features that intersect with the given geometry.<br>
    */
-  List<Feature> searchFeatures( final GM_Object geometry );
+  public List<Feature> searchFeatures( final GM_Object geometry );
 
   /**
    * Same as {@link #insertNew(getSize(), newChildType, 'uniqueRandomFeatureId', Feature.class)}
    * 
    * @see #insertNew(int, QName, String, Class)
    */
-  Feature addNew( QName newChildType );
+  public Feature addNew( QName newChildType );
 
   /**
    * Same as {@link #insertNew(getSize(), newChildType, newFeatureId, Feature.class)}
    * 
    * @see #insertNew(int, QName, String, Class)
    */
-  Feature addNew( QName newChildType, String newFeatureId );
+  public Feature addNew( QName newChildType, String newFeatureId );
 
   /**
    * Same as {@link #insertNew(getSize(), newChildType, 'uniqueRandomFeatureId', classToAdapt)}
    * 
    * @see #insertNew(int, QName, String, Class)
    */
-  <T extends Feature> T addNew( QName newChildType, Class<T> classToAdapt );
+  public <T extends Feature> T addNew( QName newChildType, Class<T> classToAdapt );
 
   /**
    * Same as {@link #insertNew(getSize(), newChildType, newFeatureId, classToAdapt)}
    * 
    * @see #insertNew(int, QName, String, Class)
    */
-  <T extends Feature> T addNew( QName newChildType, String newFeatureId, Class<T> classToAdapt );
+  public <T extends Feature> T addNew( QName newChildType, String newFeatureId, Class<T> classToAdapt );
 
   /**
    * Same as {@link #insertNew(index, newChildType, 'uniqueRandomFeatureId', Feature.class)}
    * 
    * @see #insertNew(int, QName, String, Class)
    */
-  Feature insertNew( int index, QName newChildType );
+  public Feature insertNew( int index, QName newChildType );
 
   /**
    * Same as {@link #insertNew(index, newChildType, newFeatureId, Feature.class)}
    * 
    * @see #insertNew(int, QName, String, Class)
    */
-  Feature insertNew( int index, QName newChildType, String newFeatureId );
+  public Feature insertNew( int index, QName newChildType, String newFeatureId );
 
   /**
    * Same as {@link #insertNew( index, newChildType, 'uniqueRandomFeatureId', classToAdapt)}
    * 
    * @see #insertNew(int, QName, String, Class)
    */
-  <T extends Feature> T insertNew( int index, QName newChildType, Class<T> classToAdapt );
+  public <T extends Feature> T insertNew( int index, QName newChildType, Class<T> classToAdapt );
 
   /**
    * Creates and adds a new feature of the specified type into the feature collection at the specified position.<br>
@@ -163,7 +160,7 @@ public interface FeatureList extends List, JMSpatialIndex, IFeatureProperty
    * @throws IndexOutOfBoundsException
    *           if the index is out of range (index &lt; 0 || index &gt; size()).
    */
-  <T extends Feature> T insertNew( int index, QName newChildType, String newFeatureId, Class<T> classToAdapt );
+  public <T extends Feature> T insertNew( int index, QName newChildType, String newFeatureId, Class<T> classToAdapt );
 
   /**
    * Same as {@link #insertNew(index, newChildType, newFeatureId, classToAdapt)}, additionally sets the given
@@ -175,14 +172,14 @@ public interface FeatureList extends List, JMSpatialIndex, IFeatureProperty
    * @see org.kalypso.gmlschema.feature.IFeatureType#getProperties()
    * @see #insertNew(int, QName, String, Class)
    */
-  <T extends Feature> T insertNew( int index, QName newChildType, String newFeatureId, Class<T> classToAdapt, Object[] properties );
+  public <T extends Feature> T insertNew( int index, QName newChildType, String newFeatureId, Class<T> classToAdapt, Object[] properties );
 
   /**
    * Same as {@link #insertRef(getSize(), Feature)}
    * 
    * @see #insertRef(int, Feature)
    */
-  <T extends Feature> boolean addRef( T toAdd ) throws IllegalArgumentException;
+  public <T extends Feature> boolean addRef( T toAdd ) throws IllegalArgumentException;
 
   /**
    * Add this feature as reference to this list.<br>
@@ -199,6 +196,6 @@ public interface FeatureList extends List, JMSpatialIndex, IFeatureProperty
    *           definition.
    * @throws {@link NullPointerException} If the argument toAdd is null
    */
-  <T extends Feature> boolean insertRef( int index, T toAdd ) throws IllegalArgumentException;
+  public <T extends Feature> boolean insertRef( int index, T toAdd ) throws IllegalArgumentException;
 
 }

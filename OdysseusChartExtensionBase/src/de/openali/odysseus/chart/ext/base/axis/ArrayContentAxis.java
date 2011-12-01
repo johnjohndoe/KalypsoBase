@@ -1,8 +1,11 @@
 package de.openali.odysseus.chart.ext.base.axis;
 
+import org.apache.poi.ss.formula.eval.NotImplementedException;
+
 import de.openali.odysseus.chart.ext.base.axisrenderer.AxisRendererConfig;
 import de.openali.odysseus.chart.ext.base.axisrenderer.OrdinalAxisRenderer;
 import de.openali.odysseus.chart.ext.base.data.IAxisContentProvider;
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 
@@ -11,27 +14,36 @@ import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
  */
 public class ArrayContentAxis extends AbstractAxis
 {
+ 
 
-  private IAxisContentProvider m_contentProvider = null;
-
-  private int m_fixedWidth = -1;
-
-  public ArrayContentAxis( final String id, final IAxisContentProvider contentProvider, final int fixedWidth )
+  /**
+   * @see de.openali.odysseus.chart.ext.base.axis.AbstractAxis#getNumericRange()
+   */
+  @Override
+  public IDataRange<Number> getNumericRange( )
   {
-    this( id, POSITION.BOTTOM, contentProvider, fixedWidth );
-
+    // TODO Auto-generated method stub
+    return super.getNumericRange();
   }
 
-  public ArrayContentAxis( final String id, final POSITION position, final IAxisRenderer axisRenderer, final IAxisContentProvider contentProvider, final int fixedWidth )
+  /**
+   * @see de.openali.odysseus.chart.ext.base.axis.AbstractAxis#setNumericRange(de.openali.odysseus.chart.framework.model.data.IDataRange)
+   */
+  @Override
+  public void setNumericRange( IDataRange<Number> range )
   {
-    super( id, position, Integer.class, axisRenderer );
-    m_contentProvider = contentProvider;
-    m_fixedWidth = fixedWidth;
+     super.setNumericRange( range );
   }
 
-  public ArrayContentAxis( final String id, final POSITION position, final IAxisContentProvider contentProvider, final int fixedWidth )
+  // TODO more positions,only POSITION.BOTTOM supported
+  public ArrayContentAxis( final String id, final AxisRendererConfig config )
   {
-    this( id, position, new OrdinalAxisRenderer( id + "_axisRenderer", new AxisRendererConfig(), contentProvider ), contentProvider, fixedWidth );
+    this( id, config, null );
+  }
+
+  public ArrayContentAxis( final String id, final AxisRendererConfig config, final IAxisContentProvider contentProvider )
+  {
+    super( id, POSITION.BOTTOM, Integer.class, new OrdinalAxisRenderer( id, config, null, contentProvider ) );
   }
 
   /**
@@ -40,7 +52,7 @@ public class ArrayContentAxis extends AbstractAxis
   @Override
   public int normalizedToScreen( final double d )
   {
-    throw new UnsupportedOperationException( "use numericToScreen instead" );
+    throw new NotImplementedException( "use numericToScreen instead" );
   }
 
   /**
@@ -49,15 +61,23 @@ public class ArrayContentAxis extends AbstractAxis
   @Override
   public Integer numericToScreen( final Number value )
   {
-    final int start = getNumericRange().getMin().intValue();
-    return (value.intValue() - start) * m_fixedWidth;
+    final Number[] ticks = getRenderer().getTicks( this, null );
+    if( ticks.length < 1 )
+      return null;
+    else if( ticks.length < 2 )
+      return ticks[0].intValue();
+    final int tickdist = ticks[1].intValue() - ticks[0].intValue();
+    return ticks[0].intValue() + value.intValue() * tickdist;
   }
 
   public Object numericToContent( final int index )
   {
-    if( m_contentProvider == null )
-      return null;
-    return m_contentProvider.getContent( index );
+    final IAxisRenderer renderer = getRenderer();
+    if( renderer instanceof OrdinalAxisRenderer )
+    {
+      return ((OrdinalAxisRenderer) renderer).getContent( index );
+    }
+    return null;
   }
 
   /**
@@ -66,7 +86,7 @@ public class ArrayContentAxis extends AbstractAxis
   @Override
   public double screenToNormalized( final int value )
   {
-    throw new UnsupportedOperationException( "use screenToNumeric instead" );
+    throw new NotImplementedException( "use screenToNumeric instead" );
   }
 
   /**
@@ -75,7 +95,28 @@ public class ArrayContentAxis extends AbstractAxis
   @Override
   public Number screenToNumeric( final int value )
   {
-    // Todo: zurzeit nur intervallRendered mit festem Intervall, und 1. Tick bei screen =0
-    return Math.round( value / m_fixedWidth ) + getNumericRange().getMin().intValue();
+
+    final Number[] ticks = getRenderer().getTicks( this, null );
+    if( ticks.length < 2 )
+      return 0;
+    final int tickdist = ticks[1].intValue() - ticks[0].intValue();
+    if( value < ticks[0].intValue() )
+      return  (value - ticks[0].intValue()) / tickdist;
+    if( value > ticks[ticks.length - 1].intValue() )
+      return (ticks.length - 1) + (value - ticks[ticks.length - 1].intValue()) / tickdist;
+
+    int minDist = Integer.MAX_VALUE;
+    Number returnValue = 0;
+    for( int i = 0; i < ticks.length; i++ )
+    {
+      final int dist = Math.abs( ticks[i].intValue() - value );
+      if( dist < minDist )
+      {
+        minDist = dist;
+        returnValue = i;
+      }
+    }
+    return returnValue;
+
   }
 }

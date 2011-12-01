@@ -37,7 +37,9 @@
 package org.kalypsodeegree.model.geometry;
 
 /**
+ * 
  * This interface defines the basis functionallity of geomerty boundaries.
+ * 
  * <p>
  * -----------------------------------------------------
  * </p>
@@ -52,6 +54,6 @@ public interface GM_Boundary extends GM_Object
   /**
    * A geometric object, which has no boundary is a cycle.
    */
-  public boolean isCycle( );
+  public boolean isCycle();
 
 }

@@ -52,12 +52,12 @@ public class TrianglePatchesContentHandler extends GMLElementContentHandler impl
 {
   public static final String ELEMENT_TRIANGLE_PATCH = "trianglePatches";
 
-  private final ITriangleHandler m_triangleHandler;
+  private final ITriangleHandler m_triangleHandler;  
 
   public TrianglePatchesContentHandler( final XMLReader reader, final ITriangleHandler triangleHandler, final String defaultSrs )
-  {
+  { 
     super( reader, NS.GML3, ELEMENT_TRIANGLE_PATCH, defaultSrs, triangleHandler );
-    m_triangleHandler = triangleHandler;
+    m_triangleHandler = triangleHandler;    
   }
 
   @Override
@@ -91,7 +91,7 @@ public class TrianglePatchesContentHandler extends GMLElementContentHandler impl
     {
       final IGmlContentHandler triangleContentHandler = new TriangleContentHandler( getXMLReader(), this, m_defaultSrs );
       triangleContentHandler.activate();
-      triangleContentHandler.startElement( uri, localName, name, atts );
+      triangleContentHandler.startElement( uri, localName, name, atts );        
     }
     else
       throwSAXParseException( "Unexpected start element: {%s}%s = %s - should be {%s}%s", uri, localName, name, NS.GML3, m_localName );

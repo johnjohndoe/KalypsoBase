@@ -52,7 +52,7 @@ import org.kalypso.commons.parser.ParserException;
 
 /**
  * Ein Parser für Date Objekte.
- * 
+ *
  * @author schlienger
  */
 public class DateParser extends AbstractParser
@@ -64,7 +64,7 @@ public class DateParser extends AbstractParser
   /**
    * Default constructor.
    */
-  public DateParser( )
+  public DateParser()
   {
     this( "" ); //$NON-NLS-1$
   }
@@ -97,7 +97,7 @@ public class DateParser extends AbstractParser
    * @see org.kalypso.commons.parser.IParser#getFormat()
    */
   @Override
-  public String getFormat( )
+  public String getFormat()
   {
     return m_format;
   }
@@ -135,8 +135,8 @@ public class DateParser extends AbstractParser
   @Override
   public int compare( final Object value1, final Object value2 )
   {
-    final Date d1 = (Date) value1;
-    final Date d2 = (Date) value2;
+    final Date d1 = (Date)value1;
+    final Date d2 = (Date)value2;
 
     return d1.compareTo( d2 );
   }

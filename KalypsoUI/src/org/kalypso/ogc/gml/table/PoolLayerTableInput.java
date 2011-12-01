@@ -72,6 +72,7 @@ public class PoolLayerTableInput implements ILayerTableInput
 
   private final PoolFeaturesProvider m_featuresProvider;
 
+
   public PoolLayerTableInput( final IPoolableObjectType poolKey, final String featurePath )
   {
     m_featuresProvider = new PoolFeaturesProvider( poolKey, featurePath );

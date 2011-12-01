@@ -45,9 +45,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -149,9 +149,7 @@ public class ProfileWrapper
     for( final ProfilePointWrapper point : points )
     {
       if( point.getBreite() < width )
-      {
         before = point;
-      }
       else
         return before;
     }
@@ -232,7 +230,7 @@ public class ProfileWrapper
   @Override
   public String toString( )
   {
-    return String.format( Messages.getString( "ProfileWrapper_0" ), m_profile.getStation() ); //$NON-NLS-1$
+    return String.format( Messages.getString("ProfileWrapper_0"), m_profile.getStation() ); //$NON-NLS-1$
   }
 
   public ProfilePointWrapper getFirstPoint( )
@@ -278,13 +276,8 @@ public class ProfileWrapper
   {
     if( obj instanceof ProfileWrapper )
     {
-      final ProfileWrapper other = (ProfileWrapper) obj;
-
-      final String station = String.format( "%.3f", getStation() ); //$NON-NLS-1$
-      final String otherStation = String.format( "%.3f", other.getStation() ); //$NON-NLS-1$
-
       final EqualsBuilder builder = new EqualsBuilder();
-      builder.append( station, otherStation );
+      builder.append( getStation(), ((ProfileWrapper) obj).getStation() );
 
       return builder.isEquals();
     }
@@ -298,10 +291,9 @@ public class ProfileWrapper
   @Override
   public int hashCode( )
   {
-    final String station = String.format( "%.3f", getStation() ); //$NON-NLS-1$
-
     final HashCodeBuilder builder = new HashCodeBuilder();
-    builder.append( station );
+    builder.append( getClass().getName() );
+    builder.append( getStation() );
 
     return builder.toHashCode();
   }
@@ -340,13 +332,9 @@ public class ProfileWrapper
     for( final ProfilePointWrapper point : points )
     {
       if( point.getBreite() < breite )
-      {
         last = point;
-      }
       else if( point.getBreite() >= breite )
-      {
         break;
-      }
     }
 
     return last;
@@ -381,9 +369,7 @@ public class ProfileWrapper
     for( final ProfilePointWrapper point : points )
     {
       if( point.getHoehe() < height )
-      {
         height = point.getHoehe();
-      }
     }
 
     return height;

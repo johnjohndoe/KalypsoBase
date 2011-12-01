@@ -113,7 +113,7 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
   {
     // TODO: should never happen remove if fixed
     if( feature == null )
-      return new NotImplementedFeatureDialog();
+      return new NotImplementedFeatureDialog(  );  
 
     if( pt instanceof IValuePropertyType )
     {
@@ -141,8 +141,8 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
       if( property == null )
       {
         if( !rt.isInlineAble() || rt.isLinkAble() )
-          return new NotImplementedFeatureDialog( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog.implemented" ), "..." ); //$NON-NLS-1$  //$NON-NLS-2$
-
+          return new NotImplementedFeatureDialog( Messages.getString("org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog.implemented"), "..." );  //$NON-NLS-1$  //$NON-NLS-2$
+        
         return new CreateFeaturePropertyDialog( listener, feature, rt );
       }
 
@@ -174,7 +174,7 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
   @Override
   public void dispose( )
   {
-    if( !m_button.isDisposed() )
+    if( !(m_button.isDisposed()) )
       m_button.dispose();
   }
 
@@ -278,7 +278,7 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
       return;
 
     m_button.setText( m_dialog.getLabel() );
-
+    
     m_button.setEnabled( feature != null );
   }
 }

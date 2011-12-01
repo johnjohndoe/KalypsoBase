@@ -48,8 +48,6 @@ import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -88,7 +86,6 @@ public class ChartHandlerUtilities
    */
   public static IChartComposite getChart( final IEvaluationContext context )
   {
-    // Fixme: wenn mehrere Charts geöffnet sind wird die contextVariable nicht immer richtig gesetzt
     return (IChartComposite) context.getVariable( ChartSourceProvider.ACTIVE_CHART_NAME );
   }
 
@@ -142,7 +139,7 @@ public class ChartHandlerUtilities
    * @deprecated Should happen automatically, use ISourceProvider mechanism instead.
    */
   @Deprecated
-  public static void updateElements( final Object part )
+  public static void updateElements( final IChartPart part )
   {
     final Map<Object, Object> filter = new HashMap<Object, Object>();
 
@@ -185,20 +182,5 @@ public class ChartHandlerUtilities
       return null;
 
     return chart.getChartModel();
-  }
-
-  public static Point screen2plotPoint( final Point screen, final Rectangle plotRect )
-  {
-    if( plotRect == null )
-      return screen;
-
-    return new Point( screen.x - plotRect.x, screen.y - plotRect.y );
-  }
-
-  public static Point plotPoint2screen( final Point plotPoint, final Rectangle plotRect )
-  {
-    if( plotRect == null )
-      return plotPoint;
-    return new Point( plotPoint.x + plotRect.x, plotPoint.y + plotRect.y );
   }
 }

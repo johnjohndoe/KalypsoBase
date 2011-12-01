@@ -18,7 +18,6 @@ import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.gml.util.ChangeSourceType;
 import org.kalypso.gml.util.CsvSourceType;
 import org.kalypso.gml.util.CsvTargetType;
-import org.kalypso.gml.util.Excelsource;
 import org.kalypso.gml.util.FeaturemappingSourceType;
 import org.kalypso.gml.util.GmlSourceType;
 import org.kalypso.gml.util.GmlTargetType;
@@ -31,7 +30,6 @@ import org.kalypso.gml.util.SourceType;
 import org.kalypso.gml.util.TargetType;
 import org.kalypso.ogc.gml.convert.source.ChangeSourceTypeHandler;
 import org.kalypso.ogc.gml.convert.source.CsvSourceHandler;
-import org.kalypso.ogc.gml.convert.source.ExcelSourceHandler;
 import org.kalypso.ogc.gml.convert.source.FeaturemappingSourceHandler;
 import org.kalypso.ogc.gml.convert.source.GmlNewHandler;
 import org.kalypso.ogc.gml.convert.source.GmlSourceHandler;
@@ -132,9 +130,6 @@ public final class GmlConvertFactory
 
     if( source instanceof CsvSourceType )
       return new CsvSourceHandler( resolver, context, (CsvSourceType) source );
-
-    if( source instanceof Excelsource )
-      return new ExcelSourceHandler( resolver, context, (Excelsource) source );
 
     if( source instanceof ShpSourceType )
       return new ShpSourceHandler( resolver, context, (ShpSourceType) source );

@@ -118,7 +118,7 @@ public class RenderingRule
     if( m_mask == 0 || mask == 0 )
       return mask == m_mask;
 
-    return (m_mask & mask) != 0;
+    return (m_mask & mask) == mask;
   }
 
   /**
@@ -133,7 +133,7 @@ public class RenderingRule
   /**
    * Create a deep copy of this rule.
    */
-  public RenderingRule cloneRule( )
+  public RenderingRule cloneRule()
   {
     return new RenderingRule( m_mask, m_fg, m_bg, m_ft, m_tt, m_icon );
   }

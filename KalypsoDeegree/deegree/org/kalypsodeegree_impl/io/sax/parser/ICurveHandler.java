@@ -45,6 +45,7 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 
 /**
  * @author Felipe Maximino
+ *
  */
 public interface ICurveHandler extends IGMLElementHandler<GM_Curve>
 {

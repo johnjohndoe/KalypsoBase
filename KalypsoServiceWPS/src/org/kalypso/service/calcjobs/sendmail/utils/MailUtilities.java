@@ -84,10 +84,10 @@ public class MailUtilities
    * false.
    * 
    * @param type
-   *          The type given by the user.
+   *            The type given by the user.
    * @return True, if this content type is allowed.
    */
-  public static boolean checkContentType( final String type )
+  public static boolean checkContentType( String type )
   {
     if( TEXT_PLAIN.equals( type ) )
       return true;

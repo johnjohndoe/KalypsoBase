@@ -44,10 +44,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -56,25 +54,23 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
-import org.kalypso.contribs.eclipse.jface.dialog.EnhancedTitleAreaDialog;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 
 /**
  * @author Dirk Kuch
  */
-public class CompareProfilesDialog extends EnhancedTitleAreaDialog
+public class CompareProfilesDialog extends TitleAreaDialog
 {
-  protected final String m_screenSettings;
+  private static final int SCREEN_WIDTH = 800;
+
+  private static final int SCREEN_HEIGHT = 600;
 
   private final ICompareProfileProvider m_provider;
 
-  public CompareProfilesDialog( final Shell shell, final ICompareProfileProvider provider, final String screenSetting )
+  public CompareProfilesDialog( final Shell shell, final ICompareProfileProvider provider )
   {
     super( shell );
-    setShellStyle( SWT.CLOSE | SWT.MAX | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE );
     m_provider = provider;
-    m_screenSettings = screenSetting;
   }
 
   /**
@@ -83,35 +79,33 @@ public class CompareProfilesDialog extends EnhancedTitleAreaDialog
   @Override
   protected Control createDialogArea( final Composite parent )
   {
-    getShell().setText( Messages.getString( "CompareProfilesDialog_0" ) ); //$NON-NLS-1$
+    getShell().setText( Messages.getString("CompareProfilesDialog_0") ); //$NON-NLS-1$
+
+    // FIXME: title should be set from outside, we always have different reasons to compare two profiles
+    setTitle( "Profilvergleich zwischen KalypsoWSPM Modellprofil und Maﬂnahmenprofil" );
 
     final FormToolkit toolkit = new FormToolkit( parent.getDisplay() );
 
-    final Composite base = toolkit.createComposite( parent, SWT.NULL );
-    base.setLayout( new GridLayout() );
+    final Composite base = toolkit.createComposite( parent );
 
-    final Point screen = getScreenSize( m_screenSettings );
+    final GridLayout baseLayout = new GridLayout();
+    baseLayout.marginHeight = baseLayout.marginWidth = 0;
+    base.setLayout( baseLayout );
 
     final GridData data = new GridData( GridData.FILL, GridData.FILL, true, true );
-    data.widthHint = screen.x;
-    data.heightHint = screen.y;
+    data.widthHint = SCREEN_WIDTH;
+    data.heightHint = SCREEN_HEIGHT;
     base.setLayoutData( data );
 
     final ScrolledForm form = toolkit.createScrolledForm( base );
     form.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     final Composite body = form.getBody();
-    body.setLayout( Layouts.createGridLayout() );
-
-    base.addControlListener( new ControlAdapter()
-    {
-      @Override
-      public void controlResized( final ControlEvent e )
-      {
-        setScreenSize( m_screenSettings, base.getSize() );
-      }
-    } );
+    final GridLayout bodyLayout = new GridLayout();
+    bodyLayout.marginHeight = bodyLayout.marginWidth = 0;
+    body.setLayout( bodyLayout );
 
     final CompareProfileWrapper baseWrapper = m_provider.getBaseProfile();
+
     final ProfileChartComposite baseChartView = createChartView( baseWrapper, body, toolkit );
 
     final List<ProfileChartComposite> additionalChartViews = new ArrayList<ProfileChartComposite>();
@@ -133,7 +127,9 @@ public class CompareProfilesDialog extends EnhancedTitleAreaDialog
   {
     final Group group = new Group( body, SWT.NULL );
 
-    group.setLayout( Layouts.createGridLayout() );
+    final GridLayout layout = new GridLayout();
+    layout.marginHeight = layout.marginWidth = 0;
+    group.setLayout( layout );
 
     group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     group.setText( wrapper.getLabel() );

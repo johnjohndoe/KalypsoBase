@@ -42,12 +42,11 @@ package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -76,6 +75,7 @@ import org.kalypso.ogc.gml.painter.IStylePainter;
 import org.kalypso.ogc.gml.painter.StylePainterFactory;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
+import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -86,18 +86,14 @@ import org.kalypsodeegree.model.feature.event.IGMLWorkspaceModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.graphics.displayelements.ILabelPlacementStrategy;
-import org.kalypsodeegree_impl.graphics.displayelements.SimpleLabelPlacementStrategy;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-
-import com.vividsolutions.jts.geom.Envelope;
 
 /**
  * @author Andreas von Dömming
  */
 public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalypsoFeatureTheme, ModellEventListener, IKalypsoStyleListener
 {
-  private final List<IKalypsoStyle> m_styles = Collections.synchronizedList( new ArrayList<IKalypsoStyle>() );
+  private final List<IKalypsoStyle> m_styles = new ArrayList<IKalypsoStyle>();
 
   private CommandableWorkspace m_workspace;
 
@@ -203,6 +199,11 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     return m_featurePath;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
+   *      org.eclipse.core.runtime.IProgressMonitor)
+   */
   @Override
   public IStatus paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
   {
@@ -210,9 +211,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
     try
     {
-      final ILabelPlacementStrategy strategy = createStrategy( g, selected );
-
-      final IStylePaintable paintDelegate = new FeatureThemePaintable( p, (Graphics2D) graphics, m_selectionManager, selected, strategy );
+      final IStylePaintable paintDelegate = new FeatureThemePaintable( p, graphics, m_selectionManager, selected );
       final IStylePainter painter = StylePainterFactory.create( this, selected );
       painter.paint( paintDelegate, monitor );
 
@@ -225,18 +224,6 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     }
 
     return Status.OK_STATUS;
-  }
-
-  private ILabelPlacementStrategy createStrategy( final Graphics g, final Boolean selected )
-  {
-    if( selected != null && selected == true )
-      return null;
-
-    // FIXME: create strategy depending on theme property
-    // FIXME: give additional parameters into strategy
-    final Rectangle bounds = g.getClipBounds();
-    final Envelope screenRect = new Envelope( bounds.getMinX(), bounds.getMaxX(), bounds.getMinY(), bounds.getMaxY() );
-    return new SimpleLabelPlacementStrategy( screenRect );
   }
 
   /**
@@ -292,6 +279,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     return m_styles.toArray( new IKalypsoStyle[m_styles.size()] );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
+   */
   @Override
   public void onModellChange( final ModellEvent modellEvent )
   {
@@ -302,12 +292,12 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     {
       // my workspace ?
       final GMLWorkspace changedWorkspace = ((IGMLWorkspaceModellEvent) modellEvent).getGMLWorkspace();
-      if( m_workspace != null && changedWorkspace != m_workspace && changedWorkspace != m_workspace.getWorkspace() )
+      if( ((m_workspace != null) && (changedWorkspace != m_workspace) && (changedWorkspace != m_workspace.getWorkspace())) )
         return; // not my workspace
 
       if( modellEvent instanceof FeaturesChangedModellEvent )
       {
-        final FeaturesChangedModellEvent featuresChangedModellEvent = (FeaturesChangedModellEvent) modellEvent;
+        final FeaturesChangedModellEvent featuresChangedModellEvent = ((FeaturesChangedModellEvent) modellEvent);
         final Feature[] features = featuresChangedModellEvent.getFeatures();
 
         // HACK: for single-feature lists (see flag), we must invalidate the list ourselves.
@@ -377,6 +367,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     }
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
+   */
   @Override
   public GM_Envelope getFullExtent( )
   {
@@ -394,17 +387,53 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     return m_featureList;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeatureListVisible(org.kalypsodeegree.model.geometry.GM_Envelope)
+   */
   @Override
   public FeatureList getFeatureListVisible( final GM_Envelope searchEnvelope )
   {
     if( m_featureList == null )
       return null;
 
+    // TODO: we should also get the scale here (else we might return currently invisible features)
+
     /* Use complete bounding box if search envelope is not set. */
     final GM_Envelope env = searchEnvelope == null ? m_featureList.getBoundingBox() : searchEnvelope;
 
     // Put features in set in order to avoid duplicates
-    final VisibleFeaturesPaintable paintDelegate = new VisibleFeaturesPaintable( env );
+    final Set<Feature> features = new LinkedHashSet<Feature>();
+    final IStylePaintable paintDelegate = new IStylePaintable()
+    {
+      @Override
+      public void paint( final DisplayElement displayElement, final IProgressMonitor paintMonitor )
+      {
+        final Feature feature = displayElement.getFeature();
+        final GM_Envelope envelope = feature.getEnvelope();
+        if( envelope != null && env.intersects( envelope ) )
+        {
+          features.add( feature );
+        }
+      }
+
+      @Override
+      public Double getScale( )
+      {
+        return null;
+      }
+
+      @Override
+      public GM_Envelope getBoundingBox( )
+      {
+        return env;
+      }
+
+      @Override
+      public boolean shouldPaintFeature( final Feature feature )
+      {
+        return true;
+      }
+    };
 
     final IProgressMonitor monitor = new NullProgressMonitor();
 
@@ -421,11 +450,14 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     final Feature parentFeature = m_featureList.getParentFeature();
     final IRelationType parentFTP = m_featureList.getParentFeatureTypeProperty();
     final FeatureList resultList = FeatureFactory.createFeatureList( parentFeature, parentFTP );
-    final Collection<Feature> visibleFeatures = paintDelegate.getVisibleFeatures();
-    resultList.addAll( visibleFeatures );
+    resultList.addAll( features );
     return resultList;
   }
 
+  /**
+   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand,
+   *      java.lang.Runnable)
+   */
   @Override
   public void postCommand( final ICommand command, final Runnable runnable )
   {
@@ -443,18 +475,27 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     }
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getSchedulingRule()
+   */
   @Override
   public ISchedulingRule getSchedulingRule( )
   {
     return null;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getSelectionManager()
+   */
   @Override
   public IFeatureSelectionManager getSelectionManager( )
   {
     return m_selectionManager;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getDefaultIcon()
+   */
   @Override
   public ImageDescriptor getDefaultIcon( )
   {
@@ -464,6 +505,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     return ImageDescriptor.createFromImage( m_featureThemeIcon );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoStyleListener#styleChanged()
+   */
   @Override
   public void styleChanged( )
   {
@@ -523,7 +567,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     if( infoId == null )
       return null;
 
-    if( infoId.startsWith( "%" ) ) //$NON-NLS-1$
+    if( infoId.startsWith( "%" ) )
     {
       final I10nString themeName = getName();
       if( themeName != null )

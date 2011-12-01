@@ -42,8 +42,6 @@ package org.kalypso.zml.core.table.model.references;
 
 import java.util.Date;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -69,7 +67,7 @@ public class ZmlDataValueReference implements IZmlValueReference
 
   private final IZmlModelRow m_row;
 
-  public ZmlDataValueReference( final IZmlModelRow row, final IZmlModelColumn column, final int tupleModelIndex )
+  protected ZmlDataValueReference( final IZmlModelRow row, final IZmlModelColumn column, final int tupleModelIndex )
   {
     m_row = row;
     m_column = column;
@@ -117,30 +115,45 @@ public class ZmlDataValueReference implements IZmlValueReference
     return null;
   }
 
+  /**
+   * @see org.kalypso.zml.ui.table.model.references.IZmlValueReference#getColumn()
+   */
   @Override
   public IZmlModelColumn getColumn( )
   {
     return m_column;
   }
 
+  /**
+   * @see org.kalypso.zml.ui.table.model.references.IZmlValueReference#getRow()
+   */
   @Override
   public IZmlModelRow getRow( )
   {
     return m_row;
   }
 
+  /**
+   * @see org.kalypso.zml.ui.table.model.references.IZmlValueReference#getTupleModelIndex()
+   */
   @Override
   public Integer getModelIndex( )
   {
     return m_tupleModelIndex;
   }
 
+  /**
+   * @see org.kalypso.zml.ui.table.model.references.IZmlValueReference#getModel()
+   */
   @Override
   public IZmlModel getModel( )
   {
     return m_row.getModel();
   }
 
+  /**
+   * @see org.kalypso.zml.ui.table.model.references.IZmlValueReference#getDataSource()
+   */
   @Override
   public String getDataSource( ) throws SensorException
   {
@@ -159,6 +172,9 @@ public class ZmlDataValueReference implements IZmlValueReference
     return null;
   }
 
+  /**
+   * @see org.kalypso.zml.ui.table.model.references.IZmlValueReference#getHref()
+   */
   @Override
   public String getHref( )
   {
@@ -173,45 +189,9 @@ public class ZmlDataValueReference implements IZmlValueReference
     }
     catch( final Throwable t )
     {
-      t.printStackTrace();
     }
 
     return href;
   }
 
-  @Override
-  public boolean equals( final Object obj )
-  {
-    if( obj instanceof ZmlDataValueReference )
-    {
-      try
-      {
-        final ZmlDataValueReference other = (ZmlDataValueReference) obj;
-
-        final EqualsBuilder builder = new EqualsBuilder();
-        builder.append( getColumn().getIdentifier(), other.getColumn().getIdentifier() );
-        builder.append( getModelIndex(), getModelIndex() );
-        builder.append( getValue(), other.getValue() );
-
-        return builder.isEquals();
-      }
-      catch( final SensorException e )
-      {
-        e.printStackTrace();
-      }
-    }
-
-    return super.equals( obj );
-  }
-
-  @Override
-  public int hashCode( )
-  {
-    final HashCodeBuilder builder = new HashCodeBuilder();
-    builder.append( getClass().getName() );
-    builder.append( getColumn().getIdentifier() );
-    builder.append( getModelIndex() );
-
-    return builder.toHashCode();
-  }
 }

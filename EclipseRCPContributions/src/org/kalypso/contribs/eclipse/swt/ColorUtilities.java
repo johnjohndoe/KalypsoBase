@@ -47,7 +47,7 @@ import org.eclipse.swt.graphics.RGB;
  * 
  * @author Holger Albert
  */
-public final class ColorUtilities
+public class ColorUtilities
 {
   /**
    * The constructor.
@@ -63,7 +63,7 @@ public final class ColorUtilities
    *          The html string in the format #RGB.
    * @return The RGB color, or null, if string is not correct parsable.
    */
-  public static RGB toRGBFromHTML( final String html )
+  public static RGB toRGBFromHTML( String html )
   {
     if( html == null || html.length() != 7 )
       return null;
@@ -71,15 +71,15 @@ public final class ColorUtilities
     if( !html.startsWith( "#" ) )
       return null;
 
-    final RGB rgb = new RGB( 0, 0, 0 );
+    RGB rgb = new RGB( 0, 0, 0 );
 
-    final String red = html.substring( 1, 3 );
+    String red = html.substring( 1, 3 );
     rgb.red = Integer.decode( "0x" + red );
 
-    final String green = html.substring( 3, 5 );
+    String green = html.substring( 3, 5 );
     rgb.green = Integer.decode( "0x" + green );
 
-    final String blue = html.substring( 5, 7 );
+    String blue = html.substring( 5, 7 );
     rgb.blue = Integer.decode( "0x" + blue );
 
     return rgb;
@@ -92,7 +92,7 @@ public final class ColorUtilities
    *          The color in RGB format.
    * @return The color in W3C conform form.
    */
-  public static String toHTMLFromRGB( final RGB rgb )
+  public static String toHTMLFromRGB( RGB rgb )
   {
     String red = Integer.toHexString( rgb.red );
     if( red.length() < 2 )
@@ -107,15 +107,5 @@ public final class ColorUtilities
       blue = "0" + blue;
 
     return new String( "#" + red + green + blue );
-  }
-
-  public static java.awt.Color toAwtColor( final RGB rgb )
-  {
-    return new java.awt.Color( rgb.red, rgb.green, rgb.blue );
-  }
-
-  public static RGB toRGB( final java.awt.Color color )
-  {
-    return new RGB( color.getRed(), color.getGreen(), color.getBlue() );
   }
 }

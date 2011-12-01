@@ -83,43 +83,43 @@ public class TableFeatureControlUtils
    * This function will build the command for deleting features from the list.
    * 
    * @param allFeatures
-   *          The features, that should be deleted.
+   *            The features, that should be deleted.
    * @param shell
-   *          The shell.
+   *            The shell.
    */
-  public static DeleteFeatureCommand deleteFeaturesFromSelection( final EasyFeatureWrapper[] allFeatures, final Shell shell )
+  public static DeleteFeatureCommand deleteFeaturesFromSelection( EasyFeatureWrapper[] allFeatures, Shell shell )
   {
     if( allFeatures.length > 0 )
     {
-      final String[] gmlIds = new String[allFeatures.length];
+      String[] gmlIds = new String[allFeatures.length];
       for( int i = 0; i < gmlIds.length; i++ )
         gmlIds[i] = allFeatures[i].getFeature().getId();
 
       /* Work with the first workspace, normally all features in this context should live in the same workspace. */
       /* Furthermore, it is not relevant, in which workspace the command is processed. */
-      final GMLWorkspace workspace = allFeatures[0].getWorkspace();
+      GMLWorkspace workspace = allFeatures[0].getWorkspace();
 
       /* Find features with links to the removed features and display a warning message. */
-      final FindLinkedFeatureVisitor visitor = new FindLinkedFeatureVisitor( gmlIds );
+      FindLinkedFeatureVisitor visitor = new FindLinkedFeatureVisitor( gmlIds );
       workspace.accept( visitor, workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
       final Map<Feature, Set<IRelationType>> linkedFeatures = visitor.getLinkedFeatures();
       if( linkedFeatures.size() > 0 )
       {
         String msg;
         if( allFeatures.length == 1 )
-          msg = Messages.getString( "org.kalypso.ui.editor.actions.TableFeatureControlUtils.0" ); //$NON-NLS-1$
+          msg = Messages.getString("org.kalypso.ui.editor.actions.TableFeatureControlUtils.0"); //$NON-NLS-1$
         else
-          msg = Messages.getString( "org.kalypso.ui.editor.actions.TableFeatureControlUtils.1" ); //$NON-NLS-1$
+          msg = Messages.getString("org.kalypso.ui.editor.actions.TableFeatureControlUtils.1"); //$NON-NLS-1$
 
-        final MessageDialog dialog = new MessageDialog( shell, Messages.getString( "org.kalypso.ui.editor.actions.TableFeatureControlUtils.2" ), null, msg, MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0 ) //$NON-NLS-1$
+        MessageDialog dialog = new MessageDialog( shell, Messages.getString("org.kalypso.ui.editor.actions.TableFeatureControlUtils.2"), null, msg, MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0 ) //$NON-NLS-1$
         {
           /**
            * @see org.eclipse.jface.dialogs.MessageDialog#createCustomArea(org.eclipse.swt.widgets.Composite)
            */
           @Override
-          protected Control createCustomArea( final Composite dialogParent )
+          protected Control createCustomArea( Composite dialogParent )
           {
-            final TableViewer viewer = new TableViewer( dialogParent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.HIDE_SELECTION );
+            TableViewer viewer = new TableViewer( dialogParent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.HIDE_SELECTION );
             viewer.setContentProvider( new ArrayContentProvider() );
             viewer.setLabelProvider( new GMLLabelProvider()
             {
@@ -127,7 +127,7 @@ public class TableFeatureControlUtils
                * @see org.kalypso.ui.editor.gmleditor.ui.GMLEditorLabelProvider2#getText(java.lang.Object)
                */
               @Override
-              public String getText( final Object element )
+              public String getText( Object element )
               {
                 if( element instanceof Feature )
                   return FeatureHelper.getAnnotationValue( (Feature) element, IAnnotation.ANNO_NAME ) + ": <" + FeatureHelper.getAnnotationValue( (Feature) element, IAnnotation.ANNO_LABEL ) + ">"; //$NON-NLS-1$ //$NON-NLS-2$
@@ -139,8 +139,8 @@ public class TableFeatureControlUtils
 
             viewer.getTable();
 
-            final Control control = viewer.getControl();
-            final GridData gridData = new GridData( SWT.FILL, SWT.FILL, true, true );
+            Control control = viewer.getControl();
+            GridData gridData = new GridData( SWT.FILL, SWT.FILL, true, true );
             gridData.minimumHeight = 200;
             gridData.widthHint = 200;
             gridData.heightHint = 200;
@@ -154,7 +154,7 @@ public class TableFeatureControlUtils
           return null;
       }
 
-      final DeleteFeatureCommand command = new DeleteFeatureCommand( allFeatures );
+      DeleteFeatureCommand command = new DeleteFeatureCommand( allFeatures );
       return command;
     }
 

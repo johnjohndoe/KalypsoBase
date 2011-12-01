@@ -54,7 +54,7 @@ public class AcceptAllFileFilter implements FileFilter
    * @see java.io.FileFilter#accept(java.io.File)
    */
   @Override
-  public boolean accept( final File arg0 )
+  public boolean accept( File arg0 )
   {
     return true;
   }

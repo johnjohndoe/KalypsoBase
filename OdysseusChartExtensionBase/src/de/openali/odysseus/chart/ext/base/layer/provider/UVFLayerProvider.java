@@ -29,6 +29,7 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
  */
 public class UVFLayerProvider extends AbstractLayerProvider
 {
+
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayer(java.net.URL)
    */
@@ -39,7 +40,10 @@ public class UVFLayerProvider extends AbstractLayerProvider
     return new DefaultLineLayer( this, getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
   }
 
-  private AbstractDomainValueFileData<Calendar, Number> getDataContainer( )
+  /**
+   * @see org.kalypso.chart.factory.provider.ILayerProvider#getDataContainer()
+   */
+  public AbstractDomainValueFileData<Calendar, Number> getDataContainer( )
   {
     final AbstractDomainValueFileData<Calendar, Number> data = new AbstractDomainValueFileData<Calendar, Number>()
     {

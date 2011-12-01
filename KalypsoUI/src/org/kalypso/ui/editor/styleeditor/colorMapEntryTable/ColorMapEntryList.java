@@ -40,63 +40,55 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.colorMapEntryTable;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 
 public class ColorMapEntryList
 {
-  private final Set<IColorMapEntryViewer> m_listeners;
+  private Set<IColorMapEntryViewer> changeListeners = new HashSet<IColorMapEntryViewer>();
 
-  private final List<ColorMapEntry> m_entries;
+  private final Vector<ColorMapEntry> m_colorMapEntryList = new Vector<ColorMapEntry>();
 
-  public ColorMapEntryList( )
+  public Vector getColorMapEntries( )
   {
-    m_listeners = new HashSet<IColorMapEntryViewer>();
-    m_entries = new ArrayList<ColorMapEntry>();
+    return m_colorMapEntryList;
   }
 
-  public void addChangeListener( final IColorMapEntryViewer viewer )
+  public void addColorMapEntry( final ColorMapEntry colorMapEntry )
   {
-    m_listeners.add( viewer );
+    m_colorMapEntryList.add( m_colorMapEntryList.size(), colorMapEntry );
+    Iterator iterator = changeListeners.iterator();
+    while( iterator.hasNext() )
+      ((IColorMapEntryViewer) iterator.next()).addColorMapEntry( colorMapEntry );
+  }
+
+  public void removeColorMapEntry( final ColorMapEntry colorMapEntry )
+  {
+    m_colorMapEntryList.remove( colorMapEntry );
+    Iterator iterator = changeListeners.iterator();
+    while( iterator.hasNext() )
+      ((IColorMapEntryViewer) iterator.next()).removeColorMapEntry( colorMapEntry );
+  }
+
+  public void colorMapEntryChanged( final ColorMapEntry colorMapEntry )
+  {
+    Iterator iterator = changeListeners.iterator();
+    while( iterator.hasNext() )
+      ((IColorMapEntryViewer) iterator.next()).updateColorMapEntry( colorMapEntry );
   }
 
   public void removeChangeListener( final IColorMapEntryViewer viewer )
   {
-    m_listeners.remove( viewer );
+    changeListeners.remove( viewer );
   }
 
-  public void colorMapEntryChanged( final ColorMapEntry entry )
+  public void addChangeListener( final IColorMapEntryViewer viewer )
   {
-    final Iterator<IColorMapEntryViewer> iterator = m_listeners.iterator();
-    while( iterator.hasNext() )
-      iterator.next().updateColorMapEntry( entry );
+    changeListeners.add( viewer );
   }
 
-  public void addColorMapEntry( final ColorMapEntry entry )
-  {
-    m_entries.add( m_entries.size(), entry );
-
-    final Iterator<IColorMapEntryViewer> iterator = m_listeners.iterator();
-    while( iterator.hasNext() )
-      iterator.next().addColorMapEntry( entry );
-  }
-
-  public void removeColorMapEntry( final ColorMapEntry entry )
-  {
-    m_entries.remove( entry );
-
-    final Iterator<IColorMapEntryViewer> iterator = m_listeners.iterator();
-    while( iterator.hasNext() )
-      iterator.next().removeColorMapEntry( entry );
-  }
-
-  public List<ColorMapEntry> getColorMapEntries( )
-  {
-    return m_entries;
-  }
 }

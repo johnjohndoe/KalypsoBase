@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,20 +36,20 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.core.status;
 
 import java.text.DateFormat;
 import java.util.Date;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusWithTime;
 import org.kalypso.core.KalypsoCorePlugin;
 
 /**
  * @author Gernot Belger
+ *
  */
 public class StatusLabelTimeProvider extends StatusLabelProvider
 {
@@ -60,22 +60,25 @@ public class StatusLabelTimeProvider extends StatusLabelProvider
     m_dateFormat.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
   }
 
+  /**
+   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
+   */
   @Override
   public String getText( final Object element )
   {
     final IStatus status = statusForElement( element );
     if( status == null )
-      return StringUtils.EMPTY;
+      return ""; //$NON-NLS-1$
 
     if( status instanceof IStatusWithTime )
     {
       final Date time = ((IStatusWithTime) status).getTime();
       if( time == null )
-        return StringUtils.EMPTY;
+        return ""; //$NON-NLS-1$
 
       return m_dateFormat.format( time );
     }
 
-    return StringUtils.EMPTY;
+    return ""; //$NON-NLS-1$  
   }
 }

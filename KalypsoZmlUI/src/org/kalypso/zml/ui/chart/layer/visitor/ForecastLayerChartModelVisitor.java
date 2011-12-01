@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.visitor;
 
-import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.provider.PlainObsProvider;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
@@ -60,13 +59,12 @@ public class ForecastLayerChartModelVisitor implements IChartLayerVisitor
 
   private IZmlLayerDataHandler m_handler;
 
+  /**
+   * @see org.kalypso.zml.core.diagram.base.AbstractExternalChartModelVisitor#accept(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+   */
   @Override
-  public void visit( final IChartLayer layer ) throws CancelVisitorException
+  public void visit( final IChartLayer layer )
   {
-    if( !isValid( layer ) )
-    {
-      return;
-    }
 
     if( layer instanceof ZmlForecastLayer )
     {
@@ -77,26 +75,16 @@ public class ForecastLayerChartModelVisitor implements IChartLayerVisitor
       final IZmlLayer zml = (IZmlLayer) layer;
       final IZmlLayerDataHandler handler = zml.getDataHandler();
 
-      if( Objects.isNotNull( handler ) && Objects.isNotNull( handler.getObservation() ) )
+      if( Objects.isNotNull( handler.getObservation() ) )
         m_handler = handler;
     }
-
-    if( m_foreCastLayer != null && m_handler != null )
-      throw new CancelVisitorException();
 
     layer.getLayerManager().accept( this );
   }
 
-  private boolean isValid( final IChartLayer layer )
-  {
-    /** section variantenvergleich - don't use layers of "other" calc case as forecast date! */
-    final String identifier = layer.getIdentifier();
-    if( identifier.toLowerCase().contains( "other" ) ) //$NON-NLS-1$
-      return false;
-
-    return true;
-  }
-
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#doFinialize()
+   */
   @Override
   public void doFinialize( )
   {

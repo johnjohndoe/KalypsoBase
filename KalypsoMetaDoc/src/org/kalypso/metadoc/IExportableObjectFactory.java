@@ -60,8 +60,7 @@ public interface IExportableObjectFactory
   public IExportableObject[] createExportableObjects( final Configuration configuration ) throws CoreException;
 
   /**
-   * @param defaultImage
-   *          This image should be used for each created wizard-page, if no own images are supplied.
+   * @param defaultImage This image should be used for each created wizard-page, if no own images are supplied.
    */
   public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, final ImageDescriptor defaultImage ) throws CoreException;
 }

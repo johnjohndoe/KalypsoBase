@@ -47,7 +47,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.PointRemove;
@@ -63,49 +63,47 @@ public final class DouglasPeuckerHelper
 {
   private static final class ProfileSegmentData
   {
-    public final IRecord[] m_segmPoints;
+    public final IRecord[] segmPoints;
 
-    public final int m_startInd;
+    public final int startInd;
 
-    public final int m_endInd;
+    public final int endInd;
 
-    public final double m_distance;
+    public final double distance;
 
-    public int m_distInd;
+    public int distInd;
 
     public ProfileSegmentData( final IRecord[] points, final int start, final int end )
     {
-      m_segmPoints = points;
-      m_startInd = start;
-      m_endInd = end;
-      m_distance = maxSegmentDistance();
+      segmPoints = points;
+      startInd = start;
+      endInd = end;
+      distance = maxSegmentDistance();
     }
 
     private double maxSegmentDistance( )
     {
       double maxDistance = Double.NEGATIVE_INFINITY;
-      final int deltaIndex = m_endInd - m_startInd;
+      final int deltaIndex = endInd - startInd;
       if( deltaIndex > 2 )
-      {
-        for( int i = 1; i < m_endInd - m_startInd - 1; i++ )
+        for( int i = 1; i < endInd - startInd - 1; i++ )
         {
-          final double currentDistance = calcDistance( m_segmPoints[m_startInd], m_segmPoints[m_endInd], m_segmPoints[m_startInd + i] );
+          final double currentDistance = calcDistance( segmPoints[startInd], segmPoints[endInd], segmPoints[startInd + i] );
           if( currentDistance > maxDistance )
           {
             maxDistance = currentDistance;
-            m_distInd = m_startInd + i;
+            distInd = startInd + i;
           }
         }
-      }
       else if( deltaIndex == 2 )
       {
-        maxDistance = calcDistance( m_segmPoints[m_startInd], m_segmPoints[m_endInd], m_segmPoints[m_startInd + 1] );
-        m_distInd = m_startInd + 1;
+        maxDistance = calcDistance( segmPoints[startInd], segmPoints[endInd], segmPoints[startInd + 1] );
+        distInd = startInd + 1;
       }
       else if( deltaIndex == 1 )
       {
         maxDistance = 0;
-        m_distInd = m_startInd;
+        distInd = startInd;
       }
 
       return maxDistance;
@@ -124,11 +122,11 @@ public final class DouglasPeuckerHelper
    * Peucker algorythm, for finding the point to remove.
    * 
    * @param allowedDistance
-   *          The allowed distance [m].
+   *            The allowed distance [m].
    * @param points
-   *          The profile points.
+   *            The profile points.
    * @param profil
-   *          The profile.
+   *            The profile.
    * @return The profile changes.
    */
   public static IProfilChange[] reduce( final double allowedDistance, final IRecord[] points, final IProfil profile )
@@ -146,11 +144,11 @@ public final class DouglasPeuckerHelper
    * This function finds all points, which must be removed.
    * 
    * @param points
-   *          All profile points.
+   *            All profile points.
    * @param pointsToKeep
-   *          All points, which are important and should be kept.
+   *            All points, which are important and should be kept.
    * @param allowedDistance
-   *          The allowed distance.
+   *            The allowed distance.
    * @return The points to remove.
    */
   public static IRecord[] reducePoints( final IRecord[] points, final IRecord[] pointsToKeep, final double allowedDistance )
@@ -167,9 +165,7 @@ public final class DouglasPeuckerHelper
     for( int i = 0; i < points.length; i++ )
     {
       if( i == segmentBegin )
-      {
         continue;
-      }
 
       final IRecord point = points[i];
       if( pointsToKeepList.contains( point ) || i == points.length - 1 )
@@ -221,9 +217,7 @@ public final class DouglasPeuckerHelper
     // kein Punkt mehr wichtig: alle zwischenpunkte zurückgeben
     final IRecord[] reduced = new IRecord[end - (begin + 1)];
     for( int i = 0; i < reduced.length; i++ )
-    {
       reduced[i] = points[i + begin + 1];
-    }
 
     return reduced;
   }
@@ -231,33 +225,27 @@ public final class DouglasPeuckerHelper
   protected static double calcDistance( final IRecord beginPoint, final IRecord endPoint, final IRecord middlePoint )
   {
 
-// final IComponent breiteComp = ProfilObsHelper.getPropertyFromId( beginPoint, IWspmConstants.POINT_PROPERTY_BREITE );
-// final IComponent hoeheComp = ProfilObsHelper.getPropertyFromId( beginPoint, IWspmConstants.POINT_PROPERTY_HOEHE );
+//    final IComponent breiteComp = ProfilObsHelper.getPropertyFromId( beginPoint, IWspmConstants.POINT_PROPERTY_BREITE );
+//    final IComponent hoeheComp = ProfilObsHelper.getPropertyFromId( beginPoint, IWspmConstants.POINT_PROPERTY_HOEHE );
 //
-// final TupleResult ownerBegin = beginPoint.getOwner();
-// final int breiteIndexBegin = ownerBegin.indexOfComponent( breiteComp );
-// final int hoeheIndexBegin = ownerBegin.indexOfComponent( hoeheComp );
+//    final TupleResult ownerBegin = beginPoint.getOwner();
+//    final int breiteIndexBegin = ownerBegin.indexOfComponent( breiteComp );
+//    final int hoeheIndexBegin = ownerBegin.indexOfComponent( hoeheComp );
 //
-// final TupleResult ownerMiddle = middlePoint.getOwner();
-// final int breiteIndexMiddle = ownerMiddle.indexOfComponent( breiteComp );
-// final int hoeheIndexMiddle = ownerMiddle.indexOfComponent( hoeheComp );
+//    final TupleResult ownerMiddle = middlePoint.getOwner();
+//    final int breiteIndexMiddle = ownerMiddle.indexOfComponent( breiteComp );
+//    final int hoeheIndexMiddle = ownerMiddle.indexOfComponent( hoeheComp );
 //
-// final TupleResult ownerEnd = endPoint.getOwner();
-// final int breiteIndexEnd = ownerEnd.indexOfComponent( breiteComp );
-// final int hoeheIndexEnd = ownerEnd.indexOfComponent( hoeheComp );
+//    final TupleResult ownerEnd = endPoint.getOwner();
+//    final int breiteIndexEnd = ownerEnd.indexOfComponent( breiteComp );
+//    final int hoeheIndexEnd = ownerEnd.indexOfComponent( hoeheComp );
 
-    final Double bx = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, beginPoint );// (Double)
-// beginPoint.getValue( breiteIndexBegin );
-    final Double by = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, beginPoint );// (Double)
-// beginPoint.getValue( hoeheIndexBegin );
-    final Double ex = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, endPoint );// (Double)
-// endPoint.getValue( breiteIndexMiddle );
-    final Double ey = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, endPoint );// (Double)
-// endPoint.getValue( hoeheIndexMiddle );
-    final Double mx = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, middlePoint );// (Double)
-// middlePoint.getValue( breiteIndexEnd );
-    final Double my = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, middlePoint );// (Double)
-// middlePoint.getValue( hoeheIndexEnd );
+    final Double bx = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, beginPoint );//(Double) beginPoint.getValue( breiteIndexBegin );
+    final Double by = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, beginPoint );//(Double) beginPoint.getValue( hoeheIndexBegin );
+    final Double ex = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, endPoint );//(Double) endPoint.getValue( breiteIndexMiddle );
+    final Double ey = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, endPoint );//(Double) endPoint.getValue( hoeheIndexMiddle );
+    final Double mx = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, middlePoint );//(Double) middlePoint.getValue( breiteIndexEnd );
+    final Double my = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, middlePoint );//(Double) middlePoint.getValue( hoeheIndexEnd );
 
     final double f = (ey - by) / (ex - bx);
 
@@ -270,9 +258,9 @@ public final class DouglasPeuckerHelper
    * initially defined by the start and end point of the profile.
    * 
    * @param points
-   *          all profile points
+   *            all profile points
    * @param allowedNumPoints
-   *          max number of points.
+   *            max number of points.
    * @return points to keep
    */
   public static IRecord[] findIProfileVIPPoints( final IRecord[] points, final int allowedNumPoints )
@@ -298,7 +286,7 @@ public final class DouglasPeuckerHelper
         // find the maxDistanceSegment
 
         final ProfileSegmentData currentProfSegment = profSegmentList.get( j );
-        final double currentDist = currentProfSegment.m_distance;
+        final double currentDist = currentProfSegment.distance;
         if( currentDist > maxDist )
         {
           maxDist = currentDist;
@@ -306,11 +294,11 @@ public final class DouglasPeuckerHelper
         }
       }
       // store the found maximum in the profile point list
-      pointsToKeep.add( points[profSegmentList.get( indexMax ).m_distInd] );
+      pointsToKeep.add( points[profSegmentList.get( indexMax ).distInd] );
 
       // split the maxDistanceSegment
-      final ProfileSegmentData firstSplittedSegment = new ProfileSegmentData( points, profSegmentList.get( indexMax ).m_startInd, profSegmentList.get( indexMax ).m_distInd );
-      final ProfileSegmentData secondSplittedSegment = new ProfileSegmentData( points, profSegmentList.get( indexMax ).m_distInd, profSegmentList.get( indexMax ).m_endInd );
+      final ProfileSegmentData firstSplittedSegment = new ProfileSegmentData( points, profSegmentList.get( indexMax ).startInd, profSegmentList.get( indexMax ).distInd );
+      final ProfileSegmentData secondSplittedSegment = new ProfileSegmentData( points, profSegmentList.get( indexMax ).distInd, profSegmentList.get( indexMax ).endInd );
 
       // store the new segments in the list
       profSegmentList.set( indexMax, firstSplittedSegment );

@@ -180,9 +180,9 @@ class LinearContains
           {
             for( final GM_Position[] element2 : inner_ )
             {
-              for( final GM_Position element3 : element2 )
+              for( int j = 0; j < element2.length; j++ )
               {
-                if( contains( element, element3 ) )
+                if( contains( element, element2[j] ) )
                 {
                   con = false;
                   break;
@@ -198,9 +198,9 @@ class LinearContains
 
           // a point of the inner rings of the first is not allowed
           // to be within the second surface
-          for( final GM_Position element2 : element )
+          for( int j = 0; j < element.length; j++ )
           {
-            if( contains( surface2, element2 ) )
+            if( contains( surface2, element[j] ) )
             {
               con = false;
               break;
@@ -372,7 +372,7 @@ class LinearContains
 
       if( cury < lasty )
       {
-        if( point.getY() < cury || point.getY() >= lasty )
+        if( (point.getY() < cury) || (point.getY() >= lasty) )
         {
           continue;
         }
@@ -388,7 +388,7 @@ class LinearContains
       }
       else
       {
-        if( point.getY() < lasty || point.getY() >= cury )
+        if( (point.getY() < lasty) || (point.getY() >= cury) )
         {
           continue;
         }
@@ -403,12 +403,12 @@ class LinearContains
         test2 = point.getY() - lasty;
       }
 
-      if( test1 < test2 / (lasty - cury) * (lastx - curx) )
+      if( test1 < (test2 / (lasty - cury) * (lastx - curx)) )
       {
         hits++;
       }
     }
 
-    return (hits & 1) != 0;
+    return ((hits & 1) != 0);
   }
 }

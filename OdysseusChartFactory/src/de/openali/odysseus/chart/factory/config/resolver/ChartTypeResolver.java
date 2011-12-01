@@ -1,3 +1,5 @@
+package de.openali.odysseus.chart.factory.config.resolver;
+
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -39,8 +41,6 @@
  *
  *  ---------------------------------------------------------------------------*/
 
-package de.openali.odysseus.chart.factory.config.resolver;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -52,18 +52,15 @@ import java.util.concurrent.TimeUnit;
 import jregex.Pattern;
 import jregex.RETokenizer;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.ICatalog;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.MapMaker;
 
 import de.openali.odysseus.chart.factory.OdysseusChartFactory;
@@ -130,14 +127,12 @@ public final class ChartTypeResolver implements IReferenceResolver
   {
     try
     {
-      if( reference == null || reference.length() == 0 )
-        return null;
 
       final String plainUrl = getUrl( reference, context );
       final String identifier = getAnchor( reference );
 
       AbstractStyleType type;
-      if( plainUrl.startsWith( "urn:" ) ) // $NON-NLS-1$
+      if( plainUrl.startsWith( "urn:" ) )
         type = findUrnStyleType( context, plainUrl, identifier );
       else
         type = findUrlStyleType( context, plainUrl, identifier );
@@ -146,8 +141,7 @@ public final class ChartTypeResolver implements IReferenceResolver
     }
     catch( final Throwable t )
     {
-      final String msg = String.format( "Resolving style type \"%s\" failed  ", reference );
-      throw new CoreException( StatusUtilities.createExceptionalErrorStatus( msg, t ) );
+      throw new CoreException( StatusUtilities.createExceptionalErrorStatus( "Resolving style type failed", t ) );
     }
   }
 
@@ -227,7 +221,7 @@ public final class ChartTypeResolver implements IReferenceResolver
       }
       catch( final CoreException e )
       {
-        OdysseusChartFactory.getDefault().getLog().log( new Status( IStatus.ERROR, OdysseusChartFactory.PLUGIN_ID, e.getLocalizedMessage(), e ) );
+        OdysseusChartFactory.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
       }
     }
 
@@ -285,9 +279,6 @@ public final class ChartTypeResolver implements IReferenceResolver
 
   private String getUrl( final String url, final URL context )
   {
-    if( StringUtils.isBlank( url ) )
-      return context.toString();
-
     if( url.contains( "#" ) ) // $NON-NLS-1$
     {
       final Pattern pattern = new Pattern( "#.*" ); // $NON-NLS-1$
@@ -304,9 +295,6 @@ public final class ChartTypeResolver implements IReferenceResolver
 
   private String getAnchor( final String url )
   {
-    if( Strings.isNullOrEmpty( url ) )
-      return null;
-
     final RETokenizer tokenizer = new RETokenizer( new Pattern( ".*#" ), url ); //$NON-NLS-1$
 
     return StringUtils.chomp( tokenizer.nextToken() );

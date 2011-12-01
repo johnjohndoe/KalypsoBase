@@ -47,7 +47,7 @@ import org.eclipse.core.databinding.conversion.Converter;
  * 
  * @author Holger Albert
  */
-public abstract class TypedConverter<FROM, TO> extends Converter implements ITypedConverter<FROM, TO>
+public abstract class TypedConverter<FROM, TO> extends Converter
 {
   /**
    * The constructor.
@@ -57,29 +57,28 @@ public abstract class TypedConverter<FROM, TO> extends Converter implements ITyp
    * @param toType
    *          The to type.
    */
-  public TypedConverter( final Class<FROM> fromType, final Class<TO> toType )
+  public TypedConverter( Class<FROM> fromType, Class<TO> toType )
   {
     super( fromType, toType );
   }
 
-  @Override
+  /**
+   * @see org.eclipse.core.databinding.conversion.IConverter#convert(java.lang.Object)
+   */
   @SuppressWarnings("unchecked")
-  public Class<TO> getToType( )
+  @Override
+  public Object convert( Object fromObject )
   {
-    return (Class<TO>) super.getToType();
+    Class<FROM> fromType = (Class<FROM>) getFromType();
+    return doConvert( fromType.cast( fromObject ) );
   }
 
-  @Override
-  @SuppressWarnings("unchecked")
-  public Class<FROM> getFromType( )
-  {
-    return (Class<FROM>) super.getFromType();
-  }
-
-  @Override
-  public TO convert( final Object fromObject )
-  {
-    final Class<FROM> fromType = getFromType();
-    return convertTyped( fromType.cast( fromObject ) );
-  }
+  /**
+   * This function returns the result of the conversion of the given object.
+   * 
+   * @param fromObject
+   *          The object to convert, of type getFromType().
+   * @return The converted object, of type getToType().
+   */
+  protected abstract TO doConvert( FROM fromObject );
 }

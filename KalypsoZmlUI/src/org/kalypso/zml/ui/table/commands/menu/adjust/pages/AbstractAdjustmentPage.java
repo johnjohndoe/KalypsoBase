@@ -44,22 +44,20 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.contribs.eclipse.ui.pager.AbstractElementPage;
+import org.kalypso.contribs.eclipse.ui.pager.IElementPage;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
-public abstract class AbstractAdjustmentPage extends AbstractElementPage
+public abstract class AbstractAdjustmentPage implements IElementPage
 {
   public static final Font HEADING = new Font( Display.getDefault(), "Tahoma", 8, SWT.BOLD ); //$NON-NLS-1$
 
   private final IAdjustmentPageProvider m_provider;
 
-  public AbstractAdjustmentPage( final IAdjustmentPageProvider provider, final String identifier )
+  public AbstractAdjustmentPage( final IAdjustmentPageProvider provider )
   {
-    super( identifier );
-
     m_provider = provider;
   }
 

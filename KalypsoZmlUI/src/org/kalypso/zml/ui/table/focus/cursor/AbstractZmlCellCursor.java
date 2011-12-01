@@ -82,7 +82,6 @@ public abstract class AbstractZmlCellCursor extends Canvas implements ITableCurs
         {
           m_viewer.getControl().forceFocus();
         }
-
       }
     };
 

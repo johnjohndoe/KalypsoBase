@@ -11,10 +11,6 @@ public abstract class AbstractStyle implements IStyle
 
   private boolean m_isVisible;
 
-  /**
-   * @deprecated
-   */
-  @Deprecated
   private String m_title;
 
   private final Map<String, Object> m_data = new HashMap<String, Object>();
@@ -54,20 +50,12 @@ public abstract class AbstractStyle implements IStyle
     return m_isVisible;
   }
 
-  /**
-   * @deprecated
-   */
-  @Deprecated
   @Override
   public void setTitle( final String title )
   {
     m_title = title;
   }
 
-  /**
-   * @deprecated
-   */
-  @Deprecated
   @Override
   public String getTitle( )
   {

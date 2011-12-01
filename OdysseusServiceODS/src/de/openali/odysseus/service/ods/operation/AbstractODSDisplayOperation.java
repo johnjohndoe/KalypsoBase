@@ -41,9 +41,9 @@
 package de.openali.odysseus.service.ods.operation;
 
 import org.eclipse.swt.widgets.Display;
-import org.kalypso.ogc.core.exceptions.OWSException;
 
 import de.openali.odysseus.service.ods.util.DisplayHelper;
+import de.openali.odysseus.service.ows.exception.OWSException;
 
 /**
  * Abstract class for operations making use of the SWT-Display; we have to secure that these operations run in the
@@ -55,11 +55,9 @@ import de.openali.odysseus.service.ods.util.DisplayHelper;
  */
 public abstract class AbstractODSDisplayOperation extends AbstractODSOperation implements Runnable
 {
+
   private OWSException m_exception = null;
 
-  /**
-   * @see de.openali.odysseus.service.ods.operation.AbstractODSOperation#execute()
-   */
   @Override
   public void execute( ) throws OWSException
   {
@@ -80,4 +78,5 @@ public abstract class AbstractODSDisplayOperation extends AbstractODSOperation i
   {
     return m_exception;
   }
+
 }

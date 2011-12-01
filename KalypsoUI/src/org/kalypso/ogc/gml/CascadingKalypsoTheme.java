@@ -53,7 +53,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.commons.i18n.ITranslator;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -66,7 +66,6 @@ import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.types.LayerType;
 import org.kalypso.template.types.ObjectFactory;
 import org.kalypso.template.types.StyledLayerType;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.xml.sax.InputSource;
 
@@ -140,7 +139,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
       startLoadJob();
     }
     else
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.3" ) + url.toExternalForm() + Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.4" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.3" ) + url.toExternalForm() + Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.4" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public synchronized void createGismapTemplate( final GM_Envelope bbox, final String srsName, final IProgressMonitor monitor ) throws CoreException
@@ -260,10 +259,10 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
   {
     m_resolved = false;
     final IFile file = m_file;
-    final Job job = new Job( Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.5" ) + m_file.getName() ) //$NON-NLS-1$
+    final UIJob job = new UIJob( Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.5" ) + m_file.getName() ) //$NON-NLS-1$
     {
       @Override
-      public IStatus run( final IProgressMonitor monitor )
+      public IStatus runInUIThread( final IProgressMonitor monitor )
       {
         return loadJob( file );
       }
@@ -291,7 +290,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
 
       case IResourceDelta.REMOVED:
         // TODO: release map and file
-        setStatus( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.2" ) + m_file.getFullPath() ) ); //$NON-NLS-1$
+        setStatus( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.2" ) + m_file.getFullPath() ) ); //$NON-NLS-1$
         break;
     }
   }

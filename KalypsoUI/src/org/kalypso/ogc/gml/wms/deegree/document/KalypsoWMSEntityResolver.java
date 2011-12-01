@@ -45,7 +45,6 @@ import java.net.URL;
 import java.util.HashMap;
 
 import org.kalypso.i18n.Messages;
-import org.kalypso.ui.KalypsoUIDebug;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
@@ -59,7 +58,7 @@ public class KalypsoWMSEntityResolver implements EntityResolver
   /**
    * Map containing all local available resources.
    */
-  private final HashMap<String, String> m_entities;
+  private HashMap<String, String> m_entities;
 
   /**
    * The constructor.
@@ -75,14 +74,14 @@ public class KalypsoWMSEntityResolver implements EntityResolver
    * @see org.xml.sax.EntityResolver#resolveEntity(java.lang.String, java.lang.String)
    */
   @Override
-  public InputSource resolveEntity( final String publicId, final String systemId ) throws IOException
+  public InputSource resolveEntity( String publicId, String systemId ) throws IOException
   {
-    final String path = m_entities.get( systemId );
+    String path = m_entities.get( systemId );
     if( path != null )
     {
-      KalypsoUIDebug.DEBUG_WMS.printf( Messages.getString( "org.kalypso.ogc.gml.wms.deegree.document.KalypsoWMSEntityResolver.4" ) + systemId ); //$NON-NLS-1$
+      System.out.println( Messages.getString("org.kalypso.ogc.gml.wms.deegree.document.KalypsoWMSEntityResolver.4") + systemId ); //$NON-NLS-1$
+      URL resource = getClass().getResource( path );
 
-      final URL resource = getClass().getResource( path );
       if( resource != null )
         return new InputSource( resource.openStream() );
     }

@@ -56,6 +56,6 @@ public class EmptyExporter extends AbstractExporter
   @Override
   public void init( final ISupplier supplier )
   {
-    // nothing to do
+  // nothing to do
   }
 }

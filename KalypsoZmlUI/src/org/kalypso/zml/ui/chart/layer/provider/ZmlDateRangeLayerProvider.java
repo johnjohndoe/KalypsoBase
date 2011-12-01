@@ -42,36 +42,51 @@ package org.kalypso.zml.ui.chart.layer.provider;
 
 import java.net.URL;
 
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.zml.core.diagram.base.provider.observation.DefaultRequestHandler;
-import org.kalypso.zml.core.diagram.data.IRequestHandler;
-import org.kalypso.zml.core.diagram.data.IZmlLayerProvider;
+import org.apache.commons.lang.StringUtils;
+import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlDateRangeLayer;
+import org.kalypso.zml.ui.core.provider.observation.DefaultRequestHandler;
+import org.kalypso.zml.ui.core.provider.observation.SynchronousObservationProvider;
 
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
+import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlDateRangeLayerProvider extends AbstractLayerProvider implements IZmlLayerProvider
+public class ZmlDateRangeLayerProvider extends AbstractLayerProvider implements ILayerProvider
 {
   public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlDateRangeLayerProvider"; //$NON-NLS-1$
 
+  /**
+   * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
+   */
   @Override
-  public IChartLayer getLayer( final URL context )
+  public IChartLayer getLayer( final URL context ) throws ConfigurationException
   {
-    return new ZmlDateRangeLayer( this, context );
-  }
+    final IParameterContainer parameters = getParameterContainer();
 
-  @Override
-  public IRequestHandler getRequestHandler( )
-  {
-    final IParameterContainer container = getParameterContainer();
-    if( Objects.isNull( container ) )
-      return new DefaultRequestHandler();
+    final String href = parameters.getParameterValue( "href", "" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    return new DefaultRequestHandler();
+    final ZmlDateRangeLayer layer = new ZmlDateRangeLayer( this );
+    final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( layer, getTargetAxisId() );
+
+    if( StringUtils.isNotEmpty( href ) )
+    {
+      try
+      {
+        final SynchronousObservationProvider provider = new SynchronousObservationProvider( context, href, new DefaultRequestHandler() );
+        handler.setObsProvider( provider );
+      }
+      catch( final Throwable t )
+      {
+        throw new ConfigurationException( "Configuring of .kod line layer theme failed.", t );
+      }
+    }
+
+    return layer;
   }
 }
