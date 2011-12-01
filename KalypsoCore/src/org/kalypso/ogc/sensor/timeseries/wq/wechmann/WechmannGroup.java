@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.wq.wechmann;
 
@@ -66,8 +66,8 @@ public class WechmannGroup implements IWQConverter
    */
   public WechmannGroup( final WechmannSet[] wsets )
   {
-    for( final WechmannSet wset : wsets )
-      m_map.put( wset.getValidity(), wset );
+    for( int i = 0; i < wsets.length; i++ )
+      m_map.put( wsets[i].getValidity(), wsets[i] );
   }
 
   /**
@@ -101,10 +101,10 @@ public class WechmannGroup implements IWQConverter
    * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#computeW(java.util.Date, double)
    */
   @Override
-  public double computeW( final Date date, final double q ) throws WQException
+  public double computeW( final Date date, final double Q ) throws WQException
   {
-    final WechmannParams params = getFor( date ).getForQ( q );
-    return WechmannFunction.computeW( params, q );
+    final WechmannParams params = getFor( date ).getForQ( Q );
+    return WechmannFunction.computeW( params, Q );
   }
 
   /**
@@ -113,13 +113,13 @@ public class WechmannGroup implements IWQConverter
    * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#computeQ(java.util.Date, double)
    */
   @Override
-  public double computeQ( final Date date, final double w ) throws WQException
+  public double computeQ( final Date date, final double W ) throws WQException
   {
-    final WechmannParams params = getFor( date ).getForW( w );
+    final WechmannParams params = getFor( date ).getForW( W );
     if( params == null )
       return 0.0;
 
-    return WechmannFunction.computeQ( params, w );
+    return WechmannFunction.computeQ( params, W );
   }
 
   /**

@@ -3,7 +3,7 @@ package org.kalypso.gml.processes.raster2vector.collector;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.gml.processes.i18n.Messages;
 import org.kalypso.gml.processes.raster2vector.LinkedCoordinate;
 import org.kalypso.gml.processes.raster2vector.LinkedCoordinateException;
@@ -341,13 +341,13 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
     if( Double.isNaN( c1.z ) && Double.isNaN( c2.z ) )
       return null;
 
-    if( Double.isNaN( c1.z ) && value < c2.z || Double.isNaN( c2.z ) && value < c1.z )
+    if( (Double.isNaN( c1.z ) && value < c2.z) || (Double.isNaN( c2.z ) && value < c1.z) )
     {
       zFaktor = 0.5;
     }
     else
     {
-      if( z1 <= value && value < z2 || z2 <= value && value < z1 )
+      if( (z1 <= value && value < z2) || (z2 <= value && value < z1) )
         zFaktor = (value - z1) / (z2 - z1);
       if( zFaktor < 0 || zFaktor >= 1 )
         return null;

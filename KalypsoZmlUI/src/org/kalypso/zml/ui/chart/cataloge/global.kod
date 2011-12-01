@@ -874,16 +874,9 @@
           <LineColor>000040</LineColor>
         </Stroke>
       </AreaStyle>
-
-
     </Styles>
     <Layers>
       <Layer id="W">
-        <Provider epid="">
-          <Parameters>
-            <Parameter name="content.messwerte" value="true" />
-          </Parameters>
-        </Provider>
         <Title>Wasserstand</Title>
         <Layers>
           <Layer id="Wasserstand" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -913,7 +906,6 @@
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_2" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_3" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_4" />
-          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:wqboundaries#wBoundary" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
         </Layers>
         <MapperRefs>
@@ -922,11 +914,6 @@
         </MapperRefs>
       </Layer>
       <Layer id="Q">
-        <Provider epid="">
-          <Parameters>
-            <Parameter name="content.messwerte" value="true" />
-          </Parameters>
-        </Provider>
         <Title>Abfluss</Title>
         <Layers>
           <Layer id="Abfluss" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -956,7 +943,6 @@
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_2" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_3" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_4" />
-          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:wqboundaries#qBoundary" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
         </Layers>
         <MapperRefs>
@@ -965,11 +951,6 @@
         </MapperRefs>
       </Layer>
       <Layer id="N">
-        <Provider epid="">
-          <Parameters>
-            <Parameter name="content.niederschlag" value="true" />
-          </Parameters>
-        </Provider>
         <Title>Niederschlag</Title>
         <Layers>
           <Layer id="Niederschlag" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -1074,10 +1055,10 @@
         <Provider epid="de.openali.odysseus.chart.ext.base.layer.provider.DefaultTextLayerProvider">
           <Parameters>
             <Parameter name="text" value="Keine Daten vorhanden" />
-            <Parameter name="alignment.horizontal" value="CENTER" />
-            <Parameter name="alignment.vertical" value="CENTER" />
-            <Parameter name="text.anchor.x" value="CENTER" />
-            <Parameter name="text.anchor.y" value="CENTER" />
+            <Parameter name="alignment.horizontal" value="CENTERED_HORIZONTAL" />
+            <Parameter name="alignment.vertical" value="CENTERED_VERTICAL" />
+            <Parameter name="text.anchor.x" value="CENTERED_HORIZONTAL" />
+            <Parameter name="text.anchor.y" value="CENTERED_VERTICAL" />
           </Parameters>
         </Provider>
         <Title>Keine Daten vorhanden</Title>
@@ -1154,7 +1135,7 @@
         <Label>Niederschlag [mm]</Label>
         <Direction>NEGATIVE</Direction>
         <Position>RIGHT</Position>
-        <PreferredAdjustment before="0" range="50" after="50" fixMinRange="1.0" />
+        <PreferredAdjustment before="0" range="50" after="50" fixMaxRange="1.0" />
         <RendererRef ref="AutoNumberAxisRenderer" />
         <AxisNumberRangeRestriction absoluteMinValue="0.0" minRange="0.1" fixMinValue="true" />
       </Axis>
@@ -1216,7 +1197,7 @@
             <Parameter name="inset_tick" value="2" />
             <Parameter name="inset_label" value="2" />
             <Parameter name="tick_length" value="2" />
-            <Parameter name="hide_cut" value="false" />
+            <Parameter name="hide_cut" value="true" />
             <Parameter name="gap" value="0" />
           </Parameters>
         </Provider>
@@ -1236,7 +1217,7 @@
             <Parameter name="hide_cut" value="false" />
             <Parameter name="gap" value="0" />
             <!-- <Parameter name="date-format" value="dd.MM.&#10;HH:mm" /> -->
-            <Parameter name="label_position" value="CENTER" />
+            <Parameter name="label_position" value="INTERVALL_CENTERED" />
           </Parameters>
         </Provider>
         <Styles>

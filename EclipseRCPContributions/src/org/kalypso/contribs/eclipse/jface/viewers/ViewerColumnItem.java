@@ -40,16 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.viewers;
 
-import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.ViewerColumn;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Item;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 
 /**
@@ -67,12 +62,7 @@ public class ViewerColumnItem
     m_viewerColumn = viewerColumn;
   }
 
-  public ColumnViewer getViewer( )
-  {
-    return m_viewerColumn.getViewer();
-  }
-
-  public Item getColumn( )
+  private Item getColumn( )
   {
     if( m_viewerColumn instanceof TableViewerColumn )
       return ((TableViewerColumn) m_viewerColumn).getColumn();
@@ -91,16 +81,6 @@ public class ViewerColumnItem
       ((TableColumn) col).setText( text );
     else if( col instanceof TreeColumn )
       ((TreeColumn) col).setText( text );
-  }
-
-  public void setToolTipText( final String text )
-  {
-    final Item col = getColumn();
-
-    if( col instanceof TableColumn )
-      ((TableColumn) col).setToolTipText( text );
-    else if( col instanceof TreeColumn )
-      ((TreeColumn) col).setToolTipText( text );
   }
 
   public void setWidth( final int width )
@@ -133,49 +113,4 @@ public class ViewerColumnItem
       ((TreeColumn) col).setMoveable( moveable );
   }
 
-  public void addSelectionListener( final SelectionListener listener )
-  {
-    final Item column = getColumn();
-    if( column instanceof TableColumn )
-      ((TableColumn) column).addSelectionListener( listener );
-    else if( column instanceof TreeColumn )
-      ((TreeColumn) column).addSelectionListener( listener );
-  }
-
-  public void setData( final String key, final Object value )
-  {
-    getColumn().setData( key, value );
-  }
-
-  public Object getData( final String key )
-  {
-    return getColumn().getData( key );
-  }
-
-  public void setAsSortColumn( final Boolean sortState )
-  {
-    int sortDirection;
-    if( sortState == null )
-      sortDirection = SWT.NONE;
-    else if( sortState )
-      sortDirection = SWT.DOWN;
-    else
-      sortDirection = SWT.UP;
-
-    final Item column = getColumn();
-    if( column instanceof TableColumn )
-    {
-      final TableColumn sortColumn = (TableColumn) column;
-      final Table table = sortColumn.getParent();
-      table.setSortDirection( sortDirection );
-      table.setSortColumn( sortColumn );
-    }
-    else if( column instanceof TreeColumn )
-    {
-      final TreeColumn sortColumn = (TreeColumn) column;
-      final Tree tree = sortColumn.getParent();
-      tree.setSortDirection( sortDirection );
-      tree.setSortColumn( sortColumn );
-    }
-  }
 }

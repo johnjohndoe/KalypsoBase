@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveSegment;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -172,11 +173,10 @@ public class SHP2WKS
   @SuppressWarnings("unchecked")
   public static GM_Surface<GM_SurfacePatch>[] transformPolygon( final String crs, final ISHPParts shppolygon )
   {
-    final int numParts = shppolygon.getNumParts();
+    final List<GM_Position[]> outerRings = new ArrayList<GM_Position[]>( shppolygon.getNumParts() );
+    final List<GM_Position[]> innerRings = new ArrayList<GM_Position[]>( shppolygon.getNumParts() );
 
-    final List<GM_Position[]> outerRings = new ArrayList<GM_Position[]>( numParts );
-    final List<GM_Position[]> innerRings = new ArrayList<GM_Position[]>( numParts );
-    for( int i = 0; i < numParts; i++ )
+    for( int i = 0; i < shppolygon.getNumParts(); i++ )
     {
       final ISHPPoint[][] pointsz = shppolygon.getPoints();
 
@@ -187,7 +187,7 @@ public class SHP2WKS
 
       // note: esris (unmathemathic) definition of positive area is clockwise => outer ring, negative => inner ring
       final double esriArea = -GeometryUtilities.calcSignedAreaOfRing( ring );
-      if( numParts == 1 || esriArea >= 0 )
+      if( esriArea >= 0 )
         outerRings.add( ring );
       else
         innerRings.add( ring );
@@ -311,6 +311,6 @@ public class SHP2WKS
       return null;
     }
 
-    throw new UnsupportedOperationException( "Unknown shpe class: " + shpGeom );
+    throw new NotImplementedException( "Unknown shpe class: " + shpGeom );
   }
 } // end of class WKB2WKS

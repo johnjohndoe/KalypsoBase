@@ -41,7 +41,6 @@
 package org.kalypso.zml.ui.chart.layer.themes;
 
 import java.awt.geom.Rectangle2D;
-import java.net.URL;
 import java.util.Date;
 
 import org.eclipse.swt.graphics.GC;
@@ -54,17 +53,15 @@ import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
-import org.kalypso.zml.core.diagram.data.IZmlLayerProvider;
-import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.ClipHelper;
 import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
+import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
@@ -88,47 +85,32 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
 
   private final ZmlLineLayerLegendEntry m_legend = new ZmlLineLayerLegendEntry( this );
 
-  public ZmlLineLayer( final IZmlLayerProvider provider, final IStyleSet styleSet, final URL context )
+  protected ZmlLineLayer( final ILayerProvider provider, final IStyleSet styleSet )
   {
     super( provider, styleSet );
-
-    setup( context );
   }
 
-  @Override
-  public IZmlLayerProvider getProvider( )
-  {
-    return (IZmlLayerProvider) super.getProvider();
-  }
-
-  private void setup( final URL context )
-  {
-    final IZmlLayerProvider provider = getProvider();
-    final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( this, provider.getTargetAxisId() );
-    try
-    {
-      handler.load( provider, context );
-    }
-    catch( final Throwable t )
-    {
-      t.printStackTrace();
-    }
-
-    setDataHandler( handler );
-  }
-
+  /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#onObservationChanged()
+   */
   @Override
   public void onObservationChanged( )
   {
     getEventHandler().fireLayerContentChanged( this );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer#createLegendEntries()
+   */
   @Override
   public ILegendEntry[] createLegendEntries( )
   {
     return m_legend.createLegendEntries();
   }
 
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer#dispose()
+   */
   @Override
   public void dispose( )
   {
@@ -138,6 +120,9 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     super.dispose();
   }
 
+  /**
+   * @see org.kalypso.zml.ui.chart.layer.themes.IZmlLayer#getDataHandler()
+   */
   @Override
   public IZmlLayerDataHandler getDataHandler( )
   {
@@ -149,6 +134,9 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     return m_range;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
+   */
   @Override
   public IDataRange<Number> getDomainRange( )
   {
@@ -161,8 +149,11 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     return createLegendEntries();
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
+   */
   @Override
-  public IDataRange<Number> getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     return m_range.getTargetRange( domainIntervall );
   }
@@ -180,6 +171,9 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     return ObservationTokenHelper.replaceTokens( m_labelDescriptor, observation, getDataHandler().getValueAxis() );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
+   */
   @Override
   public void paint( final GC gc )
   {
@@ -198,16 +192,13 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   }
 
   @SuppressWarnings("unchecked")
-  IPair<Number, Number>[] getFilteredPoints( final IDataRange< ? > domainIntervall ) throws SensorException
+  IPair<Number, Number>[] getFilteredPoints( final IDataRange<Number> domainIntervall ) throws SensorException
   {
     final IObservation observation = m_data.getObservation();
-    if( observation == null || domainIntervall == null )
+    if( observation == null )
       return new IPair[0];
-    final Object min = domainIntervall.getMin();
-    final Object max = domainIntervall.getMax();
-    if( !(min instanceof Number) || !(max instanceof Number) )
-      return new IPair[0];
-    final LineLayerModelVisitor visitor = new LineLayerModelVisitor( this, getFilters(), new DataRange<Number>( (Number) min, (Number) max ) );
+
+    final LineLayerModelVisitor visitor = new LineLayerModelVisitor( this, getFilters(), domainIntervall );
     observation.accept( visitor, null );
     return visitor.getPoints();
   }
@@ -225,7 +216,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
 
     final Point[] screenPoints = toScreen( point );
 
-    final PointFigure pf = new PointFigure();
+    final PointFigure pf = getPointFigure();
     pf.setStyle( pointStyle );
     pf.setPoints( screenPoints );
     pf.paint( gc );
@@ -247,7 +238,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     final ILineStyle lineStyle = getLineStyle();
     if( lineStyle != null )
     {
-      final PolylineFigure lf = new PolylineFigure();
+      final PolylineFigure lf = getPolylineFigure();
       lf.setStyle( lineStyle );
       lf.setPoints( points );
       lf.paint( gc );
@@ -256,7 +247,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     final IPointStyle pointStyle = getMyPointStyle();
     if( pointStyle != null )
     {
-      final PointFigure pf = new PointFigure();
+      final PointFigure pf = getPointFigure();
       pf.setStyle( pointStyle );
       pf.setPoints( points );
       pf.paint( gc );
@@ -305,6 +296,9 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     return request.getDateRange();
   }
 
+  /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#setDataHandler(org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler)
+   */
   @Override
   public void setDataHandler( final IZmlLayerDataHandler handler )
   {
@@ -314,6 +308,9 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     m_data = handler;
   }
 
+  /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#setLabelDescriptor(java.lang.String)
+   */
   @Override
   public void setLabelDescriptor( final String labelDescriptor )
   {
@@ -354,8 +351,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     } );
   }
 
-  @Override
-  protected ILineStyle getLineStyle( )
+  ILineStyle getLineStyle( )
   {
     final IStyleSet styleSet = getStyleSet();
 
@@ -373,4 +369,5 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
       screenPoints[i] = coordinateMapper.numericToScreen( points[i].getDomain(), points[i].getTarget() );
     return screenPoints;
   }
+
 }

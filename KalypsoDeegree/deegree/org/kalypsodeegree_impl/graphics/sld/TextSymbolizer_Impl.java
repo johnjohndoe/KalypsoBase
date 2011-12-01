@@ -74,7 +74,7 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
   /**
    * constructor initializing the class with the <TextSymbolizer>
    */
-  TextSymbolizer_Impl( final Geometry geometry, final ParameterValueType label, final Font font, final LabelPlacement labelPlacement, final Halo halo, final Fill fill, final UOM uom )
+  TextSymbolizer_Impl( final Geometry geometry, final ParameterValueType label, final Font font, final LabelPlacement labelPlacement, final Halo halo, final Fill fill, final double min, final double max, final UOM uom )
   {
     super( geometry, uom );
     setLabel( label );
@@ -82,6 +82,8 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
     setLabelPlacement( labelPlacement );
     setHalo( halo );
     setFill( fill );
+    setMinScaleDenominator( min );
+    setMaxScaleDenominator( max );
   }
 
   /**
@@ -99,7 +101,7 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
    * sets the <Label>
    * 
    * @param label
-   *          the label
+   *            the label
    */
   @Override
   public void setLabel( final ParameterValueType label )
@@ -122,7 +124,7 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
    * Sets a Font of a certain family, style, and size.
    * 
    * @param font
-   *          the font
+   *            the font
    */
   @Override
   public void setFont( final Font font )
@@ -150,7 +152,7 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
    * sets the <LabelPlacement>
    * 
    * @param labelPlacement
-   *          the labelPlacement
+   *            the labelPlacement
    */
   @Override
   public void setLabelPlacement( final LabelPlacement labelPlacement )
@@ -176,7 +178,7 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
    * sets <Halo>
    * 
    * @param halo
-   *          the halo
+   *            the halo
    */
   @Override
   public void setHalo( final Halo halo )
@@ -201,7 +203,7 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
    * sets the <Fill>
    * 
    * @param fill
-   *          the fill
+   *            the fill
    */
   @Override
   public void setFill( final Fill fill )

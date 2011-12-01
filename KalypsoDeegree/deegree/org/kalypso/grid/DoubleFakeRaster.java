@@ -9,7 +9,7 @@ import com.vividsolutions.jts.geom.Coordinate;
  * <p>
  * The size of the grid is given, the value are taken from the provider.
  * </p>
- * 
+ *
  * @author Gernot Belger
  */
 public class DoubleFakeRaster extends AbstractGeoGrid implements IGeoGrid

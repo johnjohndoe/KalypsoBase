@@ -84,7 +84,7 @@ public class SHPPolyLinez implements ISHPParts
     m_numPoints = ByteUtils.readLEInt( recBuf, 40 );
 
     // index of the first point in part
-    final int pointsStart = ShapeConst.PARTS_START + numParts * 4;
+    final int pointsStart = ShapeConst.PARTS_START + (numParts * 4);
 
     // array of points for all parts
     m_parts = new SHPPointz[numParts][];
@@ -95,18 +95,18 @@ public class SHPPolyLinez implements ISHPParts
     for( int j = 0; j < numParts; j++ )
     {
       // get number of first point of current part out of ESRI shape Record:
-      final int firstPointNo = ByteUtils.readLEInt( recBuf, ShapeConst.PARTS_START + j * 4 );
+      final int firstPointNo = ByteUtils.readLEInt( recBuf, ShapeConst.PARTS_START + (j * 4) );
 
       // calculate offset of part in bytes, count from the beginning of
       // recordbuffer
-      final int offset = pointsStart + firstPointNo * 16;
+      final int offset = pointsStart + (firstPointNo * 16);
 
       // get number of first point of next part ...
       int nextFirstPointNo = 0;
       if( j < numParts - 1 )
       {
         // ... usually from ESRI shape Record
-        nextFirstPointNo = ByteUtils.readLEInt( recBuf, ShapeConst.PARTS_START + (j + 1) * 4 );
+        nextFirstPointNo = ByteUtils.readLEInt( recBuf, ShapeConst.PARTS_START + ((j + 1) * 4) );
       }
       // ... for the last part as total number of points
       else if( j == numParts - 1 )
@@ -128,11 +128,11 @@ public class SHPPolyLinez implements ISHPParts
         count++;
 
         // allocate memory for the points of the j-th part
-        final double x = ByteUtils.readLEDouble( recBuf, offset + i * 16 );
-        final double y = ByteUtils.readLEDouble( recBuf, offset + i * 16 + 8 );
+        final double x = ByteUtils.readLEDouble( recBuf, offset + (i * 16) );
+        final double y = ByteUtils.readLEDouble( recBuf, offset + (i * 16) + 8 );
 
         // jump to the z-values of the points
-        final int byteposition = 44 + 4 * numParts + m_numPoints * 16 + 16 + (count - 1) * 8;
+        final int byteposition = 44 + (4 * numParts) + (m_numPoints * 16) + 16 + ((count - 1) * 8);
         final double z = ByteUtils.readLEDouble( recBuf, byteposition );
 
         m_parts[j][i] = new SHPPointz( x, y, z, 0.0 );
@@ -140,7 +140,7 @@ public class SHPPolyLinez implements ISHPParts
     }
 
     // next the z-range of the pointsz...
-    final int byteposition = 44 + 4 * numParts + m_numPoints * 16;
+    final int byteposition = 44 + (4 * numParts) + (m_numPoints * 16);
     m_zrange = new SHPZRange( recBuf, byteposition );
 
     SHPGeometryUtils.checkParts( m_parts );
@@ -171,7 +171,7 @@ public class SHPPolyLinez implements ISHPParts
   @Override
   public int length( )
   {
-    return 40 + m_parts.length * 4 + m_numPoints * 16 + 16 + 8 * m_numPoints;
+    return 40 + m_parts.length * 4 + m_numPoints * 16 + 16 + (8 * m_numPoints);
   }
 
   @Override

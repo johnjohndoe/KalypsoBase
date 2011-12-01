@@ -44,47 +44,33 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
-import org.kalypso.contribs.eclipse.core.runtime.AdapterUtils;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoStyle;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.IKalypsoThemeProvider;
 import org.kalypso.ogc.gml.IKalypsoUserStyle;
 import org.kalypso.ogc.gml.outline.nodes.FeatureTypeStyleNode;
 import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
 import org.kalypso.ogc.gml.outline.nodes.UserStyleNode;
-import org.kalypso.ui.editor.styleeditor.SLDComposite;
+import org.kalypso.ui.editor.styleeditor.SLDEditorGuiBuilder;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Rule;
 
 public class StyleEditorViewPart extends ViewPart implements ISelectionChangedListener
 {
-  public static String ID = "org.kalypso.ui.editor.mapeditor.views.styleeditor"; //$NON-NLS-1$
-
   private ISelectionProvider m_gmop = null;
 
-  private SLDComposite m_sldComposite = null;
+  private SLDEditorGuiBuilder m_guiBuilder = null;
+
+  private FormToolkit m_formToolkit;
 
   public void setSelectionChangedProvider( final ISelectionProvider selectionProvider )
   {
-    if( m_gmop == null && selectionProvider == null )
-    {
-      /* REMARK: special case, happens, if map is closed */
-      m_sldComposite.setKalypsoStyle( null, null );
-      return;
-    }
-
-    if( m_gmop == selectionProvider )
-      return;
-
     if( m_gmop != null )
-    {
       m_gmop.removeSelectionChangedListener( this );
-      selectionChanged( new SelectionChangedEvent( m_gmop, StructuredSelection.EMPTY ) );
-    }
 
     m_gmop = selectionProvider;
 
@@ -107,8 +93,8 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
     if( m_gmop != null )
       m_gmop.removeSelectionChangedListener( this );
 
-    if( m_sldComposite != null )
-      m_sldComposite.dispose();
+    if( m_formToolkit != null )
+      m_formToolkit.dispose();
   }
 
   /**
@@ -117,7 +103,8 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
   @Override
   public void createPartControl( final Composite parent )
   {
-    m_sldComposite = new SLDComposite( parent );
+    m_formToolkit = new FormToolkit( parent.getDisplay() );
+    m_guiBuilder = new SLDEditorGuiBuilder( m_formToolkit, parent );
   }
 
   /**
@@ -126,8 +113,8 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
   @Override
   public void setFocus( )
   {
-    if( m_sldComposite != null )
-      m_sldComposite.setFocus();
+    if( m_guiBuilder != null )
+      m_guiBuilder.setFocus();
   }
 
   /**
@@ -140,7 +127,7 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
 
     if( !(o instanceof IThemeNode) )
     {
-      m_sldComposite.setKalypsoStyle( null, null );
+      m_guiBuilder.setStyle( null, null );
       return;
     }
 
@@ -148,29 +135,26 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
     final IKalypsoTheme theme = findTheme( node );
     if( !(theme instanceof IKalypsoFeatureTheme) )
     {
-      m_sldComposite.setKalypsoStyle( null, null );
+      m_guiBuilder.setStyle( null, null );
       return;
     }
 
-    final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) theme;
+    final IKalypsoFeatureTheme featureTheme = ((IKalypsoFeatureTheme) theme);
     chooseStyle( featureTheme, node );
   }
 
   private void chooseStyle( final IKalypsoFeatureTheme featureTheme, final IThemeNode node )
   {
-    final IFeatureType featureType = featureTheme == null ? null : featureTheme.getFeatureType();
-    final IKalypsoTheme theme = AdapterUtils.getAdapter( node, IKalypsoTheme.class );
-
     if( node instanceof UserStyleNode )
     {
       final IKalypsoUserStyle kalypsoStyle = ((UserStyleNode) node).getStyle();
-      m_sldComposite.setKalypsoStyle( kalypsoStyle, featureType );
+      m_guiBuilder.setStyle( kalypsoStyle, featureTheme );
     }
     else if( node.getElement() instanceof FeatureTypeStyle )
     {
       final FeatureTypeStyle fts = (FeatureTypeStyle) node.getElement();
       if( fts instanceof IKalypsoStyle )
-        m_sldComposite.setKalypsoStyle( (IKalypsoStyle) fts, featureType );
+        m_guiBuilder.setStyle( (IKalypsoStyle) fts, featureTheme );
       else
       {
         final IThemeNode parentNode = node.getParent();
@@ -198,23 +182,23 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
 
       final IKalypsoStyle style = findStyle( ftsNode );
       if( style == null )
-        m_sldComposite.setKalypsoStyle( null, null );
+        m_guiBuilder.setStyle( null, null );
       else
-        m_sldComposite.setKalypsoStyle( style, featureType, index );
+        m_guiBuilder.setStyle( style, featureTheme, index );
     }
-    else if( theme instanceof IKalypsoFeatureTheme )
+    else if( node instanceof IKalypsoThemeProvider )
     {
-      final IKalypsoFeatureTheme nodeTheme = (IKalypsoFeatureTheme) theme;
       // Reset style-editor, but the styles are not unique, so do not set anything
-      final IFeatureType otherType = nodeTheme == null ? null : nodeTheme.getFeatureType();
-      final IKalypsoStyle[] styles = nodeTheme.getStyles();
+      final IKalypsoThemeProvider provider = (IKalypsoThemeProvider) node;
+      final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) provider.getTheme();
+      final IKalypsoStyle[] styles = theme.getStyles();
       if( styles != null && styles.length > 0 )
-        m_sldComposite.setKalypsoStyle( styles[0], otherType );
+        m_guiBuilder.setStyle( styles[0], theme );
       else
-        m_sldComposite.setKalypsoStyle( null, null );
+        m_guiBuilder.setStyle( null, null );
     }
     else
-      m_sldComposite.setKalypsoStyle( null, null );
+      m_guiBuilder.setStyle( null, null );
   }
 
   private IKalypsoStyle findStyle( final IThemeNode node )

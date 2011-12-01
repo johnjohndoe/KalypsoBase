@@ -68,75 +68,63 @@ import org.kalypsodeegree_impl.graphics.sld.ColorMapEntry_Impl;
 /**
  * In this composite the user can specify the colors, values and opacities for two ColorMapEntries. The classes
  * inbetween get interpolated by defining the step width, min and max value.
- * 
+ *
  * @author Thomas Jung
  */
+
 public abstract class RasterColorMapEditorComposite extends Composite
 {
   private static final Color DEFAULT_COLOR_MIN = new Color( Integer.parseInt( "00ff00", 16 ) ); //$NON-NLS-1$
 
   private static final Color DEFAULT_COLOR_MAX = new Color( Integer.parseInt( "330033", 16 ) ); //$NON-NLS-1$
 
-  protected static final Pattern PATTERN_DOUBLE = Pattern.compile( "[\\+\\-]?[0-9]+[\\.\\,]?[0-9]*?" ); //$NON-NLS-1$
-
-  private BigDecimal m_globalMin;
-
-  private BigDecimal m_globalMax;
-
-  private final boolean m_showGlobal;
-
   private ColorMapEntry m_toEntry;
 
   private ColorMapEntry m_fromEntry;
 
-  protected BigDecimal m_minValue;
+  private final Pattern m_patternDouble = Pattern.compile( "[\\+\\-]?[0-9]+[\\.\\,]?[0-9]*?" ); //$NON-NLS-1$
 
-  protected BigDecimal m_maxValue;
+  private BigDecimal m_stepWidth;
 
-  protected BigDecimal m_stepWidth;
+  private BigDecimal m_minValue;
 
-  public RasterColorMapEditorComposite( final Composite parent, final int style, final ColorMapEntry[] entries, final BigDecimal globalMin, final BigDecimal globalMax, final boolean showGlobal )
+  private BigDecimal m_maxValue;
+
+  private final BigDecimal m_globalMin;
+
+  private final BigDecimal m_globalMax;
+
+  public RasterColorMapEditorComposite( final Composite parent, final int style, final ColorMapEntry[] colorMap, final BigDecimal minGlobalValue, final BigDecimal maxGlobalValue )
   {
     super( parent, style );
 
-    m_showGlobal = showGlobal;
-
-    /* Exclude transparent members from the beginning of the list. */
-    double modifiedMinValue = entries.length > 0 ? entries[0].getQuantity() : globalMin.doubleValue();
+    // exclude transparent members from the beginning of the list
+    double modifiedMinValue = colorMap.length > 0 ? colorMap[0].getQuantity() : minGlobalValue.doubleValue();
     final List<ColorMapEntry> nonTransparentEntriesList = new ArrayList<ColorMapEntry>();
-    for( final ColorMapEntry entry : entries )
-    {
+    for( final ColorMapEntry entry : colorMap )
       if( entry.getOpacity() > 0.0 )
         nonTransparentEntriesList.add( entry );
       else
         modifiedMinValue = entry.getQuantity();
-    }
-
     final ColorMapEntry[] modifiedColorMap = nonTransparentEntriesList.toArray( new ColorMapEntry[0] );
+
     if( modifiedColorMap.length > 0 )
     {
       m_fromEntry = modifiedColorMap[0];
       m_toEntry = modifiedColorMap[modifiedColorMap.length - 1];
     }
 
-    /* Set the given value, if it is null, set a default. */
-    m_globalMin = globalMin;
-    if( m_globalMin == null )
-      m_globalMin = new BigDecimal( 0.0 ).setScale( 2 );
+    m_globalMin = minGlobalValue;
+    m_globalMax = maxGlobalValue;
 
-    /* Set the given value, if it is null, set a default. */
-    m_globalMax = globalMax;
-    if( m_globalMax == null )
-      m_globalMax = new BigDecimal( 100.0 ).setScale( 2 );
-
-    /* Set default entries. */
     if( m_fromEntry == null || m_toEntry == null )
     {
+      // set default entries
       m_fromEntry = new ColorMapEntry_Impl( DEFAULT_COLOR_MIN, 0.8, m_globalMin.doubleValue(), m_globalMin.toString() );
       m_toEntry = new ColorMapEntry_Impl( DEFAULT_COLOR_MAX, 0.8, m_globalMax.doubleValue(), m_globalMax.toString() );
     }
 
-    /* Calculate step width. */
+    // calculate step width
     if( modifiedColorMap.length > 1 )
       m_stepWidth = new BigDecimal( modifiedColorMap[1].getQuantity() - modifiedColorMap[0].getQuantity() ).setScale( 2, BigDecimal.ROUND_HALF_UP );
     else
@@ -157,14 +145,15 @@ public abstract class RasterColorMapEditorComposite extends Composite
     final Group fromColorMapGroup = new Group( this, SWT.NONE );
     fromColorMapGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     fromColorMapGroup.setLayout( new GridLayout( 1, true ) );
-    fromColorMapGroup.setText( Messages.getString( "org.kalypso.ui.editor.sldEditor.RasterColorMapEditorComposite.3" ) ); //$NON-NLS-1$
+    fromColorMapGroup.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.RasterColorMapEditorComposite.3") ); //$NON-NLS-1$
 
     final Group toColorMapGroup = new Group( this, SWT.NONE );
     toColorMapGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     toColorMapGroup.setLayout( new GridLayout( 1, true ) );
-    toColorMapGroup.setText( Messages.getString( "org.kalypso.ui.editor.sldEditor.RasterColorMapEditorComposite.4" ) ); //$NON-NLS-1$
+    toColorMapGroup.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.RasterColorMapEditorComposite.4") ); //$NON-NLS-1$
 
     final ColorMapEntryEditorComposite fromEntryComposite = new ColorMapEntryEditorComposite( fromColorMapGroup, SWT.NONE, m_fromEntry );
+
     fromEntryComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     fromEntryComposite.addModifyListener( new IColorMapEntryModifyListener()
     {
@@ -185,36 +174,40 @@ public abstract class RasterColorMapEditorComposite extends Composite
         colorMapChanged();
       }
     } );
+
+    /*
+     * final ColorMapEntryEditorComposite nodataEntryComposite = new ColorMapEntryEditorComposite( nodataColorMapGroup,
+     * SWT.NONE, m_nodataEntry ); nodataEntryComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+     * nodataEntryComposite.addModifyListener( new IColorMapEntryModifyListener() { public void onEntryChanged( Object
+     * source, ColorMapEntry entry ) { colorMapChanged(); } } );
+     */
   }
 
-  private void createMinMaxGroup( final Composite parent )
+  private void createMinMaxGroup( final Composite commonComposite )
   {
-    /* Properties (global min / max, displayed min / max). */
-    final Group propertyGroup = new Group( parent, SWT.NONE );
+    /* properties (global min / max, displayed min / max */
+    final Group propertyGroup = new Group( commonComposite, SWT.NONE );
     final GridData gridDataProperty = new GridData( SWT.FILL, SWT.FILL, true, true );
     gridDataProperty.horizontalSpan = 2;
     propertyGroup.setLayoutData( gridDataProperty );
-    propertyGroup.setLayout( new GridLayout( m_showGlobal ? 2 : 1, true ) );
-    propertyGroup.setText( Messages.getString( "org.kalypso.ui.editor.sldEditor.RasterColorMapEditorComposite.5" ) ); //$NON-NLS-1$
+    propertyGroup.setLayout( new GridLayout( 2, true ) );
+    propertyGroup.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.RasterColorMapEditorComposite.5") ); //$NON-NLS-1$
 
-    if( m_showGlobal )
-      createGlobalComposite( propertyGroup );
-
-    createDisplayComposite( propertyGroup );
-  }
-
-  private void createGlobalComposite( final Group parent )
-  {
-    final Composite globalComposite = new Composite( parent, SWT.NONE );
-    final GridData globalData = new GridData( SWT.FILL, SWT.FILL, true, false );
-    globalComposite.setLayoutData( globalData );
+    final Composite globalComposite = new Composite( propertyGroup, SWT.NONE );
+    final GridData gridDataGlobalComp = new GridData( SWT.FILL, SWT.FILL, true, false );
+    globalComposite.setLayoutData( gridDataGlobalComp );
     globalComposite.setLayout( new GridLayout( 2, false ) );
+
+    final Composite displayComposite = new Composite( propertyGroup, SWT.NONE );
+    final GridData gridDataDisplayComp = new GridData( SWT.FILL, SWT.FILL, true, false );
+    displayComposite.setLayoutData( gridDataDisplayComp );
+    displayComposite.setLayout( new GridLayout( 2, false ) );
 
     final Label globalMaxLabel = new Label( globalComposite, SWT.NONE );
     final GridData gridDataGlobalMax = new GridData( SWT.BEGINNING, SWT.CENTER, false, false );
     gridDataGlobalMax.heightHint = 15;
     globalMaxLabel.setLayoutData( gridDataGlobalMax );
-    globalMaxLabel.setText( Messages.getString( "org.kalypso.ui.editor.sldEditor.RasterColorMapEditorComposite.6" ) ); //$NON-NLS-1$
+    globalMaxLabel.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.RasterColorMapEditorComposite.6") ); //$NON-NLS-1$
 
     final Label globalMaxValueLabel = new Label( globalComposite, SWT.NONE );
     final GridData gridDataMaxValueLabel = new GridData( SWT.END, SWT.CENTER, false, false );
@@ -223,41 +216,35 @@ public abstract class RasterColorMapEditorComposite extends Composite
 
     globalMaxValueLabel.setLayoutData( gridDataMaxValueLabel );
     String max;
-    if( m_globalMax != null )
+    if( m_globalMax.toString() != null )
       max = m_globalMax.toString();
     else
-      max = Messages.getString( "org.kalypso.ui.editor.sldEditor.RasterColorMapEditorComposite.7" ); //$NON-NLS-1$
+      max = Messages.getString("org.kalypso.ui.editor.sldEditor.RasterColorMapEditorComposite.7"); //$NON-NLS-1$
     globalMaxValueLabel.setText( max );
     globalMaxValueLabel.setAlignment( SWT.RIGHT );
 
     final Label globalMinLabel = new Label( globalComposite, SWT.NONE );
     globalMinLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
-    globalMinLabel.setText( Messages.getString( "org.kalypso.ui.editor.sldEditor.org.kalypso.ui.editor.sldEditor.RasterColorMapEditorComposite.8" ) ); //$NON-NLS-1$
+    globalMinLabel.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.org.kalypso.ui.editor.sldEditor.RasterColorMapEditorComposite.8") ); //$NON-NLS-1$
 
     final Label globalMinValueLabel = new Label( globalComposite, SWT.NONE );
     final GridData gridDataMinValueLabel = new GridData( SWT.END, SWT.CENTER, false, false );
     gridDataMinValueLabel.widthHint = 40;
+
     globalMinValueLabel.setLayoutData( gridDataMinValueLabel );
     String min;
-    if( m_globalMin != null )
+    if( m_globalMin.toString() != null )
       min = m_globalMin.toString();
     else
-      min = Messages.getString( "org.kalypso.ui.editor.sldEditor.RasterColorMapEditorComposite.9" ); //$NON-NLS-1$
+      min = Messages.getString("org.kalypso.ui.editor.sldEditor.RasterColorMapEditorComposite.9"); //$NON-NLS-1$
+
     globalMinValueLabel.setText( min );
     globalMinValueLabel.setAlignment( SWT.RIGHT );
-  }
 
-  private void createDisplayComposite( final Group parent )
-  {
-    final Composite displayComposite = new Composite( parent, SWT.NONE );
-    final GridData displayData = new GridData( SWT.FILL, SWT.FILL, true, false );
-    displayComposite.setLayoutData( displayData );
-    displayComposite.setLayout( new GridLayout( 2, false ) );
-
-    /* Max value to display. */
+    /* max value to display */
     final Label displayMaxLabel = new Label( displayComposite, SWT.NONE );
     displayMaxLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, true, false ) );
-    displayMaxLabel.setText( Messages.getString( "org.kalypso.ui.editor.sldEditor.RasterColorMapEditorComposite.10" ) ); //$NON-NLS-1$
+    displayMaxLabel.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.RasterColorMapEditorComposite.10") ); //$NON-NLS-1$
 
     final Text maxValueText = new Text( displayComposite, SWT.BORDER | SWT.TRAIL );
     final GridData gridDataMaxText = new GridData( SWT.FILL, SWT.CENTER, true, false );
@@ -268,10 +255,10 @@ public abstract class RasterColorMapEditorComposite extends Composite
     final String stringMax = String.valueOf( m_maxValue );
     maxValueText.setText( stringMax );
 
-    /* Min value to display. */
+    /* min value to display */
     final Label displayMinLabel = new Label( displayComposite, SWT.NONE );
     displayMinLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, true, false ) );
-    displayMinLabel.setText( Messages.getString( "org.kalypso.ui.editor.sldEditor.RasterColorMapEditorComposite.11" ) ); //$NON-NLS-1$
+    displayMinLabel.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.RasterColorMapEditorComposite.11") ); //$NON-NLS-1$
 
     final Text minValueText = new Text( displayComposite, SWT.BORDER | SWT.TRAIL );
     final GridData gridDataMinText = new GridData( SWT.FILL, SWT.CENTER, true, false );
@@ -281,15 +268,17 @@ public abstract class RasterColorMapEditorComposite extends Composite
 
     final String stringMin = String.valueOf( m_minValue );
     minValueText.setText( stringMin );
+
     minValueText.addKeyListener( new KeyAdapter()
     {
+      @SuppressWarnings("synthetic-access")
       @Override
       public void keyPressed( final KeyEvent event )
       {
         switch( event.keyCode )
         {
           case SWT.CR:
-            final BigDecimal value = SldHelper.checkDoubleTextValue( parent, minValueText, PATTERN_DOUBLE );
+            final BigDecimal value = SldHelper.checkDoubleTextValue( propertyGroup, minValueText, m_patternDouble );
             if( value != null )
               m_minValue = value;
         }
@@ -299,17 +288,19 @@ public abstract class RasterColorMapEditorComposite extends Composite
     minValueText.addFocusListener( new FocusListener()
     {
       @Override
+      @SuppressWarnings("synthetic-access")
       public void focusGained( final FocusEvent e )
       {
-        final BigDecimal value = SldHelper.checkDoubleTextValue( parent, minValueText, PATTERN_DOUBLE );
+        final BigDecimal value = SldHelper.checkDoubleTextValue( propertyGroup, minValueText, m_patternDouble );
         if( value != null )
           m_minValue = value;
       }
 
       @Override
+      @SuppressWarnings("synthetic-access")
       public void focusLost( final FocusEvent e )
       {
-        final BigDecimal value = SldHelper.checkDoubleTextValue( parent, minValueText, PATTERN_DOUBLE );
+        final BigDecimal value = SldHelper.checkDoubleTextValue( propertyGroup, minValueText, m_patternDouble );
         if( value != null )
         {
           m_minValue = value;
@@ -321,18 +312,20 @@ public abstract class RasterColorMapEditorComposite extends Composite
     minValueText.addModifyListener( new ModifyListener()
     {
       @Override
+      @SuppressWarnings("synthetic-access")
       public void modifyText( final ModifyEvent e )
       {
         final String tempText = minValueText.getText();
 
-        final Matcher m = PATTERN_DOUBLE.matcher( tempText );
+        final Matcher m = m_patternDouble.matcher( tempText );
+
         if( !m.matches() )
         {
-          minValueText.setBackground( parent.getDisplay().getSystemColor( SWT.COLOR_RED ) );
+          minValueText.setBackground( propertyGroup.getDisplay().getSystemColor( SWT.COLOR_RED ) );
         }
         else
         {
-          minValueText.setBackground( parent.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
+          minValueText.setBackground( propertyGroup.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
           tempText.replaceAll( ",", "." ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
@@ -340,13 +333,14 @@ public abstract class RasterColorMapEditorComposite extends Composite
 
     maxValueText.addKeyListener( new KeyAdapter()
     {
+      @SuppressWarnings("synthetic-access")
       @Override
       public void keyPressed( final KeyEvent event )
       {
         switch( event.keyCode )
         {
           case SWT.CR:
-            final BigDecimal value = SldHelper.checkDoubleTextValue( parent, maxValueText, PATTERN_DOUBLE );
+            final BigDecimal value = SldHelper.checkDoubleTextValue( propertyGroup, maxValueText, m_patternDouble );
             if( value != null )
               m_maxValue = value;
         }
@@ -356,17 +350,19 @@ public abstract class RasterColorMapEditorComposite extends Composite
     maxValueText.addFocusListener( new FocusListener()
     {
       @Override
+      @SuppressWarnings("synthetic-access")
       public void focusGained( final FocusEvent e )
       {
-        final BigDecimal value = SldHelper.checkDoubleTextValue( parent, maxValueText, PATTERN_DOUBLE );
+        final BigDecimal value = SldHelper.checkDoubleTextValue( propertyGroup, maxValueText, m_patternDouble );
         if( value != null )
           m_maxValue = value;
       }
 
       @Override
+      @SuppressWarnings("synthetic-access")
       public void focusLost( final FocusEvent e )
       {
-        final BigDecimal value = SldHelper.checkDoubleTextValue( parent, maxValueText, PATTERN_DOUBLE );
+        final BigDecimal value = SldHelper.checkDoubleTextValue( propertyGroup, maxValueText, m_patternDouble );
         if( value != null )
         {
           m_maxValue = value;
@@ -378,16 +374,20 @@ public abstract class RasterColorMapEditorComposite extends Composite
     maxValueText.addModifyListener( new ModifyListener()
     {
       @Override
+      @SuppressWarnings("synthetic-access")
       public void modifyText( final ModifyEvent e )
       {
         final String tempText = maxValueText.getText();
 
-        final Matcher m = PATTERN_DOUBLE.matcher( tempText );
+        final Matcher m = m_patternDouble.matcher( tempText );
+
         if( !m.matches() )
-          maxValueText.setBackground( parent.getDisplay().getSystemColor( SWT.COLOR_RED ) );
+        {
+          maxValueText.setBackground( propertyGroup.getDisplay().getSystemColor( SWT.COLOR_RED ) );
+        }
         else
         {
-          maxValueText.setBackground( parent.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
+          maxValueText.setBackground( propertyGroup.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
           tempText.replaceAll( ",", "." ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
@@ -396,7 +396,7 @@ public abstract class RasterColorMapEditorComposite extends Composite
     // step width spinner
     final Label labelWithSpinner = new Label( displayComposite, SWT.NONE );
     labelWithSpinner.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, true, false ) );
-    labelWithSpinner.setText( Messages.getString( "org.kalypso.ui.editor.sldEditor.RasterColorMapEditorComposite.24" ) ); //$NON-NLS-1$
+    labelWithSpinner.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.RasterColorMapEditorComposite.24") ); //$NON-NLS-1$
 
     final Text stepWidthText = new Text( displayComposite, SWT.BORDER | SWT.TRAIL );
     final GridData gridDataStepWidthText = new GridData( SWT.FILL, SWT.CENTER, true, false );
@@ -406,15 +406,17 @@ public abstract class RasterColorMapEditorComposite extends Composite
 
     final String stringStepWidth = String.valueOf( m_stepWidth );
     stepWidthText.setText( stringStepWidth );
+
     stepWidthText.addKeyListener( new KeyAdapter()
     {
+      @SuppressWarnings("synthetic-access")
       @Override
       public void keyPressed( final KeyEvent event )
       {
         switch( event.keyCode )
         {
           case SWT.CR:
-            final BigDecimal value = SldHelper.checkPositiveDoubleTextValue( parent, stepWidthText, PATTERN_DOUBLE );
+            final BigDecimal value = SldHelper.checkPositiveDoubleTextValue( propertyGroup, stepWidthText, m_patternDouble );
             if( value != null )
               m_stepWidth = value;
         }
@@ -424,17 +426,19 @@ public abstract class RasterColorMapEditorComposite extends Composite
     stepWidthText.addFocusListener( new FocusListener()
     {
       @Override
+      @SuppressWarnings("synthetic-access")
       public void focusGained( final FocusEvent e )
       {
-        final BigDecimal value = SldHelper.checkPositiveDoubleTextValue( parent, stepWidthText, PATTERN_DOUBLE );
+        final BigDecimal value = SldHelper.checkPositiveDoubleTextValue( propertyGroup, stepWidthText, m_patternDouble );
         if( value != null )
           m_stepWidth = value;
       }
 
       @Override
+      @SuppressWarnings("synthetic-access")
       public void focusLost( final FocusEvent e )
       {
-        final BigDecimal value = SldHelper.checkPositiveDoubleTextValue( parent, stepWidthText, PATTERN_DOUBLE );
+        final BigDecimal value = SldHelper.checkPositiveDoubleTextValue( propertyGroup, stepWidthText, m_patternDouble );
         if( value != null )
         {
           m_stepWidth = value;
@@ -446,22 +450,25 @@ public abstract class RasterColorMapEditorComposite extends Composite
     stepWidthText.addModifyListener( new ModifyListener()
     {
       @Override
+      @SuppressWarnings("synthetic-access")
       public void modifyText( final ModifyEvent e )
       {
         final String tempText = stepWidthText.getText();
 
-        final Matcher m = PATTERN_DOUBLE.matcher( tempText );
+        final Matcher m = m_patternDouble.matcher( tempText );
+
         if( !m.matches() )
         {
-          stepWidthText.setBackground( parent.getDisplay().getSystemColor( SWT.COLOR_RED ) );
+          stepWidthText.setBackground( propertyGroup.getDisplay().getSystemColor( SWT.COLOR_RED ) );
         }
         else
         {
-          stepWidthText.setBackground( parent.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
+          stepWidthText.setBackground( propertyGroup.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
           tempText.replaceAll( ",", "." ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
     } );
+
   }
 
   public ColorMapEntry[] getColorMap( )

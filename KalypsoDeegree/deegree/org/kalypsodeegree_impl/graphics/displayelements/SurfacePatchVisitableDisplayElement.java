@@ -62,7 +62,7 @@ public class SurfacePatchVisitableDisplayElement<P extends GM_SurfacePatch> impl
 {
   public interface IVisitorFactory<P2 extends GM_SurfacePatch>
   {
-    ISurfacePatchVisitor<P2> createVisitor( final Graphics g, final GeoTransform projection, final IElevationColorModel model );
+    public ISurfacePatchVisitor<P2> createVisitor( final Graphics g, final GeoTransform projection, final IElevationColorModel model );
   }
 
   private final IElevationColorModel m_colorModel;
@@ -90,6 +90,22 @@ public class SurfacePatchVisitableDisplayElement<P extends GM_SurfacePatch> impl
     m_colorModel = colorModel;
 
     m_surfacePatchVisitable = surfacePatchVisitable;
+  }
+
+  /**
+   * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#doesScaleConstraintApply(double)
+   */
+  @Override
+  public boolean doesScaleConstraintApply( final double scale )
+  {
+    if( m_decorated != null )
+    {
+      return m_decorated.doesScaleConstraintApply( scale );
+    }
+    else
+    {
+      return true;
+    }
   }
 
   /**

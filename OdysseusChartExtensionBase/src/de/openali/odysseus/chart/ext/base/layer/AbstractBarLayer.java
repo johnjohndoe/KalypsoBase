@@ -90,7 +90,7 @@ public abstract class AbstractBarLayer extends AbstractChartLayer
     if( pf.getStyle().isVisible() )
     {
 
-      final LegendEntry entry = new LegendEntry( this, getTitle() )
+      final LegendEntry entry = new LegendEntry( this, pf.getStyle().getTitle() )
       {
         @Override
         public void paintSymbol( final GC gc, final Point size )

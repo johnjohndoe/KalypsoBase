@@ -47,7 +47,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface IProfileFeatureProvider
 {
-  IProfileFeature getProfile( final Feature feature );
+  public IProfileFeature getProfile( final Feature feature );
 
-  Object getResult( Feature feature );
+  public Object getResult( Feature feature );
 }

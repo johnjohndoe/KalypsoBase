@@ -44,6 +44,7 @@ import java.net.URL;
 
 import javax.xml.bind.JAXBElement;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeFactory;
@@ -75,8 +76,8 @@ public class LegendThemeFactory implements IKalypsoThemeFactory
    *      org.kalypsodeegree.model.geometry.GM_Envelope, java.lang.String)
    */
   @Override
-  public JAXBElement< ? extends StyledLayerType> configureLayer( final IKalypsoTheme theme, final String id, final GM_Envelope bbox, final String srsName )
+  public JAXBElement< ? extends StyledLayerType> configureLayer( IKalypsoTheme theme, String id, GM_Envelope bbox, String srsName )
   {
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 }

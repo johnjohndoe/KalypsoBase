@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -48,7 +47,7 @@ import java.util.List;
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.util.SafeRunnable;
@@ -67,7 +66,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -79,7 +77,6 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
-import org.kalypso.ogc.gml.featureview.maker.FeatureviewTypeWithContext;
 import org.kalypso.ogc.gml.featureview.maker.IFeatureviewFactory;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.featureview.Button;
@@ -198,6 +195,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     m_modifyListeners.clear();
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#isValid()
+   */
   @Override
   public boolean isValid( )
   {
@@ -214,13 +214,13 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
   public Control createControl( final Composite parent, final int defaultStyle, final IFeatureType ft )
   {
-    final FeatureviewTypeWithContext view = m_featureviewFactory.get( ft, getFeature() );
+    final FeatureviewType view = m_featureviewFactory.get( ft, getFeature() );
 
-    // TODO: dubious we shoudn't need to adapt the parent, that should already have been done by the calling code
+    // TODO: dubious we shoudn't need to adapt the parent, that should already have beend done by the calling code
     if( m_formToolkit != null )
       m_formToolkit.adapt( parent );
 
-    m_control = createControl( parent, defaultStyle, view.getView() );
+    m_control = createControl( parent, defaultStyle, view );
 
     /* If a toolkit is set, use it. */
     if( m_formToolkit != null )
@@ -308,10 +308,6 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     if( control instanceof Composite )
     {
       final Composite panel = (Composite) control;
-
-      if( panel instanceof Section )
-        return;
-
       m_formToolkit.adapt( panel );
 
       final Control[] children = panel.getChildren();
@@ -360,7 +356,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     final ControlType controlType = (ControlType) control.getData( DATA_CONTROL_TYPE );
 
     // REMARK: Special case for direct children of Tab-Folders. Setting the visibility here
-    // breaks the tab folder behavior. We assume, that the visibility of a
+    // breaks the tab folder behaviour. We assume, that the visibility of a
     // tab folder item is never changed depending on a value of a feature.
     if( !(control.getParent() instanceof org.eclipse.swt.widgets.TabFolder) )
     {
@@ -480,7 +476,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     /* TODO: move all from above into the factory method */
     final IFeatureControlFactory controlFactory = createControlFactory( parent, controlType );
     final IFeatureControl featureControl = createFeatureControl( controlFactory, feature, ftp, controlType, annotation );
-    final Control control = featureControl.createControl(m_formToolkit, parent, style );
+    final Control control = featureControl.createControl( parent, style );
     addFeatureControl( featureControl );
     return control;
   }
@@ -766,11 +762,10 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     if( feature == null )
       return;
 
-    final FeatureviewTypeWithContext type = m_featureviewFactory.get( feature.getFeatureType(), feature );
-    types.add( type.getView() );
+    final FeatureviewType type = m_featureviewFactory.get( feature.getFeatureType(), feature );
+    types.add( type );
 
     for( final IFeatureControl control : m_featureControls )
-    {
       if( control instanceof FeatureComposite )
         ((FeatureComposite) control).collectViewTypes( types );
       else if( control instanceof SubFeatureControl )
@@ -779,7 +774,6 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
         if( fc instanceof FeatureComposite )
           ((FeatureComposite) fc).collectViewTypes( types );
       }
-    }
   }
 
   /**
@@ -832,21 +826,5 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   public boolean isShowOk( )
   {
     return m_showOk;
-  }
-
-  @Override
-  public URL getFeatureviewContext( )
-  {
-    final Feature feature = getFeature();
-    if( feature == null )
-      return null;
-
-    final IFeatureType featureType = feature.getFeatureType();
-
-    final FeatureviewTypeWithContext featureviewWithContext = m_featureviewFactory.get( featureType, feature );
-    if( featureviewWithContext == null )
-      return null;
-
-    return featureviewWithContext.getContext();
   }
 }

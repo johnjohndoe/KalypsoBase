@@ -46,6 +46,7 @@ import de.openali.odysseus.chart.ext.base.layer.DefaultTickRasterLayer;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
@@ -54,10 +55,13 @@ import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
 /**
  * @author Dirk Kuch
  */
-public class ZmlGridLayerProvider extends AbstractLayerProvider
+public class ZmlGridLayerProvider extends AbstractLayerProvider implements ILayerProvider
 {
   public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlGridLayerProvider";
 
+  /**
+   * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
+   */
   @Override
   public IChartLayer getLayer( final URL context ) throws ConfigurationException
   {

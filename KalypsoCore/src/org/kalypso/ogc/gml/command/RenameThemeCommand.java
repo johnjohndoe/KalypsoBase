@@ -106,7 +106,7 @@ public class RenameThemeCommand implements ICommand
   @Override
   public String getDescription( )
   {
-    return "org.kalypso.ogc.gml.command.RenameThemeCommand"; //$NON-NLS-1$
+    return  "org.kalypso.ogc.gml.command.RenameThemeCommand" ; //$NON-NLS-1$
   }
 
 }

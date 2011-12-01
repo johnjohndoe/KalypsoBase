@@ -59,7 +59,7 @@ public class PropertyTooltipGenerator implements ITooltipGenerator
   /**
    * The constructor.
    */
-  public PropertyTooltipGenerator( final QName property )
+  public PropertyTooltipGenerator( QName property )
   {
     m_property = property;
   }
@@ -68,12 +68,12 @@ public class PropertyTooltipGenerator implements ITooltipGenerator
    * @see org.kalypso.ogc.gml.map.widgets.providers.tooltips.ITooltipGenerator#generate(java.lang.Object)
    */
   @Override
-  public String generate( final Object object )
+  public String generate( Object object )
   {
     /* We know, that it must be a feature, we get here. */
-    final Feature feature = (Feature) object;
+    Feature feature = (Feature) object;
 
-    final Object property = feature.getProperty( m_property );
+    Object property = feature.getProperty( m_property );
 
     return property.toString();
   }

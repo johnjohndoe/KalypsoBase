@@ -126,35 +126,7 @@ public final class MapModellHelper
    *          If >0 and <=25 a border will be drawn around the map.
    * @return The image showing the map.
    */
-  public static BufferedImage createWellFormedImageFromModel( final IMapPanel panel, final int width, final int height, final Insets insets, final int borderWidth )
-  {
-    /* Get the map model. */
-    final IMapModell mapModel = panel.getMapModell();
-
-    /* Get the bounding box. */
-    final GM_Envelope boundingBox = panel.getBoundingBox();
-
-    return createWellFormedImageFromModel( mapModel, width, height, insets, borderWidth, boundingBox );
-  }
-
-  /**
-   * This function creates an image of a map model and keeps aspect ratio of the displayed map and its extend.
-   * 
-   * @param mapModel
-   *          The map model.
-   * @param width
-   *          The width of the new image.
-   * @param height
-   *          The height of the new image.
-   * @param insets
-   *          The insets of the image define a print border, which is kept empty.
-   * @param borderWidth
-   *          If >0 and <=25 a border will be drawn around the map.
-   * @param boundingBox
-   *          The original bounding box.
-   * @return The image showing the map.
-   */
-  public static BufferedImage createWellFormedImageFromModel( final IMapModell mapModel, final int width, final int height, final Insets insets, final int borderWidth, final GM_Envelope boundingBox )
+  public static BufferedImage createWellFormedImageFromModel( IMapPanel panel, int width, int height, Insets insets, int borderWidth )
   {
     /* The remaining dimensions for the map considering the insets. */
     int mapWidth = width;
@@ -174,11 +146,17 @@ public final class MapModellHelper
       mapHeight = mapHeight - borderWidth;
     }
 
+    /* Get the map model. */
+    IMapModell mapModel = panel.getMapModell();
+
+    /* Get the bounding box. */
+    GM_Envelope boundingBox = panel.getBoundingBox();
+
     /* Calculate the ratio of the width and height of the available to the map. */
-    final double ratio = (double) mapHeight / (double) mapWidth;
+    double ratio = (double) mapHeight / (double) mapWidth;
 
     /* Adjust the bounding box. */
-    final GM_Envelope adjustedBoundingBox = MapModellHelper.adjustBoundingBox( mapModel, boundingBox, ratio );
+    GM_Envelope adjustedBoundingBox = MapModellHelper.adjustBoundingBox( mapModel, boundingBox, ratio );
 
     return MapModellHelper.createImageFromModell( mapModel, width, height, insets, borderWidth, adjustedBoundingBox );
   }
@@ -202,7 +180,7 @@ public final class MapModellHelper
    *          The envelope of the map, which should be exported.
    * @return The image showing the map.
    */
-  public static BufferedImage createImageFromModell( final IMapModell model, final int width, final int height, Insets insets, int borderWidth, final GM_Envelope boundingBox )
+  public static BufferedImage createImageFromModell( IMapModell model, int width, int height, Insets insets, int borderWidth, GM_Envelope boundingBox )
   {
     /* If there is no bounding box, we cannot draw the map. */
     if( boundingBox == null )
@@ -217,16 +195,16 @@ public final class MapModellHelper
       borderWidth = 0;
 
     /* Calculate the remaining dimensions for the map considering the insets and the border. */
-    final int mapWidth = width - insets.left - insets.right - borderWidth;
-    final int mapHeight = height - insets.top - insets.bottom - borderWidth;
+    int mapWidth = width - insets.left - insets.right - borderWidth;
+    int mapHeight = height - insets.top - insets.bottom - borderWidth;
 
     /* Create the image for the map WITH the insets AND the border. */
-    final BufferedImage image = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
-    final Graphics2D gr = (Graphics2D) image.getGraphics();
+    BufferedImage image = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
+    Graphics2D gr = (Graphics2D) image.getGraphics();
 
     /* Create the image for the map WITHOUT the insets AND the border. */
-    final BufferedImage mapImage = new BufferedImage( mapWidth, mapHeight, BufferedImage.TYPE_INT_ARGB );
-    final Graphics2D mapgr = (Graphics2D) mapImage.getGraphics();
+    BufferedImage mapImage = new BufferedImage( mapWidth, mapHeight, BufferedImage.TYPE_INT_ARGB );
+    Graphics2D mapgr = (Graphics2D) mapImage.getGraphics();
 
     try
     {
@@ -249,7 +227,7 @@ public final class MapModellHelper
       mapgr.setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
 
       /* Create the world to screen transform. */
-      final GeoTransform world2screen = new WorldToScreenTransform();
+      GeoTransform world2screen = new WorldToScreenTransform();
       world2screen.setSourceRect( boundingBox );
       world2screen.setDestRect( 0, 0, mapWidth, mapHeight, null );
 
@@ -261,7 +239,7 @@ public final class MapModellHelper
 
       /* Draw the border. */
       /* The insets and the space for the border are already considered on the image. */
-      final Polygon polygon = new Polygon();
+      Polygon polygon = new Polygon();
       polygon.addPoint( insets.left, insets.top );
       polygon.addPoint( insets.left + borderWidth + mapWidth + borderWidth, insets.top );
       polygon.addPoint( insets.left + borderWidth + mapWidth + borderWidth, insets.top + borderWidth + mapHeight + borderWidth );
@@ -274,7 +252,7 @@ public final class MapModellHelper
       polygon.addPoint( insets.left + borderWidth, insets.top + borderWidth );
       gr.fill( polygon );
     }
-    catch( final Exception ex )
+    catch( Exception ex )
     {
       /* Print the stack trace. */
       ex.printStackTrace();
@@ -315,7 +293,7 @@ public final class MapModellHelper
     GM_Envelope result = null;
     for( final IKalypsoTheme kalypsoTheme : themes )
     {
-      if( predicate == null || predicate.decide( kalypsoTheme ) )
+      if( (predicate == null) || predicate.decide( kalypsoTheme ) )
       {
         final GM_Envelope boundingBox = kalypsoTheme.getFullExtent();
         if( result == null )

@@ -128,7 +128,7 @@ public class EditGeometryWidget extends AbstractWidget
 
     // final FeatureList featureListVisible = ((IKalypsoFeatureTheme) activeTheme).getFeatureListVisible( null );
     final FeatureList featureListVisible = ((IKalypsoFeatureTheme) activeTheme).getFeatureList();
-    final List<Object> features = JMSelector.select( envelope, featureListVisible, false );
+    final List<Object> features = selector.select( envelope, featureListVisible, false );
     m_handles = HandlesFactory.createHandles( features, null, envelope );
 
     final IMapPanel panel = getMapPanel();
@@ -269,7 +269,7 @@ public class EditGeometryWidget extends AbstractWidget
     final double gisX = transform.getSourceX( pointOfInterest.getX() );
     final double gisY = transform.getSourceY( pointOfInterest.getY() );
     final GM_Position positionOfInterest = GeometryFactory.createGM_Position( gisX, gisY );
-
+    
     // todo checkForTopology is not used, check it
     final List<Handle> checkForTopology = new ArrayList<Handle>();
     // 1. select nearest handle

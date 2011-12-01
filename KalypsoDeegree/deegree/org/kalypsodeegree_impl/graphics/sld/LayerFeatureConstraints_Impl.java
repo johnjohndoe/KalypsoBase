@@ -60,9 +60,9 @@ public class LayerFeatureConstraints_Impl implements LayerFeatureConstraints, Ma
   /**
    * constructor initializing the class with the <LayerFeatureConstraints>
    */
-  LayerFeatureConstraints_Impl( final FeatureTypeConstraint[] featureTypeConstraint )
+  LayerFeatureConstraints_Impl( FeatureTypeConstraint[] featureTypeConstraint )
   {
-    m_featureTypeConstraint = new ArrayList();
+    this.m_featureTypeConstraint = new ArrayList();
     setFeatureTypeConstraint( featureTypeConstraint );
   }
 
@@ -73,9 +73,10 @@ public class LayerFeatureConstraints_Impl implements LayerFeatureConstraints, Ma
    * @return the FeatureTypeConstraints as Array
    */
   @Override
-  public FeatureTypeConstraint[] getFeatureTypeConstraint( )
+  public FeatureTypeConstraint[] getFeatureTypeConstraint()
   {
-    return (FeatureTypeConstraint[]) m_featureTypeConstraint.toArray( new FeatureTypeConstraint[m_featureTypeConstraint.size()] );
+    return (FeatureTypeConstraint[])m_featureTypeConstraint.toArray( new FeatureTypeConstraint[m_featureTypeConstraint
+        .size()] );
   }
 
   /**
@@ -85,15 +86,15 @@ public class LayerFeatureConstraints_Impl implements LayerFeatureConstraints, Ma
    *          the <FeatureTypeConstraint>
    */
   @Override
-  public void setFeatureTypeConstraint( final FeatureTypeConstraint[] featureTypeConstraint )
+  public void setFeatureTypeConstraint( FeatureTypeConstraint[] featureTypeConstraint )
   {
-    m_featureTypeConstraint.clear();
+    this.m_featureTypeConstraint.clear();
 
     if( featureTypeConstraint != null )
     {
-      for( final FeatureTypeConstraint element : featureTypeConstraint )
+      for( int i = 0; i < featureTypeConstraint.length; i++ )
       {
-        m_featureTypeConstraint.add( element );
+        this.m_featureTypeConstraint.add( featureTypeConstraint[i] );
       }
     }
   }
@@ -105,9 +106,9 @@ public class LayerFeatureConstraints_Impl implements LayerFeatureConstraints, Ma
    *          the <FeatureTypeConstraint>
    */
   @Override
-  public void addFeatureTypeConstraint( final FeatureTypeConstraint featureTypeConstraint )
+  public void addFeatureTypeConstraint( FeatureTypeConstraint featureTypeConstraint )
   {
-    m_featureTypeConstraint.add( featureTypeConstraint );
+    this.m_featureTypeConstraint.add( featureTypeConstraint );
   }
 
   /**
@@ -117,9 +118,9 @@ public class LayerFeatureConstraints_Impl implements LayerFeatureConstraints, Ma
    *          the <FeatureTypeConstraint>
    */
   @Override
-  public void removeFeatureTypeConstraint( final FeatureTypeConstraint featureTypeConstraint )
+  public void removeFeatureTypeConstraint( FeatureTypeConstraint featureTypeConstraint )
   {
-    m_featureTypeConstraint.remove( m_featureTypeConstraint.indexOf( featureTypeConstraint ) );
+    this.m_featureTypeConstraint.remove( this.m_featureTypeConstraint.indexOf( featureTypeConstraint ) );
   }
 
   /**
@@ -128,7 +129,7 @@ public class LayerFeatureConstraints_Impl implements LayerFeatureConstraints, Ma
    * @return the LayerFeatureConstraints as String
    */
   @Override
-  public String toString( )
+  public String toString()
   {
     String ret = getClass().getName() + "\n";
     ret = "featureTypeConstraint = " + m_featureTypeConstraint + "\n";
@@ -142,15 +143,15 @@ public class LayerFeatureConstraints_Impl implements LayerFeatureConstraints, Ma
    * @return xml representation of the Font
    */
   @Override
-  public String exportAsXML( )
+  public String exportAsXML()
   {
     Debug.debugMethodBegin();
 
-    final StringBuffer sb = new StringBuffer( 1000 );
+    StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<LayerFeatureConstraints>" );
     for( int i = 0; i < m_featureTypeConstraint.size(); i++ )
     {
-      sb.append( ((Marshallable) m_featureTypeConstraint.get( i )).exportAsXML() );
+      sb.append( ( (Marshallable)m_featureTypeConstraint.get( i ) ).exportAsXML() );
     }
     sb.append( "</LayerFeatureConstraints>" );
 

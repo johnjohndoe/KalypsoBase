@@ -80,7 +80,7 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
   /**
    * @param type
    * @param cs
-   *          The default cs.
+   *            The default cs.
    */
   private GM_MultiPoint createGM_MultiPoint( final MultiPointType type, final String cs )
   {
@@ -123,7 +123,7 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
   {
     final String co = getCS_CoordinateSystem( cs, multiPolygonType );
     final List<JAXBElement< ? extends GeometryAssociationType>> geometryMember = multiPolygonType.getGeometryMember();
-    final GM_Surface< ? >[] surfaces = new GM_Surface[geometryMember.size()];
+    final GM_Surface<?>[] surfaces = new GM_Surface[geometryMember.size()];
 
     int i = 0;
     for( final JAXBElement< ? extends GeometryAssociationType> element : geometryMember )
@@ -137,7 +137,7 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
     return GeometryFactory.createGM_MultiSurface( surfaces, co );
   }
 
-  private GM_Surface< ? > createGM_Surface( final PolygonType polygonType, final String cs ) throws GM_Exception
+  private GM_Surface<?> createGM_Surface( final PolygonType polygonType, final String cs ) throws GM_Exception
   {
     final String co = getCS_CoordinateSystem( cs, polygonType );
     // outer...
@@ -259,16 +259,13 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
     if( srsName == null )
       return defaultCS;
 
-    // BUGFIX/REMARK: preserve memory by intern'ing the srs strings. Especially for bigger gml's this can have a major
-    // effect, as every srs string was being kept separately in memory.
-
     if( srsName.startsWith( "http://www.opengis.net/gml/srs/epsg.xml#" ) )
     {
       final String[] split = srsName.split( "#" );
-      return ("EPSG:" + split[1]).intern();
+      return "EPSG:" + split[1];
     }
     else
-      return srsName.intern();
+      return srsName;
   }
 
   /**
@@ -279,13 +276,13 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
    * @see org.kalypsodeegree_impl.model.geometry.IGMLBindingToValueAdapter#wrapFromBinding(java.lang.Object)
    */
   @Override
-  public Object wrapFromBinding( final Object bindingGeometry, final Class< ? > geometryClass ) throws GM_Exception
+  public Object wrapFromBinding( final Object bindingGeometry, final Class<?> geometryClass ) throws GM_Exception
   {
     if( bindingGeometry == null )
       return null;
 
     if( bindingGeometry instanceof JAXBElement )
-      return wrapFromBinding( ((JAXBElement< ? >) bindingGeometry).getValue(), geometryClass );
+      return wrapFromBinding( ((JAXBElement<?>) bindingGeometry).getValue(), geometryClass );
 
     if( bindingGeometry instanceof AbstractGeometryType )
     {
@@ -296,12 +293,12 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
 
       if( bindingTypeObject instanceof PolygonType )
       {
-        final GM_Surface< ? > surface = createGM_Surface( (PolygonType) bindingTypeObject, cs );
+        final GM_Surface<?> surface = createGM_Surface( (PolygonType) bindingTypeObject, cs );
         // if multisurface is expected but surface is provided, then we create a multisurface with this surface
         // inside.
         if( geometryClass == GeometryUtilities.getMultiPolygonClass() )
         {
-          final GM_Surface< ? >[] surfaces = new GM_Surface[] { surface };
+          final GM_Surface<?>[] surfaces = new GM_Surface[] { surface };
           return GeometryFactory.createGM_MultiSurface( surfaces, cs );
         }
         return surface;
@@ -334,7 +331,7 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
 
     final GM_Position[] positions;
     final List<CoordType> coords = boxType.getCoord();
-    if( coords != null && !coords.isEmpty() )
+    if( coords != null && (!coords.isEmpty()) )
       positions = createGM_Positions( coords );
     else
       positions = createGM_Positions( boxType.getCoordinates() );

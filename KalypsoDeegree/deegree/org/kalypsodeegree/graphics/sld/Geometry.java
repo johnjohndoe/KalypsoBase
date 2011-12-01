@@ -50,18 +50,36 @@ import org.kalypsodeegree_impl.filterencoding.PropertyName;
  */
 public interface Geometry
 {
+
   /**
    * returns the name of the geometry property
    * 
    * @return the name of the geometry property
    */
-  PropertyName getPropertyName( );
+  public PropertyName getPropertyName( );
 
   /**
    * sets the name of the geometry property
    * 
    * @param propertyName
-   *          the name of the geometry property
+   *            the name of the geometry property
    */
-  void setPropertyName( final PropertyName propertyName );
+  public void setPropertyName( final PropertyName propertyName );
+
+// /**
+// * In principle, a fixed geometry could be defined using GML or operators could be defined for computing a geometry
+// * from references or literals. This enbales the calling client to submitt the geometry to be rendered by the WMS
+// * directly. (This is not part of the SLD XML-schema)
+// *
+// * @return the GMLGeometry
+// */
+// GMLGeometry getGeometryAsGML();
+
+// /**
+// * sets the <GMLGeometry>
+// *
+// * @param geometry
+// * the GMLGeometry
+// */
+// void setGeometryAsGML( GMLGeometry geometry );
 }

@@ -42,9 +42,9 @@ public class DiffLogger implements IDiffLogger
 
   private final ILogger m_logger;
 
-  private final Stack<StringBuffer> m_buffers = new Stack<StringBuffer>();
+  private Stack<StringBuffer> m_buffers = new Stack<StringBuffer>();
 
-  public DiffLogger( final ILogger logger )
+  public DiffLogger( ILogger logger )
   {
     m_logger = logger;
   }
@@ -53,7 +53,7 @@ public class DiffLogger implements IDiffLogger
    * @see org.kalypso.commons.diff.IDiffLogger#log(int, java.lang.String)
    */
   @Override
-  public void log( final int status, final String message )
+  public void log( int status, String message )
   {
     final String diff;
     switch( status )
@@ -70,12 +70,12 @@ public class DiffLogger implements IDiffLogger
       case IDiffComparator.DIFF_UNCOMPAREABLE:
         diff = "??? "; //$NON-NLS-1$
         break;
-      // case IDiffComparator.DIFF_INFO:
+      //    case IDiffComparator.DIFF_INFO:
       case IDiffComparator.DIFF_OK:
         return;
-        // case IDiffComparator.DIFF_OK:
-        // diff = "=== ";
-        // break;
+      //        case IDiffComparator.DIFF_OK:
+      //          diff = "=== ";
+      //          break;
       case IDiffComparator.DIFF_INFO:
         diff = "# "; //$NON-NLS-1$
         break;
@@ -83,8 +83,8 @@ public class DiffLogger implements IDiffLogger
         diff = "unknown "; //$NON-NLS-1$
         break;
     }
-    final int offset = m_buffers.size();
-    final StringBuffer tab = new StringBuffer();
+    int offset = m_buffers.size();
+    StringBuffer tab = new StringBuffer();
     for( int i = 0; i < offset; i++ )
       tab.append( " " ); //$NON-NLS-1$
     innerLog( Level.INFO, tab.toString() + diff + message );
@@ -107,7 +107,7 @@ public class DiffLogger implements IDiffLogger
    * @see org.kalypso.commons.diff.IDiffLogger#block()
    */
   @Override
-  public void block( )
+  public void block()
   {
     final StringBuffer stringBuffer = new StringBuffer();
     m_buffers.push( stringBuffer );
@@ -117,7 +117,7 @@ public class DiffLogger implements IDiffLogger
    * @see org.kalypso.commons.diff.IDiffLogger#unblock(boolean)
    */
   @Override
-  public void unblock( final boolean keepLastLog )
+  public void unblock( boolean keepLastLog )
   {
     final StringBuffer buffer = m_buffers.pop();
     if( keepLastLog )

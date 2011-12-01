@@ -92,13 +92,8 @@ class FeatureTypeStylePainter implements IStylePainter
     for( final Rule rule : rules )
     {
       final SubMonitor childProgress = progress.newChild( 1 );
-
-      final Double scale = paintable.getScale();
-      if( scale == null || rule.doesScaleConstraintApply( scale ) )
-      {
-        final IStylePainter rulePainter = StylePainterFactory.create( rule, m_features );
-        rulePainter.paint( delegatePaintable, childProgress );
-      }
+      final IStylePainter rulePainter = StylePainterFactory.create( rule, m_features );
+      rulePainter.paint( delegatePaintable, childProgress );
     }
   }
 

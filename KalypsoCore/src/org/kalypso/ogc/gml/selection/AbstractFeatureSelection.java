@@ -59,7 +59,7 @@ public abstract class AbstractFeatureSelection implements IFeatureSelection
   }
 
   @Override
-  public final Object getFirstElement( )
+  public final Object getFirstElement()
   {
     return m_selection.getFirstElement();
   }
@@ -71,13 +71,13 @@ public abstract class AbstractFeatureSelection implements IFeatureSelection
   }
 
   @Override
-  public final int size( )
+  public final int size()
   {
     return m_selection.size();
   }
 
   @Override
-  public final Object[] toArray( )
+  public final Object[] toArray()
   {
     return m_selection.toArray();
   }
@@ -89,7 +89,7 @@ public abstract class AbstractFeatureSelection implements IFeatureSelection
   }
 
   @Override
-  public final boolean isEmpty( )
+  public final boolean isEmpty()
   {
     return m_selection.isEmpty();
   }

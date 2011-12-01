@@ -46,7 +46,6 @@ import java.util.List;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
-import de.openali.odysseus.chart.framework.model.impl.IAxisVisitorBehavior;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisAdjustment;
@@ -61,9 +60,12 @@ public class AutoScaleVisitor implements IAxisVisitor
 
   private final IChartModel m_model;
 
-  public AutoScaleVisitor( final IChartModel model )
+  private final boolean m_recursive;
+
+  public AutoScaleVisitor( final IChartModel model, final boolean recursive )
   {
     m_model = model;
+    m_recursive = recursive;
   }
 
   /**
@@ -72,17 +74,15 @@ public class AutoScaleVisitor implements IAxisVisitor
   @Override
   public void visit( final IAxis axis )
   {
-    final IChartLayer[] layers = m_model.getLayerManager().getLayers( axis, true );
-    final List<IDataRange< ? >> ranges = new ArrayList<IDataRange< ? >>( layers.length );
-    final IAxisVisitorBehavior visitorBehavior = axis.getAxisVisitorBehavior();
-    if( visitorBehavior != null && !visitorBehavior.isAutoscaleEnabled() )
-      return;
+    final IChartLayer[] layers = m_model.getLayerManager().getLayers( axis, m_recursive );
+
+    final List<IDataRange<Number>> ranges = new ArrayList<IDataRange<Number>>( layers.length );
 
     for( final IChartLayer layer : layers )
     {
-      if( layer.isVisible() && layer.isAutoScale() )
+      if( layer.isVisible() )
       {
-        final IDataRange< ? > range = getRangeFor( layer, axis );
+        final IDataRange<Number> range = getRangeFor( layer, axis );
         if( range != null )
         {
           ranges.add( range );
@@ -120,13 +120,13 @@ public class AutoScaleVisitor implements IAxisVisitor
       final double rangeMax;
       if( mergedRange < minMergedRange )
       {
-        final double delta = (minMergedRange - mergedRange) / 2.0;
+        final double delta = (minMergedRange-mergedRange ) / 2.0;
         rangeMin = mergedDataRange.getMin().doubleValue() - delta;
         rangeMax = mergedDataRange.getMax().doubleValue() + delta;
       }
       else if( mergedRange > maxMergedRange )
       {
-        final double delta = (mergedRange - maxMergedRange) / 2.0;
+        final double delta = (mergedRange-maxMergedRange ) / 2.0;
         rangeMin = mergedDataRange.getMin().doubleValue() + delta;
         rangeMax = mergedDataRange.getMax().doubleValue() - delta;
       }
@@ -137,8 +137,8 @@ public class AutoScaleVisitor implements IAxisVisitor
       }
       // computing preferred adjustment failed if rangesize==0.0, so we set a range minimum depends on adjustment
       final double rangeSize = mergedRange == 0.0 ? 1.0 : mergedRange;
-      final double newMin = rangeMin - rangeSize * adjBefore / adjRange;
-      final double newMax = rangeMax + rangeSize * adjAfter / adjRange;
+      final double newMin = rangeMin - rangeSize * (adjBefore / adjRange);
+      final double newMax = rangeMax + rangeSize * (adjAfter / adjRange);
 
       axis.setNumericRange( new ComparableDataRange<Number>( new Number[] { newMin, newMax } ) );
     }
@@ -151,7 +151,7 @@ public class AutoScaleVisitor implements IAxisVisitor
   /**
    * @return DataRange of all domain or target data available in the given layer
    */
-  private IDataRange< ? > getRangeFor( final IChartLayer layer, final IAxis axis )
+  private IDataRange<Number> getRangeFor( final IChartLayer layer, final IAxis axis )
   {
     if( axis == layer.getCoordinateMapper().getDomainAxis() )
       return layer.getDomainRange();

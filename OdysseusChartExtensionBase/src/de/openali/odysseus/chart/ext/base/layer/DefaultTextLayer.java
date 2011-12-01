@@ -100,7 +100,7 @@ public class DefaultTextLayer extends AbstractChartLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Number> getDomainRange( )
   {
     // TODO Auto-generated method stub
     return null;
@@ -110,7 +110,7 @@ public class DefaultTextLayer extends AbstractChartLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange(de.openali.odysseus.chart.framework.model.data.IDataRange)
    */
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     // TODO Auto-generated method stub
     return null;

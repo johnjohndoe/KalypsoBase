@@ -59,7 +59,6 @@ import org.kalypso.ogc.gml.featureview.modfier.BooleanModifier;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * @author belger
@@ -74,13 +73,13 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
 
   private final String m_text;
 
-  public CheckboxFeatureControl( final Feature feature, final GMLXPath propertyPath, final IValuePropertyType ftp, final String text )
+  public CheckboxFeatureControl( final Feature feature, final IValuePropertyType ftp, final String text )
   {
     super( feature, ftp );
 
     m_text = text;
 
-    m_modifier = new BooleanModifier( propertyPath, ftp );
+    m_modifier = new BooleanModifier( ftp );
   }
 
   /**
@@ -149,7 +148,7 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
     {
       // compare with old to prevent loop
       final boolean oldValue = m_checkbox.getSelection();
-      final Boolean newvalue = (Boolean) m_modifier.getProperty( feature );
+      final Boolean newvalue = (Boolean) m_modifier.getValue( feature );
       if( newvalue.booleanValue() != oldValue )
         m_checkbox.setSelection( newvalue.booleanValue() );
     }
@@ -170,7 +169,7 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
     final Object oldData = feature.getProperty( pt );
 
     // nur ändern, wenn sich wirklich was geändert hat
-    if( newData == null && oldData != null || newData != null && !newData.equals( oldData ) )
+    if( (newData == null && oldData != null) || (newData != null && !newData.equals( oldData )) )
       return new ChangeFeatureCommand( feature, pt, newData );
 
     return null;

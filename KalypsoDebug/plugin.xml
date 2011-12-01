@@ -13,12 +13,6 @@
             category="org.kalypso.view.debug"
             name="Resource Pool"
             id="org.kalypso.debug.view.pool"/>
-      <view
-            class="org.kalypso.debug.view.StatusTestView"
-            id="org.kalypso.debug.view.StatusTestView"
-            name="Status Dialog Tester"
-            restorable="true">
-      </view>
    </extension>
    <extension
          point="org.eclipse.ui.actionSets">

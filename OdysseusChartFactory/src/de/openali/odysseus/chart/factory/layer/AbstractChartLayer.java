@@ -6,7 +6,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.ImageData;
@@ -18,7 +18,6 @@ import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 
 import de.openali.odysseus.chart.framework.OdysseusChartFramework;
-import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.ILayerContainer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.event.ILayerEventListener;
@@ -34,21 +33,13 @@ import de.openali.odysseus.chart.framework.model.layer.manager.LayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.IRetinalMapper;
+import de.openali.odysseus.chart.framework.model.mapper.IScreenAxis;
 
 /**
  * @author alibu
  */
 public abstract class AbstractChartLayer implements IChartLayer
 {
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#isAutoScale()
-   */
-  @Override
-  public boolean isAutoScale( )
-  {
-    return true;
-  }
-
   private ICoordinateMapper m_coordinateMapper;
 
   Set<IChartLayerFilter> m_filters = new LinkedHashSet<IChartLayerFilter>();
@@ -235,7 +226,7 @@ public abstract class AbstractChartLayer implements IChartLayer
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getDomainRange()
    */
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Number> getDomainRange( )
   {
     final LayerDomainRangeVisitor rangeVisitor = new LayerDomainRangeVisitor();
     getLayerManager().accept( rangeVisitor );
@@ -295,7 +286,7 @@ public abstract class AbstractChartLayer implements IChartLayer
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetRange()
    */
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > intervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> intervall )
   {
     final LayerTargetRangeVisitor rangeVisitor = new LayerTargetRangeVisitor();
     getLayerManager().accept( rangeVisitor );
@@ -341,32 +332,31 @@ public abstract class AbstractChartLayer implements IChartLayer
   @Override
   public boolean isVisible( )
   {
-    return m_isVisible;
-// if( !m_isVisible )
-// return false;
-//
-// final ICoordinateMapper mapper = getCoordinateMapper();
-// if( mapper == null )
-// return true;
-//
-// if( isNotVisible( mapper.getDomainAxis() ) )
-// return false;
-//
-// if( isNotVisible( mapper.getTargetAxis() ) )
-// return false;
-//
-// return true;
+    if( !m_isVisible )
+      return false;
+
+    final ICoordinateMapper mapper = getCoordinateMapper();
+    if( mapper == null )
+      return true;
+
+    if( isNotVisible( mapper.getDomainAxis() ) )
+      return false;
+
+    if( isNotVisible( mapper.getTargetAxis() ) )
+      return false;
+
+    return true;
   }
 
-// private boolean isNotVisible( final IAxis axis )
-// {
-// if( Objects.isNull( axis ) )
-// return true;
-// else if( axis instanceof IScreenAxis )
-// return false;
-//
-// return !axis.isVisible();
-// }
+  private boolean isNotVisible( final IAxis axis )
+  {
+    if( Objects.isNull( axis ) )
+      return true;
+    else if( axis instanceof IScreenAxis )
+      return false;
+
+    return !axis.isVisible();
+  }
 
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
@@ -404,23 +394,32 @@ public abstract class AbstractChartLayer implements IChartLayer
   }
 
   @Override
-  public final void setCoordinateMapper( final ICoordinateMapper coordinateMapper )
+  public void setCoordinateMapper( final ICoordinateMapper coordinateMapper )
   {
     m_coordinateMapper = coordinateMapper;
   }
 
+  /**
+   * @see org.kalypso.chart.framework.model.layer.IChartLayer#setData()
+   */
   @Override
   public void setData( final String id, final Object data )
   {
     m_data.put( id, data );
   }
 
+  /**
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#setDescription(java.lang.String)
+   */
   @Override
   public void setDescription( final String description )
   {
     m_description = description;
   }
 
+  /**
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#setID(java.lang.String)
+   */
   @Override
   public void setIdentifier( final String identifier )
   {
@@ -445,6 +444,9 @@ public abstract class AbstractChartLayer implements IChartLayer
     m_title = title;
   }
 
+  /**
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#setVisibility(boolean)
+   */
   @Override
   public void setVisible( final boolean isVisible )
   {
@@ -456,6 +458,9 @@ public abstract class AbstractChartLayer implements IChartLayer
     }
   }
 
+  /**
+   * @see java.lang.Object#toString()
+   */
   @Override
   public String toString( )
   {
@@ -468,12 +473,18 @@ public abstract class AbstractChartLayer implements IChartLayer
     return m_layerManager;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#setParent(java.lang.Object)
+   */
   @Override
   public void setParent( final ILayerContainer parent )
   {
     m_parent = parent;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getParent()
+   */
   @Override
   public ILayerContainer getParent( )
   {
@@ -524,11 +535,4 @@ public abstract class AbstractChartLayer implements IChartLayer
 
     getEventHandler().fireLayerContentChanged( this );
   }
-
-  @Override
-  public IChartModel getModel( )
-  {
-    return getParent().getModel();
-  }
-
 }

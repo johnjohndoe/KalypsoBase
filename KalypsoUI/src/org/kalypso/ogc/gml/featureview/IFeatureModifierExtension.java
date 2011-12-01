@@ -41,7 +41,6 @@
 package org.kalypso.ogc.gml.featureview;
 
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * Extends {@link IFeatureModifier} and can be used to initialize the modifier with a
@@ -52,5 +51,5 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
  */
 public interface IFeatureModifierExtension extends IFeatureModifier
 {
-  void init( GMLXPath propertyPath, IPropertyType pt );
+  public void init( IPropertyType pt );
 }

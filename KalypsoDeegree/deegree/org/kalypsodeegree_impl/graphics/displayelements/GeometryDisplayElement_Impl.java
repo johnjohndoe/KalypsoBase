@@ -92,7 +92,7 @@ abstract class GeometryDisplayElement_Impl extends DisplayElement_Impl implement
    * <p>
    * 
    * @param o
-   *          the placement to be used
+   *            the placement to be used
    */
   @Override
   public void setPlacement( final Object o )
@@ -134,4 +134,14 @@ abstract class GeometryDisplayElement_Impl extends DisplayElement_Impl implement
   {
     return m_symbolizer;
   }
+
+  /**
+   * Returns if the <tt>DisplayElement</tt> should be painted at the current scale or not.
+   */
+  @Override
+  public boolean doesScaleConstraintApply( final double scale )
+  {
+    return m_symbolizer.getMinScaleDenominator() <= scale && m_symbolizer.getMaxScaleDenominator() > scale;
+  }
+
 }

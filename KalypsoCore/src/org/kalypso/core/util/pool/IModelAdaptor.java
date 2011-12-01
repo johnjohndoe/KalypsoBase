@@ -46,7 +46,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * TODO: please comment
- * 
+ *
  * @author kurzbach
  */
 public interface IModelAdaptor
@@ -54,7 +54,7 @@ public interface IModelAdaptor
   /**
    * Adapt the workspace if needed.
    */
-  GMLWorkspace adapt( final GMLWorkspace workspace, final IProgressMonitor monitor );
+  public GMLWorkspace adapt( final GMLWorkspace workspace, final IProgressMonitor monitor );
 
-  IStatus getResult( );
+  public IStatus getResult( );
 }

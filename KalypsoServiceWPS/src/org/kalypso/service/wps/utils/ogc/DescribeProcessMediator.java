@@ -76,7 +76,7 @@ public class DescribeProcessMediator extends AbstractWPSMediator<net.opengis.wps
         final List<net.opengis.ows._1.CodeType> identifier2 = getV10().getIdentifier();
         if( identifier2 != null )
         {
-          for( final net.opengis.ows._1.CodeType codeType : identifier2 )
+          for( net.opengis.ows._1.CodeType codeType : identifier2 )
           {
             identifiers.add( codeType.getValue() );
           }

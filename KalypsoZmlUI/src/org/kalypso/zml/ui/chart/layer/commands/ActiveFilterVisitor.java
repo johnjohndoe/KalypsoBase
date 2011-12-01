@@ -64,6 +64,9 @@ public class ActiveFilterVisitor extends AbstractChartLayerVisitor
     m_filterDisabled = filterDisabled;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+   */
   @Override
   public void visit( final IChartLayer layer ) throws CancelVisitorException
   {

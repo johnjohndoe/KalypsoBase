@@ -137,7 +137,7 @@ public class SHPPoint implements ISHPPoint
   @Override
   public String toString( )
   {
-    return "SHPPOINT" + "[" + m_x + "; " + m_y + "]";
+    return "SHPPOINT" + "[" + this.m_x + "; " + this.m_y + "]";
   }
 
   @Override

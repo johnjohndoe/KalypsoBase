@@ -48,8 +48,8 @@ import java.util.Map;
 
 import javax.xml.bind.JAXBException;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
  * This catalog implementation caches the results of its delegate.
@@ -66,7 +66,7 @@ public class CachingCatalog implements ICatalog
 
   private long m_failed = 0;
 
-  private static final class CacheKey
+  private final static class CacheKey
   {
     private final String m_publicID;
 

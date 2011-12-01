@@ -60,7 +60,7 @@ public class MultiplyValueAdjustmentPage extends AbstractAdjustmentPage implemen
 
   public MultiplyValueAdjustmentPage( final IAdjustmentPageProvider provider )
   {
-    super( provider, MultiplyValueAdjustmentPage.class.getName() );
+    super( provider );
   }
 
   /**

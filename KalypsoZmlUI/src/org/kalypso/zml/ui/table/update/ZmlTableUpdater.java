@@ -40,20 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.update;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
-import org.kalypso.zml.core.diagram.base.zml.MultipleTsLink;
-import org.kalypso.zml.core.diagram.base.zml.TSLinkWithName;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.IClonedColumn;
-import org.kalypso.zml.core.table.binding.TableTypes;
-import org.kalypso.zml.core.table.model.memento.ILabeledObsProvider;
+import org.kalypso.zml.core.table.binding.TableTypeHelper;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.ui.core.element.ZmlLinkDiagramElement;
+import org.kalypso.zml.ui.core.zml.MultipleTsLink;
+import org.kalypso.zml.ui.core.zml.TSLinkWithName;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.ZmlTableColumnBuilder;
+import org.kalypso.zml.ui.table.memento.ILabeledObsProvider;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 
 /**
@@ -94,7 +94,6 @@ public class ZmlTableUpdater implements Runnable
         update( link, identifier, index );
       }
     }
-
   }
 
   private void update( final TSLinkWithName link, final String identifier, final int index )
@@ -102,11 +101,11 @@ public class ZmlTableUpdater implements Runnable
     final ZmlLinkDiagramElement element = createZmlDiagrammElement( link, identifier, index );
     final IObsProvider clonedProvider = element.getObsProvider().copy();
 
-    m_part.getModel().load( element );
+    m_part.getModel().loadColumn( element );
 
     final ILabeledObsProvider obsWithLabel = new TsLinkObsProvider( link, clonedProvider );
     final IPoolableObjectType poolKey = element.getPoolKey();
-    m_part.getModel().getMemento().register( poolKey, obsWithLabel );
+    m_part.getMemento().register( poolKey, obsWithLabel );
   }
 
   private ZmlLinkDiagramElement createZmlDiagrammElement( final TSLinkWithName link, final String identifier, final int index )
@@ -139,16 +138,8 @@ public class ZmlTableUpdater implements Runnable
         return multipleIdentifier;
     }
 
-    final AbstractColumnType base = TableTypes.finColumn( m_part.getModel().getTableType(), identifier );
-
-    if( base == null )
-    {
-      // FIXME: better error handling and error message!
-      // FIXME: better recovery
-      throw new IllegalStateException( "Faiuled to find base column for identifier: " + identifier );
-    }
-
-    final AbstractColumnType clone = TableTypes.cloneColumn( base );
+    final AbstractColumnType base = TableTypeHelper.finColumn( m_part.getModel().getTableType(), identifier );
+    final AbstractColumnType clone = TableTypeHelper.cloneColumn( base );
     clone.setId( multipleIdentifier );
 
     /** only one rule / style set! */

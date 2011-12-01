@@ -52,12 +52,12 @@ public class CoordinatePair implements Comparable<CoordinatePair>
   /**
    * The first coordinate.
    */
-  private final Coordinate m_coordinate1;
+  private Coordinate m_coordinate1;
 
   /**
    * The second coordinate.
    */
-  private final Coordinate m_coordinate2;
+  private Coordinate m_coordinate2;
 
   /**
    * The distance between the two coordinates.
@@ -72,7 +72,7 @@ public class CoordinatePair implements Comparable<CoordinatePair>
    * @param coordinate2
    *          The first coordinate.
    */
-  public CoordinatePair( final Coordinate coordinate1, final Coordinate coordinate2 )
+  public CoordinatePair( Coordinate coordinate1, Coordinate coordinate2 )
   {
     m_coordinate1 = coordinate1;
     m_coordinate2 = coordinate2;
@@ -116,7 +116,7 @@ public class CoordinatePair implements Comparable<CoordinatePair>
    * @see java.lang.Comparable#compareTo(java.lang.Object)
    */
   @Override
-  public int compareTo( final CoordinatePair o )
+  public int compareTo( CoordinatePair o )
   {
     return Double.compare( getDistance(), o.getDistance() );
   }

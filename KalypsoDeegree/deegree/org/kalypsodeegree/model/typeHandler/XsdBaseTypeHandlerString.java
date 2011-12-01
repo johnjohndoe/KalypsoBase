@@ -69,7 +69,7 @@ public class XsdBaseTypeHandlerString extends XsdBaseTypeHandler<String>
   @Override
   public int compare( final String o1, final String o2 )
   {
-    if( o1 == null && o2 == null )
+    if( (o1 == null) && (o2 == null) )
     {
       return 0; // equals
     }

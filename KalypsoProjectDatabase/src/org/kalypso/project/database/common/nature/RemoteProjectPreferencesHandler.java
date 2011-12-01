@@ -45,26 +45,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.kalypso.commons.java.lang.Strings;
 
 class RemoteProjectPreferencesHandler implements IRemoteProjectPreferences
 {
-  private final WorkspaceJob m_flushJob = new WorkspaceJob( "" ) //$NON-NLS-1$
-  {
-    @Override
-    public IStatus runInWorkspace( final IProgressMonitor monitor )
-    {
-      try
-      {
-        m_node.flush();
-      }
-      catch( final Exception e )
-      {
-      }
-      return Status.OK_STATUS;
-    }
-  };
-
   private static final String PROJECT_LOCK_TICKET = "project.lock"; //$NON-NLS-1$
 
   private static final String PROJECT_IS_MODIFIED = "project.is.modified"; //$NON-NLS-1$
@@ -90,7 +73,11 @@ class RemoteProjectPreferencesHandler implements IRemoteProjectPreferences
   @Override
   public boolean isLocked( )
   {
-    return Strings.isNotEmpty( getEditTicket() );
+    final String ticket = getEditTicket();
+    if( ticket == null || "".equals( ticket.trim() ) ) //$NON-NLS-1$
+      return false;
+
+    return true;
   }
 
   /**
@@ -113,14 +100,7 @@ class RemoteProjectPreferencesHandler implements IRemoteProjectPreferences
   @Override
   public String getEditTicket( )
   {
-    try
-    {
-      return m_node.get( PROJECT_LOCK_TICKET, null );
-    }
-    catch( final Throwable t )
-    {
-      return null;
-    }
+    return m_node.get( PROJECT_LOCK_TICKET, null );
   }
 
   /**
@@ -138,15 +118,7 @@ class RemoteProjectPreferencesHandler implements IRemoteProjectPreferences
   @Override
   public Integer getVersion( )
   {
-    try
-    {
-      return Integer.valueOf( m_node.get( PROJECT_DOWNLOADED_VERSION, "-1" ) ); //$NON-NLS-1$  
-    }
-    catch( final Throwable t )
-    {
-      return -1;
-    }
-
+    return Integer.valueOf( m_node.get( PROJECT_DOWNLOADED_VERSION, "-1" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -161,7 +133,22 @@ class RemoteProjectPreferencesHandler implements IRemoteProjectPreferences
 
   private void flush( )
   {
-    m_flushJob.schedule();
+    new WorkspaceJob( "" ) //$NON-NLS-1$
+    {
+      @Override
+      public IStatus runInWorkspace( final IProgressMonitor monitor )
+      {
+        try
+        {
+          m_node.flush();
+        }
+        catch( final Exception e )
+        {
+        }
+        return Status.OK_STATUS;
+      }
+    }.schedule();
+
   }
 
   /**
@@ -226,6 +213,7 @@ class RemoteProjectPreferencesHandler implements IRemoteProjectPreferences
   public boolean isModified( )
   {
     final String value = m_node.get( PROJECT_IS_MODIFIED, Boolean.FALSE.toString() );
+
     return Boolean.valueOf( value );
   }
 
@@ -237,5 +225,6 @@ class RemoteProjectPreferencesHandler implements IRemoteProjectPreferences
   {
     m_node.put( PROJECT_IS_MODIFIED, Boolean.valueOf( value ).toString() );
     flush();
+
   }
 }

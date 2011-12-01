@@ -44,6 +44,7 @@ import org.kalypso.commons.command.ICommandTarget;
 
 /**
  * @author belger
+ *
  */
 public interface IWidgetManager
 {

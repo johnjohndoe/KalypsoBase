@@ -89,17 +89,13 @@ public class ProfileSelection
 
     final List< ? > items = ((IStructuredSelection) m_selection).toList();
     for( final Object item : items )
-    {
       addItem( item );
-    }
   }
 
   private void addItem( final Object item )
   {
     if( m_workspace == null )
-    {
       m_workspace = AdapterUtils.getAdapter( item, CommandableWorkspace.class );
-    }
 
     final FeatureList featureList = AdapterUtils.getAdapter( item, FeatureList.class );
     if( featureList != null )
@@ -147,9 +143,7 @@ public class ProfileSelection
       for( final Object sister : sisters )
       {
         if( sister instanceof IProfileFeature )
-        {
           addProfile( (IProfileFeature) sister );
-        }
       }
     }
   }
@@ -165,9 +159,7 @@ public class ProfileSelection
         return;
 
       if( m_selection instanceof IFeatureSelection )
-      {
         m_workspace = ((IFeatureSelection) m_selection).getWorkspace( profile );
-      }
     }
 
   }

@@ -274,7 +274,7 @@ public class FeaturePath
         {
           final IFeatureType associationFeatureType = relationPT.getTargetFeatureType();
           final IGMLSchema contextSchema = workspace.getGMLSchema();
-
+          
           final String namespaceURI = m_typename.getNamespaceURI();
           if( namespaceURI != null && !namespaceURI.isEmpty() )
           {
@@ -282,22 +282,19 @@ public class FeaturePath
             if( foundFT != null && foundFT.getQName().equals( m_typename ) )
               return foundFT;
           }
-          try
-          {
+          try{
             final IFeatureType foundFT = contextSchema.getFeatureType( m_typename );
-            if( foundFT != null )
-            {
+            if( foundFT != null) {
               final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, contextSchema, true, true );
               for( final IFeatureType substType : associationFeatureTypes )
               {
                 if( foundFT.equals( substType ) )
                   return substType;
               }
-// return foundFT;
+//              return foundFT;
             }
           }
-          catch( final Exception e )
-          {
+          catch (Exception e) {
           }
           final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, contextSchema, true, true );
           for( final IFeatureType substType : associationFeatureTypes )

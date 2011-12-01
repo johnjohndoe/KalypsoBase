@@ -35,27 +35,27 @@
  */
 package org.kalypsodeegree_impl.gml.schema;
 
-abstract class SpecialMapper
-{
-  private final Class< ? > m_srcType;
+ abstract class SpecialMapper
+ {
+   private final Class< ? > m_srcType;
 
-  private final Class< ? > m_targetType;
+   private final Class< ? > m_targetType;
 
-  public SpecialMapper( final Class< ? > srcType, final Class< ? > targetType )
-  {
-    m_srcType = srcType;
-    m_targetType = targetType;
-  }
+   public SpecialMapper( final Class< ? > srcType, final Class< ? > targetType )
+   {
+     m_srcType = srcType;
+     m_targetType = targetType;
+   }
 
-  public Class< ? > getSrcType( )
-  {
-    return m_srcType;
-  }
+   public Class< ? > getSrcType( )
+   {
+     return m_srcType;
+   }
 
-  public Class< ? > getTargetType( )
-  {
-    return m_targetType;
-  }
+   public Class< ? > getTargetType( )
+   {
+     return m_targetType;
+   }
 
-  public abstract Object map( Object srcObject );
-}
+   public abstract Object map( Object srcObject );
+ }

@@ -45,21 +45,18 @@ import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
-import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
@@ -88,9 +85,6 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -214,7 +208,6 @@ public class SelectFeatureWidget extends AbstractWidget
     final IMapPanel mapPanel = getMapPanel();
     final IMapModell mapModell = mapPanel.getMapModell();
     mapPanel.repaintMap();
-
     final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
     if( activeTheme instanceof IKalypsoFeatureTheme )
     {
@@ -254,14 +247,8 @@ public class SelectFeatureWidget extends AbstractWidget
       if( m_geometryBuilder instanceof PointGeometryBuilder )
       {
         /* Grab next feature. */
-        final GMLXPath[] geomQNames = findGeometryPathes( theme, m_geomQName, IKalypsoFeatureTheme.PROPERTY_SELECTABLE_GEOMETRIES, null );
+        final QName[] geomQNames = findGeomQName( theme, m_geomQName, IKalypsoFeatureTheme.PROPERTY_SELECTABLE_GEOMETRIES, null );
         final FeatureList visibleFeatures = theme.getFeatureListVisible( reqEnvelope );
-
-        if( visibleFeatures.size() > 0 )
-        {
-          int x = 1;
-          x++;
-        }
 
         /* Grab to the first feature that you can get. */
         m_hoverFeature = GeometryUtilities.findNearestFeature( currentPos, grabDistance, visibleFeatures, geomQNames, m_qnamesToSelect );
@@ -319,12 +306,10 @@ public class SelectFeatureWidget extends AbstractWidget
         /* just snap to grabbed feature */
         if( m_hoverFeature != null )
         {
-          final List<Feature> selectedFeature = Collections.singletonList( m_hoverFeature );
-          final Map<IKalypsoFeatureTheme, List<Feature>> selection = Collections.singletonMap( m_hoverTheme, selectedFeature );
-
+          final List<Feature> selectedFeatures = new ArrayList<Feature>();
+          selectedFeatures.add( m_hoverFeature );
           final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
-
-          doChangeSelection( selectionManager, selection, m_addMode, m_toggleMode );
+          changeSelection( selectionManager, selectedFeatures, m_themes, m_addMode, m_toggleMode );
         }
         m_geometryBuilder.reset();
       }
@@ -408,26 +393,26 @@ public class SelectFeatureWidget extends AbstractWidget
 
     switch( keyCode )
     {
-    // "SHFT": Add mode
+      // "SHFT": Add mode
       case KeyEvent.VK_SHIFT:
         m_addMode = true;
         break;
 
-      // "STRG": Toggle mode
+        // "STRG": Toggle mode
       case KeyEvent.VK_CONTROL:
         m_toggleMode = true;
         break;
 
-      // "ALT": switch between intersect / contains mode
+        // "ALT": switch between intersect / contains mode
       case KeyEvent.VK_ALT:
         m_intersectMode = true;
         break;
 
-      // "SPACE": switch between polygon / rect mode
+        // "SPACE": switch between polygon / rect mode
       case KeyEvent.VK_SPACE:
         changeGeometryBuilder();
         break;
-      // "ESC": deselection
+        // "ESC": deselection
       case KeyEvent.VK_ESCAPE:
         m_geometryBuilder.reset();
         final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
@@ -465,7 +450,7 @@ public class SelectFeatureWidget extends AbstractWidget
     m_geometryBuilder = createGeometryBuilder();
   }
 
-  protected IGeometryBuilder createGeometryBuilder( )
+  private IGeometryBuilder createGeometryBuilder( )
   {
     final IMapPanel mapPanel = getMapPanel();
     Assert.isNotNull( mapPanel );
@@ -505,8 +490,8 @@ public class SelectFeatureWidget extends AbstractWidget
 
     if( hoverFeature != null )
     {
-      final GMLXPath[] geomQNames = findGeometryPathes( hoverTheme, geomQName, IKalypsoFeatureTheme.PROPERTY_HOVER_GEOMETRIES, hoverFeature );
-      for( final GMLXPath qName : geomQNames )
+      final QName[] geomQNames = findGeomQName( hoverTheme, geomQName, IKalypsoFeatureTheme.PROPERTY_HOVER_GEOMETRIES, hoverFeature );
+      for( final QName qName : geomQNames )
         MapUtils.paintGrabbedFeature( g, mapPanel, hoverFeature, qName );
     }
   }
@@ -554,7 +539,7 @@ public class SelectFeatureWidget extends AbstractWidget
     if( m_themes == null )
       return;
 
-    final Map<IKalypsoFeatureTheme, List<Feature>> selection = new HashMap<IKalypsoFeatureTheme, List<Feature>>();
+    final List<Feature> selectedFeatures = new ArrayList<Feature>();
 
     for( final IKalypsoFeatureTheme theme : m_themes )
     {
@@ -565,102 +550,91 @@ public class SelectFeatureWidget extends AbstractWidget
       if( featureList == null )
         continue;
 
-      final GMLXPath[] geomQNames = findGeometryPathes( theme, m_geomQName, IKalypsoFeatureTheme.PROPERTY_SELECTABLE_GEOMETRIES, null );
+      final QName[] geomQNames = findGeomQName( theme, m_geomQName, IKalypsoFeatureTheme.PROPERTY_SELECTABLE_GEOMETRIES, null );
 
       final Collection<Feature> selectedSubList = selectFeatures( featureList, selectGeometry, m_qnamesToSelect, geomQNames, m_intersectMode );
       if( selectedSubList != null )
-      {
-        if( !selection.containsKey( theme ) )
-          selection.put( theme, new ArrayList<Feature>( selectedSubList.size() ) );
-
-        final List<Feature> selectedFeatures = selection.get( theme );
         selectedFeatures.addAll( selectedSubList );
-      }
     }
 
     final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
-    doChangeSelection( selectionManager, selection, m_addMode, m_toggleMode );
+    changeSelection( selectionManager, selectedFeatures, m_themes, m_addMode, m_toggleMode );
   }
 
   /**
    * Finds the geometry properties to select from.<br>
    * If a default type is specified, this will always be used.<br>
-   * Else, all geometry properties of the target type of the list will be taken.
+   * Else, all geometrie properties of the target type of the list will be taken.
    * 
    * @param propertyName
-   *          The property of the theme, that may provide the geometry pathes.
+   *          The property of the theme, that may provide the geometry qname.
    * @param feature
    *          The feature that provides the geometries. If <code>null</code>, the target feature type of the given theme
    *          is analysed.
    */
-  public static GMLXPath[] findGeometryPathes( final IKalypsoFeatureTheme theme, final QName defaultGeometry, final String propertyName, final Feature feature )
+  public static QName[] findGeomQName( final IKalypsoFeatureTheme theme, final QName defaultGeometry, final String propertyName, final Feature feature )
   {
     if( defaultGeometry != null )
-      return new GMLXPath[] { new GMLXPath( defaultGeometry ) };
+      return new QName[] { defaultGeometry };
 
     // REMARK:
     // If no geometry is defined in this widget, first search for the 'selectableGeometry' property of the theme.
     final String selectionGeometries = theme.getProperty( propertyName, null );
     if( selectionGeometries != null )
     {
-      // TODO: fetch namespace context from map xml
-      final NamespaceContext namespaceContext = null;
-
       final String[] geomNames = selectionGeometries.split( "," );
-      final GMLXPath[] geomPathes = new GMLXPath[geomNames.length];
-      for( int i = 0; i < geomPathes.length; i++ )
-        geomPathes[i] = new GMLXPath( geomNames[i], namespaceContext );
+      final QName[] geomQNames = new QName[geomNames.length];
+      for( int i = 0; i < geomQNames.length; i++ )
+        geomQNames[i] = QName.valueOf( geomNames[i] );
 
-      return geomPathes;
+      return geomQNames;
     }
 
     // REMARK:
     // If no geometry is defined in this widget, second search the feature type of the feature...
     if( feature != null )
-      return findGeometryPathes( feature.getFeatureType() );
+      return findGeomQName( feature.getFeatureType() );
 
     // REMARK:
-    // ...if not possible, use the geometries of the feature-lists target feature type.
+    // ...if not possiple, use the geometries of the feature-lists target feature type.
     final FeatureList featureList = theme.getFeatureList();
     final IRelationType parentFeatureTypeProperty = featureList.getParentFeatureTypeProperty();
     if( parentFeatureTypeProperty == null )
       return null;
 
-    return findGeometryPathes( parentFeatureTypeProperty.getTargetFeatureType() );
+    return findGeomQName( parentFeatureTypeProperty.getTargetFeatureType() );
   }
 
-  public static GMLXPath[] findGeometryPathes( final IFeatureType targetFeatureType )
+  public static QName[] findGeomQName( final IFeatureType targetFeatureType )
   {
     final IValuePropertyType[] geomProperties = targetFeatureType.getAllGeomteryProperties();
-    final GMLXPath[] result = new GMLXPath[geomProperties.length];
+    final QName[] result = new QName[geomProperties.length];
     for( int i = 0; i < geomProperties.length; i++ )
-      result[i] = new GMLXPath( geomProperties[i].getQName() );
+      result[i] = geomProperties[i].getQName();
 
     return result;
   }
 
-  /**
-   * Overwritten, so sub classes can overwrite.
-   */
-  protected void doChangeSelection( final IFeatureSelectionManager selectionManager, final Map<IKalypsoFeatureTheme, List<Feature>> selection, final boolean add, final boolean toggle )
+  public static void changeSelection( final IFeatureSelectionManager selectionManager, final List<Feature> selectedFeatures, final IKalypsoFeatureTheme[] themes, final boolean add, final boolean toggle )
   {
-    changeSelection( selectionManager, selection, add, toggle );
-  }
-
-  public static void changeSelection( final IFeatureSelectionManager selectionManager, final Map<IKalypsoFeatureTheme, List<Feature>> selection, final boolean add, final boolean toggle )
-  {
-    if( selection.size() == 0 )
+    if( selectedFeatures.size() == 0 )
       selectionManager.clear();
 
     final List<Feature> toRemove = new ArrayList<Feature>();
     final List<EasyFeatureWrapper> toAdd = new ArrayList<EasyFeatureWrapper>();
 
-    for( final IKalypsoFeatureTheme theme : selection.keySet() )
+    // FIXME: This only works, because there is mostly one theme, hence one workspace.
+    // The selected features comes from this theme (normally the active one on the map).
+    //
+    // If once there are features of different themes (and workspaces) selected,
+    // they will all be added with the workspace of the first theme,
+    // then they will all be added again with the workspace of the second theme, and so on.
+    // So all features will be multiple selected with their right and wrong workspaces.
+    for( final IKalypsoFeatureTheme theme : themes )
     {
       /* consider the selection modes */
       final CommandableWorkspace workspace = theme.getWorkspace();
 
-      final List<Feature> selectedFeatures = selection.get( theme );
       for( final Feature feature : selectedFeatures )
       {
         if( add )
@@ -693,7 +667,7 @@ public class SelectFeatureWidget extends AbstractWidget
     selectionManager.changeSelection( toRemove.toArray( new Feature[toRemove.size()] ), toAdd.toArray( new EasyFeatureWrapper[toAdd.size()] ) );
   }
 
-  private Collection<Feature> selectFeatures( final FeatureList featureList, final GM_Object selectGeometry, final QName[] qnamesToSelect, final GMLXPath[] geometryPathes, final boolean intersectMode )
+  private Collection<Feature> selectFeatures( final FeatureList featureList, final GM_Object selectGeometry, final QName[] qnamesToSelect, final QName[] geomQNames, final boolean intersectMode )
   {
     final Collection<Feature> selectedFeatures = new HashSet<Feature>();
 
@@ -711,22 +685,26 @@ public class SelectFeatureWidget extends AbstractWidget
 
         if( GMLSchemaUtilities.substitutes( featureType, qnamesToSelect ) )
         {
-          for( final GMLXPath geometryPath : geometryPathes )
+          for( final QName geomQName : geomQNames )
           {
-            try
-            {
-              final Object geomOrList = GMLXPathUtilities.query( geometryPath, feature );
+            final IPropertyType pt = featureType.getProperty( geomQName );
+            if( pt == null )
+              continue;
 
-              final GM_Object[] foundGeometries = GeometryUtilities.findGeometries( geomOrList, GM_Object.class );
-              for( final GM_Object geometry : foundGeometries )
+            final Object property = feature.getProperty( pt );
+            if( pt.isList() )
+            {
+              final List< ? > list = (List< ? >) property;
+              for( final Object elmt : list )
               {
-                if( intersects( selectGeometry, geometry, intersectMode ) )
+                if( intersects( selectGeometry, (GM_Object) elmt, intersectMode ) )
                   selectedFeatures.add( feature );
               }
             }
-            catch( final GMLXPathException e )
+            else
             {
-              e.printStackTrace();
+              if( intersects( selectGeometry, (GM_Object) property, intersectMode ) )
+                selectedFeatures.add( feature );
             }
           }
         }
@@ -779,6 +757,7 @@ public class SelectFeatureWidget extends AbstractWidget
 
   private IDialogSettings getSettings( )
   {
-    return DialogSettingsUtils.getDialogSettings( KalypsoGisPlugin.getDefault(), getClass().getName() );
+    return PluginUtilities.getDialogSettings( KalypsoGisPlugin.getDefault(), getClass().getName() );
   }
+
 }

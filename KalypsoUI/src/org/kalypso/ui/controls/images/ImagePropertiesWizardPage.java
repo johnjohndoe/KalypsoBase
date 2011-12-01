@@ -143,7 +143,7 @@ public class ImagePropertiesWizardPage extends WizardPage
    * @param defaultFormat
    *          The default image format.
    */
-  public ImagePropertiesWizardPage( final String pageName, final IPublishingConfiguration configuration, final int defaultWidth, final int defaultHeight, final boolean defaultAspectRatio, final Insets defaultInsets, final boolean defaultBorder, final String defaultFormat )
+  public ImagePropertiesWizardPage( String pageName, IPublishingConfiguration configuration, int defaultWidth, int defaultHeight, boolean defaultAspectRatio, Insets defaultInsets, boolean defaultBorder, String defaultFormat )
   {
     this( pageName, "Bildeigenschaften", null, configuration, defaultWidth, defaultHeight, defaultAspectRatio, defaultInsets, defaultBorder, defaultFormat );
   }
@@ -172,7 +172,7 @@ public class ImagePropertiesWizardPage extends WizardPage
    * @param defaultFormat
    *          The default image format.
    */
-  public ImagePropertiesWizardPage( final String pageName, final String title, final ImageDescriptor titleImage, final IPublishingConfiguration configuration, final int defaultWidth, final int defaultHeight, final boolean defaultAspectRatio, final Insets defaultInsets, final boolean defaultBorder, final String defaultFormat )
+  public ImagePropertiesWizardPage( String pageName, String title, ImageDescriptor titleImage, IPublishingConfiguration configuration, int defaultWidth, int defaultHeight, boolean defaultAspectRatio, Insets defaultInsets, boolean defaultBorder, String defaultFormat )
   {
     super( pageName, title, titleImage );
 
@@ -193,14 +193,14 @@ public class ImagePropertiesWizardPage extends WizardPage
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  public void createControl( final Composite parent )
+  public void createControl( Composite parent )
   {
     /* Create the main composite. */
-    final Composite main = new Composite( parent, SWT.NONE );
+    Composite main = new Composite( parent, SWT.NONE );
     main.setLayout( new FillLayout() );
 
     /* Create the image properties composite. */
-    final ImagePropertiesComposite imageComposite = new ImagePropertiesComposite( main, SWT.NONE, m_width, m_height, false, m_insets, m_border, m_format );
+    ImagePropertiesComposite imageComposite = new ImagePropertiesComposite( main, SWT.NONE, m_width, m_height, false, m_insets, m_border, m_format );
 
     /* Add a listener. */
     imageComposite.addImagePropertyChangedListener( new IImagePropertyChangedListener()
@@ -210,7 +210,7 @@ public class ImagePropertiesWizardPage extends WizardPage
        *      java.awt.Insets, boolean, java.lang.String)
        */
       @Override
-      public void imagePropertyChanged( final int width, final int height, final boolean aspectRatio, final Insets insets, final boolean border, final String format )
+      public void imagePropertyChanged( int width, int height, boolean aspectRatio, Insets insets, boolean border, String format )
       {
         /* Store the image properties. */
         m_width = width;

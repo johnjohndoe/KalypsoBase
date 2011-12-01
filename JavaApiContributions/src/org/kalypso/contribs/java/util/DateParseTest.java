@@ -54,7 +54,7 @@ import org.junit.Test;
 public class DateParseTest
 {
   @Test
-  public void parseDates( ) throws ParseException
+  public void parseDates() throws ParseException
   {
     final SimpleDateFormat DF = new SimpleDateFormat( "dd.MM.yyyy HH:mm" );
 
@@ -70,8 +70,8 @@ public class DateParseTest
     utc1Cal.setTime( utc1Date );
     utc1Cal.setTimeZone( TimeZone.getTimeZone( "UTC+1" ) );
 
-// final long utcMillis = utcCal.getTimeInMillis();
-// final long utc1Millis = utc1Cal.getTimeInMillis();
+//    final long utcMillis = utcCal.getTimeInMillis();
+//    final long utc1Millis = utc1Cal.getTimeInMillis();
 
     // / ?????????
 

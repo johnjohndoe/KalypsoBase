@@ -56,7 +56,7 @@ public class EnumerationRule implements IRule
    */
   private Object[] m_labels;
 
-  public EnumerationRule( final Object[] enums, final Object[] labels )
+  public EnumerationRule( Object[] enums, Object[] labels )
   {
     super();
     m_enums = enums;
@@ -69,19 +69,19 @@ public class EnumerationRule implements IRule
    * @see org.kalypso.ogc.gml.util.IRule#isValid(java.lang.Object)
    */
   @Override
-  public IStatus isValid( final Object object )
+  public IStatus isValid( Object object )
   {
-    Status status = new Status( IStatus.CANCEL, Platform.PI_RUNTIME, IStatus.CANCEL, "Der Ausdruck entspricht nicht einem Wert aus der Enumeration.", null );
+    Status status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "Der Ausdruck entspricht nicht einem Wert aus der Enumeration.", null );
 
     /* If the object does not exist, return true. */
     if( object == null )
-      return new Status( IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "EnumerationRule: Validation OK (null).", null );
+      return new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "EnumerationRule: Validation OK (null).", null );
 
-    for( final Object m_enum : m_enums )
+    for( int i = 0; i < m_enums.length; i++ )
     {
-      if( object.equals( m_enum ) )
+      if( object.equals( m_enums[i] ) )
       {
-        status = new Status( IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "EnumerationRule: Validation OK.", null );
+        status = new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "EnumerationRule: Validation OK.", null );
       }
     }
 
@@ -104,7 +104,7 @@ public class EnumerationRule implements IRule
    * @param enums
    *          Allowed values for a enumeration.
    */
-  public void setEnums( final String[] enums )
+  public void setEnums( String[] enums )
   {
     m_enums = enums;
   }
@@ -114,7 +114,7 @@ public class EnumerationRule implements IRule
     return m_labels;
   }
 
-  public void setLabels( final Object[] labels )
+  public void setLabels( Object[] labels )
   {
     m_labels = labels;
   }

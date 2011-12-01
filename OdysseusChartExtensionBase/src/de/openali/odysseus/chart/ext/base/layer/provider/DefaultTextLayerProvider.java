@@ -47,6 +47,7 @@ import de.openali.odysseus.chart.ext.base.layer.DefaultTextLayer;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
@@ -56,7 +57,7 @@ import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 /**
  * @author Dirk Kuch
  */
-public class DefaultTextLayerProvider extends AbstractLayerProvider
+public class DefaultTextLayerProvider extends AbstractLayerProvider implements ILayerProvider
 {
   public static final String ID = "de.openali.odysseus.chart.ext.base.layer.provider.DefaultTextLayerProvider";
 
@@ -95,10 +96,10 @@ public class DefaultTextLayerProvider extends AbstractLayerProvider
 
     final String text = container.getParameterValue( PROPERTY_TEXT, "" );
 
-    final String propertyAlignmentHorizontal = container.getParameterValue( PROPERTY_ALIGNMENT_HORIZONTAL, "CENTER" );
-    final String propertyAlignmentVertical = container.getParameterValue( PROPERTY_ALIGNMENT_VERTICAL, "CENTER" );
-    final String propertyTextAnchorX = container.getParameterValue( PROPERTY_TEXT_ANCHOR_X, "CENTER" );
-    final String propertyTextAnchorY = container.getParameterValue( PROPERTY_TEXT_ANCHOR_Y, "CENTER" );
+    final String propertyAlignmentHorizontal = container.getParameterValue( PROPERTY_ALIGNMENT_HORIZONTAL, "CENTERED_HORIZONTAL" );
+    final String propertyAlignmentVertical = container.getParameterValue( PROPERTY_ALIGNMENT_VERTICAL, "CENTERED_VERTICAL" );
+    final String propertyTextAnchorX = container.getParameterValue( PROPERTY_TEXT_ANCHOR_X, "CENTERED_HORIZONTAL" );
+    final String propertyTextAnchorY = container.getParameterValue( PROPERTY_TEXT_ANCHOR_Y, "CENTERED_VERTICAL" );
 
     final ALIGNMENT alignmentHorizontal = ALIGNMENT.valueOf( propertyAlignmentHorizontal );
     final ALIGNMENT alignmentVertical = ALIGNMENT.valueOf( propertyAlignmentVertical );

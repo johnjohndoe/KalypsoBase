@@ -64,9 +64,44 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
  */
 public abstract class AbstractProfilTheme extends AbstractProfilLayer implements IChartLayer
 {
+// private final ILayerManagerEventListener m_eventListener = new AbstractLayerManagerEventListener()
+// {
+// /**
+// * @see
+// de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+// */
+// @Override
+// public void onLayerContentChanged( final IChartLayer layer )
+// {
+// fireLayerContentChanged();
+// }
+//
+// /**
+// * @see
+// de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerMoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+// */
+// @Override
+// public void onLayerMoved( final IChartLayer layer )
+// {
+// fireLayerContentChanged();
+// }
+//
+// /**
+// * @see
+// de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+// */
+// @Override
+// public void onLayerVisibilityChanged( final IChartLayer layer )
+// {
+// fireLayerContentChanged();
+// }
+// };
+
   private final String m_id;
 
-  private String m_title;
+// private final ILayerManager m_layerManager = new LayerManager();
+
+  private final String m_title;
 
   public AbstractProfilTheme( final IProfil profil, final String id, final String title, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
@@ -77,19 +112,18 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   {
     super( id, profil, "", styleProvider ); //$NON-NLS-1$
 
-    /* *grml* AbstractProfileLayer overwrites getTitle() implementation */
-    setTitle( title );
     m_title = title;
-
     m_id = id;
 
     setCoordinateMapper( cm );
+// m_layerManager.addListener( m_eventListener );
 
     if( chartLayers != null )
     {
       for( final IChartLayer layer : chartLayers )
+      {
         layer.setCoordinateMapper( cm );
-
+      }
       getLayerManager().addLayer( chartLayers );
     }
   }
@@ -102,21 +136,15 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   public EditInfo commitDrag( final Point point, final EditInfo dragStartData )
   {
     if( getTargetComponent() != null )
-    {
       getProfil().setActivePointProperty( getTargetComponent() );
-    }
     final IProfilChartLayer layer = getActiveLayer();
     if( layer == null )
       return null;
 
     if( dragStartData.getPosition() == point )
-    {
       layer.executeClick( dragStartData );
-    }
     else
-    {
       layer.executeDrop( point, dragStartData );
-    }
 
     return null;
   }
@@ -142,9 +170,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
         {
           final ILegendEntry[] les = layer.getLegendEntries();
           if( les == null || les.length == 0 )
-          {
             continue;
-          }
           for( final ILegendEntry l : les )
           {
             ((LegendEntry) l).paintSymbol( gc, size );
@@ -153,26 +179,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
       }
     };
     return new ILegendEntry[] { le };
-  }
-
-  /**
-   * *grml* AbstractProfileLayer overwrites getTitle() implementation
-   */
-  @Override
-  public String getTitle( )
-  {
-    return m_title;
-  }
-
-  /**
-   * *grml* AbstractProfileLayer overwrites getTitle() implementation
-   */
-  @Override
-  public void setTitle( final String title )
-  {
-    super.setTitle( title );
-
-    m_title = title;
   }
 
   /**
@@ -197,9 +203,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   {
     final IProfilChartLayer layer = getActiveLayer();
     if( layer != null )
-    {
       layer.executeClick( clickInfo );
-    }
   }
 
   /**
@@ -212,9 +216,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   {
     final IProfilChartLayer layer = getActiveLayer();
     if( layer != null )
-    {
       layer.executeDrop( point, dragStartData );
-    }
   }
 
   protected final void fireLayerContentChanged( )
@@ -222,7 +224,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
     getEventHandler().fireLayerContentChanged( this );
   }
 
-  private IProfilChartLayer getActiveLayer( )
+  private final IProfilChartLayer getActiveLayer( )
   {
     for( final IChartLayer l : getLayerManager().getLayers() )
     {
@@ -247,17 +249,17 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getDomainRange()
    */
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Number> getDomainRange( )
   {
     Double min = null;
     Double max = null;
     for( final IChartLayer layer : getLayerManager().getLayers() )
     {
-      final IDataRange< ? > dr = layer.getDomainRange();
+      final IDataRange<Number> dr = layer.getDomainRange();
       if( dr != null )
       {
-        final double drMax = ((Number) dr.getMax()).doubleValue();
-        final double drMin = ((Number) dr.getMin()).doubleValue();
+        final double drMax = dr.getMax().doubleValue();
+        final double drMin = dr.getMin().doubleValue();
 
         max = max == null ? drMax : Math.max( max, drMax );
         min = min == null ? drMin : Math.min( min, drMin );
@@ -285,9 +287,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
         if( info != null )
         {
           if( !pLayer.isActive() )
-          {
             pLayer.setActive( true );
-          }
           return info;
         }
       }
@@ -326,38 +326,39 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetRange()
    */
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     Double min = null;
     Double max = null;
     for( final IChartLayer layer : getLayerManager().getLayers() )
     {
-      final IDataRange< ? > dr = layer.getTargetRange( null );
+      final IDataRange<Number> dr = layer.getTargetRange( null );
       if( dr != null )
       {
         if( max == null )
-        {
-          max = ((Number) dr.getMax()).doubleValue();
-        }
+          max = dr.getMax().doubleValue();
         else
-        {
-          max = Math.max( max, ((Number) dr.getMax()).doubleValue() );
-        }
+          max = Math.max( max, dr.getMax().doubleValue() );
         if( min == null )
-        {
-          min = ((Number) dr.getMin()).doubleValue();
-        }
+          min = dr.getMin().doubleValue();
         else
-        {
-          min = Math.min( min, ((Number) dr.getMin()).doubleValue() );
-        }
+          min = Math.min( min, dr.getMin().doubleValue() );
       }
     }
     if( min == null || max == null )
       return null;
-// if( min == max )
-// min = 0.9 * max;
+    if( min == max )
+      min = 0.9 * max;
     return new DataRange<Number>( min, max );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTitle()
+   */
+  @Override
+  public String getTitle( )
+  {
+    return m_title;
   }
 
   /**
@@ -392,15 +393,11 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
       fireLayerContentChanged();
     }
     else
-    {
       for( final IChartLayer layer : getLayerManager().getLayers() )
       {
         if( layer instanceof IProfilChartLayer )
-        {
           ((IProfilChartLayer) layer).onProfilChanged( hint, changes );
-        }
       }
-    }
   }
 
   /**
@@ -411,9 +408,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   {
     for( final IChartLayer layer : getLayerManager().getLayers() )
       if( layer.isVisible() )
-      {
         layer.paint( gc );
-      }
   }
 
   /**
@@ -435,9 +430,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
     for( final IChartLayer layer : getLayerManager().getLayers() )
     {
       if( layer instanceof IProfilChartLayer )
-      {
         ((IProfilChartLayer) layer).setProfil( profil );
-      }
     }
   }
 }

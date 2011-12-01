@@ -46,8 +46,8 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
+import org.kalypso.ui.editor.actions.FeatureComparator;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.FeatureComparator;
 
 /**
  * This viewer comparator has an init()-function, which will allow the client to send any parameters (out of a .gft, for

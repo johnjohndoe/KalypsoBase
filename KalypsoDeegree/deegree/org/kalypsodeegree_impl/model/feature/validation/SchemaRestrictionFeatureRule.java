@@ -58,7 +58,7 @@ public class SchemaRestrictionFeatureRule extends AbstractFeatureRule implements
    *      org.kalypsodeegree.model.feature.validation.IFeatureMarkerCollector)
    */
   @Override
-  public void validate( final Feature feature, final IFeatureMarkerCollector collector )
+  public void validate( final Feature feature, final IFeatureMarkerCollector collector ) 
   {
     final FeatureVisitor visitor = new FeatureVisitor()
     {

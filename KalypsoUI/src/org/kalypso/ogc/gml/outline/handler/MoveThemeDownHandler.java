@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraï¿½e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline.handler;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -59,7 +56,6 @@ import org.kalypso.ogc.gml.command.MoveThemeDownCommand;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.ChangeSelectionRunnable;
-import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
 import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
 
 /**
@@ -92,7 +88,7 @@ public class MoveThemeDownHandler extends AbstractHandler
       return null;
 
     /* Move down in reverse order, else it wont happen. */
-    final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString( "org.kalypso.ogc.gml.outline.handler.MoveThemeDownHandler.0" ) ); //$NON-NLS-1$
+    final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString("org.kalypso.ogc.gml.outline.handler.MoveThemeDownHandler.0") ); //$NON-NLS-1$
     for( int i = selectedThemesInOrder.length; i > 0; i-- )
     {
       final IKalypsoTheme kalypsoTheme = selectedThemesInOrder[i - 1];
@@ -101,15 +97,7 @@ public class MoveThemeDownHandler extends AbstractHandler
     }
 
     /* (Re-)select moved themes */
-    final List<IThemeNode> selectedNodesInOrder = new ArrayList<IThemeNode>();
-    for( final IKalypsoTheme theme : selectedThemesInOrder )
-    {
-      final IThemeNode node = mapOutline.findNode( theme );
-      if( node != null )
-        selectedNodesInOrder.add( node );
-    }
-
-    final StructuredSelection newSelection = new StructuredSelection( selectedNodesInOrder );
+    final StructuredSelection newSelection = new StructuredSelection( selectedThemesInOrder );
     MapHandlerUtils.postCommandChecked( context, compositeCommand, new ChangeSelectionRunnable( mapOutline, newSelection, display ) );
 
     return null;

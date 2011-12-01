@@ -44,7 +44,7 @@ public class GmlTreeDragListener extends DragSourceAdapter
   {
     m_view = view;
   }
-
+  
   /**
    * @see org.eclipse.swt.dnd.DragSourceListener#dragSetData(org.eclipse.swt.dnd.DragSourceEvent)
    */

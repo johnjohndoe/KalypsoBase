@@ -184,7 +184,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
 
       for( int j = 0; j < pos.length; j++ )
       {
-        cen[j] += pos[j] / getSize();
+        cen[j] += (pos[j] / getSize());
       }
     }
 

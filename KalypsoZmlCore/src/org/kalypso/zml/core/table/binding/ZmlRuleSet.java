@@ -43,7 +43,7 @@ package org.kalypso.zml.core.table.binding;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.zml.core.KalypsoZmlCore;
@@ -84,10 +84,7 @@ public class ZmlRuleSet
       if( objRule instanceof RuleType )
       {
         final RuleType ruleType = (RuleType) objRule;
-        final ZmlRule rule = new ZmlRule( ruleType );
-        rule.reset();
-
-        rules.add( rule );
+        rules.add( new ZmlRule( ruleType ) );
       }
       else if( objRule instanceof RuleRefernceType )
       {
@@ -96,10 +93,7 @@ public class ZmlRuleSet
           final RuleRefernceType reference = (RuleRefernceType) objRule;
           final ZmlRule rule = resolver.findRule( null, reference );
           if( rule != null )
-          {
-            rule.reset();
             rules.add( rule );
-          }
         }
         catch( final CoreException e )
         {
@@ -124,5 +118,4 @@ public class ZmlRuleSet
 
     return null;
   }
-
 }

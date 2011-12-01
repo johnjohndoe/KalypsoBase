@@ -17,18 +17,20 @@ import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.mapper.IRetinalMapper;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 public class BranchLayerProvider extends AbstractLayerProvider
 {
   @Override
   public BranchLayer getLayer( final URL context ) throws ConfigurationException
   {
-    final String href = getParameterContainer().getParameterValue( "href", null ); // $NON-NLS-1$
+    final String href = getParameterContainer().getParameterValue( "href", null );
 
-    final String observationId = getParameterContainer().getParameterValue( "observationId", null ); // $NON-NLS-1$
-    final String domainComponentName = getParameterContainer().getParameterValue( "domainComponent", null ); // $NON-NLS-1$
-    final String targetComponentName = getParameterContainer().getParameterValue( "targetComponent", null ); // $NON-NLS-1$
-    final String iconComponentName = getParameterContainer().getParameterValue( "iconComponent", null ); // $NON-NLS-1$
+    final String observationId = getParameterContainer().getParameterValue( "observationId", null );
+    final String domainComponentName = getParameterContainer().getParameterValue( "domainComponent", null );
+    final String targetComponentName = getParameterContainer().getParameterValue( "targetComponent", null );
+    final String iconComponentName = getParameterContainer().getParameterValue( "iconComponent", null );
 
     GMLWorkspace workspace;
     try
@@ -48,7 +50,7 @@ public class BranchLayerProvider extends AbstractLayerProvider
       Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "Found feature: " + feature.getId() );
     final IObservation<TupleResult> observation = ObservationFeatureFactory.toObservation( feature );
 
-    final BranchLayer layer = new BranchLayer( this, observation.getResult(), domainComponentName, targetComponentName, iconComponentName, getStyleSet() );
+    final BranchLayer layer = new BranchLayer( this, observation.getResult(), domainComponentName, targetComponentName, iconComponentName, getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
     final Set<Entry<String, String>> entrySet = getMapperMap().entrySet();
     for( final Entry<String, String> e : entrySet )
       layer.addMapper( e.getKey(), (IRetinalMapper) getModel().getMapperRegistry().getMapper( e.getValue() ) );

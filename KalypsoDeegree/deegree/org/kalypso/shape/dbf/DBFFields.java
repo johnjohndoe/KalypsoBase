@@ -50,11 +50,11 @@ import java.nio.charset.Charset;
  */
 class DBFFields
 {
-  private final IDBFField[] m_fields;
+  private final DBFField[] m_fields;
 
   private final int m_recordLength;
 
-  public DBFFields( final IDBFField[] fields ) throws DBaseException
+  public DBFFields( final DBFField[] fields ) throws DBaseException
   {
     if( fields.length > 128 )
       throw new DBaseException( "Maximal 128 fields allowed." );
@@ -62,7 +62,7 @@ class DBFFields
     m_fields = fields;
 
     int recordLength = 0;
-    for( final IDBFField field : fields )
+    for( final DBFField field : fields )
     {
       final short length = field.getLength();
       recordLength += length;
@@ -83,7 +83,7 @@ class DBFFields
 
   public static DBFFields read( final DataInput input, final int numColumns, final Charset charset ) throws IOException, DBaseException
   {
-    final IDBFField[] fields = new IDBFField[numColumns];
+    final DBFField[] fields = new DBFField[numColumns];
 
     for( int col = 0; col < numColumns; col++ )
       fields[col] = DBFField.read( input, charset );
@@ -93,7 +93,7 @@ class DBFFields
 
   public void write( final DataOutput output, final Charset charset ) throws IOException
   {
-    for( final IDBFField mField : m_fields )
+    for( final DBFField mField : m_fields )
       mField.write( output, charset );
   }
 
@@ -109,7 +109,7 @@ class DBFFields
     output.writeByte( 0x20 ); // record is not deleted
     for( int i = 0; i < data.length; i++ )
     {
-      final IDBFField field = m_fields[i];
+      final DBFField field = m_fields[i];
       field.writeValue( output, data[i], charset );
     }
   }
@@ -129,14 +129,14 @@ class DBFFields
 
     for( int i = 0; i < m_fields.length; i++ )
     {
-      final IDBFField field = m_fields[i];
+      final DBFField field = m_fields[i];
       row[i] = field.readValue( input, charset );
     }
 
     return row;
   }
 
-  public IDBFField[] getFields( )
+  public DBFField[] getFields( )
   {
     return m_fields;
   }

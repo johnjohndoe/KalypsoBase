@@ -44,10 +44,10 @@ import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.ui.PlatformUI;
 
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
-import de.openali.odysseus.chart.framework.util.ChartUtilities;
 
 /**
  * @author kimwerner
@@ -74,7 +74,7 @@ public class ChartAxisPainter
   {
     if( !m_axis.isVisible() )
       return null;
-    final Device dev = ChartUtilities.getDisplay();
+    final Device dev = PlatformUI.getWorkbench().getDisplay();
     final int width = m_axis.getRenderer().getAxisWidth( m_axis );
     final int height = m_axis.getScreenHeight();
     if( width == 0 || height == 0 )

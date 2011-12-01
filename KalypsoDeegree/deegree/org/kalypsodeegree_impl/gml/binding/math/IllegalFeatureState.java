@@ -62,7 +62,7 @@ public class IllegalFeatureState extends Exception
    */
   private final Object m_propValue;
 
-  public IllegalFeatureState( final Feature feature, final QName propQName, final Object propValue )
+  public IllegalFeatureState( Feature feature, QName propQName, Object propValue )
   {
     this( computeMessage( feature, propQName, propValue ), feature, propQName, propValue );
   }
@@ -79,17 +79,17 @@ public class IllegalFeatureState extends Exception
    * @param propValue
    *          the property value found illegal
    */
-  public IllegalFeatureState( final String message, final Feature feature, final QName propQName, final Object propValue )
+  public IllegalFeatureState( String message, Feature feature, QName propQName, Object propValue )
   {
     super( message );
-    m_feature = feature;
-    m_propQName = propQName;
-    m_propValue = propValue;
+    this.m_feature = feature;
+    this.m_propQName = propQName;
+    this.m_propValue = propValue;
   }
 
-  static private final String computeMessage( final Feature feature, final QName propQName, final Object propValue )
+  static private final String computeMessage( Feature feature, QName propQName, Object propValue )
   {
-    final StringBuffer buf = new StringBuffer( 128 );
+    StringBuffer buf = new StringBuffer( 128 );
     buf.append( "Illegal feature State" );
     if( feature != null )
     {

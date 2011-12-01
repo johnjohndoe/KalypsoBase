@@ -52,17 +52,17 @@ public class SobekProfileHeight
   /**
    * The height.
    */
-  private final BigDecimal m_height;
+  private BigDecimal m_height;
 
   /**
    * The full width.
    */
-  private final BigDecimal m_fullWidth;
+  private BigDecimal m_fullWidth;
 
   /**
    * The flow width.
    */
-  private final BigDecimal m_flowWidth;
+  private BigDecimal m_flowWidth;
 
   /**
    * The constructor.
@@ -74,7 +74,7 @@ public class SobekProfileHeight
    * @param flowWidth
    *          The flow width.
    */
-  public SobekProfileHeight( final BigDecimal height, final BigDecimal fullWidth, final BigDecimal flowWidth )
+  public SobekProfileHeight( BigDecimal height, BigDecimal fullWidth, BigDecimal flowWidth )
   {
     m_height = height;
     m_fullWidth = fullWidth;

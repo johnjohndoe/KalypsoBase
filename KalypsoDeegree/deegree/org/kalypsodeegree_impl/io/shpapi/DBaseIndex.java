@@ -52,17 +52,21 @@ import org.kalypsodeegree.model.geometry.ByteUtils;
  * <p>
  * A class for reading from and writing to DBase index files (*.ndx), maybe not 100% xbase compatible!
  * </p>
+ * 
  * <p>
  * The fileformat is described at http://www.e-bachmann.dk/computing/databases/xbase/index.html
  * </p>
+ * 
  * <p>
  * This index is suitable for indexing both unique and non-unique columns. Unique indexing is much faster than
  * non-unique because it use a faster algorithm.
  * </p>
+ * 
  * <p>
  * The index file is a B+tree (sometimes called a paged B-tree) that consist of pages. There are two page types, leaves
  * and non-leafs. The starting page (eg. the page the search algorithm starts) is the root page.
  * </p>
+ * 
  * <p>
  * <b>Searching goes as follows: </b>
  * <ul>
@@ -81,11 +85,13 @@ import org.kalypsodeegree.model.geometry.ByteUtils;
  * </li>
  * </ul>
  * </p>
+ * 
  * <p>
  * Above algorithm is implemented in two different methods, one for unique indexes and one for non-unique indexes.
  * Searching unique indexes is easier because the algorithm is finished as soon as it has found a key, the non-unique
  * version of the algorithm has to find all keys present in the index.
  * <p>
+ * 
  * <p>
  * <b>Inserting goes as follows: </b>
  * <ul>
@@ -107,9 +113,11 @@ import org.kalypsodeegree.model.geometry.ByteUtils;
  * </li>
  * </ul>
  * </p>
+ * 
  * <p>
  * If a page that splits does not have a parent page then a new page is created. This page is the new starting page
  * </p>
+ * 
  * <p>
  * Handling different data types: The index can handle strings and numbers. Numbers are always stored als IEEE doubles.
  * The method addKey checks the given key and throws an exception if the datatype of the key doesn't suit the index
@@ -119,25 +127,25 @@ import org.kalypsodeegree.model.geometry.ByteUtils;
  */
 public class DBaseIndex
 {
-  // The filename we use (this variable is used by toString)
-  private final String fileName;
+  //The filename we use (this variable is used by toString)
+  private String fileName;
 
-  // The random access file we use
+  //The random access file we use
   protected RandomAccessFile file;
 
-  // Attributes stored in the .ndx header
+  //Attributes stored in the .ndx header
   protected int startingPageNo, numberOfPages, sizeOfKeyRecord, keyLength, noOfKeysPerPage, keyType;
 
-  private final boolean uniqueFlag;
+  private boolean uniqueFlag;
 
-  // Buffers
+  //Buffers
   protected byte[] b = new byte[4], page = new byte[512], keyBytes;
 
-  // Cache size
+  //Cache size
   protected int cacheSize = 20;
 
-  // Cache
-  private final Cache cache = new Cache();
+  //Cache
+  private Cache cache = new Cache();
 
   /**
    * Inner class for the cache. The cache remembers recently used pages.
@@ -152,7 +160,7 @@ public class DBaseIndex
       /**
        * Create a new item with the given page
        */
-      Item( final Page p )
+      Item( Page p )
       {
         this.p = p;
         timeStamp = System.currentTimeMillis();
@@ -161,7 +169,7 @@ public class DBaseIndex
       /**
        * Mark the item as used (eg. create a new time stamp)
        */
-      void use( )
+      void use()
       {
         timeStamp = System.currentTimeMillis();
       }
@@ -174,20 +182,20 @@ public class DBaseIndex
        * Compare the time stamp from this object to the time stamp of another object
        */
       @Override
-      public int compareTo( final Object o )
+      public int compareTo( Object o )
       {
-        return new Long( timeStamp ).compareTo( new Long( ((Item) o).timeStamp ) );
+        return new Long( timeStamp ).compareTo( new Long( ( (Item)o ).timeStamp ) );
       }
     }
 
-    private final Hashtable pages;
+    private Hashtable pages;
 
-    private final LinkedList cacheItems;
+    private LinkedList cacheItems;
 
     /**
      * Create a new cache
      */
-    public Cache( )
+    public Cache()
     {
       pages = new Hashtable();
       cacheItems = new LinkedList();
@@ -196,9 +204,9 @@ public class DBaseIndex
     /**
      * Remove an item from the cache (this method searches for the last used item)
      */
-    void removeItem( ) throws IOException
+    void removeItem() throws IOException
     {
-      final Item i = (Item) cacheItems.removeFirst();
+      Item i = (Item)cacheItems.removeFirst();
 
       if( i.p.onStoreList )
         i.p.write();
@@ -209,9 +217,9 @@ public class DBaseIndex
     /**
      * Insert a new item into the cache
      */
-    public void insert( final int number, final Page p ) throws IOException
+    public void insert( int number, Page p ) throws IOException
     {
-      final Item i = new Item( p );
+      Item i = new Item( p );
 
       pages.put( new Integer( number ), i );
       cacheItems.addLast( i );
@@ -223,9 +231,9 @@ public class DBaseIndex
     /**
      * Get a page form the cache
      */
-    public Page get( final int number )
+    public Page get( int number )
     {
-      final Item item = (Item) pages.get( new Integer( number ) );
+      Item item = (Item)pages.get( new Integer( number ) );
 
       if( item != null )
       {
@@ -242,13 +250,13 @@ public class DBaseIndex
     /**
      * Flush the cache (eg. store modified pages)
      */
-    public void flush( )
+    public void flush()
     {
-      final ListIterator i = cacheItems.listIterator();
+      ListIterator i = cacheItems.listIterator();
 
       while( i.hasNext() )
       {
-        final Item item = (Item) i.next();
+        Item item = (Item)i.next();
 
         try
         {
@@ -257,7 +265,7 @@ public class DBaseIndex
             item.p.write();
           }
         }
-        catch( final IOException e )
+        catch( IOException e )
         {
           e.printStackTrace();
         }
@@ -273,16 +281,16 @@ public class DBaseIndex
    */
   private class KeyEntry
   {
-    // Lower pointer and record number
+    //Lower pointer and record number
     int lower, record;
 
-    // Data
+    //Data
     Comparable data;
 
     /**
      * Construct a new KeyEntry
      */
-    KeyEntry( final int lower, final int record, final Comparable data )
+    KeyEntry( int lower, int record, Comparable data )
     {
       this.lower = lower;
       this.record = record;
@@ -292,7 +300,7 @@ public class DBaseIndex
     /**
      * Read an existing KeyEntry
      */
-    KeyEntry( final int lower, final int record ) throws IOException
+    KeyEntry( int lower, int record ) throws IOException
     {
       this.lower = lower;
       this.record = record;
@@ -302,15 +310,15 @@ public class DBaseIndex
     /**
      * Compare this key entry to another key
      */
-    int compareTo( final Comparable key )
+    int compareTo( Comparable key )
     {
-      return data.compareTo( key );
+      return this.data.compareTo( key );
     }
 
     /**
      * Read data from current file position
      */
-    void read( ) throws IOException
+    void read() throws IOException
     {
       if( keyType == 0 )
       {
@@ -326,17 +334,17 @@ public class DBaseIndex
     /**
      * Write data to current file position
      */
-    void write( ) throws IOException
+    void write() throws IOException
     {
       if( keyType == 0 )
       {
-        final byte[] currentKeyBytes = ((String) data).getBytes();
+        byte[] currentKeyBytes = ( (String)data ).getBytes();
         file.write( currentKeyBytes );
         file.write( new byte[keyLength - currentKeyBytes.length] );
       }
       else
       {
-        file.writeDouble( ((Double) data).doubleValue() );
+        file.writeDouble( ( (Double)data ).doubleValue() );
       }
     }
   }
@@ -346,19 +354,19 @@ public class DBaseIndex
    */
   private class Page
   {
-    // Page numer, number of valid entries and the last lower pointer
+    //Page numer, number of valid entries and the last lower pointer
     int number, validEntries, lastLower;
 
-    // An array with the key entries;
+    //An array with the key entries;
     KeyEntry[] entries = new KeyEntry[noOfKeysPerPage + 1];
 
-    // Is this page on the store list?
+    //Is this page on the store list?
     boolean onStoreList;
 
     /**
      * This constructor is only used by newPage(), it creates an empty page
      */
-    Page( )
+    Page()
     {
       validEntries = 0;
       lastLower = 0;
@@ -368,37 +376,37 @@ public class DBaseIndex
     /**
      * This constructor is only used by getPage(), it loads a page from the file
      */
-    Page( final int number ) throws IOException
+    Page( int number ) throws IOException
     {
       this.number = number;
       onStoreList = false;
 
-      // Seek to the page
+      //Seek to the page
       file.seek( number * 512 );
-      // Read the number of valid entries
+      //Read the number of valid entries
       file.read( b );
       validEntries = ByteUtils.readLEInt( b, 0 );
 
-      // Read the key entries
+      //Read the key entries
       for( int i = 0; i < validEntries; i++ )
       {
         int lower, record;
 
-        // Read the lower pointer
+        //Read the lower pointer
         file.read( b );
         lower = ByteUtils.readLEInt( b, 0 );
 
-        // Read the record number
+        //Read the record number
         file.read( b );
         record = ByteUtils.readLEInt( b, 0 );
 
-        // Store the key in the array
+        //Store the key in the array
         entries[i] = new KeyEntry( lower, record );
 
-        // Skip some unused bytes
-        file.skipBytes( sizeOfKeyRecord - (keyLength + 8) );
+        //Skip some unused bytes
+        file.skipBytes( sizeOfKeyRecord - ( keyLength + 8 ) );
       }
-      // Read the last lower pointer
+      //Read the last lower pointer
       file.read( b );
       lastLower = ByteUtils.readLEInt( b, 0 );
     }
@@ -406,44 +414,44 @@ public class DBaseIndex
     /**
      * Write the page to disk
      */
-    void write( ) throws IOException
+    void write() throws IOException
     {
       file.seek( number * 512 );
-      // Write the number of valid entries
+      //Write the number of valid entries
       ByteUtils.writeLEInt( b, 0, validEntries );
       file.write( b );
 
-      // Write all the key entries
+      //Write all the key entries
       for( int i = 0; i < validEntries; i++ )
       {
-        // Write the lower pointer
+        //Write the lower pointer
         ByteUtils.writeLEInt( b, 0, entries[i].lower );
         file.write( b );
 
-        // Write the the recordnumber
+        //Write the the recordnumber
         ByteUtils.writeLEInt( b, 0, entries[i].record );
         file.write( b );
 
-        // Write the key
+        //Write the key
         entries[i].write();
 
         for( int j = 0; j < keyLength - keyBytes.length; j++ )
           file.write( 0x20 );
 
-        file.skipBytes( sizeOfKeyRecord - (keyLength + 8) );
+        file.skipBytes( sizeOfKeyRecord - ( keyLength + 8 ) );
       }
-      // Write the last lower pointer
+      //Write the last lower pointer
       ByteUtils.writeLEInt( b, 0, lastLower );
       file.write( b );
 
-      final long size = (number + 1) * 512 - file.getFilePointer();
-      file.write( new byte[(int) size] );
+      long size = ( ( number + 1 ) * 512 ) - file.getFilePointer();
+      file.write( new byte[(int)size] );
     }
 
     /**
      * This method is called if saving is needed
      */
-    void store( )
+    void store()
     {
       onStoreList = true;
     }
@@ -451,14 +459,14 @@ public class DBaseIndex
     /**
      * Search in this page (and lower pages)
      */
-    int search( final Comparable key, final Stack searchStack ) throws IOException
+    int search( Comparable key, Stack searchStack ) throws IOException
     {
-      if( validEntries == 0 ) // Page is empty
+      if( validEntries == 0 ) //Page is empty
       {
         return -number;
       }
 
-      if( entries[0].lower == 0 ) // This page is a leaf
+      if( entries[0].lower == 0 ) //This page is a leaf
       {
         for( int i = 0; i < validEntries; i++ )
         {
@@ -472,18 +480,18 @@ public class DBaseIndex
 
       for( int i = 0; i < validEntries; i++ )
       {
-        final int compare = entries[i].compareTo( key );
+        int compare = entries[i].compareTo( key );
 
         if( compare == 0 || compare > 0 )
         {
-          final Page lowerPage = getPage( entries[i].lower );
+          Page lowerPage = getPage( entries[i].lower );
           if( searchStack != null )
             searchStack.push( new Integer( number ) );
           return lowerPage.search( key, searchStack );
         }
       }
 
-      final Page lowerPage = getPage( lastLower );
+      Page lowerPage = getPage( lastLower );
       if( searchStack != null )
         searchStack.push( new Integer( number ) );
       return lowerPage.search( key, searchStack );
@@ -492,13 +500,13 @@ public class DBaseIndex
     /**
      * Search in this page (and lower pages), duplicates allowed
      */
-    ArrayList searchDup( final Comparable key ) throws IOException
+    ArrayList searchDup( Comparable key ) throws IOException
     {
-      final ArrayList found = new ArrayList();
+      ArrayList found = new ArrayList();
 
-      if( validEntries != 0 ) // Page is not emtpy
+      if( validEntries != 0 ) //Page is not emtpy
       {
-        if( entries[0].lower == 0 ) // Page is a leaf
+        if( entries[0].lower == 0 ) //Page is a leaf
         {
           for( int i = 0; i < validEntries; i++ )
           {
@@ -514,7 +522,7 @@ public class DBaseIndex
           {
             if( entries[i].compareTo( key ) >= 0 )
             {
-              final ArrayList lowerFound = getPage( entries[i].lower ).searchDup( key );
+              ArrayList lowerFound = getPage( entries[i].lower ).searchDup( key );
               if( lowerFound.size() != 0 )
                 found.addAll( lowerFound );
               else
@@ -532,25 +540,25 @@ public class DBaseIndex
     /**
      * Find the insert position for a key
      */
-    int searchDupPos( final Comparable key, final Stack searchStack ) throws IOException
+    int searchDupPos( Comparable key, Stack searchStack ) throws IOException
     {
-      if( validEntries == 0 ) // Page is empty
+      if( validEntries == 0 ) //Page is empty
         return number;
 
-      if( entries[0].lower == 0 ) // Page is a leaf
+      if( entries[0].lower == 0 ) //Page is a leaf
         return number;
 
       for( int i = 0; i < validEntries; i++ )
       {
         if( entries[i].compareTo( key ) >= 0 )
         {
-          final Page lowerPage = getPage( entries[i].lower );
+          Page lowerPage = getPage( entries[i].lower );
           searchStack.push( new Integer( number ) );
           return lowerPage.searchDupPos( key, searchStack );
         }
       }
 
-      final Page lowerPage = getPage( lastLower );
+      Page lowerPage = getPage( lastLower );
       searchStack.push( new Integer( number ) );
       return lowerPage.searchDupPos( key, searchStack );
     }
@@ -558,7 +566,7 @@ public class DBaseIndex
     /**
      * Add a node to this page, this method is only called if page is non-leaf page
      */
-    void addNode( final Comparable key, final int left, final int right, final Stack searchStack ) throws IOException
+    void addNode( Comparable key, int left, int right, Stack searchStack ) throws IOException
     {
       for( int i = 0; i < validEntries + 1; i++ )
       {
@@ -583,13 +591,13 @@ public class DBaseIndex
 
       validEntries++;
 
-      if( validEntries > noOfKeysPerPage ) // Split
+      if( validEntries > noOfKeysPerPage ) //Split
       {
-        final Page newPage = newPage();
+        Page newPage = newPage();
 
         int firstEntry = validEntries / 2;
 
-        final KeyEntry parentKey = entries[firstEntry];
+        KeyEntry parentKey = entries[firstEntry];
         firstEntry++;
 
         int j = 0;
@@ -612,7 +620,7 @@ public class DBaseIndex
           setRoot( parent );
         }
         else
-          parent = getPage( ((Integer) searchStack.pop()).intValue() );
+          parent = getPage( ( (Integer)searchStack.pop() ).intValue() );
 
         parent.addNode( parentKey.data, number, newPage.number, searchStack );
       }
@@ -622,7 +630,7 @@ public class DBaseIndex
     /**
      * Add a key to this page, only for leaf nodes
      */
-    void addKey( final Comparable key, final int record, final Stack searchStack ) throws IOException
+    void addKey( Comparable key, int record, Stack searchStack ) throws IOException
     {
       for( int i = 0; i < validEntries + 1; i++ )
       {
@@ -645,12 +653,12 @@ public class DBaseIndex
 
       validEntries++;
 
-      if( validEntries == noOfKeysPerPage ) // Split
+      if( validEntries == noOfKeysPerPage ) //Split
       {
-        final Page newPage = newPage();
+        Page newPage = newPage();
 
         int firstEntry = validEntries / 2 + 1;
-        if( validEntries % 2 != 0 )
+        if( ( validEntries % 2 ) != 0 )
           firstEntry++;
 
         int j = 0;
@@ -670,7 +678,7 @@ public class DBaseIndex
           setRoot( parent );
         }
         else
-          parent = getPage( ((Integer) searchStack.pop()).intValue() );
+          parent = getPage( ( (Integer)searchStack.pop() ).intValue() );
         parent.addNode( entries[validEntries - 1].data, number, newPage.number, searchStack );
       }
 
@@ -680,7 +688,7 @@ public class DBaseIndex
     /**
      * Calculate the depth for this page
      */
-    int getDepth( ) throws IOException
+    int getDepth() throws IOException
     {
       if( validEntries == 0 )
       {
@@ -698,7 +706,7 @@ public class DBaseIndex
      * Convert the page to a string (for debugging)
      */
     @Override
-    public String toString( )
+    public String toString()
     {
       String s = "Number: " + number + "\nValidEntries: " + validEntries + "\n";
 
@@ -706,7 +714,7 @@ public class DBaseIndex
       {
         s += "entry: " + i + "\n";
 
-        final KeyEntry key = entries[i];
+        KeyEntry key = entries[i];
         s += "  lower: " + key.lower + "\n";
         s += "  record: " + key.record + "\n";
         s += "  data: " + key.data + "\n";
@@ -719,9 +727,9 @@ public class DBaseIndex
   /**
    * Open an existing .ndx file
    */
-  public DBaseIndex( final String name ) throws IOException
+  public DBaseIndex( String name ) throws IOException
   {
-    final File f = new File( name + ".ndx" );
+    File f = new File( name + ".ndx" );
 
     if( !f.exists() )
       throw new FileNotFoundException();
@@ -735,7 +743,7 @@ public class DBaseIndex
     file.read( b );
     numberOfPages = ByteUtils.readLEInt( b, 0 );
 
-    file.skipBytes( 4 ); // Reserved
+    file.skipBytes( 4 ); //Reserved
     file.read( b, 0, 2 );
     keyLength = ByteUtils.readLEShort( b, 0 );
 
@@ -748,7 +756,7 @@ public class DBaseIndex
     file.read( b );
     sizeOfKeyRecord = ByteUtils.readLEInt( b, 0 );
 
-    file.skipBytes( 1 ); // Reserved
+    file.skipBytes( 1 ); //Reserved
     uniqueFlag = file.readBoolean();
 
     keyBytes = new byte[keyLength];
@@ -757,7 +765,8 @@ public class DBaseIndex
   /**
    * Used by createIndex()
    */
-  private DBaseIndex( final String name, final int startingPageNo, final int numberOfPages, final int sizeOfKeyRecord, final int keyLength, final int noOfKeysPerPage, final int keyType, final boolean uniqueFlag, final RandomAccessFile file )
+  private DBaseIndex( String name, int startingPageNo, int numberOfPages, int sizeOfKeyRecord, int keyLength,
+      int noOfKeysPerPage, int keyType, boolean uniqueFlag, RandomAccessFile file )
   {
     fileName = name;
     this.startingPageNo = startingPageNo;
@@ -775,7 +784,7 @@ public class DBaseIndex
   /**
    * Get a page
    */
-  protected Page getPage( final int number ) throws IOException
+  protected Page getPage( int number ) throws IOException
   {
     Page p;
 
@@ -794,7 +803,7 @@ public class DBaseIndex
     {
       if( p.entries[0].lower != 0 )
       {
-        final Hashtable test = new Hashtable();
+        Hashtable test = new Hashtable();
         for( int i = 0; i < p.validEntries; i++ )
           test.put( new Integer( p.entries[i].lower ), "" );
         test.put( new Integer( p.lastLower ), "" );
@@ -809,7 +818,7 @@ public class DBaseIndex
   /**
    * Create a new page
    */
-  protected Page newPage( ) throws IOException
+  protected Page newPage() throws IOException
   {
     Page p;
 
@@ -829,7 +838,7 @@ public class DBaseIndex
   /**
    * Set the root page
    */
-  protected synchronized void setRoot( final Page page )
+  protected synchronized void setRoot( Page page )
   {
     startingPageNo = page.number;
   }
@@ -837,25 +846,24 @@ public class DBaseIndex
   /**
    * Create a new index
    */
-  public static DBaseIndex createIndex( final String name, final String column, int keyLength, final boolean uniqueFlag, final boolean numbers ) throws IOException
+  public static DBaseIndex createIndex( String name, String column, int keyLength, boolean uniqueFlag, boolean numbers )
+      throws IOException
   {
-    final RandomAccessFile file = new RandomAccessFile( name + ".ndx", "rw" );
+    RandomAccessFile file = new RandomAccessFile( name + ".ndx", "rw" );
 
-    final int startingPageNo = 1, numberOfPages = 1;
-    int sizeOfKeyRecord, noOfKeysPerPage;
-    final int keyType = numbers ? 1 : 0;
+    int startingPageNo = 1, numberOfPages = 1, sizeOfKeyRecord, noOfKeysPerPage, keyType = numbers ? 1 : 0;
 
     if( numbers )
       keyLength = 8;
 
     sizeOfKeyRecord = 8 + keyLength;
 
-    while( sizeOfKeyRecord % 4 != 0 )
+    while( ( sizeOfKeyRecord % 4 ) != 0 )
       sizeOfKeyRecord++;
 
     noOfKeysPerPage = 504 / sizeOfKeyRecord;
 
-    final byte[] b = new byte[4];
+    byte[] b = new byte[4];
 
     ByteUtils.writeLEInt( b, 0, startingPageNo );
     file.write( b );
@@ -863,7 +871,7 @@ public class DBaseIndex
     ByteUtils.writeLEInt( b, 0, numberOfPages );
     file.write( b );
 
-    file.writeInt( 0 ); // Reserved
+    file.writeInt( 0 ); //Reserved
 
     ByteUtils.writeLEShort( b, 0, keyLength );
     file.write( b, 0, 2 );
@@ -877,7 +885,7 @@ public class DBaseIndex
     ByteUtils.writeLEInt( b, 0, sizeOfKeyRecord );
     file.write( b );
 
-    file.write( 0 ); // Reserved
+    file.write( 0 ); //Reserved
 
     file.writeBoolean( uniqueFlag );
 
@@ -889,13 +897,14 @@ public class DBaseIndex
     for( int i = 0; i < 820; i++ )
       file.write( 0 );
 
-    return new DBaseIndex( name, startingPageNo, numberOfPages, sizeOfKeyRecord, keyLength, noOfKeysPerPage, keyType, uniqueFlag, file );
+    return new DBaseIndex( name, startingPageNo, numberOfPages, sizeOfKeyRecord, keyLength, noOfKeysPerPage, keyType,
+        uniqueFlag, file );
   }
 
   /**
    * Flush all the buffers
    */
-  public void flush( ) throws IOException
+  public void flush() throws IOException
   {
     file.seek( 0 );
     ByteUtils.writeLEInt( b, 0, startingPageNo );
@@ -910,7 +919,7 @@ public class DBaseIndex
   /**
    * Close the index file
    */
-  public void close( ) throws IOException
+  public void close() throws IOException
   {
     flush();
     file.close();
@@ -921,21 +930,21 @@ public class DBaseIndex
     if( key == null )
       throw new NullPointerException();
 
-    if( keyType == 0 && !(key instanceof String) || keyType == 1 && !(key instanceof Number) )
+    if( ( keyType == 0 && !( key instanceof String ) ) || ( keyType == 1 && !( key instanceof Number ) ) )
     {
       throw new InvalidKeyTypeException( key, this );
     }
 
-    if( keyType == 1 && !(key instanceof Double) )
+    if( keyType == 1 && !( key instanceof Double ) )
     {
-      key = new Double( ((Number) key).doubleValue() );
+      key = new Double( ( (Number)key ).doubleValue() );
     }
 
-    final Page root = getPage( startingPageNo );
+    Page root = getPage( startingPageNo );
 
     if( uniqueFlag )
     {
-      final int[] retval = new int[1];
+      int[] retval = new int[1];
       retval[0] = root.search( key, null );
       if( retval[0] < 0 )
       {
@@ -944,49 +953,50 @@ public class DBaseIndex
       return retval;
     }
 
-    final ArrayList searchResult = root.searchDup( key );
+    ArrayList searchResult = root.searchDup( key );
     if( searchResult.size() == 0 )
     {
       throw new KeyNotFoundException( key, this );
     }
-    final int[] retval = new int[searchResult.size()];
+    int[] retval = new int[searchResult.size()];
     for( int i = 0; i < retval.length; i++ )
-      retval[i] = ((Integer) searchResult.get( i )).intValue();
+      retval[i] = ( (Integer)searchResult.get( i ) ).intValue();
     return retval;
   }
 
   /**
    * Add a key to the index
    */
-  public void addKey( Comparable key, final int record ) throws IOException, KeyAlreadyExistException, InvalidKeyTypeException, KeyTooLongException
+  public void addKey( Comparable key, int record ) throws IOException, KeyAlreadyExistException,
+      InvalidKeyTypeException, KeyTooLongException
   {
     if( key == null )
       throw new NullPointerException();
 
-    if( keyType == 0 && !(key instanceof String) || keyType == 1 && !(key instanceof Number) )
+    if( ( keyType == 0 && !( key instanceof String ) ) || ( keyType == 1 && !( key instanceof Number ) ) )
     {
       throw new InvalidKeyTypeException( key, this );
     }
 
-    if( keyType == 1 && !(key instanceof Double) )
+    if( keyType == 1 && !( key instanceof Double ) )
     {
-      key = new Double( ((Number) key).doubleValue() );
+      key = new Double( ( (Number)key ).doubleValue() );
     }
 
     if( key instanceof String )
     {
-      if( ((String) key).length() > keyLength )
+      if( ( (String)key ).length() > keyLength )
       {
         throw new KeyTooLongException( key, this );
       }
     }
 
-    final Page root = getPage( startingPageNo );
-    final Stack stack = new Stack();
+    Page root = getPage( startingPageNo );
+    Stack stack = new Stack();
 
     if( uniqueFlag )
     {
-      final int searchResult = root.search( key, stack );
+      int searchResult = root.search( key, stack );
       if( searchResult >= 0 )
       {
         throw new KeyAlreadyExistException( key, this );
@@ -996,7 +1006,7 @@ public class DBaseIndex
     }
     else
     {
-      final int searchResult = root.searchDupPos( key, stack );
+      int searchResult = root.searchDupPos( key, stack );
       getPage( searchResult ).addKey( key, record, stack );
     }
   }
@@ -1004,22 +1014,22 @@ public class DBaseIndex
   /**
    * Calculate the depth for the index
    */
-  public int getDepth( ) throws IOException
+  public int getDepth() throws IOException
   {
-    final Page root = getPage( startingPageNo );
+    Page root = getPage( startingPageNo );
     return root.getDepth();
   }
 
   /**
    * Contains this index unique values?
    */
-  public boolean isUnique( )
+  public boolean isUnique()
   {
     return uniqueFlag;
   }
 
   @Override
-  public String toString( )
+  public String toString()
   {
     return fileName;
   }

@@ -44,12 +44,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.module.project.local.ILocalProject;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.client.core.model.projects.ITranscendenceProject;
+import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
+import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.sei.IProjectDatabase;
 
@@ -76,14 +75,13 @@ public class AcquireProjectLockWorker implements ICoreRunnableWithProgress
   {
     final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
     final String ticket = service.acquireProjectEditLock( m_handler.getUniqueName() );
-    if( Strings.isEmpty( ticket ) ) //$NON-NLS-1$
-      StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.project.database.client.core.project.lock.acquire.AcquireProjectLockWorker.1", m_handler.getName() ) ); //$NON-NLS-1$
+    if( ticket == null || "".equals( ticket.trim() ) ) //$NON-NLS-1$
+      StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.project.database.client.core.project.lock.acquire.AcquireProjectLockWorker.1" , m_handler.getName() ) ); //$NON-NLS-1$
 
     if( !(m_handler instanceof ITranscendenceProject) )
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.project.database.client.core.project.lock.acquire.AcquireProjectLockWorker.2", m_handler.getName() ) ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createErrorStatus(Messages.getString( "org.kalypso.project.database.client.core.project.lock.acquire.AcquireProjectLockWorker.2" , m_handler.getName() ) ) ); //$NON-NLS-1$
 
-    final ITranscendenceProject trancendence = (ITranscendenceProject) m_handler;
-    trancendence.getRemotePreferences().setEditTicket( ticket );
+    m_handler.getRemotePreferences().setEditTicket( ticket );
 
     return Status.OK_STATUS;
   }

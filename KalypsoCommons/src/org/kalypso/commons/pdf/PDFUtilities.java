@@ -103,27 +103,27 @@ public class PDFUtilities
         try
         {
           /* Create a random access file. */
-          final RandomAccessFile raf = new RandomAccessFile( file, "r" );
-          final FileChannel channel = raf.getChannel();
-          final ByteBuffer buf = channel.map( FileChannel.MapMode.READ_ONLY, 0, channel.size() );
+          RandomAccessFile raf = new RandomAccessFile( file, "r" );
+          FileChannel channel = raf.getChannel();
+          ByteBuffer buf = channel.map( FileChannel.MapMode.READ_ONLY, 0, channel.size() );
 
           /* Create the pdf file. */
-          final PDFFile pdfFile = new PDFFile( buf );
+          PDFFile pdfFile = new PDFFile( buf );
 
           /* This is used for printing the pdf file. */
-          final PDFPrintPage pages = new PDFPrintPage( pdfFile );
+          PDFPrintPage pages = new PDFPrintPage( pdfFile );
 
           /* Create print job. */
-          final PrinterJob pjob = PrinterJob.getPrinterJob();
+          PrinterJob pjob = PrinterJob.getPrinterJob();
           pjob.setJobName( file.getName() );
 
           /* Get the page format. */
-          final PageFormat pf = pjob.defaultPage();
+          PageFormat pf = pjob.defaultPage();
           pf.setPaper( createPaper( PAGE_SIZE_A4_WIDTH, PAGE_SIZE_A4_HEIGHT ) );
           pf.setOrientation( pageFormat );
 
           /* Create a new book. */
-          final Book book = new Book();
+          Book book = new Book();
           book.append( pages, pf, pdfFile.getNumPages() );
           pjob.setPageable( book );
 
@@ -134,7 +134,7 @@ public class PDFUtilities
           /* Close the random access file. */
           raf.close();
         }
-        catch( final Exception ex )
+        catch( Exception ex )
         {
           /* Log the error message. */
           KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), ex.getLocalizedMessage(), ex ) );
@@ -152,9 +152,9 @@ public class PDFUtilities
    *          The height of the paper. See {@link PDFUtilities#PAGE_SIZE_A4_HEIGHT}
    * @return The paper.
    */
-  protected static Paper createPaper( final float width, final float height )
+  protected static Paper createPaper( float width, float height )
   {
-    final Paper paper = new Paper();
+    Paper paper = new Paper();
     paper.setSize( width, height );
     paper.setImageableArea( 0, 0, paper.getWidth(), paper.getHeight() );
 

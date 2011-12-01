@@ -75,7 +75,7 @@ public class ShowSchemaEditorActionDelegate implements IEditorActionDelegate
   public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
   {
     m_targetEditor = (GmlEditor) targetEditor;
-
+    
     refreshAction( action );
   }
 
@@ -88,11 +88,11 @@ public class ShowSchemaEditorActionDelegate implements IEditorActionDelegate
     final GMLWorkspace workspace = m_targetEditor.getTreeView().getWorkspace();
     if( workspace == null )
       return;
-
+    
     final IGMLSchema schema = workspace.getGMLSchema();
     if( schema == null )
       return;
-
+    
     final String version = schema.getGMLVersion();
     final String schemaNamespace = schema.getTargetNamespace();
     final String schemaLocationString = workspace.getSchemaLocationString();
@@ -103,7 +103,7 @@ public class ShowSchemaEditorActionDelegate implements IEditorActionDelegate
     try
     {
       final Map<String, URL> namespaces = GMLSchemaUtilities.parseSchemaLocation( schemaLocationString, workspace.getContext() );
-
+      
       final IEditorInput input = new GmlSchemaEditorInput( schemaNamespace, version, namespaces.get( schemaNamespace ) );
       activePage.openEditor( input, "org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor" );
     }

@@ -45,7 +45,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -54,12 +53,10 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ControlEditor;
-import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IViewSite;
@@ -71,7 +68,6 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor.ADVANCE_MODE;
@@ -83,7 +79,6 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
-import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.IProfilProvider;
 import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
@@ -105,17 +100,9 @@ import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
  */
 public class TableView extends ViewPart implements IAdapterEater<IProfilProvider>, IProfilProviderListener, ITupleResultViewerProvider
 {
-  public static final String ID = "org.kalypso.model.wspm.ui.view.table.TableView"; //$NON-NLS-1$
-
-  private static final int INITIAL_PROBLEM_SASH_WEIGHT = 150;
-
-  private static final String SETTINGS_SASH_WEIGHT = "sashWeight"; //$NON-NLS-1$
-
   private final AdapterPartListener<IProfilProvider> m_profilProviderListener = new AdapterPartListener<IProfilProvider>( IProfilProvider.class, this, EditorFirstAdapterFinder.<IProfilProvider> instance(), EditorFirstAdapterFinder.<IProfilProvider> instance() );
 
-  private final IDialogSettings m_settings = DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), ID );
-
-  private Form m_form;
+  protected Form m_form;
 
   private FormToolkit m_toolkit;
 
@@ -129,9 +116,13 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
 
   private TupleResultLabelProvider m_tupleResultLabelProvider;
 
-  private ProfileProblemView m_problemView = null;
+  protected ProfileProblemView m_problemView = null;
+
+  protected Composite m_outlineContainer;
 
   private String m_registeredName;
+
+  private final static int MAX_OUTLINE_HEIGHT = 70;
 
   protected final UIJob m_markerRefreshJob = new UIJob( Messages.getString( "org.kalypso.model.wspm.ui.view.table.TableView.0" ) ) //$NON-NLS-1$
   {
@@ -144,9 +135,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
         if( points.length > 0 )
         {
           if( m_view != null && !m_view.getTable().isDisposed() )
-          {
             m_view.update( points, new String[] { "" } ); //$NON-NLS-1$
-          }
         }
       }
       updateProblemView();
@@ -184,6 +173,9 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
       }
     }
 
+    /**
+     * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProblemMarkerChanged(org.kalypso.model.wspm.core.profil.IProfil)
+     */
     @Override
     public void onProblemMarkerChanged( final IProfil source )
     {
@@ -194,8 +186,9 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
 
   private MenuManager m_menuManager;
 
-  private SashForm m_sashForm;
-
+  /**
+   * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite)
+   */
   @Override
   public void init( final IViewSite site ) throws PartInitException
   {
@@ -213,9 +206,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     super.dispose();
 
     if( m_profile != null )
-    {
       m_profile.removeProfilListener( m_profileListener );
-    }
 
     m_menuManager.dispose();
     m_menuManager = null;
@@ -223,21 +214,15 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     unhookProvider();
 
     if( m_tupleResultContentProvider != null )
-    {
       m_tupleResultContentProvider.dispose();
-    }
 
     if( m_tupleResultLabelProvider != null )
-    {
       m_tupleResultLabelProvider.dispose();
-    }
 
     m_profilProviderListener.dispose();
 
     if( m_form != null )
-    {
       m_form.dispose();
-    }
 
     m_view = null;
   }
@@ -251,42 +236,44 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     }
   }
 
+  /**
+   * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
+   */
   @Override
   public void createPartControl( final Composite parent )
   {
     final IContextService contextService = (IContextService) getSite().getService( IContextService.class );
     if( contextService != null )
-    {
       contextService.activateContext( "org.kalypso.model.wspm.ui.view.table.swt.context" ); //$NON-NLS-1$
-    }
 
     m_toolkit = new FormToolkit( parent.getDisplay() );
     m_form = m_toolkit.createForm( parent );
     m_toolkit.decorateFormHeading( m_form );
 
-    final Composite body = m_form.getBody();
-    body.setLayout( new FillLayout() );
+    final GridLayout bodyLayout = new GridLayout();
+    bodyLayout.marginHeight = 0;
+    bodyLayout.marginWidth = 0;
+    m_form.getBody().setLayout( bodyLayout );
+    m_outlineContainer = m_toolkit.createComposite( m_form.getBody() );
+    final GridLayout outlineLayout = new GridLayout( 1, false );
+    outlineLayout.marginHeight = 0;
+    outlineLayout.marginWidth = 0;
+    m_outlineContainer.setLayout( outlineLayout );
+    final GridData outlineData = new GridData( SWT.FILL, SWT.FILL, true, false );
+    outlineData.exclude = true;
+    m_outlineContainer.setLayoutData( outlineData );
+    m_problemView = new ProfileProblemView( m_toolkit, m_outlineContainer, MAX_OUTLINE_HEIGHT );
 
-    m_sashForm = new SashForm( body, SWT.VERTICAL );
-    m_sashForm.setSashWidth( 4 );
+    m_view = new TupleResultTableViewer( m_form.getBody(), SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
 
-    m_problemView = new ProfileProblemView( m_toolkit, m_sashForm, INITIAL_PROBLEM_SASH_WEIGHT );
-
-    m_view = new TupleResultTableViewer( m_sashForm, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
-
-    final int savedWeight = DialogSettingsUtils.getInt( m_settings, SETTINGS_SASH_WEIGHT, INITIAL_PROBLEM_SASH_WEIGHT );
-    final int problemWeight = Math.min( 900, savedWeight );
-
-    m_sashForm.setWeights( new int[] { problemWeight, 1000 - problemWeight } );
-
-    final ExcelTableCursor cursor = new ExcelTableCursor( m_view, SWT.BORDER_DASH, ADVANCE_MODE.DOWN, true );
-    final ControlEditor controlEditor = new ControlEditor( cursor );
-    controlEditor.grabHorizontal = true;
-    controlEditor.grabVertical = true;
+    final ExcelTableCursor m_cursor = new ExcelTableCursor( m_view, SWT.BORDER_DASH, ADVANCE_MODE.DOWN, true );
+    final ControlEditor m_controlEditor = new ControlEditor( m_cursor );
+    m_controlEditor.grabHorizontal = true;
+    m_controlEditor.grabVertical = true;
 
     try
     {
-      cursor.setVisible( true );
+      m_cursor.setVisible( true );
     }
     catch( final Exception e )
     {
@@ -294,7 +281,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     }
     try
     {
-      cursor.setEnabled( true );
+      m_cursor.setEnabled( true );
     }
     catch( final Exception e )
     {
@@ -303,6 +290,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
 
     m_view.getTable().setHeaderVisible( true );
     m_view.getTable().setLinesVisible( true );
+    m_view.getTable().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     getSite().setSelectionProvider( m_view );
     getSite().registerContextMenu( m_menuManager, m_view );
@@ -318,15 +306,16 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
         {
           final IRecord point = (IRecord) selection.getFirstElement();
           if( point != m_profile.getActivePoint() )
-          {
             m_profile.setActivePoint( point );
-          }
         }
       }
     } );
 
-    cursor.addSelectionListener( new SelectionAdapter()
+    m_cursor.addSelectionListener( new SelectionAdapter()
     {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -336,74 +325,57 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
         {
           final IRecord point = (IRecord) element;
           if( point != m_profile.getActivePoint() )
-          {
             m_profile.setActivePoint( point );
-          }
         }
-      }
-    } );
-
-    m_view.getTable().addControlListener( new ControlAdapter()
-    {
-      @Override
-      public void controlResized( final ControlEvent e )
-      {
-        handleSashSizeChanged();
       }
     } );
 
     updateControl();
   }
 
-  protected void handleSashSizeChanged( )
-  {
-    if( m_sashForm.isDisposed() )
-      return;
-
-    final int[] weights = m_sashForm.getWeights();
-    m_settings.put( SETTINGS_SASH_WEIGHT, weights[0] );
-  }
-
+  /**
+   * @see org.eclipse.ui.IWorkbenchPart#setFocus()
+   */
   @Override
   public void setFocus( )
   {
-    if( m_view == null )
-      return;
-
-    final Control control = m_view.getControl();
-    if( control != null && !control.isDisposed() )
-      control.setFocus();
+    if( m_view != null )
+    {
+      final Control control = m_view.getControl();
+      if( (control != null) && !control.isDisposed() )
+        control.setFocus();
+    }
   }
 
   protected void updateControl( )
   {
-    if( m_form == null || m_form.isDisposed() )
+    if( (m_form == null) || m_form.isDisposed() )
       return;
 
-    if( m_profile == null )
+    if( (m_profile == null) )
     {
       m_form.setMessage( Messages.getString( "org.kalypso.model.wspm.ui.view.table.TableView.2" ), IMessageProvider.INFORMATION ); //$NON-NLS-1$
-      setPartName( m_registeredName );
+      this.setPartName( m_registeredName );
+      final GridData tableGrid = (GridData) m_view.getTable().getLayoutData();
+      tableGrid.exclude = true;
 
-      m_sashForm.setMaximizedControl( m_view.getControl() );
       m_view.getTable().setVisible( false );
 
       return;
     }
 
-    m_view.getTable().setVisible( true );
-
     /* Create handlers for this profile */
     setContentDescription( "" ); //$NON-NLS-1$
+    final GridData tableGrid = (GridData) m_view.getTable().getLayoutData();
+    tableGrid.exclude = false;
+    m_view.getTable().setVisible( true );
 
     final IProfilLayerProvider layerProvider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( m_profile.getType() );
     final IComponentUiHandlerProvider handlerProvider = layerProvider.getComponentUiHandlerProvider( m_profile );
     if( m_view.getContentProvider() != null )
-    {
       m_view.setInput( null ); // Reset input in order to avoid double refresh
-    }
 
-    setPartName( Messages.getString( "org.kalypso.model.wspm.ui.view.table.TableView.3", m_profile.getStation() ) ); //$NON-NLS-1$
+    this.setPartName( Messages.getString( "org.kalypso.model.wspm.ui.view.table.TableView.3", m_profile.getStation() ) ); //$NON-NLS-1$
     m_tupleResultContentProvider = new TupleResultContentProvider( handlerProvider );
     m_tupleResultLabelProvider = new TupleResultLabelProvider( m_tupleResultContentProvider );
 
@@ -411,16 +383,28 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     m_view.setLabelProvider( m_tupleResultLabelProvider );
     m_view.setCellModifier( new TupleResultCellModifier( m_tupleResultContentProvider ) );
 
+    // TODO needed? - if an result is empty -> null will be automatically returned
+    // final Feature[] obsFeatures = FeatureSelectionHelper.getAllFeaturesOfType(
+    // KalypsoCorePlugin.getDefault().getSelectionManager(), ObservationFeatureFactory.OM_OBSERVATION );
+    // if( obsFeatures.length > 0 )
+    // m_view.setInput( m_profile.getResult() );
+    // else
+    // m_view.setInput( null );
+
     m_view.setInput( m_profile.getResult() );
     m_form.setMessage( null );
 
     m_view.getControl().getParent().layout();
+
   }
 
+  /**
+   * @see org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater#setAdapter(java.lang.Object)
+   */
   @Override
   public void setAdapter( final IWorkbenchPart part, final IProfilProvider provider )
   {
-    if( m_provider == provider && provider != null )
+    if( (m_provider == provider) && (provider != null) )
       return;
 
     unhookProvider();
@@ -428,9 +412,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     m_provider = provider;
 
     if( m_provider != null )
-    {
       m_provider.addProfilProviderListener( this );
-    }
 
     final IProfil newProfile = m_provider == null ? null : m_provider.getProfil();
     onProfilProviderChanged( m_provider, m_profile, newProfile );
@@ -446,18 +428,14 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
   public void onProfilProviderChanged( final IProfilProvider provider, final IProfil oldProfile, final IProfil newProfile )
   {
     if( m_profile != null )
-    {
       m_profile.removeProfilListener( m_profileListener );
-    }
 
     m_profile = newProfile;
 
     if( m_profile != null )
-    {
       m_profile.addProfilListener( m_profileListener );
-    }
 
-    if( m_form != null && !m_form.isDisposed() )
+    if( (m_form != null) && !m_form.isDisposed() )
     {
       m_form.getDisplay().asyncExec( new Runnable()
       {
@@ -479,34 +457,28 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
 
   protected final void updateProblemView( )
   {
-    if( m_problemView == null )
+    if( m_problemView == null || m_outlineContainer == null || m_outlineContainer.isDisposed() )
       return;
-
-    final Control problemControl = m_problemView.getControl();
-    if( problemControl == null || problemControl.isDisposed() )
-      return;
-
     final int height = m_problemView.updateSections( m_profile );
-
-// final GridData layoutData = (GridData) problemControl.getLayoutData();
-
     if( height < 0 )
     {
-      m_sashForm.setMaximizedControl( m_view.getControl() );
-// layoutData.exclude = true;
-// problemControl.setVisible( false );
+      ((GridData) (m_outlineContainer.getLayoutData())).exclude = true;
+      m_outlineContainer.setVisible( false );
     }
     else
     {
-      m_sashForm.setMaximizedControl( null );
-// layoutData.exclude = false;
-// problemControl.setVisible( true );
-// layoutData.heightHint = Math.min( height, MAX_OUTLINE_HEIGHT );
+      ((GridData) (m_outlineContainer.getLayoutData())).exclude = false;
+      m_outlineContainer.setVisible( true );
+      ((GridData) (m_outlineContainer.getLayoutData())).heightHint = Math.min( height, MAX_OUTLINE_HEIGHT );
     }
 
-// m_view.getControl().getParent().layout();
+    m_view.getControl().getParent().layout();
+
   }
 
+  /**
+   * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
+   */
   @Override
   public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
@@ -516,6 +488,9 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     return super.getAdapter( adapter );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.om.table.command.ITupleResultViewerProvider#getTupleResult()
+   */
   @Override
   public TupleResult getTupleResult( )
   {

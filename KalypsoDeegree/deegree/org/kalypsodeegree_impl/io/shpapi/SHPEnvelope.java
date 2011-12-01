@@ -91,59 +91,59 @@ public class SHPEnvelope implements Serializable
     south = 0.0;
   }
 
-  public SHPEnvelope( final double westbc, final double eastbc, final double northbc, final double southbc )
+  public SHPEnvelope( double westbc, double eastbc, double northbc, double southbc )
   {
-    west = westbc; // west bounding coordinate
-    east = eastbc; // east bounding coordinate
-    north = northbc; // north bounding coordinate
-    south = southbc; // south bounding coordinate
+    this.west = westbc; // west bounding coordinate
+    this.east = eastbc; // east bounding coordinate
+    this.north = northbc; // north bounding coordinate
+    this.south = southbc; // south bounding coordinate
   }
 
   /**
    * Transform from WKBPoint to Rectangle
    */
-  public SHPEnvelope( final SHPPoint min, final SHPPoint max )
+  public SHPEnvelope( SHPPoint min, SHPPoint max )
   {
     // west bounding coordinate = minEsri.x
-    west = min.getX();
+    this.west = min.getX();
     // east bounding coordinate = maxEsri.x
-    east = max.getX();
+    this.east = max.getX();
     // north bounding coordinate = maxEsri.y
-    north = max.getY();
+    this.north = max.getY();
     // south bounding coordinate = minEsri.y
-    south = min.getY();
+    this.south = min.getY();
   }
 
   /**
    * create from an existing SHPEnvelope
    */
-  public SHPEnvelope( final SHPEnvelope env )
+  public SHPEnvelope( SHPEnvelope env )
   {
     // west bounding coordinate = Ebb.min.x
-    west = env.west;
+    this.west = env.west;
     // east bounding coordinate = Ebb.max.x
-    east = env.east;
+    this.east = env.east;
     // north bounding coordinate = Ebb.max.y
-    north = env.north;
+    this.north = env.north;
     // south bounding coordinate = Ebb.min.y
-    south = env.south;
+    this.south = env.south;
   }
 
-  public SHPEnvelope( final byte[] recBuf )
+  public SHPEnvelope( byte[] recBuf )
   {
     // west bounding coordinate = xmin of rec-Box
-    west = ByteUtils.readLEDouble( recBuf, recWest );
+    this.west = ByteUtils.readLEDouble( recBuf, recWest );
     // east bounding coordinate = xmax of rec-Box
-    east = ByteUtils.readLEDouble( recBuf, recEast );
+    this.east = ByteUtils.readLEDouble( recBuf, recEast );
     // north bounding coordinate = ymax of rec-Box
-    north = ByteUtils.readLEDouble( recBuf, recNorth );
+    this.north = ByteUtils.readLEDouble( recBuf, recNorth );
     // south bounding coordinate = ymin of rec-Box
-    south = ByteUtils.readLEDouble( recBuf, recSouth );
+    this.south = ByteUtils.readLEDouble( recBuf, recSouth );
   }
 
   public byte[] writeLESHPEnvelope( )
   {
-    final byte[] recBuf = new byte[8 * 4];
+    byte[] recBuf = new byte[8 * 4];
     // west bounding coordinate = xmin of rec-Box
     ByteUtils.writeLEDouble( recBuf, 0, west );
     // south bounding coordinate = ymin of rec-Box
@@ -158,7 +158,7 @@ public class SHPEnvelope implements Serializable
 
   public byte[] writeBESHPEnvelope( )
   {
-    final byte[] recBuf = new byte[8 * 4];
+    byte[] recBuf = new byte[8 * 4];
     // west bounding coordinate = xmin of rec-Box
     ByteUtils.writeBEDouble( recBuf, 0, west );
     // south bounding coordinate = ymin of rec-Box
@@ -174,7 +174,7 @@ public class SHPEnvelope implements Serializable
   @Override
   public String toString( )
   {
-    return "RECTANGLE" + "\n[west: " + west + "]" + "\n[east: " + east + "]" + "\n[north: " + north + "]" + "\n[south: " + south + "]";
+    return "RECTANGLE" + "\n[west: " + this.west + "]" + "\n[east: " + this.east + "]" + "\n[north: " + this.north + "]" + "\n[south: " + this.south + "]";
   }
 
 }

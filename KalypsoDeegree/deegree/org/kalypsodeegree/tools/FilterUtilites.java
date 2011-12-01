@@ -71,7 +71,7 @@ public class FilterUtilites
    * @throws exception
    *           throws a OperationNotSupportedException if the filters could not be merched.
    */
-  public static Filter mergeFilters( final Filter filter1, final Filter filter2 ) throws OperationNotSupportedException
+  public static Filter mergeFilters( Filter filter1, Filter filter2 ) throws OperationNotSupportedException
   {
     if( filter1 != null && filter2 == null )
       return filter1;
@@ -87,19 +87,19 @@ public class FilterUtilites
       throw new OperationNotSupportedException( "filters are not of the same type and can not be merged!" );
   }
 
-  private static Filter mergeFeatureFilters( final FeatureFilter filter1, final FeatureFilter filter2 )
+  private static Filter mergeFeatureFilters( FeatureFilter filter1, FeatureFilter filter2 )
   {
     final ArrayList<FeatureId> featureIds1 = filter1.getFeatureIds();
     final ArrayList<FeatureId> featureIds2 = filter2.getFeatureIds();
     final FeatureFilter mergedFeatureIds = new FeatureFilter();
-    for( final FeatureId id : featureIds1 )
+    for( FeatureId id : featureIds1 )
       mergedFeatureIds.addFeatureId( id );
-    for( final FeatureId id : featureIds2 )
+    for( FeatureId id : featureIds2 )
       mergedFeatureIds.addFeatureId( id );
     return mergedFeatureIds;
   }
 
-  private static Filter mergeComplexFilters( final ComplexFilter filter1, final ComplexFilter filter2 )
+  private static Filter mergeComplexFilters( ComplexFilter filter1, ComplexFilter filter2 )
   {
     final Operation op1 = filter1.getOperation();
     final Operation op2 = filter2.getOperation();
@@ -125,7 +125,7 @@ public class FilterUtilites
    * @throws exception
    *           throws an FilterConstructionException if the operation was not successful.
    */
-  public Filter removeFilter( final Filter originalFilter, final Filter filterToRemove ) throws OperationNotSupportedException
+  public Filter removeFilter( Filter originalFilter, Filter filterToRemove ) throws OperationNotSupportedException
   {
     // TODO remove operation: visit all operations and check for equality. If they are equal remove filter element.
     originalFilter.getClass();

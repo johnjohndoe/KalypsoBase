@@ -199,7 +199,7 @@ public class GrafikAchsen
 
     private final int m_id;
 
-    public GrafikAchse( final int id, final String name )
+    public GrafikAchse( int id, String name )
     {
       m_id = id;
       m_name = name;

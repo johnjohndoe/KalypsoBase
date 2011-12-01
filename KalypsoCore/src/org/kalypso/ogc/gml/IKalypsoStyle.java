@@ -40,13 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
-import java.net.URL;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.swt.widgets.Shell;
 import org.kalypso.template.types.StyledLayerType.Style;
 
 /**
@@ -68,8 +65,6 @@ public interface IKalypsoStyle extends INamedStyleElement
 
   void dispose( );
 
-  IStatus save( Shell shell );
-
   void save( IProgressMonitor monitor ) throws CoreException;
 
   boolean isDirty( );
@@ -77,12 +72,4 @@ public interface IKalypsoStyle extends INamedStyleElement
   void fillStyleType( List<Style> stylesList, Style styleType );
 
   boolean isLoaded( );
-
-  URL getContext( );
-
-  boolean isResetable( );
-
-  IStatus reset( Shell shell );
-
-  boolean isCatalogStyle( );
 }

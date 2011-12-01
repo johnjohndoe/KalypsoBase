@@ -61,7 +61,7 @@ import org.kalypso.metadoc.KalypsoMetaDocPlugin;
 
 /**
  * Handles the extension points of this plugin.
- * 
+ *
  * @author schlienger
  */
 public class MetadocExtensions

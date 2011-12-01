@@ -40,62 +40,46 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.colorMapEntryTable;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 
 /**
- * A label provider for the color map entry table.
+ * Label provider for the ColorMapEntryTable
  * 
- * @author Andreas Doemming
- * @author Holger Albert
+ * @see org.eclipse.jface.viewers.LabelProvider
  */
 public class ColorMapEntryLabelProvider extends LabelProvider implements ITableLabelProvider
 {
-  /**
-   * The registry of the images.
-   */
-  private final Map<java.awt.Color, Image> m_images;
-
-  /**
-   * The constructor.
-   */
-  public ColorMapEntryLabelProvider( )
-  {
-    m_images = new HashMap<java.awt.Color, Image>();
-  }
-
   /**
    * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
    */
   @Override
   public String getColumnText( final Object element, final int columnIndex )
   {
+    String result = ""; //$NON-NLS-1$
     final ColorMapEntry colorMapEntry = (ColorMapEntry) element;
-
     switch( columnIndex )
     {
       case 0:
-        return colorMapEntry.getLabel();
+        result = colorMapEntry.getLabel();
+        break;
       case 1:
-        return String.format( "%.1f", colorMapEntry.getQuantity() ); //$NON-NLS-1$
+        result = colorMapEntry.getQuantity() + ""; //$NON-NLS-1$
+        break;
       case 2:
+        // no label
         break;
       case 3:
-        return String.format( "%.1f", colorMapEntry.getOpacity() ); //$NON-NLS-1$
+        result = colorMapEntry.getOpacity() + ""; //$NON-NLS-1$
+        break;
       default:
         break;
     }
-
-    return "";
+    return result;
   }
 
   /**
@@ -104,67 +88,18 @@ public class ColorMapEntryLabelProvider extends LabelProvider implements ITableL
   @Override
   public Image getColumnImage( final Object element, final int columnIndex )
   {
-    if( !(element instanceof ColorMapEntry) )
-      return null;
-
-    if( columnIndex != 2 )
-      return null;
-
-    /* Things, that needs to be disposed. */
-    Color swtColor = null;
-    GC gc = null;
-
-    try
+    Image image = null;
+    if( columnIndex == 2 )
     {
-      /* Cast. */
-      final ColorMapEntry entry = (ColorMapEntry) element;
-
-      /* Get the display. */
-      final Display display = PlatformUI.getWorkbench().getDisplay();
-
-      /* Get the color. */
-      final java.awt.Color awtColor = entry.getColor();
-      if( m_images.containsKey( awtColor ) )
-        return m_images.get( awtColor );
-
-      swtColor = new Color( display, awtColor.getRed(), awtColor.getGreen(), awtColor.getBlue() );
-
-      /* Create the image. */
-      final Image image = new Image( display, 25, 15 );
-      gc = new GC( image );
-
-      /* Change the background of the image. */
-      gc.setBackground( swtColor );
-      gc.setAlpha( awtColor.getAlpha() );
+      image = new Image( ColorMapEntryTable.table.getDisplay(), 25, 15 );
+      final GC gc = new GC( image );
+      final java.awt.Color color = ((ColorMapEntry) element).getColor();
+      gc.setBackground( new Color( ColorMapEntryTable.table.getDisplay(), color.getRed(), color.getGreen(), color.getBlue() ) );
+      gc.setAlpha( color.getAlpha() );
       gc.fillRectangle( image.getBounds() );
-
-      /* Store the image. */
-      m_images.put( awtColor, image );
-
-      /* Return it. */
-      return image;
+      gc.dispose();
     }
-    finally
-    {
-      /* Dispose the swt color. */
-      if( swtColor != null )
-        swtColor.dispose();
-
-      /* Dispose the gc. */
-      if( gc != null )
-        gc.dispose();
-    }
+    return image;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.BaseLabelProvider#dispose()
-   */
-  @Override
-  public void dispose( )
-  {
-    for( final Image image : m_images.values() )
-      image.dispose();
-
-    super.dispose();
-  }
 }

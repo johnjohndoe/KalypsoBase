@@ -40,97 +40,50 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands.menu;
 
-import java.awt.Toolkit;
-import java.awt.datatransfer.StringSelection;
-
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.commons.java.lang.Arrays;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.ui.PlatformUI;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
-import org.kalypso.zml.ui.table.model.IZmlTableRow;
-import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
+import org.kalypso.zml.ui.table.model.IZmlTableCell;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlCommandCopyValue extends AbstractHandler
 {
+  /**
+   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+   */
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
+    final IZmlTable table = ZmlHandlerUtil.getTable( event );
+    final IZmlTableSelectionHandler selection = table.getSelectionHandler();
+    final IZmlTableCell cell = selection.findActiveCellByPosition();
+    final IZmlValueReference reference = cell.getValueReference();
+
     try
     {
-      final IZmlTable table = ZmlHandlerUtil.getTable( event );
-      final IZmlTableSelectionHandler selection = table.getSelectionHandler();
+      final Clipboard clipboard = new Clipboard( PlatformUI.getWorkbench().getDisplay() );
+      final Object value = reference.getValue();
 
-      final StringBuffer buffer = new StringBuffer();
-
-      final IZmlTableColumn[] columns = table.getColumns();
-      for( final IZmlTableColumn column : columns )
-      {
-        if( !column.isVisible() )
-          continue;
-
-        final String text = column.getTableViewerColumn().getColumn().getText();
-        buffer.append( text );
-
-        if( !Arrays.isLastItem( columns, column ) )
-          buffer.append( "\t" );
-      }
-      buffer.append( "\n" );
-
-      final IZmlTableRow[] rows = selection.getSelectedRows();
-      for( final IZmlTableRow row : rows )
-      {
-        for( final IZmlTableColumn column : columns )
-        {
-          if( !column.isVisible() )
-            continue;
-
-          final ZmlLabelProvider provider = new ZmlLabelProvider( row.getModelRow(), column, new ZmlRule[] {} );
-          buffer.append( provider.getText() );
-
-// if( column.isIndexColumn() )
-// {
-// final Date date = row.getModelRow().getIndexValue();
-//            final SimpleDateFormat sdf = new SimpleDateFormat( "dd.MM.yyyy HH:mm" ); //$NON-NLS-1$
-// sdf.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
-//
-// buffer.append( sdf.format( date ) );
-// }
-// else
-// {
-//
-// final IZmlValueReference reference = row.getValueReference( column );
-// final Number value = reference.getValue();
-// final String text = String.format( "%.3f", value.doubleValue() );
-//
-// buffer.append( text );
-// }
-
-          if( !Arrays.isLastItem( columns, column ) )
-            buffer.append( "\t" );
-        }
-
-        buffer.append( "\n" );
-      }
-
-      final StringSelection clipboardSelection = new StringSelection( buffer.toString() );
-      Toolkit.getDefaultToolkit().getSystemClipboard().setContents( clipboardSelection, clipboardSelection );
+      final TextTransfer textTransfer = TextTransfer.getInstance();
+      clipboard.setContents( new Object[] { value.toString() }, new Transfer[] { textTransfer } );
 
       return Status.OK_STATUS;
     }
-    catch( final Exception ex )
+    catch( final SensorException e )
     {
-      ex.printStackTrace();
-
-      throw new ExecutionException( "Kopieren der Werte in die Zwischenablage fehlgeschlagen.", ex );
+      throw new ExecutionException( "Einfügen des Wertes in die Zwischenablage fehlgeschlagen.", e );
     }
   }
 

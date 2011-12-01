@@ -42,31 +42,54 @@ package org.kalypso.zml.ui.chart.layer.provider;
 
 import java.net.URL;
 
-import org.kalypso.zml.core.diagram.base.provider.observation.DefaultRequestHandler;
-import org.kalypso.zml.core.diagram.data.IRequestHandler;
-import org.kalypso.zml.core.diagram.data.IZmlLayerProvider;
+import org.apache.commons.lang.StringUtils;
+import org.kalypso.zml.core.diagram.data.ZmlObservationDataHandler;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlSinglePointLayer;
+import org.kalypso.zml.ui.core.provider.observation.DefaultRequestHandler;
+import org.kalypso.zml.ui.core.provider.observation.SynchronousObservationProvider;
 
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
+import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlSinglePointProvider extends AbstractLayerProvider implements IZmlLayerProvider
+public class ZmlSinglePointProvider extends AbstractLayerProvider implements ILayerProvider
 {
   public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlSinglePointProvider"; //$NON-NLS-1$
 
+  /**
+   * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
+   */
   @Override
   public IChartLayer getLayer( final URL context )
   {
-    return new ZmlSinglePointLayer( this, getStyleSet(), context );
-  }
+    final IParameterContainer parameters = getParameterContainer();
+    final String href = parameters.getParameterValue( "href", "" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-  @Override
-  public IRequestHandler getRequestHandler( )
-  {
-    return new DefaultRequestHandler();
+    final ZmlSinglePointLayer layer = new ZmlSinglePointLayer( this, getStyleSet() );
+
+    if( !StringUtils.isEmpty( href ) )
+    {
+      try
+      {
+        final SynchronousObservationProvider provider = new SynchronousObservationProvider( context, href, new DefaultRequestHandler() );
+
+        final ZmlObservationDataHandler handler = new ZmlObservationDataHandler( layer, href );
+        handler.setObservation( provider.getObservation() );
+
+        layer.setDataHandler( handler );
+      }
+      catch( final Throwable t )
+      {
+        t.printStackTrace();
+      }
+    }
+
+    return layer;
+
   }
 
 }

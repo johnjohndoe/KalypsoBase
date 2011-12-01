@@ -46,21 +46,21 @@ package org.kalypso.model.wspm.ui.view.chart.color;
  */
 public interface IProfilColorSet
 {
-  String COLOUR_GELAENDE_MARKED = "profil.color.gelaende.marked"; //$NON-NLS-1$
+  public final static String COLOUR_GELAENDE_MARKED = "profil.color.gelaende.marked"; //$NON-NLS-1$
 
-  String COLOUR_AXIS_FOREGROUND = "profil.color.axis.foreground"; //$NON-NLS-1$
+  public final static String COLOUR_AXIS_FOREGROUND = "profil.color.axis.foreground"; //$NON-NLS-1$
 
-  String COLOUR_AXIS_BACKGROUND = "profil.color.axis.background"; //$NON-NLS-1$
+  public final static String COLOUR_AXIS_BACKGROUND = "profil.color.axis.background"; //$NON-NLS-1$
 
-  String COLOUR_STATIONS = "profil.color.stations"; //$NON-NLS-1$
+  public final static String COLOUR_STATIONS = "profil.color.stations"; //$NON-NLS-1$
 
-  String COLOUR_BRUECKE = "profil.color.bruecke"; //$NON-NLS-1$
+  public final static String COLOUR_BRUECKE = "profil.color.bruecke"; //$NON-NLS-1$
 
-  String COLOUR_DURCHLASS = "profil.color.durchlass"; //$NON-NLS-1$
+  public final static String COLOUR_DURCHLASS = "profil.color.durchlass"; //$NON-NLS-1$
 
-  String COLOUR_WEHR = "profil.color.durchlass"; //$NON-NLS-1$
+  public final static String COLOUR_WEHR = "profil.color.durchlass"; //$NON-NLS-1$
 
-  String COLOUR_WSP = "profil.color.wsp"; //$NON-NLS-1$
+  public final static String COLOUR_WSP = "profil.color.wsp"; //$NON-NLS-1$
 
-  String COLOUR = "profil.color."; //$NON-NLS-1$
+  public final static String COLOUR_ = "profil.color."; //$NON-NLS-1$
 }

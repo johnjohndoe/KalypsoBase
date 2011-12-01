@@ -65,17 +65,18 @@ public class SurfaceLineSymbolizer_Impl extends Symbolizer_Impl implements Surfa
    */
   public SurfaceLineSymbolizer_Impl( )
   {
-    this( new LineColorMap_Impl(), null, UOM.pixel );
+    this( new LineColorMap_Impl(), null, 0, 99E9, UOM.pixel );
   }
 
   /**
    * constructor initializing the class with the <PolygonSymbolizer>
    */
-  public SurfaceLineSymbolizer_Impl( final LineColorMap colorMap, final Geometry geometry, final UOM uom )
+  public SurfaceLineSymbolizer_Impl( LineColorMap colorMap, final Geometry geometry, final double min, final double max, final UOM uom )
   {
     super( geometry, uom );
-
     setColorMap( colorMap );
+    setMinScaleDenominator( min );
+    setMaxScaleDenominator( max );
   }
 
   @Override
@@ -95,7 +96,7 @@ public class SurfaceLineSymbolizer_Impl extends Symbolizer_Impl implements Surfa
    *      org.kalypsodeegree.model.feature.Feature)
    */
   @Override
-  public void paint( final GC gc, final Feature feature ) throws FilterEvaluationException
+  public void paint( GC gc, Feature feature ) throws FilterEvaluationException
   {
     final Rectangle clipping = gc.getClipping();
 
@@ -107,12 +108,12 @@ public class SurfaceLineSymbolizer_Impl extends Symbolizer_Impl implements Surfa
     final LineColorMapEntry[] colorMapEntries = m_colorMap.getColorMap();
 
     // the black border
-    final java.awt.Color startColor = colorMapEntries[0].getStroke().getStroke( null );
+    java.awt.Color startColor = colorMapEntries[0].getStroke().getStroke( null );
     gc.setForeground( new Color( gc.getDevice(), startColor.getRed(), startColor.getGreen(), startColor.getBlue() ) );
     gc.drawLine( clipping.x, clipping.y, clipping.width, clipping.height / 2 );
 
     // the black border
-    final java.awt.Color endColor = colorMapEntries[colorMapEntries.length - 1].getStroke().getStroke( null );
+    java.awt.Color endColor = colorMapEntries[colorMapEntries.length - 1].getStroke().getStroke( null );
     gc.setForeground( new Color( gc.getDevice(), endColor.getRed(), endColor.getGreen(), endColor.getBlue() ) );
     gc.drawLine( clipping.x, clipping.height / 2, clipping.width, clipping.height );
 
@@ -130,6 +131,7 @@ public class SurfaceLineSymbolizer_Impl extends Symbolizer_Impl implements Surfa
   public String toString( )
   {
     final StringBuffer sb = new StringBuffer();
+    sb.append( "scale constraint:  >=" + getMinScaleDenominator() + " AND <" + getMaxScaleDenominator() + "\n" );
     sb.append( "<SurfaceLineSymbolizer xmlns:sldExt=\"" + SLDFactory.SLDNS_EXT + "\"" );
 
     final UOM uom = getUom();

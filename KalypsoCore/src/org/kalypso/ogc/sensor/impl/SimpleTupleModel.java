@@ -41,7 +41,6 @@
 package org.kalypso.ogc.sensor.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
@@ -66,7 +65,10 @@ public class SimpleTupleModel extends AbstractTupleModel
    */
   public static final ITupleModel EMPTY_TUPPLEMODEL = new SimpleTupleModel( new IAxis[0] );
 
-  private final List<Object[]> m_tuples = new ArrayList<Object[]>();
+  /**
+   * The list of tuples.
+   */
+  private List<Object[]> m_tuples;
 
   /**
    * The constructor. The model will contain no data.
@@ -134,7 +136,11 @@ public class SimpleTupleModel extends AbstractTupleModel
   {
     super( axes );
 
-    m_tuples.addAll( Arrays.asList( values ) );
+    m_tuples = new ArrayList<Object[]>();
+    for( int i = 0; i < values.length; i++ )
+    {
+      m_tuples.add( values[i] );
+    }
   }
 
   /**
@@ -226,9 +232,9 @@ public class SimpleTupleModel extends AbstractTupleModel
   {
     final IAxis[] axes = getAxes();
 
-    m_tuples.clear();
-    clearAxesPositions();
+    m_tuples = new ArrayList<Object[]>();
 
+    clearAxesPositions();
     for( int index = 0; index < axes.length; index++ )
     {
       mapAxisToPos( axes[index], index );
@@ -265,9 +271,9 @@ public class SimpleTupleModel extends AbstractTupleModel
       return;
     }
 
-    m_tuples.clear();
-    clearAxesPositions();
+    m_tuples = new ArrayList<Object[]>();
 
+    clearAxesPositions();
     for( int index = 0; index < axes.length; index++ )
     {
       mapAxisToPos( axes[index], index );

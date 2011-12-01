@@ -110,13 +110,13 @@ public class WMSThemePropertyPage extends PropertyPage implements IWorkbenchProp
     } );
 
     /* Last request */
-    final Label lastRequestLabel = new Label( composite, SWT.NONE );
+    Label lastRequestLabel = new Label( composite, SWT.NONE );
     lastRequestLabel.setText( "Letzte Anfrage" );
     lastRequestLabel.setLayoutData( new GridData( SWT.FILL, SWT.TOP, false, false ) );
 
     /* Read only, as WMS-Theme does not support changing the last request. */
     final Text lastRequestText = new Text( composite, SWT.READ_ONLY | SWT.MULTI | SWT.BORDER | SWT.WRAP );
-    final GridData lastRequestData = new GridData( SWT.FILL, SWT.TOP, true, false );
+    GridData lastRequestData = new GridData( SWT.FILL, SWT.TOP, true, false );
     lastRequestData.widthHint = 200;
     lastRequestText.setLayoutData( lastRequestData );
     String lastRequest = theme.getLastRequest();
@@ -184,7 +184,7 @@ public class WMSThemePropertyPage extends PropertyPage implements IWorkbenchProp
     setErrorMessage( null );
 
     /* Revalidate and set message accoring to result. */
-    final String msg = validate();
+    String msg = validate();
     if( msg != null )
     {
       setValid( false );
@@ -212,7 +212,7 @@ public class WMSThemePropertyPage extends PropertyPage implements IWorkbenchProp
    * @param source
    *          The source of the theme.
    */
-  protected void setThemeSource( final String themeSource )
+  protected void setThemeSource( String themeSource )
   {
     m_themeSource = themeSource;
 
@@ -225,7 +225,7 @@ public class WMSThemePropertyPage extends PropertyPage implements IWorkbenchProp
    * @param lastRequest
    *          The last request of the theme.
    */
-  protected void setLastRequest( final String lastRequest )
+  protected void setLastRequest( String lastRequest )
   {
     m_lastRequest = lastRequest;
 

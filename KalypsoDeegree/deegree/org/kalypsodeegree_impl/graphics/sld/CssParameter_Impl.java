@@ -45,7 +45,7 @@ import org.kalypsodeegree_impl.tools.Debug;
 /**
  * The simple SVG/CSS2 styling parameters are given with the CssParameter element, which is defined as follows:
  * 
- * <pre>
+ * <pre> 
  *  <xs:element name="CssParameter" type="sld:ParameterValueType"/>
  *     <xs:complexType name="ParameterValueType" mixed="true">
  *        <xs:choice minOccurs="0" maxOccurs="unbounded">
@@ -94,10 +94,10 @@ class CssParameter_Impl implements CssParameter, Marshallable
   /**
    * constructor initializing the class with the <CssParameter>
    */
-  CssParameter_Impl( final String name, final ParameterValueType pvt )
+  CssParameter_Impl( String name, ParameterValueType pvt )
   {
-    m_name = name;
-    m_pvt = pvt;
+    this.m_name = name;
+    this.m_pvt = pvt;
   }
 
   /**
@@ -107,7 +107,7 @@ class CssParameter_Impl implements CssParameter, Marshallable
    * @return the value of the name attribute of the CssParameter
    */
   @Override
-  public String getName( )
+  public String getName()
   {
     return m_name;
   }
@@ -120,9 +120,9 @@ class CssParameter_Impl implements CssParameter, Marshallable
    *          the value of the name attribute of the CssParameter
    */
   @Override
-  public void setName( final String name )
+  public void setName( String name )
   {
-    m_name = name;
+    this.m_name = name;
   }
 
   /**
@@ -132,7 +132,7 @@ class CssParameter_Impl implements CssParameter, Marshallable
    * @return the mixed content of the element
    */
   @Override
-  public ParameterValueType getValue( )
+  public ParameterValueType getValue()
   {
     return m_pvt;
   }
@@ -145,9 +145,9 @@ class CssParameter_Impl implements CssParameter, Marshallable
    *          the mixed content of the element
    */
   @Override
-  public void setValue( final ParameterValueType value )
+  public void setValue( ParameterValueType value )
   {
-    m_pvt = value;
+    this.m_pvt = value;
   }
 
   /**
@@ -161,7 +161,7 @@ class CssParameter_Impl implements CssParameter, Marshallable
    *           if the evaluations fails
    */
   @Override
-  public String getValue( final Feature feature ) throws FilterEvaluationException
+  public String getValue( Feature feature ) throws FilterEvaluationException
   {
     return m_pvt.evaluate( feature );
   }
@@ -174,11 +174,11 @@ class CssParameter_Impl implements CssParameter, Marshallable
    *          CssParameter-Value to be set
    */
   @Override
-  public void setValue( final String value )
+  public void setValue( String value )
   {
     ParameterValueType pvt = null;
     pvt = StyleFactory.createParameterValueType( "" + value );
-    m_pvt = pvt;
+    this.m_pvt = pvt;
   }
 
   /**
@@ -187,13 +187,13 @@ class CssParameter_Impl implements CssParameter, Marshallable
    * @return xml representation of the CssParameter
    */
   @Override
-  public String exportAsXML( )
+  public String exportAsXML()
   {
     Debug.debugMethodBegin();
 
-    final StringBuffer sb = new StringBuffer( "<CssParameter name=" );
+    StringBuffer sb = new StringBuffer( "<CssParameter name=" );
     sb.append( "'" + m_name + "'>" );
-    sb.append( ((Marshallable) m_pvt).exportAsXML() );
+    sb.append( ( (Marshallable)m_pvt ).exportAsXML() );
     sb.append( "</CssParameter>" );
 
     Debug.debugMethodEnd();

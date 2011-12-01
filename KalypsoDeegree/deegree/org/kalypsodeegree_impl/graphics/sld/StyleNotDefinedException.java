@@ -45,17 +45,17 @@ public class StyleNotDefinedException extends Exception
     super();
   }
 
-  public StyleNotDefinedException( final Throwable cause )
+  public StyleNotDefinedException( Throwable cause )
   {
     super( cause );
   }
 
-  public StyleNotDefinedException( final String message, final Throwable cause )
+  public StyleNotDefinedException( String message, Throwable cause )
   {
     super( message, cause );
   }
 
-  public StyleNotDefinedException( final String message )
+  public StyleNotDefinedException( String message )
   {
     super( message );
   }

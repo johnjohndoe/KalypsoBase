@@ -47,7 +47,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.eclipse.core.runtime.Assert;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
@@ -56,7 +55,6 @@ import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.template.types.StyledLayerType.Property;
 import org.kalypso.template.types.StyledLayerType.Style;
 import org.kalypso.ui.i18n.Messages;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 public class AddThemeCommand implements IThemeCommand
 {
@@ -78,26 +76,6 @@ public class AddThemeCommand implements IThemeCommand
 
   private StyledLayerType m_layer;
 
-  private final GMLXPath m_xpath;
-
-  private boolean m_shouldActivateTheme = true;
-
-  /**
-   * Same as {@link #AddThemeCommand(IKalypsoLayerModell, String, String, String, String)}, but without feature path.
-   */
-  public AddThemeCommand( final IKalypsoLayerModell model, final String name, final String type, final String source )
-  {
-    this( model, name, type, null, null, source );
-  }
-
-  /**
-   * Sets if the theme should be activated after it is added to the map.
-   */
-  public void setShouldActivateTheme( final boolean shouldActivateTheme )
-  {
-    m_shouldActivateTheme = shouldActivateTheme;
-  }
-
   /**
    * This command adds a new theme to a map.
    * 
@@ -118,41 +96,9 @@ public class AddThemeCommand implements IThemeCommand
    */
   public AddThemeCommand( final IKalypsoLayerModell model, final String name, final String type, final String featurePath, final String source )
   {
-    this( model, name, type, null, featurePath, source );
-  }
-
-  /**
-   * This command adds a new theme to a map.
-   * 
-   * @param model
-   *          active GisTemplateMapModell from the active Map
-   * @param name
-   *          name of the layer
-   * @param type
-   *          type of source (must be a valid loader) ex.: wms, wfs, shape, etc.
-   * @param featureXPath
-   *          the feature path in the gml workspace
-   * @param source
-   *          a String having keywords and (paired values) depending on the Loader context
-   * @param style
-   *          name of the style
-   * @param styleLocation
-   *          a valid resource path (of the used plug-in or a valid URL )
-   */
-  public AddThemeCommand( final IKalypsoLayerModell model, final String name, final String type, final GMLXPath featureXPath, final String source )
-  {
-    this( model, name, type, featureXPath, null, source );
-  }
-
-  private AddThemeCommand( final IKalypsoLayerModell model, final String name, final String type, final GMLXPath featureXPath, final String featurePath, final String source )
-  {
-    /* Only one path should be set */
-    Assert.isTrue( featureXPath == null || featurePath == null );
-
     m_mapModell = model;
     m_name = name;
     m_type = type;
-    m_xpath = featureXPath;
     m_featurePath = featurePath;
     m_source = source;
   }
@@ -181,7 +127,7 @@ public class AddThemeCommand implements IThemeCommand
   @Override
   public String getDescription( )
   {
-    return Messages.getString( "org.kalypso.ui.action.AddThemeCommand.0" ); //$NON-NLS-1$
+    return Messages.getString("org.kalypso.ui.action.AddThemeCommand.0"); //$NON-NLS-1$
   }
 
   private StyledLayerType init( )
@@ -190,12 +136,7 @@ public class AddThemeCommand implements IThemeCommand
 
     final StyledLayerType layer = GisTemplateHelper.OF_TEMPLATE_TYPES.createStyledLayerType();
     layer.setHref( m_source );
-
-    if( m_xpath != null )
-      layer.setFeatureXPath( m_xpath.toString() );
-    else
-      layer.setFeaturePath( m_featurePath );
-
+    layer.setFeaturePath( m_featurePath );
     layer.setName( m_name );
     layer.setLinktype( m_type );
     layer.setId( "ID_" + id ); //$NON-NLS-1$
@@ -234,9 +175,7 @@ public class AddThemeCommand implements IThemeCommand
   {
     m_layer = init();
     m_theme = m_mapModell.insertLayer( m_layer, 0 );
-
-    if( m_shouldActivateTheme )
-      m_mapModell.activateTheme( m_theme );
+    m_mapModell.activateTheme( m_theme );
   }
 
   /**

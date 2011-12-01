@@ -47,7 +47,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -96,7 +97,8 @@ public abstract class AbstractAdvancedEditModeMovementDelegate implements IAdvan
   {
     return m_results;
   }
-
+  
+  
   protected IAdvancedEditWidget getWidget( )
   {
     return m_widget;
@@ -149,7 +151,7 @@ public abstract class AbstractAdvancedEditModeMovementDelegate implements IAdvan
         results.add( new AdvancedEditWidgetResult( feature, result ) );
       }
       else
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
 
     m_results = results.toArray( new IAdvancedEditWidgetResult[] {} );
@@ -166,7 +168,7 @@ public abstract class AbstractAdvancedEditModeMovementDelegate implements IAdvan
   {
     if( ArrayUtils.isEmpty( polygons ) )
       return false;
-
+    
     for( final IAdvancedEditWidgetResult result : polygons )
     {
       final Polygon polygon = (Polygon) result.getGeometry();
@@ -186,7 +188,7 @@ public abstract class AbstractAdvancedEditModeMovementDelegate implements IAdvan
 // {
 // continue;
 // }
-//
+//        
 // final Geometry intersection = p1.intersection( p2 );
 // final double area = intersection.getArea();
 // if( intersection instanceof Polygon || intersection instanceof MultiPolygon )
@@ -211,11 +213,11 @@ public abstract class AbstractAdvancedEditModeMovementDelegate implements IAdvan
       {
         try
         {
-          final FeatureChange[] myChanges = m_provider.getAsFeatureChanges( result );
-          for( final FeatureChange change : myChanges )
-          {
-            changes.add( change );
-          }
+        final FeatureChange[] myChanges = m_provider.getAsFeatureChanges( result );
+        for( final FeatureChange change : myChanges )
+        {
+          changes.add( change );
+        }
         }
         catch( final CoreException e )
         {
@@ -233,5 +235,6 @@ public abstract class AbstractAdvancedEditModeMovementDelegate implements IAdvan
       }
     }
   }
+
 
 }

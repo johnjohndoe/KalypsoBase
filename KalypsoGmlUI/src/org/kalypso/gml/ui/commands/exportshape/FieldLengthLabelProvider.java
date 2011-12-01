@@ -40,23 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.ui.commands.exportshape;
 
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.kalypso.shape.ShapeDataException;
 import org.kalypso.shape.dbf.IDBFValue;
 
 /**
  * @author Gernot
  */
-public class FieldLengthLabelProvider extends FieldLabelProvider
+public class FieldLengthLabelProvider extends ColumnLabelProvider
 {
-  public FieldLengthLabelProvider( )
-  {
-  }
-
-  public FieldLengthLabelProvider( final IFieldProvider provider )
-  {
-    super( provider );
-  }
-
   /**
    * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
    */
@@ -67,7 +59,7 @@ public class FieldLengthLabelProvider extends FieldLabelProvider
     {
       final IDBFValue value = (IDBFValue) element;
       final short length = value.getField().getLength();
-      return String.format( "%d", length ); //$NON-NLS-1$
+      return String.format( "%d", length );
     }
     catch( final ShapeDataException e )
     {

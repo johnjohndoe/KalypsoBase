@@ -45,11 +45,11 @@ public class StreamGobbler extends Thread
    * The constructor.
    * 
    * @param is
-   *          The input stream to handle.
+   *            The input stream to handle.
    * @param type
-   *          The type of the stream.
+   *            The type of the stream.
    * @param debug
-   *          True, if the stream should be written to the console.
+   *            True, if the stream should be written to the console.
    */
   public StreamGobbler( final InputStream is, final String type, final boolean debug )
   {
@@ -60,9 +60,9 @@ public class StreamGobbler extends Thread
 
   /**
    * @param output
-   *          flush input stream to output stream...
+   *            flush input stream to output stream...
    */
-  public StreamGobbler( final InputStream is, final String type, final boolean debug, final PrintStream output )
+  public StreamGobbler( final InputStream is, final String type, final boolean debug, PrintStream output )
   {
     m_is = is;
     m_type = type;
@@ -72,9 +72,9 @@ public class StreamGobbler extends Thread
 
   /**
    * @param output
-   *          flush input stream to output stream...
+   *            flush input stream to output stream...
    */
-  public StreamGobbler( final InputStream is, final String type, final boolean debug, final MyPrintStream output )
+  public StreamGobbler( final InputStream is, final String type, final boolean debug, MyPrintStream output )
   {
     m_is = is;
     m_type = type;

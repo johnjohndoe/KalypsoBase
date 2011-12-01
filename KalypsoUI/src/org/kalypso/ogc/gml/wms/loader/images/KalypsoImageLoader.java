@@ -129,7 +129,7 @@ public class KalypsoImageLoader extends Job
       /* Load the image. This could take a while. */
       m_buffer = m_provider.getImage( m_width, m_height, m_bbox );
 
-      return new Status( IStatus.OK, KalypsoGisPlugin.getId(), Messages.getString( "org.kalypso.ogc.gml.wms.loader.images.KalypsoImageLoader.2" ) ); //$NON-NLS-1$
+      return StatusUtilities.createOkStatus( Messages.getString( "org.kalypso.ogc.gml.wms.loader.images.KalypsoImageLoader.2" ) ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {

@@ -41,18 +41,21 @@
 package org.kalypso.ui.editor.styleeditor.colorMapEntryTable;
 
 import java.awt.Color;
-import java.util.List;
+import java.util.Arrays;
+import java.util.Map.Entry;
+import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.Vector;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColorCellEditor;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
-import org.eclipse.jface.window.Window;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -62,412 +65,387 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.gml.IKalypsoStyle;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
 import org.kalypsodeegree_impl.graphics.sld.ColorMapEntry_Impl;
 
-/**
- * A table for editing color maps.
- * 
- * @author Andreas Doemming
- * @author Holger Albert
- */
 public class ColorMapEntryTable
 {
-  private static final String NON_NEGATIVE_INTEGER_FIELD = "(\\d){1,9}"; //$NON-NLS-1$
+  public static Table table = null;
 
-  private static final String INTEGER_FIELD = "(-)?" + NON_NEGATIVE_INTEGER_FIELD; //$NON-NLS-1$
+  public TableViewer tableViewer = null;
 
-  private static final String NON_NEGATIVE_FLOATING_POINT_FIELD = "(\\d){1,10}\\.(\\d){1,10}"; //$NON-NLS-1$
+  public ColorMapEntryList m_colorMapEntryList = null;
 
-  private static final String FLOATING_POINT_FIELD = "(-)?" + NON_NEGATIVE_FLOATING_POINT_FIELD; //$NON-NLS-1$
+  IKalypsoStyle m_style = null;
 
-  private static final String LABEL_COLUMN = "label"; //$NON-NLS-1$
+  RasterSymbolizer m_rasterSymbolizer = null;
 
-  private static final String QUANTITY_COLUMN = "quantity"; //$NON-NLS-1$
+  // Set the table column property names
+  private final String LABEL_COLUMN = "label"; //$NON-NLS-1$
 
-  private static final String COLOR_COLUMN = "color"; //$NON-NLS-1$
+  private final String QUANTITY_COLUMN = "quantity"; //$NON-NLS-1$
 
-  private static final String OPACITY_COLUMN = "opacity"; //$NON-NLS-1$
+  private final String COLOR_COLUMN = "color"; //$NON-NLS-1$
 
-  public static final String[] COLUMN_NAMES = new String[] { LABEL_COLUMN, QUANTITY_COLUMN, COLOR_COLUMN, OPACITY_COLUMN };
+  private final String OPACITY_COLUMN = "opacity"; //$NON-NLS-1$
 
-  private static final String[] COLUMN_LABLES = new String[] { "Bezeichnung", "Obere Grenze", "Farbe", "Transparenz" };
+  // Set column names
+  private final String[] columnNames = new String[] { LABEL_COLUMN, QUANTITY_COLUMN, COLOR_COLUMN, OPACITY_COLUMN };
 
-  protected TableViewer m_tableViewer;
+  private static final String fNON_NEGATIVE_INTEGER_FIELD = "(\\d){1,9}"; //$NON-NLS-1$
 
-  protected ColorMapEntryList m_entryList;
+  private static final String fINTEGER_FIELD = "(-)?" + fNON_NEGATIVE_INTEGER_FIELD; //$NON-NLS-1$
 
-  private final IStyleInput<RasterSymbolizer> m_input;
+  private static final String fNON_NEGATIVE_FLOATING_POINT_FIELD = "(\\d){1,10}\\.(\\d){1,10}"; //$NON-NLS-1$
 
-  /**
-   * @param parent
-   *          The parent composite.
-   * @param style
-   *          The kalypso style.
-   * @param rasterSymbolizer
-   *          The raster symbolizer.
-   */
-  public ColorMapEntryTable( final Composite parent, final IStyleInput<RasterSymbolizer> input )
-  {
-    m_input = input;
-    m_tableViewer = null;
-    m_entryList = new ColorMapEntryList();
-
-    final RasterSymbolizer data = input.getData();
-    // Dubious: we should work on the original list
-    for( final ColorMapEntry entry : data.getColorMap().values() )
-      m_entryList.addColorMapEntry( entry.clone() );
-
-    createControls( parent );
-  }
+  private static final String fFLOATING_POINT_FIELD = "(-)?" + fNON_NEGATIVE_FLOATING_POINT_FIELD; //$NON-NLS-1$
 
   /**
-   * @param parent
-   *          The parent composite.
-   * @param entries
-   *          The color map entries.
+   * for testing
    */
-  public ColorMapEntryTable( final Composite parent, final ColorMapEntry[] entries )
+  public ColorMapEntryTable( final Composite parent )
   {
-    m_input = null;
-    m_tableViewer = null;
-    m_entryList = new ColorMapEntryList();
-
-    for( final ColorMapEntry entry : entries )
-      m_entryList.addColorMapEntry( entry.clone() );
-
-    createControls( parent );
-  }
-
-  /**
-   * This function creates the controls.
-   * 
-   * @param parent
-   *          The parent composite.
-   */
-  private void createControls( final Composite parent )
-  {
-    /* Create a composite to hold the children. */
-    final Composite main = new Composite( parent, SWT.NONE );
-    main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    main.setLayout( new GridLayout( 4, false ) );
-
-    /* Create the table viewer. */
-    m_tableViewer = createTableViewer( main, m_entryList );
-    final TableColumn[] columns = m_tableViewer.getTable().getColumns();
-    for( final TableColumn column : columns )
-      column.pack();
-
-    /* Add the buttons. */
-    createButtons( main );
-  }
-
-  /**
-   * This function creates the table viewer.
-   * 
-   * @param parent
-   *          The parent composite.
-   * @param input
-   *          The input.
-   * @return The table viewer.
-   */
-  private TableViewer createTableViewer( final Composite parent, final ColorMapEntryList input )
-  {
-    /* Create the table viewer. */
-    final TableViewer viewer = new TableViewer( parent, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION );
-    viewer.getTable().setLayoutData( new GridData( SWT.FILL, SWT.FILL, false, true, 4, 1 ) );
-    viewer.getTable().setLinesVisible( true );
-    viewer.getTable().setHeaderVisible( true );
-    viewer.setUseHashlookup( true );
-    viewer.setColumnProperties( COLUMN_NAMES );
-
-    /* Create the table columns. */
-    createColumns( viewer );
-
-    /* Create the cell editors. */
-    createEditors( viewer );
-
-    /* Configure the table viewer. */
-    viewer.setCellModifier( new ColorMapEntryCellModifier( this ) );
-    viewer.setSorter( new QuantitySorter() );
-    viewer.setContentProvider( new ColorMapEntryContentProvider() );
-    viewer.setLabelProvider( new ColorMapEntryLabelProvider() );
-    viewer.setInput( input );
-
-    return viewer;
-  }
-
-  /**
-   * This function creates the columns for the table viewer.
-   * 
-   * @param parent
-   *          The parent table viewer.
-   */
-  private void createColumns( final TableViewer parent )
-  {
-    /* Get the table. */
-    final Table table = parent.getTable();
-
-    /* Create the label column. */
-    final TableColumn tableColumn = new TableColumn( table, SWT.LEFT );
-    tableColumn.setText( COLUMN_LABLES[0] );
-    tableColumn.setWidth( 100 );
-
-    /* Create the quantity column. */
-    final TableColumn quantityColumn = new TableColumn( table, SWT.RIGHT );
-    quantityColumn.setText( COLUMN_LABLES[1] );
-    quantityColumn.setWidth( 75 );
-    quantityColumn.addSelectionListener( new SelectionAdapter()
+    m_colorMapEntryList = new ColorMapEntryList();
+    final int count = 10;
+    ColorMapEntry colorMapEntry;
+    for( int i = 0; i < count; i++ )
     {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
+      colorMapEntry = new ColorMapEntry_Impl( Color.CYAN, i * 0.1, i, "Label " + i ); //$NON-NLS-1$
+      m_colorMapEntryList.addColorMapEntry( colorMapEntry );
+    }
+    this.addChildControls( parent );
+  }
+
+  public ColorMapEntryTable( final Composite parent, final IKalypsoStyle style, final RasterSymbolizer rasterSymbolizer )
+  {
+    m_style = style;
+    m_rasterSymbolizer = rasterSymbolizer;
+    m_colorMapEntryList = new ColorMapEntryList();
+    final SortedMap<Double, ColorMapEntry> colorMap = m_rasterSymbolizer.getColorMap();
+    for( final Entry<Double, ColorMapEntry> entry : colorMap.entrySet() )
+    {
+      final ColorMapEntry colorMapEntry = entry.getValue();
+      m_colorMapEntryList.addColorMapEntry( colorMapEntry.clone() );
+    }
+
+    this.addChildControls( parent );
+  }
+
+  private void addChildControls( final Composite composite )
+  {
+    // Create a composite to hold the children
+    final GridData gridData = new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_BOTH );
+    composite.setLayoutData( gridData );
+
+    // Set numColumns to 3 for the buttons
+    final GridLayout layout = new GridLayout( 3, false );
+    layout.marginWidth = 4;
+    composite.setLayout( layout );
+
+    // Create the table
+    createTable( composite );
+
+    // Create and setup the TableViewer
+    createTableViewer();
+    tableViewer.setContentProvider( new ColorMapEntryContentProvider() );
+    tableViewer.setLabelProvider( new ColorMapEntryLabelProvider() );
+
+    tableViewer.setInput( m_colorMapEntryList );
+
+    // Add the buttons
+    createButtons( composite );
+  }
+
+  /**
+   * Create the Table
+   */
+  private void createTable( final Composite parent )
+  {
+    final int style = SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION;
+
+    table = new Table( parent, style );
+
+    final GridData gridData = new GridData( GridData.FILL_BOTH );
+    gridData.grabExcessVerticalSpace = true;
+    gridData.horizontalSpan = 3;
+    table.setLayoutData( gridData );
+
+    table.setLinesVisible( true );
+    table.setHeaderVisible( true );
+
+    // 1st column with label
+    TableColumn column = new TableColumn( table, SWT.CENTER, 0 );
+    column.setText( columnNames[0] );
+    column.setWidth( 70 );
+
+    // 2nd column with quantity
+    column = new TableColumn( table, SWT.CENTER, 1 );
+    column.setText( columnNames[1] );
+    column.setWidth( 60 );
+    // Add listener to column so tasks are sorted by quantity when clicked
+    column.addSelectionListener( new SelectionAdapter()
+    {
+
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        m_tableViewer.setSorter( new QuantitySorter() );
+        tableViewer.setSorter( new QuantitySorter() );
       }
     } );
 
-    /* Create the color column. */
-    final TableColumn colorColumn = new TableColumn( table, SWT.CENTER );
-    colorColumn.setText( COLUMN_LABLES[2] );
-    colorColumn.setWidth( 50 );
+    // 3rd column with color
+    column = new TableColumn( table, SWT.CENTER, 2 );
+    column.setText( columnNames[2] );
+    column.setWidth( 50 );
 
-    /* Create the opacity column. */
-    final TableColumn opacityColumn = new TableColumn( table, SWT.RIGHT );
-    opacityColumn.setText( COLUMN_LABLES[3] );
-    opacityColumn.setWidth( 75 );
+    // 4th column with opacity
+    column = new TableColumn( table, SWT.CENTER, 3 );
+    column.setText( columnNames[3] );
+    column.setWidth( 50 );
   }
 
   /**
-   * This function creates the cell editors for the table viewer.
-   * 
-   * @param parent
-   *          The parent table viewer.
+   * Create the TableViewer
    */
-  private void createEditors( final TableViewer parent )
+  private void createTableViewer( )
   {
-    /* Memory for the cell editors. */
-    final CellEditor[] editors = new CellEditor[COLUMN_NAMES.length];
 
-    /* Get the table. */
-    final Table table = parent.getTable();
+    tableViewer = new TableViewer( table );
+    tableViewer.setUseHashlookup( true );
 
-    /* Create the label cell editor. */
-    final TextCellEditor labelEditor = new TextCellEditor( table );
-    editors[0] = labelEditor;
+    tableViewer.setColumnProperties( columnNames );
 
-    /* Create the quantity cell editor. */
-    final TextCellEditor quantityEditor = new TextCellEditor( table );
-    editors[1] = quantityEditor;
+    // Create the cell editors
+    final CellEditor[] editors = new CellEditor[columnNames.length];
 
-    /* Create the color cell editor. */
+    // Column 1 :
+    TextCellEditor textEditor = new TextCellEditor( table );
+    ((Text) textEditor.getControl()).setTextLimit( 100 );
+    editors[0] = textEditor;
+
+    // Column 2 :
+    textEditor = new TextCellEditor( table );
+
+    ((Text) textEditor.getControl()).addVerifyListener(
+
+    new VerifyListener()
+    {
+      @Override
+      public void verifyText( final VerifyEvent e )
+      {
+        if( e.text.matches( fINTEGER_FIELD ) || e.text.matches( fFLOATING_POINT_FIELD ) )
+          e.doit = true;
+      }
+    } );
+
+    editors[1] = textEditor;
+
+    // Column 3 :
     editors[2] = new ColorCellEditor( table );
 
-    /* Create the opacity cell editor. */
-    final TextCellEditor opacityEditor = new TextCellEditor( table );
-    editors[3] = opacityEditor;
+    // Column 4 :
+    textEditor = new TextCellEditor( table );
+    ((Text) textEditor.getControl()).addVerifyListener(
 
-    /* Configure the label cell editor. */
-    final Text labelText = (Text) labelEditor.getControl();
-    labelText.setTextLimit( 100 );
-
-    /* Configure the quantity cell editor. */
-    final Text quantityText = (Text) quantityEditor.getControl();
-    quantityText.addVerifyListener( new VerifyListener()
+    new VerifyListener()
     {
-      /**
-       * @see org.eclipse.swt.events.VerifyListener#verifyText(org.eclipse.swt.events.VerifyEvent)
-       */
       @Override
       public void verifyText( final VerifyEvent e )
       {
-        if( e.text.matches( INTEGER_FIELD ) || e.text.matches( FLOATING_POINT_FIELD ) )
+        if( e.text.matches( fNON_NEGATIVE_INTEGER_FIELD ) || e.text.matches( fNON_NEGATIVE_FLOATING_POINT_FIELD ) )
           e.doit = true;
       }
     } );
+    editors[3] = textEditor;
 
-    /* Configure the opacity cell editor. */
-    final Text opacityText = (Text) opacityEditor.getControl();
-    opacityText.addVerifyListener( new VerifyListener()
+    // Assign the cell editors to the viewer
+    tableViewer.setCellEditors( editors );
+    // Set the cell modifier for the viewer
+    tableViewer.setCellModifier( new ColorMapEntryCellModifier( this ) );
+    // Set the default sorter for the viewer
+    tableViewer.setSorter( new QuantitySorter() );
+  }
+
+  class ColorMapEntryContentProvider implements IStructuredContentProvider, IColorMapEntryViewer
+  {
+    @Override
+    public void inputChanged( final Viewer v, final Object oldInput, final Object newInput )
     {
-      /**
-       * @see org.eclipse.swt.events.VerifyListener#verifyText(org.eclipse.swt.events.VerifyEvent)
-       */
-      @Override
-      public void verifyText( final VerifyEvent e )
-      {
-        if( e.text.matches( NON_NEGATIVE_INTEGER_FIELD ) || e.text.matches( NON_NEGATIVE_FLOATING_POINT_FIELD ) )
-          e.doit = true;
-      }
-    } );
+      if( newInput != null )
+        ((ColorMapEntryList) newInput).addChangeListener( this );
+      if( oldInput != null )
+        ((ColorMapEntryList) oldInput).removeChangeListener( this );
+    }
 
-    /* Set the cell editors. */
-    parent.setCellEditors( editors );
+    @Override
+    public void dispose( )
+    {
+      m_colorMapEntryList.removeChangeListener( this );
+    }
+
+    // Return the colorMapEntries as an array of Objects
+    @Override
+    public Object[] getElements( final Object parent )
+    {
+      return m_colorMapEntryList.getColorMapEntries().toArray();
+    }
+
+    @Override
+    public void addColorMapEntry( final ColorMapEntry colorMapEntry )
+    {
+      tableViewer.add( colorMapEntry );
+    }
+
+    @Override
+    public void removeColorMapEntry( final ColorMapEntry colorMapEntry )
+    {
+      tableViewer.remove( colorMapEntry );
+    }
+
+    @Override
+    public void updateColorMapEntry( final ColorMapEntry colorMapEntry )
+    {
+      tableViewer.update( colorMapEntry, null );
+    }
   }
 
   /**
-   * This functions creates the "Generate Range", "Add", "Delete" and "Refresh" buttons.
-   * 
+   * Add the "Add", "Delete" and "Analyse","Refresh" buttons
+   *
    * @param parent
-   *          The parent composite.
+   *            the parent composite
    */
   private void createButtons( final Composite parent )
   {
-    /* Create the generate range button. */
-    final Button generateRangeButton = new Button( parent, SWT.PUSH | SWT.CENTER );
-    generateRangeButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_EDIT_COLOR_RANGE.createImage() );
-    generateRangeButton.setLayoutData( new GridData( SWT.BEGINNING, SWT.TOP, false, false ) );
-    generateRangeButton.addSelectionListener( new SelectionAdapter()
-    {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
-      @Override
-      public void widgetSelected( final SelectionEvent e )
-      {
-        generateColorRange();
-      }
-    } );
 
-    /* Create the add button. */
+    // Create and configure the "Add" button
     final Button add = new Button( parent, SWT.PUSH | SWT.CENTER );
     add.setImage( ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE.createImage() );
-    add.setLayoutData( new GridData( SWT.BEGINNING, SWT.TOP, false, false ) );
+
+    GridData gridData = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING );
+    gridData.widthHint = 30;
+    add.setLayoutData( gridData );
     add.addSelectionListener( new SelectionAdapter()
     {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
+
+      // Add a colorMapEntry to the colorMapEntryMap and refresh the table
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        m_entryList.addColorMapEntry( new ColorMapEntry_Impl( Color.WHITE, 1, 0, "" ) );
+        final ColorMapEntry colorMapEntry = new ColorMapEntry_Impl( Color.WHITE, 1, 0, "" ); //$NON-NLS-1$
+        m_colorMapEntryList.addColorMapEntry( colorMapEntry );
       }
     } );
 
-    /* Create the delete button. */
+    // Create and configure the "Delete" button
     final Button delete = new Button( parent, SWT.PUSH | SWT.CENTER );
     delete.setImage( ImageProvider.IMAGE_STYLEEDITOR_REMOVE.createImage() );
-    delete.setLayoutData( new GridData( SWT.BEGINNING, SWT.TOP, false, false ) );
+    gridData = new GridData( GridData.HORIZONTAL_ALIGN_BEGINNING );
+    gridData.widthHint = 30;
+    delete.setLayoutData( gridData );
+
     delete.addSelectionListener( new SelectionAdapter()
     {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
+
+      // Remove the selection and refresh the table
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        final ColorMapEntry entry = (ColorMapEntry) ((IStructuredSelection) m_tableViewer.getSelection()).getFirstElement();
-        if( entry != null )
-          m_entryList.removeColorMapEntry( entry );
+        final ColorMapEntry colorMapEntry = (ColorMapEntry) ((IStructuredSelection) tableViewer.getSelection()).getFirstElement();
+        if( colorMapEntry != null )
+        {
+          m_colorMapEntryList.removeColorMapEntry( colorMapEntry );
+        }
       }
     } );
 
-    /* Without a style context, a refresh is not possible. */
-    if( m_input != null )
+    // Create and configure the "Refresh Map" button
+    final Button refresh = new Button( parent, SWT.PUSH | SWT.CENTER );
+    refresh.setText( "refresh" ); //$NON-NLS-1$
+    gridData = new GridData( GridData.HORIZONTAL_ALIGN_END );
+    gridData.widthHint = 70;
+    refresh.setLayoutData( gridData );
+
+    refresh.addSelectionListener( new SelectionAdapter()
     {
-      /* Create the refresh button. */
-      final Button refresh = new Button( parent, SWT.PUSH | SWT.CENTER );
-      refresh.setText( "&Aktualisieren" );
-      refresh.setLayoutData( new GridData( SWT.END, SWT.TOP, true, false ) );
-      refresh.addSelectionListener( new SelectionAdapter()
+
+      // refresh the map
+      @Override
+      public void widgetSelected( final SelectionEvent e )
       {
-        /**
-         * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-         */
-        @Override
-        public void widgetSelected( final SelectionEvent e )
-        {
-          updateRasterSymbolizer();
-        }
-      } );
-    }
-    else
-    {
-      /* Create a empty label. */
-      final Label emptyLabel = new Label( parent, SWT.NONE );
-      emptyLabel.setText( "" );
-      emptyLabel.setLayoutData( new GridData( SWT.END, SWT.TOP, true, false ) );
-    }
-  }
-
-  /**
-   * This function opens a dialog for generating a color range.
-   */
-  protected void generateColorRange( )
-  {
-    if( m_tableViewer == null || m_tableViewer.getTable().isDisposed() )
-      return;
-
-    /* Create the dialog. */
-    final GenerateColorRangeDialog dialog = new GenerateColorRangeDialog( m_tableViewer.getTable().getDisplay().getActiveShell(), m_entryList.getColorMapEntries().toArray( new ColorMapEntry[] {} ) );
-
-    /* Open the dialog. */
-    final int open = dialog.open();
-    if( open == Window.CANCEL )
-      return;
-
-    /* Clear old entries. */
-    m_entryList.getColorMapEntries().clear();
-
-    /* Add all new ones. */
-    final ColorMapEntry[] entries = dialog.getEntries();
-    for( final ColorMapEntry entry : entries )
-      m_entryList.addColorMapEntry( entry );
-  }
-
-  /**
-   * This function updates the raster symbolizer.
-   */
-  protected void updateRasterSymbolizer( )
-  {
-    if( m_input == null )
-      return;
-
-    try
-    {
-      final TreeMap<Double, ColorMapEntry> colorMap = new TreeMap<Double, ColorMapEntry>();
-
-      final List<ColorMapEntry> entries = m_entryList.getColorMapEntries();
-      for( int i = 0; i < entries.size(); i++ )
-      {
-        final ColorMapEntry entry = entries.get( i );
-
-        if( colorMap.containsKey( new Double( entry.getQuantity() ) ) )
-          throw new Exception( Messages.getString( "org.kalypso.ui.editor.styleeditor.colorMapEntryTable.ColorMapEntryTable.12" ) );
-
-        colorMap.put( new Double( entry.getQuantity() ), entry.clone() );
+        updateRasterSymbolizer();
       }
+    } );
 
-      final RasterSymbolizer rasterSymbolizer = m_input.getData();
-      rasterSymbolizer.setColorMap( colorMap );
-      m_input.fireStyleChanged();
-    }
-    catch( final Exception ex )
-    {
-      /* Open a error dialog. */
-      ErrorDialog.openError( m_tableViewer.getTable().getShell(), "Error", "Es ist ein Fehler beim Aktualisieren aufgetreten...", new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), ex.getLocalizedMessage(), ex ) ); //$NON-NLS-1$ 
-    }
+    // Create and configure the "Analyse" button
+    /*
+     * Button analyse = new Button( parent, SWT.PUSH | SWT.CENTER ); analyse.setText( "analyse" ); gridData = new
+     * GridData( GridData.HORIZONTAL_ALIGN_END ); gridData.widthHint = 50; analyse.setLayoutData( gridData );
+     * analyse.addSelectionListener( new SelectionAdapter() { // analyse the raster data public void widgetSelected(
+     * SelectionEvent e ) { System.out.println("Analyse"); } } );
+     */
+
   }
 
   /**
-   * This function returns the color map entry list.
-   * 
-   * @return The color map entry list.
+   * Return the column names in a collection
+   *
+   * @return List containing column names
+   */
+  public java.util.List<String> getColumnNames( )
+  {
+    return Arrays.asList( columnNames );
+  }
+
+  /**
+   * @return currently selected item
+   */
+  public ISelection getSelection( )
+  {
+    return tableViewer.getSelection();
+  }
+
+  /**
+   * Return the ColorMapEntryList
    */
   public ColorMapEntryList getColorMapEntryList( )
   {
-    return m_entryList;
+    return m_colorMapEntryList;
   }
+
+  /**
+   * update the colorMap of the rasterSymbolizer
+   */
+  public void updateRasterSymbolizer( )
+  {
+    final TreeMap<Double, ColorMapEntry> new_colorMap = new TreeMap<Double, ColorMapEntry>();
+    final Vector< ? > colorMapEntries = m_colorMapEntryList.getColorMapEntries();
+    try
+    {
+      for( int i = 0; i < colorMapEntries.size(); i++ )
+      {
+        final ColorMapEntry colorMapEntry = (ColorMapEntry) colorMapEntries.get( i );
+        if( !new_colorMap.containsKey( new Double( colorMapEntry.getQuantity() ) ) )
+          new_colorMap.put( new Double( colorMapEntry.getQuantity() ), colorMapEntry.clone() );
+        else
+        {
+          throw new Exception();
+        }
+      }
+      m_rasterSymbolizer.setColorMap( new_colorMap );
+      m_style.fireStyleChanged();
+    }
+    catch( final Exception e )
+    {
+      MessageDialog.openError( table.getShell(), "Error", Messages.getString("org.kalypso.ui.editor.styleeditor.colorMapEntryTable.ColorMapEntryTable.12") ); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+  }
+
 }

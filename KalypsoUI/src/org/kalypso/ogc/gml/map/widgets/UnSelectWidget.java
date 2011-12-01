@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.map.widgets;
 
 /**
+ * 
  * @author doemming
  */
 public class UnSelectWidget extends AbstractSelectWidget
@@ -52,13 +53,12 @@ public class UnSelectWidget extends AbstractSelectWidget
   }
 
   @Override
-  protected int getSelectionMode( )
+  protected int getSelectionMode()
   {
     return MODE_UNSELECT;
   }
 
-  @Override
-  /**
+  @Override /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractSelectWidget#allowOnlyOneSelectedFeature()
    */
   boolean allowOnlyOneSelectedFeature( )

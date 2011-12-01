@@ -22,7 +22,7 @@ public class CoordOrientation
 
     public static TYPE NEGATIV = new TYPE( "negativ" ); //$NON-NLS-1$
 
-    private final String m_name;
+    private String m_name;
 
     private TYPE( final String name )
     {
@@ -88,7 +88,7 @@ public class CoordOrientation
     else if( o > 0 )
       return TYPE.POSITIV;
     else
-      throw new CoordOrientationException( Messages.getString( "com.bce.ext.jts.CoordOrientation.3" ) ); //$NON-NLS-1$
+      throw new CoordOrientationException( Messages.getString("com.bce.ext.jts.CoordOrientation.3") ); //$NON-NLS-1$
   }
 
 }

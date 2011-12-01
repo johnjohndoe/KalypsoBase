@@ -572,7 +572,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
   {
     String ret = null;
     ret = "CoordinateSystem = " + m_crs + "\n";
-    ret += "mute = " + GM_Position.MUTE + "\n";
+    ret += ("mute = " + GM_Position.MUTE + "\n");
     return ret;
   }
 

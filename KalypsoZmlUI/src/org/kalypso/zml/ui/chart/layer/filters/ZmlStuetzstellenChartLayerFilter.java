@@ -51,12 +51,18 @@ public class ZmlStuetzstellenChartLayerFilter extends AbstractZmlChartLayerFilte
 
   public static final String ID = "org.kalypso.chart.layer.filter.stuetzstelle"; // $NON-NLS-1$
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter#getIdentifier()
+   */
   @Override
   public String getIdentifier( )
   {
     return ID;
   }
 
+  /**
+   * @see org.kalypso.zml.ui.chart.layer.filters.AbstractZmlChartLayerFilter#filter(org.kalypso.ogc.sensor.visitor.ITupleModelVisitorValue)
+   */
   @Override
   protected boolean filter( final IObservationValueContainer container )
   {

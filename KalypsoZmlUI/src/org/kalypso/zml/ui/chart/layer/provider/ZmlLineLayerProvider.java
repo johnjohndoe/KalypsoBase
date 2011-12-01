@@ -42,37 +42,62 @@ package org.kalypso.zml.ui.chart.layer.provider;
 
 import java.net.URL;
 
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.zml.core.diagram.base.provider.observation.DefaultRequestHandler;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.zml.core.diagram.data.IRequestHandler;
-import org.kalypso.zml.core.diagram.data.IZmlLayerProvider;
 import org.kalypso.zml.core.diagram.data.MetadataRequestHandler;
-import org.kalypso.zml.core.diagram.layer.IZmlLayer;
+import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
+import org.kalypso.zml.ui.chart.layer.themes.ZmlLayerFactory;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlLineLayer;
+import org.kalypso.zml.ui.core.provider.observation.SynchronousObservationProvider;
 
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
+import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlLineLayerProvider extends AbstractLayerProvider implements IZmlLayerProvider
+public class ZmlLineLayerProvider extends AbstractLayerProvider implements ILayerProvider
 {
   public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider"; //$NON-NLS-1$
 
+  /**
+   * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
+   */
   @Override
-  public IZmlLayer getLayer( final URL context )
+  public IChartLayer getLayer( final URL context ) throws ConfigurationException
   {
-    return new ZmlLineLayer( this, getStyleSet(), context );
+    try
+    {
+      final IStyleSet styleSet = getStyleSet();
+      final String targetAxisId = getTargetAxisId();
+
+      final ZmlLayerFactory factory = ZmlLayerFactory.getInstance();
+
+      final ZmlLineLayer layer = factory.createLineLayer( this, styleSet );
+      final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( layer, targetAxisId );
+
+      final IParameterContainer parameters = getParameterContainer();
+      final String href = parameters.getParameterValue( "href", "" ); //$NON-NLS-1$
+      if( !StringUtils.isEmpty( href ) )
+      {
+        final SynchronousObservationProvider provider = new SynchronousObservationProvider( context, href, getRequestHandler() );
+        handler.setObsProvider( provider );
+      }
+
+      return layer;
+    }
+    catch( final Throwable t )
+    {
+      throw new ConfigurationException( "Configuring of .kod line layer theme failed.", t );
+    }
   }
 
-  @Override
-  public IRequestHandler getRequestHandler( )
+  protected IRequestHandler getRequestHandler( )
   {
-    final IParameterContainer container = getParameterContainer();
-    if( Objects.isNull( container ) )
-      return new DefaultRequestHandler();
-
     return new MetadataRequestHandler( getParameterContainer() );
   }
 

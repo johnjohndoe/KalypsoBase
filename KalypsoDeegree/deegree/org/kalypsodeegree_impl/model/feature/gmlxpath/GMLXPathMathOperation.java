@@ -42,13 +42,13 @@ package org.kalypsodeegree_impl.model.feature.gmlxpath;
  */
 public abstract class GMLXPathMathOperation extends GMLXPathOperation implements IGMLXPathOperation
 {
-  public GMLXPathMathOperation( final String pattern )
+  public GMLXPathMathOperation( String pattern )
   {
     super( pattern );
   }
 
   @Override
-  public Object operate( final Object value1, final Object value2 ) throws GMLXPathException
+  public Object operate( Object value1, Object value2 ) throws GMLXPathException
   {
     final double n1;
     if( value1 instanceof Number )

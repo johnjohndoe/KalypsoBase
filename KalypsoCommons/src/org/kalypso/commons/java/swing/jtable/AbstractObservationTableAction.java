@@ -22,7 +22,7 @@ public abstract class AbstractObservationTableAction extends AbstractAction
     putValue( SHORT_DESCRIPTION, toolTip );
   }
 
-  public JTable getTable( )
+  public JTable getTable()
   {
     return m_table;
   }
@@ -31,7 +31,7 @@ public abstract class AbstractObservationTableAction extends AbstractAction
    * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
    */
   @Override
-  public void actionPerformed( final ActionEvent e )
+  public void actionPerformed( ActionEvent e )
   {
     try
     {

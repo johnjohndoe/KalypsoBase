@@ -52,7 +52,7 @@ import org.kalypso.ogc.sensor.impl.SimpleObservation;
  */
 public class ObservationCacheTest extends TestCase
 {
-  public void testGetObservationFor( )
+  public void testGetObservationFor()
   {
     final IObservation obs = ObservationCache.getInstance().getObservationFor( new FooAdaptable() );
 
@@ -64,7 +64,7 @@ public class ObservationCacheTest extends TestCase
   private static class FooAdaptable implements IAdaptable
   {
     @Override
-    public Object getAdapter( final Class anotherClass )
+    public Object getAdapter( Class anotherClass )
     {
       if( anotherClass == IObservation.class )
         return new SimpleObservation();

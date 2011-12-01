@@ -48,8 +48,7 @@ import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
  * <ul>
  * <li>value (Double): The value to return.</li>
  * </ul>
- * </p>
- * *
+ * </p>*
  * 
  * @author thuel2
  */
@@ -61,10 +60,10 @@ public class ConstantDoubleIfNullFeaturePropertyFunction extends FeatureProperty
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
    */
   @Override
-  public void init( final Map<String, String> properties )
+  public void init( Map<String, String> properties )
   {
 
-    m_value = Double.valueOf( properties.get( "value" ).toString() );
+    m_value = Double.valueOf( (properties.get( "value" )).toString() );
   }
 
   /**
@@ -72,7 +71,7 @@ public class ConstantDoubleIfNullFeaturePropertyFunction extends FeatureProperty
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
   @Override
-  public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
+  public Object getValue( Feature feature, IPropertyType pt, Object currentValue )
   {
     if( currentValue == null )
       return m_value;
@@ -85,7 +84,7 @@ public class ConstantDoubleIfNullFeaturePropertyFunction extends FeatureProperty
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
   @Override
-  public Object setValue( final Feature feature, final IPropertyType pt, final Object valueToSet )
+  public Object setValue( Feature feature, IPropertyType pt, Object valueToSet )
   {
 
     return valueToSet;

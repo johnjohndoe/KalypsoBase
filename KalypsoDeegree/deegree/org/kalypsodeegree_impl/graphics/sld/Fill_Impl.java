@@ -37,7 +37,7 @@ package org.kalypsodeegree_impl.graphics.sld;
 
 import java.awt.Color;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.Iterator;
 
 import org.kalypso.commons.KalypsoCommonsPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -47,6 +47,7 @@ import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree.graphics.sld.GraphicFill;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.Marshallable;
+import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * A Fill allows area geometries to be filled. There are two types of fills: solid-color and repeated GraphicFill. In
@@ -58,22 +59,24 @@ import org.kalypsodeegree.xml.Marshallable;
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
  */
+@SuppressWarnings("unchecked")
 public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
 {
+
   /**
    * Constructs a new <tt>Fill_Impl</tt>.
    */
-  protected Fill_Impl( )
+  protected Fill_Impl()
   {
-    super( new HashMap<String, CssParameter>(), null );
+    super( new HashMap(), null );
   }
 
   /**
    * Constructs a new <tt>Fill_Impl</tt>.
    */
-  public Fill_Impl( final Map<String, CssParameter> params, final GraphicFill gaphicFill )
+  public Fill_Impl( HashMap pCssParams, GraphicFill pGraphicFill )
   {
-    super( params, gaphicFill );
+    super( pCssParams, pGraphicFill );
   }
 
   /**
@@ -87,30 +90,37 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
    *           if the evaluation fails or the value is invalid
    */
   @Override
-  public Color getFill( final Feature feature ) throws FilterEvaluationException
+  public Color getFill( Feature feature ) throws FilterEvaluationException
   {
-    final CssParameter cssParam = getParameter( CSS_FILL );
+    Color awtColor = FILL_DEFAULT;
 
-    if( cssParam == null )
-      return FILL_DEFAULT;
+    CssParameter cssParam = (CssParameter)cssParams.get( "fill" );
 
-    String s = cssParam.getValue( feature );
-    if( s.length() < 2 )
-      return FILL_DEFAULT;
-
-    try
+    if( cssParam != null )
     {
-      if( s.charAt( 0 ) == '#' && s.charAt( 1 ) == '#' )
-        s = s.substring( 1 );
+      String s = cssParam.getValue( feature );
 
-      return Color.decode( s );
+      // EXTREMELY SLOW! used only for checking if string begins with ## 
+      //cssParam.getValue( feature ).replaceAll("##", "#");
+      try
+      {
+        if (s.charAt( 0 ) == '#' && s.charAt( 1 ) == '#') 
+          s = s.substring( 1 );
+        awtColor =  Color.decode( s );
+      }
+      catch( Exception e )
+      {
+        KalypsoCommonsPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e, "Given value ('" + s + "') for CSS-Parameter 'fill' "
+          + "does not denote a valid color!" ) );
+        return awtColor;
+//        throw new FilterEvaluationException( "Given value ('" + s + "') for CSS-Parameter 'fill' "
+//            + "does not denote a valid color!" );
+      }
     }
-    catch( final Exception e )
-    {
-      KalypsoCommonsPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e, "Given value ('" + s + "') for CSS-Parameter 'fill' " + "does not denote a valid color!" ) );
-      return FILL_DEFAULT;
-    }
+
+    return awtColor;
   }
+  
 
   /**
    * sets the value of the fill's CssParameter 'fill' as a simple color
@@ -119,13 +129,13 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
    *          color to be set
    */
   @Override
-  public void setFill( final Color color )
+  public void setFill( Color color )
   {
 
-    final String s = StyleFactory.getColorAsHex( color );
-    final CssParameter fill = StyleFactory.createCssParameter( "fill", s );
+    String s = StyleFactory.getColorAsHex( color );
+    CssParameter fill = StyleFactory.createCssParameter( "fill", s );
 
-    addCssParameter( "fill", fill );
+    cssParams.put( "fill", fill );
   }
 
   /**
@@ -139,28 +149,30 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
    *           if the evaluation fails or the value is invalid
    */
   @Override
-  public double getOpacity( final Feature feature ) throws FilterEvaluationException
+  public double getOpacity( Feature feature ) throws FilterEvaluationException
   {
     double opacity = OPACITY_DEFAULT;
 
-    final CssParameter cssParam = getParameter( CSS_OPACITY );
+    CssParameter cssParam = (CssParameter)cssParams.get( "fill-opacity" );
 
     if( cssParam != null )
     {
-      final String value = cssParam.getValue( feature );
+      String value = cssParam.getValue( feature );
 
       try
       {
         opacity = Double.parseDouble( value );
       }
-      catch( final NumberFormatException e )
+      catch( NumberFormatException e )
       {
-        throw new FilterEvaluationException( "Given value for parameter 'fill-opacity' ('" + value + "') has invalid format!" );
+        throw new FilterEvaluationException( "Given value for parameter 'fill-opacity' ('" + value
+            + "') has invalid format!" );
       }
 
-      if( opacity < 0.0 || opacity > 1.0 )
+      if( ( opacity < 0.0 ) || ( opacity > 1.0 ) )
       {
-        throw new FilterEvaluationException( "Value for parameter 'fill-opacity' (given: '" + value + "') must be between 0.0 and 1.0!" );
+        throw new FilterEvaluationException( "Value for parameter 'fill-opacity' (given: '" + value
+            + "') must be between 0.0 and 1.0!" );
       }
     }
 
@@ -177,6 +189,7 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
   @Override
   public void setOpacity( double opacity )
   {
+
     if( opacity > 1 )
     {
       opacity = 1;
@@ -186,8 +199,8 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
       opacity = 0;
     }
 
-    final CssParameter fillOp = StyleFactory.createCssParameter( "fill-opacity", "" + opacity );
-    addCssParameter( "fill-opacity", fillOp );
+    CssParameter fillOp = StyleFactory.createCssParameter( "fill-opacity", "" + opacity );
+    cssParams.put( "fill-opacity", fillOp );
   }
 
   /**
@@ -196,20 +209,25 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
    * @return xml representation of the CssParameter
    */
   @Override
-  public String exportAsXML( )
+  public String exportAsXML()
   {
-    final StringBuffer sb = new StringBuffer( "<Fill>" );
+    Debug.debugMethodBegin();
 
-    final GraphicFill graphicFill = getGraphicFill();
+    StringBuffer sb = new StringBuffer( "<Fill>" );
+
     if( graphicFill != null )
-      sb.append( graphicFill.exportAsXML() );
-
-    final Map<String, CssParameter> cssParameters = getCssParameters();
-    for( final CssParameter param : cssParameters.values() )
-      sb.append( param.exportAsXML() );
+    {
+      sb.append( ( (Marshallable)graphicFill ).exportAsXML() );
+    }
+    Iterator iterator = cssParams.values().iterator();
+    while( iterator.hasNext() )
+    {
+      sb.append( ( (Marshallable)iterator.next() ).exportAsXML() );
+    }
 
     sb.append( "</Fill>" );
 
+    Debug.debugMethodEnd();
     return sb.toString();
   }
 

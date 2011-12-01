@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoCore Plug-in
 Bundle-SymbolicName: org.kalypso.core; singleton:=true
-Bundle-Version: 11.6.3.qualifier
+Bundle-Version: 10.10.1.qualifier
 Bundle-Activator: org.kalypso.core.KalypsoCorePlugin
 Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-Localization: plugin
@@ -11,7 +11,6 @@ Export-Package: org.kalypso.binding.ratingtable,
  org.kalypso.core.catalog,
  org.kalypso.core.catalog.urn,
  org.kalypso.core.gml.provider,
- org.kalypso.core.io,
  org.kalypso.core.jaxb,
  org.kalypso.core.preferences,
  org.kalypso.core.repository,
@@ -52,6 +51,7 @@ Export-Package: org.kalypso.binding.ratingtable,
  org.kalypso.ogc.sensor.filter.creators,
  org.kalypso.ogc.sensor.filter.filters,
  org.kalypso.ogc.sensor.filter.filters.interval,
+ org.kalypso.ogc.sensor.filter.test,
  org.kalypso.ogc.sensor.impl,
  org.kalypso.ogc.sensor.metadata,
  org.kalypso.ogc.sensor.provider,
@@ -99,14 +99,12 @@ Export-Package: org.kalypso.binding.ratingtable,
  org.kalypso.zml.request,
  org.w3._1999.xlinkext,
  org.w3._2001.xmlschema
-Require-Bundle: org.junit4;bundle-version="4.3.0";resolution:=optional,
- org.eclipse.ui.ide;bundle-version="3.6.1",
- org.eclipse.core.expressions,
+Require-Bundle: org.eclipse.core.expressions,
  org.eclipse.wst.xml.core;resolution:=optional,
+ org.junit4;bundle-version="4.3.0";resolution:=optional,
  org.kalypso.contribs.ogc31,
  org.kalypso.deegree;visibility:=reexport,
  org.kalypso.repository;visibility:=reexport,
- org.eclipse.ui.ide,
- org.junit4;resolution:=optional
+ org.eclipse.ui.ide
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

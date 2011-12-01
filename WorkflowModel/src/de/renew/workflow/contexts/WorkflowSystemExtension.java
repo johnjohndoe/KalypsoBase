@@ -65,7 +65,7 @@ import de.renew.workflow.base.impl.Workflow_Impl;
 
 /**
  * Helper class to read and cache workflow systems from extension point.
- * 
+ *
  * @author Stefan Kurzbach
  */
 public class WorkflowSystemExtension
@@ -110,16 +110,15 @@ public class WorkflowSystemExtension
           }
           else
           {
-            throw new CoreException( new Status( IStatus.ERROR, "de.renew.workflow.model", "Invalid path " + filePath ) );
+            throw new CoreException( new Status( Status.ERROR, "de.renew.workflow.model", "Invalid path " + filePath ) );
           }
         }
         catch( final CoreException e )
         {
           // in this moment logger is not available...
           e.printStackTrace();
-          // final IStatus status = new Status( Status.ERROR, "de.renew.workflow.model",
-          // "Failed to create workflowSystem extension for id: " + id, e );
-          // WorkflowModelPlugin.getInstance().getLog().log( status );
+          //          final IStatus status = new Status( Status.ERROR, "de.renew.workflow.model", "Failed to create workflowSystem extension for id: " + id, e );
+          //          WorkflowModelPlugin.getInstance().getLog().log( status );
         }
       }
     }
@@ -137,7 +136,7 @@ public class WorkflowSystemExtension
     }
     catch( final Throwable e )
     {
-      final IStatus status = new Status( IStatus.ERROR, "de.renew.workflow.model", "", e );
+      final IStatus status = new Status( Status.ERROR, "de.renew.workflow.model", "", e );
       throw new CoreException( status );
     }
   }

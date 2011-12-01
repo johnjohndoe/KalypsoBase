@@ -42,7 +42,7 @@ package org.kalypso.contribs.eclipse.jobs;
 
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
-import org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsPlugin;
+import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
 
 /**
  * This is a default implementation for a cron job.
@@ -100,7 +100,7 @@ public abstract class CronJob extends Job
    * @param identifier
    *          The identifier of this job.
    */
-  public void setIdentifier( final String identifier )
+  public void setIdentifier( String identifier )
   {
     m_identifier = identifier;
   }
@@ -129,7 +129,7 @@ public abstract class CronJob extends Job
    * @param mutexString
    *          The mutex string.
    */
-  public void setMutexString( final String mutexString )
+  public void setMutexString( String mutexString )
   {
     /* Reset the mutex string. */
     m_mutexString = "none";
@@ -143,7 +143,7 @@ public abstract class CronJob extends Job
       m_mutexString = mutexString;
 
       /* Get the mutex for this cron job. */
-      final ISchedulingRule mutex = EclipseRCPContributionsPlugin.getDefault().getCronJobMutex( mutexString );
+      ISchedulingRule mutex = EclipseRCPContributionsPlugin.getDefault().getCronJobMutex( mutexString );
 
       /* Set the mutex for this cron job. */
       setRule( mutex );
@@ -188,7 +188,7 @@ public abstract class CronJob extends Job
    * @see org.eclipse.core.runtime.jobs.Job#belongsTo(java.lang.Object)
    */
   @Override
-  public final boolean belongsTo( final Object family )
+  public final boolean belongsTo( Object family )
   {
     return CRON_JOB_FAMILY.equals( family );
   }

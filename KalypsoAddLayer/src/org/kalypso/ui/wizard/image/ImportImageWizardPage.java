@@ -366,7 +366,7 @@ public class ImportImageWizardPage extends WizardPage implements SelectionListen
         for( final Control combo : array )
         {
           if( combo instanceof Text )
-            str = str + ((Text) combo).getText().trim() + "\n"; //$NON-NLS-1$
+            str = str + (((Text) combo).getText().trim() + "\n"); //$NON-NLS-1$
         }
 
         final ByteArrayInputStream bis = new ByteArrayInputStream( str.getBytes() );

@@ -46,6 +46,7 @@ import java.util.ResourceBundle;
 
 /**
  * @author Dejan Antanaskovic
+ *
  */
 public class Messages
 {

@@ -44,7 +44,7 @@ import java.text.ParseException;
 import java.util.Collection;
 import java.util.HashSet;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -171,7 +171,7 @@ public class SpinnerFeatureControl extends AbstractFeatureControl
     final Object oldData = feature.getProperty( pt );
 
     // nur ändern, wenn sich wirklich was geändert hat
-    if( newData == null && oldData != null || newData != null && !newData.equals( oldData ) )
+    if( (newData == null && oldData != null) || (newData != null && !newData.equals( oldData )) )
       return new ChangeFeatureCommand( feature, pt, newData );
 
     return null;

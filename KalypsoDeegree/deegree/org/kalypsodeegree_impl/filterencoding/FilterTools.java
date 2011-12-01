@@ -48,12 +48,12 @@ import org.kalypsodeegree_impl.tools.Debug;
 public class FilterTools
 {
   /**
-   * Traverses the <tt>Filter</tt> -tree and returns the first BBOX-Operation that is found and a <tt>Filter</tt> that
-   * is equal to the given one minus the BBOX-Operation.
+   * Traverses the <tt>Filter</tt> -tree and returns the first BBOX-Operation that is found and a <tt>Filter</tt>
+   * that is equal to the given one minus the BBOX-Operation.
    * <p>
    * 
    * @param filter
-   *          search starts here
+   *            search starts here
    * @return [0]: <tt>GM_Envelope</tt> (BBOX), [1]: <tt>Filter</tt>
    * @throws Exception
    */

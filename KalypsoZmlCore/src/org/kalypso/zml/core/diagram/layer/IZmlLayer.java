@@ -41,7 +41,6 @@
 package org.kalypso.zml.core.diagram.layer;
 
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
-import org.kalypso.zml.core.diagram.data.IZmlLayerProvider;
 
 import de.openali.odysseus.chart.framework.model.event.impl.LayerEventHandler;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -52,12 +51,6 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 public interface IZmlLayer extends IChartLayer
 {
   IZmlLayerDataHandler getDataHandler( );
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getProvider()
-   */
-  @Override
-  IZmlLayerProvider getProvider( );
 
   void setDataHandler( IZmlLayerDataHandler handler );
 

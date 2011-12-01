@@ -48,34 +48,34 @@ package org.kalypso.ogc.sensor.timeseries.wq.wechmann;
 public final class WechmannParams
 {
   /** Konstante W1 */
-  private final double m_w1;
+  private final double m_W1;
 
   /** Konstante LNK1 */
-  private final double m_lnk1;
+  private final double m_LNK1;
 
   /** Konstante K2 */
-  private final double m_k2;
+  private final double m_K2;
 
   /**
    * obere Wasserstandsgrenze in cm. When no WGR value is defined, this class supposes Double.MAX_VALUE is used
    */
-  private final double m_wgr;
+  private final double m_WGR;
 
   /**
-   * this is the Q computed from WGR using the Wechmann function. This Q is also stored as a member of this class
+   * this is the Q computed from WGR usign the Wechmann function. This Q is also stored as a member of this class
    * because it is used when convert Q to W.
    * <p>
    * this is a computed value, it is not serialized.
    */
-  private double m_q4wgr;
+  private double m_Q4WGR;
 
   /**
    * Creates the parameters with a WGR value of Double.MAX_VALUE. Use this constructor when the WGR value is not
    * defined, thus the parameters are valid for all possible W values.
    */
-  public WechmannParams( final double w1, final double lnk1, final double k2 )
+  public WechmannParams( final double W1, final double LNK1, final double K2 )
   {
-    this( w1, lnk1, k2, Double.MAX_VALUE );
+    this( W1, LNK1, K2, Double.MAX_VALUE );
   }
 
   /**
@@ -90,21 +90,21 @@ public final class WechmannParams
    * @param WGR
    *          obere Wasserstandsgrenze in cm
    */
-  public WechmannParams( final double w1, final double lnk1, final double k2, final double wgr )
+  public WechmannParams( final double W1, final double LNK1, final double K2, final double WGR )
   {
-    m_w1 = w1;
-    m_lnk1 = lnk1;
-    m_k2 = k2;
-    m_wgr = wgr;
+    m_W1 = W1;
+    m_LNK1 = LNK1;
+    m_K2 = K2;
+    m_WGR = WGR;
 
     try
     {
-      m_q4wgr = WechmannFunction.computeQ( lnk1, wgr, w1, k2 );
+      m_Q4WGR = WechmannFunction.computeQ( LNK1, WGR, W1, K2 );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      m_q4wgr = Double.MAX_VALUE;
+      m_Q4WGR = Double.MAX_VALUE;
     }
   }
 
@@ -113,7 +113,7 @@ public final class WechmannParams
    */
   public double getK2( )
   {
-    return m_k2;
+    return m_K2;
   }
 
   /**
@@ -121,7 +121,7 @@ public final class WechmannParams
    */
   public double getLNK1( )
   {
-    return m_lnk1;
+    return m_LNK1;
   }
 
   /**
@@ -129,7 +129,7 @@ public final class WechmannParams
    */
   public double getW1( )
   {
-    return m_w1;
+    return m_W1;
   }
 
   /**
@@ -137,7 +137,7 @@ public final class WechmannParams
    */
   public double getWGR( )
   {
-    return m_wgr;
+    return m_WGR;
   }
 
   /**
@@ -145,7 +145,7 @@ public final class WechmannParams
    */
   public boolean hasWGR( )
   {
-    return Double.compare( m_wgr, Double.MAX_VALUE ) != 0;
+    return Double.compare( m_WGR, Double.MAX_VALUE ) != 0;
   }
 
   /**
@@ -153,6 +153,6 @@ public final class WechmannParams
    */
   public double getQ4WGR( )
   {
-    return m_q4wgr;
+    return m_Q4WGR;
   }
 }

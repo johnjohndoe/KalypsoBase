@@ -88,6 +88,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.gml.binding.commons.CoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
@@ -113,14 +114,14 @@ public class TestGrid2Shp extends TestCase
   {
     // unzip test data into workspace
     final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-    final IProject project = workspace.getRoot().getProject( "GridConvertingTest" ); //$NON-NLS-1$
+    final IProject project = workspace.getRoot().getProject( "GridConvertingTest" );
     project.create( new NullProgressMonitor() );
 
-    final URL zipLocation = getClass().getResource( "resources/grids.zip" ); //$NON-NLS-1$
+    final URL zipLocation = getClass().getResource( "resources/grids.zip" );
     ZipUtilities.unzip( zipLocation, project, new NullProgressMonitor() );
 
     // run test model
-    final IFolder importDataFolder = project.getFolder( "grids" ); //$NON-NLS-1$
+    final IFolder importDataFolder = project.getFolder( "grids" );
 
     final IGeoGrid raster = getTestGrid( importDataFolder );
 
@@ -153,11 +154,11 @@ public class TestGrid2Shp extends TestCase
     final IMarshallingTypeHandler stringTypeHandler = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_STRING );
     final IMarshallingTypeHandler lineTypeHandler = typeRegistry.getTypeHandlerForTypeName( GMLConstants.QN_LINE_STRING );
 
-    final QName shapeTypeQName = new QName( "anyNS", "shapeType" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final QName shapeTypeQName = new QName( "anyNS", "shapeType" );
 
-    final IValuePropertyType doubleType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "id" ), doubleTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
-    final IValuePropertyType stringType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "name" ), stringTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
-    final IValuePropertyType lineType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "aGeometry" ), lineTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IValuePropertyType doubleType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "id" ), doubleTypeHandler, 1, 1, false );
+    final IValuePropertyType stringType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "name" ), stringTypeHandler, 1, 1, false );
+    final IValuePropertyType lineType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "aGeometry" ), lineTypeHandler, 1, 1, false );
 
     final IPropertyType[] properties = new IPropertyType[] { lineType, doubleType, stringType };
     final IFeatureType shapeFT = GMLSchemaFactory.createFeatureType( shapeTypeQName, properties );
@@ -174,12 +175,12 @@ public class TestGrid2Shp extends TestCase
       final String[] name = data[i].getName();
 
       final Object[] shapeData = new Object[] { line, id, name[0] };
-      final Feature feature = FeatureFactory.createFeature( shapeRootFeature, shapeParentRelation, "FeatureID" + i, shapeFT, shapeData ); //$NON-NLS-1$
+      final Feature feature = FeatureFactory.createFeature( shapeRootFeature, shapeParentRelation, "FeatureID" + i, shapeFT, shapeData );
       shapeWorkspace.addFeatureAsComposition( shapeRootFeature, shapeParentRelation, -1, feature );
     }
 
-    final String shapeBase = importDataFolder.getLocation() + "export_isoline"; //$NON-NLS-1$
-    ShapeSerializer.serialize( shapeWorkspace, shapeBase, (String) null );
+    final String shapeBase = importDataFolder.getLocation() + "export_isoline";
+    ShapeSerializer.serialize( shapeWorkspace, shapeBase, null );
   }
 
   private void writePolygonShape( final CollectorDataProvider[] data, final IFolder importDataFolder ) throws Exception, GmlSerializeException
@@ -191,14 +192,14 @@ public class TestGrid2Shp extends TestCase
     final IMarshallingTypeHandler stringTypeHandler = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_STRING );
     final IMarshallingTypeHandler polygonTypeHandler = typeRegistry.getTypeHandlerForTypeName( GMLConstants.QN_POLYGON );
 
-    final QName shapeTypeQName = new QName( "anyNS", "shapeType" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final QName shapeTypeQName = new QName( "anyNS", "shapeType" );
 
-    final IValuePropertyType doubleTypeId = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "id" ), doubleTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
-    final IValuePropertyType doubleTypeFrom = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "from" ), doubleTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
-    final IValuePropertyType doubleTypeTo = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "to" ), doubleTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
-    final IValuePropertyType stringTypeRange = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "range" ), stringTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
-    final IValuePropertyType stringTypeId = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "internalId" ), stringTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
-    final IValuePropertyType polygonType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "geometry" ), polygonTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IValuePropertyType doubleTypeId = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "id" ), doubleTypeHandler, 1, 1, false );
+    final IValuePropertyType doubleTypeFrom = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "from" ), doubleTypeHandler, 1, 1, false );
+    final IValuePropertyType doubleTypeTo = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "to" ), doubleTypeHandler, 1, 1, false );
+    final IValuePropertyType stringTypeRange = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "range" ), stringTypeHandler, 1, 1, false );
+    final IValuePropertyType stringTypeId = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "internalId" ), stringTypeHandler, 1, 1, false );
+    final IValuePropertyType polygonType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "geometry" ), polygonTypeHandler, 1, 1, false );
 
     final IPropertyType[] properties = new IPropertyType[] { polygonType, doubleTypeId, doubleTypeFrom, doubleTypeTo, stringTypeRange, stringTypeId };
     final IFeatureType shapeFT = GMLSchemaFactory.createFeatureType( shapeTypeQName, properties );
@@ -218,12 +219,12 @@ public class TestGrid2Shp extends TestCase
       final String[] name = data[i].getName();
 
       final Object[] shapeData = new Object[] { line, id, from, to, name[0], name[1] };
-      final Feature feature = FeatureFactory.createFeature( shapeRootFeature, shapeParentRelation, "FeatureID" + i, shapeFT, shapeData ); //$NON-NLS-1$
+      final Feature feature = FeatureFactory.createFeature( shapeRootFeature, shapeParentRelation, "FeatureID" + i, shapeFT, shapeData );
       shapeWorkspace.addFeatureAsComposition( shapeRootFeature, shapeParentRelation, -1, feature );
     }
 
-    final String shapeBase = importDataFolder.getLocation() + "export_polygon_"; //$NON-NLS-1$
-    ShapeSerializer.serialize( shapeWorkspace, shapeBase, (String) null );
+    final String shapeBase = importDataFolder.getLocation() + "export_polygon_";
+    ShapeSerializer.serialize( shapeWorkspace, shapeBase, null );
   }
 
   private IGeoGrid getTestGrid( final IFolder importDataFolder ) throws Exception, MalformedURLException, IOException
@@ -232,19 +233,19 @@ public class TestGrid2Shp extends TestCase
     final IFile covCollFile = importDataFolder.getFile( new Path( "covColl.gml" ) ); //$NON-NLS-1$
     final GMLWorkspace covCollWorkspace = GmlSerializer.createGMLWorkspace( ResourceUtilities.createURL( covCollFile ), null );
 
-    final IFile file = importDataFolder.getFile( "floodZones.asc" ); //$NON-NLS-1$
+    final IFile file = importDataFolder.getFile( "floodZones.asc" );
 
-    final String binFileName = file.getName() + ".bin"; //$NON-NLS-1$
+    final String binFileName = file.getName() + ".bin";
     final String dstFileName = binFileName;
     final IFile dstRasterIFile = importDataFolder.getFile( dstFileName );
     final File dstRasterFile = dstRasterIFile.getRawLocation().toFile();
-    final RectifiedGridDomain gridDomain = importAsBinaryRaster( file.getLocation().toFile(), dstRasterFile, "EPSG:28992", new NullProgressMonitor() ); //$NON-NLS-1$
+    final RectifiedGridDomain gridDomain = importAsBinaryRaster( file.getLocation().toFile(), dstRasterFile, "EPSG:28992", new NullProgressMonitor() );
 
     final IFeatureType ft = covCollWorkspace.getGMLSchema().getFeatureType( RectifiedGridCoverage.QNAME );
     final Feature rootFeature = covCollWorkspace.getRootFeature();
     final ICoverageCollection covColl = (ICoverageCollection) rootFeature.getAdapter( ICoverageCollection.class );
 
-    final IRelationType parentRelation = (IRelationType) covColl.getFeatureType().getProperty( ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER );
+    final IRelationType parentRelation = (IRelationType) covColl.getFeatureType().getProperty( CoverageCollection.QNAME_PROP_COVERAGE_MEMBER );
     final Feature coverageFeature = covCollWorkspace.createFeature( covColl, parentRelation, ft );
     final RectifiedGridCoverage coverage = (RectifiedGridCoverage) coverageFeature;
     covColl.getCoverages().add( coverage );
@@ -257,7 +258,7 @@ public class TestGrid2Shp extends TestCase
     coverage.setRangeSet( rangeSetFile );
     coverage.setGridDomain( gridDomain );
     coverage.setName( binFileName );
-    coverage.setDescription( "ASCII-Import" ); //$NON-NLS-1$
+    coverage.setDescription( "ASCII-Import" );
 
     return GeoGridUtilities.toGrid( coverage );
   }

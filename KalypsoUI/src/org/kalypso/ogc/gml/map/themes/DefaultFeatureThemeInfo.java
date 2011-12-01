@@ -45,7 +45,6 @@ import java.util.Properties;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -98,7 +97,7 @@ public class DefaultFeatureThemeInfo implements IKalypsoThemeInfo
     }
   }
 
-  private IKalypsoThemeInfo findDelegate( final IFeatureType featureType ) throws CoreException
+  private IKalypsoThemeInfo findDelegate( IFeatureType featureType ) throws CoreException
   {
     if( featureType == null )
       return null;
@@ -106,13 +105,13 @@ public class DefaultFeatureThemeInfo implements IKalypsoThemeInfo
     final QName qname = featureType.getQName();
     final Properties properties = FeatureTypePropertiesCatalog.getProperties( m_theme.getWorkspace().getContext(), qname );
     final String infoId = properties.getProperty( IFeatureTypePropertiesConstants.THEME_INFO_ID, null );
-    if( StringUtils.isBlank( infoId ) )
+    if( infoId == null )
     {
-      final IFeatureType parentFT = featureType.getSubstitutionGroupFT();
+      IFeatureType parentFT = featureType.getSubstitutionGroupFT();
       return findDelegate( parentFT );
     }
 
-    final IKalypsoThemeInfo delegate = KalypsoCoreExtensions.createThemeInfo( infoId, m_theme );
+    IKalypsoThemeInfo delegate = KalypsoCoreExtensions.createThemeInfo( infoId, m_theme );
     if( delegate == null )
     {
       final String msg = Messages.getString( "org.kalypso.ogc.gml.map.themes.DefaultFeatureThemeInfo.4", m_theme.getLabel(), infoId ); //$NON-NLS-1$

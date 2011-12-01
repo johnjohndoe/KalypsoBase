@@ -40,12 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.model.impl.visitors;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
-import de.openali.odysseus.chart.framework.model.impl.IAxisVisitorBehavior;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IAxisVisitor;
@@ -61,9 +59,6 @@ public class PanToVisitor implements IAxisVisitor
 
   public PanToVisitor( final Point start, final Point end )
   {
-    Assert.isNotNull( start );
-    Assert.isNotNull( end );
-
     m_start = start;
     m_end = end;
   }
@@ -74,10 +69,7 @@ public class PanToVisitor implements IAxisVisitor
   @Override
   public void visit( final IAxis axis )
   {
-    final IAxisVisitorBehavior visitorBehavior = axis.getAxisVisitorBehavior();
-    final boolean isAllowed = visitorBehavior == null ? true : visitorBehavior.isPanEnabled();
-
-    if( m_start.equals( m_end ) || !isAllowed )
+    if( m_start.equals( m_end ) )
       return;
 
     double newmin = 0;

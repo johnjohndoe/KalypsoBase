@@ -59,7 +59,6 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
@@ -257,19 +256,8 @@ public class SplitSort implements FeatureList
       // TODO: slow!
       final boolean removed = m_items.remove( object );
 
-      // If index is empty, use opportunity to reset
-      if( m_items.size() == 0 )
-        invalidate();
-      else if( m_index != null )
+      if( m_index != null )
         m_index.remove( env, object );
-
-      if( object instanceof Feature )
-      {
-        final Feature f = (Feature) object;
-        final GMLWorkspace workspace = f.getWorkspace();
-        if( workspace instanceof GMLWorkspace_Impl )
-          ((GMLWorkspace_Impl) workspace).unregisterFeature( f );
-      }
 
       return removed;
     }
@@ -296,6 +284,9 @@ public class SplitSort implements FeatureList
     }
   }
 
+  /**
+   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#getBoundingBox()
+   */
   // TODO: slow; check if we can improve it by maintaining the bbox in this class
   @Override
   public GM_Envelope getBoundingBox( )
@@ -307,9 +298,7 @@ public class SplitSort implements FeatureList
       final Envelope bbox = m_index.getBoundingBox();
       if( bbox == null )
         return null;
-
-      final KalypsoDeegreePlugin plugin = KalypsoDeegreePlugin.getDefault();
-      return JTSAdapter.wrap( bbox, plugin.getCoordinateSystem() );
+      return JTSAdapter.wrap( bbox, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
     }
   }
 
@@ -897,9 +886,4 @@ public class SplitSort implements FeatureList
     return false;
   }
 
-  @Override
-  public IRelationType getPropertyType( )
-  {
-    return m_parentFeatureTypeProperty;
-  }
 }

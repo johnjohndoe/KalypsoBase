@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
+import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedSpinner;
 import org.kalypso.zml.ui.table.base.widgets.IEnhancedTextBoxListener;
@@ -69,7 +69,7 @@ public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage
 
   public ShiftDateAdjustmentPage( final IAdjustmentPageProvider provider )
   {
-    super( provider, ShiftDateAdjustmentPage.class.getName() );
+    super( provider );
   }
 
   /**
@@ -96,7 +96,7 @@ public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage
       toolkit.createLabel( body, "Verschieben, um:" ).setFont( HEADING );
 
       final Composite control = toolkit.createComposite( body );
-      control.setLayout( Layouts.createGridLayout( 3 ) );
+      control.setLayout( LayoutHelper.createGridLayout( 3 ) );
       control.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
       if( offset < 60 )

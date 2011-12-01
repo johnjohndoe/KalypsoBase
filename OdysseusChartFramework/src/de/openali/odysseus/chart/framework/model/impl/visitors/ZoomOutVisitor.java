@@ -44,7 +44,6 @@ import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
-import de.openali.odysseus.chart.framework.model.impl.IAxisVisitorBehavior;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IAxisVisitor;
 
@@ -70,9 +69,7 @@ public class ZoomOutVisitor implements IAxisVisitor
   @Override
   public void visit( final IAxis axis )
   {
-    final IAxisVisitorBehavior visitorBehavior = axis.getAxisVisitorBehavior();
-    final boolean isAllowed = visitorBehavior == null ? true : visitorBehavior.isZoomEnabled();
-    if( m_start == null || m_end == null || !isAllowed )
+    if( m_start == null || m_end == null )
       return;
 
     double from = Double.NaN;
@@ -125,10 +122,10 @@ public class ZoomOutVisitor implements IAxisVisitor
         final double oldmin = min.doubleValue();
         final double oldmax = max.doubleValue();
         final double oldrange = Math.abs( oldmin - oldmax );
-        final double newrange = oldrange / mouserange * oldrange;
+        final double newrange = (oldrange / mouserange) * oldrange;
 
-        final double newFrom = oldmin - Math.abs( from - oldmin ) / oldrange * newrange;
-        final double newTo = oldmax + Math.abs( to - oldmax ) / oldrange * newrange;
+        final double newFrom = oldmin - ((Math.abs( from - oldmin ) / oldrange) * newrange);
+        final double newTo = oldmax + ((Math.abs( to - oldmax ) / oldrange) * newrange);
 
         axis.setNumericRange( new ComparableDataRange<Number>( new Number[] { new Double( newFrom ), new Double( newTo ) } ) );
       }

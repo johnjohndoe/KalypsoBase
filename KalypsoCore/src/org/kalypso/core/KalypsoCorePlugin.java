@@ -71,7 +71,7 @@ import org.osgi.framework.BundleContext;
  */
 public class KalypsoCorePlugin extends AbstractUIPlugin
 {
-  private static KalypsoCorePlugin INSTANCE;
+  private static KalypsoCorePlugin m_default;
 
   /**
    * Storage for preferences.
@@ -99,12 +99,12 @@ public class KalypsoCorePlugin extends AbstractUIPlugin
 
   public static KalypsoCorePlugin getDefault( )
   {
-    return INSTANCE;
+    return m_default;
   }
 
   public KalypsoCorePlugin( )
   {
-    INSTANCE = this;
+    m_default = this;
   }
 
   /**

@@ -5,52 +5,41 @@ import java.text.Format;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
-import de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer;
 
 /**
  * @author alibu
  */
 public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
 {
+
+  private final Insets m_labelInsets;
+
+  private final Insets m_tickLabelInsets;
+
   private final String m_id;
-
-  private IChartLabelRenderer m_axisLabelRender = null;
-
-  private IChartLabelRenderer m_tickLabelRender = null;
-
-  private final AxisRendererConfig m_axisConfig;
 
   /**
    * Hashmap to store arbitrary key value pairs
    */
-  /**
-   * @deprecated
-   */
-  @Deprecated
   private final Map<String, Object> m_data = new HashMap<String, Object>();
 
-  public AbstractGenericAxisRenderer( final String id, final AxisRendererConfig axisConfig )
-  {
-    m_id = id;
-    m_axisConfig = axisConfig;
-  }
+  private ILineStyle m_axisLineStyle;
 
-  public AbstractGenericAxisRenderer( final String id, final IChartLabelRenderer axisLabelRenderer, final IChartLabelRenderer tickLabelRenderer, final AxisRendererConfig axisConfig )
-  {
-    m_id = id;
-    m_axisConfig = axisConfig;
-    m_axisLabelRender = axisLabelRenderer;
-    m_tickLabelRender = tickLabelRenderer;
-  }
+  private ITextStyle m_labelStyle;
+
+  private ITextStyle m_tickLabelStyle;
+
+  private ILineStyle m_tickLineStyle;
 
   public AbstractGenericAxisRenderer( final String id, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, final ILineStyle axisLineStyle, final ITextStyle labelStyle, final ILineStyle tickLineStyle, final ITextStyle tickLabelStyle )
   {
@@ -61,16 +50,16 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
   public AbstractGenericAxisRenderer( final String id, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, final ILineStyle axisLineStyle, final ITextStyle labelStyle, final ILineStyle tickLineStyle, final ITextStyle tickLabelStyle, final int borderSize )
   {
     m_id = id;
-    m_axisConfig = new AxisRendererConfig();
-    m_axisConfig.tickLength = tickLength;
-    m_axisConfig.axisLineStyle = axisLineStyle;
-    m_axisConfig.tickLineStyle = tickLineStyle;
-    m_axisConfig.axisInsets = new Insets( gap, 0, borderSize, 0 );
+    m_data.put( IAxisConstants.TICK_LENGTH, tickLength );
+    m_tickLabelInsets = tickLabelInsets;
+    m_labelInsets = labelInsets;
+    m_data.put( IAxisConstants.AXIS_GAP, gap );
+    m_axisLineStyle = axisLineStyle;
+    m_labelStyle = labelStyle;
+    m_tickLabelStyle = tickLabelStyle;
+    m_tickLineStyle = tickLineStyle;
+    m_data.put( IAxisConstants.BORDER_SIZE, borderSize );
 
-    setTickLabelStyle( tickLabelStyle );
-    setTickLabelInsets( tickLabelInsets );
-    setLabelStyle( labelStyle );
-    setAxisLabelInsets( labelInsets );
   }
 
   @Override
@@ -90,14 +79,9 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
     gc.drawText( text, x, y );
   }
 
-  public AxisRendererConfig getAxisConfig( )
+  public int getBorderSize( )
   {
-    return m_axisConfig;
-  }
-
-  public final IChartLabelRenderer getAxisLabelRenderer( )
-  {
-    return m_axisLabelRender;
+    return (Integer) m_data.get( IAxisConstants.BORDER_SIZE );
   }
 
   /**
@@ -111,7 +95,7 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
 
   public int getGap( )
   {
-    return m_axisConfig.axisInsets.top;
+    return (Integer) m_data.get( IAxisConstants.AXIS_GAP );
   }
 
   @Override
@@ -122,21 +106,21 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
 
   public Insets getLabelInsets( )
   {
-    if( getAxisLabelRenderer() == null )
-      return null;
-    return getAxisLabelRenderer().getTitleTypeBean().getInsets();
+    return m_labelInsets;
   }
 
   public ITextStyle getLabelStyle( )
   {
-    if( getAxisLabelRenderer() == null )
-      return null;
-    return getAxisLabelRenderer().getTitleTypeBean().getTextStyle();
+    if( m_labelStyle == null )
+      m_labelStyle = StyleUtils.getDefaultTextStyle();
+    return m_labelStyle;
   }
 
   public ILineStyle getLineStyle( )
   {
-    return m_axisConfig.axisLineStyle;
+    if( m_axisLineStyle == null )
+      m_axisLineStyle = StyleUtils.getDefaultLineStyle();
+    return m_axisLineStyle;
   }
 
   protected abstract Point getTextExtent( GC gcw, Number value, ITextStyle style, Format format, IDataRange<Number> range );
@@ -150,38 +134,26 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
 
   public Insets getTickLabelInsets( )
   {
-    if( getTickLabelRenderer() == null )
-      return getAxisConfig().tickLabelInsets;
-    return getTickLabelRenderer().getTitleTypeBean().getInsets();
-  }
-
-  public final IChartLabelRenderer getTickLabelRenderer( )
-  {
-    return m_tickLabelRender;
+    return m_tickLabelInsets;
   }
 
   public ITextStyle getTickLabelStyle( )
   {
-    if( getTickLabelRenderer() == null )
-      return StyleUtils.getDefaultTextStyle();
-    return getTickLabelRenderer().getTitleTypeBean().getTextStyle();
+    if( m_tickLabelStyle == null )
+      m_tickLabelStyle = StyleUtils.getDefaultTextStyle();
+    return m_tickLabelStyle;
   }
 
   public int getTickLength( )
   {
-    return m_axisConfig.tickLength;
+    return (Integer) m_data.get( IAxisConstants.TICK_LENGTH );
   }
 
   public ILineStyle getTickLineStyle( )
   {
-    return m_axisConfig.tickLineStyle;
-  }
-
-  public void setAxisLabelInsets( final Insets insets )
-  {
-    if( getAxisLabelRenderer() == null )
-      return;
-    getAxisLabelRenderer().getTitleTypeBean().setInsets( insets );
+    if( m_tickLineStyle == null )
+      m_tickLineStyle = StyleUtils.getDefaultLineStyle();
+    return m_tickLineStyle;
   }
 
   /**
@@ -196,16 +168,7 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
   @Override
   public void setLabelStyle( final ITextStyle style )
   {
-    if( getAxisLabelRenderer() == null )
-      return;
-    getAxisLabelRenderer().getTitleTypeBean().setTextStyle( style );
-  }
-
-  public void setTickLabelInsets( final Insets insets )
-  {
-    if( getTickLabelRenderer() == null )
-      return;
-    getTickLabelRenderer().getTitleTypeBean().setInsets( insets );
+    m_labelStyle = style;
   }
 
   /**
@@ -214,9 +177,8 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
   @Override
   public void setTickLabelStyle( final ITextStyle style )
   {
-    if( getTickLabelRenderer() == null )
-      return;
-    getTickLabelRenderer().getTitleTypeBean().setTextStyle( style );
+    m_tickLabelStyle = style;
+
   }
 
 }

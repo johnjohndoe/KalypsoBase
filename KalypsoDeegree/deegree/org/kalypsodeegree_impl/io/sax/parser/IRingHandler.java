@@ -48,5 +48,5 @@ import org.kalypsodeegree.model.geometry.GM_Ring;
  */
 public interface IRingHandler extends IGMLElementHandler<GM_Ring>
 {
-
+  
 }

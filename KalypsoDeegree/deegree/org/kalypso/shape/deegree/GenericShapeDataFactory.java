@@ -60,7 +60,6 @@ import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.dbf.DBFField;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.dbf.FieldType;
-import org.kalypso.shape.dbf.IDBFField;
 import org.kalypso.shape.dbf.IDBFValue;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -70,19 +69,14 @@ import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
-import org.kalypsodeegree_impl.tools.GMLConstants;
 
 /**
  * A {@link org.kalypso.shape.IShapeDataProvider} that simulates the old ShapeSerializer behaviour.
  * 
  * @author Gernot Belger
  */
-public final class GenericShapeDataFactory
+public class GenericShapeDataFactory
 {
-  private GenericShapeDataFactory( )
-  {
-  }
-
   public static IShapeData createDefaultData( final List<Feature> features, final Charset charset, final String coordinateSystem )
   {
     if( features.isEmpty() )
@@ -108,7 +102,7 @@ public final class GenericShapeDataFactory
     {
       try
       {
-        final IDBFField field = findField( element );
+        final DBFField field = findField( element );
         if( field != null )
         {
           final QName qName = element.getQName();
@@ -126,7 +120,7 @@ public final class GenericShapeDataFactory
     return fields.toArray( new IDBFValue[fields.size()] );
   }
 
-  private static IDBFField findField( final IPropertyType property ) throws DBaseException
+  private static DBFField findField( final IPropertyType property ) throws DBaseException
   {
     if( !(property instanceof IValuePropertyType) )
       return null;
@@ -155,7 +149,7 @@ public final class GenericShapeDataFactory
       // TODO: Problem: reading/writing a shape will change the precision/size of the column!
       return new DBFField( fieldName, FieldType.N, (byte) 30, (byte) 10 );
 
-    if( clazz == Double.class || clazz == Number.class )
+    if( (clazz == Double.class) || (clazz == Number.class) )
       return new DBFField( fieldName, FieldType.N, (byte) 30, (byte) 10 );
 
     if( clazz == BigDecimal.class )
@@ -183,7 +177,7 @@ public final class GenericShapeDataFactory
     if( pos < 0 )
       return localPart;
 
-    return localPart.substring( pos + 1, Math.min( pos + 12, localPart.length() ) );
+    return localPart.substring( pos + 1 );
   }
 
   public static GMLXPath findGeometry( final IFeatureType type )
@@ -223,33 +217,6 @@ public final class GenericShapeDataFactory
       return ShapeType.POLYGON;
 
     return ShapeType.NULL;
-  }
-
-  public static QName findGeometryType( final ShapeType type )
-  {
-    switch( type )
-    {
-      case NULL:
-        return GMLConstants.QN_GEOMETRY;
-
-      case POINT:
-      case POINTZ:
-        return GMLConstants.QN_POINT;
-
-      case MULTIPOINT:
-      case MULTIPOINTZ:
-        return GMLConstants.QN_MULTI_POINT;
-
-      case POLYLINE:
-      case POLYLINEZ:
-        return GMLConstants.QN_CURVE;
-
-      case POLYGON:
-      case POLYGONZ:
-        return GMLConstants.QN_SURFACE;
-    }
-
-    return GMLConstants.QN_GEOMETRY;
   }
 
   public static IFeatureType findLeastCommonType( final Feature[] features )

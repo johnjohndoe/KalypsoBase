@@ -12,10 +12,17 @@ public class KalypsoFtpService extends Plugin
 
   private static KalypsoFtpService PLUGIN;
 
+  /**
+   * The constructor
+   */
   public KalypsoFtpService( )
   {
   }
 
+  /*
+   * (non-Javadoc)
+   * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
+   */
   @Override
   public void start( final BundleContext context ) throws Exception
   {
@@ -27,6 +34,10 @@ public class KalypsoFtpService extends Plugin
     PLUGIN = this;
   }
 
+  /*
+   * (non-Javadoc)
+   * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
+   */
   @Override
   public void stop( final BundleContext context ) throws Exception
   {

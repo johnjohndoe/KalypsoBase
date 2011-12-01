@@ -48,13 +48,9 @@ import java.util.Date;
 import java.util.Set;
 import java.util.TimeZone;
 
-import org.apache.commons.lang3.StringUtils;
-import org.joda.time.Period;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.lang.Strings;
-import org.kalypso.commons.time.PeriodUtils;
-import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.DateRange;
@@ -172,15 +168,12 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
 
   public static String getWqTable( final MetadataList mdl )
   {
-    return mdl.getProperty( ITimeseriesConstants.MD_WQ_TABLE );
+    return mdl.getProperty( ITimeseriesConstants.MD_WQTABLE );
   }
 
   public static void setWqTable( final MetadataList mdl, final String table )
   {
-    if( Strings.isEmpty( table ) )
-      mdl.remove( ITimeseriesConstants.MD_WQ_TABLE );
-    else
-      mdl.setProperty( ITimeseriesConstants.MD_WQ_TABLE, table );
+    mdl.setProperty( ITimeseriesConstants.MD_WQTABLE, table );
   }
 
   /**
@@ -245,32 +238,6 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
       final String toStr = DateUtilities.printDateTime( to, timeZone );
       metadata.setProperty( ITimeseriesConstants.MD_DATE_END, toStr ); //$NON-NLS-1$
     }
-  }
-
-  public static void setTimestep( final MetadataList metadata, final int calendarField, final int amount )
-  {
-    final String fieldName = CalendarUtilities.getName( calendarField );
-    final Object value = String.format( "%s#%d", fieldName, amount );
-    metadata.put( MD_TIMESTEP, value );
-  }
-
-  public static Period getTimestep( final MetadataList metadata )
-  {
-    final String property = metadata.getProperty( MD_TIMESTEP, null );
-    if( StringUtils.isBlank( property ) )
-      return null;
-
-    final String[] split = property.split( "#" );
-    if( split.length != 2 )
-      return null;
-
-    final String fieldName = split[0];
-    final Integer amount = NumberUtils.parseQuietInteger( split[1] );
-    if( amount == null )
-      return null;
-
-    final int field = CalendarUtilities.getCalendarField( fieldName );
-    return PeriodUtils.getPeriod( field, amount );
   }
 
   public static Date getAusgabeZeitpunkt( final MetadataList metadata ) throws ParseException

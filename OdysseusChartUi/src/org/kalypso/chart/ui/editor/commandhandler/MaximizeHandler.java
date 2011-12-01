@@ -5,8 +5,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Status;
 
-import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.util.ChartUtilities;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
@@ -16,16 +15,20 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
  */
 public class MaximizeHandler extends AbstractHandler
 {
+  /**
+   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+   */
   @Override
   public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final IChartComposite chart = ChartHandlerUtilities.getChart( context );
-    if( chart == null || chart.getChartModel() == null )
+    if( chart == null )
       return Status.CANCEL_STATUS;
-    final IChartModel model = chart.getChartModel();
-    model.autoscale( new IAxis[] {} );
+
+    ChartUtilities.maximize( chart.getChartModel() );
 
     return Status.OK_STATUS;
   }
+
 }

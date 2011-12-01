@@ -44,7 +44,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -53,14 +53,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
@@ -77,7 +73,6 @@ import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.validation.ResourceValidatorMarkerCollector;
-import org.kalypso.model.wspm.ui.profil.wizard.ProfileHandlerUtils;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
@@ -87,45 +82,41 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author kimwerner
  */
-public class ValidateProfilesWizard extends Wizard implements IWorkbenchWizard
+public class ValidateProfilesWizard extends Wizard
 {
-  private String m_profiletype = StringUtils.EMPTY;
 
-  private ValidatorRuleSet m_validatorRuleSet;
+  private String m_profiletype = ""; //$NON-NLS-1$
 
-  private IProfilMarkerResolution[] m_reparatorRules;
+  final private ValidatorRuleSet m_validatorRuleSet;
 
-  private ProfilesChooserPage m_profileChooserPage;
+  final private IProfilMarkerResolution[] m_reparatorRules;
+
+  final private ProfilesChooserPage m_profileChooserPage;
 
   private ArrayChooserPage m_validatorChooserPage;
 
   private ArrayChooserPage m_quickFixChoosePage;
 
-  private IProfileFeature[] m_profiles;
+  final private IProfileFeature[] m_profiles;
 
-  protected CommandableWorkspace m_workspace;
+  final protected CommandableWorkspace m_workspace;
 
-  public ValidateProfilesWizard( )
+  public ValidateProfilesWizard( final ProfileSelection profileSelection )
   {
-    setNeedsProgressMonitor( true );
-    setWindowTitle( Messages.getString( "org.kalypso.model.wspm.ui.action.ValidateProfilesActionDelegate.0" ) ); //$NON-NLS-1$
-    setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
-  }
-
-  @Override
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
-  {
-    final ProfileSelection profileSelection = ProfileHandlerUtils.getSelectionChecked( selection );
     m_workspace = profileSelection.getWorkspace();
     m_profiles = profileSelection.getProfiles();
     m_profiletype = (String) m_profiles[0].getProperty( ProfileFeatureFactory.QNAME_TYPE );
     m_validatorRuleSet = KalypsoModelWspmCorePlugin.getValidatorSet( m_profiletype );
 
     m_reparatorRules = KalypsoModelWspmCoreExtensions.createReparatorRules();
+    setNeedsProgressMonitor( true );
     final String description = Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard.2" ); //$NON-NLS-1$ 
     m_profileChooserPage = new ProfilesChooserPage( description, profileSelection, false );
   }
 
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#addPages()
+   */
   @Override
   public void addPages( )
   {
@@ -184,7 +175,7 @@ public class ValidateProfilesWizard extends Wizard implements IWorkbenchWizard
 
     final Shell shell = getShell();
 
-    final ICoreRunnableWithProgress validateJob = new ICoreRunnableWithProgress()
+    final ICoreRunnableWithProgress m_validateJob = new ICoreRunnableWithProgress()
     {
       @Override
       public IStatus execute( final IProgressMonitor monitor )
@@ -207,9 +198,7 @@ public class ValidateProfilesWizard extends Wizard implements IWorkbenchWizard
               for( final IMarker marker : markers )
               {
                 if( marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_PROFILE_ID ).equals( featureIDs[i] ) )
-                {
                   marker.delete();
-                }
               }
             }
             catch( final CoreException e )
@@ -296,7 +285,7 @@ public class ValidateProfilesWizard extends Wizard implements IWorkbenchWizard
       @Override
       public void run( )
       {
-        RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, true, validateJob );
+        RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, true, m_validateJob );
 
         try
         {

@@ -101,6 +101,9 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
     }
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
+   */
   @Override
   public void paint( final GC gc )
   {
@@ -175,8 +178,11 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
     return instance;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
+   */
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Number> getDomainRange( )
   {
     // TODO: all three parameters should eventually be set from outside
     final boolean shouldAutomax = true;
@@ -199,12 +205,18 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
     return new DataRange<Number>( m_dateDataOperator.logicalToNumeric( from.getTime() ), m_dateDataOperator.logicalToNumeric( end.getTime() ) );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange(de.openali.odysseus.chart.framework.model.data.IDataRange)
+   */
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     return null;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#dispose()
+   */
   @Override
   public void dispose( )
   {
@@ -212,12 +224,18 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
       m_provider.dispose();
   }
 
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#createLegendEntries()
+   */
   @Override
   protected ILegendEntry[] createLegendEntries( )
   {
     return new ILegendEntry[] {};
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.template.IObsProviderListener#observationLoadedEvent()
+   */
   @Override
   public void observationReplaced( )
   {
@@ -225,6 +243,9 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
     getEventHandler().fireLayerContentChanged( this );
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.template.IObsProviderListener#observationChangedX(java.lang.Object)
+   */
   @Override
   public void observationChanged( final Object source )
   {

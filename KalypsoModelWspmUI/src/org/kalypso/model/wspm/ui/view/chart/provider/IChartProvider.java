@@ -59,5 +59,5 @@ public interface IChartProvider
    * @param feature
    *          The feature within the chart.
    */
-  void configure( IChartModel chartModel, Feature feature );
+  public void configure( IChartModel chartModel, Feature feature );
 }

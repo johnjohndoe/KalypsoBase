@@ -40,20 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.themes;
 
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 import javax.xml.bind.JAXBElement;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.commons.java.util.PropertiesHelper;
-import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeFactory;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -61,15 +55,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
 import org.kalypso.ogc.gml.wms.utils.KalypsoWMSUtilities;
 import org.kalypso.template.types.StyledLayerType;
-import org.kalypso.template.types.StyledLayerType.Style;
-import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
-import org.kalypsodeegree.graphics.sld.NamedLayer;
-import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
-import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
-import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 
 /**
  * Theme factory for {@link KalypsoWMSTheme}s.
@@ -84,72 +70,34 @@ public class WmsThemeFactory implements IKalypsoThemeFactory
    *      org.kalypso.ogc.gml.selection.IFeatureSelectionManager)
    */
   @Override
-  public IKalypsoTheme createTheme( final I10nString layerName, final StyledLayerType layerType, final URL context, final IMapModell mapModell, final IFeatureSelectionManager selectionManager ) throws CoreException
+  public IKalypsoTheme createTheme( final I10nString layerName, final StyledLayerType layerType, final URL context, final IMapModell mapModell, final IFeatureSelectionManager selectionManager )
   {
-    try
-    {
-      final String source = layerType.getHref();
-      final String linktype = layerType.getLinktype();
+    final String source = layerType.getHref();
+    final String linktype = layerType.getLinktype();
 
-      /* Parse the source into properties. */
-      final Properties sourceProps = PropertiesHelper.parseFromString( source, '#' );
+    /* Parse the source into properties. */
+    final Properties sourceProps = PropertiesHelper.parseFromString( source, '#' );
 
-      /* Get the provider attribute. */
-      final String layerProp = sourceProps.getProperty( IKalypsoImageProvider.KEY_LAYERS, null );
-      final String styleProp = sourceProps.getProperty( IKalypsoImageProvider.KEY_STYLES, null );
-      final String service = sourceProps.getProperty( IKalypsoImageProvider.KEY_URL, null );
-      final String providerID = sourceProps.getProperty( IKalypsoImageProvider.KEY_PROVIDER, null );
+    /* Get the provider attribute. */
+    final String layerProp = sourceProps.getProperty( IKalypsoImageProvider.KEY_LAYERS, null );
+    final String styleProp = sourceProps.getProperty( IKalypsoImageProvider.KEY_STYLES, null );
+    final String service = sourceProps.getProperty( IKalypsoImageProvider.KEY_URL, null );
+    final String providerID = sourceProps.getProperty( IKalypsoImageProvider.KEY_PROVIDER, null );
 
-      /* Create the image provider. */
-      final String[] layers = layerProp == null ? null : layerProp.split( "," ); //$NON-NLS-1$
-      final String[] styles = styleProp == null ? null : styleProp.split( "," ); //$NON-NLS-1$
-      String sldBody = null;
-      final List<Style> styleList = layerType.getStyle();
-      if( styleList.size() > 0 )
-      {
-        final IUrlResolver2 resolver = new IUrlResolver2()
-        {
-          /**
-           * @see org.kalypso.contribs.java.net.IUrlResolver2#resolveURL(java.lang.String)
-           */
-          @Override
-          public URL resolveURL( final String relativeOrAbsolute ) throws MalformedURLException
-          {
-            return new URL( relativeOrAbsolute );
-          }
-        };
+    /* Create the image provider. */
+    final String[] layers = layerProp == null ? null : layerProp.split( "," ); //$NON-NLS-1$
+    final String[] styles = styleProp == null ? null : styleProp.split( "," ); //$NON-NLS-1$
+    final IKalypsoImageProvider imageProvider = KalypsoWMSUtilities.getImageProvider( layerName.getValue(), layers, styles, service, providerID );
 
-        final List<NamedLayer> namedLayers = new ArrayList<NamedLayer>();
-        for( final Style style : styleList )
-        {
-          final URL styleUrl = new URL( style.getHref() );
-          final FeatureTypeStyle ftStyle = SLDFactory.createFeatureTypeStyle( resolver, styleUrl );
-          final UserStyle userStyle = StyleFactory.createUserStyle( null, null, null, false, new FeatureTypeStyle[] { ftStyle } );
-          final NamedLayer layer = SLDFactory.createNamedLayer( style.getStyle(), null, new UserStyle[] { userStyle } );
-          namedLayers.add( layer );
-        }
-
-        final StyledLayerDescriptor descriptor = SLDFactory.createStyledLayerDescriptor( namedLayers.toArray( new NamedLayer[] {} ) );
-        sldBody = descriptor.exportAsXML();
-      }
-
-      final IKalypsoImageProvider imageProvider = KalypsoWMSUtilities.getImageProvider( layerName.getValue(), layers, styles, service, providerID, sldBody );
-
-      return new KalypsoWMSTheme( source, linktype, layerName, layerType, imageProvider, mapModell );
-    }
-    catch( final Exception ex )
-    {
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), ex.getLocalizedMessage(), ex ) );
-    }
+    return new KalypsoWMSTheme( source, linktype, layerName, imageProvider, mapModell );
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoThemeFactory#configureLayer(org.kalypso.ogc.gml.IKalypsoTheme, java.lang.String,
-   *      org.kalypsodeegree.model.geometry.GM_Envelope, java.lang.String)
+   * @see org.kalypso.ogc.gml.IKalypsoThemeFactory#configureLayer(org.kalypso.ogc.gml.IKalypsoTheme, java.lang.String, org.kalypsodeegree.model.geometry.GM_Envelope, java.lang.String)
    */
   @Override
-  public JAXBElement< ? extends StyledLayerType> configureLayer( final IKalypsoTheme theme, final String id, final GM_Envelope bbox, final String srsName )
+  public JAXBElement< ? extends StyledLayerType> configureLayer( IKalypsoTheme theme, String id, GM_Envelope bbox, String srsName )
   {
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 }

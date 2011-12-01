@@ -41,21 +41,21 @@
 package org.kalypso.model.wspm.core.gml;
 
 import java.math.BigDecimal;
-import java.net.URI;
+import java.net.URL;
 
 import javax.xml.namespace.QName;
 
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree_impl.gml.binding.commons.Image;
 
 /**
  * @author Dirk Kuch
  */
-public interface IProfileFeature extends Feature
+public interface IProfileFeature extends Feature, IFeatureWrapper2
 {
   QName QN_PROFILE = new QName( IWspmConstants.NS_WSPMPROF, "Profile" ); //$NON-NLS-1$
 
@@ -111,7 +111,5 @@ public interface IProfileFeature extends Feature
 
   void setProfileType( String type );
 
-  Image addImage( URI photoURL );
-
-  IFeatureBindingCollection<Image> getImages( );
+  Image addImage( URL photoURL );
 }

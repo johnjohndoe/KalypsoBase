@@ -51,13 +51,12 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPersistableElement;
-import org.eclipse.ui.part.FileEditorInput;
 import org.kalypso.contribs.eclipse.i18n.Messages;
 
 /**
  * An {@link org.eclipse.ui.IEditorInput} which is based on a {@link IStorage}.
  * <p>
- * Is persitable if the storage implements {@link org.eclipse.ui.IPersistableElement}. <br/>
+ * Is persitable if the storage implements {@link org.eclipse.ui.IPersistableElement}.
  * 
  * @author Gernot Belger
  */
@@ -83,6 +82,9 @@ public class StorageEditorInput implements IFileEditorInput
     return m_storage;
   }
 
+  /**
+   * @see org.eclipse.ui.IFileEditorInput#getFile()
+   */
   @Override
   public IFile getFile( )
   {
@@ -92,12 +94,7 @@ public class StorageEditorInput implements IFileEditorInput
     if( fullPath == null )
       return null;
 
-    final IFile file = root.getFile( fullPath );
-
-    if( FileEditorInput.isLocalFile( file ) )
-      return file;
-
-    return null;
+    return root.getFile( fullPath );
   }
 
   /**

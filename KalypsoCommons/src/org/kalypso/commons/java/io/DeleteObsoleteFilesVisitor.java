@@ -55,9 +55,9 @@ public class DeleteObsoleteFilesVisitor implements FileVisitor
 
   private final File m_adoptDir;
 
-  private final String[] m_excludeDirWithFile;
+  private final String m_excludeDirWithFile;
 
-  public DeleteObsoleteFilesVisitor( final File adoptFile, final File compareDir, final String[] excludeDirWithFile )
+  public DeleteObsoleteFilesVisitor( final File adoptFile, final File compareDir, final String excludeDirWithFile )
   {
     m_adoptDir = adoptFile;
     m_compareDir = compareDir;
@@ -73,16 +73,12 @@ public class DeleteObsoleteFilesVisitor implements FileVisitor
     final String relativePathTo = FileUtilities.getRelativePathTo( m_adoptDir, file );
     final File compareFile = new File( m_compareDir, relativePathTo );
 
-    // falls es ein Verzeichnis ist und das Ausschlussfile enthält, hier abbrechen
+    // falls es ein Verzeichnis ist und das Auschlussfile enthält, hier abbrechen
     if( m_excludeDirWithFile != null && file.isDirectory() )
     {
-      /* If one of the exclude files exists, return false. */
-      for( final String excludeDirWithFile : m_excludeDirWithFile )
-      {
-        final File excludeFile = new File( file, excludeDirWithFile );
-        if( excludeFile.exists() )
-          return false;
-      }
+      final File excludeFile = new File( file, m_excludeDirWithFile );
+      if( excludeFile.exists() )
+        return false;
     }
 
     if( !compareFile.exists() )

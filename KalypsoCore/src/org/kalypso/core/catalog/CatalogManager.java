@@ -82,9 +82,9 @@ import org.kalypso.core.i18n.Messages;
  */
 public class CatalogManager
 {
-  public static final JAXBContext JAX_CONTEXT_CATALOG = JaxbUtilities.createQuiet( ObjectFactory.class );
+  public final static JAXBContext JAX_CONTEXT_CATALOG = JaxbUtilities.createQuiet( ObjectFactory.class );
 
-  public static final ObjectFactory OBJECT_FACTORY_CATALOG = new ObjectFactory();
+  public final static ObjectFactory OBJECT_FACTORY_CATALOG = new ObjectFactory();
 
   public final Hashtable<Class< ? >, IURNGenerator> m_urnGenerators = new Hashtable<Class< ? >, IURNGenerator>();
 

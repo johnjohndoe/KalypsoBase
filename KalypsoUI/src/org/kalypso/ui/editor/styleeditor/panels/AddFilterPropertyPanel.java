@@ -61,28 +61,30 @@ import org.kalypso.ui.editor.styleeditor.MessageBundle;
 
 /**
  * @author F.Lindemann
+ *  
  */
 public class AddFilterPropertyPanel
 {
+
   private Composite composite = null;
 
   private Combo geometryCombo = null;
 
   private int selectionIndex = 0;
 
-  private final EventListenerList listenerList = new EventListenerList();
+  private EventListenerList listenerList = new EventListenerList();
 
   private String label = null;
 
   private String[] listCombi = null;
 
-  public AddFilterPropertyPanel( final Composite parent, final String m_label, final String[] list )
+  public AddFilterPropertyPanel( Composite parent, String m_label, String[] list )
   {
     setLabel( m_label );
     setListCombi( list );
     composite = new Composite( parent, SWT.NULL );
-    final FormLayout compositeLayout = new FormLayout();
-    final GridData compositeData = new GridData();
+    FormLayout compositeLayout = new FormLayout();
+    GridData compositeData = new GridData();
     compositeData.widthHint = 230;
     composite.setLayoutData( compositeData );
     composite.setLayout( compositeLayout );
@@ -93,16 +95,16 @@ public class AddFilterPropertyPanel
     init();
   }
 
-  public void addPanelListener( final PanelListener pl )
+  public void addPanelListener( PanelListener pl )
   {
     listenerList.add( PanelListener.class, pl );
   }
 
-  private void init( )
+  private void init()
   {
     // Geometry-Selection Combo
     geometryCombo = new Combo( composite, SWT.NULL );
-    final FormData geometryComboData = new FormData();
+    FormData geometryComboData = new FormData();
     geometryComboData.height = 21;
     geometryComboData.width = 90;
     geometryComboData.left = new FormAttachment( 295, 1000, 0 );
@@ -116,9 +118,9 @@ public class AddFilterPropertyPanel
     }
 
     // Symbolizer Add-Button
-    final Label symbolizerAddButton = new Label( composite, SWT.PUSH | SWT.CENTER );
+    Label symbolizerAddButton = new Label( composite, SWT.PUSH | SWT.CENTER );
     symbolizerAddButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_GET_SCALE.createImage() );
-    final FormData symbolizerAddButtonData = new FormData();
+    FormData symbolizerAddButtonData = new FormData();
     symbolizerAddButtonData.height = 20;
     symbolizerAddButtonData.width = 30;
     symbolizerAddButtonData.left = new FormAttachment( 860, 1000, 0 );
@@ -128,29 +130,29 @@ public class AddFilterPropertyPanel
     symbolizerAddButton.addMouseListener( new MouseListener()
     {
       @Override
-      public void mouseDoubleClick( final MouseEvent e )
+      public void mouseDoubleClick( MouseEvent e )
       {
         setSelection( getGeometryCombo().getSelectionIndex() );
         fire();
       }
 
       @Override
-      public void mouseDown( final MouseEvent e )
+      public void mouseDown( MouseEvent e )
       {
         mouseDoubleClick( e );
       }
 
       @Override
-      public void mouseUp( final MouseEvent e )
+      public void mouseUp( MouseEvent e )
       {
-        // nothing
+      // nothing
       }
 
     } );
 
     // ***** Label
-    final Label symbolizerLabel = new Label( composite, SWT.NULL );
-    final FormData symbolizerLabelData = new FormData();
+    Label symbolizerLabel = new Label( composite, SWT.NULL );
+    FormData symbolizerLabelData = new FormData();
     symbolizerLabelData.height = 15;
     symbolizerLabelData.width = 242;
     symbolizerLabelData.left = new FormAttachment( 0, 1000, 0 );
@@ -159,17 +161,17 @@ public class AddFilterPropertyPanel
     symbolizerLabel.setText( label );
   }
 
-  public String getSelection( )
+  public String getSelection()
   {
     return getListCombi()[selectionIndex];
   }
 
-  public void setSelection( final int index )
+  public void setSelection( int index )
   {
-    selectionIndex = index;
+    this.selectionIndex = index;
   }
 
-  public void setSelection( final String selectionString )
+  public void setSelection( String selectionString )
   {
     if( getListCombi() == null )
       return;
@@ -183,56 +185,56 @@ public class AddFilterPropertyPanel
     }
   }
 
-  protected void fire( )
+  protected void fire()
   {
-    final Object[] listeners = listenerList.getListenerList();
+    Object[] listeners = listenerList.getListenerList();
     for( int i = listeners.length - 2; i >= 0; i -= 2 )
     {
       if( listeners[i] == PanelListener.class )
       {
-        final PanelEvent event = new PanelEvent( this );
-        ((PanelListener) listeners[i + 1]).valueChanged( event );
+        PanelEvent event = new PanelEvent( this );
+        ( (PanelListener)listeners[i + 1] ).valueChanged( event );
       }
     }
   }
 
-  public Combo getGeometryCombo( )
+  public Combo getGeometryCombo()
   {
     return geometryCombo;
   }
 
-  public void setGeometryCombo( final Combo m_geometryCombo )
+  public void setGeometryCombo( Combo m_geometryCombo )
   {
-    geometryCombo = m_geometryCombo;
+    this.geometryCombo = m_geometryCombo;
   }
 
-  public String getLabel( )
+  public String getLabel()
   {
     return label;
   }
 
-  public void setLabel( final String m_label )
+  public void setLabel( String m_label )
   {
-    label = m_label;
+    this.label = m_label;
   }
 
-  public int getSelectionIndex( )
+  public int getSelectionIndex()
   {
     return selectionIndex;
   }
 
-  public void setSelectionIndex( final int m_selectionIndex )
+  public void setSelectionIndex( int m_selectionIndex )
   {
-    selectionIndex = m_selectionIndex;
+    this.selectionIndex = m_selectionIndex;
   }
 
-  public String[] getListCombi( )
+  public String[] getListCombi()
   {
     return listCombi;
   }
 
-  public void setListCombi( final String[] m_listCombi )
+  public void setListCombi( String[] m_listCombi )
   {
-    listCombi = m_listCombi;
+    this.listCombi = m_listCombi;
   }
 }

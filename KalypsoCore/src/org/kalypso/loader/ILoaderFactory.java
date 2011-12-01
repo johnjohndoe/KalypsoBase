@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.loader;
 
@@ -51,8 +51,9 @@ import org.kalypso.commons.factory.FactoryException;
  * </p>
  * 
  * @author Schlienger
+ *  
  */
 public interface ILoaderFactory
 {
-  ILoader getLoaderInstance( final String type ) throws FactoryException;
+  public ILoader getLoaderInstance( final String type ) throws FactoryException;
 }

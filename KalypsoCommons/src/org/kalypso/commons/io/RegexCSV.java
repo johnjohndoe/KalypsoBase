@@ -75,10 +75,10 @@ public class RegexCSV extends AbstractCSV
   @Override
   protected void handleCurrentLine( final String line )
   {
-    final Matcher m = m_pattern.matcher( line );
+    Matcher m = m_pattern.matcher( line );
     if( m.matches() )
     {
-      final String[] sLine = new String[m.groupCount()];
+      String[] sLine = new String[m.groupCount()];
 
       for( int i = 0; i < sLine.length; i++ )
         sLine[i] = m.group( i + 1 );

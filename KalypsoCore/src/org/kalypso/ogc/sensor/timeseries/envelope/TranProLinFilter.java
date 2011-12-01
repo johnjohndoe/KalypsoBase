@@ -72,6 +72,10 @@ import org.kalypso.ogc.sensor.timeseries.wq.WQTuppleModel;
  */
 public class TranProLinFilter extends AbstractObservationFilter
 {
+  private final Date m_dateBegin;
+
+  private final Date m_dateEnd;
+
   private final double m_operandBegin;
 
   private final double m_operandEnd;
@@ -82,34 +86,36 @@ public class TranProLinFilter extends AbstractObservationFilter
 
   private final String m_axisTypes;
 
-  private final DateRange m_range;
-
   /**
    * @param statusToMerge
    *          status is merged to modified values as bitwise OR operation (use <code>statusToMerge=0</code> for
    *          unchanged status)
    * @param axisTypes
    */
-  public TranProLinFilter( final DateRange range, final String operator, final double operandBegin, final double operandEnd, final int statusToMerge, final String axisTypes )
+  public TranProLinFilter( final Date dateBegin, final Date dateEnd, final String operator, final double operandBegin, final double operandEnd, final int statusToMerge, final String axisTypes )
   {
-    m_range = range;
+    m_dateBegin = dateBegin;
+    m_dateEnd = dateEnd;
     m_operandBegin = operandBegin;
     m_operandEnd = operandEnd;
     m_statusToMerge = statusToMerge;
     m_axisTypes = axisTypes;
     m_operation = MathOperationFactory.createMathOperation( operator );
-
-    final long rangeLength = m_range.getLength();
-
-    if( rangeLength <= 0 || rangeLength == Long.MAX_VALUE )
-      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.envelope.TranProLinFilter.0" ) + m_range ); //$NON-NLS-1$ //$NON-NLS-2$
+    if( dateBegin != null && dateEnd != null && (dateBegin.after( dateEnd ) || dateBegin.equals( dateEnd )) )
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.envelope.TranProLinFilter.0" ) + dateBegin + " - " + dateEnd ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#appendSettings(org.kalypso.ogc.sensor.metadata.MetadataList)
+   */
   @Override
   protected void appendSettings( final MetadataList metadata )
   {
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#getValues(org.kalypso.ogc.sensor.request.IRequest)
+   */
   @Override
   public ITupleModel getValues( final IRequest args ) throws SensorException
   {
@@ -135,8 +141,8 @@ public class TranProLinFilter extends AbstractObservationFilter
       // If transformation start/end are null:
       // 1. use from/to from request
       // 2. use first/last from base observation
-      Date transformBegin = m_range.getFrom();
-      Date transformEnd = m_range.getTo();
+      Date transformBegin = m_dateBegin;
+      Date transformEnd = m_dateEnd;
 
       // try to assume from request if needed
       if( args != null && args.getDateRange() != null )

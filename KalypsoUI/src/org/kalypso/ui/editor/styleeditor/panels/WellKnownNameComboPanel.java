@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.Composite;
 public class WellKnownNameComboPanel extends ComboPanel
 {
 
-  public WellKnownNameComboPanel( final Composite parent, final String label, final String value )
+  public WellKnownNameComboPanel( Composite parent, String label, String value )
   {
     super( parent, label );
     items = new String[6];
@@ -79,7 +79,7 @@ public class WellKnownNameComboPanel extends ComboPanel
     return selection_index;
   }
 
-  public static String getWellKnownNameByIndex( final int index )
+  public static String getWellKnownNameByIndex( int index )
   {
     switch( index )
     {
@@ -104,7 +104,7 @@ public class WellKnownNameComboPanel extends ComboPanel
    * @see org.kalypso.ui.editor.styleeditor.panels.StrokeComboPanel#setSelection(int)
    */
   @Override
-  public void setSelection( final int index )
+  public void setSelection( int index )
   {
     comboBox.select( index );
   }

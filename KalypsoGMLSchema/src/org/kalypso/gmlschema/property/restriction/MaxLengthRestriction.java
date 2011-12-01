@@ -42,13 +42,14 @@ package org.kalypso.gmlschema.property.restriction;
 
 /**
  * @author doemming
+ *
  */
 public class MaxLengthRestriction implements IRestriction
 {
 
   private final int m_maxLength;
 
-  public MaxLengthRestriction( final int maxLength )
+  public MaxLengthRestriction( int maxLength )
   {
     m_maxLength = maxLength;
   }

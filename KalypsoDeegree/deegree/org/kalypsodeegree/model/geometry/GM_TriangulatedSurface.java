@@ -50,7 +50,7 @@ public interface GM_TriangulatedSurface extends GM_PolyhedralSurface<GM_Triangle
    * </p>
    * 
    * @param positionMust
-   *          be in the same coordinate system as the tirangulated surface.
+   *            be in the same coordinate system as the tirangulated surface.
    * @return The linearly interpolated z-value of the first triangle covering the position. <code>Double.NaN</code> if
    *         no covering triangle was found.
    */
@@ -64,7 +64,7 @@ public interface GM_TriangulatedSurface extends GM_PolyhedralSurface<GM_Triangle
    * </p>
    * 
    * @param positionMust
-   *          be in the same coordinate system as the tirangulated surface.
+   *            be in the same coordinate system as the tirangulated surface.
    * @return The linearly interpolated z-value of the first triangle covering the position. <code>Double.NaN</code> if
    *         no covering triangle was found.
    */

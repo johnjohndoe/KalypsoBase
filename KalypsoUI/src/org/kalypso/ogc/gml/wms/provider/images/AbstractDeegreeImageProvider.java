@@ -112,11 +112,6 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
   private String m_localSRS;
 
   /**
-   * This is the content of a SLD, if we want the server to render the image with a specific style.
-   */
-  private String m_sldBody;
-
-  /**
    * This variable stores the loader for the capabilities.
    */
   private final ICapabilitiesLoader m_loader;
@@ -151,7 +146,6 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     m_styles = null;
     m_service = null;
     m_localSRS = null;
-    m_sldBody = null;
 
     m_loader = loader;
     m_wms = null;
@@ -162,17 +156,16 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
 
   /**
    * @see org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider#init(java.lang.String, java.lang.String[],
-   *      java.lang.String[], java.lang.String, java.lang.String, java.lang.String)
+   *      java.lang.String[], java.lang.String, java.lang.String)
    */
   @Override
-  public void init( final String themeName, final String[] layers, final String[] styles, final String service, final String localSRS, final String sldBody )
+  public void init( final String themeName, final String[] layers, final String[] styles, final String service, final String localSRS )
   {
     m_themeName = themeName;
     m_layers = layers;
     m_styles = styles;
     m_service = service;
     m_localSRS = localSRS;
-    m_sldBody = sldBody;
 
     m_wms = null;
     m_negotiatedSRS = null;
@@ -194,11 +187,11 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
   }
 
   /**
-   * @see org.kalypso.ogc.gml.outline.nodes.ILegendProvider#getLegendGraphic(java.lang.String[], boolean,
+   * @see org.kalypso.ogc.gml.outline.nodes.ILegendProvider#getLegendGraphic(java.lang.String[],
    *      org.eclipse.swt.graphics.Font)
    */
   @Override
-  public org.eclipse.swt.graphics.Image getLegendGraphic( final String[] whiteList, final boolean onlyVisible, final Font font ) throws CoreException
+  public org.eclipse.swt.graphics.Image getLegendGraphic( String[] whiteList, final Font font ) throws CoreException
   {
     /* Initialize the remote WMS, if it is not already done. */
     initializeRemoteWMS();
@@ -228,10 +221,10 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
 
       /* Ask for the srs. */
       m_negotiatedSRS = negotiateCRS( m_localSRS, wmsCaps, m_layers );
-      final Operation operation = wmsCaps.getOperationMetadata().getOperation( new QualifiedName( "GetMap" ) );
+      Operation operation = wmsCaps.getOperationMetadata().getOperation( new QualifiedName( "GetMap" ) );
       HTTP http = null;
-      final List<DCP> dcps = operation.getDCP();
-      for( final DCP dcp : dcps )
+      List<DCP> dcps = operation.getDCP();
+      for( DCP dcp : dcps )
         if( dcp instanceof HTTP )
           http = (HTTP) dcp;
       if( http != null )
@@ -388,7 +381,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
         return null;
 
       /* Create the GetMap request. */
-      final GetMap request = DeegreeWMSUtilities.createGetMapRequest( (WMSCapabilities) remoteWMS.getCapabilities(), getNegotiatedSRS(), getThemeName(), m_layers, m_styles, width, height, bbox, getLocalSRS(), m_sldBody );
+      final GetMap request = DeegreeWMSUtilities.createGetMapRequest( (WMSCapabilities) remoteWMS.getCapabilities(), getNegotiatedSRS(), getThemeName(), m_layers, m_styles, width, height, bbox, getLocalSRS() );
 
       /* Store the request, before actually asking the WMS for a response. */
       m_lastRequest = URLDecoder.decode( String.format( "%s%s", m_getMapUrl, request.toString() ), "UTF-8" );
@@ -448,8 +441,6 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
 
     /* Get the URL of the legend. */
     final LegendURL legendURL = findLegendURL( layers );
-    if( legendURL == null )
-      return null;
 
     /* Get the real URL. */
     final URL onlineResource = legendURL.getOnlineResource();
@@ -499,7 +490,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     return result.toArray( new Layer[result.size()] );
   }
 
-  private LegendURL findLegendURL( final Layer[] layers )
+  private LegendURL findLegendURL( Layer[] layers )
   {
     /* End recursion. */
     if( layers == null || layers.length == 0 )
@@ -507,20 +498,20 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
 
     // TODO: we should show all styles of all layers as a tree in the outline
     // TODO: Instead, we show the graphic of the first style of the first layer
-    final Style[] styles = layers[0].getStyles();
+    Style[] styles = layers[0].getStyles();
     if( styles.length == 0 )
       return findLegendURL( layers[0].getLayer() );
 
     /* TODO Only the first style will be used for now. */
-    final Style style = styles[0];
+    Style style = styles[0];
 
     /* Only use styles, denoted by m_styles. */
-    final List<String> styleList = Arrays.asList( m_styles );
+    List<String> styleList = Arrays.asList( m_styles );
     if( !styleList.contains( style.getName() ) )
       return null;
 
     /* Get the URLs for the legend. */
-    final LegendURL[] legendURLs = style.getLegendURL();
+    LegendURL[] legendURLs = style.getLegendURL();
     if( legendURLs.length == 0 )
       return null;
 

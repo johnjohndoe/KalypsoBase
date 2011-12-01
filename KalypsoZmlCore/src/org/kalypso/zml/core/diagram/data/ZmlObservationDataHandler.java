@@ -55,10 +55,7 @@ import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 
 /**
  * @author Dirk Kuch
- * @deprecated Do not use, all observations should be provided by an IObservationProvider -> do only use the other
- *             implementation, even if loading synchronously
  */
-@Deprecated
 public class ZmlObservationDataHandler implements IZmlLayerDataHandler, IObservationListener
 {
   private final String m_targetAxisId;
@@ -93,13 +90,10 @@ public class ZmlObservationDataHandler implements IZmlLayerDataHandler, IObserva
   @Override
   public IAxis getValueAxis( )
   {
-    synchronized( this )
-    {
-      if( m_valueAxis == null )
-        m_valueAxis = AxisUtils.findAxis( m_observation.getAxes(), m_targetAxisId );
+    if( m_valueAxis == null )
+      m_valueAxis = AxisUtils.findAxis( m_observation.getAxes(), m_targetAxisId );
 
-      return m_valueAxis;
-    }
+    return m_valueAxis;
   }
 
   /**
@@ -122,14 +116,11 @@ public class ZmlObservationDataHandler implements IZmlLayerDataHandler, IObserva
 
   public void setObservation( final IObservation observation )
   {
-    synchronized( this )
-    {
-      if( m_observation != null )
-        m_observation.removeListener( this );
+    if( m_observation != null )
+      m_observation.removeListener( this );
 
-      m_observation = observation;
-      m_observation.addListener( this );
-    }
+    m_observation = observation;
+    m_observation.addListener( this );
 
     m_layer.onObservationChanged();
   }

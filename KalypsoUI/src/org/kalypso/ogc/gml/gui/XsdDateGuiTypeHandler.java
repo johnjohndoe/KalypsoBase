@@ -71,7 +71,7 @@ import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
 
 /**
  * Gui type handler for xs:date's.
- * 
+ *
  * @author Holger Albert
  */
 public class XsdDateGuiTypeHandler extends XsdBaseGuiTypeHandler
@@ -172,7 +172,7 @@ public class XsdDateGuiTypeHandler extends XsdBaseGuiTypeHandler
   @Override
   public String getText( final Object element )
   {
-    final Date date = DateUtilities.toDate( element );
+    Date date = DateUtilities.toDate( element );
     if( date == null )
       return ""; //$NON-NLS-1$
 

@@ -57,21 +57,21 @@ public class MyPrintStream
 
   private java.io.DataOutputStream m_fileStream = null;
 
-  public MyPrintStream( final File output, final PrintStream stream )
+  public MyPrintStream( File output, PrintStream stream )
   {
     m_stream = stream;
     try
     {
       m_fileStream = new java.io.DataOutputStream( new BufferedOutputStream( new FileOutputStream( output ) ) );
     }
-    catch( final FileNotFoundException e )
+    catch( FileNotFoundException e )
     {
       e.printStackTrace();
     }
 
   }
 
-  public void print( final String message )
+  public void print( String message )
   {
     if( m_stream != null )
       m_stream.print( message );
@@ -81,14 +81,14 @@ public class MyPrintStream
       if( m_fileStream != null )
         m_fileStream.writeUTF( message );
     }
-    catch( final IOException e )
+    catch( IOException e )
     {
       e.printStackTrace();
     }
 
   }
 
-  public void println( final String message )
+  public void println( String message )
   {
     if( m_stream != null )
       m_stream.println( message );
@@ -98,7 +98,7 @@ public class MyPrintStream
       if( m_fileStream != null )
         m_fileStream.writeUTF( message + "\r\n" );
     }
-    catch( final IOException e )
+    catch( IOException e )
     {
       e.printStackTrace();
     }
@@ -111,7 +111,7 @@ public class MyPrintStream
     {
       m_fileStream.close();
     }
-    catch( final IOException e )
+    catch( IOException e )
     {
       e.printStackTrace();
     }

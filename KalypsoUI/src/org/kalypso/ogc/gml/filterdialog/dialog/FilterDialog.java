@@ -83,6 +83,7 @@ import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.gml.IKalypsoStyle;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
 import org.kalypso.ogc.gml.filterdialog.model.FilterReader;
 import org.kalypso.ogc.gml.filterdialog.model.FilterRootElement;
@@ -93,7 +94,6 @@ import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
-import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.filterencoding.Operation;
@@ -116,6 +116,8 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
 
   private static final String FILTER_KEY = "filter"; //$NON-NLS-1$
 
+  protected final IFeatureType m_ft;
+
   protected FilterRootElement m_root;
 
   protected Group m_propGroup;
@@ -136,29 +138,29 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
 
   private Composite m_top;
 
+  final private IKalypsoStyle m_style;
+
   private final boolean RESTOREABLE;
 
   final String[] m_supportedOperations;
-
-  private final IStyleInput< ? > m_input;
 
   /**
    * Der Benutzer kann mit Hilfe dieses Dialogs ein Filter-Query (OGC-Filter-Specs. Version 1.1.1) auf eine Feature
    * Selektion anwenden oder einen Filter für einen SLD (Styled-Layer-Discribtor) erzeugen.
    */
-  public FilterDialog( final Shell parent, final IStyleInput< ? > input, final Filter filter, final Feature spatialOperator, final String[] supportedOperations, final boolean restorable )
+  public FilterDialog( final Shell parent, final IFeatureType ftToSelectFrom, final IKalypsoStyle style, final Filter filter, final Feature spatialOperator, final String[] supportedOperations, final boolean restorable )
   {
     super( parent );
-
-    m_input = input;
+    m_style = style;
+    m_ft = ftToSelectFrom;
     m_supportedOperations = supportedOperations;
     m_spatialOperator = spatialOperator;
     RESTOREABLE = restorable;
     m_root = new FilterRootElement();
     if( filter != null )
       m_root.addChild( filter );
-
     setShellStyle( getShellStyle() | SWT.MAX );
+
   }
 
   /**
@@ -169,7 +171,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
   {
     final Control control = super.createContents( parent );
     createButton( (Composite) getButtonBar(), FilterDialog.ID_BUTTON_APPLY, FilterDialog.LABEL_BUTTON_APPLY, true );
-    if( m_input == null )
+    if( m_style == null )
       getButton( ID_BUTTON_APPLY ).setEnabled( false );
     return control;
   }
@@ -185,8 +187,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
     {
       if( buttonId == ID_BUTTON_APPLY )
       {
-
-        m_input.fireStyleChanged();
+        m_style.fireStyleChanged();
         setReturnCode( APPLY_FILTER );
       }
 
@@ -287,9 +288,9 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
     m_viewer.getControl().setLayoutData( data1 );
     m_viewer.setLabelProvider( m_labelProvider );
     m_viewer.setContentProvider( m_contentProvider );
-
     m_viewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
+
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
@@ -306,8 +307,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
               if( !m_newOpsComposite.isDisposed() )
                 m_newOpsComposite.dispose();
             }
-            final IFeatureType ft = getFeatureType();
-            m_newOpsComposite = FilterCompositeFactory.createFilterElementComposite( m_propGroup, FilterDialog.this, (Operation) firstElement, m_supportedOperations, ft, m_spatialOperator );
+            m_newOpsComposite = FilterCompositeFactory.createFilterElementComposite( m_propGroup, FilterDialog.this, (Operation) firstElement, m_supportedOperations, m_ft, m_spatialOperator );
             if( m_newOpsComposite != null )
             {
               m_newOpsComposite.setFilterDialog( FilterDialog.this );
@@ -364,7 +364,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
                     final IStructuredSelection s = (IStructuredSelection) mapPanel.getSelection();
                     if( s instanceof KalypsoFeatureThemeSelection )
                     {
-                      final KalypsoFeatureThemeSelection fts = (KalypsoFeatureThemeSelection) s;
+                      final KalypsoFeatureThemeSelection fts = ((KalypsoFeatureThemeSelection) s);
                       final Object[] elements = fts.toArray();
                       final String[] features = new String[elements.length];
                       for( int i = 0; i < elements.length; i++ )
@@ -609,6 +609,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
     return null;
   }
 
+
   public boolean isRestorable( )
   {
     return RESTOREABLE;
@@ -617,13 +618,5 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
   public void refresh( )
   {
     m_viewer.refresh();
-  }
-
-  protected IFeatureType getFeatureType( )
-  {
-    if( m_input == null )
-      return null;
-
-    return m_input.getFeatureType();
   }
 }

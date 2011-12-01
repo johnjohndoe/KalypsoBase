@@ -121,7 +121,7 @@ public class NativeObservationEx2Adapter implements INativeObservationAdapter
     String lineIn = null;
     while( (lineIn = reader.readLine()) != null )
     {
-      if( !continueWithErrors && numberOfErrors > MAX_NO_OF_ERRORS )
+      if( !continueWithErrors && (numberOfErrors > MAX_NO_OF_ERRORS) )
         return null;
       try
       {

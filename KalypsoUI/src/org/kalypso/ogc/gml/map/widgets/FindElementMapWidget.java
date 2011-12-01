@@ -101,10 +101,8 @@ import org.kalypso.ogc.gml.outline.ViewContentOutline;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
-import org.kalypso.ui.editor.mapeditor.views.MapWidgetView;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
-import org.kalypsodeegree.graphics.sld.CssParameter;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.feature.Feature;
@@ -127,8 +125,6 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 @SuppressWarnings("unchecked")
 public class FindElementMapWidget extends AbstractWidget implements IWidgetWithOptions
 {
-  private static IWorkbenchPage m_activePage;
-
   private final String m_defaultCrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
   private final FindElementWidgetFace m_widgetFace;
@@ -225,8 +221,8 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-    m_activePage = window.getActivePage();
-    return (ViewContentOutline) m_activePage.findView( ViewContentOutline.ID );
+    final IWorkbenchPage page = window.getActivePage();
+    return (ViewContentOutline) page.findView( ViewContentOutline.ID );
   }
 
   /**
@@ -247,13 +243,8 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
     if( m_widgetFace != null )
     {
       m_widgetFace.disposeControl();
-      hideView();
+      m_widgetFace.disposeParent();
     }
-  }
-
-  public void hideView( )
-  {
-    m_activePage.hideView( m_activePage.findView( MapWidgetView.ID ) );
   }
 
   /**
@@ -416,7 +407,7 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
     }
     else if( featureObj instanceof List )
     {
-      final List< ? > featureList = (List< ? >) featureObj;
+      final List featureList = (List) featureObj;
       String lStrSuffix = ""; //$NON-NLS-1$
       String lStrPrefix = ""; //$NON-NLS-1$
       if( featureType != null )
@@ -464,6 +455,11 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
 
     public FindElementWidgetFace( )
     {
+    }
+
+    public void disposeParent( )
+    {
+
     }
 
     public Control createControl( final Composite parent )
@@ -618,7 +614,7 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
   protected void showFound( ) throws ExecutionException
   {
     GM_Point centroid = null;
-    if( m_feature == null && m_boolFound || m_posX != null && m_posY != null && !"".equals( m_posX.getText() ) && !"".equals( m_posY.getText() ) )
+    if( m_feature == null && m_boolFound || (m_posX != null && m_posY != null && !"".equals( m_posX.getText() ) && !"".equals( m_posY.getText() )) )
     {
       centroid = GeometryFactory.createGM_Point( NumberUtils.parseQuietDouble( m_posX.getText() ), NumberUtils.parseQuietDouble( m_posY.getText() ), m_defaultCrs );
     }
@@ -665,7 +661,7 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
 
         double scaledFactor = getMapPanel().getCurrentScale();
 
-        if( envelope.getMaxX() == envelope.getMinX() && envelope.getMaxY() == envelope.getMinY() )
+        if( ( envelope.getMaxX() == envelope.getMinX() && envelope.getMaxY() == envelope.getMinY() ) )
         {
           scaledFactor *= 0.00093;
         }
@@ -677,7 +673,7 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
         geometryObjectToShow = geometryObjectValue.getBuffer( scaledFactor );
         final PolygonSymbolizer symb = new PolygonSymbolizer_Impl();
 
-        final Stroke stroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
+        final Stroke stroke = new Stroke_Impl( new HashMap<Object, Object>(), null, null );
         stroke.setWidth( 5 );
         stroke.setStroke( new Color( 255, 0, 0 ) );
         symb.setStroke( stroke );
@@ -929,31 +925,5 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
       final FeatureList featureList = lActTheme.getFeatureList();
       m_boolFound = findFeature( featureList );
     }
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#canBeActivated(org.eclipse.jface.viewers.ISelection,
-   *      org.kalypso.ogc.gml.map.IMapPanel)
-   */
-  @Override
-  public boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
-  {
-    MapWidgetView widgetView = null;
-    try
-    {
-      if( m_activePage == null )
-      {
-        findOutlineView();
-      }
-      widgetView = (MapWidgetView) m_activePage.findView( MapWidgetView.ID );
-    }
-    catch( final Exception e )
-    {
-    }
-    if( widgetView != null )
-    {
-      return false;
-    }
-    return super.canBeActivated( selection, mapPanel );
   }
 }

@@ -111,6 +111,7 @@ public class ObservationTableView extends ViewPart implements IFeatureSelectionL
     m_viewer.getControl().setFocus();
   }
 
+
   /**
    * @see org.kalypso.ogc.gml.selection.IFeatureSelectionListener#selectionChanged(java.lang.Object,
    *      org.kalypso.ogc.gml.selection.IFeatureSelection)

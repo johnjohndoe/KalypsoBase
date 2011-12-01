@@ -47,11 +47,12 @@ import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author F.Lindemann
+ *  
  */
 public class LogicalFilterComboPanel extends FilterComboPanel
 {
 
-  public LogicalFilterComboPanel( final Composite parent )
+  public LogicalFilterComboPanel( Composite parent )
   {
     super( parent );
     items = new String[3];
@@ -62,7 +63,7 @@ public class LogicalFilterComboPanel extends FilterComboPanel
   }
 
   @Override
-  public int getSelection( )
+  public int getSelection()
   {
     return selection_index;
   }

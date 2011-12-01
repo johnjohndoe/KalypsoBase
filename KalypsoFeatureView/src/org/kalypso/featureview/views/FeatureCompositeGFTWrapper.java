@@ -46,7 +46,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +56,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.eclipse.core.resources.IEncodedStorage;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -67,7 +67,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
@@ -113,8 +112,9 @@ public class FeatureCompositeGFTWrapper
 
     final CachedFeatureviewFactory cfvFactory = new CachedFeatureviewFactory( fvFactory );
 
-    // FIXME: never closed!
-    final Reader r = new InputStreamReader( file.getContents(), file.getCharset() );
+    final Reader r;
+
+    r = new InputStreamReader( file.getContents(), ((IEncodedStorage) file).getCharset() );
 
     final InputSource is = new InputSource( r );
     final Unmarshaller unmarshaller = FeatureCompositeGFTWrapper.JC.createUnmarshaller();
@@ -122,15 +122,10 @@ public class FeatureCompositeGFTWrapper
     // TODO close reader and stream!
 
     final Featuretemplate m_template = (Featuretemplate) unmarshaller.unmarshal( is );
-
-    // FIXME: close on exception!
-
-    final URL context = ResourceUtilities.createQuietURL( file );
-
     final List<FeatureviewType> view = m_template.getView();
 
     for( final FeatureviewType featureviewType : view )
-      cfvFactory.addView( featureviewType, context );
+      cfvFactory.addView( featureviewType );
 
     m_compFeature = new FeatureComposite( feature, KalypsoCorePlugin.getDefault().getSelectionManager(), cfvFactory );
     m_compFeature.setFormToolkit( toolkit );
@@ -144,7 +139,7 @@ public class FeatureCompositeGFTWrapper
 
   private void removeListener( )
   {
-    if( m_compFeature != null && m_ifFtrChLstner != null )
+    if( (m_compFeature != null) && (m_ifFtrChLstner != null) )
     {
       m_compFeature.removeChangeListener( m_ifFtrChLstner );
       m_ifFtrChLstner = null;
@@ -169,7 +164,7 @@ public class FeatureCompositeGFTWrapper
     /*
      * Are there already listeners created?
      */
-    if( m_ifFtrChLstner != null )
+    if( (m_ifFtrChLstner != null) )
       /* There are already listeners specified. Remove them first. */
       throw new IllegalStateException( "There are already listener attached, remove them first." ); //$NON-NLS-1$
 
@@ -182,7 +177,7 @@ public class FeatureCompositeGFTWrapper
         if( modellEvent.isType( ModellEvent.FEATURE_CHANGE ) )
         {
           final Control control = getFeatureComposite().getControl();
-          if( control != null && !control.isDisposed() )
+          if( (control != null) && !control.isDisposed() )
             control.getDisplay().asyncExec( new Runnable()
             {
               @Override
