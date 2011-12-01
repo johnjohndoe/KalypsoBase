@@ -68,9 +68,11 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.KalypsoCommonsPlugin;
 
+import com.google.common.base.Charsets;
+
 /**
  * Helper methods for {@link IProject}.
- * 
+ *
  * @author Gernot Belger
  */
 public final class ProjectUtilities
@@ -84,7 +86,7 @@ public final class ProjectUtilities
 
   /**
    * Findet alle Projekte einer Selektion von Resourcen
-   * 
+   *
    * @param selection
    * @return list of projects (not null)
    */
@@ -115,7 +117,7 @@ public final class ProjectUtilities
   /**
    * TODO does this work? seems not... Note from Marc: this only works when the navigator has an active selection
    * Returns the currently selected project from the navigator.
-   * 
+   *
    * @return list of selected projects
    */
   public static IProject[] getSelectedProjects( )
@@ -199,7 +201,11 @@ public final class ProjectUtilities
       final IFile projectResource = project.getFile( FILE_PROJECT );
       final File projectFile = projectResource.getLocation().toFile();
 
-      final String projectEncoding = projectResource.getCharset();
+      // REMARK: does not work correctly, if project was created this moment.
+      // But we know, that .project is normally 'UTF-8' encoded.
+      // final String projectEncoding = projectResource.getCharset( true );
+
+      final String projectEncoding = Charsets.UTF_8.name();
 
       final String projectContents = FileUtils.readFileToString( projectFile, projectEncoding );
       final String nameTag = String.format( "<name>%s</name>", nameToSet );
