@@ -87,7 +87,7 @@ public abstract class AbstractCaseManager<T extends ICase> implements ICaseManag
 
   /**
    * Initializes the {@link ICaseManager} on the given project
-   * 
+   *
    * @param project
    *          the project, must not be <code>null</code>
    * @exception CoreException
@@ -199,7 +199,7 @@ public abstract class AbstractCaseManager<T extends ICase> implements ICaseManag
   public void persist( @SuppressWarnings("unused") final IProgressMonitor monitor )
   {
     // TODO: comment, why in a job?!
-    final Job job = new Job( "" )
+    final Job job = new Job( "Szenarien speichern." )
     {
       /**
        * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
