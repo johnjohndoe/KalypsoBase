@@ -44,15 +44,21 @@ package org.kalypso.afgui.wizards;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
+import org.kalypso.module.IKalypsoModule;
+import org.kalypso.module.INewProjectHandler;
+import org.kalypso.module.ModuleExtensions;
 import org.kalypso.module.conversion.IProjectConversionOperation;
 import org.kalypso.module.conversion.ProjectConversionPage;
 
@@ -60,7 +66,7 @@ import org.kalypso.module.conversion.ProjectConversionPage;
  * FIXME: generalize: should be useable for all modules.<br/>
  * This wizard converts project of old KalypsoHydrology versions into the current Kalypso version by creating a new
  * project and copying the the old data to the right places.<br/>
- * 
+ *
  * @author Gernot Belger
  */
 public class ProjectConversionWizard extends NewProjectWizard
@@ -69,12 +75,17 @@ public class ProjectConversionWizard extends NewProjectWizard
 
   private final String m_moduleID;
 
+  private final INewProjectHandler m_handler;
+
   // FIXME the module should know the project template
   public ProjectConversionWizard( final String moduleID, final String projectTemplate )
   {
     super( new ProjectTemplatePage( "Projektvorlage", "Bitte wählen Sie, welche Projektvorlage verwendet werden soll", projectTemplate ), true, moduleID );
 
     m_moduleID = moduleID;
+
+    final IKalypsoModule module = ModuleExtensions.getKalypsoModule( moduleID );
+    m_handler = module.getNewProjectHandler();
 
     setHelpAvailable( false );
     setNeedsProgressMonitor( true );
@@ -95,15 +106,16 @@ public class ProjectConversionWizard extends NewProjectWizard
     // - choose old version (if not known)
   }
 
-  /**
-   * @see org.kalypso.afgui.wizards.NewProjectWizard#postCreateProject(org.eclipse.core.resources.IProject,
-   *      org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
-  public IStatus postCreateProject( final IProject project, final IProgressMonitor monitor )
+  public IStatus postCreateProject( final IProject project, final ProjectTemplate template, final IProgressMonitor monitor ) throws CoreException
   {
+    monitor.beginTask( "Project conversion", 100 );
+
+    if( m_handler != null )
+      m_handler.postCreateProject( project, template, new SubProgressMonitor( monitor, 10 ) );
+
     final File inputDir = m_conversionPage.getProjectDir();
-    return doConvertProject( inputDir, project, monitor );
+    return doConvertProject( inputDir, project, new SubProgressMonitor( monitor, 90 ) );
   }
 
   private IStatus doConvertProject( final File sourceDir, final IProject targetProject, final IProgressMonitor monitor )
@@ -140,7 +152,7 @@ public class ProjectConversionWizard extends NewProjectWizard
   private IStatus doPreConversion( final IProjectConversionOperation operation )
   {
     final Shell shell = getShell();
-    final UIJob job = new UIJob( shell.getDisplay(), "" )
+    final UIJob job = new UIJob( shell.getDisplay(), StringUtils.EMPTY )
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -160,5 +172,14 @@ public class ProjectConversionWizard extends NewProjectWizard
       e.printStackTrace();
       return Status.CANCEL_STATUS;
     }
+  }
+
+  @Override
+  public void openProject( final IProject project ) throws CoreException
+  {
+    if( m_handler == null )
+      super.openProject( project );
+    else
+      m_handler.openProject( project );
   }
 }

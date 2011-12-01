@@ -52,7 +52,7 @@ import org.osgi.framework.Version;
 /**
  * Instance of an Kalypso Modul. Like KalypsoWspm, KalypsoNA, KalypsoRisk, etc. Needed for rendering and handling the
  * welcome page
- * 
+ *
  * @author Dirk Kuch
  */
 public interface IKalypsoModule
@@ -87,4 +87,6 @@ public interface IKalypsoModule
   Version getVersion( );
 
   IProjectHandleProvider getProjectProvider( );
+
+  INewProjectHandler getNewProjectHandler( );
 }
