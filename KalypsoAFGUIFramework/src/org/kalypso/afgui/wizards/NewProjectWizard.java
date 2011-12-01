@@ -66,6 +66,7 @@ import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
 import org.kalypso.core.status.StatusDialog;
+import org.kalypso.module.INewProjectHandler;
 import org.kalypso.module.welcome.INewProjectWizard;
 
 /**
@@ -255,7 +256,7 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
    */
   @SuppressWarnings("unused")
   @Override
-  public IStatus postCreateProject( final IProject project, final IProgressMonitor monitor ) throws CoreException
+  public IStatus postCreateProject( final IProject project, final ProjectTemplate template, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.done();
     return Status.OK_STATUS;
