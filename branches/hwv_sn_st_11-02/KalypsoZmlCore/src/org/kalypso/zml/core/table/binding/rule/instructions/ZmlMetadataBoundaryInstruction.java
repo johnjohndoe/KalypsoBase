@@ -113,7 +113,11 @@ public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionTy
     if( m_boundaryFrom == null || reference.getColumn() != m_lastFromColumn )
     {
       m_lastFromColumn = reference.getColumn();
-      m_boundaryFrom = getBoundary( m_lastFromColumn.getMetadata(), getType().getFrom(), getType().getFromExtensionPoint(), new BigDecimal( -Double.MAX_VALUE ), getType().getFactorFrom() );
+      final MetadataList metadata = m_lastFromColumn.getMetadata();
+      if( metadata == null )
+        return null;
+
+      m_boundaryFrom = getBoundary( metadata, getType().getFrom(), getType().getFromExtensionPoint(), new BigDecimal( -Double.MAX_VALUE ), getType().getFactorFrom() );
     }
 
     return m_boundaryFrom;
@@ -145,7 +149,11 @@ public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionTy
     if( m_boundaryTo == null || reference.getColumn() != m_lastToColumn )
     {
       m_lastToColumn = reference.getColumn();
-      m_boundaryTo = getBoundary( m_lastToColumn.getMetadata(), getType().getTo(), getType().getToExtensionPoint(), new BigDecimal( -Double.MAX_VALUE ), getType().getFactorTo() );
+      final MetadataList metadata = m_lastToColumn.getMetadata();
+      if( Objects.isNull( metadata ) )
+        return null;
+
+      m_boundaryTo = getBoundary( metadata, getType().getTo(), getType().getToExtensionPoint(), new BigDecimal( -Double.MAX_VALUE ), getType().getFactorTo() );
     }
 
     return m_boundaryTo;
