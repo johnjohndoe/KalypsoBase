@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse;
 
@@ -57,7 +57,7 @@ import org.osgi.framework.Bundle;
 
 /**
  * Helper class handling the extension-points of this plug-in.
- * 
+ *
  * @author Gernot Belger
  */
 public class EclipsePlatformContributionsExtensions
@@ -66,7 +66,7 @@ public class EclipsePlatformContributionsExtensions
 
   /**
    * Returns all registered project templates.
-   * 
+   *
    * @param If
    *          non-<code>null</code>, only the project templates of the given category are returned, else, every
    *          registered template project is returned.
@@ -80,6 +80,7 @@ public class EclipsePlatformContributionsExtensions
     final Collection<ProjectTemplate> demoProjects = new ArrayList<ProjectTemplate>( configurationElements.length );
     for( final IConfigurationElement configurationElement : configurationElements )
     {
+      final String id = configurationElement.getAttribute( "id" ); //$NON-NLS-1$
       final String label = configurationElement.getAttribute( "label" ); //$NON-NLS-1$
       final String projectName = configurationElement.getAttribute( "projectName" ); //$NON-NLS-1$
       final String description = configurationElement.getAttribute( "description" ); //$NON-NLS-1$
@@ -98,7 +99,7 @@ public class EclipsePlatformContributionsExtensions
           EclipsePlatformContributionsPlugin.getDefault().getLog().log( status );
         }
         else
-          demoProjects.add( new ProjectTemplate( label, projectName, description, icon, dataLocation ) );
+          demoProjects.add( new ProjectTemplate( id, label, projectName, description, icon, dataLocation ) );
       }
     }
 

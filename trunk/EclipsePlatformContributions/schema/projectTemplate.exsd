@@ -56,6 +56,13 @@ Each implementation of a project template references a single zip file or a plug
          </appInfo>
       </annotation>
       <complexType>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  An (optional) additional id that can be used to identify this element.
+               </documentation>
+            </annotation>
+         </attribute>
          <attribute name="label" type="string">
             <annotation>
                <documentation>
@@ -69,7 +76,7 @@ Each implementation of a project template references a single zip file or a plug
          <attribute name="projectName" type="string">
             <annotation>
                <documentation>
-                  The name of the newly created project, which is prooposed to the user.
+                  The name of the newly created project, which is proposed to the user.
                </documentation>
                <appInfo>
                   <meta.attribute translatable="true"/>
@@ -122,6 +129,15 @@ Else, the location must point to a folder within the given bundle. If a project 
 
    <annotation>
       <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         See org.kalypso.contribs.eclipse.core.resources.ProjectTemplate
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
          <meta.section type="since"/>
       </appInfo>
       <documentation>
@@ -135,15 +151,6 @@ Else, the location must point to a folder within the given bundle. If a project 
       </appInfo>
       <documentation>
          [Enter extension point usage example here.]
-      </documentation>
-   </annotation>
-
-   <annotation>
-      <appInfo>
-         <meta.section type="apiInfo"/>
-      </appInfo>
-      <documentation>
-         See org.kalypso.contribs.eclipse.core.resources.ProjectTemplate
       </documentation>
    </annotation>
 
@@ -179,7 +186,6 @@ more details.
    
 You should have received a copy of the GNU Lesser General Public
 License along with Kalypso.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
-
       </documentation>
    </annotation>
 
