@@ -83,6 +83,10 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
 
   private boolean m_ignore = false;
 
+  private String m_labelTokenizer;
+
+  private boolean m_labeled = false;
+
   public ZmlModelColumn( final IZmlModel model, final String identifier, final DataColumn type )
   {
     m_model = model;
@@ -105,6 +109,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   public void setLabel( final String label )
   {
     m_label = label;
+    m_labeled = true;
   }
 
   @Override
@@ -133,9 +138,12 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
 
   public void purge( )
   {
-    m_handler.dispose();
+    if( Objects.isNotNull( m_handler ) )
+    {
+      m_handler.dispose();
+      fireColumnChanged();
+    }
 
-    fireColumnChanged();
   }
 
   @Override
@@ -402,13 +410,15 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
       return false;
 
     final IObservation observation = handler.getObservation();
+    if( Objects.isNull( observation ) )
+      return false;
 
-    return Objects.isNotNull( observation );
+    final IAxis[] axes = observation.getAxes();
+    final String valueAxis = getDataColumn().getValueAxis();
+
+    return Objects.isNotNull( AxisUtils.findAxis( axes, valueAxis ) );
   }
 
-  /**
-   * @see org.kalypso.zml.core.table.model.IZmlModelColumn#fireColumnChangedEvent()
-   */
   @Override
   public void fireColumnChangedEvent( )
   {
@@ -424,6 +434,27 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
     {
       ex.printStackTrace();
     }
+  }
+
+  @Override
+  public void setLableTokenizer( final String titleTokenizer )
+  {
+    m_labelTokenizer = titleTokenizer;
+  }
+
+  @Override
+  public String getLabelTokenizer( )
+  {
+    return m_labelTokenizer;
+  }
+
+  /**
+   * @see org.kalypso.zml.core.table.model.IZmlModelColumn#isLabeled()
+   */
+  @Override
+  public boolean isLabeled( )
+  {
+    return m_labeled;
   }
 
 }

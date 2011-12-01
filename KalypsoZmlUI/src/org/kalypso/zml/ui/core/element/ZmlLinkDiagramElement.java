@@ -110,4 +110,10 @@ public class ZmlLinkDiagramElement extends AbstractTsLinkDiagramElement implemen
     final IObservation observation = getObsProvider().getObservation();
     return ObservationTokenHelper.replaceTokens( tokenizedName, observation, axis );
   }
+
+  @Override
+  public String getTitleTokenzizer( )
+  {
+    return getLink().getName();
+  }
 }

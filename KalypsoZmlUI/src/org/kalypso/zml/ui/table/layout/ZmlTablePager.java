@@ -214,6 +214,9 @@ public class ZmlTablePager
 
     for( final IZmlModelColumn column : columns )
     {
+      if( !column.isActive() )
+        continue;
+
       final Date date = findForecastDate( column );
       if( Objects.isNotNull( date ) )
         return date;

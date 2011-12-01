@@ -143,17 +143,13 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
 
       /** base observation will be disposed by NewZmlTableLayoutPart (save table) */
       final IObsProvider base = m_element.getObsProvider();
-      final IObservation observation = base.getObservation();
-      if( Objects.isNull( observation ) )
-        return;
 
       final DataColumnType type = (DataColumnType) TableTypes.findColumnType( m_model.getTableType(), m_element.getIdentifier() );
       if( Objects.isNull( type ) )
         return;
 
-      final IAxis[] axes = observation.getAxes();
-      if( !hasValueAxis( axes, type ) )
-        return;
+      final IObservation observation = base.getObservation();
+      final IAxis[] axes = Objects.isNotNull( observation ) ? observation.getAxes() : new IAxis[] {};
 
       final IObsProvider provider = base.copy();
       final IZmlModelColumnDataHandler handler = new ObsProviderZmlColumnDataHandler( provider );
@@ -165,12 +161,12 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
       {
         KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlColumnLoadCommand - Adding new model column: %s\n", m_element.getIdentifier() );
         column = new ZmlModelColumn( m_model, m_element.getIdentifier(), data );
-        doUpdateColumn( column, data, axes, handler );
+        column.setDataHandler( handler );
+
+        doUpdateColumn( column, data, axes );
 
         m_model.add( column );
       }
-      else
-        doUpdateColumn( column, data, axes, handler );
     }
     finally
     {
@@ -178,16 +174,16 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
     }
   }
 
-  private void doUpdateColumn( final IZmlModelColumn column, final DataColumn type, final IAxis[] axes, final IZmlModelColumnDataHandler handler )
+  private void doUpdateColumn( final IZmlModelColumn column, final DataColumn type, final IAxis[] axes )
   {
-    final String label = m_element.getTitle( AxisUtils.findAxis( axes, type.getValueAxis() ) );
-    column.setLabel( label );
-    column.setDataHandler( handler );
-  }
+    final IAxis axis = AxisUtils.findAxis( axes, type.getValueAxis() );
+    if( Objects.isNotNull( axis ) )
+    {
+      final String label = m_element.getTitle( axis );
+      column.setLabel( label );
+    }
 
-  private boolean hasValueAxis( final IAxis[] axes, final DataColumnType type )
-  {
-    return Objects.isNotNull( AxisUtils.findAxis( axes, type.getValueAxis() ) );
+    column.setLableTokenizer( m_element.getTitleTokenzizer() );
   }
 
 }

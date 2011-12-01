@@ -137,6 +137,7 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
     synchronized( this )
     {
       columns = m_columns.toArray( new ZmlModelColumn[] {} );
+      m_columns.clear();
       m_rows.clear();
     }
 
@@ -234,6 +235,8 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
   @Override
   public void modelColumnChangedEvent( final IZmlModelColumn column )
   {
+    m_rows.clear();
+
     fireModelChanged( column );
   }
 

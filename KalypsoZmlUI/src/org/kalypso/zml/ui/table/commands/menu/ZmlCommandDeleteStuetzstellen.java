@@ -45,19 +45,17 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
-import org.kalypso.ogc.sensor.timeseries.AxisUtils;
-import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 import org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilter;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.interpolation.ZmlInterpolationWorker;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.model.references.ZmlValues;
+import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
@@ -85,7 +83,8 @@ public class ZmlCommandDeleteStuetzstellen extends AbstractHandler
       final ITupleModel model = modelColumn.getTupleModel();
 
       final String src = String.format( "%s%s", IDataSourceItem.FILTER_SOURCE, InterpolationFilter.FILTER_ID ); //$NON-NLS-1$
-      final DataSourceHandler dataSourceHandler = new DataSourceHandler( modelColumn.getMetadata() );
+
+      final ZmlModelTransaction transaction = new ZmlModelTransaction();
 
       final IZmlTableCell[] cells = column.getSelectedCells();
       for( final IZmlTableCell cell : cells )
@@ -95,12 +94,7 @@ public class ZmlCommandDeleteStuetzstellen extends AbstractHandler
           final IZmlValueReference reference = cell.getValueReference();
           if( ZmlValues.isStuetzstelle( reference ) )
           {
-            final IAxis valueAxis = reference.getColumn().getValueAxis();
-            final IAxis statusAxis = AxisUtils.findStatusAxis( model.getAxes(), valueAxis );
-            final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( model.getAxes(), valueAxis );
-
-            model.set( reference.getModelIndex(), statusAxis, KalypsoStati.BIT_OK );
-            model.set( reference.getModelIndex(), dataSourceAxis, dataSourceHandler.addDataSource( src, src ) );
+            transaction.add( reference, reference.getValue(), src, KalypsoStati.BIT_OK );
           }
         }
         catch( final Throwable t )
@@ -108,6 +102,8 @@ public class ZmlCommandDeleteStuetzstellen extends AbstractHandler
           KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
         }
       }
+
+      transaction.execute();
 
       ProgressUtilities.busyCursorWhile( new ZmlInterpolationWorker( modelColumn ) );
 
