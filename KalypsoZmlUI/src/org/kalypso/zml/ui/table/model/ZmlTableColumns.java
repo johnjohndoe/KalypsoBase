@@ -44,6 +44,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.IZmlTable;
 
@@ -60,23 +62,40 @@ public final class ZmlTableColumns
   {
     final Set<IZmlTableColumn> columns = new HashSet<IZmlTableColumn>();
 
+    final String[] modelIds = toIdentifiers( modelColumns );
+
     final ZmlTableColumn[] tableColumns = (ZmlTableColumn[]) table.getColumns();
     for( final ZmlTableColumn tableColumn : tableColumns )
     {
       if( tableColumn.isIndexColumn() && index )
         columns.add( tableColumn );
-
       // columns empty? means refresh all columns
-      if( ArrayUtils.isEmpty( modelColumns ) )
+      else if( ArrayUtils.isEmpty( modelColumns ) )
         columns.add( tableColumn );
       else
       {
-        final IZmlModelColumn modelColumn = tableColumn.getModelColumn();
-        if( ArrayUtils.contains( modelColumns, modelColumn ) )
+        final BaseColumn type = tableColumn.getColumnType();
+        if( Objects.isNotNull( type ) && ArrayUtils.contains( modelIds, type.getIdentifier() ) )
           columns.add( tableColumn );
+
       }
     }
 
     return columns.toArray( new IZmlTableColumn[] {} );
   }
+
+  private static String[] toIdentifiers( final IZmlModelColumn[] columns )
+  {
+    if( ArrayUtils.isEmpty( columns ) )
+      return new String[] {};
+
+    final Set<String> identifiers = new HashSet<String>();
+    for( final IZmlModelColumn column : columns )
+    {
+      identifiers.add( column.getIdentifier() );
+    }
+
+    return identifiers.toArray( new String[] {} );
+  }
+
 }
