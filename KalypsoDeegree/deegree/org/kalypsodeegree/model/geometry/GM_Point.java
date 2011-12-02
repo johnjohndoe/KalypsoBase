@@ -37,7 +37,9 @@
 package org.kalypsodeegree.model.geometry;
 
 /**
+ * 
  * The basic two dimensional geometry
+ * 
  * <p>
  * -----------------------------------------------------
  * </p>
@@ -52,26 +54,26 @@ public interface GM_Point extends GM_Primitive
   /**
    * returns the x-value of the point
    */
-  public double getX( );
+  public double getX();
 
   /**
    * returns the y-value of the point
    */
-  public double getY( );
+  public double getY();
 
   /**
    * returns the z-value of the point
    */
-  public double getZ( );
+  public double getZ();
 
   /**
    * returns the x- and y-value of the point as a two dimensional array the first field contains the x- the second field
    * the y-value.
    */
-  public double[] getAsArray( );
+  public double[] getAsArray();
 
   /**
    * returns the position of the point
    */
-  public GM_Position getPosition( );
+  public GM_Position getPosition();
 }

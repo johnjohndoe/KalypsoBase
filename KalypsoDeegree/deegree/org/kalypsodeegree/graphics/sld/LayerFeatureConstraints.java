@@ -55,7 +55,7 @@ public interface LayerFeatureConstraints
    * 
    * @return the FeatureTypeConstraints as Array
    */
-  FeatureTypeConstraint[] getFeatureTypeConstraint( );
+  FeatureTypeConstraint[] getFeatureTypeConstraint();
 
   /**
    * Sets the FeatureTypeConstraint.

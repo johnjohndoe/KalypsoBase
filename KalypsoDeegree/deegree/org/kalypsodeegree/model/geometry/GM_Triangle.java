@@ -35,6 +35,7 @@
  */
 package org.kalypsodeegree.model.geometry;
 
+
 /**
  * @author Gernot Belger
  */
@@ -48,6 +49,6 @@ public interface GM_Triangle extends GM_Polygon
   public boolean contains( GM_Position position );
 
   public double getValue( GM_Position position );
-
-  public int getOrientation( );
+  
+  public int getOrientation();
 }

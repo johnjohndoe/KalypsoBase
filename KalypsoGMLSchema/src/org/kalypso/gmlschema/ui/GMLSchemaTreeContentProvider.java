@@ -149,7 +149,7 @@ public class GMLSchemaTreeContentProvider implements ITreeContentProvider
       final TreeSet<IFeatureType> sortedFTs = new TreeSet<IFeatureType>( new Comparator<IFeatureType>()
       {
         @Override
-        public int compare( final IFeatureType ft1, final IFeatureType ft2 )
+        public int compare( IFeatureType ft1, IFeatureType ft2 )
         {
           String ns1 = ft1.getQName().getNamespaceURI();
           String ns2 = ft2.getQName().getNamespaceURI();

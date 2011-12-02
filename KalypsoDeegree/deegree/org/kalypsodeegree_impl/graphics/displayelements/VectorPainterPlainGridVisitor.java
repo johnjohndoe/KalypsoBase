@@ -44,7 +44,6 @@ import java.util.Map;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypsodeegree.graphics.displayelements.LineStringDisplayElement;
-import org.kalypsodeegree.graphics.sld.CssParameter;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -89,7 +88,7 @@ public class VectorPainterPlainGridVisitor<T extends GM_Curve> implements IPlain
     {
       m_cssParams = pMapCssParams;
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
 
     }
@@ -100,13 +99,13 @@ public class VectorPainterPlainGridVisitor<T extends GM_Curve> implements IPlain
    *      int)
    */
   @Override
-  public boolean visit( final T actualGridNode )
+  public boolean visit( T actualGridNode )
   {
     try
     {
       paintVector( actualGridNode );
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
       return false;
     }
@@ -122,37 +121,37 @@ public class VectorPainterPlainGridVisitor<T extends GM_Curve> implements IPlain
   private void paintArrowPart( final T pCurve )
   {
     final PolygonSymbolizer symb = new PolygonSymbolizer_Impl();
-    final Stroke stroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
+    final Stroke stroke = new Stroke_Impl( new HashMap<Object, Object>(), null, null );
     stroke.setWidth( DOUBLE_STROKE_WIDTH );
-    final Color strokeColor = new Color( 0, 0, 0 );
+    Color strokeColor = new Color( 0, 0, 0 );
     stroke.setStroke( strokeColor );
     symb.setStroke( stroke );
 
     if( m_cssParams == null )
       fillCssDefaultsMap( pCurve );
 
-    final Double lDoubleVectorSize = getVectorSize( pCurve );
+    Double lDoubleVectorSize = getVectorSize( pCurve );
 
     m_cssParams.put( StrokeArrowHelper.STROKE_ARROW_SIZE, StyleFactory.createCssParameter( StrokeArrowHelper.STROKE_ARROW_SIZE, lDoubleVectorSize ) );
 
-    final StrokeArrowPainter lPainter = new StrokeArrowPainter( m_cssParams, m_projection, symb.getUom() );
+    StrokeArrowPainter lPainter = new StrokeArrowPainter( m_cssParams, m_projection, symb.getUom() );
 
-// java.awt.Stroke oldStroke = ( ( Graphics2D ) m_gc ).getStroke();
-// Color oldColor = ( ( Graphics2D ) m_gc ).getColor();
-    // prepare graphics
-    ((Graphics2D) m_gc).setColor( strokeColor );
-// ( ( Graphics2D ) m_gc ).setStroke( (java.awt.Stroke) stroke );
-
+//    java.awt.Stroke oldStroke = ( ( Graphics2D ) m_gc ).getStroke(); 
+//    Color oldColor = ( ( Graphics2D ) m_gc ).getColor();
+    //prepare graphics 
+    ( ( Graphics2D ) m_gc ).setColor( strokeColor );
+//    ( ( Graphics2D ) m_gc ).setStroke( (java.awt.Stroke) stroke );
+    
     lPainter.paint( (Graphics2D) m_gc, pCurve, null );
 
-    // restore graphics
-// ( ( Graphics2D ) m_gc ).setColor( oldColor );
-// ( ( Graphics2D ) m_gc ).setStroke( oldStroke );
+    //restore graphics 
+//    ( ( Graphics2D ) m_gc ).setColor( oldColor );
+//    ( ( Graphics2D ) m_gc ).setStroke( oldStroke );
   }
 
   private void fillCssDefaultsMap( final GM_Curve pCurve )
   {
-    final Double lDoubleVectorSize = getVectorSize( pCurve );
+    Double lDoubleVectorSize = getVectorSize( pCurve );
     m_cssParams = new HashMap<String, Object>();
     m_cssParams.put( StrokeArrowHelper.STROKE_ARROW_TYPE, StyleFactory.createCssParameter( StrokeArrowHelper.STROKE_ARROW_TYPE, "line" ) ); //$NON-NLS-1$
     m_cssParams.put( StrokeArrowHelper.STROKE_ARROW_WIDGET, StyleFactory.createCssParameter( StrokeArrowHelper.STROKE_ARROW_WIDGET, "open" ) ); //$NON-NLS-1$
@@ -164,19 +163,19 @@ public class VectorPainterPlainGridVisitor<T extends GM_Curve> implements IPlain
 
   private Double getVectorSize( final GM_Curve curve )
   {
-    final double lX = m_projection.getDestPoint( curve.getEndPoint().getPosition() ).getX() - m_projection.getDestPoint( curve.getStartPoint().getPosition() ).getX();
-    final double lY = m_projection.getDestPoint( curve.getEndPoint().getPosition() ).getY() - m_projection.getDestPoint( curve.getStartPoint().getPosition() ).getY();
+    double lX = m_projection.getDestPoint( curve.getEndPoint().getPosition() ).getX() - m_projection.getDestPoint( curve.getStartPoint().getPosition() ).getX();
+    double lY = m_projection.getDestPoint( curve.getEndPoint().getPosition() ).getY() - m_projection.getDestPoint( curve.getStartPoint().getPosition() ).getY();
     return Math.sqrt( lX * lX + lY * lY );
   }
 
   private void paintLinePart( final T pCurve )
   {
-    final LineStringDisplayElement lLineElement = new LineStringDisplayElement_Impl( m_feature, new GM_Curve[] { pCurve } );
+    LineStringDisplayElement lLineElement = new LineStringDisplayElement_Impl( m_feature, new GM_Curve[] { pCurve } );
     try
     {
       lLineElement.paint( m_gc, m_projection, new NullProgressMonitor() );
     }
-    catch( final CoreException e )
+    catch( CoreException e )
     {
       e.printStackTrace();
     }

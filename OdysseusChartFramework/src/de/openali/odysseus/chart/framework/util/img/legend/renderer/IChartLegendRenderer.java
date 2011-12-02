@@ -41,7 +41,7 @@
 package de.openali.odysseus.chart.framework.util.img.legend.renderer;
 
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.util.img.legend.IChartLegendCanvas;
 import de.openali.odysseus.chart.framework.util.img.legend.config.IChartLegendConfig;
@@ -55,7 +55,7 @@ public interface IChartLegendRenderer
 
   Image createImage( final IChartLegendCanvas canvas, final IChartLegendConfig config );
 
-  Rectangle calculateSize( final IChartLegendCanvas canvas, final IChartLegendConfig config );
+  Point calculateSize( final IChartLegendCanvas canvas, final IChartLegendConfig config );
 
   String getIdentifier( );
 

@@ -91,7 +91,6 @@ public class I10nString
     if( m_translator == null )
       return m_key;
 
-    // FIXME: Caching? To increase performance...
     return m_translator.get( m_key.substring( 1 ), locale, context );
   }
 

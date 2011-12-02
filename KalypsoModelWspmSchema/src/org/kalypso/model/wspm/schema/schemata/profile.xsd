@@ -118,9 +118,9 @@
             <annotation>
               <appinfo>This property is backed by the profile-observation.</appinfo>
               <documentation xml:lang="de">
-                <label>Durchfluss</label>
-                <tooltip>Durchfluss</tooltip>
-                <description>Durchfluss</description>
+                <label>Durchfluß</label>
+                <tooltip>Durchfluß</tooltip>
+                <description>Durchfluß</description>
               </documentation>
               <documentation xml:lang="en">
                 <label>Profile throughput location</label>

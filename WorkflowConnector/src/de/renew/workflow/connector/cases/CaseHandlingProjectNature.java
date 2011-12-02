@@ -69,10 +69,15 @@ public abstract class CaseHandlingProjectNature<T extends ICase> implements IPro
   /**
    * Creates a specific case manager for this project
    */
-  protected abstract ICaseManager<T> createCaseManager( final IProject project );
+  protected abstract ICaseManager<T> createCaseManager( final IProject project ) throws CoreException;
 
-  public ICaseManager<T> getCaseManager( )
+  public ICaseManager<T> getCaseManager( ) throws CoreException
   {
+    if( m_caseManager == null )
+    {
+      m_caseManager = createCaseManager( m_project );
+      m_caseManager.addCaseManagerListener( this );
+    }
     return m_caseManager;
   }
 
@@ -110,19 +115,7 @@ public abstract class CaseHandlingProjectNature<T extends ICase> implements IPro
   @Override
   public void setProject( final IProject project )
   {
-    if( m_caseManager != null )
-    {
-      m_caseManager.dispose();
-      m_caseManager = null;
-    }
-
-    m_project = project;
-
-    if( m_project != null )
-    {
-      m_caseManager = createCaseManager( m_project );
-      m_caseManager.addCaseManagerListener( this );
-    }
+    this.m_project = project;
   }
 
   /**

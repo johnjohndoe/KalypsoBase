@@ -68,16 +68,16 @@ public class FeatureIndex
    *          The qname of the property, which should be used for indexing.
    * @return The HashMap of the features with the property value as key, and the features as value.
    */
-  public static Map<Object, Feature> indexFeature( final FeatureList features, final QName qname )
+  public static Map<Object, Feature> indexFeature( FeatureList features, QName qname )
   {
     /* Create the visitor. */
-    final IndexByPropertyVisitor visitor = new IndexByPropertyVisitor( qname, false, null );
+    IndexByPropertyVisitor visitor = new IndexByPropertyVisitor( qname, false, null );
 
     /* Collect the features. */
     features.accept( visitor );
 
     /* Get the index. */
-    final Map<Object, Feature> index = visitor.getIndex();
+    Map<Object, Feature> index = visitor.getIndex();
 
     return index;
   }
@@ -93,19 +93,19 @@ public class FeatureIndex
    *          The comparator, that should be used for the TreeMap.
    * @return The TreeMap of the features with the property value as key, and the features as value.
    */
-  public static SortedMap<Object, Feature> indexFeatureSorted( final FeatureList features, final QName qname, final Comparator<Object> comparator )
+  public static SortedMap<Object, Feature> indexFeatureSorted( FeatureList features, QName qname, Comparator<Object> comparator )
   {
     /* Create the visitor. */
-    final IndexByPropertyVisitor visitor = new IndexByPropertyVisitor( qname, true, comparator );
+    IndexByPropertyVisitor visitor = new IndexByPropertyVisitor( qname, true, comparator );
 
     /* Collect the features. */
     features.accept( visitor );
 
     /* Get the index. */
-    final Map<Object, Feature> index = visitor.getIndex();
+    Map<Object, Feature> index = visitor.getIndex();
 
     /* We know (because of the second parameter in the constructor of the visitor), that it will be a TreeMap. */
-    final TreeMap<Object, Feature> sortedIndex = (TreeMap<Object, Feature>) index;
+    TreeMap<Object, Feature> sortedIndex = (TreeMap<Object, Feature>) index;
 
     return sortedIndex;
   }

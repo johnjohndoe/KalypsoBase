@@ -48,6 +48,8 @@ import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 /**
  * @author Gernot Belger
@@ -61,9 +63,7 @@ public class DefaultTupleResultLayerProvider extends AbstractLayerProvider
   @Override
   public IChartLayer getLayer( final URL context )
   {
-    return new TupleResultLineLayer( this, getDataContainer(), getStyleSet() );// .getStyle( "line", ILineStyle.class ),
-// getStyleSet().getStyle( "point", IPointStyle.class ) ); // $NON-NLS-1$
-// // $NON-NLS-2$
+    return new TupleResultLineLayer( this, getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
   }
 
   /**
@@ -73,15 +73,15 @@ public class DefaultTupleResultLayerProvider extends AbstractLayerProvider
   {
     final IParameterContainer pc = getParameterContainer();
 
-    final String href = pc.getParameterValue( "href", null ); //$NON-NLS-1$
+    final String href = pc.getParameterValue( "href", null );
 
-    final String observationId = pc.getParameterValue( "observationId", null ); //$NON-NLS-1$
-    final String domainComponentName = pc.getParameterValue( "domainComponentId", null ); //$NON-NLS-1$
-    final String targetComponentName = pc.getParameterValue( "targetComponentId", null ); //$NON-NLS-1$
+    final String observationId = pc.getParameterValue( "observationId", null );
+    final String domainComponentName = pc.getParameterValue( "domainComponentId", null );
+    final String targetComponentName = pc.getParameterValue( "targetComponentId", null );
 
     if( href != null && observationId != null && domainComponentName != null && targetComponentName != null )
     {
-      return new TupleResultDomainValueData<Object, Object>( getContext(), href, observationId, domainComponentName, targetComponentName );
+      return new TupleResultDomainValueData( getContext(), href, observationId, domainComponentName, targetComponentName );
     }
 
     return null;

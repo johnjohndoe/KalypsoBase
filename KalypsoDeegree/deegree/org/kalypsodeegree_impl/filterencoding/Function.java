@@ -75,17 +75,17 @@ public class Function extends Expression_Impl
   }
 
   /**
-   * Given a DOM-fragment, a corresponding Expression-object is built. This method recursively calls other buildFromDOM
-   * () - methods to validate the structure of the DOM-fragment.
+   * Given a DOM-fragment, a corresponding Expression-object is built. This method recursively calls other buildFromDOM () -
+   * methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
-   *           if the structure of the DOM-fragment is invalid
+   *             if the structure of the DOM-fragment is invalid
    */
   public static Expression buildFromDOM( final Element element ) throws FilterConstructionException
   {
     // check if root element's name equals 'Function'
     final String localName = element.getLocalName();
-    if( !"function".equals( localName.toLowerCase() ) )
+    if( !localName.toLowerCase().equals( "function" ) )
       throw new FilterConstructionException( "Name of element does not equal 'Function'!" );
 
     // determine the name of the Function
@@ -116,7 +116,7 @@ public class Function extends Expression_Impl
    */
   public void setName( final String name )
   {
-    m_name = name;
+    this.m_name = name;
   }
 
   /**
@@ -145,7 +145,7 @@ public class Function extends Expression_Impl
    * Returns the <tt>Function</tt>'s value (to be used in the evaluation of a complexer <tt>Expression</tt>).
    * 
    * @param feature
-   *          that determines the concrete values of <tt>PropertyNames</tt> found in the expression
+   *            that determines the concrete values of <tt>PropertyNames</tt> found in the expression
    * @return the resulting value
    */
   @Override

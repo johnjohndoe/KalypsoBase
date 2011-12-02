@@ -68,7 +68,7 @@ public abstract class RuleFactory
    * This function creates a list of rules for a property, if it have any restrictions.
    * 
    * @param ftp
-   *          The GML schema that represents a feature property.
+   *            The GML schema that represents a feature property.
    */
   public static IRule[] getRules( final IPropertyType ftp )
   {
@@ -80,8 +80,9 @@ public abstract class RuleFactory
 
       final IRestriction[] restrictions = vpt.getRestriction();
 
-      for( final IRestriction restriction : restrictions )
+      for( int i = 0; i < restrictions.length; i++ )
       {
+        final IRestriction restriction = restrictions[i];
 
         /* What restrictions do I have found here? */
 

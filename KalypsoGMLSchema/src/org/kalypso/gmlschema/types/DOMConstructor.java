@@ -85,9 +85,9 @@ public class DOMConstructor implements ContentHandler, LexicalHandler
    * Create new DOMConstructor instance.
    * 
    * @param factory
-   *          Factory instance to be used for creating nodes.
+   *            Factory instance to be used for creating nodes.
    * @param resultEater
-   *          will be feeded with the result of unmarshalling process
+   *            will be feeded with the result of unmarshalling process
    */
   public DOMConstructor( final Document factory, final UnmarshallResultEater resultEater )
   {

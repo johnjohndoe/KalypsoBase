@@ -45,7 +45,7 @@ public interface ICalculationChainMember extends Feature, Comparable<ICalculatio
   public boolean getUseAntLauncher( );
 
   public void setUseAntLauncher( final boolean value );
-
+  
   public IPath getCalculationCaseFolder( ) throws URIException, MalformedURLException;
 
   public void setCalculationCaseFolder( IPath container ) throws URIException;

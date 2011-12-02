@@ -53,7 +53,7 @@ import org.eclipse.ui.IWorkbenchPartReference;
  * <li>other editors</li>
  * <li>other views</li>
  * </ul>
- * 
+ *
  * @author Gernot Belger
  */
 public class EditorFirstAdapterFinder<C> implements IAdapterFinder<C>

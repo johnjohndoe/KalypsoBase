@@ -40,24 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.mapserver.utils;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.net.URL;
-import java.util.List;
-import java.util.Locale;
 
-import javax.measure.unit.NonSI;
-import javax.measure.unit.SI;
-import javax.measure.unit.Unit;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -69,36 +60,10 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.eclipse.swt.graphics.RGB;
-import org.geotools.referencing.CRS;
 import org.kalypso.commons.KalypsoCommonsPlugin;
 import org.kalypso.commons.bind.JaxbUtilities;
-import org.kalypso.mapserver.utils.exceptions.MapServerException;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.tools.GMLConstants;
-import org.mapserver.mapserver.BooleanEnum;
-import org.mapserver.mapserver.Class;
-import org.mapserver.mapserver.ExpressionType;
-import org.mapserver.mapserver.ItemType;
-import org.mapserver.mapserver.ItemType.Item;
-import org.mapserver.mapserver.Label;
-import org.mapserver.mapserver.Layer;
-import org.mapserver.mapserver.Legend;
 import org.mapserver.mapserver.Map;
 import org.mapserver.mapserver.ObjectFactory;
-import org.mapserver.mapserver.OutputFormat;
-import org.mapserver.mapserver.PositionEnum;
-import org.mapserver.mapserver.RgbColorType;
-import org.mapserver.mapserver.SizeType;
-import org.mapserver.mapserver.StateEnum;
-import org.mapserver.mapserver.Style;
-import org.mapserver.mapserver.Web;
-import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.NoSuchAuthorityCodeException;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
-import org.opengis.referencing.cs.CoordinateSystem;
-import org.opengis.referencing.cs.CoordinateSystemAxis;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -137,18 +102,18 @@ public class MapFileUtilities
    *          The input stream.
    * @return The contents of the map file.
    */
-  public static Map loadFromXML( final InputStream inputStream ) throws JAXBException, SAXException, ParserConfigurationException, IOException
+  public static Map loadFromXML( InputStream inputStream ) throws JAXBException, SAXException, ParserConfigurationException, IOException
   {
     /* Create the unmarshaller. */
-    final Unmarshaller unmarshaller = JC.createUnmarshaller();
+    Unmarshaller unmarshaller = JC.createUnmarshaller();
 
     /* Get the sax parser factory. */
-    final SAXParserFactory spf = SAXParserFactory.newInstance();
+    SAXParserFactory spf = SAXParserFactory.newInstance();
     spf.setNamespaceAware( true );
     spf.setXIncludeAware( true );
 
     /* Get the xml reader. */
-    final XMLReader xr = spf.newSAXParser().getXMLReader();
+    XMLReader xr = spf.newSAXParser().getXMLReader();
     xr.setContentHandler( unmarshaller.getUnmarshallerHandler() );
     xr.parse( new InputSource( inputStream ) );
 
@@ -165,10 +130,10 @@ public class MapFileUtilities
    * @param encoding
    *          The encoding.
    */
-  public static void saveAsXML( final Map map, final OutputStream outputStream, final String encoding ) throws JAXBException
+  public static void saveAsXML( Map map, OutputStream outputStream, String encoding ) throws JAXBException
   {
     /* Create the marshaller. */
-    final Marshaller marshaller = JC.createMarshaller();
+    Marshaller marshaller = JC.createMarshaller();
     marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
     marshaller.setProperty( Marshaller.JAXB_ENCODING, encoding );
     marshaller.setProperty( "com.sun.xml.bind.namespacePrefixMapper", new MapFileNamespacePrefixMapper() );
@@ -185,7 +150,7 @@ public class MapFileUtilities
    * @param encoding
    *          The encoding.
    */
-  public static void saveInASCII( final Map map, final OutputStream outputStream, final String encoding ) throws ParserConfigurationException, JAXBException, SAXException, IOException, TransformerException
+  public static void saveInASCII( Map map, OutputStream outputStream, String encoding ) throws ParserConfigurationException, JAXBException, SAXException, IOException, TransformerException
   {
 
     /* the input stream. */
@@ -194,17 +159,17 @@ public class MapFileUtilities
     try
     {
       /* Create the document builder factory. */
-      final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       factory.setNamespaceAware( true );
 
       /* Create the document builder. */
-      final DocumentBuilder builder = factory.newDocumentBuilder();
+      DocumentBuilder builder = factory.newDocumentBuilder();
 
       /* Create a XML document. */
-      final Document xmlDOM = builder.newDocument();
+      Document xmlDOM = builder.newDocument();
 
       /* Create the marshaller. */
-      final Marshaller marshaller = JC.createMarshaller();
+      Marshaller marshaller = JC.createMarshaller();
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       marshaller.setProperty( Marshaller.JAXB_ENCODING, encoding );
       marshaller.setProperty( "com.sun.xml.bind.namespacePrefixMapper", new MapFileNamespacePrefixMapper() );
@@ -214,13 +179,13 @@ public class MapFileUtilities
 
       /* Load the XLS document. */
       inputStream = XSL_URL.openStream();
-      final Document xslDOM = builder.parse( inputStream );
+      Document xslDOM = builder.parse( inputStream );
 
       /* Create the transformer factory. */
-      final TransformerFactory transformerFactory = KalypsoCommonsPlugin.getDefault().getTransformerFactory();
+      TransformerFactory transformerFactory = KalypsoCommonsPlugin.getDefault().getTransformerFactory();
 
       /* Create the transformer using the XSL document. */
-      final Transformer transformer = transformerFactory.newTransformer( new DOMSource( xslDOM ) );
+      Transformer transformer = transformerFactory.newTransformer( new DOMSource( xslDOM ) );
 
       /* Transform the XML document document and write it to the output stream. */
       transformer.transform( new DOMSource( xmlDOM ), new StreamResult( outputStream ) );
@@ -230,288 +195,5 @@ public class MapFileUtilities
       /* Close the input stream. */
       IOUtils.closeQuietly( inputStream );
     }
-  }
-
-  /**
-   * This function creates the contents of the map file without any layers.
-   * 
-   * @param wmsURL
-   * @param mapFile
-   * @param width
-   * @param height
-   * @param mapName
-   * @param envelope
-   * @param sourceCRS
-   * @param otherCRSs
-   * @return The contents of the map file.
-   */
-  public static Map createMap( final String wmsURL, final File mapFile, final int width, final int height, final String mapName, final GM_Envelope envelope, final String sourceCRS, final String[] otherCRSs ) throws NoSuchAuthorityCodeException, FactoryException
-  {
-    /* Create the root element of the XML map file. */
-    final Map map = OF.createMap();
-    map.setName( mapName );
-    map.setStatus( StateEnum.ON );
-
-    /* Create the size element. */
-    if( width > 0 && height > 0 )
-    {
-      final SizeType size = OF.createSizeType();
-      size.setX( BigInteger.valueOf( width ) );
-      size.setY( BigInteger.valueOf( height ) );
-      map.setSize( size );
-    }
-
-    /* Fill the extent element. */
-    map.getExtent().add( envelope.getMinX() );
-    map.getExtent().add( envelope.getMinY() );
-    map.getExtent().add( envelope.getMaxX() );
-    map.getExtent().add( envelope.getMaxY() );
-
-    /* Detrermine the units. */
-    final CoordinateReferenceSystem referenceSystem = CRS.decode( sourceCRS );
-    final CoordinateSystem coordinateSystem = referenceSystem.getCoordinateSystem();
-    final CoordinateSystemAxis axis = coordinateSystem.getAxis( 0 );
-    final Unit< ? > unit = axis.getUnit();
-    String units = null;
-    if( SI.KILOMETER.equals( unit ) )
-      units = "kilometers";
-    else if( SI.METER.equals( unit ) )
-      units = "meters";
-    else if( NonSI.DEGREE_ANGLE.equals( unit ) )
-      units = "dd";
-
-    if( units != null && units.length() > 0 )
-      map.setUnits( units );
-
-    /* Create the rgb color element. */
-    // RgbColorType rgbColor = OF.createRgbColorType();
-    // rgbColor.setRed( 255 );
-    // rgbColor.setGreen( 255 );
-    // rgbColor.setBlue( 255 );
-    // map.setImageColor( rgbColor );
-
-    /* Create the output format element. */
-    final OutputFormat outputFormat = OF.createOutputFormat();
-    outputFormat.setName( "PNG" );
-    outputFormat.setDriver( "AGG/PNG" );
-    outputFormat.setMimeType( "image/png" );
-    outputFormat.setImageMode( "RGBA" );
-    outputFormat.setExtension( "png" );
-    map.getOutputFormat().add( outputFormat );
-
-    /* Fill the projection element. */
-    map.getProjection().add( "init=" + sourceCRS );
-
-    /* Create the item element. */
-    final String resource = String.format( "%s?map=%s&", wmsURL, mapFile.getAbsolutePath().replace( "\\", "/" ) );
-    final ItemType item = OF.createItemType();
-    item.getItem().add( createItem( "wms_title", mapName ) );
-    item.getItem().add( createItem( "wms_onlineresource", resource ) );
-    item.getItem().add( createItem( "wms_srs", String.format( "%s %s", sourceCRS, StringUtils.join( otherCRSs, " " ) ) ) );
-    item.getItem().add( createItem( "wms_feature_info_mime_type", "text/html" ) );
-
-    /* Create the map element. */
-    final Web web = OF.createWeb();
-    web.setMetadata( item );
-
-    /* Fill the web element. */
-    map.getWeb().add( web );
-
-    /* Create a label element. */
-    final Label label = OF.createLabel();
-    label.setAntialias( BooleanEnum.TRUE );
-    label.setType( "bitmap" );
-    label.setSize( "medium" );
-    label.setPosition( "AUTO" );
-    label.setPartials( BooleanEnum.FALSE );
-
-    /* Create the outline color element. */
-    final RgbColorType outlineColor = OF.createRgbColorType();
-    outlineColor.setRed( 0 );
-    outlineColor.setGreen( 0 );
-    outlineColor.setBlue( 0 );
-
-    /* Create the legend element. */
-    final Legend legend = OF.createLegend();
-    legend.setStatus( "on" );
-    legend.setPosition( PositionEnum.LR );
-    legend.setLabel( label );
-    legend.setOutlineColor( outlineColor );
-    map.setLegend( legend );
-
-    return map;
-  }
-
-  /**
-   * This function creates the contents of the item.
-   * 
-   * @param name
-   * @param value
-   * @return The contents of the item.
-   */
-  public static Item createItem( final String name, final String value )
-  {
-    final Item item = OF.createItemTypeItem();
-    item.setName( name );
-    item.setValue( value );
-
-    return item;
-  }
-
-  /**
-   * This function creates the contents of the layer.
-   * 
-   * @param wmsURL
-   * @param mapFile
-   * @param layerName
-   *          Used for naming the layer and the wms layer.
-   * @paramd data
-   * @param geoemtryType
-   * @param envelope
-   * @param sourceCRS
-   * @param otherCRSs
-   * @return The contents of the layer.
-   */
-  public static Layer createLayerForShape( final String wmsURL, final File mapFile, final String layerName, final String data, final QName geoemtryType, final GM_Envelope envelope, final String sourceCRS, final String[] otherCRSs ) throws MapServerException
-  {
-    String shapeType = "POLYGON";
-    if( GMLConstants.QN_POINT.equals( geoemtryType ) || GMLConstants.QN_MULTI_POINT.equals( geoemtryType ) )
-      shapeType = "POINT";
-    else if( GMLConstants.QN_CURVE.equals( geoemtryType ) || GMLConstants.QN_MULTI_CURVE.equals( geoemtryType ) )
-      shapeType = "LINE";
-    else if( GMLConstants.QN_POLYGON.equals( geoemtryType ) || GMLConstants.QN_MULTI_POLYGON.equals( geoemtryType ) )
-      shapeType = "POLYGON";
-
-    /* Create the layer element. */
-    final Layer layer = OF.createLayer();
-    layer.setName( layerName );
-    layer.setType( shapeType );
-    layer.setStatus( "ON" );
-    layer.setData( data );
-    layer.setTemplate( "getfeatureinfo.html" );
-
-    /* Fill the projection element. */
-    layer.getProjection().add( "init=" + sourceCRS );
-
-    /* Create the item element. */
-    final String resource = String.format( "%s?map=%s&", wmsURL, mapFile.getAbsolutePath().replace( "\\", "/" ) );
-    final ItemType item = OF.createItemType();
-    item.getItem().add( createItem( "wms_title", layerName ) );
-    item.getItem().add( createItem( "wms_onlineresource", resource ) );
-    item.getItem().add( createItem( "wms_srs", String.format( "%s %s", sourceCRS, StringUtils.join( otherCRSs, " " ) ) ) );
-    item.getItem().add( createItem( "wms_extent", String.format( Locale.PRC, "%f %f %f %f", envelope.getMinX(), envelope.getMinY(), envelope.getMaxX(), envelope.getMaxY() ) ) );
-    layer.setMetadata( item );
-
-    /* Create the class element. */
-    final Class clazz = createClass( "Standard", null, null, new RGB( 0, 0, 0 ) );
-
-    /* Fill the class element. */
-    layer.getClazz().add( clazz );
-
-    return layer;
-  }
-
-  /**
-   * This function creates the contents of the layer without any classes.
-   * 
-   * @param wmsURL
-   * @param mapFile
-   * @param layerName
-   *          Used for naming the layer and the wms layer.
-   * @param opacity
-   * @param data
-   * @param bigMin
-   * @param bigMax
-   * @param envelope
-   * @param sourceCRS
-   * @param otherCRSs
-   * @return The contents of the layer.
-   */
-  public static Layer createLayerForRaster( final String wmsURL, final File mapFile, final String layerName, final String opacity, final String data, final BigDecimal bigMin, final BigDecimal bigMax, final GM_Envelope envelope, final String sourceCRS, final String[] otherCRSs )
-  {
-    /* Create the layer element. */
-    final Layer layer = OF.createLayer();
-    layer.setName( layerName );
-    layer.setType( "RASTER" );
-    layer.setStatus( "ON" );
-    layer.setOpacity( opacity );
-    layer.setData( data );
-    layer.setTemplate( "getfeatureinfo.html" );
-
-    /* Fill the processing element. */
-    double min = -Double.MAX_VALUE;
-    if( bigMin != null )
-      min = bigMin.doubleValue();
-
-    double max = Double.MAX_VALUE;
-    if( bigMax != null )
-      max = bigMax.doubleValue();
-
-    double buckets = Math.floor( (max - min) / 0.05 );
-    if( buckets < 2.0 )
-      buckets = 2.0;
-
-    final List<String> processing = layer.getProcessing();
-    processing.add( String.format( Locale.PRC, "SCALE=%.2f %.2f", min, max ) );
-    processing.add( String.format( Locale.PRC, "SCALE_BUCKETS=%d", (int) buckets ) );
-    processing.add( "RESAMPLE=BILINEAR" );
-
-    /* Fill the projection element. */
-    layer.getProjection().add( "init=" + sourceCRS );
-
-    /* Create the item element. */
-    final String resource = String.format( "%s?map=%s&", wmsURL, mapFile.getAbsolutePath().replace( "\\", "/" ) );
-    final ItemType item = OF.createItemType();
-    item.getItem().add( createItem( "wms_title", layerName ) );
-    item.getItem().add( createItem( "wms_onlineresource", resource ) );
-    item.getItem().add( createItem( "wms_srs", String.format( "%s %s", sourceCRS, StringUtils.join( otherCRSs, " " ) ) ) );
-    item.getItem().add( createItem( "wms_extent", String.format( Locale.PRC, "%f %f %f %f", envelope.getMinX(), envelope.getMinY(), envelope.getMaxX(), envelope.getMaxY() ) ) );
-    layer.setMetadata( item );
-
-    return layer;
-  }
-
-  /**
-   * This function creates the content of the class.
-   * 
-   * @param label
-   * @param expressionValue
-   *          Used to evaluate specific criteria. May be null.
-   * @param expressionType
-   *          Must be set, if a expressionValue is set. Otherwise it may be null.
-   * @param rgb
-   *          The rgb colors.
-   * @return The contents of the class.
-   */
-  public static Class createClass( final String label, final String expressionValue, final String expressionType, final RGB rgb ) throws MapServerException
-  {
-    /* Create the class element. */
-    final Class clazz = OF.createClass();
-    clazz.setName( label );
-
-    /* Create the expression element. */
-    if( expressionValue != null && expressionValue.length() > 0 )
-    {
-      if( expressionType == null || expressionType.length() == 0 )
-        throw new MapServerException( "Expression value without expression type set..." );
-
-      final ExpressionType expression = OF.createExpressionType();
-      expression.setValue( expressionValue );
-      expression.setType( expressionType );
-      clazz.setExpression( expression );
-    }
-
-    /* Create the rgb color element. */
-    final RgbColorType rgbColor = OF.createRgbColorType();
-    rgbColor.setRed( rgb.red );
-    rgbColor.setGreen( rgb.green );
-    rgbColor.setBlue( rgb.blue );
-
-    /* Create the style element. */
-    final Style style = OF.createStyle();
-    style.setColor( rgbColor );
-    clazz.getStyle().add( style );
-
-    return clazz;
   }
 }

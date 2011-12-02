@@ -44,8 +44,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.kalypso.repository.AbstractRepository;
 import org.kalypso.repository.IModifyableRepository;
 import org.kalypso.repository.IRepositoryItem;
@@ -54,7 +52,6 @@ import org.kalypso.repository.RepositoryException;
 import org.kalypso.services.observation.KalypsoServiceObs;
 import org.kalypso.services.observation.sei.IObservationService;
 import org.kalypso.services.observation.sei.ItemBean;
-import org.kalypso.services.observation.sei.StatusBean;
 
 /**
  * Repository of the Observation Service.
@@ -81,15 +78,6 @@ public class ObservationServiceRepository extends AbstractRepository implements 
 
     if( getService() == null )
       throw new RepositoryException( "Could not find Repository Service" ); //$NON-NLS-1$
-  }
-
-  @Override
-  public IStatus getStatus( final String type )
-  {
-    final IObservationService service = getService();
-    final StatusBean bean = service.getStatus( type );
-
-    return new Status( bean.getSeverity(), bean.getPlugin(), bean.getMessage() );
   }
 
   /**

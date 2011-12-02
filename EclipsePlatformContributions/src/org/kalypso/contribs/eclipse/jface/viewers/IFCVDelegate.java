@@ -51,9 +51,9 @@ import org.eclipse.jface.viewers.ISelection;
 
 public interface IFCVDelegate
 {
-  ISelection getDefaultKey( );
+  public ISelection getDefaultKey( );
 
-  Object[] getInputData( );
+  public Object[] getInputData( );
 
-  String getValue( Object element );
+  public String getValue( Object element );
 }

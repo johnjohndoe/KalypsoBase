@@ -50,8 +50,7 @@ public class CalcJobTestUtilis
       /**
        * @see org.kalypso.simulation.core.ISimulationResultEater#addResult(java.lang.String, java.lang.Object)
        */
-      @Override
-      public void addResult( final String id, final Object result )
+      public void addResult( String id, Object result )
       {
         System.out.println( "ID" + id + " File:" + ((File) result).getAbsolutePath() );
       }
@@ -65,16 +64,14 @@ public class CalcJobTestUtilis
       /**
        * @see org.kalypso.services.calculation.job.ICalcMonitor#cancel()
        */
-      @Override
       public void cancel( )
       {
-        //
+        //  
       }
 
       /**
        * @see org.kalypso.services.calculation.job.ICalcMonitor#isCanceled()
        */
-      @Override
       public boolean isCanceled( )
       {
         return false;
@@ -83,8 +80,7 @@ public class CalcJobTestUtilis
       /**
        * @see org.kalypso.services.calculation.job.ICalcMonitor#setProgress(int)
        */
-      @Override
-      public void setProgress( final int progress )
+      public void setProgress( int progress )
       {
         //
       }
@@ -92,7 +88,6 @@ public class CalcJobTestUtilis
       /**
        * @see org.kalypso.services.calculation.job.ICalcMonitor#getProgress()
        */
-      @Override
       public int getProgress( )
       {
         return 0;
@@ -101,7 +96,6 @@ public class CalcJobTestUtilis
       /**
        * @see org.kalypso.services.calculation.job.ICalcMonitor#getMessage()
        */
-      @Override
       public String getMessage( )
       {
         return null;
@@ -110,27 +104,23 @@ public class CalcJobTestUtilis
       /**
        * @see org.kalypso.services.calculation.job.ICalcMonitor#setMessage(java.lang.String)
        */
-      @Override
-      public void setMessage( final String message )
+      public void setMessage( String message )
       {
         System.out.println( message + "\n" );
       }
 
-      @Override
-      public void setFinishInfo( final int status, final String text )
+      public void setFinishInfo( int status, String text )
       {
         // TODO Auto-generated method stub
 
       }
 
-      @Override
       public String getFinishText( )
       {
         // TODO Auto-generated method stub
         return null;
       }
 
-      @Override
       public int getFinishStatus( )
       {
         // TODO Auto-generated method stub
@@ -142,7 +132,7 @@ public class CalcJobTestUtilis
 
   public static File getTmpDir( )
   {
-    final File file = FileUtilities.createNewTempDir( "NA_TEST", new File( "C:\\tmp" ) );
+    File file = FileUtilities.createNewTempDir( "NA_TEST", new File( "C:\\tmp" ) );
     file.mkdirs();
     return file;
   }

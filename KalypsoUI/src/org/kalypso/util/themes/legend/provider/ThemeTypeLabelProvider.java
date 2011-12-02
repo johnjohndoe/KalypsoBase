@@ -61,7 +61,7 @@ public class ThemeTypeLabelProvider extends ColumnLabelProvider
    * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
    */
   @Override
-  public String getText( final Object element )
+  public String getText( Object element )
   {
     if( element instanceof IKalypsoTheme )
       return ((IKalypsoTheme) element).getType();

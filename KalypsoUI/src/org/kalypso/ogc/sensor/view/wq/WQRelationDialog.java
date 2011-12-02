@@ -70,7 +70,7 @@ public class WQRelationDialog extends ResizableDialog
 
     final String fromType = wqs.getFromType();
     final String toType = wqs.getToType();
-    final String title = Messages.getString( "org.kalypso.ogc.sensor.view.wq.WQRelationDialog.1", fromType, toType, obsName ); //$NON-NLS-1$
+    final String title = Messages.getString("org.kalypso.ogc.sensor.view.wq.WQRelationDialog.1", fromType ,toType ,  obsName);  //$NON-NLS-1$
 
     m_title = title;
     m_wqs = wqs;
@@ -84,7 +84,6 @@ public class WQRelationDialog extends ResizableDialog
     final SashForm form = new SashForm( composite, SWT.HORIZONTAL );
     form.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
-    // FIXME: no connection between selection of tables in table-viewer and the chart
     final WQRelationDiagramViewer diagViewer = new WQRelationDiagramViewer( form );
     final WQRelationTableViewer tableViewer = new WQRelationTableViewer( form );
 
@@ -97,7 +96,7 @@ public class WQRelationDialog extends ResizableDialog
     {
       e.printStackTrace();
 
-      MessageDialog.openError( getShell(), Messages.getString( "org.kalypso.ogc.sensor.view.wq.WQRelationDialog.0" ), e.getLocalizedMessage() ); //$NON-NLS-1$
+      MessageDialog.openError( getShell(), Messages.getString("org.kalypso.ogc.sensor.view.wq.WQRelationDialog.0"), e.getLocalizedMessage() ); //$NON-NLS-1$
     }
 
     getShell().setText( m_title );

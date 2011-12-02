@@ -40,12 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard;
 
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWizard;
-import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
-import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfileManipulationOperation.IProfileManipulator;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -53,28 +48,25 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 /**
  * @author Gernot Belger
  */
-public abstract class ManipulateProfileWizard extends Wizard implements IWorkbenchWizard
+public abstract class ManipulateProfileWizard extends Wizard
 {
-  private ProfilesChooserPage m_profileChooserPage;
+  final private ProfilesChooserPage m_profileChooserPage;
 
-  private CommandableWorkspace m_workspace;
+  final private CommandableWorkspace m_workspace;
 
-  @Override
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
+  public ManipulateProfileWizard( final ProfileSelection profileSelection, final String profilePageMessage )
   {
-    setNeedsProgressMonitor( true );
-    setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
-
-    final ProfileSelection profileSelection = ProfileHandlerUtils.getSelectionChecked( selection );
     m_workspace = profileSelection.getWorkspace();
+    setNeedsProgressMonitor( true );
 
-    m_profileChooserPage = new ProfilesChooserPage( getProfilePageMessage(), profileSelection, false );
+    m_profileChooserPage = new ProfilesChooserPage( profilePageMessage, profileSelection, false );
 
     addPage( m_profileChooserPage );
   }
 
-  protected abstract String getProfilePageMessage( );
-
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#performFinish()
+   */
   @Override
   public boolean performFinish( )
   {

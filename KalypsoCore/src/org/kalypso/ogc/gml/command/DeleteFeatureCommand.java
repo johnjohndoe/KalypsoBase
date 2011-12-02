@@ -47,7 +47,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
@@ -138,7 +138,7 @@ public class DeleteFeatureCommand implements ICommand
 
       if( rt.isList() )
       {
-        final int index = m_listIndexMap.get( featureToAdd ).intValue();
+        final int index = (m_listIndexMap.get( featureToAdd )).intValue();
         workspace.addFeatureAsComposition( parentFeature, rt, index, featureToAdd );
       }
       else
@@ -271,7 +271,7 @@ public class DeleteFeatureCommand implements ICommand
     public ModellEvent[] getEvents( )
     {
       final ModellEvent[] modellEvents = m_structureEvents.values().toArray( new ModellEvent[0] );
-      return ArrayUtils.addAll( modellEvents, new ModellEvent[] { getChangedFeatures() } );
+      return (ModellEvent[]) ArrayUtils.addAll( modellEvents, new ModellEvent[] { getChangedFeatures() } );
     }
 
     private FeaturesChangedModellEvent getChangedFeatures( )

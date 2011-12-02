@@ -61,6 +61,7 @@ import org.kalypsodeegree.filterencoding.Filter;
  */
 public interface Rule
 {
+
   /**
    * returns the name of the rule. this for machine interpreting.
    * 
@@ -72,8 +73,8 @@ public interface Rule
    * Sets the name attribute's value of the rule.
    * 
    * @param name
-   *          the name of the rule
-   *          <p>
+   *            the name of the rule
+   *            <p>
    */
   void setName( String name );
 
@@ -88,8 +89,8 @@ public interface Rule
    * Sets the title attribute's value of the rule.
    * 
    * @param title
-   *          the title of the rule
-   *          <p>
+   *            the title of the rule
+   *            <p>
    */
   void setTitle( String title );
 
@@ -103,10 +104,10 @@ public interface Rule
   /**
    * Sets the abstract attribute's value of the Rule.
    * 
-   * @param description
-   *          the abstract of the rule
+   * @param abstract_
+   *            the abstract of the rule
    */
-  void setAbstract( String description );
+  void setAbstract( String abstract_ );
 
   /**
    * The LegendGraphic element gives an optional explicit Graphic symbol to be displayed in a legend for this rule.
@@ -119,7 +120,7 @@ public interface Rule
    * Sets the LegendGraphic element
    * 
    * @param legendGraphic
-   *          the legendGraphic of the rule
+   *            the legendGraphic of the rule
    */
   void setLegendGraphic( LegendGraphic legendGraphic );
 
@@ -135,7 +136,7 @@ public interface Rule
    * Sets the Filter.
    * 
    * @param filter
-   *          the filter element
+   *            the filter element
    */
   void setFilter( Filter filter );
 
@@ -151,9 +152,9 @@ public interface Rule
    * sets the <ElseFilter>
    * 
    * @param elseFilter
-   *          an elseFilter
+   *            an elseFilter
    */
-  void setElseFilter( boolean elseFilter );
+  public void setElseFilter( boolean elseFilter );
 
   /**
    * The MinScaleDenominator and MaxScaleDenominator elements of a Rule define the range of map-rendering scales for
@@ -165,11 +166,10 @@ public interface Rule
   double getMinScaleDenominator( );
 
   /**
-   * Sets the MinScaleDenominator. <br/>
-   * TODO: allow for null value, as the schema does<br/>
+   * Sets the MinScaleDenominator.
    * 
    * @param minScaleDenominator
-   *          the MinScaleDenominator for the rule
+   *            the MinScaleDenominator for the rule
    */
   void setMinScaleDenominator( double minScaleDenominator );
 
@@ -183,18 +183,12 @@ public interface Rule
   double getMaxScaleDenominator( );
 
   /**
-   * Sets the MaxScaleDenominator. <br/>
-   * TODO: allow for null value, as the schema does<br/>
+   * Sets the MaxScaleDenominator.
    * 
    * @param maxScaleDenominator
-   *          the MaxScaleDenominator for the rule
+   *            the MaxScaleDenominator for the rule
    */
   void setMaxScaleDenominator( double maxScaleDenominator );
-
-  /**
-   * Returns if this <tt>Rule</tt> should be painted at the current scale or not.
-   */
-  boolean doesScaleConstraintApply( double scale );
 
   /**
    * Embedded inside of Rules, which group conditions for styling features, are Symbolizers. A symbolizer describes how
@@ -216,7 +210,7 @@ public interface Rule
    * Sets a set of <Symbolizer>s.
    * 
    * @param symbolizers
-   *          symbolizers for the rule
+   *            symbolizers for the rule
    */
   void setSymbolizers( Symbolizer[] symbolizers );
 
@@ -224,7 +218,7 @@ public interface Rule
    * Adds a <Symbolizer>to a set of Symbolizers.
    * 
    * @param symbolizer
-   *          symbolizer to add
+   *            symbolizer to add
    */
   void addSymbolizer( Symbolizer symbolizer );
 
@@ -232,7 +226,7 @@ public interface Rule
    * Removes a <Symbolizer>from a set of Symbolizers.
    * 
    * @param symbolizer
-   *          symbolizer to remove
+   *            symbolizer to remove
    */
   void removeSymbolizer( Symbolizer symbolizer );
 }

@@ -48,7 +48,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.observation.result.IComponent;
@@ -73,7 +73,6 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATI
 import de.openali.odysseus.chart.framework.model.mapper.IRetinalMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
-import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
  * @author burtscher1
@@ -111,25 +110,15 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
    * @param iconComponent
    *          the component which shall be mapped to an icon
    */
-  public BranchLayer( final ILayerProvider provider, final TupleResult data, final String domainComponentId, final String targetComponentId, final String iconComponentenId, final IStyleSet styleSet )
+  public BranchLayer( final ILayerProvider provider, final TupleResult data, final String domainComponentId, final String targetComponentId, final String iconComponentenId, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
-    super( provider, styleSet );
+    super( provider, lineStyle, pointStyle );
 
     m_data = data;
     m_domainComponentId = domainComponentId;
     m_targetComponentId = targetComponentId;
     m_iconComponentId = iconComponentenId;
   }
-
-// private final IPointStyle getPointStyle( )
-// {
-// return (IPointStyle) getStyleSet().getStyle( "point_style" );
-// }
-//
-// private final ILineStyle getLineStyle( )
-// {
-// return (ILineStyle) getStyleSet().getStyle( "line_style" );
-// }
 
   @Override
   @SuppressWarnings({ "unchecked", "deprecation" })
@@ -145,7 +134,7 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
       else if( component.getId().equals( m_iconComponentId ) )
         m_iconComponent = component;
 
-    if( m_domainComponent != null && m_targetComponent != null && m_iconComponent != null )
+    if( (m_domainComponent != null) && (m_targetComponent != null) && (m_iconComponent != null) )
       m_isInited = true;
 
     // Icon-Mapping vorbereiten
@@ -154,8 +143,7 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
     final IRetinalMapper mapper = getMapper( "icon" );
     final IDataOperator dop = mapper.getDataOperator( String.class );
 
-    final String[] smallStyles = new String[] { "ConnectionNode", "LinkageNode", "CrossSectionNode" }; // $NON-NLS-1$ //
-// $NON-NLS-2$ // $NON-NLS-3$
+    final String[] smallStyles = new String[] { "ConnectionNode", "LinkageNode", "CrossSectionNode" };
 
     for( int i = 0; i < m_data.size(); i++ )
     {
@@ -182,7 +170,7 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Number> getDomainRange( )
   {
     if( m_isInited )
     {
@@ -197,7 +185,7 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     if( m_isInited )
     {
@@ -231,8 +219,7 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
         m_pointMarks.get( record.getValue( m_iconComponent ) ).add( point );
       }
 
-    final PolylineFigure polylineFigure = new PolylineFigure();
-    polylineFigure.setStyle( getLineStyle() );
+    final PolylineFigure polylineFigure = getPolylineFigure();
     polylineFigure.setPoints( path.toArray( new Point[] {} ) );
     polylineFigure.paint( gc );
 
@@ -240,8 +227,7 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
     for( final Entry<Object, ArrayList<Point>> e : m_pointMarks.entrySet() )
     {
       final ArrayList<Point> points = e.getValue();
-      final PointFigure pointFigure = new PointFigure();
-      pointFigure.setStyle( getPointStyle() );
+      final PointFigure pointFigure = getPointFigure();
       final Object nodeType = e.getKey();
       final IPointStyle iconStyle = m_mapping.get( nodeType );
 
@@ -294,7 +280,7 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
   {
 
     final ArrayList<ILegendEntry> entries = new ArrayList<ILegendEntry>();
-    final ILineStyle ls = getLineStyle();
+    final ILineStyle ls = getPolylineFigure().getStyle();
     if( ls.isVisible() )
     {
 
@@ -314,9 +300,7 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
           path.add( new Point( sizeX / 5 * 3, sizeY / 4 * 3 ) );
           path.add( new Point( sizeX / 5 * 4, sizeY / 2 ) );
           path.add( new Point( sizeX, sizeY / 2 ) );
-          final PolylineFigure plf = new PolylineFigure();
-          plf.setStyle( getLineStyle() );
-          plf.paint( gc );
+          drawLine( gc, path );
         }
 
       };
@@ -421,7 +405,7 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
       if( cd.compare( domainVal, domainValMin ) >= 0 )
       {
         final Object targetVal = record.getValue( m_targetComponent );
-        if( ct.compare( targetVal, targetValMin ) >= 0 && ct.compare( targetVal, targetValMax ) <= 0 )
+        if( (ct.compare( targetVal, targetValMin ) >= 0) && (ct.compare( targetVal, targetValMax ) <= 0) )
           return createTooltipInfo( pos, i );
       }
     }
@@ -441,7 +425,7 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
     final T_domain domainVal = (T_domain) record.getValue( m_domainComponent );
     final T_target targetVal = (T_target) record.getValue( m_targetComponent );
 
-    if( domainVal != null && targetVal != null )
+    if( (domainVal != null) && (targetVal != null) )
     {
       final IAxis domainAxis = getDomainAxis();
       final IAxis targetAxis = getTargetAxis();
@@ -452,10 +436,10 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
       final Number dataTargetValNum = dopTarget.logicalToNumeric( targetVal );
 
       Point dataPos = null;
-      if( dataDomainValNum != null && dataTargetValNum != null )
+      if( (dataDomainValNum != null) && (dataTargetValNum != null) )
         dataPos = getCoordinateMapper().numericToScreen( dataDomainValNum, dataTargetValNum );
 
-      final IRetinalMapper mapper = getMapper( "icon" ); // $NON-NLS-1$
+      final IRetinalMapper mapper = getMapper( "icon" );
       final Object iconVal = record.getValue( m_iconComponent );
       final IDataOperator iop = mapper.getDataOperator( iconVal.getClass() );
 

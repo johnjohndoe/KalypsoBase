@@ -46,6 +46,7 @@ import org.kalypso.ui.catalogs.FeatureTypeImageCatalog;
 import org.kalypso.ui.catalogs.LinkedFeatureTypeImageCatalog;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
@@ -109,7 +110,7 @@ public class GMLLabelProvider extends LabelProvider
    * This function retrieves the image descriptor from an catalog or other sources.
    * 
    * @param element
-   *          The element, for which the image descriptor should be obtained.
+   *            The element, for which the image descriptor should be obtained.
    * @return The image descriptor.
    */
   private ImageDescriptor getDescriptor( final Object element )
@@ -119,7 +120,7 @@ public class GMLLabelProvider extends LabelProvider
     if( qname != null )
     {
       /* Check the catalogs for this qname. */
-      if( element instanceof LinkedFeatureElement )
+      if( element instanceof LinkedFeatureElement2 )
       {
         final ImageDescriptor catalogImage = LinkedFeatureTypeImageCatalog.getImage( null, qname );
         if( catalogImage != null )
@@ -135,10 +136,13 @@ public class GMLLabelProvider extends LabelProvider
     if( element instanceof Feature )
       return ImageProvider.IMAGE_FEATURE;
 
+    if( element instanceof IFeatureWrapper2 )
+      return ImageProvider.IMAGE_FEATURE;
+
     if( element instanceof FeatureAssociationTypeElement )
       return ImageProvider.IMAGE_FEATURE_RELATION_COMPOSITION;
 
-    if( element instanceof LinkedFeatureElement )
+    if( element instanceof LinkedFeatureElement2 )
       return ImageProvider.IMAGE_FEATURE_LINKED;
 
     if( element instanceof IValuePropertyType )
@@ -176,6 +180,9 @@ public class GMLLabelProvider extends LabelProvider
     if( element instanceof Feature )
       return FeatureHelper.getAnnotationValue( (Feature) element, IAnnotation.ANNO_LABEL );
 
+    if( element instanceof IFeatureWrapper2 )
+      return FeatureHelper.getAnnotationValue( ((IFeatureWrapper2) element).getFeature(), IAnnotation.ANNO_LABEL );
+
     if( element instanceof FeatureAssociationTypeElement )
     {
       final IAnnotation annotation = ((FeatureAssociationTypeElement) element).getAssociationTypeProperty().getAnnotation();
@@ -184,9 +191,9 @@ public class GMLLabelProvider extends LabelProvider
       return "<-> "; //$NON-NLS-1$
     }
 
-    if( element instanceof LinkedFeatureElement )
+    if( element instanceof LinkedFeatureElement2 )
     {
-      final Feature decoratedFeature = ((LinkedFeatureElement) element).getDecoratedFeature();
+      final Feature decoratedFeature = ((LinkedFeatureElement2) element).getDecoratedFeature();
       return "-> " + getText( decoratedFeature ); //$NON-NLS-1$
     }
 
@@ -209,7 +216,7 @@ public class GMLLabelProvider extends LabelProvider
    * This function tries to obtain the qname of the element.
    * 
    * @param element
-   *          The element.
+   *            The element.
    * @return The qname of the element or null.
    */
   private QName getQName( final Object element )
@@ -219,14 +226,19 @@ public class GMLLabelProvider extends LabelProvider
       final IFeatureType featureType = ((Feature) element).getFeatureType();
       return featureType.getQName();
     }
+    else if( element instanceof IFeatureWrapper2 )
+    {
+      final IFeatureType featureType = ((IFeatureWrapper2) element).getFeature().getFeatureType();
+      return featureType.getQName();
+    }
     else if( element instanceof FeatureAssociationTypeElement )
     {
       final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) element;
       return fate.getAssociationTypeProperty().getQName();
     }
-    else if( element instanceof LinkedFeatureElement )
+    else if( element instanceof LinkedFeatureElement2 )
     {
-      final LinkedFeatureElement linkedFeature = (LinkedFeatureElement) element;
+      final LinkedFeatureElement2 linkedFeature = (LinkedFeatureElement2) element;
       final Feature decoratedFeature = linkedFeature.getDecoratedFeature();
       if( decoratedFeature == null )
         return null;

@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table.command;
 
@@ -45,7 +45,6 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.table.LayerTableSorter;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * @author gernot
@@ -56,9 +55,9 @@ public class ChangeSortingCommand implements ICommand
 
   private final LayerTableSorter m_sorter;
 
-  private final GMLXPath m_oldPropertyPath;
+  private final String m_oldPropertyName;
 
-  private final GMLXPath m_newPropertyPath;
+  private final String m_newPropertyName;
 
   private final boolean m_oldInverse;
 
@@ -68,32 +67,32 @@ public class ChangeSortingCommand implements ICommand
   {
     m_viewer = viewer;
 
-    final GMLXPath propertyPath = (GMLXPath) tableColumn.getData( LayerTableViewer.COLUMN_PROP_PATH );
+    final String propertyName = (String)tableColumn.getData( LayerTableViewer.COLUMN_PROP_NAME );
 
-    m_sorter = (LayerTableSorter) m_viewer.getSorter();
-    // TODO: check if sorting is supported at all
+    m_sorter = (LayerTableSorter)m_viewer.getSorter();
+    // TODO: check if sortig is supported at all
 
-    m_oldPropertyPath = m_sorter.getPropertyPath();
+    m_oldPropertyName = m_sorter.getPropertyName();
     m_oldInverse = m_sorter.isInverse();
 
-    if( m_oldPropertyPath != null && m_oldPropertyPath.equals( propertyPath ) )
+    if( m_oldPropertyName != null && m_oldPropertyName.equals( propertyName ) )
     {
       // falls bereits invers, ausschalten
       if( m_oldInverse )
       {
-        m_newPropertyPath = null;
+        m_newPropertyName = null;
         m_newInverse = false;
       }
       else
       {
         m_newInverse = true;
-        m_newPropertyPath = m_oldPropertyPath;
+        m_newPropertyName = m_oldPropertyName;
       }
     }
     else
     {
       m_newInverse = false;
-      m_newPropertyPath = propertyPath;
+      m_newPropertyName = propertyName;
     }
   }
 
@@ -101,7 +100,7 @@ public class ChangeSortingCommand implements ICommand
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
   @Override
-  public boolean isUndoable( )
+  public boolean isUndoable()
   {
     return true;
   }
@@ -110,21 +109,21 @@ public class ChangeSortingCommand implements ICommand
    * @see org.kalypso.commons.command.ICommand#process()
    */
   @Override
-  public void process( ) throws Exception
+  public void process() throws Exception
   {
-    changeSorter( m_newInverse, m_newPropertyPath );
+    changeSorter( m_newInverse, m_newPropertyName );
   }
 
-  private void changeSorter( final boolean bInverse, final GMLXPath propertyPath )
+  private void changeSorter( final boolean bInverse, final String propertyName )
   {
     m_sorter.setInverse( bInverse );
-    m_sorter.setPropertyPath( propertyPath );
+    m_sorter.setPropertyName( propertyName );
 
     final LayerTableViewer viewer = m_viewer;
     viewer.getControl().getDisplay().asyncExec( new Runnable()
     {
       @Override
-      public void run( )
+      public void run()
       {
         viewer.refresh();
       }
@@ -135,7 +134,7 @@ public class ChangeSortingCommand implements ICommand
    * @see org.kalypso.commons.command.ICommand#redo()
    */
   @Override
-  public void redo( ) throws Exception
+  public void redo() throws Exception
   {
     process();
   }
@@ -144,17 +143,18 @@ public class ChangeSortingCommand implements ICommand
    * @see org.kalypso.commons.command.ICommand#undo()
    */
   @Override
-  public void undo( ) throws Exception
+  public void undo() throws Exception
   {
-    changeSorter( m_oldInverse, m_oldPropertyPath );
+    changeSorter( m_oldInverse, m_oldPropertyName );
   }
 
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
   @Override
-  public String getDescription( )
+  public String getDescription()
   {
-    return (m_newInverse ? Messages.getString( "org.kalypso.ogc.gml.table.command.ChangeSortingCommand.0" ) : Messages.getString( "org.kalypso.ogc.gml.table.command.ChangeSortingCommand.1" )) + Messages.getString( "org.kalypso.ogc.gml.table.command.ChangeSortingCommand.2" ) + m_newPropertyPath; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    return ( m_newInverse ? Messages.getString("org.kalypso.ogc.gml.table.command.ChangeSortingCommand.0") : Messages.getString("org.kalypso.ogc.gml.table.command.ChangeSortingCommand.1") ) + Messages.getString("org.kalypso.ogc.gml.table.command.ChangeSortingCommand.2") + m_newPropertyName; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
+
 }

@@ -48,7 +48,7 @@ import org.kalypso.observation.result.IRecord;
 /**
  * @author kimwerner
  */
-public final class ProfilPropertyOperation
+public class ProfilPropertyOperation
 {
   private ProfilPropertyOperation( )
   {

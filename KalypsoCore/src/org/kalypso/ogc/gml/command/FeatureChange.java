@@ -60,7 +60,7 @@ public class FeatureChange
   public FeatureChange( final Feature feature, final IPropertyType property, final Object newValue )
   {
     Assert.isNotNull( property );
-
+    
     m_feature = feature;
     m_property = property;
     m_newValue = newValue;

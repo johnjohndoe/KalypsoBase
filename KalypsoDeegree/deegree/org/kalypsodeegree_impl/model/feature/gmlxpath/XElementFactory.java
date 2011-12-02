@@ -82,7 +82,7 @@ public class XElementFactory
     {
       // "mod";
       @Override
-      public Object operate( final Object value1, final Object value2 )
+      public Object operate( Object value1, Object value2 )
       {
         // TODO Auto-generated method stub
         return null;
@@ -92,7 +92,7 @@ public class XElementFactory
     final IGMLXPathOperation op2 = new GMLXPathOperation( "(.+)( div )(.+)" )
     {
       @Override
-      public Object operate( final Object value1, final Object value2 )
+      public Object operate( Object value1, Object value2 )
       {
         // TODO Auto-generated method stub
         return null;
@@ -102,18 +102,18 @@ public class XElementFactory
     final IGMLXPathOperation op3 = new GMLXPathOperation( "(.+)( or )(.+)" )
     {
       @Override
-      public Object operate( final Object value1, final Object value2 )
+      public Object operate( Object value1, Object value2 )
       {
         boolean b1;
         if( value1 instanceof Boolean )
           b1 = ((Boolean) value1).booleanValue();
         else
-          b1 = value1 != null;
+          b1 = (value1 != null);
         boolean b2;
         if( value2 instanceof Boolean )
           b2 = ((Boolean) value2).booleanValue();
         else
-          b2 = value2 != null;
+          b2 = (value2 != null);
         return b1 || b2;
       }
     };
@@ -121,18 +121,18 @@ public class XElementFactory
     final IGMLXPathOperation op4 = new GMLXPathOperation( "(.+)( and )(.+)" )
     {
       @Override
-      public Object operate( final Object value1, final Object value2 )
+      public Object operate( Object value1, Object value2 )
       {
         boolean b1;
         if( value1 instanceof Boolean )
           b1 = ((Boolean) value1).booleanValue();
         else
-          b1 = value1 != null;
+          b1 = (value1 != null);
         boolean b2;
         if( value2 instanceof Boolean )
           b2 = ((Boolean) value2).booleanValue();
         else
-          b2 = value2 != null;
+          b2 = (value2 != null);
         return b1 && b2;
       }
     };
@@ -140,7 +140,7 @@ public class XElementFactory
     {
 
       @Override
-      public Object mathOperate( final double n1, final double n2 )
+      public Object mathOperate( double n1, double n2 )
       {
         return n1 >= n2;
       }
@@ -150,7 +150,7 @@ public class XElementFactory
     {
 
       @Override
-      public Object mathOperate( final double n1, final double n2 )
+      public Object mathOperate( double n1, double n2 )
       {
         return n1 <= n2;
       }
@@ -159,7 +159,7 @@ public class XElementFactory
     {
 
       @Override
-      public Object mathOperate( final double n1, final double n2 )
+      public Object mathOperate( double n1, double n2 )
       {
         return n1 > n2;
       }
@@ -168,7 +168,7 @@ public class XElementFactory
     {
 
       @Override
-      public Object mathOperate( final double n1, final double n2 )
+      public Object mathOperate( double n1, double n2 )
       {
         return n1 >= n2;
       }
@@ -177,7 +177,7 @@ public class XElementFactory
     {
 
       @Override
-      public Object operate( final Object value1, final Object value2 ) throws GMLXPathException
+      public Object operate( Object value1, Object value2 ) throws GMLXPathException
       {
         if( value1 instanceof String && value2 instanceof String )
           return !value1.equals( value2 );
@@ -187,7 +187,7 @@ public class XElementFactory
       }
 
       @Override
-      public Object mathOperate( final double n1, final double n2 )
+      public Object mathOperate( double n1, double n2 )
       {
         return n1 != n2;
       }
@@ -196,7 +196,7 @@ public class XElementFactory
     {
 
       @Override
-      public Object operate( final Object value1, final Object value2 ) throws GMLXPathException
+      public Object operate( Object value1, Object value2 ) throws GMLXPathException
       {
         if( value1 instanceof String && value2 instanceof String )
           return value1.equals( value2 );
@@ -206,7 +206,7 @@ public class XElementFactory
       }
 
       @Override
-      public Object mathOperate( final double n1, final double n2 )
+      public Object mathOperate( double n1, double n2 )
       {
         return n1 == n2;
       }
@@ -215,7 +215,7 @@ public class XElementFactory
     {
 
       @Override
-      public Object mathOperate( final double n1, final double n2 )
+      public Object mathOperate( double n1, double n2 )
       {
         return n1 * n2;
       }
@@ -224,7 +224,7 @@ public class XElementFactory
     final IGMLXPathOperation op12 = new GMLXPathMathOperation( "(.+)( - )(.+)" )
     {
       @Override
-      public Object mathOperate( final double n1, final double n2 )
+      public Object mathOperate( double n1, double n2 )
       {
         return n1 - n2;
       }
@@ -232,7 +232,7 @@ public class XElementFactory
     final IGMLXPathOperation op13 = new GMLXPathMathOperation( "(.+)( \\\\+ )(.+)" )
     {
       @Override
-      public Object mathOperate( final double n1, final double n2 )
+      public Object mathOperate( double n1, double n2 )
       {
         return n1 + n2;
       }
@@ -243,9 +243,9 @@ public class XElementFactory
     {
 
       @Override
-      public Boolean evaluate( final Feature contextFE, final IXElement argumentXEelement, final boolean isFeatureTypeLevel ) throws GMLXPathException
+      public Boolean evaluate( Feature contextFE, IXElement argumentXEelement, boolean isFeatureTypeLevel ) throws GMLXPathException
       {
-        final Object object = argumentXEelement.evaluate( contextFE, isFeatureTypeLevel );
+        Object object = argumentXEelement.evaluate( contextFE, isFeatureTypeLevel );
         if( object instanceof String )
           return !Boolean.parseBoolean( (String) object );
         return null;
@@ -255,7 +255,7 @@ public class XElementFactory
     {
 
       @Override
-      public Object evaluate( final Feature contextFE, final IXElement argumentXEelement, final boolean isFeatureTypeLevel ) throws GMLXPathException
+      public Object evaluate( Feature contextFE, IXElement argumentXEelement, boolean isFeatureTypeLevel ) throws GMLXPathException
       {
         final Feature fe;
         if( argumentXEelement != null )
@@ -268,19 +268,21 @@ public class XElementFactory
     final IGMLXPathFunction f3 = new AbstractGMLXPathFunction( "position" )
     {
       @Override
-      public Object evaluate( final Feature contextFE, final IXElement argumentXEelement, final boolean isFeatureTypeLevel )
+      public Object evaluate( Feature contextFE, IXElement argumentXEelement, boolean isFeatureTypeLevel )
       {
         throw new UnsupportedOperationException();
       }
     };
     final IGMLXPathFunction f4 = new AbstractGMLXPathFunction( "id" )
     {
+
       @Override
-      public Object evaluate( final Feature contextFE, final IXElement argumentXEelement, final boolean isFeatureTypeLevel ) throws GMLXPathException
+      public Object evaluate( Feature contextFE, IXElement argumentXEelement, boolean isFeatureTypeLevel ) throws GMLXPathException
       {
         final GMLWorkspace workspace = contextFE.getWorkspace();
         final String fId = (String) argumentXEelement.evaluate( contextFE, isFeatureTypeLevel );
-        return workspace.getFeature( fId );
+        final Feature feature = workspace.getFeature( fId );
+        return feature;
       }
     };
 

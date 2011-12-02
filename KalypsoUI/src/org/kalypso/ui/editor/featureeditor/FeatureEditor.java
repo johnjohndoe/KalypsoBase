@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.featureeditor;
 
@@ -68,7 +68,6 @@ import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.template.featureview.Featuretemplate;
@@ -108,7 +107,7 @@ public class FeatureEditor extends EditorPart
   private final FeatureTemplateviewer m_viewer = new FeatureTemplateviewer( m_commandTarget );
 
   /**
-   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#dispose()
+   * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
    */
   @Override
   public void dispose( )
@@ -181,7 +180,7 @@ public class FeatureEditor extends EditorPart
       e.printStackTrace();
 
       final IStatus status = StatusUtilities.statusFromThrowable( e );
-      ErrorDialog.openError( getSite().getShell(), Messages.getString( "org.kalypso.ui.editor.featureeditor.FeatureEditor.2" ), Messages.getString( "org.kalypso.ui.editor.featureeditor.FeatureEditor.3" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( getSite().getShell(), Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureEditor.2"), Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureEditor.3"), status ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -253,7 +252,7 @@ public class FeatureEditor extends EditorPart
         status = StatusUtilities.statusFromThrowable( targetException, msg );
       }
 
-      ErrorDialog.openError( getEditorSite().getShell(), Messages.getString( "org.kalypso.ui.editor.featureeditor.FeatureEditor.5" ), Messages.getString( "org.kalypso.ui.editor.featureeditor.FeatureEditor.6" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( getEditorSite().getShell(), Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureEditor.5"), Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureEditor.6"), status ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     catch( final InterruptedException e )
     {
@@ -263,26 +262,23 @@ public class FeatureEditor extends EditorPart
 
   protected final void loadInput( final IStorageEditorInput input, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.featureeditor.FeatureEditor.7" ), 1000 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureEditor.7"), 1000 ); //$NON-NLS-1$
 
     try
     {
       final IStorage storage = input.getStorage();
 
       final IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile( storage.getFullPath() );
-      final URL templateContext = ResourceUtilities.createURL( file );
+      final URL context = ResourceUtilities.createURL( file );
 
       final Featuretemplate template = GisTemplateHelper.loadGisFeatureTemplate( storage );
-
-      final IPoolableObjectType key = FeatureTemplateviewer.createKey( template, null, null, templateContext );
-
-      m_viewer.setTemplate( template, key, null, templateContext );
+      m_viewer.setTemplate( template, context, null, null, null );
     }
     catch( final MalformedURLException e )
     {
       e.printStackTrace();
 
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ui.editor.featureeditor.FeatureEditor.8" ) ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureEditor.8") ) ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {
@@ -294,7 +290,7 @@ public class FeatureEditor extends EditorPart
     {
       e.printStackTrace();
 
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ui.editor.featureeditor.FeatureEditor.9" ) ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString("org.kalypso.ui.editor.featureeditor.FeatureEditor.9") ) ); //$NON-NLS-1$
     }
     finally
     {

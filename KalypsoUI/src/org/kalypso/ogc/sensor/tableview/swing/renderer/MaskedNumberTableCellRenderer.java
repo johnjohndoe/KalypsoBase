@@ -120,9 +120,7 @@ public class MaskedNumberTableCellRenderer extends DefaultTableCellRenderer
       label.setFont( f );
 
       final Icon ic = element.getIcon();
-      /* The first rule having an icon wins */
-      if( ic != null && label.getIcon() == null )
-        label.setIcon( ic );
+      label.setIcon( ic );
 
       if( !isSelected )
       {

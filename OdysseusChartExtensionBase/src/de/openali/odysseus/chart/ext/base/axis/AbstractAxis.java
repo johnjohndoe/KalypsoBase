@@ -1,22 +1,16 @@
 package de.openali.odysseus.chart.ext.base.axis;
 
-import java.awt.Insets;
-import java.util.ArrayList;
-import java.util.List;
+import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRangeRestriction;
-import de.openali.odysseus.chart.framework.model.impl.AxisVisitorBehavior;
-import de.openali.odysseus.chart.framework.model.impl.IAxisVisitorBehavior;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisAdjustment;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
-import de.openali.odysseus.chart.framework.util.img.ChartLabelRendererFactory;
-import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 
 /**
  * @author burtscher Abstract implementation of IAxis - implements some methods which are equal for all concrete
@@ -24,45 +18,15 @@ import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
  */
 public abstract class AbstractAxis extends AbstractMapper implements IAxis
 {
-  /**
-   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#setActiveRange(de.openali.odysseus.chart.framework.model.data.IDataRange)
-   */
-  @Override
-  public void setSelection( final DataRange<Number> range )
-  {
-    if( m_activeRange == range )
-      return;
-    m_activeRange = range;
-    fireMapperChanged( this );
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#getActiveRange()
-   */
-  @Override
-  public DataRange<Number> getSelection( )
-  {
-    return m_activeRange;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#getAxisVisitorBehavior()
-   */
-  @Override
-  public IAxisVisitorBehavior getAxisVisitorBehavior( )
-  {
-    return new AxisVisitorBehavior( m_allowZoom, true, true );
-  }
-
   private final Class< ? > m_dataClass;
 
   private DIRECTION m_dir = DIRECTION.POSITIVE;
 
   private int m_height = 1;
 
-  private DataRange<Number> m_activeRange = null;
+  private final String m_id;
 
-  private final List<TitleTypeBean> m_axisLabels = new ArrayList<TitleTypeBean>();
+  private String m_label = "";
 
   private IDataRange<Number> m_numericRange = new DataRange<Number>( null, null );
 
@@ -76,44 +40,20 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
 
   private boolean m_visible = true;
 
-  private boolean m_allowZoom = true;
+  private Object m_selection;
 
   public AbstractAxis( final String id, final POSITION pos, final Class< ? > dataClass )
   {
     this( id, pos, dataClass, null );
   }
 
-  public boolean isAllowZoom( )
-  {
-    return m_allowZoom;
-  }
-
-  public void setAllowZoom( final boolean allowZoom )
-  {
-    m_allowZoom = allowZoom;
-  }
-
   public AbstractAxis( final String id, final POSITION pos, final Class< ? > dataClass, final IAxisRenderer renderer )
   {
     super( id );
-    // m_id = id;
+    m_id = id;
     m_pos = pos;
-    // m_dir = pos.getOrientation() == ORIENTATION.VERTICAL ? DIRECTION.NEGATIVE : DIRECTION.POSITIVE;
     m_dataClass = dataClass;
     setRenderer( renderer );
-  }
-
-  @Override
-  public void addLabel( final TitleTypeBean title )
-  {
-    m_axisLabels.add( title );
-
-  }
-
-  @Override
-  public void clearLabels( )
-  {
-    m_axisLabels.clear();
   }
 
   @Override
@@ -122,33 +62,36 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     return m_dataClass;
   }
 
+  /**
+   * @see org.kalypso.chart.framework.axis.IAxis#getDirection()
+   */
   @Override
   public DIRECTION getDirection( )
   {
     return m_dir;
   }
 
-  @Deprecated
+  /**
+   * @see org.kalypso.chart.framework.axis.IAxis#getLabel()
+   */
   @Override
   public String getLabel( )
   {
-    if( m_axisLabels.size() == 0 )
-      return "";
-    return m_axisLabels.get( 0 ).getText();
+    return m_label;
   }
 
-  @Override
-  public TitleTypeBean[] getLabels( )
-  {
-    return m_axisLabels.toArray( new TitleTypeBean[] {} );
-  }
-
+  /**
+   * @see org.kalypso.chart.framework.model.mapper.IAxis#getNumericRange()
+   */
   @Override
   public IDataRange<Number> getNumericRange( )
   {
     return m_numericRange;
   }
 
+  /**
+   * @see org.kalypso.chart.framework.axis.IAxis#getPosition()
+   */
   @Override
   public POSITION getPosition( )
   {
@@ -161,12 +104,18 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     return m_preferredAdjustment;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#getRangeRestriction()
+   */
   @Override
   public DataRangeRestriction<Number> getRangeRestriction( )
   {
     return m_rangeRestriction;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#getRenderer()
+   */
   @Override
   public IAxisRenderer getRenderer( )
   {
@@ -179,13 +128,6 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     return m_height;
   }
 
-  protected boolean isInverted( )
-  {
-    if( getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
-      return getDirection() == DIRECTION.NEGATIVE;
-    return getDirection() == DIRECTION.POSITIVE;
-  }
-
   private boolean hasNullValues( final IDataRange<Number> range, final DataRangeRestriction<Number> restriction )
   {
     if( restriction == null || range == null || range.getMin() == null || range.getMax() == null || restriction.getMin() == null || restriction.getMax() == null || restriction.getMinRange() == null
@@ -193,6 +135,15 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
       return true;
 
     return false;
+  }
+
+  /**
+   * @see org.kalypso.chart.framework.axis.IAxis#isInverted()
+   */
+  @Override
+  public boolean isInverted( )
+  {
+    return getDirection() == DIRECTION.NEGATIVE;
   }
 
   @Override
@@ -212,9 +163,7 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
   {
     if( !getLabel().equals( label ) )
     {
-      m_axisLabels.clear();
-      m_axisLabels.add( ChartLabelRendererFactory.getAxisLabelType( getPosition(), label, new Insets( 1, 1, 1, 1 ), null ) );// new
-// TitleTypeBean( label ) );
+      m_label = label;
       fireMapperChanged( this );
     }
   }
@@ -243,12 +192,18 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     fireMapperChanged( this );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#setRangeRestriction(de.openali.odysseus.chart.framework.model.data.IDataRange)
+   */
   @Override
   public void setRangeRestriction( final DataRangeRestriction<Number> range )
   {
     m_rangeRestriction = range;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#setRenderer(IAxisRenderer )
+   */
   @Override
   public void setRenderer( final IAxisRenderer renderer )
   {
@@ -277,10 +232,13 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     fireMapperChanged( this );
   }
 
+  /**
+   * @see java.lang.Object#toString()
+   */
   @Override
   public String toString( )
   {
-    return String.format( "%s {id=%s, pos=%s, dir=%s, visible=%s }", getLabel(), getIdentifier(), m_pos, m_dir, isVisible() ); //$NON-NLS-1$
+    return String.format( "%s {id=%s, pos=%s, dir=%s, visible=%s }", m_label, m_id, m_pos, m_dir, isVisible() ); //$NON-NLS-1$
   }
 
   protected IDataRange<Number> validateDataRange( final IDataRange<Number> range, final DataRangeRestriction<Number> restriction )
@@ -341,5 +299,29 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     }
 
     return new DataRange<Number>( newRangeMin, newRangeMax );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#getSelection()
+   */
+  @Override
+  public Object getSelection( )
+  {
+    return m_selection;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#setSelection(java.lang.Object)
+   */
+  @Override
+  public void setSelection( final Point screen )
+  {
+    if( screen == null )
+      m_selection = null;
+
+    final int screenValue = getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) ? screen.x : screen.y;
+    m_selection = screenToNumeric( screenValue );
+
+    fireMapperChanged( this );
   }
 }

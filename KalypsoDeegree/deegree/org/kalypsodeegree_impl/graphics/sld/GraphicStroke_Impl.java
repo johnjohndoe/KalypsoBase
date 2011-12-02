@@ -62,7 +62,7 @@ public class GraphicStroke_Impl implements GraphicStroke, Marshallable
   /**
    * constructor initializing the class with the <GraphicStroke>
    */
-  GraphicStroke_Impl( final Graphic graphic )
+  GraphicStroke_Impl( Graphic graphic )
   {
     setGraphic( graphic );
   }
@@ -75,7 +75,7 @@ public class GraphicStroke_Impl implements GraphicStroke, Marshallable
    * @return graphic
    */
   @Override
-  public Graphic getGraphic( )
+  public Graphic getGraphic()
   {
     return graphic;
   }
@@ -86,7 +86,7 @@ public class GraphicStroke_Impl implements GraphicStroke, Marshallable
    * @param graphic
    */
   @Override
-  public void setGraphic( final Graphic graphic )
+  public void setGraphic( Graphic graphic )
   {
     this.graphic = graphic;
   }
@@ -97,13 +97,13 @@ public class GraphicStroke_Impl implements GraphicStroke, Marshallable
    * @return xml representation of the GraphicStroke
    */
   @Override
-  public String exportAsXML( )
+  public String exportAsXML()
   {
     Debug.debugMethodBegin();
 
-    final StringBuffer sb = new StringBuffer( 1000 );
+    StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<GraphicStroke>" );
-    sb.append( ((Marshallable) graphic).exportAsXML() );
+    sb.append( ( (Marshallable)graphic ).exportAsXML() );
     sb.append( "</GraphicStroke>" );
 
     Debug.debugMethodEnd();

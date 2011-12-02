@@ -50,7 +50,7 @@ import javax.xml.namespace.QName;
 import junit.framework.Assert;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.net.UrlUtilities;
@@ -63,11 +63,12 @@ import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 
 /**
  * @author felipe maximino
+ *
  */
 public class GmlTriSurface2HmoConverterTest extends Assert
 {
   @Test
-  public void testSerialize( ) throws Exception
+  public void testSerialize() throws Exception
   {
     final URL gmlLocation = getClass().getResource( "resources/tinyTin.gml" );
     assertNotNull( gmlLocation );
@@ -81,7 +82,7 @@ public class GmlTriSurface2HmoConverterTest extends Assert
 
     final File result = FileUtilities.createNewUniqueFile( "hmoTest", FileUtilities.TMP_DIR );
 
-    final Gml2HmoConverter conv = new GmlTriSurface2HmoConverter( tin );
+    final Gml2HmoConverter conv = new GmlTriSurface2HmoConverter(tin);
     conv.writeHmo( result );
 
     assertContentEquals( result, hmoLocation );

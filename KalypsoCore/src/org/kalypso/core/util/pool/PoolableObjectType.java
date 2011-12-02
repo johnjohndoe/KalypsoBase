@@ -42,7 +42,7 @@ package org.kalypso.core.util.pool;
 
 import java.net.URL;
 
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -146,7 +146,7 @@ public class PoolableObjectType implements IPoolableObjectType
     if( getContext() == null && other.getContext() == null )
       return true;
 
-    if( getContext() != null && !getContext().equals( other.getContext() ) )
+    if( (getContext() != null && !getContext().equals( other.getContext() )) )
       return false;
 
     return true;

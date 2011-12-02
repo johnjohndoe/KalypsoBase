@@ -59,7 +59,7 @@ public interface Halo
    * 
    * @return the underlying <tt>Fill</tt> -object, or null
    */
-  Fill getFill( );
+  Fill getFill();
 
   /**
    * Sets the Fill for the Halo.
@@ -70,12 +70,12 @@ public interface Halo
   void setFill( Fill fill );
 
   /**
-   * FIXME: not part of sld-schema: check!<br/>
    * Returns the underlying <tt>Stroke</tt> -instance used to draw the boundary of the halo.
+   * <p>
    * 
    * @return the underlying <tt>Stroke</tt> -object, or null
    */
-  Stroke getStroke( );
+  Stroke getStroke();
 
   /**
    * Sets the Stroke for the Halo.
@@ -94,7 +94,7 @@ public interface Halo
    * 
    * @return the radius definition as <tt>ParameterValueType</tt>, or null if it has not been specified
    */
-  ParameterValueType getRadius( );
+  ParameterValueType getRadius();
 
   /**
    * Sets the Radius for the Halo.
@@ -120,7 +120,8 @@ public interface Halo
   double getRadius( Feature feature ) throws FilterEvaluationException;
 
   /**
-   * @see #getRadius(Feature) <p>
+   * @see #getRadius(Feature)
+   *      <p>
    * @param radius
    *          radius to be set for the halo
    */

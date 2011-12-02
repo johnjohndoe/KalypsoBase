@@ -43,18 +43,13 @@ package org.kalypso.zml.core.table.binding.rule.instructions;
 
 import java.math.BigDecimal;
 
-import org.apache.commons.lang3.ObjectUtils;
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.commons.java.lang.Strings;
+import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataBoundary;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
-import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.core.table.rules.impl.grenzwert.IZmlGrenzwertValue;
 import org.kalypso.zml.core.table.schema.AbstractRuleInstructionType;
 import org.kalypso.zml.core.table.schema.MetadataBoundaryInstructionType;
 
@@ -113,31 +108,10 @@ public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionTy
     if( m_boundaryFrom == null || reference.getColumn() != m_lastFromColumn )
     {
       m_lastFromColumn = reference.getColumn();
-      m_boundaryFrom = getBoundary( m_lastFromColumn.getMetadata(), getType().getFrom(), getType().getFromExtensionPoint(), new BigDecimal( -Double.MAX_VALUE ), getType().getFactorFrom() );
+      m_boundaryFrom = MetadataBoundary.getBoundary( m_lastFromColumn.getMetadata(), getType().getFrom(), new BigDecimal( -Double.MAX_VALUE ) );
     }
 
     return m_boundaryFrom;
-  }
-
-  private MetadataBoundary getBoundary( final MetadataList metadata, final String property, final String propertyExtensionPoint, final BigDecimal defaultValue, final double factor )
-  {
-    if( Strings.isEmpty( propertyExtensionPoint ) )
-    {
-      final MetadataBoundary boundary = MetadataBoundary.getBoundary( metadata, property, defaultValue, factor );
-      return boundary;
-    }
-
-    final IZmlGrenzwertValue delegate = KalypsoZmlCore.getDefault().findGrenzwertDelegate( propertyExtensionPoint );
-    if( Objects.isNull( delegate ) )
-      return null;
-
-    final Double v = delegate.getValue( metadata, property );
-    if( Objects.isNull( v ) )
-      return null;
-
-    final double value = v * factor;
-
-    return new MetadataBoundary( property, BigDecimal.valueOf( value ) );
   }
 
   private MetadataBoundary getBoundaryTo( final IZmlValueReference reference )
@@ -145,7 +119,7 @@ public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionTy
     if( m_boundaryTo == null || reference.getColumn() != m_lastToColumn )
     {
       m_lastToColumn = reference.getColumn();
-      m_boundaryTo = getBoundary( m_lastToColumn.getMetadata(), getType().getTo(), getType().getToExtensionPoint(), new BigDecimal( -Double.MAX_VALUE ), getType().getFactorTo() );
+      m_boundaryTo = MetadataBoundary.getBoundary( m_lastToColumn.getMetadata(), getType().getTo(), new BigDecimal( -Double.MAX_VALUE ) );
     }
 
     return m_boundaryTo;
@@ -194,11 +168,7 @@ public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionTy
    */
   private double getReferenceValue( final IZmlValueReference reference ) throws SensorException
   {
-    final Number value = reference.getValue();
-    if( Objects.isNull( value ) )
-      return Double.NaN;
-
-    return value.doubleValue();
+    return reference.getValue().doubleValue();
   }
 
   private boolean compareMeta( final MetadataBoundary meta, final String property, final BigDecimal value, final String op )

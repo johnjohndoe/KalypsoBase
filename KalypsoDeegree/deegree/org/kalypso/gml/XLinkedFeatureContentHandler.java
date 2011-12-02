@@ -74,8 +74,7 @@ public class XLinkedFeatureContentHandler extends AbstractGmlContentHandler
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler#endElement(java.lang.String, java.lang.String,
-   *      java.lang.String)
+   * @see org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
    */
   @Override
   public void endElement( final String uri, final String localName, final String qName ) throws SAXException
@@ -85,8 +84,7 @@ public class XLinkedFeatureContentHandler extends AbstractGmlContentHandler
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler#startElement(java.lang.String,
-   *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
+   * @see org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
   public void startElement( final String uri, final String localName, final String qName, final Attributes atts )
@@ -111,6 +109,6 @@ public class XLinkedFeatureContentHandler extends AbstractGmlContentHandler
       final IFeatureType targetFeatureType = m_scopeProperty.getTargetFeatureType();
       final Feature childFeature = new XLinkedFeature_Impl( m_scopeFeature, m_scopeProperty, targetFeatureType, href, role, arcrole, title, show, actuate );
       FeatureHelper.addChild( m_scopeFeature, m_scopeProperty, childFeature );
-    }
+    }    
   }
 }

@@ -53,7 +53,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * Date Time Cell Editor for XMLGregorianCalendar Observation Components
- * 
+ *
  * @author Dirk Kuch
  */
 public class DateTimeCellEditor extends CellEditor

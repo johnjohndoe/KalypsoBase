@@ -55,7 +55,7 @@ public abstract class AbstractXLinkFeatureProvider implements IFeatureProvider
 
   /**
    * @param context
-   *          The context is used to find the feature.
+   *            The context is used to find the feature.
    */
   public AbstractXLinkFeatureProvider( final GMLWorkspace context, final String uri )
   {

@@ -110,10 +110,10 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
         final Object obj = selection.getFirstElement();
-        if( obj instanceof LinkedFeatureElement )
+        if( obj instanceof LinkedFeatureElement2 )
         {
           // Jump to linked element
-          final Feature feature = ((LinkedFeatureElement) obj).getDecoratedFeature();
+          final Feature feature = ((LinkedFeatureElement2) obj).getDecoratedFeature();
           final StructuredSelection ss = new StructuredSelection( feature );
           treeViewer.setSelection( ss, true );
           treeViewer.expandToLevel( feature, 1 );
@@ -192,7 +192,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     final TreeViewer treeViewer = m_treeViewer;
     // must be sync, if not we get a racing condition with handleModelChange
     final Control control = treeViewer.getControl();
-    if( control == null || control.isDisposed() )
+    if( (control == null) || control.isDisposed() )
       return;
 
     final GMLContentProvider contentProvider = m_contentProvider;
@@ -269,11 +269,11 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     for( final Object treeElement : selectedTreeItems )
     {
       Feature feature = null;
-      if( treeElement instanceof LinkedFeatureElement )
-        feature = ((LinkedFeatureElement) treeElement).getDecoratedFeature();
+      if( treeElement instanceof LinkedFeatureElement2 )
+        feature = ((LinkedFeatureElement2) treeElement).getDecoratedFeature();
       else if( treeElement instanceof Feature )
         feature = (Feature) treeElement;
-      if( feature != null && !selectedFeatures.contains( feature ) )
+      if( (feature != null) && !selectedFeatures.contains( feature ) )
         selectedFeatures.add( feature );
     }
     return selectedFeatures.toArray( new Feature[selectedFeatures.size()] );
@@ -323,7 +323,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ui.editor.gmleditor.part.GmlTreeView.1" ) ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ui.editor.gmleditor.ui.GmlTreeView.1" ) ) ); //$NON-NLS-1$
     }
   }
 
@@ -388,7 +388,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
         m_workspace = null;
       }
 
-      m_workspace = (CommandableWorkspace) newValue;
+      m_workspace = ((CommandableWorkspace) newValue);
       if( m_workspace != null )
         m_workspace.addModellListener( this );
 
@@ -396,7 +396,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
       final TreeViewer treeViewer = m_treeViewer;
       final Control control = treeViewer.getControl();
-      if( control == null || control.isDisposed() )
+      if( (control == null) || control.isDisposed() )
         return;
 
       final GMLContentProvider contentProvider = m_contentProvider;
@@ -420,7 +420,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
             }
             else
             {
-              ErrorDialog.openError( tree.getShell(), Messages.getString( "org.kalypso.ui.editor.gmleditor.part.GmlTreeView.3" ), Messages.getString( "org.kalypso.ui.editor.gmleditor.part.GmlTreeView.4" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
+              ErrorDialog.openError( tree.getShell(), Messages.getString( "org.kalypso.ui.editor.gmleditor.ui.GmlTreeView.3" ), Messages.getString( "org.kalypso.ui.editor.gmleditor.ui.GmlTreeView.4" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
               treeViewer.setLabelProvider( labelProvider );
               treeViewer.setContentProvider( contentProvider );
               tree.setLinesVisible( false );
@@ -445,7 +445,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
             if( !control.isDisposed() )
             {
               final Object[] elements = contentProvider.getElements( m_workspace );
-              if( elements != null && elements.length > 0 )
+              if( (elements != null) && (elements.length > 0) )
                 treeViewer.setSelection( new StructuredSelection( elements[0] ) );
             }
           }
@@ -473,7 +473,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
           return Status.OK_STATUS;
 
         final Image failImg = KalypsoGisPlugin.getImageProvider().getImage( DESCRIPTORS.FAILED_LOADING_OBJ );
-        treeViewer.setLabelProvider( new ConstantLabelProvider( Messages.getString( "org.kalypso.ui.editor.gmleditor.part.GmlTreeView.5" ), failImg ) ); //$NON-NLS-1$
+        treeViewer.setLabelProvider( new ConstantLabelProvider( Messages.getString( "org.kalypso.ui.editor.gmleditor.ui.GmlTreeView.5" ), failImg ) ); //$NON-NLS-1$
         treeViewer.setContentProvider( new ArrayTreeContentProvider() );
         treeViewer.getTree().setLinesVisible( false );
         treeViewer.setInput( new Object[] { "" } ); //$NON-NLS-1$
@@ -486,7 +486,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
   public void loadInput( final Reader r, final URL context, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.gmleditor.part.GmlTreeView.7" ), 1000 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.gmleditor.ui.GmlTreeView.7" ), 1000 ); //$NON-NLS-1$
     try
     {
       final Unmarshaller unmarshaller = GmlTreeView.JC.createUnmarshaller();
@@ -499,7 +499,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     catch( final JAXBException e )
     {
       e.printStackTrace();
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ui.editor.gmleditor.part.GmlTreeView.8" ) ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ui.editor.gmleditor.ui.GmlTreeView.8" ) ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -509,7 +509,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
   protected void saveInput( final Writer writer, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.gmleditor.part.GmlTreeView.9" ), 1000 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.gmleditor.ui.GmlTreeView.9" ), 1000 ); //$NON-NLS-1$
     try
     {
       final GMLXPath rootPath = m_contentProvider.getRootPath();
@@ -521,7 +521,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     catch( final JAXBException e )
     {
       e.printStackTrace();
-      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ui.editor.gmleditor.part.GmlTreeView.10" ) ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.ui.editor.gmleditor.ui.GmlTreeView.10" ) ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -661,7 +661,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     if( m_workspace != null )
     {
       final KeyInfo info = m_pool.getInfo( m_workspace );
-      return info != null && info.isDirty();
+      return (info != null) && info.isDirty();
     }
 
     return false;
@@ -705,7 +705,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     if( !m_treeViewer.getControl().isDisposed() )
     {
       if( showContextWhileLoading )
-        m_treeViewer.setLabelProvider( new ConstantLabelProvider( Messages.getString( "org.kalypso.ui.editor.gmleditor.part.GmlTreeView.11" ) + context + Messages.getString( "org.kalypso.ui.editor.gmleditor.part.GmlTreeView.12" ), waitImg ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        m_treeViewer.setLabelProvider( new ConstantLabelProvider( Messages.getString( "org.kalypso.ui.editor.gmleditor.ui.GmlTreeView.11" ) + context + Messages.getString( "org.kalypso.ui.editor.gmleditor.ui.GmlTreeView.12" ), waitImg ) ); //$NON-NLS-1$ //$NON-NLS-2$
       else
         m_treeViewer.setLabelProvider( new ConstantLabelProvider( " ", waitImg ) ); //$NON-NLS-1$
 
@@ -719,10 +719,5 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
     m_key = new PoolableObjectType( linktype, href, context );
     m_pool.addPoolListener( this, m_key );
-  }
-
-  public GMLContentProvider getContentProvider( )
-  {
-    return m_contentProvider;
   }
 }

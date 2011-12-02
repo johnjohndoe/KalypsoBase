@@ -48,5 +48,5 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
 public interface IActiveLayerChangeListener
 {
-  void onActiveLayerChanged( final IChartLayer activeLayer );
+  public void onActiveLayerChanged( final IChartLayer activeLayer );
 }

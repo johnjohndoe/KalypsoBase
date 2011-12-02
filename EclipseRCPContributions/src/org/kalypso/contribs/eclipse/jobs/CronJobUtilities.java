@@ -53,35 +53,35 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.Job;
-import org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsDebug;
-import org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsPlugin;
+import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
+import org.kalypso.contribs.eclipse.utils.Debug;
 
 /**
  * This class provides functions for dealing with cron jobs.
  * 
  * @author Holger Albert
  */
-public final class CronJobUtilities
+public class CronJobUtilities
 {
   /**
    * The identifier attribute (string).
    */
-  private static final String IDENTIFIER = "identifier"; //$NON-NLS-1$
+  private static final String IDENTIFIER = "identifier";
 
   /**
    * The name attribute (string).
    */
-  private static final String NAME = "name"; //$NON-NLS-1$
+  private static final String NAME = "name";
 
   /**
    * The mutex attribute (string).
    */
-  private static final String MUTEX = "mutex"; //$NON-NLS-1$
+  private static final String MUTEX = "mutex";
 
   /**
    * The job attribute (class).
    */
-  private static final String JOB = "job"; //$NON-NLS-1$
+  private static final String JOB = "job";
 
   /**
    * This listener is responsible for rescheduling the cron jobs.
@@ -109,20 +109,20 @@ public final class CronJobUtilities
     ResourcesPlugin.getPlugin();
 
     /* Get all cron jobs. */
-    final List<CronJob> cronJobs = getCronJobs();
+    List<CronJob> cronJobs = getCronJobs();
     if( cronJobs.size() == 0 )
       return;
 
     for( int i = 0; i < cronJobs.size(); i++ )
     {
       /* Get the cron job. */
-      final CronJob cronJob = cronJobs.get( i );
+      CronJob cronJob = cronJobs.get( i );
 
       /* Start the cron job. */
-      final IStatus status = CronJobUtilities.startCronJob( cronJob );
+      IStatus status = CronJobUtilities.startCronJob( cronJob );
 
       /* Log the result. */
-      if( EclipseRCPContributionsDebug.CRON_JOB.isEnabled() )
+      if( Debug.CRON_JOB.isEnabled() )
         EclipseRCPContributionsPlugin.getDefault().getLog().log( status );
     }
   }
@@ -136,28 +136,28 @@ public final class CronJobUtilities
   private static List<CronJob> getCronJobs( ) throws CoreException
   {
     /* The memory for the results. */
-    final List<CronJob> cronJobs = new ArrayList<CronJob>();
+    List<CronJob> cronJobs = new ArrayList<CronJob>();
 
     /* Get the extension registry. */
-    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+    IExtensionRegistry registry = Platform.getExtensionRegistry();
 
     /* Get all elements for the extension point. */
-    final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.contribs.eclipsercp.cronJobs" );
+    IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.contribs.eclipsercp.cronJobs" );
 
     /* Create all cron jobs. */
-    for( final IConfigurationElement element : elements )
+    for( IConfigurationElement element : elements )
     {
       /* Get the identifier. */
-      final String identifier = element.getAttribute( IDENTIFIER );
+      String identifier = element.getAttribute( IDENTIFIER );
 
       /* Get the name. */
-      final String name = element.getAttribute( NAME );
+      String name = element.getAttribute( NAME );
 
       /* Get the mutex string. */
-      final String mutexString = element.getAttribute( MUTEX );
+      String mutexString = element.getAttribute( MUTEX );
 
       /* Create the cron job. */
-      final CronJob cronJob = (CronJob) element.createExecutableExtension( JOB );
+      CronJob cronJob = (CronJob) element.createExecutableExtension( JOB );
       cronJob.setIdentifier( identifier );
       cronJob.setName( name );
       cronJob.setMutexString( mutexString );
@@ -177,31 +177,31 @@ public final class CronJobUtilities
    *          The cron job.
    * @return A status, indicating, if the cron job was started.
    */
-  public static IStatus startCronJob( final CronJob cronJob )
+  public static IStatus startCronJob( CronJob cronJob )
   {
     /* Get the identifier, name, mutex string and schedule delay. */
-    final String identifier = cronJob.getIdentifier();
-    final String name = cronJob.getName();
-    final String mutexString = cronJob.getMutexString();
-    final long scheduleDelay = cronJob.getScheduleDelay();
+    String identifier = cronJob.getIdentifier();
+    String name = cronJob.getName();
+    String mutexString = cronJob.getMutexString();
+    long scheduleDelay = cronJob.getScheduleDelay();
 
     /* This cron job should not be started. */
     if( scheduleDelay < 0 )
       return new Status( IStatus.WARNING, EclipseRCPContributionsPlugin.ID, String.format( "The cron job ('%s') should not be activated, due to a negative schedule delay...", name ) );
 
     /* Get the job manager. */
-    final IJobManager jobManager = Job.getJobManager();
+    IJobManager jobManager = CronJob.getJobManager();
 
     /* Search all running (waiting, executing and sleeping) jobs with the cron job family. */
-    final Job[] runningJobs = jobManager.find( CronJob.CRON_JOB_FAMILY );
-    for( final Job runningJob : runningJobs )
+    Job[] runningJobs = jobManager.find( CronJob.CRON_JOB_FAMILY );
+    for( Job runningJob : runningJobs )
     {
       /* Don't handle other jobs, which should happen to have the same family, but are no cron jobs. */
       if( !(runningJob instanceof CronJob) )
         continue;
 
       /* Cast. */
-      final CronJob runningCronJob = (CronJob) runningJob;
+      CronJob runningCronJob = (CronJob) runningJob;
 
       /* If our cron job is already running, ignore it. */
       if( runningCronJob.getIdentifier().equals( identifier ) )
@@ -226,18 +226,18 @@ public final class CronJobUtilities
   public static void cancelAllCronJobs( )
   {
     /* Get the job manager. */
-    final IJobManager jobManager = Job.getJobManager();
+    IJobManager jobManager = CronJob.getJobManager();
 
     /* Search all running (waiting, executing and sleeping) jobs with the cron job family. */
-    final Job[] runningJobs = jobManager.find( CronJob.CRON_JOB_FAMILY );
-    for( final Job runningJob : runningJobs )
+    Job[] runningJobs = jobManager.find( CronJob.CRON_JOB_FAMILY );
+    for( Job runningJob : runningJobs )
     {
       /* Don't handle other jobs, which should happen to have the same family, but are no cron jobs. */
       if( !(runningJob instanceof CronJob) )
         continue;
 
       /* Cast. */
-      final CronJob runningCronJob = (CronJob) runningJob;
+      CronJob runningCronJob = (CronJob) runningJob;
 
       /* Cancel the cron job. */
       runningCronJob.cancel();

@@ -82,4 +82,9 @@ public interface DisplayElement
    * returns if the <tt>DisplayElement</tt> is highlighted or not.
    */
   boolean isHighlighted( );
+
+  /**
+   * Returns if the <tt>DisplayElement</tt> should be painted at the current scale or not.
+   */
+  boolean doesScaleConstraintApply( double scale );
 }

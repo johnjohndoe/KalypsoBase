@@ -36,6 +36,7 @@
 package org.kalypsodeegree_impl.model.feature.visitors;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -60,13 +61,13 @@ public class SetPropertyFeatureVisitor implements FeatureVisitor
    * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
    */
   @Override
-  public boolean visit( final Feature f )
+  public boolean visit( Feature f )
   {
     final IFeatureType featureType = f.getFeatureType();
     final Set<IPropertyType> keySet = m_map.keySet();
-    for( final Object element : keySet )
+    for( Iterator iter = keySet.iterator(); iter.hasNext(); )
     {
-      final IPropertyType pt = (IPropertyType) element;
+      final IPropertyType pt = (IPropertyType) iter.next();
       final IPropertyType property = featureType.getProperty( pt.getQName() );
       if( property != null )
       {

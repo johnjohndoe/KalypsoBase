@@ -187,6 +187,10 @@ public abstract class Symbolizer_Impl implements Symbolizer
       resource.dispose();
   }
 
+  private double m_maxDenominator = Double.MAX_VALUE;
+
+  private double m_minDenominator = -Double.MAX_VALUE;
+
   private Geometry m_geometry = null;
 
   private UOM m_uom = UOM.pixel;
@@ -225,12 +229,12 @@ public abstract class Symbolizer_Impl implements Symbolizer
    * sets the <Geometry>
    * 
    * @param geometry
-   *          the geometry of the symbolizer
+   *            the geometry of the symbolizer
    */
   @Override
   public void setGeometry( final Geometry geometry )
   {
-    m_geometry = geometry;
+    this.m_geometry = geometry;
   }
 
   @Override
@@ -243,6 +247,44 @@ public abstract class Symbolizer_Impl implements Symbolizer
   public UOM getUom( )
   {
     return m_uom;
+  }
+
+  /**
+   * @return the MinScaleDenominator
+   */
+  @Override
+  public double getMinScaleDenominator( )
+  {
+    return m_minDenominator;
+  }
+
+  /**
+   * @param minDenominator
+   *            the MinScaleDenominator
+   */
+  @Override
+  public void setMinScaleDenominator( final double minDenominator )
+  {
+    this.m_minDenominator = minDenominator;
+  }
+
+  /**
+   * @return the MaxScaleDenominator
+   */
+  @Override
+  public double getMaxScaleDenominator( )
+  {
+    return m_maxDenominator;
+  }
+
+  /**
+   * @param maxDenominator
+   *            the MaxScaleDenominator
+   */
+  @Override
+  public void setMaxScaleDenominator( final double maxDenominator )
+  {
+    this.m_maxDenominator = maxDenominator;
   }
 
   /**

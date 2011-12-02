@@ -44,7 +44,6 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -54,10 +53,8 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class XElementFormPath extends AbstractXElement
 {
-  private static final QName QNAME_DOT_DOT = new QName( ".." );
-
   /* QName constant indicating that '*' was given as path. */
-  private static final QName QNAME_ALL = new QName( "*", "*", "*" );
+  private final static QName QNAME_ALL = new QName( "*", "*", "*" );
 
   private final QName m_propName;
 
@@ -85,15 +82,12 @@ public class XElementFormPath extends AbstractXElement
     if( featureTypeLevel )
     {
       // check featureType
-      // TODO: still tests for local part first, remove, if qname is always correctly used.
+      // TODO: still tests for local part first, remove, if qname is allways correctly used.
       if( m_propName == QNAME_ALL || m_propName.getLocalPart().equals( featureType.getQName().getLocalPart() ) || m_propName.equals( featureType.getQName() ) )
         return contextFeature;
       else
         return null;
     }
-
-    if( QNAME_DOT_DOT.equals( m_propName ) )
-      return evaluateDotDotFromFeature( contextFeature );
 
     final IPropertyType pt = getPropertyType( featureType, m_propName );
     if( pt == null )
@@ -119,21 +113,6 @@ public class XElementFormPath extends AbstractXElement
     return value;
   }
 
-  private Object evaluateDotDotFromFeature( final Feature contextFeature )
-  {
-    final Feature parent = contextFeature.getParent();
-    if( parent == null )
-      return null;
-
-    final IRelationType parentRelation = contextFeature.getParentRelation();
-    final Object property = parent.getProperty( parentRelation );
-    if( property instanceof FeatureList )
-      return property;
-
-    /* Throw exception instead? */
-    return null;
-  }
-
   @SuppressWarnings("deprecation")
   private IPropertyType getPropertyType( final IFeatureType featureType, final QName qname )
   {
@@ -146,6 +125,9 @@ public class XElementFormPath extends AbstractXElement
     return featureType.getProperty( qname );
   }
 
+  /**
+   * @see org.kalypsodeegree_impl.model.feature.xpath.AbstractXElement#evaluateOther(java.lang.Object, boolean)
+   */
   @Override
   public Object evaluateOther( final Object context, final boolean featureTypeLevel )
   {
@@ -162,12 +144,6 @@ public class XElementFormPath extends AbstractXElement
     {
       final IRelationType relationType = (IRelationType) context;
       return evaluateFeatureType( relationType.getTargetFeatureType() );
-    }
-
-    if( context instanceof FeatureList )
-    {
-      if( QNAME_DOT_DOT.equals( m_propName ) )
-        return ((FeatureList) context).getParentFeature();
     }
 
     return null;

@@ -39,6 +39,7 @@ package org.kalypsodeegree_impl.io.rtree;
  * <p>
  * The common exception thrown by problems during the rtree methods. Thats the exception a user of the package get if
  * errors occure.
+ * 
  * </p>
  * 
  * @author Wolfgang Bär
@@ -49,7 +50,7 @@ public class RTreeException extends Exception
   /**
    * Constructor for RTreeException.
    */
-  public RTreeException( )
+  public RTreeException()
   {
     super();
   }
@@ -59,7 +60,7 @@ public class RTreeException extends Exception
    * 
    * @param message
    */
-  public RTreeException( final String message )
+  public RTreeException( String message )
   {
     super( message );
   }

@@ -52,6 +52,9 @@ public interface ITypedObservableValue<SOURCE, VALUE> extends IObservableValue
 
   VALUE doGetValueTyped( SOURCE source );
 
+  /**
+   * @see org.eclipse.core.databinding.observable.value.IObservableValue#getValueType()
+   */
   @Override
   Class<VALUE> getValueType( );
 }

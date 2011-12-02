@@ -70,7 +70,6 @@ public class PointSymbolizer_Impl extends Symbolizer_Impl implements PointSymbol
   public PointSymbolizer_Impl( )
   {
     super();
-
     final Stroke stroke = new Stroke_Impl();
     final Fill fill = new Fill_Impl();
     final Mark mark = new Mark_Impl( "square", stroke, fill );
@@ -80,11 +79,18 @@ public class PointSymbolizer_Impl extends Symbolizer_Impl implements PointSymbol
   /**
    * constructor initializing the class with the <PointSymbolizer>
    */
-  PointSymbolizer_Impl( final Graphic graphic, final Geometry geometry, final UOM uom )
+  PointSymbolizer_Impl( Graphic graphic, final Geometry geometry, final double min, final double max, final UOM uom )
   {
     super( geometry, uom );
 
+    if( graphic == null )
+    {
+      graphic = new Graphic_Impl();
+    }
+
     setGraphic( graphic );
+    setMinScaleDenominator( min );
+    setMaxScaleDenominator( max );
   }
 
   /**
@@ -126,12 +132,12 @@ public class PointSymbolizer_Impl extends Symbolizer_Impl implements PointSymbol
    * sets the <Graphic>
    * 
    * @param graphic
-   *          the graphic of the point
+   *            the graphic of the point
    */
   @Override
   public void setGraphic( final Graphic graphic )
   {
-    m_graphic = graphic;
+    this.m_graphic = graphic;
   }
 
   /**

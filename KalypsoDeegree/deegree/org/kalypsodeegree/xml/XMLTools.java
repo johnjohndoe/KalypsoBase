@@ -52,8 +52,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
@@ -143,7 +141,7 @@ public final class XMLTools
     Element element = null;
     Element result = null;
 
-    if( nl != null && nl.getLength() > 0 )
+    if( (nl != null) && (nl.getLength() > 0) )
     {
       for( int i = 0; i < nl.getLength(); i++ )
       {
@@ -151,7 +149,7 @@ public final class XMLTools
         {
           element = (Element) nl.item( i );
           final String s = element.getNamespaceURI();
-          if( s == null && namespace == null || namespace != null && namespace.equals( s ) )
+          if( (s == null && namespace == null) || (namespace != null && namespace.equals( s )) )
           {
             if( element.getLocalName().equals( name ) )
             {
@@ -189,7 +187,7 @@ public final class XMLTools
 
     final NodeList nl = node.getChildNodes();
 
-    if( nl != null && nl.getLength() > 0 )
+    if( (nl != null) && (nl.getLength() > 0) )
     {
       for( int i = 0; i < nl.getLength(); i++ )
       {
@@ -198,7 +196,7 @@ public final class XMLTools
           final Element element = (Element) nl.item( i );
 
           final String s = element.getNamespaceURI();
-          if( s == null && namespace == null || namespace != null && namespace.equals( s ) )
+          if( (s == null && namespace == null) || (namespace != null && namespace.equals( s )) )
           {
             if( element.getLocalName().equals( name ) )
               return element;
@@ -229,7 +227,7 @@ public final class XMLTools
     Element element = null;
     final ElementList elementList = new ElementList();
 
-    if( nl != null && nl.getLength() > 0 )
+    if( (nl != null) && (nl.getLength() > 0) )
     {
       for( int i = 0; i < nl.getLength(); i++ )
       {
@@ -239,7 +237,7 @@ public final class XMLTools
 
           final String s = element.getNamespaceURI();
 
-          if( s == null && namespace == null || namespace != null && namespace.equals( s ) )
+          if( (s == null && namespace == null) || (namespace != null && namespace.equals( s )) )
           {
             if( element.getLocalName().equals( name ) )
             {
@@ -605,23 +603,6 @@ public final class XMLTools
     return null;
   }
 
-  public static Document parse( final IFile file ) throws IOException, SAXException, CoreException
-  {
-    InputStream stream = null;
-
-    try
-    {
-      stream = new BufferedInputStream( file.getContents() );
-      final Document doc = parse( stream );
-      stream.close();
-      return doc;
-    }
-    finally
-    {
-      IOUtils.closeQuietly( stream );
-    }
-  }
-
   /**
    * Parses a XML document and returns a DOM object.
    * 
@@ -774,7 +755,7 @@ public final class XMLTools
         final Node n = copyNode( list.item( i ), en );
         dest.appendChild( n );
       }
-      else if( list.item( i ) instanceof CDATASection )
+      else if( (list.item( i ) instanceof CDATASection) )
       {
         final CDATASection cd = dest.getOwnerDocument().createCDATASection( list.item( i ).getNodeValue() );
         dest.appendChild( cd );
@@ -832,7 +813,7 @@ public final class XMLTools
     final NodeList nl = node.getChildNodes();
     Element element = null;
 
-    if( nl != null && nl.getLength() > 0 )
+    if( (nl != null) && (nl.getLength() > 0) )
     {
       for( int i = 0; i < nl.getLength(); i++ )
       {
@@ -856,7 +837,7 @@ public final class XMLTools
 
     final NodeList nl = node.getChildNodes();
 
-    if( nl != null && nl.getLength() > 0 )
+    if( (nl != null) && (nl.getLength() > 0) )
     {
       for( int i = 0; i < nl.getLength(); i++ )
       {
@@ -880,7 +861,7 @@ public final class XMLTools
     Element element = null;
     Element return_ = null;
 
-    if( nl != null && nl.getLength() > 0 )
+    if( (nl != null) && (nl.getLength() > 0) )
     {
       for( int i = 0; i < nl.getLength(); i++ )
       {
@@ -912,7 +893,7 @@ public final class XMLTools
     Element element = null;
     Element return_ = null;
 
-    if( nl != null && nl.getLength() > 0 )
+    if( (nl != null) && (nl.getLength() > 0) )
     {
       for( int i = 0; i < nl.getLength(); i++ )
       {
@@ -922,7 +903,7 @@ public final class XMLTools
 
           final String s = element.getNamespaceURI();
 
-          if( namespace == null && s == null || namespace.equals( s ) )
+          if( (namespace == null && s == null) || namespace.equals( s ) )
           {
             if( element.getLocalName().equals( name ) )
             {

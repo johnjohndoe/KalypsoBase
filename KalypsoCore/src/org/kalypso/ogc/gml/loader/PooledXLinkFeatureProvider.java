@@ -165,7 +165,7 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
             Thread.sleep( 100 );
             timer += 100;
           }
-// FIXME: bad... leads to dead locks...
+
           info.join();
         }
       }

@@ -40,9 +40,9 @@ public class BBoxSpatialData extends AbstractSpatialData
    * @see org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.AbstractData#verify()
    */
   @Override
-  public boolean verify( )
+  public boolean verify()
   {
-    final Object type = getGeomType();
+    Object type = getGeomType();
     if( type instanceof GM_Envelope )
       return true;
     return false;

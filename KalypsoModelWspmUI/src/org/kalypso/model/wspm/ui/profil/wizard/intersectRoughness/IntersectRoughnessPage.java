@@ -113,7 +113,7 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
         if( pt instanceof IValuePropertyType )
         {
           final QName valueQName = ((IValuePropertyType) pt).getValueQName();
-          if( valueQName.equals( GMLConstants.QN_POLYGON ) || valueQName.equals( GMLConstants.QN_MULTI_POLYGON ) || valueQName.equals( GMLConstants.QN_MULTI_SURFACE ) )
+          if( valueQName.equals( GMLConstants.QN_POLYGON ) || valueQName.equals( GMLConstants.QN_MULTI_POLYGON ) )
             return true;
         }
 
@@ -176,6 +176,7 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
     group.setText( ProfilePointFilterComposite.STR_GROUP_TEXT );
 
     m_filterChooser.createControl( group, SWT.BORDER );
+
     m_filterChooser.setDialogSettings( getDialogSettings() );
 
     m_filterChooser.addCheckStateListener( new ICheckStateListener()
@@ -227,13 +228,9 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
   {
     final IMessageProvider message = validatePage();
     if( message == null )
-    {
       setMessage( null );
-    }
     else
-    {
       setMessage( message.getMessage(), message.getMessageType() );
-    }
     setPageComplete( message == null );
   }
 

@@ -43,7 +43,6 @@ package de.openali.odysseus.chart.ext.base.axisrenderer;
 import java.awt.Insets;
 
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
-import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
@@ -71,14 +70,9 @@ public class AxisRendererConfig
   public Insets labelInsets = new Insets( 1, 1, 1, 1 );
 
   /**
-   * insets around axis
-   */
-  public Insets axisInsets = new Insets( 0, 0, 0, 0 );
-
-  /**
    * gap between plot and axis line
    */
-  // public int gap = 0;
+  public int gap = 0;
 
   /**
    * smallest intervall for tick label values
@@ -117,13 +111,9 @@ public class AxisRendererConfig
    */
   public ITextStyle tickLabelStyle = StyleUtils.getDefaultTextStyle();
 
-  // public int borderSize = 0;
+  public int borderSize = 0;
 
-  public ALIGNMENT labelPosition = ALIGNMENT.CENTER;
-
-  public boolean intervallLabeledTick = false;
-
-  public IAreaStyle textBorderStyle = null;
+  public ALIGNMENT labelPosition = ALIGNMENT.TICK_CENTERED;
 
   public AxisRendererConfig( )
   {

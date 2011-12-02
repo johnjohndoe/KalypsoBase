@@ -56,7 +56,7 @@ public interface TextSymbolizer extends Symbolizer
    * 
    * @return the label
    */
-  ParameterValueType getLabel( );
+  ParameterValueType getLabel();
 
   /**
    * sets the Label as a <tt>ParameterValueType</tt> to be renderd
@@ -71,7 +71,7 @@ public interface TextSymbolizer extends Symbolizer
    * 
    * @return the font
    */
-  Font getFont( );
+  Font getFont();
 
   /**
    * sets the Font
@@ -91,7 +91,7 @@ public interface TextSymbolizer extends Symbolizer
    * 
    * @return the labelPlacement
    */
-  LabelPlacement getLabelPlacement( );
+  LabelPlacement getLabelPlacement();
 
   /**
    * Sets the LabelPlacement
@@ -109,7 +109,7 @@ public interface TextSymbolizer extends Symbolizer
    * 
    * @return the halo
    */
-  Halo getHalo( );
+  Halo getHalo();
 
   /**
    * Sets the Halo.
@@ -126,7 +126,7 @@ public interface TextSymbolizer extends Symbolizer
    * 
    * @return the fill
    */
-  Fill getFill( );
+  Fill getFill();
 
   /**
    * Sets the Fill.

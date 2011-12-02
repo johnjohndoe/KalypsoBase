@@ -53,13 +53,13 @@ package org.kalypso.commons.command;
  */
 public interface ICommand
 {
-  public boolean isUndoable( );
+  public boolean isUndoable();
 
-  public void process( ) throws Exception;
+  public void process() throws Exception;
 
-  public void redo( ) throws Exception;
+  public void redo() throws Exception;
 
-  public void undo( ) throws Exception;
+  public void undo() throws Exception;
 
-  public String getDescription( );
+  public String getDescription();
 }

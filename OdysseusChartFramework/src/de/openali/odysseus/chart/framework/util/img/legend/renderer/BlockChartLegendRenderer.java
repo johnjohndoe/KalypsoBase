@@ -46,14 +46,13 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.ui.PlatformUI;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
-import de.openali.odysseus.chart.framework.util.ChartUtilities;
 import de.openali.odysseus.chart.framework.util.img.legend.IChartLegendCanvas;
 import de.openali.odysseus.chart.framework.util.img.legend.config.IChartLegendConfig;
 import de.openali.odysseus.chart.framework.util.img.legend.utils.LegendChartLayersVisitor;
@@ -97,13 +96,13 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
   public Image createImage( final IChartLegendCanvas canvas, final IChartLegendConfig config )
   {
     final IChartLayer[] layers = getLayers( canvas.getModel() );
-    final Rectangle canvasRect = calculateSize( layers, config );
+    final Point canvasSize = calculateSize( layers, config );
     final Point itemSize = calculateItemSize( layers, config );
-    if( canvasRect.width <= 0 || canvasRect.height <= 0 )
+    if( canvasSize.x <= 0 || canvasSize.y <= 0 )
       return null;
 
-    final Device dev = ChartUtilities.getDisplay();
-    final Image image = new Image( dev, canvasRect.width, canvasRect.height );
+    final Device dev = PlatformUI.getWorkbench().getDisplay();
+    final Image image = new Image( dev, canvasSize.x, canvasSize.y );
     final GC gc = new GC( image );
 
     final ITextStyle style = config.getTextStyle();
@@ -124,7 +123,7 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
             continue;
 
           final ImageData imageData = createLegendItem( entry, config, itemSize );
-          if( x + imageData.width > config.getMaximumWidth().width )
+          if( x + imageData.width > config.getMaximumWidth() )
           {
             x = 0;
             y += imageData.height;
@@ -158,7 +157,7 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
 
   private ImageData createLegendItem( final ILegendEntry entry, final IChartLegendConfig config, final Point size )
   {
-    final Device dev = ChartUtilities.getDisplay();
+    final Device dev = PlatformUI.getWorkbench().getDisplay();
     final Image img = new Image( dev, size.x, size.y );
     final GC gc = new GC( img );
 
@@ -196,7 +195,7 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
 
   private Point getItemSize( final IChartLegendConfig config, final ILegendEntry entry )
   {
-    final Device dev = ChartUtilities.getDisplay();
+    final Device dev = PlatformUI.getWorkbench().getDisplay();
     final Image image = new Image( dev, 1, 1 );
     final GC gc = new GC( image );
 
@@ -227,26 +226,26 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
    * @see de.openali.odysseus.chart.framework.util.img.ILegendStrategy#getSize(de.openali.odysseus.chart.framework.util.img.LegendImageCreator)
    */
   @Override
-  public Rectangle calculateSize( final IChartLegendCanvas canvas, final IChartLegendConfig config )
+  public Point calculateSize( final IChartLegendCanvas canvas, final IChartLegendConfig config )
   {
     final IChartLayer[] layers = getLayers( canvas.getModel() );
 
     return calculateSize( layers, config );
   }
 
-  private Rectangle calculateSize( final IChartLayer[] layers, final IChartLegendConfig config )
+  private Point calculateSize( final IChartLayer[] layers, final IChartLegendConfig config )
   {
     final Point maxItemSize = calculateItemSize( layers, config );
     if( maxItemSize == null || maxItemSize.x == 0 || maxItemSize.y == 0 )
-      return new Rectangle( config.getMaximumWidth().x, config.getMaximumWidth().y, 1, 1 );
+      return new Point( 1, 1 );
 
     final int legendEntries = calculateLegendEntries( layers );
     // never return 0 itemsperrow,
-    final int itemsPerRow = Math.max( 1, config.getMaximumWidth().width / maxItemSize.x );
+    final int itemsPerRow = Math.max( 1, config.getMaximumWidth() / maxItemSize.x );
 
     m_rows = calculateRowNumbers( legendEntries, itemsPerRow );
 
-    return new Rectangle( config.getMaximumWidth().x, config.getMaximumWidth().y, config.getMaximumWidth().width, Double.valueOf( m_rows ).intValue() * maxItemSize.y );
+    return new Point( config.getMaximumWidth(), Double.valueOf( m_rows ).intValue() * maxItemSize.y );
   }
 
   private int calculateRowNumbers( final int legendEntries, final int itemsPerRow )
@@ -263,8 +262,7 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
     int legendEntries = 0;
     for( final IChartLayer layer : layers )
     {
-      final ILegendEntry[] entries = layer.getLegendEntries();
-      legendEntries += entries == null ? 0 : entries.length;
+      legendEntries += layer.getLegendEntries().length;
     }
 
     return legendEntries;
@@ -299,8 +297,6 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
     Point maxItemSize = null;
 
     final ILegendEntry[] entries = layer.getLegendEntries();
-    if( entries == null )
-      return null;
     for( final ILegendEntry entry : entries )
     {
       if( entry == null )

@@ -48,23 +48,25 @@ import org.kalypso.ui.editor.styleeditor.MessageBundle;
 
 /**
  * @author F.Lindemann
+ *  
  */
 public class StyleEditorErrorDialog
 {
+
   private IStatus status = null;
 
   private String message = null;
 
   private Shell shell = null;
 
-  public StyleEditorErrorDialog( final Shell m_shell, final String m_message, final String reason )
+  public StyleEditorErrorDialog( Shell m_shell, String m_message, String reason )
   {
-    message = m_message;
+    this.message = m_message;
     status = new Status( IStatus.ERROR, MessageBundle.STYLE_EDITOR_PLUGIN_ID, 0, reason, null );
-    shell = m_shell;
+    this.shell = m_shell;
   }
 
-  public void showError( )
+  public void showError()
   {
     ErrorDialog.openError( shell, MessageBundle.STYLE_EDITOR_ERROR_TITLE, message, status );
   }

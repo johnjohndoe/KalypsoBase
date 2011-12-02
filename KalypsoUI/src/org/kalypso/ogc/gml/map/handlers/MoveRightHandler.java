@@ -69,6 +69,7 @@ public class MoveRightHandler extends AbstractHandler implements IHandler
 
     final GM_Envelope currentBBox = mapPanel.getBoundingBox();
 
+
     final GM_Position currentMax = currentBBox.getMax();
     final GM_Position currentMin = currentBBox.getMin();
 

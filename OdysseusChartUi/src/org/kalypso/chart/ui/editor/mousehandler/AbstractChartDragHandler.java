@@ -1,13 +1,11 @@
 package org.kalypso.chart.ui.editor.mousehandler;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
-import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.impl.visitors.LayerTooltipVisitor;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
@@ -24,7 +22,7 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
 {
   private EditInfo m_editInfo = null;
 
-  private final int m_trashold;
+  private final int m_trashHold;
 
   private EditInfo m_clickInfo = null;
 
@@ -52,7 +50,7 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
   {
     super( chart );
 
-    m_trashold = trashHold;
+    m_trashHold = trashHold;
     m_observedButtonMask = observedButtonMask;
   }
 
@@ -71,7 +69,7 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
     if( model == null )
       return null;
 
-    final Point plotPoint = ChartHandlerUtilities.screen2plotPoint( screen, getChart().getPlotRect() );
+    final Point plotPoint = getChart().screen2plotPoint( screen );
 
     final ILayerManager layerManager = model.getLayerManager();
     final EditableChartLayerVisitor visitor = new EditableChartLayerVisitor();
@@ -94,10 +92,10 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
   {
     m_clickInfo = getHover( down );
     if( m_clickInfo == null )
-      m_clickInfo = new EditInfo( null, null, null, null, null, ChartHandlerUtilities.screen2plotPoint( down, getChart().getPlotRect() ) );
+      m_clickInfo = new EditInfo( null, null, null, null, null, getChart().screen2plotPoint( down ) );
 
     // offset from cursor relative to the given InfoObject Center
-    final Point pos = ChartHandlerUtilities.plotPoint2screen( m_clickInfo.getPosition(), getChart().getPlotRect() );
+    final Point pos = getChart().plotPoint2screen( m_clickInfo.getPosition() );
     m_deltaSnapX = down.x - pos.x;
     m_deltaSnapY = down.y - pos.y;
     m_startX = down.x;
@@ -123,27 +121,19 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
   public void mouseMove( final MouseEvent e )
   {
     super.mouseMove( e );
-    getChart().setTooltipInfo( null );
-    final Point p = new Point( e.x, e.y );
-    if( m_clickInfo == null )
-      doSetTooltip( p );
-    else
-      mouseMove( p );
-  }
 
-  private void doSetTooltip( final Point point )
-  {
-    final LayerTooltipVisitor visitor = new LayerTooltipVisitor( getChart(), ChartHandlerUtilities.screen2plotPoint( point,getChart().getPlotRect() ) );
-    final IChartModel model = getChart().getChartModel();
-    model.getLayerManager().accept( visitor );
+    if( m_clickInfo == null )
+      return;
+
+    mouseMove( new Point( e.x, e.y ) );
   }
 
   protected void mouseMove( final Point move )
   {
-    if( m_editInfo == null && (Math.abs( move.x - m_startX ) > m_trashold || Math.abs( move.y - m_startY ) > m_trashold) )
+    if( m_editInfo == null && (Math.abs( move.x - m_startX ) > m_trashHold || Math.abs( move.y - m_startY ) > m_trashHold) )
       m_editInfo = m_clickInfo.clone();
 
-    final Point plotPoint = ChartHandlerUtilities.screen2plotPoint( new Point( move.x - m_deltaSnapX, move.y - m_deltaSnapY ),getChart().getPlotRect() );
+    final Point plotPoint = getChart().screen2plotPoint( new Point( move.x - m_deltaSnapX, move.y - m_deltaSnapY ) );
     doMouseMoveAction( plotPoint, m_editInfo == null ? m_clickInfo : m_editInfo );
   }
 
@@ -163,7 +153,7 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
     {
       if( m_editInfo != null )
       {
-        final Point plotPoint = ChartHandlerUtilities.screen2plotPoint( new Point( up.x - m_deltaSnapX, up.y - m_deltaSnapY ),getChart().getPlotRect() );
+        final Point plotPoint = getChart().screen2plotPoint( new Point( up.x - m_deltaSnapX, up.y - m_deltaSnapY ) );
         doMouseUpAction( plotPoint, m_editInfo );
       }
       else if( m_clickInfo != null )

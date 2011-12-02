@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: de.renew.workflow.model;singleton:=true
-Bundle-Version: 11.6.3.qualifier
+Bundle-Version: 10.10.1.qualifier
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.expressions,
  org.eclipse.core.resources,
@@ -15,4 +15,4 @@ Export-Package: de.renew.workflow.base,
  de.renew.workflow.contexts
 Bundle-Activator: de.renew.workflow.base.WorkflowModelPlugin
 Bundle-Vendor: kalypsobase.sourceforge.net
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

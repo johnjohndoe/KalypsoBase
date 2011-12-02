@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Status;
-import org.kalypso.ogc.core.operations.IOGCOperation;
+
+import de.openali.odysseus.service.ows.extension.IOWSOperation;
 
 public interface IODSEnvironment
 {
+
   public ODSConfigurationLoader getConfigLoader( );
 
   public Status getStatus( );
@@ -17,7 +19,7 @@ public interface IODSEnvironment
 
   public String getDefaultSceneId( );
 
-  public IOGCOperation[] getOperations( );
+  public IOWSOperation[] getOperations( );
 
   public String getServiceUrl( );
 

@@ -40,7 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
@@ -64,7 +64,6 @@ import org.kalypso.ogc.gml.featureview.modfier.StringModifier;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * @author Gernot Belger
@@ -83,13 +82,13 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
 
   private boolean m_editable = true;
 
-  public TextFeatureControl( final Feature feature, final GMLXPath propertyPath, final IValuePropertyType ftp, final String format )
+  public TextFeatureControl( final Feature feature, final IValuePropertyType ftp, final String format )
   {
     super( feature, ftp );
 
-    Assert.isNotNull( ftp, "Unknown Feature-Property" ); //$NON-NLS-1$
+    Assert.isNotNull( ftp, "Unknown Feature-Property" );
 
-    m_modifier = new StringModifier( propertyPath, ftp, format );
+    m_modifier = new StringModifier( ftp, format );
   }
 
   /**

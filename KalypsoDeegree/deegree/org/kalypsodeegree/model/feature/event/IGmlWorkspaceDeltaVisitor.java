@@ -75,8 +75,8 @@ public interface IGmlWorkspaceDeltaVisitor
   /**
    * Visits the given workspace delta.
    * 
-   * @return <code>true</code> if the workspace delta's children should be visited; <code>false</code> if they should be
-   *         skipped.
+   * @return <code>true</code> if the workspace delta's children should be visited; <code>false</code> if they should
+   *         be skipped.
    * @exception CoreException
    *              if the visit fails for some reason.
    */

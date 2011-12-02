@@ -12,10 +12,10 @@ import org.osgi.framework.BundleContext;
 public class EclipsePlatformContributionsPlugin extends Plugin
 {
   // The shared instance.
-  private static EclipsePlatformContributionsPlugin INSTANCE;
+  private static EclipsePlatformContributionsPlugin plugin;
 
   // Resource bundle.
-  private ResourceBundle m_resourceBundle;
+  private ResourceBundle resourceBundle;
 
   /**
    * The constructor.
@@ -23,7 +23,7 @@ public class EclipsePlatformContributionsPlugin extends Plugin
   public EclipsePlatformContributionsPlugin( )
   {
     super();
-    INSTANCE = this;
+    plugin = this;
   }
 
   /**
@@ -42,8 +42,8 @@ public class EclipsePlatformContributionsPlugin extends Plugin
   public void stop( final BundleContext context ) throws Exception
   {
     super.stop( context );
-    INSTANCE = null;
-    m_resourceBundle = null;
+    plugin = null;
+    resourceBundle = null;
   }
 
   /**
@@ -51,7 +51,7 @@ public class EclipsePlatformContributionsPlugin extends Plugin
    */
   public static EclipsePlatformContributionsPlugin getDefault( )
   {
-    return INSTANCE;
+    return plugin;
   }
 
   /**
@@ -59,12 +59,12 @@ public class EclipsePlatformContributionsPlugin extends Plugin
    */
   public static String getResourceString( final String key )
   {
-    final ResourceBundle bundle = EclipsePlatformContributionsPlugin.getDefault().getResourceBundle();
+    ResourceBundle bundle = EclipsePlatformContributionsPlugin.getDefault().getResourceBundle();
     try
     {
-      return bundle != null ? bundle.getString( key ) : key;
+      return (bundle != null) ? bundle.getString( key ) : key;
     }
-    catch( final MissingResourceException e )
+    catch( MissingResourceException e )
     {
       return key;
     }
@@ -77,14 +77,14 @@ public class EclipsePlatformContributionsPlugin extends Plugin
   {
     try
     {
-      if( m_resourceBundle == null )
-        m_resourceBundle = ResourceBundle.getBundle( "org.kalypso.contribs.eclipse.platform.EclipsePlatformContributionsPluginResources" ); //$NON-NLS-1$
+      if( resourceBundle == null )
+        resourceBundle = ResourceBundle.getBundle( "org.kalypso.contribs.eclipse.platform.EclipsePlatformContributionsPluginResources" ); //$NON-NLS-1$
     }
-    catch( final MissingResourceException x )
+    catch( MissingResourceException x )
     {
-      m_resourceBundle = null;
+      resourceBundle = null;
     }
-    return m_resourceBundle;
+    return resourceBundle;
   }
 
   public static String getID( )

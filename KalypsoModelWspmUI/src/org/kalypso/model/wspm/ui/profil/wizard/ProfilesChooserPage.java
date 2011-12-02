@@ -40,12 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard;
 
-import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.i18n.Messages;
@@ -64,12 +62,7 @@ public class ProfilesChooserPage extends ArrayChooserPage
 
   public ProfilesChooserPage( final String message, final ProfileSelection selection, final boolean useDialogSettings )
   {
-    this( message, selection, useDialogSettings, 1 );
-  }
-
-  public ProfilesChooserPage( final String message, final ProfileSelection selection, final boolean useDialogSettings, final int numToSelect )
-  {
-    this( message, selection.getProfiles(), new Object[0], selection.getSelectedProfiles(), numToSelect, useDialogSettings );//$NON-NLS-1$//$NON-NLS-2$
+    this( message, selection.getProfiles(), new Object[0], selection.getSelectedProfiles(), 1, useDialogSettings );//$NON-NLS-1$//$NON-NLS-2$
   }
 
   public ProfilesChooserPage( final String message, final Object chooseables, final Object[] selected, final Object[] checked, final int numToSelect, final boolean useDialogSettings )
@@ -77,11 +70,6 @@ public class ProfilesChooserPage extends ArrayChooserPage
     super( chooseables, selected, checked, numToSelect, "profilesChooserPage", Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage.1" ), null, useDialogSettings );//$NON-NLS-1$//$NON-NLS-2$
     setLabelProvider( new GMLLabelProvider() );
     setDescription( message );
-
-    if( chooseables instanceof Object[] && Arrays.isEmpty( (Object[]) chooseables ) )
-    {
-      setMessage( Messages.getString( "ProfilesChooserPage.0" ), IMessageProvider.WARNING ); //$NON-NLS-1$
-    }
   }
 
   /**
@@ -95,9 +83,7 @@ public class ProfilesChooserPage extends ArrayChooserPage
     final Composite panel = (Composite) getControl();
     final Control interpolationGroup = createInterpolationGroup( panel );
     if( interpolationGroup != null )
-    {
       interpolationGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    }
   }
 
   private Control createInterpolationGroup( final Composite parent )
@@ -118,4 +104,5 @@ public class ProfilesChooserPage extends ArrayChooserPage
   {
     return m_resultInterpolationSettingsComposite;
   }
+
 }

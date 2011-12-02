@@ -77,7 +77,7 @@ public class LinearRingContentHandler extends GMLElementContentHandler implement
   {
     m_srs = ContentHandlerUtils.parseSrsFromAttributes( attributes, m_defaultSrs );
 
-    final GMLPropertyChoiceContentHandler choiceContentHandler = new GMLPropertyChoiceContentHandler( getXMLReader(), this, this, m_srs, new LinearRingSpecification() );
+    final GMLPropertyChoiceContentHandler choiceContentHandler = new GMLPropertyChoiceContentHandler( getXMLReader(), this, this, m_defaultSrs, new LinearRingSpecification() );
     choiceContentHandler.activate();
   }
 
@@ -139,7 +139,7 @@ public class LinearRingContentHandler extends GMLElementContentHandler implement
         position = GeometryFactory.createGM_Position( tuple[0], tuple[1] );
       }
       else
-      // >2
+        // >2
       {
         position = GeometryFactory.createGM_Position( tuple[0], tuple[1], tuple[2] );
       }

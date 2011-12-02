@@ -73,26 +73,22 @@ public class GuiTypeHandlerUtilities
     {
       if( handler instanceof XsdBaseTypeHandler )
       {
-        final IGuiTypeHandler existingHandler = guiRegistry.getTypeHandlerForTypeName( handler.getTypeName() );
-        if( existingHandler == null )
-        {
-          final IGuiTypeHandler wrappedHandler = new XsdBaseGuiTypeHandler( (XsdBaseTypeHandler< ? >) handler );
-          guiRegistry.registerTypeHandler( wrappedHandler );
-        }
+        final IGuiTypeHandler wrappedHandler = new XsdBaseGuiTypeHandler( (XsdBaseTypeHandler<?>) handler );
+        guiRegistry.registerTypeHandler( wrappedHandler );
       }
     }
 
-    guiRegistry.registerTypeHandler( new XsdDateGuiTypeHandler( (XsdBaseTypeHandler< ? >) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "date" ) ), XsdDateGuiTypeHandler.DF_Date, true ) ); //$NON-NLS-1$
-    guiRegistry.registerTypeHandler( new XsdDateGuiTypeHandler( (XsdBaseTypeHandler< ? >) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "dateTime" ) ), XsdDateGuiTypeHandler.DF_DateTime, true ) ); //$NON-NLS-1$
-    guiRegistry.registerTypeHandler( new XsdDateGuiTypeHandler( (XsdBaseTypeHandler< ? >) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "time" ) ), XsdDateGuiTypeHandler.DF_Time, false ) ); //$NON-NLS-1$
+    guiRegistry.registerTypeHandler( new XsdDateGuiTypeHandler( (XsdBaseTypeHandler<?>) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "date" ) ), XsdDateGuiTypeHandler.DF_Date, true ) ); //$NON-NLS-1$
+    guiRegistry.registerTypeHandler( new XsdDateGuiTypeHandler( (XsdBaseTypeHandler<?>) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "dateTime" ) ), XsdDateGuiTypeHandler.DF_DateTime, true ) ); //$NON-NLS-1$
+    guiRegistry.registerTypeHandler( new XsdDateGuiTypeHandler( (XsdBaseTypeHandler<?>) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "time" ) ), XsdDateGuiTypeHandler.DF_Time, false ) ); //$NON-NLS-1$
 
-    guiRegistry.registerTypeHandler( new XsdDecimalGuiTypeHandler( (XsdBaseTypeHandler< ? >) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "decimal" ) ) ) ); //$NON-NLS-1$
+    guiRegistry.registerTypeHandler( new XsdDecimalGuiTypeHandler( (XsdBaseTypeHandler<?>) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "decimal" ) ) ) ); //$NON-NLS-1$
 
     guiRegistry.registerTypeHandler( new Gml3EnvelopeGuiTypeHandler() );
     guiRegistry.registerTypeHandler( new Gml3PointGuiTypeHandler() );
 
-    guiRegistry.registerTypeHandler( new ColorGuiTypeHandler( (XsdBaseTypeHandler< ? >) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.COMMON, "color" ) ) ) ); //$NON-NLS-1$
-    guiRegistry.registerTypeHandler( new DirectoryGuiTypeHandler( (XsdBaseTypeHandler< ? >) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.COMMON, "directory" ) ) ) ); //$NON-NLS-1$
-    guiRegistry.registerTypeHandler( new FileGuiTypeHandler( (XsdBaseTypeHandler< ? >) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.COMMON, "file" ) ) ) ); //$NON-NLS-1$
+    guiRegistry.registerTypeHandler( new ColorGuiTypeHandler( (XsdBaseTypeHandler<?>) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.COMMON, "color" ) ) ) ); //$NON-NLS-1$
+    guiRegistry.registerTypeHandler( new DirectoryGuiTypeHandler( (XsdBaseTypeHandler<?>) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.COMMON, "directory" ) ) ) ); //$NON-NLS-1$
+    guiRegistry.registerTypeHandler( new FileGuiTypeHandler( (XsdBaseTypeHandler<?>) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.COMMON, "file" ) ) ) ); //$NON-NLS-1$
   }
 }

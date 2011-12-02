@@ -41,7 +41,7 @@
 package org.kalypso.metadoc.ui;
 
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;

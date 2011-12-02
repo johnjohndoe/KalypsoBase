@@ -43,15 +43,16 @@ package org.kalypso.services.observation.server;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 
+import javax.activation.DataHandler;
 import javax.jws.WebService;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.services.observation.KalypsoServiceObs;
@@ -59,7 +60,6 @@ import org.kalypso.services.observation.sei.DataBean;
 import org.kalypso.services.observation.sei.IObservationService;
 import org.kalypso.services.observation.sei.ItemBean;
 import org.kalypso.services.observation.sei.ObservationBean;
-import org.kalypso.services.observation.sei.StatusBean;
 
 /**
  * Kalypso Observation Service.<br>
@@ -194,6 +194,21 @@ public class ObservationServiceImpl implements IObservationService
       return delegate.readData( href );
 
     return null;
+  }
+
+  /**
+   * @see org.kalypso.services.observation.sei.IObservationService#writeData(org.kalypso.services.observation.sei.ObservationBean,
+   *      javax.activation.DataHandler)
+   */
+  @Override
+  public void writeData( final ObservationBean observation, final DataHandler data ) throws SensorException
+  {
+    /* Get the observation service delegate. */
+    final IObservationService delegate = getDelegate();
+
+    /* If it is existing, delegate to it. */
+    if( delegate != null )
+      delegate.writeData( observation, data );
   }
 
   /**
@@ -359,7 +374,7 @@ public class ObservationServiceImpl implements IObservationService
       getDelegate().setItemData( identifier, serializable );
     }
     else
-      throw new UnsupportedOperationException();
+      throw new NotImplementedException();
 
   }
 
@@ -386,15 +401,5 @@ public class ObservationServiceImpl implements IObservationService
       return delegate.isMultipleSourceItem( identifier );
 
     return false;
-  }
-
-  @Override
-  public StatusBean getStatus( final String type )
-  {
-    final IObservationService delegate = getDelegate();
-    if( Objects.isNotNull( delegate ) )
-      return delegate.getStatus( type );
-
-    return new StatusBean( IStatus.ERROR, KalypsoServiceObs.ID, "Service not available. IObservationService delegate is null." );
   }
 }

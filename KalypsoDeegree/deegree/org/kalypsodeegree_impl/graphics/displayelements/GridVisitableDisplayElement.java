@@ -52,7 +52,7 @@ import org.kalypsodeegree.model.geometry.IPlainGridVisitor;
 /**
  * Provide display mechanism for wind data models
  * 
- * @author
+ * @author 
  */
 public class GridVisitableDisplayElement<P extends GM_Curve> implements DisplayElementDecorator
 {
@@ -84,9 +84,23 @@ public class GridVisitableDisplayElement<P extends GM_Curve> implements DisplayE
   }
 
   /**
+   * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#doesScaleConstraintApply(double)
+   */
+  public boolean doesScaleConstraintApply( final double scale )
+  {
+    if( m_decorated != null )
+    {
+      return m_decorated.doesScaleConstraintApply( scale );
+    }
+    else
+    {
+      return true;
+    }
+  }
+
+  /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#getFeature()
    */
-  @Override
   public Feature getFeature( )
   {
     return m_feature;
@@ -95,7 +109,6 @@ public class GridVisitableDisplayElement<P extends GM_Curve> implements DisplayE
   /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#isHighlighted()
    */
-  @Override
   public boolean isHighlighted( )
   {
     if( m_decorated != null )
@@ -111,7 +124,6 @@ public class GridVisitableDisplayElement<P extends GM_Curve> implements DisplayE
   /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#isSelected()
    */
-  @Override
   public boolean isSelected( )
   {
     if( m_decorated != null )
@@ -127,7 +139,6 @@ public class GridVisitableDisplayElement<P extends GM_Curve> implements DisplayE
   /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#setHighlighted(boolean)
    */
-  @Override
   public void setHighlighted( final boolean highlighted )
   {
     if( m_decorated != null )
@@ -139,7 +150,6 @@ public class GridVisitableDisplayElement<P extends GM_Curve> implements DisplayE
   /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#setSelected(boolean)
    */
-  @Override
   public void setSelected( final boolean selected )
   {
     if( m_decorated != null )
@@ -149,7 +159,6 @@ public class GridVisitableDisplayElement<P extends GM_Curve> implements DisplayE
     m_isSelected = selected;
   }
 
-  @Override
   public void paint( final Graphics g, final GeoTransform projection, final IProgressMonitor monitor ) throws CoreException
   {
     if( m_decorated != null )
@@ -172,7 +181,6 @@ public class GridVisitableDisplayElement<P extends GM_Curve> implements DisplayE
   /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator#getDecorated()
    */
-  @Override
   public DisplayElement getDecorated( )
   {
     return m_decorated;
@@ -181,7 +189,6 @@ public class GridVisitableDisplayElement<P extends GM_Curve> implements DisplayE
   /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator#setDecorated(org.kalypsodeegree.graphics.displayelements.DisplayElement)
    */
-  @Override
   public void setDecorated( final DisplayElement decorated )
   {
     m_decorated = decorated;

@@ -726,6 +726,7 @@ public class TupleResult implements List<IRecord>
     }
   }
 
+
   public int indexOfComponent( final IComponent comp )
   {
     return m_components.indexOf( comp );
@@ -758,12 +759,12 @@ public class TupleResult implements List<IRecord>
    * @return -1, if no such component exists. Returns the index of the first component with a given id.
    */
 
-  public int indexOfComponent( final String componentId )
+  public int indexOfComponent( final String domainComponentId )
   {
     for( int i = 0; i < m_components.size(); i++ )
     {
       final IComponent comp = m_components.get( i );
-      if( comp.getId().equals( componentId ) )
+      if( comp.getId().equals( domainComponentId ) )
         return i;
     }
 

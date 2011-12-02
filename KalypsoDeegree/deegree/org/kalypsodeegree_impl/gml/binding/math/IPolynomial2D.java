@@ -35,6 +35,7 @@
  */
 package org.kalypsodeegree_impl.gml.binding.math;
 
+
 /**
  * Specifies the interface for object representing a 2D polynom in the simulation model base schema. The algerbic
  * representation is: SUM(aijx^iy^j) for 0&lt=i&lt=degreeX and 0&lt=i&lt=degreeY
@@ -81,15 +82,13 @@ public interface IPolynomial2D extends IPolynomial
    *          the new x degree of the polynom
    * @param degreeY
    *          the new y degree of the polynom
-   * @param coefficients
-   *          -- the coefficient of this polynom
+   * @param coefficients --
+   *          the coefficient of this polynom
    * @throws illegal
    *           argument exception if
    *           <ul>
-   *           <li/>degreeX or degreeY is negative
-   *           <li/>coefficient is null
-   *           <li/>number of double passed as coefficient is not equal to order (deegreeX+1)*(degreeY+1) and their
-   *           respective last element are not zero
+   *           <li/>degreeX or degreeY is negative <li/>coefficient is null <li/>number of double passed as coefficient
+   *           is not equal to order (deegreeX+1)*(degreeY+1) and their respective last element are not zero
    *           </ul>
    */
   public void setPolynomParameters( int degreeX, int degreeY, double[] coefficients ) throws IllegalArgumentException;

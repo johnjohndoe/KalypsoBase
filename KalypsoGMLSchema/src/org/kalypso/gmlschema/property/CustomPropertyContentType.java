@@ -140,7 +140,7 @@ public class CustomPropertyContentType implements IPropertyContentType
   @Override
   public String toString( )
   {
-    return String.format( "%s: %s", getClass().getName(), m_qname ); //$NON-NLS-1$
+    return String.format( "%s: %s", getClass().getName(), m_qname );
   }
 
 }

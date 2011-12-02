@@ -63,33 +63,33 @@ import org.kalypso.ui.editor.abstractobseditor.ObservationEditorOutlinePage;
  */
 public class EditDiagCurveAction extends FullAction
 {
-  private final ObservationEditorOutlinePage m_page;
+  private ObservationEditorOutlinePage m_page;
 
   public EditDiagCurveAction( final ObservationEditorOutlinePage page )
   {
-    super( Messages.getString( "org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveAction.0" ), ImageProvider.IMAGE_OBSVIEW_CURVE_PROPERTIES, //$NON-NLS-1$
-    Messages.getString( "org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveAction.1" ) ); //$NON-NLS-1$
+    super( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveAction.0"), ImageProvider.IMAGE_OBSVIEW_CURVE_PROPERTIES, //$NON-NLS-1$
+        Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveAction.1") ); //$NON-NLS-1$
 
     m_page = page;
   }
 
   @Override
-  public void run( )
+  public void run()
   {
     final Shell shell = m_page.getSite().getShell();
 
-    final DiagView obsView = (DiagView) m_page.getView();
+    final DiagView obsView = (DiagView)m_page.getView();
     final ObsViewItem[] items = m_page.getSelectedItems();
-
+    
     if( items.length == 0 )
     {
-      MessageDialog.openWarning( shell, Messages.getString( "org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveAction.2" ), Messages.getString( "org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveAction.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      MessageDialog.openWarning(shell, Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveAction.2"), Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveAction.3")); //$NON-NLS-1$ //$NON-NLS-2$
       return;
     }
-
+    
     final LineProperties[] currentProperties = new LineProperties[items.length];
     for( int i = 0; i < items.length; i++ )
-      currentProperties[i] = itemToProperties( (DiagViewCurve) items[i] );
+      currentProperties[i] = itemToProperties( (DiagViewCurve)items[i] );
 
     final LineProperties lineProperties = LineProperties.mergeProperties( currentProperties );
 
@@ -99,18 +99,18 @@ public class EditDiagCurveAction extends FullAction
        * @see org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveDialog#propertiesChanged()
        */
       @Override
-      protected void propertiesChanged( )
+      protected void propertiesChanged()
       {
         final LineProperties resultProperties = getLineProperties();
-        for( final ObsViewItem item : items )
-          applyLineProperties( obsView, (DiagViewCurve) item, resultProperties, items.length == 1 );
+        for( int i = 0; i < items.length; i++ )
+          applyLineProperties( obsView, (DiagViewCurve)items[i], resultProperties, items.length == 1 );
       }
     };
 
     if( dialog.open() == Window.CANCEL )
     {
       for( int i = 0; i < items.length; i++ )
-        applyLineProperties( obsView, (DiagViewCurve) items[i], currentProperties[i], true );
+        applyLineProperties( obsView, (DiagViewCurve)items[i], currentProperties[i], true );
     }
   }
 
@@ -124,11 +124,11 @@ public class EditDiagCurveAction extends FullAction
 
     if( stroke instanceof BasicStroke )
     {
-      final BasicStroke basicStroke = (BasicStroke) stroke;
-      size = new Integer( (int) basicStroke.getLineWidth() );
+      final BasicStroke basicStroke = (BasicStroke)stroke;
+      size = new Integer( (int)basicStroke.getLineWidth() );
 
       final float[] curveDash = basicStroke.getDashArray();
-      final DashType userDash = new DashType( Messages.getString( "org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveAction.4" ), Messages.getString( "org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveAction.5" ), curveDash == null ? new float[] {} //$NON-NLS-1$ //$NON-NLS-2$
+      final DashType userDash = new DashType( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveAction.4"), Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveAction.5"), curveDash == null ? new float[] {} //$NON-NLS-1$ //$NON-NLS-2$
           : curveDash );
       if( DashType.isKnownDash( userDash ) )
         dash = DashType.findKnownDash( userDash );
@@ -146,10 +146,11 @@ public class EditDiagCurveAction extends FullAction
 
   /**
    * Applies the changed properties to all selected items. <br>
-   * Only applies changed values (i.e. non- <code>null</code>) We do not always apply the name, as the name is used as
-   * id by the diagramm... this causes bugs, if two curves have the same name.
+   * Only applies changed values (i.e. non- <code>null</code>) We do not always apply the name, as the name is used
+   * as id by the diagramm... this causes bugs, if two curves have the same name.
    */
-  protected void applyLineProperties( final DiagView view, final DiagViewCurve item, final LineProperties properties, final boolean applyName )
+  protected void applyLineProperties( final DiagView view, final DiagViewCurve item, final LineProperties properties,
+      final boolean applyName )
   {
     final String nameToSet;
     final Color colorToSet;
@@ -173,7 +174,8 @@ public class EditDiagCurveAction extends FullAction
     else
       strokeToSet = stroke;
 
-    final ChangeThemePropertiesCommand command = new ChangeThemePropertiesCommand( view, item, nameToSet, colorToSet, strokeToSet );
+    final ChangeThemePropertiesCommand command = new ChangeThemePropertiesCommand( view, item, nameToSet, colorToSet,
+        strokeToSet );
     m_page.getEditor().postCommand( command, null );
   }
 

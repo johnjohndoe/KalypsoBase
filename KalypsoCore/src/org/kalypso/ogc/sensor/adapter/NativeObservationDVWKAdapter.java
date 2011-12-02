@@ -45,7 +45,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -163,7 +162,7 @@ public class NativeObservationDVWKAdapter implements INativeObservationAdapter
             {
               dateCollector.add( previousNlineCalendar.getTime() );
               valueCollector.add( 0.0 );
-              previousNlineCalendar.add( Calendar.MINUTE, 5 );
+              previousNlineCalendar.add( GregorianCalendar.MINUTE, 5 );
             }
           }
 
@@ -204,7 +203,7 @@ public class NativeObservationDVWKAdapter implements INativeObservationAdapter
                   errorBuffer.append( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationDVWKAdapter.10" ) + reader.getLineNumber() + Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationDVWKAdapter.11" ) + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                   numberOfErrors++;
                 }
-                calendar.add( Calendar.MINUTE, 5 );
+                calendar.add( GregorianCalendar.MINUTE, 5 );
               }
             }
           }

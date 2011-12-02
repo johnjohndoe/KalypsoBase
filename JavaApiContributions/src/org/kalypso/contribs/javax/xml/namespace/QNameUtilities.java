@@ -106,17 +106,15 @@ public class QNameUtilities
   }
 
   /**
-   * Parses a {@link QName} from a string in xml-syntax using a prefix resolver. <br/>
-   * Syntax of the qname:
+   * Parses a {@link QName} from a string in xml-syntax using a prefix resolver. <br/> Syntax of the qname:
    * 
    * <pre>
    *    prefix:localPart
    * </pre>
    * 
-   * <br/>
-   * For backwards compability, also the {@link QName#toString()} form (i.e. {namespace}localPart) form is recognized.<br/>
-   * If either the prefix is empty or the namespaceContext is null, returns a qname with empty local part (due to
-   * XML-Spec).
+   * <br/> For backwards compability, also the {@link QName#toString()} form (i.e. {namespace}localPart) form is
+   * recognized.<br/> If either the prefix is empty or the namespaceContext is null, returns a qname with empty local
+   * part (due to XML-Spec).
    */
   public static QName createQName( final String condition, final NamespaceContext namespaceContext )
   {

@@ -60,10 +60,8 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.progress.IProgressConstants;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCoreDebug;
-import org.kalypso.core.catalog.CatalogUtilities;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.loader.ILoader;
-import org.kalypso.loader.ISaveUrnLoader;
 import org.kalypso.loader.LoaderException;
 
 public final class KeyInfo extends Job
@@ -96,6 +94,7 @@ public final class KeyInfo extends Job
     m_key = key;
     m_loader = loader;
 
+    m_resources.clear();
     try
     {
       final IResource[] resources = m_loader.getResources( m_key );
@@ -129,16 +128,12 @@ public final class KeyInfo extends Job
     final int state = getState();
     KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( "Current Pool-Job state: %d%n", state ); //$NON-NLS-1$ 
 
-    final Object o;
+    m_listeners.add( l );
+    m_addListenerTraces.put( l, new Exception() );
 
-    synchronized( this )
-    {
-      m_listeners.add( l );
-      m_addListenerTraces.put( l, new Exception() );
+    // TODO: shouldn't we synchronise here?
 
-      o = m_object;
-    }
-
+    final Object o = m_object;
     if( o != null )
     {
       l.objectLoaded( m_key, o, Status.OK_STATUS );
@@ -419,9 +414,6 @@ public final class KeyInfo extends Job
 
     try
     {
-      if( force )
-        m_hasNothingBlocked = false;
-
       reloadInternal();
       setDirty( false );
     }
@@ -503,33 +495,5 @@ public final class KeyInfo extends Job
   public ILoader getLoader( )
   {
     return m_loader;
-  }
-
-  public boolean isSaveable( )
-  {
-    try
-    {
-      final ILoader loader = getLoader();
-      final IResource[] resources = loader.getResources( getKey() );
-      if( resources.length == 0 )
-        return isSaveUrnSupported();
-    }
-    catch( final Throwable e )
-    {
-      e.printStackTrace();
-    }
-    return true;
-  }
-
-  private boolean isSaveUrnSupported( )
-  {
-    final ILoader loader = getLoader();
-    if( loader instanceof ISaveUrnLoader )
-    {
-      final String location = m_key.getLocation();
-      return CatalogUtilities.isCatalogResource( location );
-    }
-
-    return false;
   }
 }

@@ -56,15 +56,15 @@ public class PartsArrayItem
 
   protected int numPoints;
 
-  public PartsArrayItem( )
+  public PartsArrayItem()
   {
-    offset = 0;
-    numPoints = 0;
+    this.offset = 0;
+    this.numPoints = 0;
   }
 
-  public PartsArrayItem( final int off, final int numP )
+  public PartsArrayItem( int off, int numP )
   {
-    offset = off;
-    numPoints = numP;
+    this.offset = off;
+    this.numPoints = numP;
   }
 } // end of class PartsArrayItem

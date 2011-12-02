@@ -9,11 +9,11 @@ import org.osgi.framework.BundleContext;
 public class KalypsoModelWspmCorePlugin extends Plugin
 {
   /** The shared instance. */
-  private static KalypsoModelWspmCorePlugin PLUGIN;
+  private static KalypsoModelWspmCorePlugin plugin;
 
   public static KalypsoModelWspmCorePlugin getDefault( )
   {
-    return PLUGIN;
+    return plugin;
   }
 
   public static String getID( )
@@ -21,8 +21,8 @@ public class KalypsoModelWspmCorePlugin extends Plugin
     return getDefault().getBundle().getSymbolicName();
   }
 
-  /** The rules will will created (lazy) only once and used in every rule set. */
-
+  /** The rules will will created (laziliy) only once and used in every rule set. */
+ 
   private ValidatorFactory m_validatorFactory = null;
 
   @Override
@@ -30,7 +30,7 @@ public class KalypsoModelWspmCorePlugin extends Plugin
   {
     super.start( context );
 
-    PLUGIN = this;
+    plugin = this;
   }
 
   @Override
@@ -38,7 +38,7 @@ public class KalypsoModelWspmCorePlugin extends Plugin
   {
     super.stop( context );
 
-    PLUGIN = null;
+    plugin = null;
   }
 
   public static ValidatorRuleSet getValidatorSet( final String type )
@@ -52,9 +52,7 @@ public class KalypsoModelWspmCorePlugin extends Plugin
   public ValidatorFactory getValidatorFactory( )
   {
     if( m_validatorFactory == null )
-    {
       m_validatorFactory = new ValidatorFactory();
-    }
 
     return m_validatorFactory;
   }

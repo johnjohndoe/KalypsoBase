@@ -46,6 +46,7 @@ import org.kalypso.gmlschema.ui.ITreeContentProviderVisitor;
 import org.kalypso.test.TestUtilities;
 import org.kalypso.ui.KalypsoGisPlugin;
 
+
 /**
  * this test parses GML application schemas and produces a ASCII-Tree-output. this output is compared by validated
  * treeoutputs in the resources. This Test is intended to fail on changes in schema parsing.
@@ -128,10 +129,10 @@ public class GMLSchemaTest extends TestCase
   {
     try
     {
-      loadAndTestSchema( //
+      loadAndTestSchema( // 
       getClass().getResource( "resources/namodell.xsd" ),// schemalocationURL
-          getClass().getResource( "resources/test_rrm.txt" ) // testresource to compare
-          , false );
+      getClass().getResource( "resources/test_rrm.txt" ) // testresource to compare
+      , false );
     }
     catch( final Exception e )
     {

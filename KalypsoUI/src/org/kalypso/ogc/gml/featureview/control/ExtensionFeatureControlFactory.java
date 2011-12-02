@@ -43,7 +43,7 @@ package org.kalypso.ogc.gml.featureview.control;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.gmlschema.annotation.IAnnotation;
@@ -82,7 +82,7 @@ public class ExtensionFeatureControlFactory extends AbstractFeatureControlFactor
     try
     {
       final IExtensionsFeatureControlFactory2 controlFactory = KalypsoUIExtensions.getFeatureviewControlFactory( extensionId );
-      final FormToolkit toolkit = getToolkit();
+      FormToolkit toolkit = getToolkit();
       return controlFactory.createFeatureControl( toolkit, feature, pt, parameters );
     }
     catch( final CoreException ce )

@@ -53,7 +53,7 @@ public class SobekProfileWarning
   /**
    * The warnings.
    */
-  private final List<String> m_warnings;
+  private List<String> m_warnings;
 
   /**
    * The constructor.
@@ -69,13 +69,11 @@ public class SobekProfileWarning
    * @param initialWarning
    *          The initial warning message. May be null.
    */
-  public SobekProfileWarning( final String initialWarning )
+  public SobekProfileWarning( String initialWarning )
   {
     m_warnings = new ArrayList<String>();
     if( initialWarning != null && initialWarning.length() > 0 )
-    {
       m_warnings.add( initialWarning );
-    }
   }
 
   /**
@@ -84,7 +82,7 @@ public class SobekProfileWarning
    * @param warning
    *          The warning.
    */
-  public void addWarning( final String warning )
+  public void addWarning( String warning )
   {
     m_warnings.add( warning );
   }
@@ -109,16 +107,14 @@ public class SobekProfileWarning
     if( m_warnings.size() == 0 )
       return ""; //$NON-NLS-1$
 
-    final StringBuilder line = new StringBuilder();
+    StringBuilder line = new StringBuilder();
     line.append( " #" ); //$NON-NLS-1$
 
     for( int i = 0; i < m_warnings.size(); i++ )
     {
       line.append( m_warnings.get( i ) );
       if( i < m_warnings.size() - 1 )
-      {
         line.append( " #" ); //$NON-NLS-1$
-      }
     }
 
     return line.toString();

@@ -52,13 +52,15 @@ import org.kalypso.template.featureview.Checkbox;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * @author Gernot Belger
  */
 public class CheckboxFeatureControlFactory implements IFeatureControlFactory
 {
+  /**
+   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControlFactory#createFeatureControl(org.kalypso.ogc.gml.featureview.control.IFeatureComposite, org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType, org.kalypso.template.featureview.ControlType, org.kalypso.gmlschema.annotation.IAnnotation)
+   */
   @Override
   public IFeatureControl createFeatureControl( final IFeatureComposite parentComposite, final Feature feature, final IPropertyType pt, final ControlType controlType, final IAnnotation annotation )
   {
@@ -78,8 +80,7 @@ public class CheckboxFeatureControlFactory implements IFeatureControlFactory
       return new StatusFeatureControl( status );
     }
 
-    final GMLXPath propertyPath = new GMLXPath( vpt.getQName() );
-
-    return new CheckboxFeatureControl( feature, propertyPath, vpt, text );
+    return new CheckboxFeatureControl( feature, vpt, text );
   }
+
 }

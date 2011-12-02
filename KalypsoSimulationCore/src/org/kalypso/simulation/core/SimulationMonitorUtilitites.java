@@ -58,8 +58,8 @@ public class SimulationMonitorUtilitites
     monitor.setProgress( progress );
     if( monitor.isCanceled() )
     {
-      monitor.setFinishInfo( IStatus.CANCEL, Messages.getString( "org.kalypso.simulation.core.SimulationMonitorUtilitites.0" ) ); //$NON-NLS-1$
-      throw new SimulationException( Messages.getString( "org.kalypso.simulation.core.SimulationMonitorUtilitites.1" ), null ); //$NON-NLS-1$
+      monitor.setFinishInfo( IStatus.CANCEL, Messages.getString("org.kalypso.simulation.core.SimulationMonitorUtilitites.0") ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString("org.kalypso.simulation.core.SimulationMonitorUtilitites.1"), null ); //$NON-NLS-1$
     }
   }
 }

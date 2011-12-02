@@ -47,9 +47,12 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
  */
 public class KalypsoCorePreferenceInitializer extends AbstractPreferenceInitializer
 {
+  /**
+   * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#initializeDefaultPreferences()
+   */
   @Override
   public void initializeDefaultPreferences( )
   {
-    // Moved to deegree
+    //Moved to deegree
   }
 }

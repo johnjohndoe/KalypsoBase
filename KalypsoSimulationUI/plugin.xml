@@ -17,6 +17,13 @@
                id="org.kalypso.simulation.ui.menu.debug">
             <groupMarker name="start"/>
          </menu>
+         <action
+               label="%org.kalypso.action.debug.testCalcCase.label"
+               class="org.kalypso.simulation.ui.actions.TestCalculationDelegate"
+               tooltip="%org.kalypso.action.debug.testCalcCase.tooltip"
+               style="push"
+               menubarPath="org.kalypso.simulation.ui.menu.debug/start"
+               id="org.kalypso.action.debug.testCalcCase"/>
       </actionSet>
    </extension>
    
@@ -47,6 +54,7 @@
 		<antTask eclipseRuntime="true" class="org.kalypso.simulation.ui.ant.FetchFromURLsTask" library="lib/anttasks.jar" name="Kalypso.fetchFromURL" />
 		<antTask class="org.kalypso.simulation.ui.ant.PropertyReplaceTask" headless="true" library="lib/anttasks.jar" name="kalypso.propertyReplace" />
 		<antTask eclipseRuntime="false" class="org.kalypso.simulation.ui.ant.GetFileTask" headless="false" library="lib/anttasks.jar" name="kalypso.getFileTask" />
+		<antTask class="org.kalypso.simulation.ui.ant.ThiessenWeightTask" headless="true" library="lib/anttasks.jar" name="kalypso.thiessenWeightTask" />
 		<antTask eclipseRuntime="true" class="org.kalypso.simulation.ui.ant.MergeObservationTask" library="lib/anttasks.jar" name="kalypso.mergeObservation" />
 		<antTask class="org.kalypso.simulation.ui.ant.ChangeGmlTask" eclipseRuntime="true" library="lib/anttasks.jar" name="kalypso.changeGml"/>
    </extension>

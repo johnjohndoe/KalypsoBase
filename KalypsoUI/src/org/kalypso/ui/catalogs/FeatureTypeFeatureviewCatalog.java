@@ -48,7 +48,6 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
 
 import org.kalypso.core.jaxb.TemplateUtilities;
-import org.kalypso.ogc.gml.featureview.maker.FeatureviewTypeWithContext;
 import org.kalypso.template.featureview.FeatureviewType;
 
 /**
@@ -58,17 +57,19 @@ public class FeatureTypeFeatureviewCatalog extends FeatureTypeCatalog
 {
   private static final String BASETYPE = "featureview"; //$NON-NLS-1$
 
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
-  public static FeatureviewTypeWithContext getFeatureview( final URL context, final QName qname ) throws JAXBException
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  public static FeatureviewType getFeatureview( final URL context, final QName qname ) throws JAXBException
   {
     final URL url = getURL( BASETYPE, context, qname );
     if( url == null )
       return null;
 
     final Unmarshaller unmarshaller = TemplateUtilities.createFeatureviewUnmarshaller();
-
+    
     final JAXBElement<FeatureviewType> element = (JAXBElement<FeatureviewType>) unmarshaller.unmarshal( url );
-    final FeatureviewType featureview = element.getValue();
-    return new FeatureviewTypeWithContext( featureview, context );
+    return element.getValue();
   }
+  
+
+  
 }

@@ -37,7 +37,6 @@ package org.kalypsodeegree.graphics.sld;
 
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.xml.Marshallable;
 
 /**
  * The simple SVG/CSS2 styling parameters are given with the CssParameter element, which is defined as follows:
@@ -45,7 +44,7 @@ import org.kalypsodeegree.xml.Marshallable;
  * <pre>
  *  <xs:element name="CssParameter" type="sld:ParameterValueType"/>
  * 	<xs:complexType name="ParameterValueType" mixed="true">
- * 	<xs:choice minOccurs="0" maxOccurs="unbounded">
+ *		<xs:choice minOccurs="0" maxOccurs="unbounded">
  * 			<xs:element ref="wfs:expression"/>
  * 		</xs:choice>
  *  </xs:complexType>
@@ -82,15 +81,16 @@ import org.kalypsodeegree.xml.Marshallable;
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
  */
-public interface CssParameter extends Marshallable
+public interface CssParameter
 {
+
   /**
    * Returns the name attribute's value of the CssParameter.
    * <p>
    * 
    * @return the value of the name attribute of the CssParameter
    */
-  String getName( );
+  String getName();
 
   /**
    * Sets the name attribute's value of the CssParameter.
@@ -107,7 +107,7 @@ public interface CssParameter extends Marshallable
    * 
    * @return the mixed content of the element
    */
-  ParameterValueType getValue( );
+  ParameterValueType getValue();
 
   /**
    * Sets the value of the CssParameter as an <tt>ParameterValueType</tt>.

@@ -57,11 +57,11 @@ public class ObservationPropertySourceProvider implements IPropertySourceProvide
    * @see org.eclipse.ui.views.properties.IPropertySourceProvider#getPropertySource(java.lang.Object)
    */
   @Override
-  public IPropertySource getPropertySource( final Object object )
+  public IPropertySource getPropertySource( Object object )
   {
     if( object instanceof IAdaptable )
     {
-      final IObservation obs = ObservationCache.getInstance().getObservationFor( (IAdaptable) object );
+      final IObservation obs = ObservationCache.getInstance().getObservationFor( (IAdaptable)object );
       if( obs == null )
         return null;
 

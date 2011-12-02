@@ -169,7 +169,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
       if( dra != null )
         m_subTitle.setText( dra.toString() );
 
-      final IActionBars actionbar = getViewSite().getActionBars();
+      final IActionBars actionbar = this.getViewSite().getActionBars();
       actionbar.updateActionBars();
 
       // FIXME - wont update commands of view

@@ -35,6 +35,7 @@
  */
 package org.kalypsodeegree.model.typeHandler;
 
+
 /**
  * @author Dirk Kuch
  */
@@ -73,7 +74,7 @@ public class XsdBaseTypeHandlerLong extends XsdBaseTypeHandler<Long>
   @Override
   public int compare( final Long o1, final Long o2 )
   {
-    if( o1 == null && o2 == null )
+    if( (o1 == null) && (o2 == null) )
     {
       return 0; // equals
     }

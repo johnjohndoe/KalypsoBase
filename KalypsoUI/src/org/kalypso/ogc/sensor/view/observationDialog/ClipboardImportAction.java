@@ -46,12 +46,13 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
+import org.kalypso.ogc.sensor.view.ObservationViewerDialog;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
@@ -59,40 +60,52 @@ import org.kalypso.ui.KalypsoGisPlugin;
  */
 public class ClipboardImportAction extends AbstractObservationAction
 {
-  private final ZmlInlineTypeHandler m_typeHandler;
+  private final Clipboard m_clipboard;
 
-  public ClipboardImportAction( final ZmlInlineTypeHandler typeHandler )
+  public ClipboardImportAction( final ObservationViewerDialog dialog, final Clipboard clipboard )
   {
-    m_typeHandler = typeHandler;
+    super( dialog );
+    m_clipboard = clipboard;
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.view.observationDialog.AbstractObservationAction#getLabel()
+   */
   @Override
   protected String getLabel( )
   {
     return Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.8" ); //$NON-NLS-1$ 
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.view.observationDialog.AbstractObservationAction#getTooltip()
+   */
   @Override
   protected String getTooltip( )
   {
     return Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.9" ); //$NON-NLS-1$
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.view.observationDialog.AbstractObservationAction#run()
+   */
   @Override
-  protected IStatus execute( )
+  protected IStatus run( )
   {
-    final ObservationViewer viewer = getViewer();
-    final Clipboard clipboard = viewer.getClipboard();
-    final Object content = clipboard.getContents( TextTransfer.getInstance() );
+    final Object content = m_clipboard.getContents( TextTransfer.getInstance() );
     if( content == null || !(content instanceof String) )
+    {
+      // TODO messagebox
       return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), "Clipboard content is not of type text." );
+    }
 
     try
     {
-      final Object inputObs = viewer.getInput();
+      final Object inputObs = getDialog().getInput();
       final String name = inputObs instanceof IObservation ? ((IObservation) inputObs).getName() : ""; //$NON-NLS-1$
 
-      final IAxis[] axis = m_typeHandler.createAxes();
+      final String[] axisTypes = getDialog().getAxisTypes();
+      final IAxis[] axis = TimeseriesUtils.createDefaultAxes( axisTypes, true );
 
       final Clipboard2Zml clipboard2Zml = new Clipboard2Zml( axis );
 
@@ -100,7 +113,7 @@ public class ClipboardImportAction extends AbstractObservationAction
 
       final IObservation obs = new SimpleObservation( null, name, new MetadataList(), model );
 
-      viewer.setInput( obs, viewer.getShow() );
+      getDialog().setInput( obs );
 
       return Status.OK_STATUS;
     }

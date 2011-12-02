@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.patternreplace;
 
+
 /**
  * @author Gernot Belger
  */
@@ -47,23 +48,18 @@ public class ConstantReplacer implements IPatternInput<Object>
 {
   private final String m_value;
 
-  private final String m_token;
-
   public ConstantReplacer( final String value )
   {
-    this( null, value );
-  }
-
-  public ConstantReplacer( final String token, final String value )
-  {
-    m_token = token;
     m_value = value;
   }
 
+  /**
+   * @see org.kalypso.commons.patternreplace.IPatternInput#getLabel()
+   */
   @Override
   public String getLabel( )
   {
-    return m_token;
+    return null;
   }
 
   /**
@@ -72,7 +68,7 @@ public class ConstantReplacer implements IPatternInput<Object>
   @Override
   public String getToken( )
   {
-    return m_token;
+    return null;
   }
 
   /**

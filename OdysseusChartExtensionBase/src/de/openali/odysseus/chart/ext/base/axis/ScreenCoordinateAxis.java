@@ -4,6 +4,7 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.IScreenAxis;
+import de.openali.odysseus.chart.framework.util.ChartUtilities;
 
 /**
  * @author kimwerner
@@ -55,9 +56,8 @@ public class ScreenCoordinateAxis extends AbstractAxis implements IScreenAxis
   /**
    * @see org.kalypso.chart.framework.model.mapper.IAxis#setNumericRange(org.kalypso.chart.framework.model.data.IDataRange)
    */
-  @SuppressWarnings("rawtypes")
   @Override
-  public void setNumericRange( final IDataRange range )
+  public void setNumericRange( final IDataRange<Number> range )
   {
     // do nothing, fixed Range
   }
@@ -70,13 +70,12 @@ public class ScreenCoordinateAxis extends AbstractAxis implements IScreenAxis
   @Override
   public int normalizedToScreen( final double normValue )
   {
-    // double myNormValue = normValue;
+    double myNormValue = normValue;
     final int range = getScreenHeight();
-// if( ChartUtilities.isInverseScreenCoords( this ) )
-// myNormValue = 1 - myNormValue;
-// final int screenValue = (int) (range * myNormValue);
-// return screenValue;
-    return (int) (range * normValue);
+    if( ChartUtilities.isInverseScreenCoords( this ) )
+      myNormValue = 1 - myNormValue;
+    final int screenValue = (int) (range * myNormValue);
+    return screenValue;
   }
 
   /**
@@ -90,11 +89,10 @@ public class ScreenCoordinateAxis extends AbstractAxis implements IScreenAxis
     final int range = getScreenHeight();
     if( range == 0 )
       return 0;
-// final double normValue = (double) screenValue / range;
-// if( ChartUtilities.isInverseScreenCoords( this ) )
-// return 1 - normValue;
-//
-// return normValue;
-    return (double) screenValue / range;
+    final double normValue = (double) screenValue / range;
+    if( ChartUtilities.isInverseScreenCoords( this ) )
+      return 1 - normValue;
+
+    return normValue;
   }
 }

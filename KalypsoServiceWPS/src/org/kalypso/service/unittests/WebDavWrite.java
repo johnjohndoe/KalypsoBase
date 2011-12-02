@@ -46,15 +46,15 @@ import java.io.IOException;
 import junit.framework.Assert;
 import junit.framework.JUnit4TestAdapter;
 
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileUtil;
-import org.apache.commons.vfs2.cache.DefaultFilesCache;
-import org.apache.commons.vfs2.impl.DefaultFileReplicator;
-import org.apache.commons.vfs2.impl.DefaultFileSystemManager;
-import org.apache.commons.vfs2.provider.local.DefaultLocalFileProvider;
-import org.apache.commons.vfs2.provider.temp.TemporaryFileProvider;
-import org.apache.commons.vfs2.provider.url.UrlFileProvider;
-import org.apache.commons.vfs2.provider.webdav.WebdavFileProvider;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileUtil;
+import org.apache.commons.vfs.cache.DefaultFilesCache;
+import org.apache.commons.vfs.impl.DefaultFileReplicator;
+import org.apache.commons.vfs.impl.DefaultFileSystemManager;
+import org.apache.commons.vfs.provider.local.DefaultLocalFileProvider;
+import org.apache.commons.vfs.provider.temp.TemporaryFileProvider;
+import org.apache.commons.vfs.provider.url.UrlFileProvider;
+import org.apache.commons.vfs.provider.webdav.WebdavFileProvider;
 import org.junit.Test;
 import org.kalypso.commons.java.io.FileUtilities;
 
@@ -71,7 +71,7 @@ public class WebDavWrite
   @Test
   public void testWebDavWrite( ) throws IOException
   {
-    final DefaultFileSystemManager manager = new DefaultFileSystemManager();
+    DefaultFileSystemManager manager = new DefaultFileSystemManager();
     manager.addProvider( "webdav", new WebdavFileProvider() );
     manager.addProvider( "file", new DefaultLocalFileProvider() );
     manager.addProvider( "tmp", new TemporaryFileProvider() );
@@ -81,10 +81,10 @@ public class WebDavWrite
     manager.setTemporaryFileStore( new DefaultFileReplicator() );
     manager.init();
 
-    final File file = new File( FileUtilities.TMP_DIR, "davWrite.txt" );
-    final FileObject testFile = manager.toFileObject( file );
+    File file = new File( FileUtilities.TMP_DIR, "davWrite.txt" );
+    FileObject testFile = manager.toFileObject( file );
 
-    final FileObject davFile = manager.resolveFile( "webdav://albert:gnimfe@ibpm.bjoernsen.de/dav/pub/Test/test.txt" );
+    FileObject davFile = manager.resolveFile( "webdav://albert:gnimfe@ibpm.bjoernsen.de/dav/pub/Test/test.txt" );
     Assert.assertNotNull( davFile );
 
     FileUtil.copyContent( testFile, davFile );

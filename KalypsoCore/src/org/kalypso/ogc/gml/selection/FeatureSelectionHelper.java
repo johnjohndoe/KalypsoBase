@@ -98,7 +98,7 @@ public final class FeatureSelectionHelper
 
       if( feature != null )
       {
-        if( filterWorkspace == null || filterWorkspace != null && selection.getWorkspace( feature ) == filterWorkspace )
+        if( filterWorkspace == null || (filterWorkspace != null && selection.getWorkspace( feature ) == filterWorkspace) )
           features.add( feature );
       }
     }

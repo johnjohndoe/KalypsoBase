@@ -42,7 +42,7 @@ package org.kalypso.ogc.gml.om.table.handlers;
 
 import java.math.BigDecimal;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
@@ -95,7 +95,7 @@ public class ComponentUiDecimalHandler extends AbstractComponentUiHandler
   @Override
   public void doSetValue( final IRecord record, final Object value )
   {
-    if( value == null || value instanceof String && ((String) value).length() == 0 )
+    if( value == null || (value instanceof String && ((String) value).length() == 0) )
       setValue( record, null );
     else
       setValue( record, parseValue( value.toString() ) );

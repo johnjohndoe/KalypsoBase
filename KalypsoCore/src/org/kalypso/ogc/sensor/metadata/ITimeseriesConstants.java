@@ -88,8 +88,6 @@ public interface ITimeseriesConstants extends IMetadataConstants
   // METADATEN
   String MD_TIMEZONE = "Zeitzone"; //$NON-NLS-1$
 
-  String MD_TIMESTEP = "Zeitschritt"; //$NON-NLS-1$
-
   /**
    * Markierung für eine Vorhersage. Wenn die Property gesetzt ist (true), handelt es sich um eine Vorhersage Zeitreihe.
    * 
@@ -114,7 +112,7 @@ public interface ITimeseriesConstants extends IMetadataConstants
 
   String MD_UNSICHERE_VORHERSAGE_ENDE = "unsichere Vorhersage Ende"; //$NON-NLS-1$
 
-  String MD_WQ_TABLE = "WQ-Tabelle"; //$NON-NLS-1$
+  String MD_WQTABLE = "WQ-Tabelle"; //$NON-NLS-1$
 
   String MD_WQWECHMANN = "WQ-Parameter"; //$NON-NLS-1$
 
@@ -174,6 +172,10 @@ public interface ITimeseriesConstants extends IMetadataConstants
   String TYPE_DISCHARGE = TYPE_RUNOFF;
 
   String TYPE_RUNOFF_RHB = "Qrhb"; //$NON-NLS-1$
+
+  String TYPE_RUNOFF_Q2 = "Q2"; //$NON-NLS-1$
+
+  String TYPE_RUNOFF_Q3 = "Q3"; //$NON-NLS-1$
 
   /** Temperatur */
   String TYPE_TEMPERATURE = "T"; //$NON-NLS-1$

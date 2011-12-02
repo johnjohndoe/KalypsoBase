@@ -59,6 +59,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class RelativeFeatureChange extends FeatureChange
 {
+
   private final double m_operand;
 
   private final String m_operator;
@@ -104,13 +105,9 @@ public class RelativeFeatureChange extends FeatureChange
     if( "=".equals( m_operator ) ) //$NON-NLS-1$
       return castDoubleAsType( (Class< ? extends Number>) valueClass, m_operand );
 
-    final Object property = feature.getProperty( getProperty() );
-    if( property == null )
-      return null;
-    if( !(property instanceof Number) )
-      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.gml.command.RelativeFeatureChange.11" ) + property.getClass() ); //$NON-NLS-1$
-
-    final Number numericProperty = (Number) property;
+    final Number numericProperty = (Number) feature.getProperty( getProperty() );
+    if( numericProperty == null )
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.gml.command.RelativeFeatureChange.11" ) + " null" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( "+".equals( m_operator ) ) //$NON-NLS-1$
       return calculate( numericProperty, m_operand, "add" ); //$NON-NLS-1$

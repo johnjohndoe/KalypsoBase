@@ -61,8 +61,8 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.commons.KalypsoCommonsPlugin;
 import org.kalypso.commons.internal.i18n.Messages;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 
 /**
  * Action delegate to save a view or editor as html.
@@ -85,11 +85,11 @@ public class SaveHtmlActionDelegate implements IViewActionDelegate, IEditorActio
 
   private IWorkbenchPart m_part;
 
-  private final IDialogSettings m_dialogSettings;
+  private IDialogSettings m_dialogSettings;
 
   public SaveHtmlActionDelegate( )
   {
-    m_dialogSettings = DialogSettingsUtils.getDialogSettings( KalypsoCommonsPlugin.getDefault(), getClass().getName() );
+    m_dialogSettings = PluginUtilities.getDialogSettings( KalypsoCommonsPlugin.getDefault(), getClass().getName() );
   }
 
   /**
@@ -114,9 +114,8 @@ public class SaveHtmlActionDelegate implements IViewActionDelegate, IEditorActio
     final Shell shell = m_part.getSite().getShell();
 
     final FileDialog dialog = new FileDialog( shell, SWT.SAVE );
-    dialog.setText( Messages.getString( "org.kalypso.commons.browser.actions.SaveHtmlActionDelegate.0" ) ); //$NON-NLS-1$
-    dialog.setFilterNames( new String[] {
-        Messages.getString( "org.kalypso.commons.browser.actions.SaveHtmlActionDelegate.1" ), Messages.getString( "org.kalypso.commons.browser.actions.SaveHtmlActionDelegate.2" ) } ); //$NON-NLS-1$ //$NON-NLS-2$
+    dialog.setText( Messages.getString("org.kalypso.commons.browser.actions.SaveHtmlActionDelegate.0") ); //$NON-NLS-1$
+    dialog.setFilterNames( new String[] { Messages.getString("org.kalypso.commons.browser.actions.SaveHtmlActionDelegate.1"), Messages.getString("org.kalypso.commons.browser.actions.SaveHtmlActionDelegate.2") } ); //$NON-NLS-1$ //$NON-NLS-2$
     dialog.setFilterExtensions( new String[] { "*.html", "*.*" } ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final String lastName = m_dialogSettings.get( SETTINGS_FILE_NAME );
@@ -132,10 +131,10 @@ public class SaveHtmlActionDelegate implements IViewActionDelegate, IEditorActio
     m_dialogSettings.put( SETTINGS_FILE_NAME, dialog.getFileName() );
     m_dialogSettings.put( SETTINGS_FILE_PATH, savePath );
 
-    final Job job = new Job( Messages.getString( "org.kalypso.commons.browser.actions.SaveHtmlActionDelegate.3" ) + savePath ) //$NON-NLS-1$
+    final Job job = new Job( Messages.getString("org.kalypso.commons.browser.actions.SaveHtmlActionDelegate.3") + savePath ) //$NON-NLS-1$
     {
       @Override
-      protected IStatus run( final IProgressMonitor monitor )
+      protected IStatus run( IProgressMonitor monitor )
       {
         try
         {

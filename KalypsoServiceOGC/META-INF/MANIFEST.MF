@@ -2,11 +2,11 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoServiceOGC Plug-in
 Bundle-SymbolicName: org.kalypso.service.ogc;singleton:=true
-Bundle-Version: 11.6.3.qualifier
+Bundle-Version: 10.10.1.qualifier
 Bundle-Activator: org.kalypso.service.ogc.Activator
 Require-Bundle: org.eclipse.core.runtime,
- org.kalypso.commons;visibility:=reexport,
- org.eclipse.equinox.http.registry
+ org.kalypso.commons;bundle-version="0.0.1";visibility:=reexport,
+ org.eclipse.equinox.http.registry;bundle-version="1.0.100"
 Bundle-ActivationPolicy: lazy
 Export-Package: net.opengeospatial.ows,
  org.kalypso.service.ogc,
@@ -15,4 +15,4 @@ Export-Package: net.opengeospatial.ows,
 Import-Package: javax.servlet,
  javax.servlet.http
 Bundle-Vendor: kalypsobase.sourceforge.net
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

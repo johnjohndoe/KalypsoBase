@@ -133,10 +133,10 @@ public class FilterDialogTreeNode
     // nothing
   }
 
-  public FilterDialogTreeNode( final String string, final int m_type )
+  public FilterDialogTreeNode( String string, int m_type )
   {
-    name = string;
-    type = m_type;
+    this.name = string;
+    this.type = m_type;
     switch( type )
     {
       case LOGICAL_NODE_TYPE:
@@ -199,14 +199,14 @@ public class FilterDialogTreeNode
       createRoot( string );
   }
 
-  public static boolean isBinaryComparisonType( final int type )
+  public static boolean isBinaryComparisonType( int type )
   {
     if( type >= OperationDefines.PROPERTYISEQUALTO && type <= OperationDefines.PROPERTYISGREATERTHANOREQUALTO )
       return true;
     return false;
   }
 
-  public static boolean isBinarySpatialType( final int type )
+  public static boolean isBinarySpatialType( int type )
   {
     if( type >= OperationDefines.EQUALS && type <= OperationDefines.OVERLAPS )
       return true;
@@ -246,7 +246,7 @@ public class FilterDialogTreeNode
       {
         return data.verify();
       }
-      catch( final FilterDialogException e )
+      catch( FilterDialogException e )
       {
         e.getError().setNode( this );
         throw e;
@@ -257,7 +257,7 @@ public class FilterDialogTreeNode
 
   }
 
-  private void createRoot( final String m_name )
+  private void createRoot( String m_name )
   {
     parent = new FilterDialogTreeNode();
     parent.name = m_name;
@@ -266,7 +266,7 @@ public class FilterDialogTreeNode
     children.add( parent );
   }
 
-  public void addNode( final FilterDialogTreeNode node )
+  public void addNode( FilterDialogTreeNode node )
   {
     if( children == null )
     {
@@ -276,7 +276,7 @@ public class FilterDialogTreeNode
     children.add( node );
   }
 
-  public void removeNode( final FilterDialogTreeNode node )
+  public void removeNode( FilterDialogTreeNode node )
   {
     if( children != null )
     {
@@ -313,8 +313,8 @@ public class FilterDialogTreeNode
     return data;
   }
 
-  public void setData( final AbstractData m_data )
+  public void setData( AbstractData m_data )
   {
-    data = m_data;
+    this.data = m_data;
   }
 }

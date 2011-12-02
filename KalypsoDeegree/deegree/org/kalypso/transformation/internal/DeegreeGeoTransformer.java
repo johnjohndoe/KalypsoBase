@@ -65,7 +65,7 @@ public class DeegreeGeoTransformer implements IGeoTransformer
   /**
    * The coordinate system, into which the transformations should be done.
    */
-  private final String m_targetCRS;
+  private String m_targetCRS;
 
   /**
    * The constructor.
@@ -73,7 +73,7 @@ public class DeegreeGeoTransformer implements IGeoTransformer
    * @param targetCRS
    *          The coordinate system, into which the transformations should be done.
    */
-  public DeegreeGeoTransformer( final String targetCRS )
+  public DeegreeGeoTransformer( String targetCRS )
   {
     m_targetCRS = targetCRS;
   }
@@ -92,7 +92,7 @@ public class DeegreeGeoTransformer implements IGeoTransformer
    *      java.lang.String)
    */
   @Override
-  public GM_Position transform( final GM_Position position, final String sourceCRS ) throws Exception
+  public GM_Position transform( GM_Position position, String sourceCRS ) throws Exception
   {
     if( position == null )
       return null;
@@ -107,17 +107,17 @@ public class DeegreeGeoTransformer implements IGeoTransformer
    * @see org.kalypso.transformation.transformer.IGeoTransformer#transform(org.kalypsodeegree.model.geometry.GM_Object)
    */
   @Override
-  public GM_Object transform( final GM_Object geometry ) throws Exception
+  public GM_Object transform( GM_Object geometry ) throws Exception
   {
     if( geometry == null )
       return null;
 
-    final String sourceCRS = geometry.getCoordinateSystem();
+    String sourceCRS = geometry.getCoordinateSystem();
     if( sourceCRS == null || sourceCRS.equalsIgnoreCase( m_targetCRS ) )
       return geometry;
 
     if( geometry instanceof GM_Point )
-      return transform( (GM_Point) geometry, sourceCRS, m_targetCRS );
+      return transform( ((GM_Point) geometry), sourceCRS, m_targetCRS );
 
     return geometry.transform( m_targetCRS );
   }
@@ -126,17 +126,17 @@ public class DeegreeGeoTransformer implements IGeoTransformer
    * @see org.kalypso.transformation.transformer.IGeoTransformer#transform(org.kalypsodeegree.model.geometry.GM_Envelope)
    */
   @Override
-  public GM_Envelope transform( final GM_Envelope envelope ) throws Exception
+  public GM_Envelope transform( GM_Envelope envelope ) throws Exception
   {
     if( envelope == null )
       return null;
 
-    final String sourceCRS = envelope.getCoordinateSystem();
+    String sourceCRS = envelope.getCoordinateSystem();
     if( sourceCRS == null || sourceCRS.equalsIgnoreCase( m_targetCRS ) )
       return envelope;
 
-    final GM_Position min = transform( envelope.getMin(), sourceCRS );
-    final GM_Position max = transform( envelope.getMax(), sourceCRS );
+    GM_Position min = transform( envelope.getMin(), sourceCRS );
+    GM_Position max = transform( envelope.getMax(), sourceCRS );
 
     return GeometryFactory.createGM_Envelope( min, max, m_targetCRS );
   }
@@ -145,12 +145,12 @@ public class DeegreeGeoTransformer implements IGeoTransformer
    * @see org.kalypso.transformation.transformer.IGeoTransformer#transform(org.kalypsodeegree.model.geometry.GM_SurfacePatch)
    */
   @Override
-  public GM_SurfacePatch transform( final GM_SurfacePatch surfacePatch ) throws Exception
+  public GM_SurfacePatch transform( GM_SurfacePatch surfacePatch ) throws Exception
   {
     if( surfacePatch == null )
       return null;
 
-    final String sourceCRS = surfacePatch.getCoordinateSystem();
+    String sourceCRS = surfacePatch.getCoordinateSystem();
     if( sourceCRS == null || sourceCRS.equalsIgnoreCase( m_targetCRS ) )
       return surfacePatch;
 
@@ -168,18 +168,18 @@ public class DeegreeGeoTransformer implements IGeoTransformer
    *          The coordinate system of the target.
    * @return The transformed point.
    */
-  private GM_Point transform( final GM_Point point, final String sourceCRS, final String targetCRS ) throws Exception
+  private GM_Point transform( GM_Point point, String sourceCRS, String targetCRS ) throws Exception
   {
     /* If the coordinate systems are the same, do not transform. */
     if( sourceCRS == null || sourceCRS.equalsIgnoreCase( targetCRS ) )
       return point;
 
     /* Get the transformation. */
-    final CRSTransformation transformation = getTransformation( sourceCRS, targetCRS );
+    CRSTransformation transformation = getTransformation( sourceCRS, targetCRS );
 
     /* Get the coordinate systems. */
-    final CoordinateSystem sourceCoordinateSystem = transformation.getSourceCRS();
-    final CoordinateSystem targetCoordinateSystem = transformation.getTargetCRS();
+    CoordinateSystem sourceCoordinateSystem = transformation.getSourceCRS();
+    CoordinateSystem targetCoordinateSystem = transformation.getTargetCRS();
 
     /* Debug. */
     Debug.TRANSFORM.printf( "POINT: %s to %s\n", sourceCoordinateSystem.getIdentifier(), targetCoordinateSystem.getIdentifier() );
@@ -187,7 +187,7 @@ public class DeegreeGeoTransformer implements IGeoTransformer
     /* Normalize points to fit in -180:180 and -90:90 if they are in degrees. */
     double geoX = point.getX();
     double geoY = point.getY();
-    final double geoZ = point.getZ();
+    double geoZ = point.getZ();
     if( sourceCoordinateSystem.getUnits().equals( Unit.RADIAN ) )
     {
       geoX = ProjectionUtils.normalizeLongitude( Math.toRadians( geoX ) );
@@ -195,8 +195,8 @@ public class DeegreeGeoTransformer implements IGeoTransformer
     }
 
     /* Transform. */
-    final Point3d coords = new Point3d( geoX, geoY, geoZ );
-    final Point3d newCoords = transformation.doTransform( coords );
+    Point3d coords = new Point3d( geoX, geoY, geoZ );
+    Point3d newCoords = transformation.doTransform( coords );
 
     /* Convert back to degrees, if necessary. */
     if( targetCoordinateSystem.getUnits().equals( Unit.RADIAN ) )
@@ -209,7 +209,7 @@ public class DeegreeGeoTransformer implements IGeoTransformer
     // We only have to check if the z value was transformed because of a 3d transformation
     // (therefore the check for dimensions)
     // We either put the old z value or the transformed value
-    return GeometryFactory.createGM_Point( newCoords.x, newCoords.y, targetCoordinateSystem.getDimension() == 3 ? newCoords.z : point.getZ(), targetCoordinateSystem.getIdentifier() );
+    return GeometryFactory.createGM_Point( newCoords.x, newCoords.y, (targetCoordinateSystem.getDimension() == 3) ? newCoords.z : point.getZ(), targetCoordinateSystem.getIdentifier() );
   }
 
   /**
@@ -223,18 +223,18 @@ public class DeegreeGeoTransformer implements IGeoTransformer
    *          The coordinate system of the target.
    * @return The transformed position.
    */
-  private GM_Position transform( final GM_Position pos, final String sourceCRS, final String targetCRS ) throws Exception
+  private GM_Position transform( GM_Position pos, String sourceCRS, String targetCRS ) throws Exception
   {
     /* If the coordinate systems are the same, do not transform. */
     if( sourceCRS == null || sourceCRS.equalsIgnoreCase( targetCRS ) )
       return pos;
 
     /* Get the transformation. */
-    final CRSTransformation transformation = getTransformation( sourceCRS, targetCRS );
+    CRSTransformation transformation = getTransformation( sourceCRS, targetCRS );
 
     /* Get the coordinate systems. */
-    final CoordinateSystem sourceCoordinateSystem = transformation.getSourceCRS();
-    final CoordinateSystem targetCoordinateSystem = transformation.getTargetCRS();
+    CoordinateSystem sourceCoordinateSystem = transformation.getSourceCRS();
+    CoordinateSystem targetCoordinateSystem = transformation.getTargetCRS();
 
     /* Debug. */
     Debug.TRANSFORM.printf( "POS: %s to %s\n", sourceCoordinateSystem.getIdentifier(), targetCoordinateSystem.getIdentifier() );
@@ -242,7 +242,7 @@ public class DeegreeGeoTransformer implements IGeoTransformer
     /* Normalize points to fit in -180:180 and -90:90 if they are in degrees. */
     double geoX = pos.getX();
     double geoY = pos.getY();
-    final double geoZ = pos.getZ();
+    double geoZ = pos.getZ();
     if( sourceCoordinateSystem.getUnits().equals( Unit.RADIAN ) )
     {
       geoX = ProjectionUtils.normalizeLongitude( Math.toRadians( geoX ) );
@@ -250,8 +250,8 @@ public class DeegreeGeoTransformer implements IGeoTransformer
     }
 
     /* Transform. */
-    final Point3d coords = new Point3d( geoX, geoY, geoZ );
-    final Point3d newCoords = transformation.doTransform( coords );
+    Point3d coords = new Point3d( geoX, geoY, geoZ );
+    Point3d newCoords = transformation.doTransform( coords );
 
     /* Convert back to degrees, if necessary. */
     if( targetCoordinateSystem.getUnits().equals( Unit.RADIAN ) )
@@ -264,7 +264,7 @@ public class DeegreeGeoTransformer implements IGeoTransformer
     // We only have to check if the z value was transformed because of a 3d transformation
     // (therefore the check for dimensions)
     // We either put the old z value or the transformed value
-    return GeometryFactory.createGM_Position( newCoords.x, newCoords.y, targetCoordinateSystem.getDimension() == 3 ? newCoords.z : pos.getZ() );
+    return GeometryFactory.createGM_Position( newCoords.x, newCoords.y, (targetCoordinateSystem.getDimension() == 3) ? newCoords.z : pos.getZ() );
   }
 
   /**
@@ -276,10 +276,10 @@ public class DeegreeGeoTransformer implements IGeoTransformer
    *          The coordinate system, into which the transformations should be done.
    * @return The transformation from the source coordinate system to the GeoTransformers target coordinate system.
    */
-  private CRSTransformation getTransformation( final String sourceCRS, final String targetCRS ) throws Exception
+  private CRSTransformation getTransformation( String sourceCRS, String targetCRS ) throws Exception
   {
-    final CachedTransformationFactory transformationFactory = CachedTransformationFactory.getInstance();
-    final CRSTransformation transformation = transformationFactory.createFromCoordinateSystems( sourceCRS, targetCRS );
+    CachedTransformationFactory transformationFactory = CachedTransformationFactory.getInstance();
+    CRSTransformation transformation = transformationFactory.createFromCoordinateSystems( sourceCRS, targetCRS );
 
     return transformation;
   }

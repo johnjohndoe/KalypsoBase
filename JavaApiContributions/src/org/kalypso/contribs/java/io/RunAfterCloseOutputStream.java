@@ -65,7 +65,7 @@ public class RunAfterCloseOutputStream extends OutputStream
    * @see java.io.OutputStream#close()
    */
   @Override
-  public void close( ) throws IOException
+  public void close() throws IOException
   {
     try
     {
@@ -96,7 +96,7 @@ public class RunAfterCloseOutputStream extends OutputStream
    * @see java.io.OutputStream#write(byte[])
    */
   @Override
-  public void write( final byte[] b ) throws IOException
+  public void write( byte[] b ) throws IOException
   {
     m_os.write( b );
   }
@@ -107,7 +107,7 @@ public class RunAfterCloseOutputStream extends OutputStream
    * @see java.io.OutputStream#write(byte[], int, int)
    */
   @Override
-  public void write( final byte[] b, final int off, final int len ) throws IOException
+  public void write( byte[] b, int off, int len ) throws IOException
   {
     m_os.write( b, off, len );
   }

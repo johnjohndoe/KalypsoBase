@@ -135,7 +135,7 @@ public class DoubleToString
 
       // First off, if the number is too small for the given format, we
       // only print 0.0..., which makes this real quick
-      if( magnitude + numFractDigits < 0 )
+      if( (magnitude + numFractDigits) < 0 )
       {
         appendNearlyZeroNumber( s, d, magnitude, numFractDigits, decimalPoint );
         if( negative )
@@ -150,7 +150,7 @@ public class DoubleToString
       // This test is unlikely to ever be true. It would require numFractDigits
       // to be 305 or more, which is pretty unlikely.
       if( magnitude < -305 )
-        l = (long) (d * 1E18 / d_tenthPowers[magnitude + 324]);
+        l = (long) ((d * 1E18) / d_tenthPowers[magnitude + 324]);
       else
         l = (long) (d / d_tenthPowers[magnitude + 323 - 17]);
 
@@ -166,7 +166,7 @@ public class DoubleToString
       // not rounded because all the digits after the decimal points are 0 anyway
       if( numFractDigits + magnitude + 1 < l_tenthPowers.length )
       {
-        final long digit = l / (l_tenthPower / l_tenthPowers[numFractDigits + magnitude + 1]) % 10;
+        final long digit = (l / (l_tenthPower / l_tenthPowers[numFractDigits + magnitude + 1])) % 10;
         if( digit >= 5 )
         {
           l += l_tenthPower / l_tenthPowers[numFractDigits + magnitude];
@@ -255,7 +255,7 @@ public class DoubleToString
         }
 
         // Don't forget about the thousands separator
-        if( d_magnitude % numDigitsSeparated == numDigitsSeparated - 1 )
+        if( d_magnitude % numDigitsSeparated == (numDigitsSeparated - 1) )
           s.append( thousandsSeparator );
 
         // Multiply by the leading digit by the magnitude so that we can eliminate the leading digit
@@ -306,7 +306,7 @@ public class DoubleToString
       int i;
       if( d_magnitude < -305 )
         // Probably not necessary. Who is going to print 305 places?
-        i = (int) (d * 1E19 / d_tenthPowers[d_magnitude + 324 + 18]);
+        i = (int) ((d * 1E19) / d_tenthPowers[d_magnitude + 324 + 18]);
       else
         i = (int) (d / d_tenthPowers[d_magnitude + 323]);
 
@@ -405,7 +405,7 @@ public class DoubleToString
 
   public static long getNthDigit( final long l, final int n )
   {
-    return l / (tenthPower( l ) / l_tenthPowers[n - 1]) % 10;
+    return (l / (tenthPower( l ) / l_tenthPowers[n - 1])) % 10;
   }
 
   public static void main( final String args[] )
@@ -530,64 +530,64 @@ public class DoubleToString
       if( d >= 0.001 && d < 0.01 )
       {
         long i = (long) (d * 1E20);
-        i = i % 100 >= 50 ? i / 100 + 1 : i / 100;
+        i = i % 100 >= 50 ? (i / 100) + 1 : i / 100;
         s.append( DOUBLE_ZERO2 );
         appendFractDigits( s, i, -1 );
       }
       else if( d >= 0.01 && d < 0.1 )
       {
         long i = (long) (d * 1E19);
-        i = i % 100 >= 50 ? i / 100 + 1 : i / 100;
+        i = i % 100 >= 50 ? (i / 100) + 1 : i / 100;
         s.append( DOUBLE_ZERO );
         appendFractDigits( s, i, -1 );
       }
       else if( d >= 0.1 && d < 1 )
       {
         long i = (long) (d * 1E18);
-        i = i % 100 >= 50 ? i / 100 + 1 : i / 100;
+        i = i % 100 >= 50 ? (i / 100) + 1 : i / 100;
         s.append( DOUBLE_ZERO0 );
         appendFractDigits( s, i, -1 );
       }
       else if( d >= 1 && d < 10 )
       {
         long i = (long) (d * 1E17);
-        i = i % 100 >= 50 ? i / 100 + 1 : i / 100;
+        i = i % 100 >= 50 ? (i / 100) + 1 : i / 100;
         appendFractDigits( s, i, 1 );
       }
       else if( d >= 10 && d < 100 )
       {
         long i = (long) (d * 1E16);
-        i = i % 100 >= 50 ? i / 100 + 1 : i / 100;
+        i = i % 100 >= 50 ? (i / 100) + 1 : i / 100;
         appendFractDigits( s, i, 2 );
       }
       else if( d >= 100 && d < 1000 )
       {
         long i = (long) (d * 1E15);
-        i = i % 100 >= 50 ? i / 100 + 1 : i / 100;
+        i = i % 100 >= 50 ? (i / 100) + 1 : i / 100;
         appendFractDigits( s, i, 3 );
       }
       else if( d >= 1000 && d < 10000 )
       {
         long i = (long) (d * 1E14);
-        i = i % 100 >= 50 ? i / 100 + 1 : i / 100;
+        i = i % 100 >= 50 ? (i / 100) + 1 : i / 100;
         appendFractDigits( s, i, 4 );
       }
       else if( d >= 10000 && d < 100000 )
       {
         long i = (long) (d * 1E13);
-        i = i % 100 >= 50 ? i / 100 + 1 : i / 100;
+        i = i % 100 >= 50 ? (i / 100) + 1 : i / 100;
         appendFractDigits( s, i, 5 );
       }
       else if( d >= 100000 && d < 1000000 )
       {
         long i = (long) (d * 1E12);
-        i = i % 100 >= 50 ? i / 100 + 1 : i / 100;
+        i = i % 100 >= 50 ? (i / 100) + 1 : i / 100;
         appendFractDigits( s, i, 6 );
       }
       else if( d >= 1000000 && d < 10000000 )
       {
         long i = (long) (d * 1E11);
-        i = i % 100 >= 50 ? i / 100 + 1 : i / 100;
+        i = i % 100 >= 50 ? (i / 100) + 1 : i / 100;
         appendFractDigits( s, i, 7 );
       }
       else
@@ -598,7 +598,7 @@ public class DoubleToString
           i = (long) (d * 1E18 / d_tenthPowers[magnitude + 324]);
         else
           i = (long) (d / d_tenthPowers[magnitude + 323 - 17]);
-        i = i % 100 >= 50 ? i / 100 + 1 : i / 100;
+        i = i % 100 >= 50 ? (i / 100) + 1 : i / 100;
         appendFractDigits( s, i, 1 );
         s.append( 'E' );
         append( s, magnitude );

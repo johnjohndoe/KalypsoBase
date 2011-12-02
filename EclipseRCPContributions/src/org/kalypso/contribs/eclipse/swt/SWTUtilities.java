@@ -50,7 +50,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.widgets.ExpandableComposite;
 
 /**
  * @author doemming
@@ -94,20 +93,7 @@ public final class SWTUtilities
     SWT_MAP.put( "SWT.RESIZE", SWT.RESIZE ); //$NON-NLS-1$
     SWT_MAP.put( "SWT.SMOOTH", SWT.SMOOTH ); //$NON-NLS-1$
     SWT_MAP.put( "SWT.SEPARATOR", SWT.SEPARATOR ); //$NON-NLS-1$
-    SWT_MAP.put( "SWT.SEARCH", SWT.SEARCH ); //$NON-NLS-1$
-
-    SWT_MAP.put( "ExpandableComposite.CLIENT_INDENT", ExpandableComposite.CLIENT_INDENT ); //$NON-NLS-1$
-    SWT_MAP.put( "ExpandableComposite.COMPACT", ExpandableComposite.COMPACT ); //$NON-NLS-1$
-    SWT_MAP.put( "ExpandableComposite.EXPANDED", ExpandableComposite.EXPANDED ); //$NON-NLS-1$
-    SWT_MAP.put( "ExpandableComposite.FOCUS_TITLE", ExpandableComposite.FOCUS_TITLE ); //$NON-NLS-1$
-    SWT_MAP.put( "ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT", ExpandableComposite.LEFT_TEXT_CLIENT_ALIGNMENT ); //$NON-NLS-1$
-    SWT_MAP.put( "ExpandableComposite.NO_TITLE", ExpandableComposite.NO_TITLE ); //$NON-NLS-1$
-    SWT_MAP.put( "ExpandableComposite.NO_TITLE_FOCUS_BOX", ExpandableComposite.NO_TITLE_FOCUS_BOX ); //$NON-NLS-1$
-    SWT_MAP.put( "ExpandableComposite.SHORT_TITLE_BAR", ExpandableComposite.SHORT_TITLE_BAR ); //$NON-NLS-1$
-    SWT_MAP.put( "ExpandableComposite.TITLE_BAR", ExpandableComposite.TITLE_BAR ); //$NON-NLS-1$
-    SWT_MAP.put( "ExpandableComposite.TREE_NODE", ExpandableComposite.TREE_NODE ); //$NON-NLS-1$
-    SWT_MAP.put( "ExpandableComposite.TWISTIE", ExpandableComposite.TWISTIE ); //$NON-NLS-1$
-
+    // Add other keys to complete the map
   }
 
   private static final Map<String, Integer> GRID_DATA_MAP = new HashMap<String, Integer>();
@@ -177,9 +163,6 @@ public final class SWTUtilities
 
   public static Point calcTextSize( final String label, final Font font )
   {
-    if( label == null )
-      return new Point( 0, 0 );
-
     final org.eclipse.swt.graphics.Image tmpImage = new org.eclipse.swt.graphics.Image( font.getDevice(), 1, 1 );
     final GC tmpGC = new GC( tmpImage );
     tmpGC.setFont( font );
@@ -190,8 +173,8 @@ public final class SWTUtilities
   }
 
   /**
-   * Enables/disables all controls in a hierarchy of controls.<br>
-   * Composite are not disabled (but their children are), so we still get mouse events on them.
+   * Enables/disables all controls in a hirarchy of controls.<br>
+   * Composite are not disabled (but their chidlren are), so we still get mouse events on them.
    */
   public static void enableControlNoComposites( final Control control, final boolean enabled )
   {

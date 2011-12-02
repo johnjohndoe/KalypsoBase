@@ -48,7 +48,7 @@ import org.kalypso.commons.parser.ParserException;
 
 /**
  * Ein Parser für Integer, Long, und Short Objekte.
- * 
+ *
  * @author schlienger
  */
 public class IntegerParser extends AbstractParser
@@ -60,7 +60,7 @@ public class IntegerParser extends AbstractParser
   /**
    * Default Constructor
    */
-  public IntegerParser( )
+  public IntegerParser()
   {
     this( "" ); //$NON-NLS-1$
   }
@@ -89,7 +89,7 @@ public class IntegerParser extends AbstractParser
    * @see org.kalypso.commons.parser.IParser#getFormat()
    */
   @Override
-  public String getFormat( )
+  public String getFormat()
   {
     return m_format;
   }
@@ -126,8 +126,8 @@ public class IntegerParser extends AbstractParser
   @Override
   public int compare( final Object value1, final Object value2 )
   {
-    final int n1 = ((Number) value1).intValue();
-    final int n2 = ((Number) value2).intValue();
+    final int n1 = ( (Number)value1 ).intValue();
+    final int n2 = ( (Number)value2 ).intValue();
 
     if( n1 < n2 )
       return -1;

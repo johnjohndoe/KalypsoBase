@@ -52,7 +52,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public class Definition extends Feature_Impl
 {
-  public static final QName QN_DEFINITION = new QName( NS.GML3, "Definition" ); //$NON-NLS-1$
+  public static final QName QNAME_Definition = new QName( NS.GML3, "Definition" );
 
   public Definition( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {

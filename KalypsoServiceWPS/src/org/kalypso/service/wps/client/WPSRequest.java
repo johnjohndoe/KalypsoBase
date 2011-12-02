@@ -58,15 +58,15 @@ import net.opengeospatial.wps.ProcessFailedType;
 import net.opengeospatial.wps.ProcessStartedType;
 import net.opengeospatial.wps.StatusType;
 
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemException;
+import org.apache.commons.vfs.FileSystemManagerWrapper;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.commons.io.VFSUtilities;
-import org.kalypso.commons.vfs.FileSystemManagerWrapper;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.service.wps.i18n.Messages;
 import org.kalypso.service.wps.internal.KalypsoServiceWPSDebug;
@@ -189,11 +189,11 @@ public class WPSRequest
     return wpsRequest.cancelJob();
   }
 
-  public IStatus run( final Map<String, Object> inputs, final List<String> outputs, final IProgressMonitor progressMonitor )
+  public IStatus run( final Map<String, Object> inputs, final List<String> outputs, IProgressMonitor monitor )
   {
-    final SubMonitor monitor = SubMonitor.convert( progressMonitor, 100 );
+    monitor = SubMonitor.convert( monitor );
 
-    IStatus status = wpsRequest.init( inputs, outputs, monitor.newChild( 1 ) );
+    IStatus status = wpsRequest.init( inputs, outputs, monitor );
 
     // on error return immediately
     if( !status.isOK() )
@@ -206,7 +206,7 @@ public class WPSRequest
     }
 
     // start request, returns immediately
-    status = wpsRequest.run( monitor.newChild( 1 ) );
+    status = wpsRequest.run( monitor );
 
     // on error return immediately
     if( !status.isOK() )
@@ -231,10 +231,9 @@ public class WPSRequest
       long executed = 0;
 
       /* Loop, until an result is available, a timeout is reached or the user has cancelled the job. */
-      final ProcessDescriptionType processDescription = getProcessDescription( monitor.newChild( 1 ) );
+      final ProcessDescriptionType processDescription = getProcessDescription( monitor );
       final String title = processDescription.getTitle();
-      final SubMonitor processMonitor = monitor.newChild( 97 );
-      processMonitor.beginTask( Messages.getString( "org.kalypso.service.wps.client.WPSRequest.1" ) + title, MONITOR_SERVER_VALUE ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "org.kalypso.service.wps.client.WPSRequest.1" ) + title, IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
 
       m_manager = VFSUtilities.getNewManager();
       while( run )
@@ -259,7 +258,7 @@ public class WPSRequest
         else if( state.getProcessFailed() != null )
           return doProcessFailed( exState );
         else if( state.getProcessStarted() != null )
-          doProcessStarted( processMonitor, exState );
+          doProcessStarted( monitor, exState );
         else if( state.getProcessSucceeded() != null )
           return doProcessSucceeded( exState );
         else

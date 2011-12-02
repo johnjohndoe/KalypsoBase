@@ -52,13 +52,13 @@ public class FileCache<K, V>
    * Constructor
    * 
    * @param kFact
-   *          the key factory used to read and write the keys from/to a simple string representation
+   *            the key factory used to read and write the keys from/to a simple string representation
    * @param kc
-   *          key comparator
+   *            key comparator
    * @param ser
-   *          object serializer
+   *            object serializer
    * @param directory
-   *          location of the index file and of all other files used for caching
+   *            location of the index file and of all other files used for caching
    */
   public FileCache( final IKeyFactory<K> kFact, final Comparator< ? super K> kc, final ISerializer<V> ser, final File directory )
   {

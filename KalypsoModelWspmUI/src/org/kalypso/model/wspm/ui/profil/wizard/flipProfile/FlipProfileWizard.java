@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.ui.profil.wizard.flipProfile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.ManipulateProfileWizard;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfileManipulationOperation.IProfileManipulator;
@@ -52,17 +53,14 @@ import org.kalypso.model.wspm.ui.profil.wizard.ProfileManipulationOperation.IPro
  */
 public class FlipProfileWizard extends ManipulateProfileWizard
 {
-  public FlipProfileWizard( )
+  public FlipProfileWizard( final ProfileSelection profileSelection )
   {
-    setWindowTitle( Messages.getString( "FlipProfileWizard.0" ) ); //$NON-NLS-1$
+    super( profileSelection, Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.flipProfile.FlipProfileWizard.2" ) ); //$NON-NLS-1$
   }
 
-  @Override
-  protected String getProfilePageMessage( )
-  {
-    return Messages.getString( "FlipProfileWizard.1" ); //$NON-NLS-1$
-  }
-
+  /**
+   * @see org.kalypso.model.wspm.ui.profil.wizard.ManipulateProfileWizard#getProfileManipulator()
+   */
   @Override
   protected IProfileManipulator getProfileManipulator( )
   {

@@ -188,7 +188,7 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
   @Override
   public boolean performCancel( )
   {
-    dispose();
+    this.dispose();
     return true;
   }
 
@@ -214,7 +214,7 @@ public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportW
     do
     {
       if( line.startsWith( KalypsoServiceConstants.WFS_LINK_TYPE ) )
-        catalog.add( line.split( "=" )[1] ); //$NON-NLS-1$
+        catalog.add( (line.split( "=" ))[1] ); //$NON-NLS-1$
 
       line = br.readLine();
     }

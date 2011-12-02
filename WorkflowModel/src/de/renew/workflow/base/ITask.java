@@ -44,7 +44,7 @@ import de.renew.workflow.contexts.ContextType;
 
 /**
  * Represents one task of an {@link IWorkflow}.
- * 
+ *
  * @author Gernot Belger
  */
 public interface ITask

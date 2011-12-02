@@ -43,12 +43,12 @@ package org.kalypso.commons.tokenreplace;
 /**
  * Replacement of Kind: ${token:argument}
  * 
- * @author Gernot Belger
+ * @author belger
  */
 public interface ITokenReplacer
 {
   public String replaceToken( final Object value, final String argument );
 
   /** The name of the token which this replacer is able to replace. */
-  public String getToken( );
+  public String getToken();
 }

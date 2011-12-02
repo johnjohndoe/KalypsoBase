@@ -42,7 +42,8 @@ package org.kalypso.zml.core.table.binding.rule.instructions;
 
 import java.util.Date;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.ogc.sensor.SensorException;
@@ -72,18 +73,18 @@ public class ZmlMetadataDaterangeInstruction extends AbstractZmlRuleInstructionT
     return (MetadataDateRangeInstructionType) super.getType();
   }
 
+  /**
+   * @see org.kalypso.zml.core.table.binding.rule.instructions.AbstractZmlRuleInstructionType#matches(org.kalypso.zml.core.table.model.references.IZmlValueReference)
+   */
   @Override
   public boolean matches( final IZmlValueReference reference ) throws SensorException
   {
     final MetadataList metadata = resolveMetadata( reference );
-    if( Objects.isNull( metadata ) )
-      return false;
-
     final MetadataDateRangeInstructionType type = getType();
 
     final Date from = getDate( metadata, type.getPropertyFrom() );
     final Date to = getDate( metadata, type.getPropertyTo() );
-    if( Objects.isNull( from, to ) )
+    if( from == null || to == null )
       return false;
 
     final Date referenceDate = reference.getIndexValue();
@@ -129,7 +130,7 @@ public class ZmlMetadataDaterangeInstruction extends AbstractZmlRuleInstructionT
         return columns[0].getMetadata();
     }
 
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 
   private Date getDate( final MetadataList metadata, final String property )

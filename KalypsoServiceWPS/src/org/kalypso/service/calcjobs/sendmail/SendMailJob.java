@@ -119,54 +119,54 @@ public class SendMailJob implements ISimulation
    *      org.kalypso.simulation.core.ISimulationResultEater, org.kalypso.simulation.core.ISimulationMonitor)
    */
   @Override
-  public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor )
+  public void run( File tmpdir, ISimulationDataProvider inputProvider, ISimulationResultEater resultEater, ISimulationMonitor monitor )
   {
     /* Update monitor. */
-    monitor.setMessage( Messages.getString( "org.kalypso.service.calcjobs.sendmail.SendMailJob.0" ) ); //$NON-NLS-1$
+    monitor.setMessage( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.0") ); //$NON-NLS-1$
 
     try
     {
       /* Get all neccessary inputs. */
-      final String sender = (String) inputProvider.getInputForID( INPUT_SENDER );
-      final String receiver = (String) inputProvider.getInputForID( INPUT_RECEIVER );
-      final String type = (String) inputProvider.getInputForID( INPUT_TYPE );
-      final String title = (String) inputProvider.getInputForID( INPUT_TITLE );
-      final String text = (String) inputProvider.getInputForID( INPUT_TEXT );
+      String sender = (String) inputProvider.getInputForID( INPUT_SENDER );
+      String receiver = (String) inputProvider.getInputForID( INPUT_RECEIVER );
+      String type = (String) inputProvider.getInputForID( INPUT_TYPE );
+      String title = (String) inputProvider.getInputForID( INPUT_TITLE );
+      String text = (String) inputProvider.getInputForID( INPUT_TEXT );
 
       /* Check all neccessary inputs. */
       if( sender == null || sender.length() == 0 )
-        throw new SimulationException( Messages.getString( "org.kalypso.service.calcjobs.sendmail.SendMailJob.1", INPUT_SENDER ), null ); //$NON-NLS-1$
+        throw new SimulationException( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.1",INPUT_SENDER ), null ); //$NON-NLS-1$
 
       if( receiver == null || receiver.length() == 0 )
-        throw new SimulationException( Messages.getString( "org.kalypso.service.calcjobs.sendmail.SendMailJob.1", INPUT_RECEIVER ), null ); //$NON-NLS-1$ 
+        throw new SimulationException( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.1",INPUT_RECEIVER ), null ); //$NON-NLS-1$ 
 
       if( type == null || type.length() == 0 )
-        throw new SimulationException( Messages.getString( "org.kalypso.service.calcjobs.sendmail.SendMailJob.1", INPUT_TYPE ), null ); //$NON-NLS-1$ 
+        throw new SimulationException( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.1", INPUT_TYPE ), null ); //$NON-NLS-1$ 
 
       if( title == null || title.length() == 0 )
-        throw new SimulationException( Messages.getString( "org.kalypso.service.calcjobs.sendmail.SendMailJob.1", INPUT_TITLE ), null ); //$NON-NLS-1$ 
+        throw new SimulationException( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.1",INPUT_TITLE ), null ); //$NON-NLS-1$ 
 
       if( text == null || text.length() == 0 )
-        throw new SimulationException( Messages.getString( "org.kalypso.service.calcjobs.sendmail.SendMailJob.1", INPUT_TEXT ), null ); //$NON-NLS-1$ 
+        throw new SimulationException( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.1", INPUT_TEXT ), null ); //$NON-NLS-1$ 
 
       if( !MailUtilities.checkContentType( type ) )
-        throw new SimulationException( Messages.getString( "org.kalypso.service.calcjobs.sendmail.SendMailJob.2", type, MailUtilities.TEXT_PLAIN ), null ); //$NON-NLS-1$ 
+        throw new SimulationException( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.2", type , MailUtilities.TEXT_PLAIN ), null ); //$NON-NLS-1$ 
 
       /* Configuration inputs. */
-      final String relais = FrameworkProperties.getProperty( CFG_RELAIS );
+      String relais = FrameworkProperties.getProperty( CFG_RELAIS );
       if( relais == null || relais.length() == 0 )
-        throw new SimulationException( Messages.getString( "org.kalypso.service.calcjobs.sendmail.SendMailJob.3", CFG_RELAIS ), null ); //$NON-NLS-1$ 
+        throw new SimulationException( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.3", CFG_RELAIS ), null ); //$NON-NLS-1$ 
 
       /* Configuration, which is optional. */
-      final String relais_username = FrameworkProperties.getProperty( CFG_RELAIS_USERNAME );
-      final String relais_password = FrameworkProperties.getProperty( CFG_RELAIS_PASSWORD );
+      String relais_username = FrameworkProperties.getProperty( CFG_RELAIS_USERNAME );
+      String relais_password = FrameworkProperties.getProperty( CFG_RELAIS_PASSWORD );
 
       /* Update monitor. */
       monitor.setProgress( 25 );
-      monitor.setMessage( Messages.getString( "org.kalypso.service.calcjobs.sendmail.SendMailJob.4" ) ); //$NON-NLS-1$
+      monitor.setMessage( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.4") ); //$NON-NLS-1$
 
       /* Create the properties for the session configuration. */
-      final Properties properties = new Properties();
+      Properties properties = new Properties();
 
       /*
        * Specifies the default Message Access Protocol. The Session.getStore() method returns a Store object that
@@ -219,29 +219,29 @@ public class SendMailJob implements ISimulation
 
       /* Need an authenticator eventually. */
       Authenticator auth = null;
-      if( relais_username != null && relais_username.length() > 0 && relais_password != null && relais_password.length() > 0 )
+      if( (relais_username != null && relais_username.length() > 0) && (relais_password != null && relais_password.length() > 0) )
         auth = new SendMailAuthenticator( relais_username, relais_password );
 
       /* Create the settings. */
-      final Session session = Session.getInstance( properties, auth );
+      Session session = Session.getInstance( properties, auth );
 
       /* A tokenizer for splitting the string into all contained e-mail addresses. */
-      final StringTokenizer tokenizer = new StringTokenizer( receiver, ";" ); //$NON-NLS-1$
+      StringTokenizer tokenizer = new StringTokenizer( receiver, ";" ); //$NON-NLS-1$
 
       /* The from address. */
-      final Address fromAddr = new InternetAddress( sender );
+      Address fromAddr = new InternetAddress( sender );
 
       /* All to addresses. */
-      final List<Address> toAddrs = new LinkedList<Address>();
+      List<Address> toAddrs = new LinkedList<Address>();
       while( tokenizer.hasMoreElements() )
         toAddrs.add( new InternetAddress( tokenizer.nextToken() ) );
 
       /* Update monitor. */
       monitor.setProgress( 50 );
-      monitor.setMessage( Messages.getString( "org.kalypso.service.calcjobs.sendmail.SendMailJob.5" ) ); //$NON-NLS-1$
+      monitor.setMessage( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.5") ); //$NON-NLS-1$
 
       /* Create the message. */
-      final MimeMessage message = new MimeMessage( session );
+      MimeMessage message = new MimeMessage( session );
       message.setFrom( fromAddr );
       message.setRecipients( Message.RecipientType.TO, toAddrs.toArray( new Address[] {} ) );
       message.setSubject( title );
@@ -254,26 +254,26 @@ public class SendMailJob implements ISimulation
       // message.setHeader( "X-Mailer", "WPSSendMailV1.0" );
       /* Update monitor. */
       monitor.setProgress( 75 );
-      monitor.setMessage( Messages.getString( "org.kalypso.service.calcjobs.sendmail.SendMailJob.6" ) ); //$NON-NLS-1$
+      monitor.setMessage( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.6") ); //$NON-NLS-1$
 
       /* Sends the message. */
       Transport.send( message );
 
       /* Update monitor. */
       monitor.setProgress( 100 );
-      monitor.setMessage( Messages.getString( "org.kalypso.service.calcjobs.sendmail.SendMailJob.7" ) ); //$NON-NLS-1$
+      monitor.setMessage( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.7") ); //$NON-NLS-1$
 
       /* Add the result and end the simulation. */
-      resultEater.addResult( OUTPUT_RESULT, Messages.getString( "org.kalypso.service.calcjobs.sendmail.SendMailJob.8" ) ); //$NON-NLS-1$
+      resultEater.addResult( OUTPUT_RESULT, Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.8") ); //$NON-NLS-1$
 
       /* Finish the job. */
-      monitor.setMessage( Messages.getString( "org.kalypso.service.calcjobs.sendmail.SendMailJob.9" ) ); //$NON-NLS-1$
-      monitor.setFinishInfo( IStatus.OK, Messages.getString( "org.kalypso.service.calcjobs.sendmail.SendMailJob.10" ) ); //$NON-NLS-1$
+      monitor.setMessage( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.9") ); //$NON-NLS-1$
+      monitor.setFinishInfo( IStatus.OK, Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.10") ); //$NON-NLS-1$
     }
-    catch( final Exception ex )
+    catch( Exception ex )
     {
-      monitor.setMessage( Messages.getString( "org.kalypso.service.calcjobs.sendmail.SendMailJob.11" ) + ex.getMessage() ); //$NON-NLS-1$
-      monitor.setFinishInfo( IStatus.ERROR, Messages.getString( "org.kalypso.service.calcjobs.sendmail.SendMailJob.12" ) + ex.getMessage() ); //$NON-NLS-1$
+      monitor.setMessage( Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.11") + ex.getMessage() ); //$NON-NLS-1$
+      monitor.setFinishInfo( IStatus.ERROR, Messages.getString("org.kalypso.service.calcjobs.sendmail.SendMailJob.12") + ex.getMessage() ); //$NON-NLS-1$
     }
   }
 }

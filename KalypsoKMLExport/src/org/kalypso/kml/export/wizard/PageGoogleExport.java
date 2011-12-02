@@ -74,6 +74,7 @@ public class PageGoogleExport extends WizardPage implements IKMLExportSettings
 
   /*
    * (non-Javadoc)
+   * 
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
   @Override
@@ -121,7 +122,7 @@ public class PageGoogleExport extends WizardPage implements IKMLExportSettings
 
     /* fileChooser */
     final FileChooserDelegateSave saveDelegate = new FileChooserDelegateSave();
-    saveDelegate.addFilter( Messages.PageGoogleExport_9, "*.kml" ); //$NON-NLS-1$
+    saveDelegate.addFilter( Messages.PageGoogleExport_9, "*.kmz" );
 
     if( m_file == null )
     {

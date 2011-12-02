@@ -48,9 +48,11 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.xelement.IXElement;
  */
 public interface IGMLXPathFunction
 {
-  Pattern getPattern( );
 
-  Object evaluate( Feature contextFE, IXElement argumentXEelement, boolean isFeatureTypeLevel ) throws GMLXPathException;
+  public Pattern getPattern( );
 
-  String getArgument( Matcher matcher, GMLXPathString cond );
+  public Object evaluate( Feature contextFE, IXElement argumentXEelement, boolean isFeatureTypeLevel ) throws GMLXPathException;
+
+  public String getArgument( Matcher matcher, GMLXPathString cond );
+
 }

@@ -59,6 +59,9 @@ public class SingleGridVisibilityVisitor extends AbstractChartLayerVisitor
 {
   private boolean m_visibility = true;
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+   */
   @Override
   public void visit( final IChartLayer layer )
   {
@@ -93,9 +96,6 @@ public class SingleGridVisibilityVisitor extends AbstractChartLayerVisitor
       return false;
 
     final IZmlLayerDataHandler handler = zmlLayer.getDataHandler();
-    if( Objects.isNull( handler ) )
-      return false;
-
     if( Objects.isNull( handler.getObservation() ) )
       return false;
 
@@ -112,6 +112,7 @@ public class SingleGridVisibilityVisitor extends AbstractChartLayerVisitor
 
       if( layer instanceof IZmlLayer )
         return (IZmlLayer) layer;
+
     }
 
     return null;

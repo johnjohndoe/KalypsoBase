@@ -1,9 +1,7 @@
 package org.kalypso.chart.ui.editor.mousehandler;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
-import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
@@ -49,23 +47,12 @@ public class DragEditHandler extends AbstractChartDragHandler
     return false;
   }
 
-  /**
-   * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartHandler#doMouseMoveAction(org.eclipse.swt.graphics.Point,
-   *      org.eclipse.swt.graphics.Point, de.openali.odysseus.chart.framework.model.layer.EditInfo)
-   */
-  @Override
-  public void doMouseMoveAction( final Point start, final EditInfo editInfo )
+  private int getCursor( final Point start )
   {
+    if( start != null && canSnap( start ) || m_editInfo != null )
+      return SWT.CURSOR_HAND;
 
-    if( m_editInfo == null )
-      m_editInfo = editInfo;
-    if( m_editInfo.getLayer() != null )
-    {
-      if( ((IEditableChartLayer) editInfo.getLayer()).isLocked() )
-        m_editInfo = null;
-      else
-        getChart().setEditInfo( ((IEditableChartLayer) editInfo.getLayer()).drag( start, m_editInfo ) );
-    }
+    return SWT.CURSOR_ARROW;
   }
 
   /**
@@ -77,8 +64,8 @@ public class DragEditHandler extends AbstractChartDragHandler
   {
     try
     {
-      if( editInfo != null && editInfo.getLayer() != null )
-        ((IEditableChartLayer) editInfo.getLayer()).commitDrag( start, editInfo );
+      if( m_editInfo != null && m_editInfo.getLayer() != null )
+        ((IEditableChartLayer) m_editInfo.getLayer()).commitDrag( start, editInfo );
     }
     finally
     {
@@ -87,16 +74,23 @@ public class DragEditHandler extends AbstractChartDragHandler
   }
 
   /**
-   * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartDragHandler#mouseMove(org.eclipse.swt.events.MouseEvent)
+   * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartHandler#doMouseMoveAction(org.eclipse.swt.graphics.Point,
+   *      org.eclipse.swt.graphics.Point, de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
   @Override
-  public void mouseMove( final MouseEvent e )
+  public void doMouseMoveAction( final Point start, final EditInfo editInfo )
   {
-    if( canSnap( ChartHandlerUtilities.screen2plotPoint( new Point( e.x, e.y ),getChart().getPlotRect() ) ) )
-      setCursor( SWT.CURSOR_HAND );
-    else
-      setCursor( SWT.CURSOR_ARROW );
+    // TODO: should live in the top-level mouseMove method
+    setCursor( getCursor( start ) );
 
-    super.mouseMove( e );
+    if( m_editInfo == null )
+      m_editInfo = editInfo;
+    if( m_editInfo.getLayer() != null )
+    {
+      if( ((IEditableChartLayer) editInfo.getLayer()).isLocked() )
+        m_editInfo = null;
+      else
+        getChart().setEditInfo( ((IEditableChartLayer) editInfo.getLayer()).drag( start, m_editInfo ) );
+    }
   }
 }

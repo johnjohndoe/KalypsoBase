@@ -40,19 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.util.img;
 
-import java.awt.Insets;
-
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Transform;
+import org.eclipse.ui.PlatformUI;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
-import de.openali.odysseus.chart.framework.util.ChartUtilities;
 
 /**
  * @author kimwerner
@@ -73,12 +70,12 @@ public class ChartPlotPainter
   {
     if( m_size == null || m_size.x < 1 || m_size.y < 1 )
       return null;
-    final Device dev = ChartUtilities.getDisplay();
+    final Device dev = PlatformUI.getWorkbench().getDisplay();
     final Image image = new Image( dev, m_size.x, m_size.y );
     final GC gc = new GC( image );
     try
     {
-      paint( gc, new Insets( 0, 0, 0, 0 ) );
+      paint( gc );
     }
     finally
     {
@@ -99,27 +96,15 @@ public class ChartPlotPainter
     return m_size;
   }
 
-  public void paint( final GC gc, final Insets plotInsets )
+  public void paint( final GC gc )
   {
     final IChartLayer[] layers = getChartLayers();
     ArrayUtils.reverse( layers );
-    final Transform transform = new Transform( gc.getDevice() );
-    gc.getTransform( transform );
-    transform.translate( plotInsets.left, plotInsets.top );
-    gc.setTransform( transform );
-    try
+
+    for( final IChartLayer layer : layers )
     {
-      for( final IChartLayer layer : layers )
-      {
-        if( layer.isVisible() )
-          layer.paint( gc );
-      }
-    }
-    finally
-    {
-      transform.translate( -plotInsets.left, -plotInsets.top );
-      gc.setTransform( transform );
-      transform.dispose();
+      if( layer.isVisible() )
+        layer.paint( gc );
     }
   }
 

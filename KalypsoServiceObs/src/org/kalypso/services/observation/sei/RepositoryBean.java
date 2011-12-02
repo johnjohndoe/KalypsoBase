@@ -48,7 +48,7 @@ package org.kalypso.services.observation.sei;
  */
 public class RepositoryBean extends ItemBean
 {
-  public RepositoryBean( )
+  public RepositoryBean()
   {
     super();
   }

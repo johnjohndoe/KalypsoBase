@@ -40,7 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.builders.sld.rules;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -63,7 +64,7 @@ public class SelfIntersectionValidation
     {
       final Polygon polygon = (Polygon) geometry;
       Coordinate[] coordinates = polygon.getCoordinates();
-      coordinates = ArrayUtils.remove( coordinates, coordinates.length - 1 );
+      coordinates = (Coordinate[]) ArrayUtils.remove( coordinates, coordinates.length - 1 );
 
       final LineString lineString = JTSAdapter.jtsFactory.createLineString( coordinates );
       return isValid( lineString );
@@ -71,7 +72,7 @@ public class SelfIntersectionValidation
     else if( geometry instanceof LineString )
       return isValid( (LineString) geometry );
 
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 
   private static boolean isValid( final LineString lineString )

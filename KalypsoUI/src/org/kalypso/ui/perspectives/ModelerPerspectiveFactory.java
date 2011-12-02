@@ -78,7 +78,6 @@ public class ModelerPerspectiveFactory implements IPerspectiveFactory
     layout.addNewWizardShortcut( BasicNewFolderResourceWizard.WIZARD_ID );
     layout.addNewWizardShortcut( BasicNewFileResourceWizard.WIZARD_ID );
     layout.addNewWizardShortcut( NewGMLFileWizard.WIZARD_ID );
-// layout.addNewWizardShortcut( CreateGisMapViewWizard.WIZARD_ID );
 
     // Add "show views".
     layout.addShowViewShortcut( IPageLayout.ID_RES_NAV );
@@ -104,7 +103,7 @@ public class ModelerPerspectiveFactory implements IPerspectiveFactory
 
     // Bottom left.
     final IFolderLayout bottomLeft = layout.createFolder( "bottomLeft", IPageLayout.BOTTOM, (float) 0.50,//$NON-NLS-1$
-        "topLeft" );//$NON-NLS-1$
+    "topLeft" );//$NON-NLS-1$
     bottomLeft.addView( IPageLayout.ID_OUTLINE );
   }
 

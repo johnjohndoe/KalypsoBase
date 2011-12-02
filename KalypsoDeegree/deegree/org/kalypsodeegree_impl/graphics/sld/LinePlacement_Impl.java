@@ -50,8 +50,8 @@ import org.kalypsodeegree_impl.tools.Debug;
  * <li>PerpendicularOffset: may be used as defined by the OGC, but it can also be set to one of the special values
  * 'center', 'above', 'below', 'auto'
  * <li>Gap: defines the distance between two captions on the line string
- * <li>LineWidth: provides the thickness of the styled line (needed as information for the correct positioning of labels
- * above and below the line string)
+ * <li>LineWidth: provides the thickness of the styled line (needed as information for the correct positioning of
+ * labels above and below the line string)
  * </ul>
  * <p>
  * 
@@ -60,17 +60,18 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 public class LinePlacement_Impl implements LinePlacement, Marshallable
 {
-  private ParameterValueType m_perpendicularOffset = null;
+  private ParameterValueType perpendicularOffset = null;
 
-  private ParameterValueType m_lineWidth = null;
+  private ParameterValueType lineWidth = null;
 
-  private ParameterValueType m_gap = null;
+  private ParameterValueType gap = null;
 
-  public LinePlacement_Impl( final ParameterValueType perpendicularOffset, final ParameterValueType lineWidth, final ParameterValueType gap )
+  public LinePlacement_Impl( ParameterValueType perpendicularOffset, ParameterValueType lineWidth,
+      ParameterValueType gap )
   {
-    m_perpendicularOffset = perpendicularOffset;
-    m_lineWidth = lineWidth;
-    m_gap = gap;
+    this.perpendicularOffset = perpendicularOffset;
+    this.lineWidth = lineWidth;
+    this.gap = gap;
   }
 
   /**
@@ -89,37 +90,42 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
    *           if the evaluation fails
    */
   @Override
-  public double getPerpendicularOffset( final Feature feature ) throws FilterEvaluationException
+  public double getPerpendicularOffset( Feature feature ) throws FilterEvaluationException
   {
-    if( m_perpendicularOffset != null )
+
+    double pValue = 0.0;
+
+    if( perpendicularOffset != null )
     {
-      final PlacementType placementType = getPlacementType( feature );
-      if( placementType == PlacementType.absolute )
+      String stringValue = perpendicularOffset.evaluate( feature );
+      if( ( !stringValue.equals( "center" ) ) && ( !stringValue.equals( "above" ) )
+          && ( !stringValue.equals( "below" ) ) && ( !stringValue.equals( "auto" ) ) )
       {
         try
         {
-          final String stringValue = m_perpendicularOffset.evaluate( feature );
-          return Double.parseDouble( stringValue );
+          pValue = Double.parseDouble( stringValue );
         }
-        catch( final NumberFormatException e )
+        catch( NumberFormatException e )
         {
-          throw new FilterEvaluationException( "Element 'PerpendicularOffset' " + "must be equal to 'center', 'above', 'below' or 'auto' or it " + "must denote a valid double value!" );
+          throw new FilterEvaluationException( "Element 'PerpendicularOffset' "
+              + "must be equal to 'center', 'above', 'below' or 'auto' or it " + "must denote a valid double value!" );
         }
 
       }
     }
-
-    return 0.0;
+    return pValue;
   }
 
   /**
    * @see org.kalypsodeegree_impl.graphics.sld.LinePlacement_Impl#getPerpendicularOffset(Feature)
+   *      <p>
    * @param perpendicularOffset
    */
   @Override
-  public void setPerpendicularOffset( final double perpendicularOffset )
+  public void setPerpendicularOffset( double perpendicularOffset )
   {
-    m_perpendicularOffset = StyleFactory.createParameterValueType( "" + perpendicularOffset );
+    ParameterValueType pvt = StyleFactory.createParameterValueType( "" + perpendicularOffset );
+    this.perpendicularOffset = pvt;
   }
 
   /**
@@ -129,21 +135,31 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
    * @throws FilterEvaluationException
    */
   @Override
-  public PlacementType getPlacementType( final Feature feature ) throws FilterEvaluationException
+  public int getPlacementType( Feature feature ) throws FilterEvaluationException
   {
-    if( m_perpendicularOffset == null )
-      return PlacementType.absolute;
+    int type = TYPE_ABSOLUTE;
 
-    final String stringValue = m_perpendicularOffset.evaluate( feature );
-    try
+    if( perpendicularOffset != null )
     {
-      return PlacementType.valueOf( stringValue );
+      String stringValue = perpendicularOffset.evaluate( feature );
+      if( stringValue.equals( "center" ) )
+      {
+        type = TYPE_CENTER;
+      }
+      else if( stringValue.equals( "above" ) )
+      {
+        type = TYPE_ABOVE;
+      }
+      else if( stringValue.equals( "below" ) )
+      {
+        type = TYPE_BELOW;
+      }
+      else if( stringValue.equals( "auto" ) )
+      {
+        type = TYPE_AUTO;
+      }
     }
-    catch( final Exception e )
-    {
-// e.printStackTrace();
-      return PlacementType.absolute;
-    }
+    return type;
   }
 
   /**
@@ -153,12 +169,28 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
    * @param placementType
    */
   @Override
-  public void setPlacementType( final PlacementType placementType )
+  public void setPlacementType( int placementType )
   {
-    if( placementType == PlacementType.absolute )
-      m_perpendicularOffset = StyleFactory.createParameterValueType( "0.0" );
-    else
-      m_perpendicularOffset = StyleFactory.createParameterValueType( placementType.name() );
+    ParameterValueType pvt = null;
+    String type = null;
+    if( placementType == 1 )
+    {
+      type = "above";
+    }
+    else if( placementType == 2 )
+    {
+      type = "below";
+    }
+    else if( placementType == 3 )
+    {
+      type = "center";
+    }
+    else if( placementType == 4 )
+    {
+      type = "auto";
+    }
+    pvt = StyleFactory.createParameterValueType( "" + type );
+    this.perpendicularOffset = pvt;
   }
 
   /**
@@ -169,12 +201,15 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
    * @throws FilterEvaluationException
    */
   @Override
-  public double getLineWidth( final Feature feature ) throws FilterEvaluationException
+  public double getLineWidth( Feature feature ) throws FilterEvaluationException
   {
-    if( m_lineWidth != null )
-      return Double.parseDouble( m_lineWidth.evaluate( feature ) );
+    double width = 3;
 
-    return 3;
+    if( lineWidth != null )
+    {
+      width = Double.parseDouble( lineWidth.evaluate( feature ) );
+    }
+    return width;
   }
 
   /**
@@ -186,9 +221,10 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
    *          the lineWidth to be set
    */
   @Override
-  public void setLineWidth( final double lineWidth )
+  public void setLineWidth( double lineWidth )
   {
-    m_lineWidth = StyleFactory.createParameterValueType( "" + lineWidth );
+    ParameterValueType pvt = StyleFactory.createParameterValueType( "" + lineWidth );
+    this.lineWidth = pvt;
   }
 
   /**
@@ -198,12 +234,15 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
    * @throws FilterEvaluationException
    */
   @Override
-  public int getGap( final Feature feature ) throws FilterEvaluationException
+  public int getGap( Feature feature ) throws FilterEvaluationException
   {
-    if( m_gap != null )
-      return Integer.parseInt( m_gap.evaluate( feature ) );
+    int gapValue = 6;
 
-    return 6;
+    if( gap != null )
+    {
+      gapValue = Integer.parseInt( gap.evaluate( feature ) );
+    }
+    return gapValue;
   }
 
   /**
@@ -214,9 +253,10 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
    *          the gap to be set
    */
   @Override
-  public void setGap( final int gap )
+  public void setGap( int gap )
   {
-    m_gap = StyleFactory.createParameterValueType( "" + gap );
+    ParameterValueType pvt = StyleFactory.createParameterValueType( "" + gap );
+    this.gap = pvt;
   }
 
   /**
@@ -225,28 +265,28 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
    * @return xml representation of the Font
    */
   @Override
-  public String exportAsXML( )
+  public String exportAsXML()
   {
     Debug.debugMethodBegin();
 
-    final StringBuffer sb = new StringBuffer( 1000 );
+    StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<LinePlacement>" );
-    if( m_perpendicularOffset != null )
+    if( perpendicularOffset != null )
     {
       sb.append( "<PerpendicularOffset>" );
-      sb.append( ((Marshallable) m_perpendicularOffset).exportAsXML() );
+      sb.append( ( (Marshallable)perpendicularOffset ).exportAsXML() );
       sb.append( "</PerpendicularOffset>" );
     }
-    if( m_lineWidth != null )
+    if( lineWidth != null )
     {
       sb.append( "<LineWidth>" );
-      sb.append( ((Marshallable) m_lineWidth).exportAsXML() );
+      sb.append( ( (Marshallable)lineWidth ).exportAsXML() );
       sb.append( "</LineWidth>" );
     }
-    if( m_gap != null )
+    if( gap != null )
     {
       sb.append( "<Gap>" );
-      sb.append( ((Marshallable) m_gap).exportAsXML() );
+      sb.append( ( (Marshallable)gap ).exportAsXML() );
       sb.append( "</Gap>" );
     }
     sb.append( "</LinePlacement>" );

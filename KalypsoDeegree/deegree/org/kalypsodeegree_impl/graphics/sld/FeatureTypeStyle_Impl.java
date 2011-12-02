@@ -56,7 +56,7 @@ import org.kalypsodeegree.xml.Marshallable;
  * <p>
  * ----------------------------------------------------------------------
  * </p>
- * 
+ *
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @version $Revision$ $Date$
  */
@@ -90,7 +90,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
   /**
    * The Name element does not have an explicit use at present, though it conceivably might be used to reference a
    * feature style in some feature-style library.
-   * 
+   *
    * @return name
    */
   @Override
@@ -102,19 +102,19 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
   /**
    * The Name element does not have an explicit use at present, though it conceivably might be used to reference a
    * feature style in some feature-style library. Sets the <Name>o
-   * 
+   *
    * @param name
-   *          the name
+   *            the name
    */
   @Override
   public void setName( final String name )
   {
-    m_name = name;
+    this.m_name = name;
   }
 
   /**
    * human-readable information about the style
-   * 
+   *
    * @return the title of the FeatureTypeStyle
    */
   @Override
@@ -125,19 +125,19 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
 
   /**
    * sets the <Title>
-   * 
+   *
    * @param title
-   *          the title of the FeatureTypeStyle
+   *            the title of the FeatureTypeStyle
    */
   @Override
   public void setTitle( final String title )
   {
-    m_title = title;
+    this.m_title = title;
   }
 
   /**
    * human-readable information about the style
-   * 
+   *
    * @return an abstract of the FeatureTypeStyle
    */
   @Override
@@ -148,19 +148,19 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
 
   /**
    * sets <Abstract>
-   * 
+   *
    * @param abstract_
-   *          an abstract of the FeatureTypeStyle
+   *            an abstract of the FeatureTypeStyle
    */
   @Override
   public void setAbstract( final String abstract_ )
   {
-    m_abstract = abstract_;
+    this.m_abstract = abstract_;
   }
 
   /**
    * returns the name of the affected feature type
-   * 
+   *
    * @return the name of the FeatureTypeStyle as String
    */
   @Override
@@ -171,9 +171,9 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
 
   /**
    * sets the name of the affected feature type
-   * 
+   *
    * @param featureTypeName
-   *          the name of the FeatureTypeStyle
+   *            the name of the FeatureTypeStyle
    */
   @Override
   public void setFeatureTypeName( final QName featureTypeQName )
@@ -188,7 +188,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    * generic:line, generic:polygon, generic:point, generic:text, generic:raster, and generic:any are reserved to
    * indicate that a FeatureTypeStyle may be used with any feature type with the corresponding default geometry type
    * (i.e., no feature properties are referenced in the feature-type style).
-   * 
+   *
    * @return the SemanticTypeIdentifiers from the FeatureTypeStyle as String-Array
    */
   @Override
@@ -199,9 +199,9 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
 
   /**
    * Sets the SemanticTypeIdentifiers.
-   * 
+   *
    * @param semanticTypeIdentifiers
-   *          SemanticTypeIdentifiers for the FeatureTypeStyle
+   *            SemanticTypeIdentifiers for the FeatureTypeStyle
    */
   @Override
   public void setSemanticTypeIdentifier( final String[] semanticTypeIdentifiers )
@@ -219,32 +219,32 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
 
   /**
    * adds the <SemanticTypeIdentifier>
-   * 
+   *
    * @param semanticTypeIdentifier
-   *          SemanticTypeIdentifier to add
+   *            SemanticTypeIdentifier to add
    */
   @Override
   public void addSemanticTypeIdentifier( final String semanticTypeIdentifier )
   {
-    m_semanticTypeIdentifier.add( semanticTypeIdentifier );
+    this.m_semanticTypeIdentifier.add( semanticTypeIdentifier );
   }
 
   /**
    * Removes an <SemanticTypeIdentifier>.
-   * 
+   *
    * @param semanticTypeIdentifier
-   *          SemanticTypeIdentifier to remove
+   *            SemanticTypeIdentifier to remove
    */
   @Override
   public void removeSemanticTypeIdentifier( final String semanticTypeIdentifier )
   {
-    m_semanticTypeIdentifier.remove( m_semanticTypeIdentifier.indexOf( semanticTypeIdentifier ) );
+    this.m_semanticTypeIdentifier.remove( this.m_semanticTypeIdentifier.indexOf( semanticTypeIdentifier ) );
   }
 
   /**
    * Rules are used to group rendering instructions by feature-property conditions and map scales. Rule definitions are
    * placed immediately inside of feature-style definitions.
-   * 
+   *
    * @return the rules of the FeatureTypeStyle as Array
    */
   @Override
@@ -269,29 +269,29 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
 
   /**
    * sets the <Rules>
-   * 
+   *
    * @param rules
-   *          the rules of the FeatureTypeStyle as Array
+   *            the rules of the FeatureTypeStyle as Array
    */
   @Override
   public void setRules( final Rule[] rules )
   {
-    m_rules.clear();
+    this.m_rules.clear();
 
     if( rules != null )
     {
       for( final Rule rule : rules )
       {
-        m_rules.add( rule );
+        this.m_rules.add( rule );
       }
     }
   }
 
   /**
    * adds the <Rules>
-   * 
+   *
    * @param rule
-   *          a rule
+   *            a rule
    */
   @Override
   public void addRule( final Rule rule )
@@ -301,9 +301,9 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
 
   /**
    * removes a rule
-   * 
+   *
    * @param rule
-   *          a rule
+   *            a rule
    */
   @Override
   public void removeRule( final Rule rule )
@@ -313,7 +313,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
 
   /**
    * exports the content of the FeatureTypeStyle as XML formated String
-   * 
+   *
    * @return xml representation of the FeatureTypeStyle
    */
   @Override

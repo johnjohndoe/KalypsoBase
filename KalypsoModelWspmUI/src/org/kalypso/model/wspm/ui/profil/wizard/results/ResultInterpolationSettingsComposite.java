@@ -141,9 +141,7 @@ public class ResultInterpolationSettingsComposite implements IResultInterpolatio
 
     final IDialogSettings dialogSettings = getDialogSettings();
     if( dialogSettings != null )
-    {
       dialogSettings.put( SETTINGS_DO_INTERPOLATION, m_doInterpolation );
-    }
   }
 
   protected void setDoForeland( final boolean doForelandInterpolation )
@@ -152,9 +150,7 @@ public class ResultInterpolationSettingsComposite implements IResultInterpolatio
 
     final IDialogSettings dialogSettings = getDialogSettings();
     if( dialogSettings != null )
-    {
       dialogSettings.put( SETTINGS_DO_FORELAND, m_doForelandInterpolation );
-    }
   }
 
   @Override

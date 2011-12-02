@@ -41,10 +41,8 @@
 package de.openali.odysseus.chart.framework.model.impl.visitors;
 
 import org.eclipse.swt.graphics.Point;
-import org.kalypso.commons.java.lang.Objects;
 
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
-import de.openali.odysseus.chart.framework.model.impl.IAxisVisitorBehavior;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IAxisVisitor;
 
@@ -108,9 +106,8 @@ public class ZoomInVisitor implements IAxisVisitor
         }
         break;
     }
-    final IAxisVisitorBehavior visitorBehavior = axis.getAxisVisitorBehavior();
-    final boolean isAllowed = visitorBehavior == null ? true : visitorBehavior.isZoomEnabled();
-    if( Objects.allNotNull( from, to ) && isAllowed )
+
+    if( from != null && to != null )
     {
       axis.setNumericRange( new ComparableDataRange<Number>( new Number[] { from, to } ) );
     }

@@ -24,7 +24,6 @@
 				<include name="KalypsoSimulationUI/build/bin" />
 			</dirset>
 			<fileset dir="${basedir}/..">
-				<include name="org.apache.commons/lib/**/*.jar" />
 				<include name="KalypsoCommons/lib/**/*.jar" />
 				<include name="KalypsoDeegree/lib/**/*.jar" />
 			</fileset>
@@ -40,7 +39,7 @@
 			</fileset>
 		</path>
 		
-		<antcall target="buildAntJar" inheritrefs="true" />
+		<antcall target="buildAntJar"/>
 	</target>
 
 </project>

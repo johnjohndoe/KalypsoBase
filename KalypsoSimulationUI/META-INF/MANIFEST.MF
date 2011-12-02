@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoSimulationUI Plug-in
 Bundle-SymbolicName: org.kalypso.simulation.ui; singleton:=true
-Bundle-Version: 11.6.3.qualifier
+Bundle-Version: 10.10.1.qualifier
 Bundle-Activator: org.kalypso.simulation.ui.KalypsoSimulationUIPlugin
 Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-Localization: plugin
@@ -15,7 +15,7 @@ Export-Package: org.kalypso.compare,
  org.kalypso.simulation.ui.calccase.jface,
  org.kalypso.simulation.ui.calccase.simulation,
  org.kalypso.simulation.ui.wizards.createCalcCase
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: .
 Require-Bundle: org.eclipse.core.commands,
  org.eclipse.core.externaltools,

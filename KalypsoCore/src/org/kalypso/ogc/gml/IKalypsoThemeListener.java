@@ -44,7 +44,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * This listener listens to changes in objects of the type IKalypsoTheme
- * 
+ *
  * @author Stefan Kurzbach
  */
 public interface IKalypsoThemeListener
@@ -62,7 +62,7 @@ public interface IKalypsoThemeListener
 
   /**
    * Occurs, if the theme wants to be repainted.
-   * 
+   *
    * @param invalidExtent
    *          The extent that is no more valid; <code>null</code> indicating that the complete theme should be
    *          repainted.

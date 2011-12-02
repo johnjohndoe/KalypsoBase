@@ -58,6 +58,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.tableview.TableViewColumn;
 
@@ -148,8 +149,10 @@ public class ColumnHeaderRenderer implements TableCellRenderer
     try
     {
       final TableViewColumn tvc = (TableViewColumn) element;
+      final IObservation observation = tvc.getObservation();
+      final IRequest arguments = tvc.getArguments();
       final IAxis valueAxis = tvc.getValueAxis();
-      final ITupleModel values = tvc.getValues();
+      final ITupleModel values = observation.getValues( arguments );
 
       final int mergedStatus = KalypsoStatusUtils.getStatus( values, valueAxis );
       final String tooltip = KalypsoStatusUtils.getTooltipFor( mergedStatus );
@@ -176,8 +179,9 @@ public class ColumnHeaderRenderer implements TableCellRenderer
       if( observation == null )
         return null;
 
+      final IRequest arguments = tvc.getArguments();
       final IAxis valueAxis = tvc.getValueAxis();
-      final ITupleModel values = tvc.getValues();
+      final ITupleModel values = observation.getValues( arguments );
 
       final int mergedStatus = KalypsoStatusUtils.getStatus( values, valueAxis );
       return KalypsoStatusUtils.getIconFor( mergedStatus );

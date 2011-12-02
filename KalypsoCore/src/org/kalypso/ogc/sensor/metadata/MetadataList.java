@@ -54,27 +54,9 @@ public class MetadataList extends Properties
     super();
   }
 
-  /** REMARK: Sets the given properties as default values. It doesn't mean 'putAll'! */
+  /** REMARK: Sets the given properties as default values. Doesn't mean 'putAll'! */
   public MetadataList( final Properties arg0 )
   {
     super( arg0 );
-  }
-
-  /**
-   * @see java.util.Properties#setProperty(java.lang.String, java.lang.String)
-   */
-  @Override
-  public synchronized Object setProperty( final String key, final String value )
-  {
-    return super.setProperty( key, value );
-  }
-
-  /**
-   * @see java.util.Hashtable#put(java.lang.Object, java.lang.Object)
-   */
-  @Override
-  public synchronized Object put( final Object key, final Object value )
-  {
-    return super.put( key, value );
   }
 }

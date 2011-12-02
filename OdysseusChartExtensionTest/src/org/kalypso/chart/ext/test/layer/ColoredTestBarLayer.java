@@ -95,7 +95,7 @@ public class ColoredTestBarLayer extends AbstractBarLayer
   }
 
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     // muss als minimalen Wert 0 zurückgeben, weil die Bars bis dahin laufen
     final IDataRange targetRange = getDataContainer().getTargetRange();
@@ -112,7 +112,7 @@ public class ColoredTestBarLayer extends AbstractBarLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Number> getDomainRange( )
   {
     // TODO Auto-generated method stub
     return null;

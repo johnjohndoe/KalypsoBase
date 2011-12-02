@@ -45,9 +45,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import junit.framework.TestCase;
+
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.junit.Ignore;
-import org.junit.Test;
 import org.kalypso.grid.AbstractDelegatingGeoGrid;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
@@ -62,10 +62,8 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 /**
  * @author Gernot Belger
  */
-public class GridTest
+public class GridTest extends TestCase
 {
-  @Test
-  @Ignore(value = "Takes too much time....")
   public void testGridProcessing( ) throws Exception
   {
     final URL zipResource = getClass().getResource( "resources/dgm2m.zip" ); //$NON-NLS-1$

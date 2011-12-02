@@ -41,17 +41,31 @@
 package org.kalypso.ogc.sensor.view.wizard;
 
 import java.io.File;
+import java.io.FileOutputStream;
 
+import org.apache.commons.io.IOUtils;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.eclipse.swt.widgets.Composite;
+import org.kalypso.contribs.eclipse.core.resources.ProjectUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.wizard.FileSelectWizardPage;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.zml.Observation;
 
 /**
  * Wizard for exporting a Repository ZML as a file in the local filesystem
@@ -66,67 +80,114 @@ public class ExportAsFileWizard extends Wizard
 
   private final IObservation m_obs;
 
+  protected IProject m_project = null;
+
   public ExportAsFileWizard( final IObservation obs )
   {
     m_obs = obs;
 
-    final IDialogSettings section = DialogSettingsUtils.getDialogSettings( KalypsoGisPlugin.getDefault(), "ExportAsFileWizard" ); //$NON-NLS-1$ 
-    setDialogSettings( section );
+    final IDialogSettings settings = KalypsoGisPlugin.getDefault().getDialogSettings();
 
-    setWindowTitle( Messages.getString( "org.kalypso.ogc.sensor.view.wizard.ExportAsFileWizard.5" ) ); //$NON-NLS-1$
-    setNeedsProgressMonitor( true );
+    IDialogSettings section = settings.getSection( "ExportAsFileWizard" ); //$NON-NLS-1$
+    if( section == null )
+      section = settings.addNewSection( "ExportAsFileWizard" ); //$NON-NLS-1$
+
+    setDialogSettings( section );
   }
 
   /**
    * @see org.eclipse.jface.wizard.Wizard#addPages()
    */
   @Override
-  public void addPages( )
+  public void addPages()
   {
     super.addPages();
 
-    final String lastDirPath = getDialogSettings().get( "lastDir" );
-    File file;
-    if( lastDirPath == null )
-      file = new File( m_obs.getName() );
-    else
-      file = new File( lastDirPath, m_obs.getName() );
+    final IProject[] projects = ProjectUtilities.getSelectedProjects();
+    String fileName = ""; //$NON-NLS-1$
 
-    final String fileName = file.getAbsolutePath();
+    if( projects.length > 0 )
+    {
+      m_project = projects[0];
+      fileName = m_project.getLocation().toFile().getAbsolutePath();
+    }
+    else
+      fileName = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString() + File.separator + "datei.zml"; //$NON-NLS-1$
 
     m_page1 = new DateRangeInputWizardPage();
     m_page2 = new FileSelectWizardPage( "fileselect", fileName, new String[] //$NON-NLS-1$
-    { "*.zml", "*.xml" } ); //$NON-NLS-1$ //$NON-NLS-2$
+                                                                           { "*.zml", "*.xml" } ); //$NON-NLS-1$ //$NON-NLS-2$
 
     addPage( m_page1 );
     addPage( m_page2 );
   }
 
   /**
+   * @see org.eclipse.jface.wizard.Wizard#createPageControls(org.eclipse.swt.widgets.Composite)
+   */
+  @Override
+  public void createPageControls( final Composite pageContainer )
+  {
+    //super.createPageControls( pageContainer );
+
+    setWindowTitle( Messages.getString("org.kalypso.ogc.sensor.view.wizard.ExportAsFileWizard.5") ); //$NON-NLS-1$
+    setNeedsProgressMonitor( true );
+  }
+
+  /**
    * @see org.eclipse.jface.wizard.Wizard#performFinish()
    */
   @Override
-  public boolean performFinish( )
+  public boolean performFinish()
   {
     final DateRange dateRange = m_page1.getDateRange();
     final String filePath = m_page2.getFilePath();
 
+    FileOutputStream outs = null;
     try
     {
-      final File file = new File( filePath );
+      final Observation ot = ZmlFactory.createXML( m_obs, new ObservationRequest( dateRange ) );
 
-      getDialogSettings().put( "lastDir", file.getParent() );
-
-      final ObservationRequest request = new ObservationRequest( dateRange );
-      ZmlFactory.writeToFile( m_obs, file, request );
+      outs = new FileOutputStream( new File( filePath ) );
+      ZmlFactory.getMarshaller().marshal( ot, outs );
+      outs.close();
     }
     catch( final Exception e )
     {
       e.printStackTrace();
 
-      MessageDialog.openError( getShell(), Messages.getString( "org.kalypso.ogc.sensor.view.wizard.ExportAsFileWizard.6" ), e.getLocalizedMessage() ); //$NON-NLS-1$
+      MessageDialog.openError( getShell(), Messages.getString("org.kalypso.ogc.sensor.view.wizard.ExportAsFileWizard.6"), e.getLocalizedMessage() ); //$NON-NLS-1$
 
       return false;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( outs );
+    }
+
+    if( m_project != null )
+    {
+      final Job refreshJob = new Job( Messages.getString("org.kalypso.ogc.sensor.view.wizard.ExportAsFileWizard.7") + m_project.getName() + Messages.getString("org.kalypso.ogc.sensor.view.wizard.ExportAsFileWizard.8") ) //$NON-NLS-1$ //$NON-NLS-2$
+      {
+        @Override
+        protected IStatus run( final IProgressMonitor monitor )
+        {
+          try
+          {
+            m_project.refreshLocal( IResource.DEPTH_INFINITE, monitor );
+          }
+          catch( final CoreException e )
+          {
+            e.printStackTrace();
+
+            return StatusUtilities.statusFromThrowable( e );
+          }
+
+          return Status.OK_STATUS;
+        }
+      };
+
+      refreshJob.schedule();
     }
 
     return true;

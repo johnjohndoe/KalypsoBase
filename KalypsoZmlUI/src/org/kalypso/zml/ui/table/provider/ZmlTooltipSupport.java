@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.util.StringUtilities;
@@ -57,7 +57,7 @@ import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.commands.toolbar.view.AbstractHourViewCommand;
 import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
-import org.kalypso.zml.ui.table.model.ZmlTableColumn;
+import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 
 import com.google.common.base.Strings;
 
@@ -66,13 +66,13 @@ import com.google.common.base.Strings;
  */
 public class ZmlTooltipSupport
 {
-  private static final Image IMG = new Image( null, ZmlTooltipProvider.class.getResourceAsStream( "icons/help_hint_48.png" ) ); //$NON-NLS-1$
+  private static final Image IMG = new Image( null, ZmlLabelProvider.class.getResourceAsStream( "icons/help_hint_48.png" ) ); //$NON-NLS-1$
 
-  private final ZmlTableColumn m_column;
+  private final ExtendedZmlTableColumn m_column;
 
   private static boolean SHOW_TOOLTIPS = true;
 
-  public ZmlTooltipSupport( final ZmlTableColumn column )
+  public ZmlTooltipSupport( final ExtendedZmlTableColumn column )
   {
     m_column = column;
   }
@@ -101,7 +101,7 @@ public class ZmlTooltipSupport
         return null;
 
       final String tip1 = getSourceTooltip( reference, isAggregated() );
-      final String tip2 = getRuleTooltip( row, reference );
+      final String tip2 = getRuleTooltip( row );
       final String tip3 = getModelTooltip( dataColumn );
 
       return StringUtilities.concat( tip1, Strings.repeat( "\n", 2 ), tip2, Strings.repeat( "\n", 2 ), tip3 ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -119,7 +119,7 @@ public class ZmlTooltipSupport
     return filter.getResolution() > 1;
   }
 
-  private String getRuleTooltip( final IZmlModelRow row, final IZmlValueReference reference )
+  private String getRuleTooltip( final IZmlModelRow row )
   {
     final ZmlRule[] activeRules = m_column.findActiveRules( row );
     if( ArrayUtils.isEmpty( activeRules ) )
@@ -130,8 +130,7 @@ public class ZmlTooltipSupport
 
     for( final ZmlRule rule : activeRules )
     {
-
-      buffer.append( String.format( "    - %s\n", rule.getLabel( reference ) ) );//$NON-NLS-1$
+      buffer.append( String.format( "    - %s\n", rule.getLabel() ) );//$NON-NLS-1$
     }
 
     return StringUtils.chomp( buffer.toString() );

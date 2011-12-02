@@ -58,13 +58,14 @@ import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author F.Lindemann
+ *  
  */
 public abstract class FilterComboPanel
 {
 
   private Composite composite = null;
 
-  private final EventListenerList listenerList = new EventListenerList();
+  private EventListenerList listenerList = new EventListenerList();
 
   protected Combo comboBox = null;
 
@@ -72,11 +73,11 @@ public abstract class FilterComboPanel
 
   protected int selection_index = -1;
 
-  protected FilterComboPanel( final Composite parent )
+  protected FilterComboPanel( Composite parent )
   {
     composite = new Composite( parent, SWT.NULL );
-    final FormLayout compositeLayout = new FormLayout();
-    final GridData compositeData = new GridData();
+    FormLayout compositeLayout = new FormLayout();
+    GridData compositeData = new GridData();
     compositeData.widthHint = 90;
     composite.setLayoutData( compositeData );
     composite.setLayout( compositeLayout );
@@ -86,37 +87,37 @@ public abstract class FilterComboPanel
     composite.layout();
   }
 
-  public String getSelectionName( final int index )
+  public String getSelectionName( int index )
   {
     if( index < items.length )
       return items[index];
     return null;
   }
 
-  public void addPanelListener( final PanelListener pl )
+  public void addPanelListener( PanelListener pl )
   {
     listenerList.add( PanelListener.class, pl );
   }
 
   public abstract void setSelection( int index );
 
-  public abstract int getSelection( );
+  public abstract int getSelection();
 
-  public void disable( )
+  public void disable()
   {
     comboBox.setEnabled( false );
   }
 
-  public void enable( )
+  public void enable()
   {
     comboBox.setEnabled( true );
   }
 
-  protected void init( )
+  protected void init()
   {
 
     comboBox = new Combo( composite, SWT.NULL );
-    final FormData comboData = new FormData();
+    FormData comboData = new FormData();
     comboData.width = 60;
     comboData.height = 10;
     comboData.left = new FormAttachment( 0, 1000, 0 );
@@ -127,14 +128,14 @@ public abstract class FilterComboPanel
     comboBox.addSelectionListener( new SelectionListener()
     {
       @Override
-      public void widgetSelected( final SelectionEvent e )
+      public void widgetSelected( SelectionEvent e )
       {
-        setSelection_index( ((Combo) e.getSource()).getSelectionIndex() );
+        setSelection_index( ( (Combo)e.getSource() ).getSelectionIndex() );
         fire();
       }
 
       @Override
-      public void widgetDefaultSelected( final SelectionEvent e )
+      public void widgetDefaultSelected( SelectionEvent e )
       {
         widgetSelected( e );
       }
@@ -143,26 +144,26 @@ public abstract class FilterComboPanel
       setSelection( 0 );
   }
 
-  protected void fire( )
+  protected void fire()
   {
-    final Object[] listeners = listenerList.getListenerList();
+    Object[] listeners = listenerList.getListenerList();
     for( int i = listeners.length - 2; i >= 0; i -= 2 )
     {
       if( listeners[i] == PanelListener.class )
       {
-        final PanelEvent event = new PanelEvent( this );
-        ((PanelListener) listeners[i + 1]).valueChanged( event );
+        PanelEvent event = new PanelEvent( this );
+        ( (PanelListener)listeners[i + 1] ).valueChanged( event );
       }
     }
   }
 
-  public int getSelection_index( )
+  public int getSelection_index()
   {
     return selection_index;
   }
 
-  public void setSelection_index( final int m_selection_index )
+  public void setSelection_index( int m_selection_index )
   {
-    selection_index = m_selection_index;
+    this.selection_index = m_selection_index;
   }
 }

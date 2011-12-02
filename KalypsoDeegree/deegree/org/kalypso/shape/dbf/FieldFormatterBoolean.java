@@ -58,6 +58,8 @@ class FieldFormatterBoolean extends FieldFormatter
     super( null );
   }
 
+  
+  
   /**
    * @see org.kalypsodeegree_impl.io.shpapi.FieldFormatter#toBytes(java.lang.Object, java.nio.charset.Charset)
    */
@@ -86,7 +88,7 @@ class FieldFormatterBoolean extends FieldFormatter
   {
     if( asString == null || asString.isEmpty() )
       return null;
-
+    
     switch( asString.charAt( 0 ) )
     {
       case ' ':

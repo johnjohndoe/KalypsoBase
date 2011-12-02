@@ -49,7 +49,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerEditor;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.IZmlTableListener;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
 import org.kalypso.zml.ui.table.focus.cursor.ITableCursor;
@@ -78,13 +77,14 @@ public class ZmlTableFocusCellHandler implements IZmlTableListener, IZmlTableFoc
 
   private void init( )
   {
-    final TableViewer viewer = m_table.getViewer();
-    m_cursor = new ZmlTableCursor( m_table );
+    final TableViewer viewer = m_table.getTableViewer();
+    m_cursor = new ZmlTableCursor( viewer );
 
     final ZmlCursorCellHighlighter highlighter = new ZmlCursorCellHighlighter( viewer, m_cursor );
     final ZmlCellNavigationStrategy navigationStrategy = new ZmlCellNavigationStrategy();
 
     m_cellManager = new ZmlTableFocusCellManager( m_table, highlighter, navigationStrategy );
+
     m_cursor.setCellManager( m_cellManager );
 
     final ColumnViewerEditorActivationStrategy activationSupport = new ZmlTableEditorActivationStrategy( viewer, m_cellManager );
@@ -92,8 +92,11 @@ public class ZmlTableFocusCellHandler implements IZmlTableListener, IZmlTableFoc
     TableViewerEditor.create( viewer, m_cellManager, activationSupport, ColumnViewerEditor.KEYBOARD_ACTIVATION );
   }
 
+  /**
+   * @see org.kalypso.zml.ui.table.IZmlTableListener#eventTableChanged()
+   */
   @Override
-  public void eventTableChanged( final String type, final IZmlModelColumn... columns )
+  public void eventTableChanged( )
   {
     new UIJob( "" )
     {

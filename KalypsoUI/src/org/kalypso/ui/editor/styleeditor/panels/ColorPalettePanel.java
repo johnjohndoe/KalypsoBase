@@ -56,17 +56,18 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
-import org.kalypso.ui.editor.styleeditor.style.RuleCollection;
+import org.kalypso.ui.editor.styleeditor.rulePattern.RuleCollection;
 
 /**
  * @author Administrator
+ *  
  */
 public class ColorPalettePanel
 {
 
   private Composite composite = null;
 
-  private final EventListenerList listenerList = new EventListenerList();
+  private EventListenerList listenerList = new EventListenerList();
 
   public final static int CUSTOM_TRANSITION = -1;
 
@@ -94,13 +95,13 @@ public class ColorPalettePanel
 
   private RuleCollection ruleCollection = null;
 
-  public ColorPalettePanel( final Composite parent, final Color[] colors, final RuleCollection m_ruleCollection )
+  public ColorPalettePanel( Composite parent, Color[] colors, RuleCollection m_ruleCollection )
   {
-    type = RED_GREEN_TRANSITION;
+    this.type = RED_GREEN_TRANSITION;
     setRuleCollection( m_ruleCollection );
     composite = new Composite( parent, SWT.NULL );
-    final FormLayout compositeLayout = new FormLayout();
-    final GridData compositeData = new GridData();
+    FormLayout compositeLayout = new FormLayout();
+    GridData compositeData = new GridData();
     compositeData.widthHint = 180;
     composite.setLayoutData( compositeData );
     composite.setLayout( compositeLayout );
@@ -117,16 +118,16 @@ public class ColorPalettePanel
     customColor = getColorArray();
   }
 
-  public void addColorPalettePanelListener( final PanelListener pl )
+  public void addColorPalettePanelListener( PanelListener pl )
   {
     listenerList.add( PanelListener.class, pl );
   }
 
-  public void draw( final Composite parent )
+  public void draw( Composite parent )
   {
     composite = new Composite( parent, SWT.NULL );
-    final FormLayout compositeLayout = new FormLayout();
-    final GridData compositeData = new GridData();
+    FormLayout compositeLayout = new FormLayout();
+    GridData compositeData = new GridData();
     compositeData.widthHint = 180;
     composite.setLayoutData( compositeData );
     composite.setLayout( compositeLayout );
@@ -137,65 +138,66 @@ public class ColorPalettePanel
     init();
   }
 
-  private void init( )
+  private void init()
   {
-    final Composite palleteParentComposite = new Composite( composite, SWT.NULL );
+    Composite palleteParentComposite = new Composite( composite, SWT.NULL );
     palleteParentComposite.setLayout( new GridLayout() );
-    final FormData palleteParentCompositeData = new FormData();
+    FormData palleteParentCompositeData = new FormData();
     palleteParentCompositeData.left = new FormAttachment( 340, 1000, 0 );
     palleteParentCompositeData.top = new FormAttachment( 0, 1000, 0 );
     palleteParentComposite.setLayoutData( palleteParentCompositeData );
 
     comboBox = new ColorPaletteComboBox( palleteParentComposite );
     comboBox.setSelection( colorPaletteSelection );
-    final ColorPalette colorPallete = new ColorPalette( palleteParentComposite, getColorArray(), COLOR_SIZE, COLOR_BORDER, getRuleCollection() );
+    final ColorPalette colorPallete = new ColorPalette( palleteParentComposite, getColorArray(), COLOR_SIZE,
+        COLOR_BORDER, getRuleCollection() );
 
     comboBox.addPanelListener( new PanelListener()
     {
       @Override
-      public void valueChanged( final PanelEvent event )
+      public void valueChanged( PanelEvent event )
       {
         switch( getComboBox().getSelection() )
         {
-          case 0:
-          {
-            initializeColors( RED_GREEN_TRANSITION, getNumberOfColors() );
-            setColorPaletteSelection( 0 );
-            setType( RED_GREEN_TRANSITION );
-            colorPallete.setColors( getColorArray() );
-            break;
-          }
-          case 1:
-          {
-            initializeColors( BLUE_GREEN_TRANSITION, getNumberOfColors() );
-            setColorPaletteSelection( 1 );
-            setType( BLUE_GREEN_TRANSITION );
-            colorPallete.setColors( getColorArray() );
-            break;
-          }
-          case 2:
-          {
-            initializeColors( RED_BLUE_TRANSITION, getNumberOfColors() );
-            setColorPaletteSelection( 2 );
-            setType( RED_BLUE_TRANSITION );
-            colorPallete.setColors( getColorArray() );
-            break;
-          }
-          case 3:
-          {
-            initializeColors( CUSTOM_TRANSITION, getNumberOfColors() );
-            setColorPaletteSelection( 3 );
-            setType( CUSTOM_TRANSITION );
-            colorPallete.setColors( getCustomColor() );
-            break;
-          }
-          default:
-          {
-            initializeColors( RED_GREEN_TRANSITION, getNumberOfColors() );
-            setColorPaletteSelection( 1 );
-            setType( BLUE_GREEN_TRANSITION );
-            colorPallete.setColors( getColorArray() );
-          }
+        case 0:
+        {
+          initializeColors( RED_GREEN_TRANSITION, getNumberOfColors() );
+          setColorPaletteSelection( 0 );
+          setType( RED_GREEN_TRANSITION );
+          colorPallete.setColors( getColorArray() );
+          break;
+        }
+        case 1:
+        {
+          initializeColors( BLUE_GREEN_TRANSITION, getNumberOfColors() );
+          setColorPaletteSelection( 1 );
+          setType( BLUE_GREEN_TRANSITION );
+          colorPallete.setColors( getColorArray() );
+          break;
+        }
+        case 2:
+        {
+          initializeColors( RED_BLUE_TRANSITION, getNumberOfColors() );
+          setColorPaletteSelection( 2 );
+          setType( RED_BLUE_TRANSITION );
+          colorPallete.setColors( getColorArray() );
+          break;
+        }
+        case 3:
+        {
+          initializeColors( CUSTOM_TRANSITION, getNumberOfColors() );
+          setColorPaletteSelection( 3 );
+          setType( CUSTOM_TRANSITION );
+          colorPallete.setColors( getCustomColor() );
+          break;
+        }
+        default:
+        {
+          initializeColors( RED_GREEN_TRANSITION, getNumberOfColors() );
+          setColorPaletteSelection( 1 );
+          setType( BLUE_GREEN_TRANSITION );
+          colorPallete.setColors( getColorArray() );
+        }
         }
         colorPallete.setColors( getColorArray() );
         setColorPaletteSelection( getComboBox().getSelection() );
@@ -206,7 +208,7 @@ public class ColorPalettePanel
     colorPallete.addColorPaletterListener( new PanelListener()
     {
       @Override
-      public void valueChanged( final PanelEvent event )
+      public void valueChanged( PanelEvent event )
       {
         // changes allowed only to customize selection
         setColorPaletteSelection( 3 );
@@ -217,8 +219,8 @@ public class ColorPalettePanel
       }
     } );
 
-    final Label fillColorLabel = new Label( composite, SWT.NULL );
-    final FormData fillColorLabelLData = new FormData();
+    Label fillColorLabel = new Label( composite, SWT.NULL );
+    FormData fillColorLabelLData = new FormData();
     fillColorLabelLData.height = 15;
     fillColorLabelLData.width = 242;
     fillColorLabelLData.left = new FormAttachment( 0, 1000, 0 );
@@ -227,43 +229,43 @@ public class ColorPalettePanel
     fillColorLabel.setText( MessageBundle.STYLE_EDITOR_COLOR_PATTERN );
   }
 
-  // public static Color[] initializeColors(int type,int numberOfColors)
-  public void initializeColors( final int m_type, final int m_numberOfColors )
+  //public static Color[] initializeColors(int type,int numberOfColors)
+  public void initializeColors( int m_type, int m_numberOfColors )
   {
-    type = m_type;
+    this.type = m_type;
     if( type == CUSTOM_TRANSITION )
     {
       initializeCustomColors( m_numberOfColors );
       return;
     }
-    final Color[] colors = new Color[m_numberOfColors];
+    Color[] colors = new Color[m_numberOfColors];
     int step = 255;
     if( m_numberOfColors > 1 )
-      step = 255 / (m_numberOfColors - 1);
+      step = 255 / ( m_numberOfColors - 1 );
     for( int i = 0; i < m_numberOfColors; i++ )
     {
       if( type == BLUE_GREEN_TRANSITION )
       {
-        colors[i] = new Color( null, 0, i * step, 255 - i * step );
+        colors[i] = new Color( null, 0, i * step, 255 - ( i * step ) );
       }
       else if( type == RED_BLUE_TRANSITION )
       {
-        colors[i] = new Color( null, 255 - i * step, 0, i * step );
+        colors[i] = new Color( null, 255 - ( i * step ), 0, i * step );
       }
       else if( type == RED_GREEN_TRANSITION )
       {
-        colors[i] = new Color( null, 255 - i * step, i * step, 0 );
+        colors[i] = new Color( null, 255 - ( i * step ), i * step, 0 );
       }
     }
     setColorArray( colors );
   }
 
-  private void initializeCustomColors( final int m_numberOfColors )
+  private void initializeCustomColors( int m_numberOfColors )
   {
     // check whether size is appropriate
     if( customColor.length < m_numberOfColors )
     {
-      final Color[] tmpColor = new Color[m_numberOfColors];
+      Color[] tmpColor = new Color[m_numberOfColors];
       int i = 0;
       for( ; i < customColor.length; i++ )
         tmpColor[i] = customColor[i];
@@ -273,7 +275,7 @@ public class ColorPalettePanel
     }
     else if( customColor.length > m_numberOfColors )
     {
-      final Color[] tmpColor = new Color[m_numberOfColors];
+      Color[] tmpColor = new Color[m_numberOfColors];
       for( int i = 0; i < m_numberOfColors; i++ )
         tmpColor[i] = customColor[i];
       customColor = tmpColor;
@@ -281,120 +283,120 @@ public class ColorPalettePanel
     setColorArray( customColor );
   }
 
-  public void setColorPalette( final Color[] colors )
+  public void setColorPalette( Color[] colors )
   {
     setColorArray( colors );
   }
 
-  public Color[] getColorPalette( )
+  public Color[] getColorPalette()
   {
     return getColorArray();
   }
 
-  protected void fire( )
+  protected void fire()
   {
-    final Object[] listeners = listenerList.getListenerList();
+    Object[] listeners = listenerList.getListenerList();
     for( int i = listeners.length - 2; i >= 0; i -= 2 )
     {
       if( listeners[i] == PanelListener.class )
       {
-        final PanelEvent event = new PanelEvent( this );
-        ((PanelListener) listeners[i + 1]).valueChanged( event );
+        PanelEvent event = new PanelEvent( this );
+        ( (PanelListener)listeners[i + 1] ).valueChanged( event );
       }
     }
   }
 
-  public Color[] getColorArray( )
+  public Color[] getColorArray()
   {
     return colorArray;
   }
 
-  public void setColorArray( final Color[] m_colorArray )
+  public void setColorArray( Color[] m_colorArray )
   {
     numberOfColors = m_colorArray.length;
-    colorArray = m_colorArray;
+    this.colorArray = m_colorArray;
   }
 
-  public int getType( )
+  public int getType()
   {
     return type;
   }
 
-  public void setType( final int m_type )
+  public void setType( int m_type )
   {
-    type = m_type;
-    switch( type )
+    this.type = m_type;
+    switch( this.type )
     {
-      case RED_GREEN_TRANSITION:
-      {
-        setColorPaletteSelection( 0 );
-        break;
-      }
-      case BLUE_GREEN_TRANSITION:
-      {
-        setColorPaletteSelection( 1 );
-        break;
-      }
-      case RED_BLUE_TRANSITION:
-      {
-        setColorPaletteSelection( 2 );
-        break;
-      }
-      default:
-      {
-        setColorPaletteSelection( 3 );
-      }
+    case RED_GREEN_TRANSITION:
+    {
+      setColorPaletteSelection( 0 );
+      break;
+    }
+    case BLUE_GREEN_TRANSITION:
+    {
+      setColorPaletteSelection( 1 );
+      break;
+    }
+    case RED_BLUE_TRANSITION:
+    {
+      setColorPaletteSelection( 2 );
+      break;
+    }
+    default:
+    {
+      setColorPaletteSelection( 3 );
+    }
     }
   }
 
-  public int getNumberOfColors( )
+  public int getNumberOfColors()
   {
     return numberOfColors;
   }
 
-  public void setNumberOfColors( final int m_numberOfColors )
+  public void setNumberOfColors( int m_numberOfColors )
   {
-    numberOfColors = m_numberOfColors;
+    this.numberOfColors = m_numberOfColors;
   }
 
-  public int getColorPaletteSelection( )
+  public int getColorPaletteSelection()
   {
     return colorPaletteSelection;
   }
 
-  public void setColorPaletteSelection( final int m_colorPaletteSelection )
+  public void setColorPaletteSelection( int m_colorPaletteSelection )
   {
-    colorPaletteSelection = m_colorPaletteSelection;
+    this.colorPaletteSelection = m_colorPaletteSelection;
     getComboBox().setSelection( m_colorPaletteSelection );
   }
 
-  public Color[] getCustomColor( )
+  public Color[] getCustomColor()
   {
     return customColor;
   }
 
-  public void setCustomColor( final Color[] m_customColor )
+  public void setCustomColor( Color[] m_customColor )
   {
-    customColor = m_customColor;
+    this.customColor = m_customColor;
   }
 
-  public ColorPaletteComboBox getComboBox( )
+  public ColorPaletteComboBox getComboBox()
   {
     return comboBox;
   }
 
-  public void setComboBox( final ColorPaletteComboBox m_comboBox )
+  public void setComboBox( ColorPaletteComboBox m_comboBox )
   {
-    comboBox = m_comboBox;
+    this.comboBox = m_comboBox;
   }
 
-  public RuleCollection getRuleCollection( )
+  public RuleCollection getRuleCollection()
   {
     return ruleCollection;
   }
 
-  public void setRuleCollection( final RuleCollection m_ruleCollection )
+  public void setRuleCollection( RuleCollection m_ruleCollection )
   {
-    ruleCollection = m_ruleCollection;
+    this.ruleCollection = m_ruleCollection;
   }
 }

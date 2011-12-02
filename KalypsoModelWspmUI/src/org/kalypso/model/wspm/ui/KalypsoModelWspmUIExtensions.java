@@ -55,23 +55,24 @@ import org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.IPointsSource;
 import org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.IPointsTarget;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 
-public final class KalypsoModelWspmUIExtensions
+public class KalypsoModelWspmUIExtensions
 {
-  private KalypsoModelWspmUIExtensions( )
+  /** Only the Plugin may instantiate me */
+  KalypsoModelWspmUIExtensions( )
   {
   }
 
   public static IPointsTarget[] createProfilPointTargets( )
   {
-    return createExtensions( "org.kalypso.model.wspm.ui.profilPointsTarget", new IPointsTarget[0] ); //$NON-NLS-1$
+    return createExtensions( "org.kalypso.model.wspm.ui.profilPointsTarget", new IPointsTarget[0] );  //$NON-NLS-1$
   }
 
   public static IPointsSource[] createProfilPointSources( )
   {
-    return createExtensions( "org.kalypso.model.wspm.ui.profilPointsSource", new IPointsSource[0] ); //$NON-NLS-1$
+    return createExtensions( "org.kalypso.model.wspm.ui.profilPointsSource", new IPointsSource[0] );  //$NON-NLS-1$
   }
 
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public static <T> T[] createExtensions( final String extensionPoint, final T[] a )
   {
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -81,11 +82,12 @@ public final class KalypsoModelWspmUIExtensions
     // elements[0].createExecutableExtension( "class" );
 
     final Collection<T> targets = new ArrayList<T>( elements.length );
-    for( final IConfigurationElement element : elements )
+    for( int i = 0; i < elements.length; i++ )
     {
+      final IConfigurationElement element = elements[i];
       try
       {
-        targets.add( (T) element.createExecutableExtension( "class" ) ); //$NON-NLS-1$
+        targets.add( (T) element.createExecutableExtension( "class" ) );  //$NON-NLS-1$
       }
       catch( final CoreException e )
       {
@@ -98,7 +100,7 @@ public final class KalypsoModelWspmUIExtensions
 
   public static IPointPropertyCalculator[] createPointPropertyCalculator( )
   {
-    return createExtensions( "org.kalypso.model.wspm.ui.pointPropertyCalculator", new IPointPropertyCalculator[0] ); //$NON-NLS-1$
+    return createExtensions( "org.kalypso.model.wspm.ui.pointPropertyCalculator", new IPointPropertyCalculator[0] );  //$NON-NLS-1$
   }
 
   /**
@@ -107,12 +109,12 @@ public final class KalypsoModelWspmUIExtensions
   public static IProfilLayerProvider createProfilLayerProvider( final String profiletype, final String providerId )
   {
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
-    final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.ui.profilChartLayerProvider" ); //$NON-NLS-1$
+    final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.ui.profilChartLayerProvider" );  //$NON-NLS-1$
 
     for( final IConfigurationElement element : elements )
     {
-      final String type = element.getAttribute( "profiletype" ); //$NON-NLS-1$
-      final String id = element.getAttribute( "id" ); //$NON-NLS-1$
+      final String type = element.getAttribute( "profiletype" );  //$NON-NLS-1$
+      final String id = element.getAttribute( "id" );  //$NON-NLS-1$
 
       /*
        * If a provider id is given, only accept this one, else use the first one. TODO: Kim: if providerID == null,
@@ -122,7 +124,7 @@ public final class KalypsoModelWspmUIExtensions
       {
         try
         {
-          final Object layerProvider = element.createExecutableExtension( "provider" ); //$NON-NLS-1$
+          final Object layerProvider = element.createExecutableExtension( "provider" );  //$NON-NLS-1$
           if( layerProvider instanceof IProfilLayerProvider )
             return (IProfilLayerProvider) layerProvider;
         }
@@ -132,7 +134,7 @@ public final class KalypsoModelWspmUIExtensions
         }
       }
     }
-    final IStatus status = StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions.8" ) + profiletype ); //$NON-NLS-1$
+    final IStatus status = StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions.8") + profiletype );  //$NON-NLS-1$
     KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
     return null;
 
@@ -144,16 +146,16 @@ public final class KalypsoModelWspmUIExtensions
   public static IProfilLayerProvider createProfilLayerProvider( final String profiletype )
   {
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
-    final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.ui.profilChartLayerProvider" ); //$NON-NLS-1$
+    final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.ui.profilChartLayerProvider" );  //$NON-NLS-1$
 
     for( final IConfigurationElement element : elements )
     {
-      final String type = element.getAttribute( "profiletype" ); //$NON-NLS-1$
+      final String type = element.getAttribute( "profiletype" );  //$NON-NLS-1$
       if( type.equals( profiletype ) )
       {
         try
         {
-          final Object layerProvider = element.createExecutableExtension( "provider" ); //$NON-NLS-1$
+          final Object layerProvider = element.createExecutableExtension( "provider" );  //$NON-NLS-1$
           if( layerProvider instanceof IProfilLayerProvider )
             return (IProfilLayerProvider) layerProvider;
         }
@@ -163,7 +165,7 @@ public final class KalypsoModelWspmUIExtensions
         }
       }
     }
-    final IStatus status = StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions.12" ) + profiletype ); //$NON-NLS-1$
+    final IStatus status = StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions.12") + profiletype );  //$NON-NLS-1$
     KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
     return null;
   }
