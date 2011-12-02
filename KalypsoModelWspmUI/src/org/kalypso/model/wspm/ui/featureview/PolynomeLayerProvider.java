@@ -95,7 +95,7 @@ public class PolynomeLayerProvider extends AbstractLayerProvider
     final String featureKey = pc.getParameterValue( "featureKey", null ); //$NON-NLS-1$
     final String propertyNameStr = pc.getParameterValue( "propertyName", null ); //$NON-NLS-1$
     final QName propertyName = propertyNameStr == null ? null : QName.valueOf( propertyNameStr );
-    final Feature feature = ChartDataProvider.FEATURE_MAP.get( featureKey );
+    final Feature feature = (Feature) getModel().getData( featureKey );
 
     final FeatureList polygones = (FeatureList) feature.getProperty( propertyName );
 

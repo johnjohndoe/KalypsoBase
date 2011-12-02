@@ -45,6 +45,7 @@ import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,8 +86,16 @@ public final class ProfilUtil
    */
   public static Object[] getValuesFor( final IProfil profil, final IComponent pointProperty )
   {
+    return getValuesFor( profil, pointProperty, false );
+  }
+
+  /**
+   * @return the values of each point for this pointProperty in the correct order
+   */
+  public static Object[] getValuesFor( final IProfil profil, final IComponent pointProperty, final boolean skipNullValues )
+  {
     final IRecord[] points = profil.getPoints();
-    return getValuesFor( points, pointProperty );
+    return getValuesFor( points, pointProperty, skipNullValues );
   }
 
   public static IComponent getFeatureComponent( final String propertyId )
@@ -107,12 +116,12 @@ public final class ProfilUtil
   /**
    * @return the DoubleValues of each point for this pointProperty in the correct order
    */
-  public static Object[] getValuesFor( final IRecord[] points, final IComponent pointProperty )
+  public static Object[] getValuesFor( final IRecord[] points, final IComponent pointProperty, final boolean skipNullValues )
   {
-    return getValuesFor( points, pointProperty.getId() );
+    return getValuesFor( points, pointProperty.getId(), skipNullValues );
   }
 
-  public static Object[] getValuesFor( final IRecord[] points, final String component )
+  public static Object[] getValuesFor( final IRecord[] points, final String component, final boolean skipNullValues )
   {
     if( points == null || points.length < 1 )
       return new Object[0];
@@ -122,22 +131,21 @@ public final class ProfilUtil
     if( iProp < 0 )
       throw new IllegalArgumentException( String.format( "Unknown component: %s", component ) ); //$NON-NLS-1$
 
-    return getValuesFor( points, iProp );
+    return getValuesFor( points, iProp, skipNullValues );
   }
 
-  public static Object[] getValuesFor( final IRecord[] points, final int componentIndex )
+  public static Object[] getValuesFor( final IRecord[] points, final int componentIndex, final boolean skipNullValues )
   {
-    final Object[] values = new Object[points.length];
-    int i = 0;
+    final Collection<Object> values = new ArrayList<Object>( points.length );
+
     for( final IRecord point : points )
     {
       final Object value = point.getValue( componentIndex );
-      // if( value == null )
-      // Debug.print( point, Messages.getString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.5", pointProperty.getName(), iProp ) ); //$NON-NLS-1$
-      values[i] = value;
-      i++;
+      if( value != null || !skipNullValues )
+        values.add( value );
     }
-    return values;
+
+    return values.toArray( new Object[values.size()] );
   }
 
   public static int getNextNonNull( final IRecord[] points, final int start, final int componentIndex )
@@ -207,25 +215,18 @@ public final class ProfilUtil
   }
 
   /**
-   * @return a subList include both MarkerPoints, maybe null
-   */
-  public static List<IRecord> getInnerPoints( final IProfil profil, final IProfilPointMarker leftMarker, final IProfilPointMarker rightMarker )
-  {
-    final IRecord[] points = profil.getPoints();
-    final int leftPos = leftMarker != null ? ArrayUtils.indexOf( points, leftMarker.getPoint() ) : 0;
-    final int rightPos = rightMarker != null ? ArrayUtils.indexOf( points, rightMarker.getPoint() ) + 1 : 0;
-    return leftPos < rightPos ? profil.getResult().subList( leftPos, rightPos ) : null;
-  }
-
-  /**
-   * Returns all points between the given markers (closed interval).
+   * Returns all points between the given markers (closed interval).<br/>
+   * If the marker does not exist (or not enough markers of that kind), the whole profile is returned.
    */
   public static List<IRecord> getInnerPoints( final IProfil profil, final IComponent markerTyp )
   {
     final IProfilPointMarker[] markers = profil.getPointMarkerFor( markerTyp );
     final IRecord[] points = profil.getPoints();
-    final int leftPos = markers.length > 0 ? ArrayUtils.indexOf( points, markers[0].getPoint() ) : 0;
-    final int rightPos = markers.length > 1 ? ArrayUtils.indexOf( points, markers[markers.length - 1].getPoint() ) + 1 : 0;
+
+    // REMARK: check both for length > 1, a single marker does not count
+    final int leftPos = markers.length > 1 ? ArrayUtils.indexOf( points, markers[0].getPoint() ) : 0;
+    final int rightPos = markers.length > 1 ? ArrayUtils.indexOf( points, markers[markers.length - 1].getPoint() ) + 1 : points.length - 1;
+
     return leftPos < rightPos ? profil.getResult().subList( leftPos, rightPos ) : null;
   }
 
@@ -966,14 +967,24 @@ public final class ProfilUtil
     return GeometryFactory.createGM_Curve( pos, crs );
   }
 
-  public static Double[] getDoubleValuesFor( final IProfil profil, final IComponent pointProperty )
+  public static Double[] getDoubleValuesFor( final IProfil profil, final IComponent pointProperty, final boolean skipNullValues )
   {
     final List<Double> myValues = new ArrayList<Double>();
 
     final Object[] values = getValuesFor( profil, pointProperty );
     for( final Object object : values )
     {
-      myValues.add( Double.valueOf( object.toString() ) );
+      if( object instanceof Double )
+        myValues.add( ((Double) object) );
+      else if( object instanceof Number )
+        myValues.add( ((Number) object).doubleValue() );
+      else if( object instanceof String )
+      {
+        // TODO: dubious...
+        myValues.add( Double.valueOf( object.toString() ) );
+      }
+      else if( object == null && !skipNullValues )
+        myValues.add( null );
     }
 
     return myValues.toArray( new Double[] {} );
@@ -1109,16 +1120,16 @@ public final class ProfilUtil
    * Same as {@link #getValuesFor(IRecord[], String)}, but casts the result to the given type.
    */
   @SuppressWarnings("unchecked")
-  public static <T> T[] getValuesFor( final IRecord[] points, final String component, final Class<T> type )
+  public static <T> T[] getValuesFor( final IRecord[] points, final String component, final Class<T> type, final boolean skipNullValues )
   {
-    final Object[] values = getValuesFor( points, component );
+    final Object[] values = getValuesFor( points, component, skipNullValues );
     final T[] targetArray = (T[]) Array.newInstance( type, values.length );
     return Arrays.castArray( values, targetArray );
   }
 
   public static Double[] getValuesFor( final IProfil profil, final String component, final Class<Double> type )
   {
-    return getValuesFor( profil.getPoints(), component, type );
+    return getValuesFor( profil.getPoints(), component, type, false );
   }
 
   /**

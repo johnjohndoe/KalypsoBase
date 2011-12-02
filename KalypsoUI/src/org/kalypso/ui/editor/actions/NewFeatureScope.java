@@ -43,6 +43,7 @@ package org.kalypso.ui.editor.actions;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -123,5 +124,11 @@ public class NewFeatureScope implements INewScope
   {
     for( final NewFeaturePropertyScope scope : m_scopes )
       scope.addMenuItemWithoutAddition( menuManager );
+  }
+
+  @Override
+  public IAction[] createActions( )
+  {
+    throw new UnsupportedOperationException();
   }
 }

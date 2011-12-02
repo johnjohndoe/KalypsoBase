@@ -55,6 +55,7 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.commandhandler.ChartSourceProvider;
 import org.kalypso.commons.eclipse.ui.EmbeddedSourceToolbarManager;
+import org.kalypsodeegree.model.feature.Feature;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
@@ -73,7 +74,7 @@ public class ChartTabItem extends Composite implements IChartPart
 
   private final EmbeddedSourceToolbarManager m_sourceManager;
 
-  public ChartTabItem( final Composite parent, final int style, final Map<String, Integer> commands )
+  public ChartTabItem( final String featureKeyName, final Feature feature, final Composite parent, final int style, final Map<String, Integer> commands )
   {
     super( parent, style );
 
@@ -83,6 +84,9 @@ public class ChartTabItem extends Composite implements IChartPart
     final ToolBar toolBar = manager.createControl( this );
 
     final IChartModel chartModel = new ChartModel();
+    // remember the feature from the feature control
+    chartModel.setData( featureKeyName, feature );
+
     m_chartComposite = new ChartImageComposite( this, SWT.BORDER, chartModel, new RGB( 255, 255, 255 ), new Insets( 10, 10, 10, 10 ) );
     m_chartComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
