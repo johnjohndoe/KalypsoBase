@@ -71,6 +71,7 @@ public final class TranProLinFilterUtilities
   {
     final TranProLinFilter filter = new TranProLinFilter( range, operator, operandBegin, operandEnd, axisTypes );
     filter.initFilter( null, baseObservation, null );
-    return AutoProxyFactory.getInstance().proxyObservation( filter );
+    // FIXME: dubious: all observations we get already should have been decorated. Why is this needed here?
+    return AutoProxyFactory.proxyObservation( filter );
   }
 }
