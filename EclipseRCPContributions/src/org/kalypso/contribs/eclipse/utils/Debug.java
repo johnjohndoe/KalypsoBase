@@ -38,32 +38,23 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.contribs.eclipse.jface.viewers;
+package org.kalypso.contribs.eclipse.utils;
 
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
 
 /**
- * Inverts another sorter.
+ * This class is a helper for debugging.
  * 
- * @author Gernot Belger
+ * @author Holger Albert
  */
-public final class InverseSorter extends ViewerSorter
+public class Debug
 {
-  private final ViewerSorter m_sorter;
-
-  public InverseSorter( final ViewerSorter sorter )
-  {
-    m_sorter = sorter;
-  }
-
   /**
-   * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
+   * The constructor.
    */
-  @Override
-  public int compare( final Viewer viewer, final Object e1, final Object e2 )
+  private Debug( )
   {
-    return m_sorter.compare( viewer, e1, e2 ) * -1;
   }
+
+  public static final org.kalypso.contribs.eclipse.core.runtime.Debug CRON_JOB = new org.kalypso.contribs.eclipse.core.runtime.Debug( EclipseRCPContributionsPlugin.getDefault(), "/debug/cronjob" ); //$NON-NLS-1$
 }

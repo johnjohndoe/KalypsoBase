@@ -38,32 +38,33 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.contribs.eclipse.jface.viewers;
+package org.kalypso.contribs.eclipse.core.variables;
 
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.variables.IStringVariableManager;
+import org.eclipse.core.variables.VariablesPlugin;
 
 /**
- * Inverts another sorter.
- * 
- * @author Gernot Belger
+ * @author Holger Albert
  */
-public final class InverseSorter extends ViewerSorter
+public final class VariableUtils
 {
-  private final ViewerSorter m_sorter;
-
-  public InverseSorter( final ViewerSorter sorter )
+  private VariableUtils( )
   {
-    m_sorter = sorter;
+    throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
-   */
-  @Override
-  public int compare( final Viewer viewer, final Object e1, final Object e2 )
+  public static String resolveVariablesQuietly( String pattern )
   {
-    return m_sorter.compare( viewer, e1, e2 ) * -1;
+    try
+    {
+      final IStringVariableManager variableManager = VariablesPlugin.getDefault().getStringVariableManager();
+      return variableManager.performStringSubstitution( pattern, true );
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+      return pattern;
+    }
   }
 }

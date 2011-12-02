@@ -81,9 +81,9 @@ public class FullscreenPerspectiveListener implements IPerspectiveListener
   private final IPerspectiveDescriptor m_descriptor;
 
   /** Contribution-Manager -> Items */
-  private final Map<IContributionManager, IContributionItem[]> m_itemMap = new HashMap<IContributionManager, IContributionItem[]>();
+  private Map<IContributionManager, IContributionItem[]> m_itemMap = new HashMap<IContributionManager, IContributionItem[]>();
 
-  private final Collection<Composite> m_hiddenControls = new ArrayList<Composite>( 2 );
+  private Collection<Composite> m_hiddenControls = new ArrayList<Composite>( 2 );
 
   public FullscreenPerspectiveListener( final IPerspectiveDescriptor descriptor, final boolean hideMenu, final boolean hideToolbars )
   {
@@ -115,8 +115,8 @@ public class FullscreenPerspectiveListener implements IPerspectiveListener
       final IContributionManager manager = entry.getKey();
       final IContributionItem[] items = entry.getValue();
 
-      for( final IContributionItem item : items )
-        manager.add( item );
+      for( int i = 0; i < items.length; i++ )
+        manager.add( items[i] );
 
       manager.update( true );
     }
