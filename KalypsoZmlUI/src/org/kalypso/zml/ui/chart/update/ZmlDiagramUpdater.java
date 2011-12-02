@@ -101,14 +101,9 @@ public class ZmlDiagramUpdater implements Runnable
 
         try
         {
-
           final AsynchronousObservationProvider provider = new AsynchronousObservationProvider( link, multiple.getType() );
           update( layers, provider, index, link.getName() );
           provider.dispose();
-
-// final SynchronousObservationProvider synchrone = new SynchronousObservationProvider( link.getContext(),
-// link.getHref() );
-// update( layers, synchrone, index, link.getName() );
         }
         catch( final Exception e )
         {
