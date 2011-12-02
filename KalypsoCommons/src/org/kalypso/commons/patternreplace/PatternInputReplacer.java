@@ -85,7 +85,7 @@ public class PatternInputReplacer<T>
     m_patternStart = patternStart;
     m_patternStop = patternStop;
 
-    final String pattern = String.format( "%s(.*?)(:(.*))?%s", Pattern.quote( m_patternStart ), Pattern.quote( m_patternStop ) );
+    final String pattern = String.format( "%s(.*?)(:(.*?))?%s", Pattern.quote( m_patternStart ), Pattern.quote( m_patternStop ) );
 
     m_tokenPattern = Pattern.compile( pattern );
   }
