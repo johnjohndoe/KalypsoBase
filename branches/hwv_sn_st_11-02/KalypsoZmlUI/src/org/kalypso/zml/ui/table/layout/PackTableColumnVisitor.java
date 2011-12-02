@@ -101,7 +101,7 @@ public class PackTableColumnVisitor extends AbstractTableColumnPackVisitor
     final IZmlModelColumn modelColumn = column.getModelColumn();
     final TableColumn tableColumn = column.getTableViewerColumn().getColumn();
 
-    if( modelColumn.isLabeled() )
+    if( !modelColumn.isLabeled() )
     {
       updateColumnLabel( modelColumn, tableColumn );
 
