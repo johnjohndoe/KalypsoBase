@@ -40,17 +40,13 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.zml;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Writer;
 import java.net.URL;
 
 import javax.xml.bind.JAXBContext;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -59,7 +55,6 @@ import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.commons.parser.IParser;
 import org.kalypso.commons.parser.ParserFactory;
-import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -69,10 +64,6 @@ import org.kalypso.ogc.sensor.proxy.RequestObservationProxy;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.request.RequestFactory;
-import org.kalypso.repository.IRepository;
-import org.kalypso.repository.IRepositoryItem;
-import org.kalypso.repository.RepositoryException;
-import org.kalypso.repository.utils.Repositories;
 import org.kalypso.zml.request.Request;
 import org.xml.sax.InputSource;
 
@@ -108,120 +99,25 @@ public final class ZmlFactory
    * @throws SensorException
    *           in case of parsing or creation problem
    */
+  // TODO: bad method name
   public static IObservation parseXML( final URL url ) throws SensorException
   {
-    final IObservation observation = fetchObservationFromRegisteredRepository( url );
+    final IObservation observation = readZml( url );
+    final String href = url.toExternalForm();
+    return decorateObservation( observation, href, url );
+  }
+
+  private static IObservation readZml( final URL url ) throws SensorException
+  {
+    final IObservation observation = ObservationRepositoryFetcher.loadObservation( url );
     if( observation != null )
-      return decorateObservation( observation, url.toExternalForm(), url );
-
-    InputStream inputStream = null;
-
-    try
-    {
-      final String zmlId = ZmlURL.getIdentifierPart( url );
-
-      if( ZmlURL.isUseAsContext( url ) )
-      {
-        /*
-         * if there is a fragment called "useascontext" then we are dealing with a special kind of zml-url: the scheme
-         * denotes solely a context, the observation is strictly built using the query part and the context.
-         */
-
-        // create the real context
-        final URL context = new URL( zmlId );
-
-        // directly return the observation
-        return decorateObservation( null, url.toExternalForm(), context );
-      }
-
-      final String scheme = ZmlURL.getSchemePart( url );
-      if( scheme.startsWith( "file" ) || scheme.startsWith( "platform" ) || scheme.startsWith( "jar" ) || scheme.startsWith( "bundleresource" ) ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-      {
-        /*
-         * if this is a local url, we remove the query part because Eclipse Platform's URLStreamHandler cannot deal with
-         * it.
-         */
-
-        // only take the simple part of the url
-        final URL tmpUrl = new URL( zmlId );
-
-        // stream is closed in finally
-        inputStream = tmpUrl.openStream();
-      }
-      else
-      {
-        // default behaviour (might use a specific stream handler like
-        // the OCSUrlStreamHandler )
-        inputStream = url.openStream();
-      }
-
-      inputStream = new BufferedInputStream( inputStream );
-
-      // url is given as an argument here (and not tmpUrl) in order not to
-      // loose the query part we might have removed because of Eclipse's
-      // url handling.
-      return parseXML( new InputSource( inputStream ), url );
-    }
-    catch( final IOException e )
-    {
-      throw new SensorException( Messages.getString( "org.kalypso.ogc.sensor.zml.ZmlFactory.5" ) + url.toExternalForm(), e ); //$NON-NLS-1$
-    }
-    finally
-    {
-      IOUtils.closeQuietly( inputStream );
-    }
-  }
-
-  private static IObservation fetchObservationFromRegisteredRepository( final URL url ) throws SensorException
-  {
-    try
-    {
-      final String urlBase = url.toExternalForm();
-      if( ZmlURL.isEmpty( urlBase ) )
-        return RequestFactory.createDefaultObservation( urlBase );
-
-      final IRepository registeredRepository = Repositories.findRegisteredRepository( url.toExternalForm() );
-      if( registeredRepository == null )
-        return null;
-
-      final String[] splittedUrlBase = urlBase.split( "\\?" ); //$NON-NLS-1$
-      if( splittedUrlBase.length > 2 )
-        throw new IllegalStateException( String.format( "Unknown URL format. Format = zml-proxy://itemId?parameter. Given %s", urlBase ) ); //$NON-NLS-1$
-
-      final String itemId = splittedUrlBase[0];
-
-      final IObservation observation = fetchZmlFromRepository( registeredRepository, itemId );
-
-      /* If we have an request here but we did not find an observation -> create an request anyways */
-      if( observation != null )
-        return observation;
-
-      final Request xmlReq = RequestFactory.parseRequest( urlBase );
-      if( xmlReq != null )
-        return RequestFactory.createDefaultObservation( xmlReq );
-
       return observation;
-    }
-    catch( final SensorException e )
-    {
-      throw e;
-    }
-    catch( final Exception ex )
-    {
-      throw new SensorException( "Parsing zml-proxy observation failed.", ex ); //$NON-NLS-1$
-    }
-  }
 
-  private static IObservation fetchZmlFromRepository( final IRepository repository, final String itemId ) throws RepositoryException
-  {
-    final IRepositoryItem item = repository.findItem( itemId );
-    if( item == null )
-      throw new RepositoryException( String.format( "Unknown ID: %s", itemId ) );
-
-    return (IObservation) item.getAdapter( IObservation.class );
+    return ObservationStreamFetcher.loadObservation( url );
   }
 
   /**
+   * FIXME: check: why do we have two parse methods? There should be only one access point...! <br/>
    * Parse the XML and create an IObservation instance.
    * 
    * @param source
@@ -254,7 +150,7 @@ public final class ZmlFactory
     // tricky: check if a proxy has been specified in the url
     final IObservation proxyObs = createProxyFrom( href, filteredObs );
 
-    return AutoProxyFactory.getInstance().proxyObservation( proxyObs );
+    return AutoProxyFactory.proxyObservation( proxyObs );
   }
 
   /**
