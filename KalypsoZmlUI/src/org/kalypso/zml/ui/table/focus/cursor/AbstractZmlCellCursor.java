@@ -44,10 +44,6 @@ public abstract class AbstractZmlCellCursor extends Canvas implements ITableCurs
 
   protected final TableViewer m_viewer;
 
-  /**
-   * @param viewer
-   * @param style
-   */
   public AbstractZmlCellCursor( final TableViewer viewer )
   {
     super( (Composite) viewer.getControl(), SWT.NONE );
@@ -82,7 +78,6 @@ public abstract class AbstractZmlCellCursor extends Canvas implements ITableCurs
         {
           m_viewer.getControl().forceFocus();
         }
-
       }
     };
 
@@ -112,16 +107,21 @@ public abstract class AbstractZmlCellCursor extends Canvas implements ITableCurs
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        new UIJob( "" )
+        final UIJob job = new UIJob( "Aktualisere Tabellen-Cursor" )
         {
           @Override
           public IStatus runInUIThread( final IProgressMonitor monitor )
           {
             redraw();
+
             return Status.OK_STATUS;
           }
 
-        }.schedule();
+        };
+        job.setSystem( true );
+        job.setUser( false );
+
+        job.schedule();
       }
     } );
 
@@ -140,9 +140,6 @@ public abstract class AbstractZmlCellCursor extends Canvas implements ITableCurs
     getParent().notifyListeners( SWT.MouseDown, copyEvent( event ) );
   }
 
-  /**
-   * @see org.eclipse.swt.widgets.Control#redraw()
-   */
   @Override
   public void redraw( )
   {
