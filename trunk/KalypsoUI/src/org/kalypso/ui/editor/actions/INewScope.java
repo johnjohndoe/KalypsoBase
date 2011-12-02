@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.actions;
 
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 
 /**
@@ -50,4 +51,6 @@ public interface INewScope
   IMenuManager createMenu( );
 
   void addMenuItems( IMenuManager menuManager );
+
+  IAction[] createActions( );
 }

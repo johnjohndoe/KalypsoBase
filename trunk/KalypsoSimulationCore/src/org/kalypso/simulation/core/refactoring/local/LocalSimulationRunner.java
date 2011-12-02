@@ -85,10 +85,6 @@ public class LocalSimulationRunner implements ISimulationRunner
     m_inputDir = inputDir;
   }
 
-  /**
-   * @see org.kalypso.simulation.core.refactoring.ISimulationRunner#startProcess(java.util.Map, java.util.List,
-   *      org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public void run( final Map<String, Object> inputs, final List<String> outputs, final IProgressMonitor monitor ) throws CoreException
   {

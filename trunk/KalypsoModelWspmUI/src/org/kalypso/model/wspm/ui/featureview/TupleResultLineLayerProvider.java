@@ -84,15 +84,28 @@ public class TupleResultLineLayerProvider extends AbstractLayerProvider
     return icl;
   }
 
-  @SuppressWarnings({ "unchecked" })
-  private TupleResultDomainValueData getDataContainer( )
+  private TupleResultDomainValueData< ? , ? > getDataContainer( )
+  {
+    final IObservation<TupleResult> observation = getObservation();
+    if( observation == null )
+      return null;
+
+    final IParameterContainer pc1 = getParameterContainer();
+    // final TupleResult result = obs.getResult();
+    final String domainComponentId = pc1.getParameterValue( "domainComponentId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String valueComponentId = pc1.getParameterValue( "valueComponentId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final TupleResultDomainValueData< ? , ? > data = new TupleResultDomainValueData<Object, Object>( observation, domainComponentId, valueComponentId );
+    return data;
+  }
+
+  protected IObservation<TupleResult> getObservation( )
   {
     final IParameterContainer pc = getParameterContainer();
     final String featureKey = pc.getParameterValue( "featureKey", null ); //$NON-NLS-1$
     final String propertyNameStr = pc.getParameterValue( "propertyName", null ); //$NON-NLS-1$
     final QName propertyName = propertyNameStr == null ? null : QName.valueOf( propertyNameStr );
 
-    final Feature baseFeature = ChartDataProvider.FEATURE_MAP.get( featureKey );
+    final Feature baseFeature = (Feature) getModel().getData( featureKey );
     final Feature feature;
     if( propertyName == null )
     {
@@ -102,15 +115,9 @@ public class TupleResultLineLayerProvider extends AbstractLayerProvider
     {
       feature = FeatureHelper.getFeature( baseFeature.getWorkspace(), baseFeature.getProperty( propertyName ) );
     }
-
-    if( feature == null )
+    if( feature != null )
+      return ObservationFeatureFactory.toObservation( feature );
+    else
       return null;
-
-    final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( feature );
-    // final TupleResult result = obs.getResult();
-    final String domainComponentId = pc.getParameterValue( "domainComponentId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
-    final String valueComponentId = pc.getParameterValue( "valueComponentId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
-    final TupleResultDomainValueData data = new TupleResultDomainValueData( obs, domainComponentId, valueComponentId );
-    return data;
   }
 }

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoCommons Plug-in
 Bundle-SymbolicName: org.kalypso.commons;singleton:=true
-Bundle-Version: 11.6.3.qualifier
+Bundle-Version: 11.6.4.qualifier
 Bundle-ClassPath: lib/jaxb_2_2_4/activation.jar,
  lib/jaxb_2_2_4/jaxb-api.jar,
  lib/jaxb_2_2_4/jaxb-impl.jar,
@@ -384,6 +384,7 @@ Export-Package: au.com.bytecode.opencsv,
  org.kalypso.commons.i18n,
  org.kalypso.commons.image,
  org.kalypso.commons.io,
+ org.kalypso.commons.java.activation,
  org.kalypso.commons.java.io,
  org.kalypso.commons.java.lang,
  org.kalypso.commons.java.net,

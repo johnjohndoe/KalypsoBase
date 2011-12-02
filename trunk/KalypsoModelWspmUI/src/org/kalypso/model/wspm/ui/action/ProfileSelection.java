@@ -56,6 +56,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.IFeatureProperty;
 
 /**
  * Helper class that extracts profiles from a selection.
@@ -92,6 +93,25 @@ public class ProfileSelection
     {
       addItem( item );
     }
+
+    addSisters();
+
+  }
+
+  /**
+   * Add all elements of the 'containingList' as (non-selected) sister elements to the found features.
+   */
+  private void addSisters( )
+  {
+    if( m_containingList != null )
+    {
+      for( final Object sister : m_containingList )
+      {
+        final IProfileFeature sisterProfile = AdapterUtils.getAdapter( sister, IProfileFeature.class );
+        if( sisterProfile != null )
+          addProfile( sisterProfile );
+      }
+    }
   }
 
   private void addItem( final Object item )
@@ -104,21 +124,21 @@ public class ProfileSelection
     final FeatureList featureList = AdapterUtils.getAdapter( item, FeatureList.class );
     if( featureList != null )
     {
-      addFeatureList( featureList );
+      addFeatureProperty( featureList );
       return;
     }
 
     final FeatureAssociationTypeElement fate = AdapterUtils.getAdapter( item, FeatureAssociationTypeElement.class );
     if( fate != null )
     {
-      addFeatureAssociation( (FeatureAssociationTypeElement) item );
+      addFeatureProperty( (FeatureAssociationTypeElement) item );
       return;
     }
 
     final IProfileFeature profileFeature = AdapterUtils.getAdapter( item, IProfileFeature.class );
     if( profileFeature != null )
     {
-      addProfileFeature( profileFeature );
+      addProfileFeature( item, profileFeature );
       return;
     }
 
@@ -131,27 +151,30 @@ public class ProfileSelection
     }
   }
 
-  private void addProfileFeature( final IProfileFeature profile )
+  private void addProfileFeature( final Object item, final IProfileFeature profile )
   {
     m_selectedProfiles.add( profile );
 
-    final IRelationType rt = profile.getParentRelation();
-    final Feature container = profile.getOwner();
-    m_container = container;
-    if( rt.isList() )
+    if( item instanceof Feature )
     {
-      final FeatureList sisters = (FeatureList) container.getProperty( rt );
-
-      m_containingList = sisters;
-
-      for( final Object sister : sisters )
-      {
-        if( sister instanceof IProfileFeature )
-        {
-          addProfile( (IProfileFeature) sister );
-        }
-      }
+      final Feature itemParent = ((Feature) item).getOwner();
+      final IRelationType parentRelation = ((Feature) item).getParentRelation();
+      setAsContainer( itemParent, parentRelation );
     }
+    else
+    {
+      final IRelationType rt = profile.getParentRelation();
+      final Feature container = profile.getOwner();
+      setAsContainer( container, rt );
+    }
+  }
+
+  private void setAsContainer( final Feature container, final IRelationType parentRelation )
+  {
+    m_container = container;
+
+    if( parentRelation.isList() )
+      m_containingList = (FeatureList) container.getProperty( parentRelation );
   }
 
   private void addProfile( final IProfileFeature... profiles )
@@ -180,17 +203,10 @@ public class ProfileSelection
     m_selectedProfiles.addAll( asList );
   }
 
-  private void addFeatureList( final FeatureList featureList )
+  private void addFeatureProperty( final IFeatureProperty featureList )
   {
-    final IRelationType rt = featureList.getParentFeatureTypeProperty();
+    final IRelationType rt = featureList.getPropertyType();
     final Feature parentFeature = featureList.getParentFeature();
-    addParentFeature( parentFeature, rt );
-  }
-
-  private void addFeatureAssociation( final FeatureAssociationTypeElement fate )
-  {
-    final IRelationType rt = fate.getAssociationTypeProperty();
-    final Feature parentFeature = fate.getParentFeature();
     addParentFeature( parentFeature, rt );
   }
 
@@ -226,10 +242,5 @@ public class ProfileSelection
   public Feature getContainer( )
   {
     return m_container;
-  }
-
-  public FeatureList getContainingList( )
-  {
-    return m_containingList;
   }
 }

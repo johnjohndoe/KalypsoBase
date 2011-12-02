@@ -117,6 +117,8 @@ public class ChartFeatureControl extends AbstractFeatureControl
    */
   private IChartComposite[] m_charts;
 
+  private final String m_featureKeyName;
+
   /**
    * The constructor.
    * 
@@ -128,10 +130,11 @@ public class ChartFeatureControl extends AbstractFeatureControl
    * @param commands
    * @param chartProviderID
    */
-  public ChartFeatureControl( final Feature feature, final IPropertyType ftp, final ChartConfigurationLoader ccl, final ChartType[] chartTypes, final URL context, final Map<String, Integer> commands, final String chartProviderID )
+  public ChartFeatureControl( final String featureKeyName, final Feature feature, final IPropertyType ftp, final ChartConfigurationLoader ccl, final ChartType[] chartTypes, final URL context, final Map<String, Integer> commands, final String chartProviderID )
   {
     super( feature, ftp );
-
+    
+    m_featureKeyName = featureKeyName;
     m_ccl = ccl;
     m_chartTypes = chartTypes;
     m_context = context;
@@ -164,7 +167,7 @@ public class ChartFeatureControl extends AbstractFeatureControl
     if( m_chartTabs.length == 1 )
     {
       /* REMARK: We do not tab, if we have only one chart. */
-      m_chartTabs[0] = new ChartTabItem( parent, style, m_commands );
+      m_chartTabs[0] = new ChartTabItem( m_featureKeyName, getFeature(), parent, style, m_commands );
 
       /* Update the controls. */
       updateControl();
@@ -201,7 +204,7 @@ public class ChartFeatureControl extends AbstractFeatureControl
       item.setToolTipText( chartType.getDescription() );
 
       /* Create the chart tab. */
-      m_chartTabs[i] = new ChartTabItem( folder, style, m_commands );
+      m_chartTabs[i] = new ChartTabItem( m_featureKeyName, getFeature(), folder, style, m_commands );
 
       /* Set the chart tab to the tab. */
       item.setControl( m_chartTabs[i] );

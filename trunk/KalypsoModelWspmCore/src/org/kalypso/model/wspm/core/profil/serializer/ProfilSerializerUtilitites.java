@@ -55,7 +55,6 @@ import java.io.Writer;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.ProfilFactory;
 
 /**
  * Helper class with utility methods to handle {@link IProfilSource}s.
@@ -72,8 +71,6 @@ public final class ProfilSerializerUtilitites
   /** Read a file via the given profile source and creates a profile from it. */
   public static IProfil[] readProfile( final IProfilSource source, final File file, final String profilType ) throws IOException
   {
-    ProfilFactory.createProfil( profilType );
-
     Reader fileReader = null;
     try
     {

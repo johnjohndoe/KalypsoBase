@@ -139,9 +139,6 @@ public abstract class AbstractFeatureControl implements IFeatureControl
     return m_ftp;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#addModifyListener(org.eclipse.swt.events.ModifyListener)
-   */
   @Override
   public void addModifyListener( final ModifyListener l )
   {

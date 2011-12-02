@@ -220,7 +220,7 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider impl
     if( ObjectUtils.equals( m_feature, profile ) )
       return;
 
-    final CommandableWorkspace workspace = fs.getWorkspace( profile );
+    final CommandableWorkspace workspace = profileAndResults.getWorkspace();
     final URL workspaceContext = workspace == null ? null : workspace.getContext();
     m_file = workspaceContext == null ? null : ResourceUtilities.findFileFromURL( workspaceContext );
 

@@ -122,7 +122,10 @@ public class RunOffEvent extends Feature_Impl implements IRunOffEvent
     {
       final BigDecimal station = (BigDecimal) record.getValue( stationComp );
       final BigDecimal runOff = (BigDecimal) record.getValue( abflussComp );
-      values.put( station, runOff );
+
+      // REMARK: just skip lines with 'holes', avoids confusion if an empty (but hardly visible) line is present.
+      if( station != null && runOff != null )
+        values.put( station, runOff );
     }
 
     return values;

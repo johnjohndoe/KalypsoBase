@@ -1,6 +1,7 @@
 package de.openali.odysseus.chart.framework.model.impl;
 
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.kalypso.commons.java.lang.Arrays;
 
@@ -29,7 +30,7 @@ public class ChartModel implements IChartModel
 
   protected final BasicChartSettings m_settings = new BasicChartSettings();
 
-  private final Properties m_properties = new Properties();
+  private final Map<String, Object> m_dataMap = new HashMap<String, Object>();
 
   public ChartModel( )
   {
@@ -38,7 +39,7 @@ public class ChartModel implements IChartModel
 
   /**
    * automatically scales all given axes; scaling means here: show all available values
-   * 
+   *
    * @param axes
    *          axes == null -> update all chart model axes
    */
@@ -46,6 +47,7 @@ public class ChartModel implements IChartModel
   public void autoscale( final IAxis... axes )
   {
     final AutoScaleVisitor visitor = new AutoScaleVisitor( this );
+    // axes==null means all Axes
     for( final IAxis axis : Arrays.isEmpty( axes ) ? getMapperRegistry().getAxes() : axes )
     {
       visitor.visit( axis );
@@ -68,6 +70,7 @@ public class ChartModel implements IChartModel
   public void dispose( )
   {
     getLayerManager().accept( new DisposeLayersVisitor() );
+    m_dataMap.clear();
   }
 
   @Override
@@ -131,9 +134,14 @@ public class ChartModel implements IChartModel
   }
 
   @Override
-  public Properties getProperties( )
+  public Object getData( final String key )
   {
-    return m_properties;
+    return m_dataMap.get( key );
   }
 
+  @Override
+  public Object setData( final String key, final Object value )
+  {
+    return m_dataMap.put( key, value );
+  }
 }
