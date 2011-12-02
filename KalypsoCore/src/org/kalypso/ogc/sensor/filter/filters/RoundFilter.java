@@ -134,7 +134,8 @@ public class RoundFilter extends AbstractObservationFilter
   public ITupleModel getValues( final IRequest request ) throws SensorException
   {
     /* Create a proxied observation. */
-    final IObservation proxiedObservation = AutoProxyFactory.getInstance().proxyObservation( m_baseobservation );
+    // FIXME: dubious: all observations we get already should have been decorated. Why is this needed here?
+    final IObservation proxiedObservation = AutoProxyFactory.proxyObservation( m_baseobservation );
     final ITupleModel proxiedValues = proxiedObservation.getValues( request );
 
     /* Get all non-virtual Double-Axises. */
