@@ -43,24 +43,17 @@ package org.kalypso.zml.ui.table.commands.menu;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.repository.IDataSourceItem;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
-import org.kalypso.zml.core.table.model.interpolation.ZmlInterpolationWorker;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
+import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
-import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
-import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
 
 /**
  * @author Dirk Kuch
@@ -77,52 +70,24 @@ public class ZmlCommandSetAllValues extends AbstractHandler
       final IZmlTableCell active = selection.findActiveCellByPosition();
 
       final IZmlValueReference base = active.getValueReference();
+      final Number targetValue = base.getValue();
+
       final IZmlTableColumn column = active.getColumn();
+      final IZmlTableCell[] visibleCells = column.getCells();
 
-      final IZmlEditingStrategy strategy = column.getEditingStrategy();
-      if( strategy.isAggregated() )
+      final ZmlModelTransaction transaction = new ZmlModelTransaction();
+
+      for( final IZmlTableCell cell : visibleCells )
       {
-        final ZmlLabelProvider provider = new ZmlLabelProvider( base.getRow(), column, new ZmlRule[] {} );
-        final String targetValue = provider.getText();
-
-        final IZmlTableCell[] visibleCells = column.getCells();
-        for( final IZmlTableCell cell : visibleCells )
-        {
-          strategy.setValue( cell.getRow().getModelRow(), targetValue );
-        }
-      }
-      else
-      {
-        final IZmlValueReference reference = active.getValueReference();
-        final Number targetValue = reference.getValue();
-
-        column.getModelColumn().accept( new IZmlModelColumnVisitor()
-        {
-          @Override
-          public void visit( final IZmlValueReference ref ) throws SensorException
-          {
-            ref.update( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
-          }
-        } );
+        final IZmlValueReference ref = cell.getValueReference();
+        transaction.add( ref, targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
       }
 
-      try
-      {
-        /**
-         * reinterpolate complete observation because of table view filter (like 12h view, stueztstellen ansicht, etc)
-         */
-        final IObservation observation = column.getModelColumn().getObservation();
-        final ZmlInterpolationWorker interpolationWorker = new ZmlInterpolationWorker( observation );
-        interpolationWorker.execute( new NullProgressMonitor() );
-      }
-      catch( final CoreException e )
-      {
-        e.printStackTrace();
-      }
+      transaction.execute();
 
       return Status.OK_STATUS;
     }
-    catch( final Exception e )
+    catch( final SensorException e )
     {
       throw new ExecutionException( "Aktualisieren der Werte fehlgeschlagen.", e );
     }

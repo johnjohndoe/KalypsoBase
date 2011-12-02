@@ -98,7 +98,7 @@ public final class ExcelClipboardAdapter
     m_table.getActionMap().put( CMD_PASTE, m_pasteAction );
   }
 
-  public void dispose( )
+  public void dispose()
   {
     m_table.getInputMap().remove( m_ksCopy );
     m_table.getActionMap().remove( CMD_COPY );
@@ -106,19 +106,19 @@ public final class ExcelClipboardAdapter
     m_table.getActionMap().remove( CMD_PASTE );
   }
 
-  public CopyAction getCopyAction( )
+  public CopyAction getCopyAction()
   {
     return m_copyAction;
   }
 
-  public PasteAction getPasteAction( )
+  public PasteAction getPasteAction()
   {
     return m_pasteAction;
   }
 
   private class CopyAction extends AbstractAction
   {
-    public CopyAction( )
+    public CopyAction()
     {
       super( "Kopieren" );
     }
@@ -131,9 +131,11 @@ public final class ExcelClipboardAdapter
       final int numrows = m_table.getSelectedRowCount();
       final int[] rowsselected = m_table.getSelectedRows();
       final int[] colsselected = m_table.getSelectedColumns();
-      if( !(numrows - 1 == rowsselected[rowsselected.length - 1] - rowsselected[0] && numrows == rowsselected.length && numcols - 1 == colsselected[colsselected.length - 1] - colsselected[0] && numcols == colsselected.length) )
+      if( !( ( numrows - 1 == rowsselected[rowsselected.length - 1] - rowsselected[0] && numrows == rowsselected.length ) && ( numcols - 1 == colsselected[colsselected.length - 1]
+          - colsselected[0] && numcols == colsselected.length ) ) )
       {
-        JOptionPane.showMessageDialog( null, "Ungültige Copy Selektion", "Ungültige Copy Selektion", JOptionPane.ERROR_MESSAGE );
+        JOptionPane.showMessageDialog( null, "Ungültige Copy Selektion", "Ungültige Copy Selektion",
+            JOptionPane.ERROR_MESSAGE );
         return;
       }
 
@@ -159,7 +161,7 @@ public final class ExcelClipboardAdapter
 
   private class PasteAction extends AbstractAction
   {
-    public PasteAction( )
+    public PasteAction()
     {
       super( "Einfügen" );
     }
@@ -167,11 +169,12 @@ public final class ExcelClipboardAdapter
     @Override
     public void actionPerformed( final ActionEvent e )
     {
-      final int startRow = m_table.getSelectedRows()[0];
-      final int startCol = m_table.getSelectedColumns()[0];
+      final int startRow = ( m_table.getSelectedRows() )[0];
+      final int startCol = ( m_table.getSelectedColumns() )[0];
       try
       {
-        final String trstring = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getContents( this ).getTransferData( DataFlavor.stringFlavor );
+        final String trstring = (String)( Toolkit.getDefaultToolkit().getSystemClipboard().getContents( this )
+            .getTransferData( DataFlavor.stringFlavor ) );
 
         final StringTokenizer st1 = new StringTokenizer( trstring, "\n" );
 

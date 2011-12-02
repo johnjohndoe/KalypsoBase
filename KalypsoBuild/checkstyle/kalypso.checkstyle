@@ -14,6 +14,7 @@
     <property name="tabWidth" value="4"/>
     <module name="JavadocMethod">
       <property name="severity" value="ignore"/>
+      <property name="logLoadErrors" value="true"/>
       <property name="suppressLoadErrors" value="true"/>
       <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
     </module>
@@ -87,8 +88,7 @@
       <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
     </module>
     <module name="EmptyBlock">
-      <property name="severity" value="ignore"/>
-      <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="warning"/>
+      <property name="severity" value="warning"/>
     </module>
     <module name="LeftCurly">
       <property name="severity" value="ignore"/>
@@ -120,6 +120,7 @@
       <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
     </module>
     <module name="RedundantThrows">
+      <property name="logLoadErrors" value="true"/>
       <property name="suppressLoadErrors" value="true"/>
     </module>
     <module name="SimplifyBooleanExpression"/>

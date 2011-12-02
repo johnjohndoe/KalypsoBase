@@ -57,7 +57,7 @@ import java.util.logging.Logger;
 
 import javax.swing.table.AbstractTableModel;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -243,7 +243,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
       if( isDateColumn( columnIndex ) )
         return m_sharedAxis;
 
-      return m_columns.get( columnIndex - 1 );
+      return (m_columns.get( columnIndex - 1 ));
     }
   }
 

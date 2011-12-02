@@ -66,4 +66,9 @@ public interface IMovieFrame
    * @return The image.
    */
   public RenderedImage getImage( int width, int height );
+
+  /**
+   * This function disposes the movie frame.
+   */
+  public void dispose( );
 }

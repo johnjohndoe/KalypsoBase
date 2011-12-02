@@ -40,12 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui;
 
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+
+import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
+import de.openali.odysseus.chart.framework.model.event.IEventProvider;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
+import de.openali.odysseus.chart.framework.view.IPlotHandler;
 
 /**
  * @author burtscher1
  */
-public interface IChartPart
+public interface IChartPart extends IEventProvider<IChartModelEventListener>
 {
+  public IPlotHandler getPlotDragHandler( );
+
   public IChartComposite getChartComposite( );
+
+  public IContentOutlinePage getOutlinePage( );
 }

@@ -36,175 +36,140 @@ import org.eclipse.swt.widgets.Event;
 /**
  * Push button that repeats selection event based on timer.
  */
-public class RepeatingButton extends Button
-{
-  public static final int DEFAULT_INITIAL_REPEAT_DELAY = 200; // Milliseconds
+public class RepeatingButton extends Button {
+    public static final int DEFAULT_INITIAL_REPEAT_DELAY = 200; // Milliseconds
+    public static final int DEFAULT_REPEAT_DELAY = 50;          // Milliseconds
+    private int initialRepeatDelay = DEFAULT_INITIAL_REPEAT_DELAY;
+    private int repeatDelay = DEFAULT_REPEAT_DELAY;
+    private ArrayList selectionListeners = new ArrayList(3);
+    private Repeater repeater;
 
-  public static final int DEFAULT_REPEAT_DELAY = 50; // Milliseconds
+    /**
+     * @param parent Parent container.
+     * @param style  Button style.
+     */
+    public RepeatingButton(Composite parent, int style) {
+        super(parent, style);
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseDown(MouseEvent event) {
+                cancelRepeater();
 
-  private int initialRepeatDelay = DEFAULT_INITIAL_REPEAT_DELAY;
+                if (event.button == 1) { // Left click
+                    buttonPressed(event.stateMask, event.time);
 
-  private int repeatDelay = DEFAULT_REPEAT_DELAY;
+                    repeater = new Repeater(event.stateMask);
+                    getDisplay().timerExec(initialRepeatDelay, repeater);
+                }
+            }
 
-  private final ArrayList selectionListeners = new ArrayList( 3 );
+            @Override
+            public void mouseUp(MouseEvent event) {
+                if (event.button == 1) { // Left click
+                    cancelRepeater();
+                }
+            }
+        });
 
-  private Repeater repeater;
+        addMouseTrackListener(new MouseTrackAdapter() {
+            @Override
+            public void mouseExit(MouseEvent e) {
+                cancelRepeater();
+            }
+        });
+    }
 
-  /**
-   * @param parent
-   *          Parent container.
-   * @param style
-   *          Button style.
-   */
-  public RepeatingButton( final Composite parent, final int style )
-  {
-    super( parent, style );
-    addMouseListener( new MouseAdapter()
-    {
-      @Override
-      public void mouseDown( final MouseEvent event )
-      {
-        cancelRepeater();
+    @Override
+    public void addSelectionListener(SelectionListener listener) {
+        selectionListeners.add(listener);
+    }
 
-        if( event.button == 1 )
-        { // Left click
-          buttonPressed( event.stateMask, event.time );
+    @Override
+    public void removeSelectionListener(SelectionListener listener) {
+        selectionListeners.remove(listener);
+    }
 
-          repeater = new Repeater( event.stateMask );
-          getDisplay().timerExec( initialRepeatDelay, repeater );
+    /**
+     * @return Returns the initial repeat delay in milliseconds.
+     */
+    public int getInitialRepeatDelay() {
+        return initialRepeatDelay;
+    }
+
+    /**
+     * @param initialRepeatDelay The new initial repeat delay in milliseconds.
+     */
+    public void setInitialRepeatDelay(int initialRepeatDelay) {
+        this.initialRepeatDelay = initialRepeatDelay;
+    }
+
+    /**
+     * @return Returns the repeat delay in millisecons.
+     */
+    public int getRepeatDelay() {
+        return repeatDelay;
+    }
+
+    /**
+     * @param repeatDelay The new repeat delay in milliseconds.
+     */
+    public void setRepeatDelay(int repeatDelay) {
+        this.repeatDelay = repeatDelay;
+    }
+
+    private void buttonPressed(int stateMask, int time) {
+        SelectionListener[] listeners = new SelectionListener[selectionListeners.size()];
+        selectionListeners.toArray(listeners);
+        for (int i = 0; i < listeners.length; i++) {
+            SelectionListener l = listeners[i];
+            Event event = new Event();
+            event.type = SWT.Selection;
+            event.display = getDisplay();
+            event.widget = this;
+            event.stateMask = stateMask;
+            event.time = time;
+            l.widgetSelected(new SelectionEvent(event));
         }
-      }
+    }
 
-      @Override
-      public void mouseUp( final MouseEvent event )
-      {
-        if( event.button == 1 )
-        { // Left click
-          cancelRepeater();
+    private void cancelRepeater() {
+        if (repeater != null) {
+            repeater.cancel();
+            repeater = null;
         }
-      }
-    } );
-
-    addMouseTrackListener( new MouseTrackAdapter()
-    {
-      @Override
-      public void mouseExit( final MouseEvent e )
-      {
-        cancelRepeater();
-      }
-    } );
-  }
-
-  @Override
-  public void addSelectionListener( final SelectionListener listener )
-  {
-    selectionListeners.add( listener );
-  }
-
-  @Override
-  public void removeSelectionListener( final SelectionListener listener )
-  {
-    selectionListeners.remove( listener );
-  }
-
-  /**
-   * @return Returns the initial repeat delay in milliseconds.
-   */
-  public int getInitialRepeatDelay( )
-  {
-    return initialRepeatDelay;
-  }
-
-  /**
-   * @param initialRepeatDelay
-   *          The new initial repeat delay in milliseconds.
-   */
-  public void setInitialRepeatDelay( final int initialRepeatDelay )
-  {
-    this.initialRepeatDelay = initialRepeatDelay;
-  }
-
-  /**
-   * @return Returns the repeat delay in millisecons.
-   */
-  public int getRepeatDelay( )
-  {
-    return repeatDelay;
-  }
-
-  /**
-   * @param repeatDelay
-   *          The new repeat delay in milliseconds.
-   */
-  public void setRepeatDelay( final int repeatDelay )
-  {
-    this.repeatDelay = repeatDelay;
-  }
-
-  private void buttonPressed( final int stateMask, final int time )
-  {
-    final SelectionListener[] listeners = new SelectionListener[selectionListeners.size()];
-    selectionListeners.toArray( listeners );
-    for( final SelectionListener l : listeners )
-    {
-      final Event event = new Event();
-      event.type = SWT.Selection;
-      event.display = getDisplay();
-      event.widget = this;
-      event.stateMask = stateMask;
-      event.time = time;
-      l.widgetSelected( new SelectionEvent( event ) );
-    }
-  }
-
-  private void cancelRepeater( )
-  {
-    if( repeater != null )
-    {
-      repeater.cancel();
-      repeater = null;
-    }
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see org.eclipse.swt.widgets.Widget#checkSubclass()
-   */
-  @Override
-  protected void checkSubclass( )
-  {
-  }
-
-  private class Repeater implements Runnable
-  {
-    private boolean canceled;
-
-    private final int stateMask;
-
-    public Repeater( final int stateMask )
-    {
-      super();
-      this.stateMask = stateMask;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Runnable#run()
+    /* (non-Javadoc)
+     * @see org.eclipse.swt.widgets.Widget#checkSubclass()
      */
     @Override
-    public void run( )
-    {
-      if( !canceled )
-      {
-        buttonPressed( stateMask, (int) System.currentTimeMillis() );
-
-        getDisplay().timerExec( repeatDelay, this );
-      }
+    protected void checkSubclass() {
     }
 
-    public void cancel( )
-    {
-      canceled = true;
+
+    private class Repeater implements Runnable {
+        private boolean canceled;
+        private int stateMask;
+
+        public Repeater(int stateMask) {
+            super();
+            this.stateMask = stateMask;
+        }
+
+        /* (non-Javadoc)
+         * @see java.lang.Runnable#run()
+         */
+        @Override
+        public void run() {
+            if (!canceled) {
+                buttonPressed(stateMask, (int) System.currentTimeMillis());
+
+                getDisplay().timerExec(repeatDelay, this);
+            }
+        }
+
+        public void cancel() {
+            canceled = true;
+        }
     }
-  }
 }

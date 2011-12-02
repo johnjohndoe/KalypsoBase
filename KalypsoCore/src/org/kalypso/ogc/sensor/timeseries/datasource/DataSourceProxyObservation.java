@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.datasource;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
@@ -48,7 +48,6 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
-import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
@@ -69,8 +68,6 @@ public class DataSourceProxyObservation implements IObservation
 
   private final String m_repositoryId;
 
-  private MetadataList m_metadata;
-
   public DataSourceProxyObservation( final IObservation observation, final String itemIdentifier, final String repositoryId )
   {
     m_observation = observation;
@@ -78,23 +75,20 @@ public class DataSourceProxyObservation implements IObservation
     m_repositoryId = repositoryId;
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.IObservation#getMetadataList()
+   */
   @Override
-  public synchronized MetadataList getMetadataList( )
+  public MetadataList getMetadataList( )
   {
-    if( m_metadata == null )
+    final MetadataList metadata = m_observation.getMetadataList();
+    final DataSourceHandler handler = new DataSourceHandler( metadata );
+    if( !handler.containsDataSourceReferences() )
     {
-      final MetadataList metadata = m_observation.getMetadataList();
-
-      m_metadata = MetadataHelper.clone( metadata );
-
-      final DataSourceHandler handler = new DataSourceHandler( m_metadata );
-      if( handler.containsDataSourceReferences() )
-        handler.removeAllDataSources();
-
       handler.addDataSource( m_itemIdentifier, m_repositoryId );
     }
 
-    return m_metadata;
+    return metadata;
   }
 
   /**
@@ -106,7 +100,7 @@ public class DataSourceProxyObservation implements IObservation
     final IAxis[] axes = m_observation.getAxes();
     if( AxisUtils.findDataSourceAxis( axes ) == null )
     {
-      return ArrayUtils.add( axes, new DefaultAxis( ITimeseriesConstants.TYPE_DATA_SRC, ITimeseriesConstants.TYPE_DATA_SRC, "", Integer.class, false ) );
+      return (IAxis[]) ArrayUtils.add( axes, new DefaultAxis( ITimeseriesConstants.TYPE_DATA_SRC, ITimeseriesConstants.TYPE_DATA_SRC, "", Integer.class, false ) );
     }
 
     return axes;

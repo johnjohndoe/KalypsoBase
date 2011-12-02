@@ -49,7 +49,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
@@ -125,15 +125,15 @@ public class GenericLayerRenderer
 
     String tooltiptext = m_editInfo.getText();
     final Point mousePos = m_editInfo.getPosition();
-    if( tooltiptext != null && mousePos != null )
+    if( (tooltiptext != null) && (mousePos != null) )
     {
       tooltiptext = tooltiptext.replace( '\r', ' ' );
-      final Display display = ChartUtilities.getDisplay();
+
       final Font oldFont = gcw.getFont();
       final Font bannerFont = JFaceResources.getTextFont();
       gcw.setFont( bannerFont );
-      gcw.setBackground( display.getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
-      gcw.setForeground( display.getSystemColor( SWT.COLOR_INFO_FOREGROUND ) );
+      gcw.setBackground( PlatformUI.getWorkbench().getDisplay().getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
+      gcw.setForeground( PlatformUI.getWorkbench().getDisplay().getSystemColor( SWT.COLOR_INFO_FOREGROUND ) );
       final Point toolsize = gcw.textExtent( tooltiptext );
 
       /*
@@ -149,7 +149,7 @@ public class GenericLayerRenderer
       }
 
       int tooly = mousePos.y + 3 + TOOLINSET + 20;
-      if( tooly + toolsize.y > screen.height && mousePos.y - 3 - TOOLINSET - toolsize.y - 20 > 0 )
+      if( (tooly + toolsize.y > screen.height) && ((mousePos.y - 3 - TOOLINSET - toolsize.y - 20) > 0) )
         tooly = mousePos.y - 3 - TOOLINSET - toolsize.y - 20;
 
       gcw.setLineWidth( 1 );

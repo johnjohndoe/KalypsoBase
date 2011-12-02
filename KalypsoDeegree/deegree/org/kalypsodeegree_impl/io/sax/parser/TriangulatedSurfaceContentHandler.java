@@ -72,19 +72,14 @@ public class TriangulatedSurfaceContentHandler extends GMLElementContentHandler 
     this( reader, resultEater, null );
   }
 
-  public TriangulatedSurfaceContentHandler( final XMLReader reader, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContentHandler, final String defaultSrs )
+  public TriangulatedSurfaceContentHandler( final XMLReader reader, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContentHandler )
   {
-    super( reader, NS.GML3, ELEMENT_TRIANGULATED_SURFACE, defaultSrs, parentContentHandler );
+    super( reader, NS.GML3, ELEMENT_TRIANGULATED_SURFACE, parentContentHandler );
 
     m_resultEater = resultEater;
 
     m_triangles = new ArrayList<GM_Triangle>();
     m_triangulatedSurface = null;
-  }
-
-  public TriangulatedSurfaceContentHandler( final XMLReader reader, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContentHandler )
-  {
-    this( reader, resultEater, parentContentHandler, null );
   }
 
   @Override
@@ -144,7 +139,7 @@ public class TriangulatedSurfaceContentHandler extends GMLElementContentHandler 
     if( m_triangles == null )
       m_triangles = new ArrayList<GM_Triangle>();
 
-    m_triangles.add( triangle );
-    // TODO: project triangles to my srs?
+      m_triangles.add( triangle );
+      // TODO: project triangles to my srs?
   }
 }

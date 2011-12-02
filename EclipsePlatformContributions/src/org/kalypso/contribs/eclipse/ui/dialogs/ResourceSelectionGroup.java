@@ -27,6 +27,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
@@ -35,9 +36,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.part.DrillDownComposite;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 
-@SuppressWarnings("restriction")
 public class ResourceSelectionGroup extends Composite
 {
   private final Listener m_listener;
@@ -54,11 +53,11 @@ public class ResourceSelectionGroup extends Composite
 
   private static final int SIZING_SELECTION_PANE_HEIGHT = 300;
 
-  private Text m_resourceNameField;
+  private Text resourceNameField;
 
-  TreeViewer m_treeViewer;
+  TreeViewer treeViewer;
 
-  private IResource m_selectedResource;
+  private IResource selectedResource;
 
   private final String[] m_allowedResourceExtensions;
 
@@ -90,19 +89,19 @@ public class ResourceSelectionGroup extends Composite
 
   public void addViewerFilter( final ViewerFilter filter )
   {
-    m_treeViewer.addFilter( filter );
+    treeViewer.addFilter( filter );
   }
 
   public void resourceSelectionChanged( final IResource resource )
   {
-    m_selectedResource = resource;
+    selectedResource = resource;
 
     if( m_allowNewResourceName )
     {
       if( resource == null )
-        m_resourceNameField.setText( "" );//$NON-NLS-1$
+        resourceNameField.setText( "" );//$NON-NLS-1$
       else
-        m_resourceNameField.setText( resource.getFullPath().makeRelative().toString() );
+        resourceNameField.setText( resource.getFullPath().makeRelative().toString() );
     }
 
     // fire an event so the parent can update its controls
@@ -136,20 +135,22 @@ public class ResourceSelectionGroup extends Composite
    */
   public void createContents( final String message, final int heightHint )
   {
-    setLayout( Layouts.createGridLayout() );
+    final GridLayout layout = new GridLayout();
+    layout.marginWidth = 0;
+    setLayout( layout );
     setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     final Label label = new Label( this, SWT.WRAP );
     label.setText( message );
-    label.setFont( getFont() );
+    label.setFont( this.getFont() );
 
     if( m_allowNewResourceName )
     {
-      m_resourceNameField = new Text( this, SWT.SINGLE | SWT.BORDER );
-      m_resourceNameField.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+      resourceNameField = new Text( this, SWT.SINGLE | SWT.BORDER );
+      resourceNameField.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
       // TODO: add listener to control user input
       // resourceNameField.addListener( SWT.DefaultSelection, m_listener );
-      m_resourceNameField.setFont( getFont() );
+      resourceNameField.setFont( this.getFont() );
     }
     else
     {
@@ -171,14 +172,14 @@ public class ResourceSelectionGroup extends Composite
     drillDown.setLayoutData( spec );
 
     // Create tree viewer inside drill down.
-    m_treeViewer = new TreeViewer( drillDown, SWT.NONE );
-    drillDown.setChildTree( m_treeViewer );
+    treeViewer = new TreeViewer( drillDown, SWT.NONE );
+    drillDown.setChildTree( treeViewer );
     final ResourceContentProvider cp = new ResourceContentProvider( m_allowedResourceExtensions );
     cp.showClosedProjects( m_showClosedProjects );
-    m_treeViewer.setContentProvider( cp );
-    m_treeViewer.setLabelProvider( WorkbenchLabelProvider.getDecoratingWorkbenchLabelProvider() );
-    m_treeViewer.setSorter( new ViewerSorter() );
-    m_treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
+    treeViewer.setContentProvider( cp );
+    treeViewer.setLabelProvider( WorkbenchLabelProvider.getDecoratingWorkbenchLabelProvider() );
+    treeViewer.setSorter( new ViewerSorter() );
+    treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
@@ -188,7 +189,7 @@ public class ResourceSelectionGroup extends Composite
         // null
       }
     } );
-    m_treeViewer.addDoubleClickListener( new IDoubleClickListener()
+    treeViewer.addDoubleClickListener( new IDoubleClickListener()
     {
       @Override
       public void doubleClick( final DoubleClickEvent event )
@@ -197,10 +198,10 @@ public class ResourceSelectionGroup extends Composite
         if( selection instanceof IStructuredSelection )
         {
           final Object item = ((IStructuredSelection) selection).getFirstElement();
-          if( m_treeViewer.getExpandedState( item ) )
-            m_treeViewer.collapseToLevel( item, 1 );
+          if( treeViewer.getExpandedState( item ) )
+            treeViewer.collapseToLevel( item, 1 );
           else
-            m_treeViewer.expandToLevel( item, 1 );
+            treeViewer.expandToLevel( item, 1 );
         }
         fireEvent( SWT.MouseDoubleClick );
       }
@@ -208,7 +209,7 @@ public class ResourceSelectionGroup extends Composite
 
     // This has to be done after the viewer has been laid out
     // treeViewer.setInput( ResourcesPlugin.getWorkspace() );
-    m_treeViewer.setInput( m_inputContainer );
+    treeViewer.setInput( m_inputContainer );
   }
 
   public IPath getResourceFullPath( )
@@ -216,7 +217,7 @@ public class ResourceSelectionGroup extends Composite
     IPath resourcePath = null;
     if( m_allowNewResourceName )
     {
-      final String pathName = m_resourceNameField.getText();
+      final String pathName = resourceNameField.getText();
       if( pathName == null || pathName.length() < 1 )
       {
         // nothing
@@ -224,17 +225,17 @@ public class ResourceSelectionGroup extends Composite
       else
       {
         // The user may not have made this absolute so do it for them
-        resourcePath = new Path( pathName ).makeAbsolute();
+        resourcePath = (new Path( pathName )).makeAbsolute();
       }
     }
     else
     {
-      if( m_selectedResource == null )
+      if( selectedResource == null )
       {
         // nothing
       }
       else
-        resourcePath = m_selectedResource.getFullPath();
+        resourcePath = selectedResource.getFullPath();
     }
     return resourcePath;
   }
@@ -245,9 +246,9 @@ public class ResourceSelectionGroup extends Composite
   public void setInitialFocus( )
   {
     if( m_allowNewResourceName )
-      m_resourceNameField.setFocus();
+      resourceNameField.setFocus();
     else
-      m_treeViewer.getTree().setFocus();
+      treeViewer.getTree().setFocus();
   }
 
   /**
@@ -255,7 +256,7 @@ public class ResourceSelectionGroup extends Composite
    */
   public void setSelectedResource( final IResource resource )
   {
-    m_selectedResource = resource;
+    selectedResource = resource;
 
     // expand to and select the specified container
     final List<IContainer> itemsToExpand = new ArrayList<IContainer>();
@@ -265,13 +266,13 @@ public class ResourceSelectionGroup extends Composite
       itemsToExpand.add( 0, parent );
       parent = parent.getParent();
     }
-    m_treeViewer.setExpandedElements( itemsToExpand.toArray() );
-    m_treeViewer.setSelection( new StructuredSelection( resource ), true );
+    treeViewer.setExpandedElements( itemsToExpand.toArray() );
+    treeViewer.setSelection( new StructuredSelection( resource ), true );
   }
 
   public IResource getSelectedResource( )
   {
-    return m_selectedResource;
+    return selectedResource;
   }
 
 }

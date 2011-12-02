@@ -65,7 +65,7 @@ public class PropertyIsLikeOperation extends ComparisonOperation
 
   private char m_escapeChar;
 
-  public PropertyIsLikeOperation( final PropertyName propertyName, final Literal literal, final char wildCard, final char singleChar, final char escapeChar )
+  public PropertyIsLikeOperation( PropertyName propertyName, Literal literal, char wildCard, char singleChar, char escapeChar )
   {
     super( OperationDefines.PROPERTYISLIKE );
     m_propertyName = propertyName;
@@ -91,19 +91,19 @@ public class PropertyIsLikeOperation extends ComparisonOperation
     return m_escapeChar;
   }
 
-  public void setWildCard( final char wildCard )
+  public void setWildCard( char wildCard )
   {
-    m_wildCard = wildCard;
+    this.m_wildCard = wildCard;
   }
 
-  public void setSingleChar( final char singleChar )
+  public void setSingleChar( char singleChar )
   {
-    m_singleChar = singleChar;
+    this.m_singleChar = singleChar;
   }
 
-  public void setEscapeChar( final char escapeChar )
+  public void setEscapeChar( char escapeChar )
   {
-    m_escapeChar = escapeChar;
+    this.m_escapeChar = escapeChar;
   }
 
   /**
@@ -113,27 +113,27 @@ public class PropertyIsLikeOperation extends ComparisonOperation
    * @throws FilterConstructionException
    *           if the structure of the DOM-fragment is invalid
    */
-  public static Operation buildFromDOM( final Element element ) throws FilterConstructionException
+  public static Operation buildFromDOM( Element element ) throws FilterConstructionException
   {
 
     // check if root element's name equals 'PropertyIsLike'
     if( !element.getLocalName().equals( "PropertyIsLike" ) )
       throw new FilterConstructionException( "Name of element does not equal 'PropertyIsLike'!" );
 
-    final ElementList children = XMLTools.getChildElements( element );
+    ElementList children = XMLTools.getChildElements( element );
     if( children.getLength() != 2 )
       throw new FilterConstructionException( "'PropertyIsLike' requires exactly 2 elements!" );
 
-    final PropertyName propertyName = (PropertyName) PropertyName.buildFromDOM( children.item( 0 ) );
-    final Literal literal = (Literal) Literal.buildFromDOM( children.item( 1 ) );
+    PropertyName propertyName = (PropertyName) PropertyName.buildFromDOM( children.item( 0 ) );
+    Literal literal = (Literal) Literal.buildFromDOM( children.item( 1 ) );
 
     // determine the needed attributes
-    final String wildCard = element.getAttribute( "wildCard" );
+    String wildCard = element.getAttribute( "wildCard" );
     if( wildCard == null || wildCard.length() == 0 )
       throw new FilterConstructionException( "wildCard-Attribute is unspecified!" );
     if( wildCard.length() != 1 )
       throw new FilterConstructionException( "wildCard-Attribute must be exactly one character!" );
-    final String singleChar = element.getAttribute( "singleChar" );
+    String singleChar = element.getAttribute( "singleChar" );
     if( singleChar == null || singleChar.length() == 0 )
       throw new FilterConstructionException( "singleChar-Attribute is unspecified!" );
     if( singleChar.length() != 1 )
@@ -157,7 +157,7 @@ public class PropertyIsLikeOperation extends ComparisonOperation
     return m_propertyName;
   }
 
-  public void setPropertyName( final PropertyName propName )
+  public void setPropertyName( PropertyName propName )
   {
     m_propertyName = propName;
   }
@@ -170,17 +170,17 @@ public class PropertyIsLikeOperation extends ComparisonOperation
     return m_literal;
   }
 
-  public void setLiteral( final Literal literal )
+  public void setLiteral( Literal literal )
   {
-    m_literal = literal;
-    m_strLiteral = m_literal.getValue();
+    this.m_literal = literal;
+    this.m_strLiteral = m_literal.getValue();
   }
 
   /** Produces an indented XML representation of this object. */
   @Override
   public StringBuffer toXML( )
   {
-    final StringBuffer sb = new StringBuffer( 500 );
+    StringBuffer sb = new StringBuffer( 500 );
     sb.append( "<ogc:" ).append( getOperatorName() ).append( " wildCard=\"" ).append( m_wildCard ).append( "\" singleChar=\"" ).append( m_singleChar ).append( "\" escape=\"" ).append( m_escapeChar ).append( "\">" ).append( m_propertyName.toXML() ).append( m_literal.toXML() );
     sb.append( "</ogc:" ).append( getOperatorName() ).append( ">" );
     return sb;
@@ -196,7 +196,7 @@ public class PropertyIsLikeOperation extends ComparisonOperation
    * @return true, if the <tt>Literal</tt> matches the <tt>PropertyName</tt>'s value
    */
   @Override
-  public boolean evaluate( final Feature feature )
+  public boolean evaluate( Feature feature )
   {
 
     Object value1 = null;
@@ -207,7 +207,7 @@ public class PropertyIsLikeOperation extends ComparisonOperation
         return false;
       return matches( m_strLiteral, value1.toString() );
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
       // nothing
     }
@@ -229,7 +229,7 @@ public class PropertyIsLikeOperation extends ComparisonOperation
    *          the <tt>String</tt> to test
    * @return true, if the <tt>String</tt> matches the pattern
    */
-  private boolean matches( String pattern, final String buffer )
+  private boolean matches( String pattern, String buffer )
   {
     // match was successful if both the pattern and the buffer are empty
     if( pattern.length() == 0 && buffer.length() == 0 )
@@ -252,14 +252,14 @@ public class PropertyIsLikeOperation extends ComparisonOperation
     // build the prefix that has to match the beginning of the buffer
     // prefix ends at the first (unescaped!) wildcard / singlechar character
 // StringBuffer sb = new StringBuffer();
-    final StringBuilder sb = new StringBuilder();
+    StringBuilder sb = new StringBuilder();
     boolean escapeMode = false;
-    final int length = pattern.length();
+    int length = pattern.length();
     char specialChar = '\0';
 
     for( int i = 0; i < length; i++ )
     {
-      final char c = pattern.charAt( i );
+      char c = pattern.charAt( i );
 
       if( escapeMode )
       {
@@ -283,8 +283,8 @@ public class PropertyIsLikeOperation extends ComparisonOperation
           sb.append( c );
       }
     }
-    final String prefix = sb.toString();
-    final int skip = prefix.length();
+    String prefix = sb.toString();
+    int skip = prefix.length();
 
     // the buffer must begin with the prefix or else there is no match
     if( !buffer.startsWith( prefix ) )
@@ -297,7 +297,7 @@ public class PropertyIsLikeOperation extends ComparisonOperation
       // try to find a match for the rest of the pattern
       for( int i = skip; i <= buffer.length(); i++ )
       {
-        final String rest = buffer.substring( i, buffer.length() );
+        String rest = buffer.substring( i, buffer.length() );
         if( matches( pattern, rest ) )
           return true;
       }
@@ -308,7 +308,7 @@ public class PropertyIsLikeOperation extends ComparisonOperation
       pattern = pattern.substring( skip + 1, pattern.length() );
       if( skip + 1 > buffer.length() )
         return false;
-      final String rest = buffer.substring( skip + 1, buffer.length() );
+      String rest = buffer.substring( skip + 1, buffer.length() );
       if( matches( pattern, rest ) )
         return true;
     }
@@ -326,7 +326,7 @@ public class PropertyIsLikeOperation extends ComparisonOperation
    *      org.kalypsodeegree.filterencoding.Operation, int)
    */
   @Override
-  public void accept( final FilterVisitor fv, final Operation operation, final int depth )
+  public void accept( FilterVisitor fv, Operation operation, int depth )
   {
     fv.visit( this );
   }

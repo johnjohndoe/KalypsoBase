@@ -49,21 +49,22 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.client.core.model.projects.IRemoteProject;
+import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
 import org.kalypso.project.database.client.i18n.Messages;
+import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
  * @author Dirk Kuch
  */
 public class RemoteProjectDownloader implements ICoreRunnableWithProgress
 {
+  private final IRemoteProject m_project;
+
   private final File m_destination;
 
   private File m_projectDir;
-
-  private final IRemoteProject m_project;
 
   public RemoteProjectDownloader( final IRemoteProject project, final File destination )
   {
@@ -82,20 +83,20 @@ public class RemoteProjectDownloader implements ICoreRunnableWithProgress
     try
     {
       // unzip remote project to destination dir
-      final String unixName = m_project.getUniqueName();
+      final KalypsoProjectBean bean = m_project.getBean();
+
+      final String unixName = bean.getUnixName();
       m_projectDir = new File( m_destination, unixName );
       m_projectDir.mkdir();
 
-      final URL urlBean = m_project.getBean().getUrl();
+      final URL urlBean = bean.getUrl();
       ZipUtilities.unzip( urlBean, m_projectDir );
 
       return Status.OK_STATUS;
     }
     catch( final Exception e )
     {
-      final String msg = Messages.getString( "org.kalypso.project.database.client.core.utils.RemoteProjectDownloader.0", m_project.getUniqueName() ); //$NON-NLS-1$;
-      final IStatus status = new Status( IStatus.ERROR, KalypsoProjectDatabaseClient.PLUGIN_ID, msg, e );
-      throw new CoreException( status );
+      throw new CoreException( StatusUtilities.createErrorStatus(  Messages.getString("org.kalypso.project.database.client.core.utils.RemoteProjectDownloader.0", m_project.getUniqueName() ), e ) ); //$NON-NLS-1$
     }
   }
 

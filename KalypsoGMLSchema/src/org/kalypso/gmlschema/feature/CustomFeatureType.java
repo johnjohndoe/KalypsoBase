@@ -64,7 +64,7 @@ import org.kalypso.gmlschema.xml.QualifiedElement;
 
 /**
  * This is a FeatureType created programatically.
- * 
+ *
  * @author doemming, kurzbach
  */
 public class CustomFeatureType extends QualifiedElement implements IFeatureType
@@ -100,7 +100,7 @@ public class CustomFeatureType extends QualifiedElement implements IFeatureType
         if( !(schema instanceof GMLSchema) )
           return;
 
-        final ElementReference substitutesReference = ((GMLSchema) schema).resolveElementReference( substitutionGroup );
+        final ElementReference substitutesReference = ((GMLSchema)schema).resolveElementReference( substitutionGroup );
         if( substitutesReference == null )
           return;
         final GMLSchema substiututesGMLSchema = (GMLSchema) substitutesReference.getGMLSchema();
@@ -122,7 +122,7 @@ public class CustomFeatureType extends QualifiedElement implements IFeatureType
   /**
    * Use this constructor if no substitution type is given. This might result in some serious errors so it is suggested
    * to use the other constructor.
-   * 
+   *
    * @deprecated
    */
   @Deprecated
@@ -232,7 +232,7 @@ public class CustomFeatureType extends QualifiedElement implements IFeatureType
   {
     return m_substitutionGroupFT;
   }
-
+  
   /**
    * @see org.kalypso.gmlschema.feature.IFeatureType#getDefaultGeometryPropertyPosition()
    */

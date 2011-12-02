@@ -44,7 +44,7 @@ import org.kalypso.commons.parser.AbstractParser;
 
 /**
  * StringParser
- * 
+ *
  * @author schlienger
  */
 public class StringParser extends AbstractParser
@@ -71,7 +71,7 @@ public class StringParser extends AbstractParser
    * @see org.kalypso.commons.parser.IParser#getFormat()
    */
   @Override
-  public String getFormat( )
+  public String getFormat()
   {
     return ""; //$NON-NLS-1$
   }

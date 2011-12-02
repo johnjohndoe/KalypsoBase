@@ -41,8 +41,9 @@
 package org.kalypso.ogc.gml;
 
 /**
+ *
  * TODO: insert type comment here
- * 
+ *
  * @author doemming
  */
 public interface IGetFeatureInfoResultProcessor
@@ -51,5 +52,5 @@ public interface IGetFeatureInfoResultProcessor
   /**
    * @param featureInfoString
    */
-  void write( final String featureInfoString );
+  void write(final  String featureInfoString );
 }

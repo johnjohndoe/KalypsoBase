@@ -32,8 +32,8 @@ package org.kalypso.gmlschema.feature;
 /**
  * TODO: insert type comment here
  * 
- * @deprecated Do not use. It is only used by {@link org.kalypso.gmlschema.ui.GMLSchemaTreeContentProvider}, this should
- *             be refaktored.
+ * @deprecated Do not use. It is only used by {@link org.kalypso.gmlschema.ui.GMLSchemaTreeContentProvider}, this
+ *             should be refaktored.
  * @author doemming
  */
 @Deprecated

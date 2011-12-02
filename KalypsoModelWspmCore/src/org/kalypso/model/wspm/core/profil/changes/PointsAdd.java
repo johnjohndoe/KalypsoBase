@@ -69,14 +69,10 @@ public class PointsAdd implements IProfilChange
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
     if( hint != null )
-    {
       hint.setPointsChanged();
-    }
 
     for( int i = 0; i < m_points.length; i++ )
-    {
       m_profil.addPoint( m_pointPositions[i], m_points[i] );
-    }
 
     return new PointRemove( m_profil, m_points );
   }

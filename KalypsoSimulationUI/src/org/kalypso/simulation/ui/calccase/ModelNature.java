@@ -107,11 +107,10 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   public static final String ID = KalypsoSimulationUIPlugin.getID() + ".ModelNature"; //$NON-NLS-1$
 
-  private static final String METADATA_FILE = ".metadata.ini"; //$NON-NLS-1$
+  private static final String METADATA_FILE = ".metadata"; //$NON-NLS-1$
 
   public static final String LOCAL_NAME = ".local"; //$NON-NLS-1$
 
-  // FIXME: move to hwv
   public static final String CONTROL_NAME = ".calculation"; //$NON-NLS-1$
 
   public static final String CONTROL_TEMPLATE_NAME = ".calculation.template"; //$NON-NLS-1$
@@ -244,18 +243,9 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     return "???"; //$NON-NLS-1$
   }
 
-  /**
-   * @deprecated Use only for HWV plugins; should be moved there.
-   */
-  @Deprecated
   public static boolean isCalcCalseFolder( final IContainer folder )
   {
-    return isCalcCalseFolder( folder, CONTROL_NAME );
-  }
-
-  public static boolean isCalcCalseFolder( final IContainer folder, final String controlPath )
-  {
-    final IResource calcFile = folder.findMember( controlPath );
+    final IResource calcFile = folder.findMember( CONTROL_NAME );
 
     return calcFile != null && calcFile.exists() && calcFile instanceof IFile;
   }
@@ -539,7 +529,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   /**
    * Returns a metadatum associated with this nature.
-   *
+   * 
    * @param key
    *          One of the METADATA_KEY_ conmstants.
    * @return The value of the given key; or <code>null</code> if not set.
@@ -554,14 +544,14 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
     return m_project.getFolder( MODELLTYP_FOLDER );
   }
 
-  public GMLWorkspace loadOrCreateControl( final IContainer folder, final String controlPath ) throws CoreException
+  public GMLWorkspace loadOrCreateControl( final IContainer folder ) throws CoreException
   {
     try
     {
       if( folder == null )
         throw new IllegalArgumentException();
 
-      final IFile controlFile = folder.getFile( new Path( controlPath ) );
+      final IFile controlFile = folder.getFile( new Path( CONTROL_NAME ) );
       final String gmlPath = controlFile.getFullPath().toString();
       final URL gmlURL = new URL( "platform:/resource/" + gmlPath ); //$NON-NLS-1$
 
@@ -577,7 +567,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   /**
    * stellt fest, ob es sich um einen gültigen Zeitpunkt für den Start der Prognose handelt
-   *
+   * 
    * @param cal
    * @return true when time is valid
    */
@@ -599,7 +589,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   /**
    * Load the calculation and read the value for the given property
-   *
+   * 
    * @param calcCase
    * @param propertyName
    *          name of the property to read value for
@@ -608,7 +598,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
   public Object loadCalculationAndReadProperty( final IContainer calcCase, final String propertyName ) throws CoreException
   {
     // load .calculation, dont create one if not existent
-    final GMLWorkspace workspace = loadOrCreateControl( calcCase, CONTROL_NAME );
+    final GMLWorkspace workspace = loadOrCreateControl( calcCase );
     if( workspace == null )
       return null;
 

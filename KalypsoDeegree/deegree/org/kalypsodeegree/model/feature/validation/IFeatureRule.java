@@ -62,8 +62,8 @@ public interface IFeatureRule extends IExecutableExtension
   public String getDescription( );
 
   /**
-   * The qname(s), this rule is responsible for. If <code>null</code> (not empty), this rule validates all types of
-   * features.
+   * The qname(s), this rule is responsible for. If <code>null</code> (not empty), this rule validates all types
+   * of features.
    * <p>
    * A rule which specifies qnames, can excpect to validate only features of theses types.
    * </p>

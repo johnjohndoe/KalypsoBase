@@ -49,7 +49,7 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.deegree.datatypes.QualifiedName;
 import org.deegree.ogcwebservices.wfs.capabilities.WFSFeatureType;
 import org.eclipse.core.runtime.IProgressMonitor;

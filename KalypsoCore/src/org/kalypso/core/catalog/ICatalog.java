@@ -69,12 +69,12 @@ public interface ICatalog
    * @param resolveContext
    *          If true, the found uri is resolved against the local context
    */
-  String resolve( final String systemID, final String publicID, final boolean resolveContext );
+  public String resolve( final String systemID, final String publicID, final boolean resolveContext );
 
   /**
    * Same as {@link #resolve(String, String, true)}.
    */
-  String resolve( final String systemID, final String publicID );
+  public String resolve( final String systemID, final String publicID );
 
   /**
    * resolves all URNs that fit to the pattern<br>
@@ -87,7 +87,7 @@ public interface ICatalog
    *          pattern to match
    * @return URNs for pattern
    */
-  List<String> getEntryURNS( String urnPattern ) throws MalformedURLException, JAXBException;
+  public List<String> getEntryURNS( String urnPattern ) throws MalformedURLException, JAXBException;
 
   /**
    * adds an entry to the catalog
@@ -99,7 +99,7 @@ public interface ICatalog
    * @param systemID
    *          the publicID
    */
-  void addEntry( String uri, String systemID, String publicID );
+  public void addEntry( String uri, String systemID, String publicID );
 
   /**
    * adds an entry to the catalog, but changes the uri to a relative reference to the catalog itself<br>
@@ -111,8 +111,8 @@ public interface ICatalog
    * @param systemID
    *          the publicID
    */
-  void addEntryRelative( String uri, String systemID, String publicID );
+  public void addEntryRelative( String uri, String systemID, String publicID );
 
-  void addNextCatalog( URL catalogURL );
+  public void addNextCatalog( URL catalogURL );
 
 }

@@ -37,4 +37,5 @@ public class Module extends AbstractUIPlugin
   {
     return plugin;
   }
+
 }

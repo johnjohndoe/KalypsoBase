@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraï¿½e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -135,7 +135,7 @@ public class StyleEditorConfig implements IStyleEditorConfig
     return m_lineSymbolizerStrokeLineDetails;
   }
 
-  public void setLineSymbolizerStrokeLineDetails( final boolean lineSymbolizerStrokeLineDetails )
+  public void setLineSymbolizerStrokeLineDetails( boolean lineSymbolizerStrokeLineDetails )
   {
     m_lineSymbolizerStrokeLineDetails = lineSymbolizerStrokeLineDetails;
   }
@@ -146,7 +146,7 @@ public class StyleEditorConfig implements IStyleEditorConfig
     return m_polygonSymbolizerStrokeLineDetails;
   }
 
-  public void setPolygonSymbolizerStrokeLineDetails( final boolean polygonSymbolizerStrokeLineDetails )
+  public void setPolygonSymbolizerStrokeLineDetails( boolean polygonSymbolizerStrokeLineDetails )
   {
     m_polygonSymbolizerStrokeLineDetails = polygonSymbolizerStrokeLineDetails;
   }

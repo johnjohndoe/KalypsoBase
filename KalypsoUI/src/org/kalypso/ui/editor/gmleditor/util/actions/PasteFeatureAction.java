@@ -50,17 +50,18 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 public final class PasteFeatureAction extends Action
 {
-  private final IRelationType m_propertyName;
+  private IRelationType m_propertyName;
 
-  private final CommandableWorkspace m_workspace;
+  private CommandableWorkspace m_workspace;
 
-  private final Feature m_parentFeature;
+  private Feature m_parentFeature;
 
   private Clipboard m_clipboard = null;
 
-  public static final String NAME = Messages.getString( "org.kalypso.ui.editor.gmleditor.util.actions.PasteFeatureAction.0" ); //$NON-NLS-1$
+  public static final String NAME = Messages.getString("org.kalypso.ui.editor.gmleditor.util.actions.PasteFeatureAction.0"); //$NON-NLS-1$
 
-  public PasteFeatureAction( final CommandableWorkspace workspace, final Feature parentFeature, final IRelationType propertyName, final Clipboard clipboard )
+  public PasteFeatureAction(final  CommandableWorkspace workspace, final Feature parentFeature, IRelationType propertyName,
+      Clipboard clipboard )
   {
     super( NAME );
     m_propertyName = propertyName;
@@ -73,16 +74,17 @@ public final class PasteFeatureAction extends Action
    * @see org.eclipse.jface.action.IAction#run()
    */
   @Override
-  public void run( )
+  public void run()
   {
-    // m_clipboard.setClipboardFeature(null);
+    //m_clipboard.setClipboardFeature(null);
     if( m_clipboard.getClipboardFeature() != null )
       try
       {
         // TODO use command !!
-        m_workspace.addFeatureAsAggregation( m_parentFeature, m_propertyName, 0, m_clipboard.getClipboardFeature().getId() );
+        m_workspace.addFeatureAsAggregation( m_parentFeature, m_propertyName, 0, m_clipboard.getClipboardFeature()
+            .getId() );
       }
-      catch( final Exception e )
+      catch( Exception e )
       {
         e.printStackTrace();
       }

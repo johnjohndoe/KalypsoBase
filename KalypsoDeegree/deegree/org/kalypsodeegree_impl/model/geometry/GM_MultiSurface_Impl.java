@@ -259,7 +259,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
 
       for( int j = 0; j < cnt; j++ )
       {
-        cen[j] = cen[j] + pos[j] * a;
+        cen[j] = cen[j] + (pos[j] * a);
       }
     }
 

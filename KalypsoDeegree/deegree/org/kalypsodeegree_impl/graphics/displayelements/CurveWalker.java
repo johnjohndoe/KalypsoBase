@@ -142,11 +142,11 @@ public class CurveWalker
    * <p>
    * 
    * @param start
-   *          starting point of the linestring
+   *            starting point of the linestring
    * @param end
-   *          end point of the linestring
+   *            end point of the linestring
    * @param points
-   *          points in between
+   *            points in between
    */
   public double[] calcDeviation( int[] start, int[] end, final List<int[]> points )
   {
@@ -199,7 +199,7 @@ public class CurveWalker
         while( it.hasNext() )
         {
           final int[] point = it.next();
-          final double d = point[1] - start[1];
+          double d = point[1] - start[1];
           if( d < 0 )
           {
             // candidate for left extreme value
@@ -222,7 +222,7 @@ public class CurveWalker
       while( it.hasNext() )
       {
         final int[] point = it.next();
-        final double d = point[0] - start[0];
+        double d = point[0] - start[0];
         if( d < 0 )
         {
           // candidate for left extreme value
@@ -247,13 +247,13 @@ public class CurveWalker
    * <p>
    * 
    * @param p0
-   *          point that is used as reference point for the distance
+   *            point that is used as reference point for the distance
    * @param p1
-   *          starting point of the line
+   *            starting point of the line
    * @param p2
-   *          end point of the line
+   *            end point of the line
    * @param d
-   *          distance
+   *            distance
    */
   public static int[] findPointWithDistance( final int[] p0, final int[] p1, final int[] p2, final double d )
   {
@@ -269,7 +269,7 @@ public class CurveWalker
     {
       // line segment does not run vertical
       final double u = (y2 - y1) / (x2 - x1);
-      final double p = -2 * (x0 + u * u * x1 - u * (y1 - y0)) / (u * u + 1);
+      double p = -2 * (x0 + u * u * x1 - u * (y1 - y0)) / (u * u + 1);
       final double q = ((y1 - y0) * (y1 - y0) + u * u * x1 * x1 + x0 * x0 - 2 * u * x1 * (y1 - y0) - d * d) / (u * u + 1);
       int minX = p1[0];
       int maxX = p2[0];
@@ -289,12 +289,12 @@ public class CurveWalker
       if( x1 < x2 )
       {
         // to the right
-        x = -p / 2 + Math.sqrt( p / 2 * (p / 2) - q );
+        x = -p / 2 + Math.sqrt( (p / 2) * (p / 2) - q );
       }
       else
       {
         // to the left
-        x = -p / 2 - Math.sqrt( p / 2 * (p / 2) - q );
+        x = -p / 2 - Math.sqrt( (p / 2) * (p / 2) - q );
       }
 
       // if ((int) (x + 0.5) <= minX || (int) (x + 0.5) >= maxX) {
@@ -315,18 +315,18 @@ public class CurveWalker
         maxY = p1[1];
       }
 
-      final double p = -2 * y0;
+      double p = -2 * y0;
       final double q = y0 * y0 + (x1 - x0) * (x1 - x0) - d * d;
 
       if( y1 > y2 )
       {
         // down
-        y = -p / 2 - Math.sqrt( p / 2 * (p / 2) - q );
+        y = -p / 2 - Math.sqrt( (p / 2) * (p / 2) - q );
       }
       else
       {
         // up
-        y = -p / 2 + Math.sqrt( p / 2 * (p / 2) - q );
+        y = -p / 2 + Math.sqrt( (p / 2) * (p / 2) - q );
       }
 
       // y = -p / 2 - Math.sqrt ((p / 2) * (p / 2) - q);

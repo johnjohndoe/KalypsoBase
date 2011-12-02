@@ -52,7 +52,7 @@ import org.kalypso.zml.core.table.model.interpolation.ZmlInterpolation;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.ZmlTableColumn;
+import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 
 /**
  * updated value will be a new stützstelle. update all values between
@@ -71,7 +71,7 @@ import org.kalypso.zml.ui.table.model.ZmlTableColumn;
 public class InterpolatedValueEditingStrategy extends AbstractEditingStrategy
 {
 
-  public InterpolatedValueEditingStrategy( final ZmlTableColumn column )
+  public InterpolatedValueEditingStrategy( final ExtendedZmlTableColumn column )
   {
     super( column );
   }
@@ -101,10 +101,6 @@ public class InterpolatedValueEditingStrategy extends AbstractEditingStrategy
     return null;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy#setValue(org.kalypso.zml.ui.table.model.IZmlModelRow,
-   *      java.lang.String)
-   */
   @Override
   public void setValue( final IZmlModelRow element, final String value )
   {
@@ -115,9 +111,9 @@ public class InterpolatedValueEditingStrategy extends AbstractEditingStrategy
       final IZmlValueReference reference = row.get( getColumn().getColumnType().getType() );
 
       final Number targetValue = getTargetValue( value );
-      reference.update( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
+      reference.doUpdate( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
 
-      final ZmlTableColumn column = getColumn();
+      final ExtendedZmlTableColumn column = getColumn();
       final IZmlTableCell cell = column.findCell( row );
 
       /** update interpolated values before and after */
@@ -157,12 +153,6 @@ public class InterpolatedValueEditingStrategy extends AbstractEditingStrategy
     }
     else
       ZmlInterpolation.interpolate( column, before, current );
-  }
-
-  @Override
-  public boolean isAggregated( )
-  {
-    return false;
   }
 
 }

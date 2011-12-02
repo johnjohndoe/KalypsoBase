@@ -54,7 +54,7 @@ import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 public class UrlCatalogOGC extends AbstractUrlCatalog
 {
   @Override
-  protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> catalog, final Map<String, String> prefixes )
+  protected void fillCatalog( final Class<?> myClass, final Map<String, URL> catalog, Map<String, String> prefixes )
   {
     // SWE & OM things
     catalog.put( NS.SWE, myClass.getResource( "schemata/sweCommon/1.0.30/swe.xsd" ) ); //$NON-NLS-1$
@@ -63,7 +63,7 @@ public class UrlCatalogOGC extends AbstractUrlCatalog
     catalog.put( NS.ST, myClass.getResource( "schemata/sweCommon/1.0.30/simpleTypeDerivation.xsd" ) ); //$NON-NLS-1$
     prefixes.put( NS.ST, "st" ); //$NON-NLS-1$
 
-    catalog.put( NS.OM, myClass.getResource( "schemata/om/1.0.30/observation.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NS.OM, myClass.getResource("schemata/om/1.0.30/observation.xsd") ); //$NON-NLS-1$
     prefixes.put( NS.OM, "om" ); //$NON-NLS-1$
   }
 }

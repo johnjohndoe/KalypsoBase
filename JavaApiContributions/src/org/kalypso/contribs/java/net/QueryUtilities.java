@@ -40,13 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.java.net;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author Dirk Kuch
@@ -77,7 +72,7 @@ public final class QueryUtilities
       if( param.length() == 0 )
         continue;
 
-      final String[] paramParts = param.split( "=", 2 ); //$NON-NLS-1$
+      final String[] paramParts = param.split( "=" ); //$NON-NLS-1$
       if( paramParts.length != 2 )
         throw new IllegalArgumentException( "URL contains incorect query part: " + param );
 
@@ -87,22 +82,5 @@ public final class QueryUtilities
     }
 
     return result;
-  }
-
-  public static String addParameter( String query, Map<String, String> parameter )
-  {
-    List<String> allParameter = new ArrayList<String>();
-    for( Entry<String, String> entry : parameter.entrySet() )
-    {
-      String oneParameter = String.format( "%s=%s", entry.getValue(), entry.getKey() );
-      allParameter.add( oneParameter );
-    }
-
-    String joinedParameter = StringUtils.join( allParameter.toArray( new String[] {} ), "&" );
-
-    if( query.contains( "?" ) )
-      return String.format( "%s&%s", query, joinedParameter );
-
-    return String.format( "%s?%s", query, joinedParameter );
   }
 }

@@ -131,7 +131,7 @@ public final class RequestFactory
     final List<IAxis> axes = new Vector<IAxis>();
     for( final String axesType : axesTypes )
     {
-      final IAxis axis = TimeseriesUtils.createDefaultAxis( axesType );
+      final IAxis axis = TimeseriesUtils.createDefaulAxis( axesType );
       axes.add( axis );
       if( Arrays.binarySearch( statusAxes, axesType ) >= 0 )
         axes.add( KalypsoStatusUtils.createStatusAxisFor( axis, true ) );

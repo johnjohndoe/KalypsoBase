@@ -32,17 +32,6 @@ public class GenericNumberTickCalculator implements ITickCalculator
     if( max == null || Double.isNaN( max.doubleValue() ) || min == null || Double.isNaN( min.doubleValue() ) )
       return new Number[] {};
 
-    // TickLabelGröße + 2 wegen Rundungsfehlern beim positionieren
-    /* minimaler Bildschirmabstand zwischen zwei labels */
-// final int tickLabelWidth;
-// if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
-// {
-// tickLabelWidth = ticklabelSize.x;
-// }
-// else
-// {
-// tickLabelWidth = ticklabelSize.y;
-// }
 
     // Collection für Ticks
     // final TreeMap<Integer, SortedSet<Double>> ticks = new TreeMap<Integer, SortedSet<Double>>();
@@ -88,18 +77,18 @@ public class GenericNumberTickCalculator implements ITickCalculator
     // Das Minimum normalisieren und abrunden
     double normmin = Math.floor( range.getMin().doubleValue() * Math.pow( 10, rangepow - 1 ) );
     // Das Minimum wieder zurï¿½ckrechnen
-    normmin = normmin * Math.pow( 10, (rangepow - 1) * -1 );
+    normmin = normmin * Math.pow( 10, (rangepow - 1) * (-1) );
 
     // Das Maximum normalisieren und aufrunden
     double normmax = Math.ceil( range.getMax().doubleValue() * Math.pow( 10, rangepow - 1 ) );
     // Das Maximum wieder zurï¿½ckrechnen
-    normmax = normmax * Math.pow( 10, (rangepow - 1) * -1 );
+    normmax = normmax * Math.pow( 10, (rangepow - 1) * (-1) );
 
     // Zum feststellen, Ã¼ber wieviele Grundintervalle iteriert werden soll
     final int normmid = (int) ((normmax - normmin) * Math.pow( 10, rangepow - 1 ));
 
     // Das Intervall verwendet zunï¿½chst nur 10er Schritte
-    double interval = Math.pow( 10, rangepow * -1 - 1 );
+    double interval = Math.pow( 10, rangepow * (-1) - 1 );
     if( minDisplayInterval != null && interval < minDisplayInterval.doubleValue() )
     {
       interval = minDisplayInterval.doubleValue();
@@ -161,7 +150,7 @@ public class GenericNumberTickCalculator implements ITickCalculator
         minDispInterval = minDisplayInterval.doubleValue();
       }
 
-      if( interval < betweenrange && betweenrange >= minDispInterval )
+      if( (interval < betweenrange) && (betweenrange >= minDispInterval) )
       {
         // vorher prï¿½fen
         int count = 0;
@@ -171,8 +160,8 @@ public class GenericNumberTickCalculator implements ITickCalculator
         {
           // nur berechenen, wenn wenigstens eine Intervallgrenze im sichtbaren Bereich liegt
           // oder die Intervallgrenzen den sichtbaren Bereich umschliessen
-          if( i >= dataRange.getMin().doubleValue() && i <= dataRange.getMax().doubleValue() || i + betweenrange >= dataRange.getMin().doubleValue()
-              && i + betweenrange <= dataRange.getMax().doubleValue() || i <= dataRange.getMin().doubleValue() && i + betweenrange >= dataRange.getMax().doubleValue()
+          if( (((i >= dataRange.getMin().doubleValue()) && (i <= dataRange.getMax().doubleValue())) || ((i + betweenrange >= dataRange.getMin().doubleValue()) && (i + betweenrange <= dataRange.getMax().doubleValue())))
+              || ((i <= dataRange.getMin().doubleValue()) && (i + betweenrange >= dataRange.getMax().doubleValue()))
 
           )
           {

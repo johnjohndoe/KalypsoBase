@@ -41,7 +41,7 @@
 package org.kalypso.transformation.ui.validators;
 
 import org.eclipse.jface.dialogs.IInputValidator;
-import org.kalypso.deegree.i18n.Messages;
+import org.kalypso.i18n.Messages;
 import org.kalypso.transformation.CRSHelper;
 
 /**
@@ -62,7 +62,7 @@ public class CRSInputValidator implements IInputValidator
    * @see org.eclipse.jface.dialogs.IInputValidator#isValid(java.lang.String)
    */
   @Override
-  public String isValid( final String newText )
+  public String isValid( String newText )
   {
     if( !CRSHelper.isKnownCRS( newText ) )
       return String.format( Messages.getString( "org.kalypso.transformation.ui.validators.CRSInputValidator.0" ), newText ); //$NON-NLS-1$

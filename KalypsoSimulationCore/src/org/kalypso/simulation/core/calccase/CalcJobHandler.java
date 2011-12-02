@@ -176,7 +176,7 @@ public class CalcJobHandler
       {
         case FINISHED:
         {
-          monitor.subTask( "Aktuelle Ergebnisse aus dem Arbeitsbereich löschen..." );
+          monitor.subTask( "Altergebnisse aus dem Arbeitsbereich löschen..." );
           SimulationUtils.clearResultsAfterCalculation( m_modelspec, calcCaseFolder, new SubProgressMonitor( monitor, 500 ) );
 
           monitor.subTask( "Ergebnisse in den Arbeitsbereich kopieren..." );
@@ -191,13 +191,6 @@ public class CalcJobHandler
 
         case ERROR:
         {
-          monitor.subTask( "Aktuelle Ergebnisse aus dem Arbeitsbereich löschen..." );
-          SimulationUtils.clearResultsAfterCalculation( m_modelspec, calcCaseFolder, new SubProgressMonitor( monitor, 500 ) );
-
-          monitor.subTask( "Ergebnisse in den Arbeitsbereich kopieren..." );
-          final IProject project = calcCaseFolder.getProject();
-          m_calcService.transferCurrentResults( project, m_jobID );
-
           final Throwable exception = jobBean.getException();
           final IStatus status = StatusUtilities.createStatus( jobBean.getFinishStatus(), message, exception );
           throw new CoreException( status );
@@ -246,6 +239,8 @@ public class CalcJobHandler
       monitor.done();
     }
   }
+
+
 
   private String startCalcJob( final IContainer calcCaseFolder, final IProgressMonitor monitor ) throws CoreException
   {

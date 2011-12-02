@@ -162,7 +162,7 @@ public class ToolTipRenderer
 
     final Rectangle2D maxRect = calculateBoxWidth( g );
 
-    final int textHeight = (int) maxRect.getHeight(); // height of one line
+    final int textHeight = (int) (maxRect.getHeight()); // height of one line
     final int textboxWidth = (int) maxRect.getWidth(); // width of textbox
     final int textboxHeight = textHeight * m_rows.length; // height of textbox
 

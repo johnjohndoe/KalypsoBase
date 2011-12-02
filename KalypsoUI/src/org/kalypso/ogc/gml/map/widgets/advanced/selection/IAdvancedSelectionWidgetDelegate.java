@@ -57,9 +57,9 @@ public interface IAdvancedSelectionWidgetDelegate
   Cursor getCursor( );
 
   Point getMousePressed( );
-
+  
   boolean isMouseButtonPressed( );
-
+  
   void keyReleased( KeyEvent e );
 
   void leftPressed( Point p );
@@ -67,8 +67,8 @@ public interface IAdvancedSelectionWidgetDelegate
   void leftReleased( Point p );
 
   void paint( Graphics g );
-
+  
   EDIT_MODE getEditMode( );
 
-  String[] getTooltip( );
+  String[] getTooltip( ); 
 }

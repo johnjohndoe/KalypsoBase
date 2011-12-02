@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoContributionsOGC31 Plug-in
 Bundle-SymbolicName: org.kalypso.contribs.ogc31; singleton:=true
-Bundle-Version: 11.6.3.qualifier
+Bundle-Version: 11.4.0.qualifier
 Bundle-Vendor: kalypsobase.sourceforge.net
 Require-Bundle: org.junit;resolution:=optional,
  org.kalypso.commons
@@ -22,4 +22,4 @@ Export-Package: au.csiro.seegrid.xml.st,
  org.kalypso.contribs.ogc31.test,
  org.w3._2001.smil20.language
 Bundle-Activator: org.kalypso.contribs.ogc31.KalypsoOGC31Plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

@@ -44,27 +44,24 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.commons.java.lang.Objects;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.impl.visitors.LayerTooltipVisitor;
 import de.openali.odysseus.chart.framework.model.impl.visitors.PanToVisitor;
-import de.openali.odysseus.chart.framework.model.impl.visitors.SetActivePointVisitor;
 import de.openali.odysseus.chart.framework.model.impl.visitors.ZoomInVisitor;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
  * @author Dirk Kuch
- * @author kimwerner
  */
 public class ZoomPanMaximizeHandler extends AbstractChartHandler
 {
-  private static final int m_trashold = 5;
+  private static final int m_trashHold = 5;
 
   public enum DIRECTION
   {
@@ -100,6 +97,9 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
     m_direction = direction;
   }
 
+  /**
+   * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartDragHandler#mouseDown(org.eclipse.swt.events.MouseEvent)
+   */
   @Override
   public void mouseDown( final MouseEvent e )
   {
@@ -107,8 +107,7 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
 
     final Point currentPos = EventUtils.getPoint( e );
     m_startPos = currentPos;
-
-    m_startPlot = ChartHandlerUtilities.screen2plotPoint( currentPos,getChart().getPlotRect() );
+    m_startPlot = getChart().screen2plotPoint( currentPos );
   }
 
   private int cursorFromButton( final MouseEvent e )
@@ -117,7 +116,7 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
       return SWT.CURSOR_CROSS;
 
     if( EventUtils.isButton2( e ) )
-      return SWT.CURSOR_SIZEALL;
+      return SWT.CURSOR_HAND;
 
     return -1;
   }
@@ -130,14 +129,11 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
   {
     super.mouseMove( e );
 
-    final Point currentPos = EventUtils.getPoint( e );
-    final Point currentPlot = ChartHandlerUtilities.screen2plotPoint( currentPos,getChart().getPlotRect() );
-    getChart().setTooltipInfo( null );
     if( m_startPlot == null )
-    {
-      doSetTooltip( currentPlot );
       return;
-    }
+
+    final Point currentPos = EventUtils.getPoint( e );
+    final Point currentPlot = getChart().screen2plotPoint( currentPos );
 
     final boolean isMoved = isMoved( currentPos );
     if( !isMoved )
@@ -154,16 +150,9 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
       doMouseMovePan( m_startPlot, currentPlot );
   }
 
-  private void doSetTooltip( final Point point )
-  {
-    final LayerTooltipVisitor visitor = new LayerTooltipVisitor( getChart(), point );
-    final IChartModel model = getChart().getChartModel();
-    model.getLayerManager().accept( visitor );
-  }
-
   private boolean isMoved( final Point currentPos )
   {
-    return Math.abs( currentPos.x - m_startPos.x ) > m_trashold || Math.abs( currentPos.y - m_startPos.y ) > 5;
+    return Math.abs( currentPos.x - m_startPos.x ) > m_trashHold || Math.abs( currentPos.y - m_startPos.y ) > 5;
   }
 
   protected void doMouseMovePan( final Point start, final Point end )
@@ -178,7 +167,7 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
       getChart().setPanOffset( null, end, otherStart );
     }
     else
-      throw new UnsupportedOperationException();
+      throw new NotImplementedException();
   }
 
   protected void doMouseMoveSelection( final Point start, final Point end )
@@ -201,9 +190,6 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
   @Override
   public void mouseUp( final MouseEvent e )
   {
-    if( m_startPlot == null )
-      return;
-
     try
     {
       doMouseUpAction( e );
@@ -222,14 +208,13 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
   private void doMouseUpAction( final MouseEvent e )
   {
     final Point currentPos = EventUtils.getPoint( e );
-    final Point currentPlot = ChartHandlerUtilities.screen2plotPoint( currentPos,getChart().getPlotRect() );
+    final Point currentPlot = getChart().screen2plotPoint( currentPos );
 
     final boolean isMoved = isMoved( currentPos );
     if( !isMoved )
     {
       if( EventUtils.isStateButton1( e ) )
         fireSelectionChanged( currentPlot );
-      doMouseUpClick( m_startPlot );
       return;
     }
 
@@ -250,15 +235,6 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
       if( Objects.isNotNull( currentPlot ) )
         doMouseUpPan( m_startPlot, currentPlot );
     }
-  }
-
-  private void doMouseUpClick( final Point start )
-  {
-
-    final SetActivePointVisitor visitor = new SetActivePointVisitor( start, 10 );
-
-    final IChartModel model = getChart().getChartModel();
-    model.getMapperRegistry().accept( visitor );
   }
 
   private void doMouseUpPan( final Point start, final Point end )

@@ -43,6 +43,12 @@ package org.kalypso.core.status;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.ViewerColumn;
+import org.eclipse.swt.SWT;
+import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerUtil;
+import org.kalypso.contribs.eclipse.jface.viewers.ViewerColumnItem;
+import org.kalypso.core.i18n.Messages;
 
 /**
  * A label provider showing stati.
@@ -51,6 +57,60 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
  */
 public abstract class StatusLabelProvider extends ColumnLabelProvider
 {
+  /**
+   * Adds a column that shows the severity of a status.
+   */
+  public static void addSeverityColumn( final ColumnViewer columnViewer )
+  {
+    final ViewerColumn severityColumn = ColumnViewerUtil.createViewerColumn( columnViewer, SWT.CENTER );
+    final ViewerColumnItem severityCol = new ViewerColumnItem( severityColumn );
+    severityCol.setText( Messages.getString( "org.kalypso.util.swt.StatusLabelProvider.3" ) );
+    severityCol.setWidth( 30 );
+    severityCol.setResizable( true );
+    severityCol.setMoveable( false );
+    severityColumn.setLabelProvider( new StatusLabelSeverityProvider() );
+  }
+
+  /**
+   * Adds a column that shows the message of a status.
+   */
+  public static void addMessageColumn( final ColumnViewer columnViewer )
+  {
+    final ViewerColumn messageColumn = ColumnViewerUtil.createViewerColumn( columnViewer, SWT.LEFT );
+    final ViewerColumnItem messageCol = new ViewerColumnItem( messageColumn );
+    messageCol.setText( Messages.getString( "org.kalypso.util.swt.StatusLabelProvider.4" ) );
+    messageCol.setWidth( 500 );
+    messageCol.setResizable( true );
+    messageCol.setMoveable( false );
+    messageColumn.setLabelProvider( new StatusLabelMessageProvider() );
+  }
+
+  /**
+   * Adds a column that shows the time of a status.
+   */
+  public static void addTimeColumn( final ColumnViewer columnViewer )
+  {
+    final ViewerColumn timeColumn = ColumnViewerUtil.createViewerColumn( columnViewer, SWT.LEFT );
+    final ViewerColumnItem timeCol = new ViewerColumnItem( timeColumn );
+    timeCol.setText( Messages.getString( "org.kalypso.util.swt.StatusLabelProvider.5" ) );
+    timeCol.setWidth( 150 );
+    timeCol.setResizable( false );
+    timeCol.setMoveable( false );
+    timeColumn.setLabelProvider( new StatusLabelTimeProvider() );
+  }
+
+  public static void addNavigationColumn( final ColumnViewer columnViewer )
+  {
+    final ViewerColumn naviColumn = ColumnViewerUtil.createViewerColumn( columnViewer, SWT.LEFT );
+    final ViewerColumnItem naviCol = new ViewerColumnItem( naviColumn );
+    naviCol.setWidth( 50 );
+    naviCol.setResizable( true );
+    naviCol.setMoveable( false );
+    naviColumn.setLabelProvider( new StatusLabelProvider()
+    {
+    } );
+  }
+
   protected IStatus statusForElement( final Object element )
   {
     if( element instanceof IStatus )

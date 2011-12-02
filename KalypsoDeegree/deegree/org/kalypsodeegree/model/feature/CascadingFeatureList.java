@@ -45,6 +45,7 @@ import java.util.ListIterator;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -97,7 +98,7 @@ public class CascadingFeatureList implements FeatureList
   @Override
   public void accept( final FeatureVisitor visitor, final int depth )
   {
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 
   /**
@@ -612,11 +613,5 @@ public class CascadingFeatureList implements FeatureList
   public <T extends Feature> boolean insertRef( final int index, final T toAdd ) throws IllegalArgumentException
   {
     throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public IRelationType getPropertyType( )
-  {
-    return null;
   }
 }

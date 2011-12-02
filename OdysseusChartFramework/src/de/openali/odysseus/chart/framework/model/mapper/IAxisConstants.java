@@ -39,7 +39,7 @@ public interface IAxisConstants
     TOP(0),
     BOTTOM(1),
     CENTER(0.5);
-
+ 
     private final double m_doubleValue;
 
     ALIGNMENT( final double doubleValue )

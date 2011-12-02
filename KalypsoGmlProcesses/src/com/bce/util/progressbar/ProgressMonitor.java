@@ -18,7 +18,7 @@ import org.kalypso.gml.processes.i18n.Messages;
 
 /**
  * Eine alternative zum javax.swing.ProgressMonitor
- * 
+ *
  * @author belger
  */
 public class ProgressMonitor implements Progressable
@@ -33,15 +33,13 @@ public class ProgressMonitor implements Progressable
 
   private final JOptionPane m_optionPane;
 
-  private static final String CANCEL = Messages.getString( "com.bce.util.progressbar.ProgressMonitor.0" ); //$NON-NLS-1$
+  private static final String CANCEL = Messages.getString("com.bce.util.progressbar.ProgressMonitor.0"); //$NON-NLS-1$
 
   /**
    * -
-   * 
-   * @param parent
-   *          -
-   * @param title
-   *          -
+   *
+   * @param parent -
+   * @param title -
    */
   public ProgressMonitor( final Component parent, final String title )
   {
@@ -53,13 +51,10 @@ public class ProgressMonitor implements Progressable
 
   /**
    * -
-   * 
-   * @param parentComponent
-   *          -
-   * @param title
-   *          -
-   * @param op
-   *          -
+   *
+   * @param parentComponent -
+   * @param title -
+   * @param op -
    * @return -
    */
   public JDialog createDialog( final Component parentComponent, final String title, final JOptionPane op )

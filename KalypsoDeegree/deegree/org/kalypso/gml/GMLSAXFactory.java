@@ -75,7 +75,7 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * Writes an GMLWorkspace into a {@link XMLReader}.
- * 
+ *
  * @author Andreas von Dömming
  */
 public class GMLSAXFactory
@@ -226,7 +226,7 @@ public class GMLSAXFactory
         final List< ? > values = (List< ? >) value;
         if( values != null )
         {
-          /* FIXME: ConcurrentModificationExceptions happens sometimes here */
+          /* FIXME: ConcurrentModificationExceptions happens sometimes here  */
           for( final Object propertyValue : values )
             processProperty( pt, propertyValue );
         }
@@ -308,7 +308,7 @@ public class GMLSAXFactory
     return atts;
   }
 
-  private String printSimpleValue( final IValuePropertyType pt, final ISimpleMarshallingTypeHandler<Object> th, final Object propertyValue ) throws SAXException
+  private String  printSimpleValue( final IValuePropertyType pt, final ISimpleMarshallingTypeHandler<Object> th, final Object propertyValue ) throws SAXException
   {
     if( pt.isFixed() )
       return pt.getFixed();
@@ -332,7 +332,7 @@ public class GMLSAXFactory
   {
     final IMarshallingTypeHandler th = pt.getTypeHandler();
 
-    if( th instanceof ISimpleMarshallingTypeHandler< ? > )
+    if( th instanceof ISimpleMarshallingTypeHandler<?> )
     {
       final String xmlString = printSimpleValue( pt, (ISimpleMarshallingTypeHandler<Object>) th, propertyValue );
       if( xmlString != null )

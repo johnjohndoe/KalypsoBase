@@ -42,27 +42,29 @@ package de.openali.odysseus.chart.ext.base.axisrenderer;
 
 import org.joda.time.DateTimeFieldType;
 
+
 /**
  * @author kimwerner
+ *
  */
 public class DateTimeAxisField implements IDateTimeAxisField
 {
-
+ 
   private final int[] m_rollovers;
 
   private final int[] m_beginners;
 
   private final String m_formatString;
 
-  private final DateTimeFieldType m_fieldType;
-
+  private  final DateTimeFieldType m_fieldType;
+  
   public DateTimeAxisField( final DateTimeFieldType fieldType, final String formatString, final int[] rollovers, final int[] beginners )
   {
     super();
     m_rollovers = rollovers;
     m_beginners = beginners;
     m_formatString = formatString;
-    m_fieldType = fieldType;
+    m_fieldType=fieldType;
   }
 
   /**
@@ -71,8 +73,10 @@ public class DateTimeAxisField implements IDateTimeAxisField
   @Override
   public int[] getBeginners( )
   {
-    return m_beginners;
+   return m_beginners;
   }
+
+  
 
   @Override
   public DateTimeFieldType getFieldType( )
@@ -88,6 +92,8 @@ public class DateTimeAxisField implements IDateTimeAxisField
   {
     return m_formatString;
   }
+
+
 
   /**
    * @see de.openali.odysseus.chart.ext.base.axisrenderer.IDateTimeAxisField#getRollovers()

@@ -38,8 +38,8 @@ package org.kalypsodeegree.graphics.sld;
 import java.util.Map;
 
 /**
- * This is the top level interface of <tt>Fill</tt> and <tt>Stroke</tt> defining the methods <tt>getGraphicFill()</tt>
- * and <tt>getCssParameters()</tt> that are common to both.
+ * This is the top level interface of <tt>Fill</tt> and <tt>Stroke</tt> defining the methods
+ * <tt>getGraphicFill()</tt> and <tt>getCssParameters()</tt> that are common to both.
  * <p>
  * 
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
@@ -64,7 +64,8 @@ public interface Drawing
    * This method is for technical use. The user should access the specialized methods of the derived classes.
    * 
    * @return the CssParameters
-   * @deprecated Use {#getParameter} instead
+   * 
+   * @deprecated Use {#getParameter} instead 
    */
   @Deprecated
   Map<String, CssParameter> getCssParameters( );
@@ -79,9 +80,9 @@ public interface Drawing
    * <p>
    * 
    * @param key
-   *          the key of the object to insert
+   *            the key of the object to insert
    * @param value
-   *          the value of the object to insert
+   *            the value of the object to insert
    */
   void addCssParameter( String key, CssParameter value );
 

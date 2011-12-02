@@ -59,7 +59,7 @@ public class FilterCompositeFactory extends ModellEventProviderAdapter
     return m_factory;
   }
 
-  public static AbstractFilterComposite createFilterElementComposite( final Composite parent, final IErrorMessageReciever errorMessageReciever, final Operation operation, final String[] supportedOperations, final IFeatureType ft, final Feature spatialOperator )
+  public static AbstractFilterComposite createFilterElementComposite( final Composite parent, final IErrorMessageReciever errorMessageReciever, final Operation operation, final String[] supportedOperations, final IFeatureType ft, Feature spatialOperator )
   {
     AbstractFilterComposite c = null;
 
@@ -69,48 +69,48 @@ public class FilterCompositeFactory extends ModellEventProviderAdapter
       if( operation instanceof PropertyIsCOMPOperation )
       {
         if( operatorName == null )
-          operatorName = Messages.getString( "org.kalypso.ogc.gml.filterdialog.widgets.FilterCompositeFactory.0" ); //$NON-NLS-1$
-        ((Group) parent).setText( Messages.getString( "org.kalypso.ogc.gml.filterdialog.widgets.FilterCompositeFactory.1" ) + operatorName ); //$NON-NLS-1$
+          operatorName = Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.FilterCompositeFactory.0"); //$NON-NLS-1$
+        ((Group) parent).setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.FilterCompositeFactory.1") + operatorName ); //$NON-NLS-1$
         c = new PropertyIsCOMPOperationComposite( parent, SWT.NULL, (PropertyIsCOMPOperation) operation, getSupportedCOMPOps( supportedOperations ), errorMessageReciever, ft );
       }
       else if( operation instanceof PropertyIsLikeOperation )
       {
         if( operatorName == null )
-          operatorName = Messages.getString( "org.kalypso.ogc.gml.filterdialog.widgets.FilterCompositeFactory.2" ); //$NON-NLS-1$
-        ((Group) parent).setText( Messages.getString( "org.kalypso.ogc.gml.filterdialog.widgets.FilterCompositeFactory.3" ) + operatorName ); //$NON-NLS-1$
+          operatorName = Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.FilterCompositeFactory.2"); //$NON-NLS-1$
+        ((Group) parent).setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.FilterCompositeFactory.3") + operatorName ); //$NON-NLS-1$
         c = new PropertyIsLikeOperationComposite( parent, SWT.NULL, (PropertyIsLikeOperation) operation, errorMessageReciever, ft );
 
       }
       else if( operation instanceof PropertyIsBetweenOperation )
       {
         if( operatorName == null )
-          operatorName = Messages.getString( "org.kalypso.ogc.gml.filterdialog.widgets.FilterCompositeFactory.4" ); //$NON-NLS-1$
-        ((Group) parent).setText( Messages.getString( "org.kalypso.ogc.gml.filterdialog.widgets.FilterCompositeFactory.5" ) + operatorName ); //$NON-NLS-1$
+          operatorName = Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.FilterCompositeFactory.4"); //$NON-NLS-1$
+        ((Group) parent).setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.FilterCompositeFactory.5") + operatorName ); //$NON-NLS-1$
         c = new PropertyIsBetweenComposite( parent, SWT.NULL, (PropertyIsBetweenOperation) operation, errorMessageReciever, ft );
 
       }
       else if( operation instanceof SpatialOperation )
       {
         if( operatorName == null )
-          operatorName = Messages.getString( "org.kalypso.ogc.gml.filterdialog.widgets.FilterCompositeFactory.6" ); //$NON-NLS-1$
-        ((Group) parent).setText( Messages.getString( "org.kalypso.ogc.gml.filterdialog.widgets.FilterCompositeFactory.7" ) + operatorName ); //$NON-NLS-1$
+          operatorName = Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.FilterCompositeFactory.6"); //$NON-NLS-1$
+        ((Group) parent).setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.FilterCompositeFactory.7") + operatorName ); //$NON-NLS-1$
         c = new SpatialComposite( parent, SWT.NULL, (SpatialOperation) operation, errorMessageReciever, ft, spatialOperator, getSupportedSpatialOps( supportedOperations ) );
       }
       else if( operation instanceof PropertyIsNullOperation )
       {
         if( operatorName == null )
-          operatorName = Messages.getString( "org.kalypso.ogc.gml.filterdialog.widgets.FilterCompositeFactory.8" ); //$NON-NLS-1$
-        ((Group) parent).setText( Messages.getString( "org.kalypso.ogc.gml.filterdialog.widgets.FilterCompositeFactory.9" ) + operatorName ); //$NON-NLS-1$
+          operatorName = Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.FilterCompositeFactory.8"); //$NON-NLS-1$
+        ((Group) parent).setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.FilterCompositeFactory.9") + operatorName ); //$NON-NLS-1$
         c = new PropertyIsNullOperationComposite( parent, SWT.NULL, (PropertyIsNullOperation) operation, ft, errorMessageReciever );
       }
     }
     return c;
   }
 
-  private static String[] getSupportedSpatialOps( final String[] supportedOperations )
+  private static String[] getSupportedSpatialOps( String[] supportedOperations )
   {
-    final ArrayList<String> result = new ArrayList<String>();
-    for( final String ops : supportedOperations )
+    ArrayList<String> result = new ArrayList<String>();
+    for( String ops : supportedOperations )
     {
       if( OperationDefines.getTypeByName( ops ) == OperationDefines.TYPE_SPATIAL )
         result.add( ops );
@@ -127,12 +127,12 @@ public class FilterCompositeFactory extends ModellEventProviderAdapter
   // result.add( ops );
   // }
   // return result.toArray( new String[result.size()] );
-  // }
+  //  }
 
-  private static String[] getSupportedCOMPOps( final String[] supportedOperations )
+  private static String[] getSupportedCOMPOps( String[] supportedOperations )
   {
-    final ArrayList<String> result = new ArrayList<String>();
-    for( final String ops : supportedOperations )
+    ArrayList<String> result = new ArrayList<String>();
+    for( String ops : supportedOperations )
     {
       if( OperationDefines.getTypeByName( ops ) == OperationDefines.TYPE_COMPARISON )
         result.add( ops );

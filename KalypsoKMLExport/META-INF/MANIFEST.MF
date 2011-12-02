@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.kalypso.kml.export;singleton:=true
-Bundle-Version: 11.6.3.qualifier
+Bundle-Version: 11.4.0.qualifier
 Require-Bundle: org.eclipse.core.expressions,
  org.kalypso.ui
 Export-Package: org.kalypso.kml.export.constants,
@@ -10,10 +10,7 @@ Export-Package: org.kalypso.kml.export.constants,
 Bundle-Localization: plugin
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.kalypso.kml.export.KalypsoKMLPlugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: kalypsobase.sourceforge.net
-Bundle-ClassPath: lib/jaxb/jaxb-api.jar,
- lib/jaxb/jaxb-impl.jar,
- lib/jaxb/jaxb-xjc.jar,
- lib/JavaApiForKML/2010_01/JavaAPIforKml.jar,
+Bundle-ClassPath: lib/JavaApiForKML/2010_01/JavaAPIforKml.jar,
  .

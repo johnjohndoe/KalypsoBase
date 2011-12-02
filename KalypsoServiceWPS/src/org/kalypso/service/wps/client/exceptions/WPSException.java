@@ -58,9 +58,9 @@ public class WPSException extends Exception
    * The constructor.
    * 
    * @param message
-   *          The detail message. The detail message is saved for later retrieval by the getMessage() method.
+   *            The detail message. The detail message is saved for later retrieval by the getMessage() method.
    */
-  public WPSException( final String message )
+  public WPSException( String message )
   {
     super( message );
   }
@@ -69,10 +69,10 @@ public class WPSException extends Exception
    * The constructor.
    * 
    * @param cause
-   *          The cause (which is saved for later retrieval by the getCause() method). (A null value is permitted, and
-   *          indicates that the cause is nonexistent or unknown.)
+   *            The cause (which is saved for later retrieval by the getCause() method). (A null value is permitted, and
+   *            indicates that the cause is nonexistent or unknown.)
    */
-  public WPSException( final Throwable cause )
+  public WPSException( Throwable cause )
   {
     super( cause );
   }
@@ -81,12 +81,12 @@ public class WPSException extends Exception
    * The constructor.
    * 
    * @param message
-   *          The detail message. The detail message is saved for later retrieval by the getMessage() method.
+   *            The detail message. The detail message is saved for later retrieval by the getMessage() method.
    * @param cause
-   *          The cause (which is saved for later retrieval by the getCause() method). (A null value is permitted, and
-   *          indicates that the cause is nonexistent or unknown.)
+   *            The cause (which is saved for later retrieval by the getCause() method). (A null value is permitted, and
+   *            indicates that the cause is nonexistent or unknown.)
    */
-  public WPSException( final String message, final Throwable cause )
+  public WPSException( String message, Throwable cause )
   {
     super( message, cause );
   }

@@ -41,8 +41,6 @@
 package org.kalypso.model.wspm.ui.preferences;
 
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
@@ -57,6 +55,9 @@ import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
  */
 public class KalypsoWspmPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage
 {
+  /**
+   * The constructor.
+   */
   public KalypsoWspmPreferencePage( )
   {
     super( GRID );
@@ -65,23 +66,19 @@ public class KalypsoWspmPreferencePage extends FieldEditorPreferencePage impleme
     setDescription( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.preferences.KalypsoWspmPreferencePage.0" ) ); //$NON-NLS-1$
   }
 
-  @Override
-  public void init( final IWorkbench workbench )
-  {
-  }
-
-  @Override
-  protected Control createContents( final Composite parent )
-  {
-    // Must be here, else its overwritten
-    setTitle( "KalypsoWSPM" ); //$NON-NLS-1$
-
-    // Nothing to do yet
-    return super.createContents( parent );
-  }
-
+  /**
+   * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
+   */
   @Override
   public void createFieldEditors( )
+  {
+  }
+
+  /**
+   * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
+   */
+  @Override
+  public void init( IWorkbench workbench )
   {
   }
 }

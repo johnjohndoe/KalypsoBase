@@ -21,7 +21,7 @@ public class WorkflowConnectorPlugin extends Plugin
 
   /**
    * Returns the shared instance
-   * 
+   *
    * @return the shared instance
    */
   public static WorkflowConnectorPlugin getDefault( )

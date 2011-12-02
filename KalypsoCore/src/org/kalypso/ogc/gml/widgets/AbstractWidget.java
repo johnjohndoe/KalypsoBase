@@ -120,7 +120,7 @@ public abstract class AbstractWidget implements IWidget
    * @see org.kalypso.ogc.gml.widgets.IWidget#isActive()
    */
   @Override
-  public synchronized boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
+  public boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
   {
     return true;
   }
@@ -401,8 +401,11 @@ public abstract class AbstractWidget implements IWidget
     // not implemented by default
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#setParameter(java.util.Map)
+   */
   @Override
-  public void setParameter( final Map<String, String> parameter )
+  public void setParameter( Map<String, String> parameter )
   {
     m_parameter = parameter;
   }

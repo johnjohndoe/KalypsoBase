@@ -57,7 +57,7 @@ public class ForwardAction extends Action
   /**
    * The movie player.
    */
-  private final MoviePlayer m_player;
+  private MoviePlayer m_player;
 
   /**
    * The constructor.
@@ -65,7 +65,7 @@ public class ForwardAction extends Action
    * @param player
    *          The movie player.
    */
-  public ForwardAction( final MoviePlayer player )
+  public ForwardAction( MoviePlayer player )
   {
     m_player = player;
   }
@@ -74,9 +74,9 @@ public class ForwardAction extends Action
    * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
    */
   @Override
-  public void runWithEvent( final Event event )
+  public void runWithEvent( Event event )
   {
-    final int currentStep = m_player.getCurrentStep();
+    int currentStep = m_player.getCurrentStep();
     m_player.stepTo( currentStep + 1 );
     m_player.updateControls();
   }

@@ -44,7 +44,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -55,8 +54,6 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-import de.openali.odysseus.chart.framework.util.ChartUtilities;
-
 /**
  * TODO: Auslagern in externes Test-Plugin
  * 
@@ -66,7 +63,7 @@ public class ImageTest implements PaintListener
 {
   public static void main( final String[] args )
   {
-    final Display d = ChartUtilities.getDisplay();
+    final Display d = Display.getDefault();
 
     final Shell s = new Shell( d );
     s.setLayout( new FillLayout() );
@@ -94,18 +91,17 @@ public class ImageTest implements PaintListener
   public void paintControl( final PaintEvent e )
   {
     final GC gc = e.gc;
-    final Device device = gc.getDevice();
-    final Color blue = device.getSystemColor( SWT.COLOR_BLUE );
+    final Color blue = Display.getDefault().getSystemColor( SWT.COLOR_BLUE );
 
     final ImageData id1 = new ImageData( 200, 200, 32, new PaletteData( 0, 0, 0 ) );
     id1.transparentPixel = 0;
 
-    final Image img1 = new Image( device, id1 );
+    final Image img1 = new Image( Display.getDefault(), id1 );
     final GC gc1 = new GC( img1 );
     gc1.setForeground( blue );
     gc1.drawLine( 0, 0, 200, 200 );
 
-    final Image img2 = new Image( device, 200, 200 );
+    final Image img2 = new Image( Display.getDefault(), 200, 200 );
     final GC gc2 = new GC( img2 );
     gc2.setForeground( blue );
     gc2.drawLine( 0, 200, 200, 0 );
@@ -117,5 +113,6 @@ public class ImageTest implements PaintListener
     img1.dispose();
     gc2.dispose();
     img2.dispose();
+
   }
 }

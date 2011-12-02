@@ -44,7 +44,7 @@ import org.kalypsodeegree_impl.tools.Debug;
  * <p>
  * ----------------------------------------------------------------------
  * </p>
- * 
+ *
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  */
@@ -52,7 +52,7 @@ class NamedStyle_Impl extends Style_Impl implements NamedStyle, Marshallable
 {
   /**
    * Creates a new NamedStyle_Impl object.
-   * 
+   *
    * @param name
    */
   NamedStyle_Impl( final String name )
@@ -62,11 +62,11 @@ class NamedStyle_Impl extends Style_Impl implements NamedStyle, Marshallable
 
   /**
    * exports the content of the NamedStyle as XML formated String
-   * 
+   *
    * @return xml representation of the NamedStyle
    */
   @Override
-  public String exportAsXML( )
+  public String exportAsXML()
   {
     Debug.debugMethodBegin();
 

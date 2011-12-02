@@ -120,7 +120,7 @@ public class SimpleShapeWriter
 
   public void close( ) throws GmlSerializeException
   {
-    ShapeSerializer.serialize( m_workspace, m_file.getAbsolutePath(), (String) null );
+    ShapeSerializer.serialize( m_workspace, m_file.getAbsolutePath(), null );
     m_workspace.dispose();
   }
 

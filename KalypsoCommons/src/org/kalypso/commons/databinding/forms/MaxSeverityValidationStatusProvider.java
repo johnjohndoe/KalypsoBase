@@ -18,28 +18,25 @@ import org.eclipse.core.databinding.ValidationStatusProvider;
 import org.eclipse.core.databinding.observable.value.ComputedValue;
 import org.eclipse.core.runtime.IStatus;
 
-/*package*/class MaxSeverityValidationStatusProvider extends ComputedValue
-{
+/*package*/ class MaxSeverityValidationStatusProvider extends ComputedValue {
 
   private Collection< ? > validationStatusProviders;
 
-  public MaxSeverityValidationStatusProvider( final DataBindingContext dbc )
-  {
-    super( ValidationStatusProvider.class );
-    validationStatusProviders = dbc.getValidationStatusProviders();
+  public MaxSeverityValidationStatusProvider(final DataBindingContext dbc) {
+    super(ValidationStatusProvider.class);
+    this.validationStatusProviders = dbc.getValidationStatusProviders();
   }
 
   @Override
-  protected Object calculate( )
-  {
+  protected Object calculate() {
     int maxSeverity = IStatus.OK;
     ValidationStatusProvider maxSeverityProvider = null;
     for( final Object name : validationStatusProviders )
     {
       final ValidationStatusProvider provider = (ValidationStatusProvider) name;
-      final IStatus status = (IStatus) provider.getValidationStatus().getValue();
-      if( status.getSeverity() > maxSeverity )
-      {
+      final IStatus status = (IStatus) provider.getValidationStatus()
+      .getValue();
+      if (status.getSeverity() > maxSeverity) {
         maxSeverity = status.getSeverity();
         maxSeverityProvider = provider;
       }
@@ -48,8 +45,7 @@ import org.eclipse.core.runtime.IStatus;
   }
 
   @Override
-  public synchronized void dispose( )
-  {
+  public synchronized void dispose() {
     validationStatusProviders = null;
     super.dispose();
   }

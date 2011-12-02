@@ -92,12 +92,13 @@ public class CloneFeatureVisitor implements FeatureVisitor
     if( parentFEClone == m_targetFeature )
       propertiesToCopy = m_ftp;
 
-    for( final IPropertyType property : propertiesToCopy )
+    for( int i = 0; i < propertiesToCopy.length; i++ )
     {
 
+      final IPropertyType property = propertiesToCopy[i];
       if( property instanceof IRelationType )
       {
-        final IRelationType linkPT = (IRelationType) property;
+        IRelationType linkPT = (IRelationType) property;
         final Feature[] childFEsOriginal = m_workspace.resolveLinks( parentFEOriginal, linkPT, GMLWorkspace.RESOLVE_ALL );
         for( int j = 0; j < childFEsOriginal.length; j++ )
         {
@@ -120,7 +121,7 @@ public class CloneFeatureVisitor implements FeatureVisitor
                 addLinkInfo( new AdaptLinkInfo( parentFEOriginal, linkPT, j, childFEOriginal ) );
               }
             }
-            catch( final Exception e ) // do nothing, assume that original features is valid
+            catch( Exception e ) // do nothing, assume that original features is valid
             {
               e.printStackTrace();
             }
@@ -134,12 +135,13 @@ public class CloneFeatureVisitor implements FeatureVisitor
               m_workspace.addFeatureAsComposition( parentFEClone, linkPT, j, childFEClone );
               addToIdMap( childFEOriginal.getId(), childFEClone.getId() );
               final AdaptLinkInfo[] linkInfo = getLinkInfo( childFEOriginal );
-              for( final AdaptLinkInfo info : linkInfo )
+              for( int k = 0; k < linkInfo.length; k++ )
               {
+                final AdaptLinkInfo info = linkInfo[k];
                 info.adaptToClones();
               }
             }
-            catch( final Exception e )// do nothing, assume that original features is valid
+            catch( Exception e )// do nothing, assume that original features is valid
             {
               e.printStackTrace();
             }
@@ -153,7 +155,7 @@ public class CloneFeatureVisitor implements FeatureVisitor
         {
           FeatureHelper.copySimpleProperty( parentFEOriginal, parentFEClone, property );
         }
-        catch( final Exception e ) // TODO what to do with the exceptions here ?
+        catch( Exception e ) // TODO what to do with the exceptions here ?
         {
           e.printStackTrace();
         }
@@ -193,7 +195,7 @@ public class CloneFeatureVisitor implements FeatureVisitor
    * @param parentFEOriginal
    * @return clone of parentFEOriginal
    */
-  Feature getFeatureClone( final Feature parentFEOriginal )
+  Feature getFeatureClone( Feature parentFEOriginal )
   {
     final String parentID = parentFEOriginal.getId();
     if( m_idMap.containsKey( parentID ) )
@@ -225,7 +227,7 @@ public class CloneFeatureVisitor implements FeatureVisitor
 
     private final IRelationType m_linkPT;
 
-    public AdaptLinkInfo( final Feature parentFEOriginal, final IRelationType linkPT, final int pos, final Feature targetFEOriginal )
+    public AdaptLinkInfo( final Feature parentFEOriginal, IRelationType linkPT, final int pos, final Feature targetFEOriginal )
     {
       m_parentFEOriginal = parentFEOriginal;
       m_linkPT = linkPT;

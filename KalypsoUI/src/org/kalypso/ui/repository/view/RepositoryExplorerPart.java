@@ -103,7 +103,7 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
     if( adapter.equals( IPropertySheetPage.class ) )
     {
       // lazy loading
-      if( m_propsPage == null || m_propsPage.getControl().isDisposed() )
+      if( (m_propsPage == null) || m_propsPage.getControl().isDisposed() )
       {
         // dispose it when not null (not sure if this is ok)
         if( m_propsPage != null )
@@ -191,7 +191,7 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
   @Override
   public void selectionChanged( final SelectionChangedEvent event )
   {
-    if( m_propsPage != null && !m_propsPage.getControl().isDisposed() )
+    if( (m_propsPage != null) && !m_propsPage.getControl().isDisposed() )
       m_propsPage.selectionChanged( this, event.getSelection() );
   }
 

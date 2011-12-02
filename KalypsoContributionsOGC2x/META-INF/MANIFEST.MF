@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoContributionsOGC2x Plug-in
 Bundle-SymbolicName: org.kalypso.contribs.ogc2x;singleton:=true
-Bundle-Version: 11.6.3.qualifier
+Bundle-Version: 11.4.0.qualifier
 Bundle-Vendor: kalypsobase.sourceforge.net
 Require-Bundle: org.kalypso.commons,
  org.eclipse.wst.xml.core;resolution:=optional
@@ -12,4 +12,4 @@ Export-Package: ogc2.www.opengis.net.gml,
  ogc2.www.opengis.net.ows,
  ogc2.www.opengis.net.sld,
  org.kalypso.contribs.ogc2x
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

@@ -45,14 +45,13 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.zml.core.KalypsoZmlCoreConstants;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * The round zml filter.
  * 
  * @author Holger Albert
  */
-public class RoundZmlFilter extends Feature_Impl implements IZmlFilter
+public class RoundZmlFilter extends AbstractZmlFilter
 {
   /**
    * The qname of the factor.
@@ -69,8 +68,6 @@ public class RoundZmlFilter extends Feature_Impl implements IZmlFilter
    */
   public static final QName QNAME_AXIS_TYPE = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "axisType" );
 
-  public static final QName QNAME_ROUND_ZML_FILTER = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "RoundZmlFilter" );
-
   /**
    * The constructor.
    * 
@@ -80,7 +77,7 @@ public class RoundZmlFilter extends Feature_Impl implements IZmlFilter
    * @param id
    * @param propValues
    */
-  public RoundZmlFilter( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public RoundZmlFilter( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }

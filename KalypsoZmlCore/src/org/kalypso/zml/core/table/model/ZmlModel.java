@@ -40,10 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model;
 
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -51,15 +48,11 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.kalypso.zml.core.debug.KalypsoZmlCoreDebug;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.zml.core.table.IZmlTableElement;
 import org.kalypso.zml.core.table.model.loader.ZmlColumnLoadCommand;
-import org.kalypso.zml.core.table.model.loader.ZmlRowBuilder;
-import org.kalypso.zml.core.table.model.memento.IZmlMemento;
-import org.kalypso.zml.core.table.model.memento.ZmlMemento;
-import org.kalypso.zml.core.table.schema.DataColumnType;
+import org.kalypso.zml.core.table.model.loader.ZmlModelBuilder;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 
 /**
@@ -67,53 +60,38 @@ import org.kalypso.zml.core.table.schema.ZmlTableType;
  */
 public class ZmlModel implements IZmlModel, IZmlModelColumnListener
 {
-  private final IZmlMemento m_memento = new ZmlMemento();
+  private final List<IZmlModelColumn> m_columns = new ArrayList<IZmlModelColumn>();
 
-  private final List<IZmlModelColumn> m_columns = Collections.synchronizedList( new ArrayList<IZmlModelColumn>() );
+  private final Set<ZmlColumnLoadCommand> m_commands = new HashSet<ZmlColumnLoadCommand>();
 
-  private final Set<ZmlColumnLoadCommand> m_commandRegister = Collections.synchronizedSet( new HashSet<ZmlColumnLoadCommand>() );
+  private final Set<IZmlColumnModelListener> m_listeners = new HashSet<IZmlColumnModelListener>();
 
-  private final Set<IZmlColumnModelListener> m_listeners = Collections.synchronizedSet( new HashSet<IZmlColumnModelListener>() );
+  private final Map<Object, IZmlModelRow> m_rows = new TreeMap<Object, IZmlModelRow>();
 
-  private Map<Date, IZmlModelRow> m_rows = Collections.synchronizedMap( new TreeMap<Date, IZmlModelRow>() );
+  private boolean m_rowsDirty = true;
 
   private final ZmlTableType m_type;
 
-  private final URL m_context;
-
-  public ZmlModel( final ZmlTableType type, final URL context )
+  public ZmlModel( final ZmlTableType type )
   {
     m_type = type;
-    m_context = context;
-
-    init();
-  }
-
-  @Override
-  public IZmlMemento getMemento( )
-  {
-    return m_memento;
-  }
-
-  private void init( )
-  {
-    final ZmlModelInitializer initializer = new ZmlModelInitializer( this );
-    initializer.execute( new NullProgressMonitor() );
   }
 
   @Override
   public void accept( final IZmlModelRowVisitor visitor )
   {
-    synchronized( this )
-    {
-      if( m_rows.isEmpty() )
-        getRows();
-    }
-
-    final Set<Entry<Date, IZmlModelRow>> entries = m_rows.entrySet();
-    for( final Entry<Date, IZmlModelRow> entry : entries )
+    final Set<Entry<Object, IZmlModelRow>> entries = m_rows.entrySet();
+    for( final Entry<Object, IZmlModelRow> entry : entries )
     {
       visitor.visit( entry.getValue() );
+    }
+  }
+
+  public void add( final IZmlModelRow row )
+  {
+    synchronized( m_rows )
+    {
+      m_rows.put( row.getIndexValue(), row );
     }
   }
 
@@ -122,7 +100,7 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
     column.addListener( this );
     m_columns.add( column );
 
-    fireModelChanged( column );
+    fireModelChanged();
   }
 
   @Override
@@ -131,26 +109,25 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
     m_listeners.add( listener );
   }
 
-  public void purge( )
+  public void clean( )
   {
-    KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlTableModel - purge() model" );
-
     final ZmlModelColumn[] columns;
     final ZmlColumnLoadCommand[] commands;
 
     synchronized( this )
     {
       columns = m_columns.toArray( new ZmlModelColumn[] {} );
-      commands = m_commandRegister.toArray( new ZmlColumnLoadCommand[] {} );
+      m_columns.clear();
 
-      m_commandRegister.clear();
+      commands = m_commands.toArray( new ZmlColumnLoadCommand[] {} );
+      m_commands.clear();
+
       m_rows.clear();
     }
 
     for( final ZmlModelColumn column : columns )
     {
-      column.purge();
-      column.setActive( false );
+      column.dispose();
     }
 
     for( final ZmlColumnLoadCommand command : commands )
@@ -162,37 +139,27 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
   }
 
   @Override
-  public void dispose( )
+  public void fireModelChanged( )
   {
-    purge();
+    m_rowsDirty = true;
 
-    m_memento.dispose();
-  }
-
-  @Override
-  public void fireModelChanged( final IZmlModelColumn... columns )
-  {
     final IZmlColumnModelListener[] listeners = m_listeners.toArray( new IZmlColumnModelListener[] {} );
     for( final IZmlColumnModelListener listener : listeners )
     {
-      listener.modelChanged( columns );
+      listener.modelChanged();
     }
   }
 
   @Override
   public IZmlModelColumn getColumn( final String id )
   {
-    synchronized( this )
+    for( final IZmlModelColumn column : m_columns )
     {
-      final IZmlModelColumn[] columns = m_columns.toArray( new IZmlModelColumn[] {} );
-      for( final IZmlModelColumn column : columns )
-      {
-        if( column.getIdentifier().equals( id ) )
-          return column;
-      }
-
-      return null;
+      if( column.getIdentifier().equals( id ) )
+        return column;
     }
+
+    return null;
   }
 
   @Override
@@ -202,17 +169,25 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
   }
 
   @Override
-  public IZmlModelRow getRow( final Date index )
+  public IZmlModelRow getRow( final Object index )
   {
-    synchronized( this )
+    if( m_rowsDirty )
     {
-      if( m_rows.isEmpty() )
-        getRows();
+      synchronized( this )
+      {
+        final ZmlModelBuilder builder = new ZmlModelBuilder( this );
+        ProgressUtilities.busyCursorWhile( builder );
+
+        m_rowsDirty = false;
+      }
     }
 
     return m_rows.get( index );
   }
 
+  /**
+   * @see org.kalypso.zml.core.table.model.IZmlModel#getRowAt(int)
+   */
   @Override
   public IZmlModelRow getRowAt( final int index )
   {
@@ -223,15 +198,22 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
     return rows[index];
   }
 
+  /**
+   * @see org.kalypso.zml.ui.table.model.IZmlDataModel#getRows()
+   */
   @Override
   public IZmlModelRow[] getRows( )
   {
     synchronized( this )
     {
-      if( m_rows.isEmpty() )
+      if( m_rowsDirty )
       {
-        final ZmlRowBuilder builder = new ZmlRowBuilder( this );
-        m_rows = builder.execute();
+        m_rows.clear();
+
+        final ZmlModelBuilder builder = new ZmlModelBuilder( this );
+        builder.execute( new NullProgressMonitor() );
+
+        m_rowsDirty = false;
       }
 
       return m_rows.values().toArray( new IZmlModelRow[] {} );
@@ -244,44 +226,17 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
     return m_type;
   }
 
-  public void load( final IZmlTableElement column )
+  public void loadColumn( final IZmlTableElement column )
   {
-    synchronized( this )
-    {
-      final ZmlColumnLoadCommand command = new ZmlColumnLoadCommand( this, column );
-      m_commandRegister.add( command );
-
-      command.execute();
-    }
+    m_commands.add( new ZmlColumnLoadCommand( this, column ) );
   }
 
+  /**
+   * @see org.kalypso.zml.core.table.model.IZmlModelColumnListener#modelColumnChangedEvent()
+   */
   @Override
-  public void modelColumnChangedEvent( final IZmlModelColumn column )
+  public void modelColumnChangedEvent( )
   {
-    fireModelChanged( column );
-  }
-
-  public URL getContext( )
-  {
-    return m_context;
-  }
-
-  public void setIgnoreTypes( final String[] ignoreTypes )
-  {
-    KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlTableModel - Setting ignore types\n" );
-
-    synchronized( this )
-    {
-      final IZmlModelColumn[] columns = m_columns.toArray( new IZmlModelColumn[] {} );
-
-      for( final IZmlModelColumn column : columns )
-      {
-        final DataColumnType columnType = column.getDataColumn().getType();
-        final String type = columnType.getValueAxis();
-
-        final boolean ignore = ArrayUtils.contains( ignoreTypes, type );
-        column.setIsIgnoreType( ignore );
-      }
-    }
+    fireModelChanged();
   }
 }

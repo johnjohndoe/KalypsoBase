@@ -42,7 +42,6 @@ package org.kalypso.zml.ui.table.layout;
 
 import java.util.Date;
 
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.IZmlModelRowVisitor;
 import org.kalypso.zml.ui.table.IZmlTableRowVisitor;
@@ -76,9 +75,6 @@ public class ClosestDateVisitor implements IZmlTableRowVisitor, IZmlModelRowVisi
   {
     final IZmlModelRow modelRow = row.getModelRow();
     final Date date = modelRow.getIndexValue();
-    if( Objects.isNull( date ) )
-      return;
-
     final long time = date.getTime();
 
     final long diff = Math.abs( m_base - time );

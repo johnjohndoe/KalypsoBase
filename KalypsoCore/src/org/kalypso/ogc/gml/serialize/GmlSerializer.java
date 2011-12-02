@@ -53,6 +53,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
@@ -72,18 +73,17 @@ import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -117,8 +117,6 @@ import org.xml.sax.XMLReader;
  */
 public final class GmlSerializer
 {
-  private static TransformerFactory TRANSFORMER_FACTORY = TransformerFactory.newInstance();
-
   public static final IFeatureProviderFactory DEFAULT_FACTORY = new GmlSerializerFeatureProviderFactory();
 
   public static final String[] GZ_EXTENSIONS = new String[] { "gz", "gmlz" }; //$NON-NLS-1$ //$NON-NLS-2$
@@ -161,9 +159,8 @@ public final class GmlSerializer
   /**
    * REMARK: This method closes the given writer, which is VERY bad. Every caller should close the write on its own
    * 
-   * @deprecated Because this method closes it writer. Change to
-   *             {@link #serializeWorkspace(Writer, GMLWorkspace, String, false)}, rewrite your code, then we can get
-   *             rid of this method and the flag.
+   * @deprecated Because this method closes it writer. Change to {@link #serializeWorkspace(Writer, GMLWorkspace,
+   *             String, false)}, rewrite your code, then we can get rid of this method and the flag.
    */
   @Deprecated
   public static void serializeWorkspace( final Writer writer, final GMLWorkspace gmlWorkspace, final String charsetEncoding ) throws GmlSerializeException
@@ -210,7 +207,8 @@ public final class GmlSerializer
 
       final Source source = new SAXSource( reader, inputSource );
 
-      final Transformer transformer = TRANSFORMER_FACTORY.newTransformer();
+      final TransformerFactory tFac = TransformerFactory.newInstance();
+      final Transformer transformer = tFac.newTransformer();
       transformer.setOutputProperty( OutputKeys.ENCODING, charsetEncoding );
       transformer.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
       transformer.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "1" ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -228,7 +226,6 @@ public final class GmlSerializer
 
   /**
    * Same as {@link #createGMLWorkspace(URL, IFeatureProviderFactory, null )
-
    */
   public static GMLWorkspace createGMLWorkspace( final URL gmlURL, final IFeatureProviderFactory factory ) throws Exception
   {
@@ -244,8 +241,7 @@ public final class GmlSerializer
   }
 
   /**
-   * @param context
-   *          If set, this context is used instead of the gmlUrl where the workspace is loaded from.
+   * @param context If set, this context is used instead of the gmlUrl where the workspace is loaded from.
    */
   public static GMLWorkspace createGMLWorkspace( final URL gmlURL, final URL context, final IFeatureProviderFactory factory, final IProgressMonitor monitor ) throws Exception
   {
@@ -262,7 +258,7 @@ public final class GmlSerializer
       }
       else
       {
-        final long contentLength = UrlUtilities.getContentLength( gmlURL );
+        final long contentLength = getContentLength( gmlURL );
         final String tskMsg = Messages.getString( "org.kalypso.ogc.gml.serialize.GmlSerializer.3", gmlURL ); //$NON-NLS-1$
         monitor.beginTask( tskMsg, (int) contentLength );
         bis = new ProgressInputStream( urlStream, contentLength, monitor );
@@ -302,6 +298,21 @@ public final class GmlSerializer
     // REMARK: this is a quite crude way to decide, if to compress or not. But how should we decide it anyway?
     final String extension = FilenameUtils.getExtension( filename );
     return ArrayUtils.contains( GZ_EXTENSIONS, extension );
+  }
+
+  private static long getContentLength( final URL url ) throws IOException
+  {
+    final File file = FileUtils.toFile( url );
+    if( file != null )
+      return file.length();
+
+    final File platformFile = ResourceUtilities.findJavaFileFromURL( url );
+    if( platformFile != null )
+      return platformFile.length();
+
+    final URLConnection connection = url.openConnection();
+    final int contentLength = connection.getContentLength();
+    return contentLength;
   }
 
   public static GMLWorkspace createGMLWorkspace( final InputSource inputSource, final URL schemaLocationHint, final URL context, final IFeatureProviderFactory factory ) throws ParserConfigurationException, SAXException, IOException, GMLException
@@ -487,23 +498,11 @@ public final class GmlSerializer
    */
   public static GMLWorkspace createGMLWorkspace( final IFile file ) throws Exception
   {
-    return createGMLWorkspace( file, new NullProgressMonitor() );
-  }
-
-  /**
-   * This function loads a workspace from a {@link IFile}.
-   * 
-   * @param file
-   *          The file of the workspace.
-   * @return The workspace of the file.
-   */
-  public static GMLWorkspace createGMLWorkspace( final IFile file, final IProgressMonitor monitor ) throws Exception
-  {
     /* Create the url of the workspace. */
     final URL url = ResourceUtilities.createURL( file );
 
     /* Load the workspace and return it. */
-    return GmlSerializer.createGMLWorkspace( url, null, monitor );
+    return GmlSerializer.createGMLWorkspace( url, null );
   }
 
   /**
@@ -556,38 +555,6 @@ public final class GmlSerializer
     finally
     {
       IOUtils.closeQuietly( zos );
-    }
-  }
-
-  public static void serializeWorkspace( final IFile targetFile, final GMLWorkspace workspace, final IProgressMonitor monitor ) throws CoreException
-  {
-    monitor.beginTask( "Writing gml", 100 );
-
-    String charset;
-    if( targetFile.exists() )
-      charset = targetFile.getCharset();
-    else
-    {
-      // check: is there a better way to set this default encoding?
-      charset = "UTF-8"; //$NON-NLS-1$
-    }
-    monitor.worked( 5 );
-
-    try
-    {
-      final File file = targetFile.getLocation().toFile();
-      serializeWorkspace( file, workspace, charset );
-      monitor.worked( 90 );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      final IStatus error = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), "Failed to write gml workspace", e );
-      throw new CoreException( error );
-    }
-    finally
-    {
-      targetFile.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 5 ) );
     }
   }
 }

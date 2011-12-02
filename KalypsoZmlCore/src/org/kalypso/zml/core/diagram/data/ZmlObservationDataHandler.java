@@ -93,13 +93,10 @@ public class ZmlObservationDataHandler implements IZmlLayerDataHandler, IObserva
   @Override
   public IAxis getValueAxis( )
   {
-    synchronized( this )
-    {
-      if( m_valueAxis == null )
-        m_valueAxis = AxisUtils.findAxis( m_observation.getAxes(), m_targetAxisId );
+    if( m_valueAxis == null )
+      m_valueAxis = AxisUtils.findAxis( m_observation.getAxes(), m_targetAxisId );
 
-      return m_valueAxis;
-    }
+    return m_valueAxis;
   }
 
   /**

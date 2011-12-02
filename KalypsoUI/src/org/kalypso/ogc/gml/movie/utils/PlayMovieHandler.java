@@ -80,37 +80,37 @@ public class PlayMovieHandler extends AbstractHandler
    * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  public Object execute( final ExecutionEvent event )
+  public Object execute( ExecutionEvent event )
   {
     /* Get the evaluation context. */
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
     /* Get the shell. */
-    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
 
     try
     {
       /* Get the workbench. */
-      final IWorkbench workbench = PlatformUI.getWorkbench();
+      IWorkbench workbench = PlatformUI.getWorkbench();
       if( workbench == null )
         throw new Exception( "Es wurde keine Workbench gefunden..." );
 
       /* Get the progress service. */
-      final IProgressService service = workbench.getProgressService();
+      IProgressService service = workbench.getProgressService();
       if( service == null )
         throw new Exception( "Es wurde kein Progress-Service gefunden..." );
 
       /* Get the map panel. */
-      final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
+      IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
 
       /* Save it to a temporary file. */
-      final GisTemplateMapModell newMapModel = saveAndReloadGismapTemplate( mapPanel );
+      GisTemplateMapModell newMapModel = saveAndReloadGismapTemplate( mapPanel );
 
       /* Create the operation. */
-      final MovieImageProviderRunnable operation = new MovieImageProviderRunnable( newMapModel, mapPanel.getBoundingBox() );
+      MovieImageProviderRunnable operation = new MovieImageProviderRunnable( newMapModel, mapPanel.getBoundingBox() );
 
       /* Execute the operation. */
-      final IStatus status = RunnableContextHelper.execute( service, true, true, operation );
+      IStatus status = RunnableContextHelper.execute( service, true, true, operation );
       if( !status.isOK() )
       {
         /* Log the error message. */
@@ -123,20 +123,20 @@ public class PlayMovieHandler extends AbstractHandler
       }
 
       /* Get the image provider. */
-      final IMovieImageProvider imageProvider = operation.getImageProvider();
+      IMovieImageProvider imageProvider = operation.getImageProvider();
 
       /* Create the movie player. */
-      final MoviePlayer player = new MoviePlayer( imageProvider );
+      MoviePlayer player = new MoviePlayer( imageProvider );
 
       /* Create the movie dialog. */
-      final MovieDialog movieDialog = new MovieDialog( shell, player );
+      MovieDialog movieDialog = new MovieDialog( shell, player );
 
       /* Open the movie dialog. */
       movieDialog.open();
 
       return null;
     }
-    catch( final Exception ex )
+    catch( Exception ex )
     {
       ex.printStackTrace();
       MessageDialog.openError( shell, "Film starten", String.format( "Konnte den Film nicht abspielen: %s", ex.getLocalizedMessage() ) );
@@ -145,10 +145,10 @@ public class PlayMovieHandler extends AbstractHandler
     }
   }
 
-  private GisTemplateMapModell saveAndReloadGismapTemplate( final IMapPanel mapPanel ) throws IOException
+  private GisTemplateMapModell saveAndReloadGismapTemplate( IMapPanel mapPanel ) throws IOException
   {
     /* Get the map model. */
-    final IMapModell mapModel = mapPanel.getMapModell();
+    IMapModell mapModel = mapPanel.getMapModell();
     if( !(mapModel instanceof GisTemplateMapModell) )
       throw new IOException( "Ungültiges Karten-Modell..." );
 

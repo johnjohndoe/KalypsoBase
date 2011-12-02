@@ -87,7 +87,6 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 import org.kalypso.ui.editor.gmleditor.ui.GMLContentProvider;
 import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
@@ -208,17 +207,17 @@ public class GmlFileImportPage extends WizardPage
     final GridLayout topGroupLayout = new GridLayout( 3, false );
     group.setLayout( topGroupLayout );
 
-    group.setText( Messages.getString( "org.kalypso.ui.wizard.gmlGmlFileImportPage.0" ) ); //$NON-NLS-1$
+    group.setText( Messages.getString("org.kalypso.ui.wizard.gmlGmlFileImportPage.0") ); //$NON-NLS-1$
     final Label fileLabel = new Label( group, SWT.NONE );
     fileLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
-    fileLabel.setText( Messages.getString( "org.kalypso.ui.wizard.gmlGmlFileImportPage.1" ) ); //$NON-NLS-1$
+    fileLabel.setText( Messages.getString("org.kalypso.ui.wizard.gmlGmlFileImportPage.1") ); //$NON-NLS-1$
 
     m_sourceFileText = new Text( group, SWT.BORDER );
     m_sourceFileText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_sourceFileText.setEditable( false );
 
     final Button browseButton = new Button( group, SWT.PUSH );
-    browseButton.setText( Messages.getString( "org.kalypso.ui.wizard.gmlGmlFileImportPage.2" ) ); //$NON-NLS-1$
+    browseButton.setText( Messages.getString("org.kalypso.ui.wizard.gmlGmlFileImportPage.2") ); //$NON-NLS-1$
     browseButton.setLayoutData( new GridData( SWT.END, SWT.CENTER, false, false ) );
     browseButton.addSelectionListener( new SelectionAdapter()
     {
@@ -241,7 +240,7 @@ public class GmlFileImportPage extends WizardPage
 
     final IContainer container = m_selectedProject == null ? root : m_selectedProject;
 
-    final KalypsoResourceSelectionDialog dialog = new KalypsoResourceSelectionDialog( getShell(), null, Messages.getString( "org.kalypso.ui.wizard.gmlGmlFileImportPage.3" ), new String[] { "gml" }, container, new ResourceSelectionValidator() ); //$NON-NLS-1$ //$NON-NLS-2$
+    final KalypsoResourceSelectionDialog dialog = new KalypsoResourceSelectionDialog( getShell(), null, Messages.getString("org.kalypso.ui.wizard.gmlGmlFileImportPage.3"), new String[] { "gml" }, container, new ResourceSelectionValidator() ); //$NON-NLS-1$ //$NON-NLS-2$
     if( m_filter != null )
       dialog.setViewerFilter( m_filter );
 
@@ -267,7 +266,7 @@ public class GmlFileImportPage extends WizardPage
       {
         try
         {
-          monitor.beginTask( Messages.getString( "org.kalypso.ui.wizard.gmlGmlFileImportPage.4" ), 1 ); //$NON-NLS-1$
+          monitor.beginTask( Messages.getString("org.kalypso.ui.wizard.gmlGmlFileImportPage.4"), 1 ); //$NON-NLS-1$
           final URL gmlURL = ResourceUtilities.createURL( resource );
           final CommandableWorkspace workspace = new CommandableWorkspace( GmlSerializer.createGMLWorkspace( gmlURL, null ) );
           setWorkspace( workspace, source );
@@ -282,7 +281,7 @@ public class GmlFileImportPage extends WizardPage
     };
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, progress );
-    ErrorDialog.openError( getShell(), getWizard().getWindowTitle(), Messages.getString( "org.kalypso.ui.wizard.gmlGmlFileImportPage.5" ), status ); //$NON-NLS-1$
+    ErrorDialog.openError( getShell(), getWizard().getWindowTitle(), Messages.getString("org.kalypso.ui.wizard.gmlGmlFileImportPage.5"), status ); //$NON-NLS-1$
 
     m_treeViewer.getTree().setVisible( true );
     m_treeViewer.setInput( m_workspace );
@@ -324,7 +323,7 @@ public class GmlFileImportPage extends WizardPage
   private IStatus validateCurrentSelection( )
   {
     if( m_currentSelection == null || m_currentSelection.isEmpty() )
-      return new Status( IStatus.WARNING, KalypsoAddLayerPlugin.getId(), Messages.getString( "org.kalypso.ui.wizard.gmlGmlFileImportPage.6" ) ); //$NON-NLS-1$
+      return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.ui.wizard.gmlGmlFileImportPage.6") ); //$NON-NLS-1$
 
     final Object[] objects = m_currentSelection.toArray();
     for( final Object object : objects )
@@ -335,7 +334,7 @@ public class GmlFileImportPage extends WizardPage
         final IFeatureType featureType = f.getFeatureType();
 
         if( !checkFeatureTypeValid( featureType ) )
-          return new Status( IStatus.WARNING, KalypsoAddLayerPlugin.getId(), Messages.getString( "org.kalypso.ui.wizard.gmlGmlFileImportPage.7" ) ); //$NON-NLS-1$
+          return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.ui.wizard.gmlGmlFileImportPage.7") ); //$NON-NLS-1$
 
         return Status.OK_STATUS;
       }
@@ -345,12 +344,12 @@ public class GmlFileImportPage extends WizardPage
         final IRelationType associationRt = fate.getAssociationTypeProperty();
         final IFeatureType targetFeatureType = associationRt.getTargetFeatureType();
         if( !checkFeatureTypeValid( targetFeatureType ) )
-          return new Status( IStatus.WARNING, KalypsoAddLayerPlugin.getId(), Messages.getString( "org.kalypso.ui.wizard.gmlGmlFileImportPage.8" ) ); //$NON-NLS-1$
+          return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.ui.wizard.gmlGmlFileImportPage.8") ); //$NON-NLS-1$
 
         return Status.OK_STATUS;
       }
 
-      return new Status( IStatus.WARNING, KalypsoAddLayerPlugin.getId(), Messages.getString( "org.kalypso.ui.wizard.gmlGmlFileImportPage.9" ) ); //$NON-NLS-1$
+      return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.ui.wizard.gmlGmlFileImportPage.9") ); //$NON-NLS-1$
     }
 
     return Status.OK_STATUS;

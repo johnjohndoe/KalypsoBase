@@ -53,7 +53,7 @@ import org.kalypso.template.types.LayerType;
  */
 public class OsmTheme extends KalypsoWMSTheme
 {
-  public OsmTheme( final String source, final String linktype, final I10nString themeName, final LayerType layerType, final IKalypsoImageProvider imageProvider, final IMapModell mapModel )
+  public OsmTheme( final String source, final String linktype, final I10nString themeName, LayerType layerType, final IKalypsoImageProvider imageProvider, final IMapModell mapModel )
   {
     super( source, linktype, themeName, layerType, imageProvider, mapModel );
   }

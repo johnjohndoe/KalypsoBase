@@ -475,6 +475,9 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
   protected final class UnRegisterVisitor implements FeatureVisitor
   {
+    /**
+     * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
+     */
     @Override
     public boolean visit( final Feature f )
     {
@@ -824,15 +827,15 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     return result;
   }
 
-  /**
-   * Unregisters a feature from this workspace.<br/>
-   * Should be called only within this implementation. NOT intended to be called by client.
-   */
-  public void unregisterFeature( final Feature childFeature )
+  private void unregisterFeature( final Feature childFeature )
   {
     m_indexMap.remove( childFeature.getId() );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#accept(org.kalypsodeegree.model.feature.FeatureVisitor,
+   *      java.lang.String, int)
+   */
   @Override
   public void accept( final FeatureVisitor fv, final String featurePath, final int depth )
   {
@@ -843,6 +846,22 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       accept( fv, (FeatureList) featureFromPath, depth );
     else
       throw new IllegalArgumentException( "FeaturePath is neither Feature nor FeatureList: " + featurePath );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.GMLWorkspace#isExistingRelation(org.kalypsodeegree.model.feature.Feature,
+   *      org.kalypsodeegree.model.feature.Feature, java.lang.String)
+   */
+  @Override
+  public boolean isExistingRelation( final Feature srcFE, final Feature destFE, final IRelationType relationProp )
+  {
+    final Feature[] features = resolveLinks( srcFE, relationProp );
+    for( final Feature element : features )
+    {
+      if( element == destFE )
+        return true;
+    }
+    return false;
   }
 
   /**

@@ -19,8 +19,8 @@ class Circle
 
   Circle( final RealPoint pRealPointCenter, final double pDoubleRadius )
   {
-    m_realPointCenterc = pRealPointCenter;
-    m_doubleRadius = pDoubleRadius;
+    this.m_realPointCenterc = pRealPointCenter;
+    this.m_doubleRadius = pDoubleRadius;
   }
 
   public RealPoint getCenterPoint( )
@@ -35,8 +35,8 @@ class Circle
 
   public void set( final RealPoint c, final double r )
   {
-    m_realPointCenterc = c;
-    m_doubleRadius = r;
+    this.m_realPointCenterc = c;
+    this.m_doubleRadius = r;
   }
 
   /*
@@ -61,7 +61,7 @@ class Circle
     if( cp != 0.0 )
     {
       double p1Sq, p2Sq, p3Sq;
-      double num;// , den;
+      double num;//, den;
       double cx, cy;
 
       p1Sq = p1.getX() * p1.getX() + p1.getY() * p1.getY();

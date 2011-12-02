@@ -27,8 +27,6 @@ import org.osgi.service.url.URLStreamHandlerService;
  */
 public class KalypsoServiceObs extends Plugin
 {
-  public static final String ID = "org.kalypso.services.observation";
-
   public static final String SYSPROP_CONFIGURATION_LOCATION = "kalypso.hwv.observation.service.configuration.location"; //$NON-NLS-1$
 
   public static final String SYSPROP_REINIT_SERVICE = "kalypso.hwv.observation.service.reinit.interval"; //$NON-NLS-1$
@@ -70,7 +68,7 @@ public class KalypsoServiceObs extends Plugin
     // register the observation webservice url stream handler
     final OcsURLStreamHandler handler = new OcsURLStreamHandler();
 
-    final Dictionary<String, Object> properties = new Hashtable<String, Object>( 1 );
+    final Dictionary<Object, Object> properties = new Hashtable<Object, Object>( 1 );
     properties.put( URLConstants.URL_HANDLER_PROTOCOL, new String[] { ObservationServiceRepository.ID } );
     context.registerService( URLStreamHandlerService.class.getName(), handler, properties );
   }

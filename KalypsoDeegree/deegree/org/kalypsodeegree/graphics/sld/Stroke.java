@@ -59,8 +59,12 @@ import org.kalypsodeegree.model.feature.Feature;
  * <li>stroke-arrow-alignment (start | middle | end)
  * <li>stroke-arrow-size
  * <p>
- * <h1>stroke-arrow-type</h1> An Arrow will be placed on a line or its line segments
- * <h1>stroke-arrow-alignment</h1> where on a line or its line segments the arrow will be placed: start, middle, end
+ * 
+ * <h1>stroke-arrow-type</h1>
+ * An Arrow will be placed on a line or its line segments
+ * 
+ * <h1>stroke-arrow-alignment</h1>
+ * where on a line or its line segments the arrow will be placed: start, middle, end
  * 
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
@@ -111,7 +115,7 @@ public interface Stroke extends Drawing
    * 
    * @returns the underlying <tt>GraphicStroke</tt> instance (may be null)
    */
-  GraphicStroke getGraphicStroke( );
+  GraphicStroke getGraphicStroke();
 
   /**
    * Sets a GraphicStroke.
@@ -138,7 +142,8 @@ public interface Stroke extends Drawing
   Color getStroke( Feature feature ) throws FilterEvaluationException;
 
   /**
-   * @see #getStroke(Feature) <p>
+   * @see #getStroke(Feature)
+   *      <p>
    * @param stroke
    *          the stroke to be set
    */
@@ -160,7 +165,8 @@ public interface Stroke extends Drawing
   double getOpacity( Feature feature ) throws FilterEvaluationException;
 
   /**
-   * @see #getOpacity(Feature) <p>
+   * @see #getOpacity(Feature)
+   *      <p>
    * @param opacity
    *          the opacity to be set for the stroke
    */
@@ -182,7 +188,8 @@ public interface Stroke extends Drawing
   double getWidth( Feature feature ) throws FilterEvaluationException;
 
   /**
-   * @see #getWidth(Feature) <p>
+   * @see #getWidth(Feature)
+   *      <p>
    * @param width
    *          the width to be set for the stroke
    */
@@ -203,7 +210,8 @@ public interface Stroke extends Drawing
   int getLineJoin( Feature feature ) throws FilterEvaluationException;
 
   /**
-   * @see #getLineJoin(Feature) <p>
+   * @see #getLineJoin(Feature)
+   *      <p>
    * @param lineJoin
    *          the lineJoin to be set for the stroke
    */
@@ -224,7 +232,8 @@ public interface Stroke extends Drawing
   int getLineCap( Feature feature ) throws FilterEvaluationException;
 
   /**
-   * @see #getLineCap(Feature) <p>
+   * @see #getLineCap(Feature)
+   *      <p>
    * @param lineCap
    *          lineCap to be set for the stroke
    */
@@ -247,7 +256,8 @@ public interface Stroke extends Drawing
   float[] getDashArray( Feature feature ) throws FilterEvaluationException;
 
   /**
-   * @see #getDashArray(Feature) <p>
+   * @see #getDashArray(Feature)
+   *      <p>
    * @param dashArray
    *          the dashArray to be set for the Stroke
    */

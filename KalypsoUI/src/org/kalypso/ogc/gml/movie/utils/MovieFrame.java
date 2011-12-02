@@ -52,11 +52,9 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.util.themes.legend.LegendUtilities;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -67,19 +65,9 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 public class MovieFrame implements IMovieFrame
 {
   /**
-   * The map model.
+   * The map model.-
    */
   private final GisTemplateMapModell m_mapModel;
-
-  /**
-   * The label.
-   */
-  private final String m_label;
-
-  /**
-   * The id of the theme.
-   */
-  private final String m_themeID;
 
   /**
    * The bounding box.
@@ -91,6 +79,10 @@ public class MovieFrame implements IMovieFrame
    */
   private final File m_tmpDirectory;
 
+  private final String m_label;
+
+  private final String m_themeID;
+
   public MovieFrame( final GisTemplateMapModell mapModel, final String label, final String themeID, final GM_Envelope boundingBox, final File tmpDirectory )
   {
     m_mapModel = mapModel;
@@ -98,6 +90,12 @@ public class MovieFrame implements IMovieFrame
     m_themeID = themeID;
     m_boundingBox = boundingBox;
     m_tmpDirectory = tmpDirectory;
+  }
+
+  @Override
+  public void dispose( )
+  {
+    // FIXME: we do not need to dispose, remove from interface
   }
 
   @Override
@@ -138,9 +136,7 @@ public class MovieFrame implements IMovieFrame
   }
 
   /**
-   * Initialise the model: Show my theme and hide all other themes.
-   * 
-   * @return The new map model.
+   * Initialise the model: show my theme and hide all other themes
    */
   private IMapModell createModel( ) throws Exception
   {
@@ -150,21 +146,11 @@ public class MovieFrame implements IMovieFrame
     /* Hide all themes except the movie theme. */
     final IKalypsoLayerModell movieTheme = MovieUtilities.findMovieTheme( newMapModel );
 
-    /* Get all themes. */
     final IKalypsoTheme[] allThemes = movieTheme.getAllThemes();
     for( final IKalypsoTheme theme : allThemes )
     {
-      if( theme.getId().equals( m_themeID ) )
-      {
-        /* Find/Add the legend theme. */
-        final IKalypsoTheme[] legendThemes = MapModellHelper.findThemeByProperty( newMapModel, LegendUtilities.THEME_PROPERTY_THEME_IDS, IKalypsoThemeVisitor.DEPTH_ZERO );
-        if( legendThemes != null && legendThemes.length > 0 )
-          legendThemes[0].setProperty( LegendUtilities.THEME_PROPERTY_THEME_IDS, ((IKalypsoTheme) movieTheme).getId() + ";" + theme.getId() );
-
-        theme.setVisible( true );
-      }
-      else
-        theme.setVisible( false );
+      final boolean visible = theme.getId().equals( m_themeID );
+      theme.setVisible( visible );
     }
 
     return newMapModel;
@@ -174,10 +160,6 @@ public class MovieFrame implements IMovieFrame
    * This function returns the directory, which contains the images of this size. If it does not exist, it will be
    * created.
    * 
-   * @param width
-   *          The width.
-   * @param height
-   *          The height.
    * @return The directory, which contains the images of this size.
    */
   private File getImageDirectory( final int width, final int height )

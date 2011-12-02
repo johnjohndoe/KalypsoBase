@@ -91,7 +91,7 @@ public class XMLHelper
 
   public static void writeDOM( final Document xmlDOM, final String charset, final OutputStream os ) throws TransformerException
   {
-    writeDOM( xmlDOM, charset, new StreamResult( os ), true );
+    writeDOM( xmlDOM, charset, new StreamResult( os ), true  );
   }
 
   public static void writeDOM( final Node xmlDOM, final String charset, final Writer writer ) throws TransformerException
@@ -235,7 +235,7 @@ public class XMLHelper
     try
     {
       final String xslString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "<xsl:stylesheet version=\"1.0\" " + " xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">" + "<xsl:output method=\""
-          + outputMethod + "\" />" + xslTemplateString + "</xsl:stylesheet>";
+      + outputMethod + "\" />" + xslTemplateString + "</xsl:stylesheet>";
 
       final DOMSource xmlSource = new DOMSource( domNode );
       final StreamSource xslSource = new StreamSource( new StringReader( xslString ) );

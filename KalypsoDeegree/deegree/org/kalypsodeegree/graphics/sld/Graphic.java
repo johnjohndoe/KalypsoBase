@@ -72,13 +72,13 @@ public interface Graphic
   public static final double ROTATION_DEFAULT = 0.0;
 
   /**
-   * Returns a <tt>BufferedImage</tt> representing this object. The image respects the 'Opacity', 'Size' and 'Rotation'
-   * parameters.
+   * Returns a <tt>BufferedImage</tt> representing this object. The image respects the 'Opacity', 'Size' and
+   * 'Rotation' parameters.
    * <p>
    * 
    * @return the <tt>BufferedImage</tt> ready to be painted
    * @throws FilterEvaluationException
-   *           if the evaluation fails
+   *             if the evaluation fails
    */
   BufferedImage getAsImage( final Feature feature, final UOM uom, final GeoTransform transform ) throws FilterEvaluationException;
 
@@ -89,7 +89,7 @@ public interface Graphic
    * </p>
    * 
    * @throws FilterEvaluationException
-   *           if the evaluation fails
+   *             if the evaluation fails
    */
   public void paintAwt( final Graphics2D g, final int size, final Feature feature ) throws FilterEvaluationException;
 
@@ -108,15 +108,13 @@ public interface Graphic
    * Sets the <tt>ExternalGraphic</tt>/<tt>Mark<tt>-instances that the image
    * will be based on.
    * <p>
-   * 
-   * @param object
-   *          to be used as basis for the resulting image
+   * @param object to be used as basis for the resulting image
    */
   public void setMarksAndExtGraphics( Object[] object );
 
   /**
-   * Adds an Object to an object-array that enables the access to the stored <tt>ExternalGraphic</tt> and <tt>Mark</tt>
-   * -instances.
+   * Adds an Object to an object-array that enables the access to the stored <tt>ExternalGraphic</tt> and
+   * <tt>Mark</tt> -instances.
    * <p>
    * 
    * @param object
@@ -137,10 +135,10 @@ public interface Graphic
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
+   *            specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
-   *           if the evaluation fails or the value is invalid
+   *             if the evaluation fails or the value is invalid
    */
   double getOpacity( Feature feature ) throws FilterEvaluationException;
 
@@ -149,7 +147,7 @@ public interface Graphic
    * <p>
    * 
    * @param opacity
-   *          Opacity to be set for the graphic
+   *            Opacity to be set for the graphic
    */
   void setOpacity( double opacity );
 
@@ -160,10 +158,10 @@ public interface Graphic
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
+   *            specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
-   *           if the evaluation fails or the value is invalid
+   *             if the evaluation fails or the value is invalid
    */
   double getSize( Feature feature ) throws FilterEvaluationException;
 
@@ -175,9 +173,10 @@ public interface Graphic
   public int getNormalizedSize( final Feature feature, final UOM uom, final GeoTransform transform ) throws FilterEvaluationException;
 
   /**
-   * @see #getSize(Feature) <p>
+   * @see #getSize(Feature)
+   *      <p>
    * @param size
-   *          size to be set for the graphic
+   *            size to be set for the graphic
    */
   void setSize( double size );
 
@@ -188,17 +187,18 @@ public interface Graphic
    * <p>
    * 
    * @param feature
-   *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
+   *            specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
    * @throws FilterEvaluationException
-   *           if the evaluation fails or the value is invalid
+   *             if the evaluation fails or the value is invalid
    */
   double getRotation( Feature feature ) throws FilterEvaluationException;
 
   /**
-   * @see #getRotation(Feature) <p>
+   * @see #getRotation(Feature)
+   *      <p>
    * @param rotation
-   *          rotation to be set for the graphic
+   *            rotation to be set for the graphic
    */
   void setRotation( double rotation );
 

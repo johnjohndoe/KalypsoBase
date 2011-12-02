@@ -25,10 +25,6 @@
             qname="{org.kalypso.zml.core.filter}InterpolationZmlFilter">
       </feature>
       <feature
-            class="org.kalypso.zml.core.filter.binding.IntervalZmlFilter"
-            qname="{org.kalypso.zml.core.filter}IntervalZmlFilter">
-      </feature>
-      <feature
             class="org.kalypso.zml.core.filter.binding.RoundZmlFilter"
             qname="{org.kalypso.zml.core.filter}RoundZmlFilter">
       </feature>

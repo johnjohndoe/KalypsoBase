@@ -42,7 +42,7 @@ package org.kalypso.ui.editor.styleeditor.binding;
 
 import java.net.URL;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.EqualsBuilder;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ui.editor.styleeditor.IStyleEditorConfig;
 

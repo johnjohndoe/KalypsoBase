@@ -79,6 +79,9 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
     setup( context );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.factory.layer.AbstractChartLayer#getProvider()
+   */
   @Override
   public IZmlLayerProvider getProvider( )
   {
@@ -101,20 +104,29 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
     setDataHandler( handler );
   }
 
+  /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#onObservationChanged()
+   */
   @Override
   public void onObservationChanged( )
   {
     getEventHandler().fireLayerContentChanged( this );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
+   */
   @Override
   public void paint( final GC gc )
   {
     // nothing to do
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
+   */
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Number> getDomainRange( )
   {
     if( Objects.isNull( getDateRange() ) )
       return null;
@@ -128,12 +140,18 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
     return numRange;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
+   */
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     return null;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#dispose()
+   */
   @Override
   public void dispose( )
   {
@@ -143,24 +161,36 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
     super.dispose();
   }
 
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#createLegendEntries()
+   */
   @Override
   protected ILegendEntry[] createLegendEntries( )
   {
     return null;
   }
 
+  /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#getDataHandler()
+   */
   @Override
   public IZmlLayerDataHandler getDataHandler( )
   {
     return m_dataHandler;
   }
 
+  /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#setDataHandler(org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler)
+   */
   @Override
   public void setDataHandler( final IZmlLayerDataHandler handler )
   {
     m_dataHandler = handler;
   }
 
+  /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#setLabelDescriptor(java.lang.String)
+   */
   @Override
   public void setLabelDescriptor( final String labelDescriptor )
   {

@@ -60,6 +60,9 @@ public class ZmlLineLayerProvider extends AbstractLayerProvider implements IZmlL
 {
   public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider"; //$NON-NLS-1$
 
+  /**
+   * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
+   */
   @Override
   public IZmlLayer getLayer( final URL context )
   {

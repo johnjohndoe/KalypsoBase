@@ -95,11 +95,11 @@ public class SelectionWidget extends AbstractWidget
    * The constructor.
    * 
    * @param name
-   *          The name of the widget.
+   *            The name of the widget.
    * @param toolTip
-   *          The tooltip of the widget.
+   *            The tooltip of the widget.
    * @param clickFunction
-   *          The map function, which should select a feature. May not be null!
+   *            The map function, which should select a feature. May not be null!
    */
   public SelectionWidget( final String name, final String toolTip, final IRectangleMapFunction clickFunction )
   {
@@ -110,13 +110,13 @@ public class SelectionWidget extends AbstractWidget
    * The constructor.
    * 
    * @param name
-   *          The name of the widget.
+   *            The name of the widget.
    * @param toolTip
-   *          The tooltip of the widget.
+   *            The tooltip of the widget.
    * @param clickFunction
-   *          The map function, which should select a feature. May not be null!
+   *            The map function, which should select a feature. May not be null!
    * @param tooltipProvider
-   *          The provider, which will be used on move. May be null.
+   *            The provider, which will be used on move. May be null.
    */
   public SelectionWidget( final String name, final String toolTip, final IRectangleMapFunction clickFunction, final ITooltipProvider tooltipProvider )
   {
@@ -158,7 +158,7 @@ public class SelectionWidget extends AbstractWidget
     if( m_selector != null )
     {
       m_selector.setEndPoint( new org.eclipse.swt.graphics.Point( p.x, p.y ) );
-      getMapPanel().setMessage( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectionWidget.3" ) ); //$NON-NLS-1$
+      getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectionWidget.3") ); //$NON-NLS-1$
     }
 
     // TODO: check if this repaint is really necessary
@@ -176,7 +176,7 @@ public class SelectionWidget extends AbstractWidget
   {
     /* Start painting the selection rectangle. */
     m_selector = new RectangleSelector( new org.eclipse.swt.graphics.Point( p.x, p.y ) );
-    getMapPanel().setMessage( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectionWidget.4" ) ); //$NON-NLS-1$
+    getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectionWidget.4") ); //$NON-NLS-1$
   }
 
   /**
@@ -195,7 +195,7 @@ public class SelectionWidget extends AbstractWidget
         /* Select the feature in this rectangle. */
         m_clickFunction.execute( getMapPanel(), m_selector.getRectangle() );
 
-        getMapPanel().setMessage( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectionWidget.5" ) ); //$NON-NLS-1$
+        getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectionWidget.5") ); //$NON-NLS-1$
       }
     }
     finally
@@ -212,7 +212,7 @@ public class SelectionWidget extends AbstractWidget
   {
     super.moved( p );
 
-    if( m_tooltipProvider != null && getMapPanel() != null )
+    if( (m_tooltipProvider != null) && (getMapPanel() != null) )
       m_tooltip = m_tooltipProvider.getTooltip( getMapPanel(), new Rectangle( p.x, p.y, 0, 0 ) );
 
     m_current_point = p;
@@ -234,7 +234,7 @@ public class SelectionWidget extends AbstractWidget
     if( m_selector != null )
       m_selector.paint( g );
 
-    if( m_current_point != null && m_tooltipProvider != null && !m_tooltip.equals( "" ) ) //$NON-NLS-1$
+    if( (m_current_point != null) && (m_tooltipProvider != null) && (!m_tooltip.equals( "" )) ) //$NON-NLS-1$
       m_tooltipProvider.paintTooltip( g, m_current_point, m_tooltip );
   }
 
@@ -262,7 +262,7 @@ public class SelectionWidget extends AbstractWidget
   {
     super.setSelection( selection );
 
-    getMapPanel().setMessage( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectionWidget.8" ) ); //$NON-NLS-1$
+    getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectionWidget.8") ); //$NON-NLS-1$
   }
 
   public void setSelection( final ISelection selection, final String message )

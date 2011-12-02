@@ -50,45 +50,21 @@ import java.util.Properties;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.javax.xml.namespace.QNameUnique;
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * Returns properties for qnames.
  * 
  * @author Gernot Belger
  */
-public final class FeatureTypePropertiesCatalog
+public class FeatureTypePropertiesCatalog extends FeatureTypeCatalog
 {
   private static final String BASETYPE = "uiproperties"; //$NON-NLS-1$
 
-  private static Map<String, Properties> PROPERTIES_CACHE = new HashMap<String, Properties>();
-
-  private static Properties DEFAULT_VALUES = new Properties();
-
-  static
-  {
-    DEFAULT_VALUES.setProperty( IFeatureTypePropertiesConstants.FEATURE_CREATION_DEPTH, "0" );
-    DEFAULT_VALUES.setProperty( IFeatureTypePropertiesConstants.GMLTREE_SHOW_CHILDREN, "true" );
-    DEFAULT_VALUES.setProperty( IFeatureTypePropertiesConstants.GMLTREE_NEW_MENU_ON_FEATURE, "true" );
-    DEFAULT_VALUES.setProperty( IFeatureTypePropertiesConstants.GMLTREE_NEW_MENU_SHOW_SUB_FEATURES, "false" );
-    DEFAULT_VALUES.setProperty( IFeatureTypePropertiesConstants.GMLTREE_SHOW_DUPLICATION_MENU, "true" );
-    DEFAULT_VALUES.setProperty( IFeatureTypePropertiesConstants.THEME_INFO_ID, StringUtils.EMPTY );
-  }
-
-  private FeatureTypePropertiesCatalog( )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  // FIXME: synchronize
+  private static Map<String, Properties> m_propertiesCache = new HashMap<String, Properties>();
+  
   public static Properties getProperties( final URL context, final QName qname )
   {
     /* Try to get cached image descriptor */
@@ -96,15 +72,16 @@ public final class FeatureTypePropertiesCatalog
     final String qnameStr = qname == null ? "null" : qname.toString(); //$NON-NLS-1$
     final String cacheKey = contextStr + '#' + qnameStr;
 
-    if( PROPERTIES_CACHE.containsKey( cacheKey ) )
-      return PROPERTIES_CACHE.get( cacheKey );
-
+    if( m_propertiesCache.containsKey( cacheKey ) )
+      return m_propertiesCache.get( cacheKey );
+    
     final Properties properties = new Properties();
+
 
     InputStream is = null;
     try
     {
-      final URL url = FeatureTypeCatalog.getURL( BASETYPE, context, qname );
+      final URL url = getURL( BASETYPE, context, qname );
       if( url == null )
         return properties;
 
@@ -115,40 +92,16 @@ public final class FeatureTypePropertiesCatalog
     catch( final IOException e )
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
-      KalypsoCorePlugin.getDefault().getLog().log( status );
+      KalypsoGisPlugin.getDefault().getLog().log( status );
     }
     finally
     {
       IOUtils.closeQuietly( is );
-
+      
       /* Allways add properties, so this lookup takes only place once (not finding anything is very expensive) */
-      PROPERTIES_CACHE.put( cacheKey, properties );
+      m_propertiesCache.put( cacheKey, properties );
     }
 
     return properties;
-  }
-
-  public static boolean isPropertyOn( final Feature feature, final String property )
-  {
-    if( feature == null )
-      return false;
-
-    final IFeatureType featureType = feature.getFeatureType();
-    final QNameUnique qName = featureType.getQName();
-    final GMLWorkspace workspace = feature.getWorkspace();
-    final URL context = workspace == null ? null : workspace.getContext();
-    return isPropertyOn( qName, context, property );
-  }
-
-  public static boolean isPropertyOn( final QName qname, final URL context, final String property )
-  {
-    final Properties properties = FeatureTypePropertiesCatalog.getProperties( context, qname );
-
-    final String defaultValue = DEFAULT_VALUES.getProperty( property );
-    // Default values must always be defined
-    Assert.isNotNull( defaultValue );
-
-    final String value = properties.getProperty( property, defaultValue );
-    return Boolean.parseBoolean( value );
   }
 }

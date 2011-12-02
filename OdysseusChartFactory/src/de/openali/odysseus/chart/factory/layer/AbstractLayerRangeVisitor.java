@@ -47,6 +47,7 @@ import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLaye
 
 /**
  * @author Gernot Belger
+ *
  */
 public abstract class AbstractLayerRangeVisitor extends AbstractChartLayerVisitor
 {
@@ -63,24 +64,24 @@ public abstract class AbstractLayerRangeVisitor extends AbstractChartLayerVisito
     if( !layer.isVisible() )
       return;
 
-    final IDataRange< ? > dr = getLayerRange( layer );
+    final IDataRange<Number> dr = getLayerRange( layer );
     if( dr != null )
     {
       if( m_max == null )
-        m_max = ((Number) dr.getMax()).doubleValue();
+        m_max = dr.getMax().doubleValue();
       else
-        m_max = Math.max( m_max, ((Number) dr.getMax()).doubleValue() );
+        m_max = Math.max( m_max, dr.getMax().doubleValue() );
 
       if( m_min == null )
-        m_min = ((Number) dr.getMin()).doubleValue();
+        m_min = dr.getMin().doubleValue();
       else
-        m_min = Math.min( m_min, ((Number) dr.getMin()).doubleValue() );
+        m_min = Math.min( m_min, dr.getMin().doubleValue() );
     }
   }
 
-  protected abstract IDataRange< ? > getLayerRange( final IChartLayer layer );
+  protected abstract IDataRange<Number> getLayerRange( final IChartLayer layer );
 
-  public final IDataRange< ? > getRange( )
+  public final IDataRange<Number> getRange( )
   {
     if( m_min == null || m_max == null )
       return null;

@@ -90,6 +90,7 @@ import de.openali.odysseus.chartconfig.x020.ReferencingType;
 import de.openali.odysseus.chartconfig.x020.ScreenAxisType;
 import de.openali.odysseus.chartconfig.x020.TextStyleType;
 import de.openali.odysseus.chartconfig.x020.TitleType;
+import de.openali.odysseus.chartconfig.x020.TitleTypes;
 
 /**
  * @author Dirk Kuch
@@ -159,7 +160,7 @@ public class ChartMapperFactory extends AbstractChartFactory
             axis.setData( CONFIGURATION_TYPE_KEY, axisType ); // save configuration type so it can be used for saving to
 // chartfile
             axis.setDirection( getAxisDirection( axisType ) );
-            final TitleType[] titles = axisType.isSetLabels() ? axisType.getLabels().getTitleTypeArray() : new TitleType[] {};
+            final TitleType[] titles =  axisType.isSetLabels() ? axisType.getLabels().getTitleTypeArray() : new TitleType[] {};
             final ChartTypeResolver chartTypeResolver = ChartTypeResolver.getInstance();
             for( final TitleType title : titles )
             {

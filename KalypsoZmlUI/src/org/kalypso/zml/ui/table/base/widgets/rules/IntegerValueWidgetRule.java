@@ -61,24 +61,36 @@ public class IntegerValueWidgetRule implements ITextWidgetRule<Integer>
     m_format = format;
   }
 
+  /**
+   * @see org.kalypso.zml.ui.table.base.widgets.rules.IWidgetRule#getLastValidationMessage()
+   */
   @Override
   public String getLastValidationMessage( )
   {
     return m_lastValidationMsg;
   }
 
+  /**
+   * @see org.kalypso.zml.ui.table.base.widgets.rules.IWidgetRule#getFormatedString(java.lang.Object)
+   */
   @Override
   public String getFormatedString( final Integer value )
   {
     return String.format( m_format, value );
   }
 
+  /**
+   * @see org.kalypso.zml.ui.table.base.widgets.rules.ITextWidgetRule#parseValue(java.lang.String)
+   */
   @Override
   public Integer parseValue( final String text )
   {
     return NumberUtils.parseQuietInteger( text );
   }
 
+  /**
+   * @see org.kalypso.zml.ui.table.base.widgets.rules.ITextWidgetRule#isValid(java.lang.String)
+   */
   @Override
   public boolean isValid( final String text )
   {

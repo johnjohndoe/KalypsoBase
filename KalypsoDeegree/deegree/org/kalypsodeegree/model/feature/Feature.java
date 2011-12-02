@@ -42,22 +42,19 @@ package org.kalypsodeegree.model.feature;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.core.runtime.IAdaptable;
 import org.kalypso.commons.xml.NS;
 import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
  * @author Dirk Kuch
  */
-public interface Feature extends BaseFeature, Deegree2Feature, IAdaptable
+public interface Feature extends BaseFeature, Deegree2Feature
 {
   QName QN_NAME = new QName( NS.GML3, "name" ); //$NON-NLS-1$
 
   QName QN_DESCRIPTION = new QName( NS.GML3, "description" ); //$NON-NLS-1$
 
   QName QN_BOUNDED_BY = new QName( NS.GML3, "boundedBy" ); //$NON-NLS-1$
-
-  QName QN_LOCATION = new QName( NS.GML3, "location" ); //$NON-NLS-1$
 
   /** QName of gml's gml:_Feature */
   QName QNAME_FEATURE = new QName( NS.GML3, "_Feature" ); //$NON-NLS-1$

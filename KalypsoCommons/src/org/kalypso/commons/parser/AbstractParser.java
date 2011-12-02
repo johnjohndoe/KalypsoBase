@@ -57,11 +57,11 @@ public abstract class AbstractParser implements IParser
    * @see org.kalypso.commons.parser.IParser#toString(java.lang.Object)
    */
   @Override
-  public String toString( final Object obj )
+  public String toString( Object obj )
   {
-    // if( ( obj != null ) && !getObjectClass().isAssignableFrom( obj.getClass() ) )
-    // throw new ParserException( "Object " + obj.toString() + " (type: " + obj.getClass().getName()
-    // + ") is not of the type " + getObjectClass().getName() );
+    //    if( ( obj != null ) && !getObjectClass().isAssignableFrom( obj.getClass() ) )
+    //      throw new ParserException( "Object " + obj.toString() + " (type: " + obj.getClass().getName()
+    //          + ") is not of the type " + getObjectClass().getName() );
 
     if( obj == null )
       return "null"; //$NON-NLS-1$
@@ -82,7 +82,7 @@ public abstract class AbstractParser implements IParser
    * @see org.kalypso.commons.parser.IParser#compare(java.lang.String, java.lang.String)
    */
   @Override
-  public int compare( final String value1, final String value2 ) throws ParserException
+  public int compare( String value1, String value2 ) throws ParserException
   {
     return compare( parse( value1 ), parse( value2 ) );
   }

@@ -57,7 +57,6 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
-import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
@@ -139,7 +138,7 @@ public class IntervalValuesOperation
       return null;
 
     // TODO: handle better?
-    final String message = String.format( "Quellzeitreihe muss Metadatum '%s' definieren.", ITimeseriesConstants.MD_TIMESTEP );
+    final String message = String.format( "Quellzeitreihe muss Metadatum '%s' definieren.", MetadataHelper.MD_TIMESTEP );
     throw new SensorException( message );
   }
 

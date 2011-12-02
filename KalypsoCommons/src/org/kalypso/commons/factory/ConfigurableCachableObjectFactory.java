@@ -100,6 +100,7 @@ public class ConfigurableCachableObjectFactory
    * @param expected
    * @return object instance
    * @throws FactoryException
+   * 
    * @see ConfigurableCachableObjectFactory#getObjectInstance(String, Class, Object[])
    */
   public Object getObjectInstance( final String type, final Class< ? > expected ) throws FactoryException
@@ -121,7 +122,8 @@ public class ConfigurableCachableObjectFactory
    * <p>
    * WICHTIG: Dies bedeutet dass man also Argumente benutzen sollte nur wenn der Cache nicht aktiviert ist.
    */
-  public Object getObjectInstance( final String type, final Class< ? > expected, final Object[] arguments ) throws FactoryException
+  public Object getObjectInstance( final String type, final Class< ? > expected, final Object[] arguments )
+  throws FactoryException
   {
     final String className = m_props.getProperty( type );
     if( className == null )
@@ -150,7 +152,7 @@ public class ConfigurableCachableObjectFactory
     return obj;
   }
 
-  protected final Properties getProperties( )
+  protected final Properties getProperties()
   {
     return m_props;
   }

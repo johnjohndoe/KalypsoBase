@@ -62,25 +62,25 @@ public class HighlightGraphics extends Graphics2D
   }
 
   @Override
-  public void setColor( final Color c )
+  public void setColor( Color c )
   {
     // color is controled inside
   }
 
   @Override
-  public void setBackground( final Color color )
+  public void setBackground( Color color )
   {
     // color is controled inside
   }
 
   @Override
-  public void setStroke( final Stroke s )
+  public void setStroke( Stroke s )
   {
     // stroke is controled inside
   }
 
   @Override
-  public void drawLine( final int x1, final int y1, final int x2, final int y2 )
+  public void drawLine( int x1, int y1, int x2, int y2 )
   {
     // m_graphics.setStroke( STROKE_NORMAL );
     m_graphics.setColor( m_colors.getBorderColor() );
@@ -93,7 +93,7 @@ public class HighlightGraphics extends Graphics2D
   }
 
   @Override
-  public boolean drawImage( final Image img, final int x, final int y, final ImageObserver observer )
+  public boolean drawImage( Image img, int x, int y, ImageObserver observer )
   {
     m_graphics.setXORMode( getColor() );
     final boolean result = m_graphics.drawImage( img, x, y, observer );
@@ -108,31 +108,31 @@ public class HighlightGraphics extends Graphics2D
   }
 
   @Override
-  public void addRenderingHints( final Map< ? , ? > hints )
+  public void addRenderingHints( Map< ? , ? > hints )
   {
     m_graphics.addRenderingHints( hints );
   }
 
   @Override
-  public void clearRect( final int x, final int y, final int width, final int height )
+  public void clearRect( int x, int y, int width, int height )
   {
     m_graphics.clearRect( x, y, width, height );
   }
 
   @Override
-  public void clip( final Shape s )
+  public void clip( Shape s )
   {
     m_graphics.clip( s );
   }
 
   @Override
-  public void clipRect( final int x, final int y, final int width, final int height )
+  public void clipRect( int x, int y, int width, int height )
   {
     m_graphics.clipRect( x, y, width, height );
   }
 
   @Override
-  public void copyArea( final int x, final int y, final int width, final int height, final int dx, final int dy )
+  public void copyArea( int x, int y, int width, int height, int dx, int dy )
   {
     m_graphics.copyArea( x, y, width, height, dx, dy );
   }
@@ -150,7 +150,7 @@ public class HighlightGraphics extends Graphics2D
    * @see java.awt.Graphics#create(int, int, int, int)
    */
   @Override
-  public Graphics create( final int x, final int y, final int width, final int height )
+  public Graphics create( int x, int y, int width, int height )
   {
     return new HighlightGraphics( (Graphics2D) m_graphics.create( x, y, width, height ) );
   }
@@ -162,7 +162,7 @@ public class HighlightGraphics extends Graphics2D
   }
 
   @Override
-  public void draw( final Shape s )
+  public void draw( Shape s )
   {
     m_graphics.setColor( m_colors.getBorderColor() );
     m_graphics.draw( s );
@@ -172,14 +172,14 @@ public class HighlightGraphics extends Graphics2D
    * @see java.awt.Graphics2D#draw3DRect(int, int, int, int, boolean)
    */
   @Override
-  public void draw3DRect( final int x, final int y, final int width, final int height, final boolean raised )
+  public void draw3DRect( int x, int y, int width, int height, boolean raised )
   {
     m_graphics.setColor( m_colors.getBorderColor() );
     m_graphics.draw3DRect( x, y, width, height, raised );
   }
 
   @Override
-  public void drawArc( final int x, final int y, final int width, final int height, final int startAngle, final int arcAngle )
+  public void drawArc( int x, int y, int width, int height, int startAngle, int arcAngle )
   {
     m_graphics.setColor( m_colors.getBorderColor() );
     m_graphics.drawArc( x, y, width, height, startAngle, arcAngle );
@@ -189,7 +189,7 @@ public class HighlightGraphics extends Graphics2D
    * @see java.awt.Graphics#drawBytes(byte[], int, int, int, int)
    */
   @Override
-  public void drawBytes( final byte[] data, final int offset, final int length, final int x, final int y )
+  public void drawBytes( byte[] data, int offset, int length, int x, int y )
   {
     // m_graphics.setColor(m_colors.getBorderColor());
     m_graphics.drawBytes( data, offset, length, x, y );
@@ -199,14 +199,14 @@ public class HighlightGraphics extends Graphics2D
    * @see java.awt.Graphics#drawChars(char[], int, int, int, int)
    */
   @Override
-  public void drawChars( final char[] data, final int offset, final int length, final int x, final int y )
+  public void drawChars( char[] data, int offset, int length, int x, int y )
   {
     m_graphics.setColor( m_colors.getTextColor() );
     m_graphics.drawChars( data, offset, length, x, y );
   }
 
   @Override
-  public void drawGlyphVector( final GlyphVector g, final float x, final float y )
+  public void drawGlyphVector( GlyphVector g, float x, float y )
   {
     m_graphics.setColor( m_colors.getBorderColor() );
     m_graphics.setBackground( m_colors.getBackgroundColor() );
@@ -214,49 +214,49 @@ public class HighlightGraphics extends Graphics2D
   }
 
   @Override
-  public boolean drawImage( final Image img, final int dx1, final int dy1, final int dx2, final int dy2, final int sx1, final int sy1, final int sx2, final int sy2, final Color bgcolor, final ImageObserver observer )
+  public boolean drawImage( Image img, int dx1, int dy1, int dx2, int dy2, int sx1, int sy1, int sx2, int sy2, Color bgcolor, ImageObserver observer )
   {
     return m_graphics.drawImage( img, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, bgcolor, observer );
   }
 
   @Override
-  public boolean drawImage( final Image img, final int dx1, final int dy1, final int dx2, final int dy2, final int sx1, final int sy1, final int sx2, final int sy2, final ImageObserver observer )
+  public boolean drawImage( Image img, int dx1, int dy1, int dx2, int dy2, int sx1, int sy1, int sx2, int sy2, ImageObserver observer )
   {
     return m_graphics.drawImage( img, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, observer );
   }
 
   @Override
-  public boolean drawImage( final Image img, final int x, final int y, final int width, final int height, final Color bgcolor, final ImageObserver observer )
+  public boolean drawImage( Image img, int x, int y, int width, int height, Color bgcolor, ImageObserver observer )
   {
     return m_graphics.drawImage( img, x, y, width, height, bgcolor, observer );
   }
 
   @Override
-  public boolean drawImage( final Image img, final int x, final int y, final int width, final int height, final ImageObserver observer )
+  public boolean drawImage( Image img, int x, int y, int width, int height, ImageObserver observer )
   {
     return m_graphics.drawImage( img, x, y, width, height, observer );
   }
 
   @Override
-  public boolean drawImage( final Image img, final int x, final int y, final Color bgcolor, final ImageObserver observer )
+  public boolean drawImage( Image img, int x, int y, Color bgcolor, ImageObserver observer )
   {
     return m_graphics.drawImage( img, x, y, bgcolor, observer );
   }
 
   @Override
-  public boolean drawImage( final Image img, final AffineTransform xform, final ImageObserver obs )
+  public boolean drawImage( Image img, AffineTransform xform, ImageObserver obs )
   {
     return m_graphics.drawImage( img, xform, obs );
   }
 
   @Override
-  public void drawImage( final BufferedImage img, final BufferedImageOp op, final int x, final int y )
+  public void drawImage( BufferedImage img, BufferedImageOp op, int x, int y )
   {
     m_graphics.drawImage( img, op, x, y );
   }
 
   @Override
-  public void drawOval( final int x, final int y, final int width, final int height )
+  public void drawOval( int x, int y, int width, int height )
   {
     m_graphics.setColor( m_colors.getBorderColor() );
     m_graphics.setBackground( m_colors.getBackgroundColor() );
@@ -264,7 +264,7 @@ public class HighlightGraphics extends Graphics2D
   }
 
   @Override
-  public void drawPolygon( final int[] xPoints, final int[] yPoints, final int nPoints )
+  public void drawPolygon( int[] xPoints, int[] yPoints, int nPoints )
   {
     m_graphics.setColor( m_colors.getBorderColor() );
     m_graphics.setBackground( m_colors.getBackgroundColor() );
@@ -275,7 +275,7 @@ public class HighlightGraphics extends Graphics2D
    * @see java.awt.Graphics#drawPolygon(java.awt.Polygon)
    */
   @Override
-  public void drawPolygon( final Polygon p )
+  public void drawPolygon( Polygon p )
   {
     m_graphics.setColor( m_colors.getBorderColor() );
     m_graphics.setBackground( m_colors.getBackgroundColor() );
@@ -283,7 +283,7 @@ public class HighlightGraphics extends Graphics2D
   }
 
   @Override
-  public void drawPolyline( final int[] xPoints, final int[] yPoints, final int nPoints )
+  public void drawPolyline( int[] xPoints, int[] yPoints, int nPoints )
   {
     m_graphics.setColor( m_colors.getBorderColor() );
     m_graphics.setBackground( m_colors.getBackgroundColor() );
@@ -294,7 +294,7 @@ public class HighlightGraphics extends Graphics2D
    * @see java.awt.Graphics#drawRect(int, int, int, int)
    */
   @Override
-  public void drawRect( final int x, final int y, final int width, final int height )
+  public void drawRect( int x, int y, int width, int height )
   {
     m_graphics.setColor( m_colors.getBorderColor() );
     m_graphics.setBackground( m_colors.getBackgroundColor() );
@@ -302,21 +302,21 @@ public class HighlightGraphics extends Graphics2D
   }
 
   @Override
-  public void drawRenderableImage( final RenderableImage img, final AffineTransform xform )
+  public void drawRenderableImage( RenderableImage img, AffineTransform xform )
   {
     m_graphics.setColor( m_colors.getBorderColor() );
     m_graphics.drawRenderableImage( img, xform );
   }
 
   @Override
-  public void drawRenderedImage( final RenderedImage img, final AffineTransform xform )
+  public void drawRenderedImage( RenderedImage img, AffineTransform xform )
   {
     m_graphics.setColor( m_colors.getBorderColor() );
     m_graphics.drawRenderedImage( img, xform );
   }
 
   @Override
-  public void drawRoundRect( final int x, final int y, final int width, final int height, final int arcWidth, final int arcHeight )
+  public void drawRoundRect( int x, int y, int width, int height, int arcWidth, int arcHeight )
   {
     m_graphics.setColor( m_colors.getBorderColor() );
     m_graphics.setBackground( m_colors.getBackgroundColor() );
@@ -324,28 +324,28 @@ public class HighlightGraphics extends Graphics2D
   }
 
   @Override
-  public void drawString( final String s, final float x, final float y )
+  public void drawString( String s, float x, float y )
   {
     m_graphics.setColor( m_colors.getTextColor() );
     m_graphics.drawString( s, x, y );
   }
 
   @Override
-  public void drawString( final String str, final int x, final int y )
+  public void drawString( String str, int x, int y )
   {
     m_graphics.setColor( m_colors.getTextColor() );
     m_graphics.drawString( str, x, y );
   }
 
   @Override
-  public void drawString( final AttributedCharacterIterator iterator, final float x, final float y )
+  public void drawString( AttributedCharacterIterator iterator, float x, float y )
   {
     m_graphics.setColor( m_colors.getTextColor() );
     m_graphics.drawString( iterator, x, y );
   }
 
   @Override
-  public void drawString( final AttributedCharacterIterator iterator, final int x, final int y )
+  public void drawString( AttributedCharacterIterator iterator, int x, int y )
   {
     m_graphics.setColor( m_colors.getTextColor() );
     m_graphics.drawString( iterator, x, y );
@@ -355,13 +355,13 @@ public class HighlightGraphics extends Graphics2D
    * @see java.lang.Object#equals(java.lang.Object)
    */
   @Override
-  public boolean equals( final Object obj )
+  public boolean equals( Object obj )
   {
     return m_graphics.equals( obj );
   }
 
   @Override
-  public void fill( final Shape s )
+  public void fill( Shape s )
   {
     m_graphics.setColor( m_colors.getFillColor() );
     m_graphics.fill( s );
@@ -371,28 +371,28 @@ public class HighlightGraphics extends Graphics2D
    * @see java.awt.Graphics2D#fill3DRect(int, int, int, int, boolean)
    */
   @Override
-  public void fill3DRect( final int x, final int y, final int width, final int height, final boolean raised )
+  public void fill3DRect( int x, int y, int width, int height, boolean raised )
   {
     m_graphics.setColor( m_colors.getFillColor() );
     m_graphics.fill3DRect( x, y, width, height, raised );
   }
 
   @Override
-  public void fillArc( final int x, final int y, final int width, final int height, final int startAngle, final int arcAngle )
+  public void fillArc( int x, int y, int width, int height, int startAngle, int arcAngle )
   {
     m_graphics.setColor( m_colors.getFillColor() );
     m_graphics.fillArc( x, y, width, height, startAngle, arcAngle );
   }
 
   @Override
-  public void fillOval( final int x, final int y, final int width, final int height )
+  public void fillOval( int x, int y, int width, int height )
   {
     m_graphics.setColor( m_colors.getFillColor() );
     m_graphics.fillOval( x, y, width, height );
   }
 
   @Override
-  public void fillPolygon( final int[] xPoints, final int[] yPoints, final int nPoints )
+  public void fillPolygon( int[] xPoints, int[] yPoints, int nPoints )
   {
     m_graphics.setColor( m_colors.getFillColor() );
     m_graphics.fillPolygon( xPoints, yPoints, nPoints );
@@ -402,21 +402,21 @@ public class HighlightGraphics extends Graphics2D
    * @see java.awt.Graphics#fillPolygon(java.awt.Polygon)
    */
   @Override
-  public void fillPolygon( final Polygon p )
+  public void fillPolygon( Polygon p )
   {
     m_graphics.setColor( m_colors.getFillColor() );
     m_graphics.fillPolygon( p );
   }
 
   @Override
-  public void fillRect( final int x, final int y, final int width, final int height )
+  public void fillRect( int x, int y, int width, int height )
   {
     m_graphics.setColor( m_colors.getFillColor() );
     m_graphics.fillRect( x, y, width, height );
   }
 
   @Override
-  public void fillRoundRect( final int x, final int y, final int width, final int height, final int arcWidth, final int arcHeight )
+  public void fillRoundRect( int x, int y, int width, int height, int arcWidth, int arcHeight )
   {
     m_graphics.setColor( m_colors.getFillColor() );
     m_graphics.fillRoundRect( x, y, width, height, arcWidth, arcHeight );
@@ -444,7 +444,7 @@ public class HighlightGraphics extends Graphics2D
    * @see java.awt.Graphics#getClipBounds(java.awt.Rectangle)
    */
   @Override
-  public Rectangle getClipBounds( final Rectangle r )
+  public Rectangle getClipBounds( Rectangle r )
   {
     return m_graphics.getClipBounds( r );
   }
@@ -486,7 +486,7 @@ public class HighlightGraphics extends Graphics2D
   }
 
   @Override
-  public FontMetrics getFontMetrics( final Font f )
+  public FontMetrics getFontMetrics( Font f )
   {
     return m_graphics.getFontMetrics( f );
   }
@@ -504,7 +504,7 @@ public class HighlightGraphics extends Graphics2D
   }
 
   @Override
-  public Object getRenderingHint( final Key hintKey )
+  public Object getRenderingHint( Key hintKey )
   {
     return m_graphics.getRenderingHint( hintKey );
   }
@@ -537,7 +537,7 @@ public class HighlightGraphics extends Graphics2D
   }
 
   @Override
-  public boolean hit( final Rectangle rect, final Shape s, final boolean onStroke )
+  public boolean hit( Rectangle rect, Shape s, boolean onStroke )
   {
     return m_graphics.hit( rect, s, onStroke );
   }
@@ -546,55 +546,55 @@ public class HighlightGraphics extends Graphics2D
    * @see java.awt.Graphics#hitClip(int, int, int, int)
    */
   @Override
-  public boolean hitClip( final int x, final int y, final int width, final int height )
+  public boolean hitClip( int x, int y, int width, int height )
   {
     return m_graphics.hitClip( x, y, width, height );
   }
 
   @Override
-  public void rotate( final double theta )
+  public void rotate( double theta )
   {
     m_graphics.rotate( theta );
   }
 
   @Override
-  public void rotate( final double theta, final double x, final double y )
+  public void rotate( double theta, double x, double y )
   {
     m_graphics.rotate( theta, x, y );
   }
 
   @Override
-  public void scale( final double sx, final double sy )
+  public void scale( double sx, double sy )
   {
     m_graphics.scale( sx, sy );
   }
 
   @Override
-  public void setClip( final int x, final int y, final int width, final int height )
+  public void setClip( int x, int y, int width, int height )
   {
     m_graphics.setClip( x, y, width, height );
   }
 
   @Override
-  public void setClip( final Shape clip )
+  public void setClip( Shape clip )
   {
     m_graphics.setClip( clip );
   }
 
   @Override
-  public void setComposite( final Composite comp )
+  public void setComposite( Composite comp )
   {
     m_graphics.setComposite( comp );
   }
 
   @Override
-  public void setFont( final Font font )
+  public void setFont( Font font )
   {
     m_graphics.setFont( font );
   }
 
   @Override
-  public void setPaint( final Paint paint )
+  public void setPaint( Paint paint )
   {
     m_graphics.setPaint( paint );
   }
@@ -606,31 +606,31 @@ public class HighlightGraphics extends Graphics2D
   }
 
   @Override
-  public void setRenderingHint( final Key hintKey, final Object hintValue )
+  public void setRenderingHint( Key hintKey, Object hintValue )
   {
     m_graphics.setRenderingHint( hintKey, hintValue );
   }
 
   @Override
-  public void setRenderingHints( final Map< ? , ? > hints )
+  public void setRenderingHints( Map< ? , ? > hints )
   {
     m_graphics.setRenderingHints( hints );
   }
 
   @Override
-  public void setTransform( final AffineTransform Tx )
+  public void setTransform( AffineTransform Tx )
   {
     m_graphics.setTransform( Tx );
   }
 
   @Override
-  public void setXORMode( final Color c1 )
+  public void setXORMode( Color c1 )
   {
     m_graphics.setXORMode( c1 );
   }
 
   @Override
-  public void shear( final double shx, final double shy )
+  public void shear( double shx, double shy )
   {
     m_graphics.shear( shx, shy );
   }
@@ -645,19 +645,19 @@ public class HighlightGraphics extends Graphics2D
   }
 
   @Override
-  public void transform( final AffineTransform Tx )
+  public void transform( AffineTransform Tx )
   {
     m_graphics.transform( Tx );
   }
 
   @Override
-  public void translate( final double tx, final double ty )
+  public void translate( double tx, double ty )
   {
     m_graphics.translate( tx, ty );
   }
 
   @Override
-  public void translate( final int x, final int y )
+  public void translate( int x, int y )
   {
     m_graphics.translate( x, y );
   }

@@ -66,7 +66,7 @@ public class GetFeatureInfoDialog extends PopupDialog
   /**
    * The request URL.
    */
-  private final URL m_requestUrl;
+  private URL m_requestUrl;
 
   /**
    * The constructor.
@@ -74,7 +74,7 @@ public class GetFeatureInfoDialog extends PopupDialog
    * @param requestUrl
    *          The request Url.
    */
-  public GetFeatureInfoDialog( final Shell parentShell, final URL requestUrl )
+  public GetFeatureInfoDialog( Shell parentShell, URL requestUrl )
   {
     super( parentShell, SWT.RESIZE, true, true, true, true, false, "Feature Info", null );
 
@@ -88,7 +88,7 @@ public class GetFeatureInfoDialog extends PopupDialog
   protected Control createDialogArea( final Composite parent )
   {
     /* Create the main composite. */
-    final Composite main = (Composite) super.createDialogArea( parent );
+    Composite main = (Composite) super.createDialogArea( parent );
     main.setLayout( new GridLayout( 1, false ) );
     main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
@@ -102,13 +102,13 @@ public class GetFeatureInfoDialog extends PopupDialog
       }
 
       /* Load the url in the browser. */
-      final Browser browser = new Browser( main, SWT.BORDER );
+      Browser browser = new Browser( main, SWT.BORDER );
       browser.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
       browser.setUrl( m_requestUrl.toExternalForm() );
 
       return main;
     }
-    catch( final Exception ex )
+    catch( Exception ex )
     {
       /* Log the error message. */
       KalypsoGisPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), ex.getLocalizedMessage(), ex ) );

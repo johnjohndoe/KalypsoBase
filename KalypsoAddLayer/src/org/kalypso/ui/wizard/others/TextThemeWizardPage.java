@@ -74,7 +74,7 @@ public class TextThemeWizardPage extends WizardPage
    * @param pageName
    *          The name of the page.
    */
-  public TextThemeWizardPage( final String pageName )
+  public TextThemeWizardPage( String pageName )
   {
     super( pageName );
 
@@ -94,7 +94,7 @@ public class TextThemeWizardPage extends WizardPage
    * @param titleImage
    *          The image descriptor for the title of this wizard page, or null if none.
    */
-  public TextThemeWizardPage( final String pageName, final String title, final ImageDescriptor titleImage )
+  public TextThemeWizardPage( String pageName, String title, ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
 
@@ -107,42 +107,38 @@ public class TextThemeWizardPage extends WizardPage
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  public void createControl( final Composite parent )
+  public void createControl( Composite parent )
   {
     /* Create the main composite. */
-    final Composite main = new Composite( parent, SWT.NONE );
+    Composite main = new Composite( parent, SWT.NONE );
     main.setLayout( new GridLayout( 1, false ) );
 
     /* Create the text composite. */
-    final TextComposite textComposite = new TextComposite( main, SWT.NONE, null );
+    TextComposite textComposite = new TextComposite( main, SWT.NONE, null );
     textComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     textComposite.addTextChangedListener( new ITextChangedListener()
     {
       /**
        * @see org.kalypso.util.themes.text.listener.ITextChangedListener#textPropertyChanged(java.util.Properties, int,
-       *      int, org.eclipse.swt.graphics.Color, java.lang.String, int, boolean)
+       *      int, org.eclipse.swt.graphics.Color, java.lang.String)
        */
       @Override
-      public void textPropertyChanged( final Properties properties, final int horizontal, final int vertical, final org.eclipse.swt.graphics.Color backgroundColor, final String text, final int fontSize, final boolean transparency )
+      public void textPropertyChanged( Properties properties, int horizontal, int vertical, org.eclipse.swt.graphics.Color backgroundColor, String text )
       {
         /* Store the properties. */
         m_properties.clear();
 
         /* Get the properties. */
-        final String horizontalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
-        final String verticalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
-        final String backgroundColorProperty = properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
-        final String textProperty = properties.getProperty( TextUtilities.THEME_PROPERTY_TEXT );
-        final String fontSizeProperty = properties.getProperty( TextUtilities.THEME_PROPERTY_FONT_SIZE );
-        final String transparencyProperty = properties.getProperty( TextUtilities.THEME_PROPERTY_TRANSPARENCY );
+        String horizontalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
+        String verticalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
+        String backgroundColorProperty = properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
+        String textProperty = properties.getProperty( TextUtilities.THEME_PROPERTY_TEXT );
 
         /* Set the properties. */
         m_properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );
         m_properties.put( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, verticalProperty );
         m_properties.put( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR, backgroundColorProperty );
         m_properties.put( TextUtilities.THEME_PROPERTY_TEXT, textProperty );
-        m_properties.put( TextUtilities.THEME_PROPERTY_FONT_SIZE, fontSizeProperty );
-        m_properties.put( TextUtilities.THEME_PROPERTY_TRANSPARENCY, transparencyProperty );
 
         /* Check if the page can be completed. */
         checkPageComplete();
@@ -167,7 +163,7 @@ public class TextThemeWizardPage extends WizardPage
     setPageComplete( true );
 
     /* Get the text. */
-    final String text = m_properties.get( TextUtilities.THEME_PROPERTY_TEXT );
+    String text = m_properties.get( TextUtilities.THEME_PROPERTY_TEXT );
     if( text == null || text.length() == 0 )
     {
       setErrorMessage( "Bitte geben Sie den anzuzeigenden Text an..." );

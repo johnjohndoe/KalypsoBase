@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- *
+ * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always.
- *
- * If you intend to use this software in other ways than in kalypso
+ * interface-compatibility to deegree is wanted but not retained always. 
+ * 
+ * If you intend to use this software in other ways than in kalypso 
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree,
+ * all modifications are licensed as deegree, 
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -52,7 +52,7 @@ import org.kalypsodeegree.model.geometry.ByteUtils;
  * @version 16.01.2007
  * @author Thomas Jung
  */
-public class SHPMultiPointz implements ISHPMultiPoint
+public class SHPMultiPointz implements ISHPGeometry
 {
   public final SHPPointz[] m_pointsz;
 
@@ -76,7 +76,7 @@ public class SHPMultiPointz implements ISHPMultiPoint
       final double x = ByteUtils.readLEDouble( recBuf, 40 + i * 16 );
       final double y = ByteUtils.readLEDouble( recBuf, 40 + i * 16 + 8 );
 
-      final int byteposition = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH + 40 + numPoints * 16 + 16 + 8 * numPoints + 8 * i;
+      final int byteposition = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH + (40 + numPoints * 16) + 16 + (8 * numPoints) + (8 * i);
       final double z = ByteUtils.readLEDouble( recBuf, byteposition );
 
       m_pointsz[i] = new SHPPointz( x, y, z, 0.0 );
@@ -115,7 +115,7 @@ public class SHPMultiPointz implements ISHPMultiPoint
   @Override
   public int length( )
   {
-    return 36 + m_pointsz.length * 16 + 16 + 8 * m_pointsz.length;
+    return 36 + m_pointsz.length * 16 + 16 + (8 * m_pointsz.length);
   }
 
   /**
@@ -127,7 +127,6 @@ public class SHPMultiPointz implements ISHPMultiPoint
     return m_envelope;
   }
 
-  @Override
   public SHPPointz[] getPoints( )
   {
     return m_pointsz;

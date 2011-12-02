@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.ui.views.contentoutline;
 
@@ -61,9 +61,9 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  */
 public abstract class ContentOutlinePage2 extends Page implements IContentOutlinePage, ISelectionChangedListener
 {
-  private final ListenerList m_selectionChangedListeners = new ListenerList( ListenerList.IDENTITY );
+  private ListenerList selectionChangedListeners = new ListenerList( ListenerList.IDENTITY );
 
-  protected TreeViewer m_treeViewer;
+  protected TreeViewer treeViewer;
 
   /**
    * Create a new content outline page.
@@ -77,15 +77,15 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
    * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
   @Override
-  public void addSelectionChangedListener( final ISelectionChangedListener listener )
+  public void addSelectionChangedListener( ISelectionChangedListener listener )
   {
-    m_selectionChangedListeners.add( listener );
+    selectionChangedListeners.add( listener );
   }
 
   /**
-   * The <code>ContentOutlinePage</code> implementation of this <code>IContentOutlinePage</code> method creates a tree
-   * viewer using createTreeViewer( Composite ). Subclasses may override createTreeViewer to provide another TreeViewer
-   * than the default one.
+   * The <code>ContentOutlinePage</code> implementation of this <code>IContentOutlinePage</code> method creates a
+   * tree viewer using createTreeViewer( Composite ). Subclasses may override createTreeViewer to provide another
+   * TreeViewer than the default one.
    * <p>
    * Subclasses must extend this method to configure the tree viewer with a proper content provider, label provider, and
    * input element.
@@ -95,13 +95,13 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
   @Override
   public void createControl( final Composite parent )
   {
-    m_treeViewer = createTreeViewer( parent );
-    m_treeViewer.addSelectionChangedListener( this );
+    treeViewer = createTreeViewer( parent );
+    treeViewer.addSelectionChangedListener( this );
   }
 
   /**
-   * Creates an instance of TreeViewer. This default implementation creates a <code>TreeViewer</code>. You may choose to
-   * override it and create an instance of another subclass of TreeViewer.
+   * Creates an instance of TreeViewer. This default implementation creates a <code>TreeViewer</code>. You may choose
+   * to override it and create an instance of another subclass of TreeViewer.
    * 
    * @param parent
    * @return new instance of TreeViewer
@@ -117,13 +117,13 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
    * @param selection
    *          the new selection
    */
-  protected void fireSelectionChanged( final ISelection selection )
+  protected void fireSelectionChanged( ISelection selection )
   {
     // create an event
     final SelectionChangedEvent event = new SelectionChangedEvent( this, selection );
 
     // fire the event
-    final Object[] listeners = m_selectionChangedListeners.getListeners();
+    Object[] listeners = selectionChangedListeners.getListeners();
     for( int i = 0; i < listeners.length; ++i )
     {
       final ISelectionChangedListener l = (ISelectionChangedListener) listeners[i];
@@ -144,9 +144,9 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
   @Override
   public Control getControl( )
   {
-    if( m_treeViewer == null )
+    if( treeViewer == null )
       return null;
-    return m_treeViewer.getControl();
+    return treeViewer.getControl();
   }
 
   /**
@@ -155,9 +155,9 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
   @Override
   public ISelection getSelection( )
   {
-    if( m_treeViewer == null )
+    if( treeViewer == null )
       return StructuredSelection.EMPTY;
-    return m_treeViewer.getSelection();
+    return treeViewer.getSelection();
   }
 
   /**
@@ -167,14 +167,14 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
    */
   protected TreeViewer getTreeViewer( )
   {
-    return m_treeViewer;
+    return treeViewer;
   }
 
   /**
    * @see org.eclipse.ui.part.IPageBookViewPage#init(org.eclipse.ui.part.IPageSite)
    */
   @Override
-  public void init( final IPageSite pageSite )
+  public void init( IPageSite pageSite )
   {
     super.init( pageSite );
     pageSite.setSelectionProvider( this );
@@ -184,16 +184,16 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
    * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
   @Override
-  public void removeSelectionChangedListener( final ISelectionChangedListener listener )
+  public void removeSelectionChangedListener( ISelectionChangedListener listener )
   {
-    m_selectionChangedListeners.remove( listener );
+    selectionChangedListeners.remove( listener );
   }
 
   /**
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
   @Override
-  public void selectionChanged( final SelectionChangedEvent event )
+  public void selectionChanged( SelectionChangedEvent event )
   {
     fireSelectionChanged( event.getSelection() );
   }
@@ -204,16 +204,16 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
   @Override
   public void setFocus( )
   {
-    m_treeViewer.getControl().setFocus();
+    treeViewer.getControl().setFocus();
   }
 
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
    */
   @Override
-  public void setSelection( final ISelection selection )
+  public void setSelection( ISelection selection )
   {
-    if( m_treeViewer != null )
-      m_treeViewer.setSelection( selection );
+    if( treeViewer != null )
+      treeViewer.setSelection( selection );
   }
 }

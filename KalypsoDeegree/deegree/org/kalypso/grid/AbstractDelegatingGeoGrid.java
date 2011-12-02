@@ -212,7 +212,7 @@ public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
   @Override
   public double getValueChecked( final int x, final int y ) throws GeoGridException
   {
-    if( x < 0 || x >= getSizeX() || y < 0 || y >= getSizeY() )
+    if( (x < 0) || (x >= getSizeX()) || (y < 0) || (y >= getSizeY()) )
       return Double.NaN;
 
     return getValue( x, y );

@@ -1,3 +1,5 @@
+package org.kalypso.zml.core.table.rules.impl;
+
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -39,8 +41,6 @@
  *
  *  ---------------------------------------------------------------------------*/
 
-package org.kalypso.zml.core.table.rules.impl;
-
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.binding.CellStyle;
@@ -73,10 +73,9 @@ public abstract class AbstractZmlTableRule implements IZmlRuleImplementation
   {
     try
     {
-      if( reference == null )
-        return false;
-
       if( !rule.isEnabled() )
+        return false;
+      else if( reference == null )
         return false;
 
       return doApply( rule, reference );

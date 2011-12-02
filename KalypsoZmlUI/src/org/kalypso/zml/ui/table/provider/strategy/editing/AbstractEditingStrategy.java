@@ -40,25 +40,26 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider.strategy.editing;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.zml.core.table.binding.CellStyle;
-import org.kalypso.zml.ui.table.model.ZmlTableColumn;
+import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
 public abstract class AbstractEditingStrategy implements IZmlEditingStrategy
 {
-  private final ZmlTableColumn m_column;
+  private final ExtendedZmlTableColumn m_column;
 
-  public AbstractEditingStrategy( final ZmlTableColumn column )
+  public AbstractEditingStrategy( final ExtendedZmlTableColumn column )
   {
     m_column = column;
   }
 
-  protected ZmlTableColumn getColumn( )
+  protected ExtendedZmlTableColumn getColumn( )
   {
     return m_column;
   }
@@ -82,6 +83,6 @@ public abstract class AbstractEditingStrategy implements IZmlEditingStrategy
       return NumberUtils.parseDouble( value );
     }
     else
-      throw new UnsupportedOperationException();
+      throw new NotImplementedException();
   }
 }

@@ -30,49 +30,70 @@
 package org.kalypso.ogc.sensor.view.observationDialog;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.action.Action;
-import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.core.status.StatusDialog;
+import org.kalypso.ogc.sensor.view.ObservationViewerDialog;
 
 /**
  * @author Gernot Belger
  */
-public abstract class AbstractObservationAction extends Action implements IObservationAction
+public abstract class AbstractObservationAction implements IObservationAction
 {
-  private ObservationViewer m_viewer;
+  private final ObservationViewerDialog m_dialog;
 
-  public AbstractObservationAction( )
+  public AbstractObservationAction( final ObservationViewerDialog dialog )
   {
-    setText( getLabel() );
-    setToolTipText( getTooltip() );
-  }
-
-  @Override
-  public final void init( final ObservationViewer viewer )
-  {
-    m_viewer = viewer;
+    m_dialog = dialog;
   }
 
   protected abstract String getLabel( );
 
   protected abstract String getTooltip( );
 
-  protected final ObservationViewer getViewer( )
+  protected final ObservationViewerDialog getDialog( )
   {
-    return m_viewer;
+    return m_dialog;
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.view.observationDialog.IObservationAction#createButton(org.eclipse.swt.widgets.Composite)
+   */
   @Override
-  public final void runWithEvent( final Event event )
+  public final Button createButton( final Composite parent )
   {
-    final IStatus result = execute();
+    final Button button = new Button( parent, SWT.PUSH );
+    button.setText( getLabel() );
+    button.setToolTipText( getTooltip() );
+    button.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        handleButtonSelected();
+      }
+    } );
+
+    return button;
+  }
+
+  protected void handleButtonSelected( )
+  {
+    final IStatus result = run();
     if( result.isOK() || result.matches( IStatus.CANCEL ) )
       return;
 
-    final Shell shell = m_viewer.getShell();
+    final Shell shell = getDialog().getShell();
     new StatusDialog( shell, result, getLabel() ).open();
   }
 
-  protected abstract IStatus execute( );
+  protected abstract IStatus run( );
+
 }

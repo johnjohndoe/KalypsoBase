@@ -7,7 +7,7 @@ import java.io.InterruptedIOException;
 
 /**
  * Variant of the ProgressMonitorInputStream for Progressables
- * 
+ *
  * @author belger
  */
 public class ProgressableInputStream extends FilterInputStream

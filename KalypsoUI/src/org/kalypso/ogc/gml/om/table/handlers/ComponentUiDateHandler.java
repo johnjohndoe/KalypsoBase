@@ -47,7 +47,7 @@ import java.util.Date;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.jface.viewers.TextCellEditor;
@@ -60,7 +60,7 @@ import org.kalypso.ogc.gml.om.table.celleditor.DateTimeCellEditor;
 
 /**
  * Handles XMLGreogorianCalendar types.
- * 
+ *
  * @author Dirk Kuch
  */
 public class ComponentUiDateHandler extends AbstractComponentUiHandler implements ICellEditorValidator
@@ -217,7 +217,7 @@ public class ComponentUiDateHandler extends AbstractComponentUiHandler implement
     }
     catch( final ParseException e )
     {
-      return Messages.getString( "org.kalypso.ogc.gml.om.table.handlers.ComponentUiDateHandler.1", getParseFormat() ); //$NON-NLS-1$
+      return  Messages.getString("org.kalypso.ogc.gml.om.table.handlers.ComponentUiDateHandler.1", getParseFormat() ); //$NON-NLS-1$
     }
   }
 }

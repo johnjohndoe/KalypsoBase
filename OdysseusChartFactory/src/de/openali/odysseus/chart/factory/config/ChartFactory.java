@@ -1,5 +1,6 @@
 package de.openali.odysseus.chart.factory.config;
 
+import java.awt.Insets;
 import java.net.URL;
 
 import de.openali.odysseus.chart.factory.config.exception.ConfigChartNotFoundException;
@@ -9,6 +10,7 @@ import de.openali.odysseus.chart.factory.util.IReferenceResolver;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.impl.settings.CHART_DATA_LOADER_STRATEGY;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 import de.openali.odysseus.chartconfig.x020.AbstractStyleType;
@@ -30,6 +32,8 @@ public final class ChartFactory
   public static final String AXIS_PROVIDER_KEY = "de.openali.odysseus.chart.factory.axisprovider";
 
   public static final String AXISRENDERER_PROVIDER_KEY = "de.openali.odysseus.chart.factory.axisrendererprovider";
+
+// public static final String MAPPER_PROVIDER_KEY = "de.openali.odysseus.chart.factory.mapperprovider";
 
   public static void configureChartModel( final IChartModel model, final ChartConfigurationLoader configurationLoader, final String configChartName, final IExtensionLoader extLoader, final URL context ) throws ConfigurationException
   {
@@ -65,8 +69,8 @@ public final class ChartFactory
       try
       {
         final AbstractStyleType styleType = chartTypeResolver.findStyleType( type.getStyleref(), context );
-        final ITextStyle style = StyleFactory.createTextStyle( styleType == null ? null : (TextStyleType) styleType );
-        final TitleTypeBean title = StyleHelper.getTitleTypeBean( type, style );
+        final ITextStyle style = StyleFactory.createTextStyle( (TextStyleType) styleType );
+        final TitleTypeBean title = StyleHelper.getTitleTypeBean(type, style );
         model.getSettings().addTitles( title );
       }
       catch( final Throwable t )
@@ -89,8 +93,6 @@ public final class ChartFactory
     final ChartLayerFactory layerFactory = new ChartLayerFactory( model, extendedResolver, extLoader, context, mapperFactory );
     layerFactory.build( chartType );
 
-    // TODO: restore zoom-Factor here, instead of maximise
-    model.autoscale( null );// null means maximise chart
     chartTypeResolver.clear();
   }
 }

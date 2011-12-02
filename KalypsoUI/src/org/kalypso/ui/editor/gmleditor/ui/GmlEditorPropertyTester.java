@@ -2,7 +2,8 @@ package org.kalypso.ui.editor.gmleditor.ui;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.expressions.PropertyTester;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -32,7 +33,7 @@ public class GmlEditorPropertyTester extends PropertyTester
     }
 
     final String msg = String.format( "Unknown test property %s", property );
-    throw new UnsupportedOperationException( msg );
+    throw new NotImplementedException( msg );
   }
 
   private IFeatureType findFeatureType( final Object receiver, final Object[] args )

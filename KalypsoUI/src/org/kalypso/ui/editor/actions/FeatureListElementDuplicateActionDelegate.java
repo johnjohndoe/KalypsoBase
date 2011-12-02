@@ -108,7 +108,7 @@ public class FeatureListElementDuplicateActionDelegate implements IObjectActionD
           final Feature newFeature = FeatureHelper.cloneFeature( parent, rt, m_selectedFeature );
           final int pos = list.indexOf( m_selectedFeature ) + 1;
           final AddFeatureCommand command = new AddFeatureCommand( m_workspace, parent, rt, pos, newFeature, selectionManager, true, false );
-
+          
           m_workspace.postCommand( command );
         }
         catch( final Exception e )
@@ -119,7 +119,7 @@ public class FeatureListElementDuplicateActionDelegate implements IObjectActionD
           // we are in the ui-thread so we get a shell here
           final Shell shell = m_targetPart.getSite().getShell();
           if( shell != null )
-            ErrorDialog.openError( shell, action.getText(), Messages.getString( "org.kalypso.ui.editor.actions.FeatureListElementDuplicateActionDelegate.1" ), status ); //$NON-NLS-1$
+            ErrorDialog.openError( shell, action.getText(), Messages.getString("org.kalypso.ui.editor.actions.FeatureListElementDuplicateActionDelegate.1"), status ); //$NON-NLS-1$
         }
       }
     }
@@ -145,7 +145,7 @@ public class FeatureListElementDuplicateActionDelegate implements IObjectActionD
       m_selectedFeature = FeatureSelectionHelper.getFirstFeature( m_selection );
       m_workspace = m_selection.getWorkspace( m_selectedFeature );
 
-      final IRelationType rt = m_selectedFeature.getParentRelation();
+      final IRelationType rt = m_selectedFeature.getParentRelation(  );
       if( rt != null )
       {
         final List list = (List) m_selectedFeature.getParent().getProperty( rt );

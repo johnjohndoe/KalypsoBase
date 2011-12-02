@@ -128,13 +128,13 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
    * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  protected Control createContents( final Composite parent )
+  protected Control createContents( Composite parent )
   {
     /* Initialize. */
     init();
 
     /* Create the main composite. */
-    final Composite main = new Composite( parent, SWT.NONE );
+    Composite main = new Composite( parent, SWT.NONE );
     main.setLayout( new GridLayout( 1, false ) );
     main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
@@ -142,7 +142,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
     if( m_node == null || m_theme == null )
     {
       /* Create a label. */
-      final Label messageLabel = new Label( main, SWT.NONE );
+      Label messageLabel = new Label( main, SWT.NONE );
       messageLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
       messageLabel.setText( Messages.getString( "org.kalypso.ui.views.properties.LegendPropertyPage.0" ) );//$NON-NLS-1$
 
@@ -207,12 +207,12 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
       return super.performOk();
 
     /* Get the properties. */
-    final String horizontalProperty = m_properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
-    final String verticalProperty = m_properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
-    final String backgroundColorProperty = m_properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
-    final String insetsProperty = m_properties.getProperty( LegendUtilities.THEME_PROPERTY_INSETS );
-    final String themeIdsProperty = m_properties.getProperty( LegendUtilities.THEME_PROPERTY_THEME_IDS );
-    final String fontSizeProperty = m_properties.getProperty( LegendUtilities.THEME_PROPERTY_FONT_SIZE );
+    String horizontalProperty = m_properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
+    String verticalProperty = m_properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
+    String backgroundColorProperty = m_properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
+    String insetsProperty = m_properties.getProperty( LegendUtilities.THEME_PROPERTY_INSETS );
+    String themeIdsProperty = m_properties.getProperty( LegendUtilities.THEME_PROPERTY_THEME_IDS );
+    String fontSizeProperty = m_properties.getProperty( LegendUtilities.THEME_PROPERTY_FONT_SIZE );
 
     /* Set the properties. */
     if( horizontalProperty != null && horizontalProperty.length() > 0 )
@@ -237,14 +237,14 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
   private void init( )
   {
     /* Get the element. */
-    final IAdaptable element = getElement();
+    IAdaptable element = getElement();
 
     /* Get the node. */
-    final IThemeNode node = (IThemeNode) (element instanceof IThemeNode ? element : element.getAdapter( IThemeNode.class ));
+    IThemeNode node = (IThemeNode) (element instanceof IThemeNode ? element : element.getAdapter( IThemeNode.class ));
 
     /* Get the theme. */
-    final Object nodeElement = node.getElement();
-    final IKalypsoTheme theme = nodeElement instanceof IKalypsoTheme ? (IKalypsoTheme) nodeElement : null;
+    Object nodeElement = node.getElement();
+    IKalypsoTheme theme = (nodeElement instanceof IKalypsoTheme) ? (IKalypsoTheme) nodeElement : null;
 
     /* Store the members. */
     m_node = node;
@@ -254,12 +254,12 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
     if( m_theme instanceof KalypsoLegendTheme )
     {
       /* Cast. */
-      final KalypsoLegendTheme legendTheme = (KalypsoLegendTheme) m_theme;
+      KalypsoLegendTheme legendTheme = (KalypsoLegendTheme) m_theme;
 
       /* Get the properties of the legend theme. */
-      final Properties legendProperties = new Properties();
-      final String[] propertyNames = legendTheme.getPropertyNames();
-      for( final String propertyName : propertyNames )
+      Properties legendProperties = new Properties();
+      String[] propertyNames = legendTheme.getPropertyNames();
+      for( String propertyName : propertyNames )
         legendProperties.put( propertyName, legendTheme.getProperty( propertyName, null ) );
 
       /* Store the member. */
@@ -273,21 +273,21 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
    * @param parent
    *          The parent composite.
    */
-  private void createOtherProperties( final Composite parent )
+  private void createOtherProperties( Composite parent )
   {
     try
     {
       /* Get the display. */
-      final Display display = parent.getDisplay();
+      Display display = parent.getDisplay();
 
       /* Get the legend graphic. */
-      final LegendExporter legendExporter = new LegendExporter();
-      final Image legendGraphic = legendExporter.exportLegends( null, new IThemeNode[] { m_node }, display, null, new RGB( 255, 255, 255 ), -1, -1, false, -1, null );
+      LegendExporter legendExporter = new LegendExporter();
+      Image legendGraphic = legendExporter.exportLegends( null, new IThemeNode[] { m_node }, display, null, new RGB( 255, 255, 255 ), -1, -1, false, -1, null );
       if( legendGraphic == null )
         throw new Exception( Messages.getString( "org.kalypso.ui.views.properties.LegendPropertyPage.2" ) );//$NON-NLS-1$
 
       /* Create a group. */
-      final Composite group = new Composite( parent, SWT.BORDER );
+      Composite group = new Composite( parent, SWT.BORDER );
       group.setLayout( new GridLayout( 1, false ) );
       group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
       group.setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
@@ -295,9 +295,9 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
       /* And finally display it. */
       /* REMARK: We are using an real ImageCanvas instead of just setting the background, */
       /* as this will not work for transparent images. */
-      final ImageCanvas canvas = new ImageCanvas( group, SWT.NONE );
-      final Rectangle bounds = legendGraphic.getBounds();
-      final GridData canvasData = new GridData( SWT.BEGINNING, SWT.TOP, true, true );
+      ImageCanvas canvas = new ImageCanvas( group, SWT.NONE );
+      Rectangle bounds = legendGraphic.getBounds();
+      GridData canvasData = new GridData( SWT.BEGINNING, SWT.TOP, true, true );
       canvasData.heightHint = bounds.height;
       canvasData.widthHint = bounds.width;
       canvas.setLayoutData( canvasData );
@@ -305,10 +305,10 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
       canvas.setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
       canvas.setImage( legendGraphic );
     }
-    catch( final Exception ex )
+    catch( Exception ex )
     {
       /* Create a status composite. */
-      final StatusComposite statusComposite = new StatusComposite( parent, SWT.NONE );
+      StatusComposite statusComposite = new StatusComposite( parent, SWT.NONE );
       statusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
       statusComposite.setStatus( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), "Konnte die Legende nicht anzeigen...", ex ) );
     }
@@ -320,10 +320,10 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
    * @param parent
    *          The parent composite.
    */
-  private void createLegendProperties( final Composite parent )
+  private void createLegendProperties( Composite parent )
   {
     /* Create a tab folder. */
-    final CTabFolder legendTabFolder = new CTabFolder( parent, SWT.BORDER );
+    CTabFolder legendTabFolder = new CTabFolder( parent, SWT.BORDER );
     legendTabFolder.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     legendTabFolder.setSimple( true );
     legendTabFolder.setTabPosition( SWT.TOP );
@@ -344,10 +344,10 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( final SelectionEvent e )
+      public void widgetSelected( SelectionEvent e )
       {
         /* Get the source. */
-        final CTabFolder source = (CTabFolder) e.getSource();
+        CTabFolder source = (CTabFolder) e.getSource();
 
         /* Update the preview tab, if it is switched to it. */
         if( source.getSelectionIndex() == 1 )
@@ -365,14 +365,14 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
    * @param parent
    *          The parent tab folder.
    */
-  private void createPropertiesTab( final CTabFolder parent )
+  private void createPropertiesTab( CTabFolder parent )
   {
     /* Create a tab item. */
     m_propertiesTabItem = new CTabItem( parent, SWT.NONE );
     m_propertiesTabItem.setText( "Eigenschaften" );
 
     /* Create the properties composite. */
-    final Composite propertiesComposite = createPropertiesComposite( parent );
+    Composite propertiesComposite = createPropertiesComposite( parent );
 
     /* Set the control. */
     m_propertiesTabItem.setControl( propertiesComposite );
@@ -385,10 +385,10 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
    *          The parent tab folder.
    * @return The properties composite.
    */
-  private Composite createPropertiesComposite( final CTabFolder parent )
+  private Composite createPropertiesComposite( CTabFolder parent )
   {
     /* Create the legend composite. */
-    final LegendComposite legendComposite = new LegendComposite( parent, SWT.NONE, m_theme.getMapModell(), m_properties );
+    LegendComposite legendComposite = new LegendComposite( parent, SWT.NONE, m_theme.getMapModell(), m_properties );
     legendComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     legendComposite.addLegendChangedListener( new ILegendChangedListener()
     {
@@ -397,7 +397,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
        *      int, int, org.eclipse.swt.graphics.Color, int, java.lang.String[], int)
        */
       @Override
-      public void legendPropertyChanged( final Properties properties, final int horizontal, final int vertical, final Color backgroundColor, final int insets, final String[] themeIds, final int fontSize )
+      public void legendPropertyChanged( Properties properties, int horizontal, int vertical, Color backgroundColor, int insets, String[] themeIds, int fontSize )
       {
         /* Update the properties object. */
         m_properties = properties;
@@ -416,14 +416,14 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
    * @param parent
    *          The parent tab folder.
    */
-  private void createPreviewTab( final CTabFolder parent )
+  private void createPreviewTab( CTabFolder parent )
   {
     /* Create a tab item. */
     m_previewTabItem = new CTabItem( parent, SWT.NONE );
     m_previewTabItem.setText( "Vorschau" );
 
     /* Create the preview composite. */
-    final Composite previewComposite = createPreviewComposite( parent );
+    Composite previewComposite = createPreviewComposite( parent );
 
     /* Set the control. */
     m_previewTabItem.setControl( previewComposite );
@@ -436,10 +436,10 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
    *          The parent tab folder.
    * @return The preview composite.
    */
-  private Composite createPreviewComposite( final CTabFolder parent )
+  private Composite createPreviewComposite( CTabFolder parent )
   {
     /* Create a composite. */
-    final Composite previewComposite = new Composite( parent, SWT.NONE );
+    Composite previewComposite = new Composite( parent, SWT.NONE );
     previewComposite.setLayout( new GridLayout( 1, false ) );
 
     /* Create the legend. */
@@ -454,18 +454,18 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
    * @param parent
    *          The parent composite.
    */
-  private void createPreviewLegend( final Composite parent )
+  private void createPreviewLegend( Composite parent )
   {
     /* Get the display. */
-    final Display display = parent.getDisplay();
+    Display display = parent.getDisplay();
 
     try
     {
       /* Get the properties. */
-      final String backgroundColorProperty = m_properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
-      final String insetsProperty = m_properties.getProperty( LegendUtilities.THEME_PROPERTY_INSETS );
-      final String themeIdsProperty = m_properties.getProperty( LegendUtilities.THEME_PROPERTY_THEME_IDS );
-      final String fontSizeProperty = m_properties.getProperty( LegendUtilities.THEME_PROPERTY_FONT_SIZE );
+      String backgroundColorProperty = m_properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
+      String insetsProperty = m_properties.getProperty( LegendUtilities.THEME_PROPERTY_INSETS );
+      String themeIdsProperty = m_properties.getProperty( LegendUtilities.THEME_PROPERTY_THEME_IDS );
+      String fontSizeProperty = m_properties.getProperty( LegendUtilities.THEME_PROPERTY_FONT_SIZE );
 
       /* Check the properties. */
       Color backgroundColor = ThemeUtilities.checkBackgroundColor( display, backgroundColorProperty );
@@ -476,24 +476,24 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
       if( insets == -1 )
         insets = 5;
 
-      final List<String> themeIds = LegendUtilities.verifyThemeIds( m_theme.getMapModell(), themeIdsProperty );
+      List<String> themeIds = LegendUtilities.verifyThemeIds( m_theme.getMapModell(), themeIdsProperty );
       if( themeIds == null || themeIds.size() == 0 )
         throw new Exception( "Es wurden keine Themen ausgewählt..." );
 
-      final int fontSize = LegendUtilities.checkFontSize( fontSizeProperty );
+      int fontSize = LegendUtilities.checkFontSize( fontSizeProperty );
 
       /* Create the nodes. */
-      final IThemeNode rootNode = NodeFactory.createRootNode( m_theme.getMapModell(), null );
-      final IThemeNode[] nodes = rootNode.getChildren();
+      IThemeNode rootNode = NodeFactory.createRootNode( m_theme.getMapModell(), null );
+      IThemeNode[] nodes = rootNode.getChildren();
 
       /* Get the legend graphic. */
-      final LegendExporter legendExporter = new LegendExporter();
-      final Image legendGraphic = legendExporter.exportLegends( themeIds.toArray( new String[] {} ), nodes, display, new Insets( insets, insets, insets, insets ), backgroundColor.getRGB(), -1, -1, false, fontSize, null );
+      LegendExporter legendExporter = new LegendExporter();
+      Image legendGraphic = legendExporter.exportLegends( themeIds.toArray( new String[] {} ), nodes, display, new Insets( insets, insets, insets, insets ), backgroundColor.getRGB(), -1, -1, false, fontSize, null );
       if( legendGraphic == null )
         throw new Exception( Messages.getString( "org.kalypso.ui.views.properties.LegendPropertyPage.2" ) );//$NON-NLS-1$
 
       /* Create a group. */
-      final Composite group = new Composite( parent, SWT.BORDER );
+      Composite group = new Composite( parent, SWT.BORDER );
       group.setLayout( new GridLayout( 1, false ) );
       group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
       group.setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
@@ -501,9 +501,9 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
       /* And finally display it. */
       /* REMARK: We are using an real ImageCanvas instead of just setting the background, */
       /* as this will not work for transparent images. */
-      final ImageCanvas canvas = new ImageCanvas( group, SWT.NONE );
-      final Rectangle bounds = legendGraphic.getBounds();
-      final GridData canvasData = new GridData( SWT.BEGINNING, SWT.TOP, true, true );
+      ImageCanvas canvas = new ImageCanvas( group, SWT.NONE );
+      Rectangle bounds = legendGraphic.getBounds();
+      GridData canvasData = new GridData( SWT.BEGINNING, SWT.TOP, true, true );
       canvasData.heightHint = bounds.height;
       canvasData.widthHint = bounds.width;
       canvas.setLayoutData( canvasData );
@@ -511,10 +511,10 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
       canvas.setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
       canvas.setImage( legendGraphic );
     }
-    catch( final Exception ex )
+    catch( Exception ex )
     {
       /* Create a status composite. */
-      final StatusComposite statusComposite = new StatusComposite( parent, SWT.NONE );
+      StatusComposite statusComposite = new StatusComposite( parent, SWT.NONE );
       statusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
       statusComposite.setStatus( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), "Konnte die Legende nicht anzeigen...", ex ) );
     }
@@ -529,11 +529,11 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
       return;
 
     /* Dispose the control. */
-    final Control control = m_propertiesTabItem.getControl();
+    Control control = m_propertiesTabItem.getControl();
     control.dispose();
 
     /* Create the properties composite. */
-    final Composite propertiesComposite = createPropertiesComposite( m_propertiesTabItem.getParent() );
+    Composite propertiesComposite = createPropertiesComposite( m_propertiesTabItem.getParent() );
 
     /* Set the control. */
     m_propertiesTabItem.setControl( propertiesComposite );
@@ -548,11 +548,11 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
       return;
 
     /* Dispose the control. */
-    final Control control = m_previewTabItem.getControl();
+    Control control = m_previewTabItem.getControl();
     control.dispose();
 
     /* Create the preview composite. */
-    final Composite previewComposite = createPreviewComposite( m_previewTabItem.getParent() );
+    Composite previewComposite = createPreviewComposite( m_previewTabItem.getParent() );
 
     /* Set the control. */
     m_previewTabItem.setControl( previewComposite );

@@ -44,6 +44,7 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 
 /**
  * @author kimwerner
+ *
  */
 public interface IDateTimeAxisFieldProvider
 {

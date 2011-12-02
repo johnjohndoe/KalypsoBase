@@ -48,34 +48,40 @@ import org.kalypso.ogc.sensor.filter.filters.interval.IntervalSourceHandler;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.binding.CellStyle;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.ZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.model.references.ZmlDataValueReference;
+import org.kalypso.zml.core.table.model.references.ZmlValueReferenceFactory;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.ZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
+import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
 public class SumValueEditingStrategy extends AbstractEditingStrategy
 {
-  public SumValueEditingStrategy( final ZmlTableColumn column )
+  private final ZmlLabelProvider m_labelProvider;
+
+  public SumValueEditingStrategy( final ExtendedZmlTableColumn column, final ZmlLabelProvider labelProvider )
   {
     super( column );
+    m_labelProvider = labelProvider;
   }
 
+  /**
+   * @see org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy#getValue(java.lang.Object)
+   */
   @Override
   public String getValue( final IZmlModelRow row )
   {
     try
     {
-      final ZmlLabelProvider provider = new ZmlLabelProvider( row, getColumn(), new ZmlRule[] {} );
-      final Object plain = provider.getPlainValue();
+      final Object plain = m_labelProvider.getPlainValue( row );
       if( Objects.isNull( plain ) )
         return null;
 
@@ -92,12 +98,16 @@ public class SumValueEditingStrategy extends AbstractEditingStrategy
     return null;
   }
 
+  /**
+   * @see org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy#setValue(org.kalypso.zml.ui.table.model.IZmlModelRow,
+   *      java.lang.String)
+   */
   @Override
   public void setValue( final IZmlModelRow row, final String value )
   {
     try
     {
-      final ZmlTableColumn column = getColumn();
+      final ExtendedZmlTableColumn column = getColumn();
       final IZmlTableCell cell = column.findCell( row );
 
       final Number targetValue = getTargetValue( value );
@@ -132,7 +142,8 @@ public class SumValueEditingStrategy extends AbstractEditingStrategy
   {
     final ZmlDataValueReference reference = (ZmlDataValueReference) previousCell.getValueReference();
 
-    return new ZmlDataValueReference( reference.getRow(), reference.getColumn(), reference.getModelIndex() + 1 );
+    final ZmlValueReferenceFactory factory = ZmlValueReferenceFactory.getInstance();
+    return factory.createReference( (ZmlModelRow) reference.getRow(), reference.getColumn(), reference.getModelIndex() + 1 );
   }
 
   private void updateAggregatedValue( final IZmlValueReference start, final IZmlValueReference end, final Number targetValue ) throws SensorException
@@ -147,18 +158,12 @@ public class SumValueEditingStrategy extends AbstractEditingStrategy
 
     for( int index = startIndex; index <= endIndex; index++ )
     {
-      modelColumn.update( index, stepping, IntervalSourceHandler.SOURCE_INTERVAL_FITLER, KalypsoStati.BIT_USER_MODIFIED );
+      modelColumn.doUpdate( index, stepping, IntervalSourceHandler.SOURCE_INTERVAL_FITLER, KalypsoStati.BIT_USER_MODIFIED );
     }
   }
 
   private void updateOriginValue( final IZmlValueReference reference, final Number targetValue ) throws SensorException
   {
-    reference.update( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
-  }
-
-  @Override
-  public boolean isAggregated( )
-  {
-    return true;
+    reference.doUpdate( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
   }
 }

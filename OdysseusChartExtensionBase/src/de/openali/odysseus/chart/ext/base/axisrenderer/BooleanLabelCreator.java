@@ -69,7 +69,7 @@ public class BooleanLabelCreator implements ILabelCreator
    *      de.openali.odysseus.chart.framework.model.data.IDataRange)
    */
   @Override
-  public String getLabel( final Number[] ticks, final int i, final IDataRange<Number> range )
+  public String getLabel( Number[] ticks, int i, IDataRange<Number> range )
   {
     try
     {

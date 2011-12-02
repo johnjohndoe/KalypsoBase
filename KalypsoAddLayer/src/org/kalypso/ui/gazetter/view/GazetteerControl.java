@@ -59,9 +59,9 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.wfs.WFService;
-import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.i18n.Messages;
 import org.kalypso.view.gazetter.GazetterLocationType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -145,7 +145,7 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
     }
     else
       return; // never happens
-    final Job job = new Job( Messages.getString( "org.kalypso.ui.gazetter.view.GazetteerControl.0" ) + featureTypeToLoad.getLocalPart() ) //$NON-NLS-1$
+    final Job job = new Job( Messages.getString("org.kalypso.ui.gazetter.view.GazetteerControl.0") + featureTypeToLoad.getLocalPart() ) //$NON-NLS-1$
     {
       @Override
       protected IStatus run( final IProgressMonitor monitor )
@@ -162,7 +162,7 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
           e.printStackTrace();
           setContent( null );
           setEnable( false );
-          return new Status( IStatus.ERROR, KalypsoAddLayerPlugin.getId(), Messages.getString( "org.kalypso.ui.gazetter.view.GazetteerControl.1" ) ); //$NON-NLS-1$
+          return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ui.gazetter.view.GazetteerControl.1") ); //$NON-NLS-1$
         }
         return Status.OK_STATUS;
       }
@@ -280,7 +280,7 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
       return result;
     }
     else
-      return new String[] { Messages.getString( "org.kalypso.ui.gazetter.view.GazetteerControl.2" ) }; //$NON-NLS-1$
+      return new String[] { Messages.getString("org.kalypso.ui.gazetter.view.GazetteerControl.2") }; //$NON-NLS-1$
   }
 
   /**

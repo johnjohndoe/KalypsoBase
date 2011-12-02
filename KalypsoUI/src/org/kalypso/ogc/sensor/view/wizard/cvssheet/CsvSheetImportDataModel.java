@@ -43,6 +43,7 @@ package org.kalypso.ogc.sensor.view.wizard.cvssheet;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 
 /**
@@ -69,7 +70,7 @@ public class CsvSheetImportDataModel
         case eSemicolon:
           return ';';
         default:
-          throw new UnsupportedOperationException();
+          throw new NotImplementedException();
       }
     }
 
@@ -90,7 +91,7 @@ public class CsvSheetImportDataModel
         case eSemicolon:
           return ";"; //$NON-NLS-1$
         default:
-          throw new UnsupportedOperationException();
+          throw new NotImplementedException();
       }
     }
   }
@@ -111,7 +112,7 @@ public class CsvSheetImportDataModel
         case ePoint:
           return "\\,"; //$NON-NLS-1$
         default:
-          throw new UnsupportedOperationException();
+          throw new NotImplementedException();
       }
     }
 
@@ -126,7 +127,7 @@ public class CsvSheetImportDataModel
         case ePoint:
           return ","; //$NON-NLS-1$
         default:
-          throw new UnsupportedOperationException();
+          throw new NotImplementedException();
       }
     }
 
@@ -145,7 +146,7 @@ public class CsvSheetImportDataModel
         case ePoint:
           return "\",\" (Comma)"; //$NON-NLS-1$
         default:
-          throw new UnsupportedOperationException();
+          throw new NotImplementedException();
       }
     }
   }
@@ -191,7 +192,7 @@ public class CsvSheetImportDataModel
         case eQ:
           return "Q [m³/s]"; //$NON-NLS-1$
         default:
-          throw new UnsupportedOperationException();
+          throw new NotImplementedException();
       }
     }
 
@@ -206,7 +207,7 @@ public class CsvSheetImportDataModel
         case eQ:
           return ITimeseriesConstants.TYPE_DISCHARGE;
         default:
-          throw new UnsupportedOperationException();
+          throw new NotImplementedException();
       }
 
     }

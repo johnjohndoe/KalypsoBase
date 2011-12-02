@@ -90,7 +90,7 @@ public class CellStyle implements Cloneable
   @Override
   public CellStyle clone( )
   {
-    return new CellStyle( TableTypes.cloneStyleType( m_style ) );
+    return new CellStyle( TableTypeHelper.cloneStyleType( m_style ) );
   }
 
   /**
@@ -98,7 +98,7 @@ public class CellStyle implements Cloneable
    */
   private CellStyleType init( final CellStyleType style )
   {
-    final CellStyleType base = TableTypes.resolveReference( style.getBaseStyle() );
+    final CellStyleType base = TableTypeHelper.resolveReference( style.getBaseStyle() );
     if( base == null )
       return style;
 
@@ -114,17 +114,17 @@ public class CellStyle implements Cloneable
       final List<StylePropertyType> properties = style.getProperty();
       for( final StylePropertyType property : properties )
       {
-        final StylePropertyType clone = TableTypes.cloneProperty( property );
+        final StylePropertyType clone = TableTypeHelper.cloneProperty( property );
         if( !hasProperty( base, property ) )
         {
           base.getProperty().add( clone );
         }
         else
         {
-          final String name = TableTypes.getPropertyName( property );
+          final String name = TableTypeHelper.getPropertyName( property );
           final StylePropertyName targetName = StylePropertyName.fromValue( name );
 
-          final StylePropertyType targetProperty = TableTypes.findPropertyType( base, targetName );
+          final StylePropertyType targetProperty = TableTypeHelper.findPropertyType( base, targetName );
           targetProperty.setValue( clone.getValue() );
         }
       }
@@ -151,17 +151,17 @@ public class CellStyle implements Cloneable
 
   public static boolean hasProperty( final CellStyleType style, final StylePropertyType type )
   {
-    final String name = TableTypes.getPropertyName( type );
+    final String name = TableTypeHelper.getPropertyName( type );
     final StylePropertyName property = StylePropertyName.fromValue( name );
 
-    final String value = TableTypes.findProperty( style, property );
+    final String value = TableTypeHelper.findProperty( style, property );
 
     return value != null;
   }
 
   public Color getBackgroundColor( )
   {
-    final String htmlColor = TableTypes.findProperty( m_style, StylePropertyName.BACKGROUND_COLOR );
+    final String htmlColor = TableTypeHelper.findProperty( m_style, StylePropertyName.BACKGROUND_COLOR );
     if( htmlColor == null )
       return null;
 
@@ -174,7 +174,7 @@ public class CellStyle implements Cloneable
 
   public Color getForegroundColor( )
   {
-    final String htmlColor = TableTypes.findProperty( m_style, StylePropertyName.TEXT_COLOR );
+    final String htmlColor = TableTypeHelper.findProperty( m_style, StylePropertyName.TEXT_COLOR );
     if( htmlColor == null )
       return null;
 
@@ -187,9 +187,9 @@ public class CellStyle implements Cloneable
 
   public Font getFont( )
   {
-    final String fontFamily = TableTypes.findProperty( m_style, StylePropertyName.FONT_FAMILY );
-    final String fontSize = TableTypes.findProperty( m_style, StylePropertyName.FONT_SIZE );
-    final int fontWeight = TableTypes.toSWTFontWeight( TableTypes.findProperty( m_style, StylePropertyName.FONT_WEIGHT ) );
+    final String fontFamily = TableTypeHelper.findProperty( m_style, StylePropertyName.FONT_FAMILY );
+    final String fontSize = TableTypeHelper.findProperty( m_style, StylePropertyName.FONT_SIZE );
+    final int fontWeight = TableTypeHelper.toSWTFontWeight( TableTypeHelper.findProperty( m_style, StylePropertyName.FONT_WEIGHT ) );
 
     final FontData data = new FontData( fontFamily == null ? "Arial" : fontFamily, fontSize == null ? 10 : Integer.valueOf( fontSize ), fontWeight );
     FONT_REGISTRY.put( m_style.getId(), new FontData[] { data } );
@@ -199,7 +199,7 @@ public class CellStyle implements Cloneable
 
   public Image getImage( ) throws IOException
   {
-    final String urlString = TableTypes.findProperty( m_style, StylePropertyName.ICON );
+    final String urlString = TableTypeHelper.findProperty( m_style, StylePropertyName.ICON );
     if( urlString == null )
       return null;
 
@@ -220,7 +220,7 @@ public class CellStyle implements Cloneable
 
   public String getTextFormat( )
   {
-    final String format = TableTypes.findProperty( m_style, StylePropertyName.TEXT_FORMAT );
+    final String format = TableTypeHelper.findProperty( m_style, StylePropertyName.TEXT_FORMAT );
 
     return format;
   }

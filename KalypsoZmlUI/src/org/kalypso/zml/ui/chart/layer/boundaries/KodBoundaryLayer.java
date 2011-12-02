@@ -43,7 +43,7 @@ package org.kalypso.zml.ui.chart.layer.boundaries;
 import jregex.Pattern;
 import jregex.RETokenizer;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.ogc.sensor.metadata.IMetadataBoundary;
 
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
@@ -80,6 +80,9 @@ public class KodBoundaryLayer implements IMetadataLayerBoundary
     return m_boundary;
   }
 
+  /**
+   * @see org.kalypso.hwv.core.chart.provider.style.boundary.IMetadataLayerBoundary#getLabel()
+   */
   @Override
   public String getLabel( )
   {
@@ -94,6 +97,9 @@ public class KodBoundaryLayer implements IMetadataLayerBoundary
     return String.format( m_label, tokenizer.nextToken() );
   }
 
+  /**
+   * @see org.kalypso.hwv.core.chart.provider.style.boundary.IMetadataLayerBoundary#getLineStyle()
+   */
   @Override
   public ILineStyle getLineStyle( )
   {
@@ -121,6 +127,9 @@ public class KodBoundaryLayer implements IMetadataLayerBoundary
     return visitor.visit( m_styles, ILineStyle.class, 0 );
   }
 
+  /**
+   * @see org.kalypso.hwv.core.chart.provider.style.boundary.IMetadataLayerBoundary#getTextStyle()
+   */
   @Override
   public ITextStyle getTextStyle( )
   {

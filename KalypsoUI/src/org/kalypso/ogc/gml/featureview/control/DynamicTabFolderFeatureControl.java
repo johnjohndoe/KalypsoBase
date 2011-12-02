@@ -119,6 +119,9 @@ public class DynamicTabFolderFeatureControl extends AbstractFeatureControl
     return true;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#updateControl()
+   */
   @Override
   public void updateControl( )
   {
@@ -152,7 +155,7 @@ public class DynamicTabFolderFeatureControl extends AbstractFeatureControl
 
       final FeatureTabItem featureItem = getFeatureItem( count );
       final Object tabObject = featureItem == null ? null : featureItem.getFeatureObject();
-
+      
       if( object.equals( tabObject ) )
       {
         featureItem.updateControl();

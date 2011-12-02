@@ -54,7 +54,7 @@ import java.util.logging.Logger;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 
-import org.eclipse.core.runtime.IStatus;
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.eclipse.ui.services.IDisposable;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -85,7 +85,6 @@ import org.kalypso.services.observation.sei.IObservationService;
 import org.kalypso.services.observation.sei.ItemBean;
 import org.kalypso.services.observation.sei.ObservationBean;
 import org.kalypso.services.observation.sei.RepositoryBean;
-import org.kalypso.services.observation.sei.StatusBean;
 import org.kalypso.zml.request.Request;
 
 /**
@@ -454,7 +453,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
         }
         else
         {
-          throw new UnsupportedOperationException();
+          throw new NotImplementedException();
         }
       }
     }
@@ -490,11 +489,5 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
     }
 
     return false;
-  }
-
-  @Override
-  public StatusBean getStatus( final String type )
-  {
-    return new StatusBean( IStatus.OK, KalypsoServiceObs.ID, "" );
   }
 }

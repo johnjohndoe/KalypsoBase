@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.changes;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
@@ -71,27 +71,19 @@ public class PointAdd implements IProfilChange
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
     if( hint != null )
-    {
       hint.setPointsChanged();
-    }
     IRecord pointToAdd = null;
     if( m_point != null )
-    {
       pointToAdd = m_point;
-    }
     else if( m_pointBefore != null )
-    {
       pointToAdd = m_pointBefore.cloneRecord();
-    }
     if( pointToAdd == null )
       return new IllegalChange( Messages.getString( "org.kalypso.model.wspm.core.profil.changes.PointAdd.0" ) ); //$NON-NLS-1$
 
     final IRecord[] points = m_profil.getPoints();
 
     if( m_pointBefore == null )
-    {
       m_profil.getResult().add( 0, m_point );
-    }
     else
     {
       final int index = ArrayUtils.indexOf( points, m_pointBefore );

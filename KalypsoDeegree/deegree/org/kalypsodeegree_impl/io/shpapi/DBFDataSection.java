@@ -80,7 +80,7 @@ public class DBFDataSection
 
     // calculate length of the data section
     recordlength = 0;
-    for( final FieldDescriptor element : m_fieldDesc )
+    for( final FieldDescriptor element : this.m_fieldDesc )
     {
 
       byte[] fddata = element.getFieldDescriptor();
@@ -115,10 +115,10 @@ public class DBFDataSection
   {
     final ByteContainer datasec = new ByteContainer( recordlength );
 
-    if( index < 0 || index > data.size() )
+    if( (index < 0) || (index > data.size()) )
       throw new DBaseException( "invalid index: " + index );
 
-    if( recData.size() != m_fieldDesc.length )
+    if( recData.size() != this.m_fieldDesc.length )
       throw new DBaseException( "invalid size of recData: " + recData.size() );
 
     int offset = 0;
@@ -130,7 +130,7 @@ public class DBFDataSection
     // write every field on the ArrayList to the data byte array
     for( int i = 0; i < recData.size(); i++ )
     {
-      final byte[] fddata = m_fieldDesc[i].getFieldDescriptor();
+      final byte[] fddata = this.m_fieldDesc[i].getFieldDescriptor();
       final Object recdata = recData.get( i );
       switch( fddata[11] )
       {

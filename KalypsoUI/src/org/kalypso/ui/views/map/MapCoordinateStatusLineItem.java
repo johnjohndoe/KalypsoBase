@@ -49,6 +49,7 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -59,7 +60,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.menus.WorkbenchWindowControlContribution;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
@@ -147,7 +147,10 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
   protected Control createControl( final Composite parent )
   {
     m_composite = new Composite( parent, SWT.NONE );
-    m_composite.setLayout( Layouts.createGridLayout( 3 ) );
+    final GridLayout gridLayout = new GridLayout( 3, false );
+    gridLayout.marginHeight = 0;
+    gridLayout.marginWidth = 0;
+    m_composite.setLayout( gridLayout );
 
     final ImageHyperlink lnk = new ImageHyperlink( m_composite, SWT.NONE );
     final Image image = KalypsoGisPlugin.getImageProvider().getImage( ImageProvider.DESCRIPTORS.STATUS_LINE_SHOW_MAP_COORDS );

@@ -46,13 +46,11 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -62,7 +60,7 @@ import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.ogc.sensor.metadata.MetadataWQTables;
+import org.kalypso.ogc.sensor.metadata.MetadataWQTable;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
@@ -160,10 +158,7 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
       catch( final Throwable t )
       {
         final String msg = String.format( "Merging observation \"%s\" failed", srcObservation.getHref() );
-        final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, msg, t );
-        // Log status here, because it is never seen again...
-        KalypsoCorePlugin.getDefault().getLog().log( status );
-        statis.add( status );
+        statis.add( StatusUtilities.createStatus( IStatus.ERROR, msg, t ) );
       }
     }
 
@@ -188,7 +183,7 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
       for( final ObservationSource source : m_sources )
       {
         final MetadataList metadata = source.getObservation().getMetadataList();
-        if( MetadataWQTables.updateWqTable( m_metadata, metadata ) )
+        if( MetadataWQTable.updateWqTable( m_metadata, metadata ) )
           break;
       }
     }
@@ -224,9 +219,7 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
         destValues[i] = getDestValue( srcObservation, srcModel, destMetaDataHandler, srcMetaDataHandler, defaultDataSourceIndex, index, srcAxis, destAxis );
       }
 
-      // REMARK: prohibit adding corrupt data -> may result in an empty data set
-      if( !ArrayUtils.contains( destValues, null ) )
-        data.add( destValues );
+      data.add( destValues );
     }
 
     return data.toArray( new Object[][] {} );

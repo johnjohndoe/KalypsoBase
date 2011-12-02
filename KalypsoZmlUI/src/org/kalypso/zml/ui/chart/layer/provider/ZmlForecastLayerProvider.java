@@ -59,6 +59,9 @@ public class ZmlForecastLayerProvider extends AbstractLayerProvider
 {
   public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlForecastLayerProvider";
 
+  /**
+   * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
+   */
   @Override
   public IChartLayer getLayer( final URL context ) throws ConfigurationException
   {

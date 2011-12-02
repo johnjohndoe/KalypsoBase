@@ -141,7 +141,7 @@ public class CommandUtilities
     for( final Command command : commands )
     {
       final Category cmdCat = command.getCategory();
-      if( cmdCat.equals( category ) )
+      if( cmdCat.equals( category ))
         result.add( command );
     }
 

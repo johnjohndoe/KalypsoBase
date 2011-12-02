@@ -147,14 +147,14 @@ public class NSPrefixProvider
     // TODO better methodes to generate prefix
     switch( tryIndex )
     {
-    // case 0:
-    // {
-    // final String ns = StringUtils.abbreviate( namespaceUri, 5 );
-    // if( isValidPrefix( ns ) )
-    // return ns;
-    // else
-    // return generatePrefix( namespaceUri, ++tryIndex );
-    // }
+      // case 0:
+      // {
+      // final String ns = StringUtils.abbreviate( namespaceUri, 5 );
+      // if( isValidPrefix( ns ) )
+      // return ns;
+      // else
+      // return generatePrefix( namespaceUri, ++tryIndex );
+      // }
       default:
       {
         int index = 0;

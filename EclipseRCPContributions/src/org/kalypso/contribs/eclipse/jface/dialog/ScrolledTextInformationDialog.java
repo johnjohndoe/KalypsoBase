@@ -60,7 +60,7 @@ public class ScrolledTextInformationDialog extends TitleAreaDialog
 
   private final String m_title;
 
-  public ScrolledTextInformationDialog( final Shell parentShell, final String title, final String message, final String content )
+  public ScrolledTextInformationDialog( final Shell parentShell, final String title, final String message, String content )
   {
     super( parentShell );
     setShellStyle( getShellStyle() | SWT.RESIZE );

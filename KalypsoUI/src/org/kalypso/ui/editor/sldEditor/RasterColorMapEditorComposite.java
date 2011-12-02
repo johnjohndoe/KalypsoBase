@@ -83,7 +83,7 @@ public abstract class RasterColorMapEditorComposite extends Composite
 
   private BigDecimal m_globalMax;
 
-  private final boolean m_showGlobal;
+  private boolean m_showGlobal;
 
   private ColorMapEntry m_toEntry;
 
@@ -95,7 +95,7 @@ public abstract class RasterColorMapEditorComposite extends Composite
 
   protected BigDecimal m_stepWidth;
 
-  public RasterColorMapEditorComposite( final Composite parent, final int style, final ColorMapEntry[] entries, final BigDecimal globalMin, final BigDecimal globalMax, final boolean showGlobal )
+  public RasterColorMapEditorComposite( final Composite parent, final int style, final ColorMapEntry[] entries, final BigDecimal globalMin, final BigDecimal globalMax, boolean showGlobal )
   {
     super( parent, style );
 

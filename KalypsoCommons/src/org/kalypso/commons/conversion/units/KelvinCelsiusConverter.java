@@ -9,12 +9,12 @@ public class KelvinCelsiusConverter implements IValueConverter
 {
   private static KelvinCelsiusConverter m_instance = null;
 
-  private KelvinCelsiusConverter( )
+  private KelvinCelsiusConverter()
   {
-    // empty
+  // empty
   }
 
-  public final static KelvinCelsiusConverter getInstance( )
+  public final static KelvinCelsiusConverter getInstance()
   {
     if( m_instance == null )
       m_instance = new KelvinCelsiusConverter();

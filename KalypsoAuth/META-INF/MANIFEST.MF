@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoAuth Plug-in
 Bundle-SymbolicName: org.kalypso.auth; singleton:=true
-Bundle-Version: 11.6.3.qualifier
+Bundle-Version: 11.4.0.qualifier
 Bundle-Activator: org.kalypso.auth.KalypsoAuthPlugin
 Bundle-Vendor: kalypsobase.sourceforge.net
 Export-Package: org.kalypso.auth,
@@ -11,4 +11,4 @@ Require-Bundle: org.eclipse.ui;visibility:=reexport,
  org.eclipse.core.runtime;visibility:=reexport,
  org.kalypso.commons
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

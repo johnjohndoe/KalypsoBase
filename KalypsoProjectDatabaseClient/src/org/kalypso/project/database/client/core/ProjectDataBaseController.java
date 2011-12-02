@@ -48,17 +48,17 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.module.project.local.ILocalProject;
-import org.kalypso.module.project.local.IProjectHandleProvider;
-import org.kalypso.module.project.local.ProjectHandleExtensions;
+import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.base.worker.AcquireProjectLockWorker;
 import org.kalypso.project.database.client.core.base.worker.CreateRemoteProjectWorker;
 import org.kalypso.project.database.client.core.base.worker.ReleaseProjectLockWorker;
 import org.kalypso.project.database.client.core.base.worker.UpdateProjectDescriptionWorker;
 import org.kalypso.project.database.client.core.base.worker.UpdateProjectWorker;
-import org.kalypso.project.database.client.core.model.interfaces.IRemoteProjectHandleProvider;
-import org.kalypso.project.database.client.core.model.projects.IRemoteProject;
-import org.kalypso.project.database.client.core.model.projects.ITranscendenceProject;
+import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
+import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
+import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
+import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
+import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
@@ -69,9 +69,9 @@ public class ProjectDataBaseController
 {
   protected static WorkspaceJob JOB = null;
 
-  public static IStatus createRemoteProject( final String commitType, final ILocalProject handler )
+  public static IStatus createRemoteProject( final IKalypsoModuleDatabaseSettings settings, final ILocalProject handler )
   {
-    final CreateRemoteProjectWorker worker = new CreateRemoteProjectWorker( commitType, handler );
+    final CreateRemoteProjectWorker worker = new CreateRemoteProjectWorker( settings, handler );
     final IStatus status = ProgressUtilities.busyCursorWhile( worker );
     setDirty();
 
@@ -91,18 +91,10 @@ public class ProjectDataBaseController
         @Override
         public IStatus runInWorkspace( final IProgressMonitor monitor )
         {
+          final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getModel();
+          model.setRemoteProjectsDirty();
 
-          final IProjectHandleProvider[] providers = ProjectHandleExtensions.getProviders();
-          for( final IProjectHandleProvider provider : providers )
-          {
-            if( provider instanceof IRemoteProjectHandleProvider )
-            {
-              final IRemoteProjectHandleProvider remote = (IRemoteProjectHandleProvider) provider;
-              remote.getRemoteWorkspaceModel().setDirty();
-
-              JOB = null;
-            }
-          }
+          JOB = null;
 
           return Status.OK_STATUS;
         }
@@ -148,7 +140,7 @@ public class ProjectDataBaseController
   public static IStatus acquireProjectLock( final ILocalProject handler )
   {
     final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-    if( MessageDialog.openQuestion( shell, Messages.getString( "org.kalypso.project.database.client.core.ProjectDataBaseController.0" ), Messages.getString( "org.kalypso.project.database.client.core.ProjectDataBaseController.1" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    if( MessageDialog.openQuestion( shell, Messages.getString("org.kalypso.project.database.client.core.ProjectDataBaseController.0"), Messages.getString("org.kalypso.project.database.client.core.ProjectDataBaseController.1") ) ) //$NON-NLS-1$ //$NON-NLS-2$
     {
       final AcquireProjectLockWorker worker = new AcquireProjectLockWorker( handler );
       final IStatus status = ProgressUtilities.busyCursorWhile( worker );

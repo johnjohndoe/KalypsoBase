@@ -65,8 +65,7 @@ public class ExtensionFeatureControl2Wrapper implements IExtensionsFeatureContro
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.control.IExtensionsFeatureControlFactory2#createFeatureControl(org.eclipse.ui.forms.widgets.FormToolkit,
-   *      org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType, java.util.Properties)
+   * @see org.kalypso.ogc.gml.featureview.control.IExtensionsFeatureControlFactory2#createFeatureControl(org.eclipse.ui.forms.widgets.FormToolkit, org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType, java.util.Properties)
    */
   @Override
   public IFeatureControl createFeatureControl( final FormToolkit toolkit, final Feature feature, final IPropertyType pt, final Properties arguments )

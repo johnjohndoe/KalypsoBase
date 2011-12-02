@@ -52,7 +52,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * class RemoveRelationCommand Command to remove a normal relation created by
- * 
+ *
  * @author doemming (13.05.2005)
  */
 public class RemoveRelationCommand implements ICommand
@@ -134,6 +134,6 @@ public class RemoveRelationCommand implements ICommand
   @Override
   public String getDescription( )
   {
-    return Messages.getString( "org.kalypso.ui.editor.gmleditor.util.command.RemoveRelationCommand.0" ); //$NON-NLS-1$
+    return Messages.getString("org.kalypso.ui.editor.gmleditor.util.command.RemoveRelationCommand.0"); //$NON-NLS-1$
   }
 }

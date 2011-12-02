@@ -4,8 +4,8 @@
 	<import namespace="http://www.opengis.net/gml" schemaLocation="platform:/resource/KalypsoContributionsOGC31/src/org/kalypso/contribs/ogc31/schemata/gml/3.1.1/base/gml.xsd" />
 
 	<!-- Abstract Element & Type -->
-	<element name="AbstractZmlFilter" type="zf:AbstractZmlFilterType" abstract="true" substitutionGroup="gml:_Feature" />
-	<complexType name="AbstractZmlFilterType" abstract="true">
+	<element name="AbstractZmlFilter" type="zf:AbstractZmlFilterType" substitutionGroup="gml:_Feature" />
+	<complexType name="AbstractZmlFilterType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
 				<sequence>
@@ -26,21 +26,6 @@
 					<element name="defaultStatus" type="int" default="0" minOccurs="1" maxOccurs="1" />
 					<element name="defaultValue" type="string" default="0.0" minOccurs="1" maxOccurs="1" />
 					<element name="forceFill" type="boolean" default="true" minOccurs="1" maxOccurs="1" />
-				</sequence>
-			</extension>
-		</complexContent>
-	</complexType>
-
-	<!-- Interval Filter Element & Type -->
-	<element name="IntervalZmlFilter" type="zf:IntervalZmlFilterType" substitutionGroup="zf:AbstractZmlFilter" />
-	<complexType name="IntervalZmlFilterType">
-		<complexContent>
-			<extension base="zf:AbstractZmlFilterType">
-				<sequence>
-					<element name="calendarAmount" type="int" default="1" minOccurs="1" maxOccurs="1" />
-					<element name="calendarField" type="string" default="HOUR_OF_DAY" minOccurs="1" maxOccurs="1" />
-					<element name="defaultStatus" type="int" default="0" minOccurs="1" maxOccurs="1" />
-					<element name="defaultValue" type="double" default="0.0" minOccurs="1" maxOccurs="1" />
 				</sequence>
 			</extension>
 		</complexContent>

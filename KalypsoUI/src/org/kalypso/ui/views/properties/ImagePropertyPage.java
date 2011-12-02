@@ -50,7 +50,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.themes.KalypsoImageTheme;
 import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
@@ -100,11 +99,14 @@ public class ImagePropertyPage extends PropertyPage implements IWorkbenchPropert
    * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  protected Control createContents( final Composite parent )
+  protected Control createContents( Composite parent )
   {
     /* The content. */
-    final Composite content = new Composite( parent, SWT.NONE );
-    content.setLayout( Layouts.createGridLayout() );
+    Composite content = new Composite( parent, SWT.NONE );
+    GridLayout contentLayout = new GridLayout( 1, false );
+    contentLayout.marginHeight = 0;
+    contentLayout.marginWidth = 0;
+    content.setLayout( contentLayout );
     content.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Initialize. */
@@ -156,10 +158,10 @@ public class ImagePropertyPage extends PropertyPage implements IWorkbenchPropert
       return super.performOk();
 
     /* Get the properties. */
-    final String horizontalProperty = m_properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
-    final String verticalProperty = m_properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
-    final String backgroundColorProperty = m_properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
-    final String imageUrlProperty = m_properties.getProperty( ImageUtilities.THEME_PROPERTY_IMAGE_URL );
+    String horizontalProperty = m_properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
+    String verticalProperty = m_properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
+    String backgroundColorProperty = m_properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
+    String imageUrlProperty = m_properties.getProperty( ImageUtilities.THEME_PROPERTY_IMAGE_URL );
 
     /* Set the properties. */
     if( horizontalProperty != null && horizontalProperty.length() > 0 )
@@ -180,21 +182,21 @@ public class ImagePropertyPage extends PropertyPage implements IWorkbenchPropert
    * @param parent
    *          The parent composite.
    */
-  private void createContentsInternal( final Composite parent )
+  private void createContentsInternal( Composite parent )
   {
     /* Store the parent. */
     m_parent = parent;
 
     /* Create the main composite. */
     m_main = new Composite( parent, SWT.NONE );
-    final GridLayout mainLayout = new GridLayout( 1, false );
+    GridLayout mainLayout = new GridLayout( 1, false );
     mainLayout.marginHeight = 0;
     mainLayout.marginWidth = 0;
     m_main.setLayout( mainLayout );
     m_main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Create the image composite. */
-    final ImageComposite imageComposite = new ImageComposite( m_main, SWT.NONE, m_properties );
+    ImageComposite imageComposite = new ImageComposite( m_main, SWT.NONE, m_properties );
     imageComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     imageComposite.addImageChangedListener( new IImageChangedListener()
     {
@@ -203,7 +205,7 @@ public class ImagePropertyPage extends PropertyPage implements IWorkbenchPropert
        *      int, int, org.eclipse.swt.graphics.Color, java.lang.String)
        */
       @Override
-      public void imagePropertyChanged( final Properties properties, final int horizontal, final int vertical, final org.eclipse.swt.graphics.Color backgroundColor, final String imageUrl )
+      public void imagePropertyChanged( Properties properties, int horizontal, int vertical, org.eclipse.swt.graphics.Color backgroundColor, String imageUrl )
       {
         /* Update the properties object. */
         m_properties = properties;
@@ -217,14 +219,14 @@ public class ImagePropertyPage extends PropertyPage implements IWorkbenchPropert
   private void init( )
   {
     /* Get the element. */
-    final IAdaptable element = getElement();
+    IAdaptable element = getElement();
 
     /* Get the node. */
-    final IThemeNode node = (IThemeNode) (element instanceof IThemeNode ? element : element.getAdapter( IThemeNode.class ));
+    IThemeNode node = (IThemeNode) (element instanceof IThemeNode ? element : element.getAdapter( IThemeNode.class ));
 
     /* Get the theme. */
-    final Object nodeElement = node.getElement();
-    final IKalypsoTheme theme = nodeElement instanceof IKalypsoTheme ? (IKalypsoTheme) nodeElement : null;
+    Object nodeElement = node.getElement();
+    IKalypsoTheme theme = (nodeElement instanceof IKalypsoTheme) ? (IKalypsoTheme) nodeElement : null;
 
     /* Store the members. */
     m_theme = theme;
@@ -233,12 +235,12 @@ public class ImagePropertyPage extends PropertyPage implements IWorkbenchPropert
     if( m_theme instanceof KalypsoImageTheme )
     {
       /* Cast. */
-      final KalypsoImageTheme imageTheme = (KalypsoImageTheme) m_theme;
+      KalypsoImageTheme imageTheme = (KalypsoImageTheme) m_theme;
 
       /* Get the properties of the image theme. */
-      final Properties imageProperties = new Properties();
-      final String[] propertyNames = imageTheme.getPropertyNames();
-      for( final String propertyName : propertyNames )
+      Properties imageProperties = new Properties();
+      String[] propertyNames = imageTheme.getPropertyNames();
+      for( String propertyName : propertyNames )
         imageProperties.put( propertyName, imageTheme.getProperty( propertyName, null ) );
 
       /* Store the member. */

@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraï¿½e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -50,17 +50,17 @@ public class MovieResolution
   /**
    * The text, which can be displayed in an UI.
    */
-  private final String m_displayText;
+  private String m_displayText;
 
   /**
    * The width.
    */
-  private final int m_width;
+  private int m_width;
 
   /**
    * The height.
    */
-  private final int m_height;
+  private int m_height;
 
   /**
    * The constructor.
@@ -72,7 +72,7 @@ public class MovieResolution
    * @param height
    *          The height.
    */
-  public MovieResolution( final String displayText, final int width, final int height )
+  public MovieResolution( String displayText, int width, int height )
   {
     m_displayText = displayText;
     m_width = width;

@@ -42,7 +42,7 @@ package de.renew.workflow.base;
 
 /**
  * A workflow system has one running workflow instance.
- * 
+ *
  * @author Patrice Congo, Stefan Kurzbach
  */
 public interface IWorkflowSystem

@@ -55,7 +55,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.jface.dialog.EnhancedTitleAreaDialog;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
@@ -63,6 +62,7 @@ import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.table.dialogs.EnhancedTitleAreaDialog;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 
 /**
@@ -161,7 +161,7 @@ public class ZmlEinzelwertDialog extends EnhancedTitleAreaDialog implements IZml
       try
       {
         final int index = findIndex( row, modelColumn );
-        modelColumn.update( index, row.getValue(), IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
+        modelColumn.doUpdate( index, row.getValue(), IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
       }
       catch( final Throwable t )
       {

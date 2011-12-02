@@ -63,7 +63,6 @@ import org.eclipse.ui.services.IServiceWithSources;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.ui.commands.CommandUtilities;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableListener;
 
@@ -90,10 +89,9 @@ public class TableSourceProvider extends AbstractSourceProvider
   private final IZmlTableListener m_listener = new IZmlTableListener()
   {
     @Override
-    public void eventTableChanged( final String type, final IZmlModelColumn... columns )
+    public void eventTableChanged( )
     {
-      if( IZmlTableListener.TYPE_REFRESH.equals( type ) )
-        refreshUIelements();
+      refreshUIelements();
     }
   };
 
@@ -142,9 +140,6 @@ public class TableSourceProvider extends AbstractSourceProvider
     return service;
   }
 
-  /**
-   * @see org.eclipse.ui.ISourceProvider#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -163,9 +158,6 @@ public class TableSourceProvider extends AbstractSourceProvider
       m_tableContext.getContextService().deactivateContext( m_tableContext );
   }
 
-  /**
-   * @see org.eclipse.ui.ISourceProvider#getCurrentState()
-   */
   @Override
   public Map< ? , ? > getCurrentState( )
   {
@@ -175,9 +167,6 @@ public class TableSourceProvider extends AbstractSourceProvider
     return currentState;
   }
 
-  /**
-   * @see org.eclipse.ui.ISourceProvider#getProvidedSourceNames()
-   */
   @Override
   public String[] getProvidedSourceNames( )
   {

@@ -57,13 +57,13 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  */
 public interface IProfilView
 {
-  Control createControl( final Composite parent, final FormToolkit toolkit );
+  public Control createControl( final Composite parent, final FormToolkit toolkit);
 
   /**
    * Return the control of this view.
    */
-  Control getControl( );
+  public Control getControl( );
 
-  void dispose( );
+  public void dispose( );
 
 }

@@ -48,7 +48,6 @@ import javax.xml.bind.DatatypeConverter;
 import jregex.Pattern;
 import jregex.RETokenizer;
 
-import org.apache.commons.lang3.StringUtils;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
@@ -61,8 +60,6 @@ import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
  */
 public class MetadataRequestHandler implements IRequestHandler
 {
-  private static final Pattern PATTERN_METADATA_DATE = new Pattern( "^metadata\\:" ); //$NON-NLS-1$
-
   private final IParameterContainer m_parameters;
 
   public MetadataRequestHandler( final IParameterContainer parameters )
@@ -79,8 +76,8 @@ public class MetadataRequestHandler implements IRequestHandler
     Date from = null;
     Date to = null;
 
-    final String keyStart = getKey( "start" ); //$NON-NLS-1$
-    final String keyEnd = getKey( "end" ); //$NON-NLS-1$
+    final String keyStart = getKey( "start" );
+    final String keyEnd = getKey( "end" );
 
     if( keyStart != null )
       from = getDate( metadata, keyStart );
@@ -93,7 +90,7 @@ public class MetadataRequestHandler implements IRequestHandler
 
   private Date getDate( final MetadataList metadata, final String key )
   {
-    if( key.startsWith( "metadata:" ) )//$NON-NLS-1$
+    if( key.startsWith( "metadata:" ) )
     {
       return getFromMetadata( metadata, key );
     }
@@ -103,15 +100,12 @@ public class MetadataRequestHandler implements IRequestHandler
 
   private Date getFromMetadata( final MetadataList metadata, final String url )
   {
-    final RETokenizer tokenizer = new RETokenizer( PATTERN_METADATA_DATE, url );
+    final Pattern pattern = new Pattern( "^metadata\\:" );
+    final RETokenizer tokenizer = new RETokenizer( pattern, url );
 
     final String key = tokenizer.nextToken();
 
-    final String property = metadata.getProperty( key );
-    if( StringUtils.isEmpty( property ) )
-      return null;
-
-    final Calendar calendar = DatatypeConverter.parseDate( property );
+    final Calendar calendar = DatatypeConverter.parseDate( metadata.getProperty( key ) );
 
     return calendar.getTime();
   }

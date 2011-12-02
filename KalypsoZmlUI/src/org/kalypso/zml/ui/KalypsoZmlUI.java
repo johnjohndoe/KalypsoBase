@@ -15,10 +15,17 @@ public class KalypsoZmlUI extends AbstractUIPlugin
   // The shared instance
   private static KalypsoZmlUI PLUGIN;
 
+  /**
+   * The constructor
+   */
   public KalypsoZmlUI( )
   {
   }
 
+  /*
+   * (non-Javadoc)
+   * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
+   */
   @Override
   public void start( final BundleContext context ) throws Exception
   {

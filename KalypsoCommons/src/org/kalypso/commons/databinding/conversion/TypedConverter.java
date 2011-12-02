@@ -76,6 +76,9 @@ public abstract class TypedConverter<FROM, TO> extends Converter implements ITyp
     return (Class<FROM>) super.getFromType();
   }
 
+  /**
+   * @see org.eclipse.core.databinding.conversion.IConverter#convert(java.lang.Object)
+   */
   @Override
   public TO convert( final Object fromObject )
   {

@@ -50,6 +50,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
+import org.kalypsodeegree.model.TypeHandlerUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -57,6 +58,19 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public final class FeatureHelperTest extends TestCase
 {
+  /**
+   * @see junit.framework.TestCase#setUp()
+   */
+  @Override
+  protected void setUp( ) throws Exception
+  {
+    final ITypeRegistry<IMarshallingTypeHandler> marshallingregistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    TypeHandlerUtilities.registerXSDSimpleTypeHandler( marshallingregistry );
+    // TypeHandlerUtilities.registerTypeHandlers( marshallingregistry );
+
+    super.setUp();
+  }
+
   public final void testCopyProperties( ) throws Exception
   {
     // zwei feature types erzeugen
@@ -78,7 +92,7 @@ public final class FeatureHelperTest extends TestCase
 
     final QName sourceFeatureQName = new QName( NAMESPACE, "sourceFT" );
     final IPropertyType[] sourceProps = new IPropertyType[] {
-        // GMLSchemaFactory.createValuePropertyType(name, valueQName, typeHandler, countTestCases(), countTestCases())
+    // GMLSchemaFactory.createValuePropertyType(name, valueQName, typeHandler, countTestCases(), countTestCases())
         GMLSchemaFactory.createValuePropertyType( SOURCE_STRING_PROP, stringTH, 1, 1, false ), //
         GMLSchemaFactory.createValuePropertyType( SOURCE_DOUBLE_PROP, doubleTH, 1, 1, false ), //
         GMLSchemaFactory.createValuePropertyType( SOURCE_INT_PROP, integerTH, 1, 1, false ) };

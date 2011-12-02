@@ -47,12 +47,11 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.IWspmNamespaces;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
@@ -94,9 +93,7 @@ public final class ProfileFeatureFactory implements IWspmConstants
   {
     final FeatureChange[] changes = ProfileFeatureFactory.toFeatureAsChanges( profile, targetFeature );
     for( final FeatureChange change : changes )
-    {
       change.getFeature().setProperty( change.getProperty(), change.getNewValue() );
-    }
 
     targetFeature.setEnvelopesUpdated();
   }
@@ -136,15 +133,13 @@ public final class ProfileFeatureFactory implements IWspmConstants
       /* Ensure that record-definition is there */
       final FeatureChange changeRecordDefinition = checkRecordDefinition( targetFeature );
       if( changeRecordDefinition != null )
-      {
         changes.add( changeRecordDefinition );
-      }
 
       final FeatureChange[] obsChanges = ObservationFeatureFactory.toFeatureAsChanges( profile, targetFeature );
       Collections.addAll( changes, obsChanges );
 
       /* Profile Objects */
-      final QName memberQName = new QName( IWspmNamespaces.NS_WSPMPROF, "member" ); //$NON-NLS-1$
+      final QName memberQName = new QName( IWspmConstants.NS_WSPMPROF, "member" ); //$NON-NLS-1$
       final IRelationType profileObjectsRelationType = (IRelationType) featureType.getProperty( memberQName );
       final FeatureList profileObjectList = FeatureFactory.createFeatureList( targetFeature, profileObjectsRelationType, new Feature[] {} );
 

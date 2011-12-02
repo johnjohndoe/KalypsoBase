@@ -92,10 +92,22 @@ class LineSymbolizerStrokeSection extends AbstractStyleElementSection<LineSymbol
 
     final IStyleInput<Stroke> strokeInput = new StyleInput<Stroke>( item, input );
 
-    final boolean showGraphic = input.getConfig().isLineSymbolizerShowGraphic();
-    final int sldStyle = showGraphic ? SWT.NONE : StrokeComposite.HIDE_GRAPHIC;
+    final int sldStyle = findSldStyle( input );
 
     return new StrokeComposite( toolkit, parent, strokeInput, sldStyle );
+  }
+
+  private int findSldStyle( final IStyleInput<LineSymbolizer> input )
+  {
+    int style = SWT.NONE;
+
+    if( !input.getConfig().isLineSymbolizerStrokeLineDetails() )
+      style |= StrokeComposite.HIDE_LINE_DETAILS;
+
+    if( !input.getConfig().isLineSymbolizerShowGraphic() )
+      style |= StrokeComposite.HIDE_GRAPHIC;
+
+    return style;
   }
 
   @Override

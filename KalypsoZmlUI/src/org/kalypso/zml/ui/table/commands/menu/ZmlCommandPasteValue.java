@@ -40,11 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands.menu;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -52,15 +47,14 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.repository.IDataSourceItem;
+import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
-import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
-
-import au.com.bytecode.opencsv.CSVReader;
 
 /**
  * @author Dirk Kuch
@@ -75,52 +69,21 @@ public class ZmlCommandPasteValue extends AbstractHandler
       final IZmlTable table = ZmlHandlerUtil.getTable( event );
       final IZmlTableSelectionHandler selection = table.getSelectionHandler();
       final IZmlTableCell cell = selection.findActiveCellByPosition();
-      if( cell.getColumn().isIndexColumn() )
-        throw new ExecutionException( "Aktualisierung von Index-Spalten nicht möglich!" );
+      final IZmlValueReference reference = cell.getValueReference();
 
-      IZmlTableCell ptr = cell;
+      final Clipboard clipboard = new Clipboard( PlatformUI.getWorkbench().getDisplay() );
+      final TextTransfer transfer = TextTransfer.getInstance();
+      final String data = (String) clipboard.getContents( transfer );
 
-      final IZmlTableColumn column = cell.getColumn();
-      final IZmlEditingStrategy strategy = column.getEditingStrategy();
-
-      final String[] data = getData();
-      for( final String value : data )
-      {
-        if( Objects.isNull( ptr ) )
-          break;
-
-        strategy.setValue( ptr.getRow().getModelRow(), value );
-
-        ptr = ptr.findNextCell();
-      }
+      final double value = NumberUtils.parseDouble( data );
+      reference.doUpdate( value, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
 
       return Status.OK_STATUS;
     }
-    catch( final Exception ex )
+    catch( final Exception e )
     {
-      throw new ExecutionException( "Einfügen des Wertes aus der Zwischenablage fehlgeschlagen.", ex );
+      throw new ExecutionException( "Einfügen des Wertes aus der Zwischenablage fehlgeschlagen.", e );
     }
 
-  }
-
-  private String[] getData( ) throws IOException, ExecutionException
-  {
-    final Clipboard clipboard = new Clipboard( PlatformUI.getWorkbench().getDisplay() );
-    final TextTransfer transfer = TextTransfer.getInstance();
-    final String data = (String) clipboard.getContents( transfer );
-
-    final List<String> strings = new ArrayList<String>();
-
-    final CSVReader reader = new CSVReader( new StringReader( data ), '\t' );
-    final List<String[]> rows = reader.readAll();
-    for( final String[] row : rows )
-    {
-      if( row.length != 1 )
-        throw new ExecutionException( "Ungültige Anzahl Spalten. Nur Verarbeitung von einer Spalte möglich!" );
-
-      strings.add( row[0] );
-    }
-
-    return strings.toArray( new String[] {} );
   }
 }

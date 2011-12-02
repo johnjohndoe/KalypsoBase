@@ -42,7 +42,7 @@ import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 
 /**
  * representation of a property content definition from xml schema
- * 
+ *
  * @author doemming
  */
 public class PropertyContentTypeFromTypeHandler implements IPropertyContentType

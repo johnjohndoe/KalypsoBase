@@ -2,6 +2,7 @@ package de.openali.odysseus.service.ods.util;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
@@ -9,58 +10,36 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 
 /**
- * This class contains all objects (e.g. shell) needed to keep a chart in the cache.
- * 
- * @author Alexander Burtscher, Holger Albert
+ * @author alibu this class contains all objects (e.g. shell) needed to keep a chart in the cache
  */
 public class HeadlessChart
 {
-  /**
-   * The shell.
-   */
-  private Shell m_shell;
+  private final Shell m_shell;
 
-  /**
-   * The chart composite.
-   */
-  private ChartImageComposite m_chartComposite;
+  private final IChartComposite m_chart;
 
-  /**
-   * The constructor.
-   * 
-   * @param chartModel
-   *          The chart model.
-   * @param bgRGB
-   *          The background rgb.
-   */
   public HeadlessChart( final IChartModel chartModel, final RGB bgRGB )
   {
-    m_shell = new Shell( DisplayHelper.getInstance().getDisplay() );
-    m_chartComposite = new ChartImageComposite( m_shell, SWT.NONE, chartModel, bgRGB );
+    final Display d = DisplayHelper.getInstance().getDisplay();
+    m_shell = new Shell( d );
+    m_chart = new ChartImageComposite( m_shell, SWT.NONE, chartModel, bgRGB );
   }
 
-  /**
-   * This function disposes the headless chart.
-   */
   public void dispose( )
   {
     if( m_shell != null && !m_shell.isDisposed() )
+    {
       m_shell.dispose();
-
-    if( m_chartComposite != null && !m_chartComposite.isDisposed() )
-      m_chartComposite.dispose();
-
-    m_shell = null;
-    m_chartComposite = null;
+    }
+    if( m_chart != null && !m_chart.getPlot().isDisposed() )
+    {
+      m_chart.getPlot().dispose();
+    }
   }
 
-  /**
-   * This function returns the chart composite.
-   * 
-   * @return The chart composite.
-   */
-  public IChartComposite getChartComposite( )
+  public IChartComposite getChart( )
   {
-    return m_chartComposite;
+    return m_chart;
   }
+
 }

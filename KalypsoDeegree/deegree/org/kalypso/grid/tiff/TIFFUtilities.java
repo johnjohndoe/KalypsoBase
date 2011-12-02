@@ -63,7 +63,7 @@ import com.sun.media.jai.codec.TIFFEncodeParam;
  * 
  * @author Holger Albert
  */
-public final class TIFFUtilities
+public class TIFFUtilities
 {
   /**
    * The constructor.
@@ -83,19 +83,19 @@ public final class TIFFUtilities
    *          The height of the TIFF.
    * @return The empty TIFF.
    */
-  public static TiledImage createTiff( final int dataType, final int width, final int height )
+  public static TiledImage createTiff( int dataType, int width, int height )
   {
     /* Create a float data sample model. */
-    final SampleModel sampleModel = RasterFactory.createBandedSampleModel( dataType, width, height, 1 );
+    SampleModel sampleModel = RasterFactory.createBandedSampleModel( dataType, width, height, 1 );
 
     /* Create a compatible color model. */
-    final ColorModel colorModel = PlanarImage.createColorModel( sampleModel );
+    ColorModel colorModel = PlanarImage.createColorModel( sampleModel );
 
     /* Create a writable raster. */
-    final Raster raster = RasterFactory.createWritableRaster( sampleModel, new Point( 0, 0 ) );
+    Raster raster = RasterFactory.createWritableRaster( sampleModel, new Point( 0, 0 ) );
 
     /* Create a tiled image. */
-    final TiledImage tiledImage = new TiledImage( 0, 0, width, height, 0, 0, sampleModel, colorModel );
+    TiledImage tiledImage = new TiledImage( 0, 0, width, height, 0, 0, sampleModel, colorModel );
     tiledImage.setData( raster );
 
     return tiledImage;
@@ -112,25 +112,25 @@ public final class TIFFUtilities
    *          The height of the TIFF.
    * @return The TIFF.
    */
-  public static TiledImage createTiff( final DataBuffer dataBuffer, final int width, final int height )
+  public static TiledImage createTiff( DataBuffer dataBuffer, int width, int height )
   {
     /* Create a float data sample model. */
-    final SampleModel sampleModel = RasterFactory.createBandedSampleModel( dataBuffer.getDataType(), width, height, 1 );
+    SampleModel sampleModel = RasterFactory.createBandedSampleModel( dataBuffer.getDataType(), width, height, 1 );
 
     /* Create a compatible color model. */
-    final ColorModel colorModel = PlanarImage.createColorModel( sampleModel );
+    ColorModel colorModel = PlanarImage.createColorModel( sampleModel );
 
     /* Create a writable raster. */
-    final Raster raster = RasterFactory.createWritableRaster( sampleModel, dataBuffer, new Point( 0, 0 ) );
+    Raster raster = RasterFactory.createWritableRaster( sampleModel, dataBuffer, new Point( 0, 0 ) );
 
     /* Create a tiled image. */
-    final TiledImage tiledImage = new TiledImage( 0, 0, width, height, 0, 0, sampleModel, colorModel );
+    TiledImage tiledImage = new TiledImage( 0, 0, width, height, 0, 0, sampleModel, colorModel );
     tiledImage.setData( raster );
 
     return tiledImage;
   }
 
-  public static RenderedOp loadTiff( final File file )
+  public static RenderedOp loadTiff( File file )
   {
     return JAI.create( "fileload", file.getAbsolutePath() );
   }
@@ -144,10 +144,10 @@ public final class TIFFUtilities
    * @param image
    *          The TIFF. To it the values will be copied.
    */
-  public static void copyGeoGridToTiff( final IGeoGrid grid, final TiledImage image ) throws GeoGridException
+  public static void copyGeoGridToTiff( IGeoGrid grid, TiledImage image ) throws GeoGridException
   {
-    final int sizeY = grid.getSizeY();
-    final int sizeX = grid.getSizeX();
+    int sizeY = grid.getSizeY();
+    int sizeX = grid.getSizeX();
     if( sizeX != image.getMaxX() || sizeY != image.getMaxY() )
       throw new GeoGridException( "The size of the geo grid does not match the size of the TIFF...", null );
 
@@ -170,10 +170,10 @@ public final class TIFFUtilities
    * @param file
    *          The path of the target file.
    */
-  public static void saveTiff( final TiledImage image, final int tileWidth, final int tileHeight, final File file )
+  public static void saveTiff( TiledImage image, int tileWidth, int tileHeight, File file )
   {
     /* Save the image on a file. */
-    final TIFFEncodeParam tep = new TIFFEncodeParam();
+    TIFFEncodeParam tep = new TIFFEncodeParam();
     tep.setCompression( TIFFEncodeParam.COMPRESSION_PACKBITS );
 
     /* Set tile options, if wanted. */

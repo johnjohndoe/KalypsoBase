@@ -52,7 +52,6 @@ import org.kalypso.zml.ui.chart.layer.themes.ZmlConstantLineLayer;
 
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
-import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
  * @author Dirk Kuch
@@ -61,16 +60,18 @@ public class ZmlConstantLineLayerProvider extends AbstractLayerProvider implemen
 {
   public static final String ID = "org.kalypso.hwv.core.chart.layer.ZmlBoundaryLayerProvider"; //$NON-NLS-1$
 
+  /**
+   * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
+   */
   @Override
   public IZmlLayer getLayer( final URL context )
   {
-    final IStyleSet styleSet = getStyleSet();
-    if( Objects.isNull( styleSet ) )
-      return null;
-
-    return new ZmlConstantLineLayer( this, styleSet, false, context );
+    return new ZmlConstantLineLayer( this, getStyleSet(), false, context );
   }
 
+  /**
+   * @see org.kalypso.zml.core.diagram.data.IZmlLayerProvider#getRequestHandler()
+   */
   @Override
   public IRequestHandler getRequestHandler( )
   {

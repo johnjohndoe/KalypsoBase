@@ -47,24 +47,17 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IPageChangeProvider;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWizard;
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
-import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.profil.wizard.ProfileHandlerUtils;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfileManipulationOperation;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfileManipulationOperation.IProfileManipulator;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
@@ -72,9 +65,9 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
- * @author Kim Werner
+ * @author kimwerner
  */
-public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
+public class PropertyEditWizard extends Wizard
 {
   private final IPageChangedListener m_pageChangedListener = new IPageChangedListener()
   {
@@ -85,19 +78,26 @@ public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
     }
   };
 
-  private ProfilesChooserPage m_profileChooserPage;
+  final private ProfilesChooserPage m_profileChooserPage;
 
   private ArrayChooserPage m_propertyChooserPage;
 
-  private IProfil m_profile;
+  final private IProfil m_profile;
 
   private OperationChooserPage m_operationChooserPage;
 
-  private CommandableWorkspace m_workspace;
+  final private CommandableWorkspace m_workspace;
 
-  public PropertyEditWizard( )
+  public PropertyEditWizard( final ProfileSelection profileSelection )
   {
-    // empty, needed for tools wizard
+    m_profile = null;
+    m_workspace = profileSelection.getWorkspace();
+
+    final String message = Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.2" ); //$NON-NLS-1$
+    m_profileChooserPage = new ProfilesChooserPage( message, profileSelection, false );
+    addPage( m_profileChooserPage );
+
+    init();
   }
 
   public PropertyEditWizard( final IProfil profile )
@@ -109,27 +109,9 @@ public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
     init();
   }
 
-  @Override
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
-  {
-    m_profile = null;
-
-    final ProfileSelection profileSelection = ProfileHandlerUtils.getSelectionChecked( selection );
-    m_workspace = profileSelection.getWorkspace();
-
-    final String message = Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.2" ); //$NON-NLS-1$
-    m_profileChooserPage = new ProfilesChooserPage( message, profileSelection, false );
-    addPage( m_profileChooserPage );
-
-    init();
-  }
-
   private void init( )
   {
     setNeedsProgressMonitor( true );
-    setWindowTitle( Messages.getString( "org.kalypso.model.wspm.ui.action.PropertyEditActionDelegate.0" ) ); //$NON-NLS-1$
-
-    setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
 
     final String msg = Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.10" ); //$NON-NLS-1$
     m_operationChooserPage = new OperationChooserPage( msg );
@@ -139,6 +121,9 @@ public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
     m_propertyChooserPage = new ArrayChooserPage( null, null, null, 1, "profilePropertiesChooserPage", Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.8" ), null, true ); //$NON-NLS-1$ //$NON-NLS-2$
     m_propertyChooserPage.setLabelProvider( new LabelProvider()
     {
+      /**
+       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+       */
       @Override
       public String getText( final Object element )
       {
@@ -167,16 +152,12 @@ public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
   {
     final IWizardContainer oldContainer = getContainer();
     if( oldContainer instanceof IPageChangeProvider )
-    {
       ((IPageChangeProvider) oldContainer).removePageChangedListener( m_pageChangedListener );
-    }
 
     super.setContainer( wizardContainer );
 
     if( wizardContainer instanceof IPageChangeProvider )
-    {
       ((IPageChangeProvider) wizardContainer).addPageChangedListener( m_pageChangedListener );
-    }
   }
 
   /**
@@ -228,35 +209,26 @@ public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
   {
     if( selectedPage == m_propertyChooserPage )
     {
-
       final Collection<IComponent> properties = new LinkedHashSet<IComponent>();
       final Object[] profiles = m_profile == null ? m_profileChooserPage.getChoosen() : new Object[] { m_profile };
       for( final Object object : profiles )
       {
-        final IProfil profile = getProfile( object );
-        if( Objects.isNull( profile ) )
+        final IProfil profile;
+        if( object instanceof IProfil )
+          profile = (IProfil) object;
+        else if( object instanceof ProfileFeatureBinding )
+          profile = ((ProfileFeatureBinding) object).getProfil();
+        else
           continue;
-
-        final PropertyFilter filter = new PropertyFilter( profile );
 
         for( final IComponent property : profile.getPointProperties() )
         {
-          if( filter.select( property ) )
+          if( !profile.isPointMarker( property.getId() ) )
             properties.add( property );
         }
       }
 
       m_propertyChooserPage.setInput( properties );
     }
-  }
-
-  private IProfil getProfile( final Object object )
-  {
-    if( object instanceof IProfil )
-      return (IProfil) object;
-    else if( object instanceof ProfileFeatureBinding )
-      return ((ProfileFeatureBinding) object).getProfil();
-
-    return null;
   }
 }

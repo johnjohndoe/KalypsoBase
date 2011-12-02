@@ -43,7 +43,7 @@ package org.kalypso.zml.core.table.binding.rule.instructions;
 
 import java.math.BigDecimal;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.ogc.sensor.IAxis;
@@ -194,11 +194,7 @@ public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionTy
    */
   private double getReferenceValue( final IZmlValueReference reference ) throws SensorException
   {
-    final Number value = reference.getValue();
-    if( Objects.isNull( value ) )
-      return Double.NaN;
-
-    return value.doubleValue();
+    return reference.getValue().doubleValue();
   }
 
   private boolean compareMeta( final MetadataBoundary meta, final String property, final BigDecimal value, final String op )

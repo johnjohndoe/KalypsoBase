@@ -47,11 +47,10 @@ import java.util.TreeSet;
 import jregex.Pattern;
 import jregex.RETokenizer;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.eclipse.core.runtime.Assert;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
  * @author Dirk Kuch
@@ -64,8 +63,6 @@ public class MultipleTsLink
 
   public MultipleTsLink( final String identifier )
   {
-    Assert.isNotNull( identifier );
-
     m_identifier = identifier;
   }
 
@@ -74,6 +71,9 @@ public class MultipleTsLink
     return m_identifier;
   }
 
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
   @Override
   public boolean equals( final Object obj )
   {
@@ -114,18 +114,15 @@ public class MultipleTsLink
     return identifiers.toArray( new String[] {} );
   }
 
+  /**
+   * @see java.lang.Object#hashCode()
+   */
   @Override
   public int hashCode( )
   {
     final HashCodeBuilder builder = new HashCodeBuilder();
     builder.append( MultipleTsLink.class.getName() );
     builder.append( getIdentifier() );
-
-    final TSLinkWithName[] links = getLinks();
-    for( final TSLinkWithName link : links )
-    {
-      builder.append( link.getHref() );
-    }
 
     return builder.toHashCode();
   }

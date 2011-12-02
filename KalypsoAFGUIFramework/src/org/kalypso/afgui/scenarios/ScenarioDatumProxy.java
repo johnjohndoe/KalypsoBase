@@ -92,7 +92,7 @@ public class ScenarioDatumProxy implements IScenarioDatum
     try
     {
       final String classKey = m_element.getAttribute( ATTRIBUTE_CLASS_KEY );
-      final Class< ? extends IModel> clazz = (Class< ? extends IModel>) bundle.loadClass( classKey );
+      final Class< ? extends IModel> clazz = bundle.loadClass( classKey );
       return clazz;
     }
     catch( final InvalidRegistryObjectException e )

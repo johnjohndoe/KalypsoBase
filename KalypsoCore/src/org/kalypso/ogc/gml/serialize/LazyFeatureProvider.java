@@ -43,7 +43,7 @@ package org.kalypso.ogc.gml.serialize;
 import java.net.URI;
 import java.net.URL;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -59,6 +59,7 @@ public class LazyFeatureProvider extends AbstractXLinkFeatureProvider implements
   private GMLWorkspace m_workspace;
 
   private final IFeatureProviderFactory m_factory;
+
 
   public LazyFeatureProvider( final GMLWorkspace context, final String uri, final IFeatureProviderFactory factory )
   {

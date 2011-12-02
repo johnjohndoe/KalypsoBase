@@ -49,12 +49,18 @@ public class ZmlDefaultChartLayerFilter implements IChartLayerFilter
 {
   public static final String ID = "org.kalypso.chart.layer.filter.default"; // $NON-NLS-1$
 
+  /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayerFilter#isFiltered(java.lang.Number)
+   */
   @Override
   public boolean isFiltered( final Object object )
   {
     return false;
   }
 
+  /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayerFilter#getIdentifier()
+   */
   @Override
   public String getIdentifier( )
   {

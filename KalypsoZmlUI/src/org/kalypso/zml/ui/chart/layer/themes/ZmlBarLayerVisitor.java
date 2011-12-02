@@ -77,6 +77,9 @@ public class ZmlBarLayerVisitor implements IObservationVisitor
     m_range = range;
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.visitor.IObservationVisitor#visit(org.kalypso.ogc.sensor.visitor.IObservationValueContainer)
+   */
   @Override
   public void visit( final IObservationValueContainer container )
   {

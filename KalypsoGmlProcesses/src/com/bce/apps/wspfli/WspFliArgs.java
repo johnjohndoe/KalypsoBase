@@ -4,7 +4,7 @@ import java.io.File;
 
 /**
  * Liest die Argumente der Anwendung ein und parst sie
- * 
+ *
  * @author belger
  */
 public class WspFliArgs
@@ -34,7 +34,7 @@ public class WspFliArgs
     this.rasterSize = rasterSize;
     this.bIso = bIso;
     this.grenzen = grenzen;
-    bFliTi = bFlitTi;
+    this.bFliTi = bFlitTi;
     this.bDoVolumeCalculation = bDoVolumeCalculation;
   }
 }

@@ -46,7 +46,7 @@ import java.net.URL;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.xmlbeans.XmlException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.graphics.GC;
@@ -100,6 +100,9 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
     setup( context );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.factory.layer.AbstractChartLayer#getProvider()
+   */
   @Override
   public IZmlLayerProvider getProvider( )
   {
@@ -123,6 +126,9 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
 
   }
 
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer#dispose()
+   */
   @Override
   public void dispose( )
   {
@@ -132,6 +138,9 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
     super.dispose();
   }
 
+  /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#onObservationChanged()
+   */
   @Override
   public void onObservationChanged( )
   {
@@ -156,6 +165,9 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
     return m_calculateRange;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.factory.layer.AbstractChartLayer#isLegend()
+   */
   @Override
   public boolean isLegend( )
   {
@@ -167,14 +179,20 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
     m_calculateRange = calculateRange;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
+   */
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Number> getDomainRange( )
   {
     return null;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
+   */
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     if( !m_calculateRange || ArrayUtils.isEmpty( m_descriptors ) )
     {
@@ -195,6 +213,9 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
     return new DataRange<Number>( min, max );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
+   */
   @Override
   public void paint( final GC gc )
   {
@@ -277,12 +298,18 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
     return provider.getBoundaries();
   }
 
+  /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#getDataHandler()
+   */
   @Override
   public IZmlLayerDataHandler getDataHandler( )
   {
     return m_handler;
   }
 
+  /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#setDataHandler(org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler)
+   */
   @Override
   public void setDataHandler( final IZmlLayerDataHandler handler )
   {
@@ -292,6 +319,9 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
     m_handler = handler;
   }
 
+  /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#setLabelDescriptor(java.lang.String)
+   */
   @Override
   public void setLabelDescriptor( final String labelDescriptor )
   {

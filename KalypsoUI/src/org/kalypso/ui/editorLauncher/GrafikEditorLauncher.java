@@ -82,7 +82,7 @@ public class GrafikEditorLauncher implements IEditorLauncher
     final WorkspaceModifyOperation operation = new WorkspaceModifyOperation( null )
     {
       @Override
-      protected void execute( final IProgressMonitor monitor ) throws CoreException
+      protected void execute( IProgressMonitor monitor ) throws CoreException
       {
         IStatus status = Status.OK_STATUS;
 

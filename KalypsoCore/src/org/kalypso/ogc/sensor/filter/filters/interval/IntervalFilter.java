@@ -85,10 +85,10 @@ public class IntervalFilter extends AbstractObservationFilter
 
   private MetadataList m_metadata;
 
-  public IntervalFilter( final MODE mode, final IntervalDefinition definition )
+  public IntervalFilter( final MODE mode, final IntervalDefinition calendar )
   {
     m_mode = mode;
-    m_definition = definition;
+    m_definition = calendar;
   }
 
   public IntervalFilter( final IntervallFilterType filter )

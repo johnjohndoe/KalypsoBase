@@ -60,12 +60,18 @@ public class ResolutionLabelProvider extends LabelProvider
    * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
    */
   @Override
-  public String getText( final Object element )
+  public String getText( Object element )
   {
     if( element instanceof MovieResolution )
     {
-      final MovieResolution resolution = (MovieResolution) element;
-      return String.format( "%d x %d", resolution.getWidth(), resolution.getHeight() );
+      MovieResolution resolution = (MovieResolution) element;
+      String displayText = resolution.getDisplayText();
+      int width = resolution.getWidth();
+      int height = resolution.getHeight();
+      if( displayText == null || displayText.length() == 0 )
+        return String.format( "%d x %d", width, height );
+
+      return String.format( "%d x %d (%s)", width, height, displayText );
     }
 
     return super.getText( element );

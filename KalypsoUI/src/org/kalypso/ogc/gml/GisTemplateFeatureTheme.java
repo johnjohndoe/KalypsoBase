@@ -931,9 +931,9 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
         startLoading();
     }
     else // HM: this will probably cause problems, as the theme is not really loaded
-    // But else, the stuff waiting for the map to load will wait forever...
-    if( !checkPoolListener )
-      m_loaded = true;
+      // But else, the stuff waiting for the map to load will wait forever...
+      if( !checkPoolListener )
+        m_loaded = true;
 
     super.setVisible( visible );
   }
@@ -977,12 +977,4 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     fireVisibilityChanged( newVisibility );
   }
 
-  @Override
-  public void setActiveEnvelope( final GM_Envelope boundingBox )
-  {
-    super.setActiveEnvelope( boundingBox );
-
-    if( m_theme != null )
-      m_theme.setActiveEnvelope( boundingBox );
-  }
 }

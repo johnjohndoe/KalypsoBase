@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always.
+ * interface-compatibility to deegree is wanted but not retained always. 
  * 
- * If you intend to use this software in other ways than in kalypso
+ * If you intend to use this software in other ways than in kalypso 
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree,
+ * all modifications are licensed as deegree, 
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -36,7 +36,6 @@
 package org.kalypsodeegree_impl.graphics.displayelements;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.font.FontRenderContext;
@@ -44,10 +43,10 @@ import java.awt.font.LineMetrics;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-import org.eclipse.core.runtime.Assert;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.displayelements.Label;
 import org.kalypsodeegree.graphics.displayelements.LabelDisplayElement;
@@ -56,19 +55,21 @@ import org.kalypsodeegree.graphics.sld.LabelPlacement;
 import org.kalypsodeegree.graphics.sld.LinePlacement;
 import org.kalypsodeegree.graphics.sld.LinePlacement.PlacementType;
 import org.kalypsodeegree.graphics.sld.PointPlacement;
-import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.sld.TextSymbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * Does the labeling, i.e. creates (screen) <tt>Label</tt> representations from <tt>LabelDisplayElement</tt>s.
@@ -82,220 +83,161 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class LabelFactory
 {
-  private static final int MAX_CURVE_LABELS_COUNT = 100;
-
-  private static final double DEFAULT_ROTATION = 0.0;
-
-  private static final double[] DEFAULT_POINT_DISPLACEMENT = new double[] { 0.0, 0.0 };
-
-  private static final double[] DEFAULT_POINT_ANCHOR = new double[] { 0.0, 0.5 };
-
-  private static final double[] DEFAULT_LINE_ANCHOR = new double[] { 0.5, 0.5 };
-
-  private static final Label[] EMPTY_LABELS = new Label[0];
-
-  private final LabelDisplayElement m_element;
-
-  private final GeoTransform m_projection;
-
-  private final Graphics2D m_graphics;
-
-  private final TextSymbolizer m_symbolizer;
-
-  public LabelFactory( final LabelDisplayElement element, final GeoTransform projection, final Graphics2D g )
+  public static Label createLabel( final String caption, final Font font, final Color color, final LineMetrics metrics, final Feature feature, final Halo halo, final int x, final int y, final int w, final int h, final double rotation, final double[] anchorPoint, final double[] displacement )
   {
-    m_element = element;
-    m_projection = projection;
-    m_graphics = g;
-    m_symbolizer = m_element.getSymbolizer();
+    if( rotation == 0.0 )
+      return new HorizontalLabel( caption, font, color, metrics, feature, halo, x, y, w, h, anchorPoint, displacement );
+
+    return new RotatedLabel( caption, font, color, metrics, feature, halo, x, y, w, h, rotation, anchorPoint, displacement );
   }
 
   /**
    * Generates <tt>Label</tt> -representations for a given <tt>LabelDisplayElement</tt>.
+   * <p>
+   * 
+   * @throws Exception
    */
-  public Label[] createLabels( ) throws GM_Exception
+  public static Label[] createLabels( final LabelDisplayElement element, final GeoTransform projection, final Graphics2D g ) throws Exception
   {
+    final Feature feature = element.getFeature();
+
+    String caption = null;
     try
     {
-      final Feature feature = m_element.getFeature();
-
-      final String caption = m_element.getLabel().evaluate( feature );
-      // sanity check: empty labels are ignored
-      if( StringUtils.isBlank( caption ) )
-        return EMPTY_LABELS;
-
-      // gather font information
-      final org.kalypsodeegree.graphics.sld.Font sldFont = m_symbolizer.getFont();
-      final java.awt.Font font = new java.awt.Font( sldFont.getFamily( feature ), sldFont.getStyle( feature ) | sldFont.getWeight( feature ), sldFont.getSize( feature ) );
-      m_graphics.setFont( font );
-
-      final Color color = sldFont.getColor( feature );
-
-      final FontRenderContext frc = m_graphics.getFontRenderContext();
-
-      // bugstories...
-      // I got the following error in the next line:
-      // # An unexpected error has been detected by HotSpot Virtual Machine:
-      // # [...]
-      // # Problematic frame:
-      // # C [libfontmanager.so+0x2ecd5]
-      //
-      // while running kalypso on linux, kubuntu-Dapper.
-      // The error was caused by some buggy fonts in Dapper (Rekha-normal and aakar-MagNet ).
-      // Work-around is to remove the toxic fonts by removing the package ttf-gujarati-fonts from the distribution.
-      // this error was not easy to locate, so do not remove this notice !
-      // ( v.doemming@tuhh.de )
-
-      final Rectangle2D bounds = font.getStringBounds( caption, frc );
-      final Dimension size = bounds.getBounds().getSize();
-      final LineMetrics metrics = font.getLineMetrics( caption, frc );
-
-      final GM_Object[] geometries = m_element.getGeometry();
-      final List<Label> allLabels = new ArrayList<Label>();
-      for( final GM_Object geometry : geometries )
-      {
-        final Label[] labels = createLabels( feature, caption, geometry, font, color, metrics, size );
-        allLabels.addAll( Arrays.asList( labels ) );
-      }
-
-      return allLabels.toArray( new Label[allLabels.size()] );
+      caption = element.getLabel().evaluate( feature );
     }
     catch( final FilterEvaluationException e )
     {
       // if properties are unknown to features, this should be ignored!
-      return EMPTY_LABELS;
+      return new Label[0];
     }
+    // sanity check: empty labels are ignored
+    if( caption == null || caption.trim().equals( "" ) )
+    {
+      return new Label[0];
+    }
+
+    final TextSymbolizer symbolizer = (TextSymbolizer) element.getSymbolizer();
+
+    // gather font information
+    final org.kalypsodeegree.graphics.sld.Font sldFont = symbolizer.getFont();
+    final java.awt.Font font = new java.awt.Font( sldFont.getFamily( feature ), sldFont.getStyle( feature ) | sldFont.getWeight( feature ), sldFont.getSize( feature ) );
+    g.setFont( font );
+    final FontRenderContext frc = g.getFontRenderContext();
+
+    // bugstories...
+    // I got the follwoing error in the next line:
+    // # An unexpected error has been detected by HotSpot Virtual Machine:
+    // # [...]
+    // # Problematic frame:
+    // # C [libfontmanager.so+0x2ecd5]
+    //
+    // while running kalypso on linux, kubuntu-Dapper.
+    // The error was caused by some buggy fonts in Dapper (Rekha-normal and aakar-MagNet ).
+    // Work-around is to remove the toxic fonts by removing the package ttf-gujarati-fonts from the distribution.
+    // this error was not easy to locate, so do not remove this notice !
+    // ( v.doemming@tuhh.de )
+
+    final Rectangle2D bounds = font.getStringBounds( caption, frc );
+    final LineMetrics metrics = font.getLineMetrics( caption, frc );
+    final int w = (int) bounds.getWidth();
+    final int h = (int) bounds.getHeight();
+    // int descent = (int) metrics.getDescent ();
+
+    final GM_Object[] geometries = element.getGeometry();
+    final List<Label> allLabels = new ArrayList<Label>();
+    for( final GM_Object geometry : geometries )
+    {
+      final Label[] labels = createLabels( element, projection, g, feature, caption, geometry, symbolizer, sldFont, font, metrics, w, h );
+      allLabels.addAll( Arrays.asList( labels ) );
+    }
+    return allLabels.toArray( new Label[allLabels.size()] );
   }
 
-  private Label[] createLabels( final Feature feature, final String caption, final GM_Object geometry, final java.awt.Font font, final Color color, final LineMetrics metrics, final Dimension bounds ) throws FilterEvaluationException, GM_Exception
+  private static Label[] createLabels( final LabelDisplayElement element, final GeoTransform projection, final Graphics2D g, final Feature feature, final String caption, final GM_Object geometry, final TextSymbolizer symbolizer, final org.kalypsodeegree.graphics.sld.Font sldFont, final java.awt.Font font, final LineMetrics metrics, final int w, final int h ) throws FilterEvaluationException, GM_Exception, Exception
   {
     if( geometry instanceof GM_Point )
-      return createPointLabels( feature, caption, (GM_Point) geometry, font, color, metrics, bounds );
+    {
+      // get screen coordinates
+      final int[] coords = calcScreenCoordinates( projection, geometry );
+      final int x = coords[0];
+      final int y = coords[1];
 
-    if( geometry instanceof GM_Curve || geometry instanceof GM_MultiCurve )
-      return createCurveLabels( feature, caption, geometry, font, color, metrics, bounds );
+      // default placement information
+      double rotation = 0.0;
+      double[] anchorPoint = { 0.0, 0.5 };
+      double[] displacement = { 0.0, 0.0 };
 
-    if( geometry instanceof GM_Surface || geometry instanceof GM_MultiSurface )
-      return createSurfaceLabels( feature, caption, geometry, font, color, metrics, bounds );
+      // use placement information from SLD
+      final LabelPlacement lPlacement = symbolizer.getLabelPlacement();
 
-    throw new IllegalArgumentException( "LabelFactory does not implement generation of Labels from geometries of type: '" + geometry.getClass().getName() + "'!" );
-  }
+      if( lPlacement != null )
+      {
+        final PointPlacement pPlacement = lPlacement.getPointPlacement();
+        anchorPoint = pPlacement.getAnchorPoint( feature );
+        displacement = pPlacement.getDisplacement( feature );
+        rotation = pPlacement.getRotation( feature );
+      }
 
-  private Label[] createPointLabels( final Feature feature, final String caption, final GM_Point geometry, final java.awt.Font font, final Color color, final LineMetrics metrics, final Dimension bounds ) throws FilterEvaluationException
-  {
-    // get screen coordinates
-    final int[] coords = LabelUtils.calcScreenCoordinates( m_projection, geometry );
-    final int x = coords[0];
-    final int y = coords[1];
+      return new Label[] { createLabel( caption, font, sldFont.getColor( feature ), metrics, feature, symbolizer.getHalo(), x, y, w, h, Math.toRadians( rotation ), anchorPoint, displacement ) };
+    }
+    else if( geometry instanceof GM_Surface || geometry instanceof GM_MultiSurface )
+    {
+      // get screen coordinates
+      final int[] coords = calcScreenCoordinates( projection, geometry );
+      int x = coords[0];
+      int y = coords[1];
 
-    final PointPlacement pPlacement = getPointPlacement();
+      // default placement information
+      double rotation = 0.0;
+      double[] anchorPoint = { 0.5, 0.5 };
+      double[] displacement = { 0.0, 0.0 };
 
-    final double rotation = getRotation( pPlacement, feature );
-    final double[] anchorPoint = getAnchor( pPlacement, feature, DEFAULT_POINT_ANCHOR );
-    final double[] displacement = getDisplacement( pPlacement, feature );
+      // use placement information from SLD
+      final LabelPlacement lPlacement = symbolizer.getLabelPlacement();
 
-    final Label label = createLabel( caption, font, color, metrics, feature, x, y, bounds, Math.toRadians( rotation ), anchorPoint, displacement );
-    return new Label[] { label };
-  }
+      if( lPlacement != null && lPlacement.getPointPlacement() != null )
+      {
+        final PointPlacement pPlacement = lPlacement.getPointPlacement();
 
-  private Label[] createCurveLabels( final Feature feature, final String caption, final GM_Object geometry, final Font font, final Color color, final LineMetrics metrics, final Dimension bounds ) throws GM_Exception, FilterEvaluationException
-  {
-    final GM_Surface< ? extends GM_SurfacePatch> screenSurface = GeometryFactory.createGM_Surface( m_projection.getSourceRect(), null );
-    final GM_Object intersection = screenSurface.intersection( geometry );
+        // check if the label is to be centered within the intersection of
+        // the screen surface and the polygon geometry
+        if( pPlacement.isAuto() )
+        {
+          final GM_Surface< ? extends GM_SurfacePatch> screenSurface = GeometryFactory.createGM_Surface( projection.getSourceRect(), null );
+          final GM_Object intersection = screenSurface.intersection( geometry );
+          if( intersection != null )
+          {
+            final GM_Position source = intersection.getCentroid().getPosition();
+            x = (int) (projection.getDestX( source.getX() ) + 0.5);
+            y = (int) (projection.getDestY( source.getY() ) + 0.5);
+          }
+        }
+        anchorPoint = pPlacement.getAnchorPoint( feature );
+        displacement = pPlacement.getDisplacement( feature );
+        rotation = pPlacement.getRotation( feature );
+      }
 
-    if( intersection instanceof GM_Curve )
-      return createCurveLabels( feature, caption, (GM_Curve) intersection, font, color, metrics, bounds );
+      return new Label[] { createLabel( caption, font, sldFont.getColor( feature ), metrics, feature, symbolizer.getHalo(), x, y, w, h, Math.toRadians( rotation ), anchorPoint, displacement ) };
+    }
+    else if( geometry instanceof GM_Curve || geometry instanceof GM_MultiCurve )
+    {
+      final GM_Surface< ? extends GM_SurfacePatch> screenSurface = GeometryFactory.createGM_Surface( projection.getSourceRect(), null );
+      final GM_Object intersection = screenSurface.intersection( geometry );
+      if( intersection != null )
+      {
+        if( intersection instanceof GM_Curve )
+          return createLabels( (GM_Curve) intersection, element, g, projection );
+        else if( intersection instanceof GM_MultiCurve )
+          return createLabels( (GM_MultiCurve) intersection, element, g, projection );
+      }
+    }
+    else
+    {
+      throw new Exception( "LabelFactory does not implement generation " + "of Labels from geometries of type: '" + geometry.getClass().getName() + "'!" );
+    }
 
-    if( intersection instanceof GM_MultiCurve )
-      return createMultiCurveLabels( feature, caption, (GM_MultiCurve) intersection, font, color, metrics, bounds );
-
-    return EMPTY_LABELS;
-  }
-
-  private Label[] createSurfaceLabels( final Feature feature, final String caption, final GM_Object geometry, final Font font, final Color color, final LineMetrics metrics, final Dimension bounds ) throws GM_Exception, FilterEvaluationException
-  {
-    // use placement information from SLD
-    final PointPlacement pPlacement = getPointPlacement();
-
-    final GM_Object geometryForLabel = adjustSurfaceGeometry( pPlacement, geometry );
-    // get screen coordinates
-    final int[] coords = LabelUtils.calcScreenCoordinates( m_projection, geometryForLabel );
-    final int x = coords[0];
-    final int y = coords[1];
-
-    final double rotation = getRotation( pPlacement, feature );
-    final double[] anchorPoint = getAnchor( pPlacement, feature, DEFAULT_LINE_ANCHOR );
-    final double[] displacement = getDisplacement( pPlacement, feature );
-
-    final Label label = createLabel( caption, font, color, metrics, feature, x, y, bounds, Math.toRadians( rotation ), anchorPoint, displacement );
-    return new Label[] { label };
-  }
-
-  private double[] getAnchor( final PointPlacement pPlacement, final Feature feature, final double[] defaultValue ) throws FilterEvaluationException
-  {
-    if( pPlacement == null )
-      return defaultValue;
-
-    return pPlacement.getAnchorPoint( feature );
-  }
-
-  private double[] getDisplacement( final PointPlacement pPlacement, final Feature feature ) throws FilterEvaluationException
-  {
-    if( pPlacement == null )
-      return DEFAULT_POINT_DISPLACEMENT;
-
-    return pPlacement.getDisplacement( feature );
-  }
-
-  private double getRotation( final PointPlacement pPlacement, final Feature feature ) throws FilterEvaluationException
-  {
-    if( pPlacement == null )
-      return DEFAULT_ROTATION;
-
-    return pPlacement.getRotation( feature );
-  }
-
-  private GM_Object adjustSurfaceGeometry( final PointPlacement pPlacement, final GM_Object geometry ) throws GM_Exception
-  {
-    if( pPlacement == null )
-      return geometry;
-
-    if( !pPlacement.isAuto() )
-      return geometry;
-
-    // TODO: we need to do this only onlce
-    final GM_Surface< ? extends GM_SurfacePatch> screenSurface = GeometryFactory.createGM_Surface( m_projection.getSourceRect(), null );
-
-    final GM_Object intersection = screenSurface.intersection( geometry );
-    if( intersection == null )
-      return geometry;
-
-    return intersection;
-  }
-
-  private Label createLabel( final String caption, final Font font, final Color color, final LineMetrics metrics, final Feature feature, final int x, final int y, final Dimension bounds, final double rotation, final double[] anchorPoint, final double[] displacement )
-  {
-    final Halo halo = m_symbolizer.getHalo();
-
-    return new RotatedLabel( caption, font, color, metrics, feature, halo, x, y, bounds, rotation, anchorPoint, displacement );
-  }
-
-  private PointPlacement getPointPlacement( )
-  {
-    final LabelPlacement lPlacement = m_symbolizer.getLabelPlacement();
-    if( lPlacement == null )
-      return null;
-
-    return lPlacement.getPointPlacement();
-  }
-
-  private LinePlacement getLinePlacement( )
-  {
-    final LabelPlacement lPlacement = m_symbolizer.getLabelPlacement();
-    if( lPlacement == null )
-      return null;
-
-    return lPlacement.getLinePlacement();
+    return new Label[0];
   }
 
   /**
@@ -310,13 +252,13 @@ public class LabelFactory
    * @return ArrayList containing Arrays of Label-objects
    * @throws FilterEvaluationException
    */
-  private Label[] createMultiCurveLabels( final Feature feature, final String caption, final GM_MultiCurve multiCurve, final Font font, final Color color, final LineMetrics metrics, final Dimension bounds ) throws FilterEvaluationException, GM_Exception
+  public static Label[] createLabels( final GM_MultiCurve multiCurve, final LabelDisplayElement element, final Graphics2D g, final GeoTransform projection ) throws FilterEvaluationException
   {
-    final List<Label> placements = new ArrayList<Label>();
+    final List<Label> placements = Collections.synchronizedList( new ArrayList<Label>() );
     for( int i = 0; i < multiCurve.getSize(); i++ )
     {
       final GM_Curve curve = multiCurve.getCurveAt( i );
-      final Label[] labels = createCurveLabels( feature, caption, curve, font, color, metrics, bounds );
+      final Label[] labels = createLabels( curve, element, g, projection );
       placements.addAll( Arrays.asList( labels ) );
     }
 
@@ -326,6 +268,7 @@ public class LabelFactory
   /**
    * Determines positions on the given <tt>GM_Curve</tt> where a caption could be drawn. For each of this positons,
    * three candidates are produced; one on the line, one above of it and one below.
+   * <p>
    * 
    * @param curve
    * @param element
@@ -334,137 +277,133 @@ public class LabelFactory
    * @return ArrayList containing Arrays of Label-objects
    * @throws FilterEvaluationException
    */
-  private Label[] createCurveLabels( final Feature feature, final String caption, final GM_Curve curve, final Font font, final Color color, final LineMetrics metrics, final Dimension size ) throws FilterEvaluationException, GM_Exception
+  public static Label[] createLabels( final GM_Curve curve, final LabelDisplayElement element, final Graphics2D g, final GeoTransform projection ) throws FilterEvaluationException
   {
-    final double radius = getLineRadius( feature );
+    final Feature feature = element.getFeature();
 
     // determine the placement type and parameters from the TextSymbolizer
-    final double perpendicularOffset;
-    final PlacementType placementType;
-    final double lineWidth;
-    final int gap;
-
-    final LinePlacement linePlacement = getLinePlacement();
-    if( linePlacement != null )
+    double perpendicularOffset = 0.0;
+    PlacementType placementType = PlacementType.absolute;
+    double lineWidth = 3.0;
+    int gap = 6;
+    final TextSymbolizer symbolizer = ((TextSymbolizer) element.getSymbolizer());
+    if( symbolizer.getLabelPlacement() != null )
     {
-      placementType = linePlacement.getPlacementType( feature );
-      perpendicularOffset = linePlacement.getPerpendicularOffset( feature );
-      lineWidth = linePlacement.getLineWidth( feature );
-      gap = linePlacement.getGap( feature );
+      final LinePlacement linePlacement = symbolizer.getLabelPlacement().getLinePlacement();
+      if( linePlacement != null )
+      {
+        placementType = linePlacement.getPlacementType( element.getFeature() );
+        perpendicularOffset = linePlacement.getPerpendicularOffset( element.getFeature() );
+        lineWidth = linePlacement.getLineWidth( element.getFeature() );
+        gap = linePlacement.getGap( element.getFeature() );
+      }
     }
-    else
-    {
-      placementType = PlacementType.absolute;
-      perpendicularOffset = 0.0;
-      lineWidth = 3.0;
-      gap = 6;
-    }
-
-    // get screen coordinates of the line
-    final int[][] pos = LabelUtils.calcScreenCoordinates( m_projection, curve );
 
     // get width & height of the caption
-    final double labelWidth = size.getWidth() + 2 * radius;
-    final double labelHeight = size.getHeight() + 2 * radius;
+    final String caption = element.getLabel().evaluate( element.getFeature() );
+    final org.kalypsodeegree.graphics.sld.Font sldFont = symbolizer.getFont();
+    final java.awt.Font font = new java.awt.Font( sldFont.getFamily( element.getFeature() ), sldFont.getStyle( element.getFeature() ) | sldFont.getWeight( element.getFeature() ), sldFont.getSize( element.getFeature() ) );
+    g.setFont( font );
+    final FontRenderContext frc = g.getFontRenderContext();
+    final Rectangle2D bounds = font.getStringBounds( caption, frc );
+    final LineMetrics metrics = font.getLineMetrics( caption, frc );
+    final double width = bounds.getWidth();
+    final double height = bounds.getHeight();
+
+    // get screen coordinates of the line
+    int[][] pos;
+    try
+    {
+      pos = calcScreenCoordinates( projection, curve );
+    }
+    catch( final GM_Exception e )
+    {
+      e.printStackTrace();
+      return new Label[0];
+    }
 
     // ideal distance from the line
-    final double delta = labelHeight / 2.0 + lineWidth / 2.0;
+    final double delta = height / 2.0 + lineWidth / 2.0;
 
     // walk along the linestring and "collect" possible placement positions
-    final int w = (int) labelWidth;
+    final int w = (int) width;
     int lastX = pos[0][0];
     int lastY = pos[1][0];
+    final int count = pos[2][0];
     int boxStartX = lastX;
     int boxStartY = lastY;
 
-    final List<Label> labels = new ArrayList<Label>( MAX_CURVE_LABELS_COUNT );
-    final List<int[]> eCandidates = new ArrayList<int[]>( MAX_CURVE_LABELS_COUNT );
-
+    final List<Label> labels = new ArrayList<Label>( 100 );
+    final List<int[]> eCandidates = Collections.synchronizedList( new ArrayList<int[]>( 100 ) );
     int i = 0;
-    for( int kk = 0; kk < MAX_CURVE_LABELS_COUNT && kk < pos[2][0]; kk++ )
+    int kk = 0;
+    while( i < count && kk < 100 )
     {
-      final int screenX = pos[0][i];
-      final int screenY = pos[1][i];
+      kk++;
+      int x = pos[0][i];
+      int y = pos[1][i];
 
       // segment found where endpoint of box should be located?
-      if( getDistance( boxStartX, boxStartY, screenX, screenY ) >= w )
+      if( getDistance( boxStartX, boxStartY, x, y ) >= w )
       {
-        final int[] boxStart = new int[] { boxStartX, boxStartY };
-        final int[] last = new int[] { lastX, lastY };
-        final int[] current = new int[] { screenX, screenY };
 
-        final int[] p = findPointWithDistance( boxStart, last, current, w );
+        final int[] p0 = new int[] { boxStartX, boxStartY };
+        final int[] p1 = new int[] { lastX, lastY };
+        final int[] p2 = new int[] { x, y };
 
-        lastX = p[0];
-        lastY = p[1];
+        final int[] p = findPointWithDistance( p0, p1, p2, w );
+        x = p[0];
+        y = p[1];
 
-        int boxEndX = p[0];
-        int boxEndY = p[1];
+        lastX = x;
+        lastY = y;
+        int boxEndX = x;
+        int boxEndY = y;
 
         // does the linesegment run from right to left?
-        if( boxEndX < boxStartX )
+        if( x <= boxStartX )
         {
-          final int helpX = boxStartX;
-          final int helpY = boxStartY;
-
-          boxStartX = boxEndX;
-          boxStartY = boxEndY;
-
-          boxEndX = helpX;
-          boxEndY = helpY;
+          boxEndX = boxStartX;
+          boxEndY = boxStartY;
+          boxStartX = x;
+          boxStartY = y;
+          x = boxEndX;
+          y = boxEndY;
         }
 
-        final double rotation = getRotation( boxStartX, boxStartY, boxEndX, boxEndY );
+        final double rotation = getRotation( boxStartX, boxStartY, x, y );
         final double[] deviation = calcDeviation( new int[] { boxStartX, boxStartY }, new int[] { boxEndX, boxEndY }, eCandidates );
 
-        final double[] displacement = calculateDisplacement( placementType, 0.0, perpendicularOffset, delta, deviation );
-        final double[] anchorPoint = DEFAULT_POINT_ANCHOR;
 
-        final Label label = createLabel( caption, font, color, metrics, feature, (int) (boxStartX + radius), boxStartY, size, rotation, anchorPoint, displacement );
+        final double ww = (w - width) / 2;
+        final double[] displacement = calculateDisplacement( placementType, ww, perpendicularOffset, delta, deviation );
+        final double[] anchorPoint = new double[] { 0.0, 0.5 };
+        final Label label = createLabel( caption, font, sldFont.getColor( feature ), metrics, feature, symbolizer.getHalo(), boxStartX, boxStartY, (int) width, (int) height, rotation, anchorPoint, displacement );
+
         labels.add( label );
-
         boxStartX = lastX;
         boxStartY = lastY;
-
         eCandidates.clear();
       }
       else
       {
-        eCandidates.add( new int[] { screenX, screenY } );
-        lastX = screenX;
-        lastY = screenY;
+        eCandidates.add( new int[] { x, y } );
+        lastX = x;
+        lastY = y;
         i++;
       }
     }
 
     // pick lists of boxes on the linestring
-    // FIXME: strange: is the gap really the number of labels? shouldn't it be the minimum gap in pixels betwen to
-    // labels?
     final List<Label> pick = new ArrayList<Label>( 100 );
-
     final int n = labels.size();
-    for( int j = n / 2; j < n; j += gap + 1 )
+    for( int j = n / 2; j < labels.size(); j += (gap + 1) )
       pick.add( labels.get( j ) );
 
-    for( int j = n / 2 - (gap + 1); j > 0; j -= gap + 1 )
+    for( int j = n / 2 - (gap + 1); j > 0; j -= (gap + 1) )
       pick.add( labels.get( j ) );
 
     return pick.toArray( new Label[pick.size()] );
-  }
-
-  private double getLineRadius( final Feature feature ) throws FilterEvaluationException
-  {
-    final Halo halo = m_symbolizer.getHalo();
-
-    if( halo == null )
-      return 0;
-
-    final double radius = halo.getRadius( feature );
-    final Stroke haloStroke = halo.getStroke();
-    if( haloStroke == null )
-      return radius;
-
-    return radius + haloStroke.getWidth( feature );
   }
 
   private static double[] calculateDisplacement( final PlacementType placementType, final double ww, final double perpendicularOffset, final double delta, final double[] deviation )
@@ -475,15 +414,15 @@ public class LabelFactory
         return new double[] { ww, perpendicularOffset };
 
       case above:
-        return new double[] { ww, delta + deviation[0] };
+        return new double[]{ ww, delta + deviation[0] };
 
       case below:
       case auto:
-        return new double[] { ww, -delta - deviation[1] };
+        return new double[]{ ww, -delta - deviation[1] };
 
       case center:
       default:
-        return new double[] { ww, 0.0 };
+        return new double[]{ ww, 0.0 };
     }
   }
 
@@ -502,50 +441,94 @@ public class LabelFactory
    * @param points
    *          points in between
    */
-  private static double[] calcDeviation( final int[] start, final int[] end, final List<int[]> points )
+  public static double[] calcDeviation( int[] start, int[] end, final List<int[]> points )
   {
+
     // extreme deviation to the left
     double d1 = 0.0;
     // extreme deviation to the right
     double d2 = 0.0;
+    final Iterator<int[]> it = points.iterator();
 
     // eventually swap start and end point
-    Assert.isTrue( end[0] >= start[0] );
-
-    if( start[0] == end[0] )
+    if( start[0] > end[0] )
     {
-      // label orientation is completely vertical
-      for( final int[] point : points )
-      {
-        final double d = point[0] - start[0];
-        d1 = Math.max( d1, -d );
-        d2 = Math.max( d2, d );
-      }
+      final int[] tmp = start;
+      start = end;
+      end = tmp;
     }
-    else if( start[1] == end[1] )
+
+    if( start[0] != end[0] )
     {
-      // label orientation is not completely vertical
-      // label orientation is completely horizontal
-      for( final int[] point : points )
+      // label orientation is not completly vertical
+      if( start[1] != end[1] )
       {
-        final double d = point[1] - start[1];
-        d1 = Math.max( d1, -d );
-        d2 = Math.max( d2, d );
+        // label orientation is not completly horizontal
+        while( it.hasNext() )
+        {
+          final int[] point = it.next();
+          final double u = ((double) end[1] - (double) start[1]) / ((double) end[0] - (double) start[0]);
+          final double x = (u * u * start[0] - u * ((double) start[1] - (double) point[1]) + point[0]) / (1.0 + u * u);
+          final double y = (x - start[0]) * u + start[1];
+          final double d = getDistance( point, new int[] { (int) (x + 0.5), (int) (y + 0.5) } );
+          if( y >= point[1] )
+          {
+            // candidate for left extreme value
+            if( d > d1 )
+            {
+              d1 = d;
+            }
+          }
+          else if( d > d2 )
+          {
+            // candidate for right extreme value
+            d2 = d;
+          }
+        }
+      }
+      else
+      {
+        // label orientation is completly horizontal
+        while( it.hasNext() )
+        {
+          final int[] point = it.next();
+          final double d = point[1] - start[1];
+          if( d < 0 )
+          {
+            // candidate for left extreme value
+            if( -d > d1 )
+            {
+              d1 = -d;
+            }
+          }
+          else if( d > d2 )
+          {
+            // candidate for left extreme value
+            d2 = d;
+          }
+        }
       }
     }
     else
     {
-      // label orientation is not completely horizontal
-      for( final int[] point : points )
+      // label orientation is completly vertical
+      while( it.hasNext() )
       {
-        final double u = ((double) end[1] - (double) start[1]) / ((double) end[0] - (double) start[0]);
-        final double x = (u * u * start[0] - u * ((double) start[1] - (double) point[1]) + point[0]) / (1.0 + u * u);
-        final double y = (x - start[0]) * u + start[1];
-        final double d = getDistance( point, new int[] { (int) (x + 0.5), (int) (y + 0.5) } );
-        if( y >= point[1] )
-          d1 = Math.max( d1, d );
-        else
-          d2 = Math.max( d2, d );
+        final int[] point = it.next();
+        final double d = point[0] - start[0];
+        if( d < 0 )
+        {
+          // candidate for left extreme value
+          if( -d > d1 )
+          {
+            d1 = -d;
+          }
+        }
+        else if( d > d2 )
+        {
+          // candidate for right extreme value
+          d2 = d;
+        }
       }
     }
     return new double[] { d1, d2 };
@@ -565,8 +548,10 @@ public class LabelFactory
    * @param d
    *          distance
    */
-  private static int[] findPointWithDistance( final int[] p0, final int[] p1, final int[] p2, final int d )
+  public static int[] findPointWithDistance( final int[] p0, final int[] p1, final int[] p2, final int d )
   {
+
+    double x, y;
     final double x0 = p0[0];
     final double y0 = p0[1];
     final double x1 = p1[0];
@@ -574,7 +559,6 @@ public class LabelFactory
     final double x2 = p2[0];
     final double y2 = p2[1];
 
-    double x, y;
     if( x1 != x2 )
     {
       // line segment does not run vertical
@@ -595,10 +579,10 @@ public class LabelFactory
         minY = y2;
         maxY = y1;
       }
-      x = -p / 2 - Math.sqrt( p / 2 * (p / 2) - q );
+      x = -p / 2 - Math.sqrt( (p / 2) * (p / 2) - q );
       if( x < minX || x > maxX )
       {
-        x = -p / 2 + Math.sqrt( p / 2 * (p / 2) - q );
+        x = -p / 2 + Math.sqrt( (p / 2) * (p / 2) - q );
       }
       y = (x - x1) * u + y1;
     }
@@ -618,33 +602,102 @@ public class LabelFactory
       final double p = -2 * y0;
       final double q = y0 * y0 + (x1 - x0) * (x1 - x0) - d * d;
 
-      y = -p / 2 - Math.sqrt( p / 2 * (p / 2) - q );
+      y = -p / 2 - Math.sqrt( (p / 2) * (p / 2) - q );
       if( y < minY || y > maxY )
       {
-        y = -p / 2 + Math.sqrt( p / 2 * (p / 2) - q );
+        y = -p / 2 + Math.sqrt( (p / 2) * (p / 2) - q );
       }
     }
     return new int[] { (int) (x + 0.5), (int) (y + 0.5) };
   }
 
-  private static double getRotation( final int x1, final int y1, final int x2, final int y2 )
+  public static double getRotation( final double x1, final double y1, final double x2, final double y2 )
   {
     final double dx = x2 - x1;
     final double dy = y2 - y1;
+    Debug.debugMethodEnd();
     return Math.atan( dy / dx );
   }
 
-  private static double getDistance( final int[] p1, final int[] p2 )
+  public static double getDistance( final int[] p1, final int[] p2 )
   {
     final double dx = p1[0] - p2[0];
     final double dy = p1[1] - p2[1];
     return Math.sqrt( dx * dx + dy * dy );
   }
 
-  private static double getDistance( final int x1, final int y1, final int x2, final int y2 )
+  public static double getDistance( final double x1, final double y1, final double x2, final double y2 )
   {
     final double dx = x2 - x1;
     final double dy = y2 - y1;
     return Math.sqrt( dx * dx + dy * dy );
+  }
+
+  /**
+   * Calculates the screen coordinates of the given <tt>GM_Curve</tt>.
+   */
+  public static int[][] calcScreenCoordinates( final GeoTransform projection, final GM_Curve curve ) throws GM_Exception
+  {
+    final GM_LineString lineString = curve.getAsLineString();
+    final int count = lineString.getNumberOfPoints();
+    final int[][] pos = new int[3][];
+    pos[0] = new int[count];
+    pos[1] = new int[count];
+    pos[2] = new int[1];
+
+    int k = 0;
+    for( int i = 0; i < count; i++ )
+    {
+      final GM_Position position = lineString.getPositionAt( i );
+      final double tx = projection.getDestX( position.getX() );
+      final double ty = projection.getDestY( position.getY() );
+      if( i > 0 )
+      {
+        if( getDistance( tx, ty, pos[0][k - 1], pos[1][k - 1] ) > 1 )
+        {
+          pos[0][k] = (int) (tx + 0.5);
+          pos[1][k] = (int) (ty + 0.5);
+          k++;
+        }
+      }
+      else
+      {
+        pos[0][k] = (int) (tx + 0.5);
+        pos[1][k] = (int) (ty + 0.5);
+        k++;
+      }
+    }
+    pos[2][0] = k;
+
+    Debug.debugMethodEnd();
+
+    return pos;
+  }
+
+  /**
+   * Returns the physical (screen) coordinates.
+   */
+  public static int[] calcScreenCoordinates( final GeoTransform projection, final GM_Object geometry )
+  {
+
+    final int[] coords = new int[2];
+
+    GM_Position source = null;
+    if( geometry instanceof GM_Point )
+    {
+      source = ((GM_Point) geometry).getPosition();
+    }
+    else if( geometry instanceof GM_Curve || geometry instanceof GM_MultiCurve )
+    {
+      source = geometry.getCentroid().getPosition();
+    }
+    else
+    {
+      source = geometry.getCentroid().getPosition();
+    }
+
+    coords[0] = (int) (projection.getDestX( source.getX() ) + 0.5);
+    coords[1] = (int) (projection.getDestY( source.getY() ) + 0.5);
+    return coords;
   }
 }

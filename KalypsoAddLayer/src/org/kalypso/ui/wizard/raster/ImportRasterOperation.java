@@ -24,7 +24,7 @@ import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.action.AddThemeCommand;
-import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
+import org.kalypsodeegree_impl.gml.binding.commons.CoverageCollection;
 
 /**
  * @author Gernot Belger
@@ -139,7 +139,7 @@ public final class ImportRasterOperation implements ICoreRunnableWithProgress
 
     try
     {
-      GmlSerializer.createGmlFile( ICoverageCollection.QNAME, null, m_coverageFile, monitor, null );
+      GmlSerializer.createGmlFile( CoverageCollection.QNAME, null, m_coverageFile, monitor, null );
     }
     catch( final GMLSchemaException e )
     {

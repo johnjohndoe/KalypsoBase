@@ -46,7 +46,7 @@ import java.net.URL;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -222,7 +222,7 @@ public class ImageFeatureControl extends AbstractFeatureControl
 
   private void updateImageUrl( final URL url )
   {
-// System.out.println( "Update image: " + url );
+//    System.out.println( "Update image: " + url );
 
     if( ObjectUtils.equals( m_imageUrl, url ) )
       return;

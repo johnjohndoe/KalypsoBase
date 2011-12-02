@@ -179,7 +179,7 @@ public class PageSelectGeodataFile extends WizardPage
     /* Coordinate system combo */
     m_crsPanel = new CRSSelectionPanel( container, SWT.NONE );
     m_crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    m_crsPanel.setToolTipText( Messages.getString( "org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFile.0" ) ); //$NON-NLS-1$
+    m_crsPanel.setToolTipText( Messages.getString("org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFile.0") ); //$NON-NLS-1$
     m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     m_crsPanel.setSelectedCRS( m_crs );
     m_crsPanel.addSelectionChangedListener( new CRSSelectionListener()
@@ -194,14 +194,14 @@ public class PageSelectGeodataFile extends WizardPage
     } );
 
     m_detailsGroup = new Group( container, SWT.NONE );
-    m_detailsGroup.setText( Messages.getString( "org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFile.1" ) ); //$NON-NLS-1$
+    m_detailsGroup.setText( Messages.getString("org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFile.1") ); //$NON-NLS-1$
     m_detailsGroup.setLayout( new GridLayout( 2, false ) );
     m_detailsGroup.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     m_detailsGroup.setVisible( false );
 
     // VectorXx
     final Label lVectorXx = new Label( m_detailsGroup, SWT.NONE );
-    lVectorXx.setText( Messages.getString( "org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFile.2" ) ); //$NON-NLS-1$
+    lVectorXx.setText( Messages.getString("org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFile.2") ); //$NON-NLS-1$
 
     tVectorXx = new Text( m_detailsGroup, SWT.BORDER );
     tVectorXx.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -216,7 +216,7 @@ public class PageSelectGeodataFile extends WizardPage
 
     // VectorXy
     final Label lVectorXy = new Label( m_detailsGroup, SWT.NONE );
-    lVectorXy.setText( Messages.getString( "org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFile.3" ) ); //$NON-NLS-1$
+    lVectorXy.setText( Messages.getString("org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFile.3") ); //$NON-NLS-1$
 
     tVectorXy = new Text( m_detailsGroup, SWT.BORDER );
     tVectorXy.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -231,7 +231,7 @@ public class PageSelectGeodataFile extends WizardPage
 
     // VectorYx
     final Label lVectorYx = new Label( m_detailsGroup, SWT.NONE );
-    lVectorYx.setText( Messages.getString( "org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFile.4" ) ); //$NON-NLS-1$
+    lVectorYx.setText( Messages.getString("org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFile.4") ); //$NON-NLS-1$
 
     tVectorYx = new Text( m_detailsGroup, SWT.BORDER );
     tVectorYx.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -246,7 +246,7 @@ public class PageSelectGeodataFile extends WizardPage
 
     // VectorYy
     final Label lVectorYy = new Label( m_detailsGroup, SWT.NONE );
-    lVectorYy.setText( Messages.getString( "org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFile.5" ) ); //$NON-NLS-1$
+    lVectorYy.setText( Messages.getString("org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFile.5") ); //$NON-NLS-1$
 
     tVectorYy = new Text( m_detailsGroup, SWT.BORDER );
     tVectorYy.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -261,7 +261,7 @@ public class PageSelectGeodataFile extends WizardPage
 
     // Upper left corner (X)
     final Label lUlcX = new Label( m_detailsGroup, SWT.NONE );
-    lUlcX.setText( Messages.getString( "org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFile.6" ) ); //$NON-NLS-1$
+    lUlcX.setText( Messages.getString("org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFile.6") ); //$NON-NLS-1$
 
     tUlcX = new Text( m_detailsGroup, SWT.BORDER );
     tUlcX.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -276,7 +276,7 @@ public class PageSelectGeodataFile extends WizardPage
 
     // Upper left corner (Y)
     final Label lUlcY = new Label( m_detailsGroup, SWT.NONE );
-    lUlcY.setText( Messages.getString( "org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFile.7" ) ); //$NON-NLS-1$
+    lUlcY.setText( Messages.getString("org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFile.7") ); //$NON-NLS-1$
 
     tUlcY = new Text( m_detailsGroup, SWT.BORDER );
     tUlcY.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -306,10 +306,10 @@ public class PageSelectGeodataFile extends WizardPage
     final IPath docLocation = new Path( m_tFile.getText() );
 
     final File toFile = docLocation.toFile();
-    if( docLocation == null || !toFile.exists() )
+    if( (docLocation == null) || !toFile.exists() )
     {
       setMessage( null );
-      setErrorMessage( Messages.getString( "org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFile.8" ) ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString("org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFile.8") ); //$NON-NLS-1$
 
       return;
     }
@@ -320,7 +320,7 @@ public class PageSelectGeodataFile extends WizardPage
       if( !GridFileVerifier.verify( toFile.toURI().toURL() ) )
       {
         setMessage( null );
-        setErrorMessage( Messages.getString( "org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFile.9" ) ); //$NON-NLS-1$
+        setErrorMessage( Messages.getString("org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFile.9") ); //$NON-NLS-1$
 
         return;
       }
@@ -334,7 +334,7 @@ public class PageSelectGeodataFile extends WizardPage
     if( m_crs == null )
     {
       setMessage( null );
-      setErrorMessage( Messages.getString( "org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFile.10" ) ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString("org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFile.10") ); //$NON-NLS-1$
 
       return;
     }
@@ -375,27 +375,27 @@ public class PageSelectGeodataFile extends WizardPage
 
     if( containsIllegalChars( tVectorXx.getText() ) )
     {
-      text += Messages.getString( "org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFile.11" ); //$NON-NLS-1$
+      text += Messages.getString("org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFile.11"); //$NON-NLS-1$
     }
     if( containsIllegalChars( tVectorXy.getText() ) )
     {
-      text += Messages.getString( "org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFile.12" ); //$NON-NLS-1$
+      text += Messages.getString("org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFile.12"); //$NON-NLS-1$
     }
     if( containsIllegalChars( tVectorYx.getText() ) )
     {
-      text += Messages.getString( "org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFile.13" ); //$NON-NLS-1$
+      text += Messages.getString("org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFile.13"); //$NON-NLS-1$
     }
     if( containsIllegalChars( tVectorYy.getText() ) )
     {
-      text += Messages.getString( "org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFile.14" ); //$NON-NLS-1$
+      text += Messages.getString("org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFile.14"); //$NON-NLS-1$
     }
     if( containsIllegalChars( tUlcX.getText() ) )
     {
-      text += Messages.getString( "org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFile.15" ); //$NON-NLS-1$
+      text += Messages.getString("org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFile.15"); //$NON-NLS-1$
     }
     if( containsIllegalChars( tUlcY.getText() ) )
     {
-      text += Messages.getString( "org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFile.16" ); //$NON-NLS-1$
+      text += Messages.getString("org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFile.16"); //$NON-NLS-1$
     }
 
     if( !"".equals( text ) ) //$NON-NLS-1$
@@ -459,7 +459,7 @@ public class PageSelectGeodataFile extends WizardPage
     final File file = new File( m_sFile );
     if( !file.exists() )
     {
-      throw new IllegalStateException();
+      throw (new IllegalStateException());
     }
 
     return file;

@@ -38,6 +38,8 @@ package org.kalypsodeegree_impl.io.shpapi;
 
 /**
  * OpenGIS related exceptions thrown by methods in this package.
+ * 
+ * 
  * <p>
  * -------------------------------------------------------------------------
  * </p>
@@ -50,15 +52,15 @@ public class OpenGISException extends Exception
 {
   private String message = "org.kalypsodeegree_impl.io.shpapi.OpenGISException";
 
-  public OpenGISException( final String s )
+  public OpenGISException( String s )
   {
     super( s );
     message = s;
   }
 
   @Override
-  public String toString( )
+  public String toString()
   {
-    return message + "\n" + getLocalizedMessage();
+    return message + "\n" + this.getLocalizedMessage();
   }
 }

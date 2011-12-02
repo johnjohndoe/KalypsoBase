@@ -100,8 +100,6 @@ public class ZmlDiagramUpdater implements Runnable
         final AsynchronousObservationProvider provider = new AsynchronousObservationProvider( link, multiple.getType() );
 
         update( layers, provider, index, link.getName() );
-
-        provider.dispose();
       }
     }
   }

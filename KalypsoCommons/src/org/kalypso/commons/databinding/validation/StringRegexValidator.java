@@ -62,7 +62,7 @@ public class StringRegexValidator extends TypedValidator<String>
    * @param message
    *          Will be used as message for a status, if validation fails.
    */
-  public StringRegexValidator( final int severity, final String message )
+  public StringRegexValidator( int severity, String message )
   {
     super( String.class, severity, message );
   }
@@ -71,7 +71,7 @@ public class StringRegexValidator extends TypedValidator<String>
    * @see org.kalypso.commons.databinding.validation.TypedValidator#doValidate(java.lang.Object)
    */
   @Override
-  protected IStatus doValidate( final String value )
+  protected IStatus doValidate( String value )
   {
     try
     {
@@ -81,7 +81,7 @@ public class StringRegexValidator extends TypedValidator<String>
       Pattern.compile( value );
       return Status.OK_STATUS;
     }
-    catch( final PatternSyntaxException ex )
+    catch( PatternSyntaxException ex )
     {
       return new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), String.format( "Ungültiger regulärer Ausdruck: %s", ex.getLocalizedMessage() ), ex );
     }

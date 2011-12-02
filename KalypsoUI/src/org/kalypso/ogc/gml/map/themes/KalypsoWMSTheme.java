@@ -79,17 +79,17 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   /**
    * The source string. Do not remove this, because it is needed, when the template is saved.
    */
-  private final String m_source;
+  private String m_source;
 
   /**
    * The layer.
    */
-  private final LayerType m_layer;
+  private LayerType m_layer;
 
   /**
    * This variable stores the image provider.
    */
-  private final IKalypsoImageProvider m_provider;
+  private IKalypsoImageProvider m_provider;
 
   /**
    * This variable stores the legend, if any.
@@ -138,10 +138,17 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   @Override
   public GM_Envelope getFullExtent( )
   {
-    // should not block! If capabilities are not yet loaded, return null
+    if( m_maxEnvLocalSRS == null )
+      m_maxEnvLocalSRS = m_provider.getFullExtent();
+
     return m_maxEnvLocalSRS;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
+   *      org.eclipse.core.runtime.IProgressMonitor)
+   */
   @Override
   public IStatus paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
   {
@@ -151,19 +158,10 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
     setStatus( AbstractKalypsoTheme.PAINT_STATUS );
 
-    // HACK: initialize the max-extend on first paint, because paint is the only method that is allowed to block
-    // FIXME: we should refaktor4 the whole image provider: it should immediately start loading the capas in a sepearate
-    // thread and should inform the theme when it has finished.
-    if( m_maxEnvLocalSRS == null )
-      m_maxEnvLocalSRS = m_provider.getFullExtent();
-
     final int width = (int) p.getDestWidth();
     final int height = (int) p.getDestHeight();
     final GM_Envelope extent = p.getSourceRect();
-
-    // FIXME: no job needed here, directly call image provider
     final KalypsoImageLoader loader = new KalypsoImageLoader( getLabel(), m_provider, width, height, extent );
-
     final IStatus status = loader.run( monitor );
     if( status.isOK() )
     {
@@ -327,14 +325,14 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     return ((AbstractDeegreeImageProvider) m_provider).getLastRequest();
   }
 
-  public org.eclipse.swt.graphics.Image getLegendGraphic( final Font font ) throws CoreException
+  public org.eclipse.swt.graphics.Image getLegendGraphic( Font font ) throws CoreException
   {
     if( m_provider == null || !(m_provider instanceof ILegendProvider) )
       return null;
 
     if( m_legend == null )
     {
-      final ILegendProvider legendProvider = (ILegendProvider) m_provider;
+      ILegendProvider legendProvider = (ILegendProvider) m_provider;
       m_legend = legendProvider.getLegendGraphic( null, false, font );
     }
 
@@ -349,7 +347,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     if( !(m_layer instanceof StyledLayerType) )
       return new Style[] {};
 
-    final StyledLayerType styledLayer = (StyledLayerType) m_layer;
+    StyledLayerType styledLayer = (StyledLayerType) m_layer;
     return styledLayer.getStyle().toArray( new Style[] {} );
   }
 }

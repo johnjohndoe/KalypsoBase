@@ -45,33 +45,61 @@ import java.awt.Color;
 import java.awt.Stroke;
 import java.net.URL;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.kalypso.commons.java.lang.Objects;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
 
+/**
+ * @author belger
+ */
 public class TSLinkWithName
 {
-  private final String m_identifier;
+  private final Color m_color;
+
+  private final String m_href;
+
+  private final boolean m_isEditable;
+
+  private final String m_linktype;
 
   private URL m_context;
 
   private final String m_name;
 
-  private final TimeseriesLinkType m_obsLink;
+  private final boolean m_showLegend;
 
-  private final TimeserieFeatureProperty m_property;
+  private final Stroke m_stroke;
 
-  public TSLinkWithName( final String identifier, final URL context, final String name, final TimeseriesLinkType obsLink, final TimeserieFeatureProperty property )
+  private final String m_identifier;
+
+  public TSLinkWithName( final String identifier, final URL scontext, final String sname, final String slinktype, final String shref, final String filter, final String scolor, final String swidth, final String sdashing, final boolean editable, final boolean showInLegend )
   {
     m_identifier = identifier;
-    m_context = context;
-    m_name = name;
-    m_obsLink = obsLink;
-    m_property = property;
+    m_context = scontext;
+    m_name = sname;
+    m_linktype = slinktype;
+    m_isEditable = editable;
+    m_showLegend = showInLegend;
+
+    if( filter != null && filter.length() > 0 )
+      m_href = shref + "?" + filter;
+    else
+      m_href = shref;
+
+    m_color = scolor == null ? null : ColorUtilities.decodeWithAlpha( scolor );
+
+    final float width = swidth == null ? 1f : (float) NumberUtils.parseQuietDouble( swidth );
+    final float[] dash;
+    if( sdashing == null )
+      dash = null;
+    else
+    {
+      final float dashWidth = (float) NumberUtils.parseQuietDouble( sdashing );
+      dash = new float[] { dashWidth, dashWidth };
+    }
+
+    m_stroke = new BasicStroke( width, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 10.0f, dash, 1f );
   }
 
   public String getIdentifier( )
@@ -81,11 +109,7 @@ public class TSLinkWithName
 
   public Color getColor( )
   {
-    final String color = m_property.getColor();
-    if( Objects.isNotNull( color ) )
-      return ColorUtilities.decodeWithAlpha( color );
-
-    return null;
+    return m_color;
   }
 
   public URL getContext( )
@@ -95,17 +119,12 @@ public class TSLinkWithName
 
   public String getHref( )
   {
-    final String href = m_obsLink.getHref();
-    final String filter = m_property.getFilter();
-    if( StringUtils.isNotEmpty( filter ) )
-      return href + "?" + filter;
-
-    return href;
+    return m_href;
   }
 
   public String getLinktype( )
   {
-    return m_obsLink.getLinktype();
+    return m_linktype;
   }
 
   public String getName( )
@@ -115,39 +134,17 @@ public class TSLinkWithName
 
   public Stroke getStroke( )
   {
-    final float width = getLineWidth();
-    final float[] dash = getLineDash();
-
-    return new BasicStroke( width, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 10.0f, dash, 1f );
-  }
-
-  private float[] getLineDash( )
-  {
-    final String strDash = m_property.getLineDash();
-    if( StringUtils.isEmpty( strDash ) )
-      return null;
-
-    final float dash = (float) NumberUtils.parseQuietDouble( strDash );
-    return new float[] { dash, dash };
-  }
-
-  private float getLineWidth( )
-  {
-    final String width = m_property.getLineWidth();
-    if( StringUtils.isEmpty( width ) )
-      return 1f;
-
-    return (float) NumberUtils.parseQuietDouble( width );
+    return m_stroke;
   }
 
   public boolean isEditable( )
   {
-    return m_property.isEditable();
+    return m_isEditable;
   }
 
   public boolean isShowLegend( )
   {
-    return m_property.getShowLegend();
+    return m_showLegend;
   }
 
   public void setContext( final URL context )
@@ -155,6 +152,9 @@ public class TSLinkWithName
     m_context = context;
   }
 
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
   @Override
   public boolean equals( final Object obj )
   {
@@ -173,6 +173,9 @@ public class TSLinkWithName
     return super.equals( obj );
   }
 
+  /**
+   * @see java.lang.Object#hashCode()
+   */
   @Override
   public int hashCode( )
   {
@@ -185,9 +188,12 @@ public class TSLinkWithName
     return builder.toHashCode();
   }
 
+  /**
+   * @see java.lang.Object#toString()
+   */
   @Override
   public String toString( )
   {
-    return String.format( "link %s", getHref() );
+    return String.format( "link %s", m_href );
   }
 }

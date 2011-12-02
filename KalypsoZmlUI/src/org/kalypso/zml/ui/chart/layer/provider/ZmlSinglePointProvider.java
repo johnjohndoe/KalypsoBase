@@ -57,12 +57,18 @@ public class ZmlSinglePointProvider extends AbstractLayerProvider implements IZm
 {
   public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlSinglePointProvider"; //$NON-NLS-1$
 
+  /**
+   * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
+   */
   @Override
   public IChartLayer getLayer( final URL context )
   {
     return new ZmlSinglePointLayer( this, getStyleSet(), context );
   }
 
+  /**
+   * @see org.kalypso.zml.core.diagram.data.IZmlLayerProvider#getRequestHandler()
+   */
   @Override
   public IRequestHandler getRequestHandler( )
   {

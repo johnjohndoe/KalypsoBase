@@ -52,7 +52,7 @@ public interface ITaskExecutor
   /**
    * Called when a task needs to be executed<br>
    * This method MUST be called in the swt-thread.
-   * 
+   *
    */
   public IStatus execute( final ITask task );
 
@@ -68,17 +68,17 @@ public interface ITaskExecutor
 
   /**
    * This function adds a task change listener.
-   * 
+   *
    * @param listener
-   *          The listener, which should be added.
+   *            The listener, which should be added.
    */
   public void addTaskExecutionListener( ITaskExecutionListener listener );
 
   /**
    * This function removes a task change listener. If it is not registerd, nothing will happen.
-   * 
+   *
    * @param listener
-   *          The listener, which should be removed.
+   *            The listener, which should be removed.
    */
   public void removeTaskExecutionListener( ITaskExecutionListener listener );
 }

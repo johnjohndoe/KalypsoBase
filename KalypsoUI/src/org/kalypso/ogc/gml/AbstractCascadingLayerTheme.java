@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml;
 import java.awt.Graphics;
 import java.net.URL;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -282,7 +283,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
   @Override
   public String getCoordinatesSystem( )
   {
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 
   /**

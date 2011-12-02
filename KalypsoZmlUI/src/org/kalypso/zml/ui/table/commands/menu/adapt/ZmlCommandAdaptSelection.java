@@ -40,12 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands.menu.adapt;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -91,17 +93,18 @@ public class ZmlCommandAdaptSelection extends AbstractHandler
 
       final IZmlTableCell base = selected[0];
 
-      final Date begin = toDate( base );
-      final Date end = toDate( selected[selected.length - 1] );
-      final DateRange range = new DateRange( begin, end );
+      final Calendar begin = toCalendar( base );
+      final Calendar end = toCalendar( selected[selected.length - 1] );
 
-      final IObservation transformed = transform( column, selected, range );
+      final IObservation transformed = transform( column, selected, begin, end );
 
-      final DateRange dateRange = new DateRange( begin, end );
+      final DateRange dateRange = new DateRange( begin.getTime(), end.getTime() );
 
       final AdaptValuesVisitor visitor = new AdaptValuesVisitor();
       transformed.accept( visitor, new ObservationRequest( dateRange ) );
       column.getModelColumn().accept( visitor );
+
+      visitor.doFinish();
     }
     catch( final SensorException e )
     {
@@ -112,7 +115,7 @@ public class ZmlCommandAdaptSelection extends AbstractHandler
 
   }
 
-  private IObservation transform( final IZmlTableColumn column, final IZmlTableCell[] selected, final DateRange range ) throws SensorException
+  private IObservation transform( final IZmlTableColumn column, final IZmlTableCell[] selected, final Calendar begin, final Calendar end ) throws SensorException
   {
     final IObservation observation = column.getModelColumn().getObservation();
     final double difference = getDifference( selected );
@@ -120,13 +123,18 @@ public class ZmlCommandAdaptSelection extends AbstractHandler
     final IZmlValueReference reference = selected[0].getValueReference();
     final IAxis valueAxis = reference.getColumn().getValueAxis();
 
-    return TranProLinFilterUtilities.transform( observation, range, difference, 0.0, "+", valueAxis.getType(), KalypsoStati.BIT_DERIVATED ); //$NON-NLS-1$
+    return TranProLinFilterUtilities.transform( observation, begin, end, difference, 0.0, "+", valueAxis.getType(), KalypsoStati.BIT_DERIVATED ); //$NON-NLS-1$
   }
 
-  private Date toDate( final IZmlTableCell cell ) throws SensorException
+  private Calendar toCalendar( final IZmlTableCell cell ) throws SensorException
   {
     final IZmlValueReference reference = cell.getValueReference();
-    return reference.getIndexValue();
+    final Date date = reference.getIndexValue();
+
+    final Calendar calendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
+    calendar.setTime( date );
+
+    return calendar;
   }
 
   private double getDifference( final IZmlTableCell[] cells ) throws SensorException

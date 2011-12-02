@@ -37,7 +37,9 @@
 package org.kalypsodeegree.model.geometry;
 
 /**
+ * 
  * This interface defines the basis functionallity of all aggregations containing primetive geometries.
+ * 
  * <p>
  * ----------------------------------------------------------------------
  * </p>

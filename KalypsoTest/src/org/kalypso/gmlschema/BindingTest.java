@@ -54,26 +54,23 @@ import org.kalypso.commons.bind.JaxbUtilities;
 public class BindingTest extends TestCase
 {
   final Class CL_GML3 = ogc31.www.opengis.net.gml.ObjectFactory.class;
-
   final Class CL_SWE = ogc31.www.opengis.net.swe.ObjectFactory.class;
-
   final Class CL_GMD = ogc31.www.isotc211.org.gmd.ObjectFactory.class;
-
   final Class CL_ST = au.csiro.seegrid.xml.st.ObjectFactory.class;
 
   // create the context on all of these factories else the binding won't work
   final JAXBContext context = JaxbUtilities.createQuiet( CL_GML3, CL_SWE, CL_GMD, CL_ST );
-
+  
   public void testRecordDefinition( ) throws JAXBException
   {
-    final Unmarshaller um = context.createUnmarshaller();
+    final Unmarshaller um = context.createUnmarshaller();    
     final Object object = um.unmarshal( getClass().getResourceAsStream( "resources/bindingTest.xml" ) );
     System.out.println( object );
   }
-
-  public void testItemDefinition( ) throws JAXBException
+  
+  public void testItemDefinition() throws JAXBException
   {
-    final Unmarshaller um = context.createUnmarshaller();
+    final Unmarshaller um = context.createUnmarshaller();    
     final Object object = um.unmarshal( getClass().getResourceAsStream( "resources/bindingTest2.xml" ) );
     System.out.println( object );
   }

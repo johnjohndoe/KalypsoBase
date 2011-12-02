@@ -54,7 +54,6 @@ import org.eclipse.swt.widgets.Display;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
-import de.openali.odysseus.chart.framework.util.ChartUtilities;
 
 /**
  * @author alibu
@@ -123,7 +122,7 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
   @Override
   public Image getImage( final Object element )
   {
-    final Display display = ChartUtilities.getDisplay();
+    final Display display = Display.getCurrent() != null ? Display.getCurrent() : Display.getDefault();
 
     if( element instanceof IChartLayer )
     {

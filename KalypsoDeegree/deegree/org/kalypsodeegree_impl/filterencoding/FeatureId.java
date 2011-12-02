@@ -53,19 +53,19 @@ public class FeatureId
   private String m_value;
 
   /** Constructs a new FeatureId. */
-  public FeatureId( final String value )
+  public FeatureId( String value )
   {
     m_value = value;
   }
 
   /**
-   * Given a DOM-fragment, a corresponding Expression-object is built. This method recursively calls other buildFromDOM
-   * () - methods to validate the structure of the DOM-fragment.
+   * Given a DOM-fragment, a corresponding Expression-object is built. This method recursively calls other buildFromDOM () -
+   * methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
    *           if the structure of the DOM-fragment is invalid
    */
-  public static FeatureId buildFromDOM( final Element element ) throws FilterConstructionException
+  public static FeatureId buildFromDOM( Element element ) throws FilterConstructionException
   {
 
     // check if root element's name equals 'FeatureId'
@@ -73,7 +73,7 @@ public class FeatureId
       throw new FilterConstructionException( "Name of element does not equal 'FeatureId'!" );
 
     // determine the value of the FeatureId
-    final String fid = element.getAttribute( "fid" );
+    String fid = element.getAttribute( "fid" );
     if( fid == null )
       throw new FilterConstructionException( "<FeatureId> requires 'fid'-attribute!" );
 
@@ -92,15 +92,15 @@ public class FeatureId
   /**
    * @see org.kalypsodeegree_impl.filterencoding.FeatureId#getValue()
    */
-  public void setValue( final String value )
+  public void setValue( String value )
   {
-    m_value = value;
+    this.m_value = value;
   }
 
   /** Produces an indented XML representation of this object. */
   public StringBuffer toXML( )
   {
-    final StringBuffer sb = new StringBuffer();
+    StringBuffer sb = new StringBuffer();
     sb.append( "<ogc:FeatureId fid=\"" ).append( m_value ).append( "\"/>" );
     return sb;
   }

@@ -77,7 +77,7 @@ public class RoundFilter extends AbstractObservationFilter
     m_baseobservation = null;
   }
 
-  public RoundFilter( final int factor, final String mode, final String type )
+  public RoundFilter( int factor, String mode, String type )
   {
     m_factor = factor;
     m_mode = toBigDecimalRoundingConstant( mode );

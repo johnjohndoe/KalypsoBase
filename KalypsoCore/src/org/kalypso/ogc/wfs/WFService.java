@@ -104,7 +104,7 @@ public class WFService
 
     try
     {
-      wfsCapsDoc.load( new URL( m_wfsURL ) );
+      wfsCapsDoc.load( new URL( this.m_wfsURL ) );
     }
     catch( final MalformedURLException e )
     {
@@ -113,7 +113,7 @@ public class WFService
     }
     catch( final IOException e )
     {
-      System.out.println( Messages.getString( "org.kalypso.ogc.wfs.WFService.3" ) + m_wfsURL + Messages.getString( "org.kalypso.ogc.wfs.WFService.4" ) + e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
+      System.out.println( Messages.getString( "org.kalypso.ogc.wfs.WFService.3" ) + this.m_wfsURL + Messages.getString( "org.kalypso.ogc.wfs.WFService.4" ) + e.getLocalizedMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
       throw e;
     }
     catch( final SAXException e )
@@ -160,7 +160,7 @@ public class WFService
    */
   private IGMLSchema loadForFeatureType( final QName featureType ) throws Exception
   {
-    final org.deegree.ogcwebservices.getcapabilities.Operation[] ops = m_wfsCapabilities.getOperationsMetadata().getOperations();
+    final org.deegree.ogcwebservices.getcapabilities.Operation[] ops = this.m_wfsCapabilities.getOperationsMetadata().getOperations();
 
     boolean isGet = true;
 
@@ -251,11 +251,11 @@ public class WFService
     if( xsd == null )
       return;
 
-    m_ftToSchema.put( featureTypeName, xsd );
+    this.m_ftToSchema.put( featureTypeName, xsd );
 
     final QName[] geoProp = guessGeomProperty( xsd );
 
-    m_geoProperties.put( featureTypeName, geoProp );
+    this.m_geoProperties.put( featureTypeName, geoProp );
   }
 
   /**
@@ -286,12 +286,12 @@ public class WFService
     if( wfsURL == null || "".equals( wfsURL ) ) //$NON-NLS-1$
       throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.wfs.WFService.25" ) ); //$NON-NLS-1$
 
-    m_wfsURL = wfsURL;
+    this.m_wfsURL = wfsURL;
   }
 
   public String getWfsURL( )
   {
-    return m_wfsURL;
+    return this.m_wfsURL;
   }
 
   public String[] getFeatureTypes( ) throws Exception
@@ -308,7 +308,7 @@ public class WFService
 
     final List<QName> propsList = new ArrayList<QName>();
 
-    final IGMLSchema schema = m_ftToSchema.get( featureType );
+    final IGMLSchema schema = this.m_ftToSchema.get( featureType );
 
     final IFeatureType[] fts = schema.getAllFeatureTypes();
     for( final IFeatureType ft : fts )
@@ -326,12 +326,12 @@ public class WFService
 
   public IGMLSchema getSchemaForFeatureType( final QName featureType )
   {
-    return m_ftToSchema.get( featureType );
+    return this.m_ftToSchema.get( featureType );
   }
 
   public QName[] getGeometryProperties( final QName featureType )
   {
-    return m_geoProperties.get( featureType );
+    return this.m_geoProperties.get( featureType );
   }
 
   public QualifiedName getQualiNameByFeatureTypeName( final QName ftName )
@@ -341,7 +341,7 @@ public class WFService
 
   public String getGetFeatureURL( )
   {
-    final org.deegree.ogcwebservices.getcapabilities.Operation[] ops = m_wfsCapabilities.getOperationsMetadata().getOperations();
+    final org.deegree.ogcwebservices.getcapabilities.Operation[] ops = this.m_wfsCapabilities.getOperationsMetadata().getOperations();
     m_getFeatureUrl = null;
 
     for( int i = 0; i < ops.length && m_getFeatureUrl == null; i++ )
@@ -364,7 +364,7 @@ public class WFService
   {
     String crs = null;
 
-    final FeatureTypeList ftl = m_wfsCapabilities.getFeatureTypeList();
+    final FeatureTypeList ftl = this.m_wfsCapabilities.getFeatureTypeList();
 
     final QualifiedName qn = featureTypeName;// getQualiNameByFeatureTypeName( featureType );
     final WFSFeatureType ft = ftl.getFeatureType( qn );
@@ -535,7 +535,7 @@ public class WFService
 
   public URL buildDescribeURLForFeatureType( final QName featureType ) throws Exception
   {
-    final org.deegree.ogcwebservices.getcapabilities.Operation[] ops = m_wfsCapabilities.getOperationsMetadata().getOperations();
+    final org.deegree.ogcwebservices.getcapabilities.Operation[] ops = this.m_wfsCapabilities.getOperationsMetadata().getOperations();
 
     if( m_descrFtUrl == null )
     {

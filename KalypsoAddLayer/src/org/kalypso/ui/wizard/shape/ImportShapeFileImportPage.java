@@ -39,232 +39,180 @@
  *
  *  ---------------------------------------------------------------------------*/
 
+/*
+ * Created on 31.01.2005
+ *
+ */
 package org.kalypso.ui.wizard.shape;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Vector;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.PathUtils;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
+import org.eclipse.swt.widgets.Widget;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
-import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
-import org.kalypso.contribs.java.net.UrlResolver;
+import org.kalypso.contribs.java.net.IUrlResolver2;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypso.transformation.ui.listener.CRSSelectionListener;
-import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.i18n.Messages;
-import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Layer;
 import org.kalypsodeegree.graphics.sld.Style;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
-import org.kalypsodeegree.graphics.sld.UserStyle;
-import org.kalypsodeegree.xml.XMLTools;
+import org.kalypsodeegree.xml.XMLParsingException;
 import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
- * FIXME:
- * <ul>
- * <li>Allow to edit the path-fields</li>
- * <li>Refaktor a good abstraction for resource chooser</li>
- * <li>dialog settings!</li>
- * <li>if shape is selected, preselect sld with same name</li>
- * <li></li>
- * </ul>
- * 
  * @author kuepfer
  */
-public class ImportShapeFileImportPage extends WizardPage
+public class ImportShapeFileImportPage extends WizardPage implements SelectionListener, ModifyListener, KeyListener
 {
-  enum StyleImport
-  {
-    useDefault("Use default", "Use a style from the default style registry. You will be not able to change this style later on."),
-    generateDefault(Messages.getString( "org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.9" ), "Copy a style from the default style registry next to the shape file."), //$NON-NLS-1$
-    selectExisting("Select existing", "Select an existing SLD-File from your project.");
-
-    private final String m_label;
-
-    private final String m_tooltip;
-
-    private StyleImport( final String label, final String tooltip )
-    {
-      m_label = label;
-      m_tooltip = tooltip;
-    }
-
-    public String getTooltip( )
-    {
-      return m_tooltip;
-    }
-
-    /**
-     * @see java.lang.Enum#toString()
-     */
-    @Override
-    public String toString( )
-    {
-      return m_label;
-    }
-  }
-
   // constants
   private static final int SIZING_TEXT_FIELD_WIDTH = 250;
 
-  private static final String[] EMPTY_STYLE_NAMES = new String[] { "<No style file selected>" };
+  // widgets
+  private Group m_group;
 
-  private static final String[] FEATURETYPE_STYLE_NAMES = new String[] { "<FeatureTypeStyle - contains only one style>" };
+  private Label m_sourceFileLabel;
 
-  private static final String DATA_STYLE_IMPORT = "radioStyleImport"; //$NON-NLS-1$
+  private Text m_sourceFileText;
+
+  private Composite m_topComposite;
+
+  private Button m_browseButton;
+
+  // mapping
+
+  private IPath m_relativeSourcePath;
 
   private CRSSelectionPanel m_crsPanel;
 
   private IProject m_project;
 
   // style
-  protected String m_styleName;
+  private Text m_styleTextField;
 
-  private StyleImport m_styleImportType = StyleImport.generateDefault;
+  private Button m_browseButton2;
+
+  protected Path stylePath;
+
+  protected Combo m_styleNameCombo;
+
+  protected String styleName;
+
+  private boolean m_checkDefaultStyle = true;
+
+  private Button checkDefaultStyleButton;
+
+  private Label m_styleNameLabel;
+
+  private Label m_styleLabel;
 
   protected ViewerFilter m_filter;
 
-  private IPath m_sourcePath;
-
-  private String m_crs;
-
-  private IPath m_stylePath;
-
-  private Control[] m_styleControls;
-
-  private Text m_styleTextField;
-
-  private final Button[] m_styleImportRadios = new Button[StyleImport.values().length];
-
-  public ImportShapeFileImportPage( final String pageName, final String title, final ImageDescriptor titleImage )
+  /**
+   * @param pageName
+   */
+  public ImportShapeFileImportPage( final String pageName )
   {
-    super( pageName, title, titleImage );
-
-    setDescription( Messages.getString( "org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.1" ) ); //$NON-NLS-1$
+    super( pageName );
+    setDescription( Messages.getString("org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.0") ); //$NON-NLS-1$
     setPageComplete( false );
   }
 
+  /**
+   * @param pageName
+   * @param title
+   * @param titleImage
+   */
+  public ImportShapeFileImportPage( final String pageName, final String title, final ImageDescriptor titleImage )
+  {
+    super( pageName, title, titleImage );
+    setDescription( Messages.getString("org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.1") ); //$NON-NLS-1$
+    setPageComplete( false );
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see wizard.eclipse.jface.dialogs.IDialogPage#createControl(wizard.eclipse.swt.widgets.Composite)
+   */
   @Override
   public void createControl( final Composite parent )
   {
+    m_topComposite = new Composite( parent, SWT.NULL );
+    m_topComposite.setFont( parent.getFont() );
+
     initializeDialogUnits( parent );
 
-    final Composite topComposite = new Composite( parent, SWT.NULL );
-    topComposite.setLayout( new GridLayout() );
-    topComposite.setFont( parent.getFont() );
+    // WorkbenchHelp.setHelp(topComposite,
+    // IHelpContextIds.NEW_PROJECT_WIZARD_PAGE);
 
-    createSourceGroup( topComposite );
-    setControl( topComposite );
+    m_topComposite.setLayout( new GridLayout() );
+    m_topComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+
+    // build wizard page
+    createFileGroup( m_topComposite );
+    setControl( m_topComposite );
   }
 
-  private void createSourceGroup( final Composite parent )
+  private void createFileGroup( final Composite parent )
   {
-    // shape source
-    final Group fileGroup = new Group( parent, SWT.NULL );
-    fileGroup.setLayout( new GridLayout( 3, false ) );
-    fileGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    fileGroup.setText( Messages.getString( "org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.2" ) ); //$NON-NLS-1$
+    m_group = new Group( parent, SWT.NULL );
+    final GridLayout topGroupLayout = new GridLayout();
+    final GridData topGroupData = new GridData();
+    topGroupLayout.numColumns = 3;
+    topGroupData.horizontalAlignment = GridData.FILL;
+    m_group.setLayout( topGroupLayout );
+    m_group.setLayoutData( topGroupData );
+    m_group.setText( Messages.getString("org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.2") ); //$NON-NLS-1$
+    m_sourceFileLabel = new Label( m_group, SWT.NONE );
+    m_sourceFileLabel.setText( Messages.getString("org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.3") ); //$NON-NLS-1$
 
-    final Label sourceFileLabel = new Label( fileGroup, SWT.NONE );
-    sourceFileLabel.setText( Messages.getString( "org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.3" ) ); //$NON-NLS-1$
+    // Set width of source path field
+    final GridData data0 = new GridData( GridData.FILL_HORIZONTAL );
+    data0.widthHint = SIZING_TEXT_FIELD_WIDTH;
 
-    createSourceFileChooser( fileGroup );
-    createCrsChooser( fileGroup );
+    m_sourceFileText = new Text( m_group, SWT.BORDER );
+    m_sourceFileText.setLayoutData( data0 );
+    m_sourceFileText.setEditable( false );
+    m_sourceFileText.addModifyListener( this );
 
-    // style
-    final Group styleGroup = new Group( parent, SWT.NULL );
-    styleGroup.setLayout( new GridLayout( 3, false ) );
-    styleGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    styleGroup.setText( Messages.getString( "org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.5" ) ); //$NON-NLS-1$
+    m_browseButton = new Button( m_group, SWT.PUSH );
+    m_browseButton.setText( Messages.getString("org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.4") ); //$NON-NLS-1$
+    m_browseButton.setLayoutData( new GridData( GridData.END ) );
+    m_browseButton.addSelectionListener( this );
 
-    createStyleChooser( styleGroup );
-  }
-
-  private void createSourceFileChooser( final Composite parent )
-  {
-    final Text sourceFileText = new Text( parent, SWT.BORDER );
-    final GridData sourceFileTextData = new GridData( SWT.FILL, SWT.CENTER, true, false );
-    sourceFileTextData.minimumWidth = SIZING_TEXT_FIELD_WIDTH;
-    sourceFileText.setLayoutData( sourceFileTextData );
-    if( m_sourcePath != null )
-      sourceFileText.setText( m_sourcePath.toOSString() );
-    sourceFileText.setEditable( false );
-    sourceFileText.addModifyListener( new ModifyListener()
-    {
-      @Override
-      public void modifyText( final ModifyEvent e )
-      {
-        handleSourcePathModified( sourceFileText.getText() );
-      }
-    } );
-
-    final Button browseButton = new Button( parent, SWT.PUSH );
-    browseButton.setText( Messages.getString( "org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.4" ) ); //$NON-NLS-1$
-    browseButton.setLayoutData( new GridData( GridData.END ) );
-    browseButton.addSelectionListener( new SelectionAdapter()
-    {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
-      @Override
-      public void widgetSelected( final SelectionEvent e )
-      {
-        handleSourceButtonSelected( sourceFileText );
-      }
-    } );
-  }
-
-  private void createCrsChooser( final Composite parent )
-  {
     m_crsPanel = new CRSSelectionPanel( parent, SWT.NONE );
-    m_crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 3, 1 ) );
-
-    if( m_crs != null )
-      m_crsPanel.setSelectedCRS( m_crs );
-
+    m_crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_crsPanel.addSelectionChangedListener( new CRSSelectionListener()
     {
       /**
@@ -273,323 +221,113 @@ public class ImportShapeFileImportPage extends WizardPage
       @Override
       protected void selectionChanged( final String selectedCRS )
       {
-        handleCrsChanged( selectedCRS );
+        validate();
       }
     } );
-  }
 
-  private void createStyleChooser( final Composite parent )
-  {
-    final Composite radioPanel = new Composite( parent, SWT.NONE );
-    radioPanel.setLayout( Layouts.createGridLayout() );
-    radioPanel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 3, 1 ) );
+    m_group.pack();
 
-    final StyleImport[] styleImportTypes = StyleImport.values();
-    for( int i = 0; i < styleImportTypes.length; i++ )
-      m_styleImportRadios[i] = addStyleRadio( radioPanel, styleImportTypes[i] );
+    // style
+    final Group styleGroup = new Group( parent, SWT.NULL );
+    styleGroup.setText( Messages.getString("org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.5") ); //$NON-NLS-1$
 
-    final Label styleLabel = new Label( parent, SWT.NONE );
-    styleLabel.setText( Messages.getString( "org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.6" ) ); //$NON-NLS-1$
+    final GridData data3 = new GridData();
+    data3.horizontalAlignment = GridData.FILL;
+    data3.grabExcessHorizontalSpace = true;
+    styleGroup.setLayoutData( data3 );
+    final GridLayout gridLayout1 = new GridLayout();
+    gridLayout1.numColumns = 3;
+    styleGroup.setLayout( gridLayout1 );
 
-    m_styleTextField = new Text( parent, SWT.BORDER );
-    m_styleTextField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    m_styleLabel = new Label( styleGroup, SWT.NONE );
+    m_styleLabel.setText( Messages.getString( "org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.6" ) ); //$NON-NLS-1$
+
+    m_styleTextField = new Text( styleGroup, SWT.BORDER );
+    final GridData data4 = new GridData();
+    data4.horizontalAlignment = GridData.FILL;
+    data4.grabExcessHorizontalSpace = true;
+    m_styleTextField.setLayoutData( data4 );
     m_styleTextField.setEditable( false );
 
-    final Button styleBrowseButton = new Button( parent, SWT.PUSH );
-    styleBrowseButton.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
-    styleBrowseButton.setText( Messages.getString( "org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.7" ) ); //$NON-NLS-1$
+    m_browseButton2 = new Button( styleGroup, SWT.PUSH );
+    m_browseButton2.setText( Messages.getString( "org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.7" ) ); //$NON-NLS-1$
+    m_browseButton2.setLayoutData( new GridData( GridData.END ) );
+    m_browseButton2.addSelectionListener( this );
 
-    final Label styleNameLabel = new Label( parent, SWT.NONE );
-    styleNameLabel.setText( Messages.getString( "org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.8" ) ); //$NON-NLS-1$
+    m_styleNameLabel = new Label( styleGroup, SWT.NONE );
+    m_styleNameLabel.setText( Messages.getString( "org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.8" ) ); //$NON-NLS-1$
 
-    final ComboViewer styleNameChooser = new ComboViewer( parent, SWT.DROP_DOWN | SWT.READ_ONLY );
-    styleNameChooser.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    styleNameChooser.setContentProvider( new ArrayContentProvider() );
-    styleNameChooser.setLabelProvider( new LabelProvider()
-    {
-      @Override
-      public String getText( final Object element )
-      {
-        if( element instanceof UserStyle )
-        {
-          final UserStyle userStyle = (UserStyle) element;
-          final String title = userStyle.getTitle();
-          if( StringUtils.isBlank( title ) )
-            return userStyle.getName();
-          return title;
-        }
+    m_styleNameCombo = new Combo( styleGroup, SWT.READ_ONLY );
+    final GridData data5 = new GridData();
+    data5.horizontalAlignment = GridData.FILL;
+    data5.grabExcessHorizontalSpace = true;
+    m_styleNameCombo.setLayoutData( data5 );
+    m_styleNameCombo.addSelectionListener( this );
 
-        return ObjectUtils.toString( element );
-      }
-    } );
-    styleNameChooser.setInput( EMPTY_STYLE_NAMES );
-    styleNameChooser.setSelection( new StructuredSelection( EMPTY_STYLE_NAMES[0] ) );
+    final Label dummyLabel = new Label( styleGroup, SWT.NONE );
+    dummyLabel.setText( "" ); //$NON-NLS-1$
 
-    m_styleControls = new Control[] { styleLabel, m_styleTextField, styleBrowseButton, styleNameLabel, styleNameChooser.getControl() };
+    checkDefaultStyleButton = new Button( styleGroup, SWT.CHECK );
+    checkDefaultStyleButton.setSelection( m_checkDefaultStyle );
+    checkDefaultStyleButton.addSelectionListener( this );
 
-    hookStyleChooserListeners( m_styleTextField, styleBrowseButton, styleNameChooser );
+    final Label defaultStyleLabel = new Label( styleGroup, SWT.NONE );
+    defaultStyleLabel.setText( Messages.getString("org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.9") ); //$NON-NLS-1$
 
-    for( final Control styleControl : m_styleControls )
-      styleControl.setEnabled( m_styleImportType == StyleImport.selectExisting );
-  }
-
-  private Button addStyleRadio( final Composite parent, final StyleImport styleImport )
-  {
-    final Button radio = new Button( parent, SWT.RADIO );
-    radio.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
-    radio.setText( styleImport.toString() );
-    radio.setToolTipText( styleImport.getTooltip() );
-    radio.setSelection( m_styleImportType == styleImport );
-    radio.setData( DATA_STYLE_IMPORT, styleImport );
-
-    radio.addSelectionListener( new SelectionAdapter()
-    {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
-      @Override
-      public void widgetSelected( final SelectionEvent e )
-      {
-        handleStyleImportRadioSelected( styleImport );
-      }
-    } );
-
-    return radio;
-  }
-
-  private void hookStyleChooserListeners( final Text styleTextField, final Button styleBrowseButton, final ComboViewer styleNameChooser )
-  {
-    styleTextField.addModifyListener( new ModifyListener()
-    {
-      @Override
-      public void modifyText( final ModifyEvent e )
-      {
-        handleStylePathModified( styleTextField.getText(), styleNameChooser );
-      }
-    } );
-
-    styleBrowseButton.addSelectionListener( new SelectionAdapter()
-    {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
-      @Override
-      public void widgetSelected( final SelectionEvent e )
-      {
-        handleStyleButtonSelected( styleTextField );
-      }
-    } );
-
-    styleNameChooser.addSelectionChangedListener( new ISelectionChangedListener()
-    {
-
-      @Override
-      public void selectionChanged( final SelectionChangedEvent event )
-      {
-        final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-        handleStyleNameSelected( selection.getFirstElement() );
-      }
-    } );
-  }
-
-  protected void handleStyleImportRadioSelected( final StyleImport styleImport )
-  {
-    m_styleImportType = styleImport;
-
-    for( final Control styleControl : m_styleControls )
-      styleControl.setEnabled( m_styleImportType == StyleImport.selectExisting );
-
-    validate();
-  }
-
-  protected void handleStyleNameSelected( final Object style )
-  {
-    if( style instanceof Style )
-      m_styleName = ((Style) style).getName();
-    else if( style instanceof String )
-      m_styleName = null;
-
-    validate();
-  }
-
-  protected void handleStyleButtonSelected( final Text styleTextField )
-  {
-    final KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[] { "sld" } ); //$NON-NLS-1$
-    dialog.open();
-    final Object[] result = dialog.getResult();
-    if( result == null )
-      return;
-
-    final Path resultPath = (Path) result[0];
-    styleTextField.setText( resultPath.toString() );
-  }
-
-  protected void handleCrsChanged( final String selectedCRS )
-  {
-    m_crs = selectedCRS;
-
-    validate();
-  }
-
-  protected void handleSourceButtonSelected( final Text sourceFileText )
-  {
-    final KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[] { "shp" } ); //$NON-NLS-1$
-    if( m_filter != null )
-      dialog.setViewerFilter( m_filter );
-    dialog.open();
-
-    final Object[] result = dialog.getResult();
-    if( result == null )
-      return;
-
-    final Path resultPath = (Path) result[0];
-    sourceFileText.setText( resultPath.toString() );
-  }
-
-  protected void handleSourcePathModified( final String text )
-  {
-    final IPath path = new Path( text );
-    if( path.isValidPath( text ) )
-      m_sourcePath = path;
-    else
-      m_sourcePath = null;
-
-    // Try to find an .sld with the same filename -> preselect it
-    if( m_stylePath == null )
-    {
-      final IFile shapeFile = getShapeFile();
-      if( shapeFile != null )
-      {
-        final IPath sldPath = shapeFile.getFullPath().removeFileExtension().addFileExtension( "sld" );
-        final IFile sldFile = ResourcesPlugin.getWorkspace().getRoot().getFile( sldPath );
-        if( sldFile.exists() )
-        {
-          for( final Button styleRadio : m_styleImportRadios )
-          {
-            final StyleImport styleType = (StyleImport) styleRadio.getData( DATA_STYLE_IMPORT );
-            styleRadio.setSelection( styleType == StyleImport.selectExisting );
-          }
-
-          handleStyleImportRadioSelected( StyleImport.selectExisting );
-          m_styleTextField.setText( sldPath.toPortableString() );
-        }
-      }
-    }
-
-    validate();
-  }
-
-  private void reloadUserStyle( final ComboViewer styleNameChooser )
-  {
-    // TODO: we know at the moment, that this will only happen if user uses the dialog.
-    // If we allow the user to modify the path, we need something more sophisticated to prevent too many reloads
-
-    try
-    {
-      final Object[] styles = loadStyles();
-
-      styleNameChooser.setInput( styles );
-
-      if( styles.length == 0 )
-        styleNameChooser.setSelection( StructuredSelection.EMPTY );
-      else
-        styleNameChooser.setSelection( new StructuredSelection( styles[0] ) );
-    }
-    catch( final CoreException e )
-    {
-      // FIXME:better error handling:show error in status composite
-
-      e.printStackTrace();
-    }
-  }
-
-  private Object[] loadStyles( ) throws CoreException
-  {
-    final IFile styleFile = getStyleFile();
-    if( styleFile == null || !styleFile.exists() )
-      return EMPTY_STYLE_NAMES;
-
-    try
-    {
-      final Document doc = XMLTools.parse( styleFile );
-      final Element documentElement = doc.getDocumentElement();
-      if( StyledLayerDescriptor.ELEMENT_STYLEDLAYERDESCRIPTOR.equals( documentElement.getLocalName() ) )
-      {
-        final URL context = ResourceUtilities.createURL( styleFile );
-        final StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createStyledLayerDescriptor( context, documentElement );
-
-        final Layer[] layers = styledLayerDescriptor.getLayers();
-        final Collection<Style> allStyles = new ArrayList<Style>();
-        for( final Layer layer : layers )
-        {
-          final Style[] styles = layer.getStyles();
-          for( final Style style : styles )
-            allStyles.add( style );
-        }
-
-        return allStyles.toArray( new Style[allStyles.size()] );
-      }
-      else if( FeatureTypeStyle.ELEMENT_FEATURETYPESTYLE.equals( documentElement.getLocalName() ) )
-        return FEATURETYPE_STYLE_NAMES;
-      else
-        return ArrayUtils.EMPTY_OBJECT_ARRAY;
-    }
-    catch( final Exception e )
-    {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoAddLayerPlugin.getId(), "Failed to sld file", e );
-      KalypsoAddLayerPlugin.getDefault().getLog().log( status );
-      throw new CoreException( status );
-    }
-  }
-
-  protected void handleStylePathModified( final String stylePath, final ComboViewer styleNameChooser )
-  {
-    final IPath path = new Path( stylePath );
-    if( path.isValidPath( stylePath ) )
-      m_stylePath = path;
-    else
-      m_stylePath = null;
-
-    validate();
-
-    reloadUserStyle( styleNameChooser );
   }
 
   void validate( )
   {
-    final IMessageProvider message = doValidate();
-    if( message == null )
-      setMessage( null );
-    else
-      setMessage( message.getMessage(), message.getMessageType() );
-    setPageComplete( message == null );
-  }
-
-  private IMessageProvider doValidate( )
-  {
-    // shapeFile
-    if( m_sourcePath == null )
-      return new MessageProvider( Messages.getString( "org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.13" ), ERROR ); //$NON-NLS-1$
-    else
+    setErrorMessage( null );
+    boolean pageComplete = true;
+    if( !m_checkDefaultStyle )
     {
-      // TODO: check if path is a real file
+      // styleName
+      if( styleName != null )
+      {
+        // ok
+      }
+      else
+      {
+        setErrorMessage( Messages.getString("org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.10") ); //$NON-NLS-1$
+        pageComplete = false;
+      }
+
+      // styleFile
+      if( m_styleTextField.getText() != null && m_styleTextField.getText().length() > 0 )
+      {
+        // ok
+      }
+      else
+      {
+        setErrorMessage( Messages.getString("org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.11") ); //$NON-NLS-1$
+        pageComplete = false;
+      }
     }
 
     // CoordinateSystem
-    if( m_crs == null )
-      return new MessageProvider( "Please choose a valid source coordinate system", ERROR );
-    else if( !CRSHelper.isKnownCRS( m_crs ) )
-      return new MessageProvider( Messages.getString( "org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.12" ), ERROR ); //$NON-NLS-1$
-
-    // User style
-    if( m_styleImportType == StyleImport.selectExisting )
+    if( checkCRS( m_crsPanel.getSelectedCRS() ) )
     {
-      // TODO: check if path is a real file
-      if( m_stylePath == null )
-        return new MessageProvider( Messages.getString( "org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.11" ), ERROR ); //$NON-NLS-1$
+      // ok
+    }
+    else
+    {
+      setErrorMessage( Messages.getString("org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.12") ); //$NON-NLS-1$
+      pageComplete = false;
     }
 
-    return null;
+    // shapeFile
+    if( m_sourceFileText.getText() != null && m_sourceFileText.getText().length() > 0 )
+    {
+      // ok
+    }
+    else
+    {
+      setErrorMessage( Messages.getString("org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.13") ); //$NON-NLS-1$
+      pageComplete = false;
+    }
+
+    setPageComplete( pageComplete );
   }
 
   public void setViewerFilter( final ViewerFilter filter )
@@ -597,19 +335,175 @@ public class ImportShapeFileImportPage extends WizardPage
     m_filter = filter;
   }
 
+  // SelectionListener
+  /**
+   * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+   */
+  @Override
+  public void widgetSelected( final SelectionEvent e )
+  {
+    Button b;
+    if( e.widget instanceof Button )
+    {
+      b = (Button) e.widget;
+      if( b.equals( m_browseButton ) )
+      {
+        final KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[] { "shp" } ); //$NON-NLS-1$
+        if( m_filter != null )
+          dialog.setViewerFilter( m_filter );
+
+        dialog.open();
+        final Object[] result = dialog.getResult();
+        if( result != null )
+        {
+          final Path resultPath = (Path) result[0];
+          m_sourceFileText.setText( resultPath.toString() );
+          m_relativeSourcePath = resultPath;
+        }
+      }
+      if( b.equals( m_browseButton2 ) )
+      {
+        final KalypsoResourceSelectionDialog dialog = createResourceDialog( new String[] { "sld" } ); //$NON-NLS-1$
+        dialog.open();
+        final Object[] result = dialog.getResult();
+        if( result != null )
+        {
+          final Path resultPath = (Path) result[0];
+          m_styleTextField.setText( resultPath.toString() );
+          stylePath = resultPath;
+          try
+          {
+            final IPath basePath = m_project.getLocation();
+            final String styleURLAsString = basePath.toFile().toURI().toURL() + stylePath.removeFirstSegments( 1 ).toString();
+            final URL styleURL = new URL( styleURLAsString );
+            final Reader reader = new InputStreamReader( (styleURL).openStream() );
+            final IUrlResolver2 resolver = new IUrlResolver2()
+            {
+
+              @Override
+              public URL resolveURL( final String href ) throws MalformedURLException
+              {
+                return UrlResolverSingleton.resolveUrl( styleURL, href );
+              }
+
+            };
+            final StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createSLD( resolver, reader );
+            reader.close();
+            final Layer[] layers = styledLayerDescriptor.getLayers();
+            final Vector<String> styleNameVector = new Vector<String>();
+            for( final Layer layer : layers )
+            {
+              final Style[] styles = layer.getStyles();
+              for( final Style style : styles )
+              {
+                styleNameVector.add( style.getName() );
+              }
+            }
+            final String[] styleNames = new String[styleNameVector.size()];
+            for( int k = 0; k < styleNameVector.size(); k++ )
+            {
+              styleNames[k] = styleNameVector.get( k );
+            }
+            m_styleNameCombo.setItems( styleNames );
+            m_styleNameCombo.select( 0 );
+            styleName = styleNames[0];
+          }
+          catch( final MalformedURLException e1 )
+          {
+            e1.printStackTrace();
+          }
+          catch( final IOException ioEx )
+          {
+            ioEx.printStackTrace();
+          }
+          catch( final XMLParsingException xmlEx )
+          {
+            xmlEx.printStackTrace();
+          }
+        }
+      }
+      if( b.equals( checkDefaultStyleButton ) )
+      {
+        final boolean isSelected = checkDefaultStyleButton.getSelection();
+        m_checkDefaultStyle = isSelected;
+        m_styleLabel.setEnabled( !isSelected );
+        m_styleTextField.setEnabled( !isSelected );
+        m_browseButton2.setEnabled( !isSelected );
+        m_styleNameLabel.setEnabled( !isSelected );
+        m_styleNameCombo.setEnabled( !isSelected );
+      }
+    }
+    if( e.widget instanceof Combo )
+    {
+      if( e.widget == m_styleNameCombo )
+      {
+        styleName = m_styleNameCombo.getText();
+      }
+    }
+
+    validate();
+  }
+
+  /**
+   * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
+   */
+  @Override
+  public void widgetDefaultSelected( final SelectionEvent e )
+  {
+    // no default selection
+  }
+
+  // ModifyListener
+  /**
+   * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
+   */
+  @Override
+  public void modifyText( final ModifyEvent e )
+  {
+    validate();
+  }
+
+  // KeyListener
+  /**
+   * @see org.eclipse.swt.events.KeyListener#keyPressed(org.eclipse.swt.events.KeyEvent)
+   */
+  @Override
+  public void keyPressed( final KeyEvent e )
+  {
+    final Widget w = e.widget;
+    if( w instanceof Combo && e.character == SWT.CR )
+    {
+      validate();
+    }
+  }
+
+  /**
+   * @see org.eclipse.swt.events.KeyListener#keyReleased(org.eclipse.swt.events.KeyEvent)
+   */
+  @Override
+  public void keyReleased( final KeyEvent e )
+  {
+    // do nothing
+  }
+
+  public File getShapeBaseFile( )
+  {
+    return new File( m_project.getLocation() + "/" + FileUtilities.nameWithoutExtension( m_relativeSourcePath.removeFirstSegments( 1 ).toString() ) ); //$NON-NLS-1$
+  }
+
+  public String getShapeBaseRelativePath( )
+  {
+    return "project:/" + FileUtilities.nameWithoutExtension( m_relativeSourcePath.removeFirstSegments( 1 ).toString() ); //$NON-NLS-1$
+  }
+
   public IPath getShapePath( )
   {
-    return m_sourcePath;
+    return m_relativeSourcePath;
   }
 
-  public IFile getShapeFile( )
+  KalypsoResourceSelectionDialog createResourceDialog( final String[] fileResourceExtensions )
   {
-    return PathUtils.toFile( m_sourcePath );
-  }
-
-  private KalypsoResourceSelectionDialog createResourceDialog( final String[] fileResourceExtensions )
-  {
-    return new KalypsoResourceSelectionDialog( getShell(), m_project, Messages.getString( "org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.14" ), fileResourceExtensions, m_project, new ResourceSelectionValidator() ); //$NON-NLS-1$
+    return new KalypsoResourceSelectionDialog( getShell(), m_project, Messages.getString("org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.14"), fileResourceExtensions, m_project, new ResourceSelectionValidator() ); //$NON-NLS-1$
   }
 
   public String getCRS( )
@@ -622,55 +516,29 @@ public class ImportShapeFileImportPage extends WizardPage
     m_project = project;
   }
 
-  public StyleImport getStyleImportType( )
+  private boolean checkCRS( final String customCRS )
   {
-    return m_styleImportType;
+    return CRSHelper.isKnownCRS( customCRS );
+  }
+
+  public boolean checkDefaultStyle( )
+  {
+    return m_checkDefaultStyle;
   }
 
   public IPath getStylePath( )
   {
-    return m_stylePath;
-  }
-
-  public IFile getStyleFile( )
-  {
-    return PathUtils.toFile( m_stylePath );
+    return stylePath;
   }
 
   public String getStyleName( )
   {
-    return m_styleName;
+    return styleName;
   }
 
-  public String getRelativeShapePath( final IFile mapFile )
+  public void removeListeners( )
   {
-    final IFile shapeFile = getShapeFile();
-    if( shapeFile == null )
-      return null;
-
-    final IPath relativeShapePath = ResourceUtilities.makeRelativ( mapFile, shapeFile );
-    if( "..".equals( relativeShapePath.segment( 0 ) ) )
-      return UrlResolver.createProjectPath( m_sourcePath.removeFileExtension() );
-    else
-      return relativeShapePath.removeFileExtension().toPortableString();
-  }
-
-  public String getRelativeStylePath( final IFile mapFile )
-  {
-    return makeRelativeOrProjectRelative( mapFile, m_stylePath );
-  }
-
-  public static String makeRelativeOrProjectRelative( final IFile mapFile, final IPath path )
-  {
-    if( path == null )
-      return null;
-
-    final IFile relativeFile = PathUtils.toFile( path );
-
-    final IPath relativeStylePath = ResourceUtilities.makeRelativ( mapFile, relativeFile );
-    if( "..".equals( relativeStylePath.segment( 0 ) ) )
-      return UrlResolver.createProjectPath( path );
-    else
-      return relativeStylePath.toPortableString();
+    m_browseButton.removeSelectionListener( this );
+    // m_checkCRS.removeSelectionListener( this );
   }
 }

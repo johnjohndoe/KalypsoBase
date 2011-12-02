@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 
-@SuppressWarnings({ "serial", "restriction" })
+@SuppressWarnings( { "serial", "restriction" })
 public class DebugServlet extends HttpServlet
 {
   public final static String PARAM_INFO_LOGS = "logs";

@@ -129,7 +129,7 @@ public class WorldToScreenTransform implements GeoTransform
 
     m_sourceRect = rect;
 
-    if( m_sourceRect != null && m_destRect != null )
+    if( (m_sourceRect != null) && (m_destRect != null) )
     {
       calculateQX();
       calculateQY();
@@ -248,20 +248,20 @@ public class WorldToScreenTransform implements GeoTransform
   }
 
   /**
-   * executes a coordinate transformation for the submitted y-coordinate of the source coordinate system.
+   * executes a coordinat transformation for the submitted y-coordinate of the source coordinat system.
    * 
    * @param ysource
-   *          y-coordinate of a point in the source coordinate system.
+   *          , y-coordinate of a point in the source coordinate system.
    * @return the y-coordinate of the submitted value in the destination coordinate system.
    */
   @Override
   public double getDestY( final double ysource )
   {
-    return m_destRect.getMaxY() - (ysource - m_sourceRect.getMinY()) * m_qy;
+    return m_destRect.getMinY() + m_destRect.getHeight() - (ysource - m_sourceRect.getMinY()) * m_qy;
   }
 
   /**
-   * executes a coordinate transformation for the submitted point of the source coordinate system.
+   * executes a coordinate transformation for the submitted point of the source coordinat system.
    * 
    * @param point
    *          in the source coordinate system.
@@ -285,7 +285,7 @@ public class WorldToScreenTransform implements GeoTransform
   @Override
   public double getSourceX( final double xdest )
   {
-    return (xdest - m_destRect.getMinX()) / m_qx + m_sourceRect.getMinX();
+    return (xdest - m_destRect.getMin().getX()) / m_qx + m_sourceRect.getMin().getX();
   }
 
   /**
@@ -298,7 +298,8 @@ public class WorldToScreenTransform implements GeoTransform
   @Override
   public double getSourceY( final double ydest )
   {
-    return (m_destRect.getHeight() - (ydest - m_destRect.getMinY())) / m_qy + m_sourceRect.getMinY();
+    return (m_destRect.getHeight() - (ydest - m_destRect.getMin().getY())) / m_qy + m_sourceRect.getMin().getY();
+
   }
 
   /**

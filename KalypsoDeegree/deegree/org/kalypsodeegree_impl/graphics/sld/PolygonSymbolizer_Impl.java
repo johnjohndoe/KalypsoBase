@@ -56,7 +56,7 @@ import org.kalypsodeegree_impl.tools.Debug;
  * <p>
  * ----------------------------------------------------------------------
  * </p>
- * 
+ *
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @version $Revision$ $Date$
  */
@@ -92,7 +92,7 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
    * A Fill allows area geometries to be filled. There are two types of fills: solid-color and repeated GraphicFill. In
    * general, if a Fill element is omitted in its containing element, no fill will be rendered. The default is a solid
    * 50%-gray (color "#808080") opaque fill.
-   * 
+   *
    * @return the fill of the polygon
    */
   @Override
@@ -103,14 +103,14 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
 
   /**
    * sets the <Fill>
-   * 
+   *
    * @param fill
-   *          the fill of the polygon
+   *            the fill of the polygon
    */
   @Override
   public void setFill( final Fill fill )
   {
-    m_fill = fill;
+    this.m_fill = fill;
   }
 
   /**
@@ -118,7 +118,7 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
    * strokes: solid Color, GraphicFill (stipple), and repeated GraphicStroke. A repeated graphic is plotted linearly and
    * has its graphic symbol bended around the curves of the line string. The default is a solid black line (Color
    * "#000000").
-   * 
+   *
    * @return the stroke of the polygon
    */
   @Override
@@ -129,9 +129,9 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
 
   /**
    * sets the <Stroke>
-   * 
+   *
    * @param stroke
-   *          the stroke of the polygon
+   *            the stroke of the polygon
    */
   @Override
   public void setStroke( final Stroke stroke )
@@ -141,7 +141,7 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
 
   /**
    * Produces a textual representation of this object.
-   * 
+   *
    * @return the textual representation
    */
   @Override
@@ -172,7 +172,7 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
 
   /**
    * exports the content of the PolygonSymbolizer as XML formated String
-   * 
+   *
    * @return xml representation of the PolygonSymbolizer
    */
   @Override
@@ -250,5 +250,7 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
       disposeResource( fillResources );
     }
   }
+
+
 
 }

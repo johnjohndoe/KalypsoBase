@@ -42,6 +42,9 @@ package de.openali.odysseus.chart.framework.util.img;
 
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 
+/**
+ * @author Administrator
+ */
 public class ChartTitleTester
 {
   final public static TitleTypeBean[] getTitleTypes( )

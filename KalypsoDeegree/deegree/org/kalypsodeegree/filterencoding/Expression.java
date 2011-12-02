@@ -58,10 +58,10 @@ public interface Expression
    * <p>
    * 
    * @param feature
-   *          that determines the values of <tt>PropertyNames</tt> in the expression
+   *            that determines the values of <tt>PropertyNames</tt> in the expression
    * @return the resulting Object
    * @throws FilterEvaluationException
-   *           if the evaluation fails
+   *             if the evaluation fails
    */
   public Object evaluate( Feature feature ) throws FilterEvaluationException;
 

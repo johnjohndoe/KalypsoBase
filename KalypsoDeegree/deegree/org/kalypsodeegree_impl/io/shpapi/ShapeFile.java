@@ -385,7 +385,7 @@ public class ShapeFile
         // TODO: Problem: reading/writing a shape will change the precision/size of the column!
         fieldList.add( new FieldDescriptor( s, "N", (byte) 30, (byte) 10 ) );
       }
-      else if( clazz == Double.class || clazz == Number.class )
+      else if( (clazz == Double.class) || (clazz == Number.class) )
       {
         fieldList.add( new FieldDescriptor( s, "N", (byte) 30, (byte) 10 ) );
       }
@@ -463,8 +463,8 @@ public class ShapeFile
         final IValuePropertyType ivp = (IValuePropertyType) ftp[j];
 
         final Class< ? > clazz = ivp.getValueClass();
-        if( clazz == Integer.class || clazz == Byte.class || clazz == Character.class || clazz == Float.class || clazz == Double.class || clazz == Number.class || clazz == Date.class
-            || clazz == Long.class || clazz == String.class || clazz == Boolean.class )
+        if( (clazz == Integer.class) || (clazz == Byte.class) || (clazz == Character.class) || (clazz == Float.class) || (clazz == Double.class) || (clazz == Number.class) || (clazz == Date.class)
+            || (clazz == Long.class) || (clazz == String.class) || (clazz == Boolean.class) )
         {
           vec.add( value );
         }
@@ -526,10 +526,10 @@ public class ShapeFile
       m_shp.write( byteArray, record, mbr );
 
       // icrement offset for pointing at the end of the file
-      offset += nbyte + ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH;
+      offset += (nbyte + ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH);
 
       // actualize shape file minimum boundary rectangle
-      if( i == 0 || i > 0 && shpmbr == null )
+      if( i == 0 || (i > 0 && shpmbr == null) )
         shpmbr = mbr;
       if( mbr != null )
       {

@@ -18,11 +18,11 @@ import org.kalypso.contribs.eclipse.jface.viewers.CheckboxCellEditor;
  */
 public class CheckboxEditingSupport extends ObservableValueEditingSupport
 {
-  private final IValueProperty m_property;
+  private IValueProperty m_property;
 
-  private final CheckboxCellEditor m_cellEditor;
+  private CheckboxCellEditor m_cellEditor;
 
-  public CheckboxEditingSupport( final ColumnViewer viewer, final DataBindingContext dbc, final IValueProperty property )
+  public CheckboxEditingSupport( ColumnViewer viewer, DataBindingContext dbc, IValueProperty property )
   {
     super( viewer, dbc );
 
@@ -34,7 +34,7 @@ public class CheckboxEditingSupport extends ObservableValueEditingSupport
    * @see org.eclipse.jface.viewers.EditingSupport#getCellEditor(java.lang.Object)
    */
   @Override
-  public CheckboxCellEditor getCellEditor( final Object element )
+  public CheckboxCellEditor getCellEditor( Object element )
   {
     return m_cellEditor;
   }
@@ -43,7 +43,7 @@ public class CheckboxEditingSupport extends ObservableValueEditingSupport
    * @see org.eclipse.jface.databinding.viewers.ObservableValueEditingSupport#doCreateCellEditorObservable(org.eclipse.jface.viewers.CellEditor)
    */
   @Override
-  protected IObservableValue doCreateCellEditorObservable( final CellEditor cellEditor )
+  protected IObservableValue doCreateCellEditorObservable( CellEditor cellEditor )
   {
     return SWTObservables.observeSelection( m_cellEditor.getControl() );
   }
@@ -53,16 +53,16 @@ public class CheckboxEditingSupport extends ObservableValueEditingSupport
    *      org.eclipse.jface.viewers.ViewerCell)
    */
   @Override
-  protected IObservableValue doCreateElementObservable( final Object element, final ViewerCell cell )
+  protected IObservableValue doCreateElementObservable( Object element, ViewerCell cell )
   {
-    final IObservableValue observeableValue = m_property.observe( element );
+    IObservableValue observeableValue = m_property.observe( element );
     observeableValue.addChangeListener( new IChangeListener()
     {
       /**
        * @see org.eclipse.core.databinding.observable.IChangeListener#handleChange(org.eclipse.core.databinding.observable.ChangeEvent)
        */
       @Override
-      public void handleChange( final ChangeEvent event )
+      public void handleChange( ChangeEvent event )
       {
         CheckboxEditingSupport.this.getViewer().refresh();
       }

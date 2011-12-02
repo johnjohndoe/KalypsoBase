@@ -44,7 +44,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.ogc.sensor.IAxis;
@@ -102,21 +102,17 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
 
   public void setObsProvider( final IObsProvider provider )
   {
-    synchronized( this )
+    if( m_provider != null )
     {
-      if( Objects.isNotNull( m_provider ) )
-      {
-        m_provider.removeListener( m_observationProviderListener );
-        m_provider.dispose();
-      }
+      m_provider.removeListener( m_observationProviderListener );
+      m_provider.dispose(); // TODO check - really dispose old provider?
+    }
 
-      if( Objects.isNull( provider ) )
-        m_provider = null;
-      else
-      {
-        m_provider = provider.copy();
-        m_provider.addListener( m_observationProviderListener );
-      }
+    m_provider = provider;
+
+    if( provider != null )
+    {
+      provider.addListener( m_observationProviderListener );
     }
 
     m_layer.onObservationChanged();
@@ -199,27 +195,21 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
     if( Objects.isNull( parameters ) )
       return;
 
-    final String href = parameters.getParameterValue( "href", "" ); //$NON-NLS-1$ //$NON-NLS-2$
-    if( StringUtils.isNotEmpty( href ) )
+    final String href = parameters.getParameterValue( "href", "" ); //$NON-NLS-1$
+
+    if( !StringUtils.isEmpty( href ) )
     {
-      final IChartModel model = provider.getModel();
+      final IChartModel model = m_layer.getModel();
       final IBasicChartSettings settings = model.getSettings();
 
       final CHART_DATA_LOADER_STRATEGY strategy = settings.getDataLoaderStrategy();
       if( CHART_DATA_LOADER_STRATEGY.eSynchrone.equals( strategy ) )
       {
-        final URL localContext = ZmlContext.resolveContext( model, href, context );
-        final String plainHref = ZmlContext.resolvePlainHref( href );
-
-        setObsProvider( new SynchronousObservationProvider( localContext, plainHref, provider.getRequestHandler() ) );
+        setObsProvider( new SynchronousObservationProvider( context, href, provider.getRequestHandler() ) );
       }
       else
       {
-        final URL localContext = ZmlContext.resolveContext( model, href, context );
-        final String plainHref = ZmlContext.resolvePlainHref( href );
-
-        final PooledObsProvider obsProvider = new PooledObsProvider( new PoolableObjectType( "zml", plainHref, localContext, true ) ); //$NON-NLS-1$
-        setObsProvider( obsProvider ); //$NON-NLS-1$ 
+        setObsProvider( new PooledObsProvider( new PoolableObjectType( "zml", href, context, true ) ) ); //$NON-NLS-1$
       }
     }
 

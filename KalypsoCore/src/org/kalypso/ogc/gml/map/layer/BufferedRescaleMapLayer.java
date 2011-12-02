@@ -172,17 +172,12 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
   protected synchronized void invalidate( final GM_Envelope extent )
   {
     final BufferedTile tile = getCurrentTile();
+    if( tile == null )
+      return;
 
     // Force repaint: reschedule, will eventually replace the current tile
-    if( tile == null || tile.intersects( extent ) )
-    {
-      final IMapPanel mapPanel = getMapPanel();
-      if( mapPanel == null )
-        return;
-
-      final GeoTransform projection = mapPanel.getProjection();
-      rescheduleJob( projection );
-    }
+    if( tile.intersects( extent ) )
+      rescheduleJob( tile.getWorld2Screen() );
   }
 
   @Override

@@ -52,7 +52,7 @@ public class LeafNode extends Node
    * @param file
    *          PageFile des Knotens
    */
-  public LeafNode( final int pageNumber, final PageFile file )
+  public LeafNode( int pageNumber, PageFile file )
   {
     super( pageNumber, file );
     data = new int[file.getCapacity()];
@@ -67,7 +67,7 @@ public class LeafNode extends Node
    * @param file
    *          PageFile des Knotens
    */
-  public LeafNode( final PageFile file )
+  public LeafNode( PageFile file )
   {
     super( -1, file );
     data = new int[file.getCapacity()];
@@ -84,7 +84,7 @@ public class LeafNode extends Node
    * @return Object Dateneintrag
    */
   @Override
-  public Object getData( final int index )
+  public Object getData( int index )
   {
     return new Integer( data[index] );
   }
@@ -98,9 +98,9 @@ public class LeafNode extends Node
    *          des Datums
    */
   @Override
-  public void insertData( final Object obj, final HyperBoundingBox box )
+  public void insertData( Object obj, HyperBoundingBox box )
   {
-    data[counter] = ((Integer) obj).intValue();
+    data[counter] = ( (Integer)obj ).intValue();
     hyperBBs[counter] = box;
     unionMinBB = unionMinBB.unionBoundingBox( box );
     counter = counter + 1;
@@ -113,9 +113,9 @@ public class LeafNode extends Node
    *          des Eintrages
    */
   @Override
-  public void deleteData( final int index )
+  public void deleteData( int index )
   {
-    if( getUsedSpace() == 1 )
+    if( this.getUsedSpace() == 1 )
     {
       // only one element is a special case.
       hyperBBs[0] = HyperBoundingBox.getNullHyperBoundingBox( file.getDimension() );
@@ -139,16 +139,16 @@ public class LeafNode extends Node
    * @return Object LeafNode-Kopie
    */
   @Override
-  public Object clone( )
+  public Object clone()
   {
-    final LeafNode clone = new LeafNode( pageNumber, file );
-    clone.counter = counter;
-    clone.place = place;
-    clone.unionMinBB = (HyperBoundingBox) unionMinBB.clone();
-    clone.parentNode = parentNode;
+    LeafNode clone = new LeafNode( this.pageNumber, this.file );
+    clone.counter = this.counter;
+    clone.place = this.place;
+    clone.unionMinBB = (HyperBoundingBox)this.unionMinBB.clone();
+    clone.parentNode = this.parentNode;
 
     for( int i = 0; i < file.getCapacity(); i++ )
-      clone.hyperBBs[i] = (HyperBoundingBox) hyperBBs[i].clone();
+      clone.hyperBBs[i] = (HyperBoundingBox)this.hyperBBs[i].clone();
 
     return clone;
   }

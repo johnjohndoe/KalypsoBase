@@ -76,7 +76,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
  */
 public class NewGMLFileWizard extends Wizard implements INewWizard
 {
-  public static final String WIZARD_ID = "org.kalypso.ui.wizard.NewGMLFileWizard"; //$NON-NLS-1$
+  public static final String WIZARD_ID = "org.kalypso.ui.wizard.NewGMLFileWizard";
 
   private GMLSchemaSelectionPage m_schemaSelectionPage;
 
@@ -93,7 +93,7 @@ public class NewGMLFileWizard extends Wizard implements INewWizard
     setNeedsProgressMonitor( true );
     setHelpAvailable( false );
 
-    setWindowTitle( Messages.getString( "org.kalypso.ui.wizard.NewGMLFileWizard.0" ) ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString("org.kalypso.ui.wizard.NewGMLFileWizard.0") ); //$NON-NLS-1$
   }
 
   /**
@@ -112,7 +112,7 @@ public class NewGMLFileWizard extends Wizard implements INewWizard
       @Override
       public IStatus execute( final IProgressMonitor monitor ) throws CoreException
       {
-        monitor.beginTask( Messages.getString( "org.kalypso.ui.wizard.NewGMLFileWizard.1" ) + fileName, 3 ); //$NON-NLS-1$
+        monitor.beginTask( Messages.getString("org.kalypso.ui.wizard.NewGMLFileWizard.1") + fileName, 3 ); //$NON-NLS-1$
 
         final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
         final IResource resource = root.findMember( containerName );
@@ -124,7 +124,7 @@ public class NewGMLFileWizard extends Wizard implements INewWizard
 
         GmlSerializer.createGmlFile( featureType, file, new SubProgressMonitor( monitor, 2 ), null );
 
-        monitor.subTask( Messages.getString( "org.kalypso.ui.wizard.NewGMLFileWizard.4" ) ); //$NON-NLS-1$
+        monitor.subTask( Messages.getString("org.kalypso.ui.wizard.NewGMLFileWizard.4") ); //$NON-NLS-1$
         getShell().getDisplay().asyncExec( new Runnable()
         {
           @Override
@@ -136,7 +136,7 @@ public class NewGMLFileWizard extends Wizard implements INewWizard
             }
             catch( final PartInitException e )
             {
-              ErrorDialog.openError( getShell(), Messages.getString( "org.kalypso.ui.wizard.NewGMLFileWizard.5" ), Messages.getString( "org.kalypso.ui.wizard.NewGMLFileWizard.6" ), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
+              ErrorDialog.openError( getShell(), Messages.getString("org.kalypso.ui.wizard.NewGMLFileWizard.5"), Messages.getString("org.kalypso.ui.wizard.NewGMLFileWizard.6"), e.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
             }
           }
         } );
@@ -147,7 +147,7 @@ public class NewGMLFileWizard extends Wizard implements INewWizard
     };
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), false, false, op );
-    ErrorDialog.openError( getShell(), Messages.getString( "org.kalypso.ui.wizard.NewGMLFileWizard.7" ), Messages.getString( "org.kalypso.ui.wizard.NewGMLFileWizard.8" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
+    ErrorDialog.openError( getShell(), Messages.getString("org.kalypso.ui.wizard.NewGMLFileWizard.7"), Messages.getString("org.kalypso.ui.wizard.NewGMLFileWizard.8"), status ); //$NON-NLS-1$ //$NON-NLS-2$
     return status.isOK();
   }
 
@@ -160,8 +160,8 @@ public class NewGMLFileWizard extends Wizard implements INewWizard
     m_schemaSelectionPage = new GMLSchemaSelectionPage();
     m_featureTypeSelectionPage = new FeatureTypeSelectionPage();
     m_fileCreationPage = new WizardNewFileCreationPage( "newFile", m_selection ); //$NON-NLS-1$
-    m_fileCreationPage.setTitle( Messages.getString( "org.kalypso.ui.wizard.NewGMLFileWizard.10" ) ); //$NON-NLS-1$
-    m_fileCreationPage.setDescription( Messages.getString( "org.kalypso.ui.wizard.NewGMLFileWizard.11" ) ); //$NON-NLS-1$
+    m_fileCreationPage.setTitle( Messages.getString("org.kalypso.ui.wizard.NewGMLFileWizard.10") ); //$NON-NLS-1$
+    m_fileCreationPage.setDescription( Messages.getString("org.kalypso.ui.wizard.NewGMLFileWizard.11") ); //$NON-NLS-1$
     m_fileCreationPage.setFileName( "neu.gml" ); //$NON-NLS-1$
 
     addPage( m_schemaSelectionPage );

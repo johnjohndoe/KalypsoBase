@@ -41,8 +41,8 @@ import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.commons.xml.NSUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.xelement.IXElement;
@@ -89,11 +89,11 @@ public final class GMLXPathSegment
     return xSegments;
   }
 
-  private static final XElementFactory m_fac = new XElementFactory();
+  private final static XElementFactory m_fac = new XElementFactory();
 
-  private final transient IXElement m_addressXElement;
+  private transient final IXElement m_addressXElement;
 
-  private final transient IXElement m_conditionXElement;
+  private transient final IXElement m_conditionXElement;
 
   private final String m_segment;
 

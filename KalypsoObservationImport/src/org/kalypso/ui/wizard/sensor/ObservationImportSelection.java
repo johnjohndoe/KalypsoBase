@@ -58,7 +58,7 @@ public class ObservationImportSelection implements ISelection
 
   private final File m_fileSource;
 
-  public boolean isAppend( )
+  public boolean isAppend()
   {
     return m_append;
   }
@@ -69,7 +69,8 @@ public class ObservationImportSelection implements ISelection
 
   private final TimeZone m_sourceTimezone;
 
-  public ObservationImportSelection( final File fileSource, final IFile fileTarget, final INativeObservationAdapter adapter, final boolean append, final boolean retainMetadata, final TimeZone timezone )
+  public ObservationImportSelection( final File fileSource, final IFile fileTarget, final INativeObservationAdapter adapter,
+      final boolean append, final boolean retainMetadata, final TimeZone timezone )
   {
     m_fileSource = fileSource;
     m_fileTarget = fileTarget;
@@ -83,12 +84,12 @@ public class ObservationImportSelection implements ISelection
    * @see org.eclipse.jface.viewers.ISelection#isEmpty()
    */
   @Override
-  public boolean isEmpty( )
+  public boolean isEmpty()
   {
     return m_fileSource == null || m_fileTarget == null || m_selectedAdapter == null;
   }
 
-  public File getFileSource( )
+  public File getFileSource()
   {
     return m_fileSource;
   }
@@ -98,12 +99,12 @@ public class ObservationImportSelection implements ISelection
     return m_fileTarget;
   }
 
-  public INativeObservationAdapter getNativeAdapter( )
+  public INativeObservationAdapter getNativeAdapter()
   {
     return m_selectedAdapter;
   }
 
-  public boolean isRetainMetadata( )
+  public boolean isRetainMetadata()
   {
     return m_retainMetadata;
   }

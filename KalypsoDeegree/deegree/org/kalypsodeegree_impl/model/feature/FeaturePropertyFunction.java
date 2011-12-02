@@ -73,8 +73,8 @@ public abstract class FeaturePropertyFunction implements IFeaturePropertyHandler
    * </pre>
    * 
    * @param properties
-   *          the properties of the appinfo TODO: allow init to throw an exception in order to produce better error
-   *          messages, if function could not be correctly initialized
+   *            the properties of the appinfo TODO: allow init to throw an exception in order to produce better error
+   *            messages, if function could not be correctly initialized
    */
   public abstract void init( final Map<String, String> properties );
 

@@ -120,7 +120,7 @@ public class WQRelationTableViewer extends Composite
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
         comboSelected( selection.getFirstElement() );
       }
-    } );
+    });
   }
 
   protected void comboSelected( final Object element )
