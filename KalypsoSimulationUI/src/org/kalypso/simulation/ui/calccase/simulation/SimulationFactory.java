@@ -107,7 +107,6 @@ public final class SimulationFactory
       return Status.CANCEL_STATUS;
     }
   }
-
   public static ISimulationRunner createSimulationRunner( final IContainer calcCaseFolder, final Modeldata modelspec )
   {
     // REMARK: very crude: If no WPS-Endpoint is configured, we try to start the calculation locally

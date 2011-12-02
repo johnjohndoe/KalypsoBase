@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.afgui.scenarios;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.resources.IProject;
 
 import de.renew.workflow.connector.cases.CaseHandler;
@@ -49,12 +51,12 @@ import de.renew.workflow.connector.cases.CaseHandler;
  */
 public class ScenarioHandler extends CaseHandler implements IScenario
 {
+
   private final Scenario m_scenario;
 
   public ScenarioHandler( final Scenario scenario, final IProject project )
   {
     super( scenario, project );
-
     m_scenario = scenario;
   }
 
@@ -110,7 +112,39 @@ public class ScenarioHandler extends CaseHandler implements IScenario
 
     final int level = parent.getHierarchicalLevel();
 
-    return level + 1;
+    return (level + 1);
+  }
+
+  /**
+   * @see de.renew.workflow.connector.cases.CaseHandler#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals( final Object obj )
+  {
+    if( obj instanceof IScenario )
+    {
+      final IScenario other = (IScenario) obj;
+
+      final EqualsBuilder builder = new EqualsBuilder();
+      builder.append( getURI(), other.getURI() );
+
+      return builder.isEquals();
+    }
+
+    return super.equals( obj );
+  }
+
+  /**
+   * @see de.renew.workflow.connector.cases.CaseHandler#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    final HashCodeBuilder builder = new HashCodeBuilder();
+    builder.append( getClass().getName() );
+    builder.append( getURI() );
+
+    return builder.toHashCode();
   }
 
   /**

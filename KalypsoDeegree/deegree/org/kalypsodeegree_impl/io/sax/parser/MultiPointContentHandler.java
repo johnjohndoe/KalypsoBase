@@ -59,6 +59,7 @@ import org.xml.sax.XMLReader;
  * A content handler which parses a gml:MultiPoint element.<br>
  * 
  * @author Felipe Maximino
+ *
  */
 public class MultiPointContentHandler extends GMLElementContentHandler implements IPointHandler
 {
@@ -76,11 +77,6 @@ public class MultiPointContentHandler extends GMLElementContentHandler implement
 
   private String m_activeSrs;
 
-  public MultiPointContentHandler( final XMLReader reader, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContenthandler, final String defaultSrs )
-  {
-    this( reader, null, resultEater, parentContenthandler, defaultSrs );
-  }
-
   public MultiPointContentHandler( final XMLReader reader, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContenthandler )
   {
     this( reader, null, resultEater, parentContenthandler, null );
@@ -96,15 +92,14 @@ public class MultiPointContentHandler extends GMLElementContentHandler implement
     super( reader, NS.GML3, ELEMENT_MULTI_POINT, defaultSrs, parentContentHandler );
 
     m_resultEater = resultEater;
-    m_multiPointHandler = multiPointHandler;
+    m_multiPointHandler = multiPointHandler;    
 
     m_points = new ArrayList<GM_Point>();
     m_multiPoint = null;
-  }
+  }  
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doEndElement(java.lang.String,
-   *      java.lang.String, java.lang.String)
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doEndElement(java.lang.String, java.lang.String, java.lang.String)
    */
   @Override
   protected void doEndElement( final String uri, final String localName, final String name ) throws SAXException
@@ -123,8 +118,7 @@ public class MultiPointContentHandler extends GMLElementContentHandler implement
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#handleUnexpectedEndElement(java.lang.String,
-   *      java.lang.String, java.lang.String)
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#handleUnexpectedEndElement(java.lang.String, java.lang.String, java.lang.String)
    */
   @Override
   public void handleUnexpectedEndElement( final String uri, final String localName, final String name ) throws SAXException
@@ -146,7 +140,7 @@ public class MultiPointContentHandler extends GMLElementContentHandler implement
     final int nPoints = m_points.size();
 
     /* A MultiPoint is defined by one or more Points */
-    if( !(nPoints >= 1) )
+    if( !( nPoints >= 1 ) )
       throwSAXParseException( "A gml:MultiPoint must contain one or more points!" );
 
     final GM_Point[] pointsArr = m_points.toArray( new GM_Point[nPoints] );
@@ -156,12 +150,11 @@ public class MultiPointContentHandler extends GMLElementContentHandler implement
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doStartElement(java.lang.String,
-   *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doStartElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
   protected void doStartElement( final String uri, final String localName, final String name, final Attributes atts )
-  {
+  { 
     m_activeSrs = ContentHandlerUtils.parseSrsFromAttributes( atts, m_defaultSrs );
     m_srsDimension = ContentHandlerUtils.parseSrsDimensionFromAttributes( atts );
 
@@ -178,6 +171,6 @@ public class MultiPointContentHandler extends GMLElementContentHandler implement
     if( m_srsDimension != null && point.getCoordinateDimension() != m_srsDimension )
       throwSAXParseException( "The point " + point.toString() + "in this gml:MultiPoint does not have the number of coordinates specified in 'srsDimension': " + m_srsDimension );
 
-    m_points.add( point );
+    m_points.add( point );        
   }
 }

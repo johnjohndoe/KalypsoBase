@@ -85,7 +85,7 @@ public class ReloadHandler extends AbstractHandler
       @Override
       public void run( final IProgressMonitor monitor ) throws InvocationTargetException
       {
-        monitor.beginTask( Messages.getString( "org.kalypso.ogc.sensor.view.actions.ReloadHandler.0" ), 1 ); //$NON-NLS-1$
+        monitor.beginTask( Messages.getString("org.kalypso.ogc.sensor.view.actions.ReloadHandler.0"), 1 ); //$NON-NLS-1$
 
         // Important: clear the cache
         ObservationCache.clearCache();
@@ -95,7 +95,7 @@ public class ReloadHandler extends AbstractHandler
           rep.reload();
 
           ViewerUtilities.refresh( chooser.getViewer(), true );
-
+          
           monitor.worked( 1 );
         }
         catch( final RepositoryException e )
@@ -117,7 +117,7 @@ public class ReloadHandler extends AbstractHandler
     {
       e.printStackTrace();
 
-      MessageDialog.openWarning( shell, Messages.getString( "org.kalypso.ogc.sensor.view.actions.ReloadHandler.1" ), e.getLocalizedMessage() ); //$NON-NLS-1$
+      MessageDialog.openWarning( shell, Messages.getString("org.kalypso.ogc.sensor.view.actions.ReloadHandler.1"), e.getLocalizedMessage() ); //$NON-NLS-1$
     }
     catch( final InterruptedException ignored )
     {

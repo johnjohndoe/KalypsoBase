@@ -83,9 +83,9 @@ public class StopEditingCellEditorListener implements ICellEditorListener
   {
     m_cellEditor.removeListener( this );
 
-    /* Call cancel editing first, because else the following focus loss will aply the editor value */
+    /* Call cancel editing first, because else the following focus loss will aply the editor value*/
     m_viewer.cancelEditing();
-
+    
     m_cursor.stopEditing( m_cellEditor.getControl() );
   }
 
@@ -93,7 +93,7 @@ public class StopEditingCellEditorListener implements ICellEditorListener
    * @see org.eclipse.jface.viewers.ICellEditorListener#editorValueChanged(boolean, boolean)
    */
   @Override
-  public void editorValueChanged( final boolean oldValidState, final boolean newValidState )
+  public void editorValueChanged( boolean oldValidState, boolean newValidState )
   {
   }
 

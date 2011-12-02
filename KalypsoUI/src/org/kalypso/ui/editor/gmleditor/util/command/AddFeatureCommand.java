@@ -43,8 +43,6 @@ package org.kalypso.ui.editor.gmleditor.util.command;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.namespace.QName;
-
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -76,7 +74,7 @@ public class AddFeatureCommand implements ICommand
   private final GMLWorkspace m_workspace;
 
   /** A map with key=IPropertyType and value=Object to pass properties when the feature is newly created */
-  private final Map<IPropertyType, Object> m_properties;
+  private final Map<IPropertyType, Object> m_props;
 
   private final IFeatureSelectionManager m_selectionManager;
 
@@ -102,7 +100,7 @@ public class AddFeatureCommand implements ICommand
     m_parentFeature = parentFeature;
     m_propName = propertyName;
     m_pos = pos;
-    m_properties = properties;
+    m_props = properties;
     m_type = type;
     m_selectionManager = selectionManager;
     m_depth = depth;
@@ -144,7 +142,7 @@ public class AddFeatureCommand implements ICommand
     m_pos = pos;
     m_doFireEvents = doFireEvents;
     m_doAddOnProcess = doAddOnProcess;
-    m_properties = null;
+    m_props = null;
     m_newFeature = newFeature;
     m_type = null;
     m_selectionManager = selectionManager;
@@ -170,9 +168,9 @@ public class AddFeatureCommand implements ICommand
     {
       m_newFeature = m_workspace.createFeature( m_parentFeature, m_propName, m_type, m_depth );
 
-      if( m_properties != null )
+      if( m_props != null )
       {
-        for( final Map.Entry<IPropertyType, Object> entry : m_properties.entrySet() )
+        for( final Map.Entry<IPropertyType, Object> entry : m_props.entrySet() )
           m_newFeature.setProperty( entry.getKey(), entry.getValue() );
       }
     }
@@ -217,6 +215,9 @@ public class AddFeatureCommand implements ICommand
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature, m_newFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
 
+  /**
+   * @see org.kalypso.commons.command.ICommand#getDescription()
+   */
   @Override
   public String getDescription( )
   {
@@ -234,11 +235,6 @@ public class AddFeatureCommand implements ICommand
   public void dropSelection( final boolean dropSelection )
   {
     m_dropSelection = dropSelection;
-  }
-
-  public void addProperty( final QName qname, final Object value )
-  {
-    m_properties.put( m_type.getProperty( qname ), value );
   }
 
 }

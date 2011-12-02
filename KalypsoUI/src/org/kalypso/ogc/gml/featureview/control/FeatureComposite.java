@@ -48,7 +48,7 @@ import java.util.List;
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.util.SafeRunnable;
@@ -198,6 +198,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     m_modifyListeners.clear();
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#isValid()
+   */
   @Override
   public boolean isValid( )
   {
@@ -360,7 +363,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     final ControlType controlType = (ControlType) control.getData( DATA_CONTROL_TYPE );
 
     // REMARK: Special case for direct children of Tab-Folders. Setting the visibility here
-    // breaks the tab folder behavior. We assume, that the visibility of a
+    // breaks the tab folder behaviour. We assume, that the visibility of a
     // tab folder item is never changed depending on a value of a feature.
     if( !(control.getParent() instanceof org.eclipse.swt.widgets.TabFolder) )
     {
@@ -480,7 +483,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     /* TODO: move all from above into the factory method */
     final IFeatureControlFactory controlFactory = createControlFactory( parent, controlType );
     final IFeatureControl featureControl = createFeatureControl( controlFactory, feature, ftp, controlType, annotation );
-    final Control control = featureControl.createControl(m_formToolkit, parent, style );
+    final Control control = featureControl.createControl( parent, style );
     addFeatureControl( featureControl );
     return control;
   }

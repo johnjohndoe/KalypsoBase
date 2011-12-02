@@ -50,7 +50,7 @@ import org.osgi.framework.BundleContext;
  * 
  * @author Holger Albert
  */
-public final class FrameworkUtilities
+public class FrameworkUtilities
 {
   /**
    * The constructor.
@@ -69,16 +69,16 @@ public final class FrameworkUtilities
    *          The default value.
    * @return The value of the requested property, or the default value if the property is undefined.
    */
-  public static String getProperty( final String key, final String defaultValue )
+  public static String getProperty( String key, String defaultValue )
   {
     /* Get the bundle. */
-    final Bundle bundle = EclipsePlatformContributionsPlugin.getDefault().getBundle();
+    Bundle bundle = EclipsePlatformContributionsPlugin.getDefault().getBundle();
 
     /* Get the bundle context. */
-    final BundleContext bundleContext = bundle.getBundleContext();
+    BundleContext bundleContext = bundle.getBundleContext();
 
     /* Get the property. */
-    final String property = bundleContext.getProperty( key );
+    String property = bundleContext.getProperty( key );
     if( property != null && property.length() > 0 )
       return property;
 

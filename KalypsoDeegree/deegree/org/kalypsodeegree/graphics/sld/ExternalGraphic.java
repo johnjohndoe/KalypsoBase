@@ -70,7 +70,7 @@ public interface ExternalGraphic
    * format of an ExternalGraphic.
    * 
    * @param format
-   *          Format of the external graphic
+   *            Format of the external graphic
    */
   void setFormat( final String format );
 
@@ -88,7 +88,7 @@ public interface ExternalGraphic
    * ExternalGraphic.
    * 
    * @param onlineResource
-   *          URL of the external graphic
+   *            URL of the external graphic
    */
   void setOnlineResource( final String onlineResource );
 

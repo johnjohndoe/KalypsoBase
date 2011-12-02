@@ -60,8 +60,6 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  */
 public interface IKalypsoTheme extends IAdaptable
 {
-  String PROPERTY_CUSTOM_THEME_ID = "customID";
-
   /**
    * Name of the property which determines if the user is allowed to deleted this theme.
    */
@@ -184,14 +182,4 @@ public interface IKalypsoTheme extends IAdaptable
    *          The id of this theme.
    */
   void setId( String id );
-
-  /**
-   * Set active envelope
-   * 
-   * @param boundingBox
-   *          defines the shown envelope for the theme, if the envelope is not set in this way it, it will be calculated
-   *          by the theme self
-   */
-  void setActiveEnvelope( final GM_Envelope boundingBox );
-
 }

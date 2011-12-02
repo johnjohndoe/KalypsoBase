@@ -360,6 +360,9 @@ public class DictionaryFeature implements Feature
     return null;
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setLocation(org.kalypsodeegree.model.geometry.GM_Object)
+   */
   @Override
   public void setLocation( final GM_Object location )
   {

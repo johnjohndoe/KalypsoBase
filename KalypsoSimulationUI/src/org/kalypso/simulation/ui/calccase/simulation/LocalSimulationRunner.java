@@ -51,6 +51,7 @@ import org.kalypso.simulation.core.simspec.Modeldata;
 
 /**
  * @author Gernot Belger
+ *
  */
 public class LocalSimulationRunner implements ISimulationRunner
 {

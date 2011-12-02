@@ -42,7 +42,7 @@ package org.kalypso.ui.editor.styleeditor.symbolizer;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;

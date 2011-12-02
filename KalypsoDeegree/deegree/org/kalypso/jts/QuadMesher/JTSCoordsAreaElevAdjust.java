@@ -99,47 +99,46 @@ public class JTSCoordsAreaElevAdjust
     final int numLong = m_coords.length;
 
     // calculate areas for j = 0 (start) and j = numCross (end)
-    final Coordinate lineCoordsStart[] = copyArray( 0 );
+    Coordinate lineCoordsStart[] = copyArray(0);
     final double startArea = calculateAreaZ( lineCoordsStart );
-    final Coordinate lineCoordsEnd[] = copyArray( numCross - 1 );
+    Coordinate lineCoordsEnd[] = copyArray( numCross - 1 );
     final double endArea = calculateAreaZ( lineCoordsEnd );
 
-    for( int j = 1; j < numCross - 2; j++ ) // the values of the first and last row of the coordinate array won't be
-// touched.
+    for( int j = 1; j < numCross - 2; j++ )  //the values of the first and last row of the coordinate array won't be touched.
     {
-      // calculate area ratio
+      //calculate area ratio
       final double ratio = j / (numCross - 1);
-      // calculate the desired target area
-      final double targetArea = startArea * (1 - ratio) + endArea * ratio;
-      // calculate the actual area
-      final Coordinate lineCoords[] = copyArray( j );
+      //calculate the desired target area
+      final double targetArea = startArea * (1 - ratio) + endArea * ratio; 
+      //calculate the actual area 
+      Coordinate lineCoords[] = copyArray(j);
 
       final double currentArea = calculateAreaZ( lineCoords );
-      // calculate the area difference
+      //calculate the area difference
       final double dArea = targetArea - currentArea;
-      // calculate the segment width betwenn the coordinates
+      //calculate the segment width betwenn the coordinates
       final double[] width = calcWidths( lineCoords );
-      // calculate the adjust level
-      final double dZ = calcDZ( width, dArea );
-      // adjust the z-values for the inner coordinates
-      for( int i = 1; i < numLong - 2; i++ )
+      //calculate the adjust level
+      final double dZ = calcDZ ( width, dArea );
+      //adjust the z-values for the inner coordinates
+      for ( int i = 1; i < numLong - 2; i++ )
       {
         m_coords[j][i].z = m_coords[j][i].z - dZ;
       }
 
-      // TODO: remove later *************
+      //TODO: remove later *************
       /* Just for debug purposes */
-      // calculate the actual area again and check if the taken approach is right
-      final Coordinate lineCoords2[] = copyArray( j );
+      //calculate the actual area again and check if the taken approach is right
+      Coordinate lineCoords2[] = copyArray(j);
       final double currentAreaAdjusted = calculateAreaZ( lineCoords2 );
       final double dAreaAdjusted = targetArea - currentAreaAdjusted;
       if( dAreaAdjusted - dArea > 0.10 )
       {
-        final String s = String.format( "Schlauchgenerator: Flächenausgleich nicht hinreichend genau: %f - %f", targetArea, currentAreaAdjusted );
+        String s = String.format( "Schlauchgenerator: Flächenausgleich nicht hinreichend genau: %f - %f", targetArea, currentAreaAdjusted );
         System.out.println( s );
       }
-      // /********************************
-
+      ///********************************
+      
     }
     return m_coords;
   }
@@ -147,25 +146,25 @@ public class JTSCoordsAreaElevAdjust
   /**
    * copies the second dimension of a two-dimensional array into an one-dimensional array
    */
-  private Coordinate[] copyArray( final int j )
+  private Coordinate[] copyArray( int j )
   {
-    final Coordinate[] coord = new Coordinate[m_coords.length];
-
-    for( int i = 0; i < coord.length; i++ )
+    Coordinate[] coord = new Coordinate[m_coords.length];
+    
+    for( int i = 0; i < coord.length ; i++ )
     {
       coord[i] = m_coords[i][j];
     }
     return coord;
   }
 
-  private double calcDZ( final double[] width, final double dArea )
+  private double calcDZ( double[] width, double dArea )
   {
     double dZ = 0;
     double wi = 0;
-    // calculate the virt. width of the the first and last segment
-    wi = 0.5 * (width[0] + width[width.length - 1]);
-    // add the width of the segments inbetween
-    for( int i = 1; i < width.length - 1; i++ )
+    //calculate the virt. width of the the first and last segment
+    wi = 0.5 * ( width[0] + width [width.length - 1] );
+    //add the width of the segments inbetween
+    for (int i = 1; i < width.length - 1; i++)
     {
       wi = wi + width[i];
     }
@@ -173,13 +172,13 @@ public class JTSCoordsAreaElevAdjust
     return dZ;
   }
 
-  private double[] calcWidths( final Coordinate[] lineCoords )
+  private double[] calcWidths( Coordinate[] lineCoords )
   {
-    final double[] width = new double[lineCoords.length - 2];
-
-    for( int i = 0; i < lineCoords.length - 2; i++ )
+    final double[] width = new double [lineCoords.length - 2];
+    
+    for (int i = 0; i < lineCoords.length - 2; i++)
     {
-      width[i] = lineCoords[i].distance( lineCoords[i + 1] );
+      width[i] = lineCoords[i].distance( lineCoords[i+1] );
     }
     return width;
   }
@@ -187,20 +186,20 @@ public class JTSCoordsAreaElevAdjust
   /**
    * calculates the area z value of a coordinate array
    */
-  private double calculateAreaZ( final Coordinate[] line_coords )
+  private double calculateAreaZ( Coordinate[] line_coords)
   {
     double width = 0;
     double area = 0;
     double maxZ = 0;
-
-    maxZ = calcMaxZ( line_coords );
-
+    
+    maxZ = calcMaxZ (line_coords);
+   
     for( int i = 0; i < line_coords.length - 1; i++ )
-    {
-      final double z1 = maxZ - line_coords[i].z;
-      final double z2 = maxZ - line_coords[i + 1].z;
-      width = line_coords[i].distance( line_coords[i + 1] );
-      area = area + (z1 + z2) / 2 * width;
+    {   
+      final double z1 = (maxZ - line_coords[i].z);
+      final double z2 = (maxZ - line_coords[i+1].z);
+      width = line_coords[i].distance( line_coords[i+1] );
+      area =  area + ( z1 + z2 ) / 2 * width;
     }
     return area;
   }
@@ -208,15 +207,15 @@ public class JTSCoordsAreaElevAdjust
   /**
    * gives the maximal z value of a coordinate array
    */
-  private double calcMaxZ( final Coordinate[] line_coords )
-  {
-    double maxZ = -9999;
-
-    for( final Coordinate line_coord : line_coords )
+    private double calcMaxZ( Coordinate[] line_coords )
     {
-      if( maxZ < line_coord.z )
-        maxZ = line_coord.z;
+      double maxZ = -9999;
+      
+      for ( int i = 0; i < line_coords.length ; i++ )
+      {
+        if ( maxZ < line_coords[i].z )
+          maxZ = line_coords[i].z;
+      }
+      return maxZ;
     }
-    return maxZ;
-  }
 }

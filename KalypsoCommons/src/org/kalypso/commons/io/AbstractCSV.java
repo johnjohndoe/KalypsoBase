@@ -49,7 +49,7 @@ import java.util.Vector;
 
 /**
  * AbstractCSV
- * 
+ *
  * @author schlienger
  */
 public abstract class AbstractCSV implements ITabledValues
@@ -67,11 +67,11 @@ public abstract class AbstractCSV implements ITabledValues
 
   /**
    * Constructor
-   * 
+   *
    * @param ignoreEmptyLines
    *          when true, empty lines are not stored in this object
    * @param startLine
-   *          line number to start reading. starts with 1
+   *        line number to start reading. starts with 1
    */
   public AbstractCSV( final int startLine, final boolean ignoreEmptyLines )
   {
@@ -81,7 +81,7 @@ public abstract class AbstractCSV implements ITabledValues
 
   /**
    * Sets the string that delimits the commented lines
-   * 
+   *
    * @param str
    */
   public void setCommentedLineBeginString( final String str )
@@ -102,13 +102,13 @@ public abstract class AbstractCSV implements ITabledValues
    * @see org.kalypso.commons.io.ITabledValues#getLines()
    */
   @Override
-  public int getLines( )
+  public int getLines()
   {
     return m_lines.size();
   }
 
   @Override
-  public int getColumns( )
+  public int getColumns()
   {
     if( getLines() == 0 )
       return 0;
@@ -136,7 +136,7 @@ public abstract class AbstractCSV implements ITabledValues
 
   /**
    * Fetch the CSV-Values from the reader. Caller should take care of closing the reader.
-   * 
+   *
    * @param reader
    */
   public void fetch( final Reader reader ) throws IOException
@@ -155,7 +155,8 @@ public abstract class AbstractCSV implements ITabledValues
 
     while( line != null )
     {
-      if( m_ignoreEmptyLines && line.length() == 0 || m_commentedLineBeginString != null && line.startsWith( m_commentedLineBeginString ) )
+      if( m_ignoreEmptyLines && line.length() == 0 || m_commentedLineBeginString != null
+          && line.startsWith( m_commentedLineBeginString ) )
       {
         line = r.readLine();
         continue;
@@ -174,8 +175,9 @@ public abstract class AbstractCSV implements ITabledValues
 
   /**
    * Saves the contents in the given Writer
-   * 
+   *
    * @param writer
+   *
    * @throws IOException
    */
   public void save( final Writer writer ) throws IOException

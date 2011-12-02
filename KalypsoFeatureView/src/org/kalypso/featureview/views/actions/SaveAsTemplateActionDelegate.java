@@ -93,7 +93,7 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
 
   protected static final JAXBContext templateJC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
-  private static final String STR_ALS_VORLAGE_SPEICHERN = Messages.getString( "org.kalypso.featureview.views.actions.SaveAsTemplateActionDelegate.0" ); //$NON-NLS-1$
+  private static final String STR_ALS_VORLAGE_SPEICHERN = Messages.getString("org.kalypso.featureview.views.actions.SaveAsTemplateActionDelegate.0"); //$NON-NLS-1$
 
   private IViewPart m_view;
 
@@ -120,7 +120,7 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
 
     if( gmlWorkspace == null || feature == null )
     {
-      MessageDialog.openWarning( shell, STR_ALS_VORLAGE_SPEICHERN, Messages.getString( "org.kalypso.featureview.views.actions.SaveAsTemplateActionDelegate.1" ) ); //$NON-NLS-1$
+      MessageDialog.openWarning( shell, STR_ALS_VORLAGE_SPEICHERN, Messages.getString("org.kalypso.featureview.views.actions.SaveAsTemplateActionDelegate.1") ); //$NON-NLS-1$
       return;
     }
 
@@ -142,11 +142,11 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
     final IFile file = root.getFile( fileToWrite );
     if( file.exists() )
     {
-      if( !MessageDialog.openQuestion( shell, STR_ALS_VORLAGE_SPEICHERN, Messages.getString( "org.kalypso.featureview.views.actions.SaveAsTemplateActionDelegate.3" ) ) ) //$NON-NLS-1$
+      if( !MessageDialog.openQuestion( shell, STR_ALS_VORLAGE_SPEICHERN, Messages.getString("org.kalypso.featureview.views.actions.SaveAsTemplateActionDelegate.3") ) ) //$NON-NLS-1$
         return;
     }
 
-    final Job job = new Job( Messages.getString( "org.kalypso.featureview.views.actions.SaveAsTemplateActionDelegate.4" ) ) //$NON-NLS-1$
+    final Job job = new Job( Messages.getString("org.kalypso.featureview.views.actions.SaveAsTemplateActionDelegate.4") ) //$NON-NLS-1$
     {
       @Override
       protected IStatus run( final IProgressMonitor monitor )
@@ -184,15 +184,15 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
         }
         catch( final JAXBException e )
         {
-          return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.featureview.views.actions.SaveAsTemplateActionDelegate.9" ), e ); //$NON-NLS-1$
+          return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.featureview.views.actions.SaveAsTemplateActionDelegate.9"), e ); //$NON-NLS-1$
         }
         catch( final CoreException e )
         {
           return e.getStatus();
         }
-        catch( final IOException e )
+        catch( IOException e )
         {
-          return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.featureview.views.actions.SaveAsTemplateActionDelegate.9" ), e ); //$NON-NLS-1$
+          return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.featureview.views.actions.SaveAsTemplateActionDelegate.9"), e ); //$NON-NLS-1$
         }
 
         return Status.OK_STATUS;

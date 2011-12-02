@@ -96,12 +96,8 @@ public class PolynomeChartLayer extends AbstractLineLayer
     final double min = (Double) domainRange.getMin();
     final double max = (Double) domainRange.getMax();
 
-    final PolylineFigure plf = new PolylineFigure();
-    final ILineStyle pls = (ILineStyle) getStyleSet().getStyle( "line_style" );
-    plf.setStyle( pls );
-    final PointFigure pf = new PointFigure();
-    final IPointStyle ps = (IPointStyle) getStyleSet().getStyle( "point_style" );
-    pf.setStyle( ps );
+    final PolylineFigure plf = getPolylineFigure();
+    final PointFigure pf = getPointFigure();
 
     final ArrayList<Point> path = new ArrayList<Point>();
 
@@ -118,9 +114,7 @@ public class PolynomeChartLayer extends AbstractLineLayer
     {
       final IPolynomial1D poly = PolynomialUtilities.getPoly( m_data.getPolyArray(), pos );
       if( poly == null )
-      {
         continue;
-      }
 
       final double value = poly.computeResult( pos );
 
@@ -144,7 +138,7 @@ public class PolynomeChartLayer extends AbstractLineLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Number> getDomainRange( )
   {
     return m_data.getDomainRange();
   }
@@ -153,7 +147,7 @@ public class PolynomeChartLayer extends AbstractLineLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     return m_data.getTargetRange();
   }

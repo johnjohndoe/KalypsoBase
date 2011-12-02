@@ -75,7 +75,7 @@ public class ColorMapEntryContentProvider implements IStructuredContentProvider,
    *      java.lang.Object)
    */
   @Override
-  public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
+  public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
   {
     m_viewer = null;
     if( m_input != null )
@@ -107,7 +107,7 @@ public class ColorMapEntryContentProvider implements IStructuredContentProvider,
    * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
   @Override
-  public Object[] getElements( final Object parent )
+  public Object[] getElements( Object parent )
   {
     if( m_input == null )
       return new Object[] {};
@@ -119,7 +119,7 @@ public class ColorMapEntryContentProvider implements IStructuredContentProvider,
    * @see org.kalypso.ui.editor.styleeditor.colorMapEntryTable.IColorMapEntryViewer#addColorMapEntry(org.kalypsodeegree.graphics.sld.ColorMapEntry)
    */
   @Override
-  public void addColorMapEntry( final ColorMapEntry entry )
+  public void addColorMapEntry( ColorMapEntry entry )
   {
     if( m_viewer != null && !m_viewer.getControl().isDisposed() )
       m_viewer.refresh();
@@ -129,7 +129,7 @@ public class ColorMapEntryContentProvider implements IStructuredContentProvider,
    * @see org.kalypso.ui.editor.styleeditor.colorMapEntryTable.IColorMapEntryViewer#removeColorMapEntry(org.kalypsodeegree.graphics.sld.ColorMapEntry)
    */
   @Override
-  public void removeColorMapEntry( final ColorMapEntry entry )
+  public void removeColorMapEntry( ColorMapEntry entry )
   {
     if( m_viewer != null && !m_viewer.getControl().isDisposed() )
       m_viewer.refresh();
@@ -139,7 +139,7 @@ public class ColorMapEntryContentProvider implements IStructuredContentProvider,
    * @see org.kalypso.ui.editor.styleeditor.colorMapEntryTable.IColorMapEntryViewer#updateColorMapEntry(org.kalypsodeegree.graphics.sld.ColorMapEntry)
    */
   @Override
-  public void updateColorMapEntry( final ColorMapEntry entry )
+  public void updateColorMapEntry( ColorMapEntry entry )
   {
     if( m_viewer != null && !m_viewer.getControl().isDisposed() )
       m_viewer.refresh();

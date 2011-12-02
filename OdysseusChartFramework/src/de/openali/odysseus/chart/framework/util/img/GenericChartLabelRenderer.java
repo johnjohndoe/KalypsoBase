@@ -46,7 +46,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
@@ -57,11 +57,11 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Transform;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
-import de.openali.odysseus.chart.framework.util.ChartUtilities;
 
 /**
  * @author kimwerner
@@ -165,7 +165,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
       return line;
     int maxChar = width / charWidth;
     if( maxChar < 6 )
-      return StringUtils.abbreviate( line, 5 );
+      return (StringUtils.abbreviate( line, 5 ));
     String s = StringUtils.abbreviateMiddle( line, "..", maxChar );
     while( calcTextSize( gc, s ).x > width )
     {
@@ -187,7 +187,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
 
   private Point getImageSize( final String imageURL )
   {
-    final Device device = ChartUtilities.getDisplay();
+    final Device device = PlatformUI.getWorkbench().getDisplay();
     final ImageData imageData = loadImage( device, imageURL.substring( 4 ) );
     if( imageData == null )
       return new Point( 0, 0 );
@@ -281,7 +281,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
   @Override
   public Rectangle getSize( )
   {
-    final Device device = ChartUtilities.getDisplay();
+    final Device device = PlatformUI.getWorkbench().getDisplay();
     final Image image = new Image( device, 1, 1 );
     final GC gc = new GC( image );
     try
@@ -499,7 +499,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
         final int flags = m_drawTransparent | SWT.DRAW_DELIMITER | SWT.DRAW_TAB;
 
         m_titleBean.getTextStyle().apply( gc );
-        for( final String line : lines )
+        for( String line : lines )
         {
           final String fitLine = fitToFixedWidth( gc, line, textRect.width );
 

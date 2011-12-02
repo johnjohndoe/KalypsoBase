@@ -1,5 +1,5 @@
 /* --------------- Kalypso-Header --------------------------------------------
-
+ 
  This file is part of kalypso.
  Copyright (C) 2004, 2005 by:
 
@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ------------------------------------------------------------------------------------ */
 package org.kalypso.contribs.eclipse.ui.views.propertysheet;
 
@@ -71,11 +71,11 @@ public class SimplePropertySheetViewer extends Viewer
     createControl( parent );
   }
 
-  private void createControl( final Composite parent )
+  private final void createControl( final Composite parent )
   {
     m_viewer = new DefaultTableViewer( parent, SWT.BORDER | SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL );
-    m_viewer.addColumn( "property", Messages.getString( "org.kalypso.contribs.eclipse.ui.views.propertysheet.SimplePropertySheetViewer.1" ), null, m_propColSize, -1, false, SWT.CENTER, true, false ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_viewer.addColumn( "value", Messages.getString( "org.kalypso.contribs.eclipse.ui.views.propertysheet.SimplePropertySheetViewer.3" ), null, m_valueColSize, -1, false, SWT.CENTER, true, false ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_viewer.addColumn( "property", Messages.getString("org.kalypso.contribs.eclipse.ui.views.propertysheet.SimplePropertySheetViewer.1"), null, m_propColSize, -1, false, SWT.CENTER, true, false ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_viewer.addColumn( "value", Messages.getString("org.kalypso.contribs.eclipse.ui.views.propertysheet.SimplePropertySheetViewer.3"), null, m_valueColSize, -1, false, SWT.CENTER, true, false ); //$NON-NLS-1$ //$NON-NLS-2$
 
     m_viewer.setLabelProvider( new PropertySheetTableLabelProvider( null ) );
     m_viewer.setContentProvider( new PropertySheetTableContentProvider() );

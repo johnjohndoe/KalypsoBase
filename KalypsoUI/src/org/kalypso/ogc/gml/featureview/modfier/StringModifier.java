@@ -84,7 +84,7 @@ public class StringModifier extends AbstractFeatureModifier
 
   /**
    * @param data
-   *          real property value
+   *            real property value
    */
   private String toText( final Object data )
   {
@@ -205,9 +205,9 @@ public class StringModifier extends AbstractFeatureModifier
     if( value instanceof List )
     {
       final List< ? > list = (List< ? >) value;
-      if( list.size() == 0 )
+      if( (list).size() == 0 )
         result = null;
-      else if( list.size() == 1 )
+      else if( (list).size() == 1 )
         result = list.get( 0 );
       else
         result = list;

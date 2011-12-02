@@ -246,7 +246,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     try
     {
       final Bundle bundle = Platform.getBundle( pluginId );
-      final Class<IWidget> widgetClass = (Class<IWidget>) bundle.loadClass( widgetName );
+      final Class<IWidget> widgetClass = bundle.loadClass( widgetName );
       return widgetClass.newInstance();
     }
     catch( final Exception e )

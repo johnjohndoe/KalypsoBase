@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoDeegree Plug-in
 Bundle-SymbolicName: org.kalypso.deegree; singleton:=true
-Bundle-Version: 11.6.3.qualifier
+Bundle-Version: 11.6.2.qualifier
 Bundle-ClassPath: lib/batik/lib/batik-anim.jar,
  lib/batik/lib/batik-awt-util.jar,
  lib/batik/lib/batik-bridge.jar,
@@ -36,7 +36,8 @@ Require-Bundle: org.junit4;resolution:=optional,
  org.kalypso.gmlschema;visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.kalypsodeegree.KalypsoDeegreePlugin
-Export-Package: org.kalypso.deegree.binding.gml,
+Export-Package: kalypso.wb.tuhh.de.simpletypebase,
+ org.kalypso.deegree.binding.gml,
  org.kalypso.deegree.binding.swe,
  org.kalypso.gml,
  org.kalypso.gml.test,
@@ -66,11 +67,13 @@ Export-Package: org.kalypso.deegree.binding.gml,
  org.kalypsodeegree.filterencoding,
  org.kalypsodeegree.filterencoding.visitor,
  org.kalypsodeegree.graphics.displayelements,
+ org.kalypsodeegree.graphics.legend,
  org.kalypsodeegree.graphics.sld,
  org.kalypsodeegree.graphics.transformation,
  org.kalypsodeegree.model,
  org.kalypsodeegree.model.coverage,
  org.kalypsodeegree.model.feature,
+ org.kalypsodeegree.model.feature.binding,
  org.kalypsodeegree.model.feature.event,
  org.kalypsodeegree.model.feature.validation,
  org.kalypsodeegree.model.geometry,
@@ -79,6 +82,7 @@ Export-Package: org.kalypso.deegree.binding.gml,
  org.kalypsodeegree.tools,
  org.kalypsodeegree.xml,
  org.kalypsodeegree_impl.filterencoding,
+ org.kalypsodeegree_impl.gml.binding,
  org.kalypsodeegree_impl.gml.binding.commons,
  org.kalypsodeegree_impl.gml.binding.math,
  org.kalypsodeegree_impl.gml.binding.math.resources,
@@ -93,6 +97,7 @@ Export-Package: org.kalypso.deegree.binding.gml,
  org.kalypsodeegree_impl.graphics.displayelements,
  org.kalypsodeegree_impl.graphics.displayelements.strokearrow,
  org.kalypsodeegree_impl.graphics.displayelements.strokearrow.geometries,
+ org.kalypsodeegree_impl.graphics.legend,
  org.kalypsodeegree_impl.graphics.sld,
  org.kalypsodeegree_impl.graphics.sld.awt,
  org.kalypsodeegree_impl.graphics.transformation,
@@ -117,4 +122,4 @@ Export-Package: org.kalypso.deegree.binding.gml,
  org.kalypsodeegree_impl.tools,
  org.kalypsodeegree_impl.tools.refinement,
  org.openjump.core.graph.delauneySimplexInsert
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

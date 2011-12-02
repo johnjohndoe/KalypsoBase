@@ -48,7 +48,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.i18n.Messages;
@@ -164,7 +164,7 @@ public class AdvancedEditModeMultiDelegate extends AbstractAdvancedEditModeMovem
       }
       else
       {
-        map.put( feature, ArrayUtils.add( points, point ) );
+        map.put( feature, (IAdvancedEditWidgetSnappedPoint[]) ArrayUtils.add( points, point ) );
       }
     }
 

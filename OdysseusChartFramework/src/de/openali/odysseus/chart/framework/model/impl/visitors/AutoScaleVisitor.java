@@ -43,6 +43,8 @@ package de.openali.odysseus.chart.framework.model.impl.visitors;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.commons.java.lang.Objects;
+
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
@@ -61,9 +63,12 @@ public class AutoScaleVisitor implements IAxisVisitor
 
   private final IChartModel m_model;
 
-  public AutoScaleVisitor( final IChartModel model )
+  private final boolean m_recursive;
+
+  public AutoScaleVisitor( final IChartModel model, final boolean recursive )
   {
     m_model = model;
+    m_recursive = recursive;
   }
 
   /**
@@ -72,17 +77,17 @@ public class AutoScaleVisitor implements IAxisVisitor
   @Override
   public void visit( final IAxis axis )
   {
-    final IChartLayer[] layers = m_model.getLayerManager().getLayers( axis, true );
-    final List<IDataRange< ? >> ranges = new ArrayList<IDataRange< ? >>( layers.length );
+    final IChartLayer[] layers = m_model.getLayerManager().getLayers( axis, m_recursive );
+    final List<IDataRange<Number>> ranges = new ArrayList<IDataRange<Number>>( layers.length );
     final IAxisVisitorBehavior visitorBehavior = axis.getAxisVisitorBehavior();
     if( visitorBehavior != null && !visitorBehavior.isAutoscaleEnabled() )
       return;
 
     for( final IChartLayer layer : layers )
     {
-      if( layer.isVisible() && layer.isAutoScale() )
+      if( layer.isVisible() )
       {
-        final IDataRange< ? > range = getRangeFor( layer, axis );
+        final IDataRange<Number> range = getRangeFor( layer, axis );
         if( range != null )
         {
           ranges.add( range );
@@ -151,7 +156,7 @@ public class AutoScaleVisitor implements IAxisVisitor
   /**
    * @return DataRange of all domain or target data available in the given layer
    */
-  private IDataRange< ? > getRangeFor( final IChartLayer layer, final IAxis axis )
+  private IDataRange<Number> getRangeFor( final IChartLayer layer, final IAxis axis )
   {
     if( axis == layer.getCoordinateMapper().getDomainAxis() )
       return layer.getDomainRange();

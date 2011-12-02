@@ -44,6 +44,7 @@ import org.kalypsodeegree.graphics.sld.PolygonColorMapEntry;
 
 /**
  * @author jung
+ * 
  */
 public interface IPolygonColorMapEntryModifyListener
 {

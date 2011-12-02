@@ -62,9 +62,9 @@ public abstract class AbstractLegendViewActionDelegate implements IViewActionDel
 
   protected final void handleError( final String msg )
   {
-    Logger.getLogger( getClass().getName() ).info( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.view.legend.AbstractLegendViewActionDelegate_0" ) + msg ); //$NON-NLS-1$
+    Logger.getLogger( getClass().getName() ).info( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.legend.AbstractLegendViewActionDelegate_0") + msg ); //$NON-NLS-1$
 
-    // MessageDialog.openWarning( m_view.getViewSite().getShell(), Messages.AbstractLegendViewActionDelegate_1, msg );
+   // MessageDialog.openWarning( m_view.getViewSite().getShell(), Messages.AbstractLegendViewActionDelegate_1, msg );
   }
 
   @Override

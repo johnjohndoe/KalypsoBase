@@ -50,6 +50,7 @@ import java.util.List;
 import javax.xml.bind.JAXBElement;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -211,7 +212,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell, IT
 
     final IKalypsoThemeFactory themeFactory = ThemeFactoryExtension.getThemeFactory( linktype );
     if( themeFactory == null )
-      throw new UnsupportedOperationException( Messages.getString( "org.kalypso.ogc.gml.GisTemplateMapModell.1", layerName.getValue(), linktype ) ); //$NON-NLS-1$
+      throw new NotImplementedException( Messages.getString( "org.kalypso.ogc.gml.GisTemplateMapModell.1", layerName.getValue(), linktype ) ); //$NON-NLS-1$
 
     final IKalypsoTheme theme = themeFactory.createTheme( layerName, layerType, context, this, m_selectionManager );
     if( theme instanceof AbstractKalypsoTheme )
@@ -222,8 +223,8 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell, IT
     }
 
     /* Read the properties. */
-    final List<Property> properties = layerType.getProperty();
-    for( final Property property : properties )
+    List<Property> properties = layerType.getProperty();
+    for( Property property : properties )
       theme.setProperty( property.getName(), property.getValue() );
 
     return theme;
@@ -599,7 +600,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell, IT
    */
   @SuppressWarnings("rawtypes")
   @Override
-  public Object getAdapter( final Class adapter )
+  public Object getAdapter( Class adapter )
   {
     if( adapter.equals( IMapModell.class ) )
       return this;

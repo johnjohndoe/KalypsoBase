@@ -63,7 +63,7 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
   // should the placement be optimized?
   private boolean m_auto = false;
 
-  PointPlacement_Impl( )
+  PointPlacement_Impl()
   {
     // default
   }
@@ -75,12 +75,13 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
    * @param displacement
    * @param rotation
    */
-  public PointPlacement_Impl( final ParameterValueType[] anchorPoint, final ParameterValueType[] displacement, final ParameterValueType rotation, final boolean auto )
+  public PointPlacement_Impl( final ParameterValueType[] anchorPoint, final ParameterValueType[] displacement,
+      final ParameterValueType rotation, final boolean auto )
   {
-    m_anchorPoint = anchorPoint;
-    m_displacement = displacement;
-    m_rotation = rotation;
-    m_auto = auto;
+    this.m_anchorPoint = anchorPoint;
+    this.m_displacement = displacement;
+    this.m_rotation = rotation;
+    this.m_auto = auto;
   }
 
   /**
@@ -104,7 +105,10 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
   @Override
   public double[] getAnchorPoint( final Feature feature ) throws FilterEvaluationException
   {
-    final double[] anchorPointVal = { 0.0, 0.5 };
+    final double[] anchorPointVal =
+    {
+        0.0,
+        0.5 };
 
     if( m_anchorPoint != null )
     {
@@ -116,7 +120,8 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
   }
 
   /**
-   * @see PointPlacement#getAnchorPoint(Feature) <p>
+   * @see PointPlacement#getAnchorPoint(Feature)
+   *      <p>
    * @param anchorPoint
    *          anchorPoint for the PointPlacement
    */
@@ -130,7 +135,7 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
       pvt = StyleFactory.createParameterValueType( "" + anchorPoint[i] );
       pvtArray[i] = pvt;
     }
-    m_anchorPoint = pvtArray;
+    this.m_anchorPoint = pvtArray;
   }
 
   /**
@@ -152,7 +157,10 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
   @Override
   public double[] getDisplacement( final Feature feature ) throws FilterEvaluationException
   {
-    final double[] displacementVal = { 0.0, 0.0 };
+    final double[] displacementVal =
+    {
+        0.0,
+        0.0 };
 
     if( m_displacement != null )
     {
@@ -164,7 +172,8 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
   }
 
   /**
-   * @see PointPlacement#getDisplacement(Feature) <p>
+   * @see PointPlacement#getDisplacement(Feature)
+   *      <p>
    * @param displacement
    */
   @Override
@@ -177,7 +186,7 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
       pvt = StyleFactory.createParameterValueType( "" + displacement[i] );
       pvtArray[i] = pvt;
     }
-    m_displacement = pvtArray;
+    this.m_displacement = pvtArray;
   }
 
   /**
@@ -210,7 +219,7 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
   {
     ParameterValueType pvt = null;
     pvt = StyleFactory.createParameterValueType( "" + rotation );
-    m_rotation = pvt;
+    this.m_rotation = pvt;
   }
 
   /**
@@ -220,12 +229,13 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
    * @return true, if it should be optimized
    */
   @Override
-  public boolean isAuto( )
+  public boolean isAuto()
   {
     return m_auto;
   }
 
   /**
+   * 
    * <p>
    * 
    * @param auto
@@ -233,7 +243,7 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
   @Override
   public void setAuto( final boolean auto )
   {
-    m_auto = auto;
+    this.m_auto = auto;
   }
 
   /**
@@ -242,7 +252,7 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
    * @return xml representation of the PointPlacement
    */
   @Override
-  public String exportAsXML( )
+  public String exportAsXML()
   {
     Debug.debugMethodBegin();
 

@@ -49,7 +49,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class GmlTreeDropAdapter extends ViewerDropAdapter
 {
-  private final GmlTreeView m_viewer;
+  private GmlTreeView m_viewer;
 
   public GmlTreeDropAdapter( final GmlTreeView viewer )
   {
@@ -62,7 +62,7 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
    * @see org.eclipse.jface.viewers.ViewerDropAdapter#performDrop(java.lang.Object)
    */
   @Override
-  public boolean performDrop( final Object data )
+  public boolean performDrop( Object data )
   {
     // System.out.print( "performDrop - " );
     final Object currentTargetObject = getCurrentTarget();
@@ -81,9 +81,9 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
       // boolean b = workspace.isAggrigatedLink( parentFeature, fatp.getName(), pos );
 
     }
-    final Object selectedSourceObject = getSelectedObject();
+    Object selectedSourceObject = getSelectedObject();
 
-    final int currentOperation = getCurrentOperation();
+    int currentOperation = getCurrentOperation();
     if( currentOperation == DND.DROP_COPY )
     {
       if( selectedSourceObject instanceof Feature && currentTargetObject instanceof Feature )
@@ -115,23 +115,23 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
     IRelationType targetAssocFtp = null;
     if( !isValidSelection( selectedFeatures ) )
       return false;
-    if( target instanceof LinkedFeatureElement )
+    if( target instanceof LinkedFeatureElement2 )
       return false;
     if( target instanceof FeatureAssociationTypeElement )
     {
-      final FeatureAssociationTypeElement targetFatElement = (FeatureAssociationTypeElement) target;
+      FeatureAssociationTypeElement targetFatElement = (FeatureAssociationTypeElement) target;
       targetAssocFtp = targetFatElement.getAssociationTypeProperty();
       // System.out.println( "FeatuerAssociationTypeElement:\n target: " + targetAssocFtp.getName() );
       // String propertyName = targetAssocFtp.getName();
       targetFeature = targetFatElement.getParentFeature();
       // try to find matching IFeatureType
-      final IFeatureType targetFeatureType = targetAssocFtp.getTargetFeatureType();
+      IFeatureType targetFeatureType = targetAssocFtp.getTargetFeatureType();
       matchingFt = hasMatchingFeatureType( selectedFeatures[0].getFeatureType(), GMLSchemaUtilities.getSubstituts( targetFeatureType, null, false, true ) );
       // System.out.println( "matchingFT = " + matchingFt.getName() );
       if( matchingFt == null )
         return false;
-      final int maxOccurs = targetAssocFtp.getMaxOccurs();
-      final boolean isList = targetAssocFtp.isList();
+      int maxOccurs = targetAssocFtp.getMaxOccurs();
+      boolean isList = targetAssocFtp.isList();
 
       if( isList && operation == DND.DROP_LINK )
         return false;
@@ -152,9 +152,10 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
       targetFeature = (Feature) target;
       if( FeatureHelper.isCollection( targetFeature ) )
       {
-        final IFeatureType[] featureTypeFromCollection = FeatureHelper.getFeatureTypeFromCollection( targetFeature );
-        for( final IFeatureType type : featureTypeFromCollection )
+        IFeatureType[] featureTypeFromCollection = FeatureHelper.getFeatureTypeFromCollection( targetFeature );
+        for( int i = 0; i < featureTypeFromCollection.length; i++ )
         {
+          final IFeatureType type = featureTypeFromCollection[i];
           // System.out.println( type.getName() );
           if( type.equals( selectedFeatures[0].getFeatureType() ) )
             matchingFt = type;
@@ -178,7 +179,7 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
       System.out.println( "matchingFT = " + matchingFt.getQName().getLocalPart() ); //$NON-NLS-1$
       if( selectedFeatures.length > 1 )
       {
-        final IFeatureType property = targetFeature.getFeatureType();
+        IFeatureType property = targetFeature.getFeatureType();
         System.out.println( "\tmatchingFt != null  and selectedFeaturs.length > 1 -> targetFeature(FT name) " + property.getQName().getLocalPart() ); //$NON-NLS-1$
         // TODO Christoph was passiert hier
         // int maxOccurs = property.getMaxOccurs( matchingFt.getName() );
@@ -208,23 +209,26 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
    *          the target feature type under the curser
    * @return the feature type that matches the target
    */
-  private IFeatureType hasMatchingFeatureType( final IFeatureType sourceFT, final IFeatureType[] targetFT )
+  private IFeatureType hasMatchingFeatureType( IFeatureType sourceFT, IFeatureType[] targetFT )
   {
     if( targetFT == null || sourceFT == null )
       return null;
-    for( final IFeatureType featureType : targetFT )
+    for( int j = 0; j < targetFT.length; j++ )
     {
+      final IFeatureType featureType = targetFT[j];
       if( featureType.equals( sourceFT ) )
         return featureType;
       final IPropertyType[] properties = featureType.getProperties();
-      for( final IPropertyType property : properties )
+      for( int i = 0; i < properties.length; i++ )
       {
+        final IPropertyType property = properties[i];
         if( property instanceof IRelationType )
         {
           final IFeatureType associationFeatureType = ((IRelationType) property).getTargetFeatureType();
           final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, null, false, true );
-          for( final IFeatureType aFType : associationFeatureTypes )
+          for( int k = 0; k < associationFeatureTypes.length; k++ )
           {
+            final IFeatureType aFType = associationFeatureTypes[k];
             if( aFType.equals( sourceFT ) )
               return aFType;
           }
@@ -241,7 +245,7 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
    *          array of Features to check
    * @return true if all conditions above applay else false.
    */
-  private boolean isValidSelection( final Feature[] features )
+  private boolean isValidSelection( Feature[] features )
   {
     // prüft ob alle selektierten Features vom selben typ sind und die Selection nicht leer ist
     if( features == null || features.length == 0 )
@@ -249,7 +253,7 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
     IFeatureType baseFeatureType = null;
     for( int i = 0; i < features.length; i++ )
     {
-      final IFeatureType type = features[i].getFeatureType();
+      IFeatureType type = features[i].getFeatureType();
       if( i == 0 )
         baseFeatureType = features[i].getFeatureType();
       if( !type.equals( baseFeatureType ) )

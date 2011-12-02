@@ -40,14 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.util;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
@@ -85,9 +84,9 @@ public abstract class AbstractStyleElementSection<ELEMENT, ITEM, ITEMCONTROL>
     final String description = getDescription();
     int style;
     if( description == null )
-      style = ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED;
+      style = Section.TITLE_BAR | Section.EXPANDED;
     else
-      style = ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED | Section.DESCRIPTION;
+      style = Section.TITLE_BAR | Section.EXPANDED | Section.DESCRIPTION;
 
     m_section = toolkit.createSection( parent, style );
 
@@ -160,7 +159,7 @@ public abstract class AbstractStyleElementSection<ELEMENT, ITEM, ITEMCONTROL>
   public void updateControl( )
   {
     final ELEMENT data = m_input.getData();
-    final ITEM item = getItem( data );
+    final ITEM item = getItem(data);
 
     if( ObjectUtils.equals( item, m_item ) )
     {

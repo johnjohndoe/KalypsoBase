@@ -144,7 +144,7 @@ public class FeatureCompositeGFTWrapper
 
   private void removeListener( )
   {
-    if( m_compFeature != null && m_ifFtrChLstner != null )
+    if( (m_compFeature != null) && (m_ifFtrChLstner != null) )
     {
       m_compFeature.removeChangeListener( m_ifFtrChLstner );
       m_ifFtrChLstner = null;
@@ -169,7 +169,7 @@ public class FeatureCompositeGFTWrapper
     /*
      * Are there already listeners created?
      */
-    if( m_ifFtrChLstner != null )
+    if( (m_ifFtrChLstner != null) )
       /* There are already listeners specified. Remove them first. */
       throw new IllegalStateException( "There are already listener attached, remove them first." ); //$NON-NLS-1$
 
@@ -182,7 +182,7 @@ public class FeatureCompositeGFTWrapper
         if( modellEvent.isType( ModellEvent.FEATURE_CHANGE ) )
         {
           final Control control = getFeatureComposite().getControl();
-          if( control != null && !control.isDisposed() )
+          if( (control != null) && !control.isDisposed() )
             control.getDisplay().asyncExec( new Runnable()
             {
               @Override

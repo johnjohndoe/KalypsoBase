@@ -22,10 +22,7 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 /**
  * @author alibu
- * @deprecated not used
  */
-
-@Deprecated
 public class CSVLineLayerProvider extends AbstractLayerProvider
 {
 

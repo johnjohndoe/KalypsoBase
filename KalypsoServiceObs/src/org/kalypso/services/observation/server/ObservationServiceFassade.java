@@ -54,6 +54,7 @@ import java.util.logging.Logger;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.eclipse.ui.services.IDisposable;
@@ -454,7 +455,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
         }
         else
         {
-          throw new UnsupportedOperationException();
+          throw new NotImplementedException();
         }
       }
     }

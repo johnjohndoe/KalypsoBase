@@ -107,7 +107,7 @@ public class WspmPerspectiveFactory implements IPerspectiveFactory
 
     // Bottom left.
     final IFolderLayout bottomLeft = layout.createFolder( "bottomLeft", IPageLayout.BOTTOM, (float) 0.50,//$NON-NLS-1$
-        "topLeft" );//$NON-NLS-1$
+    "topLeft" );//$NON-NLS-1$
     bottomLeft.addView( IPageLayout.ID_OUTLINE );
 
     // Top right.

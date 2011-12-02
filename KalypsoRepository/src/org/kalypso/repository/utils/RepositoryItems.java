@@ -46,8 +46,8 @@ import java.util.List;
 import jregex.Pattern;
 import jregex.RETokenizer;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
@@ -141,7 +141,7 @@ public final class RepositoryItems
    */
   public static String getPlainId( final String identifier )
   {
-    final int indexOf = identifier.indexOf( "://" );
+    int indexOf = identifier.indexOf( "://" );
     if( indexOf == -1 )
       return identifier;
 

@@ -1,9 +1,9 @@
 package org.kalypso.ogc.gml.convert.source;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.xml.bind.JAXBElement;
 
@@ -27,6 +27,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.filterencoding.AbstractFilter;
 import org.kalypsodeegree_impl.model.feature.visitors.AddFeaturesToFeaturelist;
 import org.kalypsodeegree_impl.model.feature.visitors.ChangeFeaturesFromFeaturelist;
+import org.kalypsodeegree_impl.model.feature.visitors.PropertyMapping;
 
 /**
  * @author belger
@@ -84,9 +85,9 @@ public class FeaturemappingSourceHandler implements ISourceHandler
     final String toID = mapping.getToID();
     final IFeatureType toFeatureType = secondGML.getFeatureTypeFromPath( toPath );
 
-    final Properties properties = readProperties( mapping );
+    final List<PropertyMapping> mappings = readProperties( mapping );
 
-    final FeatureVisitor visitor = createVisitorAndFilter( mapping, toFeatures, toFeatureType, fromID, toID, properties );
+    final FeatureVisitor visitor = createVisitorAndFilter( mapping, toFeatures, toFeatureType, fromID, toID, mappings );
     fromFeatures.accept( visitor );
   }
 
@@ -106,18 +107,19 @@ public class FeaturemappingSourceHandler implements ISourceHandler
     }
   }
 
-  private Properties readProperties( final MappingType mapping )
+  private List<PropertyMapping> readProperties( final MappingType mapping )
   {
-    final Properties properties = new Properties();
-
     final List<MappingType.Map> mapList = mapping.getMap();
-    for( final org.kalypso.gml.util.MappingType.Map map : mapList )
-      properties.setProperty( map.getFrom(), map.getTo() );
 
-    return properties;
+    final List<PropertyMapping> readMapping = new ArrayList<PropertyMapping>( mapList.size() );
+
+    for( final org.kalypso.gml.util.MappingType.Map map : mapList )
+      readMapping.add( new PropertyMapping( map.getFrom(), map.getTo() ) );
+
+    return readMapping;
   }
 
-  private FeatureVisitor createVisitorAndFilter( final MappingType mapping, final FeatureList toFeatures, final IFeatureType toFeatureType, final String fromID, final String toID, final Properties mappings ) throws GmlConvertException
+  private FeatureVisitor createVisitorAndFilter( final MappingType mapping, final FeatureList toFeatures, final IFeatureType toFeatureType, final String fromID, final String toID, final List<PropertyMapping> mappings ) throws GmlConvertException
   {
     final Filter filter = readFilter( mapping );
 
@@ -129,7 +131,7 @@ public class FeaturemappingSourceHandler implements ISourceHandler
     return new FilteredFeatureVisitor( visitor, filter );
   }
 
-  private FeatureVisitor createVisitor( final MappingType mapping, final FeatureList toFeatures, final IFeatureType toFeatureType, final String fromID, final String toID, final Properties mappings ) throws GmlConvertException
+  private FeatureVisitor createVisitor( final MappingType mapping, final FeatureList toFeatures, final IFeatureType toFeatureType, final String fromID, final String toID, final List<PropertyMapping> mappings ) throws GmlConvertException
   {
     if( mapping instanceof AddFeaturesMappingType )
     {

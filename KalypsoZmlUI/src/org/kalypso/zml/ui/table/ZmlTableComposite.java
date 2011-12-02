@@ -48,7 +48,7 @@ import java.util.Set;
 
 import javax.xml.bind.JAXBElement;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -73,7 +73,7 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
+import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.model.IZmlColumnModelListener;
 import org.kalypso.zml.core.table.model.IZmlModel;
@@ -128,7 +128,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     super( parent, SWT.NULL );
     m_model = model;
 
-    final GridLayout layout = Layouts.createGridLayout();
+    final GridLayout layout = LayoutHelper.createGridLayout();
     layout.verticalSpacing = 0;
     setLayout( layout );
     setup( toolkit );
@@ -147,7 +147,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
       if( hasToolbar( tableType ) )
       {
         toolbar = toolkit.createComposite( this );
-        toolbar.setLayout( Layouts.createGridLayout() );
+        toolbar.setLayout( LayoutHelper.createGridLayout() );
         toolbar.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
       }
 

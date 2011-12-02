@@ -54,7 +54,7 @@ public class CRSLabelProvider extends LabelProvider
   /**
    * If true, the EPSG code will be shown in brackets after the name of the coordinate systems.
    */
-  private final boolean m_showCode;
+  private boolean m_showCode;
 
   /**
    * The constructor.
@@ -62,7 +62,7 @@ public class CRSLabelProvider extends LabelProvider
    * @param showCode
    *          If true, the EPSG code will be shown in brackets after the name of the coordinate systems.
    */
-  public CRSLabelProvider( final boolean showCode )
+  public CRSLabelProvider( boolean showCode )
   {
     m_showCode = showCode;
   }
@@ -71,7 +71,7 @@ public class CRSLabelProvider extends LabelProvider
    * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
    */
   @Override
-  public Image getImage( final Object element )
+  public Image getImage( Object element )
   {
     return super.getImage( element );
   }
@@ -80,13 +80,13 @@ public class CRSLabelProvider extends LabelProvider
    * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
    */
   @Override
-  public String getText( final Object element )
+  public String getText( Object element )
   {
     if( element instanceof ICoordinateSystem )
     {
-      final ICoordinateSystem coordinateSystem = (ICoordinateSystem) element;
+      ICoordinateSystem coordinateSystem = (ICoordinateSystem) element;
 
-      final String name = coordinateSystem.getName();
+      String name = coordinateSystem.getName();
       if( name == null || name.length() == 0 )
         return coordinateSystem.getCode();
 

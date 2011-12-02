@@ -36,8 +36,11 @@
 
 package org.kalypsodeegree.model.geometry;
 
+
 /**
+ * 
  * The interface defines the root of each unit building Curves
+ * 
  * <p>
  * -----------------------------------------------------
  * </p>
@@ -51,12 +54,12 @@ public interface GM_CurveSegment extends GM_GenericCurve
   /**
    * returns the number of points building the curve segment
    */
-  int getNumberOfPoints( );
+  int getNumberOfPoints();
 
   /**
    * returns all positions of the segement as array of GM_Point
    */
-  GM_Position[] getPositions( );
+  GM_Position[] getPositions();
 
   /**
    * returns the curve position at the submitted index
@@ -66,12 +69,12 @@ public interface GM_CurveSegment extends GM_GenericCurve
   /**
    * reverses the direction of the curvesegment
    */
-  void reverse( );
+  void reverse();
 
   /**
    * returns the coordinate system of the curve segment
    */
-  String getCoordinateSystem( );
+  String getCoordinateSystem();
 
   /**
    * The Boolean valued operation "intersects" shall return TRUE if this GM_Object intersects another GM_Object. Within

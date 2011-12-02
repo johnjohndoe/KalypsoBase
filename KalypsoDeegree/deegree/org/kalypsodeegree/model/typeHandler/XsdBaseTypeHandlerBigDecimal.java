@@ -37,6 +37,7 @@ package org.kalypsodeegree.model.typeHandler;
 
 import java.math.BigDecimal;
 
+
 /**
  * @author Dirk Kuch
  */
@@ -79,7 +80,7 @@ public class XsdBaseTypeHandlerBigDecimal extends XsdBaseTypeHandler<BigDecimal>
   @Override
   public int compare( final BigDecimal o1, final BigDecimal o2 )
   {
-    if( o1 == null && o2 == null )
+    if( (o1 == null) && (o2 == null) )
     {
       return 0; // equals
     }

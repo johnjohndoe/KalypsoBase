@@ -49,12 +49,13 @@ public interface ParameterValueType
 {
 
   /**
-   * Returns the contents (mix of <tt>String</tt>/<tt>Expression</tt> -objects) of this <tt>ParameterValueType</tt>.
+   * Returns the contents (mix of <tt>String</tt>/<tt>Expression</tt> -objects) of this
+   * <tt>ParameterValueType</tt>.
    * <p>
    * 
    * @return mix of <tt>String</tt> and <tt>Expression</tt> -objects
    */
-  Object[] getComponents( );
+  Object[] getComponents();
 
   /**
    * Sets the contents (mix of <tt>String</tt>/<tt>Expression</tt> -objects) of this <tt>ParameterValueType</tt>.
@@ -66,7 +67,8 @@ public interface ParameterValueType
   void setComponents( Object[] components );
 
   /**
-   * Concatenates a component (a<tt>String</tt> or an <tt>Expression</tt> -object) to this <tt>ParameterValueType</tt>.
+   * Concatenates a component (a<tt>String</tt> or an <tt>Expression</tt> -object) to this
+   * <tt>ParameterValueType</tt>.
    * <p>
    * 
    * @param component

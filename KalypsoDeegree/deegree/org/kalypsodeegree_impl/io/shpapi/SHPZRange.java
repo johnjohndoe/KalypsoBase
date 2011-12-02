@@ -58,7 +58,7 @@ public class SHPZRange implements Serializable
 
   // ------------- CONSTRUTOR IMPLEMENTATION BEGIN
 
-  public SHPZRange( final double minz, final double maxz )
+  public SHPZRange( double minz, double maxz )
   {
     m_minZ = minz; // max. elevation
     m_maxZ = maxz; // min. elevation
@@ -66,7 +66,7 @@ public class SHPZRange implements Serializable
 
   public byte[] writeLESHPZRange( )
   {
-    final byte[] recBuf = new byte[8 * 4];
+    byte[] recBuf = new byte[8 * 4];
     // min z value
     ByteUtils.writeLEDouble( recBuf, 0, m_minZ );
     // max z value
@@ -77,7 +77,7 @@ public class SHPZRange implements Serializable
 
   public byte[] writeBESHPRange( )
   {
-    final byte[] recBuf = new byte[8 * 4];
+    byte[] recBuf = new byte[8 * 4];
     // west bounding coordinate = xmin of rec-Box
     ByteUtils.writeBEDouble( recBuf, 0, m_minZ );
     // south bounding coordinate = ymin of rec-Box
@@ -90,7 +90,7 @@ public class SHPZRange implements Serializable
   @Override
   public String toString( )
   {
-    return "ZRANGE" + "\n[zmin: " + m_minZ + "]" + "\n[zmax: " + m_maxZ + "]" + "]";
+    return "ZRANGE" + "\n[zmin: " + this.m_minZ + "]" + "\n[zmax: " + this.m_maxZ + "]" + "]";
   }
 
   public double getMinZ( )
@@ -98,7 +98,7 @@ public class SHPZRange implements Serializable
     return m_minZ;
   }
 
-  public void setMinZ( final double minZ )
+  public void setMinZ( double minZ )
   {
     m_minZ = minZ;
   }
@@ -108,7 +108,7 @@ public class SHPZRange implements Serializable
     return m_maxZ;
   }
 
-  public void setMaxZ( final double maxZ )
+  public void setMaxZ( double maxZ )
   {
     m_maxZ = maxZ;
   }

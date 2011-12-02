@@ -69,13 +69,13 @@ import org.eclipse.ui.views.contentoutline.ContentOutline;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.contribs.eclipse.core.runtime.AdapterUtils;
-import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.IKalypsoThemeProvider;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.MapPanelSourceProvider;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -227,10 +227,12 @@ public class MapHandlerUtils
       final Object[] elements = s.toArray();
       for( final Object element : elements )
       {
-        final IKalypsoTheme theme = AdapterUtils.getAdapter( element, IKalypsoTheme.class );
-        if( theme != null )
-          themes.add( theme );
+        if( element instanceof IKalypsoTheme )
+          themes.add( (IKalypsoTheme) element );
+        else if( element instanceof IKalypsoThemeProvider )
+          themes.add( ((IKalypsoThemeProvider) element).getTheme() );
       }
+
     }
 
     return themes.toArray( new IKalypsoTheme[themes.size()] );
@@ -352,7 +354,7 @@ public class MapHandlerUtils
    */
   public static File showSaveFileDialog( final Shell shell, final String title, final String fileName, final String settingsSectionName, final String[] filterExtensions, final String[] filterNames )
   {
-    final IDialogSettings dialogSettings = DialogSettingsUtils.getDialogSettings( KalypsoGisPlugin.getDefault(), settingsSectionName );
+    final IDialogSettings dialogSettings = PluginUtilities.getDialogSettings( KalypsoGisPlugin.getDefault(), settingsSectionName );
     final String lastDirPath = dialogSettings.get( SETTINGS_LAST_DIR );
     final FileDialog fileDialog = new FileDialog( shell, SWT.SAVE );
 
@@ -419,9 +421,15 @@ public class MapHandlerUtils
 
   private static IKalypsoFeatureTheme toFeatureTheme( final Object element )
   {
-    final IKalypsoTheme theme = AdapterUtils.getAdapter( element, IKalypsoTheme.class );
-    if( theme instanceof IKalypsoFeatureTheme )
-      return (IKalypsoFeatureTheme) theme;
+    if( element instanceof IKalypsoFeatureTheme )
+      return (IKalypsoFeatureTheme) element;
+
+    if( element instanceof IKalypsoThemeProvider )
+    {
+      final IKalypsoTheme theme = ((IKalypsoThemeProvider) element).getTheme();
+      if( theme instanceof IKalypsoFeatureTheme )
+        return (IKalypsoFeatureTheme) theme;
+    }
 
     return null;
   }

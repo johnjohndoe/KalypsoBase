@@ -41,6 +41,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -65,7 +67,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.bind.JaxbUtilities;
-import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
@@ -150,11 +151,57 @@ public final class SLDFactory
 
   private static String NS_OGC = "http://www.opengis.net/ogc";//$NON-NLS-1$
 
-//  private static String NS_XLINK = "http://www.w3.org/1999/xlink";//$NON-NLS-1$
+  private static String NS_XLINK = "http://www.w3.org/1999/xlink";//$NON-NLS-1$
 
-  private SLDFactory( )
+  /**
+   * Creates a <tt>StyledLayerDescriptor</tt> -instance from the given XML-representation.
+   * <p>
+   * 
+   * @param s
+   *          contains the XML document
+   * @throws XMLParsingException
+   *           if a syntactic or semantic error in the XML document is encountered
+   * @return the constructed <tt>StyledLayerDescriptor</tt> -instance
+   */
+  public static StyledLayerDescriptor createSLD( final IUrlResolver2 urlResolver, final String s ) throws XMLParsingException
   {
-    throw new UnsupportedOperationException();
+    final StringReader sr = new StringReader( s );
+
+    return SLDFactory.createSLD( urlResolver, sr );
+  }
+
+  /**
+   * Creates a <tt>StyledLayerDescriptor</tt> -instance from the given Reader.
+   * <p>
+   * 
+   * @param reader
+   *          provides the XML document
+   * @throws XMLParsingException
+   *           if a syntactic or semantic error in the XML document is encountered
+   * @return the constructed <tt>StyledLayerDescriptor</tt> -instance
+   * @deprecated Use the inputStream version instead: {@link #createSLD(IUrlResolver2, InputStream)}, because with
+   *             reader's the xml-encoding is not handled properly.
+   */
+  @Deprecated
+  public static StyledLayerDescriptor createSLD( final IUrlResolver2 urlResolver, final Reader reader ) throws XMLParsingException
+  {
+    StyledLayerDescriptor sld = null;
+
+    try
+    {
+      final Document doc = XMLTools.parse( reader );
+      sld = SLDFactory.createStyledLayerDescriptor( urlResolver, doc.getDocumentElement() );
+    }
+    catch( final IOException e )
+    {
+      throw new XMLParsingException( "IOException encountered while parsing SLD-Document: " + e.getMessage() );
+    }
+    catch( final SAXException e )
+    {
+      throw new XMLParsingException( "SAXException encountered while parsing SLD-Document: " + e.getMessage() );
+    }
+
+    return sld;
   }
 
   /**
@@ -235,23 +282,6 @@ public final class SLDFactory
 
   public static StyledLayerDescriptor createSLD( final URL url ) throws IOException, XMLParsingException
   {
-    final Object element = readSLD( url );
-    if( element instanceof StyledLayerDescriptor )
-      return (StyledLayerDescriptor) element;
-
-    throw new XMLParsingException( String.format( "Root element is not '%s'", StyledLayerDescriptor.ELEMENT_STYLEDLAYERDESCRIPTOR ) );
-  }
-
-  /**
-   * Reads an sld file from an {@link URL}.<br>
-   * The type of the returned element may be any of the top-level types defined in the sld-schema.
-   * 
-   * @throws XMLParsingException
-   *           if a syntactic or semantic error in the XML document is encountered
-   * @return The read top-Level element
-   */
-  public static Object readSLD( final URL url ) throws XMLParsingException, IOException
-  {
     final IUrlResolver2 urlResolver = new IUrlResolver2()
     {
       @Override
@@ -265,7 +295,7 @@ public final class SLDFactory
     try
     {
       is = new BufferedInputStream( url.openStream() );
-      final Object sld = readSLD( urlResolver, is );
+      final StyledLayerDescriptor sld = createSLD( urlResolver, is );
       is.close();
       return sld;
     }
@@ -489,11 +519,11 @@ public final class SLDFactory
         }
       }
 
-    if( pPlacement != null && lPlacement == null )
+    if( (pPlacement != null) && (lPlacement == null) )
     {
       labelPlacement = new LabelPlacement_Impl( pPlacement );
     }
-    else if( pPlacement == null && lPlacement != null )
+    else if( (pPlacement == null) && (lPlacement != null) )
     {
       labelPlacement = new LabelPlacement_Impl( lPlacement );
     }
@@ -532,7 +562,7 @@ public final class SLDFactory
       final Element apXElement = XMLTools.getChildByName( "AnchorPointX", CommonNamespaces.SLDNS.toString(), apElement );//$NON-NLS-1$
       final Element apYElement = XMLTools.getChildByName( "AnchorPointY", CommonNamespaces.SLDNS.toString(), apElement );//$NON-NLS-1$
 
-      if( apXElement == null || apYElement == null )
+      if( (apXElement == null) || (apYElement == null) )
         throw new XMLParsingException( "Element 'AnchorPoint' must contain exactly one " + "'AnchorPointX'- and one 'AnchorPointY'-element!" );
 
       anchorPoint[0] = SLDFactory.createParameterValueType( apXElement );
@@ -550,7 +580,7 @@ public final class SLDFactory
       final Element dXElement = XMLTools.getChildByName( "DisplacementX", CommonNamespaces.SLDNS.toString(), dElement );//$NON-NLS-1$
       final Element dYElement = XMLTools.getChildByName( "DisplacementY", CommonNamespaces.SLDNS.toString(), dElement );//$NON-NLS-1$
 
-      if( dXElement == null || dYElement == null )
+      if( (dXElement == null) || (dYElement == null) )
         throw new XMLParsingException( "Element 'Displacement' must contain exactly one " + "'DisplacementX'- and one 'DisplacementY'-element!" );
 
       displacement[0] = SLDFactory.createParameterValueType( dXElement );
@@ -764,6 +794,24 @@ public final class SLDFactory
     }
 
     final Layer[] layers = layerList.toArray( new Layer[layerList.size()] );
+
+    // TODO: add i18n stuff here
+    // Reading the bundle here would be nice, but what to do with it...
+    // Either we resolve the localized strings while parsing the sld (but then the resolved strings get written back to
+    // the sld)
+    // or we have to give the reference to the bundle to all sub-element (Rules, Symbolizers, ...)
+// ResourceBundle sldBundle = null;
+// try
+// {
+// final URL resourceBundleURL = urlResolver.resolveURL( "" );
+// sldBundle = ResourceBundleUtils.loadResourceBundle( resourceBundleURL );
+// }
+// catch( final MalformedURLException e )
+// {
+// // TODO Auto-generated catch block
+// e.printStackTrace();
+// }
+
     return new StyledLayerDescriptor_Impl( name, title, description, layers );
   }
 
@@ -1127,6 +1175,11 @@ public final class SLDFactory
     final String description = XMLTools.getStringValue( "Abstract", CommonNamespaces.SLDNS.toString(), element, null );
     // optional: <FeatureTypeName>
     final QName featureTypeQName = XMLTools.getQNameValue( "FeatureTypeName", CommonNamespaces.SLDNS.toString(), element );
+    // final String featureTypeName = XMLTools.getStringValue( "FeatureTypeName", CommonNamespaces.SLDNS.toString(),
+    // element, null
+    // );
+    // if( featureTypeQName == null && featureTypeName != null )
+    // featureTypeQName = new QName( featureTypeName );
 
     // optional: several <Rule> / <SemanticTypeIdentifier>
     final NodeList nodelist = element.getChildNodes();
@@ -1141,83 +1194,73 @@ public final class SLDFactory
     for( int i = 0; i < nodelist.getLength(); i++ )
     {
       final Node item = nodelist.item( i );
-      parseFilter( urlResolver, ruleList, typeIdentifierList, filters, elseRules, item );
+      if( item instanceof Element )
+      {
+        final Element child = (Element) item;
+        final String namespace = child.getNamespaceURI();
+
+        if( !CommonNamespaces.SLDNS.toString().equals( namespace ) )
+        {
+          continue;
+        }
+
+        final String childName = child.getLocalName();
+
+        if( "Rule".equals( childName ) )
+        {
+          final Rule rule = SLDFactory.createRule( urlResolver, child );
+          if( rule.hasElseFilter() )
+          {
+            elseRules.add( rule );
+          }
+          else if( (rule.getFilter() == null) || (rule.getFilter() instanceof ComplexFilter) )
+          {
+            filters.add( rule.getFilter() );
+          }
+          ruleList.add( rule );
+        }
+        else if( "SemanticTypeIdentifier".equals( childName ) )//$NON-NLS-1$
+        {
+          typeIdentifierList.add( XMLTools.getStringValue( child ) );
+        }
+      }
     }
 
     // compute and set the ElseFilter for all ElseFilter-Rules
-    final Filter elseFilter = parseElseFilter( filters );
-    for( final Rule elseRule : elseRules )
-      elseRule.setFilter( elseFilter );
-
-    final Rule[] rules = ruleList.toArray( new Rule[ruleList.size()] );
-    final String[] typeIdentifiers = typeIdentifierList.toArray( new String[typeIdentifierList.size()] );
-    return StyleFactory.createFeatureTypeStyle( name, title, description, featureTypeQName, typeIdentifiers, rules );
-  }
-
-  private static void parseFilter( final IUrlResolver2 urlResolver, final List<Rule> ruleList, final List<String> typeIdentifierList, final List<Filter> filters, final List<Rule> elseRules, final Node item ) throws XMLParsingException
-  {
-    if( item instanceof Element )
-    {
-      final Element child = (Element) item;
-      final String namespace = child.getNamespaceURI();
-
-      if( !CommonNamespaces.SLDNS.toString().equals( namespace ) )
-      {
-        return;
-      }
-
-      final String childName = child.getLocalName();
-
-      if( "Rule".equals( childName ) )
-      {
-        final Rule rule = SLDFactory.createRule( urlResolver, child );
-        if( rule.hasElseFilter() )
-        {
-          elseRules.add( rule );
-        }
-        else if( rule.getFilter() == null || rule.getFilter() instanceof ComplexFilter )
-        {
-          filters.add( rule.getFilter() );
-        }
-        ruleList.add( rule );
-      }
-      else if( "SemanticTypeIdentifier".equals( childName ) )//$NON-NLS-1$
-      {
-        typeIdentifierList.add( XMLTools.getStringValue( child ) );
-      }
-    }
-  }
-
-  private static Filter parseElseFilter( final List<Filter> filters )
-  {
+    Filter elseFilter = null;
     // a Rule exists with no Filter at all -> elseFilter = false
     if( filters.contains( null ) )
-      return new FalseFilter();
-
-    if( filters.size() == 1 )
     {
-      final ComplexFilter elseFilter = new ComplexFilter( OperationDefines.NOT );
-      final List<Operation> arguments = ((LogicalOperation) elseFilter.getOperation()).getArguments();
+      elseFilter = new FalseFilter();
+    }
+    else if( filters.size() == 1 )
+    {
+      elseFilter = new ComplexFilter( OperationDefines.NOT );
+      final List<Operation> arguments = ((LogicalOperation) ((ComplexFilter) elseFilter).getOperation()).getArguments();
       final ComplexFilter complexFilter = (ComplexFilter) filters.get( 0 );
       arguments.add( complexFilter.getOperation() );
-      return elseFilter;
     }
-
-    if( filters.size() > 1 )
+    else if( filters.size() > 1 )
     {
       // several Rules with Filters exist -> elseFilter = NOT (Filter1 OR Filter2 OR...)
       final ComplexFilter innerFilter = new ComplexFilter( OperationDefines.OR );
-      ComplexFilter elseFilter;
       elseFilter = new ComplexFilter( innerFilter, null, OperationDefines.NOT );
       final List<Operation> arguments = ((LogicalOperation) innerFilter.getOperation()).getArguments();
 
       for( final Filter complexFilter : filters )
+      {
         arguments.add( ((ComplexFilter) complexFilter).getOperation() );
-
-      return elseFilter;
+      }
     }
 
-    return null;
+    for( final Rule elseRule : elseRules )
+    {
+      elseRule.setFilter( elseFilter );
+    }
+
+    final Rule[] rules = ruleList.toArray( new Rule[ruleList.size()] );
+    final String[] typeIdentifiers = typeIdentifierList.toArray( new String[typeIdentifierList.size()] );
+    return StyleFactory.createFeatureTypeStyle( name, title, description, featureTypeQName, typeIdentifiers, rules );
   }
 
   /**
@@ -1265,7 +1308,7 @@ public final class SLDFactory
       isAnElseFilter = true;
     }
 
-    if( filterElement != null && elseFilterElement != null )
+    if( (filterElement != null) && (elseFilterElement != null) )
       throw new XMLParsingException( "Element 'Rule' may contain a 'Filter'- or " + "an 'ElseFilter'-element, but not both!" );
 
     // optional: <MinScaleDenominator>
@@ -1334,7 +1377,15 @@ public final class SLDFactory
     if( !(CommonNamespaces.SLDNS.toString().equals( namespace ) || SLDNS_EXT.equals( namespace )) )
       return null;
 
-    final UOM uom = readUOM( symbolizerElement );
+    /*
+     * In reference to Symbology Encoding specification (1.1.0), we read an extra 'uom' attribute from the
+     * Symbology-Elements. In SLD 1.0.0 this is not yet supported, always 'pixel' is assumed.
+     */
+    final UOM uom;
+    if( symbolizerElement.hasAttribute( "uom" ) )//$NON-NLS-1$
+      uom = UOM.valueOf( symbolizerElement.getAttribute( "uom" ) );//$NON-NLS-1$
+    else
+      uom = UOM.pixel;
 
     final String symbolizerName = symbolizerElement.getLocalName();
 
@@ -1360,20 +1411,6 @@ public final class SLDFactory
       return SLDFactory.createSurfacePolygonSymbolizer( urlResolver, symbolizerElement, uom );
 
     return null;
-  }
-
-  /*
-   * In reference to Symbology Encoding specification (1.1.0), we read an extra 'uom' attribute from the
-   * Symbology-Elements. In SLD 1.0.0 this is not yet supported, always 'pixel' is assumed.
-   */
-  private static UOM readUOM( final Element symbolizerElement )
-  {
-    final UOM uom;
-    if( symbolizerElement.hasAttribute( "uom" ) )//$NON-NLS-1$
-      uom = UOM.valueOf( symbolizerElement.getAttribute( "uom" ) );//$NON-NLS-1$
-    else
-      uom = UOM.pixel;
-    return uom;
   }
 
   /**
@@ -1771,7 +1808,19 @@ public final class SLDFactory
     // required: <OnlineResource>
     final Element onlineResourceElement = XMLTools.getRequiredChildByName( "OnlineResource", CommonNamespaces.SLDNS.toString(), element );
 
-    final String href = XMLTools.getRequiredAttrValue( "href", NS.XLINK, onlineResourceElement ); //$NON-NLS-1$
+    // required: href-Attribute (in <OnlineResource>)
+    final String href = XMLTools.getRequiredAttrValue( "href", SLDFactory.NS_XLINK, onlineResourceElement );
+    // URL url = null;
+    //
+    // try
+    // {
+    // url = urlResolver.resolveURL( href );
+    // }
+    // catch( MalformedURLException e )
+    // {
+    // throw new XMLParsingException( "Value ('" + href + "') of attribute 'href' of " + "element 'OnlineResoure' does
+    // not denote a valid URL: " + e.getMessage() );
+    // }
 
     // required: <Format> (in <OnlineResource>)
     final String format = XMLTools.getRequiredStringValue( "Format", CommonNamespaces.SLDNS.toString(), element );
@@ -1972,7 +2021,7 @@ public final class SLDFactory
     final String name = XMLTools.getRequiredAttrValue( "name", element );
     final ParameterValueType pvt = SLDFactory.createParameterValueType( element );
 
-    return new CssParameter_Impl( name, pvt );
+    return (new CssParameter_Impl( name, pvt ));
   }
 
   private static RasterSymbolizer createRasterSymbolizer( final IUrlResolver2 urlResolver, final Element element, final UOM uom )
@@ -2063,4 +2112,5 @@ public final class SLDFactory
 
     return null;
   }
+
 }

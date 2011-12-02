@@ -23,7 +23,7 @@ public abstract class ProcessWraper
 {
   private final Process m_proc;
 
-  private final Writer m_logWriter;
+  private Writer m_logWriter;
 
   private boolean m_canceled = false;
 
@@ -36,7 +36,7 @@ public abstract class ProcessWraper
    * @param logWriter
    *          [optional, can be null]
    */
-  public ProcessWraper( final Process proc, final Writer logWriter )
+  public ProcessWraper( Process proc, Writer logWriter )
   {
     m_proc = proc;
     m_logWriter = logWriter;
@@ -55,7 +55,7 @@ public abstract class ProcessWraper
   /**
    * Force the underlying process to stop
    */
-  public synchronized void cancel( )
+  public synchronized void cancel()
   {
     m_canceled = true;
   }
@@ -66,7 +66,7 @@ public abstract class ProcessWraper
    * @throws IOException
    * @throws InterruptedException
    */
-  public synchronized void waitForProcess( ) throws IOException, InterruptedException
+  public synchronized void waitForProcess() throws IOException, InterruptedException
   {
     final OutputStream nul_dev = new NullOutputStream();
     final Writer log;
@@ -87,7 +87,7 @@ public abstract class ProcessWraper
 
         try
         {
-          final int rc = m_proc.exitValue();
+          int rc = m_proc.exitValue();
 
           processTerminated( rc );
 
@@ -121,7 +121,7 @@ public abstract class ProcessWraper
   /**
    * Called after the process has been told to be cancelled
    */
-  public abstract void processCanceled( );
+  public abstract void processCanceled();
 
   /**
    * Called after the process has stopped execution

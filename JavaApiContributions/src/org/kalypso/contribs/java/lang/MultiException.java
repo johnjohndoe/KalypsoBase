@@ -72,7 +72,7 @@ public class MultiException extends Exception
     super.finalize();
   }
 
-  public void addException( final Exception e )
+  public void addException( Exception e )
   {
     if( m_exceptions == null )
       m_exceptions = new LinkedList<Exception>();
@@ -96,6 +96,7 @@ public class MultiException extends Exception
     return bf.toString();
   }
 
+  
   /**
    * @see java.lang.Throwable#getLocalizedMessage()
    */
@@ -104,14 +105,14 @@ public class MultiException extends Exception
   {
     if( isEmpty() )
       return "";
-
+    
     final StringBuffer bf = new StringBuffer();
     for( final Exception exception : m_exceptions )
       bf.append( exception.getLocalizedMessage() ).append( '\n' );
-
+    
     return bf.toString();
   }
-
+  
   /**
    * @return true if this MultiException container does not contain any exceptions
    */

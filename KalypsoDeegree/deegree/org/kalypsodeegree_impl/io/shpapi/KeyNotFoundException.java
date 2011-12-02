@@ -36,6 +36,8 @@
 package org.kalypsodeegree_impl.io.shpapi;
 
 /**
+ * 
+ * 
  * @version $Revision$
  */
 public class KeyNotFoundException extends DBaseIndexException
@@ -46,7 +48,7 @@ public class KeyNotFoundException extends DBaseIndexException
    * @param key
    * @param index
    */
-  public KeyNotFoundException( final Comparable key, final DBaseIndex index )
+  public KeyNotFoundException( Comparable key, DBaseIndex index )
   {
     super( "Key " + key + " not found in index " + index, key, index );
   }

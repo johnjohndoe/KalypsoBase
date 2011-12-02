@@ -61,11 +61,11 @@ public class FeatureActionFilterAdapterFactory implements IAdapterFactory
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
    */
   @Override
-  public Object getAdapter( final Object adaptableObject, final Class adapterType )
+  public Object getAdapter( Object adaptableObject, Class adapterType )
   {
     if( adapterType == IActionFilter.class )
       return m_featureActionFilter;
-
+    
     return null;
   }
 

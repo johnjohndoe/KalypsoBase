@@ -48,7 +48,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -59,6 +58,7 @@ import org.eclipse.ui.intro.IIntroSite;
 import org.eclipse.ui.intro.config.IIntroAction;
 import org.eclipse.ui.part.FileEditorInput;
 import org.kalypso.contribs.eclipse.EclipsePlatformContributionsPlugin;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.i18n.Messages;
 
 /**
@@ -88,10 +88,7 @@ public class OpenPerspectiveAction implements IIntroAction
       final String filePathStr = params.getProperty( "file", null ); //$NON-NLS-1$
       final String editorID = params.getProperty( "editorId", null ); //$NON-NLS-1$
       if( perspectiveID == null )
-      {
-        final IStatus status = new Status( IStatus.ERROR, EclipsePlatformContributionsPlugin.getID(), Messages.getString( "org.kalypso.contribs.eclipse.ui.intro.config.OpenPerspectiveAction.3" ) ); //$NON-NLS-1$
-        throw new CoreException( status );
-      }
+        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.contribs.eclipse.ui.intro.config.OpenPerspectiveAction.3") ) ); //$NON-NLS-1$
 
       final IWorkbench workbench = PlatformUI.getWorkbench();
 
@@ -102,12 +99,12 @@ public class OpenPerspectiveAction implements IIntroAction
       // show intro view
       final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
       workbench.showPerspective( perspectiveID, window );
-
+      
       if( filePathStr != null )
       {
         final IPath filePath = Path.fromPortableString( filePathStr );
         final IWorkbenchPage page = window.getActivePage();
-
+        
         final IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile( filePath );
         page.openEditor( new FileEditorInput( file ), editorID );
       }
@@ -115,7 +112,7 @@ public class OpenPerspectiveAction implements IIntroAction
     catch( final CoreException e )
     {
       final IStatus status = e.getStatus();
-      ErrorDialog.openError( site.getShell(), Messages.getString( "org.kalypso.contribs.eclipse.ui.intro.config.OpenPerspectiveAction.4" ), Messages.getString( "org.kalypso.contribs.eclipse.ui.intro.config.OpenPerspectiveAction.5" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( site.getShell(), Messages.getString("org.kalypso.contribs.eclipse.ui.intro.config.OpenPerspectiveAction.4"), Messages.getString("org.kalypso.contribs.eclipse.ui.intro.config.OpenPerspectiveAction.5"), status ); //$NON-NLS-1$ //$NON-NLS-2$
       EclipsePlatformContributionsPlugin.getDefault().getLog().log( status );
     }
   }

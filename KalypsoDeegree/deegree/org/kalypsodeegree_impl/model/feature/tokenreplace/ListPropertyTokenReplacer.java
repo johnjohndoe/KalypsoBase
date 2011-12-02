@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.xml.namespace.NamespaceContext;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.tokenreplace.ITokenReplacer;
 import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypsodeegree.model.feature.Feature;

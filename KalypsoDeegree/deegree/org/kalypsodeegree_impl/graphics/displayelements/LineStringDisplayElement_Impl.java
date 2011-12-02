@@ -133,4 +133,11 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
     painter.paintPoses( g2, pos );
     painter.paintAdditionals( g2, curve, pos );
   }
+
+  public double getDistance( final double x1, final double y1, final double x2, final double y2 )
+  {
+    final double dx = x2 - x1;
+    final double dy = y2 - y1;
+    return Math.sqrt( dx * dx + dy * dy );
+  }
 }

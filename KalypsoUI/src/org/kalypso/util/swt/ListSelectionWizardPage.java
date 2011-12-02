@@ -153,7 +153,7 @@ public class ListSelectionWizardPage extends WizardPage
     // REMARK: we hide the status completely, if the status is null.
     // Makes layout necessary if status changed from/to null.
     final IStatus currentStatus = m_statusLabel.getStatus();
-    final boolean layoutNeeded = status == null && currentStatus != null || status != null && currentStatus == null;
+    final boolean layoutNeeded = (status == null && currentStatus != null) || (status != null && currentStatus == null);
 
     m_statusLabel.setStatus( status );
 

@@ -137,7 +137,7 @@ public final class MapUtilities
     if( geometryJTS instanceof com.vividsolutions.jts.geom.Point )
       return SnapUtilities.snapPoint( pointJTS );
     else if( geometryJTS instanceof LineString )
-      return SnapUtilities.snapToLine( (LineString) geometryJTS, pointBuffer, type );
+      return SnapUtilities.snapLine( (LineString) geometryJTS, pointBuffer, type );
     else if( geometryJTS instanceof MultiLineString )
       return SnapUtilities.snapMultiLine( (MultiLineString) geometryJTS, pointBuffer, type );
     else if( geometryJTS instanceof Polygon )
@@ -284,8 +284,8 @@ public final class MapUtilities
     y = y + height / 2;
 
     /* Calculate the new extent. */
-    final double newWidth = width / mapScale * scale;
-    final double newHeight = height / mapScale * scale;
+    final double newWidth = (width / mapScale) * scale;
+    final double newHeight = (height / mapScale) * scale;
 
     final double newX = x - newWidth / 2;
     final double newY = y - newHeight / 2;
@@ -335,5 +335,4 @@ public final class MapUtilities
 
     return newId;
   }
-
 }

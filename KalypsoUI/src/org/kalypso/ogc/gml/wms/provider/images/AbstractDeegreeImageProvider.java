@@ -228,10 +228,10 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
 
       /* Ask for the srs. */
       m_negotiatedSRS = negotiateCRS( m_localSRS, wmsCaps, m_layers );
-      final Operation operation = wmsCaps.getOperationMetadata().getOperation( new QualifiedName( "GetMap" ) );
+      Operation operation = wmsCaps.getOperationMetadata().getOperation( new QualifiedName( "GetMap" ) );
       HTTP http = null;
-      final List<DCP> dcps = operation.getDCP();
-      for( final DCP dcp : dcps )
+      List<DCP> dcps = operation.getDCP();
+      for( DCP dcp : dcps )
         if( dcp instanceof HTTP )
           http = (HTTP) dcp;
       if( http != null )
@@ -448,8 +448,6 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
 
     /* Get the URL of the legend. */
     final LegendURL legendURL = findLegendURL( layers );
-    if( legendURL == null )
-      return null;
 
     /* Get the real URL. */
     final URL onlineResource = legendURL.getOnlineResource();
@@ -499,7 +497,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     return result.toArray( new Layer[result.size()] );
   }
 
-  private LegendURL findLegendURL( final Layer[] layers )
+  private LegendURL findLegendURL( Layer[] layers )
   {
     /* End recursion. */
     if( layers == null || layers.length == 0 )
@@ -507,20 +505,20 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
 
     // TODO: we should show all styles of all layers as a tree in the outline
     // TODO: Instead, we show the graphic of the first style of the first layer
-    final Style[] styles = layers[0].getStyles();
+    Style[] styles = layers[0].getStyles();
     if( styles.length == 0 )
       return findLegendURL( layers[0].getLayer() );
 
     /* TODO Only the first style will be used for now. */
-    final Style style = styles[0];
+    Style style = styles[0];
 
     /* Only use styles, denoted by m_styles. */
-    final List<String> styleList = Arrays.asList( m_styles );
+    List<String> styleList = Arrays.asList( m_styles );
     if( !styleList.contains( style.getName() ) )
       return null;
 
     /* Get the URLs for the legend. */
-    final LegendURL[] legendURLs = style.getLegendURL();
+    LegendURL[] legendURLs = style.getLegendURL();
     if( legendURLs.length == 0 )
       return null;
 

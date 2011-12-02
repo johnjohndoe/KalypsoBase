@@ -62,6 +62,9 @@ public class KalypsoWorkbenchAdvisor extends IDEWorkbenchAdvisor
     super( processor );
   }
 
+  /**
+   * @see org.eclipse.ui.internal.ide.application.IDEWorkbenchAdvisor#initialize(org.eclipse.ui.application.IWorkbenchConfigurer)
+   */
   @Override
   public void initialize( final IWorkbenchConfigurer configurer )
   {

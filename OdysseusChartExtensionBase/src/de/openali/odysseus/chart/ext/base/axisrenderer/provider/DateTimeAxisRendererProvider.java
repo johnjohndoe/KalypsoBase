@@ -9,6 +9,7 @@ import de.openali.odysseus.chart.ext.base.axisrenderer.IDateTimeAxisField;
 import de.openali.odysseus.chart.ext.base.axisrenderer.IDateTimeAxisFieldProvider;
 import de.openali.odysseus.chart.ext.base.axisrenderer.ILabelCreator;
 import de.openali.odysseus.chart.ext.base.axisrenderer.ITickCalculator;
+import de.openali.odysseus.chart.factory.provider.AbstractAxisRendererProvider;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 
 /**

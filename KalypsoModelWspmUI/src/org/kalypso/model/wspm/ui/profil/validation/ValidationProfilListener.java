@@ -50,7 +50,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.progress.IProgressConstants;
-import org.joda.time.DateTime;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
@@ -63,7 +62,7 @@ import org.kalypso.model.wspm.ui.preferences.PreferenceConstants;
 
 /**
  * Profil-listener which repairs and validates the profile, each time it changes.
- * 
+ *
  * @author belger
  */
 public class ValidationProfilListener implements IProfilListener
@@ -78,7 +77,7 @@ public class ValidationProfilListener implements IProfilListener
 
     final ValidatorRuleSet rules = KalypsoModelWspmCorePlugin.getValidatorSet( profiletype );
 
-    m_validateJob = new WorkspaceJob( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.validation.ValidationProfilListener.0" ) ) //$NON-NLS-1$
+    m_validateJob = new WorkspaceJob( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.validation.ValidationProfilListener.0") ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInWorkspace( final IProgressMonitor monitor )
@@ -95,13 +94,10 @@ public class ValidationProfilListener implements IProfilListener
           collector.reset( featureID );
 
           // TODO: use monitor and check for cancel
-          System.out.println( "(validation_performance_check)    startValidation :" + DateTime.now().toString( "mm:ss:" ) + DateTime.now().getMillisOfSecond() );
-
           final IStatus status = rules.validateProfile( profile, collector, validate, excludes.split( ";" ) ); //$NON-NLS-1$
 
           final IMarker[] markers = collector.getMarkers();
           profile.setProblemMarker( markers );
-          System.out.println( "(validation_performance_check)    endValidation :" + DateTime.now().toString( "mm:ss:" ) + DateTime.now().getMillisOfSecond() );
 
           return status;
         }
@@ -122,9 +118,7 @@ public class ValidationProfilListener implements IProfilListener
       public void propertyChange( final PropertyChangeEvent event )
       {
         if( PreferenceConstants.P_VALIDATE_PROFILE.equals( event.getProperty() ) || PreferenceConstants.P_VALIDATE_RULES_TO_EXCLUDE.equals( event.getProperty() ) )
-        {
           revalidate(); // TODO: validate all profiles... in that case!
-        }
       }
     };
 
@@ -140,7 +134,6 @@ public class ValidationProfilListener implements IProfilListener
 
   protected void revalidate( )
   {
-    System.out.println( "(validation_performance_check)Revalidate :" + DateTime.now().toString( "mm:ss:" ) + DateTime.now().getMillisOfSecond() );
     m_validateJob.cancel(); // Just in case, to avoid too much validations
     m_validateJob.schedule( 100 );
   }
@@ -151,9 +144,7 @@ public class ValidationProfilListener implements IProfilListener
     // only revalidate if rellay data has changed
     if( hint.isObjectChanged() || hint.isObjectDataChanged() || hint.isMarkerDataChanged() || hint.isMarkerMoved() || hint.isPointPropertiesChanged() || hint.isPointsChanged()
         || hint.isPointValuesChanged() || hint.isProfilPropertyChanged() )
-    {
       revalidate();
-    }
   }
 
   /**

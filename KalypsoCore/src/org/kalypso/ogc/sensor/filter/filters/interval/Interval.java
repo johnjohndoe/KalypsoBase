@@ -244,7 +244,7 @@ public class Interval
   {
     switch( matrix )
     {
-    // REMARK: not using getters for start/end as cloning the calendars is a performance hot spot of this class.
+      // REMARK: not using getters for start/end as cloning the calendars is a performance hot spot of this class.
 
       case STATUS_INTERSECTION_START:
         return new Interval( m_start, other.m_end );

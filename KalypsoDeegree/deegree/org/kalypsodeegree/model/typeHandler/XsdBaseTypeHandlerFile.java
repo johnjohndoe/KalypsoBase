@@ -83,7 +83,7 @@ public class XsdBaseTypeHandlerFile extends XsdBaseTypeHandler<File>
   @Override
   public int compare( final File o1, final File o2 )
   {
-    if( o1 == null && o2 == null )
+    if( (o1 == null) && (o2 == null) )
     {
       return 0; // equals
     }

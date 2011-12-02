@@ -20,7 +20,7 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
  */
 public final class ImportProfilesCommand implements ICommand
 {
-  private final IProfil[] m_profiles;
+  private final List<IProfil> m_profiles;
 
   private final FeatureList m_profileList;
 
@@ -30,12 +30,12 @@ public final class ImportProfilesCommand implements ICommand
 
   private Feature[] m_addedFeatures = null;
 
-  public ImportProfilesCommand( final WspmWaterBody water, final IProfil[] profiles )
+  public ImportProfilesCommand( final WspmWaterBody water, final List<IProfil> profiles )
   {
     m_water = water;
     m_workspace = m_water.getWorkspace();
     m_profiles = profiles;
-    m_profileList = (FeatureList) m_water.getProperty( WspmWaterBody.QNAME_MEMBER_PROFILE );
+    m_profileList = (FeatureList) m_water.getProperty( WspmWaterBody.QNAME_PROP_PROFILEMEMBER );
   }
 
   @Override

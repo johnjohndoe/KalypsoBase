@@ -13,8 +13,6 @@ public class CalculationChain extends Feature_Impl implements ICalculationChain
 
   private boolean m_isSorted = true;
 
-  private int m_ordinalNumber = 0;
-
   public CalculationChain( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
@@ -34,7 +32,6 @@ public class CalculationChain extends Feature_Impl implements ICalculationChain
   public void addCalculation( final ICalculationChainMember member )
   {
     m_calculations.add( member );
-    member.setOrdinalNumber( m_ordinalNumber++ );
     m_isSorted = false;
   }
 

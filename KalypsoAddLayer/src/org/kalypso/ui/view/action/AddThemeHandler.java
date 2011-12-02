@@ -47,7 +47,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
 import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
@@ -70,8 +69,8 @@ public class AddThemeHandler extends AbstractHandler
 
     final GisMapOutlinePage viewer = MapHandlerUtils.getMapOutline( context );
 
-    final IWorkbench workbench = activeWorkbenchWindow.getWorkbench();
-    final KalypsoAddLayerWizard wizard = new KalypsoAddLayerWizard( viewer, selection, workbench );
+    final KalypsoAddLayerWizard wizard = new KalypsoAddLayerWizard( viewer, selection );
+    wizard.init( activeWorkbenchWindow.getWorkbench() );
     wizard.setForcePreviousAndNextButtons( true );
     final WizardDialog dialog = new WizardDialog( shell, wizard );
     dialog.open();

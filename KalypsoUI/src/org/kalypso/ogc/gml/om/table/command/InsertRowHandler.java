@@ -72,21 +72,16 @@ public class InsertRowHandler extends AbstractHandler
 
     final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
     if( selection == null )
-      throw new ExecutionException( Messages.getString( "org.kalypso.ogc.gml.om.table.command.InsertRowHandler.3" ) ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.om.table.command.InsertRowHandler.3") ); //$NON-NLS-1$
 
-    final int index;
     if( selection.size() == 0 )
-    {
-      //throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.om.table.command.InsertRowHandler.1") ); //$NON-NLS-1$
-      index = -1;
-    }
-    else
-    {
-      final Object obj = selection.getFirstElement();
-      index = tupleResult.indexOf( obj );
-    }
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.om.table.command.InsertRowHandler.1") ); //$NON-NLS-1$
+
+    final Object obj = selection.getFirstElement();
+    final int index = tupleResult.indexOf( obj );
 
     final IRecord row = tupleResult.createRecord();
+
     tupleResult.doInterpolation( tupleResult, row, index, 0.5 );
 
     tupleResult.add( index + 1, row );

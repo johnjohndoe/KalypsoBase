@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * Wraps a {@link org.eclipse.jface.wizard.IWizardPage} as an {@link IShellProvider}.
- * 
+ *
  * @author Gernot Belger
  */
 public class WizardPageShellProvider implements IShellProvider

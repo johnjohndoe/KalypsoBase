@@ -50,11 +50,7 @@ import org.kalypsodeegree.model.feature.Feature;
  * 
  * @author Gernot Belger
  */
-public final class ChartDataProvider
+public class ChartDataProvider
 {
-  public static final Map<String, Feature> FEATURE_MAP = new HashMap<String, Feature>();
-
-  private ChartDataProvider( )
-  {
-  }
+  public static Map<String, Feature> FEATURE_MAP = new HashMap<String, Feature>();
 }

@@ -33,6 +33,7 @@ import java.util.Date;
 import java.util.Iterator;
 
 /**
+ * 
  * TODO: insert type comment here
  * 
  * @author doemming
@@ -58,7 +59,7 @@ public class ValueIterator implements Iterator<Object>
    * @see java.util.Iterator#remove()
    */
   @Override
-  public void remove( )
+  public void remove()
   {
     throw new UnsupportedOperationException();
   }
@@ -67,7 +68,7 @@ public class ValueIterator implements Iterator<Object>
    * @see java.util.Iterator#hasNext()
    */
   @Override
-  public boolean hasNext( )
+  public boolean hasNext()
   {
     return m_pos < m_rows;
   }
@@ -76,17 +77,17 @@ public class ValueIterator implements Iterator<Object>
    * @see java.util.Iterator#next()
    */
   @Override
-  public Object next( )
+  public Object next()
   {
     final int n = m_pos;
     m_pos++;
     if( m_start instanceof Double )
-      return new Double( ((Double) m_start).doubleValue() + n * ((Double) m_int).doubleValue() );
+      return new Double( ( (Double)m_start ).doubleValue() + n * ( (Double)m_int ).doubleValue() );
     if( m_start instanceof Integer )
-      return new Integer( ((Integer) m_start).intValue() + n * ((Integer) m_int).intValue() );
+      return new Integer( ( (Integer)m_start ).intValue() + n * ( (Integer)m_int ).intValue() );
     // TODO: implement Date-Type in dialog
     if( m_start instanceof Date )
-      return new Date( ((Date) m_start).getTime() + n * ((Date) m_int).getTime() );
+      return new Date( ( (Date)m_start ).getTime() + n * ( (Date)m_int ).getTime() );
 
     return new UnsupportedOperationException();
   }

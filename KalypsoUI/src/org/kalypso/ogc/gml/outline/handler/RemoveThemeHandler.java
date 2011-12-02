@@ -67,7 +67,7 @@ public class RemoveThemeHandler extends AbstractHandler
     final ISelection selection = (ISelection) context.getVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME );
     final IKalypsoTheme[] selectedThemes = MapHandlerUtils.getSelectedThemes( selection );
 
-    final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString( "org.kalypso.ogc.gml.outline.handler.RemoveThemeHandler.0" ) ); //$NON-NLS-1$
+    final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString("org.kalypso.ogc.gml.outline.handler.RemoveThemeHandler.0") ); //$NON-NLS-1$
     for( final IKalypsoTheme theme : selectedThemes )
       compositeCommand.addCommand( new RemoveThemeCommand( theme.getMapModell(), theme ) );
 

@@ -212,7 +212,6 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
     for( final IServiceWithSources service : m_registeredServices )
       service.removeSourceProvider( this );
 
-    m_mapPanel.removeSelectionChangedListener( m_selectionChangedListener );
     m_mapPanel.removeMapPanelListener( m_mapPanelListener );
     m_mapPanelListener.onMapModelChanged( m_mapPanel, m_mapPanel.getMapModell(), null );
 

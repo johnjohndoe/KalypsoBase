@@ -57,10 +57,7 @@ public class Refinement
       {
         for( final GM_Surface< ? > gm_SurfacePatch : multiSurface.getAllSurfaces() )
         {
-          if( remainingSurface != null )
-          {
-            remainingSurface = remainingSurface.difference( gm_SurfacePatch );
-          }
+          remainingSurface = remainingSurface.difference( gm_SurfacePatch );
         }
       }
       if( remainingSurface instanceof GM_MultiSurface )
@@ -89,6 +86,7 @@ public class Refinement
           for( final GM_SurfacePatch surfacePatch : surface )
           {
             final GM_Object preIntersection = inputCurve.intersection( surface );
+
             if( preIntersection instanceof GM_Point )
               continue;
 
@@ -154,7 +152,7 @@ public class Refinement
               {
                 final GM_Curve splitSegment = segments[j];
                 final GM_Object gmobject = splitSegment.intersection( point );
-                if( gmobject != null || splitSegment.distance( point ) < MAX_DISTANCE * 2 )
+                if( gmobject != null || (splitSegment.distance( point ) < MAX_DISTANCE * 2) )
                 {
                   final GM_Point startPoint = splitSegment.getAsLineString().getStartPoint();
                   final GM_Point endPoint = splitSegment.getAsLineString().getEndPoint();

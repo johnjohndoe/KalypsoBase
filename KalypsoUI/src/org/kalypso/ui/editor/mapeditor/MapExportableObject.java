@@ -69,37 +69,37 @@ public class MapExportableObject implements IExportableObject
   /**
    * The map panel.
    */
-  private final IMapPanel m_panel;
+  private IMapPanel m_panel;
 
   /**
    * The preferred document name.
    */
-  private final String m_preferredDocumentName;
+  private String m_preferredDocumentName;
 
   /**
    * The width of the new image.
    */
-  private final int m_width;
+  private int m_width;
 
   /**
    * The height of the new image.
    */
-  private final int m_height;
+  private int m_height;
 
   /**
    * The insets of the image define a print border, which is kept empty.
    */
-  private final Insets m_insets;
+  private Insets m_insets;
 
   /**
    * If >0 and <=25 a border will be drawn around the map.
    */
-  private final int m_borderWidth;
+  private int m_borderWidth;
 
   /**
    * The format of the image.
    */
-  private final String m_format;
+  private String m_format;
 
   /**
    * The constructor.
@@ -119,7 +119,7 @@ public class MapExportableObject implements IExportableObject
    * @param format
    *          The format of the image.
    */
-  public MapExportableObject( final IMapPanel panel, final String preferredDocumentName, final int width, final int height, final Insets insets, final int borderWidth, final String format )
+  public MapExportableObject( IMapPanel panel, String preferredDocumentName, int width, int height, Insets insets, int borderWidth, String format )
   {
     m_panel = panel;
     m_preferredDocumentName = preferredDocumentName;
@@ -136,8 +136,8 @@ public class MapExportableObject implements IExportableObject
   @Override
   public String getPreferredDocumentName( )
   {
-    final String baseName = FilenameUtils.removeExtension( m_preferredDocumentName );
-    final String fileName = String.format( "%s.%s", baseName, m_format );
+    String baseName = FilenameUtils.removeExtension( m_preferredDocumentName );
+    String fileName = String.format( "%s.%s", baseName, m_format );
 
     return FileUtilities.validateName( fileName, "_" );
   }
@@ -147,19 +147,19 @@ public class MapExportableObject implements IExportableObject
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor )
+  public IStatus exportObject( OutputStream output, IProgressMonitor monitor )
   {
     try
     {
       monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.mapeditor.ExportableMap.1" ), 1000 ); //$NON-NLS-1$
 
-      final BufferedImage image = MapModellHelper.createWellFormedImageFromModel( m_panel, m_width, m_height, m_insets, m_borderWidth );
+      BufferedImage image = MapModellHelper.createWellFormedImageFromModel( m_panel, m_width, m_height, m_insets, m_borderWidth );
 
-      final boolean result = ImageIO.write( image, m_format, output );
+      boolean result = ImageIO.write( image, m_format, output );
       if( !result )
         return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), 0, Messages.getString( "org.kalypso.ui.editor.mapeditor.ExportableMap.2" ) + m_format, null ); //$NON-NLS-1$
     }
-    catch( final IOException e )
+    catch( IOException e )
     {
       e.printStackTrace();
       return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, Messages.getString( "org.kalypso.ui.editor.mapeditor.ExportableMap.3" ), e ); //$NON-NLS-1$

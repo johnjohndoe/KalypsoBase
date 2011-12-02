@@ -143,8 +143,9 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
 
     final Source[] srcs = m_sources.toArray( new Source[m_sources.size()] );
 
+    // TODO: where from?
     final NamespaceContext namespaceContext = null;
-    final GMLXPath targetPath =  m_targetobservation == null ? null : new GMLXPath( m_targetobservation, namespaceContext );
+    final GMLXPath targetPath = new GMLXPath( m_targetobservation, namespaceContext );
 
     final ICopyObservationTarget obsTarget = CopyObservationTargetFactory.getLink( context, targetPath, m_targetObservationDir, targetRange, forecastRange );
     final ICopyObservationSource obsSource = new FeatureCopyObservationSource( context, srcs, m_tokens );

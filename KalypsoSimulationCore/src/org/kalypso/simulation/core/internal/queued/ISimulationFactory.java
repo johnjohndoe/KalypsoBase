@@ -48,7 +48,7 @@ import org.kalypso.simulation.core.SimulationException;
  */
 public interface ISimulationFactory
 {
-  public String[] getSupportedTypes( );
+  public String[] getSupportedTypes();
 
   public ISimulation createJob( final String typeID ) throws SimulationException;
 }

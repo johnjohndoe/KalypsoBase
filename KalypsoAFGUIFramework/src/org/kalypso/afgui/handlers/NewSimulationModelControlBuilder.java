@@ -7,7 +7,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
@@ -140,7 +139,7 @@ public class NewSimulationModelControlBuilder
   {
     newName = newModelTFE.getText();
 
-    newName = newName == null ? "" : newName.trim(); //$NON-NLS-1$
+    newName = (newName == null) ? "" : newName.trim(); //$NON-NLS-1$
     return newName;
   }
 
@@ -181,7 +180,8 @@ public class NewSimulationModelControlBuilder
     return errorMessage;
   }
 
-  public void setUpdateListerner( @SuppressWarnings("hiding") final IUpdateListener updateListener )
+  public void setUpdateListerner( @SuppressWarnings("hiding")
+  final IUpdateListener updateListener )
   {
     this.updateListener = updateListener;
   }
@@ -215,7 +215,7 @@ public class NewSimulationModelControlBuilder
     // wd.setMessage("Neue Simulationsmodell");
     // wd.setBlockOnOpen(true);
     final int decision = wd.open();
-    if( decision == Window.OK )
+    if( decision == WizardDialog.OK )
     {
       final String name = wpage.getNewSimulaionControlBuilder().getNewName();
       logger.info( "newName=" + name ); //$NON-NLS-1$

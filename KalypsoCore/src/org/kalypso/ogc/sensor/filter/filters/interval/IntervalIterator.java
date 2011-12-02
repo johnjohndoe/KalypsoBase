@@ -43,6 +43,7 @@ package org.kalypso.ogc.sensor.filter.filters.interval;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.Period;
@@ -81,7 +82,7 @@ public class IntervalIterator implements Iterator<Interval>, Iterable<Interval>
   @Override
   public void remove( )
   {
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 
   /**

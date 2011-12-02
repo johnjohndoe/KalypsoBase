@@ -43,7 +43,7 @@ package org.kalypso.project.database.client.ui.project.wizard.create;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
@@ -62,7 +62,7 @@ import org.kalypso.project.database.common.nature.RemoteProjectNature;
  * Wizard for creating a new local Kalypso Planer Client Project<br/>
  * FIXME: why is a different wizard needed? Makes really no sense at all!<br/>
  * FIXME: Why is planer client code here?!
- *
+ * 
  * @author Dirk Kuch
  */
 public class WizardCreateProject extends NewProjectWizard
@@ -75,7 +75,6 @@ public class WizardCreateProject extends NewProjectWizard
    * @param natures
    *          list of natures which will be added to the downloaded project
    */
-  // FIXME: create templates on the fly -> see ticket
   public WizardCreateProject( final ProjectTemplate[] templates, final String[] natures, final IKalypsoModule module )
   {
     this( new ProjectTemplatePage( "Projekt erzeugen", "", templates ), natures, module ); //$NON-NLS-2$
@@ -117,7 +116,7 @@ public class WizardCreateProject extends NewProjectWizard
         final IProject newProject = getNewProject();
         final IProjectDescription description = newProject.getDescription();
 
-        final String[] natures = ArrayUtils.addAll( description.getNatureIds(), natureIDs );
+        final String[] natures = (String[]) ArrayUtils.addAll( description.getNatureIds(), natureIDs );
         ArrayUtils.add( natures, RemoteProjectNature.NATURE_ID );
 
         // unique natures

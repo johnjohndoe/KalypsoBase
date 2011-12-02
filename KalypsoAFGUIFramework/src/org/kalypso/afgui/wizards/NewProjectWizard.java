@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.afgui.wizards;
 
-import java.util.List;
+import java.net.URL;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -66,16 +66,14 @@ import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
 import org.kalypso.core.status.StatusDialog;
-import org.kalypso.module.INewProjectHandler;
-import org.kalypso.module.welcome.INewProjectWizard;
 
 /**
  * Basic wizard implementation for the various workflow/scenario based projects.<br>
  * Normally, only the location of the project-template (-zip) should be enough.<br>
- *
+ * 
  * @author Gernot Belger
  */
-public class NewProjectWizard extends BasicNewProjectResourceWizard implements INewProjectWizard, INewProjectHandler
+public class NewProjectWizard extends BasicNewProjectResourceWizard implements INewProjectWizard
 {
   protected static final String PDE_NATURE_ID = "org.eclipse.pde.PluginNature"; //$NON-NLS-1$
 
@@ -231,8 +229,9 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
       }
     }
 
-    final NewProjectData data = new NewProjectData( this, selectedProject, project, m_moduleID );
-    final WorkspaceModifyOperation operation = new UnpackProjectTemplateOperation( data );
+    final URL dataLocation = selectedProject.getData();
+
+    final WorkspaceModifyOperation operation = new UnpackProjectTemplateOperation( this, dataLocation, project, m_moduleID );
 
     final IStatus resultStatus = RunnableContextHelper.execute( getContainer(), true, true, operation );
     KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( resultStatus );
@@ -255,8 +254,7 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
    * Does nothing by default.
    */
   @SuppressWarnings("unused")
-  @Override
-  public IStatus postCreateProject( final IProject project, final ProjectTemplate template, final IProgressMonitor monitor ) throws CoreException
+  public IStatus postCreateProject( final IProject project, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.done();
     return Status.OK_STATUS;
@@ -266,7 +264,6 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
    * Opens the project after it has been created. By default, if the project is scenario based, the Base-Scenario is
    * opened.
    */
-  @Override
   public void openProject( final IProject project ) throws CoreException
   {
     /* Also activate new project */
@@ -274,11 +271,7 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
     if( nature == null )
       return;
 
-    final List<IScenario> cases = nature.getCaseManager().getCases();
-    if( cases.size() == 0 )
-      return;
-
-    final IScenario caze = cases.get( 0 );
+    final IScenario caze = nature.getCaseManager().getCases().get( 0 );
 
     if( m_activateScenario )
       KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().setCurrentCase( caze );

@@ -61,12 +61,19 @@ public abstract class AbstractMapLayer implements IMapLayer
 {
   private final IKalypsoThemeListener m_themeListener = new KalypsoThemeAdapter()
   {
+    /**
+     * @see org.kalypso.ogc.gml.KalypsoThemeAdapter#repaintRequested(org.kalypso.ogc.gml.AbstractKalypsoTheme,
+     *      org.kalypsodeegree.model.geometry.GM_Envelope)
+     */
     @Override
     public void repaintRequested( final IKalypsoTheme source, final GM_Envelope invalidExtent )
     {
       handeRepaintRequested( invalidExtent );
     }
 
+    /**
+     * @see org.kalypso.ogc.gml.KalypsoThemeAdapter#visibilityChanged(org.kalypso.ogc.gml.IKalypsoTheme, boolean)
+     */
     @Override
     public void visibilityChanged( final IKalypsoTheme source, final boolean newVisibility )
     {

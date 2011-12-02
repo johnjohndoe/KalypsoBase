@@ -155,6 +155,7 @@ public class FeatureTemplateviewer
 
   private IFeaturesProvider m_featuresProvider;
 
+
   public FeatureTemplateviewer( final JobExclusiveCommandTarget commandtarget )
   {
     m_commandtarget = commandtarget;
@@ -351,7 +352,7 @@ public class FeatureTemplateviewer
         throw new IllegalArgumentException();
 
       // REMARK: we allow for the null-feature!
-      final Feature feature = features == null || features.size() == 0 ? null : features.get( 0 );
+      final Feature feature = (features == null || features.size() == 0) ? null : features.get( 0 );
 
       /* Try to obtain the feature to display. */
       /* The result may be null, if the feature path is null, too. */

@@ -21,7 +21,7 @@ public class WorkflowContentProvider implements ITreeContentProvider
   {
     if( element instanceof ITaskGroup )
     {
-      final ITaskGroup taskGroup = (ITaskGroup) element;
+      final ITaskGroup taskGroup = ((ITaskGroup) element);
       return taskGroup.getTasks().toArray();
     }
     else
@@ -47,7 +47,7 @@ public class WorkflowContentProvider implements ITreeContentProvider
   {
     if( element instanceof ITaskGroup )
     {
-      final ITaskGroup taskGroup = (ITaskGroup) element;
+      final ITaskGroup taskGroup = ((ITaskGroup) element);
       return !taskGroup.getTasks().isEmpty();
     }
     else

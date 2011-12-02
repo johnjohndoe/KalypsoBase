@@ -37,7 +37,9 @@
 package org.kalypsodeegree.model.geometry;
 
 /**
+ * 
  * definies the basis of a three dimensional geometry.
+ * 
  * <p>
  * -----------------------------------------------------
  * </p>
@@ -48,5 +50,4 @@ package org.kalypsodeegree.model.geometry;
  */
 
 public interface GM_Solid extends GM_Primitive
-{
-}
+{}

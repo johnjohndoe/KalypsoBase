@@ -32,7 +32,7 @@ final class BatchEditParametersInputDialog extends TitleAreaDialog
   /**
    * Creates a new input dialog
    */
-  public BatchEditParametersInputDialog( final Shell shell, final String windowTitle, final double focusedValue )
+  public BatchEditParametersInputDialog( final Shell shell, final String windowTitle, double focusedValue )
   {
     super( shell );
     m_windowTitle = windowTitle;
@@ -43,7 +43,7 @@ final class BatchEditParametersInputDialog extends TitleAreaDialog
    * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
    */
   @Override
-  protected void configureShell( final Shell newShell )
+  protected void configureShell( Shell newShell )
   {
     super.configureShell( newShell );
 
@@ -66,7 +66,7 @@ final class BatchEditParametersInputDialog extends TitleAreaDialog
     text.addModifyListener( new ModifyListener()
     {
       @Override
-      public void modifyText( final ModifyEvent e )
+      public void modifyText( ModifyEvent e )
       {
         handleTextChanged( text.getText() );
       }
@@ -83,17 +83,17 @@ final class BatchEditParametersInputDialog extends TitleAreaDialog
     addBtton( radioButtonGroup, "*", Messages.getString( "org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate.11" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     addBtton( radioButtonGroup, "/", Messages.getString( "org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate.12" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    setTitle( Messages.getString( "org.kalypso.ui.editor.actions.BatchEditParametersInputDialog.0" ) ); //$NON-NLS-1$
+    setTitle( Messages.getString("org.kalypso.ui.editor.actions.BatchEditParametersInputDialog.0") ); //$NON-NLS-1$
     setMessage( Messages.getString( "org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate.1" ) );//$NON-NLS-1$ 
 
     return composite;
   }
 
-  protected void handleTextChanged( final String text )
+  protected void handleTextChanged( String text )
   {
     m_amount = NumberUtils.parseQuietDouble( text );
 
-    final Button button = getButton( IDialogConstants.OK_ID );
+    Button button = getButton( IDialogConstants.OK_ID );
     button.setEnabled( !Double.isNaN( m_amount ) );
   }
 
@@ -102,7 +102,7 @@ final class BatchEditParametersInputDialog extends TitleAreaDialog
     return m_op;
   }
 
-  protected void setOperator( final String operator )
+  protected void setOperator( String operator )
   {
     m_op = operator;
   }
@@ -123,7 +123,7 @@ final class BatchEditParametersInputDialog extends TitleAreaDialog
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( final SelectionEvent e )
+      public void widgetSelected( SelectionEvent e )
       {
         setOperator( operation );
       }

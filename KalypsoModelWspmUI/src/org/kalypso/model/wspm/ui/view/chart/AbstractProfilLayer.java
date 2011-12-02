@@ -47,7 +47,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
-import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
@@ -80,15 +80,15 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   private ILineStyle m_lineStyle = null;
 
-  private ILineStyle m_lineStyleActive = null;
+  private ILineStyle m_lineStyle_active = null;
 
-  private ILineStyle m_lineStyleHover = null;
+  private ILineStyle m_lineStyle_hover = null;
 
   private IPointStyle m_pointStyle = null;
 
-  private IPointStyle m_pointStyleActive = null;
+  private IPointStyle m_pointStyle_active = null;
 
-  private IPointStyle m_pointStyleHover = null;
+  private IPointStyle m_pointStyle_hover = null;
 
   private IProfil m_profil;
 
@@ -102,9 +102,28 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
     m_profil = profil;
     m_targetRangeProperty = targetRangeProperty;
-    m_domainComponent = IWspmPointProperties.POINT_PROPERTY_BREITE;
+    m_domainComponent = IWspmConstants.POINT_PROPERTY_BREITE;
     setIdentifier( id );
     createStyles( styleProvider, id );
+  }
+
+  private void createStyles( final ILayerStyleProvider styleProvider, final String id )
+  {
+    if( styleProvider == null )
+      return;
+
+    // TODO: stlyes should be fetched on demand!
+    // It is not guaranteed, that we need only one line style!
+
+    // FIXME: remove theses magic names
+    m_lineStyle = styleProvider.getStyleFor( id + "_LINE", null ); //$NON-NLS-1$
+    m_pointStyle = styleProvider.getStyleFor( id + "_POINT", null ); //$NON-NLS-1$
+
+    m_lineStyle_active = styleProvider.getStyleFor( id + "_LINE_ACTIVE", null ); //$NON-NLS-1$
+    m_pointStyle_active = styleProvider.getStyleFor( id + "_POINT_ACTIVE", null ); //$NON-NLS-1$
+
+    m_lineStyle_hover = styleProvider.getStyleFor( id + "_LINE_HOVER", null ); //$NON-NLS-1$
+    m_pointStyle_hover = styleProvider.getStyleFor( id + "_POINT_HOVER", null ); //$NON-NLS-1$
   }
 
   /**
@@ -116,18 +135,12 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   {
     final IComponent targetComponent = getTargetComponent();
     if( targetComponent != null )
-    {
       getProfil().setActivePointProperty( targetComponent );
-    }
 
-    if( point == null || dragStartData.getPosition() == point )
-    {
+    if( dragStartData.getPosition() == point )
       executeClick( dragStartData );
-    }
     else
-    {
       executeDrop( point, dragStartData );
-    }
 
     return null;
   }
@@ -150,25 +163,6 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   {
     // override this method
     return null;
-  }
-
-  private void createStyles( final ILayerStyleProvider styleProvider, final String id )
-  {
-    if( styleProvider == null )
-      return;
-
-    // TODO: stlyes should be fetched on demand!
-    // It is not guaranteed, that we need only one line style!
-
-    // FIXME: remove theses magic names
-    m_lineStyle = styleProvider.getStyleFor( id + "_LINE", null ); //$NON-NLS-1$
-    m_pointStyle = styleProvider.getStyleFor( id + "_POINT", null ); //$NON-NLS-1$
-
-    m_lineStyleActive = styleProvider.getStyleFor( id + "_LINE_ACTIVE", null ); //$NON-NLS-1$
-    m_pointStyleActive = styleProvider.getStyleFor( id + "_POINT_ACTIVE", null ); //$NON-NLS-1$
-
-    m_lineStyleHover = styleProvider.getStyleFor( id + "_LINE_HOVER", null ); //$NON-NLS-1$
-    m_pointStyleHover = styleProvider.getStyleFor( id + "_POINT_HOVER", null ); //$NON-NLS-1$
   }
 
   /**
@@ -233,7 +227,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Number> getDomainRange( )
   {
     if( getCoordinateMapper() == null )
       return null;
@@ -260,9 +254,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
       final Rectangle hover = getHoverRect( profilPoints[i] );
       if( hover == null )
-      {
         continue;
-      }
 
       if( hover.contains( pos ) )
       {
@@ -285,43 +277,28 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   {
     if( m_lineStyle == null )
       m_lineStyle = StyleUtils.getDefaultLineStyle();
-
     return m_lineStyle;
   }
 
-  protected ILineStyle getLineStyleActive( )
+  protected ILineStyle getLineStyle_active( )
   {
-    if( m_lineStyleActive == null )
+    if( m_lineStyle_active == null )
     {
-      m_lineStyleActive = getLineStyle().clone();
-      m_lineStyleActive.setColor( COLOR_ACTIVE );
+      m_lineStyle_active = getLineStyle().clone();
+      m_lineStyle_active.setColor( COLOR_ACTIVE );
     }
-    return m_lineStyleActive;
+    return m_lineStyle_active;
   }
 
-  protected ILineStyle getLineStyleHover( )
+  protected ILineStyle getLineStyle_hover( )
   {
-    if( m_lineStyleHover == null )
+    if( m_lineStyle_hover == null )
     {
-      m_lineStyleHover = getLineStyle().clone();
-      m_lineStyleHover.setDash( 0f, HOVER_DASH );
-      m_lineStyleHover.setLineCap( LINECAP.FLAT );
+      m_lineStyle_hover = getLineStyle().clone();
+      m_lineStyle_hover.setDash( 0f, HOVER_DASH );
+      m_lineStyle_hover.setLineCap( LINECAP.FLAT );
     }
-    return m_lineStyleHover;
-  }
-
-  public IRecord getNextNonNull( final int index )
-  {
-    final IRecord[] points = getProfil().getPoints();
-    final int prop = getProfil().indexOfProperty( m_targetRangeProperty );
-    for( int i = index + 1; i < points.length; i++ )
-    {
-
-      if( points[i] != null && points[i].getValue( prop ) != null )
-        return points[i];
-    }
-    return points[index];
-
+    return m_lineStyle_hover;
   }
 
   public Point2D getPoint2D( final IRecord point )
@@ -329,6 +306,17 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     final Double x = ProfilUtil.getDoubleValueFor( m_domainComponent, point );
     final Double y = ProfilUtil.getDoubleValueFor( getTargetPropertyIndex(), point );
     return new Point2D.Double( x, y );
+  }
+
+  protected final int getTargetPropertyIndex( )
+  {
+    if( m_targetPropIndex < 0 )
+    {
+      if( m_profil == null )
+        return -1;
+      m_targetPropIndex = m_profil.getResult().indexOfComponent( m_targetRangeProperty );
+    }
+    return m_targetPropIndex;
   }
 
   protected IPointStyle getPointStyle( )
@@ -344,39 +332,26 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     return m_pointStyle;
   }
 
-  protected IPointStyle getPointStyleActive( )
+  protected IPointStyle getPointStyle_active( )
   {
-    if( m_pointStyleActive == null )
+    if( m_pointStyle_active == null )
     {
-      m_pointStyleActive = getPointStyle().clone();
-      m_pointStyleActive.setStroke( getLineStyleActive().clone() );
-      m_pointStyleActive.setInlineColor( getLineStyleActive().getColor() );
+      m_pointStyle_active = getPointStyle().clone();
+      m_pointStyle_active.setStroke( getLineStyle_active().clone() );
+      m_pointStyle_active.setInlineColor( getLineStyle_active().getColor() );
     }
-    return m_pointStyleActive;
+    return m_pointStyle_active;
   }
 
-  protected IPointStyle getPointStyleHover( )
+  protected IPointStyle getPointStyle_hover( )
   {
-    if( m_pointStyleHover == null )
+    if( m_pointStyle_hover == null )
     {
-      m_pointStyleHover = getPointStyle().clone();
-      m_pointStyleHover.setStroke( getLineStyleHover().clone() );
-      m_pointStyleHover.setFillVisible( false );
+      m_pointStyle_hover = getPointStyle().clone();
+      m_pointStyle_hover.setStroke( getLineStyle_hover().clone() );
+      m_pointStyle_hover.setFillVisible( false );
     }
-    return m_pointStyleHover;
-  }
-
-  public IRecord getPreviousNonNull( final int index )
-  {
-    final IRecord[] points = getProfil().getPoints();
-    final int prop = getProfil().indexOfProperty( m_targetRangeProperty );
-    for( int i = index - 1; i > -1; i-- )
-    {
-      if( points[i] != null && points[i].getValue( prop ) != null )
-        return points[i];
-    }
-    return points[index];
-
+    return m_pointStyle_hover;
   }
 
   /**
@@ -400,22 +375,11 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     return m_profil.getResult().getComponent( indexOfProperty );
   }
 
-  protected final int getTargetPropertyIndex( )
-  {
-    if( m_targetPropIndex < 0 )
-    {
-      if( m_profil == null )
-        return -1;
-      m_targetPropIndex = m_profil.getResult().indexOfComponent( m_targetRangeProperty );
-    }
-    return m_targetPropIndex;
-  }
-
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     final int targetPropertyIndex = getTargetPropertyIndex();
     if( getCoordinateMapper() == null || targetPropertyIndex == -1 )
@@ -521,14 +485,14 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     m_lineStyle = lineStyle;
   }
 
-  public void setLineStyleActive( final ILineStyle lineStyleActive )
+  public void setLineStyle_active( final ILineStyle lineStyle_active )
   {
-    m_lineStyleActive = lineStyleActive;
+    m_lineStyle_active = lineStyle_active;
   }
 
-  public void setLineStyleHover( final ILineStyle lineStyleHover )
+  public void setLineStyle_hover( final ILineStyle lineStyle_hover )
   {
-    m_lineStyleHover = lineStyleHover;
+    m_lineStyle_hover = lineStyle_hover;
   }
 
   public void setPointStyle( final IPointStyle pointStyle )
@@ -536,14 +500,14 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     m_pointStyle = pointStyle;
   }
 
-  public void setPointStyleActive( final IPointStyle pointStyleActive )
+  public void setPointStyle_active( final IPointStyle pointStyle_active )
   {
-    m_pointStyleActive = pointStyleActive;
+    m_pointStyle_active = pointStyle_active;
   }
 
-  public void setPointStyleHover( final IPointStyle pointStyleHover )
+  public void setPointStyle_hover( final IPointStyle pointStyle_hover )
   {
-    m_pointStyleHover = pointStyleHover;
+    m_pointStyle_hover = pointStyle_hover;
   }
 
   /**
@@ -568,17 +532,11 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   public Point toScreen( final IRecord point )
   {
     final ICoordinateMapper cm = getCoordinateMapper();
-    if( Objects.isNull( cm ) )
-      return null;
-
     final Double x = ProfilUtil.getDoubleValueFor( m_domainComponent, point );
     final Double y = ProfilUtil.getDoubleValueFor( getTargetPropertyIndex(), point );
-    if( Objects.isNull( x, y ) )
-      return null;
-    else if( x.isNaN() || y.isNaN() )
-      return null;
-
-    return cm.numericToScreen( x, y );
-
+    if( cm != null && x != null && y != null && !x.isNaN() && !y.isNaN() )
+      return cm == null ? null : cm.numericToScreen( x, y );
+    return null;
   }
+
 }

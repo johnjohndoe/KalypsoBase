@@ -1,6 +1,6 @@
 package de.renew.workflow.connector.cases;
 
-import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
@@ -19,7 +19,7 @@ public class SimpleCaseDataProvider implements ICaseDataProvider<Object>
     {
       if( scenario != null )
       {
-        scenario.getFolder().refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
+        scenario.getFolder().refreshLocal( IFolder.DEPTH_INFINITE, new NullProgressMonitor() );
       }
     }
     catch( final Throwable th )

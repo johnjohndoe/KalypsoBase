@@ -16,6 +16,7 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
  */
 public class EditableLineLayerProvider<T_domain, T_target> extends AbstractLayerProvider
 {
+
   private final String ROLE_LINE_STYLE = "line";
 
   private final String ROLE_POINT_STYLE = "point";
@@ -40,4 +41,5 @@ public class EditableLineLayerProvider<T_domain, T_target> extends AbstractLayer
     final EditableTestDataContainer data = new EditableTestDataContainer( dataSize, maxVal );
     return data;
   }
+
 }

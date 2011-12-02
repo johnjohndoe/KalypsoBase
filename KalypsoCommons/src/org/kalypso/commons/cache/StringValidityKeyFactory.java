@@ -23,7 +23,7 @@ public class StringValidityKeyFactory implements IKeyFactory<StringValidityKey>
       final StringValidityKey key = new StringValidityKey( splits[0], DF.parse( splits[1] ) );
       return key;
     }
-    catch( final ParseException e )
+    catch( ParseException e )
     {
       e.printStackTrace();
       throw new IllegalArgumentException( e.getLocalizedMessage() );

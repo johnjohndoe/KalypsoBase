@@ -81,7 +81,7 @@ public abstract class AbstractComponent implements IComponent
       // TODO what to do now??
       return 0;
 
-    if( objFirst == null && objSecond == null )
+    if( (objFirst == null) && (objSecond == null) )
       return 0; // equals
     else if( objFirst == null )
       return -1; // lesser

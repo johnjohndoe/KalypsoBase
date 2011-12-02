@@ -125,7 +125,7 @@ public class NativeObservationCSVAdapter implements INativeObservationAdapter
     String lineIn = null;
     while( (lineIn = reader.readLine()) != null )
     {
-      if( !continueWithErrors && numberOfErrors > MAX_NO_OF_ERRORS )
+      if( !continueWithErrors && (numberOfErrors > MAX_NO_OF_ERRORS) )
         return null;
       try
       {

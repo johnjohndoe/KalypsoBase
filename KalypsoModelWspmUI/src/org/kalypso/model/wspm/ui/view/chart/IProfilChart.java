@@ -40,15 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart;
 
-import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.model.wspm.core.profil.IProfil;
+
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
  * @author Dirk Kuch
  */
-public interface IProfilChart extends IChartPart
+public interface IProfilChart
 {
   IProfil getProfil( );
+
+  IChartComposite getChart( );
 
   void setProfil( IProfil profile, Object result );
 }

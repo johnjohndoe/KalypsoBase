@@ -52,6 +52,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.provider.PooledObsProvider;
+import org.kalypso.zml.core.debug.KalypsoZmlCoreDebug;
 import org.kalypso.zml.core.table.IZmlTableElement;
 import org.kalypso.zml.core.table.model.memento.IZmlMemento;
 import org.kalypso.zml.core.table.model.memento.LabeledObsProviderDelegate;
@@ -106,7 +107,7 @@ public class ZmlDataSourceElement implements IZmlTableElement
       if( Objects.isNotNull( m_provider ) )
         return m_provider;
 
-// KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "Creating new pooled obs provider - %s\n", type );
+//      KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "Creating new pooled obs provider - %s\n", type );
 
       m_provider = new PooledObsProvider( type );
     }

@@ -116,8 +116,8 @@ public class StreamUtilities
           return restA.length == 0 && restB.length == 0;
         if( a > -1 && b > -1 )
         {
-          final byte[] mergeA = org.kalypso.contribs.java.util.Arrays.append( restA, bufferA, a );
-          final byte[] mergeB = org.kalypso.contribs.java.util.Arrays.append( restB, bufferB, b );
+          byte[] mergeA = org.kalypso.contribs.java.util.Arrays.append( restA, bufferA, a );
+          byte[] mergeB = org.kalypso.contribs.java.util.Arrays.append( restB, bufferB, b );
           if( !org.kalypso.contribs.java.util.Arrays.equals( mergeA, mergeB, Math.min( mergeA.length, mergeB.length ) ) )
             return false;
           if( mergeB.length > mergeA.length )

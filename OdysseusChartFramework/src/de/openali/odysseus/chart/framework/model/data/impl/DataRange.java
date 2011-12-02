@@ -13,9 +13,6 @@ public class DataRange<T> implements IDataRange<T>
 
   public DataRange( final T min, final T max )
   {
-    // FIXME: dieser ganze ausgleichskram gehört nicht in diese Klasse! -> das sollte dort (vielleich mit Hilfer einer
-    // Hilfsklasse) and der Stelle passieren wo das Problem entsteht!
-
     if( min instanceof Number && max instanceof Number )
     {
       final Double minNum = ((Number) min).doubleValue();

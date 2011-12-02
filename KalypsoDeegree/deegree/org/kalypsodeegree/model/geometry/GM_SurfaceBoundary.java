@@ -37,8 +37,10 @@
 package org.kalypsodeegree.model.geometry;
 
 /**
+ * 
  * Defining the boundary of a surface. The surface boundary is defined as ring surounding the exterior boundary of the
  * surface and the rings surounding each interior ring of the surface.
+ * 
  * <p>
  * -----------------------------------------------------
  * </p>
@@ -69,11 +71,11 @@ public interface GM_SurfaceBoundary extends GM_PrimitiveBoundary
   /*
    * get the exterior ring
    */
-  public GM_Ring getExteriorRing( );
+  public GM_Ring getExteriorRing();
 
   /*
    * gets the interior ring(s)
    */
-  public GM_Ring[] getInteriorRings( );
+  public GM_Ring[] getInteriorRings();
 
 }

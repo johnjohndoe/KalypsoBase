@@ -89,8 +89,16 @@ public class CaseTreeContentAdapter extends WorkbenchAdapter
     if( o instanceof CaseHandlingProjectNature )
     {
       final CaseHandlingProjectNature< ? > nature = (CaseHandlingProjectNature< ? >) o;
-      final ICaseManager< ? > caseManager = nature.getCaseManager();
-      return caseManager.getCases().toArray();
+      try
+      {
+        final ICaseManager< ? > caseManager = nature.getCaseManager();
+        return caseManager.getCases().toArray();
+      }
+      catch( final CoreException e )
+      {
+        // ignore
+        e.printStackTrace();
+      }
     }
     return NO_CHILDREN;
   }

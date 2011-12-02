@@ -139,7 +139,7 @@ public class URLGetter implements ICoreRunnableWithProgress
         {
           final IStatus status;
 
-          String responseBodyAsString = Messages.getString( "org.kalypso.util.net.URLGetter.1" ); //$NON-NLS-1$
+          String responseBodyAsString = Messages.getString("org.kalypso.util.net.URLGetter.1"); //$NON-NLS-1$
           try
           {
             responseBodyAsString = method.getResponseBodyAsString();
@@ -161,7 +161,7 @@ public class URLGetter implements ICoreRunnableWithProgress
     };
 
     monitor.beginTask( urlAsString, IProgressMonitor.UNKNOWN );
-    monitor.subTask( Messages.getString( "org.kalypso.util.net.URLGetter.4" ) ); //$NON-NLS-1$
+    monitor.subTask( Messages.getString("org.kalypso.util.net.URLGetter.4") ); //$NON-NLS-1$
     thread.start();
     while( thread.isAlive() )
     {
@@ -178,7 +178,7 @@ public class URLGetter implements ICoreRunnableWithProgress
       final String statusText;
       final StatusLine statusLine = method.getStatusLine();
       if( statusLine == null )
-        statusText = Messages.getString( "org.kalypso.util.net.URLGetter.5" ); //$NON-NLS-1$
+        statusText = Messages.getString("org.kalypso.util.net.URLGetter.5"); //$NON-NLS-1$
       else
         statusText = method.getStatusText();
 

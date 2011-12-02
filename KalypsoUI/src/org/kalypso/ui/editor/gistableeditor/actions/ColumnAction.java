@@ -59,7 +59,8 @@ public final class ColumnAction extends Action
 
   private final GMLXPath m_propertyPath;
 
-  public ColumnAction( final ICommandTarget commandTarget, final LayerTableViewer viewer, final GMLXPath propertyPath, final IAnnotation annotation )
+  public ColumnAction( final ICommandTarget commandTarget, final LayerTableViewer viewer, final GMLXPath propertyPath,
+      final IAnnotation annotation )
   {
     super( propertyPath.toString() );
 

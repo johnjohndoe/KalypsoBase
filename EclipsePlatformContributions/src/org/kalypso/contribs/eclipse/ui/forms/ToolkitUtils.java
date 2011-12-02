@@ -108,7 +108,7 @@ public final class ToolkitUtils
   }
 
   /**
-   * Same as {@link FormToolkit#createScrolledForm(Composite)}, but allows to specify which style to use.<br/>
+   * Same as {@link FormToolkit#createScrolledForm(Composite)}, butt allow to specify which style to use.<br/>
    * {@link ScrolledForm#setExpandXXXX} is called depending on which style bits are set.
    */
   public static ScrolledForm createScrolledForm( final FormToolkit toolkit, final Composite parent, final int style )
@@ -120,13 +120,5 @@ public final class ToolkitUtils
     form.setForeground( toolkit.getColors().getColor( IFormColors.TITLE ) );
     form.setFont( JFaceResources.getHeaderFont() );
     return form;
-  }
-
-  public static void adapt( final FormToolkit toolkit, final Composite composite )
-  {
-    if( toolkit == null )
-      return;
-
-    toolkit.adapt( composite );
   }
 }

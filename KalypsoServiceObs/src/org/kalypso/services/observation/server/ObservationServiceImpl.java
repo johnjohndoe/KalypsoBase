@@ -45,6 +45,7 @@ import java.rmi.RemoteException;
 
 import javax.jws.WebService;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
@@ -359,7 +360,7 @@ public class ObservationServiceImpl implements IObservationService
       getDelegate().setItemData( identifier, serializable );
     }
     else
-      throw new UnsupportedOperationException();
+      throw new NotImplementedException();
 
   }
 

@@ -95,12 +95,14 @@ public class LegendViewPart extends AbstractChartModelViewPart
   public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     if( adapter == ChartEditorTreeOutlinePage.class )
+    {
       return m_chartlegend;
+    }
 
     return super.getAdapter( adapter );
   }
 
-  private void setSelectedLayer( final IChartModel model )
+  private final void setSelectedLayer( final IChartModel model )
   {
     final ILayerManager lm = model == null ? null : model.getLayerManager();
     if( lm == null )
@@ -125,9 +127,7 @@ public class LegendViewPart extends AbstractChartModelViewPart
     m_chartlegend.setModel( model );
     setSelectedLayer( model );
     if( model != null && model instanceof ProfilChartModel && ((ProfilChartModel) model).getProfil() == null )
-    {
       model = null;
-    }
     updatePartName( model, null, m_form );
   }
 

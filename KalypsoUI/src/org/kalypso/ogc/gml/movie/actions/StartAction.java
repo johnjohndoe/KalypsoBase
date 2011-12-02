@@ -57,7 +57,7 @@ public class StartAction extends Action
   /**
    * The movie player.
    */
-  private final MoviePlayer m_player;
+  private MoviePlayer m_player;
 
   /**
    * The constructor.
@@ -65,7 +65,7 @@ public class StartAction extends Action
    * @param player
    *          The movie player.
    */
-  public StartAction( final MoviePlayer player )
+  public StartAction( MoviePlayer player )
   {
     m_player = player;
   }
@@ -74,7 +74,7 @@ public class StartAction extends Action
    * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
    */
   @Override
-  public void runWithEvent( final Event event )
+  public void runWithEvent( Event event )
   {
     m_player.stepTo( 0 );
     m_player.updateControls();

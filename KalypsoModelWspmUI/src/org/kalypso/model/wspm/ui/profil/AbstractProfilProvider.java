@@ -76,9 +76,7 @@ public abstract class AbstractProfilProvider implements IProfilProvider
   {
     final IProfilProviderListener[] ls = m_listeners.toArray( new IProfilProviderListener[m_listeners.size()] );
     for( final IProfilProviderListener l : ls )
-    {
       l.onProfilProviderChanged( provider, oldProfile, newProfile );
-    }
   }
 
   /**

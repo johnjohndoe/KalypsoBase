@@ -31,7 +31,7 @@ public class AddScenarioHandler extends AbstractHandler
     final ISelection selection = (ISelection) context.getVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME );
     if( selection instanceof IStructuredSelection )
     {
-      final IStructuredSelection structSel = (IStructuredSelection) selection;
+      final IStructuredSelection structSel = ((IStructuredSelection) selection);
 
       if( !structSel.isEmpty() )
       {

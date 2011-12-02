@@ -41,7 +41,7 @@
 package org.kalypsodeegree_impl.io.shpapi.dataprovider;
 
 import org.kalypso.shape.ShapeDataException;
-import org.kalypso.shape.dbf.IDBFField;
+import org.kalypso.shape.dbf.DBFField;
 import org.kalypso.shape.dbf.IDBFValue;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -58,7 +58,7 @@ public class TinValue implements IDBFValue
    * @see org.kalypso.shape.dbf.IDBFValue#getField()
    */
   @Override
-  public IDBFField getField( ) throws ShapeDataException
+  public DBFField getField( ) throws ShapeDataException
   {
     return m_delegate.getField();
   }

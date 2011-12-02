@@ -80,7 +80,7 @@ public class GMLSchemaSerializeTest extends TestCase
       tmpArchive2 = File.createTempFile( "kalypsoSchema", ".jar" );
       GMLSchemaUtilities.createSchemaArchive( schemaURL2, tmpArchive2 );
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
       e.printStackTrace();
       throw e;

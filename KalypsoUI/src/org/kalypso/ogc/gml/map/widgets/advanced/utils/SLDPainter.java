@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.advanced.utils;
 
@@ -97,7 +97,7 @@ public class SLDPainter
       catch( final Exception e )
       {
         final String msg = String.format( "Painting coordinate (x=%.2f, y=%.2f) failed", coordinate.x, coordinate.y );
-        StatusUtilities.createExceptionalErrorStatus( msg, e );
+        StatusUtilities.createErrorStatus( msg, e );
       }
     }
 
@@ -111,14 +111,6 @@ public class SLDPainter
     paint( g, sld, point );
   }
 
-  public void paint( final Graphics g, final URL sld, final Geometry[] geometries ) throws CoreException
-  {
-    for( final Geometry geometry : geometries )
-    {
-      paint( g, sld, geometry );
-    }
-  }
-
   public void paint( final Graphics g, final URL sld, final Geometry geometry ) throws CoreException
   {
     try
@@ -128,19 +120,11 @@ public class SLDPainter
     }
     catch( final GM_Exception e )
     {
-      throw new CoreException( StatusUtilities.createExceptionalErrorStatus( PAINTING_SLD_FAILED, e ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( PAINTING_SLD_FAILED, e ) );
     }
   }
 
-  public void paint( final Graphics g, final URL sld, final GM_Object[] geometries ) throws CoreException
-  {
-    for( final GM_Object geometry : geometries )
-    {
-      paint( g, sld, geometry );
-    }
-  }
-
-  public void paint( final Graphics g, final URL sld, final GM_Object gmo ) throws CoreException
+  private void paint( final Graphics g, final URL sld, final GM_Object gmo ) throws CoreException
   {
     Symbolizer symbolizer = m_symbolizerMap.get( sld );
     if( symbolizer == null )
@@ -152,7 +136,7 @@ public class SLDPainter
       }
       catch( final CoreException e )
       {
-        throw new CoreException( StatusUtilities.createExceptionalErrorStatus( PAINTING_SLD_FAILED, e ) );
+        throw new CoreException( StatusUtilities.createErrorStatus( PAINTING_SLD_FAILED, e ) );
       }
     }
 
@@ -168,7 +152,7 @@ public class SLDPainter
     }
     catch( final Exception e )
     {
-      throw new CoreException( StatusUtilities.createExceptionalErrorStatus( PAINTING_SLD_FAILED, e ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( PAINTING_SLD_FAILED, e ) );
     }
   }
 
@@ -181,7 +165,7 @@ public class SLDPainter
     }
     catch( final IncompatibleGeometryTypeException e )
     {
-      throw new CoreException( StatusUtilities.createExceptionalErrorStatus( PAINTING_SLD_FAILED, e ) );
+      throw new CoreException( StatusUtilities.createErrorStatus( PAINTING_SLD_FAILED, e ) );
     }
   }
 

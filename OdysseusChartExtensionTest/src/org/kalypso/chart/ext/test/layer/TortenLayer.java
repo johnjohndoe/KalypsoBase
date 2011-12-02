@@ -98,9 +98,9 @@ public class TortenLayer extends AbstractChartLayer
     {
       final int angleStart = i * (int) (360.0f / m_pieces);
 
-      final int angle = (int) (360.0f / m_pieces);
+      final int angle = (int) ((360.0f / m_pieces));
 
-      final java.awt.Color color = new java.awt.Color( java.awt.Color.HSBtoRGB( 1.0f / m_pieces * i, 1.0f, 1.0f ) );
+      final java.awt.Color color = new java.awt.Color( java.awt.Color.HSBtoRGB( ((1.0f / m_pieces) * (i)), 1.0f, 1.0f ) );
 
       final RGB fillRGB = new RGB( color.getRed(), color.getGreen(), color.getBlue() );
 
@@ -150,9 +150,9 @@ public class TortenLayer extends AbstractChartLayer
     {
       final int angleStart = i * (int) (360.0f / m_pieces);
 
-      final int angle = (int) (360.0f / m_pieces);
+      final int angle = (int) ((360.0f / m_pieces));
 
-      final java.awt.Color color = new java.awt.Color( java.awt.Color.HSBtoRGB( 1.0f / m_pieces * i, 1.0f, 1.0f ) );
+      final java.awt.Color color = new java.awt.Color( java.awt.Color.HSBtoRGB( ((1.0f / m_pieces) * (i)), 1.0f, 1.0f ) );
 
       final RGB fillRGB = new RGB( color.getRed(), color.getGreen(), color.getBlue() );
 
@@ -175,8 +175,8 @@ public class TortenLayer extends AbstractChartLayer
       final double angleRad = Math.toRadians( angleStart );
 
       final double h = 100.0f;
-      final double g = Math.sin( angleRad ) * h;
-      final double a = Math.cos( angleRad ) * h;
+      final double g = (Math.sin( angleRad ) * h);
+      final double a = (Math.cos( angleRad ) * h);
       final double gStrich = ta.numericToScreen( g ) - centerY;
       final double aStrich = da.numericToScreen( a ) - centerX;
 
@@ -199,7 +199,7 @@ public class TortenLayer extends AbstractChartLayer
       final double gStrich = ta.numericToScreen( g ) - centerY;
       final double aStrich = da.numericToScreen( a ) - centerX;
 
-      final double hStrich = Math.sqrt( Math.pow( aStrich, 2 ) + Math.pow( gStrich, 2 ) );
+      final double hStrich = (Math.sqrt( Math.pow( aStrich, 2 ) + Math.pow( gStrich, 2 ) ));
 
       final Transform t = new Transform( dev );
       t.translate( centerX, centerY );
@@ -215,13 +215,13 @@ public class TortenLayer extends AbstractChartLayer
   }
 
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Number> getDomainRange( )
   {
     return new ComparableDataRange<Number>( new Number[] { -100, 100 } );
   }
 
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     return new ComparableDataRange<Number>( new Number[] { -100, 100 } );
   }
@@ -246,7 +246,7 @@ public class TortenLayer extends AbstractChartLayer
           // TortenLayer.this.createLegendEntries();
           final int width = size.x;
           final int height = size.y;
-          final java.awt.Color color = new java.awt.Color( java.awt.Color.HSBtoRGB( 1.0f / m_pieces * count, 1.0f, 1.0f ) );
+          final java.awt.Color color = new java.awt.Color( java.awt.Color.HSBtoRGB( ((1.0f / m_pieces) * (count)), 1.0f, 1.0f ) );
           final RGB fillRGB = new RGB( color.getRed(), color.getGreen(), color.getBlue() );
           final Color fillColor = OdysseusChartFramework.getDefault().getColorRegistry().getResource( gc.getDevice(), fillRGB );
           gc.setBackground( fillColor );

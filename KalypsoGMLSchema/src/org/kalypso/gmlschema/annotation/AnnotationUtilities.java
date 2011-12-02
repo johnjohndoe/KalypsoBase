@@ -126,10 +126,10 @@ public class AnnotationUtilities
    * <p>
    * All inner elements from the document element are regarded as annotations.
    * </p>
-   * 
+   *
    * @param createDefaultAnnotation
-   *          If true, even if no annotation data is found, return a default annotation based on the defaultName; if
-   *          false it returns null in this case.
+   *            If true, even if no annotation data is found, return a default annotation based on the defaultName; if
+   *            false it returns null in this case.
    */
   public static IAnnotation annotationForElement( final Annotation xsdAnnotation, final String defaultName, final boolean createDefaultAnnotation )
   {
@@ -270,9 +270,9 @@ public class AnnotationUtilities
    * Returns the text contained in the specified element. The returned value is trimmed by calling the trim() method of
    * java.lang.String
    * <p>
-   * 
+   *
    * @param node
-   *          current element
+   *            current element
    * @return the textual contents of the element or null, if it is missing
    */
   private static String getStringValue( final Node node )
@@ -291,7 +291,7 @@ public class AnnotationUtilities
 
   /**
    * @param createDefaultAnnotation
-   *          If false, return null.
+   *            If false, return null.
    */
   private static IAnnotation createDefaultAnnotation( final String lang, final String defaultName, final boolean createDefaultAnnotation )
   {
@@ -356,6 +356,7 @@ public class AnnotationUtilities
         shortnameFromCatalog = null;
       else
         shortnameFromCatalog = nsMapper.getPreferredPrefix( namespace, null );
+
 
       switch( type )
       {

@@ -128,25 +128,14 @@
 	<!-- Commands for the map outline -->
 	<extension point="org.eclipse.ui.commands">
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.AddTheme" name="Add Layer"  description="Add new Layer to Map"/>
-
-        <command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.OpenShapeWizardCommand" 
-            name="%org.kalypso.ui.map.outline.command.OpenShapeWizardCommand.name" description="%org.kalypso.ui.map.outline.command.OpenShapeWizardCommand..description"/>
-        <command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.OpenWmsWizardCommand" 
-            name="%org.kalypso.ui.map.outline.command.OpenWmsWizardCommand.name" description="%org.kalypso.ui.map.outline.command.OpenShapeWizardCommand..description">
-      </command>
 	</extension>
 
 	<extension point="org.eclipse.ui.commandImages">
 		<image commandId="org.kalypso.ui.map.outline.command.AddTheme" icon="icon/add_row.gif" />
-		<image commandId="org.kalypso.ui.map.outline.command.OpenShapeWizardCommand" icon="icon/open_shape_wizard_command.gif" />
-		<image commandId="org.kalypso.ui.map.outline.command.OpenWmsWizardCommand" icon="icon/open_wms_wizard_command.gif" />
 	</extension>
 
 	<extension point="org.eclipse.ui.handlers">
 		<handler commandId="org.kalypso.ui.map.outline.command.AddTheme" class="org.kalypso.ui.view.action.AddThemeHandler"/>
-
-        <handler commandId="org.kalypso.ui.map.outline.command.OpenShapeWizardCommand" class="org.kalypso.ui.action.OpenShapeWizardHandler"/>
-        <handler commandId="org.kalypso.ui.map.outline.command.OpenWmsWizardCommand" class="org.kalypso.ui.action.OpenWmsWizardHandler"/>
 	</extension>
 
 	<extension point="org.eclipse.ui.menus">
@@ -154,14 +143,5 @@
 			<command commandId="org.kalypso.ui.map.outline.command.AddTheme" style="push"/>
 		</menuContribution>
 	</extension>
- <extension
-       point="org.eclipse.ui.perspectiveExtensions">
-    <perspectiveExtension
-          targetID="org.kalypso.ui.perspectives.ModelerPerspectiveFactory">
-       <newWizardShortcut
-             id="org.kalypso.ui.createGisMapView.CreateGisMapViewWizard">
-       </newWizardShortcut>
-    </perspectiveExtension>
- </extension>
    
 </plugin>

@@ -64,7 +64,7 @@ public class LinkedCoordinate
       return;
     }
 
-    throw new LinkedCoordinateException( Messages.getString( "com.bce.gis.operation.raster2vector.LinkedCoordinate.0" ) ); //$NON-NLS-1$
+    throw new LinkedCoordinateException( Messages.getString("com.bce.gis.operation.raster2vector.LinkedCoordinate.0") ); //$NON-NLS-1$
   }
 
   public boolean isCircle( )
@@ -84,7 +84,7 @@ public class LinkedCoordinate
   private static void reverseHead( final LinkedCoordinate list ) throws LinkedCoordinateException
   {
     if( list.m_tail != null )
-      throw new LinkedCoordinateException( Messages.getString( "com.bce.gis.operation.raster2vector.LinkedCoordinate.1" ) ); //$NON-NLS-1$
+      throw new LinkedCoordinateException( Messages.getString("com.bce.gis.operation.raster2vector.LinkedCoordinate.1") ); //$NON-NLS-1$
 
     LinkedCoordinate current = list;
     while( current != null )
@@ -105,7 +105,7 @@ public class LinkedCoordinate
   private static void reverseTail( final LinkedCoordinate list ) throws LinkedCoordinateException
   {
     if( list.m_head != null )
-      throw new LinkedCoordinateException( Messages.getString( "com.bce.gis.operation.raster2vector.LinkedCoordinate.2" ) ); //$NON-NLS-1$
+      throw new LinkedCoordinateException( Messages.getString("com.bce.gis.operation.raster2vector.LinkedCoordinate.2") ); //$NON-NLS-1$
 
     LinkedCoordinate current = list;
     while( current != null )
@@ -126,7 +126,7 @@ public class LinkedCoordinate
   public Coordinate[] getAsRing( ) throws LinkedCoordinateException
   {
     if( !isCircle() )
-      throw new LinkedCoordinateException( Messages.getString( "com.bce.gis.operation.raster2vector.LinkedCoordinate.3" ) ); //$NON-NLS-1$
+      throw new LinkedCoordinateException( Messages.getString("com.bce.gis.operation.raster2vector.LinkedCoordinate.3") ); //$NON-NLS-1$
 
     final Collection<Coordinate> currentString = new ArrayList<Coordinate>();
 
@@ -194,7 +194,7 @@ public class LinkedCoordinate
   @Override
   public String toString( )
   {
-    return Messages.getString( "com.bce.gis.operation.raster2vector.LinkedCoordinate.4" ) + crd + Messages.getString( "com.bce.gis.operation.raster2vector.LinkedCoordinate.5" ) + border; //$NON-NLS-1$ //$NON-NLS-2$
+    return Messages.getString("com.bce.gis.operation.raster2vector.LinkedCoordinate.4") + crd + Messages.getString("com.bce.gis.operation.raster2vector.LinkedCoordinate.5") + border; //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**

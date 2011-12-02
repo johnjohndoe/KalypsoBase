@@ -46,7 +46,7 @@ public class PageFileException extends Exception
   /**
    * Constructor for PageFileException.
    */
-  public PageFileException( )
+  public PageFileException()
   {
     super();
   }
@@ -56,7 +56,7 @@ public class PageFileException extends Exception
    * 
    * @param message
    */
-  public PageFileException( final String message )
+  public PageFileException( String message )
   {
     super( message );
   }

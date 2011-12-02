@@ -52,6 +52,7 @@ import javax.media.jai.TiledImage;
 import ogc31.www.opengis.net.gml.FileType;
 import ogc31.www.opengis.net.gml.FileValueModelType;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.math.Range;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -289,7 +290,7 @@ public final class GeoGridUtilities
 
       /* Transform it. */
       Assert.isNotNull( "The target coordinate system is not allowed to be null ...", targetCRS );
-      if( grid.getSourceCRS() != null && !grid.getSourceCRS().equals( targetCRS ) )
+      if( grid.getSourceCRS() != null && (!grid.getSourceCRS().equals( targetCRS )) )
       {
         final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( targetCRS );
         return (GM_Surface< ? >) geoTransformer.transform( surface );
@@ -350,7 +351,7 @@ public final class GeoGridUtilities
 
       /* Transform it. */
       Assert.isNotNull( "The target coordinate system is not allowed to be null ...", targetCRS );
-      if( grid.getSourceCRS() != null && !grid.getSourceCRS().equals( targetCRS ) )
+      if( grid.getSourceCRS() != null && (!grid.getSourceCRS().equals( targetCRS )) )
       {
         final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( targetCRS );
         return (GM_Surface< ? >) geoTransformer.transform( surface );
@@ -563,6 +564,8 @@ public final class GeoGridUtilities
     final ParallelBinaryGridProcessor manager = new ParallelBinaryGridProcessor( grid, outputGridWriter );
     manager.calculate();
     outputGridWriter.close();
+// IGeoGrid outputGrid = BinaryGeoGrid.openGrid( outputCoverageFile.toURI().toURL(), grid.getOrigin(),
+// grid.getOffsetX(), grid.getOffsetY(), grid.getSourceCRS(), false );
 
     try
     {
@@ -713,7 +716,7 @@ public final class GeoGridUtilities
    * @param monitor
    *          A progress monitor.
    */
-  public static void toTiff( final IGeoGrid grid, final File file, IProgressMonitor monitor ) throws GeoGridException
+  private static void toTiff( final IGeoGrid grid, final File file, IProgressMonitor monitor ) throws GeoGridException
   {
     /* Monitor. */
     if( monitor == null )
@@ -1216,7 +1219,7 @@ public final class GeoGridUtilities
       @Override
       public boolean containsNumber( final Number number )
       {
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
       }
 
       @Override

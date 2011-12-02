@@ -50,5 +50,5 @@ import org.kalypso.observation.result.IRecord;
  */
 public interface IPointPropertyCalculator
 {
-  void calculate( final Double operand, final IComponent[] properties, final Collection<IRecord> points );
+  public void calculate( final Double operand, final IComponent[] properties, final Collection<IRecord> points );
 }

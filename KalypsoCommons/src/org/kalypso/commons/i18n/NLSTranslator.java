@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.osgi.util.NLS;
 import org.kalypso.commons.internal.i18n.Messages;
 import org.kalypso.contribs.java.JavaApiContributionsPlugin;
 import org.osgi.framework.Bundle;
@@ -63,7 +64,7 @@ import org.w3c.dom.Element;
  */
 public class NLSTranslator implements ITranslator, IExecutableExtension
 {
-  private Class< ? > m_nls;
+  private Class< ? extends NLS> m_nls;
 
   private String m_id;
 
@@ -93,7 +94,7 @@ public class NLSTranslator implements ITranslator, IExecutableExtension
    */
   @SuppressWarnings("unchecked")
   @Override
-  public void configure( final ITranslatorContext context, final List<Element> configuration )
+  public void configure( ITranslatorContext context, List<Element> configuration )
   {
     m_configuration = configuration;
 

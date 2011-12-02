@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JavaApiContributions Plug-in
 Bundle-SymbolicName: org.kalypso.contribs.java; singleton:=true
-Bundle-Version: 11.6.3.qualifier
+Bundle-Version: 11.6.2.qualifier
 Bundle-Activator: org.kalypso.contribs.java.JavaApiContributionsPlugin
 Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-Localization: plugin
@@ -24,8 +24,7 @@ Export-Package: org.kalypso.contribs.java,
  org.kalypso.contribs.java.xml,
  org.kalypso.contribs.javax.xml.namespace,
  org.kalypso.contribs.org.xml.sax
-Require-Bundle: org.apache.commons,
- org.eclipse.core.runtime;visibility:=reexport,
- org.junit4;resolution:=optional
+Require-Bundle: org.eclipse.core.runtime;visibility:=reexport,
+ org.junit4;bundle-version="4.3.1";resolution:=optional
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

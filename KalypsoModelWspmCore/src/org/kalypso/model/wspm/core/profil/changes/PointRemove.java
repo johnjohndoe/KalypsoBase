@@ -77,23 +77,17 @@ public class PointRemove implements IProfilChange
   public IProfilChange doChange( final ProfilChangeHint hint ) throws IllegalProfileOperationException
   {
     if( hint != null )
-    {
       hint.setPointsChanged();
-    }
 
     for( int i = 0; i < m_points.length; i++ )
-    {
       m_pointPositions[i] = m_profil.indexOfPoint( m_points[i] );
-    }
 
     if( m_profil.removePoints( m_points ) )
       return new PointsAdd( m_profil, m_pointPositions, m_points );
     else
     {
       if( m_points.length > 0 )
-      {
         m_profil.setActivePoint( m_points[0] );
-      }
       throw new IllegalProfileOperationException( Messages.getString( "org.kalypso.model.wspm.core.profil.changes.PointRemove.1" ), this ); //$NON-NLS-1$
     }
   }
@@ -104,6 +98,6 @@ public class PointRemove implements IProfilChange
   @Override
   public String toString( )
   {
-    return Messages.getString( "PointRemove_0" ); //$NON-NLS-1$
+    return Messages.getString("PointRemove_0"); //$NON-NLS-1$
   }
 }

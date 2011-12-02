@@ -180,9 +180,9 @@ class GM_Position3D_Impl implements GM_Position, Serializable
   public int hashCode( )
   {
     int lIntHash = 17;
-    lIntHash = 31 * lIntHash + (int) (Double.doubleToLongBits( getX() ) ^ Double.doubleToLongBits( getX() ) >>> 32);
-    lIntHash = 31 * lIntHash + (int) (Double.doubleToLongBits( getY() ) ^ Double.doubleToLongBits( getY() ) >>> 32);
-    lIntHash = 31 * lIntHash + (int) (Double.doubleToLongBits( getZ() ) ^ Double.doubleToLongBits( getZ() ) >>> 32);
+    lIntHash = 31 * lIntHash + (int) (Double.doubleToLongBits( getX() ) ^ (Double.doubleToLongBits( getX() ) >>> 32));
+    lIntHash = 31 * lIntHash + (int) (Double.doubleToLongBits( getY() ) ^ (Double.doubleToLongBits( getY() ) >>> 32));
+    lIntHash = 31 * lIntHash + (int) (Double.doubleToLongBits( getZ() ) ^ (Double.doubleToLongBits( getZ() ) >>> 32));
     return lIntHash;
   }
 
@@ -235,7 +235,7 @@ class GM_Position3D_Impl implements GM_Position, Serializable
   @Override
   public GM_Position transform( final String sourceCRS, final String targetCRS ) throws Exception
   {
-    final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( targetCRS );
+    IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( targetCRS );
     return geoTransformer.transform( this, sourceCRS );
   }
 }

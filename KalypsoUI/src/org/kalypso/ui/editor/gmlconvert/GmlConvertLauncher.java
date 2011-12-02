@@ -66,7 +66,8 @@ public class GmlConvertLauncher implements IEditorLauncher
         {
           e.printStackTrace();
 
-          return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, e.getLocalizedMessage(), e.getCause() );
+          return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, e.getLocalizedMessage(), e
+              .getCause() );
         }
         catch( final Exception e )
         {
@@ -77,7 +78,8 @@ public class GmlConvertLauncher implements IEditorLauncher
       }
     };
     job.setUser( true );
-    job.addJobChangeListener( new InformSuccessJobChangeAdapter( shell, "GML Konvertierung", "GML-Konvertierung erfolgreich abgeschlossen." ) );
+    job.addJobChangeListener( new InformSuccessJobChangeAdapter( shell, "GML Konvertierung",
+        "GML-Konvertierung erfolgreich abgeschlossen." ) );
     job.schedule();
   }
 }

@@ -72,6 +72,7 @@ public final class CsvFeatureReader extends AbstractTabularFeatureReader
     }
   }
 
+
   private void loadCSV( final InputStreamReader isr, final String comment, final String delemiter, final int lineskip ) throws CsvException, IOException, FilterEvaluationException
   {
     final FeatureList featureList = getFeatureList();

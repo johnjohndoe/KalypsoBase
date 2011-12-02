@@ -49,15 +49,15 @@ import org.kalypsodeegree.model.feature.Feature;
 
 public final class CopyFeatureAction extends Action
 {
-  private final CommandableWorkspace m_workspace;
+  private CommandableWorkspace m_workspace;
 
-  private final Feature m_originalFeature;
+  private Feature m_originalFeature;
 
-  public static final String NAME = Messages.getString( "org.kalypso.ui.editor.gmleditor.util.actions.CopyFeatureAction.0" ); //$NON-NLS-1$
+  public static final String NAME = Messages.getString("org.kalypso.ui.editor.gmleditor.util.actions.CopyFeatureAction.0"); //$NON-NLS-1$
 
-  private final Clipboard m_clipboard;
+  private Clipboard m_clipboard;
 
-  public CopyFeatureAction( final Feature originalFeature, final CommandableWorkspace workspace, final Clipboard clipboard )
+  public CopyFeatureAction( Feature originalFeature, CommandableWorkspace workspace, Clipboard clipboard )
   {
     super( NAME );
     m_originalFeature = originalFeature;
@@ -71,13 +71,13 @@ public final class CopyFeatureAction extends Action
   @Override
   public void run( )
   {
-    final CopyFeatureCommand command = new CopyFeatureCommand( m_originalFeature, m_clipboard );
+    CopyFeatureCommand command = new CopyFeatureCommand( m_originalFeature, m_clipboard );
     try
     {
       m_workspace.postCommand( command );
       return;
     }
-    catch( final Exception e )
+    catch( Exception e )
     {
       e.printStackTrace();
     }

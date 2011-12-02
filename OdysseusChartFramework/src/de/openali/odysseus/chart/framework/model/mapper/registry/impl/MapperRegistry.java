@@ -97,18 +97,6 @@ public class MapperRegistry implements IMapperRegistry
     m_handler.fireMapperRemoved( mapper );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry#clear()
-   */
-  @Override
-  public void clear( )
-  {
-    for( final IMapper mapper : getMappers() )
-    {
-      m_mappers.remove( mapper.getIdentifier() );
-    }
-  }
-
   /*
    * (non-Javadoc)
    * @see

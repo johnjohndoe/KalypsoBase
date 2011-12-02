@@ -49,14 +49,12 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 
+
 public class ValidatorFactory
 {
   private final IConfigurationElement[] m_ruleElements;
-
   private final IConfigurationElement[] m_typeElements;
-
   private final String[] m_types;
-
   private final IValidatorRule[] m_rules;
 
   public ValidatorFactory( )
@@ -66,61 +64,55 @@ public class ValidatorFactory
     m_typeElements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.core.validatortype" ); //$NON-NLS-1$
 
     final Collection<String> types = new ArrayList<String>();
-
+    
     for( final IConfigurationElement element : m_typeElements )
     {
-      final String type = element.getAttribute( "name" ); //$NON-NLS-1$
-      if( type != null )
-      {
-        types.add( type );
-      }
+        final String type = element.getAttribute( "name" ); //$NON-NLS-1$
+        if( type != null )
+          types.add( type );
     }
-
+    
     m_types = new String[types.size()];
 
     // create all rules
     final Collection<IValidatorRule> rules = new ArrayList<IValidatorRule>();
     for( final IConfigurationElement element : m_ruleElements )
     {
-      try
-      {
-        final Object protoRule = element.createExecutableExtension( "class" ); //$NON-NLS-1$
-        if( protoRule instanceof IValidatorRule )
+        try
         {
-          rules.add( (IValidatorRule) protoRule );
+          final Object protoRule = element.createExecutableExtension( "class" ); //$NON-NLS-1$
+          if( protoRule instanceof IValidatorRule )
+            rules.add( (IValidatorRule)protoRule );
         }
-      }
-      catch( final CoreException e )
-      {
-        KalypsoModelWspmCorePlugin.getDefault().getLog().log( e.getStatus() );
-      }
+        catch( final CoreException e )
+        {
+          KalypsoModelWspmCorePlugin.getDefault().getLog().log( e.getStatus() );
+        }
     }
-
+    
     m_rules = rules.toArray( new IValidatorRule[rules.size()] );
   }
-
-  public IValidatorRule[] getAllRules( )
+  
+  public IValidatorRule[] getAllRules()
   {
     return m_rules;
   }
 
-  public String[] getValidatorTypes( )
+  public String[] getValidatorTypes()
   {
     return m_types;
   }
-
+  
   public IValidatorRule[] createValidatorRules( final String type )
   {
     final Collection<IValidatorRule> rules = new ArrayList<IValidatorRule>();
-
+    
     for( final IValidatorRule rule : m_rules )
     {
       if( rule.getType().equals( type ) )
-      {
         rules.add( rule );
-      }
     }
-
+    
     return rules.toArray( new IValidatorRule[rules.size()] );
   }
 }

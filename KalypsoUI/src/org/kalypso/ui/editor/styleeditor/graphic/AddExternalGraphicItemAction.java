@@ -61,7 +61,6 @@ public class AddExternalGraphicItemAction extends Action
     setImageDescriptor( ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE );
     setToolTipText( "Add External Graphics" );
   }
-
   /**
    * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
    */

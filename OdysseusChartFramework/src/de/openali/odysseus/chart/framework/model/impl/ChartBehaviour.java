@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.model.impl;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -87,16 +87,15 @@ public class ChartBehaviour implements IChartBehaviour
         axis.setVisible( false );
         break;
       }
-      boolean hideAxis = true;
+
       for( final IChartLayer layer : layers )
       {
         if( layer.isVisible() )
         {
-          hideAxis = false;
+          axis.setVisible( true );
           break;
         }
       }
-      axis.setVisible( !hideAxis );
     }
 
   }

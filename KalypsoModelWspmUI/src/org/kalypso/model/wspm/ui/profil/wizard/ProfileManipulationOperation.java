@@ -18,11 +18,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.contribs.eclipse.ui.plugin.AbstractUIPluginExt;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
@@ -63,7 +63,7 @@ public final class ProfileManipulationOperation implements ICoreRunnableWithProg
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws InterruptedException
   {
-    monitor.beginTask( Messages.getString( "ProfileManipulationOperation_0" ), m_profileFeatures.length ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString("ProfileManipulationOperation_0"), m_profileFeatures.length ); //$NON-NLS-1$
 
     final Collection<IStatus> problems = new ArrayList<IStatus>();
     for( final Object profileObject : m_profileFeatures )
@@ -72,7 +72,7 @@ public final class ProfileManipulationOperation implements ICoreRunnableWithProg
       {
         final IProfileFeature profileFeature = (IProfileFeature) profileObject;
 
-        final String subTask = String.format( Messages.getString( "ProfileManipulationOperation_1" ), profileFeature.getName(), profileFeature.getBigStation() ); //$NON-NLS-1$
+        final String subTask = String.format( Messages.getString("ProfileManipulationOperation_1"), profileFeature.getName(), profileFeature.getBigStation() ); //$NON-NLS-1$
         monitor.subTask( subTask );
 
         final IProfil profile = profileFeature.getProfil();
@@ -93,7 +93,7 @@ public final class ProfileManipulationOperation implements ICoreRunnableWithProg
       return Status.OK_STATUS;
 
     final IStatus[] problemStati = problems.toArray( new IStatus[problems.size()] );
-    return new MultiStatus( AbstractUIPluginExt.ID, 0, problemStati, Messages.getString( "ProfileManipulationOperation_2" ), null ); //$NON-NLS-1$
+    return new MultiStatus( KalypsoModelWspmUIPlugin.ID, 0, problemStati, Messages.getString("ProfileManipulationOperation_2"), null ); //$NON-NLS-1$
   }
 
   public boolean perform( )
@@ -132,7 +132,7 @@ public final class ProfileManipulationOperation implements ICoreRunnableWithProg
       e.printStackTrace();
       final IStatus status = StatusUtilities.statusFromThrowable( e );
       final Shell shell = m_wizardContainer.getShell();
-      ErrorDialog.openError( shell, m_windowTitle, Messages.getString( "ProfileManipulationOperation_3" ), status ); //$NON-NLS-1$
+      ErrorDialog.openError( shell, m_windowTitle, Messages.getString("ProfileManipulationOperation_3"), status ); //$NON-NLS-1$
       return false;
     }
   }
@@ -144,10 +144,8 @@ public final class ProfileManipulationOperation implements ICoreRunnableWithProg
       final IProfileFeature profileFeature = (IProfileFeature) profileObject;
       // TODO: introduce ICachedFeature interface or similar?
       if( profileFeature instanceof AbstractCachedFeature2 )
-      {
         ((AbstractCachedFeature2) profileFeature).clearCachedProperties();
-        // TODO: fire change event as well?
-      }
+      // TODO: fire change event as well?
     }
 
     return false;

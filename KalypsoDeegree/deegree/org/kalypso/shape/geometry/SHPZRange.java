@@ -109,7 +109,7 @@ public class SHPZRange implements Serializable
   @Override
   public String toString( )
   {
-    return "ZRANGE" + "\n[zmin: " + m_minZ + "]" + "\n[zmax: " + m_maxZ + "]" + "]";
+    return "ZRANGE" + "\n[zmin: " + this.m_minZ + "]" + "\n[zmax: " + this.m_maxZ + "]" + "]";
   }
 
   public double getMinZ( )

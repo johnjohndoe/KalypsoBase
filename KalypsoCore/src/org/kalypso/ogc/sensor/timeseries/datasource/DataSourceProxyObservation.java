@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.datasource;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
@@ -106,7 +106,7 @@ public class DataSourceProxyObservation implements IObservation
     final IAxis[] axes = m_observation.getAxes();
     if( AxisUtils.findDataSourceAxis( axes ) == null )
     {
-      return ArrayUtils.add( axes, new DefaultAxis( ITimeseriesConstants.TYPE_DATA_SRC, ITimeseriesConstants.TYPE_DATA_SRC, "", Integer.class, false ) );
+      return (IAxis[]) ArrayUtils.add( axes, new DefaultAxis( ITimeseriesConstants.TYPE_DATA_SRC, ITimeseriesConstants.TYPE_DATA_SRC, "", Integer.class, false ) );
     }
 
     return axes;

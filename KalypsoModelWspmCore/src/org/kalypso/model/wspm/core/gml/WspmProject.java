@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,16 +36,20 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
+import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
@@ -57,53 +61,38 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  * 
  * @author Gernot Belger
  */
-public abstract class WspmProject extends Feature_Impl implements IWspmProject
+public abstract class WspmProject extends Feature_Impl implements IWspmConstants
 {
-  private IFeatureBindingCollection<WspmWaterBody> m_waterBodies = null;
+  private static final QName QNAME_WATER_BODY_MEMBER = new QName( NS_WSPM, "waterBodyMember" ); //$NON-NLS-1$
+
+  public static final QName QNAME = new QName( IWspmConstants.NS_WSPMPROJ, "WspmProject" ); //$NON-NLS-1$
 
   public WspmProject( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  @Override
-  public IFeatureBindingCollection<WspmWaterBody> getWaterBodies( )
+  public WspmWaterBody[] getWaterBodies( )
   {
-    if( m_waterBodies == null )
-      m_waterBodies = new FeatureBindingCollection<WspmWaterBody>( this, WspmWaterBody.class, QN_MEMBER_WATER_BODY );
+    final FeatureList waters = getWaterBodyList();
+    final List<WspmWaterBody> waterList = new ArrayList<WspmWaterBody>( waters.size() );
+    for( final Object object : waters )
+      waterList.add( (WspmWaterBody) object );
 
-    return m_waterBodies;
+    return waterList.toArray( new WspmWaterBody[waterList.size()] );
   }
 
-  @Override
-  public IWspmClassification getClassificationMember( )
+  private FeatureList getWaterBodyList( )
   {
-    return getProperty( QN_CLASSIFICATION_MEMBER, IWspmClassification.class );
+    return getProperty( QNAME_WATER_BODY_MEMBER, FeatureList.class );
   }
 
-  /**
-   * Returns the {@link WspmWaterBody} with the given name.
-   */
-  @Override
   public WspmWaterBody findWater( final String waterName )
   {
-    final IFeatureBindingCollection<WspmWaterBody> waters = getWaterBodies();
+    final WspmWaterBody[] waters = getWaterBodies();
     for( final WspmWaterBody body : waters )
     {
       if( waterName.equals( body.getName() ) )
-        return body;
-    }
-
-    return null;
-  }
-
-  @Override
-  public WspmWaterBody findWaterByRefNr( final String refNr )
-  {
-    final IFeatureBindingCollection<WspmWaterBody> waters = getWaterBodies();
-    for( final WspmWaterBody body : waters )
-    {
-      if( refNr.equals( body.getRefNr() ) )
         return body;
     }
 
@@ -116,14 +105,13 @@ public abstract class WspmProject extends Feature_Impl implements IWspmProject
    * If a waterBody with the same name is already present, this will be retuned instead.
    * </p>
    */
-  @Override
   public WspmWaterBody createWaterBody( final String name, final boolean isDirectionUpstreams ) throws GMLSchemaException
   {
     final WspmWaterBody water = findWater( name );
     if( water != null )
       return water;
 
-    final WspmWaterBody wspmWaterBody = (WspmWaterBody) FeatureHelper.addFeature( this, QN_MEMBER_WATER_BODY, null );
+    final WspmWaterBody wspmWaterBody = (WspmWaterBody) FeatureHelper.addFeature( this, QNAME_WATER_BODY_MEMBER, null );
 
     // set default values
     wspmWaterBody.setName( name );
@@ -134,13 +122,4 @@ public abstract class WspmProject extends Feature_Impl implements IWspmProject
     return wspmWaterBody;
   }
 
-  @Override
-  public IWspmClassification createClassificationMember( )
-  {
-    final IRelationType relation = (IRelationType) getFeatureType().getProperty( QN_CLASSIFICATION_MEMBER );
-    final IFeatureType type = relation.getTargetFeatureType();
-    final IWspmClassification classification = (IWspmClassification) getWorkspace().createFeature( this, relation, type );
-    setProperty( QN_CLASSIFICATION_MEMBER, classification );
-    return classification;
-  }
 }

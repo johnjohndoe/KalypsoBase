@@ -183,8 +183,8 @@ public class ExportI18nPropertiesHandler extends AbstractHandler
                   }
                   else
                   {
-                    writeProperty( ftPrefix + "_" + simpleType.getLocalPart(), obj.toString(), "label", aLabel ); //$NON-NLS-1$ //$NON-NLS-2$
-                    writeProperty( ftPrefix + "_" + simpleType.getLocalPart(), obj.toString(), "tooltip", aTooltip ); //$NON-NLS-1$ //$NON-NLS-2$
+                    writeProperty( ftPrefix+"_"+simpleType.getLocalPart(), obj.toString(), "label", aLabel ); //$NON-NLS-1$ //$NON-NLS-2$
+                    writeProperty( ftPrefix+"_"+simpleType.getLocalPart(), obj.toString(), "tooltip", aTooltip ); //$NON-NLS-1$ //$NON-NLS-2$
                   }
                 }
               }

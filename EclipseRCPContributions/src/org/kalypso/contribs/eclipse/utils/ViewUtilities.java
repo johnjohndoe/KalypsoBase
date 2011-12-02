@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraï¿½e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -83,34 +83,34 @@ public class ViewUtilities
    *          The secondary id. May be null.
    * @return The views in the active workbench window or a empty list.
    */
-  public static IViewPart[] findViewsInActiveWindow( final String primaryId, final String secondaryId )
+  public static IViewPart[] findViewsInActiveWindow( String primaryId, String secondaryId )
   {
     /* Get the active workbench. */
-    final IWorkbench workbench = PlatformUI.getWorkbench();
+    IWorkbench workbench = PlatformUI.getWorkbench();
     if( workbench == null )
       return new IViewPart[] {};
 
     /* Get the active workbench window. */
-    final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+    IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
     if( window == null )
       return new IViewPart[] {};
 
     /* Get all pages. */
-    final IWorkbenchPage[] pages = window.getPages();
+    IWorkbenchPage[] pages = window.getPages();
     if( pages == null || pages.length == 0 )
       return new IViewPart[] {};
 
     /* Collect the views. */
-    final List<IViewPart> views = new ArrayList<IViewPart>();
+    List<IViewPart> views = new ArrayList<IViewPart>();
 
     /* Loop the pages. */
-    for( final IWorkbenchPage page : pages )
+    for( IWorkbenchPage page : pages )
     {
       /* Get all view references. */
-      final IViewReference[] references = page.getViewReferences();
+      IViewReference[] references = page.getViewReferences();
 
       /* Loop the view references. */
-      for( final IViewReference reference : references )
+      for( IViewReference reference : references )
       {
         /* Does the primary id match? */
         if( reference.getId().equals( primaryId ) )
@@ -136,16 +136,16 @@ public class ViewUtilities
    * @param secondaryId
    *          The secondary id. If omitted, every view with the given primary id will be hidden. May be null.
    */
-  public static void hideView( final String primaryId, final String secondaryId )
+  public static void hideView( String primaryId, String secondaryId )
   {
-    final IViewPart[] views = findViewsInActiveWindow( primaryId, secondaryId );
+    IViewPart[] views = findViewsInActiveWindow( primaryId, secondaryId );
     if( views == null || views.length == 0 )
       return;
 
-    for( final IViewPart view : views )
+    for( IViewPart view : views )
     {
-      final IWorkbenchPartSite site = view.getSite();
-      final IWorkbenchPage page = site.getPage();
+      IWorkbenchPartSite site = view.getSite();
+      IWorkbenchPage page = site.getPage();
       page.hideView( view );
     }
   }

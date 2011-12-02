@@ -44,6 +44,7 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
@@ -85,6 +86,6 @@ public class ComponentUiHandlerFactory
     else if( XmlTypes.XS_BOOLEAN.equals( valueTypeName ) )
       return new ComponentUiBooleanHandler( index, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
 
-    throw new UnsupportedOperationException( Messages.getString( "org.kalypso.ogc.gml.om.table.handlers.ComponentUiHandlerFactory.6" ) + valueTypeName ); //$NON-NLS-1$
+    throw new NotImplementedException( Messages.getString( "org.kalypso.ogc.gml.om.table.handlers.ComponentUiHandlerFactory.6" ) + valueTypeName ); //$NON-NLS-1$
   }
 }

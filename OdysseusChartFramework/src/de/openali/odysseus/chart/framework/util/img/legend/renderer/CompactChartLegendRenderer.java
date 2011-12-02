@@ -47,13 +47,13 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.ui.PlatformUI;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
-import de.openali.odysseus.chart.framework.util.ChartUtilities;
 import de.openali.odysseus.chart.framework.util.img.legend.IChartLegendCanvas;
 import de.openali.odysseus.chart.framework.util.img.legend.config.IChartLegendConfig;
 import de.openali.odysseus.chart.framework.util.img.legend.utils.LegendChartLayersVisitor;
@@ -102,7 +102,7 @@ public class CompactChartLegendRenderer implements IChartLegendRenderer
     if( rect.width <= 0 || rect.height <= 0 )
       return null;
 
-    final Device dev = ChartUtilities.getDisplay();
+    final Device dev = PlatformUI.getWorkbench().getDisplay();
     final Image img = new Image( dev, rect.width, rect.height );
     final GC gc = new GC( img );
 
@@ -161,7 +161,7 @@ public class CompactChartLegendRenderer implements IChartLegendRenderer
   {
     final Point size = getItemSize( config, entry );
 
-    final Device dev = ChartUtilities.getDisplay();
+    final Device dev = PlatformUI.getWorkbench().getDisplay();
     final Image img = new Image( dev, size.x, size.y );
     final GC gc = new GC( img );
 
@@ -199,7 +199,7 @@ public class CompactChartLegendRenderer implements IChartLegendRenderer
 
   private Point getItemSize( final IChartLegendConfig config, final ILegendEntry entry )
   {
-    final Device dev = ChartUtilities.getDisplay();
+    final Device dev = PlatformUI.getWorkbench().getDisplay();
     final Image image = new Image( dev, 1, 1 );
     final GC gc = new GC( image );
 

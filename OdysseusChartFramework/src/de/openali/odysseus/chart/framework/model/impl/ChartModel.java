@@ -45,7 +45,7 @@ public class ChartModel implements IChartModel
   @Override
   public void autoscale( final IAxis... axes )
   {
-    final AutoScaleVisitor visitor = new AutoScaleVisitor( this );
+    final AutoScaleVisitor visitor = new AutoScaleVisitor( this, true );
     for( final IAxis axis : Arrays.isEmpty( axes ) ? getMapperRegistry().getAxes() : axes )
     {
       visitor.visit( axis );
@@ -55,10 +55,7 @@ public class ChartModel implements IChartModel
   @Override
   public void clear( )
   {
-    m_settings.clearTitles();
-
     getLayerManager().clear();
-    getMapperRegistry().clear();
   }
 
   /**
@@ -103,6 +100,15 @@ public class ChartModel implements IChartModel
     // chart model is root element! so return null
     return null;
   }
+
+// /**
+// * @see de.openali.odysseus.chart.framework.model.IChartModel#getState()
+// */
+// @Override
+// public IChartModelState getState( )
+// {
+// return new ChartModelState( getLayerManager() );
+// }
 
   @Override
   public IBasicChartSettings getSettings( )

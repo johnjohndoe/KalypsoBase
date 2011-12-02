@@ -42,9 +42,6 @@ package org.kalypso.ogc.gml.wms.utils;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -52,7 +49,6 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.wms.provider.images.AbstractDeegreeImageProvider;
 import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
@@ -67,18 +63,9 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
  */
 public class KalypsoWMSUtilities
 {
-  private static final String URL_PARAM_SERVICE = "SERVICE"; //$NON-NLS-1$
-
-  private static final String SERVICE_WMS = "WMS"; //$NON-NLS-1$
-
-  private static final String URL_PARAM_REQUEST = "REQUEST"; //$NON-NLS-1$ 
-
-  private static final String REQUEST_GET_CAPABILITIES = "GetCapabilities"; //$NON-NLS-1$
-
-  private static final String URL_PARAM_VERSION = "VERSION"; //$NON-NLS-1$
-
-  private static final String VERSION_1_1_1 = "1.1.1"; //$NON-NLS-1$
-
+  /**
+   * The constructor.
+   */
   private KalypsoWMSUtilities( )
   {
   }
@@ -174,6 +161,7 @@ public class KalypsoWMSUtilities
   {
     final AbstractDeegreeImageProvider provider = new WMSImageProvider();
     provider.init( themeName, layers, styles, service, localSRS, sldBody );
+
     return provider;
   }
 
@@ -186,59 +174,11 @@ public class KalypsoWMSUtilities
    */
   public static URL createCapabilitiesRequest( final URL baseURL ) throws MalformedURLException
   {
-    final Map<String, String> params = UrlUtilities.parseQuery( baseURL );
+    final String query = baseURL.getQuery();
+    final String getCapabilitiesQuery = "SERVICE=WMS&VERSION=1.1.1&REQUEST=GetCapabilities"; //$NON-NLS-1$
+    final String queryToken = (query == null || query.length() == 0) ? "?" : "&"; //$NON-NLS-1$ //$NON-NLS-2$
+    final String urlGetCapabilitiesString = baseURL.toString() + queryToken + getCapabilitiesQuery;
 
-// /* Transform all keys to upper-case, else this wont work. */
-// // TODO: it would be nice to preserve the original keys instead; what is the easiest way to do it?
-// final Transformer capitalizeTransformer = new Transformer()
-// {
-// @Override
-// public Object transform( final Object input )
-// {
-// return ((String) input).toUpperCase();
-// }
-// };
-// @SuppressWarnings("unchecked")
-// final Map<String, String> paramsCapitalized = TransformedMap.decorateTransform( params, capitalizeTransformer, null
-// );
-
-    /* Check if necessary parameters already exists; if yes they must fit else we have a problem */
-    checkParameter( params, URL_PARAM_SERVICE, SERVICE_WMS );
-    checkParameter( params, URL_PARAM_VERSION, VERSION_1_1_1 );
-    checkParameter( params, URL_PARAM_REQUEST, REQUEST_GET_CAPABILITIES );
-
-    return UrlUtilities.addQuery( baseURL, params );
-  }
-
-  /**
-   * Checks if a parameter already exists and has a certeain value.<br/>
-   * If the parameter is not set, sets it.<br>
-   * If the parameter is set to a wrong value, an error is thrown.
-   */
-  private static void checkParameter( final Map<String, String> params, final String paramKey, final String paramValue )
-  {
-    final Entry<String, String> existingEntry = searchIgnoreCase( params, paramKey );
-
-    if( existingEntry == null )
-      params.put( paramKey, paramValue );
-    else
-    {
-      final String existingValue = existingEntry.getValue();
-      if( !paramValue.equals( existingValue ) )
-        throw new IllegalArgumentException( String.format( "WMS-URL contains wrong parameter '%s': %s", paramKey, existingValue ) );
-    }
-  }
-
-  // TODO: move into MapUtils
-  private static Entry<String, String> searchIgnoreCase( final Map<String, String> map, final String key )
-  {
-    final Set<Entry<String, String>> entries = map.entrySet();
-    for( final Entry<String, String> entry : entries )
-    {
-      if( entry.getKey().equalsIgnoreCase( key ) )
-        return entry;
-    }
-
-    return null;
+    return new URL( urlGetCapabilitiesString );
   }
 }

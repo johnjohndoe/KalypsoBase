@@ -102,7 +102,7 @@ public class KalypsoTextTheme extends AbstractImageTheme
    * @param mapModell
    *          The map modell to use.
    */
-  public KalypsoTextTheme( final I10nString name, final IMapModell mapModell )
+  public KalypsoTextTheme( I10nString name, IMapModell mapModell )
   {
     super( name, "text", mapModell );
 
@@ -166,7 +166,7 @@ public class KalypsoTextTheme extends AbstractImageTheme
       monitor.subTask( "Konvertiere Text..." );
 
       /* Convert to an AWT image. */
-      final BufferedImage awtImage = ImageConverter.convertToAWT( image[0].getImageData() );
+      BufferedImage awtImage = ImageConverter.convertToAWT( image[0].getImageData() );
       image[0].dispose();
 
       /* Monitor. */
@@ -207,21 +207,21 @@ public class KalypsoTextTheme extends AbstractImageTheme
     m_transparency = false;
 
     /* Get the properties. */
-    final String horizontalProperty = getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, null );
-    final String verticalProperty = getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, null );
-    final String backgroundColorProperty = getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR, null );
-    final String textProperty = getProperty( TextUtilities.THEME_PROPERTY_TEXT, null );
-    final String fontSizeProperty = getProperty( TextUtilities.THEME_PROPERTY_FONT_SIZE, null );
-    final String transparencyProperty = getProperty( TextUtilities.THEME_PROPERTY_TRANSPARENCY, null );
+    String horizontalProperty = getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, null );
+    String verticalProperty = getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, null );
+    String backgroundColorProperty = getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR, null );
+    String textProperty = getProperty( TextUtilities.THEME_PROPERTY_TEXT, null );
+    String fontSizeProperty = getProperty( TextUtilities.THEME_PROPERTY_FONT_SIZE, null );
+    String transparencyProperty = getProperty( TextUtilities.THEME_PROPERTY_TRANSPARENCY, null );
 
     /* Check the horizontal and vertical position. */
-    final int horizontal = PositionUtilities.checkHorizontalPosition( horizontalProperty );
-    final int vertical = PositionUtilities.checkVerticalPosition( verticalProperty );
+    int horizontal = PositionUtilities.checkHorizontalPosition( horizontalProperty );
+    int vertical = PositionUtilities.checkVerticalPosition( verticalProperty );
     if( horizontal != -1 && vertical != -1 )
       updatePosition( horizontal, vertical );
 
     /* Check the background color. */
-    final org.eclipse.swt.graphics.Color backgroundColor = ThemeUtilities.checkBackgroundColor( Display.getCurrent(), backgroundColorProperty );
+    org.eclipse.swt.graphics.Color backgroundColor = ThemeUtilities.checkBackgroundColor( Display.getCurrent(), backgroundColorProperty );
     if( backgroundColor != null )
     {
       m_backgroundColor.dispose();
@@ -233,7 +233,7 @@ public class KalypsoTextTheme extends AbstractImageTheme
       m_text = TextUtilities.checkText( textProperty );
 
     /* Check the font size. */
-    final int fontSize = TextUtilities.checkFontSize( fontSizeProperty );
+    int fontSize = TextUtilities.checkFontSize( fontSizeProperty );
     if( fontSize >= 1 && fontSize <= 35 )
       m_fontSize = fontSize;
 
@@ -253,38 +253,38 @@ public class KalypsoTextTheme extends AbstractImageTheme
       return null;
 
     /* Get the font. */
-    final Font smallFont = JFaceResources.getFont( JFaceResources.DIALOG_FONT );
-    final Font bigFont = FontUtilities.changeHeightAndStyle( smallFont.getDevice(), smallFont, m_fontSize, SWT.BOLD );
+    Font smallFont = JFaceResources.getFont( JFaceResources.DIALOG_FONT );
+    Font bigFont = FontUtilities.changeHeightAndStyle( smallFont.getDevice(), smallFont, m_fontSize, SWT.BOLD );
 
     /* Create a helper image. */
-    final org.eclipse.swt.graphics.Image helperImage = new org.eclipse.swt.graphics.Image( bigFont.getDevice(), 100, 100 );
-    final GC helperGC = new GC( helperImage );
+    org.eclipse.swt.graphics.Image helperImage = new org.eclipse.swt.graphics.Image( bigFont.getDevice(), 100, 100 );
+    GC helperGC = new GC( helperImage );
     helperGC.setFont( bigFont );
 
     /* Get the text extent. */
-    final Point textExtent = helperGC.textExtent( m_text );
-    final int width = textExtent.x;
-    final int height = textExtent.y;
+    Point textExtent = helperGC.textExtent( m_text );
+    int width = textExtent.x;
+    int height = textExtent.y;
 
     /* Dispose the helper image. */
     helperImage.dispose();
     helperGC.dispose();
 
     /* Create the palette. */
-    final Color white = bigFont.getDevice().getSystemColor( SWT.COLOR_WHITE );
-    final Color black = bigFont.getDevice().getSystemColor( SWT.COLOR_BLACK );
+    Color white = bigFont.getDevice().getSystemColor( SWT.COLOR_WHITE );
+    Color black = bigFont.getDevice().getSystemColor( SWT.COLOR_BLACK );
     PaletteData palette = new PaletteData( new RGB[] { m_backgroundColor.getRGB(), black.getRGB() } );
     if( m_transparency )
       palette = new PaletteData( new RGB[] { white.getRGB(), black.getRGB() } );
 
     /* Create a new image data. */
-    final ImageData newImageData = new ImageData( width, height, 2, palette );
+    ImageData newImageData = new ImageData( width, height, 2, palette );
     if( m_transparency )
       newImageData.transparentPixel = 0;
 
     /* Create a new image. */
-    final org.eclipse.swt.graphics.Image newImage = new org.eclipse.swt.graphics.Image( bigFont.getDevice(), newImageData );
-    final GC newGC = new GC( newImage );
+    org.eclipse.swt.graphics.Image newImage = new org.eclipse.swt.graphics.Image( bigFont.getDevice(), newImageData );
+    GC newGC = new GC( newImage );
     newGC.setFont( bigFont );
 
     /* Draw the text. */

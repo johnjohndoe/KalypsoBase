@@ -45,7 +45,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
@@ -85,9 +85,9 @@ public class LegendUtilities
   {
   }
 
-  public static int checkInsets( final String insetsProperty )
+  public static int checkInsets( String insetsProperty )
   {
-    final Integer insets = NumberUtils.parseQuietInteger( insetsProperty );
+    Integer insets = NumberUtils.parseQuietInteger( insetsProperty );
     if( insets != null && insets.intValue() > 0 )
       return insets.intValue();
 
@@ -104,15 +104,16 @@ public class LegendUtilities
    *          The theme ids as serialized property, separated by a ';'.
    * @return A list of verified theme ids.
    */
-  public static List<String> verifyThemeIds( final IMapModell mapModel, final String themeIdsProperty )
+  public static List<String> verifyThemeIds( IMapModell mapModel, String themeIdsProperty )
   {
     if( themeIdsProperty != null )
     {
-      final List<String> themes = new ArrayList<String>();
-      final String[] themeIds = StringUtils.split( themeIdsProperty, ";" );
-      for( final String themeId : themeIds )
+      List<String> themes = new ArrayList<String>();
+      String[] themeIds = StringUtils.split( themeIdsProperty, ";" );
+      for( int i = 0; i < themeIds.length; i++ )
       {
-        final IKalypsoTheme theme = findThemeById( mapModel, themeId );
+        String themeId = themeIds[i];
+        IKalypsoTheme theme = findThemeById( mapModel, themeId );
         if( theme != null )
           themes.add( theme.getId() );
       }
@@ -123,9 +124,9 @@ public class LegendUtilities
     return null;
   }
 
-  public static int checkFontSize( final String fontSizeProperty )
+  public static int checkFontSize( String fontSizeProperty )
   {
-    final Integer fontSize = NumberUtils.parseQuietInteger( fontSizeProperty );
+    Integer fontSize = NumberUtils.parseQuietInteger( fontSizeProperty );
     if( fontSize != null && fontSize.intValue() > 0 )
       return fontSize.intValue();
 
@@ -139,15 +140,15 @@ public class LegendUtilities
    */
   public static Properties getDefaultProperties( )
   { /* Create the properties object. */
-    final Properties properties = new Properties();
+    Properties properties = new Properties();
 
     /* Serialise the properties. */
-    final String horizontalProperty = String.format( Locale.PRC, "%d", PositionUtilities.RIGHT );
-    final String verticalProperty = String.format( Locale.PRC, "%d", PositionUtilities.BOTTOM );
-    final String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", 255, 255, 255 );
-    final String insetsProperty = String.format( Locale.PRC, "%d", 10 );
-    final String themeIdsProperty = "";
-    final String fontSizeProperty = "-1";
+    String horizontalProperty = String.format( Locale.PRC, "%d", PositionUtilities.RIGHT );
+    String verticalProperty = String.format( Locale.PRC, "%d", PositionUtilities.BOTTOM );
+    String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", 255, 255, 255 );
+    String insetsProperty = String.format( Locale.PRC, "%d", 10 );
+    String themeIdsProperty = "";
+    String fontSizeProperty = "-1";
 
     /* Add the properties. */
     properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );
@@ -169,16 +170,16 @@ public class LegendUtilities
    *          The id to search for.
    * @return The theme, if ONE theme with the given id exists in the map model.
    */
-  public static IKalypsoTheme findThemeById( final IMapModell mapModel, final String id )
+  public static IKalypsoTheme findThemeById( IMapModell mapModel, String id )
   {
     /* Create the visitor. */
-    final KalypsoThemeVisitor visitor = new KalypsoThemeVisitor( new MatchingIdKalypsoThemePredicate( id ) );
+    KalypsoThemeVisitor visitor = new KalypsoThemeVisitor( new MatchingIdKalypsoThemePredicate( id ) );
 
     /* Search all themes. */
     mapModel.accept( visitor, IKalypsoThemeVisitor.DEPTH_INFINITE );
 
     /* The found themes. */
-    final IKalypsoTheme[] foundThemes = visitor.getFoundThemes();
+    IKalypsoTheme[] foundThemes = visitor.getFoundThemes();
     if( foundThemes.length != 1 )
       return null;
 

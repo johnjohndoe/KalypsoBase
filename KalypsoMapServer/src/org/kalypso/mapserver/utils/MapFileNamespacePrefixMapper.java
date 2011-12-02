@@ -61,7 +61,7 @@ public class MapFileNamespacePrefixMapper extends NamespacePrefixMapper
    *      boolean)
    */
   @Override
-  public String getPreferredPrefix( final String namespaceUri, final String suggestion, final boolean requirePrefix )
+  public String getPreferredPrefix( String namespaceUri, String suggestion, boolean requirePrefix )
   {
     if( "http://www.w3.org/2001/XMLSchema".equals( namespaceUri ) )
       return "xmlns";

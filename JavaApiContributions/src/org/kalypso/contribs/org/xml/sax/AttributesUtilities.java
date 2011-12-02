@@ -58,7 +58,7 @@ public class AttributesUtilities
    * Returns the attribute value for given qnmae (naemsapce:localPart).
    * 
    * @param defaultValue
-   *          If attribute is not found, returns this value.
+   *            If attribute is not found, returns this value.
    */
   public static String getAttributeValue( final Attributes atts, final String namespace, final String localPart, final String defaultValue )
   {
@@ -68,23 +68,24 @@ public class AttributesUtilities
 
     return defaultValue;
   }
-
-  /**
+  
+   /**
    * Returns the attribute value as an Integer for given qnmae (naemsapce:localPart).
    * 
    * @param defaultValue
-   *          If attribute is not found, returns this value.
+   *            If attribute is not found, returns this value.
    */
   public static Integer getAttributeIntegerValue( final Attributes atts, final String namespace, final String localPart, final String defaultValue )
   {
     final String value = getAttributeValue( atts, namespace, localPart, defaultValue );
-
+    
     if( value != null )
     {
       return Integer.valueOf( value );
     }
-
+    
     return null;
   }
-
+  
+  
 }

@@ -52,66 +52,72 @@ public class FilterDialogLabelProvider implements ILabelProvider
 
   /*
    * (non-Javadoc)
+   * 
    * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
    */
   @Override
-  public Image getImage( final Object element )
+  public Image getImage( Object element )
   {
     return null;
   }
 
   /*
    * (non-Javadoc)
+   * 
    * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
    */
   @Override
-  public String getText( final Object element )
+  public String getText( Object element )
   {
     if( element != null )
     {
-      return ((FilterDialogTreeNode) element).getName();
+      return ( (FilterDialogTreeNode)element ).getName();
     }
     return null;
   }
 
   /*
    * (non-Javadoc)
+   * 
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
    */
   @Override
-  public void addListener( final ILabelProviderListener listener )
+  public void addListener( ILabelProviderListener listener )
   {
-    // nothing
+  // nothing
   }
 
   /*
    * (non-Javadoc)
+   * 
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
    */
   @Override
-  public void dispose( )
+  public void dispose()
   {
-    // nothing
+  // nothing
   }
 
   /*
    * (non-Javadoc)
+   * 
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
    */
   @Override
-  public boolean isLabelProperty( final Object element, final String property )
+  public boolean isLabelProperty( Object element, String property )
   {
     return false;
   }
 
   /*
    * (non-Javadoc)
+   * 
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
    */
   @Override
-  public void removeListener( final ILabelProviderListener listener )
+  public void removeListener( ILabelProviderListener listener )
   {
-    // nothing
+  // nothing
   }
 
 }

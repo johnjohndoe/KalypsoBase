@@ -60,9 +60,9 @@ public interface GM_MultiSurface extends GM_MultiPrimitive
    * is larger then getSize() - 1 or smaller then 0 or gms equals null an exception will be thrown.
    * 
    * @param gms
-   *          GM_Surface to insert.
+   *            GM_Surface to insert.
    * @param index
-   *          position where to insert the new GM_Surface
+   *            position where to insert the new GM_Surface
    */
   void insertSurfaceAt( GM_Surface< ? > gms, int index ) throws GM_Exception;
 
@@ -71,9 +71,9 @@ public interface GM_MultiSurface extends GM_MultiPrimitive
    * removed. if index is larger then getSize() - 1 or smaller then 0 or gms equals null an exception will be thrown.
    * 
    * @param gms
-   *          GM_Surface to set.
+   *            GM_Surface to set.
    * @param index
-   *          position where to set the new GM_Surface
+   *            position where to set the new GM_Surface
    */
   void setSurfaceAt( GM_Surface< ? > gms, int index ) throws GM_Exception;
 

@@ -185,7 +185,6 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
     {
       if( buttonId == ID_BUTTON_APPLY )
       {
-
         m_input.fireStyleChanged();
         setReturnCode( APPLY_FILTER );
       }
@@ -287,9 +286,9 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
     m_viewer.getControl().setLayoutData( data1 );
     m_viewer.setLabelProvider( m_labelProvider );
     m_viewer.setContentProvider( m_contentProvider );
-
     m_viewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
+
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
@@ -364,7 +363,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
                     final IStructuredSelection s = (IStructuredSelection) mapPanel.getSelection();
                     if( s instanceof KalypsoFeatureThemeSelection )
                     {
-                      final KalypsoFeatureThemeSelection fts = (KalypsoFeatureThemeSelection) s;
+                      final KalypsoFeatureThemeSelection fts = ((KalypsoFeatureThemeSelection) s);
                       final Object[] elements = fts.toArray();
                       final String[] features = new String[elements.length];
                       for( int i = 0; i < elements.length; i++ )
@@ -608,6 +607,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
     }
     return null;
   }
+
 
   public boolean isRestorable( )
   {

@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.model;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.widgets.Table;

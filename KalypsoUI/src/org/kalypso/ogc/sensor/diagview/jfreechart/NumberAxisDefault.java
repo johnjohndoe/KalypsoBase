@@ -55,7 +55,6 @@ import org.jfree.data.Range;
 public class NumberAxisDefault extends NumberAxis
 {
   private Double m_max = null;
-
   private Double m_min = null;
 
   public NumberAxisDefault( final String label )
@@ -67,17 +66,17 @@ public class NumberAxisDefault extends NumberAxis
   {
     m_min = min;
   }
-
+  
   void setMax( final Double max )
   {
     m_max = max;
   }
-
+  
   /**
    * Rescales the axis to ensure that all data is visible.
    */
   @Override
-  protected void autoAdjustRange( )
+  protected void autoAdjustRange()
   {
     final Plot plot = getPlot();
     if( plot == null )
@@ -87,7 +86,7 @@ public class NumberAxisDefault extends NumberAxis
 
     if( plot instanceof ValueAxisPlot )
     {
-      final ValueAxisPlot vap = (ValueAxisPlot) plot;
+      final ValueAxisPlot vap = (ValueAxisPlot)plot;
 
       Range r = vap.getDataRange( this );
       if( r == null )
@@ -116,9 +115,9 @@ public class NumberAxisDefault extends NumberAxis
         final double minRange = getAutoRangeMinimumSize();
         if( range < minRange )
         {
-          // double expand = ( minRange - range ) / 2;
-          upper = minRange; // upper + expand;
-          lower = 0; // getlower - expand;
+          //double expand = ( minRange - range ) / 2;
+          upper = minRange; //upper + expand;
+          lower = 0; //getlower - expand;
         }
 
         if( autoRangeStickyZero() )
@@ -147,12 +146,12 @@ public class NumberAxisDefault extends NumberAxis
         }
       }
 
-      if( m_min != null && lower > m_min.doubleValue() )
+      if( m_min!= null && lower > m_min.doubleValue() )
         lower = m_min.doubleValue();
-
+      
       if( m_max != null && upper < m_max.doubleValue() )
         upper = m_max.doubleValue();
-
+      
       setRange( new Range( lower, upper ), false, false );
     }
   }

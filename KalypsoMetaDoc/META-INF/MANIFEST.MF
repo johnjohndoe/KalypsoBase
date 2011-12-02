@@ -2,12 +2,17 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoMetaDoc Plug-in
 Bundle-SymbolicName: org.kalypso.metadoc; singleton:=true
-Bundle-Version: 11.6.3.qualifier
-Bundle-ClassPath: .
+Bundle-Version: 11.6.2.qualifier
+Bundle-ClassPath: lib/commons-configuration-1.1.jar,
+ .
 Bundle-Activator: org.kalypso.metadoc.KalypsoMetaDocPlugin
 Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-Localization: plugin
-Export-Package: org.kalypso.metadoc,
+Export-Package: org.apache.commons.configuration,
+ org.apache.commons.configuration.beanutils,
+ org.apache.commons.configuration.reloading,
+ org.apache.commons.configuration.web,
+ org.kalypso.metadoc,
  org.kalypso.metadoc.configuration,
  org.kalypso.metadoc.impl,
  org.kalypso.metadoc.ui
@@ -16,4 +21,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.ide,
  org.kalypso.commons
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

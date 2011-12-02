@@ -47,13 +47,13 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang.StringUtils;
 import org.apache.xmlbeans.XmlException;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -133,12 +133,11 @@ public class ChartLayerFactory extends AbstractChartFactory
       try
       {
         final IChartLayer layer = parse( child, baseTypes );
-        if( layer != null )
-          layers.add( layer );
+        layers.add( layer );
       }
       catch( final Throwable t )
       {
-        OdysseusChartFactory.getDefault().getLog().log( new Status( IStatus.ERROR, OdysseusChartFactory.PLUGIN_ID, t.getLocalizedMessage(), t ) );
+        OdysseusChartFactory.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
       }
     }
 
@@ -171,7 +170,7 @@ public class ChartLayerFactory extends AbstractChartFactory
       return buildDerivedLayerTypes( derivedLayerType, baseTypes );
     }
     else
-      throw new UnsupportedOperationException();
+      throw new NotImplementedException();
   }
 
   private IChartLayer buildLayerReferenceType( final LayerRefernceType reference, final ReferencableType... baseTypes ) throws CoreException, ConfigurationException
@@ -183,7 +182,7 @@ public class ChartLayerFactory extends AbstractChartFactory
       throw new IllegalStateException( String.format( "Chart LayerTypeReference not found: %s", reference.getUrl() ) );
 
     final ILayerProvider provider = LayerTypeHelper.getLayerTypeProvider( getLoader(), type );
-    final IChartLayer layer = buildLayer( type, provider, ArrayUtils.add( baseTypes, type ) );
+    final IChartLayer layer = buildLayer( type, provider, (ReferencableType[]) ArrayUtils.add( baseTypes, type ) );
 
     if( reference.isSetTitle() )
       layer.setTitle( reference.getTitle() );
@@ -231,7 +230,6 @@ public class ChartLayerFactory extends AbstractChartFactory
     final IStyleSet styleSet = StyleFactory.createStyleSet( styles, baseTypes, getContext() );
     final Map<String, String> map = createMapperMap( layerType );
 
-    // FIXME: too much inline code -> pull out!
     provider.init( new ILayerProviderSource()
     {
       @Override
@@ -284,13 +282,9 @@ public class ChartLayerFactory extends AbstractChartFactory
     } );
 
     final IChartLayer layer = provider.getLayer( getContext() );
-    if( layer == null )
-      return null;
-
     setBasicParameters( layerType, layer );
 
     if( Objects.isNotNull( domainAxis, targetAxis ) )
-      // FIXME> layer is corrupt... do not use_
       layer.setCoordinateMapper( new CoordinateMapper( domainAxis, targetAxis ) );
 
     layer.setData( CONFIGURATION_TYPE_KEY, layerType );
@@ -301,7 +295,7 @@ public class ChartLayerFactory extends AbstractChartFactory
     final LayersType layers = layerType.getLayers();
     if( layers != null )
     {
-      final ReferencableType[] references = ArrayUtils.add( baseTypes, layerType );
+      final ReferencableType[] references = (ReferencableType[]) ArrayUtils.add( baseTypes, layerType );
       final IChartLayer[] children = build( layers, references );
 
       layerManager.addLayer( children );

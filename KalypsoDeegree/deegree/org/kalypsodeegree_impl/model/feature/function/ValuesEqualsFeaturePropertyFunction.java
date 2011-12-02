@@ -67,7 +67,7 @@ public class ValuesEqualsFeaturePropertyFunction extends FeaturePropertyFunction
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
    */
   @Override
-  public void init( final Map<String, String> properties )
+  public void init( Map<String, String> properties )
   {
 
     m_compareToValue = Double.valueOf( properties.get( "compareToValue" ) );
@@ -89,7 +89,7 @@ public class ValuesEqualsFeaturePropertyFunction extends FeaturePropertyFunction
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
   @Override
-  public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
+  public Object getValue( Feature feature, IPropertyType pt, Object currentValue )
   {
     if( m_compareValueName == null )
       return null;
@@ -111,7 +111,7 @@ public class ValuesEqualsFeaturePropertyFunction extends FeaturePropertyFunction
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
   @Override
-  public Object setValue( final Feature feature, final IPropertyType pt, final Object valueToSet )
+  public Object setValue( Feature feature, IPropertyType pt, Object valueToSet )
   {
 
     return null;

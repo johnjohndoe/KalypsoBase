@@ -64,8 +64,8 @@ public class FeatureFilter extends AbstractFilter
   }
 
   /**
-   * Calculates the <tt>FeatureFilter</tt>'s logical value based on the ID of the given <tt>Feature</tt>. FIXME!!! Use a
-   * TreeSet (or something) to speed up comparison.
+   * Calculates the <tt>FeatureFilter</tt>'s logical value based on the ID of the given <tt>Feature</tt>. FIXME!!!
+   * Use a TreeSet (or something) to speed up comparison.
    * 
    * @param feature
    *          that determines the Id

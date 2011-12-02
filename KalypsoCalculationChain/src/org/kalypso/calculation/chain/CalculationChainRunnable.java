@@ -13,9 +13,9 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.calculation.chain.i18n.Messages;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.SimulationJobSpecification;
@@ -89,7 +89,7 @@ public class CalculationChainRunnable implements ICoreRunnableWithProgress
     {
       for( final SimulationJobSpecification job : m_jobSpecificationList )
       {
-        setTask( String.format( Messages.getString( "CalculationChainRunnable_0" ), job.getDescription() ), monitor ); //$NON-NLS-1$
+        setTask( String.format( Messages.getString( "CalculationChainRunnable_0" ), job.getDescription() ), monitor );
 
         if( status.isOK() )
         {
@@ -120,6 +120,10 @@ public class CalculationChainRunnable implements ICoreRunnableWithProgress
 
           final ISimulationRunner runner = SimulationRunnerFactory.createRunner( job.getCalculationTypeID(), modeldata, context );
           runner.run( inputs, outputs, monitor );
+
+          // FIXME: no need to refresh all; if we are working in a workspace (not tmp), the runner already refreshes the
+          // resources
+          workspaceResource.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
         }
       }
 
@@ -127,7 +131,11 @@ public class CalculationChainRunnable implements ICoreRunnableWithProgress
     }
     catch( final Exception e )
     {
-      status = StatusUtilities.statusFromThrowable( e );
+      System.out.println( "ERROR: " + e.getLocalizedMessage() ); //$NON-NLS-1$
+      e.printStackTrace();
+      // ErrorDialog.openError(shell, "Error",
+      // e.getLocalizedMessage(), Status.CANCEL_STATUS);
+      status = Status.CANCEL_STATUS;
     }
     m_chainStatus = CHAIN_STATUS.FINISHED;
     return status;

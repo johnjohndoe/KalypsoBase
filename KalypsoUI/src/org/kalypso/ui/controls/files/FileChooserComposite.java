@@ -59,7 +59,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.ui.controls.files.listener.IFileChooserListener;
 
 /**
@@ -122,7 +121,7 @@ public class FileChooserComposite extends Composite
    * @param defaultPath
    *          If not null, this path will be set as default.
    */
-  public FileChooserComposite( final Composite parent, final int style, final String[] extensions, final String[] names, final String title, final String defaultPath )
+  public FileChooserComposite( Composite parent, int style, String[] extensions, String[] names, String title, String defaultPath )
   {
     super( parent, style );
 
@@ -148,20 +147,20 @@ public class FileChooserComposite extends Composite
     super.setLayout( new FillLayout() );
 
     /* Create the main group for the panel. */
-    final Composite main = createMainComposite();
+    Composite main = createMainComposite();
 
     /* No group? */
     if( (getStyle() & NO_GROUP) != 0 )
     {
       /* Create a label. */
-      final Label pathLabel = new Label( main, SWT.NONE );
+      Label pathLabel = new Label( main, SWT.NONE );
       pathLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
       pathLabel.setText( m_title );
     }
 
     /* Create a text field. */
     m_pathText = new Text( main, SWT.BORDER );
-    final GridData pathData = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    GridData pathData = new GridData( SWT.FILL, SWT.CENTER, true, false );
     pathData.widthHint = 350;
     m_pathText.setLayoutData( pathData );
     if( m_path != null )
@@ -174,10 +173,10 @@ public class FileChooserComposite extends Composite
        * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
        */
       @Override
-      public void modifyText( final ModifyEvent e )
+      public void modifyText( ModifyEvent e )
       {
         /* Get the source. */
-        final Text source = (Text) e.getSource();
+        Text source = (Text) e.getSource();
 
         /* Store the text. */
         m_path = source.getText();
@@ -188,7 +187,7 @@ public class FileChooserComposite extends Composite
     } );
 
     /* Create a button. */
-    final Button pathButton = new Button( main, SWT.NONE );
+    Button pathButton = new Button( main, SWT.NONE );
     pathButton.setLayoutData( new GridData( SWT.END, SWT.CENTER, false, false ) );
     pathButton.setText( "..." );
 
@@ -199,15 +198,15 @@ public class FileChooserComposite extends Composite
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( final SelectionEvent e )
+      public void widgetSelected( SelectionEvent e )
       {
         /* Get the source. */
-        final Button source = (Button) e.getSource();
+        Button source = (Button) e.getSource();
 
         /* Create the dialog. */
-        final FileDialog dialog = new FileDialog( source.getParent().getShell(), SWT.OPEN );
+        FileDialog dialog = new FileDialog( source.getParent().getShell(), SWT.OPEN );
         dialog.setText( m_title );
-        final File f = new File( m_pathText.getText() );
+        File f = new File( m_pathText.getText() );
         dialog.setFilterPath( f.getPath() );
         dialog.setFileName( "" );
 
@@ -224,7 +223,7 @@ public class FileChooserComposite extends Composite
         }
 
         /* Get the selection of the user. */
-        final String path = dialog.open();
+        String path = dialog.open();
         if( path == null || path.length() == 0 )
           return;
 
@@ -243,13 +242,16 @@ public class FileChooserComposite extends Composite
   {
     if( (getStyle() & NO_GROUP) != 0 )
     {
-      final Composite main = new Composite( this, SWT.NONE );
-      main.setLayout( Layouts.createGridLayout( 3 ) );
+      Composite main = new Composite( this, SWT.NONE );
+      GridLayout mainLayout = new GridLayout( 3, false );
+      mainLayout.marginHeight = 0;
+      mainLayout.marginWidth = 0;
+      main.setLayout( mainLayout );
 
       return main;
     }
 
-    final Group main = new Group( this, SWT.NONE );
+    Group main = new Group( this, SWT.NONE );
     main.setLayout( new GridLayout( 2, false ) );
     main.setText( m_title );
 
@@ -260,7 +262,7 @@ public class FileChooserComposite extends Composite
    * @see org.eclipse.swt.widgets.Composite#setLayout(org.eclipse.swt.widgets.Layout)
    */
   @Override
-  public void setLayout( final Layout layout )
+  public void setLayout( Layout layout )
   {
     /* Ignore user set layouts, only layout datas are permitted. */
   }
@@ -285,9 +287,9 @@ public class FileChooserComposite extends Composite
    * @param path
    *          The new path.
    */
-  protected void firePathChangedEvent( final String path )
+  protected void firePathChangedEvent( String path )
   {
-    for( final IFileChooserListener listener : m_listener )
+    for( IFileChooserListener listener : m_listener )
       listener.pathChanged( path );
   }
 
@@ -297,7 +299,7 @@ public class FileChooserComposite extends Composite
    * @param listener
    *          The file chooser listener.
    */
-  public void addFileChooserListener( final IFileChooserListener listener )
+  public void addFileChooserListener( IFileChooserListener listener )
   {
     if( !m_listener.contains( listener ) )
       m_listener.add( listener );
@@ -309,7 +311,7 @@ public class FileChooserComposite extends Composite
    * @param listener
    *          The file chooser listener.
    */
-  public void removeFileChooserListener( final IFileChooserListener listener )
+  public void removeFileChooserListener( IFileChooserListener listener )
   {
     if( m_listener.contains( listener ) )
       m_listener.remove( listener );
@@ -321,7 +323,7 @@ public class FileChooserComposite extends Composite
    * @param path
    *          The selected path.
    */
-  public void setSelectedPath( final String path )
+  public void setSelectedPath( String path )
   {
     if( m_pathText == null || m_pathText.isDisposed() )
       return;

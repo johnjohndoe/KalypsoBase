@@ -71,8 +71,9 @@ import org.kalypso.ui.KalypsoGisPlugin;
 /**
  * This action delegate can be used to specify a widget and a context to call and update a {@link Command}. Handlers
  * that wish to handle the command must register for the command id
- * "org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand#context" and subclass {@link SelectWidgetHandler}. The specified
- * widget will then be called from the command. The context can be used to set the active state of the handler. <br>
+ * "org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand#context" and subclass {@link SelectWidgetHandler}. The
+ * specified widget will then be called from the command. The context can be used to set the active state of the
+ * handler. <br>
  * <br>
  * Example:<br>
  * <blockquote> <br>
@@ -88,7 +89,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
  * </activeWhen> </handler> </blockcode>
  */
 public class SelectWidgetCommandActionDelegate extends GenericCommandActionDelegate
-{
+{  
   private String m_context = null;
 
   private String m_widgetClass = null;
@@ -99,9 +100,9 @@ public class SelectWidgetCommandActionDelegate extends GenericCommandActionDeleg
    * @see org.kalypso.ui.GenericCommandActionDelegate#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
    *      java.lang.String, java.lang.Object)
    */
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   @Override
-  public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data ) throws CoreException
+  public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data ) throws CoreException 
   {
     super.setInitializationData( config, propertyName, data );
 
@@ -116,7 +117,7 @@ public class SelectWidgetCommandActionDelegate extends GenericCommandActionDeleg
     if( m_widgetClass == null || m_context == null || m_pluginId == null )
     {
       final String id = config.getAttribute( "id" ); //$NON-NLS-1$
-      final Status status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), SWT.OK, Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate.2" ) + id + Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate.3" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
+      final Status status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), SWT.OK, Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate.2") + id + Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectWidgetCommandActionDelegate.3"), null ); //$NON-NLS-1$ //$NON-NLS-2$
       throw new CoreException( status );
     }
   }
@@ -138,7 +139,7 @@ public class SelectWidgetCommandActionDelegate extends GenericCommandActionDeleg
         final Command selectWidgetCmd = commandService.getCommand( SelectWidgetHandler.COMMAND_ID );
         command.define( cmdName, cmdName, selectWidgetCmd.getCategory(), selectWidgetCmd.getParameters() );
       }
-
+      
       return new ParameterizedCommand( command, new Parameterization[] { new Parameterization( command.getParameter( SelectWidgetHandler.PARAM_WIDGET_CLASS ), m_widgetClass ),
           new Parameterization( command.getParameter( SelectWidgetHandler.PARAM_PLUGIN_ID ), m_pluginId ) } );
     }

@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,23 +36,23 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.commons.resources;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.kalypso.commons.java.lang.Objects;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * FileUtilities
@@ -64,6 +64,43 @@ public class FileUtilities
   private FileUtilities( )
   {
     // not intended to be instanciated
+  }
+
+  /**
+   * Sets the contents of the dest file using the source file.
+   * 
+   * @deprecated Readers with charset used...
+   */
+  @Deprecated
+  public static void copyFile( final String sourceCharset, final File source, final IFile dest, final IProgressMonitor monitor ) throws CoreException
+  {
+    final SetContentHelper helper = new SetContentHelper()
+    {
+      @Override
+      protected void write( final OutputStreamWriter writer ) throws Throwable
+      {
+        final PrintWriter pwr = new PrintWriter( writer );
+        final BufferedReader reader = new BufferedReader( new InputStreamReader( new FileInputStream( source ), sourceCharset ) );
+
+        try
+        {
+          String strLine = reader.readLine();
+          while( strLine != null )
+          {
+            pwr.println( strLine );
+
+            strLine = reader.readLine();
+          }
+        }
+        finally
+        {
+          reader.close();
+          pwr.close();
+        }
+      }
+    };
+
+    helper.setFileContents( dest, false, false, monitor );
   }
 
   public static String toString( final IFile file ) throws IOException, CoreException
@@ -112,26 +149,5 @@ public class FileUtilities
     {
       IOUtils.closeQuietly( contents );
     }
-  }
-
-  public static IFile toFile( final IPath fullPath )
-  {
-    if( fullPath == null )
-      return null;
-
-    final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-    final IWorkspaceRoot root = workspace.getRoot();
-    return root.getFile( fullPath );
-  }
-
-  public static boolean isParent( final IResource base, final IResource current )
-  {
-    final IContainer parent = current.getParent();
-    if( Objects.isNull( parent ) )
-      return false;
-    else if( base.equals( parent ) )
-      return true;
-
-    return isParent( base, parent );
   }
 }

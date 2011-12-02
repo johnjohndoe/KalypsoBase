@@ -48,7 +48,7 @@ import javax.xml.bind.DatatypeConverter;
 import jregex.Pattern;
 import jregex.RETokenizer;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;

@@ -46,7 +46,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -160,15 +160,9 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
 
   private void drawHandles( final Graphics g, final int[] x, final int[] y )
   {
-    for( int i = 0; i < y.length; i++ )
-      drawHandle( g, x[i], y[i] );
-  }
-
-  // TODO: move to central place. Should used by all widgets / all geometry builders
-  public static void drawHandle( final Graphics g, final int x, final int y )
-  {
     final int sizeOuter = 6;
-    g.drawRect( x - sizeOuter / 2, y - sizeOuter / 2, sizeOuter, sizeOuter );
+    for( int i = 0; i < y.length; i++ )
+      g.drawRect( x[i] - sizeOuter / 2, y[i] - sizeOuter / 2, sizeOuter, sizeOuter );
   }
 
   /**
@@ -183,7 +177,7 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
     if( m_result != null )
       return m_result;
 
-    if( m_points.size() > 2 && (m_cnt_points == m_points.size() || m_cnt_points <= 2) )
+    if( (m_points.size() > 2) && ((m_cnt_points == m_points.size()) || (m_cnt_points <= 2)) )
     {
       final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( m_crs );
 
@@ -194,6 +188,8 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
         poses[i] = transformedPoint.getPosition();
       }
 
+// m_result = createGeometry( poses );
+// return m_result;
       return createGeometry( poses );
     }
 
@@ -281,17 +277,12 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
   }
 
   /**
-   * This function returns the minimum number of points, as given in the constructor.
+   * This function returns the number of points.
    * 
    * @return The number of points, at which the geometry should be finished. <= 2 if no rule will be used.
    */
   public int getCntPoints( )
   {
     return m_cnt_points;
-  }
-
-  public int getPointCount( )
-  {
-    return m_points.size();
   }
 }

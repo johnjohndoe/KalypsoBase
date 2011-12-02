@@ -136,7 +136,7 @@ public class TextComposite extends Composite
    * @param properties
    *          The properties, containing the default values.
    */
-  public TextComposite( final Composite parent, final int style, final Properties properties )
+  public TextComposite( Composite parent, int style, Properties properties )
   {
     super( parent, style );
 
@@ -154,7 +154,7 @@ public class TextComposite extends Composite
    * @see org.eclipse.swt.widgets.Composite#setLayout(org.eclipse.swt.widgets.Layout)
    */
   @Override
-  public void setLayout( final Layout layout )
+  public void setLayout( Layout layout )
   {
     /* Ignore user set layouts, only layout datas are permitted. */
   }
@@ -183,7 +183,7 @@ public class TextComposite extends Composite
    * @param properties
    *          The properties, containing the values.
    */
-  private void checkProperties( final Properties properties )
+  private void checkProperties( Properties properties )
   {
     /* Default values. */
     m_horizontal = PositionUtilities.RIGHT;
@@ -209,28 +209,28 @@ public class TextComposite extends Composite
    * @param properties
    *          The properties, containing the values.
    */
-  private void updateProperties( final Properties properties )
+  private void updateProperties( Properties properties )
   {
     /* Get the properties. */
-    final String horizontalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
-    final String verticalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
-    final String backgroundColorProperty = properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
-    final String textProperty = properties.getProperty( TextUtilities.THEME_PROPERTY_TEXT, null );
-    final String fontSizeProperty = properties.getProperty( TextUtilities.THEME_PROPERTY_FONT_SIZE );
-    final String transparencyProperty = properties.getProperty( TextUtilities.THEME_PROPERTY_TRANSPARENCY );
+    String horizontalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
+    String verticalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
+    String backgroundColorProperty = properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
+    String textProperty = properties.getProperty( TextUtilities.THEME_PROPERTY_TEXT, null );
+    String fontSizeProperty = properties.getProperty( TextUtilities.THEME_PROPERTY_FONT_SIZE );
+    String transparencyProperty = properties.getProperty( TextUtilities.THEME_PROPERTY_TRANSPARENCY );
 
     /* Check the horizontal position. */
-    final int horizontal = PositionUtilities.checkHorizontalPosition( horizontalProperty );
+    int horizontal = PositionUtilities.checkHorizontalPosition( horizontalProperty );
     if( horizontal != -1 )
       m_horizontal = horizontal;
 
     /* Check the vertical position. */
-    final int vertical = PositionUtilities.checkVerticalPosition( verticalProperty );
+    int vertical = PositionUtilities.checkVerticalPosition( verticalProperty );
     if( vertical != -1 )
       m_vertical = vertical;
 
     /* Check the background color. */
-    final Color backgroundColor = ThemeUtilities.checkBackgroundColor( getDisplay(), backgroundColorProperty );
+    Color backgroundColor = ThemeUtilities.checkBackgroundColor( getDisplay(), backgroundColorProperty );
     if( backgroundColor != null )
       m_backgroundColor = backgroundColor;
 
@@ -239,7 +239,7 @@ public class TextComposite extends Composite
       m_text = TextUtilities.checkText( textProperty );
 
     /* Check the font size. */
-    final int fontSize = TextUtilities.checkFontSize( fontSizeProperty );
+    int fontSize = TextUtilities.checkFontSize( fontSizeProperty );
     if( fontSize >= 1 && fontSize <= 35 )
       m_fontSize = fontSize;
 
@@ -253,14 +253,14 @@ public class TextComposite extends Composite
   private void createControls( )
   {
     /* Create the layout. */
-    final GridLayout layout = new GridLayout( 1, false );
+    GridLayout layout = new GridLayout( 1, false );
     layout.marginHeight = 0;
     layout.marginWidth = 0;
     super.setLayout( layout );
 
     /* The content. */
-    final Composite content = new Composite( this, SWT.NONE );
-    final GridLayout contentLayout = new GridLayout( 1, false );
+    Composite content = new Composite( this, SWT.NONE );
+    GridLayout contentLayout = new GridLayout( 1, false );
     contentLayout.marginHeight = 0;
     contentLayout.marginWidth = 0;
     content.setLayout( contentLayout );
@@ -271,10 +271,10 @@ public class TextComposite extends Composite
     m_main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Get the body of the form. */
-    final Composite body = m_main.getBody();
+    Composite body = m_main.getBody();
 
     /* Set the properties for the body of the form. */
-    final GridLayout bodyLayout = new GridLayout( 1, false );
+    GridLayout bodyLayout = new GridLayout( 1, false );
     bodyLayout.marginHeight = 0;
     bodyLayout.marginWidth = 0;
     body.setLayout( bodyLayout );
@@ -294,17 +294,17 @@ public class TextComposite extends Composite
    *          The parent composite.
    * @return The content composite.
    */
-  private Composite createContentComposite( final Composite parent )
+  private Composite createContentComposite( Composite parent )
   {
     /* Create a composite. */
-    final Composite contentComposite = new Composite( parent, SWT.NONE );
-    final GridLayout contentLayout = new GridLayout( 1, false );
+    Composite contentComposite = new Composite( parent, SWT.NONE );
+    GridLayout contentLayout = new GridLayout( 1, false );
     contentLayout.marginHeight = 0;
     contentLayout.marginWidth = 0;
     contentComposite.setLayout( contentLayout );
 
     /* Create the content internal composite. */
-    final Composite contentInternalComposite = createContentInternalComposite( contentComposite );
+    Composite contentInternalComposite = createContentInternalComposite( contentComposite );
     contentInternalComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     return contentComposite;
@@ -317,18 +317,18 @@ public class TextComposite extends Composite
    *          The parent composite.
    * @return The content internal composite.
    */
-  private Composite createContentInternalComposite( final Composite parent )
+  private Composite createContentInternalComposite( Composite parent )
   {
     /* Create a composite. */
-    final Composite contentInternalComposite = new Composite( parent, SWT.NONE );
+    Composite contentInternalComposite = new Composite( parent, SWT.NONE );
     contentInternalComposite.setLayout( new GridLayout( 1, false ) );
 
     /* Create the position composite. */
-    final Composite positionComposite = createPositionComposite( contentInternalComposite );
+    Composite positionComposite = createPositionComposite( contentInternalComposite );
     positionComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
     /* Create the text group. */
-    final Group textGroup = createTextGroup( contentInternalComposite );
+    Group textGroup = createTextGroup( contentInternalComposite );
     textGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     return contentInternalComposite;
@@ -341,17 +341,17 @@ public class TextComposite extends Composite
    *          The parent composite.
    * @return The position composite.
    */
-  private Composite createPositionComposite( final Composite parent )
+  private Composite createPositionComposite( Composite parent )
   {
     /* Create a composite. */
-    final PositionComposite positionComposite = new PositionComposite( parent, SWT.NONE, m_horizontal, m_vertical );
+    PositionComposite positionComposite = new PositionComposite( parent, SWT.NONE, m_horizontal, m_vertical );
     positionComposite.addPositionChangedListener( new IPositionChangedListener()
     {
       /**
        * @see org.kalypso.util.themes.position.listener.IPositionChangedListener#positionChanged(int, int)
        */
       @Override
-      public void positionChanged( final int horizontal, final int vertical )
+      public void positionChanged( int horizontal, int vertical )
       {
         m_horizontal = horizontal;
         m_vertical = vertical;
@@ -371,15 +371,15 @@ public class TextComposite extends Composite
    *          The parent composite.
    * @return The text group.
    */
-  private Group createTextGroup( final Composite parent )
+  private Group createTextGroup( Composite parent )
   {
     /* Create a group. */
-    final Group textGroup = new Group( parent, SWT.NONE );
+    Group textGroup = new Group( parent, SWT.NONE );
     textGroup.setLayout( new GridLayout( 3, false ) );
     textGroup.setText( "Optionen" );
 
     /* Create a label. */
-    final Label backgroundColorLabel = new Label( textGroup, SWT.NONE );
+    Label backgroundColorLabel = new Label( textGroup, SWT.NONE );
     backgroundColorLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
     backgroundColorLabel.setText( "Hintergrundfarbe" );
     backgroundColorLabel.setAlignment( SWT.LEFT );
@@ -402,13 +402,13 @@ public class TextComposite extends Composite
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( final SelectionEvent e )
+      public void widgetSelected( SelectionEvent e )
       {
-        final Shell shell = TextComposite.this.getShell();
+        Shell shell = TextComposite.this.getShell();
 
-        final ColorDialog dialog = new ColorDialog( shell );
+        ColorDialog dialog = new ColorDialog( shell );
         dialog.setRGB( m_backgroundColor.getRGB() );
-        final RGB rgb = dialog.open();
+        RGB rgb = dialog.open();
         if( rgb == null )
           return;
 
@@ -421,7 +421,7 @@ public class TextComposite extends Composite
     } );
 
     /* Create a button. */
-    final Button transparencyButton = new Button( textGroup, SWT.CHECK );
+    Button transparencyButton = new Button( textGroup, SWT.CHECK );
     transparencyButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 3, 1 ) );
     transparencyButton.setText( "Hintergrund transparent" );
     transparencyButton.setSelection( m_transparency );
@@ -431,9 +431,9 @@ public class TextComposite extends Composite
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( final SelectionEvent e )
+      public void widgetSelected( SelectionEvent e )
       {
-        final Button source = (Button) e.getSource();
+        Button source = (Button) e.getSource();
         backgroundLabel.setEnabled( !source.getSelection() );
         backgroundColorButton.setEnabled( !source.getSelection() );
         m_transparency = source.getSelection();
@@ -442,7 +442,7 @@ public class TextComposite extends Composite
     } );
 
     /* Create a label. */
-    final Label fontSizeLabel = new Label( textGroup, SWT.NONE );
+    Label fontSizeLabel = new Label( textGroup, SWT.NONE );
     fontSizeLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
     fontSizeLabel.setText( "Schriftgrad" );
     fontSizeLabel.setAlignment( SWT.LEFT );
@@ -457,7 +457,7 @@ public class TextComposite extends Composite
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( final SelectionEvent e )
+      public void widgetSelected( SelectionEvent e )
       {
         m_fontSize = fontSizeSpinner.getSelection();
         fireTextPropertyChanged( getProperties(), m_horizontal, m_vertical, m_backgroundColor, m_text, m_fontSize, m_transparency );
@@ -465,14 +465,14 @@ public class TextComposite extends Composite
     } );
 
     /* Create a label. */
-    final Label textLabel = new Label( textGroup, SWT.NONE );
+    Label textLabel = new Label( textGroup, SWT.NONE );
     textLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
     textLabel.setText( "Text" );
     textLabel.setAlignment( SWT.LEFT );
 
     /* Create a text field. */
-    final Text textText = new Text( textGroup, SWT.BORDER );
-    final GridData textData = new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 );
+    Text textText = new Text( textGroup, SWT.BORDER );
+    GridData textData = new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 );
     textData.widthHint = 250;
     textText.setLayoutData( textData );
     if( m_text != null )
@@ -486,9 +486,9 @@ public class TextComposite extends Composite
        * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
        */
       @Override
-      public void modifyText( final ModifyEvent e )
+      public void modifyText( ModifyEvent e )
       {
-        final Text source = (Text) e.getSource();
+        Text source = (Text) e.getSource();
         m_text = source.getText();
 
         fireTextPropertyChanged( getProperties(), m_horizontal, m_vertical, m_backgroundColor, m_text, m_fontSize, m_transparency );
@@ -504,7 +504,7 @@ public class TextComposite extends Composite
    * @param status
    *          A status, containing a message, which should be displayed in the upper area of the view. May be null.
    */
-  protected void update( final IStatus status )
+  protected void update( IStatus status )
   {
     /* Update nothing, when no form or no content is defined. */
     /* In this case the composite was never correct initialized. */
@@ -545,9 +545,9 @@ public class TextComposite extends Composite
    * @param transparency
    *          True, if the transparency is switched on.
    */
-  protected void fireTextPropertyChanged( final Properties properties, final int horizontal, final int vertical, final Color backgroundColor, final String text, final int fontSize, final boolean transparency )
+  protected void fireTextPropertyChanged( Properties properties, int horizontal, int vertical, Color backgroundColor, String text, int fontSize, boolean transparency )
   {
-    for( final ITextChangedListener listener : m_listener )
+    for( ITextChangedListener listener : m_listener )
       listener.textPropertyChanged( properties, horizontal, vertical, backgroundColor, text, fontSize, transparency );
   }
 
@@ -557,7 +557,7 @@ public class TextComposite extends Composite
    * @param listener
    *          The text changed listener to add.
    */
-  public void addTextChangedListener( final ITextChangedListener listener )
+  public void addTextChangedListener( ITextChangedListener listener )
   {
     if( !m_listener.contains( listener ) )
       m_listener.add( listener );
@@ -569,7 +569,7 @@ public class TextComposite extends Composite
    * @param listener
    *          The text changed listener to remove.
    */
-  public void removeTextChangedListener( final ITextChangedListener listener )
+  public void removeTextChangedListener( ITextChangedListener listener )
   {
     if( m_listener.contains( listener ) )
       m_listener.remove( listener );
@@ -583,17 +583,17 @@ public class TextComposite extends Composite
   public Properties getProperties( )
   {
     /* Create the properties object. */
-    final Properties properties = new Properties();
+    Properties properties = new Properties();
 
     /* Serialize the properties. */
-    final String horizontalProperty = String.format( Locale.PRC, "%d", m_horizontal );
-    final String verticalProperty = String.format( Locale.PRC, "%d", m_vertical );
-    final String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", m_backgroundColor.getRed(), m_backgroundColor.getGreen(), m_backgroundColor.getBlue() );
+    String horizontalProperty = String.format( Locale.PRC, "%d", m_horizontal );
+    String verticalProperty = String.format( Locale.PRC, "%d", m_vertical );
+    String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", m_backgroundColor.getRed(), m_backgroundColor.getGreen(), m_backgroundColor.getBlue() );
     String textProperty = null;
     if( m_text != null )
       textProperty = String.format( Locale.PRC, "%s", m_text );
-    final String fontSizeProperty = String.format( Locale.PRC, "%d", m_fontSize );
-    final String transparencyProperty = Boolean.toString( m_transparency );
+    String fontSizeProperty = String.format( Locale.PRC, "%d", m_fontSize );
+    String transparencyProperty = Boolean.toString( m_transparency );
 
     /* Add the properties. */
     properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );

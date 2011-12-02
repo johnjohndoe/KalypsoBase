@@ -191,9 +191,9 @@ public class GftTreeViewer
             selects.add( obj );
           else if( obj instanceof Feature )
             selects.add( obj );
-          else if( obj instanceof LinkedFeatureElement )
+          else if( obj instanceof LinkedFeatureElement2 )
           {
-            final LinkedFeatureElement lnk = (LinkedFeatureElement) obj;
+            final LinkedFeatureElement2 lnk = (LinkedFeatureElement2) obj;
             final Feature decoratedFeature = lnk.getDecoratedFeature();
             selects.add( decoratedFeature );
           }

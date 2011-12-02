@@ -61,7 +61,7 @@ public class MapExportableObjectFactory implements IExportableObjectFactory
   /**
    * The map panel.
    */
-  private final IMapPanel m_mapPanel;
+  private IMapPanel m_mapPanel;
 
   /**
    * The constructor.
@@ -69,7 +69,7 @@ public class MapExportableObjectFactory implements IExportableObjectFactory
    * @param mapPanel
    *          The map panel.
    */
-  public MapExportableObjectFactory( final IMapPanel mapPanel )
+  public MapExportableObjectFactory( IMapPanel mapPanel )
   {
     m_mapPanel = mapPanel;
   }
@@ -78,15 +78,15 @@ public class MapExportableObjectFactory implements IExportableObjectFactory
    * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
    */
   @Override
-  public IExportableObject[] createExportableObjects( final Configuration conf )
+  public IExportableObject[] createExportableObjects( Configuration conf )
   {
-    final String preferredDocumentName = m_mapPanel.getMapModell().getName().getValue();
-    final int width = conf.getInt( ImagePropertiesWizardPage.CONFIG_IMAGE_WIDTH, m_mapPanel.getWidth() );
-    final int height = conf.getInt( ImagePropertiesWizardPage.CONFIG_IMAGE_HEIGHT, m_mapPanel.getHeight() );
-    final Insets insets = (Insets) conf.getProperty( ImagePropertiesWizardPage.CONFIG_INSETS );
-    final boolean border = conf.getBoolean( ImagePropertiesWizardPage.CONFIG_HAS_BORDER, false );
-    final int borderWidth = border ? 1 : 0;
-    final String format = conf.getString( ImagePropertiesWizardPage.CONFIG_IMAGE_FORMAT, "PNG" );
+    String preferredDocumentName = m_mapPanel.getMapModell().getName().getValue();
+    int width = conf.getInt( ImagePropertiesWizardPage.CONFIG_IMAGE_WIDTH, m_mapPanel.getWidth() );
+    int height = conf.getInt( ImagePropertiesWizardPage.CONFIG_IMAGE_HEIGHT, m_mapPanel.getHeight() );
+    Insets insets = (Insets) conf.getProperty( ImagePropertiesWizardPage.CONFIG_INSETS );
+    boolean border = conf.getBoolean( ImagePropertiesWizardPage.CONFIG_HAS_BORDER, false );
+    int borderWidth = border ? 1 : 0;
+    String format = conf.getString( ImagePropertiesWizardPage.CONFIG_IMAGE_FORMAT, "PNG" );
 
     return new IExportableObject[] { new MapExportableObject( m_mapPanel, preferredDocumentName, width, height, insets, borderWidth, format ) };
   }
@@ -96,7 +96,7 @@ public class MapExportableObjectFactory implements IExportableObjectFactory
    *      ImageDescriptor)
    */
   @Override
-  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, final ImageDescriptor defaultImage )
+  public IWizardPage[] createWizardPages( IPublishingConfiguration configuration, ImageDescriptor defaultImage )
   {
     return new IWizardPage[] { new ImagePropertiesWizardPage( "ImagePropertiesWizardPage", "Karteneigenschaften", defaultImage, configuration, -1, -1, false, null, false, "PNG" ) };
   }

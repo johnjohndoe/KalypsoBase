@@ -116,7 +116,7 @@ public class LineColorMap_Impl implements LineColorMap
    * @see org.kalypsodeegree_impl.graphics.sld.LineColorMap#replaceColorMap(java.util.List)
    */
   @Override
-  public void replaceColorMap( final List<LineColorMapEntry> colorMapList )
+  public void replaceColorMap( List<LineColorMapEntry> colorMapList )
   {
     m_colorMap.clear();
     m_colorMap.addAll( colorMapList );

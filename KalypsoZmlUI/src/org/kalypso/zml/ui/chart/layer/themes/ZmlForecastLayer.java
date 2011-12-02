@@ -176,7 +176,7 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
   }
 
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Number> getDomainRange( )
   {
     // TODO: all three parameters should eventually be set from outside
     final boolean shouldAutomax = true;
@@ -200,7 +200,7 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
   }
 
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     return null;
   }

@@ -91,7 +91,7 @@ class GM_LineString_Impl extends GM_CurveSegment_Impl implements GM_LineString, 
       e.printStackTrace();
     }
 
-    throw new IllegalStateException();
+    throw (new IllegalStateException());
   }
 
   /**

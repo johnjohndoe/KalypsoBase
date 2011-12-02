@@ -42,8 +42,8 @@ import org.kalypsodeegree.graphics.sld.Drawing;
 import org.kalypsodeegree.graphics.sld.GraphicFill;
 
 /**
- * This is the top level interface of <tt>Fill</tt> and <tt>Stroke</tt> defining the methods <tt>getGraphicFill()</tt>
- * and <tt>getCssParameters()</tt> that are common to both.
+ * This is the top level interface of <tt>Fill</tt> and <tt>Stroke</tt> defining the methods
+ * <tt>getGraphicFill()</tt> and <tt>getCssParameters()</tt> that are common to both.
  * <p>
  * 
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
@@ -109,9 +109,9 @@ public class Drawing_Impl implements Drawing
    * <p>
    * 
    * @param key
-   *          the key of the object to insert
+   *            the key of the object to insert
    * @param value
-   *          the value of the object to insert
+   *            the value of the object to insert
    */
   @Override
   public void addCssParameter( final String key, final CssParameter value )
@@ -125,7 +125,7 @@ public class Drawing_Impl implements Drawing
    * This method adds a CssParameter to a given set of CssParameters.
    * 
    * @param key
-   *          the key of the object to remove
+   *            the key of the object to remove
    */
   @Override
   public void removeCssParameter( final String key )

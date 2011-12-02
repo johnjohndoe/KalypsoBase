@@ -127,7 +127,8 @@ public class WQRelationDiagramViewer extends Composite
       axmaps[0] = new AxisMapping( obs.getAxes()[0], diagramAxisFrom );
       axmaps[1] = new AxisMapping( obs.getAxes()[1], diagramAxisTo );
 
-      final DiagViewCurve curve = new DiagViewCurve( m_diagView, new PlainObsProvider( obs, null ), obs.getName(), ColorUtilities.random(), null, axmaps );
+      final DiagViewCurve curve = new DiagViewCurve( m_diagView, new PlainObsProvider( obs, null ), obs.getName(),
+          ColorUtilities.random(), null, axmaps );
 
       m_chart.getObservationPlot().addCurve( curve );
     }

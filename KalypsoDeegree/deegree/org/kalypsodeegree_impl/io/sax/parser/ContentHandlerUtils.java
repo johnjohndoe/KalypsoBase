@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.parser;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.contribs.org.xml.sax.AttributesUtilities;
 import org.xml.sax.Attributes;
 
