@@ -46,6 +46,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
+import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
@@ -63,6 +64,9 @@ public final class AxisUtils implements ITimeseriesConstants
 
   public static boolean isDateAxis( final IAxis axis )
   {
+    if( Objects.isNull( axis ) )
+      return false;
+
     return isDateAxis( axis.getType() );
   }
 
@@ -73,6 +77,9 @@ public final class AxisUtils implements ITimeseriesConstants
 
   public static boolean isValueAxis( final IAxis axis )
   {
+    if( Objects.isNull( axis ) )
+      return false;
+
     if( isDateAxis( axis ) )
       return false;
     else if( isDataSrcAxis( axis ) )
@@ -88,6 +95,9 @@ public final class AxisUtils implements ITimeseriesConstants
 
   public static boolean isStatusAxis( final IAxis axis )
   {
+    if( Objects.isNull( axis ) )
+      return false;
+
     return isStatusAxis( axis.getType() );
   }
 
@@ -98,6 +108,9 @@ public final class AxisUtils implements ITimeseriesConstants
 
   public static boolean isDataSrcAxis( final IAxis axis )
   {
+    if( Objects.isNull( axis ) )
+      return false;
+
     return isDataSrcAxis( axis.getType() );
   }
 
@@ -124,6 +137,9 @@ public final class AxisUtils implements ITimeseriesConstants
 
   public static IAxis findDataSourceAxis( final IAxis[] axes, final IAxis valueAxis )
   {
+    if( Arrays.isEmpty( axes ) || Objects.isNull( valueAxis ) )
+      return null;
+
     /** fallback = old behavior of finding data source axes */
     IAxis fallback = null;
 
@@ -148,6 +164,9 @@ public final class AxisUtils implements ITimeseriesConstants
    */
   private static boolean isPlainDataSourceAxis( final IAxis axis )
   {
+    if( Objects.isNull( axis ) )
+      return false;
+
     if( !isDataSrcAxis( axis ) )
       return false;
 
@@ -161,6 +180,7 @@ public final class AxisUtils implements ITimeseriesConstants
       if( isDateAxis( axis ) )
         return axis;
     }
+
     return null;
   }
 
@@ -200,6 +220,9 @@ public final class AxisUtils implements ITimeseriesConstants
 
   public static IAxis findStatusAxis( final IAxis[] axes, final IAxis valueAxis )
   {
+    if( Arrays.isEmpty( axes ) || Objects.isNull( valueAxis ) )
+      return null;
+
     return KalypsoStatusUtils.findStatusAxisFor( axes, valueAxis );
 
   }
