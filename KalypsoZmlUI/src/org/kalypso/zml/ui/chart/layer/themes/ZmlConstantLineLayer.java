@@ -47,11 +47,11 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.xmlbeans.XmlException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.utils.ConfigUtils;
@@ -138,10 +138,6 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
     try
     {
       updateDescriptors();
-    }
-    catch( final XmlException e )
-    {
-      e.printStackTrace();
     }
     catch( final IOException e )
     {
@@ -231,7 +227,7 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
     }
   }
 
-  private void updateDescriptors( ) throws XmlException, IOException
+  private void updateDescriptors( ) throws  IOException
   {
     if( Objects.isNull( m_handler ) )
       return;
@@ -259,9 +255,24 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
   /**
    * differ between generic global .kod alarmstufen definition and special alarmstufen.kod
    */
-  private IMetadataLayerBoundary[] buildBoundaries( final IObservation observation ) throws XmlException, IOException
+  private IMetadataLayerBoundary[] buildBoundaries( final IObservation observation ) throws  IOException
   {
     final MetadataList metadata = observation.getMetadataList();
+
+    final URL url = ConfigUtils.findCentralConfigLocation( "layers/grenzwerte/alarmstufen.kod" ); //$NON-NLS-1$
+
+    try
+    {
+      final KodBoundaryLayerProvider provider = new KodBoundaryLayerProvider( metadata, url, getDataHandler().getTargetAxisId() );
+      final IMetadataLayerBoundary[] boundaries = provider.getBoundaries();
+      if( !Arrays.isEmpty( boundaries ) )
+        return boundaries;
+    } 
+    catch( final Exception ex )
+    {
+      ex.printStackTrace();
+    }
+
     final IParameterContainer parameters = getProvider().getParameterContainer();
     if( Objects.isNotNull( parameters ) )
     {
@@ -271,10 +282,8 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
       return builder.getBoundaries( m_handler.getTargetAxisId() );
     }
 
-    final URL url = ConfigUtils.findCentralConfigLocation( "layers/grenzwerte/alarmstufen.kod" ); //$NON-NLS-1$
+    return new IMetadataLayerBoundary[] {};
 
-    final KodBoundaryLayerProvider provider = new KodBoundaryLayerProvider( metadata, url, getDataHandler().getTargetAxisId() );
-    return provider.getBoundaries();
   }
 
   @Override

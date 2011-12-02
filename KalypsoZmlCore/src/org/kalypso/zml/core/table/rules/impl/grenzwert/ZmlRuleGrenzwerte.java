@@ -58,12 +58,11 @@ public class ZmlRuleGrenzwerte extends AbstractZmlTableRule
 {
   public static final String ID = "org.kalypso.zml.ui.core.rule.grenzwerte"; //$NON-NLS-1$
 
-  /**
-   * @see org.kalypso.zml.ui.core.rules.IZmlTableRule#apply(org.kalypso.zml.ui.table.model.references.IZmlValueReference)
-   */
   @Override
   protected boolean doApply( final ZmlRule rule, final IZmlValueReference reference )
   {
+//    System.out.println( rule.getIdentifier() );
+
     final AbstractZmlRuleInstructionType[] instructions = rule.getInstructions();
     for( final AbstractZmlRuleInstructionType instruction : instructions )
     {
