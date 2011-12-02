@@ -186,7 +186,7 @@ public class ZmlTablePager
     viewer.reveal( row );
 
     // FIXME AbstractCellCursor has to listen to reveal events
-    new UIJob( "" )
+    final UIJob job = new UIJob( "Aktualisere Tabellen-Cursor" )
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -195,7 +195,11 @@ public class ZmlTablePager
 
         return Status.OK_STATUS;
       }
-    }.schedule();
+    };
+    job.setSystem( true );
+    job.setUser( false );
+
+    job.schedule(0);
   }
 
   private Date findForecastDate( )
