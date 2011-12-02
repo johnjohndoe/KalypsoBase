@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.proxy;
 
@@ -51,7 +51,7 @@ import org.kalypso.ogc.sensor.request.IRequest;
  * 
  * @author schlienger
  */
-public class RequestObservationProxy extends AbstractObservationDecorator implements IObservationProxy
+public class RequestObservationProxy extends AbstractObservationDecorator
 {
   private final IRequest m_args;
 
@@ -62,16 +62,12 @@ public class RequestObservationProxy extends AbstractObservationDecorator implem
     m_args = args;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
-   */
   @Override
   public ITupleModel getValues( final IRequest args ) throws SensorException
   {
     if( args == null )
       return m_obs.getValues( m_args );
 
-    // TODO if m_args!=null: they are not used at all, check policy here
     return m_obs.getValues( args );
   }
 }
