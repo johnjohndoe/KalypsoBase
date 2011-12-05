@@ -45,6 +45,7 @@ import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
 import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
@@ -102,7 +103,11 @@ public class DebugZmlModelContentProvider extends ArrayTreeContentProvider
       return ArrayUtils.isNotEmpty( rule.getInstructions() );
     }
     else if( element instanceof IZmlTableColumn )
-      return true;
+    {
+      final IZmlTableColumn tableColumn = (IZmlTableColumn) element;
+
+      return Objects.isNotNull( tableColumn.getModelColumn() );
+    }
 
     return super.hasChildren( element );
   }
