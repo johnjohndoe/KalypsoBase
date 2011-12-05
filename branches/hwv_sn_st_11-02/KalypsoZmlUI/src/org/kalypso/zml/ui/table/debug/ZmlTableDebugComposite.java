@@ -54,12 +54,9 @@ import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 public class ZmlTableDebugComposite extends Composite
 {
 
-  private final FormToolkit m_toolkit;
-
   public ZmlTableDebugComposite( final Composite parent, final FormToolkit toolkit, final IZmlTableColumn[] columns )
   {
     super( parent, SWT.NULL );
-    m_toolkit = toolkit;
 
     setLayout( LayoutHelper.createGridLayout() );
     print( toolkit, columns );
