@@ -187,6 +187,11 @@
           id="org.kalypso.zml.ui.table.commands.toolbar.tooltip"
           name="Tooltip ausschalten">
     </command>
+    <command
+          categoryId="org.kalypso.zml.ui.table.commands.category"
+          id="org.kalypso.zml.ui.table.commands.debug.dialog"
+          name="Debug-Dialog">
+    </command>
  </extension>
  <extension
        point="org.eclipse.ui.handlers">
@@ -251,6 +256,10 @@
           class="org.kalypso.zml.ui.table.commands.toolbar.view.DisableTooltipHandler"
           commandId="org.kalypso.zml.ui.table.commands.toolbar.tooltip">
     </handler>
+    <handler
+          class="org.kalypso.zml.ui.table.debug.OpenDebugDialogHandler"
+          commandId="org.kalypso.zml.ui.table.commands.debug.dialog">
+    </handler>
  </extension>
   <extension
        point="org.eclipse.ui.commandImages">
@@ -301,6 +310,10 @@
     <image
           commandId="org.kalypso.zml.ui.table.commands.toolbar.view.data.sources"
           icon="icons/table/data_source.png">
+    </image>
+    <image
+          commandId="org.kalypso.zml.ui.table.commands.debug.dialog"
+          icon="icons/table/debug.png">
     </image>
  </extension>
  <extension
@@ -410,5 +423,17 @@
            filter="org.kalypso.zml.ui.chart.layer.filters.ZmlStuetzstellenChartLayerFilter"
            id="org.kalypso.chart.layer.filter.stuetzstelle">
      </filter>
+ </extension>
+ 
+  <extension
+       point="org.eclipse.ui.menus">
+    <menuContribution
+          allPopups="false"
+          locationURI="toolbar:org.kalypso.zml.ui.table.commands.debug">
+       <command
+             commandId="org.kalypso.zml.ui.table.commands.debug.dialog"
+             style="push">
+       </command>
+    </menuContribution>
  </extension>
 </plugin>

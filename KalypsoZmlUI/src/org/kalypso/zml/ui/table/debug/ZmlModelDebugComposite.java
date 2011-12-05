@@ -38,21 +38,44 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.debug;
+package org.kalypso.zml.ui.table.debug;
 
-import org.kalypso.contribs.eclipse.core.runtime.Debug;
-import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
+import org.kalypso.zml.core.table.model.IZmlModel;
 
 /**
  * @author Dirk Kuch
  */
-public final class KalypsoZmlUiDebug
+public class ZmlModelDebugComposite extends Composite
 {
-  public static final Debug DEBUG_TABLE_RENDERING = new Debug( KalypsoZmlUI.getDefault(), "/debug/table/rendering" ); //$NON-NLS-1$
 
-  public static final Debug DEBUG_TABLE_DIALOG = new Debug( KalypsoZmlUI.getDefault(), "/debug/table/debug" ); //$NON-NLS-1$
-
-  private KalypsoZmlUiDebug( )
+  public ZmlModelDebugComposite( final Composite parent, final FormToolkit toolkit, final IZmlModel dataModel )
   {
+    super( parent, SWT.NULL );
+
+    setLayout( LayoutHelper.createGridLayout() );
+    print( toolkit, dataModel );
+
+    toolkit.adapt( this );
   }
+
+  private void print( final FormToolkit toolkit, final IZmlModel model )
+  {
+    toolkit.createLabel( this, "ZmlModel" ); //$NON-NLS-1$
+
+    final TreeViewer viewer = new TreeViewer( this );
+    viewer.getTree().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+
+    viewer.setContentProvider( new DebugZmlModelContentProvider() );
+    viewer.setLabelProvider( new DebugZmlModelLabelProvider() );
+
+    viewer.setInput( model.getColumns() );
+
+  }
+
 }
