@@ -82,6 +82,7 @@ import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.ZmlModel;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
+import org.kalypso.zml.ui.debug.KalypsoZmlUiDebug;
 import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
 import org.kalypso.zml.ui.table.focus.IZmlTableFocusHandler;
 import org.kalypso.zml.ui.table.focus.ZmlTableFocusCellHandler;
@@ -232,24 +233,35 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   private void initToolbar( final ZmlTableType tableType, final Composite composite, final FormToolkit toolkit )
   {
     /** process as job in order to handle toolbar IElementUpdate job actions */
-    final List<String> toolbarReferences = tableType.getToolbar();
-    if( toolbarReferences == null || toolbarReferences.isEmpty() )
+    final String[] references = getToolbarCommandReferences( tableType );
+    if( ArrayUtils.isEmpty( references ) && !KalypsoZmlUiDebug.DEBUG_TABLE_DIALOG.isEnabled() )
       return;
 
     final ToolBarManager toolBarManager = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT | SWT.RIGHT );
-
     final ToolBar control = toolBarManager.createControl( composite );
     control.setLayoutData( new GridData( SWT.RIGHT, SWT.FILL, true, false ) );
 
-    for( final String reference : toolbarReferences )
+    for( final String reference : references )
     {
       ContributionUtils.populateContributionManager( PlatformUI.getWorkbench(), toolBarManager, reference );
     }
+
+    if( KalypsoZmlUiDebug.DEBUG_TABLE_DIALOG.isEnabled() )
+      ContributionUtils.populateContributionManager( PlatformUI.getWorkbench(), toolBarManager, "toolbar:org.kalypso.zml.ui.table.commands.debug" ); //$NON-NLS-1$
 
     toolBarManager.update( true );
     toolkit.adapt( control );
 
     composite.getParent().layout( true, true );
+  }
+
+  private String[] getToolbarCommandReferences( final ZmlTableType tableType )
+  {
+    final List<String> references = tableType.getToolbar();
+    if( Objects.isNull( references ) )
+      return new String[] {};
+
+    return references.toArray( new String[] {} );
   }
 
   private void addEmptyColumn( )
