@@ -38,43 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.debug;
+package org.kalypso.auth;
 
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.auth.user.IKalypsoUser;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableDebugComposite extends Composite
+public interface IKalypsoAuthListener
 {
-
-  public ZmlTableDebugComposite( final Composite parent, final FormToolkit toolkit, final IZmlTableColumn[] columns )
-  {
-    super( parent, SWT.NULL );
-
-    setLayout( LayoutHelper.createGridLayout() );
-    print( toolkit, columns );
-
-    toolkit.adapt( this );
-  }
-
-  private void print( final FormToolkit toolkit, final IZmlTableColumn[] columns )
-  {
-    toolkit.createLabel( this, "Zml Table Columns" ); //$NON-NLS-1$
-
-    final TreeViewer viewer = new TreeViewer( this );
-    viewer.getTree().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-
-    viewer.setContentProvider( new DebugZmlModelContentProvider() );
-    viewer.setLabelProvider( new DebugZmlModelLabelProvider() );
-
-    viewer.setInput( columns );
-  }
-
+  void eventCurrentUserChanged( IKalypsoUser user );
 }
