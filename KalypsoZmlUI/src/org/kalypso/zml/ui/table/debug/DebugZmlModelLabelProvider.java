@@ -42,6 +42,7 @@ package org.kalypso.zml.ui.table.debug;
 
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.TableColumn;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.zml.core.table.binding.rule.ZmlRule;
@@ -57,6 +58,30 @@ import org.kalypso.zml.ui.table.provider.AppliedRule;
  */
 public class DebugZmlModelLabelProvider extends LabelProvider implements IBaseLabelProvider
 {
+  private static final Image IMG_TABLE_COLUMN = new Image( null, DebugZmlModelLabelProvider.class.getResourceAsStream( "icons/table.png" ) ); //$NON-NLS-1$
+
+  private static final Image IMG_MODEL_COLUMN = new Image( null, DebugZmlModelLabelProvider.class.getResourceAsStream( "icons/model.png" ) ); //$NON-NLS-1$
+
+  private static final Image IMG_AXIS = new Image( null, DebugZmlModelLabelProvider.class.getResourceAsStream( "icons/achsen.png" ) ); //$NON-NLS-1$
+
+  private static final Image IMG_RULE = new Image( null, DebugZmlModelLabelProvider.class.getResourceAsStream( "icons/regel.png" ) ); //$NON-NLS-1$
+
+  @Override
+  public Image getImage( final Object element )
+  {
+    if( element instanceof IZmlTableColumn )
+      return IMG_TABLE_COLUMN;
+    else if( element instanceof IZmlModelColumn )
+      return IMG_MODEL_COLUMN;
+    else if( element instanceof IAxis )
+      return IMG_AXIS;
+    else if( element instanceof ZmlRule )
+      return IMG_RULE;
+    else if( element instanceof AppliedRule )
+      return IMG_RULE;
+
+    return super.getImage( element );
+  }
 
   @Override
   public String getText( final Object element )

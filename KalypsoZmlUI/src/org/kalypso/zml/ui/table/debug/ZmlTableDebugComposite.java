@@ -69,7 +69,7 @@ public class ZmlTableDebugComposite extends Composite
 
   private void print( final FormToolkit toolkit, final IZmlTableColumn[] columns )
   {
-    toolkit.createLabel( this, "ZmlModel" ); //$NON-NLS-1$
+    toolkit.createLabel( this, "Zml Table Columns" ); //$NON-NLS-1$
 
     final TreeViewer viewer = new TreeViewer( this );
     viewer.getTree().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );

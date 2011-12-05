@@ -108,11 +108,11 @@ public class ZmlTableDebugDialog extends EnhancedTitleAreaDialog
       }
     } );
 
-    final ZmlModelDebugComposite debugModel = new ZmlModelDebugComposite( base, toolkit, m_table.getDataModel() );
-    debugModel.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-
     final ZmlTableDebugComposite debugColumns = new ZmlTableDebugComposite( base, toolkit, m_table.getColumns() );
     debugColumns.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+
+    final ZmlModelDebugComposite debugModel = new ZmlModelDebugComposite( base, toolkit, m_table.getDataModel() );
+    debugModel.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     return super.createDialogArea( parent );
   }
