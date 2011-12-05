@@ -427,7 +427,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
       // FIXME improve update value handling
       final IObservation observation = m_handler.getObservation();
       observation.setValues( getTupleModel() );
-      observation.fireChangedEvent( this );// TODO Auto-generated method stub
+      observation.fireChangedEvent( this );
 
     }
     catch( final Exception ex )

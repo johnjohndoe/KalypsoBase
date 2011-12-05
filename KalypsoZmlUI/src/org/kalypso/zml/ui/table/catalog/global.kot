@@ -277,22 +277,22 @@
     </Rule>
     <Rule id="ruleAlarmstufen" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="false">
       <RuleInstructions>
-        <MetadataBoundaryInstruction from="Grenzwert_W: Alarmstufe_1" opFrom="&gt;=" to="Grenzwert_W: Alarmstufe_2" label="AS1 ${text}" severity="10" tooltip="Überschreitung Alarmstufe 1">
+        <MetadataBoundaryInstruction from="Grenzwert_W: Alarmstufe 1" opFrom="&gt;=" to="Grenzwert_W: Alarmstufe 2" label="AS1 ${text}" severity="10" tooltip="Überschreitung Alarmstufe 1">
           <styleReference>
             <reference>alarmstufe_1</reference>
           </styleReference>
         </MetadataBoundaryInstruction>
-        <MetadataBoundaryInstruction from="Grenzwert_W: Alarmstufe_2" opFrom="&gt;=" to="Grenzwert_W: Alarmstufe_3" label="AS2 ${text}" severity="20" tooltip="Überschreitung Alarmstufe 2">
+        <MetadataBoundaryInstruction from="Grenzwert_W: Alarmstufe 2" opFrom="&gt;=" to="Grenzwert_W: Alarmstufe 3" label="AS2 ${text}" severity="20" tooltip="Überschreitung Alarmstufe 2">
           <styleReference>
             <reference>alarmstufe_2</reference>
           </styleReference>
         </MetadataBoundaryInstruction>
-        <MetadataBoundaryInstruction from="Grenzwert_W: Alarmstufe_3" opFrom="&gt;=" to="Grenzwert_W: Alarmstufe_4" label="AS3 ${text}" severity="30" tooltip="Überschreitung Alarmstufe 3">
+        <MetadataBoundaryInstruction from="Grenzwert_W: Alarmstufe 3" opFrom="&gt;=" to="Grenzwert_W: Alarmstufe 4" label="AS3 ${text}" severity="30" tooltip="Überschreitung Alarmstufe 3">
           <styleReference>
             <reference>alarmstufe_3</reference>
           </styleReference>
         </MetadataBoundaryInstruction>
-        <MetadataBoundaryInstruction from="Grenzwert_W: Alarmstufe_4" opFrom="&gt;=" label="AS4 ${text}" severity="40" tooltip="Überschreitung Alarmstufe 4">
+        <MetadataBoundaryInstruction from="Grenzwert_W: Alarmstufe 4" opFrom="&gt;=" label="AS4 ${text}" severity="40" tooltip="Überschreitung Alarmstufe 4">
           <styleReference>
             <reference>alarmstufe_4</reference>
           </styleReference>
