@@ -297,5 +297,4 @@ public class MapPanelSourceProvider extends AbstractSourceProvider
       e.printStackTrace();
     }
   }
-
 }
