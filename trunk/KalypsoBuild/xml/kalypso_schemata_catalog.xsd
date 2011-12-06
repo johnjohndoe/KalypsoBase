@@ -12,7 +12,7 @@
   <nextCatalog catalog="platform:/resource/KalypsoHwvCore/etc/schemes/catalog.xml" />
   <nextCatalog catalog="platform:/resource/OdysseusChartFactory/etc/binding/schema/catalog.xml" />
   <nextCatalog catalog="platform:/resource/KalypsoModelNA/src/org/kalypso/convert/namodel/schema/catalog.xml" />
-  <nextCatalog catalog="platform:/resource/KalypsoZmlCore/etc/schemas/catalog.xmlcatalog" />
+  <nextCatalog catalog="platform:/resource/KalypsoZmlCore/etc/schemas/catalog.xml" />
   <nextCatalog catalog="platform:/resource/KalypsoMapServer/etc/mapfile/catalog.xml" />
   <nextCatalog catalog="platform:/resource/KalypsoPlanerClientBase/catalog.xmlcatalog" />
   <nextCatalog catalog="platform:/resource/KalypsoModelRCM/src/org/kalypso/model/rcm/internal/schema/catalog.xml" />
