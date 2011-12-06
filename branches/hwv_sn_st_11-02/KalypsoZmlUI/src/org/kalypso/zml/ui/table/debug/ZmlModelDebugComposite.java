@@ -66,7 +66,7 @@ public class ZmlModelDebugComposite extends Composite
 
   private void print( final FormToolkit toolkit, final IZmlModel model )
   {
-    toolkit.createLabel( this, "Zml Model Columns" ); //$NON-NLS-1$
+    toolkit.createLabel( this, "Model Columns" ); //$NON-NLS-1$
 
     final TreeViewer viewer = new TreeViewer( this );
     viewer.getTree().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
