@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.wq.wechmann;
 
+import java.util.Date;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -47,6 +48,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.metadata.IMetadataConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 
@@ -60,99 +62,90 @@ public class WQWechmannBoundaryHandler implements ICoreRunnableWithProgress
 
   private final WechmannGroup m_group;
 
-  public WQWechmannBoundaryHandler( final WechmannGroup group, final MetadataList metadata )
+  private final DateRange m_dateRange;
+
+  public WQWechmannBoundaryHandler( final WechmannGroup group, final MetadataList metadata, final DateRange dateRange )
   {
     m_group = group;
     m_metadata = metadata;
+    m_dateRange = dateRange;
   }
 
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
-    final Double qMin = getQMin( m_group );
+    final WechmannSet set = findSet();
+    if( Objects.isNull( set ) )
+      return Status.CANCEL_STATUS;
+
+    final Double qMin = getQMin( set );
     if( Objects.isNotNull( qMin ) )
       m_metadata.setProperty( IMetadataConstants.WQ_BOUNDARY_Q_MIN, qMin.toString() );
 
-    final Double qMax = getQMax( m_group );
+    final Double qMax = getQMax( set );
     if( Objects.isNotNull( qMax ) )
       m_metadata.setProperty( IMetadataConstants.WQ_BOUNDARY_Q_MAX, qMax.toString() );
 
-    final Double wMin = getWMin( m_group );
+    final Double wMin = getWMin( set );
     if( Objects.isNotNull( wMin ) )
       m_metadata.setProperty( IMetadataConstants.WQ_BOUNDARY_W_MIN, wMin.toString() );
 
-    final Double wMax = getWMax( m_group );
+    final Double wMax = getWMax( set );
     if( Objects.isNotNull( wMax ) )
       m_metadata.setProperty( IMetadataConstants.WQ_BOUNDARY_W_MAX, wMax.toString() );
 
     return Status.OK_STATUS;
   }
 
-  private Double getQMax( final WechmannGroup group )
+  private WechmannSet findSet( )
   {
-    Double ptr = null;
+    final long requestFrom = m_dateRange.getFrom().getTime();
 
-    final Iterator<WechmannSet> iterator = group.iterator();
+    double diff = Double.MAX_VALUE;
+    WechmannSet ptr = null;
+
+    final Iterator<WechmannSet> iterator = m_group.iterator();
     while( iterator.hasNext() )
     {
       final WechmannSet set = iterator.next();
-      final WechmannParams parameter = set.getMax();
+      final Date validity = set.getValidity();
 
-      final double max = parameter.getQ4WGR();
-      ptr = Math.max( (Double) Objects.firstNonNull( ptr, max ), max );
+      final double d = Math.abs( validity.getTime() - requestFrom );
+      if( d < diff )
+      {
+        diff = d;
+        ptr = set;
+      }
     }
 
     return ptr;
   }
 
-  private Double getQMin( final WechmannGroup group )
+  private Double getQMax( final WechmannSet set )
   {
-    Double ptr = null;
+    final WechmannParams parameter = set.getMax();
 
-    final Iterator<WechmannSet> iterator = group.iterator();
-    while( iterator.hasNext() )
-    {
-      final WechmannSet set = iterator.next();
-      final WechmannParams parameter = set.getMax();
-
-      final Double min = parameter.getQ4W1();
-      ptr = Math.min( (Double) Objects.firstNonNull( ptr, min ), min );
-    }
-
-    return ptr;
+    return parameter.getQ4WGR();
   }
 
-  private Double getWMax( final WechmannGroup group )
+  private Double getQMin( final WechmannSet set )
   {
-    Double ptr = null;
+    final WechmannParams parameter = set.getMax();
 
-    final Iterator<WechmannSet> iterator = group.iterator();
-    while( iterator.hasNext() )
-    {
-      final WechmannSet set = iterator.next();
-      final WechmannParams parameter = set.getMax();
-
-      final double max = parameter.getWGR();
-      ptr = Math.max( (Double) Objects.firstNonNull( ptr, max ), max );
-    }
-
-    return ptr;
+    return parameter.getQ4W1();
   }
 
-  private Double getWMin( final WechmannGroup group )
+  private Double getWMax( final WechmannSet set )
   {
-    Double ptr = null;
+    final WechmannParams parameter = set.getMax();
 
-    final Iterator<WechmannSet> iterator = group.iterator();
-    while( iterator.hasNext() )
-    {
-      final WechmannSet set = iterator.next();
-      final WechmannParams parameter = set.getMax();
+    return parameter.getWGR();
+  }
 
-      final Double min = parameter.getW1();
-      ptr = Math.min( (Double) Objects.firstNonNull( ptr, min ), min );
-    }
+  private Double getWMin( final WechmannSet set )
+  {
+    final WechmannParams parameter = set.getMax();
 
-    return ptr;
+    return parameter.getW1();
   }
 }
