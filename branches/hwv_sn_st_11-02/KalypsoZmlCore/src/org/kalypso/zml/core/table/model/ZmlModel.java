@@ -58,6 +58,7 @@ import org.kalypso.zml.core.table.model.loader.ZmlModelColumnLoader;
 import org.kalypso.zml.core.table.model.loader.ZmlRowBuilder;
 import org.kalypso.zml.core.table.model.memento.IZmlMemento;
 import org.kalypso.zml.core.table.model.memento.ZmlMemento;
+import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 
@@ -79,6 +80,8 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
   private final URL m_context;
 
   ZmlModelColumnLoader m_loader;
+
+  private Map<String, AbstractColumnType> m_columnTypeMap;
 
   public ZmlModel( final ZmlTableType type, final URL context )
   {
@@ -267,5 +270,15 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
   public ZmlModelColumnLoader getLoader( )
   {
     return m_loader;
+  }
+
+  protected void setColumnTypeMap( final Map<String, AbstractColumnType> map )
+  {
+    m_columnTypeMap = map;
+  }
+
+  public AbstractColumnType getColumnType( final String id )
+  {
+    return m_columnTypeMap.get( id );
   }
 }

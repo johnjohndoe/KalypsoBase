@@ -40,9 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.base.helper;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.IZmlTableRow;
 import org.kalypso.zml.ui.table.model.ZmlTableRow;
 
@@ -64,6 +66,22 @@ public final class ZmlTables
     }
 
     return null;
+  }
+
+  /**
+   * @param identifier
+   *          column identifier
+   */
+  public static boolean hasColumn( final IZmlTable table, final String identifier )
+  {
+    final IZmlTableColumn[] columns = table.getColumns();
+    for( final IZmlTableColumn column : columns )
+    {
+      if( StringUtils.equals( column.getColumnType().getIdentifier(), identifier ) )
+        return true;
+    }
+
+    return false;
   }
 
 }

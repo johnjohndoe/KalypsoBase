@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.diagram.base.zml;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -64,7 +64,7 @@ public class MultipleTsLinkBuilder
       return new MultipleTsLink[] {};
 
     final TSLinkWithName[] links = m_delegate.getLinks();
-    final Map<String, MultipleTsLink> map = new HashMap<String, MultipleTsLink>();
+    final Map<String, MultipleTsLink> map = new LinkedHashMap<String, MultipleTsLink>();
 
     for( final TSLinkWithName link : links )
     {

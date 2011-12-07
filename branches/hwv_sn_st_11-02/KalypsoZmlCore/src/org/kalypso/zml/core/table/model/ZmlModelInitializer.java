@@ -41,6 +41,7 @@
 package org.kalypso.zml.core.table.model;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -79,10 +80,31 @@ public class ZmlModelInitializer implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
+
+    doInitColumnTypes();
+    doLoadColumns();
+
+    return Status.OK_STATUS;
+  }
+
+  private void doInitColumnTypes( )
+  {
+    final Map<String, AbstractColumnType> map = new LinkedHashMap<String, AbstractColumnType>();
+
+    final List<JAXBElement< ? extends AbstractColumnType>> columnTypes = m_model.getTableType().getColumns().getAbstractColumn();
+    for( final JAXBElement< ? extends AbstractColumnType> columnType : columnTypes )
+    {
+      final AbstractColumnType column = columnType.getValue();
+      map.put( column.getId(), column );
+    }
+
+    m_model.setColumnTypeMap( map );
+  }
+
+  private void doLoadColumns( )
+  {
     final Map<String, Set<DataSourcePropertyType>> map = getSources();
-
     final Set<Entry<String, Set<DataSourcePropertyType>>> entries = map.entrySet();
-
     for( final Entry<String, Set<DataSourcePropertyType>> entry : entries )
     {
       synchronized( this )
@@ -118,7 +140,6 @@ public class ZmlModelInitializer implements ICoreRunnableWithProgress
       }
     }
 
-    return Status.OK_STATUS;
   }
 
   private void appendColumnType( final AbstractColumnType type )

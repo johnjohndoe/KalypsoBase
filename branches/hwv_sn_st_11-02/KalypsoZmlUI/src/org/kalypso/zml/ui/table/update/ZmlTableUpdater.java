@@ -49,12 +49,14 @@ import org.kalypso.zml.core.diagram.base.zml.TSLinkWithName;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.IClonedColumn;
 import org.kalypso.zml.core.table.binding.TableTypes;
+import org.kalypso.zml.core.table.model.ZmlModel;
 import org.kalypso.zml.core.table.model.memento.ILabeledObsProvider;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
+import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.ui.core.element.ZmlLinkDiagramElement;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.ZmlTableColumnBuilder;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.base.helper.ZmlTables;
 
 /**
  * @author Dirk Kuch
@@ -71,9 +73,6 @@ public class ZmlTableUpdater implements Runnable
     m_links = links;
   }
 
-  /**
-   * @see java.lang.Runnable#run()
-   */
   @Override
   public void run( )
   {
@@ -86,73 +85,48 @@ public class ZmlTableUpdater implements Runnable
       if( ArrayUtils.isEmpty( links ) )
         continue;
 
-      final String identifier = multipleLink.getIdentifier();
+      final String baseTypeIdentifier = multipleLink.getIdentifier();
 
       for( int index = 0; index < links.length; index++ )
       {
         final TSLinkWithName link = links[index];
-        update( link, identifier, index );
+
+        final BaseColumn column = toBaseColumn( baseTypeIdentifier, index );
+        final ZmlLinkDiagramElement element = toZmlDiagrammElement( link, column, index );
+
+        doAddTableColumn( column, element );
+        doLoadModelColumn( link, element );
       }
     }
 
   }
 
-  private void update( final TSLinkWithName link, final String identifier, final int index )
+  private void doLoadModelColumn( final TSLinkWithName link, final ZmlLinkDiagramElement element )
   {
-    final ZmlLinkDiagramElement element = createZmlDiagrammElement( link, identifier, index );
     final IObsProvider clonedProvider = element.getObsProvider().copy();
-
     m_part.getModel().getLoader().load( element );
 
     final ILabeledObsProvider obsWithLabel = new TsLinkObsProvider( link, clonedProvider );
     final IPoolableObjectType poolKey = element.getPoolKey();
     m_part.getModel().getMemento().register( poolKey, obsWithLabel );
+
   }
 
-  private ZmlLinkDiagramElement createZmlDiagrammElement( final TSLinkWithName link, final String identifier, final int index )
+  private BaseColumn toBaseColumn( final String baseTypeIdentifier, final int index )
   {
+    final ZmlModel model = m_part.getModel();
+    final AbstractColumnType baseColumnType = model.getColumnType( baseTypeIdentifier );
     if( index == 0 )
-      return new ZmlLinkDiagramElement( link );
-
-    final String multipleIdentifier = duplicateColumn( identifier, index );
-    return new ZmlLinkDiagramElement( link )
     {
-      @Override
-      public String getIdentifier( )
-      {
-        return multipleIdentifier;
-      }
-    };
-  }
-
-  public String duplicateColumn( final String identifier, final int index )
-  {
-    final String multipleIdentifier = String.format( IClonedColumn.CLONED_COLUMN_POSTFIX_FORMAT, identifier, index );
-    final IZmlTable table = m_part.getTable();
-
-    // column already exists?
-    final IZmlTableColumn[] columns = table.getColumns();
-    for( final IZmlTableColumn column : columns )
-    {
-      final BaseColumn columnType = column.getColumnType();
-      if( columnType.getIdentifier().equals( multipleIdentifier ) )
-        return multipleIdentifier;
+      return new BaseColumn( baseColumnType );
     }
 
-    final AbstractColumnType base = TableTypes.finColumn( m_part.getModel().getTableType(), identifier );
+    final String multipleIdentifier = String.format( IClonedColumn.CLONED_COLUMN_POSTFIX_FORMAT, baseTypeIdentifier, index );
 
-    if( base == null )
-    {
-      // FIXME: better error handling and error message!
-      // FIXME: better recovery
-      throw new IllegalStateException( "Faiuled to find base column for identifier: " + identifier );
-    }
+    final AbstractColumnType clonedColumnType = TableTypes.cloneColumn( baseColumnType );
+    clonedColumnType.setId( multipleIdentifier );
 
-    final AbstractColumnType clone = TableTypes.cloneColumn( base );
-    clone.setId( multipleIdentifier );
-
-    /** only one rule / style set! */
-    final ZmlTableColumnBuilder builder = new ZmlTableColumnBuilder( m_part.getTable(), new BaseColumn( base )
+    return new BaseColumn( clonedColumnType )
     {
       @Override
       public String getIdentifier( )
@@ -163,12 +137,50 @@ public class ZmlTableUpdater implements Runnable
       @Override
       public AbstractColumnType getType( )
       {
-        return clone;
+        return clonedColumnType;
       }
-    } );
-
-    builder.execute( new NullProgressMonitor() );
-
-    return multipleIdentifier;
+    };
   }
+
+  private void doAddTableColumn( final BaseColumn column, final ZmlLinkDiagramElement element )
+  {
+    final ZmlModel model = m_part.getModel();
+    final IZmlTable table = m_part.getTable();
+
+    final AbstractColumnType columnType = column.getType();
+    if( columnType instanceof DataColumnType )
+    {
+      final DataColumnType dataColumnType = (DataColumnType) columnType;
+      final String indexAxis = dataColumnType.getIndexAxis();
+      if( !ZmlTables.hasColumn( table, indexAxis ) )
+      {
+        final AbstractColumnType indexColumnType = model.getColumnType( indexAxis );
+        final ZmlTableColumnBuilder builder = new ZmlTableColumnBuilder( table, new BaseColumn( indexColumnType ) );
+        builder.execute( new NullProgressMonitor() );
+      }
+    }
+
+    if( !ZmlTables.hasColumn( table, columnType.getId() ) )
+    {
+      final ZmlTableColumnBuilder builder = new ZmlTableColumnBuilder( table, column );
+      builder.execute( new NullProgressMonitor() );
+    }
+
+  }
+
+  private ZmlLinkDiagramElement toZmlDiagrammElement( final TSLinkWithName link, final BaseColumn column, final int index )
+  {
+    if( index == 0 )
+      return new ZmlLinkDiagramElement( link );
+
+    return new ZmlLinkDiagramElement( link )
+    {
+      @Override
+      public String getIdentifier( )
+      {
+        return column.getIdentifier();
+      }
+    };
+  }
+
 }
