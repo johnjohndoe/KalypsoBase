@@ -71,12 +71,12 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.conversion.AwtToSwtColorConverter;
 import org.kalypso.commons.databinding.conversion.FloatArrayToStringConverter;
 import org.kalypso.commons.databinding.conversion.StringToFloatArrayConverter;
 import org.kalypso.commons.databinding.conversion.SwrToAwtColorConverter;
 import org.kalypso.commons.databinding.forms.DatabindingForm;
-import org.kalypso.commons.databinding.forms.IDataBindingForm;
 import org.kalypso.commons.databinding.validation.NumberNotNegativeValidator;
 import org.kalypso.contribs.eclipse.swt.ColorUtilities;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
@@ -115,7 +115,7 @@ public class StrokeComposite extends Composite
 
   private final IStyleInput<Stroke> m_input;
 
-  private final IDataBindingForm m_binding;
+  private final IDataBinding m_binding;
 
   private GraphicStrokeSection m_strokeSection;
 
