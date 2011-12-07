@@ -40,12 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.update;
 
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.TreeMap;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.zml.core.diagram.base.zml.MultipleTsLink;
 import org.kalypso.zml.core.diagram.base.zml.TSLinkWithName;
+import org.kalypso.zml.core.diagram.base.zml.TsLinkWrapper;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.IClonedColumn;
 import org.kalypso.zml.core.table.binding.TableTypes;
@@ -76,12 +82,15 @@ public class ZmlTableUpdater implements Runnable
   @Override
   public void run( )
   {
+    /** tricky: map is used for restoring the order of columns from the underlying calcWizard.xml */
+    final Map<Integer, Object[]> map = new TreeMap<Integer, Object[]>();
+
     for( final MultipleTsLink multipleLink : m_links )
     {
       if( multipleLink.isIgnoreType( m_part.getIgnoreTypes() ) )
         continue;
 
-      final TSLinkWithName[] links = multipleLink.getLinks();
+      final TsLinkWrapper[] links = multipleLink.getLinks();
       if( ArrayUtils.isEmpty( links ) )
         continue;
 
@@ -89,16 +98,28 @@ public class ZmlTableUpdater implements Runnable
 
       for( int index = 0; index < links.length; index++ )
       {
-        final TSLinkWithName link = links[index];
+        final TsLinkWrapper link = links[index];
 
         final BaseColumn column = toBaseColumn( baseTypeIdentifier, index );
         final ZmlLinkDiagramElement element = toZmlDiagrammElement( link, column, index );
 
-        doAddTableColumn( column, element );
-        doLoadModelColumn( link, element );
+        final int tableIndex = link.getIndex();
+        map.put( tableIndex, new Object[] { link, column, element } );
       }
     }
 
+    final Set<Entry<Integer, Object[]>> entries = map.entrySet();
+    for( final Entry<Integer, Object[]> entry : entries )
+    {
+      final Object[] values = entry.getValue();
+
+      final TsLinkWrapper link = (TsLinkWrapper) values[0];
+      final BaseColumn column = (BaseColumn) values[1];
+      final ZmlLinkDiagramElement element = (ZmlLinkDiagramElement) values[2];
+
+      doAddTableColumn( column, element );
+      doLoadModelColumn( link, element );
+    }
   }
 
   private void doLoadModelColumn( final TSLinkWithName link, final ZmlLinkDiagramElement element )
