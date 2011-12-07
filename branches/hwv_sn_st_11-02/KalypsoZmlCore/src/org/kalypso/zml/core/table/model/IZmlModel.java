@@ -43,6 +43,7 @@ package org.kalypso.zml.core.table.model;
 import java.util.Date;
 
 import org.kalypso.zml.core.table.model.memento.IZmlMemento;
+import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 
 /**
@@ -73,4 +74,8 @@ public interface IZmlModel
   IZmlMemento getMemento( );
 
   void add( IZmlModelColumn column );
+
+  AbstractColumnType getColumnType( String identifier );
+
+  String[] getIgnoreTypes( );
 }

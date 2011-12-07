@@ -204,7 +204,7 @@ public class ZmlTablePager
 
   private Date findForecastDate( )
   {
-    final IZmlModel model = m_table.getDataModel();
+    final IZmlModel model = m_table.getModel();
     final IZmlModelColumn[] columns = model.getColumns();
     for( final IZmlModelColumn column : columns )
     {

@@ -93,7 +93,7 @@ public class ZmlCommandInterpolateValues extends AbstractHandler
 
       final IZmlModelColumn modelColumn = column.getModelColumn();
 
-      final IZmlModel model = table.getDataModel();
+      final IZmlModel model = table.getModel();
 
       final ZmlModelTransaction transaction = new ZmlModelTransaction();
 

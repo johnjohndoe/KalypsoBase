@@ -68,7 +68,7 @@ public interface IZmlTable
 
   IZmlTableColumn[] getColumns( );
 
-  IZmlModel getDataModel( );
+  IZmlModel getModel( );
 
   IZmlTableFocusHandler getFocusHandler( );
 

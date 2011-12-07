@@ -71,13 +71,13 @@ import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
-import org.kalypso.zml.core.table.model.IZmlColumnModelListener;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.ZmlModel;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 import org.kalypso.zml.ui.debug.KalypsoZmlUiDebug;
+import org.kalypso.zml.ui.table.base.helper.ZmlTables;
 import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
 import org.kalypso.zml.ui.table.focus.IZmlTableFocusHandler;
 import org.kalypso.zml.ui.table.focus.ZmlTableFocusCellHandler;
@@ -95,15 +95,13 @@ import org.kalypso.zml.ui.table.selection.ZmlTableSelectionHandler;
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableComposite extends Composite implements IZmlColumnModelListener, IZmlTable
+public class ZmlTableComposite extends Composite implements IZmlTable
 {
   private static final MutexRule MUTEX_TABLE_UPDATE = new MutexRule( "Aktualisiere Tabelle" ); // $NON-NLS-1$
 
   protected TableViewer m_tableViewer;
 
   private final Set<ZmlTableColumn> m_columns = new LinkedHashSet<ZmlTableColumn>();
-
-  private final IZmlModel m_model;
 
   private UIJob m_updateJob;
 
@@ -119,22 +117,26 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
   private final ZmlTableCellCache m_cache = new ZmlTableCellCache();
 
-  public ZmlTableComposite( final IZmlModel model, final Composite parent, final FormToolkit toolkit )
+  private final FormToolkit m_toolkit;
+
+  private IZmlModel m_model;
+
+  public ZmlTableComposite( final Composite parent, final FormToolkit toolkit )
   {
     super( parent, SWT.NULL );
-    m_model = model;
+    m_toolkit = toolkit;
 
     final GridLayout layout = LayoutHelper.createGridLayout();
     layout.verticalSpacing = 0;
     setLayout( layout );
-    setup( toolkit );
 
-    model.addListener( this );
     toolkit.adapt( this );
   }
 
-  private void setup( final FormToolkit toolkit )
+  public void doInitialize( final IZmlModel model )
   {
+    m_model = model;
+
     synchronized( this )
     {
       final ZmlTableType tableType = m_model.getTableType();
@@ -142,7 +144,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
       Composite toolbar = null;
       if( hasToolbar( tableType ) )
       {
-        toolbar = toolkit.createComposite( this );
+        toolbar = m_toolkit.createComposite( this );
         toolbar.setLayout( LayoutHelper.createGridLayout() );
         toolbar.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
       }
@@ -162,8 +164,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
         {
           if( inputElement instanceof ZmlModel )
           {
-            final ZmlModel model = (ZmlModel) inputElement;
-            return model.getRows();
+            return ((ZmlModel) inputElement).getRows();
           }
 
           return new Object[] {};
@@ -190,8 +191,10 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
       table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
       table.setHeaderVisible( true );
       if( hasToolbar( tableType ) )
-        initToolbar( tableType, toolbar, toolkit );
+        initToolbar( tableType, toolbar, m_toolkit );
     }
+
+    this.layout();
   }
 
   @Override
@@ -250,6 +253,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     return references.toArray( new String[] {} );
   }
 
+  /** windows layout bug -> always add a first invisble table column */
   private void addEmptyColumn( )
   {
     final TableViewerColumn column = new TableViewerColumn( m_tableViewer, SWT.NULL );
@@ -286,6 +290,8 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
             final IZmlModelColumn[] stack = m_stackColumns.toArray( new IZmlModelColumn[] {} );
             m_stackColumns.clear();
 
+            addMissingColumns();
+
             final IZmlTableColumn[] tableColumns = ZmlTableColumns.toTableColumns( ZmlTableComposite.this, true, stack );
             for( final IZmlTableColumn column : tableColumns )
             {
@@ -307,6 +313,18 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     }
   }
 
+  private void addMissingColumns( )
+  {
+    synchronized( this )
+    {
+      final IZmlModelColumn[] missing = ZmlTables.findMissingColumns( this, m_model.getColumns() );
+      for( final IZmlModelColumn column : missing )
+      {
+        ZmlTables.addTableColumn( this, column.getDataColumn() );
+      }
+    }
+  }
+
   @Override
   public void fireTableChanged( final String type, final IZmlModelColumn... columns )
   {
@@ -315,12 +333,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     {
       listener.eventTableChanged( type, columns );
     }
-  }
-
-  @Override
-  public void modelChanged( final IZmlModelColumn... columns )
-  {
-    refresh( columns );
   }
 
   @Override
@@ -354,7 +366,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   }
 
   @Override
-  public IZmlModel getDataModel( )
+  public IZmlModel getModel( )
   {
     return m_model;
   }

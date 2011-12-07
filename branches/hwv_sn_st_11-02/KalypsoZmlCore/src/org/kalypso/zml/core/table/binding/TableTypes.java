@@ -174,20 +174,24 @@ public final class TableTypes
   {
     final List<JAXBElement< ? extends AbstractColumnType>> columnTypes = tableType.getColumns().getAbstractColumn();
 
-    String id = identifier;
+    for( final JAXBElement< ? extends AbstractColumnType> columnType : columnTypes )
+    {
+      final AbstractColumnType column = columnType.getValue();
+      if( column.getId().equals( identifier ) )
+        return column;
+    }
 
+    /**
+     * FIXME if a column was added by a underlying .kod file - W_clone1,... model columns exists! zml table composite
+     * should add those columns, too
+     */
     /** cloned, multiple column entry?!? like W_clone_1 or W_clone_3 */
     if( IClonedColumn.PATTERN_CLONED_COLUMN_IDENTIFIER.matches( identifier ) )
     {
       final RETokenizer tokenizer = new RETokenizer( IClonedColumn.PATTERN_CLONED_COLUMN_TOKENIZER, identifier );
-      id = tokenizer.nextToken();
-    }
+      final String id = tokenizer.nextToken();
 
-    for( final JAXBElement< ? extends AbstractColumnType> columnType : columnTypes )
-    {
-      final AbstractColumnType column = columnType.getValue();
-      if( column.getId().equals( id ) )
-        return column;
+      return findColumnType( tableType, id );
     }
 
     return null;

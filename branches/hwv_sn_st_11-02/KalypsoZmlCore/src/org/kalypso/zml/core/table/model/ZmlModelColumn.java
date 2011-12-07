@@ -43,6 +43,7 @@ package org.kalypso.zml.core.table.model;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.lang.Strings;
@@ -63,6 +64,7 @@ import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataListener;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.model.transaction.IZmlModelUpdateCommand;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
+import org.kalypso.zml.core.table.schema.DataColumnType;
 
 /**
  * @author Dirk Kuch
@@ -80,8 +82,6 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   private final String m_identifier;
 
   private final IZmlModel m_model;
-
-  private boolean m_ignore = false;
 
   private String m_labelTokenizer;
 
@@ -389,20 +389,9 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   }
 
   @Override
-  public void setIsIgnoreType( final boolean ignore )
-  {
-    if( Objects.equal( m_ignore, ignore ) )
-      return;
-
-    m_ignore = ignore;
-
-    fireColumnChanged();
-  }
-
-  @Override
   public boolean isActive( )
   {
-    if( m_ignore )
+    if( isIgnoreType() )
       return false;
 
     final IZmlModelColumnDataHandler handler = getDataHandler();
@@ -417,6 +406,17 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
     final String valueAxis = getDataColumn().getValueAxis();
 
     return Objects.isNotNull( AxisUtils.findAxis( axes, valueAxis ) );
+  }
+
+  private boolean isIgnoreType( )
+  {
+    final IZmlModel model = getModel();
+    final String[] ignoreTypes = model.getIgnoreTypes();
+
+    final DataColumnType columnType = getDataColumn().getType();
+    final String type = columnType.getValueAxis();
+
+    return ArrayUtils.contains( ignoreTypes, type );
   }
 
   @Override
