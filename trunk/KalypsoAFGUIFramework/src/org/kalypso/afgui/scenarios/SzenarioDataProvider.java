@@ -467,18 +467,6 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
   }
 
   /**
-   * @see org.kalypso.kalypsosimulationmodel.core.ICommandPoster#postCommand(java.lang.Class,
-   *      org.kalypso.commons.command.ICommand)
-   */
-  @Override
-  @SuppressWarnings("deprecation")
-  @Deprecated
-  public void postCommand( final Class< ? extends IModel> wrapperClass, final ICommand command ) throws InvocationTargetException
-  {
-    postCommand( wrapperClass.getName(), command );
-  }
-
-  /**
    * @see org.kalypso.kalypsosimulationmodel.core.ICommandPoster#postCommand(java.lang.String,
    *      org.kalypso.commons.command.ICommand)
    */
@@ -619,19 +607,6 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     }
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.ICommandPoster#getCommandableWorkSpace(java.lang.Class)
-   */
-  @Override
-  @Deprecated
-  public CommandableWorkspace getCommandableWorkSpace( final Class< ? extends IModel> wrapperClass ) throws IllegalArgumentException, CoreException
-  {
-    return getCommandableWorkSpace( wrapperClass.getName() );
-  }
-
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.ICommandPoster#getCommandableWorkSpace(java.lang.Class)
-   */
   @Override
   public CommandableWorkspace getCommandableWorkSpace( final String id ) throws IllegalArgumentException, CoreException
   {
