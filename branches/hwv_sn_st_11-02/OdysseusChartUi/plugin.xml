@@ -74,6 +74,12 @@
             name="%org.kalypso.chart.ui.commands.openOutline.name">
       </command>
       <command
+             categoryId="org.kalypso.chart.ui.commands.category"
+             description="%org.kalypso.chart.ui.commands.ExportClipboardCommand.description"
+             id="org.kalypso.chart.ui.commands.ExportClipboardCommand"
+             name="%org.kalypso.chart.ui.commands.ExportClipboardCommand.name">
+      </command>
+      <command
             categoryId="org.kalypso.chart.ui.commands.category"
             id="org.kalypso.chart.ui.commands.zoom_pan_maximize"
             name="Zoom / Pan / Maximize">
@@ -140,6 +146,10 @@
             icon="icons/elcl16/show_outline.gif">
       </image>
       <image
+            commandId="org.kalypso.chart.ui.commands.ExportClipboardCommand"
+            icon="icons/elcl16/exportClipboard.gif">
+      </image>
+      <image
             commandId="org.kalypso.chart.ui.command.axis.selection"
             icon="icons/commands/select.png">
       </image>
@@ -177,6 +187,10 @@
       <handler
             class="org.kalypso.chart.ui.editor.commandhandler.OpenOutlineHandler"
             commandId="org.kalypso.chart.ui.commands.openOutline">
+      </handler>
+      <handler
+            class="org.kalypso.chart.ui.editor.commandhandler.ExportClipboardHandler"
+            commandId="org.kalypso.chart.ui.commands.ExportClipboardCommand">
       </handler>
       <handler
             class="org.kalypso.chart.ui.editor.commandhandler.ZoomPanMaximizeCommandHandler"
