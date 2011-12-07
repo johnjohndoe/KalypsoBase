@@ -98,7 +98,6 @@ public class CompareProfilesDialog extends EnhancedTitleAreaDialog
     base.setLayoutData( data );
 
     final ScrolledForm form = toolkit.createScrolledForm( base );
-    form.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     final Composite body = form.getBody();
     body.setLayout( Layouts.createGridLayout() );
 
