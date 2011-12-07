@@ -1,13 +1,13 @@
 package org.kalypso.afgui.views;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandImageService;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 
 import de.renew.workflow.base.ITask;
@@ -15,64 +15,59 @@ import de.renew.workflow.base.ITaskGroup;
 
 /**
  * @author Stefan Kurzbach
- * 
  */
 public class WorkflowLabelProvider extends ColumnLabelProvider
 {
-  private final Image IMAGE_TASK;
+  private final static String IMAGE_TASK = "taskDefault"; //$NON-NLS-1$
 
-  private final Image IMAGE_GROUP;
+  private final ImageRegistry m_imageRegistry = new ImageRegistry();
 
-  private final Font FONT_TASKGROUP;
+  private final Font m_fontTask;
 
-  private final Font FONT_TASK;
-
-  private final Font FONT_ACTIVE_TASK;
-
-  private final Font FONT_ACTIVE_TASKGROUP;
+  private final Font m_fontActiveTask;
 
   private final WorkflowControl m_workflowControl;
 
   public WorkflowLabelProvider( final WorkflowControl workflowControl )
   {
     m_workflowControl = workflowControl;
-    final Display display = workflowControl.getControl().getDisplay();
-    final ImageDescriptor taskImage = KalypsoAFGUIFrameworkPlugin.getImageDescriptor( "icons/nuvola_select/kig.png" ); //$NON-NLS-1$
-    final ImageDescriptor groupImage = KalypsoAFGUIFrameworkPlugin.getImageDescriptor( "icons/nuvola_select/forward.png" ); //$NON-NLS-1$
-    IMAGE_TASK = ImageDescriptor.createFromImageData( taskImage.getImageData().scaledTo( 16, 16 ) ).createImage();
-    IMAGE_GROUP = ImageDescriptor.createFromImageData( groupImage.getImageData().scaledTo( 16, 16 ) ).createImage();
-    final FontData[] fontData = JFaceResources.getFontRegistry().getFontData( JFaceResources.DIALOG_FONT );
-    final String dialogFontName = fontData[0].getName();
-    final int dialogFontHeight = fontData[0].getHeight();
-    FONT_TASK = new Font( display, fontData );
-    final FontData boldFont = new FontData( dialogFontName, dialogFontHeight, SWT.BOLD );
-    FONT_ACTIVE_TASK = new Font( display, boldFont );
-    final FontData bigFont = new FontData( dialogFontName, dialogFontHeight + 1, SWT.NORMAL );
-    FONT_TASKGROUP = new Font( display, bigFont );
-    final FontData bigBoldFont = new FontData( dialogFontName, dialogFontHeight + 1, SWT.BOLD );
-    FONT_ACTIVE_TASKGROUP = new Font( display, bigBoldFont );
+
+    final ImageDescriptor taskImage = KalypsoAFGUIFrameworkPlugin.getImageDescriptor( "icons/nuvola_select/task.png" ); //$NON-NLS-1$
+
+    m_imageRegistry.put( IMAGE_TASK, taskImage );
+
+    m_fontTask = JFaceResources.getDialogFont();
+    m_fontActiveTask = JFaceResources.getBannerFont();
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getImage(java.lang.Object)
-   */
   @Override
   public Image getImage( final Object element )
   {
     if( element instanceof ITask )
     {
-      // TODO: get image from task
-      return IMAGE_TASK;
+      final ITask task = (ITask) element;
+      final String uri = task.getURI();
+
+      final Image image = m_imageRegistry.get( uri );
+      if( image != null )
+        return image;
+
+      final ICommandImageService cis = (ICommandImageService) PlatformUI.getWorkbench().getService( ICommandImageService.class );
+      final ImageDescriptor imageDescriptor = cis.getImageDescriptor( uri );
+
+      // http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ActivateScenario
+
+      if( imageDescriptor == null )
+        return m_imageRegistry.get( IMAGE_TASK );
+
+      m_imageRegistry.put( uri, imageDescriptor );
+
+      return m_imageRegistry.get( uri );
     }
-    else
-    {// TODO: that never happens!
-      return IMAGE_GROUP;
-    }
+
+    return null;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
-   */
   @Override
   public String getText( final Object element )
   {
@@ -82,45 +77,33 @@ public class WorkflowLabelProvider extends ColumnLabelProvider
     return null;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.BaseLabelProvider#dispose()
-   */
   @Override
   public void dispose( )
   {
-    IMAGE_TASK.dispose();
-    IMAGE_GROUP.dispose();
-    FONT_TASK.dispose();
-    FONT_ACTIVE_TASK.dispose();
-    FONT_TASKGROUP.dispose();
+    m_imageRegistry.dispose();
+
     super.dispose();
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getFont(java.lang.Object)
-   */
   @Override
   public Font getFont( final Object element )
   {
     if( element instanceof ITaskGroup )
     {
       if( m_workflowControl.getTaskExecutor().getActiveTask() == element )
-        return FONT_ACTIVE_TASKGROUP;
+        return m_fontActiveTask;
       else
-        return FONT_TASKGROUP;
+        return m_fontTask;
     }
     else
     {
       if( m_workflowControl.getTaskExecutor().getActiveTask() == element )
-        return FONT_ACTIVE_TASK;
+        return m_fontActiveTask;
       else
-        return FONT_TASK;
+        return m_fontTask;
     }
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.CellLabelProvider#getToolTipText(java.lang.Object)
-   */
   @Override
   public String getToolTipText( final Object element )
   {
