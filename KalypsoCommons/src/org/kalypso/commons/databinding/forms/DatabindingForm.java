@@ -184,4 +184,14 @@ public class DatabindingForm implements IDataBinding
 
     return null;
   }
+
+  public void deactivate( )
+  {
+    m_support.setActive( false );
+  }
+
+  public void activate( )
+  {
+    m_support.setActive( true );
+  }
 }
