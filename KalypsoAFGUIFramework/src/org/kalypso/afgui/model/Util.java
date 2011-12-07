@@ -63,11 +63,11 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * TODO: most of the methods should be moved into {@link FeatureHelper}.
- * 
+ *
  * Holds utility methods
- * 
+ *
  * @author Patrice Congo
- * 
+ *
  */
 public class Util
 {
@@ -82,7 +82,7 @@ public class Util
       final IEvaluationContext currentState = service.getCurrentState();
       final ICaseDataProvider<Feature> caseDataProvider = (ICaseDataProvider<Feature>) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
       if( caseDataProvider instanceof ICommandPoster )
-        return ((ICommandPoster) caseDataProvider).getCommandableWorkSpace( modelClass );
+        return ((ICommandPoster) caseDataProvider).getCommandableWorkSpace( modelClass.getName() );
       else
         throw new RuntimeException( Messages.getString( "org.kalypso.afgui.model.Util.0" ) ); //$NON-NLS-1$
     }
@@ -103,7 +103,7 @@ public class Util
       final IEvaluationContext currentState = service.getCurrentState();
       final ICaseDataProvider<IModel> caseDataProvider = (ICaseDataProvider<IModel>) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
       if( caseDataProvider instanceof ICommandPoster )
-        ((ICommandPoster) caseDataProvider).postCommand( modelClass, command );
+        ((ICommandPoster) caseDataProvider).postCommand( modelClass.getName(), command );
       else
         throw new RuntimeException( Messages.getString( "org.kalypso.afgui.model.Util.1" ) ); //$NON-NLS-1$
     }
