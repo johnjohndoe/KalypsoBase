@@ -45,8 +45,8 @@ public class ExportHandler extends AbstractHandler
     {
       final SafeSaveDialog dia = new SafeSaveDialog( shell );
 
-      dia.setFilterNames( new String[] { "PNG", "JPG", "*BMP" } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      dia.setFilterExtensions( new String[] { "*.png", "*.jpg", "*.bmp" } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      dia.setFilterNames( new String[] { "BMP Datei (*.bmp)", "PNG Datei (*.png)", "JPG Datei (*jpg)" } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      dia.setFilterExtensions( new String[] { "*.bmp", "*.png", "*.jpg" } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
       m_filename = dia.open();
     }
