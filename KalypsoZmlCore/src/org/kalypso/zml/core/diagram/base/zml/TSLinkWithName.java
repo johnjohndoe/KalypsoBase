@@ -106,6 +106,16 @@ public class TSLinkWithName
     return href;
   }
 
+  protected TimeserieFeatureProperty getProperties( )
+  {
+    return m_property;
+  }
+
+  protected TimeseriesLinkType getTimerseriesLinkType( )
+  {
+    return m_obsLink;
+  }
+
   public String getLinktype( )
   {
     return m_obsLink.getLinktype();

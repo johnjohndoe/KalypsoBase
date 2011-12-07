@@ -59,7 +59,7 @@ import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
  */
 public class MultipleTsLink
 {
-  Set<TSLinkWithName> m_links = new LinkedHashSet<TSLinkWithName>();
+  Set<TsLinkWrapper> m_links = new LinkedHashSet<TsLinkWrapper>();
 
   private final String m_identifier;
 
@@ -131,14 +131,14 @@ public class MultipleTsLink
     return builder.toHashCode();
   }
 
-  public void add( final TSLinkWithName link )
+  public void add( final TsLinkWrapper link )
   {
     m_links.add( link );
   }
 
-  public TSLinkWithName[] getLinks( )
+  public TsLinkWrapper[] getLinks( )
   {
-    return m_links.toArray( new TSLinkWithName[] {} );
+    return m_links.toArray( new TsLinkWrapper[] {} );
   }
 
   public boolean isIgnoreType( final String[] currentIgnoreTypes )

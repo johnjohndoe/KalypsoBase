@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra�e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -40,49 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.diagram.base.zml;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /**
  * @author Dirk Kuch
  */
-public class MultipleTsLinkBuilder
+public class TsLinkWrapper extends TSLinkWithName
 {
-  private final TimeserieFeatureProperty[] m_properties;
+  private final int m_index;
 
-  private final IMultipleTsLinkBuilderSource m_delegate;
-
-  public MultipleTsLinkBuilder( final IMultipleTsLinkBuilderSource delegate, final TimeserieFeatureProperty[] properties )
+  public TsLinkWrapper( final TSLinkWithName link, final int index )
   {
-    m_delegate = delegate;
-    m_properties = properties;
+    super( link.getIdentifier(), link.getContext(), link.getName(), link.getTimerseriesLinkType(), link.getProperties() );
+    m_index = index;
   }
 
-  public MultipleTsLink[] build( )
+  public int getIndex( )
   {
-    if( m_properties == null )
-      return new MultipleTsLink[] {};
-
-    final TSLinkWithName[] links = m_delegate.getLinks();
-    final Map<String, MultipleTsLink> map = new LinkedHashMap<String, MultipleTsLink>();
-
-    for( int index = 0; index < links.length; index++ )
-    {
-      final TSLinkWithName link = links[index];
-
-      final String identifier = link.getIdentifier();
-      MultipleTsLink multiple = map.get( identifier );
-      if( multiple == null )
-      {
-        multiple = new MultipleTsLink( identifier );
-        map.put( identifier, multiple );
-      }
-
-      multiple.add( new TsLinkWrapper( link, index ) );
-
-    }
-
-    return map.values().toArray( new MultipleTsLink[] {} );
+    return m_index;
   }
-
 }
