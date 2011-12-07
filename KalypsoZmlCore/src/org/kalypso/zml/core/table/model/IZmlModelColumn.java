@@ -98,8 +98,6 @@ public interface IZmlModelColumn
 
   void fireColumnChangedEvent( );
 
-  void setIsIgnoreType( boolean ignore );
-
   void setDataHandler( IZmlModelColumnDataHandler dataHandler );
 
   void setLabel( String label );

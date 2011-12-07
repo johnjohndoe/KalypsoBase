@@ -41,7 +41,6 @@
 package org.kalypso.zml.core.table.model;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -80,25 +79,9 @@ public class ZmlModelInitializer implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
-
-    doInitColumnTypes();
     doLoadColumns();
 
     return Status.OK_STATUS;
-  }
-
-  private void doInitColumnTypes( )
-  {
-    final Map<String, AbstractColumnType> map = new LinkedHashMap<String, AbstractColumnType>();
-
-    final List<JAXBElement< ? extends AbstractColumnType>> columnTypes = m_model.getTableType().getColumns().getAbstractColumn();
-    for( final JAXBElement< ? extends AbstractColumnType> columnType : columnTypes )
-    {
-      final AbstractColumnType column = columnType.getValue();
-      map.put( column.getId(), column );
-    }
-
-    m_model.setColumnTypeMap( map );
   }
 
   private void doLoadColumns( )
@@ -126,14 +109,14 @@ public class ZmlModelInitializer implements ICoreRunnableWithProgress
           }
           else if( index > 0 )
           {
-            final String identifier = String.format( IClonedColumn.CLONED_COLUMN_POSTFIX_FORMAT, base.getId(), index );
+            final String multipleIdentifier = String.format( IClonedColumn.CLONED_COLUMN_POSTFIX_FORMAT, base.getId(), index );
             final AbstractColumnType clone = TableTypes.cloneColumn( base );
-            clone.setId( identifier );
+            clone.setId( multipleIdentifier );
 
             appendColumnType( clone );
 
-            KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlTableModel - Adding element: %s, %s\n", identifier, href );
-            final ZmlDataSourceElement element = new ZmlDataSourceElement( identifier, href, m_model.getContext(), source.getLabel(), m_model.getMemento() );
+            KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlTableModel - Adding element: %s, %s\n", multipleIdentifier, href );
+            final ZmlDataSourceElement element = new ZmlDataSourceElement( multipleIdentifier, href, m_model.getContext(), source.getLabel(), m_model.getMemento() );
             m_model.getLoader().load( element );
           }
         }

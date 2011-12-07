@@ -46,7 +46,6 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.zml.core.diagram.base.zml.MultipleTsLink;
@@ -58,10 +57,7 @@ import org.kalypso.zml.core.table.binding.TableTypes;
 import org.kalypso.zml.core.table.model.ZmlModel;
 import org.kalypso.zml.core.table.model.memento.ILabeledObsProvider;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
-import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.ui.core.element.ZmlLinkDiagramElement;
-import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.ZmlTableColumnBuilder;
 import org.kalypso.zml.ui.table.base.helper.ZmlTables;
 
 /**
@@ -87,8 +83,8 @@ public class ZmlTableUpdater implements Runnable
 
     for( final MultipleTsLink multipleLink : m_links )
     {
-      if( multipleLink.isIgnoreType( m_part.getIgnoreTypes() ) )
-        continue;
+// if( link.isIgnoreType( m_part.getIgnoreTypes() ) )
+// continue;
 
       final TsLinkWrapper[] links = multipleLink.getLinks();
       if( ArrayUtils.isEmpty( links ) )
@@ -117,8 +113,8 @@ public class ZmlTableUpdater implements Runnable
       final BaseColumn column = (BaseColumn) values[1];
       final ZmlLinkDiagramElement element = (ZmlLinkDiagramElement) values[2];
 
-      doAddTableColumn( column, element );
       doLoadModelColumn( link, element );
+      ZmlTables.addTableColumn( m_part.getTable(), column );
     }
   }
 
@@ -161,32 +157,6 @@ public class ZmlTableUpdater implements Runnable
         return clonedColumnType;
       }
     };
-  }
-
-  private void doAddTableColumn( final BaseColumn column, final ZmlLinkDiagramElement element )
-  {
-    final ZmlModel model = m_part.getModel();
-    final IZmlTable table = m_part.getTable();
-
-    final AbstractColumnType columnType = column.getType();
-    if( columnType instanceof DataColumnType )
-    {
-      final DataColumnType dataColumnType = (DataColumnType) columnType;
-      final String indexAxis = dataColumnType.getIndexAxis();
-      if( !ZmlTables.hasColumn( table, indexAxis ) )
-      {
-        final AbstractColumnType indexColumnType = model.getColumnType( indexAxis );
-        final ZmlTableColumnBuilder builder = new ZmlTableColumnBuilder( table, new BaseColumn( indexColumnType ) );
-        builder.execute( new NullProgressMonitor() );
-      }
-    }
-
-    if( !ZmlTables.hasColumn( table, columnType.getId() ) )
-    {
-      final ZmlTableColumnBuilder builder = new ZmlTableColumnBuilder( table, column );
-      builder.execute( new NullProgressMonitor() );
-    }
-
   }
 
   private ZmlLinkDiagramElement toZmlDiagrammElement( final TSLinkWithName link, final BaseColumn column, final int index )

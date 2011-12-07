@@ -127,7 +127,7 @@ public abstract class AbstractZmlTableColumn extends ZmlTableElement implements 
   @Override
   public IZmlModelColumn getModelColumn( )
   {
-    final IZmlModel model = getTable().getDataModel();
+    final IZmlModel model = getTable().getModel();
 
     return model.getColumn( m_type.getIdentifier() );
   }
