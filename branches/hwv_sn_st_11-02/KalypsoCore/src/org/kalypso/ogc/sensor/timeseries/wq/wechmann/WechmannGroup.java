@@ -102,24 +102,16 @@ public class WechmannGroup implements IWQConverter
     return m_map.get( dates[i] );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#computeW(java.util.Date, double)
-   */
   @Override
   public double computeW( final ITupleModel model, final Integer index, final double q ) throws WQException, SensorException
   {
     final IAxis dateAxis = AxisUtils.findDateAxis( model.getAxes() );
     final Date date = (Date) model.get( index, dateAxis );
 
-    // FIXME
-    // final double e = getValue( model, index, ITimeseriesConstants.TYPE_WECHMANN_E );
-    // final double v = getValue( model, index, ITimeseriesConstants.TYPE_WECHMANN_SCHALTER_V );
-
     final WechmannParams params = getFor( date ).getForQ( q );
+    final double e = getValue( model, index, ITimeseriesConstants.TYPE_WECHMANN_E );
 
-    // FIXME
-    // return WechmannFunction.computeW( params, q ) + e * v;
-    return WechmannFunction.computeW( params, q );
+    return WechmannFunction.computeW( params, q ) + e;
   }
 
   private double getValue( final ITupleModel model, final Integer index, final String type )
@@ -149,13 +141,8 @@ public class WechmannGroup implements IWQConverter
     final IAxis dateAxis = AxisUtils.findDateAxis( model.getAxes() );
     final Date date = (Date) model.get( index, dateAxis );
 
-    // FIXME
-    // final double e = getValue( model, index, ITimeseriesConstants.TYPE_WECHMANN_E );
-    // final double v = getValue( model, index, ITimeseriesConstants.TYPE_WECHMANN_SCHALTER_V );
-
-    // final double w2 = w - e * v;
-
-    final double w2 = w;
+    final double e = getValue( model, index, ITimeseriesConstants.TYPE_WECHMANN_E );
+    final double w2 = w - e;
 
     final WechmannParams params = getFor( date ).getForW( w2 );
     if( params == null )
@@ -164,9 +151,6 @@ public class WechmannGroup implements IWQConverter
     return WechmannFunction.computeQ( params, w2 );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#getFromType()
-   */
   @Override
   public String getFromType( )
   {
