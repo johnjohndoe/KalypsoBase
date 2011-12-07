@@ -186,6 +186,9 @@ public class ZmlTableCellPaintListener implements Listener
     if( index < 0 )
       return null;
 
+    if( columns.length <= index )
+      return null;
+
     final IZmlTableColumn column = columns[index];
     if( !column.isVisible() )
       return null;

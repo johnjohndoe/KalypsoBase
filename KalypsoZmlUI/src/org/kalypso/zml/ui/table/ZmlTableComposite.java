@@ -46,12 +46,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.xml.bind.JAXBElement;
-
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -74,13 +71,11 @@ import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
-import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.model.IZmlColumnModelListener;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.ZmlModel;
-import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 import org.kalypso.zml.ui.debug.KalypsoZmlUiDebug;
 import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
@@ -180,15 +175,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
       m_focus = new ZmlTableFocusCellHandler( this );
       addListener( m_focus );
       addListener( new ZmlTableLayoutHandler( this ) );
-
-      final List<JAXBElement< ? extends AbstractColumnType>> columnTypes = tableType.getColumns().getAbstractColumn();
-      for( final JAXBElement< ? extends AbstractColumnType> columnType : columnTypes )
-      {
-        final AbstractColumnType column = columnType.getValue();
-
-        final ZmlTableColumnBuilder builder = new ZmlTableColumnBuilder( this, new BaseColumn( column ) );
-        builder.execute( new NullProgressMonitor() );
-      }
 
       m_tableViewer.setInput( m_model );
 
@@ -319,12 +305,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
       m_updateJob.setRule( MUTEX_TABLE_UPDATE );
       m_updateJob.schedule( 100 );
     }
-
-    /***
-     * if( m_tableViewer.getTable().isDisposed() ) return; m_pager.update(); for( final ExtendedZmlTableColumn column :
-     * m_columns ) { column.reset(); } m_tableViewer.refresh( true, true ); m_layout.tableChanged(); fireTableChanged();
-     * m_pager.reveal();
-     */
   }
 
   @Override
