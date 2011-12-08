@@ -43,7 +43,6 @@ package org.kalypso.ogc.sensor.timeseries.interpolation.worker;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.kalypso.commons.parser.IParser;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
@@ -52,10 +51,8 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.request.IRequest;
-import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
-import org.kalypso.ogc.sensor.zml.ZmlFactory;
 
 /**
  * @author Dirk Kuch
@@ -83,6 +80,11 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
     m_dateRange = dateRange;
 
     m_interpolated = new SimpleTupleModel( getBaseModel().getAxes() );
+  }
+
+  protected IInterpolationFilter getFilter( )
+  {
+    return m_filter;
   }
 
   protected ITupleModel getBaseModel( )
@@ -146,7 +148,7 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
   protected IAxis[] getValueAxes( )
   {
     final IAxis[] axes = getBaseModel().getAxes();
-    return ObservationUtilities.findAxesByClasses( axes, new Class[] { Number.class, Boolean.class } );
+   return ObservationUtilities.findAxesByClasses( axes, new Class[] { Number.class, Boolean.class } );
   }
 
   protected IAxis[] getDataSourceAxes( )
@@ -156,37 +158,10 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
     return AxisUtils.findDataSourceAxes( axes );
   }
 
-  protected Object[] getDefaultValues( final IAxis[] valueAxes ) throws SensorException
-  {
-    final Object[] defaultValues = new Object[valueAxes.length];
-    for( int i = 0; i < defaultValues.length; i++ )
-      defaultValues[i] = getDefaultValue( valueAxes[i] );
-
-    return defaultValues;
-  }
-
-  protected Object getDefaultValue( final IAxis valueAxis ) throws SensorException
-  {
-    try
-    {
-      if( KalypsoStatusUtils.isStatusAxis( valueAxis ) )
-        return m_filter.getDefaultStatus();
-      else
-      {
-        final IParser parser = ZmlFactory.createParser( valueAxis );
-        return parser.parse( m_filter.getDefaultValue() );
-      }
-    }
-    catch( final Exception e )
-    {
-      throw new SensorException( e );
-    }
-  }
 
   protected Integer getDataSourceIndex( )
   {
     final DataSourceHandler handler = new DataSourceHandler( m_filter.getMetaDataList() );
-
     return handler.addDataSource( IInterpolationFilter.DATA_SOURCE, IInterpolationFilter.DATA_SOURCE );
   }
 
@@ -194,16 +169,18 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
    * Add one tupple with default values. The date is set to the given calendar which is stepped after the tuple was
    * added.
    */
-  protected void addDefaultTupple( final IAxis dateAxis, final IAxis[] valueAxes, final Object[] defaultValues, final Calendar calendar ) throws SensorException
+  protected void addDefaultTupple( final IAxis dateAxis, final LocalCalculationStack stack, final Calendar calendar ) throws SensorException
   {
     final SimpleTupleModel interpolatedModel = getInterpolatedModel();
 
-    final Object[] tuple = new Object[valueAxes.length + 1];
+    final LocalCalculationStackValue[] values = stack.getValues();
+
+    final Object[] tuple = new Object[values.length + 1];
     tuple[interpolatedModel.getPosition( dateAxis )] = calendar.getTime();
 
-    for( int index = 0; index < valueAxes.length; index++ )
+    for( final LocalCalculationStackValue value : values )
     {
-      final IAxis axis = valueAxes[index];
+      final IAxis axis = value.getAxis();
       final int axisPosition = interpolatedModel.getPosition( axis );
 
       // update data source reference to interpolation filter
@@ -214,7 +191,7 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
       }
       else
       {
-        tuple[axisPosition] = defaultValues[index];
+        tuple[axisPosition] = value.getDefaultValue( m_filter );
       }
     }
 
