@@ -6,7 +6,6 @@ Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.eclipse.core.runtime
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: .,
- lib/codec/commons-codec-1.5.jar,
  lib/io/commons-io-2.1.jar,
  lib/lang/commons-lang-2.6.jar,
  lib/lang/commons-lang3-3.1.jar,
@@ -22,7 +21,8 @@ Bundle-ClassPath: .,
  lib/httpclient/modified-httpclient-contribs.jar,
  lib/xml/xml-commons-resolver-1.2.jar,
  lib/httpclient/commons-httpclient-3.1.jar,
- lib/configuration/commons-configuration-1.7.jar
+ lib/configuration/commons-configuration-1.7.jar,
+ lib/codec/commons-codec-1.6.jar
 Export-Package: org.apache.commons.beanutils,
  org.apache.commons.beanutils.converters,
  org.apache.commons.beanutils.locale,
