@@ -68,9 +68,6 @@ import com.google.common.base.Splitter;
 public class ZmlCommandViewBoundaries extends AbstractHandler implements IElementUpdater
 {
 
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event )
   {
@@ -114,9 +111,6 @@ public class ZmlCommandViewBoundaries extends AbstractHandler implements IElemen
     return myRules.toArray( new ZmlRule[] {} );
   }
 
-  /**
-   * @see org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.menus.UIElement, java.util.Map)
-   */
   @Override
   public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
   {
