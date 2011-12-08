@@ -191,7 +191,7 @@ public class TimeseriesObservation implements ITimeseriesObservation
 
     if( m_sourceAxis != null )
     {
-      final int sourceIndex = m_sourceHandler.getDataSourceIndex( dataSource );
+      final int sourceIndex = m_sourceHandler.addDataSource( dataSource, dataSource );
       m_model.set( index, m_sourceAxis, sourceIndex );
     }
   }
