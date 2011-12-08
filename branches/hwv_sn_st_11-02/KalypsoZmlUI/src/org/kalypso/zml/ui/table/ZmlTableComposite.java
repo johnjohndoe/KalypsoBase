@@ -313,7 +313,7 @@ public class ZmlTableComposite extends Composite implements IZmlTable
     }
   }
 
-  private void addMissingColumns( )
+  protected void addMissingColumns( )
   {
     synchronized( this )
     {
