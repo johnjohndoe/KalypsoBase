@@ -189,7 +189,7 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
       else if( Objects.isNotNull( dataSourceAxis ) )
       {
         final int posDataSourceAxis = interpolatedModel.getPosition( dataSourceAxis );
-        final int dataSourceIndex = dataSourceHandler.getDataSourceIndex( defaultValue.getSource() );
+        final int dataSourceIndex = dataSourceHandler.addDataSource( defaultValue.getSource(), defaultValue.getSource() );
 
         tuple[posDataSourceAxis] = dataSourceIndex;
       }
