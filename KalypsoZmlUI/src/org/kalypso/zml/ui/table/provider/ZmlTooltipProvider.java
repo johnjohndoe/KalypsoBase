@@ -44,8 +44,11 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.ZmlModelRow;
+import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.ZmlTableColumn;
 
 /**
@@ -87,7 +90,16 @@ public class ZmlTooltipProvider extends ColumnLabelProvider
     if( !m_column.isVisible() )
       return null;
     else if( object instanceof IZmlModelRow )
-      return m_tooltip.getToolTipImage();
+    {
+      final IZmlTableCell cell = m_column.findCell( (IZmlModelRow) object );
+      if( Objects.isNotNull( cell ) )
+      {
+        final IZmlValueReference reference = cell.getValueReference();
+        if( Objects.isNotNull( reference ) )
+          return m_tooltip.getToolTipImage();
+      }
+
+    }
 
     return super.getToolTipImage( object );
   }
