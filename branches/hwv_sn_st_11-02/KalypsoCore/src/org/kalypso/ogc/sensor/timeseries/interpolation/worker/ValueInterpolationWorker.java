@@ -177,7 +177,7 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
           final String source = dataSet.getSource();
           if( StringUtils.isNotEmpty( source ) )
           {
-            tuple[posDataSourceAxis] = dataSourceHandler.getDataSourceIndex( source );
+            tuple[posDataSourceAxis] = dataSourceHandler.addDataSource( source, source );
           }
         }
       }
@@ -309,7 +309,7 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
           final String source = dataSet.getSource();
           if( StringUtils.isNotEmpty( source ) )
           {
-            final int dataSourceIndex = dataSourceHandler.getDataSourceIndex( source );
+            final int dataSourceIndex = dataSourceHandler.addDataSource( source, source );
             tuple[posDataSourceAxis] = dataSourceIndex;
           }
         }
