@@ -79,8 +79,11 @@ public class DataSourceHandler
   }
 
   /**
+   * @deprecated dangerous - addDataSource(String source, String source) will do the same and will create an entry if
+   *             data source not exists
    * @return -1 if index not exists
    */
+  @Deprecated
   public synchronized int getDataSourceIndex( final String identifier )
   {
     final String plainIdentifier = RepositoryItems.getPlainId( identifier );
