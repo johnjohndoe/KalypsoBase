@@ -65,7 +65,7 @@ public class DebugZmlModelContentProvider extends ArrayTreeContentProvider
       final IZmlModelColumn column = (IZmlModelColumn) parentElement;
 
       final List<Object> children = new ArrayList<Object>();
-      children.add( String.format( "Acitve: %s", Boolean.valueOf( column.isActive() ).toString() ) );
+      children.add( String.format( "Acitve: %s", Boolean.valueOf( column.isActive() ).toString() ) ); //$NON-NLS-1$
       children.add( column.getDataColumn().getType() );
       children.add( column.getIndexAxis() );
       children.add( column.getValueAxis() );
@@ -83,7 +83,7 @@ public class DebugZmlModelContentProvider extends ArrayTreeContentProvider
       final IZmlTableColumn column = (IZmlTableColumn) parentElement;
 
       final List<Object> children = new ArrayList<Object>();
-      children.add( String.format( "Visibility: %s", Boolean.valueOf( column.isVisible() ).toString() ) );
+      children.add( String.format( "Visibility: %s", Boolean.valueOf( column.isVisible() ).toString() ) ); //$NON-NLS-1$
       children.add( column.getModelColumn() );
       CollectionUtils.addAll( children, column.getAppliedRules() );
 
