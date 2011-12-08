@@ -132,9 +132,6 @@ public class ObservationServiceRepository extends AbstractRepository implements 
     return ""; //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.repository.IRepositoryItem#hasChildren()
-   */
   @Override
   public final boolean hasChildren( ) throws RepositoryException
   {
@@ -148,9 +145,6 @@ public class ObservationServiceRepository extends AbstractRepository implements 
     }
   }
 
-  /**
-   * @see org.kalypso.repository.IRepositoryItem#getChildren()
-   */
   @Override
   public final IRepositoryItem[] getChildren( ) throws RepositoryException
   {
@@ -183,9 +177,6 @@ public class ObservationServiceRepository extends AbstractRepository implements 
     return new ServiceRepositoryItem( bean, null, this );
   }
 
-  /**
-   * @see org.kalypso.repository.IRepository#reload()
-   */
   @Override
   public final void reload( ) throws RepositoryException
   {
@@ -216,36 +207,12 @@ public class ObservationServiceRepository extends AbstractRepository implements 
     getService().makeItem( getServiceId( identifier ) );
   }
 
-  /**
-   * @see org.kalypso.repository.IModifyableRepository#createItem(java.lang.String)
-   */
   @Override
   public final void deleteItem( final String identifier ) throws RepositoryException
   {
     getService().deleteItem( getServiceId( identifier ) );
   }
 
-  /**
-   * @see org.kalypso.repository.IModifyableRepositoryItem#setData(java.lang.Object)
-   */
-  @Override
-  public final void setData( final Serializable observation )
-  {
-    throw new IllegalStateException( "This should never happen" );
-  }
-
-  /**
-   * @see org.kalypso.repository.IModifyableRepositoryItem#setName(java.lang.String)
-   */
-  @Override
-  public final void setName( final String itemName )
-  {
-    throw new IllegalStateException( "This should never happen" );
-  }
-
-  /**
-   * @see org.kalypso.repository.IWriteableRepository#setData(java.lang.String, java.io.Serializable)
-   */
   @Override
   public void setData( final String identifier, final Serializable data ) throws RepositoryException
   {
@@ -254,12 +221,12 @@ public class ObservationServiceRepository extends AbstractRepository implements 
 
   IRepositoryItem getParent( final String identifier ) throws RepositoryException
   {
-    ItemBean parentBean = getService().getParent( identifier );
+    final ItemBean parentBean = getService().getParent( identifier );
     if( parentBean == null )
       return null;
 
     /** item bean == IRepository? */
-    String parentIdentifier = parentBean.getId();
+    final String parentIdentifier = parentBean.getId();
     if( StringUtils.isEmpty( RepositoryItems.getPlainId( parentIdentifier ) ) )
       return this;
 

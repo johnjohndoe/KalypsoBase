@@ -300,7 +300,8 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
     {
       m_logger.throwing( getClass().getName(), "init", e ); //$NON-NLS-1$
 
-      throw new RepositoryException( "Exception in KalypsoObservationService.init()", e ); //$NON-NLS-1$
+      /** don't throw exception - in sachsen anhalt it's normal that the wiski repository don't exists on server side */
+//      throw new RepositoryException( "Exception in KalypsoObservationService.init()", e ); //$NON-NLS-1$
     }
   }
 
@@ -606,20 +607,18 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
   {
     init();
 
-    for( final Object element : m_repositories )
+    for( final IRepository repository : m_repositories )
     {
-      final IRepository rep = (IRepository) element;
-
       final IRepositoryItem item;
 
       // first check the repository itself, then look into it
-      if( rep.getIdentifier().equals( id ) )
-        item = rep;
+      if( repository.getIdentifier().equals( id ) )
+        item = repository;
       else
       {
         try
         {
-          item = rep.findItem( id );
+          item = Repositories.findEquivalentItem( repository, id );
         }
         catch( final RepositoryException e )
         {
@@ -690,7 +689,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
     {
       if( repository instanceof IWriteableRepository )
       {
-        final IRepositoryItem item = repository.findItem( identifier );
+        final IRepositoryItem item = Repositories.findEquivalentItem( repository, identifier );
         if( item instanceof IWriteableRepositoryItem )
         {
           if( serializable instanceof Serializable )
@@ -757,7 +756,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
   }
 
   @Override
-  public ItemBean getParent( String identifier ) throws RepositoryException
+  public ItemBean getParent( final String identifier ) throws RepositoryException
   {
     init();
 
