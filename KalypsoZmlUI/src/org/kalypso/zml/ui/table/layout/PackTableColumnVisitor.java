@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.layout;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.TableColumn;
@@ -141,6 +142,8 @@ public class PackTableColumnVisitor extends AbstractTableColumnPackVisitor
       return;
 
     final String tokenizedName = modelColumn.getLabelTokenizer();
+    if( StringUtils.isEmpty( tokenizedName ) )
+      return;
 
     final String label = ObservationTokenHelper.replaceTokens( tokenizedName, observation, axis );
     modelColumn.setLabel( label );
