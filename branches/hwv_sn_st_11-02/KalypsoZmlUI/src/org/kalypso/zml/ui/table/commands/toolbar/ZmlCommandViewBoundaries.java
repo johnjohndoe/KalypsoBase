@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.zml.core.table.binding.ZmlRuleResolver;
@@ -101,7 +102,8 @@ public class ZmlCommandViewBoundaries extends AbstractHandler implements IElemen
         reference.setUrl( lnkRule );
 
         final ZmlRule rule = resolver.findRule( null, reference );
-        myRules.add( rule );
+        if( Objects.isNotNull( rule ) )
+          myRules.add( rule );
       }
       catch( final CoreException e )
       {
