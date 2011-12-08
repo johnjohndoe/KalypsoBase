@@ -43,6 +43,10 @@ package org.kalypso.ogc.sensor;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
+
 /**
  * @author Dirk Kuch
  */
@@ -82,6 +86,24 @@ public class TupleModelDataSet
   public IAxis getValueAxis( )
   {
     return m_valueAxis;
+  }
+
+  @Override
+  public String toString( )
+  {
+    final StringBuilder builder = new StringBuilder();
+    builder.append( String.format( "Axis - name = %s, type= %s, unit = %s\n", m_valueAxis.getName(), m_valueAxis.getType(), m_valueAxis.getUnit() ) ); //$NON-NLS-1$
+
+    if( Objects.isNotNull( m_value ) )
+      builder.append( String.format( "Value: %.2f", m_value.doubleValue() ) ); //$NON-NLS-1$
+
+    if( Objects.isNotNull( m_status ) )
+      builder.append( String.format( "Status: %.2f", KalypsoStatusUtils.getTooltipFor( m_status ) ) ); //$NON-NLS-1$
+
+    if( StringUtils.isNotEmpty( m_source ) )
+      builder.append( String.format( "DataSource: %.2f", m_source ) ); //$NON-NLS-1$
+
+    return builder.toString();
   }
 
   @Override
