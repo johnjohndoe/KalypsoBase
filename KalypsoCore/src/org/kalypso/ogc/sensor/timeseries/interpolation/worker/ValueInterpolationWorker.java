@@ -123,8 +123,6 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
   private void setStartValues( final LocalCalculationStack stack, final Calendar calendar ) throws SensorException
   {
     final SimpleTupleModel interpolated = getInterpolatedModel();
-    AxisUtils.findDateAxis( interpolated.getAxes() );
-
     final IAxis dateAxis = getDateAxis();
 
     final LocalCalculationStackValue[] values = stack.getValues();
@@ -140,7 +138,7 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
 
       for( final LocalCalculationStackValue value : values )
       {
-        final TupleModelDataSet dataSet = toDataSet( interpolated, 0, value );
+        final TupleModelDataSet dataSet = toDataSet( getBaseModel(), 0, value );
         value.setValue1( dataSet );
       }
 
@@ -311,7 +309,8 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
           final String source = dataSet.getSource();
           if( StringUtils.isNotEmpty( source ) )
           {
-            tuple[posDataSourceAxis] = dataSourceHandler.getDataSourceIndex( source );
+            final int dataSourceIndex = dataSourceHandler.getDataSourceIndex( source );
+            tuple[posDataSourceAxis] = dataSourceIndex;
           }
         }
 

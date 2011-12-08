@@ -28,6 +28,24 @@ public class LocalCalculationStackValue
     return m_axis;
   }
 
+  @Override
+  public String toString( )
+  {
+    final StringBuilder builder = new StringBuilder();
+    builder.append( String.format( "Axis:\t\t%s\n", m_axis.getName() ) ); //$NON-NLS-1$
+
+    if( Objects.isNotNull( m_value1 ) )
+      builder.append( String.format( "Value 1:\n%s\n", m_value1 ) ); //$NON-NLS-1$
+
+    if( Objects.isNotNull( m_value2 ) )
+      builder.append( String.format( "Value 2:\n%s\n", m_value2 ) ); //$NON-NLS-1$
+
+    if( Objects.isNotNull( m_defaultValue ) )
+      builder.append( String.format( "Default Value:\n%s\n", m_defaultValue ) ); //$NON-NLS-1$
+
+    return builder.toString();
+  }
+
   protected TupleModelDataSet getDefaultValue( final IInterpolationFilter filter ) throws SensorException
   {
     if( Objects.isNotNull( m_defaultValue ) )

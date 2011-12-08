@@ -147,6 +147,9 @@ public class DataSourceHandler
 
   public String getDataSourceIdentifier( final int pos )
   {
+    if( pos < 0 )
+      return null;
+
     final String header = MetadataHelper.getCountedHeaderItem( IDataSourceItem.MD_DATA_SOURCE_ITEM, pos );
     final String source = m_metadata.getProperty( header );
 
@@ -214,4 +217,5 @@ public class DataSourceHandler
 
     return false;
   }
+
 }

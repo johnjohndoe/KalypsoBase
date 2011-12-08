@@ -92,16 +92,16 @@ public class TupleModelDataSet
   public String toString( )
   {
     final StringBuilder builder = new StringBuilder();
-    builder.append( String.format( "Axis - name = %s, type= %s, unit = %s\n", m_valueAxis.getName(), m_valueAxis.getType(), m_valueAxis.getUnit() ) ); //$NON-NLS-1$
+    builder.append( String.format( "Axis:\t\t%s\n", m_valueAxis.getName() ) ); //$NON-NLS-1$
 
     if( Objects.isNotNull( m_value ) )
-      builder.append( String.format( "Value: %.2f", m_value.doubleValue() ) ); //$NON-NLS-1$
+      builder.append( String.format( "Value:\t\t%.2f\n", m_value.doubleValue() ) ); //$NON-NLS-1$
 
     if( Objects.isNotNull( m_status ) )
-      builder.append( String.format( "Status: %.2f", KalypsoStatusUtils.getTooltipFor( m_status ) ) ); //$NON-NLS-1$
+      builder.append( String.format( "Status:\t\t%s\n", KalypsoStatusUtils.getTooltipFor( m_status ) ) ); //$NON-NLS-1$
 
     if( StringUtils.isNotEmpty( m_source ) )
-      builder.append( String.format( "DataSource: %.2f", m_source ) ); //$NON-NLS-1$
+      builder.append( String.format( "DataSource:\t%s", m_source ) ); //$NON-NLS-1$
 
     return builder.toString();
   }

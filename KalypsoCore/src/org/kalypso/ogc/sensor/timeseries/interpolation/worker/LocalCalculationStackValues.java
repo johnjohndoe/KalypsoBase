@@ -46,17 +46,37 @@ import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.TupleModelDataSet;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 
 /**
  * @author Dirk Kuch
  */
-public class LocalCalculationStackValues
+public final class LocalCalculationStackValues
 {
+  private LocalCalculationStackValues( )
+  {
+  }
 
   public static TupleModelDataSet getInterpolatedValue( final Calendar calendar, final LocalCalculationStack stack, final LocalCalculationStackValue value )
   {
+    final IAxis axis = value.getAxis();
+    final String axisType = axis.getType();
+    if( ITimeseriesConstants.TYPE_WECHMANN_E.equals( axisType ) )
+    {
+      return getContinuedValue( value );
+    }
+    else if( ITimeseriesConstants.TYPE_WECHMANN_SCHALTER_V.equals( axisType ) )
+    {
+      return getContinuedValue( value );
+    }
+
     return getLinearInterpolatedValue( calendar, stack, value );
+  }
+
+  private static TupleModelDataSet getContinuedValue( final LocalCalculationStackValue value )
+  {
+    return value.getValue1();
   }
 
   private static TupleModelDataSet getLinearInterpolatedValue( final Calendar calendar, final LocalCalculationStack stack, final LocalCalculationStackValue value )

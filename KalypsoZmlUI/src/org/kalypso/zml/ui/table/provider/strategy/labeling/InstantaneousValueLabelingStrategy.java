@@ -61,9 +61,6 @@ public class InstantaneousValueLabelingStrategy extends AbstractValueLabelingStr
     super( column );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.provider.IZmlLabelStrategy#getText()
-   */
   @Override
   public String getText( final IZmlModelRow row ) throws SensorException, CoreException
   {
