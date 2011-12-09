@@ -71,9 +71,6 @@ public abstract class AbstractTsLinkDiagramElement extends AbstractDiagramElemen
     return m_link;
   }
 
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals( final Object obj )
   {
@@ -91,9 +88,6 @@ public abstract class AbstractTsLinkDiagramElement extends AbstractDiagramElemen
     return super.equals( obj );
   }
 
-  /**
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode( )
   {

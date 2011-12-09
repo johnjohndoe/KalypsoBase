@@ -102,7 +102,6 @@ public class ZmlMemento implements IZmlMemento
     }
 
     providers.add( provider );
-
     provider.addListener( m_obsListener );
   }
 
@@ -125,16 +124,19 @@ public class ZmlMemento implements IZmlMemento
   {
     synchronized( this )
     {
-      final Collection<List<ILabeledObsProvider>> providers = m_provider.values();
-      m_provider.clear();
 
-      for( final List<ILabeledObsProvider> ps : providers )
+      final Set<Entry<IPoolableObjectType, List<ILabeledObsProvider>>> entries = m_provider.entrySet();
+      for( final Entry<IPoolableObjectType, List<ILabeledObsProvider>> entry : entries )
       {
-        for( final ILabeledObsProvider p : ps )
+        final List<ILabeledObsProvider> providers = entry.getValue();
+        for( final ILabeledObsProvider provider : providers )
         {
-          p.dispose();
+          provider.removeListener( m_obsListener );
+          provider.dispose();
         }
       }
+
+      m_provider.clear();
 
     }
   }

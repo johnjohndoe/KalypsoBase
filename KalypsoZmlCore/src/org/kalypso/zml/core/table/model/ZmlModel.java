@@ -153,24 +153,12 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
     m_listeners.add( listener );
   }
 
-  public void clean( )
+  public void doClean( )
   {
-    KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlTableModel - purge() model" );
-
+    KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlTableModel - doClean()-ing model" );
     m_loader.cancel();
 
-    final ZmlModelColumn[] columns;
-    synchronized( this )
-    {
-      columns = m_columns.toArray( new ZmlModelColumn[] {} );
-      m_columns.clear();
-      m_rows.clear();
-    }
-
-    for( final ZmlModelColumn column : columns )
-    {
-      column.purge();
-    }
+    m_rows.clear();
 
     fireModelChanged();
   }
@@ -178,7 +166,16 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
   @Override
   public void dispose( )
   {
-    clean();
+    doClean();
+
+    final ZmlModelColumn[] columns = m_columns.toArray( new ZmlModelColumn[] {} );
+    m_columns.clear();
+
+    for( final ZmlModelColumn column : columns )
+    {
+      column.removeListener( this );
+      column.dispose();
+    }
 
     m_memento.dispose();
   }

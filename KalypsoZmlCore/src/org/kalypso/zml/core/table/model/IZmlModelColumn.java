@@ -109,4 +109,6 @@ public interface IZmlModelColumn
   String getLabelTokenizer( );
 
   boolean isLabeled( );
+
+  void removeListener( IZmlModelColumnListener listener );
 }
