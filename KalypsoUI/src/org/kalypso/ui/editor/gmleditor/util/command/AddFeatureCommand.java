@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,16 +36,19 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.gmleditor.util.command;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -96,6 +99,29 @@ public class AddFeatureCommand implements ICommand
    * @param If
    *          dropSelection is true, the workspace must be a {@link CommandableWorkspace}.
    */
+  public AddFeatureCommand( final GMLWorkspace workspace, final QName type, final Feature parentFeature, final IRelationType propertyName, final int pos, final Map<QName, Object> properties, final IFeatureSelectionManager selectionManager, final int depth )
+  {
+    this( workspace, GMLSchemaUtilities.getFeatureTypeQuiet( type ), parentFeature, propertyName, pos, convertProperties( GMLSchemaUtilities.getFeatureTypeQuiet( type ), properties ), selectionManager, depth );
+  }
+
+  private static Map<IPropertyType, Object> convertProperties( final IFeatureType featureType, final Map<QName, Object> properties )
+  {
+    final Map<IPropertyType, Object> typedProperties = new HashMap<IPropertyType, Object>();
+
+    for( final Entry<QName, Object> entry : properties.entrySet() )
+    {
+      final IPropertyType propertyType = featureType.getProperty( entry.getKey() );
+      if( propertyType != null )
+        typedProperties.put( propertyType, entry.getValue() );
+    }
+
+    return typedProperties;
+  }
+
+  /**
+   * @param If
+   *          dropSelection is true, the workspace must be a {@link CommandableWorkspace}.
+   */
   public AddFeatureCommand( final GMLWorkspace workspace, final IFeatureType type, final Feature parentFeature, final IRelationType propertyName, final int pos, final Map<IPropertyType, Object> properties, final IFeatureSelectionManager selectionManager, final int depth )
   {
     m_workspace = workspace;
@@ -131,7 +157,7 @@ public class AddFeatureCommand implements ICommand
   /**
    * Alternative constructor: instead of specifying the properties and let the command create the feature a newly
    * created feature is provided from outside.
-   * 
+   *
    * @param doAddOnProcess
    *          If false, the new feature will NOT be added/set to the given relation (propertyName). This is necessary if
    *          the feature was already added before.
