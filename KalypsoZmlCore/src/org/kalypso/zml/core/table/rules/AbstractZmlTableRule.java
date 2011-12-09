@@ -1,4 +1,4 @@
-package org.kalypso.zml.core.table.rules.impl;
+package org.kalypso.zml.core.table.rules;
 
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
@@ -46,17 +46,12 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.core.table.rules.IZmlRuleImplementation;
 
 /**
  * @author Dirk Kuch
  */
 public abstract class AbstractZmlTableRule implements IZmlRuleImplementation
 {
-  /**
-   * @see org.kalypso.zml.ui.core.rules.IZmlTableRule#update(org.kalypso.zml.ui.table.model.IZmlModelRow,
-   *      org.kalypso.zml.ui.table.binding.BaseColumn, java.lang.String)
-   */
   @SuppressWarnings("unused")
   @Override
   public String update( final ZmlRule rule, final IZmlValueReference reference, final String text ) throws SensorException
@@ -64,10 +59,6 @@ public abstract class AbstractZmlTableRule implements IZmlRuleImplementation
     return text;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.core.rules.IZmlRuleImplementation#apply(org.kalypso.zml.ui.table.binding.ZmlRule,
-   *      org.kalypso.zml.ui.table.model.references.IZmlValueReference)
-   */
   @Override
   public final boolean apply( final ZmlRule rule, final IZmlValueReference reference )
   {
@@ -90,28 +81,18 @@ public abstract class AbstractZmlTableRule implements IZmlRuleImplementation
 
   protected abstract boolean doApply( ZmlRule rule, IZmlValueReference reference );
 
-  /**
-   * @see org.kalypso.zml.core.table.rules.IZmlRuleImplementation#getCellStyle(org.kalypso.zml.core.table.model.references.IZmlValueReference)
-   */
   @Override
   public CellStyle getCellStyle( final ZmlRule rule, final IZmlValueReference reference ) throws CoreException
   {
     return rule.getPlainStyle();
   }
 
-  /**
-   * @see org.kalypso.zml.core.table.rules.IZmlRuleImplementation#getLabel(org.kalypso.zml.core.table.model.references.IZmlValueReference)
-   */
   @Override
   public String getLabel( final ZmlRule rule, final IZmlValueReference reference )
   {
     return rule.getRuleType().getLabel();
   }
 
-  /**
-   * @see org.kalypso.zml.core.table.rules.IZmlRuleImplementation#getSeverity(org.kalypso.zml.core.table.binding.rule.ZmlRule,
-   *      org.kalypso.zml.core.table.model.references.IZmlValueReference)
-   */
   @Override
   public Double getSeverity( final ZmlRule rule, final IZmlValueReference reference )
   {
