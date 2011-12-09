@@ -64,8 +64,8 @@ public class TupleModelDataSet
   {
     m_valueAxis = valueAxis;
     m_value = value;
-    setStatus( status );
-    setSource( source );
+    m_status = status;
+    m_source = source;
   }
 
   public Number getValue( )
