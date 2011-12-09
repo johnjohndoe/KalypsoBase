@@ -90,6 +90,9 @@ public class ImportObservationData extends AbstractModelObject
 
     if( m_adapters.length > 0 )
       m_adapter = m_adapters[0];
+
+    if( m_allowedParameterAxes.length > 0 )
+      m_parameterAxis = m_allowedParameterAxes[0];
   }
 
   private INativeObservationAdapter[] filterAdapters( final INativeObservationAdapter[] adapters, final Set<String> minimalTypes )

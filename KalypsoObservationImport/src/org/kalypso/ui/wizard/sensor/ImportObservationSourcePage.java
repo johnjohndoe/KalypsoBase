@@ -172,6 +172,8 @@ public class ImportObservationSourcePage extends WizardPage
 
     comboTimeZones.addFilter( new TimezoneEtcFilter() );
 
+    new Label( parent, SWT.NONE );
+
     /* Binding */
     final IViewerObservableValue targetSelection = ViewersObservables.observeSinglePostSelection( comboTimeZones );
     final ISWTObservableValue targetModification = SWTObservables.observeSelection( comboTimeZones.getControl() );
