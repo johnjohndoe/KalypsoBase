@@ -40,15 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands.toolbar;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
+import org.eclipse.ui.progress.UIJob;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.zml.core.table.binding.DataColumn;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
@@ -66,42 +71,64 @@ import com.google.common.collect.Iterables;
  */
 public class ZmlCommandHideColumns extends AbstractHandler implements IElementUpdater
 {
+  protected static final Map<String, Boolean> STATES = new HashMap<String, Boolean>(); // FIXME
 
   @Override
   public Object execute( final ExecutionEvent event )
   {
-    final String[] columnTypes = getColumnTypes( event );
+    final Map parameters = event.getParameters();
+    final String[] columnTypes = getColumnTypes( parameters );
     final boolean hide = HandlerUtils.isSelected( event );
+    for( final String type : columnTypes )
+    {
+      STATES.put( type, hide );
+    }
 
     final IZmlTable table = ZmlHandlerUtil.getTable( event );
-    table.accept( new IZmlTableColumnVisitor()
+
+    final UIJob job = new UIJob( "Aktualisiere Sichtbarkeit" )
     {
+
       @Override
-      public void visit( final IZmlTableColumn column )
+      public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        if( column.isIndexColumn() )
-          return;
-
-        final IZmlModelColumn modelColumn = column.getModelColumn();
-        final DataColumn dataColumn = modelColumn.getDataColumn();
-
-        final DataColumnType dataColumnType = dataColumn.getType();
-        final String columnTypeId = dataColumnType.getId();
-
-        if( ArrayUtils.contains( columnTypes, columnTypeId ) )
+        table.accept( new IZmlTableColumnVisitor()
         {
-          column.setVisible( !hide );
-        }
+          @Override
+          public void visit( final IZmlTableColumn column )
+          {
+            if( column.isIndexColumn() )
+              return;
 
+            final IZmlModelColumn modelColumn = column.getModelColumn();
+            final DataColumn dataColumn = modelColumn.getDataColumn();
+
+            final DataColumnType dataColumnType = dataColumn.getType();
+            final String columnTypeId = dataColumnType.getId();
+
+            if( ArrayUtils.contains( columnTypes, columnTypeId ) )
+            {
+              column.setVisible( !hide );
+            }
+
+          }
+        } );
+
+        return Status.OK_STATUS;
       }
-    } );
+    };
+
+    job.setUser( false );
+    job.setSystem( false );
+
+    job.schedule( 250 );
 
     return Status.OK_STATUS;
   }
 
-  private String[] getColumnTypes( final ExecutionEvent event )
+  private String[] getColumnTypes( final Map parameters )
   {
-    final Map parameters = event.getParameters();
+
     final String types = (String) parameters.get( "column.type" ); //$NON-NLS-1$
     if( StringUtils.isEmpty( types ) )
       return new String[] {};
@@ -114,12 +141,19 @@ public class ZmlCommandHideColumns extends AbstractHandler implements IElementUp
   @Override
   public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
   {
-// final ZmlRule[] rules = findRules( parameters );
-// for( final ZmlRule rule : rules )
-// {
-// if( rule.isEnabled() )
-// element.setChecked( true );
-// }
-  }
+    // FIXME
+    final String[] types = getColumnTypes( parameters );
+    for( final String type : types )
+    {
+      final Boolean state = STATES.get( type );
+      if( Objects.isNotNull( state ) )
+      {
+        element.setChecked( state );
+        return;
+      }
+    }
 
+    element.setChecked( false );
+
+  }
 }
