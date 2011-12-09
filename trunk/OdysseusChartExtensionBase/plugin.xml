@@ -6,13 +6,7 @@
       <provider
             class="de.openali.odysseus.chart.ext.base.layer.provider.GridLayerProvider"
             id="de.openali.odysseus.chart.ext.layer.provider.Grid"/>
-      <provider
-            class="de.openali.odysseus.chart.ext.base.layer.provider.CSVBarLayerProvider"
-            id="de.openali.odysseus.chart.ext.layer.provider.CSVBar"/>
-      <provider
-            class="de.openali.odysseus.chart.ext.base.layer.provider.CSVLineLayerProvider"
-            id="de.openali.odysseus.chart.ext.layer.provider.CSVLine"/>
-      <provider
+       <provider
             class="de.openali.odysseus.chart.ext.base.layer.provider.UVFLayerProvider"
             id="de.openali.odysseus.chart.ext.layer.provider.UVF"/>
       <provider
