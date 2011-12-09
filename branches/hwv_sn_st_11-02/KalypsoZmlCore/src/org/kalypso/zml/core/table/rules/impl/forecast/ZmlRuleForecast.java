@@ -47,7 +47,7 @@ import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.binding.rule.instructions.AbstractZmlRuleInstructionType;
 import org.kalypso.zml.core.table.binding.rule.instructions.ZmlMetadataDaterangeInstruction;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.core.table.rules.impl.AbstractZmlTableRule;
+import org.kalypso.zml.core.table.rules.AbstractZmlTableRule;
 
 /**
  * @author Dirk Kuch
