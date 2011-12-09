@@ -67,6 +67,8 @@ public abstract class AbstractZmlTableColumn extends ZmlTableElement implements 
 
   private final BaseColumn m_type;
 
+  private boolean m_visible = true;
+
   public AbstractZmlTableColumn( final IZmlTable table, final TableViewerColumn column, final BaseColumn type )
   {
     super( table );
@@ -135,6 +137,9 @@ public abstract class AbstractZmlTableColumn extends ZmlTableElement implements 
   @Override
   public boolean isVisible( )
   {
+    if( !m_visible )
+      return false;
+
     if( isIndexColumn() )
       return true;
 
@@ -194,4 +199,16 @@ public abstract class AbstractZmlTableColumn extends ZmlTableElement implements 
     m_type.reset();
   }
 
+  @Override
+  public void setVisible( final boolean visibility )
+  {
+    if( Objects.notEqual( m_visible, visibility ) )
+    {
+      m_visible = visibility;
+
+      final IZmlModelColumn modelColumn = getModelColumn();
+      if( Objects.isNotNull( modelColumn ) )
+        modelColumn.fireColumnChangedEvent();
+    }
+  }
 }
