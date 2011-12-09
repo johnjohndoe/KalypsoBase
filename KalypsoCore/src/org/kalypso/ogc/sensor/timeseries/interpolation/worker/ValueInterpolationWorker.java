@@ -49,6 +49,7 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.DateRange;
@@ -160,9 +161,12 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
         final TupleModelDataSet dataSet = toDataSet( getBaseModel(), 0, value );
         value.setValue1( dataSet );
 
+        final IAxis statusAxis = AxisUtils.findStatusAxis( interpolated.getAxes(), dataSet.getValueAxis() );
+        final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( interpolated.getAxes(), dataSet.getValueAxis() );
+
         final int posValueAxis = interpolated.getPosition( dataSet.getValueAxis() );
-        final int posStatusAxis = interpolated.getPosition( AxisUtils.findStatusAxis( interpolated.getAxes(), dataSet.getValueAxis() ) );
-        final int posDataSourceAxis = interpolated.getPosition( AxisUtils.findDataSourceAxis( interpolated.getAxes(), dataSet.getValueAxis() ) );
+        final int posStatusAxis = Objects.isNotNull( statusAxis ) ? interpolated.getPosition( statusAxis ) : -1;
+        final int posDataSourceAxis = Objects.isNotNull( dataSourceAxis ) ? interpolated.getPosition( dataSourceAxis ) : -1;
 
         if( posValueAxis >= 0 )
           tuple[posValueAxis] = dataSet.getValue();
@@ -296,14 +300,17 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
       {
         final TupleModelDataSet dataSet = LocalCalculationStackValues.getInterpolatedValue( calendar, stack, value );
 
+        final IAxis statusAxis = AxisUtils.findStatusAxis( interpolatedModel.getAxes(), dataSet.getValueAxis() );
+        final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( interpolatedModel.getAxes(), dataSet.getValueAxis() );
+
         final int posValueAxis = interpolatedModel.getPosition( dataSet.getValueAxis() );
-        final int posStatusAxis = interpolatedModel.getPosition( AxisUtils.findStatusAxis( interpolatedModel.getAxes(), dataSet.getValueAxis() ) );
-        final int posDataSourceAxis = interpolatedModel.getPosition( AxisUtils.findDataSourceAxis( interpolatedModel.getAxes(), dataSet.getValueAxis() ) );
+        final int posStatusAxis = Objects.isNotNull( statusAxis ) ? interpolatedModel.getPosition( statusAxis ) : -1;
+        final int posDataSourceAxis = Objects.isNotNull( dataSourceAxis ) ? interpolatedModel.getPosition( dataSourceAxis ) : -1;
 
         if( posValueAxis >= 0 )
           tuple[posValueAxis] = dataSet.getValue();
         if( posStatusAxis >= 0 )
-          tuple[posDataSourceAxis] = dataSet.getStatus();
+          tuple[posStatusAxis] = dataSet.getStatus();
         if( posDataSourceAxis >= 0 )
         {
           final String source = dataSet.getSource();

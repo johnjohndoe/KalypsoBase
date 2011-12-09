@@ -152,7 +152,7 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
   {
     final IAxis[] axes = getBaseModel().getAxes();
 
-    return AxisUtils.findValueAxes( axes );
+    return AxisUtils.findValueAxes( axes, false );
   }
 
   /**

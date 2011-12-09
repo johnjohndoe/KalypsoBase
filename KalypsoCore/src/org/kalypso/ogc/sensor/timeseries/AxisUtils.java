@@ -77,6 +77,11 @@ public final class AxisUtils implements ITimeseriesConstants
 
   public static boolean isValueAxis( final IAxis axis )
   {
+    return isValueAxis( axis, true );
+  }
+
+  private static boolean isValueAxis( final IAxis axis, final boolean persistable )
+  {
     if( Objects.isNull( axis ) )
       return false;
 
@@ -86,10 +91,9 @@ public final class AxisUtils implements ITimeseriesConstants
       return false;
     else if( isStatusAxis( axis ) )
       return false;
-    else if( !axis.isPersistable() )
+    else if( persistable && !axis.isPersistable() )
       return false;
 
-    // TODO so return true?
     return true;
   }
 
@@ -121,9 +125,14 @@ public final class AxisUtils implements ITimeseriesConstants
 
   public static IAxis findValueAxis( final IAxis[] axes )
   {
+    return findValueAxis( axes, true );
+  }
+
+  public static IAxis findValueAxis( final IAxis[] axes, final boolean persistable )
+  {
     for( final IAxis axis : axes )
     {
-      if( isValueAxis( axis ) )
+      if( isValueAxis( axis, persistable ) )
         return axis;
     }
 
@@ -191,15 +200,20 @@ public final class AxisUtils implements ITimeseriesConstants
 
   public static IAxis[] findValueAxes( final Collection<IAxis> axes )
   {
-    return findValueAxes( axes.toArray( new IAxis[] {} ) );
+    return findValueAxes( axes.toArray( new IAxis[] {} ), true );
   }
 
   public static IAxis[] findValueAxes( final IAxis[] axes )
   {
+    return findValueAxes( axes, true );
+  }
+
+  public static IAxis[] findValueAxes( final IAxis[] axes, final boolean persistable )
+  {
     final List<IAxis> valueAxes = new ArrayList<IAxis>();
     for( final IAxis axis : axes )
     {
-      if( isValueAxis( axis ) )
+      if( isValueAxis( axis, persistable ) )
         valueAxes.add( axis );
     }
 
