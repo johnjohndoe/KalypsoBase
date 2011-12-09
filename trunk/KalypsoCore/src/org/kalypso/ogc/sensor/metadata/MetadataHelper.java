@@ -281,4 +281,69 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
 
     return null;
   }
+
+  public static void setTimestep( final MetadataList mdl, final Period timestep )
+  {
+    final int[] values = timestep.getValues();
+    int fieldCount = 0;
+    for( final int value : values )
+    {
+      if( value != 0 )
+        fieldCount++;
+    }
+
+    if( fieldCount > 1 )
+      throw new IllegalArgumentException( "Unable to set timestep with more than one field: " + timestep );
+
+    int amount = -1;
+    int calendarField = -1;
+
+    if( timestep.getDays() != 0 )
+    {
+      amount = timestep.getDays();
+      calendarField = Calendar.DAY_OF_MONTH;
+    }
+    else if( timestep.getHours() != 0 )
+    {
+      amount = timestep.getHours();
+      calendarField = Calendar.HOUR_OF_DAY;
+    }
+    else if( timestep.getMillis() != 0 )
+    {
+      amount = timestep.getMillis();
+      calendarField = Calendar.MILLISECOND;
+    }
+    else if( timestep.getMinutes() != 0 )
+    {
+      amount = timestep.getMinutes();
+      calendarField = Calendar.MINUTE;
+    }
+    else if( timestep.getMonths() != 0 )
+    {
+      amount = timestep.getMonths();
+      calendarField = Calendar.MONTH;
+    }
+    else if( timestep.getSeconds() != 0 )
+    {
+      amount = timestep.getSeconds();
+      calendarField = Calendar.SECOND;
+    }
+    else if( timestep.getWeeks() != 0 )
+    {
+      amount = timestep.getWeeks();
+      calendarField = Calendar.WEEK_OF_YEAR;
+    }
+    else if( timestep.getYears() != 0 )
+    {
+      amount = timestep.getYears();
+      calendarField = Calendar.YEAR;
+    }
+
+    if( amount == -1 )
+      throw new IllegalArgumentException( "Unable to set 0 timestep" );
+
+    setTimestep( mdl, calendarField, amount );
+
+    return;
+  }
 }
