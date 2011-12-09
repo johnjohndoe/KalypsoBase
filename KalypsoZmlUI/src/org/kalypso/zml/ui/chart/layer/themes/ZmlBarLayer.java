@@ -77,13 +77,9 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
 
   private final ZmlBarLayerRangeHandler m_range = new ZmlBarLayerRangeHandler( this );
 
-  // private final IStyleSet m_styleSet;
-
   public ZmlBarLayer( final IZmlLayerProvider layerProvider, final IStyleSet styleSet, final URL context )
   {
     super( layerProvider, styleSet );
-    // m_styleSet = styleSet;
-
     setup( context );
   }
 
