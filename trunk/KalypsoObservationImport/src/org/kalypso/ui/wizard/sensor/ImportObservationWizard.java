@@ -81,10 +81,6 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
     setWindowTitle( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationWizard.0" ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
-   *      org.eclipse.jface.viewers.IStructuredSelection)
-   */
   @Override
   public void init( final IWorkbench workbench, final IStructuredSelection currentSelection )
   {
@@ -97,16 +93,13 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
     setNeedsProgressMonitor( true );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.IWizard#addPages()
-   */
   @Override
   public void addPages( )
   {
-    super.addPages();
+    // FIXME: use new ImportObservationSourcePage etc.
 
-    m_importPage = new ImportObservationSelectionWizardPage( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationWizard.3" ) ); //$NON-NLS-1$
-    m_axisMappingPage = new ImportObservationAxisMappingWizardPage( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationWizard.2" ) ); //$NON-NLS-1$
+    m_importPage = new ImportObservationSelectionWizardPage( "importPage" ); //$NON-NLS-1$
+    m_axisMappingPage = new ImportObservationAxisMappingWizardPage( "axisPage" ); //$NON-NLS-1$
 
     addPage( m_importPage );
     addPage( m_axisMappingPage );
@@ -115,18 +108,6 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
     m_importPage.addSelectionChangedListener( m_axisMappingPage );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.IWizard#performCancel()
-   */
-  @Override
-  public boolean performCancel( )
-  {
-    return true;
-  }
-
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#performFinish()
-   */
   @Override
   public boolean performFinish( )
   {
