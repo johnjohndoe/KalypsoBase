@@ -102,9 +102,6 @@ public class SimpleEditingStrategy extends AbstractEditingStrategy
     }
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy#isAggregated()
-   */
   @Override
   public boolean isAggregated( )
   {

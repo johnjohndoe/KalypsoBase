@@ -47,7 +47,7 @@ import java.util.TreeMap;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.core.util.pool.IPoolableObjectType;
-import org.kalypso.ogc.sensor.provider.IObsProvider;
+import org.kalypso.zml.core.diagram.base.provider.observation.AsynchronousObservationProvider;
 import org.kalypso.zml.core.diagram.base.zml.MultipleTsLink;
 import org.kalypso.zml.core.diagram.base.zml.TSLinkWithName;
 import org.kalypso.zml.core.diagram.base.zml.TsLinkWrapper;
@@ -120,10 +120,11 @@ public class ZmlTableUpdater implements Runnable
 
   private void doLoadModelColumn( final TSLinkWithName link, final ZmlLinkDiagramElement element )
   {
-    final IObsProvider clonedProvider = element.getObsProvider().copy();
+    final AsynchronousObservationProvider provider = element.getObsProvider();
+
     m_part.getModel().getLoader().load( element );
 
-    final ILabeledObsProvider obsWithLabel = new TsLinkObsProvider( link, clonedProvider );
+    final ILabeledObsProvider obsWithLabel = new TsLinkObsProvider( link, provider.copy() );
     final IPoolableObjectType poolKey = element.getPoolKey();
     m_part.getModel().getMemento().register( poolKey, obsWithLabel );
 

@@ -106,6 +106,12 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   }
 
   @Override
+  public void removeListener( final IZmlModelColumnListener listener )
+  {
+    m_listeners.remove( listener );
+  }
+
+  @Override
   public void setLabel( final String label )
   {
     m_label = label;
@@ -126,21 +132,25 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
       m_type.reset();
 
       if( Objects.isNotNull( m_handler ) )
+      {
         m_handler.removeListener( this );
+        m_handler.dispose();
+      }
 
       m_handler = handler;
       m_handler.addListener( this );
 
       fireColumnChanged();
     }
-
   }
 
-  public void purge( )
+  public void dispose( )
   {
     if( Objects.isNotNull( m_handler ) )
     {
+      m_handler.removeListener( this );
       m_handler.dispose();
+
       fireColumnChanged();
     }
 

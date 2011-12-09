@@ -192,6 +192,16 @@
           id="org.kalypso.zml.ui.table.commands.debug.dialog"
           name="Debug-Dialog">
     </command>
+    <command
+          categoryId="org.kalypso.zml.ui.table.commands.category"
+          id="org.kalypso.zml.ui.table.commands.toolbar.view.hide.column"
+          name="Hide Table Column">
+       <commandParameter
+             id="column.type"
+             name="column.type"
+             optional="true">
+       </commandParameter>
+    </command>
  </extension>
  <extension
        point="org.eclipse.ui.handlers">
@@ -259,6 +269,10 @@
     <handler
           class="org.kalypso.zml.ui.table.debug.OpenDebugDialogHandler"
           commandId="org.kalypso.zml.ui.table.commands.debug.dialog">
+    </handler>
+    <handler
+          class="org.kalypso.zml.ui.table.commands.toolbar.ZmlCommandHideColumns"
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.view.hide.column">
     </handler>
  </extension>
   <extension
