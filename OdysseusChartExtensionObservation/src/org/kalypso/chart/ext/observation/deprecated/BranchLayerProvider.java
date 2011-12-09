@@ -1,11 +1,10 @@
-package org.kalypso.chart.ext.observation.layer.provider;
+package org.kalypso.chart.ext.observation.deprecated;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.kalypso.chart.ext.observation.layer.BranchLayer;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;

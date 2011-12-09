@@ -1,4 +1,4 @@
-package de.openali.odysseus.chart.ext.base.layer.provider;
+package de.openali.odysseus.chart.ext.base.deprecated;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

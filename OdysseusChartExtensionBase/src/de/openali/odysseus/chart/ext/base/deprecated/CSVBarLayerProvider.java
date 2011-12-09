@@ -1,4 +1,4 @@
-package de.openali.odysseus.chart.ext.base.layer.provider;
+package de.openali.odysseus.chart.ext.base.deprecated;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.TimeZone;
 
 import de.openali.odysseus.chart.ext.base.data.AbstractDomainIntervalValueFileData;
-import de.openali.odysseus.chart.ext.base.layer.DefaultBarLayer;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.factory.util.ChartFactoryUtilities;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;

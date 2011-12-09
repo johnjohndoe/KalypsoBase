@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.chart.ext.observation.layer;
+package org.kalypso.chart.ext.observation.deprecated;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +67,10 @@ import de.openali.odysseus.chart.framework.model.style.IStyleSet;
  * crash if the TupleResult contains Components which are not subclasses of the types Number or Calendar.
  * 
  * @author burtscher1
+ * @Deprecated
+ * FIXME: not used
  */
+@Deprecated
 public class RealTupleResultLineLayer extends AbstractLineLayer
 {
 

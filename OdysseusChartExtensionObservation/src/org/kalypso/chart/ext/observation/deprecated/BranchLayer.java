@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.chart.ext.observation.layer;
+package org.kalypso.chart.ext.observation.deprecated;
 
 import java.text.Format;
 import java.util.ArrayList;
