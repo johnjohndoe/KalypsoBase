@@ -63,11 +63,11 @@ import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
-import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINECAP;
+import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
@@ -97,9 +97,10 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   private final String m_targetRangeProperty;
 
+ 
   public AbstractProfilLayer( final String id, final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
   {
-    super( null );
+    super( null ,new StyleSet());
 
     m_profil = profil;
     m_targetRangeProperty = targetRangeProperty;
@@ -143,15 +144,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     return null;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#createLegendEntries()
-   */
-  @Override
-  protected ILegendEntry[] createLegendEntries( )
-  {
-    // override this method
-    return null;
-  }
+ 
 
   private void createStyles( final ILayerStyleProvider styleProvider, final String id )
   {

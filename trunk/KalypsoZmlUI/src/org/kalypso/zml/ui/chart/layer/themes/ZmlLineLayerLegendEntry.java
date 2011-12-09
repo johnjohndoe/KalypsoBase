@@ -82,7 +82,7 @@ public class ZmlLineLayerLegendEntry
         final Point[] points = path.toArray( new Point[path.size()] );
 
         final PolylineFigure polylineFigure = new PolylineFigure();
-        polylineFigure.setStyle( m_layer.getLineStyle() );
+        polylineFigure.setStyle( m_layer.getMyLineStyle() );
         polylineFigure.setPoints( points );
         polylineFigure.paint( gc );
       }

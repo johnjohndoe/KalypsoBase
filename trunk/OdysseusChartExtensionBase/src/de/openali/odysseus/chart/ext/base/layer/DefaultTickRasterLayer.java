@@ -52,6 +52,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
 
@@ -65,9 +66,9 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
    */
   private static final String ID = "de.openali.odysseus.chart.ext.base.layer.DefaultTickRasterLayer"; //$NON-NLS-1$
 
-  public DefaultTickRasterLayer( final ILayerProvider provider, final ILineStyle lineStyle, final IPointStyle pointStyle )
+  public DefaultTickRasterLayer( final ILayerProvider provider, final IStyleSet styleSet )
   {
-    super( provider, lineStyle, pointStyle );
+    super( provider, styleSet );
     setIdentifier( ID );
   }
 
@@ -112,7 +113,7 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
     final int heigth = gc.getClipping().height;
 
     final PolylineFigure pf = new PolylineFigure();
-    final ILineStyle lineStyle = (ILineStyle) getStyleSet().getStyle( "line" );
+    final ILineStyle lineStyle = getStyle(ILineStyle.class );
     pf.setStyle( lineStyle );
 
     for( final Number domTick : domTicks )
@@ -131,7 +132,7 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
       pf.paint( gc );
     }
     final FullRectangleFigure figureRect = new FullRectangleFigure();
-    final IPointStyle pointStyle = (IPointStyle) getStyleSet().getStyle( "point" );
+    final IPointStyle pointStyle = getStyle( IPointStyle.class );
     if( pointStyle.isVisible() )
     {
       figureRect.setStyle( new AreaStyle( new ColorFill( pointStyle.getInlineColor() ), pointStyle.getAlpha(), pointStyle.getStroke(), pointStyle.isFillVisible() ) );

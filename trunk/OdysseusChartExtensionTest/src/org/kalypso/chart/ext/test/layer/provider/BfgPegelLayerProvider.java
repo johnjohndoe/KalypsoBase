@@ -49,8 +49,6 @@ import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.factory.util.ChartFactoryUtilities;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 /**
  * @author alibu
@@ -58,17 +56,13 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 public class BfgPegelLayerProvider extends AbstractLayerProvider
 {
 
-  private final String ROLE_LINE_STYLE = "line";
-
-  private final String ROLE_POINT_STYLE = "point";
-
   /**
    * @see org.kalypso.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
    */
   @Override
   public IChartLayer getLayer( final URL context ) throws ConfigurationException
   {
-    return new DefaultLineLayer( this, getDataContainer(), getStyleSet().getStyle( ROLE_LINE_STYLE, ILineStyle.class ), getStyleSet().getStyle( ROLE_POINT_STYLE, IPointStyle.class ) );
+    return new DefaultLineLayer( this, getDataContainer(), getStyleSet() );
   }
 
   /**

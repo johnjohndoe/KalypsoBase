@@ -60,6 +60,8 @@ import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
 
 /**
  * @author Dirk Kuch
@@ -68,12 +70,11 @@ public class AxisSelectionLayer extends AbstractChartLayer
 {
   private Point m_position;
 
-  private final ILineStyle m_style;
+// private final ILineStyle m_style;
 
-  public AxisSelectionLayer( final ILayerProvider provider, final ILineStyle style )
+  public AxisSelectionLayer( final ILayerProvider provider, final IStyleSet styleSet )
   {
-    super( provider );
-    m_style = style;
+    super( provider, styleSet );
   }
 
   /**
@@ -92,7 +93,9 @@ public class AxisSelectionLayer extends AbstractChartLayer
     final Integer y1 = targetAxis.numericToScreen( targetRange.getMax() );
 
     final PolylineFigure polylineFigure = new PolylineFigure();
-    polylineFigure.setStyle( m_style );
+    final StyleSetVisitor visitor = new StyleSetVisitor( false );
+    final ILineStyle lineStyle = visitor.visit( getStyleSet(), ILineStyle.class, 0 );
+    polylineFigure.setStyle( lineStyle );
 
     polylineFigure.setPoints( new Point[] { new Point( m_position.x, y0 ), new Point( m_position.x, y1 ) } );
     polylineFigure.paint( gc );

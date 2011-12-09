@@ -46,8 +46,8 @@ import org.eclipse.swt.graphics.Point;
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
-import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
+import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
 import de.openali.odysseus.chart.framework.util.img.GenericChartLabelRenderer;
 import de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
@@ -64,7 +64,7 @@ public class DefaultTextLayer extends AbstractChartLayer
 
   public DefaultTextLayer( final ILayerProvider provider, final String id, final IChartLabelRenderer labelRenderer, final TitleTypeBean... titleTypeBeans )
   {
-    super( provider );
+    super( provider,new StyleSet() );
 
     m_titleTypeBeans = titleTypeBeans;
     m_labelRenderer = labelRenderer;
@@ -126,14 +126,6 @@ public class DefaultTextLayer extends AbstractChartLayer
 
   }
 
-  /**
-   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#createLegendEntries()
-   */
-  @Override
-  protected ILegendEntry[] createLegendEntries( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
+  
 
 }

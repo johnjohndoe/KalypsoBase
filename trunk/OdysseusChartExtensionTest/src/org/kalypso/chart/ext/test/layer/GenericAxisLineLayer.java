@@ -53,8 +53,7 @@ import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.IPointStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
  * @author alibu
@@ -64,9 +63,9 @@ public class GenericAxisLineLayer extends AbstractLineLayer
 
   private final IListDataContainer m_data;
 
-  public GenericAxisLineLayer( final ILayerProvider provider, final IListDataContainer data, final ILineStyle lineStyle, final IPointStyle pointStyle )
+  public GenericAxisLineLayer( final ILayerProvider provider, final IListDataContainer data, final IStyleSet styleSet)
   {
-    super( provider, lineStyle, pointStyle );
+    super( provider, styleSet);
     m_data = data;
   }
 

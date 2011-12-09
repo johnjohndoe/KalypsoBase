@@ -49,9 +49,6 @@ import org.kalypso.zml.ui.chart.layer.themes.ZmlSelectionLayer;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
 
 /**
  * @author Dirk Kuch
@@ -65,11 +62,9 @@ public class ZmlSelectionLayerProvider extends AbstractLayerProvider
   {
     try
     {
-      final StyleSetVisitor visitor = new StyleSetVisitor( false );
-      final ILineStyle lineStyle = visitor.visit( getStyleSet(), ILineStyle.class, 0 );
-      final IAreaStyle areaStyle = visitor.visit( getStyleSet(), IAreaStyle.class, 0 );
+      
 
-      return new ZmlSelectionLayer( this, lineStyle, areaStyle );
+      return new ZmlSelectionLayer( this, getStyleSet() );
     }
     catch( final Throwable t )
     {

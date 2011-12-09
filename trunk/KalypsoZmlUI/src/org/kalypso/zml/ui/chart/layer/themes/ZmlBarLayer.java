@@ -77,12 +77,12 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
 
   private final ZmlBarLayerRangeHandler m_range = new ZmlBarLayerRangeHandler( this );
 
-  private final IStyleSet m_styleSet;
+  // private final IStyleSet m_styleSet;
 
   public ZmlBarLayer( final IZmlLayerProvider layerProvider, final IStyleSet styleSet, final URL context )
   {
-    super( layerProvider, null );
-    m_styleSet = styleSet;
+    super( layerProvider, styleSet );
+    // m_styleSet = styleSet;
 
     setup( context );
   }
@@ -126,12 +126,6 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
 
   @Override
   public synchronized ILegendEntry[] getLegendEntries( )
-  {
-    return createLegendEntries();
-  }
-
-  @Override
-  public ILegendEntry[] createLegendEntries( )
   {
     return m_legend.createLegendEntries( getPolygonFigure() );
   }
@@ -209,7 +203,6 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
     return ObservationTokenHelper.replaceTokens( m_labelDescriptor, observation, getDataHandler().getValueAxis() );
   }
 
-  @Override
   protected IAreaStyle getAreaStyle( )
   {
     final IStyleSet styleSet = getStyleSet();
@@ -221,8 +214,9 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
     return style;
   }
 
-  protected IStyleSet getStyleSet( )
-  {
-    return m_styleSet;
-  }
+// @Override
+// protected IStyleSet getStyleSet( )
+// {
+// return m_styleSet;
+// }
 }

@@ -56,8 +56,7 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.IPointStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
  * Equal to TupleResultLineLayer in data visualization, but works directly with TupleResult data instead of using a
@@ -86,9 +85,9 @@ public class RealTupleResultLineLayer extends AbstractLineLayer
 
   private IDataRange<Number> m_domainRange;
 
-  public RealTupleResultLineLayer( final ILayerProvider provider, final TupleResult data, final String domainComponentId, final String targetComponentId, final ILineStyle lineStyle, final IPointStyle pointStyle )
+  public RealTupleResultLineLayer( final ILayerProvider provider, final TupleResult data, final String domainComponentId, final String targetComponentId, final IStyleSet styleSet )
   {
-    super( provider, lineStyle, pointStyle );
+    super( provider, styleSet );
 
     m_data = data;
     m_domainComponentId = domainComponentId;

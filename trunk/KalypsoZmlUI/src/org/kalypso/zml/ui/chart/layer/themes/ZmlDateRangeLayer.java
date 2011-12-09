@@ -58,9 +58,9 @@ import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
-import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
+import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
 
 /**
  * ensures a specific domain date range for a chart diagram
@@ -75,7 +75,7 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
 
   public ZmlDateRangeLayer( final IZmlLayerProvider provider, final URL context )
   {
-    super( provider );
+    super( provider,new StyleSet() );
     setup( context );
   }
 
@@ -143,13 +143,7 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
     super.dispose();
   }
 
-  @Override
-  protected ILegendEntry[] createLegendEntries( )
-  {
-    return null;
-  }
-
-  @Override
+   @Override
   public IZmlLayerDataHandler getDataHandler( )
   {
     return m_dataHandler;

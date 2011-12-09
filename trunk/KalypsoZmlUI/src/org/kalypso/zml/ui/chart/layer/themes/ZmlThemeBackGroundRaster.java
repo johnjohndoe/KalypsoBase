@@ -51,6 +51,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
+import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
 
 /**
  * @author kimwerner
@@ -63,7 +64,7 @@ public class ZmlThemeBackGroundRaster extends AbstractChartLayer
 
   public ZmlThemeBackGroundRaster( final ILayerProvider provider, final IChartModel model )
   {
-    super( provider );
+    super( provider, new StyleSet() );
 
     m_model = model;
     setIdentifier( ID );

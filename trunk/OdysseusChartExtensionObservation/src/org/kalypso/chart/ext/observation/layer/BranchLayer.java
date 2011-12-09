@@ -77,7 +77,9 @@ import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
  * @author burtscher1
- */
+ * FIXME not used
+ **/
+@Deprecated
 public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
 {
 
@@ -131,7 +133,6 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
 // return (ILineStyle) getStyleSet().getStyle( "line_style" );
 // }
 
-  @Override
   @SuppressWarnings({ "unchecked", "deprecation" })
   public void init( )
   {
@@ -286,11 +287,7 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
     return new DataRange<Number>( min, max );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getLegendEntries(org.eclipse.swt.graphics.Point)
-   */
-  @Override
-  public ILegendEntry[] createLegendEntries( )
+  private ILegendEntry[] createLegendEntries( )
   {
 
     final ArrayList<ILegendEntry> entries = new ArrayList<ILegendEntry>();

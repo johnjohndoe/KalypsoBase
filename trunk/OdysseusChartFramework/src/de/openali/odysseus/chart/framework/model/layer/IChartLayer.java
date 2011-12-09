@@ -47,6 +47,7 @@ public interface IChartLayer extends ILayerContainer, IEventProvider<ILayerEvent
 
   /**
    * Initialization method; will be called after setCoordinateMapper
+   * FIXME remove from here, DataHandling
    */
   void init( );
 

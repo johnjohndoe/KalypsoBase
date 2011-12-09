@@ -294,6 +294,7 @@ public class ChartLayerFactory extends AbstractChartFactory
       layer.setCoordinateMapper( new CoordinateMapper( domainAxis, targetAxis ) );
 
     layer.setData( CONFIGURATION_TYPE_KEY, layerType );
+    //FIXME only used by EditableChartLayer and TupleResultLineLayer move to datahandling
     layer.init();
 
     final ILayerManager layerManager = layer.getLayerManager();

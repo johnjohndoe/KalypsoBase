@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.ui.view.chart.layer.wsp;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -93,6 +94,7 @@ public class WspLayer extends AbstractProfilTheme
   private final IWspLayerData m_data;
 
   private WaterlevelRenderData[] m_renderData;
+  private ILegendEntry[] m_legendEntries;
 
 
   /**
@@ -109,9 +111,20 @@ public class WspLayer extends AbstractProfilTheme
 
     m_data = data;
   }
-
+  /**
+   * @see de.openali.odysseus.chart.factory.layer.AbstractChartLayer#getLegendEntries()
+   */
   @Override
-  public ILegendEntry[] createLegendEntries( )
+  public synchronized ILegendEntry[] getLegendEntries( )
+  {
+    
+    if( ArrayUtils.isEmpty( m_legendEntries ) )
+    {
+      m_legendEntries = createLegendEntries();
+     }
+    return m_legendEntries;
+  }
+  private ILegendEntry[] createLegendEntries( )
   {
     final ILineStyle lineStyle = getLineStyle();
 

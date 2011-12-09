@@ -54,11 +54,12 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolygonFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
-import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
 
 /**
  * @author Dirk Kuch
@@ -73,12 +74,13 @@ public class ZmlSelectionLayer extends AbstractChartLayer
 
   private final IAreaStyle m_areaStyle;
 
-  public ZmlSelectionLayer( final ILayerProvider layerProvider, final ILineStyle lineStyle, final IAreaStyle areaStyle )
+  public ZmlSelectionLayer( final ILayerProvider layerProvider, final IStyleSet styleSet )
   {
-    super( layerProvider );
-
-    m_lineStyle = lineStyle;
-    m_areaStyle = areaStyle;
+    super( layerProvider ,styleSet);
+    final StyleSetVisitor visitor = new StyleSetVisitor( false );
+    m_lineStyle = visitor.visit( getStyleSet(), ILineStyle.class, 0 );
+    m_areaStyle = visitor.visit( getStyleSet(), IAreaStyle.class, 0 );
+   
   }
 
   @Override
@@ -198,10 +200,5 @@ public class ZmlSelectionLayer extends AbstractChartLayer
     return null;
   }
 
-  @Override
-  protected ILegendEntry[] createLegendEntries( )
-  {
-    return new ILegendEntry[] {};
-  }
-
+ 
 }

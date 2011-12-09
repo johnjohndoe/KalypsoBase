@@ -48,9 +48,8 @@ import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
-import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
+import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
 
 /**
  * @author burtscher1
@@ -60,29 +59,9 @@ public class TooltipTestLayer extends AbstractChartLayer implements ITooltipChar
 
   public TooltipTestLayer( final TooltipTestLayerProvider provider )
   {
-    super( provider );
+    super( provider,new StyleSet() );
   }
-
-  /**
-   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#createLegendEntries()
-   */
-  @Override
-  protected ILegendEntry[] createLegendEntries( )
-  {
-    final LegendEntry le = new LegendEntry( this, getDescription() )
-    {
-
-      @Override
-      public void paintSymbol( final GC gc, final Point size )
-      {
-        // TODO Auto-generated method stub
-
-      }
-
-    };
-    return new ILegendEntry[] { le };
-  }
-
+ 
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#dispose()
    */

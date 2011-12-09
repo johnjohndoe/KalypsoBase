@@ -13,8 +13,6 @@ import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
@@ -24,16 +22,12 @@ public class DefaultLineLayer extends AbstractLineLayer
 {
 
   private final ITabularDataContainer< ? , ? > m_dataContainer;
+
   public DefaultLineLayer( final ILayerProvider provider, final ITabularDataContainer< ? , ? > data, final IStyleSet styleSet )
   {
-    super( provider,styleSet );
+    super( provider, styleSet );
     m_dataContainer = data;
 
-  }
-  public DefaultLineLayer( final ILayerProvider provider, final ITabularDataContainer< ? , ? > data, final ILineStyle lineStyle, final IPointStyle pointStyle )
-  {
-    super( provider, lineStyle, pointStyle );
-    m_dataContainer = data;
   }
 
   /**
@@ -84,13 +78,12 @@ public class DefaultLineLayer extends AbstractLineLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
   @Override
+  @SuppressWarnings({ "rawtypes", "unchecked" })
   public IDataRange< ? > getDomainRange( )
   {
-
-    final IDataRange domainRange = m_dataContainer.getDomainRange();
+    final IDataRange< ? > domainRange = m_dataContainer.getDomainRange();
     if( domainRange == null )
       return null;
-    final Object max = domainRange.getMax();
     final IDataOperator dop = new DataOperatorHelper().getDataOperator( getDomainAxis().getDataClass() );
     return new DataRange<Number>( dop.logicalToNumeric( domainRange.getMin() ), dop.logicalToNumeric( domainRange.getMax() ) );
   }
@@ -99,13 +92,12 @@ public class DefaultLineLayer extends AbstractLineLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
   @Override
+  @SuppressWarnings({ "rawtypes", "unchecked" })
   public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
   {
-
-    final IDataRange targetRange = m_dataContainer.getTargetRange();
+    final IDataRange< ? > targetRange = m_dataContainer.getTargetRange();
     if( targetRange == null )
       return null;
-    final Object max = targetRange.getMax();
     final IDataOperator top = new DataOperatorHelper().getDataOperator( getTargetAxis().getDataClass() );
     return new DataRange<Number>( top.logicalToNumeric( targetRange.getMin() ), top.logicalToNumeric( targetRange.getMax() ) );
   }

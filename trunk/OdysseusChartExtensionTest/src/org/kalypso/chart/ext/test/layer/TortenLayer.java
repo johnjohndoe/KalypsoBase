@@ -43,6 +43,7 @@ package org.kalypso.chart.ext.test.layer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
@@ -69,10 +70,11 @@ public class TortenLayer extends AbstractChartLayer
 {
 
   private final int m_pieces;
+  private ILegendEntry[] m_legendEntries;
 
   public TortenLayer( final ILayerProvider provider, final int pieces )
   {
-    super( provider );
+    super( provider ,null);
 
     m_pieces = pieces;
   }
@@ -225,12 +227,23 @@ public class TortenLayer extends AbstractChartLayer
   {
     return new ComparableDataRange<Number>( new Number[] { -100, 100 } );
   }
-
+  /**
+   * @see de.openali.odysseus.chart.factory.layer.AbstractChartLayer#getLegendEntries()
+   */
+  @Override
+  public synchronized ILegendEntry[] getLegendEntries( )
+  {
+    
+    if( ArrayUtils.isEmpty( m_legendEntries ) )
+    {
+      m_legendEntries = createLegendEntries();
+          }
+    return m_legendEntries;
+  }
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getLegendEntries(org.eclipse.swt.graphics.Point)
    */
-  @Override
-  public ILegendEntry[] createLegendEntries( )
+  private ILegendEntry[] createLegendEntries( )
   {
 
     final List<ILegendEntry> entries = new ArrayList<ILegendEntry>();

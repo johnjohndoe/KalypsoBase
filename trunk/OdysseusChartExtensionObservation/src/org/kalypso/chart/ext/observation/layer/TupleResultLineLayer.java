@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
@@ -15,27 +14,18 @@ import org.kalypso.observation.result.TupleResult;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.IPointStyle;
+import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 
-public class TupleResultLineLayer extends AbstractLineLayer
+public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipChartLayer
 {
   private final TupleResultDomainValueData< ? , ? > m_valueData;
 
   final public static String TOOLTIP_FORMAT = "%-12s %s %n%-12s %s"; //$NON-NLS-1$
-
-  public TupleResultLineLayer( final ILayerProvider provider, final TupleResultDomainValueData< ? , ? > data, final ILineStyle lineStyle, final IPointStyle pointStyle )
-  {
-    super( provider, lineStyle, pointStyle );
-
-    m_valueData = data;
-  }
 
   public TupleResultLineLayer( final ILayerProvider provider, final TupleResultDomainValueData< ? , ? > data, final IStyleSet styleSet )
   {
@@ -44,35 +34,7 @@ public class TupleResultLineLayer extends AbstractLineLayer
     m_valueData = data;
   }
 
-  @Override
-  public void drawIcon( final GC gc, final Point size )
-  {
-    final ArrayList<Point> path = new ArrayList<Point>();
-
-    path.add( new Point( 0, size.y / 2 ) );
-    path.add( new Point( size.x / 5, size.y / 2 ) );
-    path.add( new Point( size.x / 5 * 2, size.y / 4 ) );
-    path.add( new Point( size.x / 5 * 3, size.y / 4 * 3 ) );
-    path.add( new Point( size.x / 5 * 4, size.y / 2 ) );
-    path.add( new Point( size.x, size.y / 2 ) );
-    final ILineStyle ls = getLineStyle();
-    final PolylineFigure lf = new PolylineFigure();
-    lf.setStyle( ls );
-    lf.setPoints( path.toArray( new Point[] {} ) );
-    lf.paint( gc );
-  }
-
-  @Override
-  public void drawIcon( final Image img )
-  {
-    final Rectangle bounds = img.getBounds();
-    final int height = bounds.height;
-    final int width = bounds.width;
-    final GC gc = new GC( img );
-    drawIcon( gc, new Point( width, height ) );
-    gc.dispose();
-  }
-
+ 
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
@@ -233,7 +195,6 @@ public class TupleResultLineLayer extends AbstractLineLayer
   @Override
   public void init( )
   {
-    super.init();
     if( getValueData() == null )
       return;
     if( getTargetAxis().getLabels().length == 0 )
