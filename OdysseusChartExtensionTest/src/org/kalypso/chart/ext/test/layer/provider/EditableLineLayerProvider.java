@@ -8,17 +8,18 @@ import org.kalypso.chart.ext.test.layer.EditableLineLayer;
 import de.openali.odysseus.chart.factory.config.parameters.impl.IntegerParser;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 /**
  * @author alibu
+ * @deprecated
+ * FIXME : remove from workspace:not used ?
  */
+@Deprecated
 public class EditableLineLayerProvider<T_domain, T_target> extends AbstractLayerProvider
 {
-  private final String ROLE_LINE_STYLE = "line";
-
-  private final String ROLE_POINT_STYLE = "point";
+//  private final String ROLE_LINE_STYLE = "line";
+//
+//  private final String ROLE_POINT_STYLE = "point";
 
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayer(java.net.URL)
@@ -26,7 +27,7 @@ public class EditableLineLayerProvider<T_domain, T_target> extends AbstractLayer
   @Override
   public IChartLayer getLayer( final URL context )
   {
-    return new EditableLineLayer( this, getDataContainer(), getStyleSet().getStyle( ROLE_LINE_STYLE, ILineStyle.class ), getStyleSet().getStyle( ROLE_POINT_STYLE, IPointStyle.class ) );
+    return new EditableLineLayer( this, getDataContainer(), getStyleSet());//.getStyle( ROLE_LINE_STYLE, ILineStyle.class ), getStyleSet().getStyle( ROLE_POINT_STYLE, IPointStyle.class ) );
   }
 
   /**

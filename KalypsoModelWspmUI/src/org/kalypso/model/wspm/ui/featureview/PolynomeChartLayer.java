@@ -55,6 +55,7 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
  * A chart layer which displays Polynomial1D's.
@@ -77,9 +78,9 @@ public class PolynomeChartLayer extends AbstractLineLayer
    *          : Determines the resolution how the polynomes are rendered. 1 means: for every pixel in x-diretion, a
    *          polynome value is calculated and rendered.
    */
-  public PolynomeChartLayer( final ILayerProvider provider, final PolynomDataContainer dataContainer, final int pixelsPerTick, final ILineStyle lineStyle, final IPointStyle pointStyle, final boolean showPoints )
+  public PolynomeChartLayer( final ILayerProvider provider, final PolynomDataContainer dataContainer, final int pixelsPerTick, final IStyleSet styleSet, final boolean showPoints )
   {
-    super( provider, lineStyle, pointStyle );
+    super( provider, styleSet );
     m_pixelsPerTick = pixelsPerTick;
     m_showPoints = showPoints;
     m_data = dataContainer;

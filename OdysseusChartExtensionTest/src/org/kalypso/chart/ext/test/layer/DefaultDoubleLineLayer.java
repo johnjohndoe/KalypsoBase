@@ -1,12 +1,9 @@
 package org.kalypso.chart.ext.test.layer;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
@@ -18,8 +15,7 @@ import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.impl.CoordinateMapper;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.IPointStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
  * @author alibu
@@ -29,37 +25,37 @@ public class DefaultDoubleLineLayer extends AbstractLineLayer
 
   private final ITabularDataContainer<Double, Double> m_data;
 
-  public DefaultDoubleLineLayer( final ILayerProvider provider, final ITabularDataContainer<Double, Double> data, final ILineStyle lineStyle, final IPointStyle pointStyle )
+  public DefaultDoubleLineLayer( final ILayerProvider provider, final ITabularDataContainer<Double, Double> data, final IStyleSet styleSet)
   {
-    super( provider, lineStyle, pointStyle );
+    super( provider, styleSet );
     m_data = data;
   }
 
-  /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#drawIcon(org.eclipse.swt.graphics.Image, int, int)
-   */
-  @Override
-  public void drawIcon( final Image img )
-  {
-    final Rectangle bounds = img.getBounds();
-    final int height = bounds.height;
-    final int width = bounds.width;
-    final GC gc = new GC( img );
-
-    final ArrayList<Point> path = new ArrayList<Point>();
-
-    path.add( new Point( 0, height / 2 ) );
-    path.add( new Point( width / 5, height / 2 ) );
-    path.add( new Point( width / 5 * 2, height / 4 ) );
-    path.add( new Point( width / 5 * 3, height / 4 * 3 ) );
-    path.add( new Point( width / 5 * 4, height / 2 ) );
-    path.add( new Point( width, height / 2 ) );
-
-    // Zeichnen
-    paint( gc, path.toArray( new Point[] {} ) );
-
-    gc.dispose();
-  }
+//  /**
+//   * @see org.kalypso.swtchart.chart.layer.IChartLayer#drawIcon(org.eclipse.swt.graphics.Image, int, int)
+//   */
+//  @Override
+//  public void drawIcon( final Image img )
+//  {
+//    final Rectangle bounds = img.getBounds();
+//    final int height = bounds.height;
+//    final int width = bounds.width;
+//    final GC gc = new GC( img );
+//
+//    final ArrayList<Point> path = new ArrayList<Point>();
+//
+//    path.add( new Point( 0, height / 2 ) );
+//    path.add( new Point( width / 5, height / 2 ) );
+//    path.add( new Point( width / 5 * 2, height / 4 ) );
+//    path.add( new Point( width / 5 * 3, height / 4 * 3 ) );
+//    path.add( new Point( width / 5 * 4, height / 2 ) );
+//    path.add( new Point( width, height / 2 ) );
+//
+//    // Zeichnen
+//    paint( gc, path.toArray( new Point[] {} ) );
+//
+//    gc.dispose();
+//  }
 
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC,

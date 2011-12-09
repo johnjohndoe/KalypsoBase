@@ -41,6 +41,7 @@
 package de.openali.odysseus.chart.factory.layer;
 
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
+import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
 
 /**
  * @author Dirk Kuch
@@ -50,7 +51,7 @@ public class PlainLayer extends AbstractChartLayer
 
   public PlainLayer( final ILayerProvider provider )
   {
-    super( provider );
+    super( provider,new StyleSet() );
   }
 
 }

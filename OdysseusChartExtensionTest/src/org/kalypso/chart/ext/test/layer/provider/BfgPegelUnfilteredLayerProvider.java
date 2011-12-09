@@ -46,24 +46,18 @@ import org.kalypso.chart.ext.test.layer.DefaultUnfilteredLineLayer;
 
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 /**
  * @author alibu
  */
 public class BfgPegelUnfilteredLayerProvider extends BfgPegelLayerProvider
 {
-  private final String ROLE_LINE_STYLE = "line";
-
-  private final String ROLE_POINT_STYLE = "point";
-
   /**
    * @see org.kalypso.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
    */
   @Override
   public IChartLayer getLayer( final URL context ) throws ConfigurationException
   {
-    return new DefaultUnfilteredLineLayer( this, getDataContainer(), getStyleSet().getStyle( ROLE_LINE_STYLE, ILineStyle.class ), getStyleSet().getStyle( ROLE_POINT_STYLE, IPointStyle.class ) );
+    return new DefaultUnfilteredLineLayer( this, getDataContainer(), getStyleSet() );
   }
 }

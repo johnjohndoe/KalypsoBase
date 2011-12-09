@@ -124,12 +124,6 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   }
 
   @Override
-  public ILegendEntry[] createLegendEntries( )
-  {
-    return m_legend.createLegendEntries();
-  }
-
-  @Override
   public void dispose( )
   {
     if( m_data != null )
@@ -158,7 +152,8 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   @Override
   public synchronized ILegendEntry[] getLegendEntries( )
   {
-    return createLegendEntries();
+    return m_legend.createLegendEntries();
+
   }
 
   @Override
@@ -244,7 +239,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
 
   private void paintFigures( final GC gc, final Point[] points )
   {
-    final ILineStyle lineStyle = getLineStyle();
+    final ILineStyle lineStyle = getMyLineStyle();
     if( lineStyle != null )
     {
       final PolylineFigure lf = new PolylineFigure();
@@ -354,8 +349,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     } );
   }
 
-  @Override
-  protected ILineStyle getLineStyle( )
+  protected final ILineStyle getMyLineStyle( )
   {
     final IStyleSet styleSet = getStyleSet();
 

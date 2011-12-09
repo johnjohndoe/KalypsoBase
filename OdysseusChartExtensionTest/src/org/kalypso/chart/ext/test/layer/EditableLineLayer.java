@@ -29,12 +29,15 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperat
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
  * @author alibu
+ * @deprecated FIXME : remove from workspace:not used ?
  */
+@Deprecated
 public class EditableLineLayer extends AbstractLineLayer implements IEditableChartLayer
 {
   // FIXME: Aaarg, what is that?! MUST be an implementation details of the mapper/axes
@@ -42,9 +45,9 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
 
   private final EditableTestDataContainer m_data;
 
-  public EditableLineLayer( final ILayerProvider provider, final EditableTestDataContainer dataContainer, final ILineStyle lineStyle, final IPointStyle pointStyle )
+  public EditableLineLayer( final ILayerProvider provider, final EditableTestDataContainer dataContainer, final IStyleSet styleSet )
   {
-    super( provider, lineStyle, pointStyle );
+    super( provider, styleSet );
     m_data = dataContainer;
   }
 

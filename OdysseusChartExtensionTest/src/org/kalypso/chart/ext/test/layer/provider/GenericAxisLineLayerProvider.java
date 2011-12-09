@@ -8,8 +8,6 @@ import org.kalypso.chart.ext.test.layer.GenericAxisLineLayer;
 import de.openali.odysseus.chart.factory.config.parameters.impl.IntegerParser;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 /**
  * @author alibu
@@ -17,9 +15,9 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 public class GenericAxisLineLayerProvider extends AbstractLayerProvider
 {
 
-  private final String ROLE_POINT_STYLE = "point";
-
-  private final String ROLE_LINE_STYLE = "line";
+//  private final String ROLE_POINT_STYLE = "point";
+//
+//  private final String ROLE_LINE_STYLE = "line";
 
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayer(java.net.URL)
@@ -27,7 +25,7 @@ public class GenericAxisLineLayerProvider extends AbstractLayerProvider
   @Override
   public IChartLayer getLayer( final URL context )
   {
-    return new GenericAxisLineLayer( this, getDataContainer(), getStyleSet().getStyle( ROLE_LINE_STYLE, ILineStyle.class ), getStyleSet().getStyle( ROLE_POINT_STYLE, IPointStyle.class ) );
+    return new GenericAxisLineLayer( this, getDataContainer(), getStyleSet());//.getStyle( ROLE_LINE_STYLE, ILineStyle.class ), getStyleSet().getStyle( ROLE_POINT_STYLE, IPointStyle.class ) );
   }
 
   /**

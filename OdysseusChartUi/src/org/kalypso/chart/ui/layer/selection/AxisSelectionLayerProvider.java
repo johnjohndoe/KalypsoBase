@@ -44,8 +44,6 @@ import java.net.URL;
 
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
 
 /**
  * @author Dirk Kuch
@@ -60,9 +58,6 @@ public class AxisSelectionLayerProvider extends AbstractLayerProvider
   @Override
   public IChartLayer getLayer( final URL context )
   {
-    final StyleSetVisitor visitor = new StyleSetVisitor( false );
-    final ILineStyle style = visitor.visit( getStyleSet(), ILineStyle.class, 0 );
-
-    return new AxisSelectionLayer( this, style );
+     return new AxisSelectionLayer( this, getStyleSet() );
   }
 }

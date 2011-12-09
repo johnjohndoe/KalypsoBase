@@ -11,8 +11,7 @@ import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.ITabularDataContainer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.IPointStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
  * @author alibu
@@ -20,9 +19,9 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 public class DefaultUnfilteredLineLayer extends DefaultLineLayer
 {
 
-  public DefaultUnfilteredLineLayer( final ILayerProvider provider, final ITabularDataContainer data, final ILineStyle lineStyle, final IPointStyle pointStyle )
+  public DefaultUnfilteredLineLayer( final ILayerProvider provider, final ITabularDataContainer data, final IStyleSet styleSet )
   {
-    super( provider, data, lineStyle, pointStyle );
+    super( provider, data, styleSet);//, pointStyle );
   }
 
   /**

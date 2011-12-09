@@ -3,6 +3,7 @@ package de.openali.odysseus.chart.ext.base.layer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -14,22 +15,28 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
-import de.openali.odysseus.chart.framework.util.StyleUtils;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
 
 /**
  * @author alibu
  */
 public abstract class AbstractBarLayer extends AbstractChartLayer
 {
-  private final IAreaStyle m_areaStyle;
 
   private PolygonFigure m_polygonFigure;
 
+  private ILegendEntry[] m_legendEntries;
+
   public AbstractBarLayer( final ILayerProvider provider, final IAreaStyle areaStyle )
   {
-    super( provider );
+    super( provider, new StyleSet() );
+    getStyleSet().addStyle( "area", areaStyle );
+  }
 
-    m_areaStyle = areaStyle;
+  public AbstractBarLayer( ILayerProvider provider, IStyleSet styleSet )
+  {
+    super( provider, styleSet );
   }
 
   /**
@@ -67,23 +74,28 @@ public abstract class AbstractBarLayer extends AbstractChartLayer
   {
     if( m_polygonFigure == null )
     {
-      final IAreaStyle as = getAreaStyle();
+      final IAreaStyle as = getStyleSet().getStyle( "area", IAreaStyle.class );
       m_polygonFigure = new PolygonFigure();
       m_polygonFigure.setStyle( as );
     }
     return m_polygonFigure;
   }
 
-  protected IAreaStyle getAreaStyle( )
+  /**
+   * @see de.openali.odysseus.chart.factory.layer.AbstractChartLayer#getLegendEntries()
+   */
+  @Override
+  public synchronized ILegendEntry[] getLegendEntries( )
   {
-    if( m_areaStyle == null )
-      return StyleUtils.getDefaultAreaStyle();
 
-    return m_areaStyle;
+    if( ArrayUtils.isEmpty( m_legendEntries ) )
+    {
+      m_legendEntries = createLegendEntries();
+    }
+    return m_legendEntries;
   }
 
-  @Override
-  public ILegendEntry[] createLegendEntries( )
+  private ILegendEntry[] createLegendEntries( )
   {
     final List<ILegendEntry> entries = new ArrayList<ILegendEntry>();
     final PolygonFigure pf = getPolygonFigure();

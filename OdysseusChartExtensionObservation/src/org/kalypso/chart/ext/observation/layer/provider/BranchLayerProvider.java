@@ -18,6 +18,12 @@ import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.mapper.IRetinalMapper;
 
+/**
+ * @deprecated
+ * @author kimwerner FIXME not used
+ */
+
+@Deprecated
 public class BranchLayerProvider extends AbstractLayerProvider
 {
   @Override

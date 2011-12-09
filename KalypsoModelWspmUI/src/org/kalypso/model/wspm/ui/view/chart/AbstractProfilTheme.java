@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -62,11 +63,13 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 /**
  * @author kimwerner
  */
-public abstract class AbstractProfilTheme extends AbstractProfilLayer implements IChartLayer
+public abstract class AbstractProfilTheme extends AbstractProfilLayer// implements IChartLayer
 {
   private final String m_id;
 
   private String m_title;
+
+  private ILegendEntry[] m_combinedEntry;
 
   public AbstractProfilTheme( final IProfil profil, final String id, final String title, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
@@ -127,10 +130,20 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   }
 
   /**
-   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getLegendEntries()
+   * @see de.openali.odysseus.chart.factory.layer.AbstractChartLayer#getLegendEntries()
    */
   @Override
-  public ILegendEntry[] createLegendEntries( )
+  public synchronized ILegendEntry[] getLegendEntries( )
+  {
+    if( ArrayUtils.isEmpty( m_combinedEntry ) )
+    {
+      final ILegendEntry[] entries = createLegendEntries();
+      m_combinedEntry = entries;
+    }
+    return m_combinedEntry;
+  }
+
+  private ILegendEntry[] createLegendEntries( )
   {
     // TODO: implement combined legend entry and reuse
     final LegendEntry le = new LegendEntry( this, toString() )

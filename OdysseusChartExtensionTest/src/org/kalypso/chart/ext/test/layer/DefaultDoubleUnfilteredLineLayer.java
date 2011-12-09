@@ -10,8 +10,7 @@ import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.data.ITabularDataContainer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.mapper.impl.CoordinateMapper;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.IPointStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
  * @author alibu
@@ -19,9 +18,9 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 public class DefaultDoubleUnfilteredLineLayer extends DefaultDoubleLineLayer
 {
 
-  public DefaultDoubleUnfilteredLineLayer( final ILayerProvider provider, final ITabularDataContainer<Double, Double> data, final ILineStyle lineStyle, final IPointStyle pointStyle )
+  public DefaultDoubleUnfilteredLineLayer( final ILayerProvider provider, final ITabularDataContainer<Double, Double> data, final IStyleSet styleSet)
   {
-    super( provider, data, lineStyle, pointStyle );
+    super( provider, data, styleSet );
   }
 
   @Override
