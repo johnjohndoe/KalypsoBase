@@ -40,13 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizard.sensor;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.TimeZone;
 
 import org.kalypso.commons.databinding.swt.FileAndHistoryData;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.core.KalypsoCoreExtensions;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
 
 /**
@@ -58,18 +64,73 @@ public class ImportObservationData extends AbstractModelObject
 
   static final String PROPERTY_ADAPTER = "adapter";
 
+  public static final String PROPERTY_PARAMETER_AXIS = "parameterAxis";
+
   private String m_timezone = KalypsoCorePlugin.getDefault().getTimeZone().getID();
 
-  private final INativeObservationAdapter[] m_adapters = KalypsoCoreExtensions.createNativeAdapters();
+  private final INativeObservationAdapter[] m_adapters;
 
   private INativeObservationAdapter m_adapter = null;
 
   private final FileAndHistoryData m_sourceFileData = new FileAndHistoryData( "sourceFile" ); //$NON-NLS-1$
 
-  public ImportObservationData( )
+  private final IAxis[] m_allowedParameterAxes;
+
+  private IAxis m_parameterAxis;
+
+  public ImportObservationData( final IAxis[] allowedParameterAxes )
   {
+    final INativeObservationAdapter[] adapters = KalypsoCoreExtensions.createNativeAdapters();
+
+    /* Build minimal subset of allowed axis and available adapters */
+    final Set<String> minimalTypes = findMinimalTypeSet( allowedParameterAxes, adapters );
+
+    m_adapters = filterAdapters( adapters, minimalTypes );
+    m_allowedParameterAxes = filterAxes( allowedParameterAxes, minimalTypes );
+
     if( m_adapters.length > 0 )
       m_adapter = m_adapters[0];
+  }
+
+  private INativeObservationAdapter[] filterAdapters( final INativeObservationAdapter[] adapters, final Set<String> minimalTypes )
+  {
+    final Collection<INativeObservationAdapter> filteredAdapters = new ArrayList<>();
+
+    for( final INativeObservationAdapter adapter : adapters )
+    {
+      if( minimalTypes.contains( adapter.getAxisTypeValue() ) )
+        filteredAdapters.add( adapter );
+    }
+
+    return filteredAdapters.toArray( new INativeObservationAdapter[filteredAdapters.size()] );
+  }
+
+  private IAxis[] filterAxes( final IAxis[] allowedParameterAxes, final Set<String> minimalTypes )
+  {
+    final Collection<IAxis> filteredAxes = new ArrayList<>();
+
+    for( final IAxis axis : allowedParameterAxes )
+    {
+      if( minimalTypes.contains( axis.getType() ) )
+        filteredAxes.add( axis );
+    }
+
+    return filteredAxes.toArray( new IAxis[filteredAxes.size()] );
+  }
+
+  private Set<String> findMinimalTypeSet( final IAxis[] allowedParameterAxes, final INativeObservationAdapter[] adapters )
+  {
+    final Set<String> axesTypes = new HashSet<>();
+    for( final IAxis axis : allowedParameterAxes )
+      axesTypes.add( axis.getType() );
+
+    final Set<String> adapterTypes = new HashSet<>();
+    for( final INativeObservationAdapter adapter : adapters )
+      adapterTypes.add( adapter.getAxisTypeValue() );
+
+    axesTypes.retainAll( adapterTypes );
+
+    return Collections.unmodifiableSet( axesTypes );
   }
 
   public FileAndHistoryData getSourceFileData( )
@@ -120,5 +181,24 @@ public class ImportObservationData extends AbstractModelObject
     m_adapter = adapter;
 
     firePropertyChange( PROPERTY_ADAPTER, oldValue, adapter );
+  }
+
+  public IAxis[] getAllowedParameterAxes( )
+  {
+    return m_allowedParameterAxes;
+  }
+
+  public IAxis getParameterAxis( )
+  {
+    return m_parameterAxis;
+  }
+
+  public void setParameterAxis( final IAxis parameterAxis )
+  {
+    final IAxis oldValue = m_parameterAxis;
+
+    m_parameterAxis = parameterAxis;
+
+    firePropertyChange( PROPERTY_PARAMETER_AXIS, oldValue, parameterAxis );
   }
 }

@@ -64,6 +64,7 @@ import org.kalypso.commons.databinding.swt.FileAndHistoryData;
 import org.kalypso.commons.databinding.swt.FileBinding;
 import org.kalypso.commons.databinding.validation.TimezoneStringValidator;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateOpen;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
 import org.kalypso.ui.wizard.sensor.i18n.Messages;
 
@@ -104,11 +105,12 @@ public class ImportObservationSourcePage extends WizardPage
     createFileControl( group );
     createFormatControl( group );
     createTimeZoneControl( group );
+    createParameterTypeControl( group );
   }
 
-  private void createFileControl( final Group group )
+  private void createFileControl( final Composite parent )
   {
-    final Label label = new Label( group, SWT.NONE );
+    final Label label = new Label( parent, SWT.NONE );
     label.setText( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage3" ) ); //$NON-NLS-1$
 
     final FileAndHistoryData sourceFileData = m_data.getSourceFileData();
@@ -124,10 +126,10 @@ public class ImportObservationSourcePage extends WizardPage
 
     final FileBinding fileBinding = new FileBinding( m_binding, modelFile, delegate );
 
-    final Control historyControl = fileBinding.createFileFieldWithHistory( group, modelHistory );
+    final Control historyControl = fileBinding.createFileFieldWithHistory( parent, modelHistory );
     historyControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-    final Button searchButton = fileBinding.createFileSearchButton( group, historyControl );
+    final Button searchButton = fileBinding.createFileSearchButton( parent, historyControl );
     setButtonLayoutData( searchButton );
     // fileBinding.applyBinding( m_binding );
   }
@@ -154,14 +156,14 @@ public class ImportObservationSourcePage extends WizardPage
     m_binding.bindValue( target, model );
   }
 
-  private void createTimeZoneControl( final Group group )
+  private void createTimeZoneControl( final Composite parent )
   {
-    final Label timezoneLabel = new Label( group, SWT.NONE );
+    final Label timezoneLabel = new Label( parent, SWT.NONE );
     timezoneLabel.setText( Messages.getString( "ImportObservationSelectionWizardPage.0" ) ); //$NON-NLS-1$
 
     final String[] tz = m_data.getAllTimezones();
 
-    final ComboViewer comboTimeZones = new ComboViewer( group, SWT.BORDER | SWT.SINGLE );
+    final ComboViewer comboTimeZones = new ComboViewer( parent, SWT.BORDER | SWT.SINGLE );
     comboTimeZones.getControl().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     comboTimeZones.setContentProvider( new ArrayContentProvider() );
@@ -181,5 +183,28 @@ public class ImportObservationSourcePage extends WizardPage
 
     m_binding.bindValue( targetSelection, model );
     m_binding.bindValue( modificationBinder );
+  }
+
+  private void createParameterTypeControl( final Composite parent )
+  {
+    final Label formatLabel = new Label( parent, SWT.NONE );
+    formatLabel.setText( "Parameter Type" );
+
+    final ComboViewer parameterCombo = new ComboViewer( parent, SWT.DROP_DOWN | SWT.READ_ONLY );
+    parameterCombo.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+    parameterCombo.setContentProvider( new ArrayContentProvider() );
+    parameterCombo.setLabelProvider( new LabelProvider() );
+
+    final IAxis[] axes = m_data.getAllowedParameterAxes();
+    parameterCombo.setInput( axes );
+
+    new Label( parent, SWT.NONE );
+
+    /* Binding */
+    final IViewerObservableValue target = ViewersObservables.observeSinglePostSelection( parameterCombo );
+    final IObservableValue model = BeansObservables.observeValue( m_data, ImportObservationData.PROPERTY_PARAMETER_AXIS );
+
+    m_binding.bindValue( target, model );
   }
 }

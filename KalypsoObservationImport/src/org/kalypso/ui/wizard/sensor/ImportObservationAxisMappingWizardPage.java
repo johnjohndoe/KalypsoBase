@@ -53,8 +53,6 @@ import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -70,7 +68,7 @@ import org.kalypso.ui.wizard.sensor.i18n.Messages;
 /**
  * @author doemming
  */
-public class ImportObservationAxisMappingWizardPage extends WizardPage implements FocusListener, ISelectionChangedListener
+public class ImportObservationAxisMappingWizardPage extends WizardPage implements ISelectionChangedListener
 {
   private Composite m_topLevel;
 
@@ -83,7 +81,8 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
   public ImportObservationAxisMappingWizardPage( final String pageName )
   {
     super( pageName );
-    setTitle( pageName );
+
+    setTitle( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationWizard.2" ) ); //$NON-NLS-1$
     setDescription( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationAxisMappingWizardPage.0" ) ); //$NON-NLS-1$
   }
 
@@ -122,27 +121,6 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
     setPageComplete( true );
   }
 
-  /**
-   * @see org.eclipse.swt.events.FocusListener#focusGained(org.eclipse.swt.events.FocusEvent)
-   */
-  @Override
-  public void focusGained( final FocusEvent e )
-  {
-    //
-  }
-
-  /**
-   * @see org.eclipse.swt.events.FocusListener#focusLost(org.eclipse.swt.events.FocusEvent)
-   */
-  @Override
-  public void focusLost( final FocusEvent e )
-  {
-    //
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-   */
   @Override
   public void selectionChanged( final SelectionChangedEvent event )
   {
