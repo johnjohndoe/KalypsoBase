@@ -89,4 +89,6 @@ public interface IZmlTableColumn
   IZmlLabelStrategy getLabelingStrategy( );
 
   IZmlEditingStrategy getEditingStrategy( );
+
+  void setVisible( boolean visibility );
 }

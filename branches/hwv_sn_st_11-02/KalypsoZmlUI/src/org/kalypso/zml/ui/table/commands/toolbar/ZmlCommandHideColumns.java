@@ -90,8 +90,7 @@ public class ZmlCommandHideColumns extends AbstractHandler implements IElementUp
 
         if( ArrayUtils.contains( columnTypes, columnTypeId ) )
         {
-
-          final int asdfadsf = 0;
+          column.setVisible( !hide );
         }
 
       }
