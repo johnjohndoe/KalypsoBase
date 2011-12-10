@@ -330,6 +330,42 @@ public final class KalypsoCoreExtensions
     throw new CoreException( missingStatus );
   }
 
+  public static INativeObservationAdapter[] createObservationImporters( )
+  {
+    final List<INativeObservationAdapter> adapters = new ArrayList<INativeObservationAdapter>();
+
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+
+    final IExtensionPoint extensionPoint = registry.getExtensionPoint( "org.kalypso.core.observationImporter" ); //$NON-NLS-1$
+    if( extensionPoint == null )
+      return new INativeObservationAdapter[] {};
+
+    final IExtension[] extensions = extensionPoint.getExtensions();
+    for( final IExtension extension : extensions )
+    {
+      final IConfigurationElement[] elements = extension.getConfigurationElements();
+
+      for( final IConfigurationElement element : elements )
+      {
+        try
+        {
+          final INativeObservationAdapter adapter = (INativeObservationAdapter) element.createExecutableExtension( "class" ); //$NON-NLS-1$
+          adapters.add( adapter );
+        }
+        catch( final CoreException e )
+        {
+          e.printStackTrace();
+        }
+      }
+    }
+
+    return adapters.toArray( new INativeObservationAdapter[adapters.size()] );
+  }
+
+  /**
+   * Use {@link #createObservationImporters()} instead and let user choose value type for import.
+   */
+  @Deprecated
   public static INativeObservationAdapter[] createNativeAdapters( )
   {
     final List<INativeObservationAdapter> adapters = new ArrayList<INativeObservationAdapter>();

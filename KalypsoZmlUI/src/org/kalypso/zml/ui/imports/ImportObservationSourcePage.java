@@ -64,7 +64,6 @@ import org.kalypso.commons.databinding.swt.FileAndHistoryData;
 import org.kalypso.commons.databinding.swt.FileBinding;
 import org.kalypso.commons.databinding.validation.TimezoneStringValidator;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateOpen;
-import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
 import org.kalypso.zml.ui.internal.i18n.Messages;
 
@@ -103,8 +102,8 @@ public class ImportObservationSourcePage extends WizardPage
     setControl( group );
 
     createFileControl( group );
-    createFormatControl( group );
     createTimeZoneControl( group );
+    createFormatControl( group );
     createParameterTypeControl( group );
   }
 
@@ -196,16 +195,16 @@ public class ImportObservationSourcePage extends WizardPage
     parameterCombo.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     parameterCombo.setContentProvider( new ArrayContentProvider() );
-    parameterCombo.setLabelProvider( new LabelProvider() );
+    parameterCombo.setLabelProvider( new ParameterTypeLabelProvider() );
 
-    final IAxis[] axes = m_data.getAllowedParameterAxes();
-    parameterCombo.setInput( axes );
+    final String[] parameterTypes = m_data.getAllowedParameterTypes();
+    parameterCombo.setInput( parameterTypes );
 
     new Label( parent, SWT.NONE );
 
     /* Binding */
     final IViewerObservableValue target = ViewersObservables.observeSinglePostSelection( parameterCombo );
-    final IObservableValue model = BeansObservables.observeValue( m_data, ImportObservationData.PROPERTY_PARAMETER_AXIS );
+    final IObservableValue model = BeansObservables.observeValue( m_data, ImportObservationData.PROPERTY_PARAMETER_TYPE );
 
     m_binding.bindValue( target, model );
   }

@@ -55,6 +55,7 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.zml.ui.internal.i18n.Messages;
 
 public class ImportObservationWizard extends Wizard implements IImportWizard
@@ -102,7 +103,10 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
   @Override
   public boolean performFinish( )
   {
-    final ImportObservationData data = new ImportObservationData();
+    final String[] allowedTypes = new String[] { ITimeseriesConstants.TYPE_WATERLEVEL, ITimeseriesConstants.TYPE_RUNOFF, ITimeseriesConstants.TYPE_RAINFALL, ITimeseriesConstants.TYPE_TEMPERATURE,
+        ITimeseriesConstants.TYPE_VOLUME, ITimeseriesConstants.TYPE_EVAPORATION };
+
+    final ImportObservationData data = new ImportObservationData( allowedTypes );
 
     /* Translate old selection to data */
     final ObservationImportSelection selection = (ObservationImportSelection) m_importPage.getSelection();
