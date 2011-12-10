@@ -40,12 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.imports;
 
-import java.util.ArrayList;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.TimeZone;
 
 import org.eclipse.core.resources.IFile;
@@ -53,9 +51,7 @@ import org.kalypso.commons.databinding.swt.FileAndHistoryData;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.core.KalypsoCoreExtensions;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
-import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 
 /**
  * @author Gernot Belger
@@ -66,9 +62,18 @@ public class ImportObservationData extends AbstractModelObject
 
   static final String PROPERTY_ADAPTER = "adapter"; //$NON-NLS-1$
 
-  public static final String PROPERTY_PARAMETER_AXIS = "parameterAxis"; //$NON-NLS-1$
+  public static final String PROPERTY_PARAMETER_TYPE = "parameterType"; //$NON-NLS-1$
 
   private static final String PROPERTY_TARGET_FILE = "targetFile"; //$NON-NLS-1$
+
+  private final PropertyChangeListener m_sourceFileListener = new PropertyChangeListener()
+  {
+    @Override
+    public void propertyChange( final PropertyChangeEvent evt )
+    {
+      handleSourceFileChanged( (File) evt.getNewValue() );
+    }
+  };
 
   private String m_timezone = KalypsoCorePlugin.getDefault().getTimeZone().getID();
 
@@ -78,88 +83,36 @@ public class ImportObservationData extends AbstractModelObject
 
   private final FileAndHistoryData m_sourceFileData = new FileAndHistoryData( "sourceFile" ); //$NON-NLS-1$
 
-  private final IAxis[] m_allowedParameterAxes;
+  private final String[] m_allowedParameterTypes;
 
-  private IAxis m_parameterAxis;
+  private String m_parameterType;
 
   private IFile m_targetFile;
 
-  public ImportObservationData( )
+  public ImportObservationData( final String[] allowedParameterTypes )
   {
-    this( findAllPossibleAxes() );
-  }
-
-  private static IAxis[] findAllPossibleAxes( )
-  {
-    final INativeObservationAdapter[] adapters = KalypsoCoreExtensions.createNativeAdapters();
-    final Set<String> axesTypes = new HashSet<>();
-    for( final INativeObservationAdapter adapter : adapters )
-    {
-      final String axisType = adapter.getAxisTypeValue();
-      axesTypes.add( axisType );
-    }
-
-    final String[] allTypes = axesTypes.toArray( new String[axesTypes.size()] );
-    return TimeseriesUtils.createDefaultAxes( allTypes, false );
-  }
-
-  public ImportObservationData( final IAxis[] allowedParameterAxes )
-  {
-    final INativeObservationAdapter[] adapters = KalypsoCoreExtensions.createNativeAdapters();
-
-    /* Build minimal subset of allowed axis and available adapters */
-    final Set<String> minimalTypes = findMinimalTypeSet( allowedParameterAxes, adapters );
-
-    m_adapters = filterAdapters( adapters, minimalTypes );
-    m_allowedParameterAxes = filterAxes( allowedParameterAxes, minimalTypes );
+    m_adapters = KalypsoCoreExtensions.createObservationImporters();
+    m_allowedParameterTypes = allowedParameterTypes;
 
     if( m_adapters.length > 0 )
       m_adapter = m_adapters[0];
 
-    if( m_allowedParameterAxes.length > 0 )
-      m_parameterAxis = m_allowedParameterAxes[0];
+    if( m_allowedParameterTypes.length > 0 )
+      m_parameterType = m_allowedParameterTypes[0];
+
+    m_sourceFileData.addPropertyChangeListener( FileAndHistoryData.PROPERTY_FILE, m_sourceFileListener );
   }
 
-  private INativeObservationAdapter[] filterAdapters( final INativeObservationAdapter[] adapters, final Set<String> minimalTypes )
+  protected void handleSourceFileChanged( final File newSourceFile )
   {
-    final Collection<INativeObservationAdapter> filteredAdapters = new ArrayList<>();
+    // this is probably too slow for big timeseries, so we cannot show a preview?
 
-    for( final INativeObservationAdapter adapter : adapters )
-    {
-      if( minimalTypes.contains( adapter.getAxisTypeValue() ) )
-        filteredAdapters.add( adapter );
-    }
+// IObservation sourceObservation = read
+//
+// ZmlFactory.parseXML( newSourceFile.toURI().toURL() );
 
-    return filteredAdapters.toArray( new INativeObservationAdapter[filteredAdapters.size()] );
   }
 
-  private IAxis[] filterAxes( final IAxis[] allowedParameterAxes, final Set<String> minimalTypes )
-  {
-    final Collection<IAxis> filteredAxes = new ArrayList<>();
-
-    for( final IAxis axis : allowedParameterAxes )
-    {
-      if( minimalTypes.contains( axis.getType() ) )
-        filteredAxes.add( axis );
-    }
-
-    return filteredAxes.toArray( new IAxis[filteredAxes.size()] );
-  }
-
-  private Set<String> findMinimalTypeSet( final IAxis[] allowedParameterAxes, final INativeObservationAdapter[] adapters )
-  {
-    final Set<String> axesTypes = new HashSet<>();
-    for( final IAxis axis : allowedParameterAxes )
-      axesTypes.add( axis.getType() );
-
-    final Set<String> adapterTypes = new HashSet<>();
-    for( final INativeObservationAdapter adapter : adapters )
-      adapterTypes.add( adapter.getAxisTypeValue() );
-
-    axesTypes.retainAll( adapterTypes );
-
-    return Collections.unmodifiableSet( axesTypes );
-  }
 
   public FileAndHistoryData getSourceFileData( )
   {
@@ -225,22 +178,22 @@ public class ImportObservationData extends AbstractModelObject
     firePropertyChange( PROPERTY_ADAPTER, oldValue, adapter );
   }
 
-  public IAxis[] getAllowedParameterAxes( )
+  public String[] getAllowedParameterTypes( )
   {
-    return m_allowedParameterAxes;
+    return m_allowedParameterTypes;
   }
 
-  public IAxis getParameterAxis( )
+  public String getParameterType( )
   {
-    return m_parameterAxis;
+    return m_parameterType;
   }
 
-  public void setParameterAxis( final IAxis parameterAxis )
+  public void setParameterType( final String parameterType )
   {
-    final IAxis oldValue = m_parameterAxis;
+    final String oldValue = m_parameterType;
 
-    m_parameterAxis = parameterAxis;
+    m_parameterType = parameterType;
 
-    firePropertyChange( PROPERTY_PARAMETER_AXIS, oldValue, parameterAxis );
+    firePropertyChange( PROPERTY_PARAMETER_TYPE, oldValue, parameterType );
   }
 }
