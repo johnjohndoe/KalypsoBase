@@ -47,6 +47,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.Period;
 import org.joda.time.format.PeriodFormat;
 import org.joda.time.format.PeriodFormatter;
+import org.kalypso.contribs.java.util.CalendarUtilities.FIELD;
 
 /**
  * @author Gernot Belger
@@ -108,5 +109,89 @@ public final class PeriodUtils
 
     final PeriodFormatter formatter = PeriodFormat.wordBased( Locale.getDefault() );
     return formatter.print( period );
+  }
+
+  private static int countNonZeroFields( final Period period )
+  {
+    int fieldCount = 0;
+
+    final int[] values = period.getValues();
+    for( final int value : values )
+    {
+      if( value != 0 )
+        fieldCount++;
+    }
+
+    return fieldCount;
+  }
+
+  /**
+   * @return {@link Integer#MAX_VALUE} if the amount could not be determined.
+   */
+  public static int findCalendarAmount( final Period period )
+  {
+    final int fieldCount = countNonZeroFields( period );
+    if( fieldCount > 1 )
+      throw new IllegalArgumentException( "Unable to find calendar amount for periods with more than one field: " + period );
+
+    if( period.getDays() != 0 )
+      return period.getDays();
+
+    if( period.getHours() != 0 )
+      return period.getHours();
+
+    if( period.getMillis() != 0 )
+      return period.getMillis();
+
+    if( period.getMinutes() != 0 )
+      return period.getMinutes();
+
+    if( period.getMonths() != 0 )
+      return period.getMonths();
+
+    if( period.getSeconds() != 0 )
+      return period.getSeconds();
+
+    if( period.getWeeks() != 0 )
+      return period.getWeeks();
+
+    if( period.getYears() != 0 )
+      return period.getYears();
+
+    return Integer.MAX_VALUE;
+  }
+
+  public static FIELD findCalendarField( final Period period )
+  {
+    final int fieldCount = countNonZeroFields( period );
+
+    if( fieldCount > 1 )
+      throw new IllegalArgumentException( "Unable to find calendar amount for periods with more than one field: " + period );
+
+    if( period.getDays() != 0 )
+      return FIELD.DAY_OF_MONTH;
+
+    if( period.getHours() != 0 )
+      return FIELD.HOUR_OF_DAY;
+
+    if( period.getMillis() != 0 )
+      return FIELD.MILLISECOND;
+
+    if( period.getMinutes() != 0 )
+      return FIELD.MINUTE;
+
+    if( period.getMonths() != 0 )
+      return FIELD.MONTH;
+
+    if( period.getSeconds() != 0 )
+      return FIELD.SECOND;
+
+    if( period.getWeeks() != 0 )
+      return FIELD.WEEK_OF_YEAR;
+
+    if( period.getYears() != 0 )
+      return FIELD.YEAR;
+
+    return null;
   }
 }
