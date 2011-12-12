@@ -131,4 +131,12 @@ public final class Strings
 
     return false;
   }
+  
+   public static String chop( final String user, final int lastCharacters )
+  {
+    if( StringUtils.isNotEmpty( user ) && user.length() > lastCharacters )
+      return user.substring( 0, user.length() - lastCharacters );
+
+    return user;
+  }
 }

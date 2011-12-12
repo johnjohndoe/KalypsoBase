@@ -42,7 +42,6 @@ package org.kalypso.ogc.gml;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
-import org.kalypso.template.types.StyledLayerType;
 
 /**
  * This predicates tests if a theme is a {@link GisTemplateFeatureTheme} which a given source and feature path.
@@ -51,8 +50,6 @@ import org.kalypso.template.types.StyledLayerType;
  */
 public class SoureAndPathThemePredicate implements IKalypsoThemePredicate
 {
-  private final org.kalypso.template.types.ObjectFactory m_templateFactory;
-
   private final String m_href;
 
   private final String m_featurePath;
@@ -61,9 +58,6 @@ public class SoureAndPathThemePredicate implements IKalypsoThemePredicate
   {
     m_href = href;
     m_featurePath = featurePath;
-
-    m_templateFactory = new org.kalypso.template.types.ObjectFactory();
-
   }
 
   /**
@@ -75,12 +69,10 @@ public class SoureAndPathThemePredicate implements IKalypsoThemePredicate
     if( theme instanceof GisTemplateFeatureTheme )
     {
       final GisTemplateFeatureTheme gisTheme = (GisTemplateFeatureTheme) theme;
-      final StyledLayerType layer = m_templateFactory.createStyledLayerType();
-      gisTheme.fillLayerType( layer, "doesNotMatter", true ); //$NON-NLS-1$
 
       final EqualsBuilder equalsBuilder = new EqualsBuilder();
-      equalsBuilder.append( m_href, layer.getHref() );
-      equalsBuilder.append( m_featurePath, layer.getFeaturePath() );
+      equalsBuilder.append( m_href, gisTheme.getHref() );
+      equalsBuilder.append( m_featurePath, gisTheme.getFeaturePath() );
 
       return equalsBuilder.isEquals();
     }

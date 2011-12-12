@@ -74,9 +74,9 @@ public final class WQFactory
   {
     try
     {
-      if( metadata.containsKey( ITimeseriesConstants.MD_WQWECHMANN ) )
+      if( metadata.containsKey( ITimeseriesConstants.MD_WQ_WECHMANN ) )
       {
-        final String wechmann = metadata.getProperty( ITimeseriesConstants.MD_WQWECHMANN );
+        final String wechmann = metadata.getProperty( ITimeseriesConstants.MD_WQ_WECHMANN );
 
         return WechmannFactory.parse( new InputSource( new StringReader( wechmann ) ) );
       }

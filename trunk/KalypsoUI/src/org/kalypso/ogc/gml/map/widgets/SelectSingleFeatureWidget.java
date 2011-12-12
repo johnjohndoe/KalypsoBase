@@ -156,7 +156,11 @@ public class SelectSingleFeatureWidget extends AbstractWidget implements MouseLi
   {
     super.activate( commandPoster, mapPanel );
 
-    mapPanel.getMapModell().addMapModelListener( m_mapModellListener );
+    final IMapModell mapModell = mapPanel.getMapModell();
+    if( mapModell == null )
+      return;
+
+    mapModell.addMapModelListener( m_mapModellListener );
 
     reinit();
   }
@@ -272,12 +276,12 @@ public class SelectSingleFeatureWidget extends AbstractWidget implements MouseLi
     m_hoverTheme = theme;
 
     m_tooltipRenderer.setTooltip( null );
-    if( m_hoverTheme != null )
+    if( theme != null )
     {
       final boolean showInfo = Boolean.parseBoolean( m_hoverTheme.getProperty( THEME_PROPERTY_SHOW_INFO, "false" ) );
       if( showInfo )
       {
-        final String info = getInfo( m_hoverTheme, m_hoverFeature, position );
+        final String info = getInfo( theme, m_hoverFeature, position );
         m_tooltipRenderer.setTooltip( info );
       }
     }

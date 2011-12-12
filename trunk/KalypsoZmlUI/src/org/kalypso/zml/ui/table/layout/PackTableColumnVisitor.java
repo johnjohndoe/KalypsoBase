@@ -40,15 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.layout;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.TableColumn;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ObservationTokenHelper;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.ColumnHeader;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.AppliedRule;
@@ -81,22 +87,29 @@ public class PackTableColumnVisitor extends AbstractTableColumnPackVisitor
     {
       hide( tableColumn );
     }
-    else
+    /** only update headers of data column types */
+    if( updateHeader( column ) )
     {
-      /** only update headers of data column types */
-      if( updateHeader( column ) )
-      {
-        final String label = modelColumn.getLabel();
-        tableColumn.setText( label );
+      final String label = modelColumn.getLabel();
+      tableColumn.setText( label );
 
-        pack( tableColumn, columnType, label, modelColumn.isActive() );
-      }
+      pack( tableColumn, columnType, label, modelColumn.isActive() );
     }
   }
 
   private boolean updateHeader( final IZmlTableColumn column )
   {
+    final IZmlModelColumn modelColumn = column.getModelColumn();
     final TableColumn tableColumn = column.getTableViewerColumn().getColumn();
+
+    if( !modelColumn.isLabeled() )
+    {
+      updateColumnLabel( modelColumn, tableColumn );
+
+    }
+
+    /** header icons */
+
     final ZmlTableImageMerger provider = new ZmlTableImageMerger( 1 );
 
     final BaseColumn base = column.getColumnType();
@@ -112,6 +125,29 @@ public class PackTableColumnVisitor extends AbstractTableColumnPackVisitor
     }
 
     return false;
+  }
+
+  private void updateColumnLabel( final IZmlModelColumn modelColumn, final TableColumn tableColumn )
+  {
+    final IZmlModelColumnDataHandler handler = modelColumn.getDataHandler();
+    if( Objects.isNull( handler ) )
+      return;
+
+    final IObservation observation = handler.getObservation();
+    if( Objects.isNull( observation ) )
+      return;
+
+    final IAxis axis = AxisUtils.findAxis( observation.getAxes(), modelColumn.getDataColumn().getValueAxis() );
+    if( Objects.isNull( axis ) )
+      return;
+
+    final String tokenizedName = modelColumn.getLabelTokenizer();
+    if( StringUtils.isEmpty( tokenizedName ) )
+      return;
+
+    final String label = ObservationTokenHelper.replaceTokens( tokenizedName, observation, axis );
+    modelColumn.setLabel( label );
+    tableColumn.setText( label );
   }
 
   private void fill( final ZmlTableImageMerger provider, final IZmlTableColumn column, final ColumnHeader[] columnHeaders )

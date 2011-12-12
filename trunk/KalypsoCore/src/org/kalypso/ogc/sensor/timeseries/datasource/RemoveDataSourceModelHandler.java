@@ -40,7 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.datasource;
 
-import org.apache.commons.lang3.ArrayUtils;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
@@ -70,7 +72,7 @@ public class RemoveDataSourceModelHandler extends AbstractDataSourceModelHandler
       return getModel();
 
     final ITupleModel baseModel = getModel();
-    final IAxis[] axes = getAxes( baseModel.getAxes() );
+    final IAxis[] axes = getPlainAxis( baseModel.getAxes() );
 
     final SimpleTupleModel model = new SimpleTupleModel( axes );
 
@@ -90,12 +92,15 @@ public class RemoveDataSourceModelHandler extends AbstractDataSourceModelHandler
     return model;
   }
 
-  public static IAxis[] getAxes( final IAxis[] axes )
+  public static IAxis[] getPlainAxis( final IAxis[] axes )
   {
-    final IAxis axis = AxisUtils.findDataSourceAxis( axes );
-    if( axis != null )
-      return ArrayUtils.removeElement( axes, axis );
+    final Set<IAxis> plain = new LinkedHashSet<IAxis>();
+    for( final IAxis axis : axes )
+    {
+      if( !AxisUtils.isDataSrcAxis( axis ) )
+        plain.add( axis );
+    }
 
-    return axes;
+    return plain.toArray( new IAxis[] {} );
   }
 }

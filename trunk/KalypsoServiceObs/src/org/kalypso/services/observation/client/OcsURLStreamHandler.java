@@ -82,12 +82,6 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
      */
     try
     {
-// final String protocol = u.getProtocol();
-//      if( "proxy".equals( protocol ) ) //$NON-NLS-1$
-// {
-// return openProxyConnection( u );
-// }
-
       return openOcsConnection( u );
     }
     catch( final Exception ex )
@@ -96,48 +90,6 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
     }
 
   }
-
-// private URLConnection openProxyConnection( final URL u ) throws Exception
-// {
-// /** resolve IObservation from proxy repository */
-//    final IRepositoryFactory factory = RepositoriesExtensions.retrieveExtensionFor( "org.kalypso.hwv.adapter.base.proxy.ProxyRepositoryFactory" ); //$NON-NLS-1$
-// final IRepository repository = factory.createRepository();
-//
-// final String urlBase = u.toString();
-//    final String[] splittedUrlBase = urlBase.split( "\\?" ); //$NON-NLS-1$
-// if( splittedUrlBase.length != 2 )
-//      throw new IllegalStateException( String.format( "Unknown URL format. Format = proxy://itemId?parameter. Given %s", urlBase ) ); //$NON-NLS-1$
-//
-// final String itemId = splittedUrlBase[0];
-// final String itemParameters = splittedUrlBase[1];
-//
-// final IRepositoryItem item = repository.findItem( itemId );
-// IObservation observation = (IObservation) item.getAdapter( IObservation.class );
-//
-// // apply filter on observation
-// observation = FilterFactory.createFilterFrom( itemParameters, observation, null );
-//
-// /** store observation to an local temp file an return connection handle of this temp file */
-// // FIXME delete tmp file
-// // final File tmpFile = resolveTempFile( observation, itemId );
-//
-// // ZmlFactory.writeToFile( filteredObs, file )
-//
-// return null;
-// }
-//
-// private File resolveTempFile( final IObservation observation, final String itemId ) throws IOException
-// {
-//    final String pathTmpDir = System.getProperty( "java.io.tmpdir" ); //$NON-NLS-1$
-// final File tmpDir = new File( pathTmpDir );
-//    final File observationDir = new File( tmpDir, "kalypso/observations" ); //$NON-NLS-1$
-// if( !observationDir.exists() )
-// FileUtils.forceMkdir( observationDir );
-//
-//    final String[] parts = itemId.split( ":" ); //$NON-NLS-1$
-//
-// return null;
-// }
 
   private URLConnection openOcsConnection( final URL u ) throws IOException
   {

@@ -173,6 +173,10 @@
             commandId="org.kalypso.chart.ui.commands.export">
       </handler>
       <handler
+            class="org.kalypso.chart.ui.editor.commandhandler.ZoomPanMaximizeCommandHandler"
+            commandId="org.kalypso.chart.ui.commands.zoom_pan_maximize">
+      </handler>
+      <handler
             class="org.kalypso.chart.ui.editor.commandhandler.ChangeVisibilityCommandHandler"
             commandId="org.kalypso.chart.ui.commands.change.visibility">
       </handler>

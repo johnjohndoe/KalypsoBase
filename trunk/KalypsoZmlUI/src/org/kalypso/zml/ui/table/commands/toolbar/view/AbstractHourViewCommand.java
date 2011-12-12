@@ -77,7 +77,7 @@ public abstract class AbstractHourViewCommand extends AbstractHandler implements
 
   private void doOffsetAdjustment( final IZmlTable table, final ZmlViewResolutionFilter filter )
   {
-    final IZmlModelRow[] rows = table.getDataModel().getRows();
+    final IZmlModelRow[] rows = table.getModel().getRows();
     if( ArrayUtils.isEmpty( rows ) )
       return;
 

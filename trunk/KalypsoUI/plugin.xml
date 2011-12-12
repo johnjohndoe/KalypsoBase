@@ -114,6 +114,19 @@
 		</editorContribution>
 	</extension>
 	<extension id="popupMenus" name="popupMenus" point="org.eclipse.ui.popupMenus">
+		<objectContribution objectClass="org.kalypsodeegree.model.feature.Feature" adaptable="false" id="org.kalypso.objectclass.feature">
+			<action enablesFor="1" label="%org.kalypso.ui.editor.actions.FeatureRemoveActionDelegate.label" tooltip="%org.kalypso.ui.editor.actions.FeatureRemoveActionDelegate.tooltip" class="org.kalypso.ui.editor.actions.FeatureRemoveActionDelegate" icon="icons/feature/gis_feature_delete.gif" style="push" id="org.kalypso.objectclass.feature.action.remove">
+			</action>
+			<action class="org.kalypso.ui.editor.gmleditor.util.actions.EditFeature" icon="icons/feature/gis_feature_edit.gif" id="org.kalypso.objectclass.feature.editfeature" label="%org.kalypso.ui.editor.gmleditor.util.actions.EditFeature.label.edit" tooltip="%org.kalypso.ui.editor.gmleditor.util.actions.EditFeature.tooltip" />
+			<menu label="%org.kalypso.objectclass.feature.menu.batchedit.label" path="additions" id="org.kalypso.objectclass.feature.menu.batchedit">
+				<separator name="editGroup" />
+			</menu>
+			<action class="org.kalypso.ui.editor.actions.FeatureSetPropertyActionDelegate" enablesFor="1" icon="icons/gistable/applyValues.gif" id="org.kalypso.objectclass.feature.action.setValues" label="%org.kalypso.ui.editor.actions.FeatureSetPropertyActionDelegate.label" menubarPath="org.kalypso.objectclass.feature.menu.batchedit/editGroup" style="push" tooltip="%org.kalypso.ui.editor.actions.FeatureSetPropertyActionDelegate.tooltip" />
+			<action class="org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate" enablesFor="+" icon="icons/gistable/applyValues.gif" id="org.kalypso.objectclass.feature.action.batchEdit" label="%org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate.label" menubarPath="org.kalypso.objectclass.feature.menu.batchedit/editGroup" style="push" tooltip="%org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate.tooltip" />
+			<menu id="featureListMenu" label="%menu.label.1">
+				<separator name="featureListMenuSep" />
+			</menu>
+		</objectContribution>
 		<objectContribution adaptable="false" objectClass="org.kalypsodeegree.filterencoding.Filter" id="org.kalypso.objectclass.fiterencoding.filter">
 			<menu label="%org.kalypso.objectclass.filterencoding.filter.menu.label" id="org.kalypso.objectclass.filterencoding.filter.menu">
 				<separator name="filter" />
@@ -155,6 +168,17 @@
 			<filter name="featureTypeStrict" value="http://www.opengis.net/om#Observation" />
 			<action class="org.kalypso.ogc.gml.om.EditObservationAction" enablesFor="1" icon="icons/observation/zml-icon.gif" id="org.kalypso.ogc.gml.om.EditObservationAction" label="%org.kalypso.ogc.gml.om.EditObservationAction.label" style="push" tooltip="%org.kalypso.ogc.gml.om.EditObservationAction.tooltip" />
 			<action class="org.kalypso.ogc.gml.om.ShowObservationAction" icon="icons/kalypso_ott.gif" id="org.kalypso.ogc.gml.om.ShowObservationAction" label="%org.kalypso.ogc.gml.om.ShowObservationAction.label" tooltip="%org.kalypso.ogc.gml.om.ShowObservationAction.tooltip" />
+		</objectContribution>
+		<objectContribution adaptable="false" id="org.kalypso.ui.object.contribution.org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement" objectClass="org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement">
+			<filter name="featureAssociationQname" value="http://www.opengis.net/gml#_Feature" />
+			<filter name="featureAssociationList" value="true" />
+			<action class="org.kalypso.ui.editor.actions.SortFeaturesActionDelegate" id="org.kalypso.ui.editor.actions.SortFeaturesActionDelegate" label="%action.label.20" menubarPath="featureListMenu" style="push" tooltip="%action.tooltip.1" />
+		</objectContribution>
+		<objectContribution adaptable="false" id="org.kalypso.objectclass.feature.listElements" objectClass="org.kalypsodeegree.model.feature.Feature">
+			<filter name="featureListElement" value="true" />
+			<action class="org.kalypso.ui.editor.actions.FeatureListElementDownActionDelegate" icon="icons/feature/gis_feature_down.gif" id="org.kalypso.ui.editor.actions.FeatureListElementDownActionDelegate" label="%action.label.21" menubarPath="featureListMenu" tooltip="%action.tooltip.2" />
+			<action class="org.kalypso.ui.editor.actions.FeatureListElementUpActionDelegate" icon="icons/feature/gis_feature_up.gif" id="org.kalypso.ui.editor.actions.FeatureListElementUpActionDelegate" label="%action.label.22" menubarPath="featureListMenu" tooltip="%action.tooltip.3" />
+			<action class="org.kalypso.ui.editor.actions.FeatureListElementDuplicateActionDelegate" icon="icons/feature/gis_feature_duplicate.gif" id="org.kalypso.ui.editor.actions.FeatureListElementDuplicateActionDelegate" label="%action.label.23" menubarPath="featureListMenu" style="push" tooltip="%action.tooltip.4" />
 		</objectContribution>
 	</extension>
 	<extension id="resourceFilters" name="resourceFilters" point="org.eclipse.ui.ide.resourceFilters">
@@ -260,6 +284,7 @@
 		<command categoryId="org.kalypso.ogc.gml.map.category" description="Selektiert das nächste Feature in der Karte" name="Nächstes" id="org.kalypso.ui.map.selectNextFeatureCommand" />
 		<command categoryId="org.kalypso.ogc.gml.map.category" description="Selektiert das vorhergehende Feature in der Karte" name="Vorhergehendes" id="org.kalypso.ui.map.selectPreviousFeatureCommand" />
 		<command categoryId="org.kalypso.ogc.gml.map.category" description="Selektiert das letzte Feature in der Karte" name="Letztes" id="org.kalypso.ui.map.selectLastFeatureCommand" />
+		<command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.EditRelationsCommand" name="%org.kalypso.ui.editor.mapeditor.actiondelegates.EditRelationsWidgetDelegate.label" />
 		<command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.WMSGetFeatureInfoCommand" name="%org.kalypso.ui.editor.mapeditor.actiondelegates.WMSGetfeatureInfoWidgetDelegate.label" />
 		<command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.MeasureMapCommand" name="%org.kalypso.ogc.gml.map.MeasureMapCommand.label" description="%org.kalypso.ogc.gml.map.MeasureMapCommand.tooltip"/>
 		<command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.FindElementMapCommand" name="%org.kalypso.ogc.gml.map.FindElementMapCommand.label" description="%org.kalypso.ogc.gml.map.FindElementMapCommand.tooltip"/>
@@ -417,6 +442,7 @@
 				<command commandId="org.kalypso.ogc.gml.map.SelectFeatureCommand" label="%org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate.label" style="radio" tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate.tooltip" />
 				<command commandId="org.kalypso.ogc.gml.map.MeasureMapCommand" style="radio" />
 				<command commandId="org.kalypso.ogc.gml.map.FindElementMapCommand" style="radio" />
+				<command commandId="org.kalypso.ogc.gml.map.EditRelationsCommand" label="%org.kalypso.ui.editor.mapeditor.actiondelegates.EditRelationsWidgetDelegate.label" style="radio" tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.EditRelationsWidgetDelegate.tooltip" />
 				<!-- Does not work any more...
 				<command commandId="org.kalypso.ogc.gml.map.WMSGetFeatureInfoCommand" label="%org.kalypso.ui.editor.mapeditor.actiondelegates.WMSGetfeatureInfoWidgetDelegate.label" style="radio" tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.WMSGetfeatureInfoWidgetDelegate.tooltip" />
 				-->
@@ -541,6 +567,13 @@
                <visibleWhen checkEnabled="true"/>
           </command>
         </menuContribution>
+        
+        <menuContribution
+              locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+              <command commandId="org.kalypso.ui.map.outline.command.NodeProperties" style="push">
+               <visibleWhen checkEnabled="true"/>
+          </command>
+        </menuContribution>
 	</extension>
 	
 	<!-- Map-View-Outline: tool/menu-items for standard Map-View-Outline -->
@@ -610,6 +643,7 @@
 		<image commandId="org.kalypso.ui.map.selectNextFeatureCommand" disabledIcon="icons/map/nextFeature_gray.gif" icon="icons/map/nextFeature.gif" />
 		<image commandId="org.kalypso.ui.map.selectPreviousFeatureCommand" disabledIcon="icons/map/prevFeature_gray.gif" icon="icons/map/prevFeature.gif" />
 		<image commandId="org.kalypso.ui.map.selectLastFeatureCommand" disabledIcon="icons/map/lastFeature_gray.gif" icon="icons/map/lastFeature.gif" />
+		<image commandId="org.kalypso.ogc.gml.map.EditRelationsCommand" disabledIcon="icons/map/edit_relation_gray.gif" icon="icons/map/edit_relation.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.WMSGetFeatureInfoCommand" disabledIcon="icons/map/wmsInfo_gray.gif" icon="icons/map/wmsInfo.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.MeasureMapCommand" disabledIcon="icons/map/measureTool_gray.gif" icon="icons/map/measureTool.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.FindElementMapCommand" disabledIcon="icons/map/earth_search_gray.gif" icon="icons/map/earth_search.gif" />
@@ -941,6 +975,13 @@
 						</with>
 					</visibleWhen>
 				</command>
+				<command commandId="org.kalypso.ogc.gml.map.EditRelationsCommand" label="%org.kalypso.ui.editor.mapeditor.actiondelegates.EditRelationsWidgetDelegate.label" style="radio" tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.EditRelationsWidgetDelegate.tooltip">
+					<visibleWhen checkEnabled="false">
+						<with variable="activeEditorId">
+							<equals value="org.kalypso.ui.editor.mapeditor.GisMapEditor" />
+						</with>
+					</visibleWhen>
+				</command>
 				<dynamic class="org.kalypso.ogc.gml.map.widgets.newfeature.NewFeatureToolbarContribution" id="org.kalypso.gis.newFeature.menuContribution">
 					<visibleWhen checkEnabled="false">
 						<with variable="activeEditorId">
@@ -1144,6 +1185,16 @@
 				<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.ogc.gml.widgets.PanToWidget" />
 			</class>
 		</handler>
+		<handler commandId="org.kalypso.ogc.gml.map.EditRelationsCommand">
+			<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+				<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.ogc.gml.map.widgets.editrelation.EditRelationWidget" />
+			</class>
+			<enabledWhen>
+				<with variable="activeMapPanel">
+					<test property="org.kalypso.ui.test.map.activeTheme.isFeatureTheme" />
+				</with>
+			</enabledWhen>
+		</handler>
 		<handler commandId="org.kalypso.ogc.gml.map.WMSGetFeatureInfoCommand">
 			<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
 				<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.ogc.gml.map.WMSGetFeatureInfoWidget"/>
@@ -1336,9 +1387,16 @@
 		<propertyTester class="org.kalypso.ogc.gml.map.properties.PropertyThemeTester" id="org.kalypso.ogc.gml.map.PropertyThemeTester" namespace="org.kalypso.ui.test.map.themeProperty" properties="hasProperty,isNotNull,hasExtent,isFeatureTheme,isCascading" type="org.kalypso.ogc.gml.map.IMapPanel" />
 		<propertyTester class="org.kalypso.ogc.gml.map.properties.ActiveThemeTester" id="org.kalypso.ogc.gml.map.ActiveThemeTester" namespace="org.kalypso.ui.test.map.activeTheme" properties="isNotNull,qname,hasExtent,isFeatureTheme,property,isCascading" type="org.kalypso.ogc.gml.map.IMapPanel" />
         <propertyTester class="org.kalypso.ogc.gml.map.properties.HasThemeTester" id="org.kalypso.ogc.gml.map.HasThemeTester" namespace="org.kalypso.ui.test.map.hasTheme" properties="isNotNull,qname,hasExtent,isFeatureTheme,property,isCascading" type="org.kalypso.ogc.gml.map.IMapPanel" />
-		
+        
 		<propertyTester class="org.kalypso.ogc.sensor.properties.RepositoryItemPropertyTester" id="org.kalypso.ogc.sensor.properties.RepositoryItemPropertyTester" namespace="org.kalypso.ui" properties="repositoryItemHasWQTable" type="org.kalypso.repository.IRepositoryItem" />
 		<propertyTester class="org.kalypso.ui.internal.utils.WorkbenchWindowPropertyTest" id="org.kalypso.ui.internal.utils.WorkbenchWindowPropertyTest" namespace="org.kalypso.ui.window" properties="isEditorAreaVisible,isViewVisible" type="org.eclipse.ui.IWorkbenchWindow" />
+        <propertyTester
+              class="org.kalypso.ui.editor.gmleditor.ui.GmlEditorPropertyTester"
+              id="org.kalypso.ogc.gml.expressions.GMLEditorTester"
+              namespace="org.kalypso.ui.test.gmleditor"
+              properties="qname"
+              type="java.lang.Object">
+        </propertyTester>
 	</extension>
    <extension
          point="org.kalypso.ui.addlayer.WMSImageProvider">

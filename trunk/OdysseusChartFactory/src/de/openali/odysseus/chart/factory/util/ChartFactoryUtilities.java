@@ -36,7 +36,7 @@ public final class ChartFactoryUtilities
     }
     catch( final MalformedURLException e )
     {
-      String contextString = "";
+      String contextString = ""; //$NON-NLS-1$
       if( context != null )
         contextString = contextString.toString();
       Logger.logError( Logger.TOPIC_LOG_STYLE, "Could not create url: '" + contextString + "', '" + path + "'" );

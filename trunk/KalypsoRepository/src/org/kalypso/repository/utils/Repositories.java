@@ -110,8 +110,19 @@ public final class Repositories
 
     for( int i = 0; i < count; i++ )
     {
-      if( !baseParts[i].equals( lookingForParts[i] ) )
-        return false;
+      final String lookOut = lookingForParts[i];
+      if( !baseParts[i].equals( lookOut ) )
+      {
+        /**
+         * psi child items are sometimes encoded like // kalypso-ocs:psicompact://HN.9_CR.02PG...2210.Q_MW#at and so
+         * continue search
+         */
+        if( !lookOut.contains( "#" ) ) //$NON-NLS-1$
+        {
+          return false;
+        }
+      }
+
     }
 
     return true;

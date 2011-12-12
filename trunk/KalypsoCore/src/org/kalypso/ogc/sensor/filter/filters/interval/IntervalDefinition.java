@@ -44,6 +44,8 @@ import java.util.Calendar;
 
 import org.apache.commons.lang3.StringUtils;
 import org.kalypso.contribs.java.util.CalendarUtilities;
+import org.kalypso.ogc.sensor.metadata.MetadataHelper;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.filters.IntervallFilterType;
 
 /**
@@ -113,5 +115,13 @@ public class IntervalDefinition
 
     final int calendarField = CalendarUtilities.getCalendarField( m_startCalendarField );
     start.set( calendarField, m_startCalendarValue );
+  }
+
+  public void setTimestep( final MetadataList metadata )
+  {
+    final int amount = getAmount();
+    final int calendarField = getCalendarField();
+    /* Directly update metadata with that timestep */
+    MetadataHelper.setTimestep( metadata, calendarField, amount );
   }
 }

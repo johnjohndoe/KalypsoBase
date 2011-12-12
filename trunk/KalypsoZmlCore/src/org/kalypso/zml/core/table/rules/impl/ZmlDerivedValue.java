@@ -44,6 +44,7 @@ package org.kalypso.zml.core.table.rules.impl;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.rules.AbstractZmlTableRule;
 
 /**
  * @author Dirk Kuch

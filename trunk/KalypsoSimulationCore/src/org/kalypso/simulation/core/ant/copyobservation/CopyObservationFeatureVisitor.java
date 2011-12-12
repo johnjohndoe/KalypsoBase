@@ -94,9 +94,6 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
     m_logger = logger;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
   public final boolean visit( final Feature feature )
   {

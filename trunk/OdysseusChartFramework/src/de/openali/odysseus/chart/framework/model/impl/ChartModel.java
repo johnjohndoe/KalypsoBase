@@ -63,9 +63,6 @@ public class ChartModel implements IChartModel
     getMapperRegistry().clear();
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.IChartModel#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -79,9 +76,6 @@ public class ChartModel implements IChartModel
     return m_behaviour;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.IChartModel#getId()
-   */
   @Override
   public String getIdentifier( )
   {

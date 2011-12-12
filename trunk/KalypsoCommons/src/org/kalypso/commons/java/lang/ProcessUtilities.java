@@ -107,7 +107,7 @@ public class ProcessUtilities
     return listEnv.toArray( new String[] {} );
   }
 
-  public static int executeProcess( final String[] cmdLine, final String[] env, final File directory, final long timeout, final boolean doNotAskOnTimeout, IProgressMonitor monitor ) throws TimeoutException, IOException
+  public static int executeProcess( String[] cmdLine, String[] env, File directory, long timeout, boolean doNotAskOnTimeout, boolean debug, IProgressMonitor monitor ) throws TimeoutException, IOException
   {
     /* If no monitor was given, create a null progress monitor. */
     if( monitor == null )
@@ -129,8 +129,8 @@ public class ProcessUtilities
       final InputStream inputStream = exec.getInputStream();
 
       /* Create the stream gooblers. */
-      final StreamGobbler error = new StreamGobbler( errorStream, "Report: ERROR_STREAM", true );
-      final StreamGobbler input = new StreamGobbler( inputStream, "Report: INPUT_STREAM", true );
+      final StreamGobbler error = new StreamGobbler( errorStream, "Report: ERROR_STREAM", debug );
+      final StreamGobbler input = new StreamGobbler( inputStream, "Report: INPUT_STREAM", debug );
 
       /* Start the stream gobblers. */
       error.start();

@@ -49,4 +49,6 @@ public interface IKalypsoUser
   public String getUserName( );
 
   public boolean hasRight( final String right );
+
+  public String[] getRights( );
 }

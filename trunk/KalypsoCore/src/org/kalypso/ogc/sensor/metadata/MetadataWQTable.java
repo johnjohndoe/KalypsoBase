@@ -47,11 +47,11 @@ import org.kalypso.contribs.java.lang.NumberUtils;
 /**
  * @author Dirk Kuch
  */
-public class MetadataWQTables
+public class MetadataWQTable
 {
   private final MetadataList m_metadata;
 
-  public MetadataWQTables( final MetadataList metadata )
+  public MetadataWQTable( final MetadataList metadata )
   {
     m_metadata = metadata;
   }
@@ -103,7 +103,7 @@ public class MetadataWQTables
 
     MetadataHelper.setWqTable( base, table );
 
-    final MetadataWQTables overwrited = new MetadataWQTables( overwrite );
+    final MetadataWQTable overwrited = new MetadataWQTable( overwrite );
 
     final Double w1 = overwrited.getMinW();
     updateWqBoundary( base, IMetadataConstants.WQ_BOUNDARY_W_MIN, w1 );

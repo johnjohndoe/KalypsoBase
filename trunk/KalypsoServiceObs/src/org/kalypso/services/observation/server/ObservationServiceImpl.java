@@ -164,9 +164,6 @@ public class ObservationServiceImpl implements IObservationService
       delegate.clearTempData( dataId );
   }
 
-  /**
-   * @see org.kalypso.services.observation.sei.IObservationService#getServiceVersion()
-   */
   @Override
   public int getServiceVersion( ) throws RemoteException
   {
@@ -396,5 +393,18 @@ public class ObservationServiceImpl implements IObservationService
       return delegate.getStatus( type );
 
     return new StatusBean( IStatus.ERROR, KalypsoServiceObs.ID, "Service not available. IObservationService delegate is null." );
+  }
+
+  @Override
+  public ItemBean getParent( String identifier ) throws RepositoryException
+  {
+    /* Get the observation service delegate. */
+    final IObservationService delegate = getDelegate();
+
+    /* If it is existing, delegate to it. */
+    if( delegate != null )
+      return delegate.getParent( identifier );
+
+    return null;
   }
 }

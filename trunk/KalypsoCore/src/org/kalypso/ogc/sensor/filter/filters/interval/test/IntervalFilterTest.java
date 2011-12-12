@@ -232,9 +232,8 @@ public class IntervalFilterTest extends Assert
 
   private IObservation doFilter( final IObservation sourceObservation, final IntervalDefinition intervalDefinition, final Date start, final Date end ) throws Exception
   {
-    final IntervalFilter filter = new IntervalFilter( IntervalFilter.MODE.eSum, intervalDefinition );
+    final IntervalFilter filter = new IntervalFilter( intervalDefinition );
     filter.initFilter( null, sourceObservation, null );
-
     return resolveObservation( filter, start, end );
   }
 

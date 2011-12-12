@@ -56,10 +56,8 @@ import org.xml.sax.InputSource;
  * 
  * @author schlienger
  */
-public final class AutoProxyFactory implements IProxyFactory
+public final class AutoProxyFactory
 {
-  private static AutoProxyFactory INSTANCE = null;
-
   private AutoProxyFactory( )
   {
     // do not instanciate
@@ -75,8 +73,7 @@ public final class AutoProxyFactory implements IProxyFactory
    * @param obs
    * @return either a proxy observation or the original observation
    */
-  @Override
-  public IObservation proxyObservation( final IObservation obs )
+  public static IObservation proxyObservation( final IObservation obs )
   {
     // direct assignment, just to be able to use 'proxy' as name everywhere
     IObservation proxy = obs;
@@ -147,7 +144,7 @@ public final class AutoProxyFactory implements IProxyFactory
   {
     final MetadataList mdl = obs.getMetadataList();
 
-    final String wq = mdl.getProperty( ITimeseriesConstants.MD_WQWECHMANN, "" ); //$NON-NLS-1$
+    final String wq = mdl.getProperty( ITimeseriesConstants.MD_WQ_WECHMANN, "" ); //$NON-NLS-1$
 
     if( wq.length() > 0 )
     {
@@ -188,16 +185,5 @@ public final class AutoProxyFactory implements IProxyFactory
     }
 
     return obs;
-  }
-
-  /**
-   * @return default instance of this factory class
-   */
-  public static AutoProxyFactory getInstance( )
-  {
-    if( INSTANCE == null )
-      INSTANCE = new AutoProxyFactory();
-
-    return INSTANCE;
   }
 }

@@ -46,7 +46,6 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
-import org.kalypso.repository.utils.RepositoryItems;
 import org.kalypso.ui.ImageProvider;
 
 /**
@@ -64,22 +63,18 @@ public class RepositoryLabelProvider extends LabelProvider
 
   public static final Image IMG_REPOSITORY = ImageProvider.IMAGE_ZML_REPOSITORY.createImage();
 
-  /**
-   * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
-   */
   @Override
   public Image getImage( final Object element )
   {
     if( element instanceof IRepositoryItem )
     {
-
       try
       {
         final IRepositoryItem item = (IRepositoryItem) element;
-        if( RepositoryItems.isVirtual( item.getIdentifier() ) )
+        if( item.getIdentifier().toLowerCase().contains( ".virtuell." ) ) //$NON-NLS-N$
         {
-// if( item.hasChildren() )
-// return IMG_FOLDER;
+          // if( item.hasChildren() )
+          // return IMG_FOLDER;
 
           return IMG_VIRTUAL_ITEM;
         }

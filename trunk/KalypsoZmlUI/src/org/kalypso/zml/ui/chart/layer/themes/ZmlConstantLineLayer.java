@@ -41,17 +41,17 @@
 package org.kalypso.zml.ui.chart.layer.themes;
 
 import java.awt.Insets;
-import java.io.IOException;
 import java.net.URL;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.xmlbeans.XmlException;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.utils.ConfigUtils;
@@ -135,19 +135,7 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
   @Override
   public void onObservationChanged( )
   {
-    try
-    {
-      updateDescriptors();
-    }
-    catch( final XmlException e )
-    {
-      e.printStackTrace();
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-    }
-
+    updateDescriptors();
     getEventHandler().fireLayerContentChanged( this );
   }
 
@@ -231,7 +219,7 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
     }
   }
 
-  private void updateDescriptors( ) throws XmlException, IOException
+  private void updateDescriptors( )
   {
     if( Objects.isNull( m_handler ) )
       return;
@@ -259,9 +247,31 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
   /**
    * differ between generic global .kod alarmstufen definition and special alarmstufen.kod
    */
-  private IMetadataLayerBoundary[] buildBoundaries( final IObservation observation ) throws XmlException, IOException
+  private IMetadataLayerBoundary[] buildBoundaries( final IObservation observation )
   {
+
     final MetadataList metadata = observation.getMetadataList();
+
+    /**
+     * *urks* special handling for alarmstufen layer!
+     */
+    if( StringUtils.containsIgnoreCase( getIdentifier(), "alarmstufe" ) ) //$NON-NLS-1$
+    {
+      try
+      {
+        final URL url = ConfigUtils.findCentralConfigLocation( "layers/grenzwerte/alarmstufen.kod" ); //$NON-NLS-1$    
+
+        final KodBoundaryLayerProvider provider = new KodBoundaryLayerProvider( metadata, url, getDataHandler().getTargetAxisId() );
+        final IMetadataLayerBoundary[] boundaries = provider.getBoundaries();
+        if( !Arrays.isEmpty( boundaries ) )
+          return boundaries;
+      }
+      catch( final Exception ex )
+      {
+        ex.printStackTrace();
+      }
+    }
+
     final IParameterContainer parameters = getProvider().getParameterContainer();
     if( Objects.isNotNull( parameters ) )
     {
@@ -271,10 +281,8 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
       return builder.getBoundaries( m_handler.getTargetAxisId() );
     }
 
-    final URL url = ConfigUtils.findCentralConfigLocation( "layers/grenzwerte/alarmstufen.kod" ); //$NON-NLS-1$
+    return new IMetadataLayerBoundary[] {};
 
-    final KodBoundaryLayerProvider provider = new KodBoundaryLayerProvider( metadata, url, getDataHandler().getTargetAxisId() );
-    return provider.getBoundaries();
   }
 
   @Override

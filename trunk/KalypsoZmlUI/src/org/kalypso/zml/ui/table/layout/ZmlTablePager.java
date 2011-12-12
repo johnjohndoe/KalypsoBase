@@ -42,6 +42,8 @@ package org.kalypso.zml.ui.table.layout;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -50,6 +52,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -121,7 +124,21 @@ public class ZmlTablePager
 
   private Date getIndex( final TableViewer viewer )
   {
-    final ViewerCell cell = findCell( viewer, new Point( 10, 10 ), new Point( 10, 15 ), new Point( 10, 20 ), new Point( 10, 25 ), new Point( 10, 75 ) );
+    final Rectangle bounds = viewer.getControl().getBounds();
+    if( bounds.width <= 0 || bounds.height <= 0 )
+      return null;
+
+    /** strategy: try to find last visible cell */
+    final Set<Point> grep = new LinkedHashSet<Point>();
+
+    int ptr = bounds.height;
+    while( ptr > 0 )
+    {
+      ptr -= 40; // magic number!
+      grep.add( new Point( 10, ptr ) );
+    }
+
+    final ViewerCell cell = findCell( viewer, grep.toArray( new Point[] {} ) );
     if( Objects.isNull( cell ) )
       return null;
 
@@ -169,7 +186,7 @@ public class ZmlTablePager
     viewer.reveal( row );
 
     // FIXME AbstractCellCursor has to listen to reveal events
-    new UIJob( "" )
+    final UIJob job = new UIJob( "Aktualisere Tabellen-Cursor" )
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -178,16 +195,20 @@ public class ZmlTablePager
 
         return Status.OK_STATUS;
       }
-    }.schedule();
+    };
+    job.setSystem( true );
+    job.setUser( false );
+
+    job.schedule(0);
   }
 
   private Date findForecastDate( )
   {
-    final IZmlModel model = m_table.getDataModel();
+    final IZmlModel model = m_table.getModel();
     final IZmlModelColumn[] columns = model.getColumns();
     for( final IZmlModelColumn column : columns )
     {
-      if( column.isMetadataSource() )
+      if( column.isMetadataSource() && column.isActive() )
       {
         final Date date = findForecastDate( column );
         if( Objects.isNotNull( date ) )
@@ -197,6 +218,9 @@ public class ZmlTablePager
 
     for( final IZmlModelColumn column : columns )
     {
+      if( !column.isActive() )
+        continue;
+
       final Date date = findForecastDate( column );
       if( Objects.isNotNull( date ) )
         return date;

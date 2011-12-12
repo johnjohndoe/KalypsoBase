@@ -40,16 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table;
 
+import java.awt.Color;
+
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.resource.ColorRegistry;
-import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.RGB;
-import org.kalypso.contribs.eclipse.swt.ColorUtilities;
+import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -85,9 +83,10 @@ public class LayerTableStyle
       if( stroke == null )
         return null;
 
-      final java.awt.Color strokeColor = stroke.getStroke( feature );
-      // TODO: in order to support graphic fill or opacity, we need to render the table cells ourselfs
-      return getColor( strokeColor );
+      final Color strokeColor = stroke.getStroke( feature );
+      final double opacity = stroke.getOpacity( feature );
+
+      return ColorUtilities.applyOpacity( strokeColor, opacity );
     }
     catch( final FilterEvaluationException e )
     {
@@ -107,9 +106,10 @@ public class LayerTableStyle
       if( fill == null )
         return null;
 
-      final java.awt.Color fillColor = fill.getFill( feature );
-      // TODO: in order to support graphic fill or opacity, we need to render the table cells ourselfs
-      return getColor( fillColor );
+      final Color fillColor = fill.getFill( feature );
+      final double opacity = fill.getOpacity( feature );
+
+      return ColorUtilities.applyOpacity( fillColor, opacity );
     }
     catch( final FilterEvaluationException e )
     {
@@ -119,17 +119,6 @@ public class LayerTableStyle
     }
 
     return null;
-  }
-
-  private Color getColor( final java.awt.Color fillColor )
-  {
-    final RGB fillRGB = ColorUtilities.toRGB( fillColor );
-
-    final ColorRegistry colorRegistry = JFaceResources.getColorRegistry();
-    final String symbolicName = fillRGB.toString();
-    colorRegistry.put( symbolicName, fillRGB );
-
-    return colorRegistry.get( symbolicName );
   }
 
   private Fill findFill( final Feature feature ) throws FilterEvaluationException

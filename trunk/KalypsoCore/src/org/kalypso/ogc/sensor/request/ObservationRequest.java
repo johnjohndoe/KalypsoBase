@@ -41,12 +41,18 @@
 
 package org.kalypso.ogc.sensor.request;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.Period;
+import org.kalypso.commons.time.PeriodUtils;
+import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.zml.request.CalandarField;
 import org.kalypso.zml.request.Request;
+import org.kalypso.zml.request.Request.Timestep;
 
 /**
  * Contains the request information for an observation.
@@ -64,6 +70,8 @@ public class ObservationRequest implements IRequest
   private final String[] m_axisTypes;
 
   private final String[] m_axisTypesWithStatus;
+
+  private final Period m_timestep;
 
   public ObservationRequest( )
   {
@@ -87,51 +95,42 @@ public class ObservationRequest implements IRequest
 
   public ObservationRequest( final DateRange dr, final String name, final String[] axisTypes, final String[] axisTypesWithStatus )
   {
+    this( dr, name, axisTypes, axisTypesWithStatus, null );
+  }
+
+  public ObservationRequest( final DateRange dr, final String name, final String[] axisTypes, final String[] axisTypesWithStatus, final Period timestep )
+  {
     m_dateRange = dr;
     m_name = name;
     m_axisTypes = axisTypes;
     m_axisTypesWithStatus = axisTypesWithStatus;
+    m_timestep = timestep;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.request.IRequest#getDateRange()
-   */
   @Override
   public DateRange getDateRange( )
   {
     return m_dateRange;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.request.IRequest#getName()
-   */
   @Override
   public String getName( )
   {
     return m_name;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.request.IRequest#getAxisTypes()
-   */
   @Override
   public String[] getAxisTypes( )
   {
     return m_axisTypes;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.request.IRequest#getAxisTypesWithStatus()
-   */
   @Override
   public String[] getAxisTypesWithStatus( )
   {
     return m_axisTypesWithStatus;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.request.IRequest#toString()
-   */
   @Override
   public String toString( )
   {
@@ -157,28 +156,72 @@ public class ObservationRequest implements IRequest
     if( requestType == null )
       return new ObservationRequest();
 
-    final DateRange dr;
-    final Date from = requestType.getDateFrom() == null ? null : requestType.getDateFrom().getTime();
-    final Date to = requestType.getDateTo() == null ? null : requestType.getDateTo().getTime();
-    if( from == null && to == null )
-      dr = null;
-    else
-      dr = new DateRange( from, to );
+    final DateRange dr = toDateRange( requestType );
 
-    final String[] axisTypes;
-    if( requestType.getAxes() == null )
-      axisTypes = EMPTY_STRING_ARRAY;
-    else
-      axisTypes = StringUtils.split( requestType.getAxes(), ',' );
+    final String[] axisTypes = toAxisTypes( requestType );
 
-    final String[] axisTypesWithStatus;
+    final String[] axisTypesWithStatus = toAxisTypesWithStatus( requestType );
+
+    final String name = toName( requestType );
+
+    final Period timestep = toTimestep( requestType.getTimestep() );
+
+    return new ObservationRequest( dr, name, axisTypes, axisTypesWithStatus, timestep );
+  }
+
+  private static Period toTimestep( final Timestep timestep )
+  {
+    if( timestep == null )
+      return null;
+
+    final int amount = timestep.getAmount();
+
+    final CalandarField field = timestep.getField();
+    final int calendarField = CalendarUtilities.getCalendarField( field.name() );
+
+    return PeriodUtils.getPeriod( calendarField, amount );
+  }
+
+  private static String toName( final Request requestType )
+  {
+    if( requestType.getName() == null )
+      return Messages.getString( "org.kalypso.ogc.sensor.request.ObservationRequest.8" ); //$NON-NLS-1$
+
+    return requestType.getName();
+  }
+
+  private static String[] toAxisTypesWithStatus( final Request requestType )
+  {
     if( requestType.getStatusAxes() == null )
-      axisTypesWithStatus = new String[0];
-    else
-      axisTypesWithStatus = StringUtils.split( requestType.getStatusAxes(), ',' );
+      return new String[0];
 
-    final String name = requestType.getName() != null ? requestType.getName() : Messages.getString( "org.kalypso.ogc.sensor.request.ObservationRequest.8" ); //$NON-NLS-1$
+    return StringUtils.split( requestType.getStatusAxes(), ',' );
+  }
 
-    return new ObservationRequest( dr, name, axisTypes, axisTypesWithStatus );
+  private static String[] toAxisTypes( final Request requestType )
+  {
+    if( requestType.getAxes() == null )
+      return EMPTY_STRING_ARRAY;
+
+    return StringUtils.split( requestType.getAxes(), ',' );
+  }
+
+  private static DateRange toDateRange( final Request requestType )
+  {
+    final Calendar dateFrom = requestType.getDateFrom();
+    final Calendar dateTo = requestType.getDateTo();
+
+    final Date from = dateFrom == null ? null : dateFrom.getTime();
+    final Date to = dateTo == null ? null : dateTo.getTime();
+
+    if( from == null && to == null )
+      return null;
+
+    return new DateRange( from, to );
+  }
+
+  public Period getTimestep( )
+  {
+    return m_timestep;
   }
 }

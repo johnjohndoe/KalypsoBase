@@ -66,9 +66,6 @@ public class EmptyValueInterpolationWorker extends AbstractInterpolationWorker i
     super( filter, values, dateRange );
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
@@ -87,11 +84,17 @@ public class EmptyValueInterpolationWorker extends AbstractInterpolationWorker i
 
           final IAxis dateAxis = getDateAxis();
           final IAxis[] valueAxes = getValueAxes();
-          final Object[] defaultValues = getDefaultValues( valueAxes );
+
+          final LocalCalculationStack stack = new LocalCalculationStack();
+          for( final IAxis valueAxis : valueAxes )
+          {
+            final LocalCalculationStackValue value = new LocalCalculationStackValue( valueAxis );
+            stack.add( value );
+          }
 
           while( calendar.getTime().compareTo( getDateRange().getTo() ) <= 0 )
           {
-            addDefaultTupple( dateAxis, valueAxes, defaultValues, calendar );
+            addDefaultTupple( dateAxis, stack, calendar );
           }
         }
         catch( final SensorException e )

@@ -299,7 +299,8 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
     {
       m_logger.throwing( getClass().getName(), "init", e ); //$NON-NLS-1$
 
-      throw new RepositoryException( "Exception in KalypsoObservationService.init()", e ); //$NON-NLS-1$
+      /** don't throw exception - in sachsen anhalt it's normal that the wiski repository don't exists on server side */
+//      throw new RepositoryException( "Exception in KalypsoObservationService.init()", e ); //$NON-NLS-1$
     }
   }
 
@@ -569,7 +570,6 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
         return null;
 
       final IObservation obs = (IObservation) item.getAdapter( IObservation.class );
-
       if( obs == null )
         return null;
 
@@ -584,9 +584,6 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
     }
   }
 
-  /**
-   * @see org.kalypso.services.sensor.IObservationService#getServiceVersion()
-   */
   @Override
   public final int getServiceVersion( )
   {
@@ -604,44 +601,40 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
     init();
   }
 
-  /**
-   * @see org.kalypso.repository.service.IRepositoryService#findItem(java.lang.String)
-   */
   @Override
   public final ItemBean findItem( final String id ) throws RepositoryException
   {
     init();
 
-    for( final Object element : m_repositories )
+    for( final IRepository repository : m_repositories )
     {
-      final IRepository rep = (IRepository) element;
-
       final IRepositoryItem item;
 
       // first check the repository itself, then look into it
-      if( rep.getIdentifier().equals( id ) )
-        item = rep;
+      if( repository.getIdentifier().equals( id ) )
+        item = repository;
       else
+      {
         try
         {
-          item = rep.findItem( id );
+          item = Repositories.findEquivalentItem( repository, id );
         }
         catch( final RepositoryException e )
         {
           m_logger.throwing( getClass().getName(), "findItem", e ); //$NON-NLS-1$
           throw e;
         }
+      }
 
-      if( item == null )
-        continue;
+      if( item != null )
+      {
+        final ItemBean bean = toBean( item );
 
-      final Boolean modifyable = item instanceof IWriteableRepositoryItem;
-      final ItemBean bean = new ItemBean( item.getIdentifier(), item.getName(), modifyable );
+        // store it for future referencing
+        m_mapBeanId2Item.put( bean.getId(), item );
 
-      // store it for future referencing
-      m_mapBeanId2Item.put( bean.getId(), item );
-
-      return bean;
+        return bean;
+      }
     }
 
     m_logger.warning( Messages.getString( "org.kalypso.services.observation.server.ObservationServiceDelegate.3", id ) ); //$NON-NLS-1$
@@ -695,7 +688,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
     {
       if( repository instanceof IWriteableRepository )
       {
-        final IRepositoryItem item = repository.findItem( identifier );
+        final IRepositoryItem item = Repositories.findEquivalentItem( repository, identifier );
         if( item instanceof IWriteableRepositoryItem )
         {
           if( serializable instanceof Serializable )
@@ -759,5 +752,36 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
     final IStatus status = StatusUtilities.createStatus( stati, "Repository states" );
 
     return new StatusBean( status.getSeverity(), status.getPlugin(), status.getMessage() );
+  }
+
+  @Override
+  public ItemBean getParent( final String identifier ) throws RepositoryException
+  {
+    init();
+
+    for( final Object element : m_repositories )
+    {
+      final IRepository rep = (IRepository) element;
+
+      final IRepositoryItem item = rep.findItem( identifier );
+      if( item != null )
+      {
+        final IRepositoryItem parent = item.getParent();
+        return toBean( parent );
+      }
+    }
+
+    m_logger.warning( Messages.getString( "org.kalypso.services.observation.server.ObservationServiceDelegate.3", identifier ) ); //$NON-NLS-1$
+
+    return null;
+  }
+
+  private ItemBean toBean( final IRepositoryItem item )
+  {
+    if( item == null )
+      return null;
+
+    final Boolean modifyable = item instanceof IWriteableRepositoryItem;
+    return new ItemBean( item.getIdentifier(), item.getName(), modifyable );
   }
 }

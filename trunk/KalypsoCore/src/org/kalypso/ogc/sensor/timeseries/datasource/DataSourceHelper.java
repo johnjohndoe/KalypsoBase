@@ -43,6 +43,7 @@ package org.kalypso.ogc.sensor.timeseries.datasource;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -99,17 +100,31 @@ public final class DataSourceHelper
   public static boolean hasDataSources( final ITupleModel model )
   {
     final IAxis[] axes = model.getAxes();
+    final IAxis[] dataSourceAxes = AxisUtils.findDataSourceAxes( axes );
 
-    return AxisUtils.findDataSourceAxis( axes ) != null;
+    return ArrayUtils.isNotEmpty( dataSourceAxes );
   }
 
-  public static IAxis createSourceAxis( )
+  public static IAxis createSourceAxis( final IAxis valueAxis )
   {
-    return new DefaultAxis( ITimeseriesConstants.TYPE_DATA_SRC, ITimeseriesConstants.TYPE_DATA_SRC, StringUtils.EMPTY, Integer.class, false );
+    final String name = getDataSourceName( valueAxis );
+
+    final DefaultAxis axis = new DefaultAxis( name, ITimeseriesConstants.TYPE_DATA_SRC, StringUtils.EMPTY, Integer.class, false );
+    return axis;
   }
 
   public static boolean isUnknown( final String identifier )
   {
     return IDataSourceItem.SOURCE_UNKNOWN.equals( identifier );
+  }
+
+  public static String getDataSourceName( final IAxis valueAxis )
+  {
+    return getDataSourceName( valueAxis.getType() );
+  }
+
+  public static String getDataSourceName( final String axisType )
+  {
+    return String.format( "_dataSource_%s", axisType ); //$NON-NLS-1$
   }
 }

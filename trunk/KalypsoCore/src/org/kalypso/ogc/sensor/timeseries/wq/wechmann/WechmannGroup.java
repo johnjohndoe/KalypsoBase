@@ -46,8 +46,13 @@ import java.util.Iterator;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.core.i18n.Messages;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.ITupleModel;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.wq.IWQConverter;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 
@@ -97,34 +102,55 @@ public class WechmannGroup implements IWQConverter
     return m_map.get( dates[i] );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#computeW(java.util.Date, double)
-   */
   @Override
-  public double computeW( final Date date, final double q ) throws WQException
+  public double computeW( final ITupleModel model, final Integer index, final double q ) throws WQException, SensorException
   {
+    final IAxis dateAxis = AxisUtils.findDateAxis( model.getAxes() );
+    final Date date = (Date) model.get( index, dateAxis );
+
     final WechmannParams params = getFor( date ).getForQ( q );
-    return WechmannFunction.computeW( params, q );
+    final double e = getValue( model, index, ITimeseriesConstants.TYPE_WECHMANN_E );
+
+    return WechmannFunction.computeW( params, q ) + e;
+  }
+
+  private double getValue( final ITupleModel model, final Integer index, final String type )
+  {
+    try
+    {
+      final IAxis axis = AxisUtils.findAxis( model.getAxes(), type );
+      if( Objects.isNull( axis ) )
+        return 0.0;
+
+      return (Double) model.get( index, axis );
+    }
+    catch( final SensorException e )
+    {
+      e.printStackTrace();
+
+      return 0.0;
+    }
   }
 
   /**
    * Returns 0.0, if W is too big for current validity
-   * 
-   * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#computeQ(java.util.Date, double)
    */
   @Override
-  public double computeQ( final Date date, final double w ) throws WQException
+  public double computeQ( final ITupleModel model, final Integer index, final double w ) throws WQException, SensorException
   {
-    final WechmannParams params = getFor( date ).getForW( w );
+    final IAxis dateAxis = AxisUtils.findDateAxis( model.getAxes() );
+    final Date date = (Date) model.get( index, dateAxis );
+
+    final double e = getValue( model, index, ITimeseriesConstants.TYPE_WECHMANN_E );
+    final double w2 = w - e;
+
+    final WechmannParams params = getFor( date ).getForW( w2 );
     if( params == null )
       return 0.0;
 
-    return WechmannFunction.computeQ( params, w );
+    return WechmannFunction.computeQ( params, w2 );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#getFromType()
-   */
   @Override
   public String getFromType( )
   {

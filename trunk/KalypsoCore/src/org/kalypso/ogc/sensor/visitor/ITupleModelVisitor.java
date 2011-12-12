@@ -44,7 +44,7 @@ import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.ogc.sensor.SensorException;
 
 /**
- * @author Dirk Kuch
+ * @author Dirk Kuch 
  */
 public interface ITupleModelVisitor
 {

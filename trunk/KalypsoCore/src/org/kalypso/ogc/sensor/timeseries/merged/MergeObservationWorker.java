@@ -47,6 +47,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.lang.Strings;
@@ -62,12 +63,11 @@ import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.ogc.sensor.metadata.MetadataWQTables;
+import org.kalypso.ogc.sensor.metadata.MetadataWQTable;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
-import org.kalypso.repository.IDataSourceItem;
 
 /**
  * merges multiple observation sources to one single result observation.
@@ -188,7 +188,7 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
       for( final ObservationSource source : m_sources )
       {
         final MetadataList metadata = source.getObservation().getMetadataList();
-        if( MetadataWQTables.updateWqTable( m_metadata, metadata ) )
+        if( MetadataWQTable.updateWqTable( m_metadata, metadata ) )
           break;
       }
     }
@@ -202,45 +202,66 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
     final IAxis[] srcAxes = mapping.getSourceAxes();
 
     final DataSourceHandler destMetaDataHandler = new DataSourceHandler( m_metadata );
-
-    final IAxis srcDataSourceAxis = AxisUtils.findDataSourceAxis( srcAxes );
-
-    final DataSourceHandler srcMetaDataHandler = srcDataSourceAxis == null ? null : new DataSourceHandler( srcObservation.getMetadataList() );
-
-    /* If we have no sourceAxis, create fixed dataSource */
-    final String href = srcObservation.getHref();
-    final int defaultDataSourceIndex = srcDataSourceAxis == null ? destMetaDataHandler.addDataSource( href, href ) : -1;
-
     for( int index = 0; index < srcModel.size(); index++ )
     {
       if( !m_strategy.process( srcModel, index, srcAxes ) )
         continue;
 
-      final Object[] destValues = new Object[m_axes.length];
-      for( int i = 0; i < destValues.length; i++ )
+      final Object[] targetValues = new Object[m_axes.length];
+      for( int i = 0; i < targetValues.length; i++ )
       {
-        final IAxis destAxis = m_axes[i];
-        final IAxis srcAxis = mapping.getSourceAxis( destAxis );
-        destValues[i] = getDestValue( srcObservation, srcModel, destMetaDataHandler, srcMetaDataHandler, defaultDataSourceIndex, index, srcAxis, destAxis );
+        final IAxis targetAxis = m_axes[i];
+        final IAxis sourceAxis = mapping.getSourceAxis( targetAxis );
+
+        if( AxisUtils.isDataSrcAxis( targetAxis ) ) // special handling for data source axes!
+        {
+          final String source = findDataSource( srcObservation, srcModel, sourceAxis, index );
+          final int sourceIndex = destMetaDataHandler.addDataSource( source, source );
+
+          targetValues[i] = sourceIndex;
+        }
+        else
+        {
+          targetValues[i] = getDestValue( srcModel, index, sourceAxis, sourceAxis );
+        }
       }
 
       // REMARK: prohibit adding corrupt data -> may result in an empty data set
-      if( !ArrayUtils.contains( destValues, null ) )
-        data.add( destValues );
+      if( !ArrayUtils.contains( targetValues, null ) )
+        data.add( targetValues );
     }
 
     return data.toArray( new Object[][] {} );
   }
 
-  private Object getDestValue( final IObservation srcObservation, final ITupleModel srcModel, final DataSourceHandler destMetaDataHandler, final DataSourceHandler srcMetaDataHandler, final int dataSourceIndex, final int index, final IAxis srcAxis, final IAxis destAxis ) throws SensorException
+  private String findDataSource( final IObservation srcObservation, final ITupleModel srcModel, final IAxis sourceAxis, final int index )
   {
-    if( AxisUtils.isDataSrcAxis( destAxis ) )
-    {
-      if( srcAxis == null )
-        return dataSourceIndex;
+    if( sourceAxis == null )
+      return srcObservation.getHref();
 
-      return getDestDataSource( srcObservation, srcModel, srcAxis, index, srcMetaDataHandler, destMetaDataHandler );
+    try
+    {
+      final Object value = srcModel.get( index, sourceAxis );
+      if( value instanceof Number )
+      {
+        final Number srcIndex = (Number) value;
+
+        final DataSourceHandler handler = new DataSourceHandler( srcObservation.getMetadataList() );
+        final String dataSourceIdentifier = handler.getDataSourceIdentifier( srcIndex.intValue() );
+        if( StringUtils.isNotEmpty( dataSourceIdentifier ) )
+          return dataSourceIdentifier;
+      }
     }
+    catch( final SensorException e )
+    {
+      e.printStackTrace();
+    }
+
+    return srcObservation.getHref();
+  }
+
+  private Object getDestValue( final ITupleModel srcModel, final int index, final IAxis srcAxis, final IAxis destAxis ) throws SensorException
+  {
 
     final Object srcValue = srcAxis == null ? null : srcModel.get( index, srcAxis );
 
@@ -258,21 +279,6 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
     }
 
     return srcValue;
-  }
-
-  // TODO: probably a performance bottle neck... access to the data source is expensive...
-  private Object getDestDataSource( final IObservation srcObservation, final ITupleModel srcModel, final IAxis srcAxis, final int index, final DataSourceHandler srcMetaDataHandler, final DataSourceHandler destMetaDataHandler ) throws SensorException
-  {
-    final Number srcIndex = (Number) srcModel.get( index, srcAxis );
-    if( srcIndex == null )
-    {
-      System.out.println( String.format( "Fallback: Found missing source reference.\nSource observation href: %s", srcObservation.getHref() ) );
-      return destMetaDataHandler.addDataSource( IDataSourceItem.SOURCE_UNKNOWN, IDataSourceItem.SOURCE_UNKNOWN );
-    }
-
-    final String identifier = srcMetaDataHandler.getDataSourceIdentifier( srcIndex.intValue() );
-    final String repository = srcMetaDataHandler.getDataSourceRepository( srcIndex.intValue() );
-    return destMetaDataHandler.addDataSource( identifier, repository );
   }
 
   public IObservation getObservation( )

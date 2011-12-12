@@ -45,21 +45,23 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
+import javax.xml.bind.JAXBElement;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.zml.core.debug.KalypsoZmlCoreDebug;
-import org.kalypso.zml.core.table.IZmlTableElement;
-import org.kalypso.zml.core.table.model.loader.ZmlColumnLoadCommand;
+import org.kalypso.zml.core.table.model.loader.ZmlModelColumnLoader;
 import org.kalypso.zml.core.table.model.loader.ZmlRowBuilder;
 import org.kalypso.zml.core.table.model.memento.IZmlMemento;
 import org.kalypso.zml.core.table.model.memento.ZmlMemento;
-import org.kalypso.zml.core.table.schema.DataColumnType;
+import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 
 /**
@@ -71,8 +73,6 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
 
   private final List<IZmlModelColumn> m_columns = Collections.synchronizedList( new ArrayList<IZmlModelColumn>() );
 
-  private final Set<ZmlColumnLoadCommand> m_commandRegister = Collections.synchronizedSet( new HashSet<ZmlColumnLoadCommand>() );
-
   private final Set<IZmlColumnModelListener> m_listeners = Collections.synchronizedSet( new HashSet<IZmlColumnModelListener>() );
 
   private Map<Date, IZmlModelRow> m_rows = Collections.synchronizedMap( new TreeMap<Date, IZmlModelRow>() );
@@ -81,24 +81,45 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
 
   private final URL m_context;
 
+  ZmlModelColumnLoader m_loader;
+
+  private final Map<String, AbstractColumnType> m_columnTypeMap = new LinkedHashMap<String, AbstractColumnType>();
+
+  private String[] m_ignoreTypes;
+
   public ZmlModel( final ZmlTableType type, final URL context )
   {
     m_type = type;
     m_context = context;
+    m_loader = new ZmlModelColumnLoader( this );
 
-    init();
+    doInitColumnTypes();
+  }
+
+  /** trigger loading of .kod based columns from the outside. */
+  public void loadInitialColumns( )
+  {
+    synchronized( this )
+    {
+      final ZmlModelInitializer initializer = new ZmlModelInitializer( this );
+      initializer.execute( new NullProgressMonitor() );
+    }
+  }
+
+  private void doInitColumnTypes( )
+  {
+    final List<JAXBElement< ? extends AbstractColumnType>> columnTypes = getTableType().getColumns().getAbstractColumn();
+    for( final JAXBElement< ? extends AbstractColumnType> columnType : columnTypes )
+    {
+      final AbstractColumnType column = columnType.getValue();
+      m_columnTypeMap.put( column.getId(), column );
+    }
   }
 
   @Override
   public IZmlMemento getMemento( )
   {
     return m_memento;
-  }
-
-  private void init( )
-  {
-    final ZmlModelInitializer initializer = new ZmlModelInitializer( this );
-    initializer.execute( new NullProgressMonitor() );
   }
 
   @Override
@@ -117,6 +138,7 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
     }
   }
 
+  @Override
   public void add( final IZmlModelColumn column )
   {
     column.addListener( this );
@@ -131,32 +153,12 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
     m_listeners.add( listener );
   }
 
-  public void purge( )
+  public void doClean( )
   {
-    KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlTableModel - purge() model" );
+    KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlTableModel - doClean()-ing model" );
+    m_loader.cancel();
 
-    final ZmlModelColumn[] columns;
-    final ZmlColumnLoadCommand[] commands;
-
-    synchronized( this )
-    {
-      columns = m_columns.toArray( new ZmlModelColumn[] {} );
-      commands = m_commandRegister.toArray( new ZmlColumnLoadCommand[] {} );
-
-      m_commandRegister.clear();
-      m_rows.clear();
-    }
-
-    for( final ZmlModelColumn column : columns )
-    {
-      column.purge();
-      column.setActive( false );
-    }
-
-    for( final ZmlColumnLoadCommand command : commands )
-    {
-      command.cancel();
-    }
+    m_rows.clear();
 
     fireModelChanged();
   }
@@ -164,7 +166,16 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
   @Override
   public void dispose( )
   {
-    purge();
+    doClean();
+
+    final ZmlModelColumn[] columns = m_columns.toArray( new ZmlModelColumn[] {} );
+    m_columns.clear();
+
+    for( final ZmlModelColumn column : columns )
+    {
+      column.removeListener( this );
+      column.dispose();
+    }
 
     m_memento.dispose();
   }
@@ -244,20 +255,11 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
     return m_type;
   }
 
-  public void load( final IZmlTableElement column )
-  {
-    synchronized( this )
-    {
-      final ZmlColumnLoadCommand command = new ZmlColumnLoadCommand( this, column );
-      m_commandRegister.add( command );
-
-      command.execute();
-    }
-  }
-
   @Override
   public void modelColumnChangedEvent( final IZmlModelColumn column )
   {
+    m_rows.clear();
+
     fireModelChanged( column );
   }
 
@@ -268,20 +270,30 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
 
   public void setIgnoreTypes( final String[] ignoreTypes )
   {
+    if( ArrayUtils.isEquals( m_ignoreTypes, ignoreTypes ) )
+      return;
+
     KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlTableModel - Setting ignore types\n" );
+    m_ignoreTypes = ignoreTypes;
 
-    synchronized( this )
-    {
-      final IZmlModelColumn[] columns = m_columns.toArray( new IZmlModelColumn[] {} );
-
-      for( final IZmlModelColumn column : columns )
-      {
-        final DataColumnType columnType = column.getDataColumn().getType();
-        final String type = columnType.getValueAxis();
-
-        final boolean ignore = ArrayUtils.contains( ignoreTypes, type );
-        column.setIsIgnoreType( ignore );
-      }
-    }
+    fireModelChanged();
   }
+
+  @Override
+  public String[] getIgnoreTypes( )
+  {
+    return m_ignoreTypes;
+  }
+
+  public ZmlModelColumnLoader getLoader( )
+  {
+    return m_loader;
+  }
+
+  @Override
+  public AbstractColumnType getColumnType( final String id )
+  {
+    return m_columnTypeMap.get( id );
+  }
+
 }

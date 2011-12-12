@@ -42,9 +42,7 @@ package org.kalypso.ogc.gml.table;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.viewers.BaseLabelProvider;
-import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -56,7 +54,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 /**
  * @author Gernot Belger
  */
-public class LayerTableLabelProvider extends BaseLabelProvider implements ITableLabelProvider, ITableColorProvider
+public class LayerTableLabelProvider extends BaseLabelProvider implements ITableLabelProvider
 {
   private final LayerTableViewer m_viewer;
 
@@ -110,27 +108,12 @@ public class LayerTableLabelProvider extends BaseLabelProvider implements ITable
     return label == null ? StringUtils.EMPTY : label;
   }
 
-  @Override
-  public Color getForeground( final Object element, final int columnIndex )
-  {
-    final Feature feature = (Feature) element;
-
-    final LayerTableStyle style = m_viewer.getStyle( columnIndex );
-    if( style == null )
-      return null;
-
-    return style.getForeground( feature );
-  }
-
-  @Override
-  public Color getBackground( final Object element, final int columnIndex )
-  {
-    final Feature feature = (Feature) element;
-
-    final LayerTableStyle style = m_viewer.getStyle( columnIndex );
-    if( style == null )
-      return null;
-
-    return style.getBackground( feature );
-  }
+  /**
+   * @Override public Color getForeground( final Object element, final int columnIndex ) { final Feature feature =
+   *           (Feature) element; final LayerTableStyle style = m_viewer.getStyle( columnIndex ); if( style == null )
+   *           return null; return style.getForeground( feature ); }
+   * @Override public Color getBackground( final Object element, final int columnIndex ) { final Feature feature =
+   *           (Feature) element; final LayerTableStyle style = m_viewer.getStyle( columnIndex ); if( style == null )
+   *           return null; return style.getBackground( feature ); }
+   */
 }

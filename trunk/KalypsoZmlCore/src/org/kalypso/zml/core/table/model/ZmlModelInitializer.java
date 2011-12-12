@@ -79,10 +79,15 @@ public class ZmlModelInitializer implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
+    doLoadColumns();
+
+    return Status.OK_STATUS;
+  }
+
+  private void doLoadColumns( )
+  {
     final Map<String, Set<DataSourcePropertyType>> map = getSources();
-
     final Set<Entry<String, Set<DataSourcePropertyType>>> entries = map.entrySet();
-
     for( final Entry<String, Set<DataSourcePropertyType>> entry : entries )
     {
       synchronized( this )
@@ -100,25 +105,24 @@ public class ZmlModelInitializer implements ICoreRunnableWithProgress
             KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlTableModel - Adding element: %s, %s\n", identifier, href );
 
             final ZmlDataSourceElement element = new ZmlDataSourceElement( identifier, href, m_model.getContext(), source.getLabel(), m_model.getMemento() );
-            m_model.load( element );
+            m_model.getLoader().load( element );
           }
           else if( index > 0 )
           {
-            final String identifier = String.format( IClonedColumn.CLONED_COLUMN_POSTFIX_FORMAT, base.getId(), index );
+            final String multipleIdentifier = String.format( IClonedColumn.CLONED_COLUMN_POSTFIX_FORMAT, base.getId(), index );
             final AbstractColumnType clone = TableTypes.cloneColumn( base );
-            clone.setId( identifier );
+            clone.setId( multipleIdentifier );
 
             appendColumnType( clone );
 
-            KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlTableModel - Adding element: %s, %s\n", identifier, href );
-            final ZmlDataSourceElement element = new ZmlDataSourceElement( identifier, href, m_model.getContext(), source.getLabel(), m_model.getMemento() );
-            m_model.load( element );
+            KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlTableModel - Adding element: %s, %s\n", multipleIdentifier, href );
+            final ZmlDataSourceElement element = new ZmlDataSourceElement( multipleIdentifier, href, m_model.getContext(), source.getLabel(), m_model.getMemento() );
+            m_model.getLoader().load( element );
           }
         }
       }
     }
 
-    return Status.OK_STATUS;
   }
 
   private void appendColumnType( final AbstractColumnType type )

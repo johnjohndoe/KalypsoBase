@@ -44,6 +44,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoFeatureTypeStyle;
+import org.kalypso.ogc.gml.IKalypsoStyle;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 
 /**
@@ -93,5 +96,22 @@ public class ThemeUtilities
 
     /* No visible theme was found. */
     return null;
+  }
+
+  /**
+   * Finds the 0-based index of the style in the theme's style list.
+   * 
+   * @return -1, if the style does not belong to the given theme.
+   */
+  public static int indexOfStyle( final IKalypsoFeatureTheme theme, final IKalypsoFeatureTypeStyle style )
+  {
+    final IKalypsoStyle[] styles = theme.getStyles();
+    for( int i = 0; i < styles.length; i++ )
+    {
+      if( styles[i] == style )
+        return i;
+    }
+
+    return -1;
   }
 }

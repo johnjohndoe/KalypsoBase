@@ -5,6 +5,10 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import org.kalypso.core.i18n.Messages;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.ITupleModel;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.wq.IWQConverter;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 
@@ -94,21 +98,21 @@ public class WQTableSet implements IWQConverter
     return m_tables.values().toArray( new WQTable[m_tables.size()] );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#computeW(java.util.Date, double)
-   */
   @Override
-  public double computeW( final Date date, final double q ) throws WQException
+  public double computeW( final ITupleModel model, final Integer index, final double q ) throws WQException, SensorException
   {
+    final IAxis dateAxis = AxisUtils.findDateAxis( model.getAxes() );
+    final Date date = (Date) model.get( index, dateAxis );
+
     return getFor( date ).getWFor( q );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.timeseries.wq.IWQConverter#computeQ(java.util.Date, double)
-   */
   @Override
-  public double computeQ( final Date date, final double w ) throws WQException
+  public double computeQ( final ITupleModel model, final Integer index, final double w ) throws WQException, SensorException
   {
+    final IAxis dateAxis = AxisUtils.findDateAxis( model.getAxes() );
+    final Date date = (Date) model.get( index, dateAxis );
+
     return getFor( date ).getQFor( w );
   }
 }
