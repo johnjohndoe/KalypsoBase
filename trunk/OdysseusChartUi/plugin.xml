@@ -37,6 +37,11 @@
             categoryId="org.kalypso.chart.ui.commands.category"
             id="org.kalypso.chart.ui.commands.zoom_pan_maximize"
             name="%org.kalypso.chart.ui.commands.zoom_pan_maximize.name">
+         <commandParameter
+               id="direction"
+               name="direction"
+               optional="true">
+         </commandParameter>
       </command>
       <command categoryId="org.kalypso.chart.ui.commands.category" id="org.kalypso.chart.ui.commands.pan" name="%org.kalypso.chart.ui.commands.pan.name"/>
       <command
@@ -69,16 +74,6 @@
             categoryId="org.kalypso.chart.ui.commands.category"
             id="org.kalypso.chart.ui.commands.export"
             name="%org.kalypso.chart.ui.commands.export.name">
-      </command>
-      <command
-            categoryId="org.kalypso.chart.ui.commands.category"
-            id="org.kalypso.chart.ui.commands.zoom_pan_maximize"
-            name="Zoom / Pan / Maximize">
-         <commandParameter
-               id="direction"
-               name="direction"
-               optional="true">
-         </commandParameter>
       </command>
       <command
             categoryId="org.kalypso.chart.ui.commands.category"
@@ -151,10 +146,6 @@
       <handler
             class="org.kalypso.chart.ui.editor.commandhandler.MaximizeViewHandler"
             commandId="org.kalypso.chart.ui.commands.maximizeView">
-      </handler>
-      <handler
-            class="org.kalypso.chart.ui.editor.commandhandler.ZoomPanMaximizeCommandHandler"
-            commandId="org.kalypso.chart.ui.commands.zoom_pan_maximize">
       </handler>
       <handler
             class="org.kalypso.chart.ui.editor.commandhandler.EditHandler"
