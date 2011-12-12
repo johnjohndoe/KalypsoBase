@@ -47,8 +47,10 @@ import java.util.Arrays;
 import java.util.TimeZone;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.kalypso.commons.databinding.swt.FileAndHistoryData;
 import org.kalypso.commons.java.util.AbstractModelObject;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.core.KalypsoCoreExtensions;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
@@ -101,6 +103,25 @@ public class ImportObservationData extends AbstractModelObject
       m_parameterType = m_allowedParameterTypes[0];
 
     m_sourceFileData.addPropertyChangeListener( FileAndHistoryData.PROPERTY_FILE, m_sourceFileListener );
+  }
+
+  public void init( final IDialogSettings settings )
+  {
+    if( settings == null )
+      return;
+
+    m_sourceFileData.init( settings );
+
+    m_parameterType = DialogSettingsUtils.getString( settings, PROPERTY_PARAMETER_TYPE, m_parameterType );
+
+    /* Adapter */
+    final String currentAdapterId = m_adapter == null ? null : m_adapter.getClass().getName();
+    final String adapterId = DialogSettingsUtils.getString( settings, PROPERTY_ADAPTER, currentAdapterId );
+    if( m_adapter == null )
+    {
+
+
+    }
   }
 
   protected void handleSourceFileChanged( final File newSourceFile )
