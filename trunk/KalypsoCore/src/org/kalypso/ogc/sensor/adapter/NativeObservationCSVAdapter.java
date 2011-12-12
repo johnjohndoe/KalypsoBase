@@ -69,7 +69,7 @@ public class NativeObservationCSVAdapter extends AbstractObservationImporter
 {
   private final DateFormat m_grapDateFormat = new SimpleDateFormat( "dd MM yyyy HH mm ss" ); //$NON-NLS-1$
 
-  public static Pattern CSV_PATTERN = Pattern.compile( "([0-9]{1,2}.+?[0-9]{1,2}.+?[0-9]{2,4}.+?[0-9]{1,2}.+?[0-9]{1,2}).+?([0-9]+\\,+?[0-9]+)" ); //$NON-NLS-1$
+  public static Pattern CSV_PATTERN = Pattern.compile( "([0-9]{1,2}.+?[0-9]{1,2}.+?[0-9]{2,4}.+?[0-9]{1,2}.+?[0-9]{1,2}).+?([0-9]+\\,+?[0-9]+).+?" ); //$NON-NLS-1$
 
   private static final int MAX_NO_OF_ERRORS = 30;
 
