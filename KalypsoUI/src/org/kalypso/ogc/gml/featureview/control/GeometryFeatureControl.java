@@ -41,7 +41,6 @@
 package org.kalypso.ogc.gml.featureview.control;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -61,22 +60,11 @@ public class GeometryFeatureControl extends AbstractFeatureControl
    */
   private Label m_label;
 
-  /**
-   * The Constructor.
-   * 
-   * @param feature
-   *          The GML that represents the feature.
-   * @param ftp
-   *          The GML schema that represents a feature property.
-   */
   public GeometryFeatureControl( final Feature feature, final IPropertyType ftp )
   {
     super( feature, ftp );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
-   */
   @Override
   public Control createControl( final Composite parent, final int style )
   {
@@ -88,9 +76,6 @@ public class GeometryFeatureControl extends AbstractFeatureControl
     return m_label;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#updateControl()
-   */
   @Override
   public void updateControl( )
   {
@@ -107,28 +92,9 @@ public class GeometryFeatureControl extends AbstractFeatureControl
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#isValid()
-   */
   @Override
   public boolean isValid( )
   {
     return true;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#addModifyListener(org.eclipse.swt.events.ModifyListener)
-   */
-  @Override
-  public void addModifyListener( final ModifyListener l )
-  {
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#removeModifyListener(org.eclipse.swt.events.ModifyListener)
-   */
-  @Override
-  public void removeModifyListener( final ModifyListener l )
-  {
   }
 }
