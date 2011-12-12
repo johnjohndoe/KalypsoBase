@@ -60,6 +60,8 @@ public abstract class TypedValidator<T> implements IValidator
   private final String m_message;
 
   /**
+   * The constructor.
+   * 
    * @param type
    *          Class of type T for type safe cast.
    * @param severity

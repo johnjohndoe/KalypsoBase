@@ -58,7 +58,7 @@ import org.kalypso.services.observation.sei.IObservationService;
  */
 public class ObservationServiceJob extends Job
 {
-  public static final String SERVICE_IMPLEMENTATION = "org.kalypso.services.observation.server.implementation";
+  public static final String SERVICE_IMPLEMENTATION = "org.kalypso.services.observation.server.implementation"; //$NON-NLS-1$
 
   /**
    * This wrapper also implements the {@link IObservationService}-Interface. It uses this job for reloading the

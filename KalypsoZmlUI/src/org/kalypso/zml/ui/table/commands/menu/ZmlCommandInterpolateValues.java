@@ -51,6 +51,7 @@ import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
@@ -92,7 +93,9 @@ public class ZmlCommandInterpolateValues extends AbstractHandler
 
       final IZmlModelColumn modelColumn = column.getModelColumn();
 
-      final IZmlModel model = table.getDataModel();
+      final IZmlModel model = table.getModel();
+
+      final ZmlModelTransaction transaction = new ZmlModelTransaction();
 
       for( int index = intervallStart.getModelIndex() + 1; index < intervallEnd.getModelIndex(); index++ )
       {
@@ -102,8 +105,10 @@ public class ZmlCommandInterpolateValues extends AbstractHandler
         final int step = cell.getModelIndex() - baseIndex;
         final double value = baseValue + step * stepValue;
 
-        cell.update( value, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_OK );
+        transaction.add( cell, value, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_OK );
       }
+
+      transaction.execute();
 
       return Status.OK_STATUS;
     }

@@ -158,4 +158,10 @@ public class ZmlDataSourceElement implements IZmlTableElement
     return properties.toArray( new String[] {} );
   }
 
+  @Override
+  public String getTitleTokenzizer( )
+  {
+    return "";
+  }
+
 }

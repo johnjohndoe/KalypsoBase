@@ -47,6 +47,7 @@ import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.model.references.ZmlValues;
+import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 
 /**
@@ -59,6 +60,8 @@ public class ApplySplineValuesVisior implements IZmlModelColumnVisitor
   private final IZmlValueReference m_s2;
 
   private final Splines m_splines;
+
+  ZmlModelTransaction m_transaction = new ZmlModelTransaction();
 
   /**
    * @param s1
@@ -75,9 +78,6 @@ public class ApplySplineValuesVisior implements IZmlModelColumnVisitor
     m_splines = splines;
   }
 
-  /**
-   * @see org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor#visit(org.kalypso.zml.core.table.model.references.IZmlValueReference)
-   */
   @Override
   public void visit( final IZmlValueReference reference ) throws SensorException
   {
@@ -91,7 +91,7 @@ public class ApplySplineValuesVisior implements IZmlModelColumnVisitor
       return;
 
     final Double value = m_splines.getValue( index );
-    reference.update( value, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
+    m_transaction.add( reference, value, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
   }
 
   private boolean isAfter( final Date index ) throws SensorException
@@ -116,6 +116,11 @@ public class ApplySplineValuesVisior implements IZmlModelColumnVisitor
       return true;
 
     return false;
+  }
+
+  public ZmlModelTransaction getTransaction( )
+  {
+    return m_transaction;
   }
 
 }

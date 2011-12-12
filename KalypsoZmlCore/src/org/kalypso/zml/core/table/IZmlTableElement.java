@@ -55,4 +55,6 @@ public interface IZmlTableElement
   IObsProvider getObsProvider( );
 
   String getTitle( IAxis axis );
+
+  String getTitleTokenzizer( );
 }

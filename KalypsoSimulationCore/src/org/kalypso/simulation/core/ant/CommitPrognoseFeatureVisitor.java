@@ -331,7 +331,7 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
     targetMetadata.putAll( metadataList );
 
     targetMetadata.remove( ITimeseriesConstants.MD_WQ_TABLE );
-    targetMetadata.remove( ITimeseriesConstants.MD_WQWECHMANN );
+    targetMetadata.remove( ITimeseriesConstants.MD_WQ_WECHMANN );
     return targetMetadata;
   }
 

@@ -47,12 +47,11 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.impl.AbstractObservationDecorator;
-import org.kalypso.ogc.sensor.impl.DefaultAxis;
-import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
+import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
 
 /**
  * encapsulates multiple observations.
@@ -123,10 +122,17 @@ public class MergedObservation extends AbstractObservationDecorator implements I
           resultAxes.add( axis );
       }
 
-      if( AxisUtils.findDataSourceAxis( axes ) == null )
+      for( final IAxis axis : resultAxes )
       {
-        final DefaultAxis dataSourceAxis = new DefaultAxis( ITimeseriesConstants.TYPE_DATA_SRC, ITimeseriesConstants.TYPE_DATA_SRC, "", Integer.class, false );
-        resultAxes.add( dataSourceAxis );
+        if( !AxisUtils.isValueAxis( axis ) )
+          continue;
+
+        if( AxisUtils.findDataSourceAxis( axes, axis ) == null )
+        {
+          final IAxis dataSourceAxis = DataSourceHelper.createSourceAxis( axis );
+          resultAxes.add( dataSourceAxis );
+        }
+
       }
 
       return resultAxes.toArray( new IAxis[resultAxes.size()] );

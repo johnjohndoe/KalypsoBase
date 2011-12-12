@@ -142,9 +142,6 @@ public class ServiceRepositoryObservation implements IObservation
     return m_bean.getName();
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#getMetadataList()
-   */
   @Override
   public final MetadataList getMetadataList( )
   {
@@ -160,9 +157,6 @@ public class ServiceRepositoryObservation implements IObservation
     return metadata;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#getAxisList()
-   */
   @Override
   public final IAxis[] getAxes( )
   {
@@ -180,9 +174,6 @@ public class ServiceRepositoryObservation implements IObservation
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
-   */
   @Override
   public final synchronized ITupleModel getValues( final IRequest args ) throws SensorException
   {
@@ -197,10 +188,6 @@ public class ServiceRepositoryObservation implements IObservation
     return values;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#setValues(org.kalypso.ogc.sensor.ITuppleModel)
-   * @deprecated
-   */
   @Override
   @Deprecated
   public final void setValues( final ITupleModel values )
@@ -232,10 +219,6 @@ public class ServiceRepositoryObservation implements IObservation
     return ObservationServiceUtils.addServerSideId( m_bean.getId() );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#accept(org.kalypso.ogc.sensor.visitor.IObservationVisitor,
-   *      org.kalypso.ogc.sensor.request.IRequest)
-   */
   @Override
   public void accept( final IObservationVisitor visitor, final IRequest request ) throws SensorException
   {

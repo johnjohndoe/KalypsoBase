@@ -36,9 +36,6 @@ package org.kalypso.ogc.sensor.zml;
  */
 public interface ZmlURLConstants
 {
-  /** fragment part of the url denoting a Zml-Url with a context, not a Zml-Id */
-  String FRAGMENT_USEASCONTEXT = "useascontext"; //$NON-NLS-1$
-
   /** Specification-Tags for the Zml-Request in the URL */
 // public final static String TAG_REQUEST1 = "<request"; // !NOTE: without ending '>'
 // public final static String TAG_REQUEST2 = "</request>";

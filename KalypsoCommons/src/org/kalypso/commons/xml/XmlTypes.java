@@ -41,11 +41,8 @@
 package org.kalypso.commons.xml;
 
 import java.util.Date;
-import java.util.TimeZone;
 
 import javax.xml.namespace.QName;
-
-import org.kalypso.commons.parser.impl.DateParser;
 
 /**
  * Utility class that contains the default java formaters for the types found in xml.
@@ -89,12 +86,6 @@ public final class XmlTypes
   public final static QName XS_TIME = new QName( NS.XSD_SCHEMA, "time" );//$NON-NLS-1$
 
   /**
-   * @deprecated Use {@link javax.xml.bind.DatatypeConverter#printDate(java.util.Calendar)} instead.
-   */
-  @Deprecated
-  public final static String XML_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";//$NON-NLS-1$
-
-  /**
    * Returns true if the given QName represents an xml-type which is a number
    */
   public static boolean isNumber( final QName valueTypeName )
@@ -109,24 +100,6 @@ public final class XmlTypes
   public static boolean isDate( final QName valueTypeName )
   {
     return valueTypeName.equals( XmlTypes.XS_DATE ) || valueTypeName.equals( XmlTypes.XS_DATETIME ) || valueTypeName.equals( XmlTypes.XS_DURATION ) || valueTypeName.equals( XmlTypes.XS_TIME );
-  }
-
-  /**
-   * Parser for the type <code>date</code>. It uses following format string:
-   * 
-   * <pre>
-   *      yyyy-MM-dd'T'HH:mm:ss
-   * </pre>
-   * 
-   * @deprecated Use {@link javax.xml.bind.DatatypeConverter} instead
-   */
-  @Deprecated
-  public static DateParser getDateParser( final TimeZone timezone )
-  {
-    final DateParser parser = new DateParser( XML_DATETIME_FORMAT );
-    parser.setTimezone( timezone );
-
-    return parser;
   }
 
   /**

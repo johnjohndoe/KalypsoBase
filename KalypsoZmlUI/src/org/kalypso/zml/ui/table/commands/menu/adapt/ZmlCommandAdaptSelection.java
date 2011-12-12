@@ -49,10 +49,12 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.TranProLinFilterUtilities;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
-import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.timeseries.wq.WQTimeserieProxy;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
@@ -95,13 +97,19 @@ public class ZmlCommandAdaptSelection extends AbstractHandler
       final Date end = toDate( selected[selected.length - 1] );
       final DateRange range = new DateRange( begin, end );
 
-      final IObservation transformed = transform( column, selected, range );
+      final IZmlValueReference reference = selected[0].getValueReference();
+      final IZmlModelColumn tableColumn = reference.getColumn();
+      final IAxis axis = findTransformAxisType( tableColumn );
+
+      final IObservation transformed = transform( column, selected, range, axis );
 
       final DateRange dateRange = new DateRange( begin, end );
 
-      final AdaptValuesVisitor visitor = new AdaptValuesVisitor();
+      final AdaptValuesVisitor visitor = new AdaptValuesVisitor( axis.getType() );
       transformed.accept( visitor, new ObservationRequest( dateRange ) );
       column.getModelColumn().accept( visitor );
+
+      visitor.doFinish();
     }
     catch( final SensorException e )
     {
@@ -112,15 +120,36 @@ public class ZmlCommandAdaptSelection extends AbstractHandler
 
   }
 
-  private IObservation transform( final IZmlTableColumn column, final IZmlTableCell[] selected, final DateRange range ) throws SensorException
+  private IObservation transform( final IZmlTableColumn column, final IZmlTableCell[] selected, final DateRange range, final IAxis axis ) throws SensorException
   {
     final IObservation observation = column.getModelColumn().getObservation();
-    final double difference = getDifference( selected );
 
-    final IZmlValueReference reference = selected[0].getValueReference();
-    final IAxis valueAxis = reference.getColumn().getValueAxis();
+    final double difference = getDifference( selected, axis );
 
-    return TranProLinFilterUtilities.transform( observation, range, difference, 0.0, "+", valueAxis.getType(), KalypsoStati.BIT_DERIVATED ); //$NON-NLS-1$
+    return TranProLinFilterUtilities.transform( observation, range, difference, 0.0, "+", axis.getType() ); //$NON-NLS-1$
+  }
+
+  private IAxis findTransformAxisType( final IZmlModelColumn tableColumn )
+  {
+    final IAxis valueAxis = tableColumn.getValueAxis();
+    if( valueAxis.isPersistable() )
+      return valueAxis;
+
+    final IObservation observation = tableColumn.getObservation();
+    if( observation instanceof WQTimeserieProxy )
+    {
+      final WQTimeserieProxy wqObservation = (WQTimeserieProxy) observation;
+      final IAxis destAxis = wqObservation.getDestAxis();
+      final IAxis srcAxis = wqObservation.getSrcAxis();
+
+      if( valueAxis == destAxis )
+        return srcAxis;
+
+      if( valueAxis == srcAxis )
+        return destAxis;
+    }
+
+    return null;
   }
 
   private Date toDate( final IZmlTableCell cell ) throws SensorException
@@ -129,7 +158,7 @@ public class ZmlCommandAdaptSelection extends AbstractHandler
     return reference.getIndexValue();
   }
 
-  private double getDifference( final IZmlTableCell[] cells ) throws SensorException
+  private double getDifference( final IZmlTableCell[] cells, final IAxis axis ) throws SensorException
   {
     final IZmlTableCell base = cells[0];
     final IZmlTableCell prev = base.findPreviousCell();
@@ -137,10 +166,15 @@ public class ZmlCommandAdaptSelection extends AbstractHandler
     final IZmlValueReference reference1 = base.getValueReference();
     final IZmlValueReference reference2 = prev.getValueReference();
 
-    final double value1 = reference1.getValue().doubleValue();
-    final double value2 = reference2.getValue().doubleValue();
+    final ITupleModel tupleModel1 = reference1.getColumn().getTupleModel();
+    final ITupleModel tupleModel2 = reference2.getColumn().getTupleModel();
+
+    final int index1 = reference1.getModelIndex();
+    final int index2 = reference2.getModelIndex();
+
+    final double value1 = ((Number) tupleModel1.get( index1, axis )).doubleValue();
+    final double value2 = ((Number) tupleModel2.get( index2, axis )).doubleValue();
 
     return value2 - value1;
   }
-
 }

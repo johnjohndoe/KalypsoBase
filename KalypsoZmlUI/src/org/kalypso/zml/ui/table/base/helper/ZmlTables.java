@@ -40,9 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.base.helper;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.viewers.ViewerCell;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.zml.core.table.binding.BaseColumn;
+import org.kalypso.zml.core.table.model.IZmlModel;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.schema.AbstractColumnType;
+import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.ZmlTableColumnBuilder;
+import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.IZmlTableRow;
 import org.kalypso.zml.ui.table.model.ZmlTableRow;
 
@@ -66,4 +79,74 @@ public final class ZmlTables
     return null;
   }
 
+  /**
+   * @param identifier
+   *          column identifier
+   */
+  public static boolean hasColumn( final IZmlTable table, final String identifier )
+  {
+    final IZmlTableColumn[] columns = table.getColumns();
+    for( final IZmlTableColumn column : columns )
+    {
+      if( StringUtils.equals( column.getColumnType().getIdentifier(), identifier ) )
+        return true;
+    }
+
+    return false;
+  }
+
+  public static IZmlModelColumn[] findMissingColumns( final IZmlTable table, final IZmlModelColumn[] modelColumns )
+  {
+    final Set<IZmlModelColumn> missing = new LinkedHashSet<IZmlModelColumn>();
+    for( final IZmlModelColumn modelColumn : modelColumns )
+    {
+
+      final IZmlTableColumn tableColumn = findTableColumn( table, modelColumn );
+      if( Objects.isNull( tableColumn ) )
+        missing.add( modelColumn );
+
+    }
+
+    return missing.toArray( new IZmlModelColumn[] {} );
+  }
+
+  private static IZmlTableColumn findTableColumn( final IZmlTable table, final IZmlModelColumn modelColumn )
+  {
+    final IZmlTableColumn[] columns = table.getColumns();
+    for( final IZmlTableColumn column : columns )
+    {
+      final IZmlModelColumn m = column.getModelColumn();
+      if( Objects.isNull( modelColumn, m ) )
+        continue;
+      else if( StringUtils.equals( modelColumn.getIdentifier(), m.getIdentifier() ) )
+        return column;
+    }
+
+    return null;
+  }
+
+  public static void addTableColumn( final IZmlTable table, final BaseColumn column )
+  {
+    final IZmlModel model = table.getModel();
+
+    final AbstractColumnType columnType = column.getType();
+    if( columnType instanceof DataColumnType )
+    {
+      final DataColumnType dataColumnType = (DataColumnType) columnType;
+      final String indexAxis = dataColumnType.getIndexAxis();
+      if( !ZmlTables.hasColumn( table, indexAxis ) )
+      {
+        final AbstractColumnType indexColumnType = model.getColumnType( indexAxis );
+        final ZmlTableColumnBuilder builder = new ZmlTableColumnBuilder( table, new BaseColumn( indexColumnType ) );
+        builder.execute( new NullProgressMonitor() );
+      }
+    }
+
+    if( !ZmlTables.hasColumn( table, columnType.getId() ) )
+    {
+      final ZmlTableColumnBuilder builder = new ZmlTableColumnBuilder( table, column );
+      builder.execute( new NullProgressMonitor() );
+    }
+
+  }
 }

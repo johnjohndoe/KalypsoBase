@@ -44,7 +44,6 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.merged.Source;
-import org.kalypso.ogc.sensor.zml.ZmlURLConstants;
 import org.kalypso.simulation.core.ant.copyobservation.CopyObservationFeatureVisitor;
 import org.kalypso.simulation.core.ant.copyobservation.ICopyObservationSource;
 import org.kalypso.simulation.core.ant.copyobservation.source.FeatureCopyObservationSource;
@@ -68,6 +67,15 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
  */
 public class CopyObservationMappingHelper
 {
+  /**
+   * fragment part of the url denoting a Zml-Url with a context, not a Zml-Id
+   * 
+   * @deprecated Does not work any more, code was removed. Only used by GmlWeightingTask and KrigingTask, which are both
+   *             obsolete.
+   */
+  @Deprecated
+  private static final String FRAGMENT_USEASCONTEXT = "useascontext"; //$NON-NLS-1$
+
   private static final QName QNAME_MAPPING_COLLECTION = new QName( UrlCatalogUpdateObservationMapping.NS, "MappingCollection" );
 
   private static final QName QNAME_MAPPING_OBSERVATION = new QName( UrlCatalogUpdateObservationMapping.NS, "MappingObservation" );
@@ -120,7 +128,7 @@ public class CopyObservationMappingHelper
     final IRelationType pt3 = (IRelationType) rootFeature.getFeatureType().getProperty( RESULT_LIST_PROP );
     final Feature mapFE = workspace.createFeature( rootFeature, pt3, mapFT );
     final TimeseriesLinkType inLink = obsLinkFac.createTimeseriesLinkType();
-    final String finalHref = "#" + ZmlURLConstants.FRAGMENT_USEASCONTEXT + "?" + filterInline;
+    final String finalHref = "#" + FRAGMENT_USEASCONTEXT + "?" + filterInline;
     inLink.setHref( finalHref );
     final IPropertyType inLinkPT = mapFT.getProperty( CopyObservationMappingHelper.RESULT_TS_IN_PROP );
     mapFE.setProperty( inLinkPT, inLink );
@@ -146,12 +154,12 @@ public class CopyObservationMappingHelper
        * Note: the order is important for the ForecastFilter! so we put the target-observation in the first place since
        * it is the first element that will be backed by the forecast-filter forecast and measured
        */
-      sources = new Source[] { new Source( RESULT_TS_OUT_PROP.getLocalPart(), doNotOverwriteRange, null ), new Source( RESULT_TS_IN_PROP.getLocalPart(), measuredRange, null ) };
+      sources = new Source[] { new Source( null, RESULT_TS_OUT_PROP.getLocalPart(), doNotOverwriteRange, null ), new Source( null, RESULT_TS_IN_PROP.getLocalPart(), measuredRange, null ) };
     }
     else
     {
       // measured
-      sources = new Source[] { new Source( RESULT_TS_IN_PROP.getLocalPart(), measuredRange, null ), };
+      sources = new Source[] { new Source( null, RESULT_TS_IN_PROP.getLocalPart(), measuredRange, null ), };
     }
 
     /*

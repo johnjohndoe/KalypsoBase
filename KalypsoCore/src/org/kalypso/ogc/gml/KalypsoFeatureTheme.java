@@ -229,7 +229,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
   private ILabelPlacementStrategy createStrategy( final Graphics g, final Boolean selected )
   {
-    if( selected != null && selected == true )
+    if( selected != null && selected )
       return null;
 
     // FIXME: create strategy depending on theme property
@@ -245,7 +245,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   private Graphics wrapGraphicForSelection( final Graphics g, final Boolean selected )
   {
     /* If we draw normally, never use highlight graphics */
-    if( selected == null || selected == false )
+    if( selected == null || !selected )
       return g;
 
     if( hasSelectionStyle() )
@@ -270,6 +270,12 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   public void addStyle( final IKalypsoStyle style )
   {
     m_styles.add( style );
+    
+    styleAdded( style );
+  }
+
+  private void styleAdded( final IKalypsoStyle style )
+  {
     style.addStyleListener( this );
 
     // HACKY: in order to refresh (not update) the outline, fire a visibility event

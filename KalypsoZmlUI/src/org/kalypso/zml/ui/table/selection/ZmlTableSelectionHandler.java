@@ -221,9 +221,6 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
     return -1;
   }
 
-  /**
-   * @see org.eclipse.swt.events.MouseMoveListener#mouseMove(org.eclipse.swt.events.MouseEvent)
-   */
   @Override
   public void mouseMove( final MouseEvent e )
   {

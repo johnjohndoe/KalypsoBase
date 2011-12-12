@@ -57,7 +57,7 @@ import com.google.common.collect.Multiset.Entry;
 
 /**
  * Helper class that guesses the timestep from a given timeseries.
- *
+ * 
  * @author Gernot Belger
  */
 class TimestepGuesser

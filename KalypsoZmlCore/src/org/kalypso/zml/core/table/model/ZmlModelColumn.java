@@ -43,6 +43,7 @@ package org.kalypso.zml.core.table.model;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.lang.Strings;
@@ -61,7 +62,9 @@ import org.kalypso.zml.core.table.binding.DataColumn;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataListener;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.transaction.IZmlModelUpdateCommand;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
+import org.kalypso.zml.core.table.schema.DataColumnType;
 
 /**
  * @author Dirk Kuch
@@ -80,9 +83,9 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
 
   private final IZmlModel m_model;
 
-  private boolean m_ignore = false;
+  private String m_labelTokenizer;
 
-  private boolean m_active = true;
+  private boolean m_labeled = false;
 
   public ZmlModelColumn( final IZmlModel model, final String identifier, final DataColumn type )
   {
@@ -103,9 +106,16 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   }
 
   @Override
+  public void removeListener( final IZmlModelColumnListener listener )
+  {
+    m_listeners.remove( listener );
+  }
+
+  @Override
   public void setLabel( final String label )
   {
     m_label = label;
+    m_labeled = true;
   }
 
   @Override
@@ -122,20 +132,28 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
       m_type.reset();
 
       if( Objects.isNotNull( m_handler ) )
+      {
         m_handler.removeListener( this );
+        m_handler.dispose();
+      }
 
       m_handler = handler;
       m_handler.addListener( this );
 
-      setActive( true );
+      fireColumnChanged();
     }
-
   }
 
-  public void purge( )
+  public void dispose( )
   {
-    m_handler.dispose();
-    setActive( false );
+    if( Objects.isNotNull( m_handler ) )
+    {
+      m_handler.removeListener( this );
+      m_handler.dispose();
+
+      fireColumnChanged();
+    }
+
   }
 
   @Override
@@ -170,9 +188,6 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
     return getTupleModel().size();
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {
@@ -180,16 +195,30 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   }
 
   @Override
-  public void update( final int index, final Object value, final String source, final Integer status ) throws SensorException
+  public void doUpdate( final int index, final Object value, final String source, final Integer status ) throws SensorException
+  {
+    update( index, value, source, status );
+
+    fireColumnChangedEvent();
+  }
+
+  /**
+   * @see org.kalypso.zml.core.table.model.IZmlModelColumn#doUpdate(org.kalypso.zml.core.table.model.transaction.IZmlModelUpdateCommand)
+   */
+  @Override
+  public void doExecute( final IZmlModelUpdateCommand command ) throws SensorException
+  {
+    final IZmlValueReference target = command.getTarget();
+    update( target.getModelIndex(), command.getValue(), command.getDataSource(), command.getStatus() );
+  }
+
+  private void update( final int index, final Object value, final String source, final Integer status ) throws SensorException
   {
     final ITupleModel model = getTupleModel();
-
     final IAxis[] axes = model.getAxes();
 
     for( final IAxis axis : axes )
     {
-      final Object existing = model.get( index, axis );
-
       if( AxisUtils.isDataSrcAxis( axis ) )
       {
         // FIXME - user modified triggered interpolated state?!?
@@ -200,29 +229,24 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
         else
           sourceIndex = handler.addDataSource( source, source );
 
-        if( Objects.notEqual( existing, sourceIndex ) )
-          model.set( index, axis, sourceIndex );
+        model.set( index, axis, sourceIndex );
       }
       else if( AxisUtils.isStatusAxis( axis ) )
       {
         if( Objects.isNull( status ) )
           model.set( index, axis, KalypsoStati.BIT_OK );
 
-        if( Objects.notEqual( existing, status ) )
-          model.set( index, axis, status );
+        model.set( index, axis, status );
       }
       else if( isTargetAxis( axis ) )
       {
         if( Objects.isNull( value ) )
           model.set( index, axis, Double.NaN );
 
-        if( Objects.notEqual( existing, value ) )
-          model.set( index, axis, value );
+        model.set( index, axis, value );
       }
     }
 
-    final IObservation observation = m_handler.getObservation();
-    observation.fireChangedEvent( source );
   }
 
   @Override
@@ -260,6 +284,9 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   public IAxis[] getAxes( )
   {
     final IObservation observation = m_handler.getObservation();
+    if( Objects.isNull( observation ) )
+      return new IAxis[] {};
+
     return observation.getAxes();
   }
 
@@ -300,12 +327,10 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   @Override
   public void eventObservationLoaded( )
   {
-    setActive( true );
-
     fireColumnChanged();
   }
 
-  private void fireColumnChanged( )
+  public void fireColumnChanged( )
   {
     final IZmlModelColumnListener[] listeners = m_listeners.toArray( new IZmlModelColumnListener[] {} );
     for( final IZmlModelColumnListener listener : listeners )
@@ -374,33 +399,75 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   }
 
   @Override
-  public void setIsIgnoreType( final boolean ignore )
+  public boolean isActive( )
   {
-    if( Objects.equal( m_ignore, ignore ) )
-      return;
+    if( isIgnoreType() )
+      return false;
 
-    m_ignore = ignore;
+    final IZmlModelColumnDataHandler handler = getDataHandler();
+    if( Objects.isNull( handler ) )
+      return false;
 
-    fireColumnChanged();
+    final IObservation observation = handler.getObservation();
+    if( Objects.isNull( observation ) )
+      return false;
+
+    final IAxis[] axes = observation.getAxes();
+    final String valueAxis = getDataColumn().getValueAxis();
+
+    return Objects.isNotNull( AxisUtils.findAxis( axes, valueAxis ) );
+  }
+
+  private boolean isIgnoreType( )
+  {
+    final IZmlModel model = getModel();
+    final String[] ignoreTypes = model.getIgnoreTypes();
+
+    final DataColumnType columnType = getDataColumn().getType();
+    final String type = columnType.getValueAxis();
+
+    return ArrayUtils.contains( ignoreTypes, type );
   }
 
   @Override
-  public boolean isActive( )
+  public void fireColumnChangedEvent( )
   {
-    if( m_ignore )
-      return false;
+    try
+    {
+      // FIXME improve update value handling
+      final IObservation observation = m_handler.getObservation();
+      if( Objects.isNull( observation ) )
+        return;
 
-    return m_active;
+      observation.setValues( getTupleModel() );
+      observation.fireChangedEvent( this );
+
+    }
+    catch( final Exception ex )
+    {
+      ex.printStackTrace();
+    }
   }
 
-  public void setActive( final boolean active )
+  @Override
+  public void setLableTokenizer( final String titleTokenizer )
   {
-    if( Objects.equal( m_active, active ) )
-      return;
+    m_labelTokenizer = titleTokenizer;
+  }
 
-    m_active = active;
+  @Override
+  public String getLabelTokenizer( )
+  {
+    return m_labelTokenizer;
+  }
 
-    fireColumnChanged();
+  /**
+   * @see org.kalypso.zml.core.table.model.IZmlModelColumn#isLabeled()
+   */
+  @Override
+  public boolean isLabeled( )
+  {
+    return m_labeled;
   }
 
 }

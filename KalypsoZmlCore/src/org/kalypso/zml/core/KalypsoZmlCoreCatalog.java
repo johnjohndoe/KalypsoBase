@@ -41,6 +41,7 @@
 
 package org.kalypso.zml.core;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
@@ -53,13 +54,17 @@ import org.kalypso.contribs.java.net.AbstractUrlCatalog;
  */
 public class KalypsoZmlCoreCatalog extends AbstractUrlCatalog
 {
-  /**
-   * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map, java.util.Map)
-   */
   @Override
   protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> catalog, final Map<String, String> prefixes )
   {
-    catalog.put( KalypsoZmlCoreConstants.NS_ZML_FILTER, myClass.getResource( "filter/schema/zmlFilter.xsd" ) ); //$NON-NLS-1$
-    prefixes.put( KalypsoZmlCoreConstants.NS_ZML_FILTER, KalypsoZmlCoreConstants.PREFIX_ZML_FILTER );
+    try
+    {
+      catalog.put( KalypsoZmlCoreConstants.NS_ZML_FILTER, new URL( "platform:/plugin/org.kalypso.zml.core/etc/schemas/gml/zmlFilter.xsd" ) ); //$NON-NLS-1$
+      prefixes.put( KalypsoZmlCoreConstants.NS_ZML_FILTER, KalypsoZmlCoreConstants.PREFIX_ZML_FILTER );
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+    }
   }
 }

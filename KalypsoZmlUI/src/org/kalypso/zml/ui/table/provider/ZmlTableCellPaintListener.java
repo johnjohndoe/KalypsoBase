@@ -46,7 +46,10 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 
@@ -183,9 +186,24 @@ public class ZmlTableCellPaintListener implements Listener
     if( index < 0 )
       return null;
 
+    if( columns.length <= index )
+      return null;
+
     final IZmlTableColumn column = columns[index];
     if( !column.isVisible() )
       return null;
+
+    if( !column.isIndexColumn() )
+    {
+      final IZmlModelColumn modelColumn = column.getModelColumn();
+      final IZmlModelColumnDataHandler dataHandler = modelColumn.getDataHandler();
+      if( Objects.isNull( dataHandler ) )
+        return null;
+
+      final IObservation observation = dataHandler.getObservation();
+      if( Objects.isNull( observation ) )
+        return null;
+    }
 
     return m_table.getCache().getPainter( row, column );
   }

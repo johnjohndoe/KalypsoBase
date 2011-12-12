@@ -41,13 +41,17 @@
 package org.kalypso.ogc.sensor.timeseries;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
+import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
 
 /**
  * @author Dirk Kuch
@@ -60,6 +64,9 @@ public final class AxisUtils implements ITimeseriesConstants
 
   public static boolean isDateAxis( final IAxis axis )
   {
+    if( Objects.isNull( axis ) )
+      return false;
+
     return isDateAxis( axis.getType() );
   }
 
@@ -70,21 +77,31 @@ public final class AxisUtils implements ITimeseriesConstants
 
   public static boolean isValueAxis( final IAxis axis )
   {
+    return isValueAxis( axis, true );
+  }
+
+  private static boolean isValueAxis( final IAxis axis, final boolean persistable )
+  {
+    if( Objects.isNull( axis ) )
+      return false;
+
     if( isDateAxis( axis ) )
       return false;
     else if( isDataSrcAxis( axis ) )
       return false;
     else if( isStatusAxis( axis ) )
       return false;
-    else if( !axis.isPersistable() )
+    else if( persistable && !axis.isPersistable() )
       return false;
 
-    // TODO so return true?
     return true;
   }
 
   public static boolean isStatusAxis( final IAxis axis )
   {
+    if( Objects.isNull( axis ) )
+      return false;
+
     return isStatusAxis( axis.getType() );
   }
 
@@ -95,6 +112,9 @@ public final class AxisUtils implements ITimeseriesConstants
 
   public static boolean isDataSrcAxis( final IAxis axis )
   {
+    if( Objects.isNull( axis ) )
+      return false;
+
     return isDataSrcAxis( axis.getType() );
   }
 
@@ -105,24 +125,61 @@ public final class AxisUtils implements ITimeseriesConstants
 
   public static IAxis findValueAxis( final IAxis[] axes )
   {
+    return findValueAxis( axes, true );
+  }
+
+  public static IAxis findValueAxis( final IAxis[] axes, final boolean persistable )
+  {
     for( final IAxis axis : axes )
     {
-      if( isValueAxis( axis ) )
+      if( isValueAxis( axis, persistable ) )
         return axis;
     }
 
     return null;
   }
 
-  public static IAxis findDataSourceAxis( final IAxis[] axes )
+  public static IAxis findDataSourceAxis( final Collection<IAxis> axes, final IAxis valueAxis )
   {
+    return findDataSourceAxis( axes.toArray( new IAxis[] {} ), valueAxis );
+  }
+
+  public static IAxis findDataSourceAxis( final IAxis[] axes, final IAxis valueAxis )
+  {
+    if( Arrays.isEmpty( axes ) || Objects.isNull( valueAxis ) )
+      return null;
+
+    /** fallback = old behavior of finding data source axes */
+    IAxis fallback = null;
+
     for( final IAxis axis : axes )
     {
       if( isDataSrcAxis( axis ) )
-        return axis;
+      {
+        if( StringUtils.equals( axis.getName(), DataSourceHelper.getDataSourceName( valueAxis ) ) )
+          return axis;
+
+        if( Objects.isNull( fallback ) && isPlainDataSourceAxis( axis ) )
+          fallback = axis;
+      }
+
     }
 
-    return null;
+    return fallback;
+  }
+
+  /**
+   * @return data source axis is not bound to a special value axis?
+   */
+  private static boolean isPlainDataSourceAxis( final IAxis axis )
+  {
+    if( Objects.isNull( axis ) )
+      return false;
+
+    if( !isDataSrcAxis( axis ) )
+      return false;
+
+    return !axis.getName().contains( "_dataSource_" );//$NON-NLS-N$
   }
 
   public static IAxis findDateAxis( final IAxis[] axes )
@@ -132,27 +189,31 @@ public final class AxisUtils implements ITimeseriesConstants
       if( isDateAxis( axis ) )
         return axis;
     }
+
     return null;
   }
 
   public static IAxis[] findStatusAxes( final IAxis[] axes )
   {
-    final List<IAxis> statusAxes = new ArrayList<IAxis>();
-    for( final IAxis axis : axes )
-    {
-      if( isStatusAxis( axis ) )
-        statusAxes.add( axis );
-    }
+    return KalypsoStatusUtils.findStatusAxes( axes );
+  }
 
-    return statusAxes.toArray( new IAxis[] {} );
+  public static IAxis[] findValueAxes( final Collection<IAxis> axes )
+  {
+    return findValueAxes( axes.toArray( new IAxis[] {} ), true );
   }
 
   public static IAxis[] findValueAxes( final IAxis[] axes )
   {
+    return findValueAxes( axes, true );
+  }
+
+  public static IAxis[] findValueAxes( final IAxis[] axes, final boolean persistable )
+  {
     final List<IAxis> valueAxes = new ArrayList<IAxis>();
     for( final IAxis axis : axes )
     {
-      if( isValueAxis( axis ) )
+      if( isValueAxis( axis, persistable ) )
         valueAxes.add( axis );
     }
 
@@ -171,13 +232,13 @@ public final class AxisUtils implements ITimeseriesConstants
     return dataSourceAxes.toArray( new IAxis[] {} );
   }
 
-  public static IAxis findStatusAxis( final IAxis[] axes )
+  public static IAxis findStatusAxis( final IAxis[] axes, final IAxis valueAxis )
   {
-    final IAxis[] found = findStatusAxes( axes );
-    if( ArrayUtils.isEmpty( found ) )
+    if( Arrays.isEmpty( axes ) || Objects.isNull( valueAxis ) )
       return null;
 
-    return found[0];
+    return KalypsoStatusUtils.findStatusAxisFor( axes, valueAxis );
+
   }
 
   public static IAxis findAxis( final IAxis[] axes, final String type )
@@ -207,4 +268,19 @@ public final class AxisUtils implements ITimeseriesConstants
     return null;
   }
 
+  public static boolean isEqual( final IAxis a1, final IAxis a2 )
+  {
+    if( Objects.isNull( a1, a2 ) )
+      return false;
+
+    if( Objects.equal( a1, a2 ) )
+      return true;
+
+    final EqualsBuilder builder = new EqualsBuilder();
+    builder.append( a1.getName(), a2.getName() );
+    builder.append( a1.getType(), a2.getType() );
+    builder.append( a1.getUnit(), a2.getUnit() );
+
+    return builder.isEquals();
+  }
 }

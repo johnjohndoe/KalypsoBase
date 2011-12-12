@@ -93,9 +93,9 @@ public class ZmlDataValueReference implements IZmlValueReference
   }
 
   @Override
-  public void update( final Number value, final String source, final Integer status ) throws SensorException
+  public void doUpdate( final Number value, final String source, final Integer status ) throws SensorException
   {
-    m_column.update( m_tupleModelIndex, value, source, status );
+    m_column.doUpdate( m_tupleModelIndex, value, source, status );
   }
 
   public String getIdentifier( )
@@ -145,7 +145,7 @@ public class ZmlDataValueReference implements IZmlValueReference
   public String getDataSource( ) throws SensorException
   {
     final MetadataList metadata = m_column.getMetadata();
-    final IAxis axis = AxisUtils.findDataSourceAxis( m_column.getAxes() );
+    final IAxis axis = AxisUtils.findDataSourceAxis( m_column.getAxes(), m_column.getValueAxis() );
 
     final Object objIndex = m_column.get( m_tupleModelIndex, axis );
     if( objIndex instanceof Number )

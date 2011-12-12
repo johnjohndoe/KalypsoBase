@@ -43,7 +43,7 @@ package org.kalypso.repository;
 /**
  * @author Dirk Kuch
  */
-public interface IModifyableRepository extends IRepository, IWriteableRepositoryItem
+public interface IModifyableRepository extends IRepository, IWriteableRepository
 {
   /**
    * creates a new item in the repository

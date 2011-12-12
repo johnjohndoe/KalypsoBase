@@ -74,15 +74,23 @@ public class ModelerPerspectiveFactory implements IPerspectiveFactory
    */
   private void defineActions( final IPageLayout layout )
   {
-    // Add "new wizards".
+    /* Add to "Open perspective"... */
+    layout.addPerspectiveShortcut( "org.kalypso.hwv.product.sachsen.ui.views.admin.LhwzAdminPerspective" );
+    layout.addPerspectiveShortcut( "org.kalypso.simulation.ui.startscreen.PrognosePerspective" );
+    layout.addPerspectiveShortcut( ObservationRepositoryPerspectiveFactory.ID );
+    layout.addPerspectiveShortcut( ModelerPerspectiveFactory.ID );
+    layout.addPerspectiveShortcut( "org.kalypso.hwv.product.sachsen.ui.views.LhwzStartPagePerspective" );
+    layout.addPerspectiveShortcut( "org.kalypso.dwd.visualization.perspectives.DwdVisualizePerspective" );
+
+    /* Add to "Show view"... */
+    layout.addShowViewShortcut( IPageLayout.ID_RES_NAV );
+    layout.addShowViewShortcut( IPageLayout.ID_OUTLINE );
+
+    /* Add to "New wizards"... */
     layout.addNewWizardShortcut( BasicNewFolderResourceWizard.WIZARD_ID );
     layout.addNewWizardShortcut( BasicNewFileResourceWizard.WIZARD_ID );
     layout.addNewWizardShortcut( NewGMLFileWizard.WIZARD_ID );
 // layout.addNewWizardShortcut( CreateGisMapViewWizard.WIZARD_ID );
-
-    // Add "show views".
-    layout.addShowViewShortcut( IPageLayout.ID_RES_NAV );
-    layout.addShowViewShortcut( IPageLayout.ID_OUTLINE );
 
     layout.addActionSet( "org.kalypso.simulation.ui.actionSet" ); //$NON-NLS-1$
   }

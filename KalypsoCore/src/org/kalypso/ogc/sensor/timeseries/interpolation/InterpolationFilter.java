@@ -122,9 +122,6 @@ public class InterpolationFilter extends AbstractObservationFilter implements II
     return super.getObservation();
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
-   */
   @Override
   public ITupleModel getValues( final IRequest request ) throws SensorException
   {
@@ -147,63 +144,42 @@ public class InterpolationFilter extends AbstractObservationFilter implements II
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.timeseries.interpolation.IInterpolationFilter#isFilled()
-   */
   @Override
   public boolean isFilled( )
   {
     return m_fill;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.timeseries.interpolation.IInterpolationFilter#getDefaultStatus()
-   */
   @Override
   public Integer getDefaultStatus( )
   {
     return m_defaultStatus;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.timeseries.interpolation.IInterpolationFilter#getDefaultValue()
-   */
   @Override
   public String getDefaultValue( )
   {
     return m_defValue;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.timeseries.interpolation.IInterpolationFilter#getCalendarField()
-   */
   @Override
   public int getCalendarField( )
   {
     return m_calField;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.timeseries.interpolation.IInterpolationFilter#getCalendarAmnount()
-   */
   @Override
   public int getCalendarAmnount( )
   {
     return m_amount;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.timeseries.interpolation.IInterpolationFilter#isLastFilledWithValid()
-   */
   @Override
   public boolean isLastFilledWithValid( )
   {
     return m_fillLastWithValid;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.timeseries.interpolation.worker.IInterpolationFilter#getMetaData()
-   */
   @Override
   public MetadataList getMetaDataList( )
   {

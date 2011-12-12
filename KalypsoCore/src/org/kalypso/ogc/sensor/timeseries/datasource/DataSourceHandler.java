@@ -79,8 +79,11 @@ public class DataSourceHandler
   }
 
   /**
+   * @deprecated dangerous - addDataSource(String source, String source) will do the same and will create an entry if
+   *             data source not exists
    * @return -1 if index not exists
    */
+  @Deprecated
   public synchronized int getDataSourceIndex( final String identifier )
   {
     final String plainIdentifier = RepositoryItems.getPlainId( identifier );
@@ -147,6 +150,9 @@ public class DataSourceHandler
 
   public String getDataSourceIdentifier( final int pos )
   {
+    if( pos < 0 )
+      return null;
+
     final String header = MetadataHelper.getCountedHeaderItem( IDataSourceItem.MD_DATA_SOURCE_ITEM, pos );
     final String source = m_metadata.getProperty( header );
 
@@ -214,4 +220,5 @@ public class DataSourceHandler
 
     return false;
   }
+
 }

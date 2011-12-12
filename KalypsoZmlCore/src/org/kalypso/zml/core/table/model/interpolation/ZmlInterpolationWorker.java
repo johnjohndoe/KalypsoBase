@@ -75,9 +75,6 @@ public class ZmlInterpolationWorker implements ICoreRunnableWithProgress
     m_observation = observation;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {

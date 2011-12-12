@@ -24,6 +24,11 @@
             class="de.openali.odysseus.chart.ext.base.axis.provider.GenericCalendarAxisProvider"
             id="de.openali.odysseus.chart.ext.base.axis.provider.GenericCalendarAxisProvider">
       </provider>
+      
+       <provider
+            class="de.openali.odysseus.chart.ext.base.axis.provider.BooleanAxisProvider"
+            id="de.openali.odysseus.chart.ext.axis.provider.Boolean">
+      </provider>
    </extension>
       <extension
          point="de.openali.odysseus.chart.factory.AxisRendererProvider">
@@ -42,6 +47,10 @@
       <provider
             class="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider"
             id="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
+      </provider>
+      <provider
+            class="de.openali.odysseus.chart.ext.base.axisrenderer.provider.BooleanAxisRendererProvider"
+            id="de.openali.odysseus.chart.ext.base.axisrenderer.provider.BooleanAxisRendererProvider">
       </provider>
    </extension>
 </plugin>

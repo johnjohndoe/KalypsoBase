@@ -69,6 +69,8 @@ public final class WechmannParams
    */
   private double m_q4wgr;
 
+  private double m_q4w1;
+
   /**
    * Creates the parameters with a WGR value of Double.MAX_VALUE. Use this constructor when the WGR value is not
    * defined, thus the parameters are valid for all possible W values.
@@ -106,6 +108,17 @@ public final class WechmannParams
       e.printStackTrace();
       m_q4wgr = Double.MAX_VALUE;
     }
+
+    try
+    {
+      m_q4w1 = WechmannFunction.computeQ( lnk1, w1 + 0.01, w1, k2 );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      m_q4w1 = 0.0;
+    }
+
   }
 
   /**
@@ -154,5 +167,13 @@ public final class WechmannParams
   public double getQ4WGR( )
   {
     return m_q4wgr;
+  }
+
+  /**
+   * @return the corresponding Q-value to the w1
+   */
+  public double getQ4W1( )
+  {
+    return m_q4w1;
   }
 }

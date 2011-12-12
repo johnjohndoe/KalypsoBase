@@ -72,6 +72,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Font;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.core.variables.VariableUtils;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.outline.nodes.ILegendProvider;
 import org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities;
@@ -262,7 +263,8 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
   {
     try
     {
-      return new URL( service );
+      String resolvedService = VariableUtils.resolveVariablesQuietly( service );
+      return new URL( resolvedService );
     }
     catch( final MalformedURLException e )
     {

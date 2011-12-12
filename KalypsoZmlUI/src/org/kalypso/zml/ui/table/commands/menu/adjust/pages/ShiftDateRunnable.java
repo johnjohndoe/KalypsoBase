@@ -67,15 +67,15 @@ public class ShiftDateRunnable implements ICoreRunnableWithProgress
     m_offset = offset;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
     try
     {
-      m_column.accept( new ShiftDateValuesVisitor( m_cells, m_offset ) );
+      final ShiftDateValuesVisitor visitor = new ShiftDateValuesVisitor( m_cells, m_offset );
+      m_column.accept( visitor );
+
+      visitor.doFinish();
     }
     catch( final SensorException e )
     {

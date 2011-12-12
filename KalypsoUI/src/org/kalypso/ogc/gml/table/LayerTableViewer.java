@@ -290,8 +290,8 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     final Table table = getTable();
     table.setHeaderVisible( true );
     table.setLinesVisible( true );
-    // disable capture to let selection of table and tableviewer in sync
-    table.setCapture( false );
+
+    table.addListener( SWT.EraseItem, new LayerTablePainter( this ) );
 
     m_tableCursor = new ExcelTableCursor( this, SWT.NONE, ExcelTableCursor.ADVANCE_MODE.DOWN, true );
   }

@@ -5,14 +5,14 @@
 			<kapp:gmlVersion>2.1.2</kapp:gmlVersion>
 		</appinfo>
 	</annotation>
-	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
-	<import namespace="obslink.zml.kalypso.org" schemaLocation="obslink.xsd"/>
-	<element name="MappingCollection" type="map:MappingCollectionType"/>
+	<import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd" />
+	<import namespace="obslink.zml.kalypso.org" schemaLocation="obslink.xsd" />
+	<element name="MappingCollection" type="map:MappingCollectionType" />
 	<complexType name="MappingCollectionType">
 		<complexContent>
 			<restriction base="gml:AbstractFeatureCollectionType">
 				<sequence>
-					<element name="mappingMember" type="map:MappingAssociationType" minOccurs="0" maxOccurs="unbounded"/>
+					<element name="mappingMember" type="map:MappingAssociationType" minOccurs="0" maxOccurs="unbounded" />
 				</sequence>
 			</restriction>
 		</complexContent>
@@ -21,12 +21,12 @@
 		<complexContent>
 			<restriction base="gml:FeatureAssociationType">
 				<sequence>
-					<element ref="map:MappingObservation"/>
+					<element ref="map:MappingObservation" />
 				</sequence>
 			</restriction>
 		</complexContent>
 	</complexType>
-	<element name="MappingObservation" type="map:MappingObservationType" substitutionGroup="gml:_Feature"/>
+	<element name="MappingObservation" type="map:MappingObservationType" substitutionGroup="gml:_Feature" />
 	<complexType name="MappingObservationType">
 		<complexContent>
 			<extension base="gml:AbstractFeatureType">
@@ -88,9 +88,9 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="in1ObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
-					<element name="in2ObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
-					<element name="in3ObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
+					<element name="in1ObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
+					<element name="in2ObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
+					<element name="in3ObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
 					<!-- some fields for out observation -->
 					<element name="outObservationLink" type="obslink:TimeseriesLinkFeatureProperty">
 						<annotation>
@@ -106,27 +106,27 @@
 							</documentation>
 						</annotation>
 					</element>
-					<element name="out1ObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
-					<element name="out2ObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
-					<element name="out3ObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
-					<element name="out4ObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
-					<element name="out5ObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
+					<element name="out1ObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
+					<element name="out2ObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
+					<element name="out3ObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
+					<element name="out4ObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
+					<element name="out5ObservationLink" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
 					<!-- some fields for local observation -->
-					<element name="local1" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
-					<element name="local2" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
-					<element name="local3" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
-					<element name="local4" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
-					<element name="local5" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
+					<element name="local1" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
+					<element name="local2" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
+					<element name="local3" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
+					<element name="local4" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
+					<element name="local5" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
 					<!-- some fields for remote observation -->
-					<element name="remote1" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
-					<element name="remote2" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
-					<element name="remote3" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
-					<element name="remote4" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
-					<element name="remote5" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
-					<element name="remote6" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
-					<element name="remote7" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
-					<element name="remote8" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
-					<element name="remote9" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0"/>
+					<element name="remote1" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
+					<element name="remote2" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
+					<element name="remote3" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
+					<element name="remote4" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
+					<element name="remote5" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
+					<element name="remote6" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
+					<element name="remote7" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
+					<element name="remote8" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
+					<element name="remote9" type="obslink:TimeseriesLinkFeatureProperty" minOccurs="0" />
 				</sequence>
 			</extension>
 		</complexContent>

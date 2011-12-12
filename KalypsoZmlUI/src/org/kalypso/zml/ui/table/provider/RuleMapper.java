@@ -140,7 +140,7 @@ public class RuleMapper
 
   private IZmlModelColumn getModelColumn( )
   {
-    return m_table.getDataModel().getColumn( m_column.getIdentifier() );
+    return m_table.getModel().getColumn( m_column.getIdentifier() );
   }
 
   public void reset( )

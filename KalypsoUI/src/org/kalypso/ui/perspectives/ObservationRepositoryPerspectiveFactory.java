@@ -95,6 +95,14 @@ public class ObservationRepositoryPerspectiveFactory implements IPerspectiveFact
     final IViewLayout tableViewLayout = layout.getViewLayout( IKalypsoUIConstants.ID_OBSTABLE_VIEW );
     tableViewLayout.setCloseable( false );
     tableViewLayout.setMoveable( true );
+
+    /* Add to "Open perspective"... */
+    layout.addPerspectiveShortcut( "org.kalypso.hwv.product.sachsen.ui.views.admin.LhwzAdminPerspective" );
+    layout.addPerspectiveShortcut( "org.kalypso.simulation.ui.startscreen.PrognosePerspective" );
+    layout.addPerspectiveShortcut( ObservationRepositoryPerspectiveFactory.ID );
+    layout.addPerspectiveShortcut( ModelerPerspectiveFactory.ID );
+    layout.addPerspectiveShortcut( "org.kalypso.hwv.product.sachsen.ui.views.LhwzStartPagePerspective" );
+    layout.addPerspectiveShortcut( "org.kalypso.dwd.visualization.perspectives.DwdVisualizePerspective" );
   }
 
   /**
@@ -104,9 +112,9 @@ public class ObservationRepositoryPerspectiveFactory implements IPerspectiveFact
    */
   protected void setContentsOfShowViewMenu( final IPageLayout layout )
   {
-// layout.addShowViewShortcut( IKalypsoUIConstants.ID_REPOSITORY_VIEW );
-// layout.addShowViewShortcut( IKalypsoUIConstants.ID_OBSDIAGRAM_VIEW );
-// layout.addShowViewShortcut( IKalypsoUIConstants.ID_OBSTABLE_VIEW );
+    // layout.addShowViewShortcut( IKalypsoUIConstants.ID_REPOSITORY_VIEW );
+    // layout.addShowViewShortcut( IKalypsoUIConstants.ID_OBSDIAGRAM_VIEW );
+    // layout.addShowViewShortcut( IKalypsoUIConstants.ID_OBSTABLE_VIEW );
     layout.addShowViewShortcut( IPageLayout.ID_PROP_SHEET );
   }
 }

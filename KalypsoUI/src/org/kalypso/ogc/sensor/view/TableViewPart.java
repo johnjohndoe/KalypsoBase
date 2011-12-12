@@ -80,9 +80,6 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
     m_tableView = new TableView();
   }
 
-  /**
-   * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public void createPartControl( final Composite parent )
   {
@@ -99,9 +96,6 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
     getSite().getPage().addPartListener( this );
   }
 
-  /**
-   * @see org.eclipse.ui.IWorkbenchPart#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -115,18 +109,12 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
     super.dispose();
   }
 
-  /**
-   * @see org.eclipse.ui.IWorkbenchPart#setFocus()
-   */
   @Override
   public void setFocus( )
   {
     // noch nix
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-   */
   @Override
   public void selectionChanged( final SelectionChangedEvent event )
   {
@@ -143,13 +131,11 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
     final IObservation obs = ObservationCache.getInstance().getObservationFor( item );
     if( obs != null )
     {
-      m_tableView.addObservation( new PlainObsProvider( obs, new ObservationRequest( ObservationViewHelper.makeDateRange( item ) ) ), ObservationTokenHelper.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null, true ) );
+      final PlainObsProvider provider = new PlainObsProvider( obs, new ObservationRequest( ObservationViewHelper.makeDateRange( item ) ) );
+      m_tableView.addObservation( provider, ObservationTokenHelper.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null, true ) );
     }
   }
 
-  /**
-   * @see org.eclipse.ui.IPartListener#partActivated(org.eclipse.ui.IWorkbenchPart)
-   */
   @Override
   public void partActivated( final IWorkbenchPart part )
   {
@@ -157,18 +143,12 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
       ((RepositoryExplorerPart) part).addSelectionChangedListener( this );
   }
 
-  /**
-   * @see org.eclipse.ui.IPartListener#partBroughtToTop(org.eclipse.ui.IWorkbenchPart)
-   */
   @Override
   public void partBroughtToTop( final IWorkbenchPart part )
   {
     // nada
   }
 
-  /**
-   * @see org.eclipse.ui.IPartListener#partClosed(org.eclipse.ui.IWorkbenchPart)
-   */
   @Override
   public void partClosed( final IWorkbenchPart part )
   {
@@ -176,9 +156,6 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
       ((RepositoryExplorerPart) part).removeSelectionChangedListener( this );
   }
 
-  /**
-   * @see org.eclipse.ui.IPartListener#partDeactivated(org.eclipse.ui.IWorkbenchPart)
-   */
   @Override
   public void partDeactivated( final IWorkbenchPart part )
   {
@@ -186,9 +163,6 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
       ((RepositoryExplorerPart) part).removeSelectionChangedListener( this );
   }
 
-  /**
-   * @see org.eclipse.ui.IPartListener#partOpened(org.eclipse.ui.IWorkbenchPart)
-   */
   @Override
   public void partOpened( final IWorkbenchPart part )
   {

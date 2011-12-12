@@ -40,27 +40,23 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters.interval;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.joda.time.Interval;
+import org.kalypso.ogc.sensor.TupleModelDataSet;
 
 /**
- * @author doemming
+ * @author doemming, Dirk Kuch
  */
 public class IntervalData
 {
   private final Interval m_interval;
 
-  private final double[] m_values;
+  private final TupleModelDataSet[] m_datasets;
 
-  private final int[] m_stati;
-
-  private final String m_source;
-
-  public IntervalData( final Interval interval, final double[] values, final int[] stati, final String source )
+  public IntervalData( final Interval interval, final TupleModelDataSet[] datasets )
   {
     m_interval = interval;
-    m_values = values;
-    m_stati = stati;
-    m_source = source;
+    m_datasets = datasets;
   }
 
   public Interval getInterval( )
@@ -68,36 +64,28 @@ public class IntervalData
     return m_interval;
   }
 
-  public double[] getValues( )
+  public TupleModelDataSet[] getDataSets( )
   {
-    return m_values;
-  }
-
-  public int[] getStati( )
-  {
-    return m_stati;
-  }
-
-  public String getSource( )
-  {
-    return m_source;
+    return m_datasets;
   }
 
   public IntervalData plus( final IntervalData sourceData )
   {
-    final double[] sourceValues = sourceData.getValues();
-    final double[] newValues = new double[sourceValues.length];
+    final TupleModelDataSet[] dataSets = sourceData.getDataSets();
+    final TupleModelDataSet[] newDataSets = new TupleModelDataSet[ArrayUtils.getLength( dataSets )];
 
-    for( int i = 0; i < newValues.length; i++ )
-      newValues[i] = m_values[i] + sourceValues[i];
+    for( int index = 0; index < newDataSets.length; index++ )
+    {
+      final TupleModelDataSet base = m_datasets[index];
+      final TupleModelDataSet other = dataSets[index];
 
-    final int[] sourceStati = sourceData.getStati();
-    final int[] newStati = new int[sourceStati.length];
-    for( int i = 0; i < newStati.length; i++ )
-      newStati[i] = m_stati[i] | sourceStati[i];
+      final double value = base.getValue().doubleValue() + other.getValue().doubleValue();
+      final int status = base.getStatus() | other.getStatus();
+      final String source = IntervalSourceHandler.mergeSourceReference( base.getSource(), other.getSource() );
 
-    final String newSource = IntervalSourceHandler.mergeSourceReference( m_source, sourceData.getSource() );
+      newDataSets[index] = new TupleModelDataSet( base.getValueAxis(), value, status, source );
+    }
 
-    return new IntervalData( m_interval, newValues, newStati, newSource );
+    return new IntervalData( m_interval, newDataSets );
   }
 }
