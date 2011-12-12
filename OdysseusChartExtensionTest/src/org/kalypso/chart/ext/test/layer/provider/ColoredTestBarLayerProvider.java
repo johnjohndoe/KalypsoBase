@@ -4,7 +4,7 @@ import java.net.URL;
 
 import org.kalypso.chart.ext.test.layer.ColoredTestBarLayer;
 
-import de.openali.odysseus.chart.ext.base.layer.provider.CSVBarLayerProvider;
+import de.openali.odysseus.chart.ext.base.deprecated.CSVBarLayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 
