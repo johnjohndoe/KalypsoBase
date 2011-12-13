@@ -54,7 +54,7 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * This is one strategy to create a control. It uses several of the concrete makers in a defined order to create the
  * control.
- * 
+ *
  * @author Gernot Belger
  */
 public class DefaultControlMakerStrategy implements IControlMaker
