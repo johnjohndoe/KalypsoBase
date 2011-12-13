@@ -468,10 +468,11 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     if( m_wizard.isHelpAvailable() )
       createButton( parent, IDialogConstants.HELP_ID, IDialogConstants.HELP_LABEL, "doHelp", false ); //$NON-NLS-1$
 
-    if( m_wizard.needsPreviousAndNextButtons() )
+    final boolean needsPreviousAndNextButtons = m_wizard.needsPreviousAndNextButtons();
+    if( needsPreviousAndNextButtons )
       createPreviousAndNextButtons( parent );
 
-    createButton( parent, IDialogConstants.FINISH_ID, IDialogConstants.FINISH_LABEL, "doFinish", true ); //$NON-NLS-1$
+    createButton( parent, IDialogConstants.FINISH_ID, IDialogConstants.FINISH_LABEL, "doFinish", !needsPreviousAndNextButtons ); //$NON-NLS-1$
 
     if( !(m_wizard instanceof IWizard2) || ((IWizard2) m_wizard).hasCancelButton() )
       createButton( parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, "doCancel", false ); //$NON-NLS-1$
@@ -503,7 +504,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     composite.setLayoutData( data );
     composite.setFont( parent.getFont() );
     createButton( composite, IDialogConstants.BACK_ID, IDialogConstants.BACK_LABEL, "doPrev", false ); //$NON-NLS-1$
-    createButton( composite, IDialogConstants.NEXT_ID, IDialogConstants.NEXT_LABEL, "doNext", false ); //$NON-NLS-1$
+    createButton( composite, IDialogConstants.NEXT_ID, IDialogConstants.NEXT_LABEL, "doNext", true ); //$NON-NLS-1$
     return composite;
   }
 
@@ -704,7 +705,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
       return false;
 
     if( !m_isMovingToPreviousPage )
-      // remember my previous page.
+    // remember my previous page.
     {
       if( m_backJumpsToLastVisited )
         page.setPreviousPage( m_currentPage );
