@@ -52,7 +52,7 @@ import org.kalypso.commons.KalypsoCommonsDebug;
 
 /**
  * Helper class for {@link java.util.ResourceBundle}
- * 
+ *
  * @author Gernot Belger
  */
 public final class ResourceBundleUtils
@@ -135,7 +135,7 @@ public final class ResourceBundleUtils
    * returned.<br>
    * If the given string starts with '%', but the bundle does not contain a corresponding entry, the original string is
    * returned.
-   * 
+   *
    * @param translatableString
    *          If <code>null</code>, <code>null</code> is returned.
    * @param resourceBundle
@@ -161,7 +161,7 @@ public final class ResourceBundleUtils
       if( resourceBundle.containsKey( key ) )
       {
         final String string = resourceBundle.getString( key );
-        if( !string.isEmpty() )
+        if( string != null )
           return string;
       }
     }
