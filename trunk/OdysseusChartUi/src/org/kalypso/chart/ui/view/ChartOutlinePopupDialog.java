@@ -70,9 +70,6 @@ public class ChartOutlinePopupDialog extends PopupDialog
     m_chartComposite = chartComposite;
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   protected Control createDialogArea( final Composite parent )
   {

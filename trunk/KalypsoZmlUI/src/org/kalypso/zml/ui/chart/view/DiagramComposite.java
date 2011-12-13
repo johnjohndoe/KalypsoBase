@@ -43,21 +43,27 @@ package org.kalypso.zml.ui.chart.view;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.chart.ui.editor.mousehandler.ZoomPanMaximizeHandler;
 import org.kalypso.chart.ui.editor.mousehandler.ZoomPanMaximizeHandler.DIRECTION;
+import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
 import org.kalypso.zml.core.diagram.base.ChartTypeHandler;
+import org.kalypso.zml.core.diagram.base.visitors.ResetZmlLayerVisitor;
+import org.kalypso.zml.ui.debug.KalypsoZmlUiDebug;
 
 import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
 import de.openali.odysseus.chart.factory.config.ChartFactory;
@@ -146,47 +152,36 @@ public class DiagramComposite extends Composite implements IUpdateable, IObserva
 
   private void createToolbar( final Composite body, final FormToolkit toolkit )
   {
-
     // FIXME
-// final String[] contributions = getContributions();
-//
-// if( ArrayUtils.isEmpty( contributions ) )
-// return;
-//
-// final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT );
-//
-// final ToolBar control = manager.createControl( body );
-// control.setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false ) );
-//
+    if( !KalypsoZmlUiDebug.DEBUG_DIAGRAM.isEnabled() )
+      return;
+
+    final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT );
+
+    final ToolBar control = manager.createControl( body );
+    control.setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false ) );
+
+    // TODO toolbar
 // for( final String reference : contributions )
 // {
 // ContributionUtils.populateContributionManager( PlatformUI.getWorkbench(), manager, reference );
 // }
-//
-// if( KalypsoZmlUiDebug.DEBUG_DIAGRAM.isEnabled() )
-// {
-// // FIXME
-//      //ContributionUtils.populateContributionManager( PlatformUI.getWorkbench(), manager, "toolbar:org.kalypso.hwv.chart.debug" ); //$NON-NLS-1$
-// }
-//
-// manager.update( true );
-//
-// toolkit.adapt( control );
+
+    if( KalypsoZmlUiDebug.DEBUG_DIAGRAM.isEnabled() )
+    {
+      ContributionUtils.populateContributionManager( PlatformUI.getWorkbench(), manager, "toolbar:org.kalypso.zml.ui.chart.view.debug" ); //$NON-NLS-1$
+    }
+
+    manager.update( true );
+
+    toolkit.adapt( control );
   }
 
-  public void setSelection( final IObservation selection )
+  public void setSelection( final IZmlDiagramSelectionBuilder delegate )
   {
-// if( Objects.isNull( selection ) )
-// return;
-//
-// if( Objects.equal( m_selection, selection ) )
-// return;
-//
-// m_selection = selection;
-// final String parameterType = WiskiMetadataHelper.getWiskiParameterType( selection.getMetadataList() );
-//
-// m_model.getLayerManager().accept( new UpdateObservationVisitor( selection, parameterType, parameterType +
-// "_SELECTION" ) );
+    reset();
+
+    delegate.doSelectionUpdate( m_model );
   }
 
   @Override
@@ -198,7 +193,8 @@ public class DiagramComposite extends Composite implements IUpdateable, IObserva
 
   public void reset( )
   {
-    setSelection( m_selection );
+    final ILayerManager layerManager = m_model.getLayerManager();
+    layerManager.accept( new ResetZmlLayerVisitor() );
   }
 
   @Override
