@@ -75,9 +75,6 @@ public class ProjectDownloadAction extends Action
     setImageDescriptor( IMG_DOWNLOAD );
   }
 
-  /**
-   * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
-   */
   @Override
   public void runWithEvent( final Event event )
   {

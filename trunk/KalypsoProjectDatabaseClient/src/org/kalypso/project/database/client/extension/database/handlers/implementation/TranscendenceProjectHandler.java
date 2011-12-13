@@ -43,6 +43,7 @@ package org.kalypso.project.database.client.extension.database.handlers.implemen
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.module.IKalypsoModule;
 import org.kalypso.module.nature.ModuleNature;
@@ -157,14 +158,14 @@ public class TranscendenceProjectHandler extends AbstractProjectHandle implement
     return true;
   }
 
-  /**
-   * @see org.kalypso.project.database.client.extension.database.handlers.ILocalProject#isLocked()
-   */
   @Override
   public boolean isLocked( )
   {
     final IRemoteProjectPreferences preferences = getRemotePreferences();
-    return preferences.isLocked();
+    if( Objects.isNotNull( preferences ) )
+      return preferences.isLocked();
+
+    return false;
   }
 
   /**
