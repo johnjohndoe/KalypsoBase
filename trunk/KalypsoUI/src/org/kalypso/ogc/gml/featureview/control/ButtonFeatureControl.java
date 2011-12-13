@@ -58,26 +58,23 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
-import org.kalypso.ogc.gml.featureview.dialog.CreateFeaturePropertyDialog;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
-import org.kalypso.ogc.gml.featureview.dialog.JumpToFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
+import org.kalypso.ogc.gml.gui.IFeatureDialogFactory;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
  * This control behaves in two ways: if the type of the proeprty to edit is simple, it opens a fitting dialog to edit
  * the property. If the property is a feature, it just informs its listeners, that it whichs to open that feature.
- * 
- * @author belger
+ *
+ * @author Gernot Belger
  */
 public class ButtonFeatureControl extends AbstractFeatureControl implements ModellEventListener
 {
@@ -115,57 +112,25 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
     if( feature == null )
       return new NotImplementedFeatureDialog();
 
+    final IFeatureDialogFactory factory = findDialogFactory( listener, pt );
+    if( factory == null )
+      return new NotImplementedFeatureDialog();
+
+    return factory.createFeatureDialog( feature, pt );
+  }
+
+  public static IFeatureDialogFactory findDialogFactory( final IFeatureChangeListener listener, final IPropertyType pt )
+  {
     if( pt instanceof IValuePropertyType )
     {
       final ITypeRegistry<IGuiTypeHandler> typeRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
-      final IGuiTypeHandler handler = typeRegistry.getTypeHandlerFor( pt );
-      if( handler != null )
-        return handler.createFeatureDialog( feature, pt );
+      return typeRegistry.getTypeHandlerFor( pt );
     }
 
-    // TODO: make gui type handler for this?
     if( pt instanceof IRelationType )
-    {
-      final IRelationType rt = (IRelationType) pt;
-      if( rt.isList() )
-      {
-        // it is a list of features or links to features or mixed
-        // return new FeatureDialog( workspace, feature, ftp, selectionManager );
-        return new JumpToFeatureDialog( listener, feature, pt );
-      }
+      return new RelationFeatureDialogFactory( listener );
 
-      // it is not a list
-      final Object property = feature.getProperty( pt );
-      final Feature linkedFeature;
-
-      if( property == null )
-      {
-        if( !rt.isInlineAble() || rt.isLinkAble() )
-          return new NotImplementedFeatureDialog( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog.implemented" ), "..." ); //$NON-NLS-1$  //$NON-NLS-2$
-
-        return new CreateFeaturePropertyDialog( listener, feature, rt );
-      }
-
-      if( property instanceof String ) // link auf ein Feature mit FeatureID
-      {
-        if( ((String) property).length() < 1 )
-          return new CreateFeaturePropertyDialog( listener, feature, rt );
-// return new NotImplementedFeatureDialog(
-// Messages.getString("org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl.keinelement"),
-// Messages.getString("org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl.leer") ); //$NON-NLS-1$
-
-        final GMLWorkspace workspace = feature.getWorkspace();
-        linkedFeature = workspace.getFeature( (String) property );
-      }
-      else if( property instanceof Feature )
-        linkedFeature = (Feature) property;
-      else
-        return new NotImplementedFeatureDialog( Messages.getString( "org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl.keinelement" ), Messages.getString( "org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl.leer" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-
-      return new JumpToFeatureDialog( listener, linkedFeature, null );
-    }
-
-    return new NotImplementedFeatureDialog();
+    return null;
   }
 
   /**
@@ -174,7 +139,7 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
   @Override
   public void dispose( )
   {
-    if( !m_button.isDisposed() )
+    if( !(m_button.isDisposed()) )
       m_button.dispose();
   }
 
@@ -230,7 +195,7 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
 
   /**
    * Die ButtonControl ist immer valid
-   * 
+   *
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#isValid()
    */
   @Override
