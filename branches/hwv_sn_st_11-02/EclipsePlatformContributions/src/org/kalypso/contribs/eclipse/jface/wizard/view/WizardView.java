@@ -468,11 +468,10 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     if( m_wizard.isHelpAvailable() )
       createButton( parent, IDialogConstants.HELP_ID, IDialogConstants.HELP_LABEL, "doHelp", false ); //$NON-NLS-1$
 
-    final boolean needsPreviousAndNextButtons = m_wizard.needsPreviousAndNextButtons();
-    if( needsPreviousAndNextButtons )
+    if( m_wizard.needsPreviousAndNextButtons() )
       createPreviousAndNextButtons( parent );
 
-    createButton( parent, IDialogConstants.FINISH_ID, IDialogConstants.FINISH_LABEL, "doFinish", !needsPreviousAndNextButtons ); //$NON-NLS-1$
+    createButton( parent, IDialogConstants.FINISH_ID, IDialogConstants.FINISH_LABEL, "doFinish", !m_wizard.needsPreviousAndNextButtons() ); //$NON-NLS-1$
 
     if( !(m_wizard instanceof IWizard2) || ((IWizard2) m_wizard).hasCancelButton() )
       createButton( parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, "doCancel", false ); //$NON-NLS-1$
