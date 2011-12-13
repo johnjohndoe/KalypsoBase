@@ -114,19 +114,6 @@
 		</editorContribution>
 	</extension>
 	<extension id="popupMenus" name="popupMenus" point="org.eclipse.ui.popupMenus">
-		<objectContribution objectClass="org.kalypsodeegree.model.feature.Feature" adaptable="false" id="org.kalypso.objectclass.feature">
-			<action enablesFor="1" label="%org.kalypso.ui.editor.actions.FeatureRemoveActionDelegate.label" tooltip="%org.kalypso.ui.editor.actions.FeatureRemoveActionDelegate.tooltip" class="org.kalypso.ui.editor.actions.FeatureRemoveActionDelegate" icon="icons/feature/gis_feature_delete.gif" style="push" id="org.kalypso.objectclass.feature.action.remove">
-			</action>
-			<action class="org.kalypso.ui.editor.gmleditor.util.actions.EditFeature" icon="icons/feature/gis_feature_edit.gif" id="org.kalypso.objectclass.feature.editfeature" label="%org.kalypso.ui.editor.gmleditor.util.actions.EditFeature.label.edit" tooltip="%org.kalypso.ui.editor.gmleditor.util.actions.EditFeature.tooltip" />
-			<menu label="%org.kalypso.objectclass.feature.menu.batchedit.label" path="additions" id="org.kalypso.objectclass.feature.menu.batchedit">
-				<separator name="editGroup" />
-			</menu>
-			<action class="org.kalypso.ui.editor.actions.FeatureSetPropertyActionDelegate" enablesFor="1" icon="icons/gistable/applyValues.gif" id="org.kalypso.objectclass.feature.action.setValues" label="%org.kalypso.ui.editor.actions.FeatureSetPropertyActionDelegate.label" menubarPath="org.kalypso.objectclass.feature.menu.batchedit/editGroup" style="push" tooltip="%org.kalypso.ui.editor.actions.FeatureSetPropertyActionDelegate.tooltip" />
-			<action class="org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate" enablesFor="+" icon="icons/gistable/applyValues.gif" id="org.kalypso.objectclass.feature.action.batchEdit" label="%org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate.label" menubarPath="org.kalypso.objectclass.feature.menu.batchedit/editGroup" style="push" tooltip="%org.kalypso.ui.editor.actions.FeatureBatchEditActionDelegate.tooltip" />
-			<menu id="featureListMenu" label="%menu.label.1">
-				<separator name="featureListMenuSep" />
-			</menu>
-		</objectContribution>
 		<objectContribution adaptable="false" objectClass="org.kalypsodeegree.filterencoding.Filter" id="org.kalypso.objectclass.fiterencoding.filter">
 			<menu label="%org.kalypso.objectclass.filterencoding.filter.menu.label" id="org.kalypso.objectclass.filterencoding.filter.menu">
 				<separator name="filter" />
@@ -168,17 +155,6 @@
 			<filter name="featureTypeStrict" value="http://www.opengis.net/om#Observation" />
 			<action class="org.kalypso.ogc.gml.om.EditObservationAction" enablesFor="1" icon="icons/observation/zml-icon.gif" id="org.kalypso.ogc.gml.om.EditObservationAction" label="%org.kalypso.ogc.gml.om.EditObservationAction.label" style="push" tooltip="%org.kalypso.ogc.gml.om.EditObservationAction.tooltip" />
 			<action class="org.kalypso.ogc.gml.om.ShowObservationAction" icon="icons/kalypso_ott.gif" id="org.kalypso.ogc.gml.om.ShowObservationAction" label="%org.kalypso.ogc.gml.om.ShowObservationAction.label" tooltip="%org.kalypso.ogc.gml.om.ShowObservationAction.tooltip" />
-		</objectContribution>
-		<objectContribution adaptable="false" id="org.kalypso.ui.object.contribution.org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement" objectClass="org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement">
-			<filter name="featureAssociationQname" value="http://www.opengis.net/gml#_Feature" />
-			<filter name="featureAssociationList" value="true" />
-			<action class="org.kalypso.ui.editor.actions.SortFeaturesActionDelegate" id="org.kalypso.ui.editor.actions.SortFeaturesActionDelegate" label="%action.label.20" menubarPath="featureListMenu" style="push" tooltip="%action.tooltip.1" />
-		</objectContribution>
-		<objectContribution adaptable="false" id="org.kalypso.objectclass.feature.listElements" objectClass="org.kalypsodeegree.model.feature.Feature">
-			<filter name="featureListElement" value="true" />
-			<action class="org.kalypso.ui.editor.actions.FeatureListElementDownActionDelegate" icon="icons/feature/gis_feature_down.gif" id="org.kalypso.ui.editor.actions.FeatureListElementDownActionDelegate" label="%action.label.21" menubarPath="featureListMenu" tooltip="%action.tooltip.2" />
-			<action class="org.kalypso.ui.editor.actions.FeatureListElementUpActionDelegate" icon="icons/feature/gis_feature_up.gif" id="org.kalypso.ui.editor.actions.FeatureListElementUpActionDelegate" label="%action.label.22" menubarPath="featureListMenu" tooltip="%action.tooltip.3" />
-			<action class="org.kalypso.ui.editor.actions.FeatureListElementDuplicateActionDelegate" icon="icons/feature/gis_feature_duplicate.gif" id="org.kalypso.ui.editor.actions.FeatureListElementDuplicateActionDelegate" label="%action.label.23" menubarPath="featureListMenu" style="push" tooltip="%action.tooltip.4" />
 		</objectContribution>
 	</extension>
 	<extension id="resourceFilters" name="resourceFilters" point="org.eclipse.ui.ide.resourceFilters">
