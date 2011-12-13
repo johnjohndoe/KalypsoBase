@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+
+
     <extension
        point="de.openali.odysseus.chart.factory.LayerProvider">
     <provider
@@ -459,5 +461,28 @@
              style="push">
        </command>
     </menuContribution>
+ </extension>
+
+	<extension id="views" name="views" point="org.eclipse.ui.views">
+		<view
+        allowMultiple="false"
+        category="org.kalypso.ui.kalypso"
+        class="org.kalypso.zml.ui.chart.view.DiagramViewPart"
+        icon="icons/view/diagram.gif"
+        id="org.kalypso.zml.ui.chart.view.DiagramViewPart"
+        name="Diagramm"/>
+	</extension>
+ <extension
+       point="org.eclipse.ui.perspectiveExtensions">
+    <perspectiveExtension
+          targetID="org.kalypso.kalypso1d2d.pjt.perspective.Perspective">
+       <view
+             id="org.kalypso.zml.ui.chart.view.DiagramViewPart"
+             minimized="false"
+             relationship="stack"
+             relative="org.kalypso.ui.views.mapView"
+             visible="false">
+       </view>
+    </perspectiveExtension>
  </extension>
 </plugin>
