@@ -38,30 +38,39 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.debug;
+package org.kalypso.zml.ui.chart.view.debug;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
+import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
+import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
+
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
  * @author Dirk Kuch
  */
-public class OpenDebugDialogHandler extends AbstractHandler
+public class OpenDiagramDebugDialogHandler extends AbstractHandler
 {
 
   @Override
   public Object execute( final ExecutionEvent event )
   {
-    final IZmlTable table = ZmlHandlerUtil.getTable( event );
+    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+
+    final IChartComposite chart = ChartHandlerUtilities.getChart( context );
+    if( chart == null )
+      return Status.CANCEL_STATUS;
+
     final Display display = PlatformUI.getWorkbench().getDisplay();
 
-    final ZmlTableDebugDialog dialog = new ZmlTableDebugDialog( display.getActiveShell(), table );
-    dialog.open();
+    final ChartEditorTreeOutlinePage cop = new ChartEditorTreeOutlinePage();
+    cop.setModel( chart.getChartModel() );
+    cop.createControl( display.getActiveShell() );
 
     return Status.OK_STATUS;
   }

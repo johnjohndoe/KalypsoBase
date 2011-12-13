@@ -40,7 +40,12 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.view;
 
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -54,6 +59,10 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.provider.IObsProvider;
+import org.kalypso.ogc.sensor.provider.PlainObsProvider;
+import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
 
 /**
@@ -67,9 +76,6 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
 
   private DiagramComposite m_chartComposite;
 
-  /**
-   * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public void createPartControl( final Composite parent )
   {
@@ -100,42 +106,37 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
     // TODO
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-   */
   @Override
   public void selectionChanged( final SelectionChangedEvent event )
   {
-// // always remove items first (we don't know which selection we get)
-// m_diagView.removeAllItems();
-//
-// final StructuredSelection selection = (StructuredSelection) event.getSelection();
-//
-// if( !(selection.getFirstElement() instanceof IRepositoryItem) )
-// return;
-//
-// final IRepositoryItem item = (IRepositoryItem) selection.getFirstElement();
-//
-// final IObservation obs = ObservationCache.getInstance().getObservationFor( item );
-//
-// if( obs != null )
-// {
-// final DateRange dra = ObservationViewHelper.makeDateRange( item );
-//
-// m_diagView.addObservation( new PlainObsProvider( obs, new ObservationRequest( dra ) ),
-// ObservationTokenHelper.DEFAULT_ITEM_NAME, new ObsView.ItemData( false, null, null, true ) );
-//
-// // sub title of diagram contains date-range info
-//      m_subTitle.setText( "" ); //$NON-NLS-1$
-// if( dra != null )
-// m_subTitle.setText( dra.toString() );
-//
-// final IActionBars actionbar = getViewSite().getActionBars();
-// actionbar.updateActionBars();
-//
-// // FIXME - wont update commands of view
-// actionbar.getToolBarManager().update( true );
-// }
+
+    // / TODO tslinks?!? how to handle
+
+    final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+    final Iterator iterator = selection.iterator();
+
+    final Set<IObsProvider> observations = new LinkedHashSet<IObsProvider>();
+
+    while( iterator.hasNext() )
+    {
+
+      final Object obj = iterator.next();
+      if( obj instanceof IRepositoryItem )
+      {
+        final IRepositoryItem item = (IRepositoryItem) obj;
+        if( item.hasAdapter( IObservation.class ) )
+        {
+          final IObservation observation = (IObservation) item.getAdapter( IObservation.class );
+
+          // FIXME request?!?
+          observations.add( new PlainObsProvider( observation, null ) );
+        }
+      }
+    }
+
+    final IZmlDiagramSelectionBuilder builder = new MultipleObservationSelectionBuilder( observations.toArray( new IObsProvider[] {} ) );
+    m_chartComposite.setSelection( builder );
+
   }
 
   @Override

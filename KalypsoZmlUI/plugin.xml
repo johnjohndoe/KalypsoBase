@@ -412,6 +412,11 @@
              optional="false">
        </commandParameter>
     </command>
+    <command
+          categoryId="org.kalypso.chart.ui.commands.category"
+          id="org.kalypso.zml.ui.chart.layer.commands.debug.dialog"
+          name="Debug-Dialog">
+    </command>
  </extension>
  <extension
        point="org.eclipse.ui.handlers">
@@ -423,6 +428,17 @@
           class="org.kalypso.zml.ui.chart.layer.commands.SetZmlFilterCommandHandler"
           commandId="org.kalypso.zml.ui.chart.layer.commands.set.filter">
     </handler>
+    <handler
+          class="org.kalypso.zml.ui.chart.view.debug.OpenDiagramDebugDialogHandler"
+          commandId="org.kalypso.zml.ui.chart.layer.commands.debug.dialog">
+    </handler>
+ </extension>
+ <extension
+       point="org.eclipse.ui.commandImages">
+    <image
+          commandId="org.kalypso.zml.ui.chart.layer.commands.debug.dialog"
+          icon="icons/table/debug.png">
+    </image>
  </extension>
  
  <extension
@@ -484,5 +500,16 @@
              visible="false">
        </view>
     </perspectiveExtension>
+ </extension>
+ <extension
+       point="org.eclipse.ui.menus">
+    <menuContribution
+          allPopups="false"
+          locationURI="toolbar:org.kalypso.zml.ui.chart.view.debug">
+       <command
+             commandId="org.kalypso.zml.ui.chart.layer.commands.debug.dialog"
+             style="push">
+       </command>
+    </menuContribution>
  </extension>
 </plugin>
