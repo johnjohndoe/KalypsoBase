@@ -56,7 +56,7 @@ public class ObservationRepositoryPerspectiveFactory implements IPerspectiveFact
   /**
    * The perspective id.
    */
-  public static String ID = "org.kalypso.ui.perspectives.ObservationRepositoryPerspectiveFactory";
+  public static String ID = "org.kalypso.ui.perspectives.ObservationRepositoryPerspectiveFactory"; //$NON-NLS-1$
 
   /**
    * @see IPerspectiveFactory#createInitialLayout(IPageLayout)
@@ -72,6 +72,7 @@ public class ObservationRepositoryPerspectiveFactory implements IPerspectiveFact
 
     final IFolderLayout leftBottom = layout.createFolder( "leftBottom", IPageLayout.BOTTOM, (float) 0.0, layout.getEditorArea() ); //$NON-NLS-1$
     leftBottom.addView( IKalypsoUIConstants.ID_OBSDIAGRAM_VIEW );
+    leftBottom.addView( "org.kalypso.zml.ui.chart.view.DiagramViewPart" ); //$NON-NLS-1$ //FIXME move complete perspective to zml ui plugin!!!
 
     final IFolderLayout rightBottom = layout.createFolder( "rightBottom", IPageLayout.RIGHT, (float) 0.50, "leftBottom" ); //$NON-NLS-1$ //$NON-NLS-2$
     rightBottom.addView( IKalypsoUIConstants.ID_OBSTABLE_VIEW );
@@ -79,7 +80,7 @@ public class ObservationRepositoryPerspectiveFactory implements IPerspectiveFact
     setContentsOfShowViewMenu( layout );
     layout.setEditorAreaVisible( false );
 
-    /* Configure behaviour of views */
+    /* Configure behavior of views */
     final IViewLayout repositoryViewLayout = layout.getViewLayout( IKalypsoUIConstants.ID_REPOSITORY_VIEW );
     repositoryViewLayout.setCloseable( false );
     repositoryViewLayout.setMoveable( true );
@@ -92,17 +93,21 @@ public class ObservationRepositoryPerspectiveFactory implements IPerspectiveFact
     diagramViewLayout.setCloseable( false );
     diagramViewLayout.setMoveable( true );
 
+    final IViewLayout diagramViewLayout2 = layout.getViewLayout( "org.kalypso.zml.ui.chart.view.DiagramViewPart" ); //$NON-NLS-1$
+    diagramViewLayout2.setCloseable( false );
+    diagramViewLayout2.setMoveable( true );
+
     final IViewLayout tableViewLayout = layout.getViewLayout( IKalypsoUIConstants.ID_OBSTABLE_VIEW );
     tableViewLayout.setCloseable( false );
     tableViewLayout.setMoveable( true );
 
     /* Add to "Open perspective"... */
-    layout.addPerspectiveShortcut( "org.kalypso.hwv.product.sachsen.ui.views.admin.LhwzAdminPerspective" );
-    layout.addPerspectiveShortcut( "org.kalypso.simulation.ui.startscreen.PrognosePerspective" );
+    layout.addPerspectiveShortcut( "org.kalypso.hwv.product.sachsen.ui.views.admin.LhwzAdminPerspective" ); //$NON-NLS-1$
+    layout.addPerspectiveShortcut( "org.kalypso.simulation.ui.startscreen.PrognosePerspective" ); //$NON-NLS-1$
     layout.addPerspectiveShortcut( ObservationRepositoryPerspectiveFactory.ID );
     layout.addPerspectiveShortcut( ModelerPerspectiveFactory.ID );
-    layout.addPerspectiveShortcut( "org.kalypso.hwv.product.sachsen.ui.views.LhwzStartPagePerspective" );
-    layout.addPerspectiveShortcut( "org.kalypso.dwd.visualization.perspectives.DwdVisualizePerspective" );
+    layout.addPerspectiveShortcut( "org.kalypso.hwv.product.sachsen.ui.views.LhwzStartPagePerspective" ); //$NON-NLS-1$
+    layout.addPerspectiveShortcut( "org.kalypso.dwd.visualization.perspectives.DwdVisualizePerspective" ); //$NON-NLS-1$
   }
 
   /**

@@ -105,9 +105,6 @@ public class ObservationChooser extends AbstractViewer implements ISelectionProv
     }
   }
 
-  /**
-   * @return the IObservation object when the selection is an IAdaptable object that get deliver an IObservation.
-   */
   public IObservation isObservationSelected( final ISelection selection )
   {
     final IStructuredSelection sel = (IStructuredSelection) selection;
@@ -156,9 +153,6 @@ public class ObservationChooser extends AbstractViewer implements ISelectionProv
     return m_repViewer.getControl();
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
-   */
   @Override
   public ISelection getSelection( )
   {
@@ -174,9 +168,6 @@ public class ObservationChooser extends AbstractViewer implements ISelectionProv
     m_repViewer.setSelection( selection );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
-   */
   @Override
   public void addSelectionChangedListener( final ISelectionChangedListener listener )
   {

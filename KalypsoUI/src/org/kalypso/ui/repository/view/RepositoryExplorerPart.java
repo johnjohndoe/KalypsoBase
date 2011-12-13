@@ -94,9 +94,6 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
 
   private ObservationChooser m_chooser;
 
-  /**
-   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-   */
   @Override
   public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
@@ -131,9 +128,6 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
     return super.getAdapter( adapter );
   }
 
-  /**
-   * @see org.eclipse.ui.IWorkbenchPart#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -142,9 +136,6 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
     super.dispose();
   }
 
-  /**
-   * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public void createPartControl( final Composite parent )
   {
@@ -165,9 +156,6 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
     m_memento = null;
   }
 
-  /**
-   * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
-   */
   @Override
   public void init( final IViewSite site, final IMemento memento ) throws PartInitException
   {
@@ -176,18 +164,12 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
     m_memento = memento;
   }
 
-  /**
-   * @see org.eclipse.ui.IWorkbenchPart#setFocus()
-   */
   @Override
   public void setFocus( )
   {
     // noch nix
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-   */
   @Override
   public void selectionChanged( final SelectionChangedEvent event )
   {
@@ -195,9 +177,6 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
       m_propsPage.selectionChanged( this, event.getSelection() );
   }
 
-  /**
-   * @see org.eclipse.ui.part.ViewPart#saveState(org.eclipse.ui.IMemento)
-   */
   @Override
   public void saveState( final IMemento memento )
   {
@@ -301,27 +280,18 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
     }
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
-   */
   @Override
   public ISelection getSelection( )
   {
     return m_chooser.getSelection();
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
-   */
   @Override
   public void setSelection( final ISelection selection )
   {
     m_chooser.setSelection( selection );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
-   */
   @Override
   public void addSelectionChangedListener( final ISelectionChangedListener listener )
   {
@@ -329,9 +299,6 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
       m_chooser.addSelectionChangedListener( listener );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
-   */
   @Override
   public void removeSelectionChangedListener( final ISelectionChangedListener listener )
   {

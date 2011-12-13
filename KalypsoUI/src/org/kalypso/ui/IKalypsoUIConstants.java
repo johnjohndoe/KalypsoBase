@@ -40,6 +40,12 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui;
 
+import org.kalypso.ogc.sensor.view.DiagramViewPart;
+import org.kalypso.ogc.sensor.view.TableViewPart;
+import org.kalypso.ui.perspectives.ModelerPerspectiveFactory;
+import org.kalypso.ui.perspectives.ObservationRepositoryPerspectiveFactory;
+import org.kalypso.ui.repository.view.RepositoryExplorerPart;
+
 /**
  * Constants for the Kalypso UI. Not intended to be implemented nor extended.
  * 
@@ -47,18 +53,15 @@ package org.kalypso.ui;
  */
 public interface IKalypsoUIConstants
 {
-  /** Observation Diagram View identifier (value <code>org.kalypso.ogc.sensor.view.DiagramViewPart</code>) */
-  public final static String ID_OBSDIAGRAM_VIEW = "org.kalypso.ogc.sensor.view.DiagramViewPart"; //$NON-NLS-1$
+  public final static String ID_OBSDIAGRAM_VIEW = DiagramViewPart.ID;
 
-  /** Observation Table View identifier (value <code>org.kalypso.ogc.sensor.view.TableViewPart</code>) */
-  public final static String ID_OBSTABLE_VIEW = "org.kalypso.ogc.sensor.view.TableViewPart"; //$NON-NLS-1$
+  public final static String ID_OBSTABLE_VIEW = TableViewPart.ID;
 
-  /** Repository View identifier (value <code>org.kalypso.ui.repository.view.RepositoryExplorerPart</code>) */
-  public final static String ID_REPOSITORY_VIEW = "org.kalypso.ui.repository.view.RepositoryExplorerPart"; //$NON-NLS-1$
+  public final static String ID_REPOSITORY_VIEW = RepositoryExplorerPart.ID;
 
-  public static final String MODELER_PERSPECTIVE = "org.kalypso.ui.perspectives.ModelerPerspectiveFactory"; //$NON-NLS-1$
+  public static final String MODELER_PERSPECTIVE = ModelerPerspectiveFactory.ID;
 
-  public static final String REPOSITORY_PERSPECTIVE = "org.kalypso.ui.perspectives.ObservationRepositoryPerspectiveFactory"; //$NON-NLS-1$
+  public static final String REPOSITORY_PERSPECTIVE = ObservationRepositoryPerspectiveFactory.ID;
 
   /**
    * Constant for system property intended to be defined in config.ini.
