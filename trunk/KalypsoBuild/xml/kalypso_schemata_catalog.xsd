@@ -14,6 +14,7 @@
   <nextCatalog catalog="platform:/resource/KalypsoZmlCore/etc/schemas/catalog.xml" />
   <nextCatalog catalog="platform:/resource/KalypsoMapServer/etc/mapfile/catalog.xml" />
   <nextCatalog catalog="platform:/resource/KalypsoPlanerClientBase/catalog.xmlcatalog" />
+  <nextCatalog catalog="platform:/resource/KalypsoModelRCM/etc/schema/catalog.xml" />
   <nextCatalog catalog="platform:/resource/KalypsoModelWspmSchema/src/org/kalypso/model/wspm/schema/catalog.xml" />
     
   <!-- Prognose -->
