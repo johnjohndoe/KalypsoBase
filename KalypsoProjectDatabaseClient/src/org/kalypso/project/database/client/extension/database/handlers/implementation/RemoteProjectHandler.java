@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.extension.database.handlers.implementation;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.IAction;
 import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.module.IKalypsoModule;
@@ -75,53 +76,45 @@ public class RemoteProjectHandler extends AbstractProjectHandle implements IRemo
     final IKalypsoModule[] modules = ModuleExtensions.getKalypsoModules();
     for( final IKalypsoModule module : modules )
     {
+
       if( identifier.equals( module.getId() ) )
         return module;
 
+      // @backward compatibility for old plc projects
+      if( StringUtils.equalsIgnoreCase( identifier, "PlanerClientProject" ) ) //$NON-NLS-1$
+      {
+        if( StringUtils.equalsIgnoreCase( identifier, "PlanerClientProject" ) ) //$NON-NLS-1$
+          return module;
+      }
     }
 
     return null;
   }
 
-  /**
-   * @see org.kalypso.project.database.client.extension.database.refactoring.handlers.IProjectHandler#getName()
-   */
   @Override
   public String getName( )
   {
     return m_bean.getName();
   }
 
-  /**
-   * @see org.kalypso.project.database.client.extension.database.refactoring.handlers.IProjectHandler#getUniqueName()
-   */
   @Override
   public String getUniqueName( )
   {
     return m_bean.getUnixName();
   }
 
-  /**
-   * @see org.kalypso.project.database.client.extension.database.refactoring.handlers.IRemoteProjectHandler#getBean()
-   */
   @Override
   public KalypsoProjectBean getBean( )
   {
     return m_bean;
   }
 
-  /**
-   * @see org.kalypso.project.database.client.extension.database.handlers.IProjectHandler#getDescription()
-   */
   @Override
   public String getDescription( )
   {
     return m_bean.getDescription();
   }
 
-  /**
-   * @see org.kalypso.core.projecthandle.IProjectHandle#getProjectActions()
-   */
   @Override
   public IAction[] getProjectActions( )
   {
