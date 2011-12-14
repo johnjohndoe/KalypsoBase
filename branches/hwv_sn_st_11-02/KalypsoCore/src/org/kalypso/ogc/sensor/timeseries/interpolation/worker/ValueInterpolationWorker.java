@@ -58,7 +58,6 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.TupleModelDataSet;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
-import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 
@@ -232,26 +231,35 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
     for( final LocalCalculationStackValue value : values )
     {
 
-      
-      
       final IAxis valueAxis = value.getAxis();
-      
-      // TODO fnd status axis and source axis for this one and set default values
-      
-      final int valueAxisPosition = interpolatedModel.getPosition( valueAxis );
+      final IAxis statusAxis = AxisUtils.findStatusAxis( interpolatedModel.getAxes(), valueAxis );
+      final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( interpolatedModel.getAxes(), valueAxis );
 
-      if( KalypsoStatusUtils.isStatusAxis( valueAxis ) )
-        lastValidTuple[valueAxisPosition] = getDefaultStatus();
+      final int posValueAxis = interpolatedModel.getPosition( valueAxis );
+      final int posStatusAxis = Objects.isNotNull( statusAxis ) ? interpolatedModel.getPosition( statusAxis ) : -1;
+      final int posDataSourceAxis = Objects.isNotNull( dataSourceAxis ) ? interpolatedModel.getPosition( dataSourceAxis ) : -1;
+
+      final TupleModelDataSet defaultValue = value.getDefaultValue( getFilter() ); // FIXME
+
+      if( isLastFilledWithValid() && interpolatedModel.size() > 0 && lastValidValuePosition >= 0 )
+        lastValidTuple[posValueAxis] = interpolatedModel.get( lastValidValuePosition, valueAxis );
       else
       {
-        if( isLastFilledWithValid() && interpolatedModel.size() > 0 && lastValidValuePosition >= 0 )
-          lastValidTuple[valueAxisPosition] = interpolatedModel.get( lastValidValuePosition, valueAxis );
-        else
-        {
-          final TupleModelDataSet defaultValue = value.getDefaultValue( getFilter() ); // FIXME
-          lastValidTuple[valueAxisPosition] = defaultValue.getValue();
-        }
+        lastValidTuple[posValueAxis] = defaultValue.getValue();
+      }
 
+      if( posStatusAxis >= 0 )
+        lastValidTuple[posStatusAxis] = defaultValue.getStatus();
+
+      if( posDataSourceAxis >= 0 )
+      {
+        final DataSourceHandler dataSourceHandler = new DataSourceHandler( getFilter().getMetaDataList() );
+
+        final String source = defaultValue.getSource();
+        if( StringUtils.isNotEmpty( source ) )
+        {
+          lastValidTuple[posDataSourceAxis] = dataSourceHandler.addDataSource( source, source );
+        }
       }
     }
 
