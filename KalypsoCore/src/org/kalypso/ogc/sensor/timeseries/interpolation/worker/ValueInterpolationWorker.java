@@ -232,7 +232,12 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
     for( final LocalCalculationStackValue value : values )
     {
 
+      
+      
       final IAxis valueAxis = value.getAxis();
+      
+      // TODO fnd status axis and source axis for this one and set default values
+      
       final int valueAxisPosition = interpolatedModel.getPosition( valueAxis );
 
       if( KalypsoStatusUtils.isStatusAxis( valueAxis ) )
