@@ -725,4 +725,17 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
   {
     return m_contentProvider;
   }
+
+  /** Forces a reload of the underlying data. Any pending changes are discarded. */
+  public void reload( )
+  {
+    if( m_key == null )
+      return;
+
+    final KeyInfo info = m_pool.getInfoForKey( m_key );
+    if( info == null )
+      return;
+
+    info.reload( true );
+  }
 }
