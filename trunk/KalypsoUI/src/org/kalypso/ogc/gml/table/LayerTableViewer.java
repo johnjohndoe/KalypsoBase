@@ -461,6 +461,8 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
   protected void setColumnText( final TableColumn tc )
   {
     final GMLXPath propertyPath = (GMLXPath) tc.getData( COLUMN_PROP_PATH );
+    if( propertyPath == null )
+      return;
 
     final String label = (String) tc.getData( COLUMN_PROP_LABEL );
     final String tooltip = (String) tc.getData( COLUMN_PROP_TOOLTIP );
@@ -541,11 +543,14 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
       if( column != null )
       {
         final GMLXPath propPath = (GMLXPath) column.getData( COLUMN_PROP_PATH );
-        final IPropertyType propertyType = findPropertyType( featureType, propPath );
-        if( propertyType == null )
+        if( propPath != null )
         {
-          column.dispose();
-          changed = true;
+          final IPropertyType propertyType = findPropertyType( featureType, propPath );
+          if( propertyType == null )
+          {
+            column.dispose();
+            changed = true;
+          }
         }
       }
     }
@@ -641,15 +646,18 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     for( int i = 0; i < editors.length; i++ )
     {
       final GMLXPath propPath = (GMLXPath) columns[i].getData( COLUMN_PROP_PATH );
-      final String format = (String) columns[i].getData( COLUMN_PROP_FORMAT );
-      final IPropertyType ftp = findPropertyType( featureType, propPath );
-      final String modifierId = (String) columns[i].getData( COLUMN_PROP_MODIFIER );
-
-      m_modifier[i] = createModifier( format, ftp, modifierId, propPath );
-      if( m_modifier[i] != null )
+      if( propPath != null )
       {
-        editors[i] = m_modifier[i].createCellEditor( table );
-        editors[i].setValidator( m_modifier[i] );
+        final String format = (String) columns[i].getData( COLUMN_PROP_FORMAT );
+        final IPropertyType ftp = findPropertyType( featureType, propPath );
+        final String modifierId = (String) columns[i].getData( COLUMN_PROP_MODIFIER );
+
+        m_modifier[i] = createModifier( format, ftp, modifierId, propPath );
+        if( m_modifier[i] != null )
+        {
+          editors[i] = m_modifier[i].createCellEditor( table );
+          editors[i].setValidator( m_modifier[i] );
+        }
       }
     }
     setCellEditors( editors );
