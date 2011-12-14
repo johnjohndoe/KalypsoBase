@@ -87,7 +87,6 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.featureview.Featuretemplate.Layer;
-import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -191,9 +190,7 @@ public class FeatureTemplateviewer
   {
     m_template = template;
 
-    final List<FeatureviewType> view = template.getView();
-    for( final FeatureviewType featureviewType : view )
-      m_fvFactory.addView( featureviewType, templateContext );
+    m_fvFactory.addViews( template, templateContext );
 
     final Layer layer = template.getLayer();
     final String featurePath = layer == null ? defaultFeaturePath : layer.getFeaturePath();
