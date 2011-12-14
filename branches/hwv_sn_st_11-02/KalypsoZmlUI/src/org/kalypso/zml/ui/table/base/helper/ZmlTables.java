@@ -130,6 +130,9 @@ public final class ZmlTables
     final IZmlModel model = table.getModel();
 
     final AbstractColumnType columnType = column.getType();
+    if( Objects.isNull( columnType ) )
+      return;
+
     if( columnType instanceof DataColumnType )
     {
       final DataColumnType dataColumnType = (DataColumnType) columnType;
