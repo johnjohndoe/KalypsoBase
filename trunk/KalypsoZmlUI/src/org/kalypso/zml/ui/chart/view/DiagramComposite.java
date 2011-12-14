@@ -63,6 +63,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
 import org.kalypso.zml.core.diagram.base.ChartTypeHandler;
 import org.kalypso.zml.core.diagram.base.visitors.ResetZmlLayerVisitor;
+import org.kalypso.zml.ui.chart.layer.visitor.SingleGridVisibilityVisitor;
 import org.kalypso.zml.ui.debug.KalypsoZmlUiDebug;
 
 import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
@@ -128,6 +129,9 @@ public class DiagramComposite extends Composite implements IUpdateable, IObserva
      * update data handler and visibility
      */
     final ILayerManager layerManager = m_model.getLayerManager();
+
+    layerManager.accept( new UpdateRequestStrategyVisitor() );
+
     // TODO
 // layerManager.accept( new SetDataHandlerVisitor( this ) );
 
@@ -182,6 +186,12 @@ public class DiagramComposite extends Composite implements IUpdateable, IObserva
     reset();
 
     delegate.doSelectionUpdate( m_model );
+
+    final ILayerManager layerManager = m_model.getLayerManager();
+    layerManager.accept( new HideUnuseLayersVisitor() );
+    layerManager.accept( new SingleGridVisibilityVisitor() );
+
+    m_model.autoscale();
   }
 
   @Override

@@ -58,4 +58,6 @@ public interface IZmlLayerDataHandler
   IObservation getObservation( );
 
   IRequest getRequest( );
+
+  void setRequestStrategy( IRequestStrategy strategy );
 }

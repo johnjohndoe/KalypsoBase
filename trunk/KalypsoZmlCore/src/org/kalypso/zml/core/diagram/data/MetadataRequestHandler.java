@@ -70,9 +70,6 @@ public class MetadataRequestHandler implements IRequestHandler
     m_parameters = parameters;
   }
 
-  /**
-   * @see org.kalypso.hwv.core.chart.provider.observation.IRequestHandler#getArguments(org.kalypso.ogc.sensor.IObservation)
-   */
   @Override
   public IRequest getArguments( final MetadataList metadata )
   {

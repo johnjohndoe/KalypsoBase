@@ -61,7 +61,6 @@ import org.kalypso.zml.ui.KalypsoZmlUI;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.ClipHelper;
 import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
@@ -161,7 +160,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   @Override
   public IDataRange<Number> getTargetRange( final IDataRange< ? > domainIntervall )
   {
-    return m_range.getTargetRange( domainIntervall );
+    return m_range.getTargetRange( (IDataRange<Number>) domainIntervall );
   }
 
   @Override
@@ -195,17 +194,15 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   }
 
   @SuppressWarnings("unchecked")
-  IPair<Number, Number>[] getFilteredPoints( final IDataRange< ? > domainIntervall ) throws SensorException
+  IPair<Number, Number>[] getFilteredPoints( final IDataRange<Number> domainIntervall ) throws SensorException
   {
     final IObservation observation = m_data.getObservation();
-    if( observation == null || domainIntervall == null )
+    if( observation == null )
       return new IPair[0];
-    final Object min = domainIntervall.getMin();
-    final Object max = domainIntervall.getMax();
-    if( !(min instanceof Number) || !(max instanceof Number) )
-      return new IPair[0];
-    final LineLayerModelVisitor visitor = new LineLayerModelVisitor( this, getFilters(), new DataRange<Number>( (Number) min, (Number) max ) );
-    observation.accept( visitor, null );
+
+    final LineLayerModelVisitor visitor = new LineLayerModelVisitor( this, getFilters(), domainIntervall );
+    observation.accept( visitor, m_data.getRequest() );
+
     return visitor.getPoints();
   }
 

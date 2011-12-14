@@ -47,6 +47,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IAxis;
@@ -115,13 +116,15 @@ public class MultipleObservationSelectionBuilder implements IZmlDiagramSelection
       manager.accept( visitor );
 
       final IZmlLayer[] layers = visitor.getLayers();
+      if( ArrayUtils.isEmpty( layers ) )
+        continue;
 
       final List<IObsProvider> providers = entry.getValue();
       for( int index = 0; index < providers.size(); index++ )
       {
         final IObsProvider provider = providers.get( index );
         update( layers, provider, index );
-// provider.dispose(); //FIXME
+        provider.dispose();
       }
     }
   }
