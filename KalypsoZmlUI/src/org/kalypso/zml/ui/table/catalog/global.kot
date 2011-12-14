@@ -49,8 +49,7 @@
       <baseStyle>
         <reference>nBaseCellStyle</reference>
       </baseStyle>
-      <property name="backgroundColor"></property>
-      <!-- <property name="backgroundColor">EDEFF4</property> -->
+      <property name="backgroundColor">DEDEDE</property>
     </Style>
     <!-- base q cell table style -->
     <Style id="qBaseCellStyle">
