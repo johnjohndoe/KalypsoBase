@@ -219,7 +219,6 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   {
     final FeatureviewTypeWithContext view = m_featureviewFactory.get( ft, getFeature() );
 
-    // FIXME: we need the context of this view
     m_translator = new FeatureViewTranslator( m_featureviewFactory.getTranslator( view, null ) );
 
     // TODO: dubious we shoudn't need to adapt the parent, that should already have been done by the calling code
