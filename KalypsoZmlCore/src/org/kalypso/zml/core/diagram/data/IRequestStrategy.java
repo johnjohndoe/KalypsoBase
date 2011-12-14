@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra�e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -40,24 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.diagram.data;
 
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.request.IRequest;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlLayerDataHandler
+public interface IRequestStrategy
 {
-  void dispose( );
-
-  IAxis getValueAxis( );
-
-  String getTargetAxisId( );
-
-  IObservation getObservation( );
 
   IRequest getRequest( );
 
-  void setRequestStrategy( IRequestStrategy strategy );
 }

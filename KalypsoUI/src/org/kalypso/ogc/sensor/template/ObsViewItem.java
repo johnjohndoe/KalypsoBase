@@ -131,18 +131,12 @@ public abstract class ObsViewItem implements IObsProviderListener, IViewable
     observationChanged( null );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.template.IObsProviderListener#observationChangedX(java.lang.Object)
-   */
   @Override
   public void observationChanged( final Object source )
   {
     m_view.refreshItemData( this, source );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.template.IObsProvider#getObservation()
-   */
   public IObservation getObservation( )
   {
     return m_obsProvider.getObservation();

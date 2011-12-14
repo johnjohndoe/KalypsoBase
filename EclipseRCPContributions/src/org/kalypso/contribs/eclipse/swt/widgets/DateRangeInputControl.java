@@ -63,16 +63,16 @@ import org.eclipse.swt.widgets.Text;
 public class DateRangeInputControl extends Composite
 {
   /** Flag whether to use the date range or the number of days */
-  public final static String USE_RANGE = "kalypso.repository.use_range";
+  public static final String USE_RANGE = "kalypso.repository.use_range";
 
   /** Number of days used in the date-range */
-  public final static String NUMBER_OF_DAYS = "kalypso.repository.number_of_days";
+  public static final String NUMBER_OF_DAYS = "kalypso.repository.number_of_days";
 
   /** Date-from for the preview */
-  public final static String DATE_FROM = "kalypso.repository.date_from";
+  public static final String DATE_FROM = "kalypso.repository.date_from";
 
   /** Date-to for the preview */
-  public final static String DATE_TO = "kalypso.repository.date_to";
+  public static final String DATE_TO = "kalypso.repository.date_to";
 
   protected boolean m_useRange;
 

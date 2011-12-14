@@ -91,10 +91,18 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
 
   private IAxis m_valueAxis;
 
+  private IRequestStrategy m_request = new DefaultRequestStrategy( this );
+
   public ZmlObsProviderDataHandler( final IZmlLayer layer, final String targetAxisId )
   {
     m_layer = layer;
     m_targetAxisId = targetAxisId;
+  }
+
+  @Override
+  public void setRequestStrategy( final IRequestStrategy strategy )
+  {
+    m_request = strategy;
   }
 
   public void setObsProvider( final IObsProvider provider )
@@ -151,25 +159,19 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
   @Override
   public IRequest getRequest( )
   {
-    if( Objects.isNull( m_provider ) )
-      return null;
+    return m_request.getRequest();
 
-    final IZmlLayerProvider layerProvider = m_layer.getProvider();
-    if( Objects.isNull( layerProvider ) )
-      return m_provider.getArguments();
-
-    final IRequestHandler handler = layerProvider.getRequestHandler();
-    final IObservation observation = getObservation();
-    if( Objects.isNull( observation ) )
-      return m_provider.getArguments();
-
-    return handler.getArguments( observation.getMetadataList() );
   }
 
   @Override
   public String getTargetAxisId( )
   {
     return m_targetAxisId;
+  }
+
+  public IObsProvider getProvider( )
+  {
+    return m_provider;
   }
 
   @Override
@@ -211,6 +213,11 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
       }
     }
 
+  }
+
+  public IZmlLayer getLayer( )
+  {
+    return m_layer;
   }
 
 }

@@ -79,17 +79,11 @@ public class ZmlObservationDataHandler implements IZmlLayerDataHandler, IObserva
     m_targetAxisId = targetAxisId;
   }
 
-  /**
-   * @see org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler#dispose()
-   */
   @Override
   public void dispose( )
   {
   }
 
-  /**
-   * @see org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler#getValueAxis()
-   */
   @Override
   public IAxis getValueAxis( )
   {
@@ -102,18 +96,12 @@ public class ZmlObservationDataHandler implements IZmlLayerDataHandler, IObserva
     }
   }
 
-  /**
-   * @see org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler#getTargetAxisId()
-   */
   @Override
   public String getTargetAxisId( )
   {
     return m_targetAxisId;
   }
 
-  /**
-   * @see org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler#getObservation()
-   */
   @Override
   public IObservation getObservation( )
   {
@@ -139,9 +127,6 @@ public class ZmlObservationDataHandler implements IZmlLayerDataHandler, IObserva
     m_dateRange = dateRange;
   }
 
-  /**
-   * @see org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler#getRequest()
-   */
   @Override
   public IRequest getRequest( )
   {
@@ -153,10 +138,6 @@ public class ZmlObservationDataHandler implements IZmlLayerDataHandler, IObserva
     m_listeners.add( listener );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservationListener#observationChanged(org.kalypso.ogc.sensor.IObservation,
-   *      java.lang.Object)
-   */
   @Override
   public void observationChanged( final IObservation obs, final Object source )
   {
@@ -165,5 +146,11 @@ public class ZmlObservationDataHandler implements IZmlLayerDataHandler, IObserva
     {
       listener.observationChanged( obs, source );
     }
+  }
+
+  @Override
+  public void setRequestStrategy( final IRequestStrategy strategy )
+  {
+    // FIXME
   }
 }

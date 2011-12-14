@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraï¿½e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,26 +38,52 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.diagram.data;
+package org.kalypso.zml.ui.chart.view;
 
-import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
+import org.kalypso.zml.core.diagram.layer.IZmlLayer;
+
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
+import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLayerVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlLayerDataHandler
+public class HideUnuseLayersVisitor extends AbstractChartLayerVisitor
 {
-  void dispose( );
 
-  IAxis getValueAxis( );
+  @Override
+  public void visit( final IChartLayer layer )
+  {
+    layer.setVisible( isVisible( layer ) );
 
-  String getTargetAxisId( );
+  }
 
-  IObservation getObservation( );
+  private boolean isVisible( final IChartLayer layer )
+  {
 
-  IRequest getRequest( );
+    if( layer instanceof IZmlLayer )
+    {
+      final IZmlLayer zmlLayer = (IZmlLayer) layer;
 
-  void setRequestStrategy( IRequestStrategy strategy );
+      final IZmlLayerDataHandler handler = zmlLayer.getDataHandler();
+      final IObservation observation = handler.getObservation();
+
+      return Objects.isNotNull( observation );
+    }
+
+    final ILayerManager manager = layer.getLayerManager();
+    final IChartLayer[] children = manager.getLayers();
+
+    for( final IChartLayer child : children )
+    {
+      if( isVisible( child ) )
+        return true;
+    }
+
+    return false;
+  }
 }

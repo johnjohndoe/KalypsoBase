@@ -59,9 +59,12 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.provider.PlainObsProvider;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
+import org.kalypso.ogc.sensor.view.ObservationViewHelper;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
 
@@ -103,14 +106,12 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   @Override
   public void setFocus( )
   {
-    // TODO
+    m_chartComposite.setFocus();
   }
 
   @Override
   public void selectionChanged( final SelectionChangedEvent event )
   {
-
-    // / TODO tslinks?!? how to handle
 
     final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
     final Iterator iterator = selection.iterator();
@@ -119,6 +120,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
 
     while( iterator.hasNext() )
     {
+      // TODO handle tslinks!!!
 
       final Object obj = iterator.next();
       if( obj instanceof IRepositoryItem )
@@ -127,16 +129,15 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
         if( item.hasAdapter( IObservation.class ) )
         {
           final IObservation observation = (IObservation) item.getAdapter( IObservation.class );
+          final DateRange dateRange = ObservationViewHelper.makeDateRange( item );
 
-          // FIXME request?!?
-          observations.add( new PlainObsProvider( observation, null ) );
+          observations.add( new PlainObsProvider( observation, new ObservationRequest( dateRange ) ) );
         }
       }
     }
 
     final IZmlDiagramSelectionBuilder builder = new MultipleObservationSelectionBuilder( observations.toArray( new IObsProvider[] {} ) );
     m_chartComposite.setSelection( builder );
-
   }
 
   @Override
@@ -149,7 +150,6 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   @Override
   public void partBroughtToTop( final IWorkbenchPart part )
   {
-    // TODO
   }
 
   @Override
@@ -169,6 +169,5 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   @Override
   public void partOpened( final IWorkbenchPart part )
   {
-    // Siehe partActivated...
   }
 }

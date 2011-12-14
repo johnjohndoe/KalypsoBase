@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraï¿½e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,26 +38,42 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.diagram.data;
+package org.kalypso.zml.ui.chart.view;
 
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.zml.core.diagram.data.IRequestStrategy;
+import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
+import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
+import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlLayerDataHandler
+public class RepositoryBrowserRequestStrategy implements IRequestStrategy
 {
-  void dispose( );
+  private final IZmlLayer m_layer;
 
-  IAxis getValueAxis( );
+  public RepositoryBrowserRequestStrategy( final IZmlLayer layer )
+  {
+    m_layer = layer;
+  }
 
-  String getTargetAxisId( );
+  @Override
+  public IRequest getRequest( )
+  {
+    final IZmlLayerDataHandler handler = m_layer.getDataHandler();
+    if( handler instanceof ZmlObsProviderDataHandler )
+    {
+      final ZmlObsProviderDataHandler obsHandler = (ZmlObsProviderDataHandler) handler;
+      final IObsProvider provider = obsHandler.getProvider();
+      if( Objects.isNull( provider ) )
+        return null;
 
-  IObservation getObservation( );
+      return provider.getArguments();
+    }
 
-  IRequest getRequest( );
-
-  void setRequestStrategy( IRequestStrategy strategy );
+    return null;
+  }
 }

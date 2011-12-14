@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra�e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -40,24 +40,42 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.diagram.data;
 
-import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.request.IRequest;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlLayerDataHandler
+public class DefaultRequestStrategy implements IRequestStrategy
 {
-  void dispose( );
 
-  IAxis getValueAxis( );
+  private final ZmlObsProviderDataHandler m_handler;
 
-  String getTargetAxisId( );
+  public DefaultRequestStrategy( final ZmlObsProviderDataHandler handler )
+  {
+    m_handler = handler;
+  }
 
-  IObservation getObservation( );
+  @Override
+  public IRequest getRequest( )
+  {
+    final IObsProvider provider = m_handler.getProvider();
+    if( Objects.isNull( provider ) )
+      return null;
 
-  IRequest getRequest( );
+    final IZmlLayerProvider layerProvider = m_handler.getLayer().getProvider();
+    if( Objects.isNull( layerProvider ) )
+      return provider.getArguments();
 
-  void setRequestStrategy( IRequestStrategy strategy );
+    final IRequestHandler handler = layerProvider.getRequestHandler();
+    final IObservation observation = m_handler.getObservation();
+    if( Objects.isNull( observation ) )
+      return provider.getArguments();
+
+    return handler.getArguments( observation.getMetadataList() );
+
+  }
+
 }
