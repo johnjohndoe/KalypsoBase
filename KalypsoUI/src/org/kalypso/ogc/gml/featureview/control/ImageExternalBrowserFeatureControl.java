@@ -40,31 +40,66 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
-import org.kalypso.commons.i18n.I10nString;
-import org.kalypso.commons.i18n.ITranslator;
-import org.kalypso.gmlschema.annotation.AnnotationUtilities;
-import org.kalypso.gmlschema.annotation.IAnnotation;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.template.featureview.ControlType;
-import org.kalypso.template.featureview.LabelType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
+ * A hyperlink that opens the image location in the external browser.
+ * 
  * @author Gernot Belger
  */
-public class LabelFeatureControlFactory implements IFeatureControlFactory
+public class ImageExternalBrowserFeatureControl extends AbstractImageFeatureControl
 {
-  @Override
-  public IFeatureControl createFeatureControl( final IFeatureComposite parentComposite, final Feature feature, final IPropertyType pt, final ControlType controlType, final IAnnotation annotation )
+  private ImageBrowserOpenAction m_action;
+
+  public ImageExternalBrowserFeatureControl( final IPropertyType ftp )
   {
-    final String labelControlText = ((LabelType) controlType).getText();
+    super( ftp );
+  }
 
-    final ITranslator translator = parentComposite.getTranslator();
+  public ImageExternalBrowserFeatureControl( final Feature feature, final IPropertyType ftp )
+  {
+    super( feature, ftp );
+  }
 
-    final String translatedExplicitText = new I10nString( labelControlText, translator ).getValue();
+  @Override
+  public Control createControl( final FormToolkit toolkit, final Composite parent, final int style )
+  {
+    m_action = new ImageBrowserOpenAction( this );
+    return ActionHyperlink.createHyperlink( toolkit, parent, style, m_action );
+  }
 
-    final String text = AnnotationUtilities.getAnnotation( annotation, translatedExplicitText, IAnnotation.ANNO_LABEL );
+  @Override
+  public boolean isValid( )
+  {
+    // this control does not modify, so its always valid
+    return true;
+  }
 
-    return new LabelFeatureControl( feature, pt, text );
+  @Override
+  public void updateControl( )
+  {
+    m_action.update();
+  }
+
+  public URL getLocation( )
+  {
+    try
+    {
+      final String imagePath = getImagePath();
+      return resolveImagePath( imagePath );
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 }

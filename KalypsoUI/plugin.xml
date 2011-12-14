@@ -1483,6 +1483,26 @@
      <image commandId="org.kalypso.ui.gmvtree.command.reloadData" icon="icons/feature/reload_gmltree.png"/>
   </extension>
   
+  <extension point="org.eclipse.ui.handlers">
+     <handler commandId="org.kalypso.ui.gmvtree.command.saveData" class="org.kalypso.ui.editor.gmleditor.command.SaveGmltreeHandler">
+        <enabledWhen>
+            <with variable="activeGmlTree">
+               <test property="org.kalypso.ui.gmltree.isDataDirty"/>
+            </with>
+        </enabledWhen>
+     </handler>
+     <handler commandId="org.kalypso.ui.gmvtree.command.reloadData" class="org.kalypso.ui.editor.gmleditor.command.ReloadGmltreeHandler">
+        <enabledWhen>
+            <with variable="activeGmlTree">
+               <test property="org.kalypso.ui.gmltree.isDataDirty"/>
+            </with>
+        </enabledWhen>
+     </handler>
+  </extension>
+  <extension point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester class="org.kalypso.ui.editor.gmleditor.part.GmltreePropertyTester" id="org.kalypso.ui.editor.gmleditor.part.GmltreePropertyTester" namespace="org.kalypso.ui.gmltree" properties="isDataDirty,hasSelection" type="org.kalypso.ui.editor.gmleditor.part.GmlTreeView" />
+  </extension>
+  
   <!-- General purpose commands -->
   <extension point="org.eclipse.ui.commands">
      <command
@@ -1572,5 +1592,12 @@
   </extension>
   <extension point="org.kalypso.ui.importWizards">
      <category id="importWizards" name="Import Wizards"/>
+  </extension>
+  <extension
+        point="org.kalypso.ui.featureViewExtensionControl">
+     <extensionControl
+           class="org.kalypso.ogc.gml.featureview.control.ImageExternalBrowserFeatureControlFactory"
+           id="imageExternalBrowser">
+     </extensionControl>
   </extension>
 </plugin>

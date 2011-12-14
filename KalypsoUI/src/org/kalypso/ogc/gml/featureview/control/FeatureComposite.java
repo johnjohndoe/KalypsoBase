@@ -43,7 +43,6 @@ package org.kalypso.ogc.gml.featureview.control;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
@@ -53,32 +52,34 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Layout;
-import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.commons.i18n.I10nString;
+import org.kalypso.commons.i18n.ITranslator;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.ColorUtilities;
 import org.kalypso.contribs.eclipse.swt.SWTUtilities;
+import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
+import org.kalypso.ogc.gml.featureview.control.composite.CompositeFeatureControlFactory;
+import org.kalypso.ogc.gml.featureview.control.composite.IFeatureCompositionControl;
+import org.kalypso.ogc.gml.featureview.control.composite.IFeatureCompositionControlFactory;
+import org.kalypso.ogc.gml.featureview.control.composite.SectionCompositionFactory;
+import org.kalypso.ogc.gml.featureview.control.composite.TablFolderCompositionFactory;
 import org.kalypso.ogc.gml.featureview.maker.FeatureviewTypeWithContext;
 import org.kalypso.ogc.gml.featureview.maker.IFeatureviewFactory;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
@@ -86,6 +87,7 @@ import org.kalypso.template.featureview.Button;
 import org.kalypso.template.featureview.Checkbox;
 import org.kalypso.template.featureview.ColorLabelType;
 import org.kalypso.template.featureview.Combo;
+import org.kalypso.template.featureview.CommandHyperlink;
 import org.kalypso.template.featureview.CompositeType;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.DynamicTabFolder;
@@ -96,7 +98,6 @@ import org.kalypso.template.featureview.GridDataType;
 import org.kalypso.template.featureview.Image;
 import org.kalypso.template.featureview.LabelType;
 import org.kalypso.template.featureview.LayoutDataType;
-import org.kalypso.template.featureview.LayoutType;
 import org.kalypso.template.featureview.PropertyControlType;
 import org.kalypso.template.featureview.Radiobutton;
 import org.kalypso.template.featureview.Spinner;
@@ -150,9 +151,11 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
   private final IFeatureviewFactory m_featureviewFactory;
 
+  private FeatureViewTranslator m_translator;
+
   /**
    * Constructs the FeatureComposite.
-   * 
+   *
    * @param feature
    *          If you want to add a feature directly at instantiation time, provide it here, otherwise leave it null.
    * @param selectionManager
@@ -216,11 +219,14 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   {
     final FeatureviewTypeWithContext view = m_featureviewFactory.get( ft, getFeature() );
 
+    // FIXME: we need the context of this view
+    m_translator = new FeatureViewTranslator( m_featureviewFactory.getTranslator( view, null ) );
+
     // TODO: dubious we shoudn't need to adapt the parent, that should already have been done by the calling code
     if( m_formToolkit != null )
       m_formToolkit.adapt( parent );
 
-    m_control = createControl( parent, defaultStyle, view.getView() );
+    m_control = createControl( parent, defaultStyle, view.getView(), m_translator );
 
     /* If a toolkit is set, use it. */
     if( m_formToolkit != null )
@@ -247,7 +253,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     }
   }
 
-  private Control createControl( final Composite parent, final int defaultStyle, final ControlType controlType )
+  public Control createControl( final Composite parent, final int defaultStyle, final ControlType controlType, final ITranslator translator )
   {
     final Feature feature = getFeature();
 
@@ -259,13 +265,14 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     final String controlStyle = controlType.getStyle();
     final int styleToUse = controlStyle == null ? defaultStyle : SWTUtilities.createStyleFromString( controlStyle );
 
-    final Control control = createControlFromControlType( parent, styleToUse, controlType, propertyType, annotation );
+    final Control control = createControlFromControlType( parent, styleToUse, controlType, propertyType, annotation, translator );
 
     // Set tooltip: an explicitly set tooltip always wins
     final String tooltipControlText = controlType.getTooltip();
 
     final String tooltipText = AnnotationUtilities.getAnnotation( annotation, tooltipControlText, IAnnotation.ANNO_TOOLTIP );
-    control.setToolTipText( tooltipText );
+    final String translatedTooltipText = new I10nString( tooltipText, translator ).getValue();
+    control.setToolTipText( translatedTooltipText );
 
     /* If a toolkit is set, use it. */
     applyToolkit( control );
@@ -418,63 +425,17 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     return defaultValue;
   }
 
-  private Control createControlFromControlType( final Composite parent, final int style, final ControlType controlType, final IPropertyType ftp, final IAnnotation annotation )
+  private Control createControlFromControlType( final Composite parent, final int style, final ControlType controlType, final IPropertyType ftp, final IAnnotation annotation, final ITranslator translator )
   {
+
+    // NEUUU
     final Feature feature = getFeature();
-    if( controlType instanceof CompositeType )
+
+    final IFeatureCompositionControlFactory compositionFactory = createCompositionFactory( controlType );
+    if( compositionFactory != null )
     {
-      final CompositeType compositeType = (CompositeType) controlType;
-      final Composite composite = createCompositeFromCompositeType( parent, style, compositeType, annotation );
-      // composite.setBackground( parent.getDisplay().getSystemColor( (int) (Math.random() * 16) ) );
-
-      // Layout setzen
-      final LayoutType layoutType = compositeType.getLayout().getValue();
-      if( layoutType != null )
-        composite.setLayout( createLayout( layoutType ) );
-
-      for( final JAXBElement< ? extends ControlType> element : compositeType.getControl() )
-      {
-        final ControlType value = element.getValue();
-        final int elementStyle = SWTUtilities.createStyleFromString( value.getStyle() );
-        createControl( composite, elementStyle, value );
-      }
-
-      return composite;
-    }
-
-    // FIXME: create TabFolderFeatureControl
-    if( controlType instanceof TabFolder )
-    {
-      final TabFolder tabFolderType = (TabFolder) controlType;
-
-      final org.eclipse.swt.widgets.TabFolder tabFolder = new org.eclipse.swt.widgets.TabFolder( parent, style );
-
-      final List<org.kalypso.template.featureview.TabFolder.TabItem> tabItem = tabFolderType.getTabItem();
-      for( final org.kalypso.template.featureview.TabFolder.TabItem tabItemType : tabItem )
-      {
-        final String label = tabItemType.getTabLabel();
-        final String itemLabel = AnnotationUtilities.getAnnotation( annotation, label, IAnnotation.ANNO_LABEL );
-
-        final ControlType control = tabItemType.getControl().getValue();
-
-        final TabItem item = new TabItem( tabFolder, SWT.NONE );
-        item.setText( itemLabel );
-
-        final Control tabControl = createControl( tabFolder, SWT.NONE, control );
-
-        // ?? This seems to be breaking FeatureView's with observations. in this case control of parent will be used
-        // FIXME: The parent if a TabItem MUST be the TabFolder! Everything else is just nonsense
-        try
-        {
-          item.setControl( tabControl );
-        }
-        catch( final Exception e )
-        {
-          item.setControl( tabControl.getParent() );
-        }
-      }
-
-      return tabFolder;
+      final IFeatureCompositionControl composite = compositionFactory.createControl( this, annotation, translator );
+      return composite.createControl( m_formToolkit, parent, style );
     }
 
     /* TODO: move all from above into the factory method */
@@ -483,6 +444,20 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     final Control control = featureControl.createControl(m_formToolkit, parent, style );
     addFeatureControl( featureControl );
     return control;
+  }
+
+  private IFeatureCompositionControlFactory createCompositionFactory( final ControlType controlType )
+  {
+    if( controlType instanceof CompositeType )
+      return new CompositeFeatureControlFactory( (CompositeType) controlType );
+
+    if( controlType instanceof TabFolder )
+      return new TablFolderCompositionFactory( (TabFolder) controlType );
+
+    if( controlType instanceof org.kalypso.template.featureview.Section )
+      return new SectionCompositionFactory( (org.kalypso.template.featureview.Section) controlType );
+
+    return null;
   }
 
   private IFeatureControl createFeatureControl( final IFeatureControlFactory controlFactory, final Feature feature, final IPropertyType ftp, final ControlType controlType, final IAnnotation annotation )
@@ -550,6 +525,9 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     if( controlType instanceof GeometryLabelType )
       return new GeometryFeatureControlFactory();
 
+    if( controlType instanceof CommandHyperlink )
+      return new CommandHyperlinkFeatureControlFactory();
+
     return null;
   }
 
@@ -561,62 +539,13 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   {
     if( m_formToolkit == null )
     {
-      final FormToolkit toolkit = new FormToolkit( control.getDisplay() );
+      final FormToolkit toolkit = ToolkitUtils.createToolkit( control );
       toolkit.setBackground( control.getBackground() );
-      control.addDisposeListener( new DisposeListener()
-      {
-        @Override
-        public void widgetDisposed( final DisposeEvent e )
-        {
-          // Need to dispose toolkit as we created it ourselves
-          toolkit.dispose();
-        }
-      } );
 
       return toolkit;
     }
     else
       return m_formToolkit;
-  }
-
-  private Composite createCompositeFromCompositeType( final Composite parent, final int style, final CompositeType compositeType, final IAnnotation annotation )
-  {
-    if( compositeType instanceof org.kalypso.template.featureview.Group )
-    {
-      final Group group = new org.eclipse.swt.widgets.Group( parent, style );
-
-      final String groupControlText = ((org.kalypso.template.featureview.Group) compositeType).getText();
-
-      final String groupText = AnnotationUtilities.getAnnotation( annotation, groupControlText, IAnnotation.ANNO_LABEL );
-      group.setText( groupText );
-
-      return group;
-    }
-
-    return new Composite( parent, style );
-  }
-
-  private Layout createLayout( final LayoutType layoutType )
-  {
-    if( layoutType instanceof org.kalypso.template.featureview.GridLayout )
-    {
-      final org.kalypso.template.featureview.GridLayout gridLayoutType = (org.kalypso.template.featureview.GridLayout) layoutType;
-      final GridLayout layout = new GridLayout();
-      layout.horizontalSpacing = gridLayoutType.getHorizontalSpacing();
-      layout.verticalSpacing = gridLayoutType.getVerticalSpacing();
-      layout.makeColumnsEqualWidth = gridLayoutType.isMakeColumnsEqualWidth();
-      layout.marginHeight = gridLayoutType.getMarginHeight();
-      layout.marginWidth = gridLayoutType.getMarginWidth();
-      layout.marginTop = gridLayoutType.getMarginTop();
-      layout.marginLeft = gridLayoutType.getMarginLeft();
-      layout.marginRight = gridLayoutType.getMarginRight();
-      layout.marginBottom = gridLayoutType.getMarginBottom();
-      layout.numColumns = gridLayoutType.getNumColumns();
-
-      return layout;
-    }
-
-    return null;
   }
 
   private void addFeatureControl( final IFeatureControl fc )
@@ -688,11 +617,20 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     if( featureType == null )
       return null;
 
+    final QName propertyName = findPropertyName( controlType );
+    if( propertyName == null )
+      return null;
+
+    return getPropertyTypeForQName( featureType, propertyName );
+  }
+
+  private QName findPropertyName( final ControlType controlType )
+  {
     if( controlType instanceof PropertyControlType )
-      return getPropertyTypeForQName( featureType, ((PropertyControlType) controlType).getProperty() );
+      return ((PropertyControlType) controlType).getProperty();
 
     if( controlType instanceof CompositeType )
-      return getPropertyTypeForQName( featureType, ((CompositeType) controlType).getProperty() );
+      return ((CompositeType) controlType).getProperty();
 
     return null;
   }
@@ -814,7 +752,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   /**
    * This function sets, if the green hook on a ok validated feature should be displayed. The default is false. This
    * flag has only an effect, if the validator label is activated.
-   * 
+   *
    * @param showOk
    *          The flag, indicating, if the green hook should be displayed.
    */
@@ -825,7 +763,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
   /**
    * This function returns the flag for displaying the green hook on a ok validated feature.
-   * 
+   *
    * @return The flag, indicating, if the green hook should be displayed.
    */
   @Override
@@ -848,5 +786,11 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       return null;
 
     return featureviewWithContext.getContext();
+  }
+
+  @Override
+  public ITranslator getTranslator( )
+  {
+    return m_translator;
   }
 }

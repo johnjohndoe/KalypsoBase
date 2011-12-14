@@ -40,31 +40,55 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
-import org.kalypso.commons.i18n.I10nString;
+import java.util.List;
+import java.util.Locale;
+
 import org.kalypso.commons.i18n.ITranslator;
-import org.kalypso.gmlschema.annotation.AnnotationUtilities;
-import org.kalypso.gmlschema.annotation.IAnnotation;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.template.featureview.ControlType;
-import org.kalypso.template.featureview.LabelType;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.commons.i18n.ITranslatorContext;
+import org.w3c.dom.Element;
 
 /**
+ * Helper that wraps a translator but checks for the translation key ('%'). If the string does not start with this
+ * character, it just returns the string.<br/>
+ *
  * @author Gernot Belger
  */
-public class LabelFeatureControlFactory implements IFeatureControlFactory
+public class FeatureViewTranslator implements ITranslator
 {
-  @Override
-  public IFeatureControl createFeatureControl( final IFeatureComposite parentComposite, final Feature feature, final IPropertyType pt, final ControlType controlType, final IAnnotation annotation )
+  private final ITranslator m_delegate;
+
+  public FeatureViewTranslator( final ITranslator delegate )
   {
-    final String labelControlText = ((LabelType) controlType).getText();
+    m_delegate = delegate;
+  }
 
-    final ITranslator translator = parentComposite.getTranslator();
+  @Override
+  public String getId( )
+  {
+    return m_delegate.getId();
+  }
 
-    final String translatedExplicitText = new I10nString( labelControlText, translator ).getValue();
+  @Override
+  public void configure( final ITranslatorContext context, final List<Element> elements )
+  {
+    m_delegate.configure( context, elements );
+  }
 
-    final String text = AnnotationUtilities.getAnnotation( annotation, translatedExplicitText, IAnnotation.ANNO_LABEL );
+  @Override
+  public List<Element> getConfiguration( )
+  {
+    return m_delegate.getConfiguration();
+  }
 
-    return new LabelFeatureControl( feature, pt, text );
+  @Override
+  public String get( final String key, final Locale locale, final Object[] context )
+  {
+    if( key == null )
+      return null;
+
+    if( key.length() == 0 )
+      return key;
+
+    return m_delegate.get( key, locale, context );
   }
 }
