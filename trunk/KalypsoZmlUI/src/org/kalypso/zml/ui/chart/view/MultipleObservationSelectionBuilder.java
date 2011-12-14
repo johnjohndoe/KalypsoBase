@@ -52,6 +52,7 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
@@ -123,13 +124,14 @@ public class MultipleObservationSelectionBuilder implements IZmlDiagramSelection
       for( int index = 0; index < providers.size(); index++ )
       {
         final IObsProvider provider = providers.get( index );
-        update( layers, provider, index );
+        update( layers, provider, type, index );
+
         provider.dispose();
       }
     }
   }
 
-  private void update( final IZmlLayer[] layers, final IObsProvider provider, final int index )
+  private void update( final IZmlLayer[] layers, final IObsProvider provider, final String type, final int index )
   {
     for( final IZmlLayer baseLayer : layers )
     {
@@ -140,6 +142,15 @@ public class MultipleObservationSelectionBuilder implements IZmlDiagramSelection
         final IZmlLayerDataHandler handler = layer.getDataHandler();
         if( handler instanceof ZmlObsProviderDataHandler )
           ((ZmlObsProviderDataHandler) handler).setObsProvider( provider );
+
+        final IObservation observation = provider.getObservation();
+        if( Objects.isNotNull( observation ) )
+        {
+          final IAxis axis = AxisUtils.findAxis( observation.getAxes(), type );
+          final String name = ObservationTokenHelper.replaceTokens( "%axistype% - %obsname%", observation, axis ); //$NON-NLS-1$
+          layer.setTitle( name );
+        }
+
       }
       catch( final ConfigurationException e )
       {
