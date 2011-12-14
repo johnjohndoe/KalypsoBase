@@ -48,6 +48,7 @@ import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.resources.ICommand;
@@ -223,7 +224,7 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
 
       if( dataDir.isDirectory() )
       {
-        FileUtils.copyDirectory( dataDir, destinationDir );
+        FileUtils.copyDirectory( dataDir, destinationDir, FileFilterUtils.makeSVNAware( null ) );
         removePDEfiles( destinationDir );
       }
       else
