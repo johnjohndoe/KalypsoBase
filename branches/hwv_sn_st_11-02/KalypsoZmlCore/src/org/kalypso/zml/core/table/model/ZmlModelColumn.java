@@ -136,9 +136,9 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
 
       m_handler = handler;
       m_handler.addListener( this );
-
-      fireColumnChanged();
     }
+
+    fireColumnChanged();
   }
 
   @Override
