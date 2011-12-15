@@ -46,7 +46,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.template.ObsView;
-import org.kalypso.zml.core.diagram.base.zml.TSLinkWithName;
+import org.kalypso.zml.core.base.TSLinkWithName;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.core.provider.style.ZmlStyleSet;
 import org.kalypso.zml.ui.core.registry.KodRegistry;
