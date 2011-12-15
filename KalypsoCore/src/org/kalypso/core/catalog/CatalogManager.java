@@ -49,7 +49,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -86,9 +86,9 @@ public class CatalogManager
 
   public static final ObjectFactory OBJECT_FACTORY_CATALOG = new ObjectFactory();
 
-  public final Hashtable<Class< ? >, IURNGenerator> m_urnGenerators = new Hashtable<Class< ? >, IURNGenerator>();
+  public final Map<Class< ? >, IURNGenerator> m_urnGenerators = new HashMap<>();
 
-  private final Hashtable<URI, ICatalog> m_openCatalogs = new Hashtable<URI, ICatalog>();
+  private final Map<URI, ICatalog> m_openCatalogs = new HashMap<>();
 
   private final File m_baseDir;
 
@@ -138,42 +138,39 @@ public class CatalogManager
     }
   }
 
-  @SuppressWarnings("unchecked")
   public synchronized ICatalog getCatalog( final URI catalogURI )
   {
-    InputStream is = null;
-    try
+    if( !m_openCatalogs.containsKey( catalogURI ) )
     {
-      if( !m_openCatalogs.containsKey( catalogURI ) )
-      {
-        // load existing
-        final URL catalogURL = catalogURI.toURL();
-        final Unmarshaller unmarshaller = JAX_CONTEXT_CATALOG.createUnmarshaller();
-
-        // REMARK: do not use 'unmarshaller.unmarshal( catalogURL )'
-        // It does leave the stream open
-        is = catalogURL.openStream();
-        final JAXBElement<Catalog> object = (JAXBElement<Catalog>) unmarshaller.unmarshal( is );
-        is.close();
-
-        final Catalog catalog = object.getValue();
-
-        // System.out.println( "Loaded: " + catalogURL );
-
-        final ICatalog newOpenCatalog = createCatalog( catalogURL, catalog );
+      final ICatalog newOpenCatalog = readCatalog( catalogURI );
+      if( newOpenCatalog != null )
         m_openCatalogs.put( catalogURI, newOpenCatalog );
-      }
-      return m_openCatalogs.get( catalogURI );
+    }
+    return m_openCatalogs.get( catalogURI );
+  }
+
+  private ICatalog readCatalog( final URI catalogURI )
+  {
+    try (InputStream is = catalogURI.toURL().openStream())
+    {
+      final Unmarshaller unmarshaller = JAX_CONTEXT_CATALOG.createUnmarshaller();
+
+      // REMARK: do not use 'unmarshaller.unmarshal( catalogURL )'
+      // It does leave the stream open
+      @SuppressWarnings("unchecked")
+      final JAXBElement<Catalog> object = (JAXBElement<Catalog>) unmarshaller.unmarshal( is );
+      is.close();
+
+      final Catalog catalog = object.getValue();
+
+      final URL catalogURL = catalogURI.toURL();
+      return createCatalog( catalogURL, catalog );
     }
     catch( final Exception e )
     {
-      e.printStackTrace();
-      // TODO generate new type of exception CatalogException
-      throw new RuntimeException( e );
-    }
-    finally
-    {
-      IOUtils.closeQuietly( is );
+      // e.printStackTrace();
+      System.err.println( String.format( "Failed to load catalog from: %s", catalogURI ) );
+      return null;
     }
   }
 
