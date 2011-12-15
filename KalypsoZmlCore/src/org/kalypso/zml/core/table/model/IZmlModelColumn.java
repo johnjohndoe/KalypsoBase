@@ -111,4 +111,6 @@ public interface IZmlModelColumn
   boolean isLabeled( );
 
   void removeListener( IZmlModelColumnListener listener );
+
+  void dispose( );
 }

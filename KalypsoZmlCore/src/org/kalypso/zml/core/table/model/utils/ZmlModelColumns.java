@@ -44,11 +44,11 @@ import org.apache.commons.lang.StringUtils;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
-public final class ZmlColumns
+public final class ZmlModelColumns
 {
-  private ZmlColumns( )
+  private ZmlModelColumns( )
   {
   }
 

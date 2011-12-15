@@ -61,7 +61,7 @@ import org.kalypso.zml.core.table.model.loader.ZmlModelColumnLoader;
 import org.kalypso.zml.core.table.model.loader.ZmlRowBuilder;
 import org.kalypso.zml.core.table.model.memento.IZmlMemento;
 import org.kalypso.zml.core.table.model.memento.ZmlMemento;
-import org.kalypso.zml.core.table.model.utils.ZmlColumns;
+import org.kalypso.zml.core.table.model.utils.ZmlModelColumns;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 
@@ -163,7 +163,10 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
     final IZmlModelColumn[] columns = m_columns.toArray( new IZmlModelColumn[] {} );
     for( final IZmlModelColumn column : columns )
     {
-      if( ZmlColumns.isCloned( column ) )
+      column.removeListener( this );
+      column.dispose();
+
+      if( ZmlModelColumns.isCloned( column ) )
         m_columns.remove( column );
     }
 
@@ -177,14 +180,14 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
   {
     doClean();
 
-    final ZmlModelColumn[] columns = m_columns.toArray( new ZmlModelColumn[] {} );
-    m_columns.clear();
-
-    for( final ZmlModelColumn column : columns )
-    {
-      column.removeListener( this );
-      column.dispose();
-    }
+// final ZmlModelColumn[] columns = m_columns.toArray( new ZmlModelColumn[] {} );
+// m_columns.clear();
+//
+// for( final IZmlModelColumn column : columns )
+// {
+// column.removeListener( this );
+// column.dispose();
+// }
 
     m_memento.dispose();
   }
