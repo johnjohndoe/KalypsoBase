@@ -146,18 +146,6 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
         monitor.subTask( StringUtils.EMPTY ); // Hack, else the begin task will not be set here
 
         controlPage.saveChanges( newFolderHandle, new SubProgressMonitor( monitor, 100 ) );
-
-        if( controlPage.isUpdate() )
-        {
-          final ModelNature nature = (ModelNature) newFolderHandle.getProject().getNature( ModelNature.ID );
-          final IStatus updateStatus = nature.updateCalcCase( newFolderHandle, new SubProgressMonitor( monitor, 900 ) );
-          if( !updateStatus.isOK() )
-            throw new CoreException( updateStatus );
-        }
-        else
-        {
-          monitor.worked( 1000 );
-        }
       }
     };
 
@@ -323,12 +311,19 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
     // wenn das Projekt festliegt
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.IWizard#canFinish()
-   */
   @Override
   public boolean canFinish( )
   {
     return getContainer().getCurrentPage() == m_createControlPage;
+  }
+
+  public boolean isUpdate( )
+  {
+    return m_createControlPage.isUpdate();
+  }
+
+  public IFolder getNewFolder( )
+  {
+    return m_newFolderHandle;
   }
 }
