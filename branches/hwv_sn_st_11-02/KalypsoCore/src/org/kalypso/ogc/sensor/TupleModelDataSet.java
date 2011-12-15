@@ -52,7 +52,7 @@ import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
  */
 public class TupleModelDataSet
 {
-  private Number m_value;
+  private Object m_value;
 
   private Integer m_status;
 
@@ -60,7 +60,7 @@ public class TupleModelDataSet
 
   private final IAxis m_valueAxis;
 
-  public TupleModelDataSet( final IAxis valueAxis, final Number value, final Integer status, final String source )
+  public TupleModelDataSet( final IAxis valueAxis, final Object value, final Integer status, final String source )
   {
     m_valueAxis = valueAxis;
     m_value = value;
@@ -68,7 +68,7 @@ public class TupleModelDataSet
     m_source = source;
   }
 
-  public Number getValue( )
+  public Object getValue( )
   {
     return m_value;
   }
@@ -95,7 +95,12 @@ public class TupleModelDataSet
     builder.append( String.format( "Axis:\t\t%s\n", m_valueAxis.getName() ) ); //$NON-NLS-1$
 
     if( Objects.isNotNull( m_value ) )
-      builder.append( String.format( "Value:\t\t%.2f\n", m_value.doubleValue() ) ); //$NON-NLS-1$
+    {
+      if( m_value instanceof Number )
+        builder.append( String.format( "Value:\t\t%.2f\n", ((Number) m_value).doubleValue() ) ); //$NON-NLS-1$
+      else
+        builder.append( String.format( "Value:\t\t%s\n", m_value ) ); //$NON-NLS-1$
+    }
 
     if( Objects.isNotNull( m_status ) )
       builder.append( String.format( "Status:\t\t%s\n", KalypsoStatusUtils.getTooltipFor( m_status ) ) ); //$NON-NLS-1$
@@ -109,9 +114,9 @@ public class TupleModelDataSet
   @Override
   public TupleModelDataSet clone( )
   {
-    final Number value = getValue() == null ? null : Double.valueOf( getValue().doubleValue() );
-    final Integer status = getStatus() == null ? null : Integer.valueOf( getStatus() );
-    final String source = getSource() == null ? "" : new String( getSource() );
+    final Object value = Objects.clone( getValue() );
+    final Integer status = (Integer) Objects.clone( getStatus() );
+    final String source = (String) Objects.clone( getSource() );
 
     return new TupleModelDataSet( getValueAxis(), value, status, source );
   }

@@ -151,12 +151,13 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
   protected IAxis[] getValueAxes( )
   {
     final IAxis[] axes = getBaseModel().getAxes();
+    final IAxis[] valueAxes = AxisUtils.findValueAxes( axes, false );
 
-    return AxisUtils.findValueAxes( axes, false );
+    return ObservationUtilities.findAxesByClasses( valueAxes, new Class[] { Number.class, Boolean.class } );
   }
 
   /**
-   * Add one tupple with default values. The date is set to the given calendar which is stepped after the tuple was
+   * Add one tuple with default values. The date is set to the given calendar which is stepped after the tuple was
    * added.
    */
   protected void addDefaultTupple( final IAxis dateAxis, final LocalCalculationStack stack, final Calendar calendar ) throws SensorException

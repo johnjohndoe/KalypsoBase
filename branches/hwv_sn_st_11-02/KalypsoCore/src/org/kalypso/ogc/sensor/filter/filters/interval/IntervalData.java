@@ -79,7 +79,7 @@ public class IntervalData
       final TupleModelDataSet base = m_datasets[index];
       final TupleModelDataSet other = dataSets[index];
 
-      final double value = base.getValue().doubleValue() + other.getValue().doubleValue();
+      final double value = ((Number) base.getValue()).doubleValue() + ((Number) other.getValue()).doubleValue();
       final int status = base.getStatus() | other.getStatus();
       final String source = IntervalSourceHandler.mergeSourceReference( base.getSource(), other.getSource() );
 
