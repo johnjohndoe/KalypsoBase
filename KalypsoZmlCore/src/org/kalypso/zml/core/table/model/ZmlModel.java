@@ -56,6 +56,7 @@ import javax.xml.bind.JAXBElement;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.zml.core.debug.KalypsoZmlCoreDebug;
 import org.kalypso.zml.core.table.model.loader.ZmlModelColumnLoader;
 import org.kalypso.zml.core.table.model.loader.ZmlRowBuilder;
@@ -195,10 +196,14 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
   @Override
   public void fireModelChanged( final IZmlModelColumn... columns )
   {
+
     final IZmlColumnModelListener[] listeners = m_listeners.toArray( new IZmlColumnModelListener[] {} );
     for( final IZmlColumnModelListener listener : listeners )
     {
-      listener.modelChanged( columns );
+      if( Arrays.isEmpty( columns ) )
+        listener.modelChanged( getColumns() );
+      else
+        listener.modelChanged( columns );
     }
   }
 
