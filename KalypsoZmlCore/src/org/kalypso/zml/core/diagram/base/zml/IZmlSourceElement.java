@@ -48,6 +48,8 @@ import org.kalypso.ogc.sensor.provider.IObsProvider;
  */
 public interface IZmlSourceElement
 {
+  void dispose( );
+
   IObsProvider getObsProvider( );
 
   IPoolableObjectType getPoolKey( );

@@ -45,7 +45,6 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
-import org.kalypso.zml.core.diagram.base.provider.observation.AsynchronousObservationProvider;
 import org.kalypso.zml.core.diagram.base.zml.IZmlSourceElement;
 import org.kalypso.zml.core.diagram.base.zml.TSLinkWithName;
 import org.kalypso.zml.ui.core.zml.ZmlAxisUtils;
@@ -56,8 +55,6 @@ import org.kalypso.zml.ui.core.zml.ZmlAxisUtils;
 public abstract class AbstractTsLinkDiagramElement extends AbstractDiagramElement
 {
   private final TSLinkWithName m_link;
-
-  private AsynchronousObservationProvider m_provider;
 
   public AbstractTsLinkDiagramElement( final TSLinkWithName link )
   {
@@ -106,11 +103,7 @@ public abstract class AbstractTsLinkDiagramElement extends AbstractDiagramElemen
   @Override
   public final synchronized void dispose( )
   {
-    if( m_provider != null )
-    {
-      m_provider.dispose();
-      m_provider = null;
-    }
+    m_link.dispose();
   }
 
   @Override

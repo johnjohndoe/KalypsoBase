@@ -54,12 +54,13 @@ import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.KeyInfo;
+import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationTokenHelper;
+import org.kalypso.ogc.sensor.provider.PooledObsProvider;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
-import org.kalypso.zml.core.diagram.base.provider.observation.AsynchronousObservationProvider;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 
 /**
@@ -77,7 +78,7 @@ public class TSLinkWithName implements IZmlSourceElement
 
   private final TimeserieFeatureProperty m_property;
 
-  private AsynchronousObservationProvider m_provider;
+  private PooledObsProvider m_provider;
 
   public TSLinkWithName( final String identifier, final URL context, final String name, final TimeseriesLinkType obsLink, final TimeserieFeatureProperty property )
   {
@@ -225,10 +226,17 @@ public class TSLinkWithName implements IZmlSourceElement
   }
 
   @Override
-  public AsynchronousObservationProvider getObsProvider( )
+  public PooledObsProvider getObsProvider( )
   {
-    if( Objects.isNull( m_provider ) )
-      m_provider = new AsynchronousObservationProvider( this );
+    final PoolableObjectType type = new PoolableObjectType( "zml", getHref(), getContext(), true ); //$NON-NLS-1$
+
+    synchronized( this )
+    {
+      if( Objects.isNotNull( m_provider ) )
+        return m_provider;
+
+      m_provider = new PooledObsProvider( type );
+    }
 
     return m_provider;
   }
@@ -236,7 +244,7 @@ public class TSLinkWithName implements IZmlSourceElement
   @Override
   public IPoolableObjectType getPoolKey( )
   {
-    final AsynchronousObservationProvider provider = getObsProvider();
+    final PooledObsProvider provider = getObsProvider();
 
     return provider.getPoolKey();
   }
@@ -244,7 +252,7 @@ public class TSLinkWithName implements IZmlSourceElement
   @Override
   public boolean isDirty( )
   {
-    final AsynchronousObservationProvider provider = getObsProvider();
+    final PooledObsProvider provider = getObsProvider();
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
 
     final IObservation observation = provider.getObservation();
@@ -262,7 +270,7 @@ public class TSLinkWithName implements IZmlSourceElement
   public String getLabel( )
   {
     final String tokenizedName = getName();
-    final AsynchronousObservationProvider provider = getObsProvider();
+    final PooledObsProvider provider = getObsProvider();
     if( Objects.isNull( provider ) )
       return tokenizedName;
 
@@ -272,5 +280,13 @@ public class TSLinkWithName implements IZmlSourceElement
 
     final IAxis valueAxis = AxisUtils.findValueAxis( observation.getAxes(), true );
     return ObservationTokenHelper.replaceTokens( tokenizedName, observation, valueAxis );
+  }
+
+  @Override
+  public void dispose( )
+  {
+    if( Objects.isNotNull( m_provider ) )
+      m_provider.dispose();
+
   }
 }

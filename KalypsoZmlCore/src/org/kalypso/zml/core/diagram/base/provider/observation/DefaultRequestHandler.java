@@ -50,9 +50,6 @@ import org.kalypso.zml.core.diagram.data.IRequestHandler;
 public class DefaultRequestHandler implements IRequestHandler
 {
 
-  /**
-   * @see org.kalypso.hwv.core.chart.provider.observation.IRequestHandler#getArguments(org.kalypso.ogc.sensor.IObservation)
-   */
   @Override
   public IRequest getArguments( final MetadataList metadata )
   {
