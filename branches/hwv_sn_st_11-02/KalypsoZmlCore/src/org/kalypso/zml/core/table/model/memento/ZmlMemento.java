@@ -55,18 +55,18 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.IPoolableObjectType;
-import org.kalypso.core.util.pool.KeyInfo;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.provider.IObsProviderListener;
+import org.kalypso.zml.core.diagram.base.zml.IZmlSourceElement;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlMemento implements IZmlMemento
 {
-  private final Map<IPoolableObjectType, List<ILabeledObsProvider>> m_provider = new LinkedHashMap<IPoolableObjectType, List<ILabeledObsProvider>>();
+  private final Map<IPoolableObjectType, List<IZmlSourceElement>> m_provider = new LinkedHashMap<IPoolableObjectType, List<IZmlSourceElement>>();
 
   Set<IZmlMementoListener> m_listener = Collections.synchronizedSet( new LinkedHashSet<IZmlMementoListener>() );
 
@@ -92,16 +92,19 @@ public class ZmlMemento implements IZmlMemento
   }
 
   @Override
-  public synchronized void register( final IPoolableObjectType poolKey, final ILabeledObsProvider provider )
+  public synchronized void register( final IZmlSourceElement source )
   {
-    List<ILabeledObsProvider> providers = m_provider.get( poolKey );
-    if( Objects.isNull( providers ) )
+    final IPoolableObjectType poolKey = source.getPoolKey();
+    List<IZmlSourceElement> sources = m_provider.get( poolKey );
+    if( Objects.isNull( sources ) )
     {
-      providers = new ArrayList<ILabeledObsProvider>();
-      m_provider.put( poolKey, providers );
+      sources = new ArrayList<IZmlSourceElement>();
+      m_provider.put( poolKey, sources );
     }
 
-    providers.add( provider );
+    sources.add( source );
+
+    final IObsProvider provider = source.getObsProvider();
     provider.addListener( m_obsListener );
   }
 
@@ -109,11 +112,12 @@ public class ZmlMemento implements IZmlMemento
   public synchronized void store( ) throws CoreException
   {
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
-    final IObsProvider[] dirtyElements = findDirtyElements();
-    for( final IObsProvider provider : dirtyElements )
+    final IZmlSourceElement[] dirtyElements = findDirtyElements();
+    for( final IZmlSourceElement element : dirtyElements )
     {
+      final IObsProvider provider = element.getObsProvider();
       final IObservation observation = provider.getObservation();
-      if( observation != null )
+      if( Objects.isNotNull( observation ) )
         pool.saveObject( observation, new NullProgressMonitor() );
     }
 
@@ -125,12 +129,13 @@ public class ZmlMemento implements IZmlMemento
     synchronized( this )
     {
 
-      final Set<Entry<IPoolableObjectType, List<ILabeledObsProvider>>> entries = m_provider.entrySet();
-      for( final Entry<IPoolableObjectType, List<ILabeledObsProvider>> entry : entries )
+      final Set<Entry<IPoolableObjectType, List<IZmlSourceElement>>> entries = m_provider.entrySet();
+      for( final Entry<IPoolableObjectType, List<IZmlSourceElement>> entry : entries )
       {
-        final List<ILabeledObsProvider> providers = entry.getValue();
-        for( final ILabeledObsProvider provider : providers )
+        final List<IZmlSourceElement> sources = entry.getValue();
+        for( final IZmlSourceElement source : sources )
         {
+          final IObsProvider provider = source.getObsProvider();
           provider.removeListener( m_obsListener );
           provider.dispose();
         }
@@ -142,33 +147,25 @@ public class ZmlMemento implements IZmlMemento
   }
 
   @Override
-  public synchronized ILabeledObsProvider[] findDirtyElements( )
+  public synchronized IZmlSourceElement[] findDirtyElements( )
   {
-    final Collection<ILabeledObsProvider> result = new ArrayList<ILabeledObsProvider>();
-    final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
+    final Collection<IZmlSourceElement> result = new ArrayList<IZmlSourceElement>();
 
-    final Set<Entry<IPoolableObjectType, List<ILabeledObsProvider>>> entries = m_provider.entrySet();
-    for( final Entry<IPoolableObjectType, List<ILabeledObsProvider>> entry : entries )
+    final Set<Entry<IPoolableObjectType, List<IZmlSourceElement>>> entries = m_provider.entrySet();
+    for( final Entry<IPoolableObjectType, List<IZmlSourceElement>> entry : entries )
     {
-      final List<ILabeledObsProvider> providers = entry.getValue();
-      for( final ILabeledObsProvider provider : providers )
+      final List<IZmlSourceElement> sources = entry.getValue();
+      for( final IZmlSourceElement source : sources )
       {
-        final IObservation observation = provider.getObservation();
-        if( observation != null )
+        if( source.isDirty() )
         {
-          final KeyInfo info = pool.getInfo( observation );
-          if( Objects.isNotNull( info ) )
-            if( info.isDirty() )
-            {
-              result.add( provider );
-              break;
-            }
+          result.add( source );
         }
       }
 
     }
 
-    return result.toArray( new ILabeledObsProvider[result.size()] );
+    return result.toArray( new IZmlSourceElement[] {} );
   }
 
   protected void handleObservationChanged( )

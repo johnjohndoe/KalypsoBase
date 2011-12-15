@@ -44,7 +44,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.kalypso.zml.core.table.IZmlTableElement;
+import org.kalypso.zml.core.diagram.base.zml.IZmlSourceElement;
 import org.kalypso.zml.core.table.model.IZmlModel;
 
 /**
@@ -75,7 +75,7 @@ public final class ZmlModelColumnLoader
     }
   }
 
-  public void load( final IZmlTableElement element )
+  public void load( final IZmlSourceElement element )
   {
     synchronized( this )
     {

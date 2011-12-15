@@ -51,7 +51,7 @@ import org.kalypso.ogc.sensor.IObservationListener;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
-import org.kalypso.zml.core.diagram.layer.IZmlLayer;
+import org.kalypso.zml.core.diagram.base.IZmlLayer;
 
 /**
  * @author Dirk Kuch

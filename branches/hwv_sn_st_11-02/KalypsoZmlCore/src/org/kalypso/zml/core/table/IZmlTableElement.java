@@ -40,8 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table;
 
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.provider.IObsProvider;
+import org.kalypso.zml.core.diagram.base.zml.IZmlSourceElement;
 
 /**
  * @author Dirk Kuch
@@ -50,11 +49,6 @@ public interface IZmlTableElement
 {
   void dispose( );
 
-  String getIdentifier( );
+  IZmlSourceElement getSource( );
 
-  IObsProvider getObsProvider( );
-
-  String getTitle( IAxis axis );
-
-  String getTitleTokenzizer( );
 }

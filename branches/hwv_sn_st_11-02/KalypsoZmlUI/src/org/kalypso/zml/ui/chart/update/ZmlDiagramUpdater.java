@@ -42,12 +42,11 @@ package org.kalypso.zml.ui.chart.update;
 
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
-import org.kalypso.zml.core.diagram.base.provider.observation.AsynchronousObservationProvider;
+import org.kalypso.zml.core.diagram.base.IZmlLayer;
 import org.kalypso.zml.core.diagram.base.zml.MultipleTsLink;
 import org.kalypso.zml.core.diagram.base.zml.TSLinkWithName;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
-import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
 import de.openali.odysseus.chart.framework.model.ILayerContainer;
@@ -76,9 +75,6 @@ public class ZmlDiagramUpdater implements Runnable
     m_ignoreTypes = ignoreTypes;
   }
 
-  /**
-   * @see java.lang.Runnable#run()
-   */
   @Override
   public void run( )
   {
@@ -101,7 +97,7 @@ public class ZmlDiagramUpdater implements Runnable
 
         try
         {
-          final AsynchronousObservationProvider provider = new AsynchronousObservationProvider( link, multiple.getType() );
+          final IObsProvider provider = link.getObsProvider();
           update( layers, provider, index, link.getName() );
           provider.dispose();
         }
