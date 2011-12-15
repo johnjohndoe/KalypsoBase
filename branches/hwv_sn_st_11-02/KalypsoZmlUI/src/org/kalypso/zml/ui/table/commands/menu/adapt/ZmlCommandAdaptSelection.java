@@ -106,7 +106,7 @@ public class ZmlCommandAdaptSelection extends AbstractHandler
       final DateRange dateRange = new DateRange( begin, end );
 
       final AdaptValuesVisitor visitor = new AdaptValuesVisitor( axis.getType() );
-      transformed.accept( visitor, new ObservationRequest( dateRange ) );
+      transformed.accept( visitor, new ObservationRequest( dateRange ), 1 );
       column.getModelColumn().accept( visitor );
 
       visitor.doFinish();

@@ -197,13 +197,9 @@ public abstract class AbstractObservationFilter implements IObservationFilter
     m_obs = observation;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#accept(org.kalypso.ogc.sensor.visitor.IObservationVisitor,
-   *      org.kalypso.ogc.sensor.request.IRequest)
-   */
   @Override
-  public final void accept( final IObservationVisitor visitor, final IRequest request ) throws SensorException
+  public final void accept( final IObservationVisitor visitor, final IRequest request, final int direction ) throws SensorException
   {
-    Observations.accept( this, visitor, request );
+    Observations.accept( this, visitor, request, direction );
   }
 }

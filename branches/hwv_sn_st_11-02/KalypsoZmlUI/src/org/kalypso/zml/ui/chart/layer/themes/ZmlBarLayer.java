@@ -158,7 +158,7 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
         return;
 
       final ZmlBarLayerVisitor visitor = new ZmlBarLayerVisitor( this, m_range );
-      observation.accept( visitor, m_handler.getRequest() );
+      observation.accept( visitor, m_handler.getRequest(), 1 );
 
       final PolygonFigure figure = getPolygonFigure();
       final Point[][] points = visitor.getPoints();

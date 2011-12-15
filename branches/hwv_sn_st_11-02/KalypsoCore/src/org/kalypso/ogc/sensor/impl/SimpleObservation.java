@@ -301,9 +301,6 @@ public class SimpleObservation implements IObservation
     m_href = href;
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {
@@ -311,13 +308,7 @@ public class SimpleObservation implements IObservation
   }
 
   @Override
-  public void accept( final IObservationVisitor visitor, final IRequest request ) throws SensorException
-  {
-    Observations.accept( this, visitor, request );
-
-  }
-  
-  public void accept( final IObservationVisitor visitor, final IRequest request, int direction ) throws SensorException
+  public void accept( final IObservationVisitor visitor, final IRequest request, final int direction ) throws SensorException
   {
     Observations.accept( this, visitor, request, direction );
   }

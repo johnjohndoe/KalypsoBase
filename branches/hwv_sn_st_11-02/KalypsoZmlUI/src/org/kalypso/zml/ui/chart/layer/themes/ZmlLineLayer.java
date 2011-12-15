@@ -206,7 +206,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
       return new IPair[0];
 
     final LineLayerModelVisitor visitor = new LineLayerModelVisitor( this, getFilters(), domainIntervall );
-    observation.accept( visitor, null );
+    observation.accept( visitor, null, 1 );
     return visitor.getPoints();
   }
 
