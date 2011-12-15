@@ -61,6 +61,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.IProjectProvider;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -288,7 +289,8 @@ public class SteuerparameterWizardPage extends WizardPage
     try
     {
       final URL viewURL = new URL( "platform:/resource/" + project.getName() + "/" + ModelNature.CONTROL_VIEW_PATH ); //$NON-NLS-1$ //$NON-NLS-2$
-      m_fvFactory.addView( viewURL );
+      if( UrlUtilities.checkIsAccessible( viewURL ) )
+        m_fvFactory.addView( viewURL );
     }
     catch( final MalformedURLException e )
     {
