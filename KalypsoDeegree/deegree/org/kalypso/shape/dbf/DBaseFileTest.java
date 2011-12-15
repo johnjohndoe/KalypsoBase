@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.shape.dbf;
 
@@ -62,35 +62,35 @@ public class DBaseFileTest extends Assert
   @Test
   public void testFields( ) throws DBaseException
   {
-    newFieldException( "stringWithPrecision", FieldType.C, (byte) 10, (byte) 2 );
+    newFieldException( "sWithPr", FieldType.C, (byte) 10, (byte) 2 );
     newFieldOK( "string", FieldType.C, (byte) 10, (byte) 0 );
 
-    newFieldException( "dateLengthTooLong", FieldType.D, (byte) 100, (byte) 2 );
-    newFieldException( "dateLengthTooShort", FieldType.D, (byte) 7, (byte) 0 );
-    newFieldException( "dateWithPrecision", FieldType.D, (byte) 8, (byte) 3 );
-    newFieldOK( "dateWithPrecision", FieldType.D, (byte) 8, (byte) 0 );
+    newFieldException( "dTooLong", FieldType.D, (byte) 100, (byte) 2 );
+    newFieldException( "dTooShort", FieldType.D, (byte) 7, (byte) 0 );
+    newFieldException( "dateWithPr", FieldType.D, (byte) 8, (byte) 3 );
+    newFieldOK( "dateWithPr", FieldType.D, (byte) 8, (byte) 0 );
 
     newFieldOK( "float", FieldType.F, (byte) 10, (byte) 5 );
-    newFieldException( "floatWithTooBigPrecision", FieldType.F, (byte) 10, (byte) 9 );
-    newFieldException( "anotherFloatWithTooBigPrecision", FieldType.F, (byte) 100, (byte) 16 );
+    newFieldException( "fTooBigPr", FieldType.F, (byte) 10, (byte) 9 );
+    newFieldException( "fTooBigPr2", FieldType.F, (byte) 100, (byte) 16 );
     newFieldOK( "double", FieldType.F, (byte) 20, (byte) 10 );
     newFieldOK( "integer", FieldType.F, (byte) 10, (byte) 0 );
     newFieldOK( "long", FieldType.F, (byte) 20, (byte) 0 );
 
-    newFieldException( "booleanTooLong", FieldType.L, (byte) 2, (byte) 0 );
-    newFieldException( "booleanWithPrecision", FieldType.L, (byte) 1, (byte) 1 );
+    newFieldException( "bTooLong", FieldType.L, (byte) 2, (byte) 0 );
+    newFieldException( "bWithPr", FieldType.L, (byte) 1, (byte) 1 );
     newFieldOK( "boolean", FieldType.L, (byte) 1, (byte) 0 );
 
-    newFieldException( "memoTooShort", FieldType.M, (byte) 9, (byte) 0 );
-    newFieldException( "memoTooLong", FieldType.M, (byte) 11, (byte) 0 );
-    newFieldException( "memoWithPrecision", FieldType.M, (byte) 10, (byte) 2 );
+    newFieldException( "mTooShort", FieldType.M, (byte) 9, (byte) 0 );
+    newFieldException( "mTooLong", FieldType.M, (byte) 11, (byte) 0 );
+    newFieldException( "mWithPr", FieldType.M, (byte) 10, (byte) 2 );
     newFieldOK( "memo", FieldType.M, (byte) 10, (byte) 0 );
 
-    newFieldOK( "number_float", FieldType.F, (byte) 10, (byte) 5 );
-    newFieldException( "number_floatWithTooBigPrecision", FieldType.F, (byte) 10, (byte) 9 );
-    newFieldOK( "number_double", FieldType.F, (byte) 20, (byte) 10 );
-    newFieldOK( "number_integer", FieldType.F, (byte) 10, (byte) 0 );
-    newFieldOK( "number_long", FieldType.F, (byte) 20, (byte) 0 );
+    newFieldOK( "n_f", FieldType.F, (byte) 10, (byte) 5 );
+    newFieldException( "n_fBigPr", FieldType.F, (byte) 10, (byte) 9 );
+    newFieldOK( "n_doub", FieldType.F, (byte) 20, (byte) 10 );
+    newFieldOK( "n_int", FieldType.F, (byte) 10, (byte) 0 );
+    newFieldOK( "n_long", FieldType.F, (byte) 20, (byte) 0 );
   }
 
   /*
