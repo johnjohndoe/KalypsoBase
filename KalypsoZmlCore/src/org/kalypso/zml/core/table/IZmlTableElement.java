@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table;
 
-import org.kalypso.zml.core.diagram.base.zml.IZmlSourceElement;
+import org.kalypso.zml.core.base.IZmlSourceElement;
 
 /**
  * @author Dirk Kuch

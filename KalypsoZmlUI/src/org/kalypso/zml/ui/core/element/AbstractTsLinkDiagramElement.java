@@ -45,8 +45,8 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
-import org.kalypso.zml.core.diagram.base.zml.IZmlSourceElement;
-import org.kalypso.zml.core.diagram.base.zml.TSLinkWithName;
+import org.kalypso.zml.core.base.IZmlSourceElement;
+import org.kalypso.zml.core.base.TSLinkWithName;
 import org.kalypso.zml.ui.core.zml.ZmlAxisUtils;
 
 /**

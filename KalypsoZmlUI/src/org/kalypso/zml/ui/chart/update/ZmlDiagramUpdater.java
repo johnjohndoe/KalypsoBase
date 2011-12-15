@@ -42,9 +42,9 @@ package org.kalypso.zml.ui.chart.update;
 
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
+import org.kalypso.zml.core.base.MultipleTsLink;
+import org.kalypso.zml.core.base.TSLinkWithName;
 import org.kalypso.zml.core.diagram.base.IZmlLayer;
-import org.kalypso.zml.core.diagram.base.zml.MultipleTsLink;
-import org.kalypso.zml.core.diagram.base.zml.TSLinkWithName;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 import org.kalypso.zml.ui.KalypsoZmlUI;

@@ -38,25 +38,20 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.diagram.base.zml;
+package org.kalypso.zml.core.base;
 
-import org.kalypso.core.util.pool.IPoolableObjectType;
-import org.kalypso.ogc.sensor.provider.IObsProvider;
+import java.util.Iterator;
+
+import org.eclipse.jface.viewers.IStructuredSelection;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlSourceElement
+public interface IMultipleTsLinkSelection extends IStructuredSelection
 {
-  void dispose( );
+  @Override
+  MultipleTsLink getFirstElement( );
 
-  IObsProvider getObsProvider( );
-
-  IPoolableObjectType getPoolKey( );
-
-  boolean isDirty( );
-
-  String getLabel( );
-
-  String getIdentifier( );
+  @Override
+  Iterator<MultipleTsLink> iterator( );
 }

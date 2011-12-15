@@ -44,7 +44,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.kalypso.zml.core.diagram.base.zml.IZmlSourceElement;
+import org.kalypso.zml.core.base.IZmlSourceElement;
 import org.kalypso.zml.core.table.model.IZmlModel;
 
 /**
