@@ -53,6 +53,8 @@ public interface IObservation extends IObservationEventProvider
 {
   void accept( final IObservationVisitor visitor, final IRequest request ) throws SensorException;
 
+  void accept( IObservationVisitor visitor, IRequest request, int direction)throws SensorException;
+  
   /**
    * Returns the name of this Observation
    * 
@@ -100,4 +102,6 @@ public interface IObservation extends IObservationEventProvider
    * @return href
    */
   String getHref( );
+
+  
 }
