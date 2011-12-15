@@ -46,18 +46,14 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.kalypso.core.util.pool.IPoolableObjectType;
-import org.kalypso.zml.core.diagram.base.provider.observation.AsynchronousObservationProvider;
+import org.kalypso.zml.core.diagram.base.zml.IZmlSourceElement;
 import org.kalypso.zml.core.diagram.base.zml.MultipleTsLink;
-import org.kalypso.zml.core.diagram.base.zml.TSLinkWithName;
 import org.kalypso.zml.core.diagram.base.zml.TsLinkWrapper;
 import org.kalypso.zml.core.table.binding.BaseColumn;
-import org.kalypso.zml.core.table.binding.IClonedColumn;
 import org.kalypso.zml.core.table.binding.TableTypes;
 import org.kalypso.zml.core.table.model.ZmlModel;
-import org.kalypso.zml.core.table.model.memento.ILabeledObsProvider;
+import org.kalypso.zml.core.table.model.utils.IClonedColumn;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
-import org.kalypso.zml.ui.core.element.ZmlLinkDiagramElement;
 import org.kalypso.zml.ui.table.base.helper.ZmlTables;
 
 /**
@@ -83,9 +79,6 @@ public class ZmlTableUpdater implements Runnable
 
     for( final MultipleTsLink multipleLink : m_links )
     {
-// if( link.isIgnoreType( m_part.getIgnoreTypes() ) )
-// continue;
-
       final TsLinkWrapper[] links = multipleLink.getLinks();
       if( ArrayUtils.isEmpty( links ) )
         continue;
@@ -95,12 +88,11 @@ public class ZmlTableUpdater implements Runnable
       for( int index = 0; index < links.length; index++ )
       {
         final TsLinkWrapper link = links[index];
-
         final BaseColumn column = toBaseColumn( baseTypeIdentifier, index );
-        final ZmlLinkDiagramElement element = toZmlDiagrammElement( link, column, index );
+        link.setIdentifier( column.getIdentifier() ); // update multiple selection index!
 
         final int tableIndex = link.getIndex();
-        map.put( tableIndex, new Object[] { link, column, element } );
+        map.put( tableIndex, new Object[] { link, column } );
       }
     }
 
@@ -111,23 +103,18 @@ public class ZmlTableUpdater implements Runnable
 
       final TsLinkWrapper link = (TsLinkWrapper) values[0];
       final BaseColumn column = (BaseColumn) values[1];
-      final ZmlLinkDiagramElement element = (ZmlLinkDiagramElement) values[2];
 
-      doLoadModelColumn( link, element );
+      doLoadModelColumn( link );
       ZmlTables.addTableColumn( m_part.getTable(), column );
     }
   }
 
-  private void doLoadModelColumn( final TSLinkWithName link, final ZmlLinkDiagramElement element )
+  private void doLoadModelColumn( final IZmlSourceElement source )
   {
-    final AsynchronousObservationProvider provider = element.getObsProvider();
+    final ZmlModel model = m_part.getModel();
 
-    m_part.getModel().getLoader().load( element );
-
-    final ILabeledObsProvider obsWithLabel = new TsLinkObsProvider( link, provider.copy() );
-    final IPoolableObjectType poolKey = element.getPoolKey();
-    m_part.getModel().getMemento().register( poolKey, obsWithLabel );
-
+    model.getLoader().load( source );
+    model.getMemento().register( source );
   }
 
   private BaseColumn toBaseColumn( final String baseTypeIdentifier, final int index )
@@ -156,21 +143,6 @@ public class ZmlTableUpdater implements Runnable
       public AbstractColumnType getType( )
       {
         return clonedColumnType;
-      }
-    };
-  }
-
-  private ZmlLinkDiagramElement toZmlDiagrammElement( final TSLinkWithName link, final BaseColumn column, final int index )
-  {
-    if( index == 0 )
-      return new ZmlLinkDiagramElement( link );
-
-    return new ZmlLinkDiagramElement( link )
-    {
-      @Override
-      public String getIdentifier( )
-      {
-        return column.getIdentifier();
       }
     };
   }

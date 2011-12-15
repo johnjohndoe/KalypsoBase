@@ -64,10 +64,6 @@ public class ForecastFilter extends AbstractObservationFilter
 
   private MetadataList m_metadata;
 
-  /**
-   * @see org.kalypso.ogc.sensor.filter.IObservationFilter#initFilter(java.lang.Object,
-   *      org.kalypso.ogc.sensor.IObservation, java.net.URL)
-   */
   public void initFilter( final IObservation[] observations, final IObservation baseObs, final URL context ) throws SensorException
   {
     super.initFilter( observations, baseObs, context );

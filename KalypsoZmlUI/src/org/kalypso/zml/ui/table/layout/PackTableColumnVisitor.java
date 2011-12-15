@@ -67,9 +67,6 @@ import org.kalypso.zml.ui.table.provider.ZmlTableImageMerger;
 public class PackTableColumnVisitor extends AbstractTableColumnPackVisitor
 {
 
-  /**
-   * @see org.kalypso.zml.ui.table.IZmlTableColumnVisitor#visit(org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn)
-   */
   @Override
   public void visit( final IZmlTableColumn column )
   {
@@ -102,14 +99,9 @@ public class PackTableColumnVisitor extends AbstractTableColumnPackVisitor
     final IZmlModelColumn modelColumn = column.getModelColumn();
     final TableColumn tableColumn = column.getTableViewerColumn().getColumn();
 
-    if( !modelColumn.isLabeled() )
-    {
-      updateColumnLabel( modelColumn, tableColumn );
-
-    }
+    updateColumnLabel( modelColumn, tableColumn );
 
     /** header icons */
-
     final ZmlTableImageMerger provider = new ZmlTableImageMerger( 1 );
 
     final BaseColumn base = column.getColumnType();

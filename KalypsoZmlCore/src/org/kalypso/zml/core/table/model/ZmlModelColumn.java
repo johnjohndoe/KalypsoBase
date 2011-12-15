@@ -85,8 +85,6 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
 
   private String m_labelTokenizer;
 
-  private boolean m_labeled = false;
-
   public ZmlModelColumn( final IZmlModel model, final String identifier, final DataColumn type )
   {
     m_model = model;
@@ -115,7 +113,6 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   public void setLabel( final String label )
   {
     m_label = label;
-    m_labeled = true;
   }
 
   @Override
@@ -139,17 +136,20 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
 
       m_handler = handler;
       m_handler.addListener( this );
-
-      fireColumnChanged();
     }
+
+    fireColumnChanged();
   }
 
+  @Override
   public void dispose( )
   {
     if( Objects.isNotNull( m_handler ) )
     {
       m_handler.removeListener( this );
       m_handler.dispose();
+
+      m_handler = null;
 
       fireColumnChanged();
     }
@@ -252,6 +252,9 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   @Override
   public MetadataList getMetadata( )
   {
+    if( Objects.isNull( m_handler ) )
+      return null;
+
     final IObservation observation = m_handler.getObservation();
     if( Objects.isNull( observation ) )
       return null;
@@ -283,6 +286,9 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   @Override
   public IAxis[] getAxes( )
   {
+    if( Objects.isNull( m_handler ) )
+      return new IAxis[] {};
+
     final IObservation observation = m_handler.getObservation();
     if( Objects.isNull( observation ) )
       return new IAxis[] {};
@@ -293,6 +299,9 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   @Override
   public IObservation getObservation( )
   {
+    if( Objects.isNull( m_handler ) )
+      return null;
+
     return m_handler.getObservation();
   }
 
@@ -434,6 +443,9 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   {
     try
     {
+      if( Objects.isNull( m_handler ) )
+        return;
+
       // FIXME improve update value handling
       final IObservation observation = m_handler.getObservation();
       if( Objects.isNull( observation ) )
@@ -459,15 +471,6 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   public String getLabelTokenizer( )
   {
     return m_labelTokenizer;
-  }
-
-  /**
-   * @see org.kalypso.zml.core.table.model.IZmlModelColumn#isLabeled()
-   */
-  @Override
-  public boolean isLabeled( )
-  {
-    return m_labeled;
   }
 
 }

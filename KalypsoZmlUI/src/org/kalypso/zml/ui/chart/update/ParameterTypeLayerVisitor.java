@@ -44,7 +44,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
-import org.kalypso.zml.core.diagram.layer.IZmlLayer;
+import org.kalypso.zml.core.diagram.base.IZmlLayer;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
@@ -104,7 +104,7 @@ public class ParameterTypeLayerVisitor extends AbstractChartLayerVisitor
 
   private boolean isTypeOf( final IChartLayer layer )
   {
-    final String identifier = layer.getIdentifier();
+    final String identifier = layer.getIdentifier(); 
 
     return StringUtils.equalsIgnoreCase( m_parameterType, identifier );
   }

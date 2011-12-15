@@ -130,9 +130,14 @@ public final class ZmlTables
     final IZmlModel model = table.getModel();
 
     final AbstractColumnType columnType = column.getType();
+    if( Objects.isNull( columnType ) )
+      return;
+
     if( columnType instanceof DataColumnType )
     {
       final DataColumnType dataColumnType = (DataColumnType) columnType;
+
+      /** index axis exists? */
       final String indexAxis = dataColumnType.getIndexAxis();
       if( !ZmlTables.hasColumn( table, indexAxis ) )
       {
@@ -142,7 +147,7 @@ public final class ZmlTables
       }
     }
 
-    if( !ZmlTables.hasColumn( table, columnType.getId() ) )
+    if( !ZmlTables.hasColumn( table, column.getIdentifier() ) )
     {
       final ZmlTableColumnBuilder builder = new ZmlTableColumnBuilder( table, column );
       builder.execute( new NullProgressMonitor() );

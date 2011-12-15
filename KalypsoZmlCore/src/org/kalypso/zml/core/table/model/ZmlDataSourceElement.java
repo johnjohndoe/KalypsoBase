@@ -46,20 +46,22 @@ import java.util.Set;
 
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.lang.Strings;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.util.pool.IPoolableObjectType;
+import org.kalypso.core.util.pool.KeyInfo;
 import org.kalypso.core.util.pool.PoolableObjectType;
-import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.provider.PooledObsProvider;
+import org.kalypso.zml.core.diagram.base.zml.IZmlSourceElement;
 import org.kalypso.zml.core.table.IZmlTableElement;
 import org.kalypso.zml.core.table.model.memento.IZmlMemento;
-import org.kalypso.zml.core.table.model.memento.LabeledObsProviderDelegate;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlDataSourceElement implements IZmlTableElement
+public class ZmlDataSourceElement implements IZmlTableElement, IZmlSourceElement
 {
   private PooledObsProvider m_provider;
 
@@ -97,45 +99,9 @@ public class ZmlDataSourceElement implements IZmlTableElement
   }
 
   @Override
-  public IObsProvider getObsProvider( )
+  public IZmlSourceElement getSource( )
   {
-    final PoolableObjectType type = new PoolableObjectType( "zml", m_href, m_context, true ); //$NON-NLS-1$
-
-    synchronized( this )
-    {
-      if( Objects.isNotNull( m_provider ) )
-        return m_provider;
-
-// KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "Creating new pooled obs provider - %s\n", type );
-
-      m_provider = new PooledObsProvider( type );
-    }
-
-    m_memento.register( type, new LabeledObsProviderDelegate( m_provider, m_labeling ) );
-
-    return m_provider;
-  }
-
-  @Override
-  public String getTitle( final IAxis axis )
-  {
-    if( Strings.isNotEmpty( m_label ) )
-      return m_label;
-
-    final IObservation observation = getObsProvider().getObservation();
-    final MetadataList metadata = observation.getMetadataList();
-
-    final String[] properties = findProperties( m_labeling );
-    m_label = m_labeling;
-
-    for( final String property : properties )
-    {
-      final String value = metadata.getProperty( property );
-
-      m_label = m_label.replaceAll( "%" + property + "%", value ); //$NON-NLS-1$ //$NON-NLS-2$
-    }
-
-    return m_label;
+    return this;
   }
 
   private String[] findProperties( final String labeling )
@@ -159,9 +125,68 @@ public class ZmlDataSourceElement implements IZmlTableElement
   }
 
   @Override
-  public String getTitleTokenzizer( )
+  public PooledObsProvider getObsProvider( )
   {
-    return "";
+    final PoolableObjectType type = new PoolableObjectType( "zml", m_href, m_context, true ); //$NON-NLS-1$
+
+    synchronized( this )
+    {
+      if( Objects.isNotNull( m_provider ) )
+        return m_provider;
+
+// KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "Creating new pooled obs provider - %s\n", type );
+      m_provider = new PooledObsProvider( type );
+    }
+
+    m_memento.register( this );
+
+    return m_provider;
   }
 
+  @Override
+  public IPoolableObjectType getPoolKey( )
+  {
+    final PooledObsProvider provider = getObsProvider();
+
+    return provider.getPoolKey();
+  }
+
+  @Override
+  public boolean isDirty( )
+  {
+    final PooledObsProvider provider = getObsProvider();
+    final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
+
+    final IObservation observation = provider.getObservation();
+    if( Objects.isNull( observation ) )
+      return false;
+
+    final KeyInfo info = pool.getInfo( observation );
+    if( Objects.isNull( info ) )
+      return false;
+
+    return info.isDirty();
+  }
+
+  @Override
+  public String getLabel( )
+  {
+    if( Strings.isNotEmpty( m_label ) )
+      return m_label;
+
+    final IObservation observation = getObsProvider().getObservation();
+    final MetadataList metadata = observation.getMetadataList();
+
+    final String[] properties = findProperties( m_labeling );
+    m_label = m_labeling;
+
+    for( final String property : properties )
+    {
+      final String value = metadata.getProperty( property );
+
+      m_label = m_label.replaceAll( "%" + property + "%", value ); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    return m_label;
+  }
 }

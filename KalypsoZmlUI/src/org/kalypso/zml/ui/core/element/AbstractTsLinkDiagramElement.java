@@ -42,14 +42,11 @@ package org.kalypso.zml.ui.core.element;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
-import org.kalypso.zml.core.diagram.base.provider.observation.AsynchronousObservationProvider;
+import org.kalypso.zml.core.diagram.base.zml.IZmlSourceElement;
 import org.kalypso.zml.core.diagram.base.zml.TSLinkWithName;
-import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.core.zml.ZmlAxisUtils;
 
 /**
@@ -59,11 +56,15 @@ public abstract class AbstractTsLinkDiagramElement extends AbstractDiagramElemen
 {
   private final TSLinkWithName m_link;
 
-  private AsynchronousObservationProvider m_provider;
-
   public AbstractTsLinkDiagramElement( final TSLinkWithName link )
   {
     m_link = link;
+  }
+
+  @Override
+  public IZmlSourceElement getSource( )
+  {
+    return m_link;
   }
 
   protected TSLinkWithName getLink( )
@@ -100,47 +101,17 @@ public abstract class AbstractTsLinkDiagramElement extends AbstractDiagramElemen
   }
 
   @Override
-  public final synchronized AsynchronousObservationProvider getObsProvider( )
-  {
-    if( m_provider == null )
-    {
-      try
-      {
-        m_provider = new AsynchronousObservationProvider( m_link );
-      }
-      catch( final Throwable t )
-      {
-        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
-      }
-    }
-
-    return m_provider;
-  }
-
-  @Override
   public final synchronized void dispose( )
   {
-    if( m_provider != null )
-    {
-      m_provider.dispose();
-      m_provider = null;
-    }
+    m_link.dispose();
   }
 
-  /**
-   * @see org.kalypso.hwv.core.chart.elements.IZmlDiagramElement#getValuesAxis()
-   */
   @Override
   public final IAxis[] getValueAxes( )
   {
-    final IObsProvider provider = getObsProvider();
+    final IObsProvider provider = getSource().getObsProvider();
     final IObservation observation = provider.getObservation();
 
     return ZmlAxisUtils.findValueAxes( observation.getAxes() );
-  }
-
-  public IPoolableObjectType getPoolKey( )
-  {
-    return getObsProvider().getPoolKey();
   }
 }

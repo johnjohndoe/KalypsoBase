@@ -85,7 +85,9 @@ public class ZmlTableLayoutJob extends UIJob
       m_stack.clear();
 
       doVisitIndex( stack );
-      doVisitHide( stack );
+
+      /** iterate over all columns because of multiple selection support (cloned columns will not be removed from table) */
+      doVisitHide( m_table.getColumns() );
       doVisitPack( stack );
 
       final TableViewer viewer = m_table.getViewer();
