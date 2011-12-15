@@ -41,7 +41,7 @@
 package org.kalypso.zml.ui.core.element;
 
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.zml.core.diagram.base.zml.IZmlSourceElement;
+import org.kalypso.zml.core.base.IZmlSourceElement;
 
 import de.openali.odysseus.chart.framework.model.style.IStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
