@@ -77,7 +77,7 @@ import org.kalypso.core.i18n.Messages;
  * <p>
  * the default-catalog is dynamic, but changes will not be saved
  * </p>
- * 
+ *
  * @author doemming
  */
 public class CatalogManager
@@ -169,7 +169,7 @@ public class CatalogManager
     {
       e.printStackTrace();
       // TODO generate new type of exception CatalogException
-      throw new UnsupportedOperationException( e );
+      throw new RuntimeException( e );
     }
     finally
     {
