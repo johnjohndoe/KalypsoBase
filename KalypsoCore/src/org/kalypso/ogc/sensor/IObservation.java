@@ -51,10 +51,12 @@ import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
  */
 public interface IObservation extends IObservationEventProvider
 {
-  void accept( final IObservationVisitor visitor, final IRequest request ) throws SensorException;
+  /**
+   * @param direction
+   *          >= 0 forward iteration, < 0 backward iteration
+   */
+  void accept( IObservationVisitor visitor, IRequest request, int direction ) throws SensorException;
 
-  void accept( IObservationVisitor visitor, IRequest request, int direction)throws SensorException;
-  
   /**
    * Returns the name of this Observation
    * 
@@ -103,5 +105,4 @@ public interface IObservation extends IObservationEventProvider
    */
   String getHref( );
 
-  
 }

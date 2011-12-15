@@ -81,62 +81,81 @@ public abstract class AbstractTupleModel implements ITupleModel
     m_axes = axes;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.ITupleModel#accept(org.kalypso.ogc.sensor.ITupleModelVisitor)
-   */
   @Override
-  public void accept( final ITupleModelVisitor visitor ) throws SensorException
+  public void accept( final ITupleModelVisitor visitor, final int direction ) throws SensorException
   {
-    for( int i = 0; i < size(); i++ )
+    if( direction >= 0 )
     {
-      final int index = i;
-
-      try
+      for( int index = 0; index < size(); index++ )
       {
-        visitor.visit( new ITupleModelValueContainer()
+        try
         {
-          @Override
-          public int getIndex( )
-          {
-            return index;
-          }
-
-          @Override
-          public Object get( final IAxis axis ) throws SensorException
-          {
-            return AbstractTupleModel.this.get( index, axis );
-          }
-
-          @Override
-          public boolean hasAxis( final String... types )
-          {
-            for( final String type : types )
-            {
-              if( AxisUtils.findAxis( AbstractTupleModel.this.getAxes(), type ) == null )
-                return false;
-            }
-
-            return true;
-          }
-
-          @Override
-          public IAxis[] getAxes( )
-          {
-            return AbstractTupleModel.this.getAxes();
-          }
-
-          @Override
-          public void set( final IAxis axis, final Object value ) throws SensorException
-          {
-            AbstractTupleModel.this.set( index, axis, value );
-          }
-        } );
-      }
-      catch( final CancelVisitorException e )
-      {
-        return;
+          doVisit( visitor, index );
+        }
+        catch( final CancelVisitorException e )
+        {
+          return;
+        }
       }
     }
+    else
+    {
+      for( int index = size() - 1; index >= 0; index-- )
+      {
+        try
+        {
+          doVisit( visitor, index );
+        }
+        catch( final CancelVisitorException e )
+        {
+          return;
+        }
+      }
+    }
+
+  }
+
+  private void doVisit( final ITupleModelVisitor visitor, final int index ) throws SensorException, CancelVisitorException
+  {
+    visitor.visit( new ITupleModelValueContainer()
+    {
+      @Override
+      public int getIndex( )
+      {
+        return index;
+      }
+
+      @Override
+      public Object get( final IAxis axis ) throws SensorException
+      {
+        return AbstractTupleModel.this.get( index, axis );
+      }
+
+      @Override
+      public boolean hasAxis( final String... types )
+      {
+        for( final String type : types )
+        {
+          if( AxisUtils.findAxis( AbstractTupleModel.this.getAxes(), type ) == null )
+            return false;
+        }
+
+        return true;
+      }
+
+      @Override
+      public IAxis[] getAxes( )
+      {
+        return AbstractTupleModel.this.getAxes();
+      }
+
+      @Override
+      public void set( final IAxis axis, final Object value ) throws SensorException
+      {
+        AbstractTupleModel.this.set( index, axis, value );
+      }
+    } );
+
   }
 
   /**

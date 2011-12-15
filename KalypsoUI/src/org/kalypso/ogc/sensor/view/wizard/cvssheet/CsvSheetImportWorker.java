@@ -111,7 +111,7 @@ public class CsvSheetImportWorker implements ICoreRunnableWithProgress
     else if( WQ_KIND.eQ.equals( kind ) )
       axisX = TimeseriesUtils.createDefaultAxis( ITimeseriesConstants.TYPE_RUNOFF, false );
     else
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
 
     final SimpleAxis simpleDataAxis = new SimpleAxis( axisX );
 
@@ -232,7 +232,7 @@ public class CsvSheetImportWorker implements ICoreRunnableWithProgress
       final String xmlString = WQTableFactory.createXMLString( wqSet );
 
       if( xmlString != null )
-        mdl.setProperty(ITimeseriesConstants.MD_WQ_TABLE, xmlString ); //$NON-NLS-1$
+        mdl.setProperty( ITimeseriesConstants.MD_WQ_TABLE, xmlString ); //$NON-NLS-1$
     }
 
     /*******************************************************************************************************************

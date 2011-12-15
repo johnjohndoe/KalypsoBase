@@ -89,7 +89,7 @@ public class ZmlInterpolationWorker implements ICoreRunnableWithProgress
       final Double defaultValue = ZmlInterpolation.getDefaultValue( m_observation.getMetadataList() );
 
       final FindStuetzstellenVisitor visitor = new FindStuetzstellenVisitor();
-      m_observation.accept( visitor, null );
+      m_observation.accept( visitor, null, 1 );
 
       final Integer[] stuetzstellen = visitor.getStuetzstellen();
       if( ArrayUtils.isEmpty( stuetzstellen ) )
