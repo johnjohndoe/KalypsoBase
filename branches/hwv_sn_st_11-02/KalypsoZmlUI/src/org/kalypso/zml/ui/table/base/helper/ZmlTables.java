@@ -147,7 +147,7 @@ public final class ZmlTables
       }
     }
 
-    if( !ZmlTables.hasColumn( table, columnType.getId() ) )
+    if( !ZmlTables.hasColumn( table, column.getIdentifier() ) )
     {
       final ZmlTableColumnBuilder builder = new ZmlTableColumnBuilder( table, column );
       builder.execute( new NullProgressMonitor() );

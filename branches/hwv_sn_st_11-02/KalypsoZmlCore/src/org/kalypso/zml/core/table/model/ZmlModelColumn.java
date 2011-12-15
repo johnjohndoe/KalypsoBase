@@ -85,8 +85,6 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
 
   private String m_labelTokenizer;
 
-  private boolean m_labeled = false;
-
   public ZmlModelColumn( final IZmlModel model, final String identifier, final DataColumn type )
   {
     m_model = model;
@@ -115,7 +113,6 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   public void setLabel( final String label )
   {
     m_label = label;
-    m_labeled = true;
   }
 
   @Override
@@ -474,15 +471,6 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   public String getLabelTokenizer( )
   {
     return m_labelTokenizer;
-  }
-
-  /**
-   * @see org.kalypso.zml.core.table.model.IZmlModelColumn#isLabeled()
-   */
-  @Override
-  public boolean isLabeled( )
-  {
-    return m_labeled;
   }
 
 }
