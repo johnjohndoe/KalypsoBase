@@ -137,14 +137,14 @@ public abstract class AbstractZmlTableColumn extends ZmlTableElement implements 
   @Override
   public boolean isVisible( )
   {
-    if( !m_visible )
-      return false;
-
     if( isIndexColumn() )
       return true;
 
     final IZmlModelColumn column = getModelColumn();
     if( Objects.isNull( column ) )
+      return false;
+
+    if( !m_visible )
       return false;
 
     return column.isActive();
