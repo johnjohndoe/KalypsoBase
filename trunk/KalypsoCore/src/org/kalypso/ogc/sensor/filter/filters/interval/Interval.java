@@ -194,7 +194,12 @@ public class Interval
 
     for( final TupleModelDataSet dataSet : dataSets )
     {
-      dataSet.setValue( dataSet.getValue().doubleValue() * factor );
+      final Object value = dataSet.getValue();
+      if( value instanceof Number )
+      {
+        final Number number = (Number) value;
+        dataSet.setValue( number.doubleValue() * factor );
+      }
 
       /* Bugfix: empty intervals never get a status */
       if( result.getDurationInMillis() == 0 )
@@ -245,7 +250,10 @@ public class Interval
       final TupleModelDataSet myDataSet = findDataSet( intersectionDataSet.getValueAxis() );
 
       // m_value[i] += factor * intersection.getValue()[i];
-      myDataSet.setValue( myDataSet.getValue().doubleValue() + factor * intersectionDataSet.getValue().doubleValue() );
+      final Object value1 = myDataSet.getValue();
+      final Object value2 = intersectionDataSet.getValue();
+
+      myDataSet.setValue( ((Number) value1).doubleValue() + factor * ((Number) value2).doubleValue() );
       myDataSet.setStatus( myDataSet.getStatus() | intersectionDataSet.getStatus() );
 
       if( !intersection.getStart().equals( intersection.getEnd() ) )
@@ -308,7 +316,7 @@ public class Interval
     {
       result.append( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.Intervall.6" ) ); //$NON-NLS-1$
 
-      final Double value = dataSet.getValue().doubleValue();
+      final Object value = dataSet.getValue();
       if( value != null )
       {
         result.append( "  " + value ); //$NON-NLS-1$

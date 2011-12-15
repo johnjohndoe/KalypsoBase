@@ -217,9 +217,9 @@ public class TimeseriesObservation implements ITimeseriesObservation
   }
 
   @Override
-  public void accept( final IObservationVisitor visitor, final IRequest request ) throws SensorException
+  public void accept( final IObservationVisitor visitor, final IRequest request, final int direction ) throws SensorException
   {
-    m_delegate.accept( visitor, request );
+    m_delegate.accept( visitor, request, direction );
   }
 
   @Override

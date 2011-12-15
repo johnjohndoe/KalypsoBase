@@ -38,56 +38,21 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.diagram.base.provider.observation;
+package org.kalypso.zml.core.table.model.utils;
 
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.core.util.pool.PoolableObjectType;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.provider.IObsProvider;
-import org.kalypso.ogc.sensor.provider.PooledObsProvider;
-import org.kalypso.ogc.sensor.timeseries.AxisUtils;
-import org.kalypso.zml.core.diagram.base.zml.TSLinkWithName;
+import jregex.Pattern;
 
 /**
  * @author Dirk Kuch
  */
-public class AsynchronousObservationProvider extends PooledObsProvider
+public interface IClonedColumn
 {
-  private final String m_type;
+  String CLONED_COLUMN_POSTFIX = "_clone_"; // $NON-NLS-1$
 
-  private final TSLinkWithName m_link;
+  /** example: baseLayerId _clone_ cloneNumber */
+  String CLONED_COLUMN_POSTFIX_FORMAT = "%s" + CLONED_COLUMN_POSTFIX + "%d"; // $NON-NLS-1$
 
-  public AsynchronousObservationProvider( final TSLinkWithName link )
-  {
-    this( link, null );
-  }
+  Pattern PATTERN_CLONED_COLUMN_IDENTIFIER = new Pattern( ".*_clone_\\d+$" ); // $NON-NLS-1$
 
-  public AsynchronousObservationProvider( final TSLinkWithName link, final String type )
-  {
-    super( new PoolableObjectType( "zml", link.getHref(), link.getContext(), true ) ); //$NON-NLS-1$
-
-    m_link = link;
-    m_type = type;
-  }
-
-  @Override
-  public IObsProvider copy( )
-  {
-    return new AsynchronousObservationProvider( m_link, m_type );
-  }
-
-  @Override
-  public IObservation getObservation( )
-  {
-    final IObservation observation = super.getObservation();
-    if( Objects.isNull( observation ) )
-      return null;
-
-    /** if type is defined - check type exists as value axis. otherwise return null */
-    if( Objects.isNotNull( m_type ) )
-      if( !AxisUtils.hasAxis( observation.getAxes(), m_type ) )
-        return null;
-
-    return observation;
-  }
+  Pattern PATTERN_CLONED_COLUMN_TOKENIZER = new Pattern( "_clone_\\d+$" ); // $NON-NLS-1$
 }

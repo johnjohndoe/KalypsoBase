@@ -51,11 +51,21 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.util.pool.IPoolableObjectType;
+import org.kalypso.core.util.pool.KeyInfo;
+import org.kalypso.core.util.pool.PoolableObjectType;
+import org.kalypso.core.util.pool.ResourcePool;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ObservationTokenHelper;
+import org.kalypso.ogc.sensor.provider.PooledObsProvider;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 
-public class TSLinkWithName
+public class TSLinkWithName implements IZmlSourceElement
 {
-  private final String m_identifier;
+  private String m_identifier;
 
   private URL m_context;
 
@@ -64,6 +74,8 @@ public class TSLinkWithName
   private final TimeseriesLinkType m_obsLink;
 
   private final TimeserieFeatureProperty m_property;
+
+  private PooledObsProvider m_provider;
 
   public TSLinkWithName( final String identifier, final URL context, final String name, final TimeseriesLinkType obsLink, final TimeserieFeatureProperty property )
   {
@@ -74,6 +86,15 @@ public class TSLinkWithName
     m_property = property;
   }
 
+  /**
+   * it's possible to update identifiers - this feature is needed for multiple selection
+   */
+  public void setIdentifier( final String identifier )
+  {
+    m_identifier = identifier;
+  }
+
+  @Override
   public String getIdentifier( )
   {
     return m_identifier;
@@ -199,5 +220,70 @@ public class TSLinkWithName
   public String toString( )
   {
     return String.format( "link %s", getHref() );
+  }
+
+  @Override
+  public PooledObsProvider getObsProvider( )
+  {
+    final PoolableObjectType type = new PoolableObjectType( "zml", getHref(), getContext(), true ); //$NON-NLS-1$
+
+    synchronized( this )
+    {
+      if( Objects.isNotNull( m_provider ) )
+        return m_provider;
+
+      m_provider = new PooledObsProvider( type );
+    }
+
+    return m_provider;
+  }
+
+  @Override
+  public IPoolableObjectType getPoolKey( )
+  {
+    final PooledObsProvider provider = getObsProvider();
+
+    return provider.getPoolKey();
+  }
+
+  @Override
+  public boolean isDirty( )
+  {
+    final PooledObsProvider provider = getObsProvider();
+    final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
+
+    final IObservation observation = provider.getObservation();
+    if( Objects.isNull( observation ) )
+      return false;
+
+    final KeyInfo info = pool.getInfo( observation );
+    if( Objects.isNull( info ) )
+      return false;
+
+    return info.isDirty();
+  }
+
+  @Override
+  public String getLabel( )
+  {
+    final String tokenizedName = getName();
+    final PooledObsProvider provider = getObsProvider();
+    if( Objects.isNull( provider ) )
+      return tokenizedName;
+
+    final IObservation observation = provider.getObservation();
+    if( Objects.isNull( observation ) )
+      return tokenizedName;
+
+    final IAxis valueAxis = AxisUtils.findValueAxis( observation.getAxes(), true );
+    return ObservationTokenHelper.replaceTokens( tokenizedName, observation, valueAxis );
+  }
+
+  @Override
+  public void dispose( )
+  {
+    if( Objects.isNotNull( m_provider ) )
+      m_provider.dispose();
+
   }
 }

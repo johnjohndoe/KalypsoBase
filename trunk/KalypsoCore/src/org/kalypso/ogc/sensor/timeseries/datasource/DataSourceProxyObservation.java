@@ -171,8 +171,8 @@ public class DataSourceProxyObservation implements IObservation
   }
 
   @Override
-  public void accept( final IObservationVisitor visitor, final IRequest request ) throws SensorException
+  public void accept( final IObservationVisitor visitor, final IRequest request, final int direction ) throws SensorException
   {
-    Observations.accept( this, visitor, request );
+    Observations.accept( this, visitor, request, direction );
   }
 }

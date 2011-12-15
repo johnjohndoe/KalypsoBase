@@ -468,7 +468,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     if( m_wizard.needsPreviousAndNextButtons() )
       createPreviousAndNextButtons( parent );
 
-    createButton( parent, IDialogConstants.FINISH_ID, IDialogConstants.FINISH_LABEL, "doFinish", true ); //$NON-NLS-1$
+    createButton( parent, IDialogConstants.FINISH_ID, IDialogConstants.FINISH_LABEL, "doFinish", !m_wizard.needsPreviousAndNextButtons() ); //$NON-NLS-1$
 
     if( !(m_wizard instanceof IWizard2) || ((IWizard2) m_wizard).hasCancelButton() )
       createButton( parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, "doCancel", false ); //$NON-NLS-1$
@@ -498,7 +498,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     composite.setLayoutData( data );
     composite.setFont( parent.getFont() );
     createButton( composite, IDialogConstants.BACK_ID, IDialogConstants.BACK_LABEL, "doPrev", false ); //$NON-NLS-1$
-    createButton( composite, IDialogConstants.NEXT_ID, IDialogConstants.NEXT_LABEL, "doNext", false ); //$NON-NLS-1$
+    createButton( composite, IDialogConstants.NEXT_ID, IDialogConstants.NEXT_LABEL, "doNext", true ); //$NON-NLS-1$
     return composite;
   }
 

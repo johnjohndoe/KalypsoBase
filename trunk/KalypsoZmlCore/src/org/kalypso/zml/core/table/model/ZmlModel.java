@@ -56,11 +56,13 @@ import javax.xml.bind.JAXBElement;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.zml.core.debug.KalypsoZmlCoreDebug;
 import org.kalypso.zml.core.table.model.loader.ZmlModelColumnLoader;
 import org.kalypso.zml.core.table.model.loader.ZmlRowBuilder;
 import org.kalypso.zml.core.table.model.memento.IZmlMemento;
 import org.kalypso.zml.core.table.model.memento.ZmlMemento;
+import org.kalypso.zml.core.table.model.utils.ZmlModelColumns;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 
@@ -158,6 +160,17 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
     KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlTableModel - doClean()-ing model" );
     m_loader.cancel();
 
+    /** remove cloned columns */
+    final IZmlModelColumn[] columns = m_columns.toArray( new IZmlModelColumn[] {} );
+    for( final IZmlModelColumn column : columns )
+    {
+      column.removeListener( this );
+      column.dispose();
+
+      if( ZmlModelColumns.isCloned( column ) )
+        m_columns.remove( column );
+    }
+
     m_rows.clear();
 
     fireModelChanged();
@@ -168,14 +181,14 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
   {
     doClean();
 
-    final ZmlModelColumn[] columns = m_columns.toArray( new ZmlModelColumn[] {} );
-    m_columns.clear();
-
-    for( final ZmlModelColumn column : columns )
-    {
-      column.removeListener( this );
-      column.dispose();
-    }
+// final ZmlModelColumn[] columns = m_columns.toArray( new ZmlModelColumn[] {} );
+// m_columns.clear();
+//
+// for( final IZmlModelColumn column : columns )
+// {
+// column.removeListener( this );
+// column.dispose();
+// }
 
     m_memento.dispose();
   }
@@ -183,10 +196,14 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
   @Override
   public void fireModelChanged( final IZmlModelColumn... columns )
   {
+
     final IZmlColumnModelListener[] listeners = m_listeners.toArray( new IZmlColumnModelListener[] {} );
     for( final IZmlColumnModelListener listener : listeners )
     {
-      listener.modelChanged( columns );
+      if( Arrays.isEmpty( columns ) )
+        listener.modelChanged( getColumns() );
+      else
+        listener.modelChanged( columns );
     }
   }
 

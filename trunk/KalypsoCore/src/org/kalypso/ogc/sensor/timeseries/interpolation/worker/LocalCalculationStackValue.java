@@ -54,7 +54,7 @@ public class LocalCalculationStackValue
     try
     {
       final IParser parser = ZmlFactory.createParser( m_axis );
-      final Number defaultValue = (Number) parser.parse( filter.getDefaultValue() );
+      final Object defaultValue = parser.parse( filter.getDefaultValue() );
       final Integer status = filter.getDefaultStatus();
 
       m_defaultValue = new TupleModelDataSet( m_axis, defaultValue, status, InterpolationFilter.DATA_SOURCE );

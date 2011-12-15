@@ -47,7 +47,6 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.zml.core.diagram.base.zml.TSLinkWithName;
-import org.kalypso.zml.core.table.IZmlTableElement;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.core.provider.style.ZmlStyleSet;
 import org.kalypso.zml.ui.core.registry.KodRegistry;
@@ -60,17 +59,11 @@ import de.openali.odysseus.chartconfig.x020.LayerType;
 /**
  * @author Dirk Kuch
  */
-public class ZmlLinkDiagramElement extends AbstractTsLinkDiagramElement implements IZmlTableElement
+public class ZmlLinkDiagramElement extends AbstractTsLinkDiagramElement
 {
   public ZmlLinkDiagramElement( final TSLinkWithName link )
   {
     super( link );
-  }
-
-  @Override
-  public String getIdentifier( )
-  {
-    return getLink().getIdentifier();
   }
 
   public ObsView.ItemData getItemData( )
@@ -107,13 +100,7 @@ public class ZmlLinkDiagramElement extends AbstractTsLinkDiagramElement implemen
   public String getTitle( final IAxis axis )
   {
     final String tokenizedName = getLink().getName();
-    final IObservation observation = getObsProvider().getObservation();
+    final IObservation observation = getSource().getObsProvider().getObservation();
     return ObservationTokenHelper.replaceTokens( tokenizedName, observation, axis );
-  }
-
-  @Override
-  public String getTitleTokenzizer( )
-  {
-    return getLink().getName();
   }
 }

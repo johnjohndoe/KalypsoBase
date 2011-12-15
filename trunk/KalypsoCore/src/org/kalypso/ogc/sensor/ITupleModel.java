@@ -49,7 +49,11 @@ import org.kalypso.ogc.sensor.visitor.ITupleModelVisitor;
  */
 public interface ITupleModel
 {
-  void accept( ITupleModelVisitor visitor ) throws SensorException;
+  /**
+   * @param direction
+   *          >= 0 do forward iteration, < 0 do backward iteration
+   */
+  void accept( ITupleModelVisitor visitor, int direction ) throws SensorException;
 
   /**
    * @return axis list for which this model delivers elements

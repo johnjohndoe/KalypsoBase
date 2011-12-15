@@ -26,7 +26,7 @@
       <baseStyle>
         <reference>wBaseCellStyle</reference>
       </baseStyle>
-      <property name="backgroundColor">DDDDDD</property>
+      <property name="backgroundColor">DEDEDE</property>
 <!--       <property name="backgroundColor">EDEFF4</property> -->
     </Style>
     <!-- base n cell table style -->
@@ -46,8 +46,7 @@
       <baseStyle>
         <reference>nBaseCellStyle</reference>
       </baseStyle>
-      <property name="backgroundColor">DDDDDD</property>
-<!--       <property name="backgroundColor">EDEFF4</property> -->
+      <property name="backgroundColor">DEDEDE</property>
     </Style>
     <!-- base q cell table style -->
     <Style id="qBaseCellStyle">
@@ -66,8 +65,7 @@
       <baseStyle>
         <reference>qBaseCellStyle</reference>
       </baseStyle>
-      <property name="backgroundColor">DDDDDD</property>
-<!--       <property name="backgroundColor">EDEFF4</property> -->
+      <property name="backgroundColor">DEDEDE</property>
     </Style>
     <!-- derived value style -->
     <Style id="derivedValueCellStyle">
@@ -84,8 +82,7 @@
       <baseStyle>
         <reference>volumeBaseCellStyle</reference>
       </baseStyle>
-      <property name="backgroundColor">DDDDDD</property>
-<!--       <property name="backgroundColor">EDEFF4</property> -->
+      <property name="backgroundColor">DEDEDE</property>
     </Style>
     <!-- base w [m NN] style, Wasserstand [m NN] z.B. durch Umrechnung aus Volumen in Talsperre -->
     <Style id="wNNBaseCellStyle">
@@ -124,6 +121,25 @@
       <property name="fontWeight">ITALIC</property>
       <property name="textColor">CCCCCC</property>
     </Style>
+    <!-- Wechmann-E -->
+    <Style id="eBaseCellStyle">
+      <baseStyle>
+        <reference>defaultCellStyle</reference>
+      </baseStyle>
+      <property name="textFormat">%.2f</property>
+    </Style>
+    <Style id="eBaseEditingCellStyle">
+      <baseStyle>
+        <reference>wBaseCellStyle</reference>
+      </baseStyle>
+      <property name="textFormat">%.3f</property>
+    </Style>
+    <Style id="eBaseDisabledCellStyle">
+      <baseStyle>
+        <reference>eBaseCellStyle</reference>
+      </baseStyle>
+      <property name="backgroundColor">DEDEDE</property>
+    </Style>
     <!-- rule - value user modified? -->
     <Style id="userModifiedStyle">
       <property name="icon">urn:org:kalypso:zml:ui:table:icon:user:modified</property>
@@ -161,22 +177,13 @@
     <Style id="wqBoundaryDeviationUpperExtreme">
       <property name="icon">urn:org:kalypso:zml:ui:table:icon:wq:boundary:deviation:upper:extreme</property>
     </Style>
-     <Style id="eBaseCellStyle">
-      <baseStyle>
-        <reference>defaultCellStyle</reference>
-      </baseStyle>
-      <property name="textFormat">%.3f</property>
-    </Style>
-    <Style id="eBaseEditingCellStyle">
-      <baseStyle>
-        <reference>wBaseCellStyle</reference>
-      </baseStyle>
-      <property name="textFormat">%.4f</property>
-    </Style>
   </StyleSet>
   <defaultStyle>
     <reference>defaultCellStyle</reference>
   </defaultStyle>
+  <!--
+    rule sets
+  -->
   <RuleSet id="default">
     <Rule ruleReference="org.kalypso.zml.ui.core.rule.forecast.value" id="ruleDateForecast">
       <styleReference>

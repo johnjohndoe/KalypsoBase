@@ -85,8 +85,8 @@ public final class LocalCalculationStackValues
 
     final IAxis valueAxis = value.getAxis();
 
-    final TupleModelDataSet valStart = value.getValue1();
-    final TupleModelDataSet valStop = value.getValue2();
+    final TupleModelDataSet dataSet1 = value.getValue1();
+    final TupleModelDataSet dataSet2 = value.getValue2();
 
     final long linearStart = stack.getDate1().getTime();
     final long linearStop = stack.getDate2().getTime();
@@ -96,20 +96,32 @@ public final class LocalCalculationStackValues
     {
       // BUGFIX: do not interpolate, if we have the exact date
       if( linearStart == ms )
-        return valStart;
+        return dataSet1;
       else if( linearStop == ms )
-        return valStop;
+        return dataSet2;
       else
       {
-        final LinearEquation equation = new LinearEquation();
-        equation.setPoints( linearStart, valStart.getValue().doubleValue(), linearStop, valStop.getValue().doubleValue() );
+        final Object value1 = dataSet1.getValue();
+        final Object value2 = dataSet2.getValue();
 
-        return new TupleModelDataSet( valueAxis, equation.computeY( ms ), KalypsoStati.BIT_OK, IInterpolationFilter.DATA_SOURCE );
+        if( value1 instanceof Number && value2 instanceof Number )
+        {
+          final Number number1 = (Number) value1;
+          final Number number2 = (Number) value2;
+
+          final LinearEquation equation = new LinearEquation();
+          equation.setPoints( linearStart, number1.doubleValue(), linearStop, number2.doubleValue() );
+
+          return new TupleModelDataSet( valueAxis, equation.computeY( ms ), KalypsoStati.BIT_OK, IInterpolationFilter.DATA_SOURCE );
+        }
+        else
+          return dataSet1;
+
       }
     }
     catch( final SameXValuesException e )
     {
-      return valStart;
+      return dataSet1;
     }
   }
 }

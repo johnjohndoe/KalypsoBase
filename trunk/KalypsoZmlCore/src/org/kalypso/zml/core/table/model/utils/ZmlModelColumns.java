@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra�e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,21 +38,24 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.binding;
+package org.kalypso.zml.core.table.model.utils;
 
-import jregex.Pattern;
+import org.apache.commons.lang3.StringUtils;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 
 /**
  * @author Dirk Kuch
  */
-public interface IClonedColumn
+public final class ZmlModelColumns
 {
-  String CLONED_COLUMN_POSTFIX = "_clone_"; // $NON-NLS-1$
+  private ZmlModelColumns( )
+  {
+  }
 
-  /** example: baseLayerId _clone_ cloneNumber */
-  String CLONED_COLUMN_POSTFIX_FORMAT = "%s" + CLONED_COLUMN_POSTFIX + "%d"; // $NON-NLS-1$
+  public static boolean isCloned( final IZmlModelColumn column )
+  {
+    final String identifier = column.getIdentifier();
 
-  Pattern PATTERN_CLONED_COLUMN_IDENTIFIER = new Pattern( ".*_clone_\\d+$" ); // $NON-NLS-1$
-
-  Pattern PATTERN_CLONED_COLUMN_TOKENIZER = new Pattern( "_clone_\\d+$" ); // $NON-NLS-1$
+    return StringUtils.contains( identifier, IClonedColumn.CLONED_COLUMN_POSTFIX );
+  }
 }

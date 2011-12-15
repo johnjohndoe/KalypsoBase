@@ -101,7 +101,7 @@ public class ZmlTableComposite extends Composite implements IZmlTable
 
   protected TableViewer m_tableViewer;
 
-  private final Set<ZmlTableColumn> m_columns = new LinkedHashSet<ZmlTableColumn>();
+  protected final Set<ZmlTableColumn> m_columns = new LinkedHashSet<ZmlTableColumn>();
 
   private UIJob m_updateJob;
 
@@ -461,4 +461,5 @@ public class ZmlTableComposite extends Composite implements IZmlTable
   {
     return m_cache;
   }
+
 }

@@ -204,7 +204,7 @@ public class IntervalValuesOperation
 
     for( final TupleModelDataSet clone : clonedValues )
     {
-      clone.setValue( clone.getValue().doubleValue() * factor );
+      clone.setValue( ((Number) clone.getValue()).doubleValue() * factor );
     }
 
     return new IntervalData( sourcePart, clonedValues );

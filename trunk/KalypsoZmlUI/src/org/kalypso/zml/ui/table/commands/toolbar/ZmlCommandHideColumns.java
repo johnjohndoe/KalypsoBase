@@ -76,6 +76,10 @@ public class ZmlCommandHideColumns extends AbstractHandler implements IElementUp
   @Override
   public Object execute( final ExecutionEvent event )
   {
+    final IZmlTable table = ZmlHandlerUtil.getTable( event );
+    if( Objects.isNull( table ) )
+      return Status.CANCEL_STATUS;
+
     final Map parameters = event.getParameters();
     final String[] columnTypes = getColumnTypes( parameters );
     final boolean hide = HandlerUtils.isSelected( event );
@@ -83,8 +87,6 @@ public class ZmlCommandHideColumns extends AbstractHandler implements IElementUp
     {
       STATES.put( type, hide );
     }
-
-    final IZmlTable table = ZmlHandlerUtil.getTable( event );
 
     final UIJob job = new UIJob( "Aktualisiere Sichtbarkeit" )
     {

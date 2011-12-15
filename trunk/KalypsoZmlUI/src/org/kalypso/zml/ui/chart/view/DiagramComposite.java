@@ -185,6 +185,10 @@ public class DiagramComposite extends Composite implements IUpdateable, IObserva
   {
     reset();
 
+    // TODO
+// final String title = delegate.getTitle();
+// updateDiagramTitle( title );
+
     delegate.doSelectionUpdate( m_model );
 
     final ILayerManager layerManager = m_model.getLayerManager();
