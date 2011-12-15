@@ -52,6 +52,7 @@ import jregex.RETokenizer;
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.swt.SWT;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.zml.core.table.model.utils.IClonedColumn;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.AlignmentType;
 import org.kalypso.zml.core.table.schema.CellStyleType;

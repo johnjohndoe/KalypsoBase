@@ -136,6 +136,8 @@ public final class ZmlTables
     if( columnType instanceof DataColumnType )
     {
       final DataColumnType dataColumnType = (DataColumnType) columnType;
+
+      /** index axis exists? */
       final String indexAxis = dataColumnType.getIndexAxis();
       if( !ZmlTables.hasColumn( table, indexAxis ) )
       {

@@ -48,6 +48,7 @@ import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.utils.ZmlColumns;
 import org.kalypso.zml.ui.table.IZmlTable;
 
 /**
@@ -97,6 +98,15 @@ public final class ZmlTableColumns
     }
 
     return identifiers.toArray( new String[] {} );
+  }
+
+  public static boolean isCloned( final IZmlTableColumn column )
+  {
+    final IZmlModelColumn modelColumn = column.getModelColumn();
+    if( Objects.isNull( modelColumn ) )
+      return false;
+
+    return ZmlColumns.isCloned( modelColumn );
   }
 
 }
