@@ -61,6 +61,7 @@ import org.kalypso.zml.core.table.model.loader.ZmlModelColumnLoader;
 import org.kalypso.zml.core.table.model.loader.ZmlRowBuilder;
 import org.kalypso.zml.core.table.model.memento.IZmlMemento;
 import org.kalypso.zml.core.table.model.memento.ZmlMemento;
+import org.kalypso.zml.core.table.model.utils.ZmlColumns;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 
@@ -157,6 +158,14 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
   {
     KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlTableModel - doClean()-ing model" );
     m_loader.cancel();
+
+    /** remove cloned columns */
+    final IZmlModelColumn[] columns = m_columns.toArray( new IZmlModelColumn[] {} );
+    for( final IZmlModelColumn column : columns )
+    {
+      if( ZmlColumns.isCloned( column ) )
+        m_columns.remove( column );
+    }
 
     m_rows.clear();
 

@@ -50,9 +50,9 @@ import org.kalypso.zml.core.diagram.base.zml.IZmlSourceElement;
 import org.kalypso.zml.core.diagram.base.zml.MultipleTsLink;
 import org.kalypso.zml.core.diagram.base.zml.TsLinkWrapper;
 import org.kalypso.zml.core.table.binding.BaseColumn;
-import org.kalypso.zml.core.table.binding.IClonedColumn;
 import org.kalypso.zml.core.table.binding.TableTypes;
 import org.kalypso.zml.core.table.model.ZmlModel;
+import org.kalypso.zml.core.table.model.utils.IClonedColumn;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.ui.table.base.helper.ZmlTables;
 
