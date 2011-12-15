@@ -59,7 +59,7 @@ import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.provider.IObsProviderListener;
-import org.kalypso.zml.core.diagram.base.zml.IZmlSourceElement;
+import org.kalypso.zml.core.base.IZmlSourceElement;
 
 /**
  * @author Dirk Kuch

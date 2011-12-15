@@ -41,7 +41,7 @@
 package org.kalypso.zml.core.table.model.memento;
 
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.zml.core.diagram.base.zml.IZmlSourceElement;
+import org.kalypso.zml.core.base.IZmlSourceElement;
 
 /**
  * @author Dirk Kuch

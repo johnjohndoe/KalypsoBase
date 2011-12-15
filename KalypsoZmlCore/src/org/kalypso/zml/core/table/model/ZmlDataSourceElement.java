@@ -54,7 +54,7 @@ import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.provider.PooledObsProvider;
-import org.kalypso.zml.core.diagram.base.zml.IZmlSourceElement;
+import org.kalypso.zml.core.base.IZmlSourceElement;
 import org.kalypso.zml.core.table.IZmlTableElement;
 import org.kalypso.zml.core.table.model.memento.IZmlMemento;
 
