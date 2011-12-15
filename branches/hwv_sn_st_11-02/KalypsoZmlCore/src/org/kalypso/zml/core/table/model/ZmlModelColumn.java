@@ -144,12 +144,15 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
     }
   }
 
+  @Override
   public void dispose( )
   {
     if( Objects.isNotNull( m_handler ) )
     {
       m_handler.removeListener( this );
       m_handler.dispose();
+
+      m_handler = null;
 
       fireColumnChanged();
     }
@@ -252,6 +255,9 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   @Override
   public MetadataList getMetadata( )
   {
+    if( Objects.isNull( m_handler ) )
+      return null;
+
     final IObservation observation = m_handler.getObservation();
     if( Objects.isNull( observation ) )
       return null;
@@ -283,6 +289,9 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   @Override
   public IAxis[] getAxes( )
   {
+    if( Objects.isNull( m_handler ) )
+      return new IAxis[] {};
+
     final IObservation observation = m_handler.getObservation();
     if( Objects.isNull( observation ) )
       return new IAxis[] {};
@@ -293,6 +302,9 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   @Override
   public IObservation getObservation( )
   {
+    if( Objects.isNull( m_handler ) )
+      return null;
+
     return m_handler.getObservation();
   }
 
@@ -434,6 +446,9 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   {
     try
     {
+      if( Objects.isNull( m_handler ) )
+        return;
+
       // FIXME improve update value handling
       final IObservation observation = m_handler.getObservation();
       if( Objects.isNull( observation ) )
