@@ -62,63 +62,90 @@ public final class Observations
 
   public static void accept( final IObservation observation, final IObservationVisitor visitor, final IRequest request ) throws SensorException
   {
+    accept( observation, visitor, request, 1 );
+  }
+
+  public static void accept( final IObservation observation, final IObservationVisitor visitor, final IRequest request, int direction ) throws SensorException
+  {
     final ITupleModel model = observation.getValues( request );
 
-    for( int i = 0; i < model.size(); i++ )
+    if( direction >= 0 )
     {
-      final int index = i;
-
-      try
+      for( int index = 0; index < model.size(); index++ )
       {
-        visitor.visit( new IObservationValueContainer()
+        try
         {
-          @Override
-          public boolean hasAxis( final String... types )
-          {
-            for( final String type : types )
-            {
-              if( AxisUtils.findAxis( model.getAxes(), type ) == null )
-                return false;
-            }
-
-            return true;
-          }
-
-          @Override
-          public int getIndex( )
-          {
-            return index;
-          }
-
-          @Override
-          public IAxis[] getAxes( )
-          {
-            return model.getAxes();
-          }
-
-          @Override
-          public Object get( final IAxis axis ) throws SensorException
-          {
-            return model.get( index, axis );
-          }
-
-          @Override
-          public MetadataList getMetaData( )
-          {
-            return observation.getMetadataList();
-          }
-
-          @Override
-          public void set( final IAxis axis, final Object value ) throws SensorException
-          {
-            model.set( index, axis, value );
-          }
-        } );
-      }
-      catch( final CancelVisitorException e )
-      {
-        return;
+          doVisit( visitor, observation, model, index );
+        }
+        catch( final CancelVisitorException e )
+        {
+          return;
+        }
       }
     }
+    else
+    {
+      for( int index = model.size()-1; index >= 0; index-- )
+      {
+        try
+        {
+          doVisit( visitor, observation, model, index );
+        }
+        catch( final CancelVisitorException e )
+        {
+          return;
+        }
+      }
+    }
+
+  }
+
+  private static void doVisit( final IObservationVisitor visitor, final IObservation observation, final ITupleModel model, final int index ) throws CancelVisitorException, SensorException
+  {
+    visitor.visit( new IObservationValueContainer()
+    {
+      @Override
+      public boolean hasAxis( final String... types )
+      {
+        for( final String type : types )
+        {
+          if( AxisUtils.findAxis( model.getAxes(), type ) == null )
+            return false;
+        }
+
+        return true;
+      }
+
+      @Override
+      public int getIndex( )
+      {
+        return index;
+      }
+
+      @Override
+      public IAxis[] getAxes( )
+      {
+        return model.getAxes();
+      }
+
+      @Override
+      public Object get( final IAxis axis ) throws SensorException
+      {
+        return model.get( index, axis );
+      }
+
+      @Override
+      public MetadataList getMetaData( )
+      {
+        return observation.getMetadataList();
+      }
+
+      @Override
+      public void set( final IAxis axis, final Object value ) throws SensorException
+      {
+        model.set( index, axis, value );
+      }
+    } );
+
   }
 }

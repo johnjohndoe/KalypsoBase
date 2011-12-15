@@ -310,14 +310,15 @@ public class SimpleObservation implements IObservation
     return Messages.getString( "org.kalypso.ogc.sensor.impl.SimpleObservation.8" ) + m_name + Messages.getString( "org.kalypso.ogc.sensor.impl.SimpleObservation.10" ) + m_href; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#accept(org.kalypso.ogc.sensor.visitor.IObservationVisitor,
-   *      org.kalypso.ogc.sensor.request.IRequest)
-   */
   @Override
   public void accept( final IObservationVisitor visitor, final IRequest request ) throws SensorException
   {
     Observations.accept( this, visitor, request );
 
+  }
+  
+  public void accept( final IObservationVisitor visitor, final IRequest request, int direction ) throws SensorException
+  {
+    Observations.accept( this, visitor, request, direction );
   }
 }
