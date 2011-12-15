@@ -133,50 +133,43 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
   {
     KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlColumnLoadCommand.doExecute(): %s\n", m_source.getIdentifier() );
 
-    try
+    if( m_canceled )
     {
-      if( m_canceled )
-      {
-        KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlColumnLoadCommand - Loading model column canceled: %s\n", m_source.getIdentifier() );
-        return;
-      }
-
-      /** base observation will be disposed by NewZmlTableLayoutPart (save table) */
-      final IObsProvider base = m_source.getObsProvider();
-
-      final DataColumnType type = (DataColumnType) TableTypes.findColumnType( m_model.getTableType(), m_source.getIdentifier() );
-      if( Objects.isNull( type ) )
-        return;
-
-      final IObservation observation = base.getObservation();
-      final IAxis[] axes = Objects.isNotNull( observation ) ? observation.getAxes() : new IAxis[] {};
-
-      final IObsProvider provider = base.copy();
-      final IZmlModelColumnDataHandler handler = new ObsProviderZmlColumnDataHandler( provider );
-
-      final DataColumn data = new DataColumn( type );
-
-      IZmlModelColumn column = m_model.getColumn( m_source.getIdentifier() );
-      if( Objects.isNull( column ) )
-      {
-        KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlColumnLoadCommand - Adding new model column: %s\n", m_source.getIdentifier() );
-
-        column = new ZmlModelColumn( m_model, m_source.getIdentifier(), data );
-        column.setDataHandler( handler );
-
-        m_model.add( column );
-      }
-      else
-      {
-        column.setDataHandler( handler );
-      }
-
-      doUpdateColumn( column, data, axes );
+      KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlColumnLoadCommand - Loading model column canceled: %s\n", m_source.getIdentifier() );
+      return;
     }
-    finally
+
+    /** base observation will be disposed by NewZmlTableLayoutPart (save table) */
+    final IObsProvider base = m_source.getObsProvider();
+
+    final DataColumnType type = (DataColumnType) TableTypes.findColumnType( m_model.getTableType(), m_source.getIdentifier() );
+    if( Objects.isNull( type ) )
+      return;
+
+    final IObservation observation = base.getObservation();
+    final IAxis[] axes = Objects.isNotNull( observation ) ? observation.getAxes() : new IAxis[] {};
+
+    final IObsProvider provider = base.copy();
+    final IZmlModelColumnDataHandler handler = new ObsProviderZmlColumnDataHandler( provider );
+
+    final DataColumn data = new DataColumn( type );
+
+    IZmlModelColumn column = m_model.getColumn( m_source.getIdentifier() );
+    if( Objects.isNull( column ) )
     {
-      m_source.getObsProvider().dispose();
+      KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlColumnLoadCommand - Adding new model column: %s\n", m_source.getIdentifier() );
+
+      column = new ZmlModelColumn( m_model, m_source.getIdentifier(), data );
+      column.setDataHandler( handler );
+
+      m_model.add( column );
     }
+    else
+    {
+      column.setDataHandler( handler );
+    }
+
+    doUpdateColumn( column, data, axes );
   }
 
   private void doUpdateColumn( final IZmlModelColumn column, final DataColumn type, final IAxis[] axes )

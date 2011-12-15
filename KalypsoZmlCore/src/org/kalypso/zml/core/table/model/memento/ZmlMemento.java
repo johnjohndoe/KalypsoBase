@@ -171,7 +171,6 @@ public class ZmlMemento implements IZmlMemento
   protected void handleObservationChanged( )
   {
     fireMementoChanged();
-
   }
 
   private void fireMementoChanged( )
