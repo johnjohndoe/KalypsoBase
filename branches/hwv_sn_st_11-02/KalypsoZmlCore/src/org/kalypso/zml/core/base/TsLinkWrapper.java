@@ -38,12 +38,24 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.diagram.base.zml;
+package org.kalypso.zml.core.base;
 
 /**
  * @author Dirk Kuch
  */
-public interface IMultipleTsLinkBuilderSource
+public class TsLinkWrapper extends TSLinkWithName
 {
-  TSLinkWithName[] getLinks( );
+  private final int m_index;
+
+  public TsLinkWrapper( final TSLinkWithName link, final int index )
+  {
+    super( link.getIdentifier(), link.getContext(), link.getName(), link.getTimerseriesLinkType(), link.getProperties() );
+    m_index = index;
+  }
+
+  public int getIndex( )
+  {
+    return m_index;
+  }
+
 }

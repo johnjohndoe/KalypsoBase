@@ -46,9 +46,9 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.kalypso.zml.core.diagram.base.zml.IZmlSourceElement;
-import org.kalypso.zml.core.diagram.base.zml.MultipleTsLink;
-import org.kalypso.zml.core.diagram.base.zml.TsLinkWrapper;
+import org.kalypso.zml.core.base.IZmlSourceElement;
+import org.kalypso.zml.core.base.MultipleTsLink;
+import org.kalypso.zml.core.base.TsLinkWrapper;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.TableTypes;
 import org.kalypso.zml.core.table.model.ZmlModel;

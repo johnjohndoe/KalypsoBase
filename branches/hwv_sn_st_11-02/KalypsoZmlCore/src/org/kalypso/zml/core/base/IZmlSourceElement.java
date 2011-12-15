@@ -38,24 +38,25 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.diagram.base.zml;
+package org.kalypso.zml.core.base;
+
+import org.kalypso.core.util.pool.IPoolableObjectType;
+import org.kalypso.ogc.sensor.provider.IObsProvider;
 
 /**
  * @author Dirk Kuch
  */
-public class TsLinkWrapper extends TSLinkWithName
+public interface IZmlSourceElement
 {
-  private final int m_index;
+  void dispose( );
 
-  public TsLinkWrapper( final TSLinkWithName link, final int index )
-  {
-    super( link.getIdentifier(), link.getContext(), link.getName(), link.getTimerseriesLinkType(), link.getProperties() );
-    m_index = index;
-  }
+  IObsProvider getObsProvider( );
 
-  public int getIndex( )
-  {
-    return m_index;
-  }
+  IPoolableObjectType getPoolKey( );
 
+  boolean isDirty( );
+
+  String getLabel( );
+
+  String getIdentifier( );
 }
