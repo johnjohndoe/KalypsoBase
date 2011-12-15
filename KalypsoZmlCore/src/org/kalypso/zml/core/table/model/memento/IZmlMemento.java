@@ -41,20 +41,20 @@
 package org.kalypso.zml.core.table.model.memento;
 
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.core.util.pool.IPoolableObjectType;
+import org.kalypso.zml.core.diagram.base.zml.IZmlSourceElement;
 
 /**
  * @author Dirk Kuch
  */
 public interface IZmlMemento
 {
-  void register( IPoolableObjectType poolKey, ILabeledObsProvider observationProvider );
+  void register( IZmlSourceElement element );
 
   void dispose( );
 
   void store( ) throws CoreException;
 
-  ILabeledObsProvider[] findDirtyElements( );
+  IZmlSourceElement[] findDirtyElements( );
 
   void addListener( IZmlMementoListener listener );
 

@@ -38,17 +38,23 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table;
+package org.kalypso.zml.core.diagram.base.zml;
 
-import org.kalypso.zml.core.diagram.base.zml.IZmlSourceElement;
+import org.kalypso.core.util.pool.IPoolableObjectType;
+import org.kalypso.ogc.sensor.provider.IObsProvider;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTableElement
+public interface IZmlSourceElement
 {
-  void dispose( );
+  IObsProvider getObsProvider( );
 
-  IZmlSourceElement getSource( );
+  IPoolableObjectType getPoolKey( );
 
+  boolean isDirty( );
+
+  String getLabel( );
+
+  String getIdentifier( );
 }

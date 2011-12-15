@@ -45,7 +45,6 @@ import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.provider.PooledObsProvider;
-import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.core.diagram.base.zml.TSLinkWithName;
 
 /**
@@ -53,27 +52,19 @@ import org.kalypso.zml.core.diagram.base.zml.TSLinkWithName;
  */
 public class AsynchronousObservationProvider extends PooledObsProvider
 {
-  private final String m_type;
-
   private final TSLinkWithName m_link;
 
   public AsynchronousObservationProvider( final TSLinkWithName link )
   {
-    this( link, null );
-  }
-
-  public AsynchronousObservationProvider( final TSLinkWithName link, final String type )
-  {
     super( new PoolableObjectType( "zml", link.getHref(), link.getContext(), true ) ); //$NON-NLS-1$
 
     m_link = link;
-    m_type = type;
   }
 
   @Override
   public IObsProvider copy( )
   {
-    return new AsynchronousObservationProvider( m_link, m_type );
+    return new AsynchronousObservationProvider( m_link );
   }
 
   @Override
@@ -82,11 +73,6 @@ public class AsynchronousObservationProvider extends PooledObsProvider
     final IObservation observation = super.getObservation();
     if( Objects.isNull( observation ) )
       return null;
-
-    /** if type is defined - check type exists as value axis. otherwise return null */
-    if( Objects.isNotNull( m_type ) )
-      if( !AxisUtils.hasAxis( observation.getAxes(), m_type ) )
-        return null;
 
     return observation;
   }

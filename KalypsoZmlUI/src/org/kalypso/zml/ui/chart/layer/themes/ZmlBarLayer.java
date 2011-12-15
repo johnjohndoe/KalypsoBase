@@ -49,10 +49,10 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.zml.core.diagram.base.IZmlLayer;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 import org.kalypso.zml.core.diagram.data.IZmlLayerProvider;
 import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
-import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractBarLayer;

@@ -166,8 +166,18 @@ public class CellStyle implements Cloneable
       return null;
 
     final String id = "background" + m_style.getId();
-    final RGB rgb = RGBUtilities.decodeHtmlColor( htmlColor );
-    COLOR_REGISTRY.put( id, rgb );
+
+    try
+    {
+      final RGB rgb = RGBUtilities.decodeHtmlColor( htmlColor );
+      COLOR_REGISTRY.put( id, rgb );
+    }
+    catch( final RuntimeException ex )
+    {
+      System.out.println( String.format( "Illegal background cell style: %s", getIdentifier() ) );
+
+      ex.printStackTrace();
+    }
 
     return COLOR_REGISTRY.get( id );
   }
