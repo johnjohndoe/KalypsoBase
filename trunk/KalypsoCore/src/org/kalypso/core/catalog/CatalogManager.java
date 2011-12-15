@@ -125,8 +125,6 @@ public class CatalogManager
     {
       ensureExisting( baseURN );
 
-// final ICatalog catalog = getCatalog( new URI( URLEncoder.encode( catalogFile.toURL().toString(), "UTF-8" ) ) );
-// m_baseCatalog = new CachingCatalog( catalog );
       m_baseCatalog = getCatalog( new URI( URLEncoder.encode( catalogFile.toURI().toURL().toString(), "UTF-8" ) ) ); //$NON-NLS-1$
 
       return m_baseCatalog;
