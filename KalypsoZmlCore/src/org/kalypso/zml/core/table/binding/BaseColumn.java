@@ -128,9 +128,6 @@ public class BaseColumn
     return m_headers;
   }
 
-  /**
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode( )
   {

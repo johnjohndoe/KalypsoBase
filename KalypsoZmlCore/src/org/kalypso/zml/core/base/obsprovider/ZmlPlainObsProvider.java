@@ -53,9 +53,13 @@ import org.kalypso.zml.core.base.IZmlSourceElement;
 public class ZmlPlainObsProvider extends PlainObsProvider implements IZmlSourceElement
 {
 
-  public ZmlPlainObsProvider( final IObservation obs, final IRequest args )
+  private String m_identifier;
+
+  public ZmlPlainObsProvider( final String identifier, final IObservation obs, final IRequest args )
   {
     super( obs, args );
+
+    m_identifier = identifier;
   }
 
   @Override
@@ -86,6 +90,18 @@ public class ZmlPlainObsProvider extends PlainObsProvider implements IZmlSourceE
   public String getIdentifier( )
   {
     throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void setIdentifier( final String identifier )
+  {
+    m_identifier = identifier;
+  }
+
+  @Override
+  public int getIndex( )
+  {
+    return 0;
   }
 
 }

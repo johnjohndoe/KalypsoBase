@@ -65,7 +65,7 @@ public class ZmlDataSourceElement implements IZmlTableElement, IZmlSourceElement
 {
   private PooledObsProvider m_provider;
 
-  private final String m_identifier;
+  private String m_identifier;
 
   private final String m_href;
 
@@ -188,5 +188,20 @@ public class ZmlDataSourceElement implements IZmlTableElement, IZmlSourceElement
     }
 
     return m_label;
+  }
+
+  @Override
+  public void setIdentifier( final String identifier )
+  {
+    m_identifier = identifier;
+  }
+
+  /**
+   * @see org.kalypso.zml.core.base.IZmlSourceElement#getIndex()
+   */
+  @Override
+  public int getIndex( )
+  {
+    return 0;
   }
 }

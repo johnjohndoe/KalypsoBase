@@ -177,6 +177,9 @@ public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionTy
 
     final IZmlModelColumn column = reference.getColumn();
     final IAxis valueAxis = column.getValueAxis();
+    if( Objects.isNull( valueAxis ) )
+      return Double.NaN;
+
     if( ObjectUtils.equals( valueAxis.getType(), boundaryType ) )
       return getReferenceValue( reference );
 

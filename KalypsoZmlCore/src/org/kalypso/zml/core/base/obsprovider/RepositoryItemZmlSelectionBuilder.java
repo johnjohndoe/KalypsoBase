@@ -92,7 +92,7 @@ public class RepositoryItemZmlSelectionBuilder
           map.put( type, multiple );
         }
 
-        multiple.add( new ZmlPlainObsProvider( observation, new ObservationRequest( dateRange ) ) );
+        multiple.add( new ZmlPlainObsProvider( multiple.getIdentifier(), observation, new ObservationRequest( dateRange ) ) );
       }
     }
 
