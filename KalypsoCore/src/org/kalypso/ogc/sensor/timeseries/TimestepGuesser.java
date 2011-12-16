@@ -57,7 +57,7 @@ import com.google.common.collect.Multiset.Entry;
 
 /**
  * Helper class that guesses the timestep from a given timeseries.
- * 
+ *
  * @author Gernot Belger
  */
 class TimestepGuesser
@@ -102,6 +102,9 @@ class TimestepGuesser
       final Period element = entry.getElement();
       orderedByCount.put( count, element );
     }
+
+    if( orderedByCount.isEmpty() )
+      return null;
 
     final Integer maxCount = orderedByCount.lastKey();
     return orderedByCount.get( maxCount );
