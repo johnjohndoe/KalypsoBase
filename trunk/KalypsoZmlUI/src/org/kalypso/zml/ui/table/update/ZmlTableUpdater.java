@@ -46,14 +46,17 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
 import org.kalypso.zml.core.base.IZmlSourceElement;
-import org.kalypso.zml.core.base.MultipleTsLink;
 import org.kalypso.zml.core.base.TsLinkWrapper;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.TableTypes;
+import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.ZmlModel;
 import org.kalypso.zml.core.table.model.utils.IClonedColumn;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
+import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.base.helper.ZmlTables;
 
 /**
@@ -61,14 +64,14 @@ import org.kalypso.zml.ui.table.base.helper.ZmlTables;
  */
 public class ZmlTableUpdater implements Runnable
 {
-  private final MultipleTsLink[] m_links;
+  private final IMultipleZmlSourceElement[] m_sources;
 
-  private final IZmlTableLayoutPart m_part;
+  private final IZmlTable m_table;
 
-  public ZmlTableUpdater( final IZmlTableLayoutPart part, final MultipleTsLink[] links )
+  public ZmlTableUpdater( final IZmlTable table, final IMultipleZmlSourceElement[] sources )
   {
-    m_part = part;
-    m_links = links;
+    m_table = table;
+    m_sources = sources;
   }
 
   @Override
@@ -77,9 +80,9 @@ public class ZmlTableUpdater implements Runnable
     /** tricky: map is used for restoring the order of columns from the underlying calcWizard.xml */
     final Map<Integer, Object[]> map = new TreeMap<Integer, Object[]>();
 
-    for( final MultipleTsLink multipleLink : m_links )
+    for( final IMultipleZmlSourceElement multipleLink : m_sources )
     {
-      final TsLinkWrapper[] links = multipleLink.getSources();
+      final IZmlSourceElement[] links = multipleLink.getSources();
       if( ArrayUtils.isEmpty( links ) )
         continue;
 
@@ -87,12 +90,15 @@ public class ZmlTableUpdater implements Runnable
 
       for( int index = 0; index < links.length; index++ )
       {
-        final TsLinkWrapper link = links[index];
+        final IZmlSourceElement source = links[index];
         final BaseColumn column = toBaseColumn( baseTypeIdentifier, index );
-        link.setIdentifier( column.getIdentifier() ); // update multiple selection index!
+        if( Objects.isNull( column ) )
+          continue;
 
-        final int tableIndex = link.getIndex();
-        map.put( tableIndex, new Object[] { link, column } );
+        source.setIdentifier( column.getIdentifier() ); // update multiple selection index!
+
+        final int tableIndex = source.getIndex();
+        map.put( tableIndex, new Object[] { source, column } );
       }
     }
 
@@ -101,26 +107,28 @@ public class ZmlTableUpdater implements Runnable
     {
       final Object[] values = entry.getValue();
 
-      final TsLinkWrapper link = (TsLinkWrapper) values[0];
+      final IZmlSourceElement source = (TsLinkWrapper) values[0];
       final BaseColumn column = (BaseColumn) values[1];
 
-      doLoadModelColumn( link );
-      ZmlTables.addTableColumn( m_part.getTable(), column );
+      doLoadModelColumn( source );
+      ZmlTables.addTableColumn( m_table, column );
     }
   }
 
   private void doLoadModelColumn( final IZmlSourceElement source )
   {
-    final ZmlModel model = m_part.getModel();
-
+    final ZmlModel model = (ZmlModel) m_table.getModel();
     model.getLoader().load( source );
     model.getMemento().register( source );
   }
 
   private BaseColumn toBaseColumn( final String baseTypeIdentifier, final int index )
   {
-    final ZmlModel model = m_part.getModel();
+    final IZmlModel model = m_table.getModel();
     final AbstractColumnType baseColumnType = model.getColumnType( baseTypeIdentifier );
+    if( Objects.isNull( baseColumnType ) )
+      return null;
+
     if( index == 0 )
     {
       return new BaseColumn( baseColumnType );

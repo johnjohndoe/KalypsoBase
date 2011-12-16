@@ -59,6 +59,7 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.ZmlModel;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
+import org.kalypso.zml.ui.table.update.ZmlTableUpdater;
 
 /**
  * @author Dirk Kuch
@@ -130,6 +131,10 @@ public class TableComposite extends Composite implements IUpdateable, IObservati
 
   public void setSelection( final IMultipleZmlSourceElement[] selection )
   {
+
+    final ZmlTableUpdater updater = new ZmlTableUpdater( m_table, selection );
+    updater.run();
+
 // reset();
 //
 // // TODO

@@ -92,6 +92,7 @@ public class TSLinkWithName implements IZmlSourceElement
   /**
    * it's possible to update identifiers - this feature is needed for multiple selection
    */
+  @Override
   public void setIdentifier( final String identifier )
   {
     m_identifier = identifier;
@@ -289,5 +290,11 @@ public class TSLinkWithName implements IZmlSourceElement
     if( Objects.isNotNull( m_provider ) )
       m_provider.dispose();
 
+  }
+
+  @Override
+  public int getIndex( )
+  {
+    return 0;
   }
 }
