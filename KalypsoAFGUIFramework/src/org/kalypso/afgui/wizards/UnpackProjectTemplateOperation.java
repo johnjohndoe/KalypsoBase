@@ -241,12 +241,13 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
    */
   private void removePDEfiles( final File destinationDir ) throws IOException
   {
-    final File manifestDir = new File( destinationDir, "META-INF" );
+    final File manifestDir = new File( destinationDir, "META-INF" ); //$NON-NLS-1$
     FileUtils.deleteDirectory( manifestDir );
 
-    new File( destinationDir, "plugin.xml" ).delete();
+    new File( destinationDir, "plugin.xml" ).delete(); //$NON-NLS-1$
+    new File( destinationDir, "build.properties" ).delete(); //$NON-NLS-1$
 
-    final File[] propertyFiles = destinationDir.listFiles( (FilenameFilter) new WildcardFileFilter( "plugin*.properties" ) );
+    final File[] propertyFiles = destinationDir.listFiles( (FilenameFilter) new WildcardFileFilter( "plugin*.properties" ) ); //$NON-NLS-1$
     if( propertyFiles != null )
     {
       for( final File file : propertyFiles )
