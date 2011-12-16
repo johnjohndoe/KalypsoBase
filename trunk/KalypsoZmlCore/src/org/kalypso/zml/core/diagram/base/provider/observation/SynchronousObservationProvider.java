@@ -64,11 +64,6 @@ public class SynchronousObservationProvider extends AbstractObsProvider
 {
   private final IRequestHandler m_handler;
 
-  public SynchronousObservationProvider( final URL context, final String href ) throws MalformedURLException, SensorException, URISyntaxException
-  {
-    this( context, href, new DefaultRequestHandler() );
-  }
-
   public SynchronousObservationProvider( final URL context, final String href, final IRequestHandler handler ) throws MalformedURLException, SensorException, URISyntaxException
   {
     m_handler = handler;

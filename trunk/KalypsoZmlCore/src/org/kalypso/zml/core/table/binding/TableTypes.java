@@ -93,7 +93,7 @@ public final class TableTypes
     return SWT.LEFT;
   }
 
-  public static AbstractColumnType finColumn( final ZmlTableType tableType, final String identifier )
+  public static AbstractColumnType findColumn( final ZmlTableType tableType, final String identifier )
   {
     final List<JAXBElement< ? extends AbstractColumnType>> columns = tableType.getColumns().getAbstractColumn();
     for( final JAXBElement< ? extends AbstractColumnType> columnType : columns )

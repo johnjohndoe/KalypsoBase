@@ -70,7 +70,7 @@ public class ChartTypeHandler
     this( templateFile.getLocationURI().toURL() );
   }
 
-  public ChartType getChartType( ) throws MalformedURLException, XmlException, IOException
+  public ChartType getChartType( ) throws XmlException, IOException
   {
     final ChartType[] charts = getLoader().getCharts();
     if( charts.length != 1 )
@@ -79,12 +79,12 @@ public class ChartTypeHandler
     return charts[0];
   }
 
-  public IReferenceResolver getReferenceResolver( ) throws MalformedURLException, XmlException, IOException
+  public IReferenceResolver getReferenceResolver( ) throws XmlException, IOException
   {
     return getLoader();
   }
 
-  private ChartConfigurationLoader getLoader( ) throws MalformedURLException, XmlException, IOException
+  private ChartConfigurationLoader getLoader( ) throws XmlException, IOException
   {
     if( m_loader != null )
       return m_loader;

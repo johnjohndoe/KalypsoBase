@@ -64,7 +64,7 @@ public class ZmlTableLayoutHandler implements IZmlTableListener
 
   private final MutexRule m_rule = new MutexRule( "updating column layout of zml table" );
 
-  UIJob m_job;
+  private UIJob m_job;
 
   public ZmlTableLayoutHandler( final ZmlTableComposite table )
   {

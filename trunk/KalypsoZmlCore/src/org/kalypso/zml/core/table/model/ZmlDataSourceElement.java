@@ -55,13 +55,12 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.provider.PooledObsProvider;
 import org.kalypso.zml.core.base.IZmlSourceElement;
-import org.kalypso.zml.core.table.IZmlTableElement;
 import org.kalypso.zml.core.table.model.memento.IZmlMemento;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlDataSourceElement implements IZmlTableElement, IZmlSourceElement
+public class ZmlDataSourceElement implements IZmlSourceElement
 {
   private PooledObsProvider m_provider;
 
@@ -96,12 +95,6 @@ public class ZmlDataSourceElement implements IZmlTableElement, IZmlSourceElement
   public String getIdentifier( )
   {
     return m_identifier;
-  }
-
-  @Override
-  public IZmlSourceElement getSource( )
-  {
-    return this;
   }
 
   private String[] findProperties( final String labeling )

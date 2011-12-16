@@ -69,8 +69,6 @@ public interface IZmlModel
 
   void accept( IZmlModelRowVisitor visitor );
 
-  void dispose( );
-
   void add( IZmlModelColumn column );
 
   IZmlMemento getMemento( );

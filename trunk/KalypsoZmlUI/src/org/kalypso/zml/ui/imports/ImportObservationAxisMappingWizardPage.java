@@ -163,12 +163,12 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
     for( final IAxis src : axisSrc )
     {
       boolean mapped = false;
-      for( int i_target = 0; i_target < axisTarget.length; i_target++ )
+      for( int indexTarget = 0; indexTarget < axisTarget.length; indexTarget++ )
       {
-        final IAxis target = axisTarget[i_target];
+        final IAxis target = axisTarget[indexTarget];
         if( target != null && target.getType().equals( src.getType() ) )
         {
-          axisTarget[i_target] = null;
+          axisTarget[indexTarget] = null;
           result.add( target );
           mapped = true;
           break;
