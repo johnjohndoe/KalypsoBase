@@ -43,13 +43,10 @@ package org.kalypso.zml.ui.chart.view;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IPartListener;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
@@ -66,7 +63,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
 {
   public static final String ID = "org.kalypso.zml.ui.chart.view.DiagramViewPart"; //$NON-NLS-1$
 
-  private DiagramComposite m_chartComposite;
+  private ZmlDiagramChartPartComposite m_chartPart;
 
   @Override
   public void createPartControl( final Composite parent )
@@ -78,9 +75,8 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
     layout.verticalSpacing = 0;
     base.setLayout( layout );
 
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    m_chartComposite = new DiagramComposite( base, toolkit, workbench );
-    m_chartComposite.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+    m_chartPart = new ZmlDiagramChartPartComposite( this, getClass().getResource( "templates/diagram.kod" ) ); //$NON-NLS-1$
+    m_chartPart.createControl( base, toolkit );
 
     getSite().getPage().addPartListener( this );
   }
@@ -95,13 +91,13 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   @Override
   public void setFocus( )
   {
-    m_chartComposite.setFocus();
+    m_chartPart.setFocus();
   }
 
   @Override
   public void selectionChanged( final SelectionChangedEvent event )
   {
-    m_chartComposite.setSelection( ZmlSelectionBuilder.getSelection( event ) );
+    m_chartPart.setSelection( ZmlSelectionBuilder.getSelection( event ) );
   }
 
   @Override
