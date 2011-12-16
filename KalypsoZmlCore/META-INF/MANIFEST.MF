@@ -6,11 +6,13 @@ Bundle-Version: 11.6.4.qualifier
 Bundle-Activator: org.kalypso.zml.core.KalypsoZmlCore
 Require-Bundle: org.kalypso.core;visibility:=reexport,
  de.openali.odysseus.chart.framework;visibility:=reexport,
- de.openali.odysseus.chart.factory;visibility:=reexport
+ de.openali.odysseus.chart.factory;visibility:=reexport,
+ org.kalypso.ui;bundle-version="11.6.4"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.kalypso.zml.core,
  org.kalypso.zml.core.base,
+ org.kalypso.zml.core.base.obsprovider,
  org.kalypso.zml.core.diagram.base,
  org.kalypso.zml.core.diagram.base.provider.observation,
  org.kalypso.zml.core.diagram.base.visitors,

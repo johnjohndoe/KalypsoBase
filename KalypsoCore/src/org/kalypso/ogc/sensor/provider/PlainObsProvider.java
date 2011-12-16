@@ -48,7 +48,7 @@ import org.kalypso.ogc.sensor.request.IRequest;
  * 
  * @author schlienger
  */
-public final class PlainObsProvider extends AbstractObsProvider
+public class PlainObsProvider extends AbstractObsProvider
 {
   public PlainObsProvider( final IObservation obs, final IRequest args )
   {
@@ -56,9 +56,6 @@ public final class PlainObsProvider extends AbstractObsProvider
     setObservation( obs );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.template.IObsProvider#copy()
-   */
   @Override
   public IObsProvider copy( )
   {

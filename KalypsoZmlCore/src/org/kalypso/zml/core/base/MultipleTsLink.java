@@ -53,7 +53,7 @@ import org.eclipse.core.runtime.Assert;
 /**
  * @author Dirk Kuch
  */
-public class MultipleTsLink
+public class MultipleTsLink implements IMultipleZmlSourceElement
 {
   Set<TsLinkWrapper> m_links = new LinkedHashSet<TsLinkWrapper>();
 
@@ -66,6 +66,7 @@ public class MultipleTsLink
     m_identifier = identifier;
   }
 
+  @Override
   public String getIdentifier( )
   {
     return m_identifier;
@@ -81,8 +82,8 @@ public class MultipleTsLink
       final EqualsBuilder builder = new EqualsBuilder();
       builder.append( getIdentifier(), other.getIdentifier() );
 
-      final TSLinkWithName[] links = getLinks();
-      final TSLinkWithName[] otherLinks = other.getLinks();
+      final TSLinkWithName[] links = getSources();
+      final TSLinkWithName[] otherLinks = other.getSources();
       if( links.length != otherLinks.length )
         return false;
 
@@ -118,7 +119,7 @@ public class MultipleTsLink
     builder.append( MultipleTsLink.class.getName() );
     builder.append( getIdentifier() );
 
-    final TSLinkWithName[] links = getLinks();
+    final TSLinkWithName[] links = getSources();
     for( final TSLinkWithName link : links )
     {
       builder.append( link.getHref() );
@@ -127,12 +128,14 @@ public class MultipleTsLink
     return builder.toHashCode();
   }
 
-  public void add( final TsLinkWrapper link )
+  @Override
+  public void add( final IZmlSourceElement link )
   {
-    m_links.add( link );
+    m_links.add( (TsLinkWrapper) link );
   }
 
-  public TsLinkWrapper[] getLinks( )
+  @Override
+  public TsLinkWrapper[] getSources( )
   {
     return m_links.toArray( new TsLinkWrapper[] {} );
   }

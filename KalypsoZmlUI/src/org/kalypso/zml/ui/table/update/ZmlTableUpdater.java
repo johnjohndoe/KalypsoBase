@@ -79,7 +79,7 @@ public class ZmlTableUpdater implements Runnable
 
     for( final MultipleTsLink multipleLink : m_links )
     {
-      final TsLinkWrapper[] links = multipleLink.getLinks();
+      final TsLinkWrapper[] links = multipleLink.getSources();
       if( ArrayUtils.isEmpty( links ) )
         continue;
 
