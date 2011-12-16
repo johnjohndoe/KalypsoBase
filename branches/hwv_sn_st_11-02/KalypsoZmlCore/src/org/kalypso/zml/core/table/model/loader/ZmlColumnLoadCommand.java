@@ -149,8 +149,7 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
     final IObservation observation = base.getObservation();
     final IAxis[] axes = Objects.isNotNull( observation ) ? observation.getAxes() : new IAxis[] {};
 
-    final IObsProvider provider = base.copy();
-    final IZmlModelColumnDataHandler handler = new ObsProviderZmlColumnDataHandler( provider );
+    final IZmlModelColumnDataHandler handler = new ObsProviderZmlColumnDataHandler( base.copy() );
 
     final DataColumn data = new DataColumn( type );
 

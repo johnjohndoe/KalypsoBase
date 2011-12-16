@@ -113,8 +113,8 @@ public class ZmlTableUpdater implements Runnable
   {
     final ZmlModel model = m_part.getModel();
 
-    model.getLoader().load( source );
     model.getMemento().register( source );
+    model.getLoader().load( source );
   }
 
   private BaseColumn toBaseColumn( final String baseTypeIdentifier, final int index )
