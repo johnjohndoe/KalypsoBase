@@ -112,7 +112,6 @@ public class ZmlCommandHideColumns extends AbstractHandler implements IElementUp
             {
               column.setVisible( !hide );
             }
-
           }
         } );
 

@@ -177,11 +177,6 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
     return getTupleModel().get( index, axis );
   }
 
-  private boolean isTargetAxis( final IAxis axis )
-  {
-    return axis.getType().equals( m_type.getValueAxis() );
-  }
-
   @Override
   public int size( ) throws SensorException
   {
@@ -202,9 +197,6 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
     fireColumnChangedEvent();
   }
 
-  /**
-   * @see org.kalypso.zml.core.table.model.IZmlModelColumn#doUpdate(org.kalypso.zml.core.table.model.transaction.IZmlModelUpdateCommand)
-   */
   @Override
   public void doExecute( final IZmlModelUpdateCommand command ) throws SensorException
   {
@@ -217,34 +209,37 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
     final ITupleModel model = getTupleModel();
     final IAxis[] axes = model.getAxes();
 
-    for( final IAxis axis : axes )
+    final IAxis valueAxis = AxisUtils.findAxis( axes, getIdentifier() );
+    final IAxis statusAxis = AxisUtils.findStatusAxis( axes, valueAxis );
+    final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( axes, valueAxis );
+
+    /** update value */
+    if( Objects.isNull( value ) )
+      model.set( index, valueAxis, Double.NaN );
+    else
+      model.set( index, valueAxis, value );
+
+    /** update status */
+    if( Objects.isNotNull( statusAxis ) )
     {
-      if( AxisUtils.isDataSrcAxis( axis ) )
-      {
-        // FIXME - user modified triggered interpolated state?!?
-        final DataSourceHandler handler = new DataSourceHandler( getMetadata() );
-        final int sourceIndex;
-        if( Objects.isNull( source ) )
-          sourceIndex = handler.addDataSource( IDataSourceItem.SOURCE_UNKNOWN, IDataSourceItem.SOURCE_UNKNOWN );
-        else
-          sourceIndex = handler.addDataSource( source, source );
+      if( Objects.isNull( status ) )
+        model.set( index, statusAxis, KalypsoStati.BIT_OK );
+      else
+        model.set( index, statusAxis, status );
+    }
 
-        model.set( index, axis, sourceIndex );
-      }
-      else if( AxisUtils.isStatusAxis( axis ) )
-      {
-        if( Objects.isNull( status ) )
-          model.set( index, axis, KalypsoStati.BIT_OK );
+    /** update data source */
+    if( Objects.isNotNull( dataSourceAxis ) )
+    {
+      // FIXME - user modified triggered interpolated state?!?
+      final DataSourceHandler handler = new DataSourceHandler( getMetadata() );
+      final int sourceIndex;
+      if( Objects.isNull( source ) )
+        sourceIndex = handler.addDataSource( IDataSourceItem.SOURCE_UNKNOWN, IDataSourceItem.SOURCE_UNKNOWN );
+      else
+        sourceIndex = handler.addDataSource( source, source );
 
-        model.set( index, axis, status );
-      }
-      else if( isTargetAxis( axis ) )
-      {
-        if( Objects.isNull( value ) )
-          model.set( index, axis, Double.NaN );
-
-        model.set( index, axis, value );
-      }
+      model.set( index, dataSourceAxis, sourceIndex );
     }
 
   }

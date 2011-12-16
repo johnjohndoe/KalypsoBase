@@ -164,11 +164,13 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
     final IZmlModelColumn[] columns = m_columns.toArray( new IZmlModelColumn[] {} );
     for( final IZmlModelColumn column : columns )
     {
-      column.removeListener( this );
       column.dispose();
 
       if( ZmlModelColumns.isCloned( column ) )
+      {
+        column.removeListener( this );
         m_columns.remove( column );
+      }
     }
 
     m_rows.clear();
@@ -196,7 +198,6 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
   @Override
   public void fireModelChanged( final IZmlModelColumn... columns )
   {
-
     final IZmlColumnModelListener[] listeners = m_listeners.toArray( new IZmlColumnModelListener[] {} );
     for( final IZmlColumnModelListener listener : listeners )
     {
