@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.chart.view;
+package org.kalypso.zml.ui.table.view;
 
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -55,18 +55,19 @@ import org.eclipse.ui.part.ViewPart;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
+import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
 import org.kalypso.zml.core.base.selection.ZmlSelectionBuilder;
 
 /**
- * Diagram QuickView.
+ * Table QuickView.
  * 
  * @author Dirk Kuch
  */
-public class DiagramViewPart extends ViewPart implements ISelectionChangedListener, IPartListener
+public class TableViewPart extends ViewPart implements ISelectionChangedListener, IPartListener
 {
-  public static final String ID = "org.kalypso.zml.ui.chart.view.DiagramViewPart"; //$NON-NLS-1$
+  public static final String ID = "org.kalypso.zml.ui.table.view.TableViewPart"; //$NON-NLS-1$
 
-  private DiagramComposite m_chartComposite;
+  private TableComposite m_tableComposite;
 
   @Override
   public void createPartControl( final Composite parent )
@@ -79,8 +80,9 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
     base.setLayout( layout );
 
     final IWorkbench workbench = PlatformUI.getWorkbench();
-    m_chartComposite = new DiagramComposite( base, toolkit, workbench );
-    m_chartComposite.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+
+    m_tableComposite = new TableComposite( base, toolkit, workbench );
+    m_tableComposite.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     getSite().getPage().addPartListener( this );
   }
@@ -95,13 +97,14 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   @Override
   public void setFocus( )
   {
-    m_chartComposite.setFocus();
+    m_tableComposite.setFocus();
   }
 
   @Override
   public void selectionChanged( final SelectionChangedEvent event )
   {
-    m_chartComposite.setSelection( ZmlSelectionBuilder.getSelection( event ) );
+    final IMultipleZmlSourceElement[] sources = ZmlSelectionBuilder.getSelection( event );
+    m_tableComposite.setSelection( sources );
   }
 
   @Override

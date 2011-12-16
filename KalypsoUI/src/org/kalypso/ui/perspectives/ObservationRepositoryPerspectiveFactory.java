@@ -76,6 +76,7 @@ public class ObservationRepositoryPerspectiveFactory implements IPerspectiveFact
 
     final IFolderLayout rightBottom = layout.createFolder( "rightBottom", IPageLayout.RIGHT, (float) 0.50, "leftBottom" ); //$NON-NLS-1$ //$NON-NLS-2$
     rightBottom.addView( IKalypsoUIConstants.ID_OBSTABLE_VIEW );
+    rightBottom.addView( "org.kalypso.zml.ui.table.view.TableViewPart" ); //$NON-NLS-1$ //FIXME move complete perspective to zml ui plugin!!!
 
     setContentsOfShowViewMenu( layout );
     layout.setEditorAreaVisible( false );
@@ -100,6 +101,10 @@ public class ObservationRepositoryPerspectiveFactory implements IPerspectiveFact
     final IViewLayout tableViewLayout = layout.getViewLayout( IKalypsoUIConstants.ID_OBSTABLE_VIEW );
     tableViewLayout.setCloseable( false );
     tableViewLayout.setMoveable( true );
+
+    final IViewLayout tableViewLayout2 = layout.getViewLayout( "org.kalypso.zml.ui.table.view.TableViewPart" ); //$NON-NLS-1$
+    tableViewLayout2.setCloseable( false );
+    tableViewLayout2.setMoveable( true );
 
     /* Add to "Open perspective"... */
     layout.addPerspectiveShortcut( "org.kalypso.hwv.product.sachsen.ui.views.admin.LhwzAdminPerspective" ); //$NON-NLS-1$

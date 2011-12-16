@@ -56,9 +56,9 @@ import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
 /**
  * @author Dirk Kuch
  */
-public class ZmlObsProviderSelectionBuilder
+public class RepositoryItemZmlSelectionBuilder
 {
-  public ZmlObsProviderSelectionBuilder( )
+  public RepositoryItemZmlSelectionBuilder( )
   {
 
   }

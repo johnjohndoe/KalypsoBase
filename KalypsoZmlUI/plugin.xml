@@ -487,6 +487,15 @@
         icon="icons/view/diagram.gif"
         id="org.kalypso.zml.ui.chart.view.DiagramViewPart"
         name="Diagramm"/>
+  <view
+        allowMultiple="false"
+        category="org.kalypso.ui.kalypso"
+        class="org.kalypso.zml.ui.table.view.TableViewPart"
+        icon="icons/view/table.gif"
+        id="org.kalypso.zml.ui.table.view.TableViewPart"
+        name="Tabelle"
+        restorable="true">
+  </view>
 	</extension>
  <extension
        point="org.eclipse.ui.perspectiveExtensions">
