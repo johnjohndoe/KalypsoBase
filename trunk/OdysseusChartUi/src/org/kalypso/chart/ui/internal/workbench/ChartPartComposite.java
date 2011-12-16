@@ -209,12 +209,14 @@ public class ChartPartComposite implements IChartPart
       m_composite.setFocus();
   }
 
-  public void createControl( final Composite parent )
+  public Composite createControl( final Composite parent )
   {
     m_composite = new Composite( parent, SWT.FILL );
     m_composite.setLayout( new FillLayout() );
 
     updateControl();
+
+    return m_composite;
   }
 
   /**
@@ -227,7 +229,8 @@ public class ChartPartComposite implements IChartPart
 
     /* Reset controls */
     ControlUtils.disposeChildren( m_composite );
-    m_chartPartListener.setChart( null );
+    if( m_chartPartListener != null )
+      m_chartPartListener.setChart( null );
 
     /* Dispose old model */
     if( m_chartComposite != null )
@@ -249,7 +252,10 @@ public class ChartPartComposite implements IChartPart
       final Label label = new Label( m_composite, SWT.NONE );
       label.setText( Messages.getString( "org.kalypso.chart.ui.editor.ChartEditor.6" ) ); //$NON-NLS-1$
     }
-    m_chartPartListener.setChart( m_chartComposite );
+
+    if( m_chartPartListener != null )
+      m_chartPartListener.setChart( m_chartComposite );
+
     m_composite.layout( true, true );
     if( m_outlinePage != null )
       m_outlinePage.updateControl();
