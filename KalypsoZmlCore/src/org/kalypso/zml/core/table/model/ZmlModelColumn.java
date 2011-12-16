@@ -177,11 +177,6 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
     return getTupleModel().get( index, axis );
   }
 
-  private boolean isTargetAxis( final IAxis axis )
-  {
-    return axis.getType().equals( m_type.getValueAxis() );
-  }
-
   @Override
   public int size( ) throws SensorException
   {
