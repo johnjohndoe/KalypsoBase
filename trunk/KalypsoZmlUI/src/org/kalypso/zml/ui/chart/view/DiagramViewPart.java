@@ -59,14 +59,11 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
-import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.provider.IObsProvider;
-import org.kalypso.ogc.sensor.provider.PlainObsProvider;
-import org.kalypso.ogc.sensor.request.ObservationRequest;
-import org.kalypso.ogc.sensor.view.ObservationViewHelper;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
+import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
+import org.kalypso.zml.core.base.obsprovider.ZmlObsProviderSelectionBuilder;
 
 /**
  * Diagram QuickView.
@@ -116,7 +113,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
     final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
     final Iterator iterator = selection.iterator();
 
-    final Set<IObsProvider> observations = new LinkedHashSet<IObsProvider>();
+    final Set<IRepositoryItem> items = new LinkedHashSet<>();
 
     while( iterator.hasNext() )
     {
@@ -128,16 +125,16 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
         final IRepositoryItem item = (IRepositoryItem) obj;
         if( item.hasAdapter( IObservation.class ) )
         {
-          final IObservation observation = (IObservation) item.getAdapter( IObservation.class );
-          final DateRange dateRange = ObservationViewHelper.makeDateRange( item );
 
-          observations.add( new PlainObsProvider( observation, new ObservationRequest( dateRange ) ) );
+          items.add( item );
         }
       }
     }
 
-    final IZmlDiagramSelectionBuilder builder = new MultipleObservationSelectionBuilder( observations.toArray( new IObsProvider[] {} ) );
-    m_chartComposite.setSelection( builder );
+    final ZmlObsProviderSelectionBuilder selectionBuilder = new ZmlObsProviderSelectionBuilder();
+    final IMultipleZmlSourceElement[] elements = selectionBuilder.toSelection( items.toArray( new IRepositoryItem[] {} ) );
+
+    m_chartComposite.setSelection( elements );
   }
 
   @Override

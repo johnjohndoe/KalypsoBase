@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraﬂe 22
+ *  Denickestra√üe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,14 +38,54 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.chart.view;
+package org.kalypso.zml.core.base.obsprovider;
 
-import de.openali.odysseus.chart.framework.model.IChartModel;
+import org.kalypso.core.util.pool.IPoolableObjectType;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.provider.IObsProvider;
+import org.kalypso.ogc.sensor.provider.PlainObsProvider;
+import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.zml.core.base.IZmlSourceElement;
 
 /**
- * @author Dirk Kuch
+ * @author kuch
  */
-public interface IZmlDiagramSelectionBuilder
+public class ZmlPlainObsProvider extends PlainObsProvider implements IZmlSourceElement
 {
-  void doSelectionUpdate( IChartModel model );
+
+  public ZmlPlainObsProvider( final IObservation obs, final IRequest args )
+  {
+    super( obs, args );
+  }
+
+  @Override
+  public IObsProvider getObsProvider( )
+  {
+    return this;
+  }
+
+  @Override
+  public IPoolableObjectType getPoolKey( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public boolean isDirty( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public String getLabel( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public String getIdentifier( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
 }

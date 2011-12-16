@@ -40,13 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.view;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -55,6 +48,8 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
+import org.kalypso.zml.core.base.IZmlSourceElement;
 import org.kalypso.zml.core.diagram.base.IZmlLayer;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
@@ -73,45 +68,17 @@ import de.openali.odysseus.chart.framework.model.mapper.impl.CoordinateMapper;
 /**
  * @author Dirk Kuch
  */
-public class MultipleObservationSelectionBuilder implements IZmlDiagramSelectionBuilder
+public class DiagrammCompositeSelection
 {
-  Map<String, List<IObsProvider>> m_observations = new HashMap<>();
 
-  public MultipleObservationSelectionBuilder( final IObsProvider[] providers )
-  {
-    init( providers );
-  }
-
-  private void init( final IObsProvider[] providers )
-  {
-    for( final IObsProvider provider : providers )
-    {
-      final IObservation observation = provider.getObservation(); // FIXME
-      final IAxis[] valueAxes = AxisUtils.findValueAxes( observation.getAxes(), false );
-      for( final IAxis axis : valueAxes )
-      {
-        final String type = axis.getType();
-        List<IObsProvider> obses = m_observations.get( type );
-        if( Objects.isNull( obses ) )
-        {
-          obses = new ArrayList<>();
-          m_observations.put( type, obses );
-        }
-
-        obses.add( provider );
-      }
-    }
-  }
-
-  @Override
-  public void doSelectionUpdate( final IChartModel model )
+  public static void doApply( final IChartModel model, final IMultipleZmlSourceElement[] selection )
   {
     final ILayerManager manager = model.getLayerManager();
 
-    final Set<Entry<String, List<IObsProvider>>> entries = m_observations.entrySet();
-    for( final Entry<String, List<IObsProvider>> entry : entries )
+    for( final IMultipleZmlSourceElement element : selection )
     {
-      final String type = entry.getKey();
+
+      final String type = element.getType();
 
       final ParameterTypeLayerVisitor visitor = new ParameterTypeLayerVisitor( type );
       manager.accept( visitor );
@@ -120,28 +87,33 @@ public class MultipleObservationSelectionBuilder implements IZmlDiagramSelection
       if( ArrayUtils.isEmpty( layers ) )
         continue;
 
-      final List<IObsProvider> providers = entry.getValue();
-      for( int index = 0; index < providers.size(); index++ )
+      final IZmlSourceElement[] sources = element.getSources();
+      for( int index = 0; index < ArrayUtils.getLength( sources ); index++ )
       {
-        final IObsProvider provider = providers.get( index );
-        update( layers, provider, type, index );
+        final IZmlSourceElement source = sources[index];
+        update( layers, source, type, index );
 
+        final IObsProvider provider = source.getObsProvider();
         provider.dispose();
       }
     }
   }
 
-  private void update( final IZmlLayer[] layers, final IObsProvider provider, final String type, final int index )
+  private static void update( final IZmlLayer[] layers, final IZmlSourceElement source, final String type, final int index )
   {
     for( final IZmlLayer baseLayer : layers )
     {
       try
       {
         final IZmlLayer layer = buildLayer( baseLayer, index );
+        final IObsProvider provider = source.getObsProvider();
 
         final IZmlLayerDataHandler handler = layer.getDataHandler();
         if( handler instanceof ZmlObsProviderDataHandler )
+        {
+
           ((ZmlObsProviderDataHandler) handler).setObsProvider( provider );
+        }
 
         final IObservation observation = provider.getObservation();
         if( Objects.isNotNull( observation ) )
@@ -159,7 +131,7 @@ public class MultipleObservationSelectionBuilder implements IZmlDiagramSelection
     }
   }
 
-  private IZmlLayer buildLayer( final IZmlLayer baseLayer, final int index ) throws ConfigurationException
+  private static IZmlLayer buildLayer( final IZmlLayer baseLayer, final int index ) throws ConfigurationException
   {
     if( index == 0 )
       return baseLayer;
@@ -182,4 +154,5 @@ public class MultipleObservationSelectionBuilder implements IZmlDiagramSelection
 
     return clone;
   }
+
 }

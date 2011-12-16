@@ -61,6 +61,7 @@ import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
+import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
 import org.kalypso.zml.core.diagram.base.ChartTypeHandler;
 import org.kalypso.zml.core.diagram.base.visitors.ResetZmlLayerVisitor;
 import org.kalypso.zml.ui.chart.layer.visitor.SingleGridVisibilityVisitor;
@@ -181,7 +182,7 @@ public class DiagramComposite extends Composite implements IUpdateable, IObserva
     toolkit.adapt( control );
   }
 
-  public void setSelection( final IZmlDiagramSelectionBuilder delegate )
+  public void setSelection( final IMultipleZmlSourceElement[] selection )
   {
     reset();
 
@@ -189,7 +190,7 @@ public class DiagramComposite extends Composite implements IUpdateable, IObserva
 // final String title = delegate.getTitle();
 // updateDiagramTitle( title );
 
-    delegate.doSelectionUpdate( m_model );
+    DiagrammCompositeSelection.doApply( m_model, selection );
 
     final ILayerManager layerManager = m_model.getLayerManager();
     layerManager.accept( new HideUnuseLayersVisitor() );

@@ -90,7 +90,7 @@ public class ZmlDiagramUpdater implements Runnable
 
       final IZmlLayer[] layers = visitor.getLayers();
 
-      final TSLinkWithName[] links = multiple.getLinks();
+      final TSLinkWithName[] links = multiple.getSources();
       for( int index = 0; index < links.length; index++ )
       {
         final TSLinkWithName link = links[index];
