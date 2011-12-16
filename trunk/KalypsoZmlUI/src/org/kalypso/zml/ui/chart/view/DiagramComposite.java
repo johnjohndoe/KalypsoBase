@@ -88,8 +88,6 @@ public class DiagramComposite extends Composite implements IUpdateable, IObserva
 
   protected ChartImageComposite m_chartComposite;
 
-  private IObservation m_selection;
-
   private final IServiceLocator m_context;
 
   public DiagramComposite( final Composite parent, final FormToolkit toolkit, final IServiceLocator context )
@@ -190,7 +188,7 @@ public class DiagramComposite extends Composite implements IUpdateable, IObserva
 // final String title = delegate.getTitle();
 // updateDiagramTitle( title );
 
-    DiagrammCompositeSelection.doApply( m_model, selection );
+    DiagramCompositeSelection.doApply( m_model, selection );
 
     final ILayerManager layerManager = m_model.getLayerManager();
     layerManager.accept( new HideUnuseLayersVisitor() );
@@ -204,6 +202,8 @@ public class DiagramComposite extends Composite implements IUpdateable, IObserva
   {
     m_chartComposite.dispose();
     m_model.dispose();
+
+    super.dispose();
   }
 
   public void reset( )

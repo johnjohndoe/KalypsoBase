@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ZmlTable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="schema.table.core.zml.kalypso.org">
+
+  <StyleSet>
+    <Style id="selectionCellStyle">
+      <baseStyle>
+        <url>urn:org:kalypso:zml:ui:table:global#wBaseCellStyle</url>
+      </baseStyle>
+      <property name="backgroundColor">EDEFF4</property>
+    </Style>
+  </StyleSet>
+
+  <defaultStyle>
+    <url>urn:org:kalypso:zml:ui:table:global#defaultCellStyle</url>
+  </defaultStyle>
+ 
+
+  <RuleSet id="warnings">
+    <rule>
+      <url>urn:org:kalypso:zml:ui:table:global#ruleDerivedValue</url>
+    </rule>
+    <rule>
+      <url>urn:org:kalypso:zml:ui:table:global#ruleWarnedValue</url>
+    </rule>
+    <rule>
+      <url>urn:org:kalypso:zml:ui:table:global#ruleUserModified</url>
+    </rule>
+    <rule>
+      <url>urn:org:kalypso:zml:ui:table:global#ruleInterpolatedValue</url>
+    </rule>
+    <rule>
+      <url>urn:org:kalypso:zml:ui:table:global#ruleWqConflict</url>
+    </rule>
+  </RuleSet>
+
+  <RuleSet id="dataSource">
+    <rule>
+      <url>urn:org:kalypso:zml:ui:table:global#ruleDataSource</url>
+    </rule>
+  </RuleSet>
+
+
+  <toolbar>toolbar:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.toolbar.instantaneous</toolbar>
+
+  <Columns>
+    <!-- date column -->
+    <IndexColumn autopack="true" id="date">
+      <property name="label">Datum</property>
+      <property name="alignment">CENTER</property>
+
+      <defaultCellStyle>
+        <url>urn:org:kalypso:zml:ui:table:global#dateCellStyle</url>
+      </defaultCellStyle>
+      <rule>
+        <url>urn:org:kalypso:zml:ui:table:global#ruleDateForecast</url>
+      </rule>
+
+    </IndexColumn>
+
+    <!-- wasserstand -->
+    <DataColumn editable="false" id="W_SELECTION" tooltip="true">
+      <property name="label">Auswahl</property>
+      <property name="alignment">RIGHT</property>
+
+      <defaultCellStyle>
+        <url>urn:org:kalypso:zml:ui:table:global#wBaseDisabledCellStyle</url>
+      </defaultCellStyle>
+
+      <ruleSetReference>forecast</ruleSetReference>
+      <ruleSetReference>warnings</ruleSetReference>
+      <ruleSetReference>dataSource</ruleSetReference>
+
+
+      <indexAxis>date</indexAxis>
+      <valueAxis>W</valueAxis>
+    </DataColumn>
+
+
+    <!-- Abfluss -->
+    <DataColumn editable="false" id="Q_SELECTION" metadataSource="true" tooltip="true">
+      <property name="label">Auswahl</property>
+      <property name="alignment">RIGHT</property>
+
+      <defaultCellStyle>
+        <url>urn:org:kalypso:zml:ui:table:global#qBaseDisabledCellStyle</url>
+      </defaultCellStyle>
+
+      <ruleSetReference>forecast</ruleSetReference>
+      <ruleSetReference>warnings</ruleSetReference>
+      <ruleSetReference>dataSource</ruleSetReference>
+
+      <indexAxis>date</indexAxis>
+      <valueAxis>Q</valueAxis>
+    </DataColumn>
+
+
+
+    <!-- Volumen -->
+    <DataColumn editable="false" id="V_SELECTION" metadataSource="true" tooltip="true">
+      <property name="label">Auswahl</property>
+      <property name="alignment">RIGHT</property>
+
+      <defaultCellStyle>
+        <url>urn:org:kalypso:zml:ui:table:global#volumneBaseDisabledCellStyle</url>
+      </defaultCellStyle>
+
+      <ruleSetReference>warnings</ruleSetReference>
+      <ruleSetReference>forecast</ruleSetReference>
+      <ruleSetReference>dataSource</ruleSetReference>
+
+      <indexAxis>date</indexAxis>
+      <valueAxis>V</valueAxis>
+    </DataColumn>
+
+
+    <!-- Wasserstand [m NN] (Auswahl) -->
+    <DataColumn editable="true" id="W_NN_SELECTION" metadataSource="true" tooltip="true">
+      <property name="label">Auswahl</property>
+      <property name="alignment">RIGHT</property>
+
+      <defaultCellStyle>
+        <url>urn:org:kalypso:zml:ui:table:global#wNNDisabledBaseCellStyle</url>
+      </defaultCellStyle>
+
+      <ruleSetReference>warnings</ruleSetReference>
+      <ruleSetReference>forecast</ruleSetReference>
+      <ruleSetReference>dataSource</ruleSetReference>
+
+      <indexAxis>date</indexAxis>
+      <valueAxis>NN</valueAxis>
+    </DataColumn>
+  </Columns>
+</ZmlTable>

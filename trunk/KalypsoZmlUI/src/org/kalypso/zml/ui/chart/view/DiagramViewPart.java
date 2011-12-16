@@ -40,12 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.view;
 
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -59,16 +54,13 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
-import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
-import org.kalypso.zml.core.base.obsprovider.ZmlObsProviderSelectionBuilder;
+import org.kalypso.zml.core.base.selection.ZmlSelectionBuilder;
 
 /**
  * Diagram QuickView.
  * 
- * @author schlienger
+ * @author Dirk Kuch
  */
 public class DiagramViewPart extends ViewPart implements ISelectionChangedListener, IPartListener
 {
@@ -109,32 +101,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   @Override
   public void selectionChanged( final SelectionChangedEvent event )
   {
-
-    final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-    final Iterator iterator = selection.iterator();
-
-    final Set<IRepositoryItem> items = new LinkedHashSet<>();
-
-    while( iterator.hasNext() )
-    {
-      // TODO handle tslinks!!!
-
-      final Object obj = iterator.next();
-      if( obj instanceof IRepositoryItem )
-      {
-        final IRepositoryItem item = (IRepositoryItem) obj;
-        if( item.hasAdapter( IObservation.class ) )
-        {
-
-          items.add( item );
-        }
-      }
-    }
-
-    final ZmlObsProviderSelectionBuilder selectionBuilder = new ZmlObsProviderSelectionBuilder();
-    final IMultipleZmlSourceElement[] elements = selectionBuilder.toSelection( items.toArray( new IRepositoryItem[] {} ) );
-
-    m_chartComposite.setSelection( elements );
+    m_chartComposite.setSelection( ZmlSelectionBuilder.getSelection( event ) );
   }
 
   @Override

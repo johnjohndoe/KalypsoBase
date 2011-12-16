@@ -68,8 +68,11 @@ import de.openali.odysseus.chart.framework.model.mapper.impl.CoordinateMapper;
 /**
  * @author Dirk Kuch
  */
-public class DiagrammCompositeSelection
+public final class DiagramCompositeSelection
 {
+  private DiagramCompositeSelection( )
+  {
+  }
 
   public static void doApply( final IChartModel model, final IMultipleZmlSourceElement[] selection )
   {
