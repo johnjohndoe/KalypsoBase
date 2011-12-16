@@ -328,12 +328,6 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
     fireColumnChanged();
   }
 
-  @Override
-  public void eventObservationLoaded( )
-  {
-    fireColumnChanged();
-  }
-
   public void fireColumnChanged( )
   {
     final IZmlModelColumnListener[] listeners = m_listeners.toArray( new IZmlModelColumnListener[] {} );

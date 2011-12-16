@@ -46,6 +46,4 @@ package org.kalypso.zml.core.table.model.data;
 public interface IZmlModelColumnDataListener
 {
   void eventObservationChanged( );
-
-  void eventObservationLoaded( );
 }

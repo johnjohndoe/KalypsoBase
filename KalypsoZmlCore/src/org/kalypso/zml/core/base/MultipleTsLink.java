@@ -154,6 +154,7 @@ public class MultipleTsLink implements IMultipleZmlSourceElement
     return ArrayUtils.contains( currentIgnoreTypes, type );
   }
 
+  @Override
   public String getType( )
   {
     return ZmlSourceElements.getType( this );
