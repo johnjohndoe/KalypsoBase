@@ -278,8 +278,9 @@ public class TSLinkWithName implements IZmlSourceElement
     if( Objects.isNull( observation ) )
       return tokenizedName;
 
-    final IAxis valueAxis = AxisUtils.findValueAxis( observation.getAxes(), true );
-    return ObservationTokenHelper.replaceTokens( tokenizedName, observation, valueAxis );
+    final IAxis axis = AxisUtils.findAxis( observation.getAxes(), ZmlSourceElements.getType( this ) );
+
+    return ObservationTokenHelper.replaceTokens( tokenizedName, observation, axis );
   }
 
   @Override

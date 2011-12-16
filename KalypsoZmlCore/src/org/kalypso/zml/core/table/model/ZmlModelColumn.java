@@ -202,9 +202,6 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
     fireColumnChangedEvent();
   }
 
-  /**
-   * @see org.kalypso.zml.core.table.model.IZmlModelColumn#doUpdate(org.kalypso.zml.core.table.model.transaction.IZmlModelUpdateCommand)
-   */
   @Override
   public void doExecute( final IZmlModelUpdateCommand command ) throws SensorException
   {
