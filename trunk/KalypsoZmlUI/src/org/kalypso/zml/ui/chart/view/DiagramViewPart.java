@@ -46,7 +46,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
@@ -75,7 +77,6 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
     layout.verticalSpacing = 0;
     base.setLayout( layout );
 
-    m_chartPart = new ZmlDiagramChartPartComposite( this, getClass().getResource( "templates/diagram.kod" ) ); //$NON-NLS-1$
     m_chartPart.createControl( base, toolkit );
 
     getSite().getPage().addPartListener( this );
@@ -85,7 +86,15 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   public void dispose( )
   {
     getSite().getPage().removePartListener( this );
+  }
 
+  @Override
+  public void init( final IViewSite site ) throws PartInitException
+  {
+    super.init( site );
+
+    m_chartPart = new ZmlDiagramChartPartComposite( this, getClass().getResource( "templates/diagram.kod" ) ); //$NON-NLS-1$
+    m_chartPart.init( site );
   }
 
   @Override
