@@ -85,7 +85,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
  *
  * @author Gernot Belger
  */
-public class GftPartDelegate
+public class GttPartDelegate
 {
   private final IFeaturesProviderListener m_featuresProviderListener = new IFeaturesProviderListener()
   {
@@ -118,13 +118,25 @@ public class GftPartDelegate
     m_menuManager = new MenuManager();
     m_layerTable.setMenu( m_menuManager );
 
-    if( m_tableTemplate != null )
-    {
-      final Layer layer = m_tableTemplate.getLayer();
-      m_layerTable.setInput( layer, m_tableContext );
-      m_layerTable.applyLayer( layer, m_tableContext );
-      m_layerTable.getInput().addFeaturesProviderListener( m_featuresProviderListener );
-    }
+    templateChanged();
+  }
+
+  private void templateChanged( )
+  {
+    if( m_layerTable == null )
+      return;
+
+    final ILayerTableInput oldInput = m_layerTable.getInput();
+    if( oldInput != null )
+      oldInput.removeFeaturesProviderListener( m_featuresProviderListener );
+
+    final Layer layer = m_tableTemplate == null ? null : m_tableTemplate.getLayer();
+    m_layerTable.setInput( layer, m_tableContext );
+    m_layerTable.applyLayer( layer, m_tableContext );
+
+    final ILayerTableInput newInput = m_layerTable.getInput();
+    if( newInput != null )
+      newInput.addFeaturesProviderListener( m_featuresProviderListener );
   }
 
   public void load( final IStorageEditorInput input, final IProgressMonitor monitor ) throws CoreException
@@ -134,10 +146,11 @@ public class GftPartDelegate
     try
     {
       final IStorage storage = input.getStorage();
+
       m_tableTemplate = GisTemplateHelper.loadGisTableview( storage );
       m_tableContext = findContext( storage );
 
-      // FIXME: update control if already created
+      templateChanged();
     }
     catch( final JAXBException e )
     {

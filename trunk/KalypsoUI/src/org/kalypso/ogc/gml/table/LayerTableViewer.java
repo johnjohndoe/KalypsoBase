@@ -317,15 +317,20 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
 
   public void setInput( final Layer layer, final URL context )
   {
-    final String href = layer.getHref();
-    final String type = layer.getLinktype();
-    final String featurePath = layer.getFeaturePath();
+    if( layer == null )
+      setInput( null );
+    else
+    {
+      final String href = layer.getHref();
+      final String type = layer.getLinktype();
+      final String featurePath = layer.getFeaturePath();
 
-    final IPoolableObjectType poolKey = new PoolableObjectType( type, href, context );
+      final IPoolableObjectType poolKey = new PoolableObjectType( type, href, context );
 
-    final ILayerTableInput input = new PoolLayerTableInput( poolKey, featurePath );
+      final ILayerTableInput input = new PoolLayerTableInput( poolKey, featurePath );
 
-    setInput( input );
+      setInput( input );
+    }
   }
 
   public void setInput( final CommandableWorkspace workspace, final String featurePath, final ICommandTarget commandTarget )
@@ -345,11 +350,14 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     {
       clearColumns();
 
+      setFilters( new ViewerFilter[0] );
+
+      if( layer == null )
+        return;
+
       final StyleType styleRef = layer.getStyle();
 
       final LayerTableStyle globalStyle = LayerTableStyleUtils.parseStyle( styleRef, new LayerTableStyle( null ), context );
-
-      setFilters( new ViewerFilter[0] );
 
       final Sort sort = layer.getSort();
       final List<Column> columnList = layer.getColumn();

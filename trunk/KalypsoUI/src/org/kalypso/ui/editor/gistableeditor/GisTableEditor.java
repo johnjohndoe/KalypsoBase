@@ -124,7 +124,7 @@ public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart
     }
   };
 
-  private final GftPartDelegate m_delegate = new GftPartDelegate();
+  private final GttPartDelegate m_delegate = new GttPartDelegate();
 
   @Override
   protected void doSaveInternal( final IProgressMonitor monitor, final IFile file ) throws CoreException

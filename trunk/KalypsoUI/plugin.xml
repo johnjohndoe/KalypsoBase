@@ -56,6 +56,14 @@
 		<view allowMultiple="false" category="org.kalypso.ui.kalypso" class="org.kalypso.ogc.gml.outline.ViewContentOutline" icon="icons/kalypso_gmt.gif" id="org.kalypso.ui.views.outline" name="%org.kalypso.ui.views.outline" />
 		<view allowMultiple="true" category="org.kalypso.ui.kalypso" class="org.kalypso.ui.editor.featureeditor.FeatureTemplateView" icon="icons/kalypso_gtt.gif" id="org.kalypso.ui.views.featuretemplateview" name="%view.name.1" reloadMapOnOpen="false" />
 		<view allowMultiple="false" category="org.kalypso.ui.kalypso" class="org.kalypso.ui.views.map.MapOverView" id="org.kalypso.ui.views.mapOverView" name="%view.name.2"/>
+  <view
+        category="org.kalypso.ui.kalypso"
+        class="org.kalypso.ui.editor.gistableeditor.GttViewPart"
+        icon="icons/kalypso_gtt.gif"
+        id="org.kalypso.ui.editor.gistableeditor.GttViewPart"
+        name="Gis Table"
+        restorable="true">
+  </view>
 	</extension>
 	<extension id="editorActions" name="editorActions" point="org.eclipse.ui.editorActions">
 		<editorContribution targetID="org.kalypso.ui.editor.gistableeditor.GisTableEditor" id="org.kalypso.ui.editor.gistableeditor.GisTableActionDelegate">
