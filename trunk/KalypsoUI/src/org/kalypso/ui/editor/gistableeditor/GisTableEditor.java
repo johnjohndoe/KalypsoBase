@@ -124,7 +124,7 @@ public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart
     }
   };
 
-  private final GttPartDelegate m_delegate = new GttPartDelegate();
+  private final GmlTablePartDelegate m_delegate = new GmlTablePartDelegate();
 
   @Override
   protected void doSaveInternal( final IProgressMonitor monitor, final IFile file ) throws CoreException
@@ -140,6 +140,8 @@ public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart
     final IWorkbenchPartSite site = getSite();
 
     m_delegate.createControl( parent, this, m_fcl, site );
+
+    setSourceProvider( new GmlTableSourceProvider( site, getLayerTable() ) );
 
     final ISelectionProvider selectionProvider = m_delegate.getSelectionProvider();
 

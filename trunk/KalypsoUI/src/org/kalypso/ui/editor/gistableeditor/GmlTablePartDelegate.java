@@ -85,7 +85,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
  *
  * @author Gernot Belger
  */
-public class GttPartDelegate
+public class GmlTablePartDelegate
 {
   private final IFeaturesProviderListener m_featuresProviderListener = new IFeaturesProviderListener()
   {
