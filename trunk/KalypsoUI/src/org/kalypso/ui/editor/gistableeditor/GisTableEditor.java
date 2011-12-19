@@ -61,9 +61,6 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -73,7 +70,6 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -113,16 +109,12 @@ import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
- * <p>
- * Eclipse-Editor zum editieren der Gis-Tabellen-Templates.
- * </p>
- * <p>
- * Zeigt das ganze als Tabelendarstellung, die einzelnen Datenquellen k?nnen potentiell editiert werden
- * </p>
+ * Eclipse-Editor zum editieren der Gis-Tabellen-Templates.<br/>
+ * Zeigt das ganze als Tabelendarstellung, die einzelnen Datenquellen k?nnen potentiell editiert werden.<br/>
  *
- * @author belger
+ * @author Gernot Belger
  */
-public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart, ISelectionProvider, IExportableObjectFactory
+public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart, IExportableObjectFactory
 {
   private final IFeatureChangeListener m_fcl = new IFeatureChangeListener()
   {
@@ -168,20 +160,6 @@ public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart
   private URL m_tableContext;
 
   @Override
-  public void dispose( )
-  {
-    final IWorkbenchPartSite site = getSite();
-    if( site != null )
-      site.setSelectionProvider( this );
-
-    super.dispose();
-  }
-
-  /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor,
-   *      org.eclipse.core.resources.IFile)
-   */
-  @Override
   protected void doSaveInternal( final IProgressMonitor monitor, final IFile file )
   {
     if( m_layerTable == null )
@@ -223,9 +201,6 @@ public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart
     }
   }
 
-  /**
-   * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public void createPartControl( final Composite parent )
   {
@@ -318,42 +293,6 @@ public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart
     return m_layerTable;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
-   */
-  @Override
-  public void addSelectionChangedListener( final ISelectionChangedListener listener )
-  {
-    m_layerTable.addSelectionChangedListener( listener );
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
-   */
-  @Override
-  public ISelection getSelection( )
-  {
-    return m_layerTable.getSelection();
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
-   */
-  @Override
-  public void removeSelectionChangedListener( final ISelectionChangedListener listener )
-  {
-    m_layerTable.removeSelectionChangedListener( listener );
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
-   */
-  @Override
-  public void setSelection( final ISelection selection )
-  {
-    m_layerTable.setSelection( selection );
-  }
-
   public void appendSpaltenActions( final IMenuManager manager )
   {
     final IFeaturesProvider features = m_layerTable.getInput();
@@ -401,9 +340,6 @@ public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart
     return true;
   }
 
-  /**
-   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-   */
   @Override
   public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
@@ -416,9 +352,6 @@ public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart
     return super.getAdapter( adapter );
   }
 
-  /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
-   */
   @Override
   public IExportableObject[] createExportableObjects( final Configuration configuration )
   {
@@ -427,10 +360,6 @@ public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart
     return new IExportableObject[] { exp };
   }
 
-  /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration,
-   *      ImageDescriptor)
-   */
   @Override
   public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, final ImageDescriptor defaultImage )
   {
@@ -453,5 +382,4 @@ public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart
 
     return m_layerTable.getInput();
   }
-
 }

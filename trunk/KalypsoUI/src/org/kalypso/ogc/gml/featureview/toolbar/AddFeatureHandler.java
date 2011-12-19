@@ -53,7 +53,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.control.TableFeatureControl;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
+import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
