@@ -31,7 +31,7 @@
 		<editor default="true" name="%org.kalypso.ui.editor.featureeditor.FeatureEditor" icon="icons/kalypso_gtt.gif" extensions="gft" class="org.kalypso.ui.editor.featureeditor.FeatureEditor" id="org.kalypso.ui.editor.featureeditor.FeatureEditor">
 		</editor>
 		<editor class="org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor" default="true" extensions="xsd" icon="icons/full/obj16/gml_schema_file.gif" id="org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor" name="%org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor" />
-		<editor class="org.kalypso.ui.editor.gmleditor.ui.GmlEditor" contributorClass="org.kalypso.ui.editor.gmleditor.ui.GmlEditorActionBarContributor" default="true" extensions="gmv,gml,shp,gmlz" icon="icons/kalypso_gtt.gif" id="org.kalypso.ui.editor.GmlEditor" name="%org.kalypso.ui.editor.gmleditor.part.GmlEditor">
+		<editor class="org.kalypso.ui.editor.gmleditor.part.GmlEditor" contributorClass="org.kalypso.ui.editor.gmleditor.part.GmlEditorActionBarContributor" default="true" extensions="gmv,gml,shp,gmlz" icon="icons/kalypso_gtt.gif" id="org.kalypso.ui.editor.GmlEditor" name="%org.kalypso.ui.editor.gmleditor.part.GmlEditor">
 		</editor>
 		<editor class="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor" icon="icons/kalypso_odt.gif" default="true" contributorClass="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditorContributor" name="%org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor" id="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor" extensions="odt,zml">
 		</editor>
@@ -173,7 +173,7 @@
 		<factory adaptableType="org.kalypsodeegree.model.feature.Feature" class="org.kalypso.ogc.gml.actionfilters.FeatureActionFilterAdapterFactory">
 			<adapter type="org.eclipse.ui.IActionFilter" />
 		</factory>
-		<factory adaptableType="org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement" class="org.kalypso.ogc.gml.actionfilters.FeatureAssociationActionFilterAdapterFactory">
+		<factory adaptableType="org.kalypso.ui.editor.gmleditor.part.FeatureAssociationTypeElement" class="org.kalypso.ogc.gml.actionfilters.FeatureAssociationActionFilterAdapterFactory">
 			<adapter type="org.eclipse.ui.IActionFilter" />
 		</factory>
 		<factory adaptableType="org.kalypso.ui.editor.mapeditor.GisMapEditor" class="org.kalypso.ui.views.properties.MapPartAdapterFactory">
@@ -202,7 +202,7 @@
 		<actionFilter class="org.kalypso.ogc.gml.actionfilters.FeatureTypeActionFilter" id="org.kalypso.ogc.gml.actionfilters.FeatureTypeActionFilter" targetType="org.kalypsodeegree.model.feature.Feature" />
 		<actionFilter class="org.kalypso.ogc.gml.actionfilters.FeatureTypeStrictActionFilter" id="org.kalypso.ogc.gml.actionfilters.FeatureTypeStrictActionFilter" targetType="org.kalypsodeegree.model.feature.Feature" />
 		<actionFilter class="org.kalypso.ogc.gml.actionfilters.FeatureListElementActionFilter" id="org.kalypso.ogc.gml.actionfilters.FeatureListElementActionFilter" targetType="org.kalypsodeegree.model.feature.Feature" />
-		<actionFilter class="org.kalypso.ogc.gml.actionfilters.FeatureAssociationQNameActionFilter" id="org.kalypso.ogc.gml.actionfilters.FeatureAssociationQNameActionFilter" targetType="org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement" />
+		<actionFilter class="org.kalypso.ogc.gml.actionfilters.FeatureAssociationQNameActionFilter" id="org.kalypso.ogc.gml.actionfilters.FeatureAssociationQNameActionFilter" targetType="org.kalypso.ui.editor.gmleditor.part.FeatureAssociationTypeElement" />
 	</extension>
 	<extension point="org.eclipse.ui.newWizards">
 		<category id="org.kalypso.ui.newwizards.kalypso" name="%category.name.1" />
@@ -1347,7 +1347,7 @@
 		<propertyTester class="org.kalypso.ogc.sensor.properties.RepositoryItemPropertyTester" id="org.kalypso.ogc.sensor.properties.RepositoryItemPropertyTester" namespace="org.kalypso.ui" properties="repositoryItemHasWQTable" type="org.kalypso.repository.IRepositoryItem" />
 		<propertyTester class="org.kalypso.ui.internal.utils.WorkbenchWindowPropertyTest" id="org.kalypso.ui.internal.utils.WorkbenchWindowPropertyTest" namespace="org.kalypso.ui.window" properties="isEditorAreaVisible,isViewVisible" type="org.eclipse.ui.IWorkbenchWindow" />
         <propertyTester
-              class="org.kalypso.ui.editor.gmleditor.ui.GmlEditorPropertyTester"
+              class="org.kalypso.ui.editor.gmleditor.part.GmlEditorPropertyTester"
               id="org.kalypso.ogc.gml.expressions.GMLEditorTester"
               namespace="org.kalypso.ui.test.gmleditor"
               properties="qname"
