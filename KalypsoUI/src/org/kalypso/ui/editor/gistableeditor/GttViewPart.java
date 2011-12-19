@@ -83,7 +83,7 @@ public class GttViewPart extends AbstractWorkbenchPart implements IViewPart
     }
   };
 
-  private final GttPartDelegate m_delegate = new GttPartDelegate();
+  private final GmlTablePartDelegate m_delegate = new GmlTablePartDelegate();
 
   @Override
   public IViewSite getViewSite( )
@@ -115,6 +115,8 @@ public class GttViewPart extends AbstractWorkbenchPart implements IViewPart
     final IWorkbenchPartSite site = getSite();
 
     m_delegate.createControl( parent, m_commandTarget, m_fcl, site );
+
+    setSourceProvider( new GmlTableSourceProvider( site, getLayerTable() ) );
 
 // final ISelectionProvider selectionProvider = m_delegate.getSelectionProvider();
 

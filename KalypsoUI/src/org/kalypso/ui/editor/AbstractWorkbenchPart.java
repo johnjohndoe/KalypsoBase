@@ -66,6 +66,7 @@ import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartConstants;
+import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.dialogs.SaveAsDialog;
@@ -79,6 +80,7 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
@@ -109,12 +111,23 @@ public abstract class AbstractWorkbenchPart extends WorkbenchPart implements IRe
     }
   };
 
+  private final PartAdapter2 m_partListener = new PartAdapter2()
+  {
+    @Override
+    public void partActivated( final IWorkbenchPartReference partRef )
+    {
+      handlePartActivated( partRef );
+    }
+  };
+
   private final JobExclusiveCommandTarget m_commandTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), m_dirtyRunnable );
 
   /**
    * This flag prevents reload on save.
    */
   private boolean m_isSaving = false;
+
+  private ISourceProvider2 m_sourceProvider;
 
   public AbstractWorkbenchPart( )
   {
@@ -143,15 +156,30 @@ public abstract class AbstractWorkbenchPart extends WorkbenchPart implements IRe
   @Override
   public void dispose( )
   {
+    getSite().getPage().removePartListener( m_partListener );
+
+    if( m_sourceProvider != null )
+      m_sourceProvider.dispose();
+
     ResourcesPlugin.getWorkspace().removeResourceChangeListener( this );
 
     m_commandTarget.dispose();
     super.dispose();
   }
 
-  /**
-   * @see org.eclipse.ui.part.EditorPart#doSave(org.eclipse.core.runtime.IProgressMonitor)
-   */
+  @Override
+  protected void setSite( final IWorkbenchPartSite site )
+  {
+    final IWorkbenchPartSite currentSite = getSite();
+    if( currentSite != null )
+      currentSite.getPage().addPartListener( m_partListener );
+
+    super.setSite( site );
+
+    if( site != null )
+      site.getPage().addPartListener( m_partListener );
+  }
+
   public void doSave( final IProgressMonitor monitor )
   {
     final IEditorInput eInput = getEditorInput();
@@ -489,5 +517,23 @@ public abstract class AbstractWorkbenchPart extends WorkbenchPart implements IRe
       return m_commandTarget;
 
     return super.getAdapter( adapter );
+  }
+
+  public void setSourceProvider( final ISourceProvider2 sourceProvider )
+  {
+    m_sourceProvider = sourceProvider;
+  }
+
+  /**
+   * We need to fire a source change event, in order to tell the map context which panel is the currently active one.
+   */
+  protected void handlePartActivated( final IWorkbenchPartReference partRef )
+  {
+    if( m_sourceProvider == null )
+      return;
+
+    final IWorkbenchPart part = partRef.getPart( false );
+    if( part == this )
+      m_sourceProvider.fireSourceChanged();
   }
 }

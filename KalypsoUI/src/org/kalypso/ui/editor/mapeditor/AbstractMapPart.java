@@ -65,15 +65,12 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.IExportableObjectFactory;
@@ -145,17 +142,6 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
     }
   };
 
-  private MapPanelSourceProvider m_mapSourceProvider;
-
-  private final PartAdapter2 m_partListener = new PartAdapter2()
-  {
-    @Override
-    public void partActivated( final IWorkbenchPartReference partRef )
-    {
-      handlePartActivated( partRef );
-    }
-  };
-
   private GM_Envelope m_initialEnv;
 
   private BaseMapSchedulingRule m_baseMapSchedulingRule;
@@ -212,7 +198,8 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
     m_mapPanel = m_control.createMapPanel( this, m_selectionManager );
     updatePanel( m_mapModell, m_initialEnv );
     m_mapPanel.addMapPanelListener( m_mapPanelListener );
-    m_mapSourceProvider = new MapPanelSourceProvider( site, m_mapPanel );
+
+    setSourceProvider( new MapPanelSourceProvider( site, m_mapPanel ) );
 
     // HACK: at the moment views never have a menu... maybe we could get the information,
     // if a context menu is desired from the defining extension
@@ -225,22 +212,6 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
     site.setSelectionProvider( m_mapPanel );
   }
 
-  /**
-   * We need to fire a source change event, in order to tell the map context which panel is the currently active one.
-   */
-  protected void handlePartActivated( final IWorkbenchPartReference partRef )
-  {
-    if( m_mapSourceProvider == null )
-      return;
-
-    final IWorkbenchPart part = partRef.getPart( false );
-    if( part == AbstractMapPart.this )
-      m_mapSourceProvider.fireSourceChanged();
-  }
-
-  /**
-   * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
-   */
   @Override
   public void setFocus( )
   {
@@ -272,26 +243,6 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
     return (IViewSite) getSite();
   }
 
-  /**
-   * @see org.eclipse.ui.part.WorkbenchPart#setSite(org.eclipse.ui.IWorkbenchPartSite)
-   */
-  @Override
-  protected void setSite( final IWorkbenchPartSite site )
-  {
-    final IWorkbenchPartSite currentSite = getSite();
-    if( currentSite != null )
-      currentSite.getPage().addPartListener( m_partListener );
-
-    super.setSite( site );
-
-    if( site != null )
-      site.getPage().addPartListener( m_partListener );
-  }
-
-  /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#loadInternal(org.eclipse.core.runtime.IProgressMonitor,
-   *      org.eclipse.ui.IStorageEditorInput)
-   */
   @Override
   protected synchronized void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws CoreException
   {
@@ -542,10 +493,6 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
   @Override
   public void dispose( )
   {
-    getSite().getPage().removePartListener( m_partListener );
-
-    m_mapSourceProvider.dispose();
-
     m_disposed = true;
 
     setMapModell( null, null );
@@ -565,5 +512,4 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
   {
     super.setPartName( partName );
   }
-
 }

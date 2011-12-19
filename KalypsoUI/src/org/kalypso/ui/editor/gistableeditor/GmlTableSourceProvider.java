@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.editor.gmleditor.part;
+package org.kalypso.ui.editor.gistableeditor;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -64,26 +64,27 @@ import org.eclipse.ui.services.IEvaluationService;
 import org.eclipse.ui.services.IServiceLocator;
 import org.eclipse.ui.services.IServiceWithSources;
 import org.kalypso.contribs.eclipse.ui.commands.CommandUtilities;
+import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ui.editor.ISourceProvider2;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
- * Manages context and sources corresponding to the gmv tree.<br>
- * As soon as the manager is created on a gmv part, the context is activated and registered with the given
- * serviceLocator. Also, the gmv tree is provides as source via the evaluation context.<br>
+ * Manages context and sources corresponding to the gtt table.<br>
+ * As soon as the manager is created on a gtt part, the context is activated and registered with the given
+ * serviceLocator. Also, the gtt table is provides as source via the evaluation context.<br>
  *
  * @author Gernot Belger
  */
-public class GmltreeSourceProvider extends AbstractSourceProvider implements ISourceProvider2
+public class GmlTableSourceProvider extends AbstractSourceProvider implements ISourceProvider2
 {
-  public static final String GMLTREE_COMMAND_CATEGORY = "org.kalypso.ogc.gml.gmltree.category"; //$NON-NLS-1$
+  public static final String GMLTABLE_COMMAND_CATEGORY = "org.kalypso.ogc.gml.table.category"; //$NON-NLS-1$
 
-  public static final String GMLTREE_CONTEXT = "org.kalypso.ogc.gml.tree.context"; //$NON-NLS-1$
+  public static final String GMLTABLE_CONTEXT = "org.kalypso.ogc.gml.table.context"; //$NON-NLS-1$
 
-  public static final String ACTIVE_GMLTREE_NAME = "activeGmlTree"; //$NON-NLS-1$
+  public static final String ACTIVE_GMLTABLE_NAME = "activeGmlTable"; //$NON-NLS-1$
 
-  private static final String[] PROVIDED_SOURCE_NAMES = new String[] { ACTIVE_GMLTREE_NAME };
+  private static final String[] PROVIDED_SOURCE_NAMES = new String[] { ACTIVE_GMLTABLE_NAME };
 
   private final ModellEventListener m_modelListener = new ModellEventListener()
   {
@@ -109,7 +110,7 @@ public class GmltreeSourceProvider extends AbstractSourceProvider implements ISo
    */
   private final Collection<IServiceWithSources> m_registeredServices = new HashSet<IServiceWithSources>();
 
-  private GmlTreeView m_treeViewer;
+  private LayerTableViewer m_tableViewer;
 
   private final IContextActivation m_activationContext;
 
@@ -125,7 +126,7 @@ public class GmltreeSourceProvider extends AbstractSourceProvider implements ISo
     }
   };
 
-  private final Job m_activateContextJob = new UIJob( "Activate gistree context job" ) //$NON-NLS-1$
+  private final Job m_activateContextJob = new UIJob( "Activate gml table context job" ) //$NON-NLS-1$
   {
     @Override
     @SuppressWarnings("synthetic-access")
@@ -133,7 +134,7 @@ public class GmltreeSourceProvider extends AbstractSourceProvider implements ISo
     {
       // REMARK: priority has been chosen more or less by random... set a correct priority if
       // clear how that stuff works.
-      fireSourceChanged( ISources.ACTIVE_WORKBENCH_WINDOW, ACTIVE_GMLTREE_NAME, m_treeViewer );
+      fireSourceChanged( ISources.ACTIVE_WORKBENCH_WINDOW, ACTIVE_GMLTABLE_NAME, m_tableViewer );
 
       refreshElements();
 
@@ -142,28 +143,29 @@ public class GmltreeSourceProvider extends AbstractSourceProvider implements ISo
   };
 
   /**
-   * Creates a new GmltreeSourceProvider on the given {@link GmlTreeView}.<br>
+   * Creates a new {@link GmlTableSourceProvider}r on the given {@link LayerTableViewer}.<br>
    * Initializes it state with the given parameters.
    */
-  public GmltreeSourceProvider( final IServiceLocator serviceLocator, final GmlTreeView treeViewer )
+  public GmlTableSourceProvider( final IServiceLocator serviceLocator, final LayerTableViewer tableViewer )
   {
     m_activateContextJob.setSystem( true );
 
     m_refreshElementsJob.setSystem( true );
 
     m_serviceLocator = serviceLocator;
-    m_treeViewer = treeViewer;
+    m_tableViewer = tableViewer;
 
     final IContextService contextService = (IContextService) registerServiceWithSources( serviceLocator, IContextService.class );
     registerServiceWithSources( serviceLocator, IEvaluationService.class );
     registerServiceWithSources( serviceLocator, IHandlerService.class );
     registerServiceWithSources( serviceLocator, IMenuService.class );
 
-    m_activationContext = contextService.activateContext( GMLTREE_CONTEXT );
+    m_activationContext = contextService.activateContext( GMLTABLE_CONTEXT );
 
-    m_treeViewer.addModellListener( m_modelListener );
+    // FIXME
+    // m_tableViewer.addModellListener( m_modelListener );
 
-    m_treeViewer.addSelectionChangedListener( m_selectionChangedListener );
+    m_tableViewer.addSelectionChangedListener( m_selectionChangedListener );
   }
 
   private IServiceWithSources registerServiceWithSources( final IServiceLocator serviceLocator, final Class< ? extends IServiceWithSources> serviceClass )
@@ -185,9 +187,11 @@ public class GmltreeSourceProvider extends AbstractSourceProvider implements ISo
     for( final IServiceWithSources service : m_registeredServices )
       service.removeSourceProvider( this );
 
-    m_treeViewer.removeModellListener( m_modelListener );
-    m_treeViewer.removeSelectionChangedListener( m_selectionChangedListener );
-    m_treeViewer = null;
+    // FIXME
+    // m_tableViewer.removeModellListener( m_modelListener );
+
+    m_tableViewer.removeSelectionChangedListener( m_selectionChangedListener );
+    m_tableViewer = null;
 
     if( m_activationContext != null )
       m_activationContext.getContextService().deactivateContext( m_activationContext );
@@ -197,7 +201,7 @@ public class GmltreeSourceProvider extends AbstractSourceProvider implements ISo
   public Map< ? , ? > getCurrentState( )
   {
     final Map<String, Object> currentState = new TreeMap<String, Object>();
-    currentState.put( ACTIVE_GMLTREE_NAME, m_treeViewer );
+    currentState.put( ACTIVE_GMLTABLE_NAME, m_tableViewer );
     return currentState;
   }
 
@@ -226,12 +230,12 @@ public class GmltreeSourceProvider extends AbstractSourceProvider implements ISo
     {
       final IEvaluationService evalService = (IEvaluationService) m_serviceLocator.getService( IEvaluationService.class );
       if( evalService != null )
-        evalService.requestEvaluation( ACTIVE_GMLTREE_NAME );
+        evalService.requestEvaluation( ACTIVE_GMLTABLE_NAME );
 
       // Refresh the ui elements (i.e. toolbar), but is this the best place...?
       final ICommandService commandService = (ICommandService) m_serviceLocator.getService( ICommandService.class );
       if( commandService != null )
-        CommandUtilities.refreshElements( commandService, GMLTREE_COMMAND_CATEGORY, null );
+        CommandUtilities.refreshElements( commandService, GMLTABLE_COMMAND_CATEGORY, null );
     }
     catch( final CommandException e )
     {

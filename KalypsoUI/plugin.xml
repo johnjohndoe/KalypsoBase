@@ -774,7 +774,8 @@
 	</extension>
 	<extension point="org.eclipse.ui.contexts">
 		<context id="org.kalypso.ogc.gml.map.context" name="%context.name.0" parentId="org.eclipse.ui.contexts.window" />
-        <context id="org.kalypso.ogc.gml.gmltree.context" name="Gml Tree" parentId="org.eclipse.ui.contexts.window"/>
+        <context id="org.kalypso.ogc.gml.tree.context" name="Gml Tree" parentId="org.eclipse.ui.contexts.window"/>
+        <context id="org.kalypso.ogc.gml.table.context" name="Gml Table" parentId="org.eclipse.ui.contexts.window"/>
 	</extension>
 	<extension point="org.kalypso.ui.featureViewExtensionControl">
 		<extensionControl class="org.kalypso.ogc.gml.featureview.control.ChecklistOfLinksFeatureviewControlFactory" id="org.kalypso.ogc.gml.featureview.control.ChecklistOfLinksFeatureviewControlFactory">
@@ -1601,4 +1602,12 @@
            id="imageExternalBrowser">
      </extensionControl>
   </extension>
+  
+    <extension point="org.eclipse.ui.commands">
+         <category
+               description="GIS Table Commands"
+               id="org.kalypso.ogc.gml.table.category"
+               name="GIS Table">
+         </category>
+    </extension>
 </plugin>
