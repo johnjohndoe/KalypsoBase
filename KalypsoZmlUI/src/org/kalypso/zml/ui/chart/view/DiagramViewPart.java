@@ -77,7 +77,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
     layout.verticalSpacing = 0;
     base.setLayout( layout );
 
-    m_chartPart.createControl( base, toolkit );
+    m_chartPart.createControl( base );
 
     getSite().getPage().addPartListener( this );
   }

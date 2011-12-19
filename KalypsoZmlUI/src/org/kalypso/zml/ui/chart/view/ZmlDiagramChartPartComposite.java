@@ -42,24 +42,17 @@ package org.kalypso.zml.ui.chart.view;
 
 import java.net.URL;
 
-import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.chart.ui.editor.mousehandler.ZoomPanMaximizeHandler;
 import org.kalypso.chart.ui.editor.mousehandler.ZoomPanMaximizeHandler.DIRECTION;
 import org.kalypso.chart.ui.internal.workbench.ChartPartComposite;
-import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
 import org.kalypso.zml.core.diagram.base.ChartTypeHandler;
 import org.kalypso.zml.core.diagram.base.visitors.ResetZmlLayerVisitor;
 import org.kalypso.zml.ui.chart.layer.visitor.SingleGridVisibilityVisitor;
-import org.kalypso.zml.ui.debug.KalypsoZmlUiDebug;
 
 import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
 import de.openali.odysseus.chart.factory.config.ChartFactory;
@@ -109,44 +102,19 @@ public class ZmlDiagramChartPartComposite extends ChartPartComposite
 
   }
 
-  public void createControl( final Composite parent, final FormToolkit toolkit )
+  @Override
+  public Composite createControl( final Composite parent )
   {
     loadInput( null );
 
-    createToolbar( parent, toolkit );
     final Composite control = super.createControl( parent );
     control.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     final IChartComposite chartComposite = getChartComposite();
     final ZoomPanMaximizeHandler handler = new ZoomPanMaximizeHandler( chartComposite, DIRECTION.eBoth );
     chartComposite.getPlotHandler().activatePlotHandler( handler );
-  }
 
-  private void createToolbar( final Composite body, final FormToolkit toolkit )
-  {
-    // FIXME
-    if( !KalypsoZmlUiDebug.DEBUG_DIAGRAM.isEnabled() )
-      return;
-
-    final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT );
-
-    final ToolBar control = manager.createControl( body );
-    control.setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false ) );
-
-    // TODO toolbar
-// for( final String reference : contributions )
-// {
-// ContributionUtils.populateContributionManager( PlatformUI.getWorkbench(), manager, reference );
-// }
-
-    if( KalypsoZmlUiDebug.DEBUG_DIAGRAM.isEnabled() )
-    {
-      ContributionUtils.populateContributionManager( PlatformUI.getWorkbench(), manager, "toolbar:org.kalypso.zml.ui.chart.view.debug" ); //$NON-NLS-1$
-    }
-
-    manager.update( true );
-
-    toolkit.adapt( control );
+    return control;
   }
 
   public void setSelection( final IMultipleZmlSourceElement[] selection )
