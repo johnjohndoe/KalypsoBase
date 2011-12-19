@@ -49,13 +49,13 @@ import org.kalypso.zml.core.base.IZmlSourceElement;
 /**
  * @author Dirk Kuch
  */
-public class MultipleObsProvider implements IMultipleZmlSourceElement
+public class MultipleSourceElement implements IMultipleZmlSourceElement
 {
   Set<IZmlSourceElement> m_sources = new LinkedHashSet<>();
 
   private final String m_type;
 
-  public MultipleObsProvider( final String type )
+  public MultipleSourceElement( final String type )
   {
     m_type = type;
   }

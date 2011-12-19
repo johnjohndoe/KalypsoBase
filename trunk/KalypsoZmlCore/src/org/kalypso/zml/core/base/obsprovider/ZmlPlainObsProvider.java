@@ -89,7 +89,7 @@ public class ZmlPlainObsProvider extends PlainObsProvider implements IZmlSourceE
   @Override
   public String getIdentifier( )
   {
-    throw new UnsupportedOperationException();
+    return m_identifier;
   }
 
   @Override

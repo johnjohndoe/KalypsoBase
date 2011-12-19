@@ -40,12 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.base.selection;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -54,13 +57,15 @@ import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
-import org.kalypso.ogc.sensor.provider.PlainObsProvider;
+import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.view.ObservationViewHelper;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
-import org.kalypso.zml.core.base.obsprovider.MultipleObsProvider;
+import org.kalypso.zml.core.base.IZmlSourceElement;
+import org.kalypso.zml.core.base.TSLinkWithName;
+import org.kalypso.zml.core.base.obsprovider.MultipleSourceElement;
 import org.kalypso.zml.core.base.obsprovider.ZmlPlainObsProvider;
 
 /**
@@ -83,8 +88,7 @@ public final class ZmlSelectionBuilder
   {
     final Iterator< ? > iterator = selection.iterator();
 
-    final Set<IRepositoryItem> items = new LinkedHashSet<>();
-    final Set<IObsProvider> providers = new LinkedHashSet<>();
+    final Set<IZmlSourceElement> items = new LinkedHashSet<>();
 
     while( iterator.hasNext() )
     {
@@ -94,87 +98,112 @@ public final class ZmlSelectionBuilder
         final IRepositoryItem item = (IRepositoryItem) obj;
         if( item.hasAdapter( IObservation.class ) )
         {
-          items.add( item );
+          final IZmlSourceElement[] sources = toSourceElement( item );
+          if( ArrayUtils.isNotEmpty( sources ) )
+          {
+            Collections.addAll( items, sources );
+          }
         }
       }
       else if( obj instanceof IAdaptable )
       {
         final IAdaptable adapter = (IAdaptable) obj;
 
+        final IZmlSourceElement element = (IZmlSourceElement) adapter.getAdapter( IZmlSourceElement.class );
+        if( Objects.isNotNull( element ) )
+        {
+          items.add( element );
+          continue;
+        }
+
+        final TSLinkWithName link = (TSLinkWithName) adapter.getAdapter( TSLinkWithName.class );
+        if( Objects.isNotNull( link ) )
+        {
+          items.add( link );
+          continue;
+        }
+
         final IObsProvider provider = (IObsProvider) adapter.getAdapter( IObsProvider.class );
         if( Objects.isNotNull( provider ) )
         {
-          providers.add( provider );
-          continue;
+          final IZmlSourceElement[] sources = toSourceElement( provider );
+          if( ArrayUtils.isNotEmpty( sources ) )
+          {
+            Collections.addAll( items, sources );
+            continue;
+          }
         }
 
         final IObservation observation = (IObservation) adapter.getAdapter( IObservation.class );
         if( Objects.isNotNull( observation ) )
         {
-          providers.add( new PlainObsProvider( observation, null ) );
-          continue;
+          final IZmlSourceElement[] sources = toSourceElement( provider );
+          if( ArrayUtils.isNotEmpty( sources ) )
+          {
+            Collections.addAll( items, sources );
+            continue;
+          }
         }
       }
     }
 
-    final Map<String, IMultipleZmlSourceElement> sources = new HashMap<String, IMultipleZmlSourceElement>();
-    fill( sources, items.toArray( new IRepositoryItem[] {} ) );
-    fill( sources, providers.toArray( new IObsProvider[] {} ) );
-
-    return sources.values().toArray( new IMultipleZmlSourceElement[] {} );
-  }
-
-  private static void fill( final Map<String, IMultipleZmlSourceElement> sources, final IObsProvider[] providers )
-  {
-    for( final IObsProvider provider : providers )
-    {
-      // FIXME lazy loading
-      final IObservation observation = provider.getObservation();
-      if( Objects.isNull( observation ) )
-        continue;
-
-      final IAxis[] valueAxes = AxisUtils.findValueAxes( observation.getAxes(), false );
-      for( final IAxis axis : valueAxes )
-      {
-        final String type = axis.getType();
-        IMultipleZmlSourceElement multiple = sources.get( type );
-        if( Objects.isNull( multiple ) )
-        {
-          multiple = new MultipleObsProvider( type );
-          sources.put( type, multiple );
-        }
-
-        multiple.add( new ZmlPlainObsProvider( multiple.getIdentifier(), observation, new ObservationRequest() ) );
-      }
-    }
+    return packAsMultiple( items.toArray( new IZmlSourceElement[] {} ) );
 
   }
 
-  private static void fill( final Map<String, IMultipleZmlSourceElement> sources, final IRepositoryItem[] items )
+  private static IMultipleZmlSourceElement[] packAsMultiple( final IZmlSourceElement[] sources )
   {
-    for( final IRepositoryItem item : items )
+    final Map<String, IMultipleZmlSourceElement> resultSet = new HashMap<>();
+
+    for( final IZmlSourceElement source : sources )
     {
-      final IObservation observation = (IObservation) item.getAdapter( IObservation.class );
-      if( Objects.isNull( observation ) )
-        continue;
+      final String type = source.getIdentifier();
 
-      // TODO refactor ObservationViewHelper in KalypsoUI - to get rid of KalypsoUI dependency in KalypsoZmlCore
-      final DateRange dateRange = ObservationViewHelper.makeDateRange( item );
-
-      final IAxis[] valueAxes = AxisUtils.findValueAxes( observation.getAxes(), false );
-      for( final IAxis axis : valueAxes )
+      IMultipleZmlSourceElement multiple = resultSet.get( type );
+      if( Objects.isNull( multiple ) )
       {
-        final String type = axis.getType();
-        IMultipleZmlSourceElement multiple = sources.get( type );
-        if( Objects.isNull( multiple ) )
-        {
-          multiple = new MultipleObsProvider( type );
-          sources.put( type, multiple );
-        }
-
-        multiple.add( new ZmlPlainObsProvider( multiple.getIdentifier(), observation, new ObservationRequest( dateRange ) ) );
+        multiple = new MultipleSourceElement( type );
+        resultSet.put( type, multiple );
       }
+
+      multiple.add( source );
     }
 
+    return resultSet.values().toArray( new MultipleSourceElement[] {} );
+  }
+
+  private static IZmlSourceElement[] toSourceElement( final IRepositoryItem item )
+  {
+    final IObservation observation = (IObservation) item.getAdapter( IObservation.class );
+    if( Objects.isNull( observation ) )
+      return new IZmlSourceElement[] {};
+
+    final DateRange dateRange = ObservationViewHelper.makeDateRange( item );
+
+    return toSourceElement( observation, new ObservationRequest( dateRange ) );
+  }
+
+  private static IZmlSourceElement[] toSourceElement( final IObservation observation, final IRequest request )
+  {
+    final Set<IZmlSourceElement> sources = new HashSet<>();
+
+    final IAxis[] valueAxes = AxisUtils.findValueAxes( observation.getAxes(), false );
+    for( final IAxis axis : valueAxes )
+    {
+      final String type = axis.getType();
+      sources.add( new ZmlPlainObsProvider( type, observation, request ) );
+    }
+
+    return sources.toArray( new IZmlSourceElement[] {} );
+  }
+
+  private static IZmlSourceElement[] toSourceElement( final IObsProvider provider )
+  {
+    // FIXME lazy loading
+    final IObservation observation = provider.getObservation();
+    if( Objects.isNull( observation ) )
+      return new IZmlSourceElement[] {};
+
+    return toSourceElement( observation, new ObservationRequest() );
   }
 }
