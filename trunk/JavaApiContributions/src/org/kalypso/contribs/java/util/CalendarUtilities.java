@@ -44,7 +44,7 @@ import java.util.Calendar;
 
 /**
  * CalendarUtilities
- * 
+ *
  * @author schlienger
  */
 public final class CalendarUtilities
@@ -113,7 +113,7 @@ public final class CalendarUtilities
    * <p>
    * As last resort, if the fieldName does not represent a the literal name of a calendar field, it is assumed to be an
    * integer representing its java-internal value. Finally this value is returned.
-   * 
+   *
    * @param fieldName
    * @return Calendar.*
    * @see java.util.Calendar
@@ -126,14 +126,14 @@ public final class CalendarUtilities
     }
     catch( final Throwable t )
     {
-// last we assume that it is allready an integer
+      // last we assume that it is already an integer
       return Integer.parseInt( fieldName );
     }
   }
 
   /**
    * Important note: this method is not localized and is designed to be used in a german environment.
-   * 
+   *
    * @return the string abbreviation of the given field. For instance if field is the java internal value HOUR_OF_DAY,
    *         'h' is returned
    */
