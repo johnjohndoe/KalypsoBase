@@ -77,7 +77,7 @@ import org.kalypso.core.i18n.Messages;
  * <p>
  * the default-catalog is dynamic, but changes will not be saved
  * </p>
- *
+ * 
  * @author doemming
  */
 public class CatalogManager
@@ -166,7 +166,7 @@ public class CatalogManager
     }
     catch( final Exception e )
     {
-      // e.printStackTrace();
+//      e.printStackTrace();
       System.err.println( String.format( "Failed to load catalog from: %s", catalogURI ) );
       return null;
     }
