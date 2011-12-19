@@ -61,7 +61,7 @@ import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.editor.actions.FeatureActionUtilities;
-import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
+import org.kalypso.ui.editor.gmleditor.part.FeatureAssociationTypeElement;
 import org.kalypso.ui.i18n.Messages;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 import org.kalypsodeegree.model.feature.Feature;
