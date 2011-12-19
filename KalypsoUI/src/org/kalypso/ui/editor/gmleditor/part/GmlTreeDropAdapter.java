@@ -137,7 +137,7 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
         return false;
       if( isList && (operation == DND.DROP_COPY || operation == DND.DROP_MOVE) )
       {
-        final List featureList = (List) targetFeature.getProperty( targetAssocFtp );
+        final List< ? > featureList = (List< ? >) targetFeature.getProperty( targetAssocFtp );
         System.out.println( "Diff = " + new Integer( maxOccurs - (featureList.size() + selectedFeatures.length) ) ); //$NON-NLS-1$
         if( maxOccurs >= featureList.size() + selectedFeatures.length || maxOccurs == IPropertyType.UNBOUND_OCCURENCY )
           return true;
