@@ -384,7 +384,7 @@ public abstract class AbstractWorkbenchPart extends WorkbenchPart implements IRe
     m_commandTarget.resetDirty();
   }
 
-  protected abstract void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception, CoreException;
+  protected abstract void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws CoreException;
 
   /**
    * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)

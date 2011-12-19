@@ -52,7 +52,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 
 /**
  * Common code for parts showing a .gmv file.
- * 
+ *
  * @author Gernot Belger
  */
 public class AbstractGmvPart extends AbstractWorkbenchPart implements IGmvPart
@@ -177,7 +177,7 @@ public class AbstractGmvPart extends AbstractWorkbenchPart implements IGmvPart
   }
 
   @Override
-  protected void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception
+  protected void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws CoreException
   {
     monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.gmleditor.part.GmlEditor.1" ), 1000 ); //$NON-NLS-1$
     try

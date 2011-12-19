@@ -62,7 +62,6 @@ import org.kalypso.metadoc.ui.ExportActionContributor;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.table.ILayerTableInput;
-import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ui.editor.AbstractEditorActionBarContributor;
 import org.kalypso.ui.editor.actions.FeatureSelectionActionGroup;
 import org.kalypso.ui.editor.actions.INewScope;
@@ -163,11 +162,8 @@ public class GisTableEditorActionBarContributor extends AbstractEditorActionBarC
       return;
 
     final GisTableEditor tableEditor = (GisTableEditor) activeEditor;
-    final LayerTableViewer layerTable = tableEditor.getLayerTable();
-    if( layerTable == null )
-      return;
 
-    final ILayerTableInput tableInput = layerTable.getInput();
+    final ILayerTableInput tableInput = tableEditor.getTableInput();
     if( tableInput == null )
       return;
 
@@ -177,7 +173,7 @@ public class GisTableEditorActionBarContributor extends AbstractEditorActionBarC
     if( featureList == null )
       return;
 
-    final IFeatureSelectionManager selectionManager = layerTable.getSelectionManager();
+    final IFeatureSelectionManager selectionManager = tableEditor.getSelectionManager();
 
     // FIXME: hard to solve: we should consider if there is a feature-type filter on the list of the table -> only
     // features that may go into this list should be created
