@@ -56,7 +56,7 @@ import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ui.editor.gmleditor.ui.GmlTreeView;
+import org.kalypso.ui.editor.gmleditor.part.GmlTreeView;
 
 public class ReloadGmltreeHandler extends AbstractHandler
 {

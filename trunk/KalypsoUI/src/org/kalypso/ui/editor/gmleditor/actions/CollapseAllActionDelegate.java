@@ -44,8 +44,8 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
-import org.kalypso.ui.editor.gmleditor.ui.GmlEditor;
-import org.kalypso.ui.editor.gmleditor.ui.GmlTreeView;
+import org.kalypso.ui.editor.gmleditor.part.GmlEditor;
+import org.kalypso.ui.editor.gmleditor.part.GmlTreeView;
 
 /**
  * @author Gernot

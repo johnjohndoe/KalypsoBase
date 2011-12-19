@@ -54,8 +54,8 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
-import org.kalypso.ui.editor.gmleditor.ui.GmlEditor;
-import org.kalypso.ui.editor.gmleditor.ui.GmlTreeView;
+import org.kalypso.ui.editor.gmleditor.part.GmlEditor;
+import org.kalypso.ui.editor.gmleditor.part.GmlTreeView;
 import org.kalypso.ui.editor.mapeditor.WidgetActionPart;
 
 public class SaveGmlDelegate extends AbstractGisEditorActionDelegate
