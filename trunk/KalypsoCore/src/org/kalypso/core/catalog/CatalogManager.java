@@ -166,7 +166,7 @@ public class CatalogManager
     }
     catch( final Exception e )
     {
-//      e.printStackTrace();
+      e.printStackTrace();
       System.err.println( String.format( "Failed to load catalog from: %s", catalogURI ) );
       return null;
     }

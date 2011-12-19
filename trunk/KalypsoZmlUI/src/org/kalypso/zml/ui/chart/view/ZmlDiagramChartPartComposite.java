@@ -79,7 +79,6 @@ public class ZmlDiagramChartPartComposite extends ChartPartComposite
     super( part );
 
     m_template = template;
-    loadInput( null );
   }
 
   @Override
@@ -112,6 +111,8 @@ public class ZmlDiagramChartPartComposite extends ChartPartComposite
 
   public void createControl( final Composite parent, final FormToolkit toolkit )
   {
+    loadInput( null );
+
     createToolbar( parent, toolkit );
     final Composite control = super.createControl( parent );
     control.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
