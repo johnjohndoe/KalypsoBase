@@ -98,7 +98,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 /**
  * Abstract superclass for map editor and map view. Inherits from AbstractEditorPart for editor behavior (save when
  * dirty, command target). Based on the old {@link GisMapEditor} implementation.
- * 
+ *
  * @author Stefan Kurzbach
  */
 // TODO: Why is it right here to inherit from AbstractEdtiorPart even when used within a View? Please comment on that.
@@ -293,7 +293,7 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
    *      org.eclipse.ui.IStorageEditorInput)
    */
   @Override
-  protected synchronized void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception, CoreException
+  protected synchronized void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws CoreException
   {
     monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.6" ), 2 ); //$NON-NLS-1$
 

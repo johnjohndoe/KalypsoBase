@@ -54,7 +54,6 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.table.ILayerTableInput;
-import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
 import org.kalypso.ui.editor.gistableeditor.GisTableEditor;
 import org.kalypso.ui.editor.mapeditor.WidgetActionPart;
@@ -84,19 +83,17 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate
     if( !MessageDialog.openConfirm( shell, Messages.getString( "org.kalypso.ui.editor.gistableeditor.actions.SaveThemeDelegate.0" ), Messages.getString( "org.kalypso.ui.editor.gistableeditor.actions.SaveThemeDelegate.1" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return;
 
-    final Object input = editor.getLayerTable().getInput();
+    final Object input = editor.getTableInput();
     if( input != null )
     {
       final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
-
-      final LayerTableViewer layerTable = editor.getLayerTable();
 
       final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
       {
         @Override
         protected void execute( final IProgressMonitor monitor ) throws CoreException
         {
-          layerTable.saveData( monitor );
+          editor.saveData( monitor );
         }
       };
 
@@ -133,8 +130,7 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate
     final GisTableEditor editor = (GisTableEditor) part.getPart();
     if( editor != null )
     {
-      final LayerTableViewer layerTable = editor.getLayerTable();
-      final ILayerTableInput input = layerTable.getInput();
+      final ILayerTableInput input = editor.getTableInput();
       if( input != null )
         enabled = input.isDirty();
     }
