@@ -487,7 +487,7 @@
         icon="icons/view/diagram.gif"
         id="org.kalypso.zml.ui.chart.view.DiagramViewPart"
         name="Diagramm"
-        restorable="false"/>
+        restorable="true"/>
   <view
         allowMultiple="false"
         category="org.kalypso.ui.kalypso"
@@ -495,7 +495,7 @@
         icon="icons/view/table.gif"
         id="org.kalypso.zml.ui.table.view.TableViewPart"
         name="Tabelle"
-        restorable="false">
+        restorable="true">
   </view>
 	</extension>
  <extension
