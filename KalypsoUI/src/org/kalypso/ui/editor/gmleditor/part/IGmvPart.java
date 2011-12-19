@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.editor.gmleditor.ui;
+package org.kalypso.ui.editor.gmleditor.part;
 
 import org.eclipse.ui.IWorkbenchPart3;
 import org.kalypso.commons.command.ICommandTarget;

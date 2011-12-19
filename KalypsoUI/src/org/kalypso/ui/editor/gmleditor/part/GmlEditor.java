@@ -1,4 +1,4 @@
-package org.kalypso.ui.editor.gmleditor.ui;
+package org.kalypso.ui.editor.gmleditor.part;
 
 import org.eclipse.ui.IEditorPart;
 

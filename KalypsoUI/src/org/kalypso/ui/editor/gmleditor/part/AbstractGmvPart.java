@@ -1,4 +1,4 @@
-package org.kalypso.ui.editor.gmleditor.ui;
+package org.kalypso.ui.editor.gmleditor.part;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
