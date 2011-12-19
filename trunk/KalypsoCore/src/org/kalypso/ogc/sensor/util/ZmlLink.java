@@ -60,8 +60,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
@@ -208,53 +210,50 @@ public class ZmlLink
 
   public URL getLocation( )
   {
-    final TimeseriesLinkType link = getTimeseriesLink();
-    if( link == null )
-      return null;
-
-    final String href = link.getHref();
-
     try
     {
+      final TimeseriesLinkType link = getTimeseriesLink();
+      if( link == null )
+        return null;
+
+      final String href = link.getHref();
+      if( href.startsWith( UrlResolver.PROJECT_PROTOCOLL ) )
+      {
+        final IFile file = ResourceUtilities.getFileFromPath( new Path( href ) );
+        return file.getLocation().toFile().toURI().toURL();
+      }
+
       return new URL( m_context, href );
     }
     catch( final MalformedURLException ignored )
     {
+      return null;
     }
-
-    return null;
   }
 
   public URL getExistingLocation( )
   {
-    final TimeseriesLinkType link = getTimeseriesLink();
-    if( link == null )
-      return null;
-
-    final String href = link.getHref();
-
     // check if resource exists
     InputStream is = null;
+
     try
     {
-      final URL zmlUrl = new URL( m_context, href );
+      final URL zmlUrl = getLocation();
+      if( zmlUrl == null )
+        return null;
+
       is = zmlUrl.openStream();
+
       return zmlUrl;
     }
-    catch( final MalformedURLException e )
+    catch( final IOException ignored )
     {
-      // ignore
-    }
-    catch( final IOException e )
-    {
-      // ignore
+      return null;
     }
     finally
     {
       IOUtils.closeQuietly( is );
     }
-
-    return null;
   }
 
   /**
@@ -265,11 +264,11 @@ public class ZmlLink
   {
     try
     {
-// final IFeatureType featureType = m_feature.getFeatureType();
-//
-// final Object linkPT = GMLXPathUtilities.query( m_linkPath, featureType );
-// if( !(linkPT instanceof IPropertyType) )
-// return null;
+      // final IFeatureType featureType = m_feature.getFeatureType();
+      //
+      // final Object linkPT = GMLXPathUtilities.query( m_linkPath, featureType );
+      // if( !(linkPT instanceof IPropertyType) )
+      // return null;
 
       final TimeseriesLinkType link = (TimeseriesLinkType) GMLXPathUtilities.query( m_linkPath, m_feature );
       if( link == null )
