@@ -82,7 +82,7 @@
 				<separator name="selection" />
 				<separator name="additions" />
 			</menu>
-			<action disabledIcon="icons/map/save_edit_disabled.gif" toolbarPath="edit" label="%org.kalypso.ui.editor.gmleditor.actions.SaveGmlDelegate.label" tooltip="%org.kalypso.ui.editor.gmleditor.actions.SaveGmlDelegate.tooltip" icon="icons/feature/save_GML.gif" class="org.kalypso.ui.editor.gmleditor.util.actions.SaveGmlDelagate" style="push" menubarPath="org.kalypso.ui.editors.treeeditor.menu/edit" id="org.kalypso.ui.editor.gistreeeditor.SaveDataAction">
+			<action disabledIcon="icons/map/save_edit_disabled.gif" toolbarPath="edit" label="%org.kalypso.ui.editor.gmleditor.actions.SaveGmlDelegate.label" tooltip="%org.kalypso.ui.editor.gmleditor.actions.SaveGmlDelegate.tooltip" icon="icons/feature/save_GML.gif" class="org.kalypso.ui.editor.gmleditor.util.actions.SaveGmlDelegate" style="push" menubarPath="org.kalypso.ui.editors.treeeditor.menu/edit" id="org.kalypso.ui.editor.gistreeeditor.SaveDataAction">
 			</action>
 			<action class="org.kalypso.ui.editor.gmleditor.util.actions.RedoDelegate" disabledIcon="icons/gistable/redo_edit_disabled.gif" icon="icons/gistable/redo_edit.gif" id="org.kalypso.ui.editor.gmleditor.util.actions.RedoDelegate" label="%org.kalypso.ui.editor.gmleditor.actions.RedoDelegate.label" menubarPath="org.kalypso.ui.editors.treeeditor.menu/edit" style="push" toolbarPath="edit" tooltip="%org.kalypso.ui.editor.gmleditor.actions.RedoDelegate.tooltip">
 			</action>
