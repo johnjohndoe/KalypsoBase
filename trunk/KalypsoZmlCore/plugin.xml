@@ -4,14 +4,6 @@
    <extension-point id="tableRule" name="tableRule" schema="schema/tableRule.exsd"/>
    <extension-point id="metaDataBoundaryValue" name="metaDataBoundaryValue" schema="schema/metaDataBoundaryValue.exsd"/>
  <extension
-         point="org.eclipse.wst.xml.core.catalogContributions">
-      <catalogContribution>
-         <nextCatalog
-               catalog="etc/schemas/catalog.xml">
-         </nextCatalog>
-      </catalogContribution>
- </extension>
- <extension
        point="org.kalypso.contribs.java.urlCatalog">
     <catalog
           class="org.kalypso.zml.core.KalypsoZmlCoreCatalog"
@@ -76,5 +68,12 @@
           rule="org.kalypso.zml.core.table.rules.impl.ZmlRuleDataSource">
     </rule>
  </extension>
-
+ <extension
+         point="org.eclipse.wst.xml.core.catalogContributions">
+      <catalogContribution>
+         <nextCatalog
+               catalog="etc/schemas/catalog.xml">
+         </nextCatalog>
+      </catalogContribution>
+ </extension>
 </plugin>
