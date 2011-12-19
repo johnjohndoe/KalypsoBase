@@ -27,30 +27,32 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.ui.editor.gmleditor.ui;
+package org.kalypso.ui.editor.gmleditor.part;
 
-import org.eclipse.swt.dnd.DragSourceAdapter;
-import org.eclipse.swt.dnd.DragSourceEvent;
-import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author kuepfer
  */
-public class GmlTreeDragListener extends DragSourceAdapter
+public class LinkedFeatureElement
 {
-  private final GmlTreeView m_view;
+  private final Feature m_feature;
 
-  public GmlTreeDragListener( final GmlTreeView view )
+  private final FeatureAssociationTypeElement m_fate;
+
+  public LinkedFeatureElement( final FeatureAssociationTypeElement fate, final Feature feature )
   {
-    m_view = view;
+    m_fate = fate;
+    m_feature = feature;
   }
 
-  /**
-   * @see org.eclipse.swt.dnd.DragSourceListener#dragSetData(org.eclipse.swt.dnd.DragSourceEvent)
-   */
-  @Override
-  public void dragSetData( final DragSourceEvent event )
+  public Feature getDecoratedFeature( )
   {
-    LocalSelectionTransfer.getInstance().setSelection( m_view.getSelection() );
+    return m_feature;
+  }
+
+  public FeatureAssociationTypeElement getParentElement( )
+  {
+    return m_fate;
   }
 }

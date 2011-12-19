@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.editor.gmleditor.ui;
+package org.kalypso.ui.editor.gmleditor.part;
 
 import org.eclipse.jface.action.StatusLineContributionItem;
 import org.eclipse.jface.viewers.ISelection;

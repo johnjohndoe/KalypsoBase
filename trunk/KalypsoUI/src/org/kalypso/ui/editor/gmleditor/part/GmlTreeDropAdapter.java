@@ -27,7 +27,7 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.ui.editor.gmleditor.ui;
+package org.kalypso.ui.editor.gmleditor.part;
 
 import java.util.List;
 
