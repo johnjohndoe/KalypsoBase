@@ -48,8 +48,8 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
-import org.kalypso.ui.editor.gmleditor.ui.GMLContentProvider;
-import org.kalypso.ui.editor.gmleditor.ui.GmlEditor;
+import org.kalypso.ui.editor.gmleditor.part.GMLContentProvider;
+import org.kalypso.ui.editor.gmleditor.part.GmlEditor;
 
 /**
  * @author Gernot Belger

@@ -43,8 +43,8 @@ package org.kalypso.ui.editor.gmleditor.command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.kalypso.ui.editor.gmleditor.ui.GmlTreeView;
-import org.kalypso.ui.editor.gmleditor.ui.GmltreeSourceProvider;
+import org.kalypso.ui.editor.gmleditor.part.GmlTreeView;
+import org.kalypso.ui.editor.gmleditor.part.GmltreeSourceProvider;
 
 /**
  * Helper class for implementors of {@link org.eclipse.core.commands.IHandler} for gmltree commands.
