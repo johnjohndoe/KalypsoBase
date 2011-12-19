@@ -47,7 +47,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.contribs.eclipse.core.runtime.AdapterUtils;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
+import org.kalypso.ui.editor.gmleditor.part.FeatureAssociationTypeElement;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
