@@ -30,6 +30,7 @@
 package org.kalypso.ui.editor.gmleditor.part;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -102,7 +103,7 @@ public class GMLContentProvider implements ITreeContentProvider
 
   /**
    * Likely to be replaced by {@link #GMLContentProvider(boolean)} in the future.<br>
-   * 
+   *
    * @param handleModelEvents
    *          Only for backwards compability. Should always be set to <code>true</code>.
    */
@@ -114,7 +115,7 @@ public class GMLContentProvider implements ITreeContentProvider
 
   /**
    * Gets the children and updates the parent-hash.
-   * 
+   *
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
   @Override
@@ -184,7 +185,8 @@ public class GMLContentProvider implements ITreeContentProvider
           result.add( fate );
         else
         {
-          collectAssociationChildren( fate, result );
+          final Object[] children = getChildren( fate );
+          result.addAll( Arrays.asList( children ) );
         }
       }
       else if( GeometryUtilities.isGeometry( property ) )
@@ -549,7 +551,7 @@ public class GMLContentProvider implements ITreeContentProvider
 
   /**
    * Allows to override default behavior regarding visibility of children, defined by the catalog-properties.<br/>
-   * 
+   *
    * @param override
    *          Value that overrides the catalog behavior. Set to <code>null</code>, to use the default behavior.
    */

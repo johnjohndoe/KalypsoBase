@@ -121,16 +121,13 @@ public class MoveFeatureCommand implements ICommand
     move( -m_step );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
-   */
   @Override
   public String getDescription( )
   {
-    return Messages.getString( "org.kalypso.ui.editor.gmleditor.util.command.MoveFeatureCommand.0" ); //$NON-NLS-1$
+    return Messages.getString("org.kalypso.ui.editor.gmleditor.command.MoveFeatureCommand.0"); //$NON-NLS-1$
   }
 
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings("unchecked") //$NON-NLS-1$
   private void move( final int step )
   {
     final List<Object> list = (List<Object>) m_parentFeature.getProperty( m_pt );

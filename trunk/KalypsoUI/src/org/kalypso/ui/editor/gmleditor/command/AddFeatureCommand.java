@@ -55,7 +55,6 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
-import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -79,7 +78,7 @@ public class AddFeatureCommand implements ICommand
   private final GMLWorkspace m_workspace;
 
   /** A map with key=IPropertyType and value=Object to pass properties when the feature is newly created */
-  private final Map<IPropertyType, Object> m_properties;
+  private final Map<IPropertyType, Object> m_properties = new HashMap<IPropertyType, Object>();
 
   private final IFeatureSelectionManager m_selectionManager;
 
@@ -128,12 +127,13 @@ public class AddFeatureCommand implements ICommand
     m_parentFeature = parentFeature;
     m_propName = propertyName;
     m_pos = pos;
-    m_properties = properties;
     m_type = type;
     m_selectionManager = selectionManager;
     m_depth = depth;
     m_doFireEvents = true;
     m_doAddOnProcess = true;
+    if( properties != null )
+      m_properties.putAll( properties );
   }
 
   /**
@@ -170,7 +170,6 @@ public class AddFeatureCommand implements ICommand
     m_pos = pos;
     m_doFireEvents = doFireEvents;
     m_doAddOnProcess = doAddOnProcess;
-    m_properties = null;
     m_newFeature = newFeature;
     m_type = null;
     m_selectionManager = selectionManager;
@@ -211,7 +210,7 @@ public class AddFeatureCommand implements ICommand
       m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature, m_newFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
     if( m_selectionManager != null && m_dropSelection == true && m_workspace instanceof CommandableWorkspace )
-      m_selectionManager.changeSelection( FeatureSelectionHelper.getFeatures( m_selectionManager ), new EasyFeatureWrapper[] { new EasyFeatureWrapper( (CommandableWorkspace) m_workspace, m_newFeature ) } );
+      m_selectionManager.setSelection( new EasyFeatureWrapper[] { new EasyFeatureWrapper( (CommandableWorkspace) m_workspace, m_newFeature ) } );
   }
 
   /**
@@ -246,7 +245,7 @@ public class AddFeatureCommand implements ICommand
   @Override
   public String getDescription( )
   {
-    return Messages.getString( "org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand.0" ); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand.0" ); //$NON-NLS-1$
   }
 
   public Feature getNewFeature( )
@@ -262,9 +261,13 @@ public class AddFeatureCommand implements ICommand
     m_dropSelection = dropSelection;
   }
 
-  public void addProperty( final QName qname, final Object value )
+  public void addProperty( final QName property, final Object value )
   {
-    m_properties.put( m_type.getProperty( qname ), value );
+    m_properties.put( m_type.getProperty( property ), value );
   }
 
+  public void addProperty( final IPropertyType property, final Object value )
+  {
+    m_properties.put( property, value );
+  }
 }

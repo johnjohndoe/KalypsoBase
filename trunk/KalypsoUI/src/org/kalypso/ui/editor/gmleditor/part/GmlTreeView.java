@@ -1,12 +1,11 @@
 package org.kalypso.ui.editor.gmleditor.part;
 
+import java.io.OutputStream;
 import java.io.Reader;
-import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -37,12 +36,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
 import org.kalypso.contribs.eclipse.jface.viewers.ConstantLabelProvider;
 import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.core.util.pool.IPoolListener;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.KeyComparator;
@@ -59,7 +58,6 @@ import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.gistreeview.Gistreeview;
-import org.kalypso.template.gistreeview.ObjectFactory;
 import org.kalypso.template.types.LayerType;
 import org.kalypso.ui.ImageProvider.DESCRIPTORS;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -78,8 +76,6 @@ import org.xml.sax.InputSource;
  */
 public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEventProvider, ModellEventListener
 {
-  private static final JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
-
   private final IFeatureSelectionListener m_globalSelectionChangedListener = new IFeatureSelectionListener()
   {
     @Override
@@ -162,9 +158,9 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     this( composite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER, selectionManager, null );
   }
 
-  public GmlTreeView( final Composite composite, final int style, final IFeatureSelectionManager selectionManager )
+  public GMLContentProvider getContentProvider( )
   {
-    this( composite, style, selectionManager, null );
+    return m_contentProvider;
   }
 
   /**
@@ -319,6 +315,8 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     {
       if( m_workspace != null )
         m_pool.saveObject( m_workspace, monitor );
+
+      // FIXME: fire some kind source event in order to refresh ui elements
     }
     catch( final Exception e )
     {
@@ -365,10 +363,10 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
   }
 
   @Override
-  public ISelection getSelection( )
+  public IStructuredSelection getSelection( )
   {
     if( m_treeViewer.getContentProvider() != m_contentProvider )
-      return m_treeViewer.getSelection();
+      return (IStructuredSelection) m_treeViewer.getSelection();
 
     return new TreeFeatureSelection( (IStructuredSelection) m_treeViewer.getSelection() );
   }
@@ -489,8 +487,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.gmleditor.part.GmlTreeView.7" ), 1000 ); //$NON-NLS-1$
     try
     {
-      final Unmarshaller unmarshaller = GmlTreeView.JC.createUnmarshaller();
-
+      final Unmarshaller unmarshaller = TemplateUtilities.createGistreeviewUnmarshaller();
       final InputSource is = new InputSource( r );
 
       final Gistreeview treeview = (Gistreeview) unmarshaller.unmarshal( is );
@@ -507,7 +504,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     }
   }
 
-  protected void saveInput( final Writer writer, final IProgressMonitor monitor ) throws CoreException
+  protected void saveInput( final OutputStream stream, final String charset, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.gmleditor.part.GmlTreeView.9" ), 1000 ); //$NON-NLS-1$
     try
@@ -515,8 +512,8 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
       final GMLXPath rootPath = m_contentProvider.getRootPath();
       m_gisTreeview.getInput().setFeatureXPath( rootPath.toString() );
 
-      final Marshaller marshaller = JaxbUtilities.createMarshaller( GmlTreeView.JC, true );
-      marshaller.marshal( m_gisTreeview, writer );
+      final Marshaller marshaller = TemplateUtilities.createGistreeviewMarshaller( charset );
+      marshaller.marshal( m_gisTreeview, stream );
     }
     catch( final JAXBException e )
     {
@@ -719,11 +716,6 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
     m_key = new PoolableObjectType( linktype, href, context );
     m_pool.addPoolListener( this, m_key );
-  }
-
-  public GMLContentProvider getContentProvider( )
-  {
-    return m_contentProvider;
   }
 
   /** Forces a reload of the underlying data. Any pending changes are discarded. */

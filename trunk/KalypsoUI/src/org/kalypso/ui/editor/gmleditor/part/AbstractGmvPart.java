@@ -142,9 +142,10 @@ public class AbstractGmvPart extends AbstractWorkbenchPart implements IGmvPart
     try
     {
       final String charset = file.getCharset();
+
       final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-      writer = new OutputStreamWriter( bos, charset );
-      m_viewer.saveInput( writer, monitor );
+      writer = new OutputStreamWriter( bos );
+      m_viewer.saveInput( bos, charset, monitor );
       writer.close();
 
       bis = new ByteArrayInputStream( bos.toByteArray() );
@@ -312,7 +313,7 @@ public class AbstractGmvPart extends AbstractWorkbenchPart implements IGmvPart
    */
   protected void handleMenuAboutToShow( final IMenuManager manager )
   {
-    final IStructuredSelection selection = (IStructuredSelection) m_viewer.getSelection();
+    final IStructuredSelection selection = m_viewer.getSelection();
     final IFeatureSelectionManager selectionManager = m_viewer.getSelectionManager();
 
     final CommandableWorkspace workspace = m_viewer.getWorkspace();

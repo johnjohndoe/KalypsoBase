@@ -102,7 +102,7 @@ public class CopyFeatureCommand implements ICommand
   @Override
   public String getDescription( )
   {
-    return Messages.getString( "org.kalypso.ui.editor.gmleditor.util.command.CopyFeatureCommand.0" ); //$NON-NLS-1$
+    return Messages.getString("org.kalypso.ui.editor.gmleditor.command.CopyFeatureCommand.0"); //$NON-NLS-1$
   }
 
   private void copyFeature( ) throws Exception

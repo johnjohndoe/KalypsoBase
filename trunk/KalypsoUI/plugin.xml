@@ -1346,13 +1346,6 @@
         
 		<propertyTester class="org.kalypso.ogc.sensor.properties.RepositoryItemPropertyTester" id="org.kalypso.ogc.sensor.properties.RepositoryItemPropertyTester" namespace="org.kalypso.ui" properties="repositoryItemHasWQTable" type="org.kalypso.repository.IRepositoryItem" />
 		<propertyTester class="org.kalypso.ui.internal.utils.WorkbenchWindowPropertyTest" id="org.kalypso.ui.internal.utils.WorkbenchWindowPropertyTest" namespace="org.kalypso.ui.window" properties="isEditorAreaVisible,isViewVisible" type="org.eclipse.ui.IWorkbenchWindow" />
-        <propertyTester
-              class="org.kalypso.ui.editor.gmleditor.part.GmlEditorPropertyTester"
-              id="org.kalypso.ogc.gml.expressions.GMLEditorTester"
-              namespace="org.kalypso.ui.test.gmleditor"
-              properties="qname"
-              type="java.lang.Object">
-        </propertyTester>
 	</extension>
    <extension
          point="org.kalypso.ui.addlayer.WMSImageProvider">
