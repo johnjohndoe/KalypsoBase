@@ -69,7 +69,7 @@ import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ui.editor.gmleditor.command.AddRelationCommand;
 import org.kalypso.ui.editor.gmleditor.command.RemoveRelationCommand;
-import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
+import org.kalypso.ui.editor.gmleditor.part.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;

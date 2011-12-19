@@ -43,7 +43,7 @@ package org.kalypso.ogc.gml.actionfilters;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.ui.IActionFilter;
 import org.kalypso.contribs.eclipse.ui.actionfilters.ActionFilterRegistry;
-import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
+import org.kalypso.ui.editor.gmleditor.part.FeatureAssociationTypeElement;
 
 /**
  * @author schlienger
