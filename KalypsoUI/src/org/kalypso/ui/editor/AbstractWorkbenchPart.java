@@ -368,11 +368,10 @@ public abstract class AbstractWorkbenchPart extends WorkbenchPart implements IRe
 
     try
     {
-      // TODO: general error handling
       loadInternal( new NullProgressMonitor(), input );
       fireDirty();
     }
-    catch( final Exception e )
+    catch( final CoreException e )
     {
       e.printStackTrace();
 
@@ -386,9 +385,6 @@ public abstract class AbstractWorkbenchPart extends WorkbenchPart implements IRe
 
   protected abstract void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws CoreException;
 
-  /**
-   * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
-   */
   @Override
   public void resourceChanged( final IResourceChangeEvent event )
   {
