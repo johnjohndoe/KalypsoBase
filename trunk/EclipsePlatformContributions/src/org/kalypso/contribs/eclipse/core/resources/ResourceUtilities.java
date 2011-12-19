@@ -217,11 +217,7 @@ public final class ResourceUtilities
    */
   public static URL createURL( final IResource resource ) throws MalformedURLException
   {
-    String strUrl = createURLSpec( resource );
-
-    if( resource instanceof IContainer )
-      strUrl += '/';
-
+    final String strUrl = createURLSpec( resource );
     return new URL( strUrl );
   }
 
