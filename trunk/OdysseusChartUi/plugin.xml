@@ -132,6 +132,10 @@
             commandId="org.kalypso.chart.ui.command.axis.selection"
             icon="icons/commands/select.png">
       </image>
+      <image
+            commandId="org.kalypso.chart.ui.commands.maximizeView"
+            icon="icons/commands/chart_maximize.gif">
+      </image>
    </extension>
    <extension point="org.eclipse.ui.handlers">
       <handler class="org.kalypso.chart.ui.editor.commandhandler.ZoomInHandler"

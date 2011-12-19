@@ -45,8 +45,8 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
 import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 
 import de.openali.odysseus.chart.framework.view.IChartComposite;
@@ -67,10 +67,10 @@ public class OpenDiagramDebugDialogHandler extends AbstractHandler
       return Status.CANCEL_STATUS;
 
     final Display display = PlatformUI.getWorkbench().getDisplay();
+    final Shell shell = display.getActiveShell();
 
-    final ChartEditorTreeOutlinePage cop = new ChartEditorTreeOutlinePage();
-    cop.setModel( chart.getChartModel() );
-    cop.createControl( display.getActiveShell() );
+    final DebugDiagramDebugDialog dialog = new DebugDiagramDebugDialog( shell, chart );
+    dialog.open();
 
     return Status.OK_STATUS;
   }
