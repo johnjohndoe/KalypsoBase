@@ -96,7 +96,7 @@ public class ZmlPlainObsProvider extends PlainObsProvider implements IZmlSourceE
     final MetadataList metadata = observation.getMetadataList();
     final String name = (String) metadata.get( IMetadataConstants.MD_NAME );
 
-    return String.format( "%s [%s]", name, getIdentifier() );
+    return String.format( "%s - %s", getIdentifier(), name );
   }
 
   @Override
