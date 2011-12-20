@@ -40,8 +40,6 @@
   </RuleSet>
 
 
-  <toolbar>toolbar:org.kalypso.hwv.product.sachsenanhalt.zml.table.menu.toolbar.instantaneous</toolbar>
-
   <Columns>
     <!-- date column -->
     <IndexColumn autopack="true" id="date">
