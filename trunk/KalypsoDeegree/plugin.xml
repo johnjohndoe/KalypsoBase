@@ -101,28 +101,24 @@
               id="org.kalypsodeegree_impl.model.feature.validation.SchemaRestrictionFeatureRule"
               name="Schema restrictions Rule"/>
      </extension>
-     <extension
-         id="org.kalypso.deegree.featureCommonsAdapterFactory"
-         name="Kalypso Deegree Commons Adapter Factory"
-         point="org.eclipse.core.runtime.adapters">
-      <factory
-            adaptableType="org.kalypsodeegree.model.feature.Feature"
-            class="org.kalypsodeegree_impl.gml.binding.FeatureCommonsAdapterFactory">
-         <adapter type="org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D"/>
-         <adapter type="org.kalypsodeegree_impl.gml.binding.math.IPolynomial2D"/>
-         <adapter
-               type="org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection">
-         </adapter>
-         <adapter
-               type="org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus">
-         </adapter>
-         <adapter
-               type="org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection">
-         </adapter>
-         <adapter
-               type="org.kalypsodeegree_impl.gml.binding.commons.ICoverage">
-         </adapter>
-      </factory>
+
+   <extension
+         point="org.kalypso.deegree.functionExpression">
+      <function
+            class="org.kalypsodeegree_impl.filterencoding.FeatureTypeFunctionExpression"
+            label="FeatureType-Name"
+            name="org.kalypso.deeegree.functionExpression.featureTypeName">
+      </function>
+      <function
+            class="org.kalypsodeegree_impl.filterencoding.ListPropertyToStringExpression"
+            label="ListPropert toString"
+            name="org.kalypsodeegree_impl.filterencoding.ListPropertyToStringExpression">
+      </function>
+      <function
+            class="org.kalypsodeegree_impl.filterencoding.ListSizeExpression"
+            label="List-Size Expression"
+            name="org.kalypsodeegree_impl.filterencoding.ListSizeExpression">
+      </function>
    </extension>
   
    <extension
@@ -143,7 +139,6 @@
             allowSubstitution="true"
             feature="{http://www.opengis.net/gml}RectifiedGridCoverage"
             function="org.kalypsodeegree_impl.gml.schema.virtual.RectifiedGridCoverageBoundaryFunctionProperty"
-            isList="false"
             qname="{virtual}rasterGridDomainBoundary"
             value="{http://www.opengis.net/gml}Polygon">
       </virtualProperty>
