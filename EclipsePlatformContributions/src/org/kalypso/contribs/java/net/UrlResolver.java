@@ -104,19 +104,15 @@ public class UrlResolver implements IUrlResolver
     if( relativeURL.startsWith( PROJECT_PROTOCOLL ) )
     {
       if( baseURL == null )
-      {
         throw new MalformedURLException( "Cannot process protocol 'project:' without a valid base URL as context" ); //$NON-NLS-1$
-      }
 
       if( !baseURL.toString().startsWith( PlatformURLResourceConnection.RESOURCE_URL_STRING ) )
-      {
         throw new MalformedURLException( "Protocol 'project:' need a resource url as context" + "\n\turl=" + baseURL + "\n\trelativeURL=" + relativeURL ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      }
 
       final IProject project = ResourceUtilities.findProjectFromURL( baseURL );
       final String projectURL = PlatformURLResourceConnection.RESOURCE_URL_STRING + "/" + project.getName(); //$NON-NLS-1$
-
       final String relPath = relativeURL.substring( PROJECT_PROTOCOLL.length() + 1 ); //$NON-NLS-1$
+
       return new URL( projectURL + "/" + relPath ); //$NON-NLS-1$
     }
     else if( relativeURL.startsWith( "REMOTE=" ) ) //$NON-NLS-1$
