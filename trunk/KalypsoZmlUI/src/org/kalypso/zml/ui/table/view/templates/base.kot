@@ -56,7 +56,7 @@
     </IndexColumn>
 
     <!-- wasserstand -->
-    <DataColumn editable="false" id="W_SELECTION" tooltip="true">
+    <DataColumn editable="false" id="W" tooltip="true">
       <property name="label">Auswahl</property>
       <property name="alignment">RIGHT</property>
 
@@ -75,7 +75,7 @@
 
 
     <!-- Abfluss -->
-    <DataColumn editable="false" id="Q_SELECTION" metadataSource="true" tooltip="true">
+    <DataColumn editable="false" id="Q" metadataSource="true" tooltip="true">
       <property name="label">Auswahl</property>
       <property name="alignment">RIGHT</property>
 
@@ -94,7 +94,7 @@
 
 
     <!-- Volumen -->
-    <DataColumn editable="false" id="V_SELECTION" metadataSource="true" tooltip="true">
+    <DataColumn editable="false" id="V" metadataSource="true" tooltip="true">
       <property name="label">Auswahl</property>
       <property name="alignment">RIGHT</property>
 
@@ -112,7 +112,7 @@
 
 
     <!-- Wasserstand [m NN] (Auswahl) -->
-    <DataColumn editable="true" id="W_NN_SELECTION" metadataSource="true" tooltip="true">
+    <DataColumn editable="true" id="W_NN" metadataSource="true" tooltip="true">
       <property name="label">Auswahl</property>
       <property name="alignment">RIGHT</property>
 

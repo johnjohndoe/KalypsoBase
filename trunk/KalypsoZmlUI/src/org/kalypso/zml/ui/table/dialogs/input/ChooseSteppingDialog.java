@@ -63,7 +63,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.core.KalypsoCorePlugin;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class ChooseSteppingDialog extends TitleAreaDialog
 {

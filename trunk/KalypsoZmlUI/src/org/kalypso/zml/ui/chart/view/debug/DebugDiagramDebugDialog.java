@@ -57,7 +57,7 @@ import org.kalypso.ui.dialog.EnhancedTitleAreaDialog;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class DebugDiagramDebugDialog extends EnhancedTitleAreaDialog
 {

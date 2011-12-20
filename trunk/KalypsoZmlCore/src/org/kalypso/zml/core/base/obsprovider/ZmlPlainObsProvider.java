@@ -40,26 +40,32 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.base.obsprovider;
 
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.metadata.IMetadataConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.provider.PlainObsProvider;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.zml.core.base.IZmlSourceElement;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class ZmlPlainObsProvider extends PlainObsProvider implements IZmlSourceElement
 {
 
   private String m_identifier;
 
-  public ZmlPlainObsProvider( final String identifier, final IObservation obs, final IRequest args )
+  private final int m_index;
+
+  public ZmlPlainObsProvider( final String identifier, final IObservation obs, final IRequest args, final int index )
   {
     super( obs, args );
 
     m_identifier = identifier;
+    m_index = index;
   }
 
   @Override
@@ -71,7 +77,7 @@ public class ZmlPlainObsProvider extends PlainObsProvider implements IZmlSourceE
   @Override
   public IPoolableObjectType getPoolKey( )
   {
-    throw new UnsupportedOperationException();
+    return null;
   }
 
   @Override
@@ -83,7 +89,14 @@ public class ZmlPlainObsProvider extends PlainObsProvider implements IZmlSourceE
   @Override
   public String getLabel( )
   {
-    throw new UnsupportedOperationException();
+    final IObservation observation = getObservation();
+    if( Objects.isNull( observation ) )
+      return getIdentifier();
+
+    final MetadataList metadata = observation.getMetadataList();
+    final String name = (String) metadata.get( IMetadataConstants.MD_NAME );
+
+    return String.format( "%s [%s]", name, getIdentifier() );
   }
 
   @Override
@@ -101,7 +114,7 @@ public class ZmlPlainObsProvider extends PlainObsProvider implements IZmlSourceE
   @Override
   public int getIndex( )
   {
-    return 0;
+    return m_index;
   }
 
 }
