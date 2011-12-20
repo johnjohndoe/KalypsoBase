@@ -106,7 +106,7 @@ public class TableSourceProvider extends AbstractSourceProvider
   /** Ensures, that the context are activated in the same order as the themes are activated. */
   private final ISchedulingRule m_mutexRule = new MutexRule();
 
-  private IZmlTable m_table;
+  private final IZmlTableSource m_source;
 
   private final IContextActivation m_tableContext;
 
@@ -116,10 +116,10 @@ public class TableSourceProvider extends AbstractSourceProvider
    * Creates a new {@link ChartSourceProvider} on the given chart.<br>
    * Initializes it state with the given parameters.
    */
-  public TableSourceProvider( final IServiceLocator serviceLocator, final IZmlTable table )
+  public TableSourceProvider( final IServiceLocator serviceLocator, final IZmlTableSource source )
   {
     m_serviceLocator = serviceLocator;
-    m_table = table;
+    m_source = source;
 
     final IContextService contextService = (IContextService) registerServiceWithSources( serviceLocator, IContextService.class );
     registerServiceWithSources( serviceLocator, IEvaluationService.class );
@@ -127,7 +127,9 @@ public class TableSourceProvider extends AbstractSourceProvider
     registerServiceWithSources( serviceLocator, IMenuService.class );
 
     m_tableContext = contextService.activateContext( TABLE_CONTEXT );
-    table.addListener( m_listener );
+    final IZmlTable table = source.getTable();
+    if( Objects.isNotNull( table ) )
+      table.addListener( m_listener );
   }
 
   private IServiceWithSources registerServiceWithSources( final IServiceLocator serviceLocator, final Class< ? extends IServiceWithSources> serviceClass )
@@ -151,10 +153,9 @@ public class TableSourceProvider extends AbstractSourceProvider
       service.removeSourceProvider( this );
     }
 
-    if( Objects.isNotNull( m_table ) )
-      m_table.removeListener( m_listener );
-
-    m_table = null;
+    final IZmlTable table = m_source.getTable();
+    if( Objects.isNotNull( table ) )
+      table.removeListener( m_listener );
 
     if( m_tableContext != null )
       m_tableContext.getContextService().deactivateContext( m_tableContext );
@@ -163,8 +164,9 @@ public class TableSourceProvider extends AbstractSourceProvider
   @Override
   public Map< ? , ? > getCurrentState( )
   {
+
     final Map<String, Object> currentState = new TreeMap<String, Object>();
-    currentState.put( ACTIVE_TABLE_NAME, m_table );
+    currentState.put( ACTIVE_TABLE_NAME, m_source.getTable() );
 
     return currentState;
   }

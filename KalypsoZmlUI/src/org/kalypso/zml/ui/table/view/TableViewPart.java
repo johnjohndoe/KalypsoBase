@@ -47,8 +47,10 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
@@ -57,6 +59,8 @@ import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
 import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
 import org.kalypso.zml.core.base.selection.ZmlSelectionBuilder;
+import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.context.IZmlTableSource;
 
 /**
  * Table QuickView.
@@ -67,7 +71,17 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
 {
   public static final String ID = "org.kalypso.zml.ui.table.view.TableViewPart"; //$NON-NLS-1$
 
-  private TableComposite m_tableComposite;
+  protected TableComposite m_tableComposite;
+
+  private TableViewPartListener m_partListener;
+
+  @Override
+  public void init( final IViewSite site ) throws PartInitException
+  {
+    super.init( site );
+
+    m_partListener = new TableViewPartListener( this, site );
+  }
 
   @Override
   public void createPartControl( final Composite parent )
@@ -83,6 +97,15 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
 
     m_tableComposite = new TableComposite( base, toolkit, workbench );
     m_tableComposite.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+
+    m_partListener.activate( new IZmlTableSource()
+    {
+      @Override
+      public IZmlTable getTable( )
+      {
+        return m_tableComposite.getTable();
+      }
+    } );
 
     getSite().getPage().addPartListener( this );
   }
