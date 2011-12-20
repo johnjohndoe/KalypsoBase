@@ -54,6 +54,7 @@ import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.provider.IObsProviderListener;
 import org.kalypso.ogc.sensor.provider.PooledObsProvider;
 import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.zml.core.base.request.PrognoseRequestStrategy;
 import org.kalypso.zml.core.diagram.base.IZmlLayer;
 import org.kalypso.zml.core.diagram.base.LayerProviderUtils;
 import org.kalypso.zml.core.diagram.base.provider.observation.SynchronousObservationProvider;
