@@ -30,12 +30,16 @@
 package org.kalypso.contribs.eclipse.core.resources;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLDecoder;
 
+import org.eclipse.core.internal.boot.PlatformURLHandler;
 import org.eclipse.core.internal.resources.PlatformURLResourceConnection;
+import org.eclipse.core.internal.runtime.CommonMessages;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -47,12 +51,14 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.osgi.util.NLS;
 import org.kalypso.contribs.eclipse.core.runtime.PathUtils;
+import org.kalypso.contribs.java.net.UrlUtilities;
 
 /**
  * ResourceUtilities
  * <p>
- * 
+ *
  * @author schlienger (14.06.2005)
  */
 @SuppressWarnings("restriction")
@@ -65,7 +71,7 @@ public final class ResourceUtilities
 
   /**
    * Gibt den IFile-Handler zurück, falls die URL eine Platform Url denotiert
-   * 
+   *
    * @see PlatformURLResourceConnection
    */
   public static IFile findFileFromURL( final URL u )
@@ -112,7 +118,7 @@ public final class ResourceUtilities
 
   /**
    * Resolves an absolute path (i.e. relative to IWorkspaceRoot) and returns its real location.
-   * 
+   *
    * @return A Java-File representing the resource, or null if file does not exists.
    */
   public static File makeFileFromPath( final IPath resource )
@@ -134,43 +140,79 @@ public final class ResourceUtilities
   public static IProject findProjectFromURL( final URL baseURL )
   {
     final IPath path = findPathFromURL( baseURL );
-    if( path == null || path.isRoot() || path.segmentCount() < 1 || !path.isAbsolute() )
+    if( path == null || path.segmentCount() < 1 )
       return null;
+
+    final IPath absolutePath = path.makeAbsolute();
+    if( absolutePath.isRoot() )
+      return null;
+
 
     final String projectName = path.segment( 0 );
     return ResourcesPlugin.getWorkspace().getRoot().getProject( projectName );
   }
 
-  public static IPath findPathFromURL( final URL u )
+  public static IPath findPathFromURL( final URL location )
   {
-    if( u == null )
+    try
+    {
+      return findPathFromUrlException( location );
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+    }
+    catch( final UnsupportedEncodingException e )
+    {
+      e.printStackTrace();
+    }
+
+    return null;
+  }
+
+  private static IPath findPathFromUrlException( final URL location ) throws MalformedURLException, UnsupportedEncodingException
+  {
+    if( location == null )
       return null;
 
-    final String utostring = u.toString();
-    final String urlpath;
-    final int ix = utostring.indexOf( '?' );
-    if( ix != -1 )
-      urlpath = utostring.substring( 0, ix );
-    else
-      urlpath = utostring;
+    final URL urlNoQuery = UrlUtilities.removeQuery( location );
 
-    if( urlpath != null && urlpath.startsWith( PlatformURLResourceConnection.RESOURCE_URL_STRING ) )
+    final String protocol = urlNoQuery.getProtocol();
+
+// if( urlpath != null && urlpath.startsWith( PlatformURLResourceConnection.RESOURCE_URL_STRING ) )
+// {
+// final String path = urlpath.substring( PlatformURLResourceConnection.RESOURCE_URL_STRING.length() - 1 );
+//      return new Path( path.replaceAll( "//", "/" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    // }
+
+    // FIXME: check
+    if( PlatformURLHandler.PROTOCOL.equals( protocol ) )
     {
-      final String path = urlpath.substring( PlatformURLResourceConnection.RESOURCE_URL_STRING.length() - 1 );
-      final Path path2 = new Path( path.replaceAll( "//", "/" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      return path2;
+      String spec = urlNoQuery.getFile().trim();
+      if( spec.startsWith( "/" ) ) //$NON-NLS-1$
+        spec = spec.substring( 1 );
+      final int ix = spec.indexOf( "/" ); //$NON-NLS-1$
+      if( ix == -1 )
+        throw new MalformedURLException( NLS.bind( CommonMessages.url_invalidURL, location.toExternalForm() ) );
+
+      final String type = spec.substring( 0, ix );
+      if( PlatformURLResourceConnection.RESOURCE.equals( type ) )
+      {
+        final String filePath = URLDecoder.decode( spec.substring( ix ), "UTF-8" ); //$NON-NLS-1$
+        return new Path( filePath ); //$NON-NLS-1$
+      }
     }
-    // Checks if the full path lies in the Workspace, if it does, the java.io.File path is converted
-    // to an eclipse path
-    // WARNING: this is quite ugly and probalbly doesn't work as it is intended to do
-    // especially, if we are working with pathes into the .metadata section we get bugs
-    else if( urlpath != null && urlpath.startsWith( "http:/" ) || urlpath.startsWith( "file:/" ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    else if( protocol.equals( "http" ) || protocol.equals( "file" ) ) //$NON-NLS-1$ //$NON-NLS-2$
     {
+      // Checks if the full path lies in the Workspace, if it does, the java.io.File path is converted
+      // to an eclipse path
+      // WARNING: this is quite ugly and probalbly doesn't work as it is intended to do
+      // especially, if we are working with pathes into the .metadata section we get bugs
       final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-      URL url = null;
+      URL rootUrl = null;
       try
       {
-        url = root.getLocation().toFile().toURI().toURL();
+        rootUrl = root.getLocation().toFile().toURI().toURL();
       }
       catch( final MalformedURLException e )
       {
@@ -178,15 +220,19 @@ public final class ResourceUtilities
         e.printStackTrace();
         return null;
       }
-      if( urlpath.matches( url.toString() + ".+" ) ) //$NON-NLS-1$
+
+      final String noQuery = urlNoQuery.toString();
+
+      if( noQuery.startsWith( rootUrl.toString() ) ) //$NON-NLS-1$
       {
         // split the string at the common part (path to workspace) and always take the second
         // part as the relative eclipse workspace path
-        final String[] array = urlpath.split( url.toString() );
+        final String[] array = noQuery.split( rootUrl.toString() );
         if( array[1].startsWith( ".metadata" ) ) //$NON-NLS-1$
           return null;
 
-        return new Path( array[1] );
+        final String filePath = URLDecoder.decode( array[1], "UTF-8" ); //$NON-NLS-1$
+        return new Path( filePath );
       }
     }
 
@@ -209,7 +255,7 @@ public final class ResourceUtilities
   /**
    * Creates an URL given a resource. Uses the eclipse scheme defined in
    * PlatformURLResourceConnection.RESOURCE_URL_STRING.
-   * 
+   *
    * @see PlatformURLResourceConnection#RESOURCE_URL_STRING
    * @param resource
    * @return platform URL
@@ -251,7 +297,7 @@ public final class ResourceUtilities
 
   /**
    * Creates the string representation of an URL given an IPath.
-   * 
+   *
    * @param path
    * @return platform URL
    */
@@ -262,7 +308,7 @@ public final class ResourceUtilities
 
   /**
    * Tries to get the parent project of this container.
-   * 
+   *
    * @return the parent project of the start container or null if the container is the WorkspaceRoot or itself if start
    *         is a Project.
    */
@@ -282,7 +328,7 @@ public final class ResourceUtilities
    * <br/>
    * First it tries to find the project and then iterates over all segments, getting the IFolder for it. At the last
    * segment, you get an IFile.
-   * 
+   *
    * @param path
    *          The path of the file. It must be relative to the workspace.
    * @return The Eclipse-File representing the path.
@@ -313,7 +359,7 @@ public final class ResourceUtilities
 
   /**
    * Returns all children of the given container.
-   * 
+   *
    * @param depth
    *          See {@link org.eclipse.core.resources.IResource}
    */
@@ -328,7 +374,7 @@ public final class ResourceUtilities
    * Returns all children of the given container.
    * <p>
    * If any exception is thrown, it is suppressed and an empty array of files is returned.
-   * 
+   *
    * @param depth
    *          See {@link org.eclipse.core.resources.IResource}
    */
@@ -351,7 +397,7 @@ public final class ResourceUtilities
    * returned.
    * <p>
    * If any exception is thrown, it is suppressed and an empty array of files is returned.
-   * 
+   *
    * @param depth
    *          See {@link org.eclipse.core.resources.IResource}
    * @param extension
@@ -374,7 +420,7 @@ public final class ResourceUtilities
 
   /**
    * check if the child file can be expressed as a relative path regarding to the given parent folder.
-   * 
+   *
    * @return The relative path (possibly using '..' notation, or <code>terrainModelFile#toFullPath</code> an absolute
    *         path if this is not possible.
    */
