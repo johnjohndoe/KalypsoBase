@@ -61,9 +61,6 @@ public class ObsProviderZmlColumnDataHandler extends AbstractZmlColumnDataHandle
       fireObservationChanged();
     }
 
-    /**
-     * @see org.kalypso.ogc.sensor.template.IObsProviderListener#observationChangedX(java.lang.Object)
-     */
     @Override
     public void observationChanged( final Object source )
     {
@@ -79,15 +76,11 @@ public class ObsProviderZmlColumnDataHandler extends AbstractZmlColumnDataHandle
     m_provider.addListener( m_observationProviderListener );
   }
 
-  /**
-   * @see org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler#dispose()
-   */
   @Override
   public void dispose( )
   {
     m_provider.removeListener( m_observationProviderListener );
     m_provider.dispose();
-
   }
 
   @Override
@@ -97,12 +90,9 @@ public class ObsProviderZmlColumnDataHandler extends AbstractZmlColumnDataHandle
     if( Objects.isNull( observation ) )
       return null;
 
-    return observation.getValues( null );
+    return observation.getValues( m_provider.getArguments() );
   }
 
-  /**
-   * @see org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler#getObservation()
-   */
   @Override
   public IObservation getObservation( )
   {

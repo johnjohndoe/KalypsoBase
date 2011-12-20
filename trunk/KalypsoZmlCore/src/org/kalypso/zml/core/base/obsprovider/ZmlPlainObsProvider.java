@@ -55,7 +55,6 @@ import org.kalypso.zml.core.base.IZmlSourceElement;
  */
 public class ZmlPlainObsProvider extends PlainObsProvider implements IZmlSourceElement
 {
-
   private String m_identifier;
 
   private final int m_index;
