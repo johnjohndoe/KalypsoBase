@@ -77,6 +77,8 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
 
   private final ZmlBarLayerRangeHandler m_range = new ZmlBarLayerRangeHandler( this );
 
+  private PolygonFigure m_polygonFigure;
+
   public ZmlBarLayer( final IZmlLayerProvider layerProvider, final IStyleSet styleSet, final URL context )
   {
     super( layerProvider, styleSet );
@@ -109,7 +111,9 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
   public void dispose( )
   {
     if( Objects.isNotNull( m_handler ) )
+    {
       m_handler.dispose();
+    }
 
     super.dispose();
   }
@@ -175,7 +179,9 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
   public void setDataHandler( final IZmlLayerDataHandler handler )
   {
     if( m_handler != null )
+    {
       m_handler = handler;
+    }
 
     m_handler = handler;
   }
@@ -197,6 +203,19 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
       return m_labelDescriptor;
 
     return ObservationTokenHelper.replaceTokens( m_labelDescriptor, observation, getDataHandler().getValueAxis() );
+  }
+
+  @Override
+  protected PolygonFigure getPolygonFigure( )
+  {
+    if( m_polygonFigure == null )
+    {
+      final IAreaStyle as = getAreaStyle();
+      m_polygonFigure = new PolygonFigure();
+      m_polygonFigure.setStyle( as );
+    }
+
+    return m_polygonFigure;
   }
 
   protected IAreaStyle getAreaStyle( )

@@ -34,7 +34,7 @@ public abstract class AbstractBarLayer extends AbstractChartLayer
     getStyleSet().addStyle( "area", areaStyle );
   }
 
-  public AbstractBarLayer( ILayerProvider provider, IStyleSet styleSet )
+  public AbstractBarLayer( final ILayerProvider provider, final IStyleSet styleSet )
   {
     super( provider, styleSet );
   }
