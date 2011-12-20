@@ -58,6 +58,7 @@ import org.kalypso.zml.core.table.model.IZmlColumnModelListener;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.ZmlModel;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
+import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
 import org.kalypso.zml.ui.table.update.ZmlTableUpdater;
 
@@ -183,6 +184,10 @@ public class TableComposite extends Composite implements IUpdateable, IObservati
 // job.setSystem( true );
 //
 // job.schedule();
+  }
 
+  public IZmlTable getTable( )
+  {
+    return m_table;
   }
 }

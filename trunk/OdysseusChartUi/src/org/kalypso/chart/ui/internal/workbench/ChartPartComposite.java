@@ -132,6 +132,7 @@ public class ChartPartComposite implements IChartPart
         setDirty( true );
       }
     };
+
     m_chartModel.getLayerManager().addListener( layerManagerListener );
   }
 
