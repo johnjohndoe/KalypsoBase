@@ -32,6 +32,11 @@
             name="%org.kalyso.gml.ui.command.editFeature.name">
       </command>
       <command
+            description="%org.kalyso.gml.ui.command.addFeature.description"
+            id="org.kalyso.gml.ui.command.addFeature"
+            name="%org.kalyso.gml.ui.command.addFeature.name">
+      </command>
+      <command
             description="%org.kalyso.gml.ui.command.deleteFeature.description"
             id="org.kalyso.gml.ui.command.deleteFeature"
             name="%org.kalyso.gml.ui.command.deleteFeature.name">
@@ -61,6 +66,7 @@
       <image commandId="org.kalypso.ogc.gml.map.CoverageManagementCommand" icon="icons/obj16/manageCoverages.gif" />
       <image commandId="org.kalypso.gml.ui.toolWizards" icon="icons/obj16/tools_16.png"/>
       <image commandId="org.kalyso.gml.ui.command.editFeature" icon="icons/obj16/gis_feature_edit.gif"/>
+      <image commandId="org.kalyso.gml.ui.command.addFeature" icon="icons/obj16/gis_feature_new.gif"/>
       <image commandId="org.kalyso.gml.ui.command.deleteFeature" icon="icons/obj16/gis_feature_delete.gif"/>
       <image commandId="org.kalyso.gml.ui.command.duplicateFeature" icon="icons/obj16/gis_feature_duplicate.gif"/>
       <image commandId="org.kalyso.gml.ui.command.featureUp" icon="icons/obj16/gis_feature_up.gif"/>
@@ -99,6 +105,15 @@
                          <instanceof value="org.kalypsodeegree.model.feature.Feature"/>
                       </iterate>
                    </and>
+                </with>
+             </enabledWhen>
+          </handler>
+          <handler class="org.kalypso.gml.ui.internal.gmltable.AddFeatureHandler" commandId="org.kalyso.gml.ui.command.addFeature">
+             <enabledWhen>
+                <with variable="activeGmlTable">
+                    <!-- -refernece not null -->
+                    <!-- Fixme: introduce tests -->
+                    <instanceof value="java.lang.Object"/>
                 </with>
              </enabledWhen>
           </handler>
@@ -479,4 +494,14 @@
            </enablement>
         </wizardEnablement>
     </extension>
+    
+    <!-- View menu for GML-Table -->
+    <extension point="org.eclipse.ui.menus">
+        <menuContribution locationURI="toolbar:org.kalypso.ui.editor.gistableeditor.GttViewPart">
+            <command commandId="org.kalyso.gml.ui.command.addFeature" style="push"/>
+            <command commandId="org.kalyso.gml.ui.command.deleteFeature" style="push"/>
+            <separator name="additions" visible="true" />
+        </menuContribution>
+     </extension>
+    
 </plugin>
