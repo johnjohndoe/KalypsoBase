@@ -62,7 +62,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.java.net.UrlResolver;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
@@ -148,7 +148,7 @@ public class ZmlLink
   /**
    * Fetches the observation from the kalypso resource pool, using
    * {@link ResourcePool#getObject(org.kalypso.core.util.pool.IPoolableObjectType)}.
-   * 
+   *
    * @see ResourcePool#getObject(org.kalypso.core.util.pool.IPoolableObjectType.
    */
   public IObservation getObservationFromPool( )
@@ -216,15 +216,7 @@ public class ZmlLink
         return null;
 
       final String href = link.getHref();
-      if( href.startsWith( UrlResolver.PROJECT_PROTOCOLL ) )
-      {
-        final UrlResolver resolver = new UrlResolver();
-        final IPath path = ResourceUtilities.findPathFromURL( m_context );
-        final URL context = ResourceUtilities.createQuietURL( ResourceUtilities.getFileFromPath( path ) );
-        return resolver.resolveURL( context, href );
-      }
-
-      return new URL( m_context, href );
+      return UrlResolverSingleton.resolveUrl( m_context, href );
     }
     catch( final MalformedURLException ignored )
     {
