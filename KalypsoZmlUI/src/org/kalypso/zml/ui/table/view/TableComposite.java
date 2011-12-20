@@ -55,6 +55,7 @@ import org.kalypso.ogc.sensor.IObservationListener;
 import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
 import org.kalypso.zml.core.table.ZmlTableConfigurationLoader;
 import org.kalypso.zml.core.table.model.IZmlColumnModelListener;
+import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.ZmlModel;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
@@ -67,10 +68,6 @@ import org.kalypso.zml.ui.table.update.ZmlTableUpdater;
  */
 public class TableComposite extends Composite implements IUpdateable, IObservationListener
 {
-//  private static final String TOOLBAR_DATENAUSTAUSCH_DIALOG = "toolbar:org.kalypso.hwv.product.sachsenanhalt.zml.diagram.datenaustauschdialog.menu"; //$NON-NLS-1$
-
-// protected ChartImageComposite m_chartComposite;
-
   private final IServiceLocator m_context;
 
   private ZmlModel m_model;
@@ -132,43 +129,28 @@ public class TableComposite extends Composite implements IUpdateable, IObservati
 
   public void setSelection( final IMultipleZmlSourceElement[] selection )
   {
+    final IZmlModel model = m_table.getModel();
+    model.doClean();
 
     final ZmlTableUpdater updater = new ZmlTableUpdater( m_table, selection );
     updater.run();
 
-// reset();
-//
-// // TODO
-// // final String title = delegate.getTitle();
-// // updateDiagramTitle( title );
-//
-// DiagramCompositeSelection.doApply( m_model, selection );
-//
-// final ILayerManager layerManager = m_model.getLayerManager();
-// layerManager.accept( new HideUnuseLayersVisitor() );
-// layerManager.accept( new SingleGridVisibilityVisitor() );
-//
-// m_model.autoscale();
   }
 
   @Override
   public final void dispose( )
   {
-// m_chartComposite.dispose();
-// m_model.dispose();
+    m_table.dispose();
+    m_model.dispose();
 
     super.dispose();
-  }
-
-  public void reset( )
-  {
-// final ILayerManager layerManager = m_model.getLayerManager();
-// layerManager.accept( new ResetZmlLayerVisitor() );
   }
 
   @Override
   public void observationChanged( final IObservation obs, final Object source )
   {
+
+    // TODO
 // final UIJob job = new UIJob( "Observation changed - invalidating diagram" )
 // {
 // @Override

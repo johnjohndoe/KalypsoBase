@@ -62,9 +62,6 @@ public class PlainObsProvider extends AbstractObsProvider
     return new PlainObsProvider( getObservation(), getArguments() );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.provider.IObsProvider#isValid()
-   */
   @Override
   public boolean isValid( )
   {
