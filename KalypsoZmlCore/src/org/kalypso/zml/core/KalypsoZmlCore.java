@@ -9,6 +9,7 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.zml.core.diagram.data.IRequestStrategy;
 import org.kalypso.zml.core.table.rules.IZmlRuleImplementation;
 import org.kalypso.zml.core.table.rules.impl.grenzwert.IZmlGrenzwertValue;
 import org.osgi.framework.Bundle;
@@ -18,6 +19,8 @@ import org.osgi.framework.BundleContext;
 public class KalypsoZmlCore extends Plugin implements BundleActivator
 {
   private static Map<String, IZmlRuleImplementation> ZML_TABLE_RULES = null;
+
+  private static Map<String, IRequestStrategy> REQUEST_STRATEGIES = null;
 
   private static Map<String, IZmlGrenzwertValue> ZML_GRENZWERT_DELEGATES = null;
 
@@ -151,6 +154,48 @@ public class KalypsoZmlCore extends Plugin implements BundleActivator
     final Map<String, IZmlGrenzwertValue> rules = getGrenzwertDelegates();
 
     return rules.get( identifier );
+  }
+
+  public synchronized Map<String, IRequestStrategy> getRequestStrategies( )
+  {
+    // fill binding map
+    if( Objects.isNull( REQUEST_STRATEGIES ) )
+    {
+      REQUEST_STRATEGIES = new HashMap<String, IRequestStrategy>();
+
+      /* get extension points */
+      final IExtensionRegistry registry = Platform.getExtensionRegistry();
+      final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.zml.core.requestStrategy" ); //$NON-NLS-1$
+
+      for( final IConfigurationElement element : elements )
+      {
+        try
+        {
+
+          final String identifier = null; // FIXME
+          final String pluginid = element.getContributor().getName();
+          final Bundle bundle = Platform.getBundle( pluginid );
+          final Class< ? > featureClass = bundle.loadClass( element.getAttribute( "strategy" ) ); //$NON-NLS-1$
+          final Constructor< ? > constructor = featureClass.getConstructor();
+
+          final IRequestStrategy instance = (IRequestStrategy) constructor.newInstance();
+          REQUEST_STRATEGIES.put( identifier, instance );
+        }
+        catch( final Throwable e )
+        {
+          e.printStackTrace();
+        }
+      }
+    }
+
+    return REQUEST_STRATEGIES;
+  }
+
+  public synchronized IRequestStrategy findStrategy( final String identifier )
+  {
+    final Map<String, IRequestStrategy> strategies = getRequestStrategies();
+
+    return strategies.get( identifier );
   }
 
 }

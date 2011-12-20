@@ -47,7 +47,5 @@ import org.kalypso.ogc.sensor.request.IRequest;
  */
 public interface IRequestStrategy
 {
-
   IRequest getRequest( );
-
 }

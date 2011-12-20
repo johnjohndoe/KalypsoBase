@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraﬂe 22
+ *  Denickestra√üe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,42 +38,48 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.chart.view;
+package org.kalypso.zml.core.base.request;
 
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.request.IRequest;
-import org.kalypso.zml.core.diagram.base.IZmlLayer;
+import org.kalypso.zml.core.diagram.data.IRequestHandler;
 import org.kalypso.zml.core.diagram.data.IRequestStrategy;
-import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
+import org.kalypso.zml.core.diagram.data.IZmlLayerProvider;
 import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 
 /**
  * @author Dirk Kuch
  */
-public class RepositoryBrowserRequestStrategy implements IRequestStrategy
+public class PrognoseRequestStrategy implements IRequestStrategy
 {
-  private final IZmlLayer m_layer;
 
-  public RepositoryBrowserRequestStrategy( final IZmlLayer layer )
+  private final ZmlObsProviderDataHandler m_handler;
+
+  public PrognoseRequestStrategy( final ZmlObsProviderDataHandler handler )
   {
-    m_layer = layer;
+    m_handler = handler;
   }
 
   @Override
   public IRequest getRequest( )
   {
-    final IZmlLayerDataHandler handler = m_layer.getDataHandler();
-    if( handler instanceof ZmlObsProviderDataHandler )
-    {
-      final ZmlObsProviderDataHandler obsHandler = (ZmlObsProviderDataHandler) handler;
-      final IObsProvider provider = obsHandler.getProvider();
-      if( Objects.isNull( provider ) )
-        return null;
+    final IObsProvider provider = m_handler.getProvider();
+    if( Objects.isNull( provider ) )
+      return null;
 
+    final IZmlLayerProvider layerProvider = m_handler.getLayer().getProvider();
+    if( Objects.isNull( layerProvider ) )
       return provider.getArguments();
-    }
 
-    return null;
+    final IRequestHandler handler = layerProvider.getRequestHandler();
+    final IObservation observation = m_handler.getObservation();
+    if( Objects.isNull( observation ) )
+      return provider.getArguments();
+
+    return handler.getArguments( observation.getMetadataList() );
+
   }
+
 }
