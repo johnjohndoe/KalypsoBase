@@ -79,10 +79,6 @@ public class IntervalZmlFilter extends Feature_Impl implements IZmlFilter
    */
   public static final QName PROPERTY_DEFAULT_VALUE = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "defaultValue" );
 
-  public static final QName PROPERTY_START_CALENDAR_VALUE = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "startCalendarValue" );
-
-  public static final QName PROPERTY_START_CALENDAR_FIELD = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "startCalendarField" );
-
   public static final QName FEATURE_INTERVAL_ZML_FILTER = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "IntervalZmlFilter" );
 
   public IntervalZmlFilter( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )

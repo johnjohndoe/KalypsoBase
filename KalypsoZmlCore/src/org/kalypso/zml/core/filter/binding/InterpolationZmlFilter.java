@@ -79,11 +79,6 @@ public class InterpolationZmlFilter extends Feature_Impl implements IZmlFilter
    */
   public static final QName QNAME_FORCE_FILL = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "forceFill" );
 
-  /**
-   * The qname of the fill last with valid flag.
-   */
-  public static final QName QNAME_FILL_LAST_WITH_VALID = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "fillLastWithValid" );
-
   public static final QName QNAME_INTERPOLATION_ZML_FILTER = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "InterpolationZmlFilter" );
 
   /**
