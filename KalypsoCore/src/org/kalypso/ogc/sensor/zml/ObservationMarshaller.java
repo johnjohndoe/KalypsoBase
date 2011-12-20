@@ -42,7 +42,6 @@ package org.kalypso.ogc.sensor.zml;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
@@ -190,14 +189,17 @@ class ObservationMarshaller
 
   private OutputStream openOutputStream( final File file ) throws IOException
   {
-    final FileOutputStream fileStream = FileUtils.openOutputStream( file );
+    final OutputStream fileStream = new BufferedOutputStream( FileUtils.openOutputStream( file ) );
 
     /* Handle compressed zml */
     final String extension = FilenameUtils.getExtension( file.getName() );
     if( "zmlz".equalsIgnoreCase( extension ) )
-      return new BufferedOutputStream( new GZIPOutputStream( fileStream ) );
+    {
+      final short bufferSize = Short.MAX_VALUE; // 32KB
+      return new GZIPOutputStream( fileStream, bufferSize );
+    }
 
-    return new BufferedOutputStream( fileStream );
+    return fileStream;
   }
 
   public String asString( )
@@ -364,12 +366,13 @@ class ObservationMarshaller
 
   private String buildStringDateAxis( final ITupleModel model, final IAxis axis ) throws SensorException
   {
-    final StringBuffer buffer = new StringBuffer();
+    final StringBuilder buffer = new StringBuilder();
     final DateParser dateParser = getDateParser( m_timezone );
 
     for( int i = 0; i < model.size(); i++ )
     {
-      buffer.append( dateParser.toString( model.get( i, axis ) ) ).append( ";" ); //$NON-NLS-1$
+      final Object obj = model.get( i, axis );
+      buffer.append( dateParser.toString( obj ) ).append( ";" ); //$NON-NLS-1$
     }
 
     return StringUtils.chop( buffer.toString() );
@@ -403,7 +406,7 @@ class ObservationMarshaller
    *
    * FIXME: we should use {@link javax.xml.bind.DatatypeConverter} instead
    */
-  public static DateParser getDateParser( final TimeZone timezone )
+  private static DateParser getDateParser( final TimeZone timezone )
   {
     final DateParser parser = new DateParser( XML_DATETIME_FORMAT );
     parser.setTimezone( timezone );
