@@ -137,7 +137,7 @@
     </Styles>
     <Layers>
       <Layer id="T">
-        <Title>Temeratur</Title>
+        <Title>Temperatur</Title>
         <Layers>
           <Layer id="Temeratur" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider">
@@ -145,7 +145,7 @@
                 <Parameter name="supportsMultiSelect" value="true" />
               </Parameters>
             </Provider>
-            <Title>Temeratur</Title>
+            <Title>Temperatur</Title>
             <Description />
             <Styles>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:temperature#t_line_0</StyleReference>
