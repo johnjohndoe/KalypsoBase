@@ -105,7 +105,7 @@ public class DebugDiagramDebugDialog extends EnhancedTitleAreaDialog
       }
     } );
 
-    final ChartEditorTreeOutlinePage cop = new ChartEditorTreeOutlinePage();
+    final ChartEditorTreeOutlinePage cop = new ChartEditorTreeOutlinePage( new DebugChartContentProvider(), new DebugChartLabelProvider() );
     cop.setModel( m_chart.getChartModel() );
     cop.createControl( base );
 

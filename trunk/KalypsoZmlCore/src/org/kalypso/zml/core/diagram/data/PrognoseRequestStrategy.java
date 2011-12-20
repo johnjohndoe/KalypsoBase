@@ -48,12 +48,12 @@ import org.kalypso.ogc.sensor.request.IRequest;
 /**
  * @author Dirk Kuch
  */
-public class DefaultRequestStrategy implements IRequestStrategy
+public class PrognoseRequestStrategy implements IRequestStrategy
 {
 
   private final ZmlObsProviderDataHandler m_handler;
 
-  public DefaultRequestStrategy( final ZmlObsProviderDataHandler handler )
+  public PrognoseRequestStrategy( final ZmlObsProviderDataHandler handler )
   {
     m_handler = handler;
   }

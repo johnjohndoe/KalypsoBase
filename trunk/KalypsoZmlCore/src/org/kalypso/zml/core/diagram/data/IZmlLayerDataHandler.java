@@ -60,4 +60,6 @@ public interface IZmlLayerDataHandler
   IRequest getRequest( );
 
   void setRequestStrategy( IRequestStrategy strategy );
+
+  IRequestStrategy getRequestStrategy( );
 }

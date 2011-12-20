@@ -77,7 +77,7 @@ public class ObservationChooser extends AbstractViewer implements ISelectionProv
   {
     m_repContainer = RepositoryContainerSingelton.getInstance().getContainer();
 
-    m_repViewer = new TreeViewer( parent, SWT.H_SCROLL | SWT.V_SCROLL );
+    m_repViewer = new TreeViewer( parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI );
     m_repViewer.setContentProvider( new RepositoryTreeContentProvider() );
     m_repViewer.setLabelProvider( new RepositoryLabelProvider() );
     m_repViewer.setInput( m_repContainer );
@@ -99,9 +99,13 @@ public class ObservationChooser extends AbstractViewer implements ISelectionProv
     {
       final boolean expandedState = m_repViewer.getExpandedState( firstElement );
       if( expandedState )
+      {
         m_repViewer.collapseToLevel( firstElement, 1 );
+      }
       else
+      {
         m_repViewer.expandToLevel( firstElement, 1 );
+      }
     }
   }
 
@@ -159,9 +163,6 @@ public class ObservationChooser extends AbstractViewer implements ISelectionProv
     return m_repViewer.getSelection();
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
-   */
   @Override
   public void setSelection( final ISelection selection )
   {
@@ -174,9 +175,6 @@ public class ObservationChooser extends AbstractViewer implements ISelectionProv
     m_repViewer.addSelectionChangedListener( listener );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
-   */
   @Override
   public void removeSelectionChangedListener( final ISelectionChangedListener listener )
   {
