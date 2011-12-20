@@ -90,7 +90,9 @@ public class ZmlObservationDataHandler implements IZmlLayerDataHandler, IObserva
     synchronized( this )
     {
       if( m_valueAxis == null )
+      {
         m_valueAxis = AxisUtils.findAxis( m_observation.getAxes(), m_targetAxisId );
+      }
 
       return m_valueAxis;
     }
@@ -113,7 +115,9 @@ public class ZmlObservationDataHandler implements IZmlLayerDataHandler, IObserva
     synchronized( this )
     {
       if( m_observation != null )
+      {
         m_observation.removeListener( this );
+      }
 
       m_observation = observation;
       m_observation.addListener( this );
@@ -152,5 +156,13 @@ public class ZmlObservationDataHandler implements IZmlLayerDataHandler, IObserva
   public void setRequestStrategy( final IRequestStrategy strategy )
   {
     // FIXME
+  }
+
+  @Override
+  public IRequestStrategy getRequestStrategy( )
+  {
+    // FIXME
+
+    return null;
   }
 }

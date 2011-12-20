@@ -91,7 +91,7 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
 
   private IAxis m_valueAxis;
 
-  private IRequestStrategy m_request = new DefaultRequestStrategy( this );
+  private IRequestStrategy m_request = new PrognoseRequestStrategy( this );
 
   public ZmlObsProviderDataHandler( final IZmlLayer layer, final String targetAxisId )
   {
@@ -105,6 +105,11 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
     m_request = strategy;
   }
 
+  public IRequestStrategy getRequestStrategy( )
+  {
+    return m_request;
+  }
+
   public void setObsProvider( final IObsProvider provider )
   {
     synchronized( this )
@@ -116,7 +121,9 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
       }
 
       if( Objects.isNull( provider ) )
+      {
         m_provider = null;
+      }
       else
       {
         m_provider = provider.copy();
@@ -131,7 +138,9 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
   public IAxis getValueAxis( )
   {
     if( m_valueAxis == null )
+    {
       m_valueAxis = LayerProviderUtils.getValueAxis( m_provider, m_targetAxisId );
+    }
 
     return m_valueAxis;
   }

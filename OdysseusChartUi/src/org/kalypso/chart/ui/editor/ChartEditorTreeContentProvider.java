@@ -63,9 +63,6 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
 
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
-   */
   @Override
   public Object[] getChildren( final Object element )
   {
@@ -82,20 +79,13 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
     return new Object[0];
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
-   */
   @Override
   public Object getParent( final Object element )
   {
     if( element instanceof IChartLayer )
-    {
       return findParent( m_model, m_model.getLayerManager().getLayers(), (IChartLayer) element );
-    }
     if( element instanceof ILegendEntry )
-    {
       return ((ILegendEntry) element).getParentLayer();
-    }
 
     return null;
   }
@@ -127,27 +117,17 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
     return m_model;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
-   */
   @Override
   public Object[] getElements( final Object inputElement )
   {
     return getChildren( inputElement );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-   */
   @Override
   public void dispose( )
   {
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
-   */
   @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
@@ -155,7 +135,9 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
       return;
 
     if( newInput instanceof IChartModel )
+    {
       m_model = (IChartModel) newInput;
+    }
   }
 
   private final Object findParent( final Object parent, final IChartLayer[] childs, final IChartLayer child )
