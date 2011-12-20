@@ -119,7 +119,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   public static final String CONTROL_TEMPLATE_NAME = ".calculation.template"; //$NON-NLS-1$
 
-  public static final String CONTROL_VIEW_PATH = MODELLTYP_FOLDER + "/.calculation.view"; //$NON-NLS-1$
+  public static final String CONTROL_VIEW_PATH = MODELLTYP_FOLDER + "/.calculation.gft"; //$NON-NLS-1$
 
   public static final String MODELLTYP_CALCWIZARD_XML = MODELLTYP_FOLDER + "/" + "calcWizard.xml"; //$NON-NLS-1$ //$NON-NLS-2$
 
