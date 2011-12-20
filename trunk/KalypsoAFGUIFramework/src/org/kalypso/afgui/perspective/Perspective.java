@@ -47,10 +47,12 @@ public class Perspective implements IPerspectiveFactory
     rightTop.addPlaceholder( MapView.ID );
     rightTop.addPlaceholder( FeatureTemplateView.ID );
     rightTop.addPlaceholder( DiagramViewPart.ID );
+    rightTop.addPlaceholder( "org.kalypso.zml.ui.chart.view.DiagramViewPart" );//$NON-NLS-1$
     rightTop.addPlaceholder( "org.kalypso.risk.views.RiskStatisticsResultView" ); //$NON-NLS-1$
 
     rightBottom.addPlaceholder( FeatureView.ID );
     rightBottom.addPlaceholder( TableViewPart.ID );
+    rightBottom.addPlaceholder( "org.kalypso.zml.ui.table.view.TableViewPart" );//$NON-NLS-1$
 
     veryRight.addPlaceholder( MapWidgetView.ID );
 

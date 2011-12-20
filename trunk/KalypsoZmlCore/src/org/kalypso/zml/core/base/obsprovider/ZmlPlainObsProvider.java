@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.base.obsprovider;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.ogc.sensor.IObservation;
@@ -93,9 +95,31 @@ public class ZmlPlainObsProvider extends PlainObsProvider implements IZmlSourceE
       return getIdentifier();
 
     final MetadataList metadata = observation.getMetadataList();
-    final String name = (String) metadata.get( IMetadataConstants.MD_NAME );
+    String name = (String) metadata.get( IMetadataConstants.MD_NAME );
+
+    if( isEmpty( name ) )
+    {
+
+      final String href = observation.getHref();
+      if( StringUtils.isNotEmpty( href ) )
+      {
+        name = FilenameUtils.getBaseName( href );
+      }
+      else
+      {
+        name = getIdentifier();
+      }
+    }
 
     return String.format( "%s - %s", getIdentifier(), name );
+  }
+
+  private boolean isEmpty( final String name )
+  {
+    if( StringUtils.isEmpty( name ) )
+      return true;
+
+    return StringUtils.equalsIgnoreCase( "titel", name ); //$NON-NLS-1$
   }
 
   @Override
