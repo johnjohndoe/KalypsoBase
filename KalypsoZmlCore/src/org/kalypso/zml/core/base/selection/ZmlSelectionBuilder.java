@@ -187,10 +187,12 @@ public final class ZmlSelectionBuilder
     final Set<IZmlSourceElement> sources = new HashSet<>();
 
     final IAxis[] valueAxes = AxisUtils.findValueAxes( observation.getAxes(), false );
-    for( final IAxis axis : valueAxes )
+    for( int index = 0; index < ArrayUtils.getLength( valueAxes ); index++ )
     {
+      final IAxis axis = valueAxes[index];
       final String type = axis.getType();
-      sources.add( new ZmlPlainObsProvider( type, observation, request ) );
+
+      sources.add( new ZmlPlainObsProvider( type, observation, request, index ) );
     }
 
     return sources.toArray( new IZmlSourceElement[] {} );

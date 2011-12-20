@@ -56,7 +56,7 @@ import org.kalypso.model.wspm.ui.view.table.handler.ClassificationLabelProvider;
 import org.kalypso.ogc.gml.om.table.celleditor.ComboBoxViewerCellEditor;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 @SuppressWarnings("deprecation")
 public class LandMappingEditingSupport extends EditingSupport

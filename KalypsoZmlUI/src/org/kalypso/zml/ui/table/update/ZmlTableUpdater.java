@@ -49,7 +49,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
 import org.kalypso.zml.core.base.IZmlSourceElement;
-import org.kalypso.zml.core.base.TsLinkWrapper;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.TableTypes;
 import org.kalypso.zml.core.table.model.IZmlModel;
@@ -107,7 +106,7 @@ public class ZmlTableUpdater implements Runnable
     {
       final Object[] values = entry.getValue();
 
-      final IZmlSourceElement source = (TsLinkWrapper) values[0];
+      final IZmlSourceElement source = (IZmlSourceElement) values[0];
       final BaseColumn column = (BaseColumn) values[1];
 
       doLoadModelColumn( source );
