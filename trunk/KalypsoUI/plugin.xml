@@ -33,15 +33,15 @@
 		<editor class="org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor" default="true" extensions="xsd" icon="icons/full/obj16/gml_schema_file.gif" id="org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor" name="%org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor" />
 		<editor class="org.kalypso.ui.editor.gmleditor.part.GmlEditor" contributorClass="org.kalypso.ui.editor.gmleditor.part.GmlEditorActionBarContributor" default="true" extensions="gmv,gml,shp,gmlz" icon="icons/kalypso_gtt.gif" id="org.kalypso.ui.editor.GmlEditor" name="%org.kalypso.ui.editor.gmleditor.part.GmlEditor">
 		</editor>
-		<editor class="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor" icon="icons/kalypso_odt.gif" default="true" contributorClass="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditorContributor" name="%org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor" id="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor" extensions="odt,zml">
+		<editor class="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor" icon="icons/kalypso_odt.gif" default="true" contributorClass="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditorContributor" name="%org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor" id="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor" extensions="odt,zml,zmlz">
 		</editor>
-		<editor class="org.kalypso.ui.editor.obstableeditor.ObservationTableEditor" icon="icons/kalypso_ott.gif" default="true" contributorClass="org.kalypso.ui.editor.obstableeditor.ObservationTableEditorContributor" name="%org.kalypso.ui.editor.obstableeditor.ObservationTableEditor" id="org.kalypso.ui.editor.obstableeditor.ObservationTableEditor" extensions="ott,zml">
+		<editor class="org.kalypso.ui.editor.obstableeditor.ObservationTableEditor" icon="icons/kalypso_ott.gif" default="true" contributorClass="org.kalypso.ui.editor.obstableeditor.ObservationTableEditorContributor" name="%org.kalypso.ui.editor.obstableeditor.ObservationTableEditor" id="org.kalypso.ui.editor.obstableeditor.ObservationTableEditor" extensions="ott,zml,zmlz">
 		</editor>
 		<editor launcher="org.kalypso.ui.editorLauncher.GisTemplateLauncher" icon="icons/full/obj16/gml_file.gif" default="false" name="%org.kalypso.ui.editorLauncher.GisTemplateLauncher" id="org.kalypso.ui.editor.GisEditor" extensions="gml,gmlz,shp">
 		</editor>
-		<editor launcher="org.kalypso.ui.editorLauncher.ObsTemplateLauncher" icon="icons/sample.gif" default="false" name="%org.kalypso.ui.editorLauncher.ObsTemplateLauncher" id="org.kalypso.ui.editor.ObsEditor" extensions="zml">
+		<editor launcher="org.kalypso.ui.editorLauncher.ObsTemplateLauncher" icon="icons/sample.gif" default="false" name="%org.kalypso.ui.editorLauncher.ObsTemplateLauncher" id="org.kalypso.ui.editor.ObsEditor" extensions="zml,zmlz">
 		</editor>
-		<editor launcher="org.kalypso.ui.editorLauncher.GrafikEditorLauncher" icon="icons/observation/grafik-icon.gif" default="false" name="%org.kalypso.ui.editorLauncher.GrafikEditorLauncher" id="org.kalypso.zml.grafik" extensions="zml,tpl,odt" />
+		<editor launcher="org.kalypso.ui.editorLauncher.GrafikEditorLauncher" icon="icons/observation/grafik-icon.gif" default="false" name="%org.kalypso.ui.editorLauncher.GrafikEditorLauncher" id="org.kalypso.zml.grafik" extensions="zml,tpl,odt,zmlz" />
         <editor launcher="org.kalypso.ui.editor.gmlconvert.GmlConvertLauncher" default="false" name="GML Converter" id="org.kalypso.debug.editor.gmlconvert" extensions="gmc"/>		
 	</extension>
 	<extension id="views" name="views" point="org.eclipse.ui.views">

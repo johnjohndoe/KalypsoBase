@@ -71,7 +71,7 @@ import org.kalypso.ui.editor.AbstractWorkbenchPart;
 
 /**
  * AbstractObsEditor
- * 
+ *
  * @author schlienger
  */
 public abstract class AbstractObservationEditor extends AbstractWorkbenchPart implements IEditorPart, IObsViewEventListener
@@ -125,7 +125,7 @@ public abstract class AbstractObservationEditor extends AbstractWorkbenchPart im
     {
       final IFile file = ((IFileEditorInput) input).getFile();
       final String ext = file.getFileExtension();
-      if( "zml".equalsIgnoreCase( ext ) )//$NON-NLS-1$
+      if( "zml".equalsIgnoreCase( ext ) || "zmlz".equalsIgnoreCase( "zmlz" ) )//$NON-NLS-1$ //$NON-NLS-1$
       {
         final IPath projectRelativePath = file.getProjectRelativePath();
         final TemplateStorage storage = new TemplateStorage( file, ResourceUtilities.createQuietURL( file ), "project:/" + projectRelativePath );
@@ -160,10 +160,6 @@ public abstract class AbstractObservationEditor extends AbstractWorkbenchPart im
     return null;
   }
 
-  /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#loadInternal(org.eclipse.core.runtime.IProgressMonitor,
-   *      org.eclipse.ui.IFileEditorInput)
-   */
   @Override
   protected void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input )
   {

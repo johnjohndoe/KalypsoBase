@@ -81,29 +81,6 @@ public final class ZmlURL
   }
 
   /**
-   * Returns the scheme part of the given url
-   */
-  public static String getSchemePart( final URL url )
-  {
-    return getSchemePart( url.toExternalForm() );
-  }
-
-  /**
-   * Returns the scheme part of the given url
-   */
-  public static String getSchemePart( final String strUrl )
-  {
-    // TODO test if this is correct since only the first ':' found
-    // will be returned here. But the url might contain something like
-    // foo:bar://stuff hence results might not be correct!!!
-    final int ix = strUrl.indexOf( ":" ); //$NON-NLS-1$
-    if( ix != -1 )
-      return strUrl.substring( 0, ix );
-
-    return strUrl;
-  }
-
-  /**
    * Insert the filter and/or the request found in the query-part and return the result.
    * 
    * @param href
