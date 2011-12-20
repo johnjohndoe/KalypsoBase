@@ -72,7 +72,7 @@ import org.kalypso.contribs.java.io.RunAfterCloseOutputStream;
  * Davor kann noch eine Token-Ersetzung stattfinden
  * </p>
  * TODO: untersuchen warum es auch org.kalypso.contribs.java.net.UrlUtilities gibt??? Marc.
- * 
+ *
  * @author belger
  */
 @SuppressWarnings("restriction")
@@ -93,7 +93,7 @@ public class UrlResolver implements IUrlResolver
    * project from the baseURL (e.g. the baseURL must be of the form platfrom:/resource/). It then replaces project: by
    * 'platform:/resource/ <projectname>/
    * </p>
-   * 
+   *
    * @param baseURL
    * @param relativeURL
    * @throws MalformedURLException
@@ -106,10 +106,10 @@ public class UrlResolver implements IUrlResolver
       if( baseURL == null )
         throw new MalformedURLException( "Cannot process protocol 'project:' without a valid base URL as context" ); //$NON-NLS-1$
 
-      if( !baseURL.toString().startsWith( PlatformURLResourceConnection.RESOURCE_URL_STRING ) )
+      final IProject project = ResourceUtilities.findProjectFromURL( baseURL );
+      if( project == null )
         throw new MalformedURLException( "Protocol 'project:' need a resource url as context" + "\n\turl=" + baseURL + "\n\trelativeURL=" + relativeURL ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-      final IProject project = ResourceUtilities.findProjectFromURL( baseURL );
       final String projectURL = PlatformURLResourceConnection.RESOURCE_URL_STRING + "/" + project.getName(); //$NON-NLS-1$
       final String relPath = relativeURL.substring( PROJECT_PROTOCOLL.length() + 1 ); //$NON-NLS-1$
 
@@ -159,7 +159,7 @@ public class UrlResolver implements IUrlResolver
 
   /**
    * If URL denotes a location within the workspace, special handling is done. Else, we rely on {@link UrlUtilities}.
-   * 
+   *
    * @throws IOException
    * @see org.kalypso.contribs.java.net.IUrlResolver#createWriter(java.net.URL)
    */
@@ -223,7 +223,7 @@ public class UrlResolver implements IUrlResolver
 
   /**
    * Ausnahmebehandlung von Platform URLs. In diesem Fall anhand der Workbench das encoding bestimmen.
-   * 
+   *
    * @see org.kalypso.contribs.java.net.IUrlResolver#createReader(java.net.URL)
    */
   @Override
