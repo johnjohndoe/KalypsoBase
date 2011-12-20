@@ -71,11 +71,11 @@ public class ObservationRepositoryPerspectiveFactory implements IPerspectiveFact
     botLeft.addView( IPageLayout.ID_PROP_SHEET );
 
     final IFolderLayout leftBottom = layout.createFolder( "leftBottom", IPageLayout.BOTTOM, (float) 0.0, layout.getEditorArea() ); //$NON-NLS-1$
-    leftBottom.addView( IKalypsoUIConstants.ID_OBSDIAGRAM_VIEW );
+// leftBottom.addView( IKalypsoUIConstants.ID_OBSDIAGRAM_VIEW );
     leftBottom.addView( "org.kalypso.zml.ui.chart.view.DiagramViewPart" ); //$NON-NLS-1$ //FIXME move complete perspective to zml ui plugin!!!
 
     final IFolderLayout rightBottom = layout.createFolder( "rightBottom", IPageLayout.RIGHT, (float) 0.50, "leftBottom" ); //$NON-NLS-1$ //$NON-NLS-2$
-    rightBottom.addView( IKalypsoUIConstants.ID_OBSTABLE_VIEW );
+// rightBottom.addView( IKalypsoUIConstants.ID_OBSTABLE_VIEW );
     rightBottom.addView( "org.kalypso.zml.ui.table.view.TableViewPart" ); //$NON-NLS-1$ //FIXME move complete perspective to zml ui plugin!!!
 
     setContentsOfShowViewMenu( layout );
@@ -86,13 +86,13 @@ public class ObservationRepositoryPerspectiveFactory implements IPerspectiveFact
     repositoryViewLayout.setCloseable( false );
     repositoryViewLayout.setMoveable( true );
 
-    final IViewLayout propertyViewLayout = layout.getViewLayout( IPageLayout.ID_PROP_SHEET );
-    propertyViewLayout.setCloseable( true );
-    propertyViewLayout.setMoveable( true );
-
-    final IViewLayout diagramViewLayout = layout.getViewLayout( IKalypsoUIConstants.ID_OBSDIAGRAM_VIEW );
-    diagramViewLayout.setCloseable( false );
-    diagramViewLayout.setMoveable( true );
+// final IViewLayout propertyViewLayout = layout.getViewLayout( IPageLayout.ID_PROP_SHEET );
+// propertyViewLayout.setCloseable( true );
+// propertyViewLayout.setMoveable( true );
+//
+// final IViewLayout diagramViewLayout = layout.getViewLayout( IKalypsoUIConstants.ID_OBSDIAGRAM_VIEW );
+// diagramViewLayout.setCloseable( false );
+// diagramViewLayout.setMoveable( true );
 
     final IViewLayout diagramViewLayout2 = layout.getViewLayout( "org.kalypso.zml.ui.chart.view.DiagramViewPart" ); //$NON-NLS-1$
     diagramViewLayout2.setCloseable( false );
