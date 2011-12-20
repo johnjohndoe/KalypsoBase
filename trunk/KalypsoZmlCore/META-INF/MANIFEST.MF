@@ -13,6 +13,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.kalypso.zml.core,
  org.kalypso.zml.core.base,
  org.kalypso.zml.core.base.obsprovider,
+ org.kalypso.zml.core.base.request,
  org.kalypso.zml.core.base.selection,
  org.kalypso.zml.core.diagram.base,
  org.kalypso.zml.core.diagram.base.provider.observation,
