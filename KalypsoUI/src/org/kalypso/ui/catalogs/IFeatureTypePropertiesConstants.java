@@ -54,7 +54,7 @@ public interface IFeatureTypePropertiesConstants
   /** How many levels of children should be created if a feature is created (-1 means infinite, 0 means none) */
   String FEATURE_CREATION_DEPTH = "feature.creationDepth"; //$NON-NLS-1$
 
-  String FEATURE_CREATION_DEPTH_DEFAULT = "0"; //$NON-NLS-1$
+//  String FEATURE_CREATION_DEPTH_DEFAULT = "0"; //$NON-NLS-1$
 
   //
   // GmlTree Constants
@@ -72,7 +72,7 @@ public interface IFeatureTypePropertiesConstants
   /** Prohibit the 'duplicate' menu of a feature, defaults to true */
   String GMLTREE_SHOW_DUPLICATION_MENU = "gmltree.showDuplicateMenu"; //$NON-NLS-1$
 
-  String GMLTREE_SHOW_CHILDREN_DEFAULT = "true"; //$NON-NLS-1$
+//  String GMLTREE_SHOW_CHILDREN_DEFAULT = "true"; //$NON-NLS-1$
 
   //
   // Map Constants

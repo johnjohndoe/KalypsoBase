@@ -44,7 +44,7 @@ import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 import org.eclipse.ui.IViewLayout;
-import org.kalypso.ui.IKalypsoUIConstants;
+import org.kalypso.ui.repository.view.RepositoryExplorerPart;
 
 /**
  * The PerspectiveFactory for browsing the ObservationRepository.
@@ -65,24 +65,22 @@ public class ObservationRepositoryPerspectiveFactory implements IPerspectiveFact
   public void createInitialLayout( final IPageLayout layout )
   {
     final IFolderLayout topLeft = layout.createFolder( "topLeft", IPageLayout.LEFT, (float) 0.26, layout.getEditorArea() ); //$NON-NLS-1$
-    topLeft.addView( IKalypsoUIConstants.ID_REPOSITORY_VIEW );
+    topLeft.addView( RepositoryExplorerPart.ID );
 
     final IFolderLayout botLeft = layout.createFolder( "bottom", IPageLayout.BOTTOM, (float) 0.70, "topLeft" ); //$NON-NLS-1$ //$NON-NLS-2$
     botLeft.addView( IPageLayout.ID_PROP_SHEET );
 
     final IFolderLayout leftBottom = layout.createFolder( "leftBottom", IPageLayout.BOTTOM, (float) 0.0, layout.getEditorArea() ); //$NON-NLS-1$
-// leftBottom.addView( IKalypsoUIConstants.ID_OBSDIAGRAM_VIEW );
     leftBottom.addView( "org.kalypso.zml.ui.chart.view.DiagramViewPart" ); //$NON-NLS-1$ //FIXME move complete perspective to zml ui plugin!!!
 
     final IFolderLayout rightBottom = layout.createFolder( "rightBottom", IPageLayout.RIGHT, (float) 0.50, "leftBottom" ); //$NON-NLS-1$ //$NON-NLS-2$
-// rightBottom.addView( IKalypsoUIConstants.ID_OBSTABLE_VIEW );
     rightBottom.addView( "org.kalypso.zml.ui.table.view.TableViewPart" ); //$NON-NLS-1$ //FIXME move complete perspective to zml ui plugin!!!
 
     setContentsOfShowViewMenu( layout );
     layout.setEditorAreaVisible( false );
 
     /* Configure behavior of views */
-    final IViewLayout repositoryViewLayout = layout.getViewLayout( IKalypsoUIConstants.ID_REPOSITORY_VIEW );
+    final IViewLayout repositoryViewLayout = layout.getViewLayout( RepositoryExplorerPart.ID );
     repositoryViewLayout.setCloseable( false );
     repositoryViewLayout.setMoveable( true );
 
@@ -90,21 +88,13 @@ public class ObservationRepositoryPerspectiveFactory implements IPerspectiveFact
 // propertyViewLayout.setCloseable( true );
 // propertyViewLayout.setMoveable( true );
 //
-// final IViewLayout diagramViewLayout = layout.getViewLayout( IKalypsoUIConstants.ID_OBSDIAGRAM_VIEW );
-// diagramViewLayout.setCloseable( false );
-// diagramViewLayout.setMoveable( true );
+    final IViewLayout diagramViewLayout = layout.getViewLayout( "org.kalypso.zml.ui.chart.view.DiagramViewPart" ); //$NON-NLS-1$
+    diagramViewLayout.setCloseable( false );
+    diagramViewLayout.setMoveable( true );
 
-    final IViewLayout diagramViewLayout2 = layout.getViewLayout( "org.kalypso.zml.ui.chart.view.DiagramViewPart" ); //$NON-NLS-1$
-    diagramViewLayout2.setCloseable( false );
-    diagramViewLayout2.setMoveable( true );
-
-    final IViewLayout tableViewLayout = layout.getViewLayout( IKalypsoUIConstants.ID_OBSTABLE_VIEW );
+    final IViewLayout tableViewLayout = layout.getViewLayout( "org.kalypso.zml.ui.table.view.TableViewPart" ); //$NON-NLS-1$
     tableViewLayout.setCloseable( false );
     tableViewLayout.setMoveable( true );
-
-    final IViewLayout tableViewLayout2 = layout.getViewLayout( "org.kalypso.zml.ui.table.view.TableViewPart" ); //$NON-NLS-1$
-    tableViewLayout2.setCloseable( false );
-    tableViewLayout2.setMoveable( true );
 
     /* Add to "Open perspective"... */
     layout.addPerspectiveShortcut( "org.kalypso.hwv.product.sachsen.ui.views.admin.LhwzAdminPerspective" ); //$NON-NLS-1$
@@ -123,8 +113,6 @@ public class ObservationRepositoryPerspectiveFactory implements IPerspectiveFact
   protected void setContentsOfShowViewMenu( final IPageLayout layout )
   {
     // layout.addShowViewShortcut( IKalypsoUIConstants.ID_REPOSITORY_VIEW );
-    // layout.addShowViewShortcut( IKalypsoUIConstants.ID_OBSDIAGRAM_VIEW );
-    // layout.addShowViewShortcut( IKalypsoUIConstants.ID_OBSTABLE_VIEW );
     layout.addShowViewShortcut( IPageLayout.ID_PROP_SHEET );
   }
 }

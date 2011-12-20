@@ -462,7 +462,7 @@
       <wizard
             category="org.kalypso.ui.importwizards.kalypso"
             class="org.kalypso.zml.ui.imports.ImportObservationWizard"
-            icon="icons/importWizard.gif"
+            icon="icons/imports/importWizard.gif"
             id="KalypsoNA_UI.wizard1"
             name="%KalypsoNA_UI.wizard1.name"/>
    </extension>
