@@ -63,7 +63,13 @@ public final class KalypsoOGC31JAXBcontext
       , ogc31.www.opengis.net.swe.ObjectFactory.class//
       , ogc31.www.isotc211.org.gmd.ObjectFactory.class//
       , ogc31.org.w3.smil20.ObjectFactory.class//
-      , au.csiro.seegrid.xml.st.ObjectFactory.class };
+      , au.csiro.seegrid.xml.st.ObjectFactory.class//
+      , ogc31.www.isotc211.org.gco.ObjectFactory.class//
+      , ogc31.www.isotc211.org.gsr.ObjectFactory.class//
+      , ogc31.www.isotc211.org.gss.ObjectFactory.class//
+      , ogc31.www.isotc211.org.gts.ObjectFactory.class//
+      , ogc31.www.opengis.net.ogc.ObjectFactory.class//
+      , ogc31.www.opengis.net.ows.ObjectFactory.class};
 
   public static synchronized JAXBContext getContext( )
   {
