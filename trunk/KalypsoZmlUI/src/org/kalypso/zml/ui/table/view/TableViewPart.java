@@ -114,7 +114,6 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
   public void dispose( )
   {
     getSite().getPage().removePartListener( this );
-
   }
 
   @Override

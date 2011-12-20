@@ -127,7 +127,6 @@ public class ZmlDataSourceElement implements IZmlSourceElement
       if( Objects.isNotNull( m_provider ) )
         return m_provider;
 
-// KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "Creating new pooled obs provider - %s\n", type );
       m_provider = new PooledObsProvider( type );
     }
 

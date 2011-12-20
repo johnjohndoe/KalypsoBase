@@ -76,4 +76,6 @@ public interface IZmlModel
   AbstractColumnType getColumnType( String identifier );
 
   String[] getIgnoreTypes( );
+
+  void doClean( );
 }

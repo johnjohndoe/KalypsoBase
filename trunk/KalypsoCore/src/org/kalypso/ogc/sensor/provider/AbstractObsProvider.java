@@ -73,9 +73,6 @@ public abstract class AbstractObsProvider implements IObsProvider
     m_request = args;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.template.IObsProvider#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -85,9 +82,6 @@ public abstract class AbstractObsProvider implements IObsProvider
     m_listeners.clear();
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.template.IObsProvider#getArguments()
-   */
   @Override
   public IRequest getArguments( )
   {
@@ -107,36 +101,24 @@ public abstract class AbstractObsProvider implements IObsProvider
     fireChanged();
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.template.IObsProvider#getObservation()
-   */
   @Override
   public IObservation getObservation( )
   {
     return m_observation;
   }
 
-  /**
-   * @see org.kalypso.hwv.core.chart.provider.observation.IZmlObsProvider#isLoaded()
-   */
   @Override
   public final boolean isLoaded( )
   {
     return getObservation() != null;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.template.IObsProvider#addListener(org.kalypso.ogc.sensor.template.IObsProviderListener)
-   */
   @Override
   public final void addListener( final IObsProviderListener l )
   {
     m_listeners.add( l );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.template.IObsProvider#removeListener(org.kalypso.ogc.sensor.template.IObsProviderListener)
-   */
   @Override
   public final void removeListener( final IObsProviderListener l )
   {

@@ -187,15 +187,40 @@ public final class ZmlSelectionBuilder
     final Set<IZmlSourceElement> sources = new HashSet<>();
 
     final IAxis[] valueAxes = AxisUtils.findValueAxes( observation.getAxes(), false );
-    for( int index = 0; index < ArrayUtils.getLength( valueAxes ); index++ )
+    for( final IAxis axis : valueAxes )
     {
-      final IAxis axis = valueAxes[index];
       final String type = axis.getType();
-
-      sources.add( new ZmlPlainObsProvider( type, observation, request, index ) );
+      sources.add( new ZmlPlainObsProvider( type, observation, request, getPriority( type ) ) );
     }
 
     return sources.toArray( new IZmlSourceElement[] {} );
+  }
+
+  private static int getPriority( final String type )
+  {
+    switch( type )
+    {
+      case "W": //$NON-NLS-1$
+        return 10;
+      case "Q"://$NON-NLS-1$
+        return 20;
+      case "N"://$NON-NLS-1$
+        return 30;
+      case "V"://$NON-NLS-1$
+        return 40;
+      case "E"://$NON-NLS-1$
+        return 50;
+      case "T"://$NON-NLS-1$
+        return 60;
+      case "W_NN"://$NON-NLS-1$
+        return 70;
+      case "WECHMANN_E"://$NON-NLS-1$
+        return 80;
+      case "WECHMANN_SCHALTER_V"://$NON-NLS-1$
+        return 90;
+    }
+
+    return type.hashCode();
   }
 
   private static IZmlSourceElement[] toSourceElement( final IObsProvider provider )
