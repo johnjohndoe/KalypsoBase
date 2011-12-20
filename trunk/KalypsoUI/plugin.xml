@@ -47,8 +47,6 @@
 	<extension id="views" name="views" point="org.eclipse.ui.views">
 		<category name="%category.name.0" id="org.kalypso.ui.kalypso"></category>
 		<view name="%org.kalypso.ui.repository.view.RepositoryExplorerPart" icon="icons/repository/repository.gif" category="org.kalypso.ui.kalypso" class="org.kalypso.ui.repository.view.RepositoryExplorerPart" id="org.kalypso.ui.repository.view.RepositoryExplorerPart"/>
-		<view name="%org.kalypso.ogc.sensor.view.DiagramViewPart" icon="icons/kalypso_odt.gif" category="org.kalypso.ui.kalypso" class="org.kalypso.ogc.sensor.view.DiagramViewPart" id="org.kalypso.ogc.sensor.view.DiagramViewPart"/>
-		<view name="%org.kalypso.ogc.sensor.view.TableViewPart" icon="icons/kalypso_ott.gif" category="org.kalypso.ui.kalypso" class="org.kalypso.ogc.sensor.view.TableViewPart" id="org.kalypso.ogc.sensor.view.TableViewPart"/>
 		<view name="%org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart" icon="icons/sldeditor/styleEditor.gif" category="org.kalypso.ui.kalypso" class="org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart" id="org.kalypso.ui.editor.mapeditor.views.styleeditor"/>
 		<view allowMultiple="false" icon="icons/kalypso16.gif" class="org.kalypso.ui.editor.mapeditor.views.MapWidgetView" category="org.kalypso.ui.kalypso" name="%org.kalypso.ui.editor.mapeditor.views.ActionOptionsView" id="org.kalypso.ui.editor.mapeditor.views.ActionOptionsView" />
 		<view allowMultiple="false" category="org.kalypso.ui.kalypso" class="org.kalypso.ogc.gml.om.table.ObservationTableView" icon="icons/kalypso_ott.gif" id="org.kalypso.ogc.gml.om.table.ObservationTableView" name="%org.kalypso.ogc.gml.om.table.ObservationTableView" />

@@ -40,10 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui;
 
-import org.kalypso.ogc.sensor.view.DiagramViewPart;
-import org.kalypso.ogc.sensor.view.TableViewPart;
-import org.kalypso.ui.perspectives.ModelerPerspectiveFactory;
-import org.kalypso.ui.perspectives.ObservationRepositoryPerspectiveFactory;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
 
 /**
@@ -53,15 +49,12 @@ import org.kalypso.ui.repository.view.RepositoryExplorerPart;
  */
 public interface IKalypsoUIConstants
 {
-  public final static String ID_OBSDIAGRAM_VIEW = DiagramViewPart.ID;
-
-  public final static String ID_OBSTABLE_VIEW = TableViewPart.ID;
 
   public final static String ID_REPOSITORY_VIEW = RepositoryExplorerPart.ID;
 
-  public static final String MODELER_PERSPECTIVE = ModelerPerspectiveFactory.ID;
+// public static final String MODELER_PERSPECTIVE = ModelerPerspectiveFactory.ID;
 
-  public static final String REPOSITORY_PERSPECTIVE = ObservationRepositoryPerspectiveFactory.ID;
+// public static final String REPOSITORY_PERSPECTIVE = ObservationRepositoryPerspectiveFactory.ID;
 
   /**
    * Constant for system property intended to be defined in config.ini.
@@ -69,7 +62,7 @@ public interface IKalypsoUIConstants
    * if true, the pool asks to save released objects if they are dirty.
    * </p>
    */
-  public static final String CONFIG_INI_DO_ASK_FOR_POOL_SAVE = "kalypso.ask_for_pool_save"; //$NON-NLS-1$
+//  public static final String CONFIG_INI_DO_ASK_FOR_POOL_SAVE = "kalypso.ask_for_pool_save"; //$NON-NLS-1$
 
   /**
    * The property, which marks a theme as movie theme.
