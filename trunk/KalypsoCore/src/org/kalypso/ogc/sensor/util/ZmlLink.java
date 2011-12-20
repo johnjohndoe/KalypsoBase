@@ -60,7 +60,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.UrlResolver;
@@ -219,8 +218,10 @@ public class ZmlLink
       final String href = link.getHref();
       if( href.startsWith( UrlResolver.PROJECT_PROTOCOLL ) )
       {
-        final IFile file = ResourceUtilities.getFileFromPath( new Path( href ) );
-        return file.getLocation().toFile().toURI().toURL();
+        final UrlResolver resolver = new UrlResolver();
+        final IPath path = ResourceUtilities.findPathFromURL( m_context );
+        final URL context = ResourceUtilities.createQuietURL( ResourceUtilities.getFileFromPath( path ) );
+        return resolver.resolveURL( context, href );
       }
 
       return new URL( m_context, href );
