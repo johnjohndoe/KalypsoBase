@@ -88,9 +88,6 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
     return m_diagView;
   }
 
-  /**
-   * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public void createPartControl( final Composite parent )
   {
@@ -124,7 +121,9 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
     getSite().getPage().removePartListener( this );
 
     if( m_chart != null )
+    {
       m_chart.dispose();
+    }
 
     m_diagView.dispose();
 
@@ -167,7 +166,9 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
       // sub title of diagram contains date-range info
       m_subTitle.setText( "" ); //$NON-NLS-1$
       if( dra != null )
+      {
         m_subTitle.setText( dra.toString() );
+      }
 
       final IActionBars actionbar = getViewSite().getActionBars();
       actionbar.updateActionBars();
@@ -184,7 +185,9 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   public void partActivated( final IWorkbenchPart part )
   {
     if( part != null && part instanceof RepositoryExplorerPart )
+    {
       ((RepositoryExplorerPart) part).addSelectionChangedListener( this );
+    }
   }
 
   /**
@@ -203,7 +206,9 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   public void partClosed( final IWorkbenchPart part )
   {
     if( part != null && part instanceof RepositoryExplorerPart )
+    {
       ((RepositoryExplorerPart) part).removeSelectionChangedListener( this );
+    }
   }
 
   /**
@@ -213,7 +218,9 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
   public void partDeactivated( final IWorkbenchPart part )
   {
     if( part != null && part instanceof RepositoryExplorerPart )
+    {
       ((RepositoryExplorerPart) part).removeSelectionChangedListener( this );
+    }
   }
 
   /**
