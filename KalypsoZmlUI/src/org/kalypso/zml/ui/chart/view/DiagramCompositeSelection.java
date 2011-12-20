@@ -41,6 +41,7 @@
 package org.kalypso.zml.ui.chart.view;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IAxis;
@@ -88,7 +89,9 @@ public final class DiagramCompositeSelection
 
       final IZmlLayer[] layers = visitor.getLayers();
       if( ArrayUtils.isEmpty( layers ) )
+      {
         continue;
+      }
 
       final IZmlSourceElement[] sources = element.getSources();
       for( int index = 0; index < ArrayUtils.getLength( sources ); index++ )
@@ -118,13 +121,9 @@ public final class DiagramCompositeSelection
           ((ZmlObsProviderDataHandler) handler).setObsProvider( provider );
         }
 
-        final IObservation observation = provider.getObservation();
-        if( Objects.isNotNull( observation ) )
-        {
-          final IAxis axis = AxisUtils.findAxis( observation.getAxes(), type );
-          final String name = ObservationTokenHelper.replaceTokens( "%axistype% - %obsname%", observation, axis ); //$NON-NLS-1$
-          layer.setTitle( name );
-        }
+        final String label = findLabel( source, provider, type );
+
+        layer.setTitle( label );
 
       }
       catch( final ConfigurationException e )
@@ -132,6 +131,24 @@ public final class DiagramCompositeSelection
         KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
       }
     }
+  }
+
+  private static String findLabel( final IZmlSourceElement source, final IObsProvider provider, final String type )
+  {
+    final String label = source.getLabel();
+    if( StringUtils.isNotEmpty( label ) )
+      return label;
+
+    final IObservation observation = provider.getObservation();
+    if( Objects.isNotNull( observation ) )
+    {
+      final IAxis axis = AxisUtils.findAxis( observation.getAxes(), type );
+      final String name = ObservationTokenHelper.replaceTokens( "%axistype% - %obsname%", observation, axis ); //$NON-NLS-1$
+
+      return name;
+    }
+
+    return type;
   }
 
   private static IZmlLayer buildLayer( final IZmlLayer baseLayer, final int index ) throws ConfigurationException
