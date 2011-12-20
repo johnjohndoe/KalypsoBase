@@ -147,11 +147,10 @@ public final class ZmlSelectionBuilder
       }
     }
 
-    return packAsMultiple( items.toArray( new IZmlSourceElement[] {} ) );
-
+    return packToMultiple( items.toArray( new IZmlSourceElement[] {} ) );
   }
 
-  private static IMultipleZmlSourceElement[] packAsMultiple( final IZmlSourceElement[] sources )
+  private static IMultipleZmlSourceElement[] packToMultiple( final IZmlSourceElement[] sources )
   {
     final Map<String, IMultipleZmlSourceElement> resultSet = new HashMap<>();
 

@@ -53,6 +53,7 @@ public class TsLinkWrapper extends TSLinkWithName
     m_index = index;
   }
 
+  @Override
   public int getIndex( )
   {
     return m_index;
