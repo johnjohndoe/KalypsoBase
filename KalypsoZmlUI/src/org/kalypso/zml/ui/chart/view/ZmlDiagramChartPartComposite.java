@@ -53,6 +53,7 @@ import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
 import org.kalypso.zml.core.diagram.base.ChartTypeHandler;
 import org.kalypso.zml.core.diagram.base.visitors.ResetZmlLayerVisitor;
 import org.kalypso.zml.ui.chart.layer.visitor.SingleGridVisibilityVisitor;
+import org.kalypso.zml.ui.chart.update.RemoveClonedLayerVisitor;
 
 import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
 import de.openali.odysseus.chart.factory.config.ChartFactory;
@@ -137,7 +138,9 @@ public class ZmlDiagramChartPartComposite extends ChartPartComposite
   public void reset( )
   {
     final ILayerManager layerManager = getChartModel().getLayerManager();
+    layerManager.accept( new RemoveClonedLayerVisitor() );
     layerManager.accept( new ResetZmlLayerVisitor() );
+
   }
 
 }

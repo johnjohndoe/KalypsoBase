@@ -133,6 +133,8 @@ public class TableComposite extends Composite implements IUpdateable, IObservati
     model.doClean();
 
     final ZmlTableUpdater updater = new ZmlTableUpdater( m_table, selection );
+    updater.setSingleSelectionMode( true );
+
     updater.run();
 
   }

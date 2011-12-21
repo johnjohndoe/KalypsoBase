@@ -67,6 +67,8 @@ public class ZmlTableUpdater implements Runnable
 
   private final IZmlTable m_table;
 
+  private boolean m_singleSelect;
+
   public ZmlTableUpdater( final IZmlTable table, final IMultipleZmlSourceElement[] sources )
   {
     m_table = table;
@@ -89,6 +91,9 @@ public class ZmlTableUpdater implements Runnable
 
       for( int index = 0; index < links.length; index++ )
       {
+        if( m_singleSelect && index > 1 )
+          continue;
+
         final IZmlSourceElement source = links[index];
         final BaseColumn column = toBaseColumn( baseTypeIdentifier, index );
         if( Objects.isNull( column ) )
@@ -152,6 +157,11 @@ public class ZmlTableUpdater implements Runnable
         return clonedColumnType;
       }
     };
+  }
+
+  public void setSingleSelectionMode( final boolean single )
+  {
+    m_singleSelect = single;
   }
 
 }

@@ -51,6 +51,7 @@ import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.provider.PlainObsProvider;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.zml.core.base.IZmlSourceElement;
+import org.kalypso.zml.core.table.model.utils.ZmlModelColumns;
 
 /**
  * @author Dirk Kuch
@@ -111,7 +112,13 @@ public class ZmlPlainObsProvider extends PlainObsProvider implements IZmlSourceE
       }
     }
 
-    return String.format( "%s - %s", getIdentifier(), name );
+    String identifier = getIdentifier();
+    if( ZmlModelColumns.isCloned( identifier ) )
+    {
+      identifier = ZmlModelColumns.getClonedColumnBase( identifier );
+    }
+
+    return String.format( "%s - %s", identifier, name );
   }
 
   private boolean isEmpty( final String name )
