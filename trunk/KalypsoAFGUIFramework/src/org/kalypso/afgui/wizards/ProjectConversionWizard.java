@@ -44,7 +44,6 @@ package org.kalypso.afgui.wizards;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -52,7 +51,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.progress.UIJob;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
@@ -114,6 +112,10 @@ public class ProjectConversionWizard extends NewProjectWizard
     if( m_handler != null )
       m_handler.postCreateProject( project, template, new SubProgressMonitor( monitor, 10 ) );
 
+    // FIXME: we sometimes get a dead lock, if the pre-conversion operation returns too fast; eclipse still refreshes
+    // the workspace
+    // and we get a conflict when we start modifying resources. How can we wait for the refresh to finish??
+
     final File inputDir = m_conversionPage.getProjectDir();
     return doConvertProject( inputDir, project, new SubProgressMonitor( monitor, 90 ) );
   }
@@ -152,26 +154,21 @@ public class ProjectConversionWizard extends NewProjectWizard
   private IStatus doPreConversion( final IProjectConversionOperation operation )
   {
     final Shell shell = getShell();
-    final UIJob job = new UIJob( shell.getDisplay(), StringUtils.EMPTY )
+
+    final IStatus[] status = new IStatus[1];
+    final Runnable runnable = new Runnable()
     {
       @Override
-      public IStatus runInUIThread( final IProgressMonitor monitor )
+      public void run( )
       {
-        return operation.preConversion( getShell() );
+        status[0] = operation.preConversion( getShell() );
       }
     };
 
-    job.schedule();
-    try
-    {
-      job.join();
-      return job.getResult();
-    }
-    catch( final InterruptedException e )
-    {
-      e.printStackTrace();
-      return Status.CANCEL_STATUS;
-    }
+    // FIXED: not using UIJob with join here, that leads to a dead lock
+    shell.getDisplay().syncExec( runnable );
+
+    return status[0];
   }
 
   @Override
