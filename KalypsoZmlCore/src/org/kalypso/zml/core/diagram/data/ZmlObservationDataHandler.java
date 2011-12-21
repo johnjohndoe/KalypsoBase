@@ -51,6 +51,7 @@ import org.kalypso.ogc.sensor.IObservationListener;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.zml.core.base.request.IRequestStrategy;
 import org.kalypso.zml.core.diagram.base.IZmlLayer;
 
 /**
@@ -105,9 +106,14 @@ public class ZmlObservationDataHandler implements IZmlLayerDataHandler, IObserva
   }
 
   @Override
-  public IObservation getObservation( )
+  public Object getAdapter( final Class adapter )
   {
-    return m_observation;
+    if( adapter.isAssignableFrom( IObservation.class ) )
+    {
+      return m_observation;
+    }
+
+    return null;
   }
 
   public void setObservation( final IObservation observation )

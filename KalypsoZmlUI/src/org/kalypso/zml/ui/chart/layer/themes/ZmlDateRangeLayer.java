@@ -49,9 +49,9 @@ import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.core.diagram.base.IZmlLayer;
-import org.kalypso.zml.core.diagram.base.LayerProviderUtils;
+import org.kalypso.zml.core.diagram.base.IZmlLayerProvider;
+import org.kalypso.zml.core.diagram.base.ZmlLayerProviders;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
-import org.kalypso.zml.core.diagram.data.IZmlLayerProvider;
 import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
@@ -75,7 +75,7 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
 
   public ZmlDateRangeLayer( final IZmlLayerProvider provider, final URL context )
   {
-    super( provider,new StyleSet() );
+    super( provider, new StyleSet() );
     setup( context );
   }
 
@@ -143,7 +143,7 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
     super.dispose();
   }
 
-   @Override
+  @Override
   public IZmlLayerDataHandler getDataHandler( )
   {
     return m_dataHandler;
@@ -167,17 +167,16 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
     if( Objects.isNull( handler ) )
       return null;
 
-    final IObservation observation = handler.getObservation();
+    final IObservation observation = (IObservation) handler.getAdapter( IObservation.class );
     if( Objects.isNull( observation ) )
       return null;
 
     final IParameterContainer parameters = getProvider().getParameterContainer();
 
     final MetadataList metadata = observation.getMetadataList();
-    final Date start = LayerProviderUtils.getMetadataDate( parameters, "start", metadata ); //$NON-NLS-1$
-    final Date end = LayerProviderUtils.getMetadataDate( parameters, "end", metadata ); //$NON-NLS-1$
+    final Date start = ZmlLayerProviders.getMetadataDate( parameters, "start", metadata ); //$NON-NLS-1$
+    final Date end = ZmlLayerProviders.getMetadataDate( parameters, "end", metadata ); //$NON-NLS-1$
 
     return new DateRange( start, end );
   }
-
 }

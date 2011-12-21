@@ -100,7 +100,7 @@ public class LineLayerModelVisitor implements IObservationVisitor
     if( m_dateAxis == null )
     {
       final IZmlLayerDataHandler handler = m_layer.getDataHandler();
-      final IObservation observation = handler.getObservation();
+      final IObservation observation = (IObservation) handler.getAdapter( IObservation.class );
       if( Objects.isNull( observation ) )
         return null;
 

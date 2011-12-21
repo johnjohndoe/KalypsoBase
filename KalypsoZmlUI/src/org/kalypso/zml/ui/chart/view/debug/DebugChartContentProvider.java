@@ -49,8 +49,8 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.zml.core.base.request.IRequestStrategy;
 import org.kalypso.zml.core.diagram.base.IZmlLayer;
-import org.kalypso.zml.core.diagram.data.IRequestStrategy;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 
 import de.openali.odysseus.chart.framework.model.ILayerContainer;
@@ -169,7 +169,7 @@ public class DebugChartContentProvider implements ITreeContentProvider
       {
         properties.add( String.format( "- handler impl: %s", handler.getClass().getSimpleName() ) );
 
-        final IObservation observation = handler.getObservation();
+        final IObservation observation = (IObservation) handler.getAdapter( IObservation.class );
         if( Objects.isNotNull( observation ) )
         {
           properties.add( String.format( "   - observation: %s", observation.getHref() ) );

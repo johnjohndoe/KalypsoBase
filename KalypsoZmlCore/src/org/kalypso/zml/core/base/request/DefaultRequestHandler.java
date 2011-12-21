@@ -40,40 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.base.request;
 
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.ogc.sensor.provider.IObsProvider;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
-import org.kalypso.zml.core.diagram.base.IZmlLayer;
-import org.kalypso.zml.core.diagram.data.IRequestStrategy;
-import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
-import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 
 /**
  * @author Dirk Kuch
  */
-public class RepositoryBrowserRequestStrategy implements IRequestStrategy
+public class DefaultRequestHandler implements IRequestHandler
 {
-  private final IZmlLayer m_layer;
-
-  public RepositoryBrowserRequestStrategy( final IZmlLayer layer )
-  {
-    m_layer = layer;
-  }
 
   @Override
-  public IRequest getRequest( )
+  public IRequest getArguments( final MetadataList metadata )
   {
-    final IZmlLayerDataHandler handler = m_layer.getDataHandler();
-    if( handler instanceof ZmlObsProviderDataHandler )
-    {
-      final ZmlObsProviderDataHandler obsHandler = (ZmlObsProviderDataHandler) handler;
-      final IObsProvider provider = obsHandler.getProvider();
-      if( Objects.isNull( provider ) )
-        return null;
-
-      return provider.getArguments();
-    }
-
     return null;
   }
+
 }

@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraﬂe 22
+ *  Denickestra√üe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,32 +38,35 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.chart.view;
+package org.kalypso.zml.core.base.request;
 
-import org.kalypso.zml.core.base.request.RepositoryBrowserRequestStrategy;
 import org.kalypso.zml.core.diagram.base.IZmlLayer;
-import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLayerVisitor;
+import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 
 /**
  * @author Dirk Kuch
  */
-public class UpdateRequestStrategyVisitor extends AbstractChartLayerVisitor
+public abstract class AbstractRequestStrategy implements IRequestStrategy
 {
+  private IZmlLayer m_layer;
+
+  private IParameterContainer m_container;
 
   @Override
-  public void visit( final IChartLayer layer )
+  public final void init( final IZmlLayer layer, final IParameterContainer container )
   {
-    if( layer instanceof IZmlLayer )
-    {
-      final IZmlLayer zml = (IZmlLayer) layer;
-      final IZmlLayerDataHandler handler = zml.getDataHandler();
+    m_layer = layer;
+    m_container = container;
+  }
 
-      handler.setRequestStrategy( new RepositoryBrowserRequestStrategy( zml ) );
-    }
+  protected IParameterContainer getParameterContainer( )
+  {
+    return m_container;
+  }
 
-    layer.getLayerManager().accept( this );
+  protected IZmlLayer getLayer( )
+  {
+    return m_layer;
   }
 }

@@ -38,15 +38,34 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.diagram.data;
+package org.kalypso.zml.core.base.request;
 
-import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
+import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 
 /**
  * @author Dirk Kuch
  */
-public interface IRequestHandler
+public class ObsProviderRequestStrategy extends AbstractRequestStrategy
 {
-  IRequest getArguments( MetadataList metadata );
+
+  @Override
+  public IRequest getRequest( )
+  {
+    final IZmlLayerDataHandler handler = getLayer().getDataHandler();
+    if( handler instanceof ZmlObsProviderDataHandler )
+    {
+      final ZmlObsProviderDataHandler obsHandler = (ZmlObsProviderDataHandler) handler;
+      final IObsProvider provider = obsHandler.getProvider();
+      if( Objects.isNull( provider ) )
+        return null;
+
+      return provider.getArguments();
+    }
+
+    return null;
+  }
 }

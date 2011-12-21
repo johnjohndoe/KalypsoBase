@@ -41,8 +41,8 @@
 package org.kalypso.zml.core.diagram.data;
 
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.zml.core.base.request.IRequestStrategy;
 
 /**
  * @author Dirk Kuch
@@ -55,7 +55,7 @@ public interface IZmlLayerDataHandler
 
   String getTargetAxisId( );
 
-  IObservation getObservation( );
+  Object getAdapter( Class adapter );
 
   IRequest getRequest( );
 

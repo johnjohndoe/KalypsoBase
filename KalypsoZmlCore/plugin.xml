@@ -84,8 +84,8 @@
           strategy="org.kalypso.zml.core.base.request.PrognoseRequestStrategy">
     </strategy>
     <strategy
-          id="request.strategy.repository.browser"
-          strategy="org.kalypso.zml.core.base.request.RepositoryBrowserRequestStrategy">
+          id="request.strategy.observation.provider"
+          strategy="org.kalypso.zml.core.base.request.ObsProviderRequestStrategy">
     </strategy>
  </extension>
 </plugin>

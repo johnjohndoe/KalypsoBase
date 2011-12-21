@@ -42,6 +42,7 @@ package org.kalypso.zml.ui.chart.layer.visitor;
 
 import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.provider.PlainObsProvider;
 import org.kalypso.zml.core.diagram.base.IZmlLayer;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
@@ -77,7 +78,7 @@ public class ForecastLayerChartModelVisitor implements IChartLayerVisitor
       final IZmlLayer zml = (IZmlLayer) layer;
       final IZmlLayerDataHandler handler = zml.getDataHandler();
 
-      if( Objects.isNotNull( handler ) && Objects.isNotNull( handler.getObservation() ) )
+      if( Objects.isNotNull( handler ) && Objects.isNotNull( handler.getAdapter( IObservation.class ) ) )
         m_handler = handler;
     }
 
@@ -110,7 +111,7 @@ public class ForecastLayerChartModelVisitor implements IChartLayerVisitor
     }
     else
     {
-      m_foreCastLayer.setObsProvider( new PlainObsProvider( m_handler.getObservation(), m_handler.getRequest() ) );
+      m_foreCastLayer.setObsProvider( new PlainObsProvider( (IObservation) m_handler.getAdapter( IObservation.class ), m_handler.getRequest() ) );
       m_foreCastLayer.setVisible( true );
     }
   }

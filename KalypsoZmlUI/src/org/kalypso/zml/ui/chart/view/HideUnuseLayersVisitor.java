@@ -70,7 +70,7 @@ public class HideUnuseLayersVisitor extends AbstractChartLayerVisitor
       final IZmlLayer zmlLayer = (IZmlLayer) layer;
 
       final IZmlLayerDataHandler handler = zmlLayer.getDataHandler();
-      final IObservation observation = handler.getObservation();
+      final IObservation observation = (IObservation) handler.getAdapter( IObservation.class );
 
       return Objects.isNotNull( observation );
     }
