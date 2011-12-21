@@ -38,60 +38,70 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.timeseries.datasource;
+package org.kalypso.ogc.sensor.timeseries.base;
 
-import org.apache.commons.lang3.ArrayUtils;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.ITupleModel;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
+import org.kalypso.ogc.sensor.TupleModelDataSet;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 
 /**
  * @author Dirk Kuch
  */
-public class AddDataSourceModelHandler extends AbstractDataSourceModelHandler
+public class DatedDataSets
 {
-  public AddDataSourceModelHandler( final ITupleModel model )
+  public static final Comparator<DatedDataSets> COMPARATOR = new Comparator<DatedDataSets>()
   {
-    super( model );
+    @Override
+    public int compare( final DatedDataSets v1, final DatedDataSets v2 )
+    {
+      return v1.getDate().compareTo( v2.getDate() );
+    }
+  };
+
+  private final Date m_date;
+
+  Map<IAxis, TupleModelDataSet> m_dataSets = new LinkedHashMap<IAxis, TupleModelDataSet>();
+
+  public DatedDataSets( final Date date, final TupleModelDataSet... dataSets )
+  {
+    m_date = date;
+
+    for( final TupleModelDataSet dataSet : dataSets )
+    {
+      m_dataSets.put( dataSet.getValueAxis(), dataSet );
+    }
+
+  }
+
+  public Date getDate( )
+  {
+    return m_date;
   }
 
   /**
-   * @return cloned observation extended by data source axis if no data source axis exists
+   * @return data sets for the different value axes of one tuple model
    */
-  public ITupleModel extend( ) throws SensorException
+  public TupleModelDataSet[] getDataSets( )
   {
-    if( hasDataSouceAxis() )
-      return getModel();
+    return m_dataSets.values().toArray( new TupleModelDataSet[] {} );
+  }
 
-    final ITupleModel baseModel = getModel();
-    IAxis[] baseAxes = baseModel.getAxes();
-    final IAxis dataSourceAxis = DataSourceHelper.createSourceAxis( AxisUtils.findValueAxis( baseAxes ) );
-
-    baseAxes = ArrayUtils.add( baseAxes, dataSourceAxis );
-
-    final SimpleTupleModel model = new SimpleTupleModel( baseAxes );
-    final int dataSourceIndex = ArrayUtils.indexOf( baseAxes, dataSourceAxis );
-
-    for( int i = 0; i < baseModel.size(); i++ )
+  public TupleModelDataSet getDataSet( final IAxis valueAxis )
+  {
+    final Set<Entry<IAxis, TupleModelDataSet>> entries = m_dataSets.entrySet();
+    for( final Entry<IAxis, TupleModelDataSet> entry : entries )
     {
-      final Object[] data = new Object[baseAxes.length];
-
-      for( final IAxis axis : baseModel.getAxes() )
-      {
-        final Object element = baseModel.get( i, axis );
-        data[model.getPosition( axis )] = element;
-      }
-
-      /**
-       * it's always '0' - virtual repository items will fill this field otherwise!
-       */
-      data[dataSourceIndex] = 0;
-
-      model.addTuple( data );
+      if( AxisUtils.isEqual( entry.getKey(), valueAxis ) )
+        return entry.getValue();
     }
 
-    return model;
+    return null;
   }
 }
