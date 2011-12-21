@@ -50,10 +50,11 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.core.diagram.base.IZmlLayer;
-import org.kalypso.zml.core.diagram.base.LayerProviderUtils;
+import org.kalypso.zml.core.diagram.base.IZmlLayerProvider;
+import org.kalypso.zml.core.diagram.base.ZmlLayerProviders;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
-import org.kalypso.zml.core.diagram.data.IZmlLayerProvider;
 import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
@@ -201,15 +202,17 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
 
     try
     {
-      if( handler.getObservation() == null )
+      final IObservation observation = (IObservation) handler.getAdapter( IObservation.class );
+      if( observation == null )
         return;
 
       final IParameterContainer parameters = getProvider().getParameterContainer();
 
-      final Date position = LayerProviderUtils.getMetadataDate( parameters, "position", handler.getObservation().getMetadataList() );
+      final MetadataList metadata = observation.getMetadataList();
+      final Date position = ZmlLayerProviders.getMetadataDate( parameters, "position", metadata );
 
-      final Date start = LayerProviderUtils.getMetadataDate( parameters, "start", handler.getObservation().getMetadataList() );
-      final Date end = LayerProviderUtils.getMetadataDate( parameters, "end", handler.getObservation().getMetadataList() );
+      final Date start = ZmlLayerProviders.getMetadataDate( parameters, "start", metadata );
+      final Date end = ZmlLayerProviders.getMetadataDate( parameters, "end", metadata );
 
       final Double value = findValue( handler, position );
 
@@ -237,7 +240,7 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
 
   private Double findValue( final IZmlLayerDataHandler provider, final Date position ) throws SensorException
   {
-    final IObservation observation = provider.getObservation();
+    final IObservation observation = (IObservation) provider.getAdapter( IObservation.class );
 
     final ZmlSinglePointLayerVisitor visitor = new ZmlSinglePointLayerVisitor( position, getFilters() );
     observation.accept( visitor, provider.getRequest(), 1 );

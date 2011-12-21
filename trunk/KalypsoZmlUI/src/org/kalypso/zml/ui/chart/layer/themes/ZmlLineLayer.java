@@ -54,8 +54,8 @@ import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.zml.core.diagram.base.IZmlLayer;
+import org.kalypso.zml.core.diagram.base.IZmlLayerProvider;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
-import org.kalypso.zml.core.diagram.data.IZmlLayerProvider;
 import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
@@ -169,7 +169,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     if( m_labelDescriptor == null )
       return super.getTitle();
 
-    final IObservation observation = getDataHandler().getObservation();
+    final IObservation observation = (IObservation) getDataHandler().getAdapter( IObservation.class );
     if( observation == null )
       return m_labelDescriptor;
 
@@ -196,7 +196,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   @SuppressWarnings("unchecked")
   IPair<Number, Number>[] getFilteredPoints( final IDataRange<Number> domainIntervall ) throws SensorException
   {
-    final IObservation observation = m_data.getObservation();
+    final IObservation observation = (IObservation) m_data.getAdapter( IObservation.class );
     if( observation == null )
       return new IPair[0];
 

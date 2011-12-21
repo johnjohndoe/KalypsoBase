@@ -90,12 +90,11 @@ public class ZmlDiagramChartPartComposite extends ChartPartComposite
       t.printStackTrace();
     }
 
-    // FIXME load strategy by .kod property (extension point)
     /**
      * update data handler and visibility
      */
-    final ILayerManager layerManager = getChartModel().getLayerManager();
-    layerManager.accept( new UpdateRequestStrategyVisitor() );
+// final ILayerManager layerManager = getChartModel().getLayerManager();
+    // FIXME set visibility
 
     updateControl();
     setDirty( false );

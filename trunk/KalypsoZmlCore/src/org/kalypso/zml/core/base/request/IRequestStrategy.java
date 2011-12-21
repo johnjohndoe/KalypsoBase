@@ -38,14 +38,19 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.diagram.data;
+package org.kalypso.zml.core.base.request;
 
-import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
+import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.zml.core.diagram.base.IZmlLayer;
+
+import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlLayerProvider extends ILayerProvider
+public interface IRequestStrategy
 {
-  IRequestHandler getRequestHandler( );
+  IRequest getRequest( );
+
+  void init( IZmlLayer layer, IParameterContainer container );
 }

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.diagram.data;
+package org.kalypso.zml.core.base.request;
 
 import java.util.Calendar;
 import java.util.Date;

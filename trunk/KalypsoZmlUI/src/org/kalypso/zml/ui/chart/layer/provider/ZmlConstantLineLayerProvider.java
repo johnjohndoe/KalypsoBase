@@ -44,14 +44,13 @@ package org.kalypso.zml.ui.chart.layer.provider;
 import java.net.URL;
 
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.zml.core.base.request.IRequestStrategy;
 import org.kalypso.zml.core.diagram.base.IZmlLayer;
-import org.kalypso.zml.core.diagram.base.provider.observation.DefaultRequestHandler;
-import org.kalypso.zml.core.diagram.data.IRequestHandler;
-import org.kalypso.zml.core.diagram.data.IZmlLayerProvider;
+import org.kalypso.zml.core.diagram.base.IZmlLayerProvider;
+import org.kalypso.zml.core.diagram.base.ZmlLayerProviders;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlConstantLineLayer;
 
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
-import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
@@ -72,12 +71,8 @@ public class ZmlConstantLineLayerProvider extends AbstractLayerProvider implemen
   }
 
   @Override
-  public IRequestHandler getRequestHandler( )
+  public IRequestStrategy getRequestHandler( final IZmlLayer layer )
   {
-    final IParameterContainer container = getParameterContainer();
-    if( Objects.isNull( container ) )
-      return new DefaultRequestHandler();
-
-    return new DefaultRequestHandler();
+    return ZmlLayerProviders.getRequestStrategy( layer, getParameterContainer() );
   }
 }

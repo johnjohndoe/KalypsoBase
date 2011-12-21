@@ -60,8 +60,8 @@ import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.metadata.IMetadataBoundary;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.core.diagram.base.IZmlLayer;
+import org.kalypso.zml.core.diagram.base.IZmlLayerProvider;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
-import org.kalypso.zml.core.diagram.data.IZmlLayerProvider;
 import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.chart.layer.boundaries.IMetadataLayerBoundary;
@@ -224,7 +224,7 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
     if( Objects.isNull( m_handler ) )
       return;
 
-    final IObservation observation = m_handler.getObservation();
+    final IObservation observation = (IObservation) m_handler.getAdapter( IObservation.class );
     if( Objects.isNull( observation ) )
     {
       m_descriptors = null;
@@ -312,7 +312,7 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
     if( m_labelDescriptor == null )
       return super.getTitle();
 
-    final IObservation observation = getDataHandler().getObservation();
+    final IObservation observation = (IObservation) getDataHandler().getAdapter( IObservation.class );
     if( observation == null )
       return m_labelDescriptor;
 

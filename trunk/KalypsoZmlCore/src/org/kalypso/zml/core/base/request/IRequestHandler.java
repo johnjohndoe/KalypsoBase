@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestra�e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,14 +38,15 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.diagram.data;
+package org.kalypso.zml.core.base.request;
 
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 
 /**
  * @author Dirk Kuch
  */
-public interface IRequestStrategy
+public interface IRequestHandler
 {
-  IRequest getRequest( );
+  IRequest getArguments( MetadataList metadata );
 }

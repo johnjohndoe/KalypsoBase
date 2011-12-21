@@ -44,42 +44,44 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.request.IRequest;
-import org.kalypso.zml.core.diagram.data.IRequestHandler;
-import org.kalypso.zml.core.diagram.data.IRequestStrategy;
-import org.kalypso.zml.core.diagram.data.IZmlLayerProvider;
-import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
+import org.kalypso.zml.core.diagram.base.IZmlLayerProvider;
+import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 
 /**
  * @author Dirk Kuch
  */
-public class PrognoseRequestStrategy implements IRequestStrategy
+public class PrognoseRequestStrategy extends AbstractRequestStrategy
 {
-
-  private final ZmlObsProviderDataHandler m_handler;
-
-  public PrognoseRequestStrategy( final ZmlObsProviderDataHandler handler )
-  {
-    m_handler = handler;
-  }
 
   @Override
   public IRequest getRequest( )
   {
-    final IObsProvider provider = m_handler.getProvider();
-    if( Objects.isNull( provider ) )
-      return null;
+    final IZmlLayerDataHandler dataHandler = getLayer().getDataHandler();
 
-    final IZmlLayerProvider layerProvider = m_handler.getLayer().getProvider();
+    final IZmlLayerProvider layerProvider = getLayer().getProvider();
     if( Objects.isNull( layerProvider ) )
-      return provider.getArguments();
+      return dataHandler.getRequest();
 
-    final IRequestHandler handler = layerProvider.getRequestHandler();
-    final IObservation observation = m_handler.getObservation();
+    final IObservation observation = (IObservation) dataHandler.getAdapter( IObservation.class );
     if( Objects.isNull( observation ) )
-      return provider.getArguments();
+    {
+      final IObsProvider obsProvider = (IObsProvider) dataHandler.getAdapter( IObsProvider.class );
+      if( Objects.isNull( obsProvider ) )
+        return null;
 
+      return obsProvider.getArguments();
+    }
+
+    final IRequestHandler handler = getRequestHandler();
     return handler.getArguments( observation.getMetadataList() );
+  }
 
+  private IRequestHandler getRequestHandler( )
+  {
+    if( Objects.isNull( getParameterContainer() ) )
+      return new DefaultRequestHandler();
+
+    return new MetadataRequestHandler( getParameterContainer() );
   }
 
 }

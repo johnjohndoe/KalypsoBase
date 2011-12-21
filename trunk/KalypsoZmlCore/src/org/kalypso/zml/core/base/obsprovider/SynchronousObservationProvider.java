@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.diagram.base.provider.observation;
+package org.kalypso.zml.core.base.obsprovider;
 
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -55,18 +55,18 @@ import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.provider.PlainObsProvider;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.zml.core.diagram.data.IRequestHandler;
+import org.kalypso.zml.core.base.request.IRequestStrategy;
 
 /**
  * @author Dirk Kuch
  */
 public class SynchronousObservationProvider extends AbstractObsProvider
 {
-  private final IRequestHandler m_handler;
+  private final IRequestStrategy m_strategy;
 
-  public SynchronousObservationProvider( final URL context, final String href, final IRequestHandler handler ) throws MalformedURLException, SensorException, URISyntaxException
+  public SynchronousObservationProvider( final URL context, final String href, final IRequestStrategy strategy ) throws MalformedURLException, SensorException, URISyntaxException
   {
-    m_handler = handler;
+    m_strategy = strategy;
 
     try
     {
@@ -86,9 +86,6 @@ public class SynchronousObservationProvider extends AbstractObsProvider
     setObservation( observation );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.template.IObsProvider#copy()
-   */
   @Override
   public IObsProvider copy( )
   {
@@ -105,18 +102,12 @@ public class SynchronousObservationProvider extends AbstractObsProvider
     return null;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.template.IObsProvider#getArguments()
-   */
   @Override
   public IRequest getArguments( )
   {
-    return m_handler.getArguments( getObservation().getMetadataList() );
+    return m_strategy.getRequest();
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.provider.IObsProvider#isValid()
-   */
   @Override
   public boolean isValid( )
   {

@@ -9,7 +9,7 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.zml.core.diagram.data.IRequestStrategy;
+import org.kalypso.zml.core.base.request.IRequestStrategy;
 import org.kalypso.zml.core.table.rules.IZmlRuleImplementation;
 import org.kalypso.zml.core.table.rules.impl.grenzwert.IZmlGrenzwertValue;
 import org.osgi.framework.Bundle;
@@ -172,7 +172,7 @@ public class KalypsoZmlCore extends Plugin implements BundleActivator
         try
         {
 
-          final String identifier = null; // FIXME
+          final String identifier = element.getAttribute( "id" ); //$NON-NLS-1$
           final String pluginid = element.getContributor().getName();
           final Bundle bundle = Platform.getBundle( pluginid );
           final Class< ? > featureClass = bundle.loadClass( element.getAttribute( "strategy" ) ); //$NON-NLS-1$

@@ -54,10 +54,11 @@ import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.provider.IObsProviderListener;
 import org.kalypso.ogc.sensor.provider.PooledObsProvider;
 import org.kalypso.ogc.sensor.request.IRequest;
-import org.kalypso.zml.core.base.request.PrognoseRequestStrategy;
+import org.kalypso.zml.core.base.obsprovider.SynchronousObservationProvider;
+import org.kalypso.zml.core.base.request.IRequestStrategy;
 import org.kalypso.zml.core.diagram.base.IZmlLayer;
-import org.kalypso.zml.core.diagram.base.LayerProviderUtils;
-import org.kalypso.zml.core.diagram.base.provider.observation.SynchronousObservationProvider;
+import org.kalypso.zml.core.diagram.base.IZmlLayerProvider;
+import org.kalypso.zml.core.diagram.base.ZmlLayerProviders;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.impl.settings.CHART_DATA_LOADER_STRATEGY;
@@ -92,7 +93,7 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
 
   private IAxis m_valueAxis;
 
-  private IRequestStrategy m_request = new PrognoseRequestStrategy( this );
+  private IRequestStrategy m_request;
 
   public ZmlObsProviderDataHandler( final IZmlLayer layer, final String targetAxisId )
   {
@@ -106,8 +107,17 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
     m_request = strategy;
   }
 
+  @Override
   public IRequestStrategy getRequestStrategy( )
   {
+    if( m_request == null )
+    {
+      final IZmlLayer layer = getLayer();
+      final IZmlLayerProvider provider = layer.getProvider();
+
+      m_request = provider.getRequestHandler( layer );
+    }
+
     return m_request;
   }
 
@@ -140,7 +150,7 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
   {
     if( m_valueAxis == null )
     {
-      m_valueAxis = LayerProviderUtils.getValueAxis( m_provider, m_targetAxisId );
+      m_valueAxis = ZmlLayerProviders.getValueAxis( m_provider, m_targetAxisId );
     }
 
     return m_valueAxis;
@@ -169,8 +179,9 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
   @Override
   public IRequest getRequest( )
   {
-    return m_request.getRequest();
+    final IRequestStrategy strategy = getRequestStrategy();
 
+    return strategy.getRequest();
   }
 
   @Override
@@ -185,12 +196,19 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
   }
 
   @Override
-  public IObservation getObservation( )
+  public Object getAdapter( final Class adapter )
   {
-    if( m_provider == null )
-      return null;
+    if( adapter.isAssignableFrom( IObsProvider.class ) )
+    {
+      return m_provider;
+    }
+    else if( adapter.isAssignableFrom( IObservation.class ) )
+    {
+      if( Objects.isNotNull( m_provider ) )
+        return m_provider.getObservation();
+    }
 
-    return m_provider.getObservation();
+    return null;
   }
 
   public void load( final IZmlLayerProvider provider, final URL context ) throws MalformedURLException, SensorException, URISyntaxException
@@ -211,7 +229,7 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
         final URL localContext = ZmlContext.resolveContext( model, href, context );
         final String plainHref = ZmlContext.resolvePlainHref( href );
 
-        setObsProvider( new SynchronousObservationProvider( localContext, plainHref, provider.getRequestHandler() ) );
+        setObsProvider( new SynchronousObservationProvider( localContext, plainHref, provider.getRequestHandler( getLayer() ) ) );
       }
       else
       {

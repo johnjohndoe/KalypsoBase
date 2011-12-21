@@ -41,6 +41,7 @@
 package org.kalypso.zml.ui.chart.layer.visitor;
 
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.zml.core.diagram.base.IZmlLayer;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 
@@ -96,7 +97,7 @@ public class SingleGridVisibilityVisitor extends AbstractChartLayerVisitor
     if( Objects.isNull( handler ) )
       return false;
 
-    if( Objects.isNull( handler.getObservation() ) )
+    if( Objects.isNull( handler.getAdapter( IObservation.class ) ) )
       return false;
 
     return true;

@@ -42,8 +42,8 @@ package org.kalypso.zml.ui.chart.layer.provider;
 
 import java.net.URL;
 
-import org.kalypso.zml.core.diagram.data.IRequestHandler;
-import org.kalypso.zml.core.diagram.data.MetadataRequestHandler;
+import org.kalypso.zml.core.base.request.IRequestHandler;
+import org.kalypso.zml.core.base.request.MetadataRequestHandler;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlForecastLayer;
 
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;

@@ -77,7 +77,7 @@ public class ZmlBarLayerRangeHandler
   {
     try
     {
-      final IObservation observation = m_layer.getDataHandler().getObservation();
+      final IObservation observation = (IObservation) m_layer.getDataHandler().getAdapter( IObservation.class );
       if( Objects.isNull( observation ) )
         return null;
 
@@ -110,7 +110,7 @@ public class ZmlBarLayerRangeHandler
     try
     {
       final IZmlLayerDataHandler handler = m_layer.getDataHandler();
-      final IObservation observation = handler.getObservation();
+      final IObservation observation = (IObservation) handler.getAdapter( IObservation.class );
       if( Objects.isNull( observation ) )
         return null;
 

@@ -52,15 +52,17 @@ import org.apache.commons.lang3.StringUtils;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
+import org.kalypso.zml.core.KalypsoZmlCore;
+import org.kalypso.zml.core.base.request.IRequestStrategy;
 
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 
 /**
  * @author Dirk Kuch
  */
-public final class LayerProviderUtils
+public final class ZmlLayerProviders
 {
-  private LayerProviderUtils( )
+  private ZmlLayerProviders( )
   {
   }
 
@@ -83,11 +85,11 @@ public final class LayerProviderUtils
     return getMetadataDate( parameter, metadata );
   }
 
+  private static final Pattern PATTERN_METADATE_DATE = new Pattern( "^metadata\\:" ); //$NON-NLS-1$
+
   public static Date getMetadataDate( final String key, final MetadataList metadata )
   {
-    final Pattern pattern = new Pattern( "^metadata\\:" ); //$NON-NLS-1$
-    final RETokenizer tokenizer = new RETokenizer( pattern, key );
-
+    final RETokenizer tokenizer = new RETokenizer( PATTERN_METADATE_DATE, key );
     final String mdKey = tokenizer.nextToken();
 
     // FIXME: error handling if property is missing
@@ -97,5 +99,14 @@ public final class LayerProviderUtils
 
     final Calendar calendar = DatatypeConverter.parseDate( property );
     return calendar.getTime();
+  }
+
+  public static IRequestStrategy getRequestStrategy( final IZmlLayer layer, final IParameterContainer container )
+  {
+    final String id = container.getParameterValue( "request.strategy", "request.strategy.prognose" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IRequestStrategy strategy = KalypsoZmlCore.getDefault().findStrategy( id );
+    strategy.init( layer, container );
+
+    return strategy;
   }
 }
