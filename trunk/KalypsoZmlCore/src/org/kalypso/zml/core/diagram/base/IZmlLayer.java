@@ -52,9 +52,6 @@ public interface IZmlLayer extends IChartLayer
 {
   IZmlLayerDataHandler getDataHandler( );
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getProvider()
-   */
   @Override
   IZmlLayerProvider getProvider( );
 

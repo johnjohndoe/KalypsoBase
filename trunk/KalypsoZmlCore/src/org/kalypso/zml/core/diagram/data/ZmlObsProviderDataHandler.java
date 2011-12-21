@@ -190,11 +190,6 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
     return m_targetAxisId;
   }
 
-  public IObsProvider getProvider( )
-  {
-    return m_provider;
-  }
-
   @Override
   public Object getAdapter( final Class adapter )
   {
