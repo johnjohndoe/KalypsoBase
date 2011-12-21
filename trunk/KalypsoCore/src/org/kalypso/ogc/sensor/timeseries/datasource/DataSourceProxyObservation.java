@@ -41,21 +41,28 @@
 package org.kalypso.ogc.sensor.timeseries.datasource;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.TupleModelDataSet;
+import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.ogc.sensor.timeseries.base.CacheTimeSeriesVisitor;
 import org.kalypso.ogc.sensor.util.Observations;
 import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 
@@ -96,7 +103,6 @@ public class DataSourceProxyObservation implements IObservation
     if( m_metadata == null )
     {
       final MetadataList metadata = m_observation.getMetadataList();
-
       m_metadata = MetadataHelper.clone( metadata );
 
       final DataSourceHandler handler = new DataSourceHandler( m_metadata );
@@ -112,23 +118,31 @@ public class DataSourceProxyObservation implements IObservation
   @Override
   public IAxis[] getAxes( )
   {
+    if( isComplete() )
+      return m_observation.getAxes();
+
     final IAxis[] base = m_observation.getAxes();
 
     final Set<IAxis> axes = new LinkedHashSet<IAxis>();
     Collections.addAll( axes, base );
 
-    final IAxis[] valueAxes = AxisUtils.findValueAxes( base );
+    final IAxis[] valueAxes = AxisUtils.findValueAxes( base, false );
     for( final IAxis valueAxis : valueAxes )
     {
       /** status axis */
       final IAxis statusAxis = AxisUtils.findStatusAxis( base, valueAxis );
       if( Objects.isNull( statusAxis ) )
+      {
         axes.add( KalypsoStatusUtils.createStatusAxisFor( valueAxis, true ) );
+      }
 
       /** data source axis */
       final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( base, valueAxis );
       if( Objects.isNull( dataSourceAxis ) )
+      {
         axes.add( DataSourceHelper.createSourceAxis( valueAxis ) );
+      }
+
     }
 
     return axes.toArray( new IAxis[] {} );
@@ -137,22 +151,66 @@ public class DataSourceProxyObservation implements IObservation
   @Override
   public ITupleModel getValues( final IRequest args ) throws SensorException
   {
-    final ITupleModel model = m_observation.getValues( args );
-    if( !DataSourceHelper.hasDataSources( model ) )
+    getMetadataList(); // necessary!
+
+    final ITupleModel base = m_observation.getValues( args );
+
+    if( isComplete() )
+      return base;
+
+    final CacheTimeSeriesVisitor visitor = new CacheTimeSeriesVisitor( m_itemIdentifier );
+    base.accept( visitor, 1 );
+
+    final IAxis[] target = getAxes();
+    final SimpleTupleModel model = new SimpleTupleModel( target );
+
+    final int dateAxisPosition = model.getPosition( AxisUtils.findDateAxis( target ) );
+
+    final Map<Date, TupleModelDataSet[]> values = visitor.getValueMap();
+    final Set<Entry<Date, TupleModelDataSet[]>> entrySet = values.entrySet();
+    for( final Entry<Date, TupleModelDataSet[]> entry : entrySet )
     {
-      // to assert a valid source reference!
-      getMetadataList();
+      final Object[] tuple = new Object[ArrayUtils.getLength( target )];
+      tuple[dateAxisPosition] = entry.getKey();
 
-      final AddDataSourceModelHandler handler = new AddDataSourceModelHandler( model );
-      final ITupleModel extended = handler.extend();
-      extended.accept( new FillEmptyAxesVisitor( AxisUtils.findStatusAxes( extended.getAxes() ), m_defaultStatus ), 1 );
+      final TupleModelDataSet[] dataSets = entry.getValue();
+      for( final TupleModelDataSet dataSet : dataSets )
+      {
+        final IAxis statusAxis = AxisUtils.findStatusAxis( target, dataSet.getValueAxis() );
+        final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( target, dataSet.getValueAxis() );
 
-      return extended;
+        final int valueAxisPosition = model.getPosition( dataSet.getValueAxis() );
+        final int statusAxisPosition = model.getPosition( statusAxis );
+        final int dataSourceAxisPosition = model.getPosition( dataSourceAxis );
+
+        tuple[valueAxisPosition] = dataSet.getValue();
+        tuple[statusAxisPosition] = com.google.common.base.Objects.firstNonNull( dataSet.getStatus(), m_defaultStatus );
+        tuple[dataSourceAxisPosition] = 0; // data source reference is always 0! (see getMetadataList())
+      }
+
+      model.addTuple( tuple );
     }
 
-    model.accept( new FillEmptyAxesVisitor( AxisUtils.findStatusAxes( model.getAxes() ), m_defaultStatus ), 1 );
-
     return model;
+  }
+
+  private boolean isComplete( )
+  {
+    final IAxis[] baseAxes = m_observation.getAxes();
+
+    final IAxis[] valueAxes = AxisUtils.findValueAxes( baseAxes, false );
+    for( final IAxis valueAxis : valueAxes )
+    {
+      final IAxis statusAxis = AxisUtils.findStatusAxis( baseAxes, valueAxis );
+      if( Objects.isNull( statusAxis ) )
+        return false;
+
+      final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( baseAxes, valueAxis );
+      if( Objects.isNull( dataSourceAxis ) )
+        return false;
+    }
+
+    return true;
   }
 
   @Override
