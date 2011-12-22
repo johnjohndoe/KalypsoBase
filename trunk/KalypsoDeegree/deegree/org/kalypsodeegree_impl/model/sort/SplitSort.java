@@ -82,7 +82,7 @@ public class SplitSort implements FeatureList
 
   /**
    * The constructor.
-   * 
+   *
    * @param parentFeature
    *          The parent feature. May be null, if this list has no underlying workspace. Make sure parentFTP is also
    *          null then.
@@ -97,7 +97,7 @@ public class SplitSort implements FeatureList
 
   /**
    * The constructor.
-   * 
+   *
    * @param parentFeature
    *          The parent feature. May be null, if this list has no underlying workspace. Make sure parentFTP is also
    *          null then.
@@ -244,7 +244,7 @@ public class SplitSort implements FeatureList
 
   /**
    * This is slow: TODO: better comment
-   * 
+   *
    * @see java.util.List#remove(java.lang.Object)
    */
   @Override
@@ -434,9 +434,6 @@ public class SplitSort implements FeatureList
     }
   }
 
-  /**
-   * @see java.util.List#contains(java.lang.Object)
-   */
   @Override
   public boolean contains( final Object item )
   {
@@ -446,7 +443,10 @@ public class SplitSort implements FeatureList
     synchronized( this )
     {
       // TODO: slow, as the index may be recalculated, check if possible to avoid this
-      return m_index.contains( env, item );
+      if( m_index != null )
+        return m_index.contains( env, item );
+      // FIXME: null check needed, because check nidex not within synchronize block; returning false here may be wrong
+      return false;
     }
   }
 
@@ -526,7 +526,7 @@ public class SplitSort implements FeatureList
 
   /**
    * SLOW: TODO: better comment, make deprecated in interface! FAST TODO: check the comments
-   * 
+   *
    * @see java.util.List#removeAll(java.util.Collection)
    */
   @Override
@@ -556,7 +556,7 @@ public class SplitSort implements FeatureList
 
   /**
    * NOT IMPLEMENTED
-   * 
+   *
    * @see java.util.List#retainAll(java.util.Collection)
    */
   @Override
@@ -569,7 +569,7 @@ public class SplitSort implements FeatureList
   /**
    * ATTENTION: do not remove object via this iterator, it will break the geo-index<br>
    * TODO: wrap iterator in order to maintain the index's consistency
-   * 
+   *
    * @see java.util.List#iterator()
    */
   @Override
@@ -582,7 +582,7 @@ public class SplitSort implements FeatureList
 
   /**
    * NOT IMPLEMENTED
-   * 
+   *
    * @see java.util.List#subList(int, int)
    */
   @Override
@@ -594,7 +594,7 @@ public class SplitSort implements FeatureList
   /**
    * ATTENTION: do not remove object via this iterator, it will break the geo-index<br>
    * TODO: wrap iterator in order to maintain the index's consistency
-   * 
+   *
    * @see java.util.List#listIterator()
    */
   @Override
@@ -607,7 +607,7 @@ public class SplitSort implements FeatureList
   /**
    * ATTENTION: do not remove object via this iterator, it will break the geo-index<br>
    * TODO: wrap iterator in order to maintain the index's consistency
-   * 
+   *
    * @see java.util.List#listIterator(int)
    */
   @Override
