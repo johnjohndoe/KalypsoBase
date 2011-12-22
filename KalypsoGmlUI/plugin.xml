@@ -498,9 +498,14 @@
     <!-- View menu for GML-Table -->
     <extension point="org.eclipse.ui.menus">
         <menuContribution locationURI="toolbar:org.kalypso.ui.editor.gistableeditor.GttViewPart">
-            <command commandId="org.kalyso.gml.ui.command.addFeature" style="push"/>
-            <command commandId="org.kalyso.gml.ui.command.deleteFeature" style="push"/>
-            <separator name="additions" visible="true" />
+           <command commandId="org.kalyso.gml.ui.command.addFeature" style="push"/>
+           <command commandId="org.kalyso.gml.ui.command.deleteFeature" style="push"/>
+           <command commandId="org.kalyso.gml.ui.command.duplicateFeature" style="push"/>
+           <command commandId="org.kalyso.gml.ui.command.featureUp" style="push"/>
+           <command commandId="org.kalyso.gml.ui.command.featureDown" style="push"/>
+           <separator name="featureCommandsEnd" visible="true"/>
+
+           <separator name="additions" visible="true" />
         </menuContribution>
      </extension>
     
