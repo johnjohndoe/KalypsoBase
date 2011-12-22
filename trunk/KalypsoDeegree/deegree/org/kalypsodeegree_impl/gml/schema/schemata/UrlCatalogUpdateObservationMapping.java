@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -38,20 +38,29 @@ package org.kalypsodeegree_impl.gml.schema.schemata;
 import java.net.URL;
 import java.util.Map;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.contribs.java.net.AbstractUrlCatalog;
 
 /**
  * This catalog returns the gml schema that is used in the updatetransformationprocess
- * 
+ *
  * @author doemming
  */
 public class UrlCatalogUpdateObservationMapping extends AbstractUrlCatalog
 {
   public final static String NS = "http://org.kalypso.updateObservationMapping";
 
-  /**
-   * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
-   */
+  public static final QName QNAME_MAPPING_COLLECTION = new QName( UrlCatalogUpdateObservationMapping.NS, "MappingCollection" );
+
+  public static final QName QNAME_MAPPING_OBSERVATION = new QName( UrlCatalogUpdateObservationMapping.NS, "MappingObservation" );
+
+  public static final QName RESULT_LIST_PROP = new QName( UrlCatalogUpdateObservationMapping.NS, "mappingMember" );
+
+  public static final QName RESULT_TS_IN_PROP = new QName( UrlCatalogUpdateObservationMapping.NS, "inObservationLink" );
+
+  public static final QName RESULT_TS_OUT_PROP = new QName( UrlCatalogUpdateObservationMapping.NS, "outObservationLink" );
+
   @Override
   protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> catalog, final Map<String, String> prefixes )
   {
