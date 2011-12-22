@@ -503,8 +503,13 @@
            <command commandId="org.kalyso.gml.ui.command.duplicateFeature" style="push"/>
            <command commandId="org.kalyso.gml.ui.command.featureUp" style="push"/>
            <command commandId="org.kalyso.gml.ui.command.featureDown" style="push"/>
+           
            <separator name="featureCommandsEnd" visible="true"/>
-
+           
+           <command commandId="org.kalypso.ui.command.import" style="push"/>
+           <command commandId="org.kalypso.ui.command.export" style="push"/>
+           <command commandId="org.kalypso.gml.ui.toolWizards" style="push"/>
+           
            <separator name="additions" visible="true" />
         </menuContribution>
      </extension>
