@@ -199,7 +199,7 @@ public final class FeatureHelper
    * <li><Bei Referenzen auf andere Features erfolgt nur ein shallow copy, das Referenzierte Feature bleibt gleich./li>
    * <li>Die Typen der Zurodnung müssen passen, sonst gibts ne Exception.</li>
    * </ul>
-   * 
+   *
    * @throws CloneNotSupportedException
    * @throws IllegalArgumentException
    *           Falls eine Zuordnung zwischen Properties unterschiedlkicher Typen erfolgt.
@@ -344,7 +344,7 @@ public final class FeatureHelper
 
   /**
    * Clones a feature and puts it into the given parent feature at the given property.
-   * 
+   *
    * @param newParentFeature
    *          The parent where the cloned feature will be put into. May live in the same or in another workspace.
    * @param relation
@@ -494,6 +494,25 @@ public final class FeatureHelper
     throw new CloneNotSupportedException( "Kann Datenobjekt vom Typ '" + pt.getQName() + "' nicht kopieren." );
   }
 
+  /**
+   * Copies all properties from one feature to another by cloning the data. The features must be of same feature type.
+   */
+  public static void copyData( final Feature source, final Feature target ) throws Exception
+  {
+    final IFeatureType type = source.getFeatureType();
+    final String gmlVersion = type.getGMLSchema().getGMLVersion();
+
+    Assert.isTrue( type.equals( target.getFeatureType() ) );
+
+    final IPropertyType[] properties = type.getProperties();
+    for( final IPropertyType pt : properties )
+    {
+      final Object value = source.getProperty( pt );
+      final Object clonedValue = FeatureHelper.cloneData( source, target, pt, value, gmlVersion );
+      target.setProperty( pt, clonedValue );
+    }
+  }
+
   public static boolean isCompositionLink( final Feature srcFE, final IRelationType linkProp, final Feature destFE )
   {
     final Object property = srcFE.getProperty( linkProp );
@@ -527,7 +546,7 @@ public final class FeatureHelper
 
   /**
    * Checks if one of the feature properties is a collection.
-   * 
+   *
    * @param f
    * @return It returns true after the first occurrenc of a list
    */
@@ -605,7 +624,7 @@ public final class FeatureHelper
 
   /**
    * Create properties by using the property-value of the given feature for each of the replace-tokens
-   * 
+   *
    * @param tokens
    *          replace-tokens (tokenKey-featurePropertyName;...)
    */
@@ -672,7 +691,7 @@ public final class FeatureHelper
 
   /**
    * copys all simple type properties from the source feature into the target feature
-   * 
+   *
    * @param srcFE
    * @param targetFE
    * @throws MultiException
@@ -722,7 +741,7 @@ public final class FeatureHelper
    * <li>If the property ist a list, a the given value to the list. If the given value is a list, add all its values to
    * the list.</li>
    * </ul>
-   * 
+   *
    * @see org.kalypsodeegree.model.feature.Feature#addProperty(org.kalypsodeegree.model.feature.FeatureProperty)
    */
   public static void addProperty( final Feature feature, final IPropertyType pt, final Object newValue )
@@ -756,7 +775,7 @@ public final class FeatureHelper
 
   /**
    * Adds a new member to a property of the given feature. The property must be a feature list.
-   * 
+   *
    * @param newFeatureName
    *          The QName of the featureType of the newly generated feature. If null, the target feature-type of the list
    *          is taken.
@@ -792,7 +811,7 @@ public final class FeatureHelper
 
   /**
    * Only works for non list feature property
-   * 
+   *
    * @param feature
    *          feature which list property receive the new feature
    * @param listProperty
@@ -865,7 +884,7 @@ public final class FeatureHelper
 
   /**
    * Returns a value of the given feature as feature. If it is a link, it will be resolved.
-   * 
+   *
    * @param qname
    *          Must denote a property of type IRelationType of maxoccurs 1.
    * @param followXLinks
@@ -900,7 +919,7 @@ public final class FeatureHelper
 
   /**
    * Resolves and adapts the linked feature. Note that the real feature is wrapped and return not the xlinked feature.
-   * 
+   *
    * @param feature
    *          the link property holder
    * @param propertyQName
@@ -964,7 +983,7 @@ public final class FeatureHelper
 
   /**
    * Creates a data object suitable for a feature property out of string.
-   * 
+   *
    * @return null, if the data-type is unknown
    * @throws NumberFormatException
    */
@@ -1021,7 +1040,7 @@ public final class FeatureHelper
    * <p>
    * This method creates directly a feature of the target feature type of the given property.
    * </p>
-   * 
+   *
    * @throws IllegalArgumentException
    *           If the target feature type of the given property is abstract.
    */
@@ -1140,7 +1159,7 @@ public final class FeatureHelper
 
   /**
    * This function creates separate lists of features by qname and collects them in a hash map.
-   * 
+   *
    * @param parent
    *          The parent feature, containing the original feature list.
    * @param propertyQName
@@ -1186,7 +1205,7 @@ public final class FeatureHelper
    * property.<br/>
    * If the parent workspaces of the two features are the same, an internal link (#&lt;id&gt;) is created.<br/>
    * Else, an external xlink is created. In this case, the context of the target workspace must be non <code>null</code>
-   * 
+   *
    * @throws IllegalArgumentException
    *           If the property argument is not suitable for a link (not an {@link IRelationType}). If the
    *           targetWorksapce has not a suitable context for the link.
@@ -1339,7 +1358,7 @@ public final class FeatureHelper
 
   /**
    * Calculates the minimal envelope containing all envelopes of the given features.
-   * 
+   *
    * @return <code>null</code> if none of the given features contains a valid envelope.
    */
   public static GM_Envelope getEnvelope( final Feature[] features )
