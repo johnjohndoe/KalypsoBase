@@ -37,5 +37,6 @@ Export-Package: org.kalypso.zml.ui,
  org.kalypso.zml.ui.table.model,
  org.kalypso.zml.ui.table.provider,
  org.kalypso.zml.ui.table.provider.strategy,
- org.kalypso.zml.ui.table.update
+ org.kalypso.zml.ui.table.update,
+ org.kalypso.zml.ui.table.view
 Bundle-ClassPath: .
