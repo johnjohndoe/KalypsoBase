@@ -82,8 +82,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
   private String m_schemaLocation;
 
-  private final IFeatureType[] m_featureTypes;
-
   private final IGMLSchema m_schema;
 
   private final FeatureProviderFactoryCache m_factory;
@@ -91,10 +89,9 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   /** The url-context against which to resolve any references inside this workspace. */
   private final URL m_context;
 
-  public GMLWorkspace_Impl( final IGMLSchema schema, final IFeatureType[] featureTypes, final Feature feature, final URL context, final NamespaceContext namespaceContext, final String schemaLocation, final IFeatureProviderFactory factory )
+  public GMLWorkspace_Impl( final IGMLSchema schema, final Feature feature, final URL context, final NamespaceContext namespaceContext, final String schemaLocation, final IFeatureProviderFactory factory )
   {
     m_schema = schema;
-    m_featureTypes = featureTypes;
     m_context = context;
     m_namespaceContext = namespaceContext;
     m_schemaLocation = schemaLocation;
@@ -371,7 +368,9 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   @Deprecated
   public IFeatureType getFeatureType( final String nameLocalPart )
   {
-    for( final IFeatureType ft : m_featureTypes )
+    final IFeatureType[] allFeatureTypes = m_schema.getAllFeatureTypes();
+
+    for( final IFeatureType ft : allFeatureTypes )
     {
       if( ft.getQName().getLocalPart().equals( nameLocalPart ) )
         return ft;
@@ -383,14 +382,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   @Override
   public IFeatureType getFeatureType( final QName featureQName )
   {
-    for( final IFeatureType ft : m_featureTypes )
-    {
-      if( ft.getQName().equals( featureQName ) )
-        return ft;
-    }
-
-    // HACK: because a workspace has only its own feature types
-    // maybe allways use this method?
     return m_schema.getFeatureType( featureQName );
   }
 

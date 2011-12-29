@@ -64,7 +64,7 @@ import org.kalypso.gmlschema.xml.QualifiedElement;
 
 /**
  * This is a FeatureType created programatically.
- * 
+ *
  * @author doemming, kurzbach
  */
 public class CustomFeatureType extends QualifiedElement implements IFeatureType
@@ -91,42 +91,6 @@ public class CustomFeatureType extends QualifiedElement implements IFeatureType
    * necessary at the time to use GMLSchema instead of the IGMLSchema interface.
    */
   public CustomFeatureType( final IGMLSchema schema, final QName qName, final IPropertyType[] pts, final QName substitutionGroup )
-  {
-    this( schema, qName, pts );
-    if( substitutionGroup != null )
-    {
-      try
-      {
-        if( !(schema instanceof GMLSchema) )
-          return;
-
-        final ElementReference substitutesReference = ((GMLSchema) schema).resolveElementReference( substitutionGroup );
-        if( substitutesReference == null )
-          return;
-        final GMLSchema substiututesGMLSchema = (GMLSchema) substitutesReference.getGMLSchema();
-        final Element substitutesElement = substitutesReference.getElement();
-        if( substiututesGMLSchema.getTargetNamespace().equals( NS.GML2 ) && "_Object".equals( substitutesElement.getName() ) ) //$NON-NLS-1$
-          return;
-        final FeatureType ft = (FeatureType) substiututesGMLSchema.getBuildedObjectFor( substitutesElement );
-        m_substitutionGroupFT = ft;
-      }
-      catch( final GMLSchemaException e )
-      {
-        KalypsoGMLSchemaPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-        throw new IllegalStateException( e );
-      }
-
-    }
-  }
-
-  /**
-   * Use this constructor if no substitution type is given. This might result in some serious errors so it is suggested
-   * to use the other constructor.
-   * 
-   * @deprecated
-   */
-  @Deprecated
-  public CustomFeatureType( final IGMLSchema schema, final QName qName, final IPropertyType[] pts )
   {
     super( schema, null, qName );
 
@@ -155,11 +119,33 @@ public class CustomFeatureType extends QualifiedElement implements IFeatureType
     m_allGeometryPTS = col.toArray( new IValuePropertyType[col.size()] );
     m_defaultGeometryPosition = geoPos;
     m_properties = pts;
+
+    if( substitutionGroup != null )
+    {
+      try
+      {
+        if( !(schema instanceof GMLSchema) )
+          return;
+
+        final ElementReference substitutesReference = ((GMLSchema) schema).resolveElementReference( substitutionGroup );
+        if( substitutesReference == null )
+          return;
+        final GMLSchema substiututesGMLSchema = (GMLSchema) substitutesReference.getGMLSchema();
+        final Element substitutesElement = substitutesReference.getElement();
+        if( substiututesGMLSchema.getTargetNamespace().equals( NS.GML2 ) && "_Object".equals( substitutesElement.getName() ) ) //$NON-NLS-1$
+          return;
+        final FeatureType ft = (FeatureType) substiututesGMLSchema.getBuildedObjectFor( substitutesElement );
+        m_substitutionGroupFT = ft;
+      }
+      catch( final GMLSchemaException e )
+      {
+        KalypsoGMLSchemaPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+        throw new IllegalStateException( e );
+      }
+
+    }
   }
 
-  /**
-   * @see org.kalypso.gmlschema.feature.IFeatureType#getName()
-   */
   @Override
   @SuppressWarnings("deprecation")
   @Deprecated

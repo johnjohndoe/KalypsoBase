@@ -13,7 +13,7 @@ import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.gml.util.TabularSourceType;
 import org.kalypso.gml.util.TabularSourceType.Featureproperty;
-import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.gmlschema.EmptyGMLSchema;
 import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -37,7 +37,7 @@ import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 /**
  * Lädt und schreibt ein CSV als {@link org.kalypsodeegree.model.feature.GMLWorkspace}. Die Information, welche Spalte
  * wie gelesen wird, wird per {@link #addInfo(IPropertyType, CSVInfo)}übergeben.
- * 
+ *
  * @todo Einerseits ganz schön, genau zu spezifizieren, was die Spalten sind. Alternativ wäre aber auch super, wenn das
  *       auch automatisch anhand der 1.Zeile ginge
  * @todo Koordinatensystem berücksichtigen
@@ -126,15 +126,20 @@ public abstract class AbstractTabularFeatureReader
 
   private GMLWorkspace createWorkspace( )
   {
+    final EmptyGMLSchema schema = new EmptyGMLSchema();
+
     final IPropertyType[] props = m_infos.keySet().toArray( new IPropertyType[0] );
     final IFeatureType ft = GMLSchemaFactory.createFeatureType( new QName( "namespace", "csv" ), props ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final Feature rootFeature = ShapeSerializer.createShapeRootFeature( ft );
 
-    final GMLSchema schema = null;
+    schema.addFeatureType( rootFeature.getFeatureType() );
+    schema.addFeatureType( ft );
+
     final URL context = null;
     final String schemaLocation = null;
-    return new GMLWorkspace_Impl( schema, new IFeatureType[] { rootFeature.getFeatureType(), ft }, rootFeature, context, null, schemaLocation, null );
+
+    return new GMLWorkspace_Impl( schema, rootFeature, context, null, schemaLocation, null );
   }
 
   public GMLWorkspace getWorkspace( )

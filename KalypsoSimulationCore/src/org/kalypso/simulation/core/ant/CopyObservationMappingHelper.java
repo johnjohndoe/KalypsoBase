@@ -94,7 +94,7 @@ public class CopyObservationMappingHelper
 
     final IFeatureType mapColFT = schema.getFeatureType( UrlCatalogUpdateObservationMapping.QNAME_MAPPING_COLLECTION );
     final Feature rootFE = FeatureFactory.createFeature( null, null, "1", mapColFT, true );
-    return new GMLWorkspace_Impl( schema, schema.getAllFeatureTypes(), rootFE, context, null, null, null );
+    return new GMLWorkspace_Impl( schema, rootFE, context, null, null, null );
   }
 
   /**
