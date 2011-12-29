@@ -55,8 +55,8 @@ import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelElement;
 import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelSimpleType;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.xml.NS;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.gmlschema.feature.FeatureContentType;
 import org.kalypso.gmlschema.feature.FeatureType;
@@ -76,7 +76,7 @@ import org.kalypso.gmlschema.xml.TypeReference;
 
 /**
  * represents a gml schema
- * 
+ *
  * @author doemming
  */
 public class GMLSchema implements IGMLSchema
@@ -166,7 +166,7 @@ public class GMLSchema implements IGMLSchema
 
   /**
    * initializes this schema, loads all included and imported schemas
-   * 
+   *
    * @throws GMLSchemaException
    */
   private void init( final SchemaDocument schemaDocument ) throws GMLSchemaException
@@ -297,7 +297,7 @@ public class GMLSchema implements IGMLSchema
     // beware of recursion
     if( gmlschema == null || gmlschema == this )
     {
-      final IStatus status = StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.gmlschema.GMLSchema.1", qName ) ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoGMLSchemaPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.gmlschema.GMLSchema.1", qName ) ); //$NON-NLS-1$
       KalypsoGMLSchemaPlugin.getDefault().getLog().log( status );
       return null;
     }
@@ -316,7 +316,16 @@ public class GMLSchema implements IGMLSchema
     return gmlschema.resolveSimpleTypeReference( qName );
   }
 
-  @Override
+  public ComplexTypeReference getComplexTypeReferenceFor( final Element element ) throws GMLSchemaException
+  {
+    final QName type = element.getType();
+    if( type != null )
+      return resolveComplexTypeReference( type );
+
+    final ComplexType complexType = element.getComplexType();
+    return new ComplexTypeReference( this, complexType );
+  }
+
   public ComplexTypeReference resolveComplexTypeReference( final QName qName ) throws GMLSchemaException
   {
     final String namespaceURI = qName.getNamespaceURI();
@@ -329,9 +338,6 @@ public class GMLSchema implements IGMLSchema
     return null;
   }
 
-  /**
-   * @param qName
-   */
   public TypeReference resolveTypeReference( final QName qName ) throws GMLSchemaException
   {
     final SimpleTypeReference reference = resolveSimpleTypeReference( qName );

@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -42,6 +42,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -50,7 +51,7 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * Default imlementation of the IPolynom1D interface
- * 
+ *
  * @author Patrice Congo
  */
 public class Polynomial1D extends Feature_Impl implements IPolynomial1D
@@ -238,7 +239,7 @@ public class Polynomial1D extends Feature_Impl implements IPolynomial1D
   private Feature refForId( final String domainId )
   {
     final IRelationType relation = (IRelationType) getFeatureType().getProperty( QNAME_PROP_DOMAIN_PHENOMENON );
-    final IFeatureType featureType = getWorkspace().getGMLSchema().getFeatureType( new QName( NS.SWE, "Phenomenon" ) );
+    final IFeatureType featureType = GMLSchemaUtilities.getFeatureTypeQuiet( new QName( NS.SWE, "Phenomenon" ) );
 
     final Feature ref = new XLinkedFeature_Impl( this, relation, featureType, domainId, null, null, null, null, null );
     return ref;

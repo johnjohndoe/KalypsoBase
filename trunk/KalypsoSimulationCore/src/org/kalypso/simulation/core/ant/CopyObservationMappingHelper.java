@@ -35,6 +35,7 @@ import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -110,7 +111,7 @@ public class CopyObservationMappingHelper
   {
     final org.kalypso.zml.obslink.ObjectFactory obsLinkFac = new org.kalypso.zml.obslink.ObjectFactory();
 
-    final IFeatureType mapFT = workspace.getGMLSchema().getFeatureType( UrlCatalogUpdateObservationMapping.QNAME_MAPPING_OBSERVATION );
+    final IFeatureType mapFT = GMLSchemaUtilities.getFeatureTypeQuiet( UrlCatalogUpdateObservationMapping.QNAME_MAPPING_OBSERVATION );
     final Feature rootFeature = workspace.getRootFeature();
 
     // in

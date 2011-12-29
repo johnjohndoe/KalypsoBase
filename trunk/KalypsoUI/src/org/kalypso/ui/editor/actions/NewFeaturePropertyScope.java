@@ -133,7 +133,7 @@ class NewFeaturePropertyScope implements INewScope
     if( featureType == null )
       return new IAction[0];
 
-    final IGMLSchema contextSchema = m_parentFeature.getWorkspace().getGMLSchema();
+    final IGMLSchema contextSchema = m_parentFeature.getFeatureType().getGMLSchema();
     final IFeatureType[] featureTypes = GMLSchemaUtilities.getSubstituts( featureType, contextSchema, false, true );
     for( final IFeatureType ft : featureTypes )
       actions.add( new NewFeatureAction( m_workspace, m_parentFeature, m_targetRelation, ft, m_selectionManager ) );

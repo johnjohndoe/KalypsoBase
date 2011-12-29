@@ -7,6 +7,8 @@ import org.osgi.framework.BundleContext;
 
 public class KalypsoGMLSchemaPlugin extends Plugin
 {
+  public static final String PLUGIN_ID = "org.kalypso.gmlschema"; //$NON-NLS-1$
+
   // The shared instance.
   private static KalypsoGMLSchemaPlugin INSTANCE;
 

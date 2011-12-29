@@ -57,7 +57,6 @@ import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.core.KalypsoCoreExtensions;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
@@ -424,7 +423,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
   /**
    * Helper: builds the record definition according to the components of the tuple result.
-   * 
+   *
    * @param map
    *          ATTENTION: the recordset is written in the same order as this map
    */
@@ -624,7 +623,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
    * <p>
    * TODO do not create an observation twice for the same feature, pooling?
    * </p>
-   * 
+   *
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
    */
   @Override
@@ -649,8 +648,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
   {
     final Feature recordDefinition = ObservationFeatureFactory.getOrCreateRecordDefinition( obsFeature );
 
-    final IGMLSchema schema = obsFeature.getWorkspace().getGMLSchema();
-    final IFeatureType featureType = schema.getFeatureType( ObservationFeatureFactory.SWE_ITEMDEFINITION );
+    final IFeatureType featureType = GMLSchemaUtilities.getFeatureTypeQuiet( ObservationFeatureFactory.SWE_ITEMDEFINITION );
 
     final IRelationType componentRelation = (IRelationType) recordDefinition.getFeatureType().getProperty( ObservationFeatureFactory.SWE_COMPONENT );
 

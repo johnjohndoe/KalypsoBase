@@ -70,6 +70,7 @@ import org.kalypso.gml.processes.raster2vector.collector.LineStringCollector;
 import org.kalypso.gml.processes.raster2vector.collector.PolygonCollector;
 import org.kalypso.gml.processes.raster2vector.collector.SegmentCollector;
 import org.kalypso.gmlschema.GMLSchemaFactory;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -111,7 +112,7 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  * This test extracts demo input data (grid) from resources and converts them into shape files. <br>
  * <br>
  * Run this test as plug-in test.
- * 
+ *
  * @author Thomas Jung
  */
 public class TestInundationFrequenciesGrid2Shp extends TestCase
@@ -363,7 +364,7 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
       final File dstRasterFile = dstRasterIFile.getRawLocation().toFile();
       final RectifiedGridDomain gridDomain = importAsBinaryRaster( file.getLocation().toFile(), dstRasterFile, "EPSG:31467", new NullProgressMonitor() ); //$NON-NLS-1$
 
-      final IFeatureType ft = covCollWorkspace.getGMLSchema().getFeatureType( RectifiedGridCoverage.QNAME );
+      final IFeatureType ft = GMLSchemaUtilities.getFeatureTypeQuiet( RectifiedGridCoverage.QNAME );
       final IRelationType parentRelation = (IRelationType) covColl.getFeatureType().getProperty( ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER );
       final Feature coverageFeature = covCollWorkspace.createFeature( covColl, parentRelation, ft );
       final RectifiedGridCoverage coverage = (RectifiedGridCoverage) coverageFeature;
