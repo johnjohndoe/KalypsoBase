@@ -68,7 +68,7 @@ import org.kalypsodeegree_impl.model.sort.SplitSort;
  * <p>
  * -----------------------------------------------------------------------
  * </p>
- * 
+ *
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  */
@@ -83,7 +83,7 @@ public final class FeatureFactory
    * creates an instance of a Feature from its IFeatureType and an array of Objects that represents it properties. It is
    * assumed that the order of the properties is identical to the order of the FeatureTypeProperties of the the
    * IFeatureType.
-   * 
+   *
    * @param id
    *          unique id of the <CODE>Feature</CODE>
    * @param featureType
@@ -108,7 +108,7 @@ public final class FeatureFactory
 
   /**
    * Erzeugt ein Feature mit gesetzter ID und füllt das Feature mit Standardwerten.
-   * 
+   *
    * @param initializeWithDefaults
    *          set <code>true</code> to generate default properties (e.g. when generating from UserInterface) <br>
    *          set <code>false</code> to not generate default properties (e.g. when reading from GML or so.)
@@ -249,8 +249,7 @@ public final class FeatureFactory
 
   public static GMLWorkspace createGMLWorkspace( final IGMLSchema schema, final Feature rootFeature, final URL context, final String schemaLocation, final IFeatureProviderFactory factory, final NamespaceContext namespaceContext )
   {
-    final IFeatureType[] featureTypes = schema.getAllFeatureTypes();
-    return new GMLWorkspace_Impl( schema, featureTypes, rootFeature, context, namespaceContext, schemaLocation, factory );
+    return new GMLWorkspace_Impl( schema, rootFeature, context, namespaceContext, schemaLocation, factory );
   }
 
   /**

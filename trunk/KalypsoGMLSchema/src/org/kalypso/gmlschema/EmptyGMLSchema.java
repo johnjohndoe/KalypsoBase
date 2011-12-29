@@ -59,6 +59,11 @@ public class EmptyGMLSchema implements IGMLSchema
 {
   private final Map<QName, IFeatureType> m_featureTypes = new HashMap<>();
 
+  public void addFeatureType( final IFeatureType featureType )
+  {
+    m_featureTypes.put( featureType.getQName(), featureType );
+  }
+
   @Override
   public String getGMLVersion( )
   {

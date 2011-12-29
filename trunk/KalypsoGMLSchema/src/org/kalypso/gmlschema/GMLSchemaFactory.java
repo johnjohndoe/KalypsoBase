@@ -39,6 +39,7 @@ import javax.xml.namespace.QName;
 import org.apache.commons.io.IOUtils;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument.Schema;
+import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.builder.ComplexType2FeatureContentTypeBuilder;
 import org.kalypso.gmlschema.builder.ComplexType2PropertyContentFromTypeHandlerTypeBuilder;
@@ -70,11 +71,13 @@ import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 
 /**
  * Factory for various GML-Schema elements.
- * 
+ *
  * @author doemming
  */
 public class GMLSchemaFactory
 {
+  private static QName QNAME_FEATURE = new QName( NS.GML3, "_Feature" ); //$NON-NLS-1$
+
   private static Map<String, GMLSchemaBuilder> m_gmlSchemaBuilderRegister = new HashMap<String, GMLSchemaBuilder>();
 
   private static synchronized GMLSchemaBuilder getBuilderForVersion( final String version )
@@ -204,18 +207,22 @@ public class GMLSchemaFactory
   }
 
   /**
-   * @deprecated TODO: PLEASE SEPCIFY WHAT TO USE INSTEAD!
-   * @see CustomFeatureType#CustomFeatureType(IGMLSchema, QName, IPropertyType[])
+   * Same as {@link CustomFeatureType#CustomFeatureType(IGMLSchema, QName, IPropertyType[], Feature.QNAME_FEATURE )}
    */
-  @Deprecated
   public static IFeatureType createFeatureType( final QName qName, final IPropertyType[] properties )
   {
-    return new CustomFeatureType( new EmptyGMLSchema(), qName, properties );
+    return new CustomFeatureType( new EmptyGMLSchema(), qName, properties, QNAME_FEATURE );
   }
 
   /**
-   * @see CustomFeatureType#CustomFeatureType(GMLSchema, QName, IPropertyType[], QName)
+   * Create a feature type that substitutes _Feature. <br/>
+   * Same as {@link CustomFeatureType#CustomFeatureType(QName, IPropertyType[], IGMLSchema, Feature.QNAME_FEATURE )}
    */
+  public static IFeatureType createFeatureType( final QName qName, final IPropertyType[] properties, final IGMLSchema schema )
+  {
+    return new CustomFeatureType( schema, qName, properties, QNAME_FEATURE );
+  }
+
   public static IFeatureType createFeatureType( final QName qName, final IPropertyType[] properties, final IGMLSchema schema, final QName subsFTQname )
   {
     return new CustomFeatureType( schema, qName, properties, subsFTQname );
