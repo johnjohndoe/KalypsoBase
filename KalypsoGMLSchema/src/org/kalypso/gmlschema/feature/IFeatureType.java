@@ -91,9 +91,6 @@ public interface IFeatureType extends IInitialize
 
   public QNameUnique getLocalQName( );
 
-// public long getFullID();
-// public long getLocalID();
-
   // TODO: remove this method from interface, declare it private in implementation
   public int getPropertyPosition( final IPropertyType propertyType );
 

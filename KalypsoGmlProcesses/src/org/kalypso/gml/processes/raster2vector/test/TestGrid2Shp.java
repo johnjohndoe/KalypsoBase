@@ -71,6 +71,7 @@ import org.kalypso.gml.processes.raster2vector.collector.LineStringCollector;
 import org.kalypso.gml.processes.raster2vector.collector.PolygonCollector;
 import org.kalypso.gml.processes.raster2vector.collector.SegmentCollector;
 import org.kalypso.gmlschema.GMLSchemaFactory;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -102,7 +103,7 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  * This test extracts demo input data (grid) from resources and converts them into shape files. <br>
  * <br>
  * Run this test as plug-in test.
- * 
+ *
  * @author Thomas Jung
  */
 public class TestGrid2Shp extends TestCase
@@ -240,7 +241,7 @@ public class TestGrid2Shp extends TestCase
     final File dstRasterFile = dstRasterIFile.getRawLocation().toFile();
     final RectifiedGridDomain gridDomain = importAsBinaryRaster( file.getLocation().toFile(), dstRasterFile, "EPSG:28992", new NullProgressMonitor() ); //$NON-NLS-1$
 
-    final IFeatureType ft = covCollWorkspace.getGMLSchema().getFeatureType( RectifiedGridCoverage.QNAME );
+    final IFeatureType ft = GMLSchemaUtilities.getFeatureTypeQuiet( RectifiedGridCoverage.QNAME );
     final Feature rootFeature = covCollWorkspace.getRootFeature();
     final ICoverageCollection covColl = (ICoverageCollection) rootFeature.getAdapter( ICoverageCollection.class );
 

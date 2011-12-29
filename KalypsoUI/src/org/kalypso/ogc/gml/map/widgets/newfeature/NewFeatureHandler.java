@@ -46,7 +46,7 @@ public class NewFeatureHandler extends AbstractHandler implements IHandler
     final IFeatureType featureType = featureTheme.getFeatureType();
     final FeatureList featureList = featureTheme.getFeatureList();
     final Feature parentFeature = featureList.getParentFeature();
-    final IRelationType fatp = featureList.getParentFeatureTypeProperty();
+    final IRelationType fatp = featureList.getPropertyType();
     final CommandableWorkspace workspace = featureTheme.getWorkspace();
 
     if( fatp == null || parentFeature == null || workspace == null )

@@ -75,7 +75,7 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * Writes an GMLWorkspace into a {@link XMLReader}.
- * 
+ *
  * @author Andreas von Dömming
  */
 public class GMLSAXFactory
@@ -130,7 +130,7 @@ public class GMLSAXFactory
     }
 
     // generate used prefixes
-    final IGMLSchema gmlSchema = workspace.getGMLSchema();
+    final IGMLSchema gmlSchema = rootFeature.getFeatureType().getGMLSchema();
     final IFeatureType[] featureTypes = gmlSchema.getAllFeatureTypes();
     for( final IFeatureType element : featureTypes )
     {

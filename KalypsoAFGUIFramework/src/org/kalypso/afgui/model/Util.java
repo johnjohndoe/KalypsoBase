@@ -50,6 +50,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -154,7 +155,7 @@ public class Util
       else
       {
         final GMLWorkspace workspace = parentFeature.getWorkspace();
-        final IFeatureType newFeatureType = workspace.getGMLSchema().getFeatureType( featureQName );
+        final IFeatureType newFeatureType = GMLSchemaUtilities.getFeatureTypeQuiet( featureQName );
         final Feature feature = workspace.createFeature( parentFeature, (IRelationType) property, newFeatureType );
         for( int i = featureProperties.length - 1; i >= 0; i-- )
         {

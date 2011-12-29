@@ -59,7 +59,6 @@ import org.kalypso.contribs.java.lang.MultiException;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -210,18 +209,15 @@ public final class FeatureHelper
    */
   public static void copyProperties( final Feature sourceFeature, final Feature targetFeature, final Properties propertyMap ) throws Exception
   {
-    final GMLWorkspace workspace = sourceFeature.getWorkspace();
-    final IGMLSchema gmlSchema = workspace == null ? null : workspace.getGMLSchema();
-    final String gmlVersion = gmlSchema == null ? null : gmlSchema.getGMLVersion();
     for( final Entry< ? , ? > entry : propertyMap.entrySet() )
     {
       final String sourceProp = (String) entry.getKey();
       final String targetProp = (String) entry.getValue();
-      copyProperty( sourceFeature, targetFeature, gmlVersion, sourceProp, targetProp );
+      copyProperty( sourceFeature, targetFeature, sourceProp, targetProp );
     }
   }
 
-  private static void copyProperty( final Feature sourceFeature, final Feature targetFeature, final String gmlVersion, final String sourceProp, final String targetProp ) throws Exception
+  private static void copyProperty( final Feature sourceFeature, final Feature targetFeature, final String sourceProp, final String targetProp ) throws Exception
   {
     final IPropertyType sourcePT = FeatureHelper.getPT( sourceFeature, sourceProp );
     if( sourcePT == null )
@@ -236,7 +232,7 @@ public final class FeatureHelper
 
     try
     {
-      final Object convertedValue = convertProperty( sourceFeature, targetFeature, gmlVersion, sourcePT, targetPT );
+      final Object convertedValue = convertProperty( sourceFeature, targetFeature, sourcePT, targetPT );
 
       // Hack: Types are same, but ordinality (i.e. list or not) can be different.
       if( !sourcePT.isList() && targetPT.isList() )
@@ -258,7 +254,7 @@ public final class FeatureHelper
     }
   }
 
-  private static Object convertProperty( final Feature sourceFeature, final Feature targetFeature, final String gmlVersion, final IPropertyType sourcePT, final IPropertyType targetPT ) throws Exception
+  private static Object convertProperty( final Feature sourceFeature, final Feature targetFeature, final IPropertyType sourcePT, final IPropertyType targetPT ) throws Exception
   {
     final Object sourceValue = sourceFeature.getProperty( sourcePT );
 
@@ -268,7 +264,7 @@ public final class FeatureHelper
       final IValuePropertyType sourceFTP = (IValuePropertyType) sourcePT;
       final IValuePropertyType targetFTP = (IValuePropertyType) targetPT;
       if( sourceFTP.getValueQName().equals( targetFTP.getValueQName() ) )
-        return cloneData( sourceFeature, targetFeature, sourcePT, sourceValue, gmlVersion );
+        return cloneData( sourceFeature, targetFeature, sourcePT, sourceValue );
       else if( sourceFTP.isGeometry() && targetFTP.isGeometry() )
       {
         final GM_Object targetGeom = tryConvertGeometry( (GM_Object) sourceValue, targetFTP.getValueQName() );
@@ -407,8 +403,6 @@ public final class FeatureHelper
 
   private static Object cloneProperty( final Feature sourceFeature, final Feature targetFeature, final IPropertyType pt ) throws Exception
   {
-    final String version = sourceFeature.getWorkspace().getGMLSchema().getGMLVersion();
-
     final Object property = sourceFeature.getProperty( pt );
     if( pt.isList() )
     {
@@ -417,7 +411,7 @@ public final class FeatureHelper
 
       for( final Object listElement : list )
       {
-        final Object cloneData = FeatureHelper.cloneData( sourceFeature, targetFeature, pt, listElement, version );
+        final Object cloneData = FeatureHelper.cloneData( sourceFeature, targetFeature, pt, listElement );
         // TODO: this is not nice! Better: d not add feature to list within the cloneFeature Method
         if( cloneData instanceof XLinkedFeature_Impl || !(cloneData instanceof Feature) )
         {
@@ -428,15 +422,16 @@ public final class FeatureHelper
       return targetList;
     }
 
-    return FeatureHelper.cloneData( sourceFeature, targetFeature, pt, property, version );
+    return FeatureHelper.cloneData( sourceFeature, targetFeature, pt, property );
   }
 
   /**
    * @throws CloneNotSupportedException
    * @throws UnsupportedOperationException
-   *           If type of object is not supported for clone
+   *           If type of object is not supported for clone <br/>
+   *           FIXME: get gml version from source feature type
    */
-  public static Object cloneData( final Feature sourceFeature, final Feature targetFeature, final IPropertyType pt, final Object object, final String gmlVersion ) throws Exception
+  public static Object cloneData( final Feature sourceFeature, final Feature targetFeature, final IPropertyType pt, final Object object ) throws Exception
   {
     if( object == null )
       return null;
@@ -482,6 +477,7 @@ public final class FeatureHelper
     {
       try
       {
+        final String gmlVersion = sourceFeature.getFeatureType().getGMLSchema().getGMLVersion();
         return typeHandler.cloneObject( object, gmlVersion );
       }
       catch( final Exception e )
@@ -500,7 +496,6 @@ public final class FeatureHelper
   public static void copyData( final Feature source, final Feature target ) throws Exception
   {
     final IFeatureType type = source.getFeatureType();
-    final String gmlVersion = type.getGMLSchema().getGMLVersion();
 
     Assert.isTrue( type.equals( target.getFeatureType() ) );
 
@@ -508,7 +503,7 @@ public final class FeatureHelper
     for( final IPropertyType pt : properties )
     {
       final Object value = source.getProperty( pt );
-      final Object clonedValue = FeatureHelper.cloneData( source, target, pt, value, gmlVersion );
+      final Object clonedValue = FeatureHelper.cloneData( source, target, pt, value );
       target.setProperty( pt, clonedValue );
     }
   }
@@ -725,12 +720,9 @@ public final class FeatureHelper
   {
     if( property instanceof IValuePropertyType )
     {
-      final GMLWorkspace workspace = srcFE.getWorkspace();
-      final String gmlVersion = workspace == null ? null : workspace.getGMLSchema().getGMLVersion();
-
       final IValuePropertyType pt = (IValuePropertyType) property;
       final Object valueOriginal = srcFE.getProperty( property );
-      final Object cloneValue = FeatureHelper.cloneData( srcFE, targetFE, pt, valueOriginal, gmlVersion );
+      final Object cloneValue = FeatureHelper.cloneData( srcFE, targetFE, pt, valueOriginal );
       targetFE.setProperty( pt, cloneValue );
     }
   }
@@ -797,7 +789,7 @@ public final class FeatureHelper
     }
     else
     {
-      newFeatureType = workspace.getGMLSchema().getFeatureType( newFeatureName );
+      newFeatureType = GMLSchemaUtilities.getFeatureTypeQuiet( newFeatureName );
     }
 
     if( newFeatureName != null && !GMLSchemaUtilities.substitutes( newFeatureType, targetFeatureType.getQName() ) )
@@ -852,7 +844,7 @@ public final class FeatureHelper
     }
     else
     {
-      newFeatureType = workspace.getGMLSchema().getFeatureType( newFeatureName );
+      newFeatureType = GMLSchemaUtilities.getFeatureTypeQuiet( newFeatureName );
     }
 
     if( newFeatureName != null && !GMLSchemaUtilities.substitutes( newFeatureType, targetFeatureType.getQName() ) )
@@ -1395,7 +1387,7 @@ public final class FeatureHelper
     }
     else
     {
-      newFeatureType = workspace.getGMLSchema().getFeatureType( newFeatureName );
+      newFeatureType = GMLSchemaUtilities.getFeatureTypeQuiet( newFeatureName );
     }
 
     if( newFeatureName != null && !GMLSchemaUtilities.substitutes( newFeatureType, targetFeatureType.getQName() ) )
@@ -1421,8 +1413,7 @@ public final class FeatureHelper
     Assert.isNotNull( gmlID );
 
     final GMLWorkspace workspace = parentFeature.getWorkspace();
-    final IGMLSchema schema = workspace.getGMLSchema();
-    final IFeatureType featureType = schema.getFeatureType( newFeatureQName );
+    final IFeatureType featureType = GMLSchemaUtilities.getFeatureTypeQuiet( newFeatureQName );
     final IPropertyType parentPT = parentFeature.getFeatureType().getProperty( propQName );
     if( !(parentPT instanceof IRelationType) )
       throw new IllegalArgumentException( "Property not a IRelationType=" + parentPT + " propQname=" + propQName );

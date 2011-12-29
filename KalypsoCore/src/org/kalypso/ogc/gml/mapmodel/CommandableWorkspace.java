@@ -386,6 +386,7 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
     return m_workspace.getFeatureType( nameLocalPart );
   }
 
+  @Deprecated
   @Override
   public IGMLSchema getGMLSchema( )
   {

@@ -44,7 +44,6 @@ import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.KalypsoGmlSchemaExtensions;
 import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
@@ -62,7 +61,7 @@ import org.kalypso.gmlschema.xml.QualifiedElement;
 
 /**
  * representation of a feature definition from xml schema
- * 
+ *
  * @author Andreas von Dömming
  */
 @SuppressWarnings("deprecation")
@@ -103,9 +102,12 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
       m_annotation = annotation;
   }
 
-  /**
-   * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
-   */
+  @Override
+  public GMLSchema getGMLSchema( )
+  {
+    return (GMLSchema) super.getGMLSchema();
+  }
+
   @Override
   public void init( final int initializeRun ) throws GMLSchemaException
   {
@@ -132,7 +134,9 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
 
   private void initFirst( ) throws GMLSchemaException
   {
-    final ComplexTypeReference complexTypeReference = GMLSchemaUtilities.getComplexTypeReferenceFor( getGMLSchema(), getElement() );
+    final GMLSchema gmlSchema = getGMLSchema();
+
+    final ComplexTypeReference complexTypeReference = gmlSchema.getComplexTypeReferenceFor( getElement() );
     final ComplexType complexType = complexTypeReference.getComplexType();
     final GMLSchema schema = (GMLSchema) complexTypeReference.getGMLSchema();
     m_featureContentType = (IFeatureContentType) schema.getBuildedObjectFor( complexType );
@@ -141,7 +145,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
     final QName substitutionGroup = getElement().getSubstitutionGroup();
     if( substitutionGroup != null )
     {
-      final ElementReference substitutesReference = ((GMLSchema) getGMLSchema()).resolveElementReference( substitutionGroup );
+      final ElementReference substitutesReference = gmlSchema.resolveElementReference( substitutionGroup );
       if( substitutesReference == null )
         throw new GMLSchemaException( "Could not find substitution reference: " + substitutionGroup ); //$NON-NLS-1$
 
@@ -308,7 +312,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
 
   /**
    * Returns -1 if the property does not exist.
-   * 
+   *
    * @see org.kalypso.gmlschema.feature.IFeatureType#getPropertyPosition(org.kalypso.gmlschema.property.IPropertyType)
    */
   @Override
