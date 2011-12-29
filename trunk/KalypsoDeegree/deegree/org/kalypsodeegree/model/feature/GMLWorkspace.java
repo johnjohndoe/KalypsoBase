@@ -56,13 +56,6 @@ import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
  */
 public interface GMLWorkspace extends ModellEventProvider
 {
-  // FIXME: check: never used; should be turned into an enum; move to visitors
-  int RESOLVE_ALL = 0;
-
-  int RESOLVE_LINK = 1;
-
-  int RESOLVE_COMPOSITION = 2;
-
   /**
    * Returns the root feature of the gml file represented by this workspace.
    */
@@ -70,7 +63,11 @@ public interface GMLWorkspace extends ModellEventProvider
 
   /**
    * Returns the {@link IGMLSchema} that was used to load / create this workspace.
+   *
+   * @deprecated Use {@link org.kalypso.gmlschema.GMLSchemaUtilities#getSchemaQuiet(String)} or
+   *             {@link org.kalypso.gmlschema.GMLSchemaUtilities#getFeatureTypeQuiet(QName)} instead.
    */
+  @Deprecated
   IGMLSchema getGMLSchema( );
 
   /**
@@ -91,31 +88,10 @@ public interface GMLWorkspace extends ModellEventProvider
    */
   Feature resolveLink( Feature srcFeature, IRelationType linkProperty );
 
-  // FIXME: never really used
-  /**
-   * resolves the associationlink to a feature, maxOccurs =1
-   *
-   * @param srcFeature
-   * @param linkPropertyName
-   * @param resolveMode
-   * @return linked feature
-   */
-  Feature resolveLink( Feature srcFeature, IRelationType linkProperty, int resolveMode );
-
   /**
    * resolves the associationlink to a feature, maxOccurs >1
    */
   Feature[] resolveLinks( Feature srcFeature, IRelationType linkProperty );
-
-  /**
-   * resolves the associationlink to a feature, maxOccurs >1
-   *
-   * @param srcFeature
-   * @param linkPropertyName
-   * @param resolveMode
-   * @return features
-   */
-  Feature[] resolveLinks( Feature srcFeature, IRelationType linkProperty, int resolveMode );
 
   /**
    * returns all Features that that link to the linkTargetFeature, with the specified linkPropertyname and are type of

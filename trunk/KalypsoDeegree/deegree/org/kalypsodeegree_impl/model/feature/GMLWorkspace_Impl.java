@@ -142,43 +142,28 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   @Override
   public Feature resolveLink( final Feature srcFeature, final IRelationType linkProperty )
   {
-    return resolveLink( srcFeature, linkProperty, RESOLVE_ALL );
-  }
-
-  @Override
-  public Feature resolveLink( final Feature srcFeature, final IRelationType linkProperty, final int resolveMode )
-  {
     final Object linkValue = srcFeature.getProperty( linkProperty );
     if( linkValue == null )
       return null;
+
     if( linkValue instanceof Feature )
-    {
-      if( resolveMode != RESOLVE_LINK )
-        return (Feature) linkValue;
-      return null;
-    }
+      return (Feature) linkValue;
+
     // must be a reference
     final String linkID = (String) linkValue;
-    if( resolveMode != RESOLVE_COMPOSITION )
-      return getFeature( linkID );
-    return null;
+    return getFeature( linkID );
   }
 
   @Override
   public Feature[] resolveLinks( final Feature srcFeature, final IRelationType linkProperty )
   {
-    return resolveLinks( srcFeature, linkProperty, RESOLVE_ALL );
-  }
-
-  @Override
-  public Feature[] resolveLinks( final Feature srcFeature, final IRelationType linkProperty, final int resolveMode )
-  {
     if( !linkProperty.isList() )
     {
-      final Feature feature = resolveLink( srcFeature, linkProperty, resolveMode );
-      if( feature != null )
-        return new Feature[] { feature };
-      return new Feature[] {};
+      final Feature feature = resolveLink( srcFeature, linkProperty );
+      if( feature == null )
+        return new Feature[] {};
+
+      return new Feature[] { feature };
     }
 
     final List<Feature> result = new ArrayList<Feature>();
@@ -186,18 +171,16 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
     for( final Object linkValue : linkList )
     {
+      // TODO: same code as in resolveLink -> move to common place
       if( linkValue instanceof Feature )
       {
-        if( !(resolveMode == RESOLVE_LINK) )
-          result.add( (Feature) linkValue );
+        result.add( (Feature) linkValue );
         continue;
       }
+
       // must be a reference
-      if( !(resolveMode == RESOLVE_COMPOSITION) )
-      {
-        final String linkID = (String) linkValue;
-        result.add( getFeature( linkID ) );
-      }
+      final String linkID = (String) linkValue;
+      result.add( getFeature( linkID ) );
     }
 
     return result.toArray( new Feature[result.size()] );
@@ -687,7 +670,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   {
     m_indexMap.put( id, f );
   }
-
 
   @Override
   public void accept( final FeatureVisitor fv, final String featurePath, final int depth )

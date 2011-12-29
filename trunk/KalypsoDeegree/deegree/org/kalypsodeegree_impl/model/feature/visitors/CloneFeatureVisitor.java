@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -55,7 +55,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * is already recursive now.
  * <p>
  * start visitor with the parent feature of the subtree (the one that you do not want to copy)
- * 
+ *
  * @author hübsch, doemming
  */
 public class CloneFeatureVisitor implements FeatureVisitor
@@ -98,7 +98,7 @@ public class CloneFeatureVisitor implements FeatureVisitor
       if( property instanceof IRelationType )
       {
         final IRelationType linkPT = (IRelationType) property;
-        final Feature[] childFEsOriginal = m_workspace.resolveLinks( parentFEOriginal, linkPT, GMLWorkspace.RESOLVE_ALL );
+        final Feature[] childFEsOriginal = m_workspace.resolveLinks( parentFEOriginal, linkPT );
         for( int j = 0; j < childFEsOriginal.length; j++ )
         {
           final Feature childFEOriginal = childFEsOriginal[j];
@@ -189,7 +189,7 @@ public class CloneFeatureVisitor implements FeatureVisitor
 
   /**
    * returns clone of parentFEOriginal in this copy procedure
-   * 
+   *
    * @param parentFEOriginal
    * @return clone of parentFEOriginal
    */
@@ -206,7 +206,7 @@ public class CloneFeatureVisitor implements FeatureVisitor
 
   /**
    * mapping from original feature to cloned feature in this copy procedure
-   * 
+   *
    * @param fidOriginal
    * @param fidClone
    */
