@@ -44,7 +44,6 @@ import java.net.URL;
 import java.util.List;
 
 import javax.xml.namespace.NamespaceContext;
-import javax.xml.namespace.QName;
 
 import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.commons.command.ICommand;
@@ -202,13 +201,6 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   public Feature[] getFeatures( final IFeatureType ft )
   {
     return m_workspace.getFeatures( ft );
-  }
-
-  @Deprecated
-  @Override
-  public IFeatureType getFeatureType( final QName featureName )
-  {
-    return m_workspace.getFeatureType( featureName );
   }
 
   @Override

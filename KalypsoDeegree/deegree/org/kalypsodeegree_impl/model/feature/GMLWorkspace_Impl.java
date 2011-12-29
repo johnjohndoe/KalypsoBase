@@ -44,7 +44,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.xml.namespace.NamespaceContext;
-import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
@@ -376,13 +375,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
         return ft;
     }
     return null;
-  }
-
-  @Deprecated
-  @Override
-  public IFeatureType getFeatureType( final QName featureQName )
-  {
-    return m_schema.getFeatureType( featureQName );
   }
 
   @Override

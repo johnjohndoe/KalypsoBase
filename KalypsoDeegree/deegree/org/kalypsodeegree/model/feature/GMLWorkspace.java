@@ -39,7 +39,6 @@ import java.net.URL;
 import java.util.List;
 
 import javax.xml.namespace.NamespaceContext;
-import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -123,13 +122,6 @@ public interface GMLWorkspace extends ModellEventProvider
    */
   // FIXME: check; move into feature api
   void accept( FeatureVisitor visitor, Feature feature, int depth, IPropertyType[] featureProperties );
-
-  /**
-   * @deprecated Retrieve type information via GMLSchema. Use {@link GMLSchema#getFeatureType(QName)} instead.
-   */
-  // FIXME: remove
-  @Deprecated
-  IFeatureType getFeatureType( QName featureQName );
 
   /**
    * @deprecated Retrieve type information via GMLSchema. Use {@link GMLSchema#getFeatureType(QName)} or
