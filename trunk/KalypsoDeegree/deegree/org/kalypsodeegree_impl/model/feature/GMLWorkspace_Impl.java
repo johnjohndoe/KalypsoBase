@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -66,7 +66,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.FeatureTypeVisitor;
 /**
  * In order to use this workspace with support of xlinks, a
  * {@link org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory} must be set.
- * 
+ *
  * @see #setFeatureProviderFactory(IFeatureProviderFactory)
  * @author doemming
  */
@@ -89,7 +89,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   private final FeatureProviderFactoryCache m_factory;
 
   /** The url-context against which to resolve any references inside this workspace. */
-  private URL m_context;
+  private final URL m_context;
 
   public GMLWorkspace_Impl( final IGMLSchema schema, final IFeatureType[] featureTypes, final Feature feature, final URL context, final NamespaceContext namespaceContext, final String schemaLocation, final IFeatureProviderFactory factory )
   {
@@ -107,19 +107,17 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
     try
     {
-      accept( new RegisterVisitor(), m_rootFeature, FeatureVisitor.DEPTH_INFINITE );
+      accept( new RegisterVisitor( this ), m_rootFeature, FeatureVisitor.DEPTH_INFINITE );
     }
     catch( final Throwable e )
     {
       e.printStackTrace();
     }
 
+    /* Hook registered listeners to myself */
     addModellListener( new GMLWorkspaceModellListener( this ) );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -127,19 +125,14 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     m_factory.dispose();
   }
 
-  /**
-   * @see java.lang.Object#finalize()
-   */
   @Override
   protected void finalize( ) throws Throwable
   {
     dispose();
+
     super.finalize();
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeature(java.lang.String)
-   */
   @Override
   public Feature getFeature( final String id )
   {
@@ -177,10 +170,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     return resolveLinks( srcFeature, linkProperty, RESOLVE_ALL );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#resolveLinks(org.kalypsodeegree.model.feature.Feature,
-   *      java.lang.String)
-   */
   @Override
   public Feature[] resolveLinks( final Feature srcFeature, final IRelationType linkProperty, final int resolveMode )
   {
@@ -191,6 +180,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
         return new Feature[] { feature };
       return new Feature[] {};
     }
+
     final List<Feature> result = new ArrayList<Feature>();
     final List< ? > linkList = (List< ? >) srcFeature.getProperty( linkProperty );
 
@@ -220,14 +210,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeatureTypes()
-   */
-  public IFeatureType[] getFeatureTypes( )
-  {
-    return m_featureTypes;
-  }
-
-  /**
    * Findet alle Features eines Typs. Der Typ muss genau stimmen, substitution gilt nicht
    */
   @Override
@@ -251,7 +233,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
   /**
    * Every listener is registered only once.
-   * 
+   *
    * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#addModellListener(org.kalypsodeegree.model.feature.event.ModellEventListener)
    */
   @Override
@@ -260,18 +242,12 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     m_listener.add( listener );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#removeModellListener(org.kalypsodeegree.model.feature.event.ModellEventListener)
-   */
   @Override
   public void removeModellListener( final ModellEventListener listener )
   {
     m_listener.remove( listener );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#fireModellEvent(org.kalypsodeegree.model.feature.event.ModellEvent)
-   */
   @Override
   public void fireModellEvent( final ModellEvent event )
   {
@@ -291,10 +267,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     }
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#resolveWhoLinksTo(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypsodeegree.model.feature.IFeatureType, java.lang.String)
-   */
   @Override
   public Feature[] resolveWhoLinksTo( final Feature linkTargetfeature, final IFeatureType linkSrcFeatureType, final IRelationType linkProperty )
   {
@@ -330,28 +302,12 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     return result.toArray( new Feature[result.size()] );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getContext()
-   */
   @Override
   public URL getContext( )
   {
     return m_context;
   }
 
-  /**
-   * @deprecated Using this method is a hack that which probably can be solved otherwise...
-   */
-  @Deprecated
-  public void setContext( final URL context )
-  {
-    m_context = context;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#accept(org.kalypsodeegree.model.feature.FeatureVisitor,
-   *      org.kalypsodeegree.model.feature.IFeatureType, int)
-   */
   @Override
   public void accept( final FeatureVisitor fv, final IFeatureType ft, final int depth )
   {
@@ -363,20 +319,12 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     }
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#accept(org.kalypsodeegree.model.feature.FeatureVisitor,
-   *      org.kalypsodeegree.model.feature.Feature, int)
-   */
   @Override
   public void accept( final FeatureVisitor fv, final Feature feature, final int depth )
   {
     accept( fv, feature, depth, feature.getFeatureType().getProperties() );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#accept(org.kalypsodeegree_impl.model.feature.visitors.CloneFeatureVisitor,
-   *      org.kalypsodeegree.model.feature.Feature, int, org.kalypsodeegree.model.feature.IPropertyType[])
-   */
   @Override
   public void accept( final FeatureVisitor fv, final Feature feature, final int depth, final IPropertyType[] ftps )
   {
@@ -417,10 +365,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     }
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#accept(org.kalypsodeegree.model.feature.FeatureVisitor,
-   *      java.util.List, int)
-   */
   @Override
   public void accept( final FeatureVisitor fv, final List< ? > features, final int depth )
   {
@@ -440,54 +384,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     }
   }
 
-  protected final class RegisterVisitor implements FeatureVisitor
-  {
-    /**
-     * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
-     */
-    @Override
-    public boolean visit( final Feature f )
-    {
-      String id = f.getId();
-      // ACHTUNG!!! bitte BEIDE Zeilen ein- und auskommentieren!
-      // if( m_indexMap.containsKey( id ) )
-      // System.out.println( "Workspace already contains a feature with id: " +
-      // id );
-      // if( id != null && id.equals( "a816c00e010a02356c64000000086e20" ) )
-      // System.out.println( "found" );
-
-      if( id == null || id.length() == 0 )
-      {
-        id = createFeatureId( f.getFeatureType() );
-        // System.out.println( "Feature has no id: " + f );
-      }
-
-      // TODO: better generate new ids and remember wich ones are generated (because
-      // we dont want to write the gernerated ones)
-      // IDEA: put an prefix before the generated id (a 'strong' prefix which will not be in any other id)
-      // When writing the gml, we then can quickly determine if the id is generated
-
-      // TODO: do not put null-ids into this map ? What sideeffects do we expect
-      m_indexMap.put( id, f );
-      return true;
-    }
-  }
-
-  protected final class UnRegisterVisitor implements FeatureVisitor
-  {
-    @Override
-    public boolean visit( final Feature f )
-    {
-      final String id = f.getId();
-      m_indexMap.remove( id );
-      return true;
-    }
-  }
-
-  /**
-   * @deprecated
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeatureType(java.lang.String)
-   */
   @Override
   @Deprecated
   public IFeatureType getFeatureType( final String nameLocalPart )
@@ -500,9 +396,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     return null;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeatureType(javax.xml.namespace.QName)
-   */
+  @Deprecated
   @Override
   public IFeatureType getFeatureType( final QName featureQName )
   {
@@ -517,9 +411,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     return m_schema.getFeatureType( featureQName );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeatureFromPath(java.lang.String)
-   */
   @Override
   public Object getFeatureFromPath( final String featurePath )
   {
@@ -541,8 +432,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   /**
    * Holt den durch den FeaturePath angegebenen Typ Systax des FeaturePath:
    * <code> <propertyName>/.../<propertyName>[featureTypeName] </code> Wobei der featureTypeName optional ist
-   * 
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeatureTypeFromPath(java.lang.String)
    */
   @Override
   public IFeatureType getFeatureTypeFromPath( final String featurePath )
@@ -550,18 +439,12 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     return new FeaturePath( featurePath ).getFeatureType( this );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeaturepathForFeature(org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
   public FeaturePath getFeaturepathForFeature( final Feature feature )
   {
     return new FeaturePath( feature );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getSchemaLocation()
-   */
   @Override
   public String getSchemaLocationString( )
   {
@@ -570,8 +453,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
   /**
    * Creates a new feature and registers it with this workspace.
-   * 
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#createFeature(org.kalypsodeegree.model.feature.IFeatureType)
    */
   @Override
   public Feature createFeature( final Feature parent, final IRelationType parentRelation, final IFeatureType type )
@@ -581,8 +462,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
   /**
    * Creates a new feature and registers it with this workspace.
-   * 
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#createFeature(org.kalypsodeegree.model.feature.IFeatureType)
    */
   @Override
   public Feature createFeature( final Feature parent, final IRelationType parentRelation, final IFeatureType type, final int depth )
@@ -603,7 +482,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     return newFeature;
   }
 
-  private String createFeatureId( final IFeatureType type )
+  String createFeatureId( final IFeatureType type )
   {
     // REMARK: Performance Bufix
     // The commented code (see below) caused a serious performance
@@ -626,13 +505,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       if( !m_indexMap.containsKey( id ) )
         return id;
     }
-
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#addFeatureAsComposition(org.kalypsodeegree.model.feature.Feature,
-   *      java.lang.String, int, org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
   public void addFeatureAsComposition( final Feature parent, final IRelationType propName, final int pos, final Feature newFeature ) throws Exception
   {
@@ -653,16 +527,10 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     m_indexMap.put( newFeature.getId(), newFeature );
 
     // register also features in subtree of new feature
-    accept( new RegisterVisitor(), newFeature, FeatureVisitor.DEPTH_INFINITE );
+    accept( new RegisterVisitor( this ), newFeature, FeatureVisitor.DEPTH_INFINITE );
     return;
   }
 
-  /**
-   * @throws Exception
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#setFeatureAsComposition(org.kalypsodeegree.model.feature.Feature,
-   *      java.lang.String, org.kalypsodeegree.model.feature.Feature, boolean)
-   * @deprecated Should not be used any more. Does not handle external xlinks correctly.
-   */
   @Override
   @Deprecated
   public void setFeatureAsComposition( final Feature parentFE, final IRelationType linkProp, final Feature linkedFE, final boolean overwrite ) throws Exception
@@ -677,16 +545,12 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       parentFE.setProperty( linkProp, linkedFE );
       m_indexMap.put( linkedFE.getId(), linkedFE );
       // accept all subfeatures
-      accept( new RegisterVisitor(), linkedFE, FeatureVisitor.DEPTH_INFINITE );
+      accept( new RegisterVisitor( this ), linkedFE, FeatureVisitor.DEPTH_INFINITE );
       return;
     }
     throw new Exception( "New Feature violates maxOccurs" );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#addFeatureAsAggregation(org.kalypsodeegree.model.feature.Feature,
-   *      java.lang.String, int, java.lang.String)
-   */
   @Override
   public void addFeatureAsAggregation( final Feature srcFE, final IRelationType linkProp, final int pos, final String featureID ) throws Exception
   {
@@ -717,11 +581,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       throw new Exception( "New Feature as already set" );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#addFeatureAsAggregation(org.kalypsodeegree.model.feature.Feature,
-   *      java.lang.String, int, java.lang.String)
-   * @deprecated Should not be used any more. Does not handle external xlinks correctly.
-   */
   @Override
   @Deprecated
   public void setFeatureAsAggregation( final Feature srcFE, final IRelationType linkProp, final int pos, final String featureID ) throws Exception
@@ -759,9 +618,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   /**
    * Sets the link to a feature into a property. The property must be a relation wich is no list and allows linked
    * features.
-   * 
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#setFeatureAsAggregation(org.kalypsodeegree.model.feature.Feature,
-   *      java.lang.String, java.lang.String, boolean)
    */
   @Override
   public void setFeatureAsAggregation( final Feature srcFE, final IRelationType linkProp, final String featureID, final boolean overwrite ) throws Exception
@@ -773,10 +629,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       throw new Exception( "feature is allready set" );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#removeLinkedAsAggregationFeature(org.kalypsodeegree.model.feature.Feature,
-   *      java.lang.String, java.lang.String)
-   */
   @Override
   public boolean removeLinkedAsAggregationFeature( final Feature parentFeature, final IRelationType linkProp, final String childFeatureId )
   {
@@ -794,10 +646,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     return false;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#removeLinkedAsCompositionFeature(org.kalypsodeegree.model.feature.Feature,
-   *      java.lang.String, org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
   public boolean removeLinkedAsCompositionFeature( final Feature parentFeature, final IRelationType linkProp, final Feature childFeature )
   {
@@ -816,9 +664,10 @@ public class GMLWorkspace_Impl implements GMLWorkspace
         result = true;
       }
     }
+
     if( result )
     {
-      accept( new UnRegisterVisitor(), childFeature, FeatureVisitor.DEPTH_INFINITE );
+      accept( new UnRegisterVisitor( this ), childFeature, FeatureVisitor.DEPTH_INFINITE );
       unregisterFeature( childFeature );
     }
     return result;
@@ -828,10 +677,17 @@ public class GMLWorkspace_Impl implements GMLWorkspace
    * Unregisters a feature from this workspace.<br/>
    * Should be called only within this implementation. NOT intended to be called by client.
    */
-  public void unregisterFeature( final Feature childFeature )
+  public void unregisterFeature( final Feature feature )
   {
-    m_indexMap.remove( childFeature.getId() );
+    final String id = feature.getId();
+    m_indexMap.remove( id );
   }
+
+  void register( final Feature f, final String id )
+  {
+    m_indexMap.put( id, f );
+  }
+
 
   @Override
   public void accept( final FeatureVisitor fv, final String featurePath, final int depth )
@@ -846,11 +702,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
-   * TODO: this method does not use any members of this class and so does not depends on this specific implementation.
+   * FIXME: this method does not use any members of this class and so does not depends on this specific implementation.
    * Move it into a utility class.
-   * 
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#isAggrigatedLink(org.kalypsodeegree.model.feature.Feature,
-   *      java.lang.String, int)
    */
   @Override
   public boolean isAggregatedLink( final Feature parent, final IRelationType linkProp, final int pos )
@@ -878,9 +731,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     return undefined;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#contains(org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
   public boolean contains( final Feature feature )
   {
@@ -889,11 +739,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     return m_indexMap.containsKey( feature.getId() );
   }
 
-  /**
-   * @param parentFeature
-   * @param ftp
-   * @param pos
-   */
   @Override
   public boolean isBrokenLink( final Feature parentFeature, final IPropertyType ftp, final int pos )
   {
@@ -912,45 +757,30 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     return !m_indexMap.containsKey( property );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getGMLSchema()
-   */
   @Override
   public IGMLSchema getGMLSchema( )
   {
     return m_schema;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeatureProviderFactory()
-   */
   @Override
   public IFeatureProviderFactory getFeatureProviderFactory( )
   {
     return m_factory.getFactory();
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getNamespaceContext()
-   */
   @Override
   public NamespaceContext getNamespaceContext( )
   {
     return m_namespaceContext;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#setSchemaLocation(java.lang.String)
-   */
   @Override
   public void setSchemaLocation( final String schemaLocation )
   {
     m_schemaLocation = schemaLocation;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getLinkedWorkspace(java.lang.String)
-   */
   @Override
   public GMLWorkspace getLinkedWorkspace( final String uri )
   {
