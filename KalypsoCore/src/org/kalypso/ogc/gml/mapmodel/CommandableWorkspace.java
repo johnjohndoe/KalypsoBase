@@ -66,7 +66,7 @@ import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 /**
  * Decorator über einen Workspace, der diesen um die Fähigkeiten eines
  * {@link org.kalypso.commons.command.ICommandManager ICommandManagers}erweitert
- * 
+ *
  * @author belger
  */
 public class CommandableWorkspace implements GMLWorkspace, ICommandManager
@@ -204,6 +204,7 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
     return m_workspace.getFeatures( ft );
   }
 
+  @Deprecated
   @Override
   public IFeatureType getFeatureType( final QName featureName )
   {
@@ -229,12 +230,6 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   }
 
   @Override
-  public Feature resolveLink( final Feature srcFeature, final IRelationType linkPropertyName, final int resolveMode )
-  {
-    return m_workspace.resolveLink( srcFeature, linkPropertyName, resolveMode );
-  }
-
-  @Override
   public Feature resolveLink( final Feature srcFeature, final IRelationType linkPropertyName )
   {
     return m_workspace.resolveLink( srcFeature, linkPropertyName );
@@ -244,12 +239,6 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   public Feature[] resolveLinks( final Feature srcFeature, final IRelationType linkPropertyName )
   {
     return m_workspace.resolveLinks( srcFeature, linkPropertyName );
-  }
-
-  @Override
-  public Feature[] resolveLinks( final Feature srcFeature, final IRelationType linkPropertyName, final int resolveMode )
-  {
-    return m_workspace.resolveLinks( srcFeature, linkPropertyName, resolveMode );
   }
 
   @Override
@@ -322,10 +311,7 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
     m_workspace.addFeatureAsAggregation( parent, propName, pos, featureID );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#setFeatureAsAggregation(org.kalypsodeegree.model.feature.Feature,
-   *      java.lang.String, int, java.lang.String)
-   */
+  @Deprecated
   @Override
   public void setFeatureAsAggregation( final Feature srcFE, final IRelationType propName, final int pos, final String featureID ) throws Exception
   {
@@ -338,69 +324,43 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
     return m_workspace.removeLinkedAsAggregationFeature( parentFeature, propName, linkFeatureId );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#removeLinkedAsCompositionFeature(org.kalypsodeegree.model.feature.Feature,
-   *      java.lang.String, org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
   public boolean removeLinkedAsCompositionFeature( final Feature parentFeature, final IRelationType propName, final Feature childFeature )
   {
     return m_workspace.removeLinkedAsCompositionFeature( parentFeature, propName, childFeature );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#accept(org.kalypsodeegree.model.feature.FeatureVisitor,
-   *      java.lang.String, int)
-   */
   @Override
   public void accept( final FeatureVisitor fv, final String featurePath, final int depth )
   {
     m_workspace.accept( fv, featurePath, depth );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#isAggrigatedLink(org.kalypsodeegree.model.feature.Feature,
-   *      java.lang.String, int)
-   */
   @Override
   public boolean isAggregatedLink( final Feature parent, final IRelationType linkPropName, final int pos )
   {
     return m_workspace.isAggregatedLink( parent, linkPropName, pos );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#setFeatureAsComposition(org.kalypsodeegree.model.feature.Feature,
-   *      java.lang.String, org.kalypsodeegree.model.feature.Feature, boolean)
-   */
+  @Deprecated
   @Override
   public void setFeatureAsComposition( final Feature parentFE, final IRelationType linkPropName, final Feature linkedFE, final boolean overwrite ) throws Exception
   {
     m_workspace.setFeatureAsComposition( parentFE, linkPropName, linkedFE, overwrite );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#setFeatureAsAggregation(org.kalypsodeegree.model.feature.Feature,
-   *      java.lang.String, java.lang.String, boolean)
-   */
   @Override
   public void setFeatureAsAggregation( final Feature parent, final IRelationType propName, final String featureID, final boolean overwrite ) throws Exception
   {
     m_workspace.setFeatureAsAggregation( parent, propName, featureID, overwrite );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#accept(org.kalypsodeegree.model.feature.FeatureVisitor,
-   *      org.kalypsodeegree.model.feature.Feature, int, org.kalypsodeegree.model.feature.IPropertyType[])
-   */
   @Override
   public void accept( final FeatureVisitor visitor, final Feature feature, final int depth, final IPropertyType[] featureProperties )
   {
     m_workspace.accept( visitor, feature, depth, featureProperties );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#contains(org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
   public boolean contains( final Feature feature )
   {
@@ -419,10 +379,6 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
     return m_workspace.isBrokenLink( parentFeature, ftp, pos );
   }
 
-  /**
-   * @deprecated
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeatureType(java.lang.String)
-   */
   @Override
   @Deprecated
   public IFeatureType getFeatureType( final String nameLocalPart )
@@ -430,9 +386,6 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
     return m_workspace.getFeatureType( nameLocalPart );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getGMLSchema()
-   */
   @Override
   public IGMLSchema getGMLSchema( )
   {
@@ -444,18 +397,12 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
     return m_commandManager;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl#getFeatureProviderFactory()
-   */
   @Override
   public IFeatureProviderFactory getFeatureProviderFactory( )
   {
     return m_workspace.getFeatureProviderFactory();
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommandManager#clear()
-   */
   @Override
   public void clear( )
   {

@@ -89,7 +89,6 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractWorkbenchPart;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -477,9 +476,6 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
 
     if( adapter == IMapPanel.class )
       return m_mapPanel;
-
-    if( adapter == ModellEventProvider.class )
-      return new MapPanelModellEventProvider( m_mapPanel );
 
     if( adapter == Form.class )
       return m_control;
