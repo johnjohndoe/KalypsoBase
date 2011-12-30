@@ -275,15 +275,6 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
   }
 
   @Override
-  public void setWorkspace( final GMLWorkspace workspace )
-  {
-    // nothing to do, a delegated feature is never a root feature
-  }
-
-  /**
-   * @see java.lang.Object#toString()
-   */
-  @Override
   public String toString( )
   {
     final Feature feature = getFeature();

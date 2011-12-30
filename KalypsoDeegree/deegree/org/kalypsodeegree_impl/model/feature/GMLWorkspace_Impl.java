@@ -97,8 +97,8 @@ public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
 
     m_factory = new FeatureProviderFactoryCache( factory );
 
-    if( m_rootFeature != null )
-      m_rootFeature.setWorkspace( this );
+    if( m_rootFeature instanceof Feature_Impl )
+      ((Feature_Impl) m_rootFeature).setWorkspace( this );
 
     try
     {

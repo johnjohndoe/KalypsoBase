@@ -258,18 +258,12 @@ public class Feature_Impl extends PlatformObject implements Feature
     return m_parentRelation;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#setWorkspace(org.kalypsodeegree.model.feature.GMLWorkspace)
-   */
-  @Override
-  public void setWorkspace( final GMLWorkspace workspace )
+  void setWorkspace( final GMLWorkspace workspace )
   {
-    if( m_parent == null || m_parent == workspace )
-    {
-      m_parent = workspace;
-    }
-    else
-      throw new UnsupportedOperationException( "is not a root feature" );
+    if( m_parent != null && m_parent != workspace )
+      throw new UnsupportedOperationException( "is not a root feature" ); //$NON-NLS-1$
+
+    m_parent = workspace;
   }
 
   /**

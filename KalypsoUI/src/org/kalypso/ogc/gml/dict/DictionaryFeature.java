@@ -174,38 +174,23 @@ public class DictionaryFeature implements Feature
   }
 
   @Override
-  public void setWorkspace( final GMLWorkspace workspace )
-  {
-    throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
-  }
-
-  @Override
   public GM_Envelope getBoundedBy( ) throws GeometryException
   {
     return m_feature.getBoundedBy();
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getDefaultGeometryPropertyValue()
-   */
   @Override
   public GM_Object getDefaultGeometryPropertyValue( )
   {
     return m_feature.getDefaultGeometryPropertyValue();
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getGeometryPropertyValues()
-   */
   @Override
   public GM_Object[] getGeometryPropertyValues( )
   {
     return m_feature.getGeometryPropertyValues();
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getOwner()
-   */
   @Override
   public Feature getOwner( )
   {
