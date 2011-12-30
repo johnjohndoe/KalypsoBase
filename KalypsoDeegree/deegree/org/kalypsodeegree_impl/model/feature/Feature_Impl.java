@@ -242,22 +242,6 @@ public class Feature_Impl extends PlatformObject implements Feature
     return getProperty( pt );
   }
 
-  /**
-   * @deprecated
-   * @see org.kalypsodeegree.model.feature.Feature#setProperty(java.lang.String, java.lang.Object)
-   */
-  @Override
-  @Deprecated
-  public void setProperty( final String propLocalName, final Object value )
-  {
-    final IPropertyType property = getFeatureType().getProperty( propLocalName );
-    if( property != null )
-      setProperty( property, value );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#getWorkspace()
-   */
   @Override
   public GMLWorkspace getWorkspace( )
   {

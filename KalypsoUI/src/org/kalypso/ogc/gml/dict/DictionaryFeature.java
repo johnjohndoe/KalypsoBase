@@ -167,27 +167,12 @@ public class DictionaryFeature implements Feature
     throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#setProperty(javax.xml.namespace.QName, java.lang.Object)
-   */
   @Override
   public void setProperty( final QName propQName, final Object value )
   {
     throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#setProperty(java.lang.String, java.lang.Object)
-   */
-  @Override
-  public void setProperty( final String propLocalName, final Object value )
-  {
-    throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#setWorkspace(org.kalypsodeegree.model.feature.GMLWorkspace)
-   */
   @Override
   public void setWorkspace( final GMLWorkspace workspace )
   {

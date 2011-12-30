@@ -264,19 +264,6 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
   }
 
   /**
-   * @deprecated
-   * @see org.kalypsodeegree.model.feature.Feature#setProperty(java.lang.String, java.lang.Object)
-   */
-  @Override
-  @Deprecated
-  public void setProperty( final String propLocalName, final Object value )
-  {
-    final Feature feature = getFeature();
-    if( feature != null )
-      feature.setProperty( propLocalName, value );
-  }
-
-  /**
    * Returns the workspace of the linked feature.
    *
    * @see org.kalypsodeegree.model.feature.Feature#getWorkspace()

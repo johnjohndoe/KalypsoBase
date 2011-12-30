@@ -90,18 +90,6 @@ public class AbstractCachedFeature extends Feature_Impl
     super.setProperty( propQName, value );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.feature.Feature_Impl#setProperty(java.lang.String, java.lang.Object)
-   */
-  @Deprecated
-  @Override
-  public void setProperty( final String propLocalName, final Object value )
-  {
-    m_dirty.add( propLocalName );
-
-    super.setProperty( propLocalName, value );
-  }
-
   protected boolean isDirty( )
   {
     return !m_dirty.isEmpty();

@@ -89,12 +89,6 @@ public interface BaseFeature extends IAdaptable
   @Deprecated
   Object getProperty( String propLocalName );
 
-  /**
-   * @deprecated Use {@link #setProperty(IPropertyType, Object)} instead.
-   */
-  @Deprecated
-  void setProperty( String propLocalName, Object value );
-
   Object getProperty( QName propQName );
 
   /**
