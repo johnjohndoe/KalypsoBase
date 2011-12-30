@@ -426,7 +426,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     }
 
     final Feature parentFeature = m_featureList.getOwner();
-    final IRelationType parentFTP = m_featureList.getParentFeatureTypeProperty();
+    final IRelationType parentFTP = m_featureList.getPropertyType();
     final FeatureList resultList = FeatureFactory.createFeatureList( parentFeature, parentFTP );
     final Collection<Feature> visibleFeatures = paintDelegate.getVisibleFeatures();
     resultList.addAll( visibleFeatures );

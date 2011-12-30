@@ -696,7 +696,7 @@ public class SplitSort implements FeatureList
   }
 
   @Override
-  public IRelationType getParentFeatureTypeProperty( )
+  public IRelationType getPropertyType( )
   {
     return m_parentFeatureTypeProperty;
   }
@@ -889,12 +889,6 @@ public class SplitSort implements FeatureList
   {
     // TODO Auto-generated method stub
     return false;
-  }
-
-  @Override
-  public IRelationType getPropertyType( )
-  {
-    return m_parentFeatureTypeProperty;
   }
 
   @Override

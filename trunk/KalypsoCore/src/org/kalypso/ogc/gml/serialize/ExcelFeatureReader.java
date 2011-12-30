@@ -82,7 +82,7 @@ public final class ExcelFeatureReader extends AbstractTabularFeatureReader
   {
     final FeatureList featureList = getFeatureList();
     final Feature parentFeature = featureList.getOwner();
-    final IRelationType parentRelation = featureList.getParentFeatureTypeProperty();
+    final IRelationType parentRelation = featureList.getPropertyType();
     final IFeatureType featureType = parentRelation.getTargetFeatureType();
 
     final int firstRowNum = sheet.getFirstRowNum();

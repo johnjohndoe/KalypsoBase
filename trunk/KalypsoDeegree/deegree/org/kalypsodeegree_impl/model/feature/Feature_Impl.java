@@ -566,24 +566,32 @@ public class Feature_Impl extends PlatformObject implements Feature
     return value.doubleValue();
   }
 
-// /**
-// * @see org.kalypsodeegree.model.feature.BaseFeature#setGeometry(java.lang.Object)
-// */
-// @Deprecated
-// @Override
-// public void setCachedGeometry( final Object value )
-// {
-// m_geometry = value;
-// }
-//
-// /**
-// * @see org.kalypsodeegree.model.feature.BaseFeature#getGeometry()
-// */
-// @Deprecated
-// @Override
-// public Object getCachedGeometry( )
-// {
-// return m_geometry;
-// }
+  @Override
+  public Feature getMember( final QName relation )
+  {
+    final IPropertyType property = getFeatureType().getProperty( relation );
+    if( !(property instanceof IRelationType) )
+      throw new IllegalArgumentException( String.format( "'%s' is not a relation", relation ) );
 
+    return getMember( (IRelationType) property );
+  }
+
+  @Override
+  public Feature getMember( final IRelationType relation )
+  {
+    final Object linkValue = getProperty( relation );
+    if( linkValue == null )
+      return null;
+
+    if( linkValue instanceof Feature )
+      return (Feature) linkValue;
+
+    // must be a reference
+    final String linkID = (String) linkValue;
+    final GMLWorkspace workspace = getWorkspace();
+    if( workspace == null )
+      return null;
+
+    return workspace.getFeature( linkID );
+  }
 }

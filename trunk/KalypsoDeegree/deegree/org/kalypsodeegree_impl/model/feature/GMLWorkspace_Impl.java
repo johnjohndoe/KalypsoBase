@@ -135,26 +135,11 @@ public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
   }
 
   @Override
-  public Feature resolveLink( final Feature srcFeature, final IRelationType linkProperty )
-  {
-    final Object linkValue = srcFeature.getProperty( linkProperty );
-    if( linkValue == null )
-      return null;
-
-    if( linkValue instanceof Feature )
-      return (Feature) linkValue;
-
-    // must be a reference
-    final String linkID = (String) linkValue;
-    return getFeature( linkID );
-  }
-
-  @Override
   public Feature[] resolveLinks( final Feature srcFeature, final IRelationType linkProperty )
   {
     if( !linkProperty.isList() )
     {
-      final Feature feature = resolveLink( srcFeature, linkProperty );
+      final Feature feature = srcFeature.getMember( linkProperty );
       if( feature == null )
         return new Feature[] {};
 
