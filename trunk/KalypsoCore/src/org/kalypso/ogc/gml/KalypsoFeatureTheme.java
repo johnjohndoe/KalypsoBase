@@ -89,6 +89,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.graphics.displayelements.ILabelPlacementStrategy;
 import org.kalypsodeegree_impl.graphics.displayelements.SimpleLabelPlacementStrategy;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.FeaturePath;
 
 import com.vividsolutions.jts.geom.Envelope;
 
@@ -133,7 +134,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     if( featureFromPath instanceof FeatureList )
     {
       m_featureList = (FeatureList) featureFromPath;
-      m_featureType = m_workspace.getFeatureTypeFromPath( m_featurePath );
+      m_featureType = new FeaturePath( m_featurePath ).getFeatureType( m_workspace );
     }
     else if( featureFromPath instanceof Feature )
     {
@@ -270,7 +271,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   public void addStyle( final IKalypsoStyle style )
   {
     m_styles.add( style );
-    
+
     styleAdded( style );
   }
 

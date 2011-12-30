@@ -25,6 +25,7 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.FilteredFeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.filterencoding.AbstractFilter;
+import org.kalypsodeegree_impl.model.feature.FeaturePath;
 import org.kalypsodeegree_impl.model.feature.visitors.AddFeaturesToFeaturelist;
 import org.kalypsodeegree_impl.model.feature.visitors.ChangeFeaturesFromFeaturelist;
 
@@ -82,7 +83,8 @@ public class FeaturemappingSourceHandler implements ISourceHandler
     final String fromID = mapping.getFromID();
     final FeatureList toFeatures = getFeatureList( secondGML, toPath );
     final String toID = mapping.getToID();
-    final IFeatureType toFeatureType = secondGML.getFeatureTypeFromPath( toPath );
+
+    final IFeatureType toFeatureType = new FeaturePath( toPath ).getFeatureType( secondGML );
 
     final Properties properties = readProperties( mapping );
 

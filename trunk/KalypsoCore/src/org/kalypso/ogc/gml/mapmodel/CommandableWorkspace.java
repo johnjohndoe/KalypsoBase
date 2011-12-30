@@ -58,7 +58,6 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
-import org.kalypsodeegree_impl.model.feature.FeaturePath;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 
@@ -191,16 +190,11 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
     return m_workspace.getFeature( id );
   }
 
+  @Deprecated
   @Override
   public Object getFeatureFromPath( final String featurePath )
   {
     return m_workspace.getFeatureFromPath( featurePath );
-  }
-
-  @Override
-  public IFeatureType getFeatureTypeFromPath( final String featurePath )
-  {
-    return m_workspace.getFeatureTypeFromPath( featurePath );
   }
 
   @Override
@@ -251,15 +245,6 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   }
 
   @Override
-  public FeaturePath getFeaturepathForFeature( final Feature feature )
-  {
-    return m_workspace.getFeaturepathForFeature( feature );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getSchemaLocation()
-   */
-  @Override
   public String getSchemaLocationString( )
   {
     return m_workspace.getSchemaLocationString();
@@ -271,20 +256,12 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
     return m_workspace.createFeature( parent, parentRelation, type );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#createFeature(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypso.gmlschema.feature.IFeatureType, int)
-   */
   @Override
   public Feature createFeature( final Feature parent, final IRelationType parentRelation, final IFeatureType type, final int depth )
   {
     return m_workspace.createFeature( parent, parentRelation, type, depth );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#addFeatureAsComposition(org.kalypsodeegree.model.feature.Feature,
-   *      java.lang.String, int, org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
   public void addFeatureAsComposition( final Feature parent, final IRelationType propName, final int pos, final Feature newFeature ) throws Exception
   {

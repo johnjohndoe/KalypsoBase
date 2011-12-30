@@ -74,7 +74,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
   private final Feature m_rootFeature;
 
-  /** The namespace context for which to resolve any namespcae-prefixes inside this workspace. */
+  /** The namespace context for which to resolve any namespace-prefixes inside this workspace. */
   private final NamespaceContext m_namespaceContext;
 
   private String m_schemaLocation;
@@ -359,22 +359,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       e.printStackTrace();
       return null;
     }
-  }
-
-  /**
-   * Holt den durch den FeaturePath angegebenen Typ Systax des FeaturePath:
-   * <code> <propertyName>/.../<propertyName>[featureTypeName] </code> Wobei der featureTypeName optional ist
-   */
-  @Override
-  public IFeatureType getFeatureTypeFromPath( final String featurePath )
-  {
-    return new FeaturePath( featurePath ).getFeatureType( this );
-  }
-
-  @Override
-  public FeaturePath getFeaturepathForFeature( final Feature feature )
-  {
-    return new FeaturePath( feature );
   }
 
   @Override

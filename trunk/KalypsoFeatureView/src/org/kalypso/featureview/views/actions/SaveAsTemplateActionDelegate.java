@@ -81,10 +81,11 @@ import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeaturePath;
 
 /**
  * Speichert die FeatureView als .gft Datei
- * 
+ *
  * @author belger
  */
 public class SaveAsTemplateActionDelegate implements IViewActionDelegate
@@ -154,7 +155,7 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
         try
         {
           final Layer layer = templateOF.createFeaturetemplateLayer();
-          layer.setFeaturePath( gmlWorkspace.getFeaturepathForFeature( feature ).toString() );
+          layer.setFeaturePath( new FeaturePath( feature ).toString() );
           layer.setHref( gmlWorkspace.getContext().toExternalForm() );
           layer.setLinktype( "gml" ); //$NON-NLS-1$
           layer.setId( "layer_1" ); //$NON-NLS-1$

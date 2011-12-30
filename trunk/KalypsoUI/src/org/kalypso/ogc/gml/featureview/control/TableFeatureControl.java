@@ -259,7 +259,7 @@ public class TableFeatureControl extends AbstractToolbarFeatureControl implement
     final GMLWorkspace workspace = feature == null ? null : feature.getWorkspace();
     if( m_viewer != null && workspace != null && feature != null )
     {
-      final FeaturePath parentFeaturePath = workspace.getFeaturepathForFeature( feature );
+      final FeaturePath parentFeaturePath = new FeaturePath( feature );
       final String ftpName = getFeatureTypeProperty().getQName().getLocalPart();
       final FeaturePath featurePath = new FeaturePath( parentFeaturePath, ftpName );
 

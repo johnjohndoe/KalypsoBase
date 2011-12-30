@@ -45,7 +45,6 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
-import org.kalypsodeegree_impl.model.feature.FeaturePath;
 import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 
 /**
@@ -66,6 +65,7 @@ public interface GMLWorkspace extends ModellEventProvider
    * @deprecated Use {@link org.kalypso.gmlschema.GMLSchemaUtilities#getSchemaQuiet(String)} or
    *             {@link org.kalypso.gmlschema.GMLSchemaUtilities#getFeatureTypeQuiet(QName)} instead.
    */
+  // FIXME: sometimes still makes sense to use this; remove deprecation?
   @Deprecated
   IGMLSchema getGMLSchema( );
 
@@ -117,17 +117,12 @@ public interface GMLWorkspace extends ModellEventProvider
   void accept( FeatureVisitor visitor, Feature feature, int depth, IPropertyType[] featureProperties );
 
   // FIXME: method does not what it states...
-  Object getFeatureFromPath( String featurePath );
-
   /**
-   * Holt den durch den FeaturePath angegebenen Typ Systax des FeaturePath:
-   * <code> <propertyName>/.../<propertyName>[featureTypeName] </code> Wobei der featureTypeName optional ist <br/>
-   * FIXME: does not belong here...
+   * @deprecated Use {@link org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath} instead and/or use feature
+   *             bindings.
    */
-  IFeatureType getFeatureTypeFromPath( String featurePath );
-
-  // FIXME: check
-  FeaturePath getFeaturepathForFeature( Feature feature );
+  @Deprecated
+  Object getFeatureFromPath( String featurePath );
 
   // FIXME: check; only internally used; still necessary?
   String getSchemaLocationString( );
