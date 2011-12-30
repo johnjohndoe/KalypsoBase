@@ -58,7 +58,7 @@ import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 
 /**
  * Implementation of ogc feature
- * 
+ *
  * @author doemming
  */
 public class Feature_Impl extends PlatformObject implements Feature
@@ -135,7 +135,7 @@ public class Feature_Impl extends PlatformObject implements Feature
 
   /**
    * Accesses a property value of this feature.
-   * 
+   *
    * @return Value of the given properties. Properties with maxoccurency > 0 (as defined in applicationschema) will be
    *         embedded in java.util.List-objects
    * @see org.kalypsodeegree.model.feature.Feature#getProperty(java.lang.String)
@@ -159,27 +159,6 @@ public class Feature_Impl extends PlatformObject implements Feature
     return fsh.getValue( this, pt, currentValue );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#getGeometryProperties()
-   */
-  @Override
-  public GM_Object[] getGeometryProperties( )
-  {
-    return getGeometryPropertyValues();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#getDefaultGeometryProperty()
-   */
-  @Override
-  public GM_Object getDefaultGeometryProperty( )
-  {
-    return getDefaultGeometryPropertyValue();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#getEnvelope()
-   */
   @Override
   public GM_Envelope getEnvelope( )
   {
@@ -196,7 +175,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   {
     GM_Envelope env = null;
 
-    final GM_Object[] geoms = getGeometryProperties();
+    final GM_Object[] geoms = getGeometryPropertyValues();
     for( final GM_Object geometry : geoms )
     {
       final GM_Envelope geomEnv = geometry.getEnvelope();
@@ -209,15 +188,6 @@ public class Feature_Impl extends PlatformObject implements Feature
     return env;
   }
 
-  @Override
-  public void invalidEnvelope( )
-  {
-    setEnvelopesUpdated();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#setProperty(java.lang.String, java.lang.Object)
-   */
   @Override
   public void setProperty( final IPropertyType pt, final Object value )
   {
@@ -234,7 +204,7 @@ public class Feature_Impl extends PlatformObject implements Feature
 
       if( fsh.invalidateEnvelope( pt ) )
       {
-        invalidEnvelope();
+        setEnvelopesUpdated();
       }
     }
   }
@@ -569,7 +539,7 @@ public class Feature_Impl extends PlatformObject implements Feature
 
   /**
    * feature given the property {@link QName}
-   * 
+   *
    * @param propertyQName
    *          the {@link QName} of the property to get.
    */
