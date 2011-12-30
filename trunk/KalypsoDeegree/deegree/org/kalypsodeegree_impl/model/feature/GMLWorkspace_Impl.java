@@ -59,8 +59,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureProvider;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
-import org.kalypsodeegree_impl.model.feature.visitors.CollectorVisitor;
-import org.kalypsodeegree_impl.model.feature.visitors.FeatureTypeVisitor;
 
 /**
  * In order to use this workspace with support of xlinks, a
@@ -188,26 +186,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     return m_rootFeature;
   }
 
-  /**
-   * Findet alle Features eines Typs. Der Typ muss genau stimmen, substitution gilt nicht
-   */
-  @Override
-  public Feature[] getFeatures( final IFeatureType ft )
-  {
-    final CollectorVisitor collector = new CollectorVisitor();
-    final FeatureTypeVisitor visitor = new FeatureTypeVisitor( collector, ft, false );
-    try
-    {
-      accept( visitor, getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
-    }
-    catch( final Throwable e )
-    {
-      e.printStackTrace();
-    }
-
-    return collector.getResults( true );
-  }
-
   private final Collection<ModellEventListener> m_listener = new HashSet<ModellEventListener>();
 
   /**
@@ -253,7 +231,7 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       return new Feature[0];
 
     final List<Feature> result = new ArrayList<Feature>();
-    final Feature[] features = getFeatures( linkSrcFeatureType );
+    final Feature[] features = FeatureHelper.getFeaturesWithType( this, linkSrcFeatureType );
     for( final Feature element : features )
     {
       final Object prop = element.getProperty( linkProperty );
@@ -263,11 +241,12 @@ public class GMLWorkspace_Impl implements GMLWorkspace
         result.add( element );
     }
 
+    // FIXME: directly search with substitutes instead
     final IFeatureType[] substiFTs = GMLSchemaUtilities.getSubstituts( linkSrcFeatureType, m_schema, false, true );
 
     for( final IFeatureType element : substiFTs )
     {
-      final Feature[] substiFeatures = getFeatures( element );
+      final Feature[] substiFeatures = FeatureHelper.getFeaturesWithType( this, element );
 
       for( final Feature element2 : substiFeatures )
       {
@@ -290,7 +269,8 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   @Override
   public void accept( final FeatureVisitor fv, final IFeatureType ft, final int depth )
   {
-    final Feature[] features = getFeatures( ft );
+    // FIXME: ugly implementation; use a visitor that delegates and filters instead
+    final Feature[] features = FeatureHelper.getFeaturesWithType( this, ft );
 
     for( final Feature feature : features )
     {
@@ -361,20 +341,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
       else if( next instanceof Feature )
         accept( fv, (Feature) next, depth );
     }
-  }
-
-  @Override
-  @Deprecated
-  public IFeatureType getFeatureType( final String nameLocalPart )
-  {
-    final IFeatureType[] allFeatureTypes = m_schema.getAllFeatureTypes();
-
-    for( final IFeatureType ft : allFeatureTypes )
-    {
-      if( ft.getQName().getLocalPart().equals( nameLocalPart ) )
-        return ft;
-    }
-    return null;
   }
 
   @Override

@@ -57,6 +57,7 @@ import org.kalypso.commons.tokenreplace.TokenReplacerEngine;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.MultiException;
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.contribs.javax.xml.namespace.QNameUnique;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
@@ -69,8 +70,10 @@ import org.kalypso.gmlschema.types.ISimpleMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
@@ -82,6 +85,7 @@ import org.kalypsodeegree_impl.model.feature.tokenreplace.AnnotationTokenReplace
 import org.kalypsodeegree_impl.model.feature.tokenreplace.FeatureIdTokenReplacer;
 import org.kalypsodeegree_impl.model.feature.tokenreplace.ListPropertyTokenReplacer;
 import org.kalypsodeegree_impl.model.feature.tokenreplace.PropertyTokenReplacer;
+import org.kalypsodeegree_impl.model.feature.visitors.CollectorVisitor;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
@@ -1537,4 +1541,55 @@ public final class FeatureHelper
       throw new UnsupportedOperationException( "unexcepted object, can not convert to Feature[]" );
   }
 
+  /**
+   * Returns all features of a certain feature type contained in this workspace.<br>
+   * Comparison with feature type is exact, substitution is not considered.
+   */
+  public static Feature[] getFeaturesWithType( final GMLWorkspace workspace, final IFeatureType type )
+  {
+    final FeatureTypeFilter predicate = new FeatureTypeFilter( type, false );
+    return getFeatures( workspace, predicate );
+  }
+
+  public static Feature[] getFeaturesWithName( final GMLWorkspace workspace, final QName name )
+  {
+    final QNameUnique uniqueName = QNameUnique.create( name );
+
+    final FeatureTypeFilter predicate = new FeatureTypeFilter( uniqueName, null, false );
+
+    return getFeatures( workspace, predicate );
+  }
+
+  /**
+   * Returns all feature with the given local typename.
+   */
+  public static Feature[] getFeaturesWithLocalName( final GMLWorkspace workspace, final String typenameLocalPart )
+  {
+    final QNameUnique localTypename = QNameUnique.create( XMLConstants.NULL_NS_URI, typenameLocalPart );
+
+    final FeatureTypeFilter predicate = new FeatureTypeFilter( null, localTypename, false );
+
+    return getFeatures( workspace, predicate );
+  }
+
+  /**
+   * Returns all feature of a workspace filtered by a given predicate.
+   */
+  public static Feature[] getFeatures( final GMLWorkspace workspace, final Filter predicate )
+  {
+    Assert.isNotNull( workspace );
+
+    final CollectorVisitor collector = new CollectorVisitor( predicate );
+    try
+    {
+      final Feature rootFeature = workspace.getRootFeature();
+      workspace.accept( collector, rootFeature, FeatureVisitor.DEPTH_INFINITE );
+    }
+    catch( final Throwable e )
+    {
+      e.printStackTrace();
+    }
+
+    return collector.getResults( true );
+  }
 }

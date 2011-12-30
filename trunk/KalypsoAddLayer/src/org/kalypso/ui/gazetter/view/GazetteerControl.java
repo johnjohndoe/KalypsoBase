@@ -67,6 +67,7 @@ import org.kalypso.ui.i18n.Messages;
 import org.kalypso.view.gazetter.GazetterLocationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author doemming
@@ -273,7 +274,7 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
       final GMLWorkspace workspace = (GMLWorkspace) inputElement;
       final QName featureType = m_gazetteerLocation.getFeatureType();
       final IFeatureType ft = GMLSchemaUtilities.getFeatureTypeQuiet( featureType );
-      final Feature[] features = workspace.getFeatures( ft );
+      final Feature[] features = FeatureHelper.getFeaturesWithType( workspace, ft );
       final Object result[] = new Object[features.length + 1];
       result[0] = GazetteerConstants.NO_SELECTION_IN_COMBO;
       for( int i = 1; i < result.length; i++ )

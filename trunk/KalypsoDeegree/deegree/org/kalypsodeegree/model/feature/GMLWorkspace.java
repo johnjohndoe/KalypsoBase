@@ -70,13 +70,6 @@ public interface GMLWorkspace extends ModellEventProvider
   IGMLSchema getGMLSchema( );
 
   /**
-   * Returns all features of a certain feature type contained in this workspace.<br>
-   * Comparison with feature type is exact, substitution is not considered.
-   */
-  // FIXME: does not belong here; move into a visitor / helper
-  Feature[] getFeatures( IFeatureType ft );
-
-  /**
    * Returns the feature that has the given id or null if not found.
    */
   Feature getFeature( String id );
@@ -122,15 +115,6 @@ public interface GMLWorkspace extends ModellEventProvider
    */
   // FIXME: check; move into feature api
   void accept( FeatureVisitor visitor, Feature feature, int depth, IPropertyType[] featureProperties );
-
-  /**
-   * @deprecated Retrieve type information via GMLSchema. Use {@link GMLSchema#getFeatureType(QName)} or
-   *             {@link GMLSchema#getFeatureType(String)} instead.
-   * @deprecated use getFeatureType(QName)
-   */
-  @Deprecated
-  // FIXME: remove; move to gml schema
-  IFeatureType getFeatureType( String nameLocalPart );
 
   // FIXME: method does not what it states...
   Object getFeatureFromPath( String featurePath );
