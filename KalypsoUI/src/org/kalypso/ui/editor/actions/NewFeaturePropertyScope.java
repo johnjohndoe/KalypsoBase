@@ -56,7 +56,7 @@ import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureProperty;
+import org.kalypsodeegree.model.feature.IFeatureRelation;
 
 /**
  * @author Gernot Belger
@@ -71,9 +71,9 @@ class NewFeaturePropertyScope implements INewScope
 
   private final IFeatureSelectionManager m_selectionManager;
 
-  NewFeaturePropertyScope( final IFeatureProperty property, final CommandableWorkspace workspace, final IFeatureSelectionManager selectionManager )
+  NewFeaturePropertyScope( final IFeatureRelation property, final CommandableWorkspace workspace, final IFeatureSelectionManager selectionManager )
   {
-    this( property.getParentFeature(), property.getPropertyType(), workspace, selectionManager );
+    this( property.getOwner(), property.getPropertyType(), workspace, selectionManager );
   }
 
   NewFeaturePropertyScope( final Feature parentFeature, final IRelationType targetRelation, final CommandableWorkspace workspace, final IFeatureSelectionManager selectionManager )

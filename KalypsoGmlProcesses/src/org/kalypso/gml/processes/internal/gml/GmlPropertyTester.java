@@ -56,7 +56,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ui.catalogs.FeatureTypePropertiesCatalog;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureProperty;
+import org.kalypsodeegree.model.feature.IFeatureRelation;
 
 /**
  * Tests gml elements for their qname. Can be anything form map.themes to
@@ -193,9 +193,9 @@ public class GmlPropertyTester extends PropertyTester
 
   private boolean testTargetQName( final QName expectedQName, final Object receiver )
   {
-    if( receiver instanceof IFeatureProperty )
+    if( receiver instanceof IFeatureRelation )
     {
-      final IRelationType type = ((IFeatureProperty) receiver).getPropertyType();
+      final IRelationType type = ((IFeatureRelation) receiver).getPropertyType();
       if( type == null )
         return false;
 
@@ -221,9 +221,9 @@ public class GmlPropertyTester extends PropertyTester
 
   private boolean testIsListProperty( final Object receiver )
   {
-    if( receiver instanceof IFeatureProperty )
+    if( receiver instanceof IFeatureRelation )
     {
-      final IRelationType type = ((IFeatureProperty) receiver).getPropertyType();
+      final IRelationType type = ((IFeatureRelation) receiver).getPropertyType();
       if( type == null )
         return false;
 
@@ -288,9 +288,9 @@ public class GmlPropertyTester extends PropertyTester
     if( receiver instanceof Feature )
       return ((Feature) receiver).getQualifiedName();
 
-    if( receiver instanceof IFeatureProperty )
+    if( receiver instanceof IFeatureRelation )
     {
-      final IFeatureProperty property = (IFeatureProperty) receiver;
+      final IFeatureRelation property = (IFeatureRelation) receiver;
       final IRelationType type = property.getPropertyType();
       if( type != null )
         return type.getQName();
@@ -307,9 +307,9 @@ public class GmlPropertyTester extends PropertyTester
       return feature.getWorkspace();
     }
 
-    if( receiver instanceof IFeatureProperty )
+    if( receiver instanceof IFeatureRelation )
     {
-      final Feature parentFeature = ((IFeatureProperty) receiver).getParentFeature();
+      final Feature parentFeature = ((IFeatureRelation) receiver).getOwner();
       return findWorkspace( parentFeature );
     }
 

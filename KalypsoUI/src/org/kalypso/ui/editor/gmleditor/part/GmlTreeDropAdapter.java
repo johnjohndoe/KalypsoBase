@@ -123,7 +123,7 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
       targetAssocFtp = targetFatElement.getAssociationTypeProperty();
       // System.out.println( "FeatuerAssociationTypeElement:\n target: " + targetAssocFtp.getName() );
       // String propertyName = targetAssocFtp.getName();
-      targetFeature = targetFatElement.getParentFeature();
+      targetFeature = targetFatElement.getOwner();
       // try to find matching IFeatureType
       final IFeatureType targetFeatureType = targetAssocFtp.getTargetFeatureType();
       matchingFt = hasMatchingFeatureType( selectedFeatures[0].getFeatureType(), GMLSchemaUtilities.getSubstituts( targetFeatureType, null, false, true ) );

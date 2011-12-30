@@ -227,7 +227,7 @@ public class KalypsoTableFeatureTheme extends AbstractKalypsoTheme implements IK
         final Feature[] parents = fscme.getParentFeatures();
         for( final Feature parent : parents )
         {
-          if( m_featureList.getParentFeature() == parent )
+          if( m_featureList.getOwner() == parent )
           {
             switch( fscme.getChangeType() )
             {

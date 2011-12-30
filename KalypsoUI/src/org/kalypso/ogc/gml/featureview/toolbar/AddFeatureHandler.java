@@ -51,7 +51,7 @@ import org.kalypso.ogc.gml.util.AddFeatureHandlerUtil;
 import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypso.ui.editor.gmleditor.part.FeatureAssociationTypeElement;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureProperty;
+import org.kalypsodeegree.model.feature.IFeatureRelation;
 
 /**
  * @author Dirk Kuch
@@ -71,7 +71,7 @@ public class AddFeatureHandler extends AbstractTableFeatureControlHandler
     final CommandableWorkspace workspace = control.getWorkspace();
     final IRelationType parentRelation = control.getFeatureTypeProperty();
 
-    final IFeatureProperty featureProperty = new FeatureAssociationTypeElement( parentFeature, parentRelation );
+    final IFeatureRelation featureProperty = new FeatureAssociationTypeElement( parentFeature, parentRelation );
 
     if( !AddFeatureHandlerUtil.checkPrecondition( shell, featureProperty ) )
       return null;

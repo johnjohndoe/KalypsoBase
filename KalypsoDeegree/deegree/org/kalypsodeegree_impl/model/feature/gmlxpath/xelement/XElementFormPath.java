@@ -167,7 +167,7 @@ public class XElementFormPath extends AbstractXElement
     if( context instanceof FeatureList )
     {
       if( QNAME_DOT_DOT.equals( m_propName ) )
-        return ((FeatureList) context).getParentFeature();
+        return ((FeatureList) context).getOwner();
     }
 
     return null;

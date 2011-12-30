@@ -48,7 +48,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureProperty;
+import org.kalypsodeegree.model.feature.IFeatureRelation;
 
 /**
  * Common code for adding features.
@@ -62,7 +62,7 @@ public final class AddFeatureHandlerUtil
     throw new UnsupportedOperationException();
   }
 
-  public static boolean checkPrecondition( final Shell shell, final IFeatureProperty targetProperty )
+  public static boolean checkPrecondition( final Shell shell, final IFeatureRelation targetProperty )
   {
     if( !checkMaxCount( targetProperty ) )
     {
@@ -78,10 +78,10 @@ public final class AddFeatureHandlerUtil
    *
    * @return <code>true</code>, if so.
    */
-  private static boolean checkMaxCount( final IFeatureProperty targetProperty )
+  private static boolean checkMaxCount( final IFeatureRelation targetProperty )
   {
     /* Get the needed properties. */
-    final Feature parentFeature = targetProperty.getParentFeature();
+    final Feature parentFeature = targetProperty.getOwner();
     final IRelationType parentRelation = targetProperty.getPropertyType();
 
     final int maxOccurs = parentRelation.getMaxOccurs();

@@ -139,7 +139,7 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
     {
       // create featurepath for association
       final FeatureAssociationTypeElement link = (FeatureAssociationTypeElement) firstElement;
-      final Feature parent = link.getParentFeature();
+      final Feature parent = link.getOwner();
       final FeaturePath parentFeaturePath = new FeaturePath( parent );
       final IRelationType ftp = link.getPropertyType();
 

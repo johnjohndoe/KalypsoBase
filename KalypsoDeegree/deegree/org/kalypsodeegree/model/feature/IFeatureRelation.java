@@ -40,49 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.feature;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 
 /**
- * Correspondents to FeatureProperty of deegree2.<br/>
- * the interface describes a property entry of a feature
+ * the interface describes a property entry of a feature Implementors of this interface behave like feature-properties,
+ * i.e. a property of a feature that contains (an)other feature(s).
  *
  * @author Gernot Belger
  */
-public interface IFeatureProperty
+public interface IFeatureRelation extends IFeatureProperty
 {
   /**
-   * returns the qualified name of the property
+   * Overridden because the corresponding property type is always a relation.
    */
-  QName getName( );
-
-  /**
-   * returns the value of the property
-   */
-  Object getValue( );
-
-// /**
-// * returns the value of the property; if the value is null the passed defaultValuewill be returned
-// *
-// * @param defaultValue
-// */
-// Object getValue( Object defaultValue );
-
-  /**
-   * sets the value of the property
-   */
-  void setValue( Object value );
-
-  /**
-   * Returns the instance of the Feature a Feature property is assigned to.
-   */
-  Feature getOwner( );
-
-  /* Kalypso Additions */
-
-  /**
-   * Returns the IPropertyType that corresponds to this property.
-   */
-  IPropertyType getPropertyType( );
+  @Override
+  IRelationType getPropertyType( );
 }

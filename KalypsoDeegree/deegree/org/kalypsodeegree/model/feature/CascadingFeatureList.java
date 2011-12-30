@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -55,7 +55,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
  * this featurelist cascades serveral lists, so it is possible to merge other lists without resorting or copying
  * listcontents <br>
  * this featurelist is <b>readonly </b>
- * 
+ *
  * @deprecated Only used for relation editing stuff, which also should be used no more...
  * @author doemming
  */
@@ -69,9 +69,6 @@ public class CascadingFeatureList implements FeatureList
     m_lists = lists;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#toFeatures()
-   */
   @Override
   public Feature[] toFeatures( )
   {
@@ -82,9 +79,6 @@ public class CascadingFeatureList implements FeatureList
     return result.toArray( new Feature[result.size()] );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#accept(org.kalypsodeegree.model.feature.FeatureVisitor)
-   */
   @Override
   public void accept( final FeatureVisitor visitor )
   {
@@ -447,12 +441,8 @@ public class CascadingFeatureList implements FeatureList
     return result;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#getParentFeature()
-   * @return null, as this are mixed lists
-   */
   @Override
-  public Feature getParentFeature( )
+  public Feature getOwner( )
   {
     return null;
   }
@@ -618,5 +608,23 @@ public class CascadingFeatureList implements FeatureList
   public IRelationType getPropertyType( )
   {
     return null;
+  }
+
+  @Override
+  public QName getName( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public Object getValue( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void setValue( final Object value )
+  {
+    throw new UnsupportedOperationException();
   }
 }

@@ -89,7 +89,7 @@ public class AddFeatureHandler extends AbstractHandler
     /* Do add the feature */
     final IRelationType parentRelation = featureProperty.getPropertyType();
     final IFeatureType targetFeatureType = parentRelation.getTargetFeatureType();
-    final Feature parentFeature = featureProperty.getParentFeature();
+    final Feature parentFeature = featureProperty.getOwner();
 
     final CommandableWorkspace workspace = input.getWorkspace();
 

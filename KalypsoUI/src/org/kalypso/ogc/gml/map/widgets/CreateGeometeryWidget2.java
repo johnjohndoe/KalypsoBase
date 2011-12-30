@@ -70,7 +70,7 @@ public class CreateGeometeryWidget2 extends AbstractFeatureGeometeryWidget
     final IFeatureType featureType = theme.getFeatureType();
 
     final FeatureList featureList = theme.getFeatureList();
-    final Feature parentFeature = featureList.getParentFeature();
+    final Feature parentFeature = featureList.getOwner();
     final IRelationType linkrelationType = featureList.getParentFeatureTypeProperty();
 
     final IValuePropertyType geometryProperty = GeometryUtilities.findGeometryProperty( featureType, m_apreferedGeometryClass );

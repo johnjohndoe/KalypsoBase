@@ -98,7 +98,7 @@ public class ImportProfileWizard extends Wizard implements IWorkbenchWizard
     if( firstElement instanceof FeatureAssociationTypeElement )
     {
       final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) firstElement;
-      return (WspmWaterBody) fate.getParentFeature();
+      return (WspmWaterBody) fate.getOwner();
     }
 
     if( firstElement instanceof WspmWaterBody )
