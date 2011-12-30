@@ -198,12 +198,6 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   }
 
   @Override
-  public Feature[] getFeatures( final IFeatureType ft )
-  {
-    return m_workspace.getFeatures( ft );
-  }
-
-  @Override
   public IFeatureType getFeatureTypeFromPath( final String featurePath )
   {
     return m_workspace.getFeatureTypeFromPath( featurePath );
@@ -369,13 +363,6 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   public boolean isBrokenLink( final Feature parentFeature, final IPropertyType ftp, final int pos )
   {
     return m_workspace.isBrokenLink( parentFeature, ftp, pos );
-  }
-
-  @Override
-  @Deprecated
-  public IFeatureType getFeatureType( final String nameLocalPart )
-  {
-    return m_workspace.getFeatureType( nameLocalPart );
   }
 
   @Deprecated

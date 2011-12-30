@@ -51,78 +51,63 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
+import org.kalypsodeegree.model.feature.FilteredFeatureVisitor;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.FeatureTypeFilter;
 import org.kalypsodeegree_impl.model.feature.visitors.CollectorVisitor;
-import org.kalypsodeegree_impl.model.feature.visitors.FeatureTypeVisitor;
 
 /**
  * Eine gefilterte FeatureListe. Die Liste zeigt nach aussen nur die Features, die einem bestimmten IFeatureType
  * entsprechen. Andererseits ist die Liste aber durch die originale Liste gebackupd, d.h. alle Änderungen dieser Liste
  * ändern auch die Originalliste.
- * 
+ *
  * @author belger
  */
 public class FilteredFeatureList implements FeatureList
 {
   private final FeatureList m_original;
 
-  private final FeatureTypeVisitor m_filterVisitor;
-
-  private final CollectorVisitor m_collector = new CollectorVisitor();
+  private final FeatureTypeFilter m_predicate;
 
   public FilteredFeatureList( final FeatureList original, final QName filterQName, final boolean acceptIfSubstituting )
   {
     m_original = original;
+
     final QNameUnique uniqueFilterQName = QNameUnique.create( filterQName );
-    m_filterVisitor = new FeatureTypeVisitor( null, uniqueFilterQName, uniqueFilterQName.asLocal(), acceptIfSubstituting );
+
+    m_predicate = new FeatureTypeFilter( uniqueFilterQName, uniqueFilterQName.asLocal(), acceptIfSubstituting );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#toFeatures()
-   */
   @Override
   public Feature[] toFeatures( )
   {
-    m_filterVisitor.setVisitor( m_collector );
-    m_original.accept( m_filterVisitor, FeatureVisitor.DEPTH_INFINITE_LINKS );
-    return m_collector.getResults( true );
+    final CollectorVisitor collector = new CollectorVisitor( m_predicate );
+    m_original.accept( collector, FeatureVisitor.DEPTH_INFINITE_LINKS );
+    return collector.getResults( true );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#accept(org.kalypsodeegree.model.feature.FeatureVisitor)
-   */
   @Override
   public void accept( final FeatureVisitor visitor )
   {
     accept( visitor, FeatureVisitor.DEPTH_INFINITE );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#accept(org.kalypsodeegree.model.feature.FeatureVisitor, int)
-   */
   @Override
   public void accept( final FeatureVisitor visitor, final int depth )
   {
-    m_filterVisitor.setVisitor( visitor );
-    m_original.accept( m_filterVisitor );
-    m_filterVisitor.setVisitor( null );
+    final FilteredFeatureVisitor filterVisitor = new FilteredFeatureVisitor( visitor, m_predicate );
+    m_original.accept( filterVisitor );
   }
 
-  /**
-   * @see java.util.Collection#size()
-   */
   @Override
   public int size( )
   {
     return toFeatures().length;
   }
 
-  /**
-   * @see java.util.Collection#clear()
-   */
   @Override
   public void clear( )
   {
@@ -133,27 +118,18 @@ public class FilteredFeatureList implements FeatureList
     }
   }
 
-  /**
-   * @see java.util.Collection#isEmpty()
-   */
   @Override
   public boolean isEmpty( )
   {
     return toFeatures().length == 0;
   }
 
-  /**
-   * @see java.util.Collection#toArray()
-   */
   @Override
   public Object[] toArray( )
   {
     return toFeatures();
   }
 
-  /**
-   * @see java.util.List#get(int)
-   */
   @Override
   public Object get( final int index )
   {
@@ -214,51 +190,36 @@ public class FilteredFeatureList implements FeatureList
     return -1;
   }
 
-  /**
-   * @see java.util.Collection#add(java.lang.Object)
-   */
   @Override
   public boolean add( final Object o )
   {
-    if( !m_filterVisitor.matchesType( (Feature) o ) )
+    if( !m_predicate.matchesType( (Feature) o ) )
       throw new IllegalArgumentException();
 
     return m_original.add( o );
   }
 
-  /**
-   * @see java.util.Collection#contains(java.lang.Object)
-   */
   @Override
   public boolean contains( final Object o )
   {
     return m_original.contains( o );
   }
 
-  /**
-   * @see java.util.Collection#remove(java.lang.Object)
-   */
   @Override
   public boolean remove( final Object o )
   {
-    if( m_filterVisitor.matchesType( (Feature) o ) )
+    if( m_predicate.matchesType( (Feature) o ) )
       return m_original.remove( o );
 
     return false;
   }
 
-  /**
-   * @see java.util.List#addAll(int, java.util.Collection)
-   */
   @Override
   public boolean addAll( final int index, final Collection c )
   {
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see java.util.Collection#addAll(java.util.Collection)
-   */
   @Override
   public boolean addAll( final Collection c )
   {
@@ -270,9 +231,6 @@ public class FilteredFeatureList implements FeatureList
     return !c.isEmpty();
   }
 
-  /**
-   * @see java.util.Collection#containsAll(java.util.Collection)
-   */
   @Override
   public boolean containsAll( final Collection c )
   {
@@ -373,10 +331,6 @@ public class FilteredFeatureList implements FeatureList
     return a;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#query(org.kalypsodeegree.model.geometry.GM_Envelope,
-   *      java.util.List)
-   */
   @Override
   public List query( final GM_Envelope env, final List result )
   {
@@ -394,7 +348,7 @@ public class FilteredFeatureList implements FeatureList
     for( final Object lObjNext : sublist )
     {
       final Feature f = FeatureHelper.resolveLinkedFeature( m_original.getParentFeature().getWorkspace(), lObjNext );
-      if( m_filterVisitor.matchesType( f ) )
+      if( m_predicate.matchesType( f ) )
       {
         lListActualResult.add( lObjNext );
         // removing elements from ArrayList is SLOW!
@@ -404,7 +358,6 @@ public class FilteredFeatureList implements FeatureList
       }
     }
 
-// return originalList;
     return lListActualResult;
   }
 
@@ -414,17 +367,13 @@ public class FilteredFeatureList implements FeatureList
     for( final Object object : originalList )
     {
       final Feature f = FeatureHelper.resolveLinkedFeature( m_original.getParentFeature().getWorkspace(), object );
-      if( m_filterVisitor.matchesType( f ) )
+      if( m_predicate.matchesType( f ) )
         filteredList.add( f );
     }
 
     return filteredList;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#query(org.kalypsodeegree.model.geometry.GM_Position,
-   *      java.util.List)
-   */
   @Override
   public List query( final GM_Position env, final List result )
   {
