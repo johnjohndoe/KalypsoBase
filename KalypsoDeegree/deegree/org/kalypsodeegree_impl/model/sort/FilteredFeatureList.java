@@ -410,9 +410,9 @@ public class FilteredFeatureList implements FeatureList
   }
 
   @Override
-  public IRelationType getParentFeatureTypeProperty( )
+  public IRelationType getPropertyType( )
   {
-    return m_original.getParentFeatureTypeProperty();
+    return m_original.getPropertyType();
   }
 
   @Override
@@ -562,15 +562,6 @@ public class FilteredFeatureList implements FeatureList
   {
     // TODO Auto-generated method stub
     return false;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.IFeatureProperty#getPropertyType()
-   */
-  @Override
-  public IRelationType getPropertyType( )
-  {
-    return m_original.getPropertyType();
   }
 
   @Override

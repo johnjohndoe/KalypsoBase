@@ -64,7 +64,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
  * <p>
  * 2) This feature does not support change of any values, which is prohibited for dictionary entries.
  * </p>
- * 
+ *
  * @author Gernot Belger
  */
 public class DictionaryFeature implements Feature
@@ -286,5 +286,17 @@ public class DictionaryFeature implements Feature
   public void setLocation( final GM_Object location )
   {
     throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
+  }
+
+  @Override
+  public Feature getMember( final QName relation )
+  {
+    return m_feature.getMember( relation );
+  }
+
+  @Override
+  public Feature getMember( final IRelationType relation )
+  {
+    return m_feature.getMember( relation );
   }
 }

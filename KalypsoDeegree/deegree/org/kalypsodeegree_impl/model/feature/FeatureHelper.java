@@ -783,7 +783,7 @@ public final class FeatureHelper
     final Feature parentFeature = list.getOwner();
     final GMLWorkspace workspace = parentFeature.getWorkspace();
 
-    final IRelationType parentFeatureTypeProperty = list.getParentFeatureTypeProperty();
+    final IRelationType parentFeatureTypeProperty = list.getPropertyType();
     final IFeatureType targetFeatureType = parentFeatureTypeProperty.getTargetFeatureType();
 
     final IFeatureType newFeatureType;
@@ -838,7 +838,7 @@ public final class FeatureHelper
     final Feature parentFeature = list.getOwner();
     final GMLWorkspace workspace = parentFeature.getWorkspace();
 
-    final IRelationType parentFeatureTypeProperty = list.getParentFeatureTypeProperty();
+    final IRelationType parentFeatureTypeProperty = list.getPropertyType();
     final IFeatureType targetFeatureType = parentFeatureTypeProperty.getTargetFeatureType();
 
     final IFeatureType newFeatureType;
@@ -1381,7 +1381,7 @@ public final class FeatureHelper
     final Feature parentFeature = list.getOwner();
     final GMLWorkspace workspace = parentFeature.getWorkspace();
 
-    final IRelationType parentRelation = list.getParentFeatureTypeProperty();
+    final IRelationType parentRelation = list.getPropertyType();
     final IFeatureType targetFeatureType = parentRelation.getTargetFeatureType();
 
     final IFeatureType newFeatureType;

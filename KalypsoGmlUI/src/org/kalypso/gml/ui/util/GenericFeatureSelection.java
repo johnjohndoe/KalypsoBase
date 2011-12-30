@@ -136,7 +136,7 @@ public class GenericFeatureSelection implements IFeatureSelection
 
   private void addFeatureAssociation( final FeatureAssociationTypeElement fate, final CommandableWorkspace defaultWorkspace )
   {
-    final IRelationType rt = fate.getAssociationTypeProperty();
+    final IRelationType rt = fate.getPropertyType();
     final Feature parentFeature = fate.getOwner();
     final Object value = parentFeature.getProperty( rt );
     addItem( value, defaultWorkspace );

@@ -44,6 +44,7 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
@@ -86,4 +87,21 @@ public interface Feature extends BaseFeature, Deegree2Feature, IAdaptable
    * REMARK: gml:location is deprecated in the GML3-Schema.
    */
   void setLocation( final GM_Object location );
+
+  /**
+   * Resolves a related member feature.<br/>
+   * Inline feature gets returned, feature links are returned a xlinked-features.
+   */
+  Feature getMember( IRelationType relation );
+
+  /**
+   * Resolves a related member feature.<br/>
+   * Inline feature gets returned, feature links are returned a xlinked-features.
+   * 
+   * @param relation
+   *          Name of a property of this feature (must be a relation).
+   * @throws IllegalArgumentException
+   *           If <code>relation</code> is not the name of a relation type.
+   */
+  Feature getMember( QName relation );
 }

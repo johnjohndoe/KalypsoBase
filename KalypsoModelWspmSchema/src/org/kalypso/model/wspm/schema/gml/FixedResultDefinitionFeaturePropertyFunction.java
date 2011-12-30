@@ -126,7 +126,7 @@ public class FixedResultDefinitionFeaturePropertyFunction extends FeaturePropert
     final FeatureList components = (FeatureList) feature.getProperty( QNAME_RECORD_COMPONENT );
 
     for( final String href : m_compHrefs )
-      components.add( new XLinkedFeature_Impl( components.getOwner(), components.getParentFeatureTypeProperty(), recordSchemaType, href, "", "", "", "", "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+      components.add( new XLinkedFeature_Impl( components.getOwner(), components.getPropertyType(), recordSchemaType, href, "", "", "", "", "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
     return feature;
   }

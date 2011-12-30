@@ -82,7 +82,7 @@ public class FeatureAssociationQNameActionFilter implements IActionFilterEx
       return false;
 
     final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) target;
-    final IRelationType fateRT = fate.getAssociationTypeProperty();
+    final IRelationType fateRT = fate.getPropertyType();
     final IFeatureType featureType = fateRT.getTargetFeatureType();
 
     if( ATTR_QNAME.equals( name ) )

@@ -622,7 +622,7 @@ public class SelectFeatureWidget extends AbstractWidget
     // REMARK:
     // ...if not possible, use the geometries of the feature-lists target feature type.
     final FeatureList featureList = theme.getFeatureList();
-    final IRelationType parentFeatureTypeProperty = featureList.getParentFeatureTypeProperty();
+    final IRelationType parentFeatureTypeProperty = featureList.getPropertyType();
     if( parentFeatureTypeProperty == null )
       return null;
 

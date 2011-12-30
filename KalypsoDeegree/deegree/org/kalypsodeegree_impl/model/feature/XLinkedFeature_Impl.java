@@ -483,4 +483,16 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
   {
     getFeature().setProperty( NamedFeatureHelper.GML_LOCATION, location );
   }
+
+  @Override
+  public Feature getMember( final QName relation )
+  {
+    return getFeature().getMember( relation );
+  }
+
+  @Override
+  public Feature getMember( final IRelationType relation )
+  {
+    return getFeature().getMember( relation );
+  }
 }

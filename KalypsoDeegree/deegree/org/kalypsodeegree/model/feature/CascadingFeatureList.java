@@ -452,7 +452,7 @@ public class CascadingFeatureList implements FeatureList
    * @return null, as this are mixed lists
    */
   @Override
-  public IRelationType getParentFeatureTypeProperty( )
+  public IRelationType getPropertyType( )
   {
     return null;
   }
@@ -602,12 +602,6 @@ public class CascadingFeatureList implements FeatureList
   public <T extends Feature> boolean insertRef( final int index, final T toAdd ) throws IllegalArgumentException
   {
     throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public IRelationType getPropertyType( )
-  {
-    return null;
   }
 
   @Override

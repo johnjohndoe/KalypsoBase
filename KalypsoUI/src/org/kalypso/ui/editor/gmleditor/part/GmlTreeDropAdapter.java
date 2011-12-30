@@ -120,7 +120,7 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
     if( target instanceof FeatureAssociationTypeElement )
     {
       final FeatureAssociationTypeElement targetFatElement = (FeatureAssociationTypeElement) target;
-      targetAssocFtp = targetFatElement.getAssociationTypeProperty();
+      targetAssocFtp = targetFatElement.getPropertyType();
       // System.out.println( "FeatuerAssociationTypeElement:\n target: " + targetAssocFtp.getName() );
       // String propertyName = targetAssocFtp.getName();
       targetFeature = targetFatElement.getOwner();

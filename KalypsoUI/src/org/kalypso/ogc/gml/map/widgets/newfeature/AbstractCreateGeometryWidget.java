@@ -242,7 +242,7 @@ public abstract class AbstractCreateGeometryWidget extends AbstractWidget
     {
       final FeatureList featureList = m_theme.getFeatureList();
       final Feature parentFeature = featureList.getOwner();
-      final IRelationType parentRelation = featureList.getParentFeatureTypeProperty();
+      final IRelationType parentRelation = featureList.getPropertyType();
       final Feature newFeature = parentFeature.getWorkspace().createFeature( parentFeature, parentRelation, m_featureType );
 
       // set builded geometries to feature
@@ -254,7 +254,7 @@ public abstract class AbstractCreateGeometryWidget extends AbstractWidget
       }
 
       // add new feature
-      final IRelationType rt = m_theme.getFeatureList().getParentFeatureTypeProperty();
+      final IRelationType rt = m_theme.getFeatureList().getPropertyType();
       final CommandableWorkspace workspace = m_theme.getWorkspace();
       final ICommand command = new AddFeatureCommand( workspace, parentFeature, rt, -1, newFeature, null );
       try

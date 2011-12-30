@@ -62,15 +62,6 @@ public class FeatureAssociationTypeElement extends PlatformObject implements IFe
   }
 
   /**
-   * @deprecated Use {@link #getPropertyType()} instead.
-   */
-  @Deprecated
-  public IRelationType getAssociationTypeProperty( )
-  {
-    return m_featureAssociattionTypeProp;
-  }
-
-  /**
    * Implemented in order to make to TreeViewer work.
    * <p>
    * While refreshing the tree we may have different instances of this class reflecting the same node of the tree, if

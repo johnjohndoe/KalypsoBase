@@ -342,7 +342,7 @@ public class GmlFileImportPage extends WizardPage
       else if( m_validAllowFeatureAssociation && object instanceof FeatureAssociationTypeElement )
       {
         final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) object;
-        final IRelationType associationRt = fate.getAssociationTypeProperty();
+        final IRelationType associationRt = fate.getPropertyType();
         final IFeatureType targetFeatureType = associationRt.getTargetFeatureType();
         if( !checkFeatureTypeValid( targetFeatureType ) )
           return new Status( IStatus.WARNING, KalypsoAddLayerPlugin.getId(), Messages.getString( "org.kalypso.ui.wizard.gmlGmlFileImportPage.8" ) ); //$NON-NLS-1$

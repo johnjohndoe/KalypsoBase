@@ -210,12 +210,6 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   }
 
   @Override
-  public Feature resolveLink( final Feature srcFeature, final IRelationType linkPropertyName )
-  {
-    return m_workspace.resolveLink( srcFeature, linkPropertyName );
-  }
-
-  @Override
   public Feature[] resolveLinks( final Feature srcFeature, final IRelationType linkPropertyName )
   {
     return m_workspace.resolveLinks( srcFeature, linkPropertyName );

@@ -39,7 +39,6 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.sort.JMSpatialIndex;
 
@@ -71,15 +70,6 @@ public interface FeatureList extends List, JMSpatialIndex, IFeatureRelation
    */
   @Override
   Feature getOwner( );
-
-  /**
-   * This method returns the property-type of the parent feature that denotes this list.
-   * 
-   * @return Property of parent feature that contains this list or <code>null</code>, if this list has no parent.
-   * @deprecated Use {@link #getPropertyType()} instead.
-   */
-  @Deprecated
-  IRelationType getParentFeatureTypeProperty( );
 
   /**
    * Returns the first element of the list.
