@@ -44,7 +44,7 @@ import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureProperty;
+import org.kalypsodeegree.model.feature.IFeatureRelation;
 
 public class CreateProfileMapAction extends AbstractHandler
 {
@@ -58,10 +58,10 @@ public class CreateProfileMapAction extends AbstractHandler
     final Map<Feature, IRelationType> selectedFeatures = new HashMap<Feature, IRelationType>();
     for( final Object selectedObject : selection.toList() )
     {
-      if( selectedObject instanceof IFeatureProperty )
+      if( selectedObject instanceof IFeatureRelation )
       {
-        final IFeatureProperty fate = (IFeatureProperty) selectedObject;
-        final Feature parentFeature = fate.getParentFeature();
+        final IFeatureRelation fate = (IFeatureRelation) selectedObject;
+        final Feature parentFeature = fate.getOwner();
 
         selectedFeatures.put( parentFeature, fate.getPropertyType() );
       }

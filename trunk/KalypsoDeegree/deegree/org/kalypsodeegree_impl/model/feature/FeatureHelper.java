@@ -780,7 +780,7 @@ public final class FeatureHelper
   public static Feature addFeature( final Feature feature, final QName listProperty, final QName newFeatureName, final int depth ) throws GMLSchemaException
   {
     final FeatureList list = (FeatureList) feature.getProperty( listProperty );
-    final Feature parentFeature = list.getParentFeature();
+    final Feature parentFeature = list.getOwner();
     final GMLWorkspace workspace = parentFeature.getWorkspace();
 
     final IRelationType parentFeatureTypeProperty = list.getParentFeatureTypeProperty();
@@ -835,7 +835,7 @@ public final class FeatureHelper
       throw new IllegalArgumentException( "featureProperties and FeaturePropQnames must be all null or all non null with" + "the same length" );
     final FeatureList list = (FeatureList) feature.getProperty( listProperty );
     // TODO Patrice to check can the feature(param) be different from the list property parent
-    final Feature parentFeature = list.getParentFeature();
+    final Feature parentFeature = list.getOwner();
     final GMLWorkspace workspace = parentFeature.getWorkspace();
 
     final IRelationType parentFeatureTypeProperty = list.getParentFeatureTypeProperty();
@@ -1378,7 +1378,7 @@ public final class FeatureHelper
 
   public static Feature createFeatureForListProp( final FeatureList list, final QName newFeatureName, final int index ) throws GMLSchemaException
   {
-    final Feature parentFeature = list.getParentFeature();
+    final Feature parentFeature = list.getOwner();
     final GMLWorkspace workspace = parentFeature.getWorkspace();
 
     final IRelationType parentRelation = list.getParentFeatureTypeProperty();
@@ -1463,7 +1463,7 @@ public final class FeatureHelper
    */
   public static Feature[] toArray( final FeatureList featureList )
   {
-    final GMLWorkspace workspace = featureList.getParentFeature().getWorkspace();
+    final GMLWorkspace workspace = featureList.getOwner().getWorkspace();
 
     final List<Feature> features = new ArrayList<Feature>( featureList.size() );
     for( final Object object : featureList )

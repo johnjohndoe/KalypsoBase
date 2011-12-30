@@ -359,7 +359,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
         final Feature[] parents = fscme.getParentFeatures();
         for( final Feature parent : parents )
         {
-          if( m_featureList.getParentFeature() == parent )
+          if( m_featureList.getOwner() == parent )
           {
             switch( fscme.getChangeType() )
             {
@@ -425,7 +425,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       KalypsoCorePlugin.getDefault().getLog().log( e.getStatus() );
     }
 
-    final Feature parentFeature = m_featureList.getParentFeature();
+    final Feature parentFeature = m_featureList.getOwner();
     final IRelationType parentFTP = m_featureList.getParentFeatureTypeProperty();
     final FeatureList resultList = FeatureFactory.createFeatureList( parentFeature, parentFTP );
     final Collection<Feature> visibleFeatures = paintDelegate.getVisibleFeatures();

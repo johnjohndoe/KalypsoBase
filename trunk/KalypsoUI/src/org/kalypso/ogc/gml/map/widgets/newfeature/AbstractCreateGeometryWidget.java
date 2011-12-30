@@ -241,7 +241,7 @@ public abstract class AbstractCreateGeometryWidget extends AbstractWidget
     if( m_currentGeometry == -1 )
     {
       final FeatureList featureList = m_theme.getFeatureList();
-      final Feature parentFeature = featureList.getParentFeature();
+      final Feature parentFeature = featureList.getOwner();
       final IRelationType parentRelation = featureList.getParentFeatureTypeProperty();
       final Feature newFeature = parentFeature.getWorkspace().createFeature( parentFeature, parentRelation, m_featureType );
 

@@ -787,7 +787,7 @@ public final class GeometryUtilities
     double min = Double.MAX_VALUE;
     Feature nearest = null;
 
-    final Feature parentFeature = modelList.getParentFeature();
+    final Feature parentFeature = modelList.getOwner();
     final GMLWorkspace workspace = parentFeature == null ? null : parentFeature.getWorkspace();
     for( final Object object : foundElements )
     {

@@ -149,7 +149,7 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
 
     if( existingFeature == null || "overwrite".equals( m_handleExisting ) )
     {
-      final Feature parentFeature = m_list.getParentFeature();
+      final Feature parentFeature = m_list.getOwner();
       final IRelationType parentRelation = m_list.getParentFeatureTypeProperty();
 
       final IFeatureType targetFeatureType = findTargetFeatureType( sourceFeature );

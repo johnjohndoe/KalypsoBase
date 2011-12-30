@@ -179,7 +179,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
       final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
       final FeatureList featureList = ft.getFeatureList();
-      final Feature coveragesFeature = featureList == null ? null : featureList.getParentFeature();
+      final Feature coveragesFeature = featureList == null ? null : featureList.getOwner();
 
       if( coveragesFeature == null )
         return false;
@@ -370,7 +370,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     {
       final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) activeTheme;
       final FeatureList featureList = ft.getFeatureList();
-      final Feature coveragesFeature = featureList == null ? null : featureList.getParentFeature();
+      final Feature coveragesFeature = featureList == null ? null : featureList.getOwner();
       if( coveragesFeature != null )
         setCoverages( (ICoverageCollection) coveragesFeature.getAdapter( ICoverageCollection.class ), ft );
     }
@@ -659,7 +659,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
         m_allowUserChangeGridFolder = Boolean.valueOf( property );
 
       final FeatureList featureList = ft.getFeatureList();
-      final Feature coveragesFeature = featureList == null ? null : featureList.getParentFeature();
+      final Feature coveragesFeature = featureList == null ? null : featureList.getOwner();
       if( coveragesFeature != null )
         setCoverages( (ICoverageCollection) coveragesFeature.getAdapter( ICoverageCollection.class ), ft );
     }
@@ -1018,7 +1018,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     if( featureList == null )
       return null;
 
-    final Feature parentFeature = featureList.getParentFeature();
+    final Feature parentFeature = featureList.getOwner();
     if( parentFeature == null )
       return null;
 

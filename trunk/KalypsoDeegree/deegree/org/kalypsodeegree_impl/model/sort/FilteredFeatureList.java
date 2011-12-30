@@ -347,7 +347,7 @@ public class FilteredFeatureList implements FeatureList
     lListActualResult.addAll( originalList.subList( 0, oldlength ) );
     for( final Object lObjNext : sublist )
     {
-      final Feature f = FeatureHelper.resolveLinkedFeature( m_original.getParentFeature().getWorkspace(), lObjNext );
+      final Feature f = FeatureHelper.resolveLinkedFeature( m_original.getOwner().getWorkspace(), lObjNext );
       if( m_predicate.matchesType( f ) )
       {
         lListActualResult.add( lObjNext );
@@ -366,7 +366,7 @@ public class FilteredFeatureList implements FeatureList
     final List<Feature> filteredList = new LinkedList<Feature>();
     for( final Object object : originalList )
     {
-      final Feature f = FeatureHelper.resolveLinkedFeature( m_original.getParentFeature().getWorkspace(), object );
+      final Feature f = FeatureHelper.resolveLinkedFeature( m_original.getOwner().getWorkspace(), object );
       if( m_predicate.matchesType( f ) )
         filteredList.add( f );
     }
@@ -401,26 +401,20 @@ public class FilteredFeatureList implements FeatureList
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#getParentFeature()
+   * @see org.kalypsodeegree.model.feature.IFeatureProperty#getOwner()
    */
   @Override
-  public Feature getParentFeature( )
+  public Feature getOwner( )
   {
-    return m_original.getParentFeature();
+    return m_original.getOwner();
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#getParentFeatureTypeProperty()
-   */
   @Override
   public IRelationType getParentFeatureTypeProperty( )
   {
     return m_original.getParentFeatureTypeProperty();
   }
 
-  /**
-   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#invalidate()
-   */
   @Override
   public void invalidate( )
   {
@@ -577,5 +571,26 @@ public class FilteredFeatureList implements FeatureList
   public IRelationType getPropertyType( )
   {
     return m_original.getPropertyType();
+  }
+
+  @Override
+  public QName getName( )
+  {
+    return getPropertyType().getQName();
+  }
+
+  @Override
+  public Object getValue( )
+  {
+    return this;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.IFeatureProperty#setValue(java.lang.Object)
+   */
+  @Override
+  public void setValue( final Object value )
+  {
+    throw new UnsupportedOperationException();
   }
 }

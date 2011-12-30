@@ -502,7 +502,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     for( int i = 0; i < objs.length; i++ )
     {
       final Object fObj = getFeatureList().get( i );
-      final Feature feature = FeatureHelper.getFeature( getFeatureList().getParentFeature().getWorkspace(), fObj );
+      final Feature feature = FeatureHelper.getFeature( getFeatureList().getOwner().getWorkspace(), fObj );
       if( feature == null )
         throw new RuntimeException( "Type not known:" + fObj );
       final Object object = getAdaptedFeature( feature, m_defaultWrapperClass );

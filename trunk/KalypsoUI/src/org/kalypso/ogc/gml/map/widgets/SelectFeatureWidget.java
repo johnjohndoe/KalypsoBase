@@ -701,7 +701,7 @@ public class SelectFeatureWidget extends AbstractWidget
     if( selectGeometry instanceof GM_Surface< ? > )
     {
       final GM_Envelope envelope = selectGeometry.getEnvelope();
-      final GMLWorkspace workspace = featureList.getParentFeature().getWorkspace();
+      final GMLWorkspace workspace = featureList.getOwner().getWorkspace();
       final List< ? > result = featureList.query( envelope, null );
 
       for( final Object object : result )

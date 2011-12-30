@@ -200,7 +200,7 @@ public class GMLContentProvider implements ITreeContentProvider
 
   private void collectAssociationChildren( final FeatureAssociationTypeElement fate, final List<Object> result )
   {
-    final Feature parentFeature = fate.getParentFeature();
+    final Feature parentFeature = fate.getOwner();
     final IRelationType ftp = fate.getPropertyType();
     final Feature[] features = m_workspace.resolveLinks( parentFeature, ftp );
     for( int i = 0; i < features.length; i++ )
@@ -228,7 +228,7 @@ public class GMLContentProvider implements ITreeContentProvider
     if( element instanceof FeatureAssociationTypeElement )
     {
       final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) element;
-      return fate.getParentFeature();
+      return fate.getOwner();
     }
 
     /* Is it one of the root elements? */
@@ -409,7 +409,7 @@ public class GMLContentProvider implements ITreeContentProvider
       else if( object instanceof FeatureAssociationTypeElement )
       {
         final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) object;
-        final Feature parentFeature = fate.getParentFeature();
+        final Feature parentFeature = fate.getOwner();
         final GMLXPath path = new GMLXPath( parentFeature );
         m_rootPath = new GMLXPath( path, fate.getPropertyType().getQName() );
       }

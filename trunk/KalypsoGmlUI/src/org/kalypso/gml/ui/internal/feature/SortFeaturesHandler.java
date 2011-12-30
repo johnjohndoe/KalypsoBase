@@ -75,7 +75,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureProperty;
+import org.kalypsodeegree.model.feature.IFeatureRelation;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree_impl.model.feature.FeatureComparator;
 
@@ -98,12 +98,12 @@ public class SortFeaturesHandler extends AbstractHandler
 
     final IStructuredSelection structSel = (IStructuredSelection) selection;
     final Object firstElement = structSel.getFirstElement();
-    if( !(firstElement instanceof IFeatureProperty) )
+    if( !(firstElement instanceof IFeatureRelation) )
       throw new ExecutionException( "This handler works only for selection on IFeatureProperty, check enablement" ); //$NON-NLS-1$
 
-    final IFeatureProperty fate = (IFeatureProperty) firstElement;
+    final IFeatureRelation fate = (IFeatureRelation) firstElement;
 
-    final Feature parentFeature = fate.getParentFeature();
+    final Feature parentFeature = fate.getOwner();
     final IRelationType rt = fate.getPropertyType();
 
     final IFeatureType targetFeatureType = rt.getTargetFeatureType();
@@ -189,10 +189,10 @@ public class SortFeaturesHandler extends AbstractHandler
     if( !(propertyToSort instanceof IValuePropertyType) )
       throw new IllegalArgumentException( Messages.getString( "org.kalypso.ui.editor.actions.SortFeaturesActionDelegate.5" ) ); //$NON-NLS-1$
 
-    final Comparator<Object> featureComparator = new FeatureComparator( list.getParentFeature(), propertyToSort );
+    final Comparator<Object> featureComparator = new FeatureComparator( list.getOwner(), propertyToSort );
     Collections.sort( list, featureComparator );
 
-    final Feature parentFeature = list.getParentFeature();
+    final Feature parentFeature = list.getOwner();
     final GMLWorkspace workspace = parentFeature.getWorkspace();
     workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, parentFeature, (Feature[]) null, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE ) );
 

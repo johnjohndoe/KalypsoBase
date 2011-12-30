@@ -677,7 +677,7 @@ public class SplitSort implements FeatureList
   public void accept( final FeatureVisitor visitor, final int depth )
   {
     // TODO: not synchronized: Problem?
-    final Feature parentFeature = getParentFeature();
+    final Feature parentFeature = getOwner();
     final GMLWorkspace workspace = parentFeature == null ? null : parentFeature.getWorkspace();
     for( final Object object : m_items )
       if( workspace != null && depth == FeatureVisitor.DEPTH_INFINITE_LINKS )
@@ -689,18 +689,12 @@ public class SplitSort implements FeatureList
         visitor.visit( (Feature) object );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#getParentFeature()
-   */
   @Override
-  public Feature getParentFeature( )
+  public Feature getOwner( )
   {
     return m_parentFeature;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#getParentFeatureTypeProperty()
-   */
   @Override
   public IRelationType getParentFeatureTypeProperty( )
   {
@@ -760,7 +754,7 @@ public class SplitSort implements FeatureList
   @Override
   public List<Feature> searchFeatures( final GM_Object geometry )
   {
-    final Feature parentFeature = getParentFeature();
+    final Feature parentFeature = getOwner();
     final GMLWorkspace workspace = parentFeature == null ? null : parentFeature.getWorkspace();
 
     final List< ? > query = query( geometry.getEnvelope(), null );
@@ -901,5 +895,23 @@ public class SplitSort implements FeatureList
   public IRelationType getPropertyType( )
   {
     return m_parentFeatureTypeProperty;
+  }
+
+  @Override
+  public QName getName( )
+  {
+    return getPropertyType().getQName();
+  }
+
+  @Override
+  public Object getValue( )
+  {
+    return this;
+  }
+
+  @Override
+  public void setValue( final Object value )
+  {
+    throw new UnsupportedOperationException();
   }
 }

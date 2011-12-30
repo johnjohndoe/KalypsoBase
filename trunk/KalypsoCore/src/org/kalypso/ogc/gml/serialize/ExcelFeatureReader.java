@@ -81,7 +81,7 @@ public final class ExcelFeatureReader extends AbstractTabularFeatureReader
   private void loadSheet( final HSSFSheet sheet ) throws CsvException, FilterEvaluationException
   {
     final FeatureList featureList = getFeatureList();
-    final Feature parentFeature = featureList.getParentFeature();
+    final Feature parentFeature = featureList.getOwner();
     final IRelationType parentRelation = featureList.getParentFeatureTypeProperty();
     final IFeatureType featureType = parentRelation.getTargetFeatureType();
 
