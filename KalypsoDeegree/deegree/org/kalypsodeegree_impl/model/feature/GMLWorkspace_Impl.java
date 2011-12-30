@@ -45,6 +45,7 @@ import java.util.Map;
 
 import javax.xml.namespace.NamespaceContext;
 
+import org.eclipse.core.runtime.PlatformObject;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
@@ -67,7 +68,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
  * @see #setFeatureProviderFactory(IFeatureProviderFactory)
  * @author doemming
  */
-public class GMLWorkspace_Impl implements GMLWorkspace
+public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
 {
   /** id -> feature */
   final Map<String, Feature> m_indexMap = new HashMap<String, Feature>();
@@ -696,13 +697,21 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     m_schemaLocation = schemaLocation;
   }
 
-  @Override
-  public GMLWorkspace getLinkedWorkspace( final String uri )
+  protected GMLWorkspace getLinkedWorkspace( final String uri )
   {
     final IFeatureProvider provider = m_factory.getFeatureProvider( this, uri );
     if( provider == null )
       return null;
 
     return provider.getWorkspace();
+  }
+
+  @Override
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  {
+    if( adapter == getClass() )
+      return this;
+
+    return super.getAdapter( adapter );
   }
 }
