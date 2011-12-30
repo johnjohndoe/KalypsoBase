@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.model.feature.search;
+package org.kalypsodeegree_impl.model.feature;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,8 +49,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.FeatureTypeFilter;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
+import org.kalypsodeegree_impl.model.feature.search.IReferenceCollectorStrategy;
 import org.kalypsodeegree_impl.model.feature.visitors.CollectorVisitor;
 
 /**
@@ -61,7 +60,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.CollectorVisitor;
  */
 public class DefaultReferenceCollectorStrategy implements IReferenceCollectorStrategy
 {
-  private final GMLWorkspace m_workspace;
+  private final GMLWorkspace_Impl m_workspace;
 
   private final Feature m_parentFeature;
 
@@ -69,7 +68,7 @@ public class DefaultReferenceCollectorStrategy implements IReferenceCollectorStr
 
   public DefaultReferenceCollectorStrategy( final GMLWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation )
   {
-    m_workspace = workspace;
+    m_workspace = (GMLWorkspace_Impl) workspace.getAdapter( GMLWorkspace_Impl.class );
     m_parentFeature = parentFeature;
     m_parentRelation = parentRelation;
   }

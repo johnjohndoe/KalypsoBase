@@ -60,7 +60,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
  * <p>
  * Cannot be used as workspace root.
  * </p>
- * 
+ *
  * @author Gernot Belger
  */
 public class XLinkedFeature_Impl extends PlatformObject implements Feature
@@ -130,14 +130,15 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
   public final Feature getFeature( )
   {
     final GMLWorkspace workspace = m_parentFeature.getWorkspace();
-    if( workspace == null || m_featureId == null )
+    final GMLWorkspace_Impl workspaceImpl = (GMLWorkspace_Impl) workspace.getAdapter( GMLWorkspace_Impl.class );
+    if( workspaceImpl == null || m_featureId == null )
     {
       // REMARK: This may happen while loading the gml, so we ignore it and all access to
       // getFeature() should check for null
       return null;
     }
 
-    final GMLWorkspace linkedWorkspace = workspace.getLinkedWorkspace( m_uri );
+    final GMLWorkspace linkedWorkspace = workspaceImpl.getLinkedWorkspace( m_uri );
     if( linkedWorkspace == null )
       throw new IllegalStateException( String.format( "Could not resolve xlinked workspace: %s", m_uri ) );
 
@@ -195,7 +196,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
 
   /**
    * format of name if "namespace:name" or just "name" - both will work
-   * 
+   *
    * @return array of properties, properties with maxoccurency>0 (as defined in applicationschema) will be embedded in
    *         java.util.List-objects
    * @see org.kalypsodeegree.model.feature.Feature#getProperty(java.lang.String)
@@ -298,7 +299,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
 
   /**
    * Returns the workspace of the linked feature.
-   * 
+   *
    * @see org.kalypsodeegree.model.feature.Feature#getWorkspace()
    */
   @Override

@@ -40,6 +40,7 @@ import java.util.List;
 
 import javax.xml.namespace.NamespaceContext;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -52,7 +53,7 @@ import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
  *
  * @author Andreas von Dömming
  */
-public interface GMLWorkspace extends ModellEventProvider
+public interface GMLWorkspace extends ModellEventProvider, IAdaptable
 {
   /**
    * Returns the root feature of the gml file represented by this workspace.
@@ -214,9 +215,6 @@ public interface GMLWorkspace extends ModellEventProvider
   /** Return the factory which creates feature providers used to load linked features. */
   // FIXME: should only be used internally
   IFeatureProviderFactory getFeatureProviderFactory( );
-
-  // FIXME: should only be used internally
-  GMLWorkspace getLinkedWorkspace( String uri );
 
   /**
    * The namespace context with which this workspace was read from a gm file (if any).<br>
