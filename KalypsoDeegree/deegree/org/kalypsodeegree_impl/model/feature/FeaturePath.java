@@ -284,7 +284,8 @@ public class FeaturePath
           }
           try
           {
-            final IFeatureType foundFT = GMLSchemaUtilities.getFeatureTypeQuiet( m_typename );
+            final IGMLSchema schema = workspace.getGMLSchema();
+            final IFeatureType foundFT = schema.getFeatureType( m_typename );
             if( foundFT != null )
             {
               final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, contextSchema, true, true );
@@ -293,7 +294,6 @@ public class FeaturePath
                 if( foundFT.equals( substType ) )
                   return substType;
               }
-// return foundFT;
             }
           }
           catch( final Exception e )
