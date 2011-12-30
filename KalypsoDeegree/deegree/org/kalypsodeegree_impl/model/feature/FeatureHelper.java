@@ -873,6 +873,7 @@ public final class FeatureHelper
     }
   }
 
+  // FIXME: check, if this can be replaced with Feature#getMember
   public static Feature resolveLink( final Feature feature, final QName qname )
   {
     return FeatureHelper.resolveLink( feature, qname, false );
@@ -887,6 +888,7 @@ public final class FeatureHelper
    *          If true and the property is an xlinked Feature, return the Feature where the xlink points to. Else the
    *          xlink itself is returned as feature.
    */
+  // FIXME: check, if this can be replaced with Feature#getMember
   public static Feature resolveLink( final Feature feature, final QName qname, final boolean followXLinks )
   {
     final IRelationType property = (IRelationType) feature.getFeatureType().getProperty( qname );
@@ -1040,6 +1042,7 @@ public final class FeatureHelper
    * @throws IllegalArgumentException
    *           If the target feature type of the given property is abstract.
    */
+  // FIXME: check, if this can be replaced with Feature#getMember
   public static Feature getSubFeature( final Feature parent, final QName propertyName )
   {
     final Object value = parent.getProperty( propertyName );
@@ -1500,7 +1503,10 @@ public final class FeatureHelper
 
   /**
    * Resolves linked features. Handles XLinks.
+   *
+   * @deprecated Use {@link Feature#getMember(QName)} instead.
    */
+  @Deprecated
   public static Feature resolveLinkedFeature( final GMLWorkspace targetWorkspace, final Object property )
   {
     if( property == null )
