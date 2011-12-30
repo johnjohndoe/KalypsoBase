@@ -58,12 +58,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 public interface BaseFeature extends IAdaptable
 {
   /**
-   * returns the property of the feature that matches the submitted property type
-   */
-  Object getProperty( IPropertyType propertyType );
-
-  /**
-   * returns the envelope / boundingbox of the feature
+   * returns the envelope / bounding box of the feature
    *
    * @deprecated Use {@link Deegree2Feature#getBoundedBy()} instead
    */
@@ -74,7 +69,7 @@ public interface BaseFeature extends IAdaptable
 
   /**
    * Returns the {@link IRelationType} where this feature resides inside its parent feature.
-   *
+   * 
    * @see #getParent()
    */
   IRelationType getParentRelation( );
@@ -84,15 +79,15 @@ public interface BaseFeature extends IAdaptable
   void setProperty( QName propQName, Object value );
 
   /**
+   * returns the property of the feature that matches the submitted property type
+   */
+  Object getProperty( IPropertyType propertyType );
+
+  /**
    * @deprecated use getPropery(PropertyType)
    */
   @Deprecated
   Object getProperty( String propLocalName );
 
   Object getProperty( QName propQName );
-
-  /**
-   * intended to be called from GMLWorkspace when root feature is set.
-   */
-  void setWorkspace( GMLWorkspace workspace );
 }
