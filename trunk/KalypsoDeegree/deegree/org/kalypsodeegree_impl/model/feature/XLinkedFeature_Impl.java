@@ -211,27 +211,6 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
     return feature.getProperty( pt );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#getGeometryProperties()
-   */
-  @Override
-  public GM_Object[] getGeometryProperties( )
-  {
-    return getGeometryPropertyValues();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#getDefaultGeometryProperty()
-   */
-  @Override
-  public GM_Object getDefaultGeometryProperty( )
-  {
-    return getDefaultGeometryPropertyValue();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#getEnvelope()
-   */
   @Override
   public GM_Envelope getEnvelope( )
   {
@@ -345,15 +324,6 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
     final Feature feature = getFeature();
     if( feature != null )
       feature.setProperty( propQName, value );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#invalidEnvelope()
-   */
-  @Override
-  public void invalidEnvelope( )
-  {
-    setEnvelopesUpdated();
   }
 
   public String getHref( )
@@ -479,38 +449,26 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
     return getFeatureType().getQName();
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#setEnvelopesUpdated()
-   */
   @Override
   public void setEnvelopesUpdated( )
   {
     final Feature feature = getFeature();
     if( feature != null )
-      feature.invalidEnvelope();
+      feature.setEnvelopesUpdated();
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#setFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
-   */
   @Override
   public void setFeatureType( final IFeatureType ft )
   {
     m_featureType = ft;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#setId(java.lang.String)
-   */
   @Override
   public void setId( final String fid )
   {
     m_featureId = fid;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getName()
-   */
   @Override
   public String getName( )
   {

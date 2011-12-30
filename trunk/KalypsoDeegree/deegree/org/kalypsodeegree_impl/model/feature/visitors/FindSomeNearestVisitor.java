@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -54,7 +54,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * Falls viele Objekte durchsucht werden, sollte die Suche zuerst durch ein .query auf der FeatureList bzw. dem
  * Workspace eingeschränkt werden.
  * </p>
- * 
+ *
  * @author belger
  */
 public class FindSomeNearestVisitor implements FeatureVisitor
@@ -79,7 +79,7 @@ public class FindSomeNearestVisitor implements FeatureVisitor
   private final int m_number;
 
   /**
-   *  
+   *
    */
   public FindSomeNearestVisitor( final GM_Position pos, final double radius, final int number, final String geometryProperty )
   {
@@ -108,13 +108,13 @@ public class FindSomeNearestVisitor implements FeatureVisitor
     if( feature.getFeatureType().getName().equals( RectifiedGridCoverage.getNameStatic() ) )
     {
       // TODO nadja handle this better
-      final GM_Object[] geoProps = feature.getGeometryProperties();
+      final GM_Object[] geoProps = feature.getGeometryPropertyValues();
       result = geoProps[0];
     }
     else if( m_geometryProperty != null )
       result = (GM_Object) feature.getProperty( m_geometryProperty );
     else
-      result = feature.getDefaultGeometryProperty();
+      result = feature.getDefaultGeometryPropertyValue();
     return result;
   }
 

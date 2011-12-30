@@ -46,7 +46,6 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
  * Adds additional methods to a Feature A Feature is adaptable, thus allowing Adapter Factories and/or Subclasses to
@@ -62,24 +61,6 @@ public interface BaseFeature extends IAdaptable
    * returns the property of the feature that matches the submitted propertytype
    */
   Object getProperty( IPropertyType propertyType );
-
-  /**
-   * returns all geometry properties of the feature. If no geometry could be found an <tt>GM_Object[]</tt> with zero
-   * length will be returned.
-   * 
-   * @deprecated use {FeatureDeegreeTwo}.getGeometryPropertyValues instead
-   */
-  @Deprecated
-  GM_Object[] getGeometryProperties( );
-
-  /**
-   * Returns the default geometry of the <tt>Feature</tt>.
-   * 
-   * @return default geometry or null, if the <tt>Feature</tt> has none
-   * @deprecated use {@link Deegree2Feature#getDefaultGeometryPropertyValue()} instead
-   */
-  @Deprecated
-  GM_Object getDefaultGeometryProperty( );
 
   /**
    * returns the envelope / boundingbox of the feature
@@ -127,11 +108,4 @@ public interface BaseFeature extends IAdaptable
    * intended to be called from GMLWorkspace when root feature is set.
    */
   void setWorkspace( GMLWorkspace workspace );
-
-  /**
-   * @deprecated Use {@link Deegree2Feature#setEnvelopesUpdated()} instead
-   * @see org.kalypsodeegree.model.feature.BaseFeature#invalidEnvelope()
-   */
-  @Deprecated
-  void invalidEnvelope( );
 }
