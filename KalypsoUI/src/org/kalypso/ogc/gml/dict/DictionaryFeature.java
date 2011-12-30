@@ -106,18 +106,6 @@ public class DictionaryFeature implements Feature
     return m_feature.getId();
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#getParent()
-   */
-  @Override
-  public Feature getParent( )
-  {
-    return m_feature.getParent();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#getParentRelation()
-   */
   @Override
   public IRelationType getParentRelation( )
   {

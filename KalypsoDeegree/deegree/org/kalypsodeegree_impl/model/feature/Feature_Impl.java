@@ -268,18 +268,6 @@ public class Feature_Impl extends PlatformObject implements Feature
     return null;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#getParent()
-   */
-  @Override
-  public Feature getParent( )
-  {
-    return getOwner();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#getParentRelation()
-   */
   @Override
   public IRelationType getParentRelation( )
   {
@@ -447,7 +435,7 @@ public class Feature_Impl extends PlatformObject implements Feature
     // invalidated.
     // TODO: This code is probably not very performant. How to improve this?
     // Alternative: instead of invalidating: before every query we check if any feature-envelope is invalid
-    final Feature parent = getParent();
+    final Feature parent = getOwner();
     if( parent == null )
       return;
 

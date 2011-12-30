@@ -1339,7 +1339,7 @@ public final class FeatureHelper
       return false;
     else if( child.getParentRelation() != null )
     {
-      final Feature childParent = child.getParent();
+      final Feature childParent = child.getOwner();
       final Feature childRoot = child.getWorkspace().getRootFeature();
       if( parent.equals( childParent ) )
         return true;

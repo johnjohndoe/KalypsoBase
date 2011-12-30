@@ -242,7 +242,7 @@ public class GMLContentProvider implements ITreeContentProvider
     if( element instanceof Feature )
     {
       final Feature feature = (Feature) element;
-      final Feature parent = feature.getParent();
+      final Feature parent = feature.getOwner();
 
       if( !m_showAssociations )
         return parent;

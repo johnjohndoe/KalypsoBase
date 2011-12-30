@@ -52,19 +52,19 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * provide another "view" over a feature object. For instance, an observation-feature can be directly represented as an
  * observation.<br>
  * <br>
- * 
+ *
  * @see Deegree2Feature
  */
 public interface BaseFeature extends IAdaptable
 {
   /**
-   * returns the property of the feature that matches the submitted propertytype
+   * returns the property of the feature that matches the submitted property type
    */
   Object getProperty( IPropertyType propertyType );
 
   /**
    * returns the envelope / boundingbox of the feature
-   * 
+   *
    * @deprecated Use {@link Deegree2Feature#getBoundedBy()} instead
    */
   @Deprecated
@@ -73,15 +73,8 @@ public interface BaseFeature extends IAdaptable
   GMLWorkspace getWorkspace( );
 
   /**
-   * Return the parent of this feature, that is, the feature wich contains this feature as inline feature.
-   * 
-   * @see #getParentRelation()
-   */
-  Feature getParent( );
-
-  /**
    * Returns the {@link IRelationType} where this feature resides inside its parent feature.
-   * 
+   *
    * @see #getParent()
    */
   IRelationType getParentRelation( );
@@ -97,7 +90,7 @@ public interface BaseFeature extends IAdaptable
   Object getProperty( String propLocalName );
 
   /**
-   * @deprecated
+   * @deprecated Use {@link #setProperty(IPropertyType, Object)} instead.
    */
   @Deprecated
   void setProperty( String propLocalName, Object value );
