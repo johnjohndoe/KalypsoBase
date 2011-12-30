@@ -66,12 +66,13 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.FeaturePath;
 
 /**
  * GMLWorkspace container used by the LayerTableViewer. Implements {@link IKalypsoTheme} as this was used as a hack when
  * first implementing the LayerTableViewer. Should be refaktored as soon as we refaktor the LayerTableViewer.<br>
  * Copy/Pasted from the old {@link IKalypsoFeatureTheme}, in order to more easily refaktor that one.
- * 
+ *
  * @author Gernot Belger
  */
 public class KalypsoTableFeatureTheme extends AbstractKalypsoTheme implements IKalypsoFeatureTheme, ModellEventListener, IKalypsoStyleListener
@@ -101,7 +102,7 @@ public class KalypsoTableFeatureTheme extends AbstractKalypsoTheme implements IK
     if( featureFromPath instanceof FeatureList )
     {
       m_featureList = (FeatureList) featureFromPath;
-      m_featureType = m_workspace.getFeatureTypeFromPath( m_featurePath );
+      m_featureType = new FeaturePath( m_featurePath ).getFeatureType( m_workspace );
     }
     else if( featureFromPath instanceof Feature )
     {

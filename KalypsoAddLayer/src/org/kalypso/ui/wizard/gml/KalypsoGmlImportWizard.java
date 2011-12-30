@@ -65,7 +65,6 @@ import org.kalypso.ui.editor.gmleditor.part.FeatureAssociationTypeElement;
 import org.kalypso.ui.i18n.Messages;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
 
@@ -119,7 +118,6 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
   {
     final String source = m_page.getSource();
     final IStructuredSelection selection = m_page.getSelection();
-    final GMLWorkspace workspace = m_page.getWorkspace();
 
     final Object firstElement = selection.getFirstElement();
     final List<String> pathList = new ArrayList<String>();
@@ -128,7 +126,7 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
     {
       // create featurepath for element
       final Feature feature = (Feature) firstElement;
-      final FeaturePath featurepath = workspace.getFeaturepathForFeature( feature );
+      final FeaturePath featurepath = new FeaturePath( feature );
       final IFeatureType ft = feature.getFeatureType();
       // find title
       String title = NamedFeatureHelper.getName( feature );
@@ -142,8 +140,8 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
       // create featurepath for association
       final FeatureAssociationTypeElement link = (FeatureAssociationTypeElement) firstElement;
       final Feature parent = link.getParentFeature();
-      final FeaturePath parentFeaturePath = workspace.getFeaturepathForFeature( parent );
-      final IRelationType ftp = link.getAssociationTypeProperty();
+      final FeaturePath parentFeaturePath = new FeaturePath( parent );
+      final IRelationType ftp = link.getPropertyType();
 
       final IFeatureType associationFeatureType = ftp.getTargetFeatureType();
       final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, null, false, true );
