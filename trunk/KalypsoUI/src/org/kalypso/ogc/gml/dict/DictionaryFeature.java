@@ -85,18 +85,6 @@ public class DictionaryFeature implements Feature
     return m_feature.getAdapter( adapter );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.DeegreeFeature#getDefaultGeometryProperty()
-   */
-  @Override
-  public GM_Object getDefaultGeometryProperty( )
-  {
-    return m_feature.getDefaultGeometryProperty();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.DeegreeFeature#getEnvelope()
-   */
   @Override
   public GM_Envelope getEnvelope( )
   {
@@ -112,18 +100,6 @@ public class DictionaryFeature implements Feature
     return m_feature.getFeatureType();
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.DeegreeFeature#getGeometryProperties()
-   */
-  @Override
-  public GM_Object[] getGeometryProperties( )
-  {
-    return m_feature.getGeometryProperties();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.DeegreeFeature#getId()
-   */
   @Override
   public String getId( )
   {
@@ -230,18 +206,6 @@ public class DictionaryFeature implements Feature
     throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#invalidEnvelope()
-   */
-  @Override
-  public void invalidEnvelope( )
-  {
-    m_feature.invalidEnvelope();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getBoundedBy()
-   */
   @Override
   public GM_Envelope getBoundedBy( ) throws GeometryException
   {
