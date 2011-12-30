@@ -75,21 +75,23 @@ public interface GMLWorkspace extends ModellEventProvider, IAdaptable
    */
   Feature getFeature( String id );
 
-  // FIXME: rework this stuff
   /**
    * resolves the associationlink to a feature, maxOccurs =1
    */
+  // FIXME: move into feature api
   Feature resolveLink( Feature srcFeature, IRelationType linkProperty );
 
   /**
    * resolves the associationlink to a feature, maxOccurs >1
    */
+  // FIXME: move into feature api
   Feature[] resolveLinks( Feature srcFeature, IRelationType linkProperty );
 
   /**
    * returns all Features that that link to the linkTargetFeature, with the specified linkPropertyname and are type of
    * linkSourceFeatureType or do substitute it
    */
+  // FIXME: move into feature api
   Feature[] resolveWhoLinksTo( Feature linkTargetfeature, IFeatureType linkSrcFeatureType, IRelationType linkProperty );
 
   URL getContext( );
