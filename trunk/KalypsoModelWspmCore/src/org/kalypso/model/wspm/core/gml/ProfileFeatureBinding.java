@@ -215,7 +215,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     profil.setProperty( IWspmConstants.PROFIL_PROPERTY_CRS, crs );
 
     /* TODO - @hack - add flow direction to profile meta data */
-    final Feature parent = getParent();
+    final Feature parent = getOwner();
     if( parent instanceof WspmWaterBody )
     {
       final WspmWaterBody waterBody = (WspmWaterBody) parent;

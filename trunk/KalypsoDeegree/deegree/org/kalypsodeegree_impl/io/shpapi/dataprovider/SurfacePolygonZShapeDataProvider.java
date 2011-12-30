@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -48,7 +48,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * This is because of the very slow handling of MultiShapesZ in ArcView.<br>
  * If you want to export the TriangulatedSurface feature as it is in the gml, use
  * {@link TriangulatedSurfaceMultiPartShapeDataProvider} instead.
- * 
+ *
  * @author Thomas Jung
  */
 public class SurfacePolygonZShapeDataProvider implements IShapeDataProvider
@@ -80,7 +80,7 @@ public class SurfacePolygonZShapeDataProvider implements IShapeDataProvider
     {
       // TODO return generated feature for each patch
       /* Copy the feature. */
-      final Feature copiedFeature = FeatureHelper.cloneFeature( m_features[0].getParent(), m_features[0].getParentRelation(), m_features[0] );
+      final Feature copiedFeature = FeatureHelper.cloneFeature( m_features[0].getOwner(), m_features[0].getParentRelation(), m_features[0] );
       copiedFeature.setProperty( getGeometryPropertyType(), getGeometry( index ) );
       return copiedFeature;
     }

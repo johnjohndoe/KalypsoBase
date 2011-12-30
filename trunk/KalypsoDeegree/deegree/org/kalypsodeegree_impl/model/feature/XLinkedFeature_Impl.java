@@ -287,18 +287,6 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
     return m_parentFeature.getWorkspace();
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#getParent()
-   */
-  @Override
-  public Feature getParent( )
-  {
-    return getOwner();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#setWorkspace(org.kalypsodeegree.model.feature.GMLWorkspace)
-   */
   @Override
   public void setWorkspace( final GMLWorkspace workspace )
   {

@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -50,7 +50,7 @@ import org.kalypsodeegree.model.feature.event.IGmlWorkspaceDelta;
  * For each event which should be sent from the workspace, one factory-object ist responsible.
  * <p>
  * The factory collects simple changes (feature, value) and create a tree of workspace deltas.
- * 
+ *
  * @author Gernot Belger
  */
 public class GmlWorkspaceDeltaFactory
@@ -71,7 +71,7 @@ public class GmlWorkspaceDeltaFactory
   /**
    * Adds a new workspace delta to the tree of deltas. Don't call this method after {@link #createDelta()} was called
    * once.
-   * 
+   *
    * @throws IllegalStateException
    *           If this method is called after {@link #createDelta()} was called.
    */
@@ -129,7 +129,7 @@ public class GmlWorkspaceDeltaFactory
       final GmlWorkspaceDelta newDelta = new GmlWorkspaceDelta( feature, property, kind );
       propertyMap.put( property, newDelta );
 
-      final Feature parent = feature.getParent();
+      final Feature parent = feature.getOwner();
       final IPropertyType parentProperty = feature.getParentRelation();
       final GmlWorkspaceDelta parentDelta = findParentDelta( parent, parentProperty );
       parentDelta.addChild( newDelta );
