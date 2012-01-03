@@ -336,7 +336,6 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
     return m_workspace.isBrokenLink( parentFeature, ftp, pos );
   }
 
-  @Deprecated
   @Override
   public IGMLSchema getGMLSchema( )
   {
