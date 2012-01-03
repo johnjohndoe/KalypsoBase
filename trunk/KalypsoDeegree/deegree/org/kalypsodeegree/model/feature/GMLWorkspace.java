@@ -62,12 +62,7 @@ public interface GMLWorkspace extends ModellEventProvider, IAdaptable
 
   /**
    * Returns the {@link IGMLSchema} that was used to load / create this workspace.
-   *
-   * @deprecated Use {@link org.kalypso.gmlschema.GMLSchemaUtilities#getSchemaQuiet(String)} or
-   *             {@link org.kalypso.gmlschema.GMLSchemaUtilities#getFeatureTypeQuiet(QName)} instead.
    */
-  // FIXME: sometimes still makes sense to use this; remove deprecation?
-  @Deprecated
   IGMLSchema getGMLSchema( );
 
   /**
