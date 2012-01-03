@@ -105,26 +105,17 @@ public class AdapterPartListener<C> implements IPartListener2
     }
   }
 
-  /**
-   * @see org.eclipse.ui.IPartListener2#partActivated(org.eclipse.ui.IWorkbenchPartReference)
-   */
   @Override
   public void partActivated( final IWorkbenchPartReference partRef )
   {
     adaptPartReference( partRef );
   }
 
-  /**
-   * @see org.eclipse.ui.IPartListener2#partBroughtToTop(org.eclipse.ui.IWorkbenchPartReference)
-   */
   @Override
   public void partBroughtToTop( final IWorkbenchPartReference partRef )
   {
   }
 
-  /**
-   * @see org.eclipse.ui.IPartListener2#partClosed(org.eclipse.ui.IWorkbenchPartReference)
-   */
   @Override
   public void partClosed( final IWorkbenchPartReference partRef )
   {
@@ -138,9 +129,6 @@ public class AdapterPartListener<C> implements IPartListener2
     }
   }
 
-  /**
-   * @see org.eclipse.ui.IPartListener2#partDeactivated(org.eclipse.ui.IWorkbenchPartReference)
-   */
   @Override
   public void partDeactivated( final IWorkbenchPartReference partRef )
   {
