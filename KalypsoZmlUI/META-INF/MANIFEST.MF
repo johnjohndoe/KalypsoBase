@@ -1,5 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
+Bundle-Localization: plugin
 Bundle-Name: KalypsoZmlUI
 Bundle-SymbolicName: org.kalypso.zml.ui;singleton:=true
 Bundle-Version: 11.6.4.qualifier

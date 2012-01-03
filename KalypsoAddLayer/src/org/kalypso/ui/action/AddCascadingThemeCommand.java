@@ -85,7 +85,7 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
 
   /**
    * Add Cascading theme constructor
-   * 
+   *
    * @param mapModell
    *          the gmt file
    * @param name
@@ -156,8 +156,9 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
   {
     final IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
 
-    final GisTemplateMapModell mapModell = new GisTemplateMapModell( m_mapModell.getContext(), m_mapModell.getCoordinatesSystem(), m_mapModell.getProject(), selectionManager );
+    final GisTemplateMapModell mapModell = new GisTemplateMapModell( m_mapModell.getContext(), m_mapModell.getCoordinatesSystem(), selectionManager );
     for( final ICommand command : layerCommands )
+    {
       if( command instanceof AddThemeCommand )
       {
         final AddThemeCommand myCmd = (AddThemeCommand) command;
@@ -185,6 +186,7 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
         final JAXBElement<StyledLayerType> layerElement = factory.createLayer( myLayer );
         layers.add( layerElement );
       }
+    }
   }
 
   public CascadingLayer init( final ObjectFactory factory )

@@ -105,7 +105,7 @@ import org.xml.sax.XMLReader;
 
 /**
  * Hilfsklasse, um aus den Binding-Klassen 'echte' Objekte zu erzeugen und umgekehrt
- * 
+ *
  * @author Belger
  */
 public final class GisTemplateHelper
@@ -294,6 +294,16 @@ public final class GisTemplateHelper
     }
   }
 
+  /**
+   * @param location
+   *          An absolute (i.e. resolved resource location).
+   */
+  public static final Gismapview loadGisMapView( final URL location ) throws JAXBException, SAXException, ParserConfigurationException, IOException
+  {
+    final InputSource inputSource = new InputSource( location.toString() );
+    return loadGisMapView( inputSource );
+  }
+
   // TODO: for all calling methods: close streams!
   public static final Gismapview loadGisMapView( final InputSource is ) throws JAXBException, SAXException, ParserConfigurationException, IOException
   {
@@ -315,6 +325,16 @@ public final class GisTemplateHelper
     if( storage instanceof IEncodedStorage )
       is.setEncoding( ((IEncodedStorage) storage).getCharset() );
     return GisTemplateHelper.loadGisTableview( is );
+  }
+
+  /**
+   * @param templateLocation
+   *          An absolute (i.e. resolved) resource location
+   */
+  public static final Gistableview loadGisTableview( final URL templateLocation ) throws JAXBException
+  {
+    final InputSource source = new InputSource( templateLocation.toString() );
+    return loadGisTableview( source );
   }
 
   public static final Gistableview loadGisTableview( final InputSource is ) throws JAXBException
@@ -409,7 +429,7 @@ public final class GisTemplateHelper
 
   /**
    * This method creates a new Map with a bounding box
-   * 
+   *
    * @return gismapview new empty map with a layer list
    */
   public static Gismapview emptyGisView( )

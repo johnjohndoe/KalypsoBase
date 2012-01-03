@@ -47,7 +47,6 @@ import javax.swing.SwingUtilities;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -270,23 +269,20 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
       monitor.worked( 1 );
 
       final URL context;
-      final IProject project;
       if( input instanceof IFileEditorInput )
       {
         final IFile file = ((IFileEditorInput) input).getFile();
         context = file == null ? null : ResourceUtilities.createURL( file );
-        project = file == null ? null : file.getProject();
       }
       else
       {
         context = null;
-        project = null;
       }
 
       if( !m_disposed )
       {
         final GM_Envelope env = GisTemplateHelper.getBoundingBox( gisview );
-        final GisTemplateMapModell mapModell = new GisTemplateMapModell( context, KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), project, m_selectionManager );
+        final GisTemplateMapModell mapModell = new GisTemplateMapModell( context, KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), m_selectionManager );
         mapModell.createFromTemplate( gisview );
         setMapModell( mapModell, env );
       }

@@ -60,7 +60,7 @@ public class PoolableObjectType implements IPoolableObjectType
 
   /**
    * Constructor. Defaults ignoreExceptions to false.
-   * 
+   *
    * @param type
    *          type of object to load
    * @param source
@@ -75,7 +75,7 @@ public class PoolableObjectType implements IPoolableObjectType
 
   /**
    * Constructor.
-   * 
+   *
    * @param type
    *          type of object to load
    * @param source
@@ -140,6 +140,7 @@ public class PoolableObjectType implements IPoolableObjectType
     final IPoolableObjectType other = (IPoolableObjectType) obj;
     if( !getType().equals( other.getType() ) )
       return false;
+
     if( !getLocation().equals( other.getLocation() ) )
       return false;
 

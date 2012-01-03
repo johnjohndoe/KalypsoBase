@@ -43,7 +43,6 @@ package org.kalypso.ogc.gml;
 import java.awt.Graphics;
 import java.net.URL;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -247,47 +246,30 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
     return m_innerMapModel.insertLayer( layer, position );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoLayerModell#getContext()
-   */
   @Override
   public URL getContext( )
   {
     return m_innerMapModel.getContext();
   }
 
-  /**
-   * @return
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getActiveTheme()
-   */
   @Override
   public IKalypsoTheme getActiveTheme( )
   {
     return m_innerMapModel.getActiveTheme();
   }
 
-  /**
-   * @return
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getAllThemes()
-   */
   @Override
   public IKalypsoTheme[] getAllThemes( )
   {
     return m_innerMapModel.getAllThemes();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getCoordinatesSystem()
-   */
   @Override
   public String getCoordinatesSystem( )
   {
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
-   */
   @Override
   public GM_Envelope getFullExtent( )
   {
@@ -319,16 +301,6 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
   public GisTemplateMapModell getInnerMapModel( )
   {
     return m_innerMapModel;
-  }
-
-  /**
-   * @return
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getProject()
-   */
-  @Override
-  public IProject getProject( )
-  {
-    return m_innerMapModel.getProject();
   }
 
   /**
