@@ -83,16 +83,13 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
 
   private IFile m_mapFile;
 
-  /**
-   * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setMapModel(org.kalypso.ogc.gml.IKalypsoLayerModell)
-   */
   @Override
   public void setMapModel( final IKalypsoLayerModell modell )
   {
     Assert.isTrue( modell != null );
 
     m_mapModel = modell;
-    m_project = m_mapModel.getProject();
+    m_project = ResourceUtilities.findProjectFromURL( m_mapModel.getContext() );
 
     final URL context = m_mapModel.getContext();
     m_mapFile = ResourceUtilities.findFileFromURL( context );
@@ -111,7 +108,7 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
     m_gmlFilePage.setDescription( "Please choose where to store the data file containing the grid coverages. You may also enter an existing filename." );
     addPage( m_gmlFilePage );
 
-    m_page = new ImportRasterSourceWizardPage( "Add RasterDataModel" ); //$NON-NLS-1$ 
+    m_page = new ImportRasterSourceWizardPage( "Add RasterDataModel" ); //$NON-NLS-1$
     if( m_project != null )
       m_page.setProject( m_project );
     addPage( m_page );

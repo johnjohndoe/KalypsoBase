@@ -118,11 +118,8 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
     GisTemplateLayerHelper.updateProperties( layerType, this );
 
     final URL url = CascadingKalypsoTheme.resolveUrl( context, m_mapViewRefUrl );
-    setInnerMapModel( new GisTemplateMapModell( url, mapModel.getCoordinatesSystem(), mapModel.getProject(), selectionManager )
+    setInnerMapModel( new GisTemplateMapModell( url, mapModel.getCoordinatesSystem(), selectionManager )
     {
-      /**
-       * @see org.kalypso.ogc.gml.GisTemplateMapModell#getThemeParent(org.kalypso.ogc.gml.IKalypsoTheme)
-       */
       @Override
       public Object getThemeParent( final IKalypsoTheme theme )
       {
@@ -215,7 +212,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
     }
     catch( final Throwable e )
     {
-      final String msessage = Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.6", file.getName() ); //$NON-NLS-1$ 
+      final String msessage = Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.6", file.getName() ); //$NON-NLS-1$
       final IStatus status = StatusUtilities.statusFromThrowable( e, msessage );
       setStatus( status );
       return status;

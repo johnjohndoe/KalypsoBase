@@ -15,5 +15,7 @@
   <uri name="obstableview.template.kalypso.org" uri="template/obstableview.xsd" />
 
   <uri name="zml.kalypso.org" uri="zml/observation.xsd" />
+  
+  <uri name="http://www.sourceforge.net/projects/kalypsobase/layout" uri="ui/layout.xsd" />
 
 </catalog>

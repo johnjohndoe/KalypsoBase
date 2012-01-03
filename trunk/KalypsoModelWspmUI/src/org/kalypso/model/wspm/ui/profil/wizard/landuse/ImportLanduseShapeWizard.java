@@ -49,6 +49,7 @@ import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.IRefreshable;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.ui.i18n.Messages;
@@ -142,7 +143,7 @@ public class ImportLanduseShapeWizard extends Wizard implements IWorkbenchWizard
       final IKalypsoTheme theme = (IKalypsoTheme) nodeElement;
       final IMapModell model = theme.getMapModell();
 
-      m_project = model.getProject();
+      m_project = ResourceUtilities.findProjectFromURL( model.getContext() );
     }
     else
       throw new UnsupportedOperationException();

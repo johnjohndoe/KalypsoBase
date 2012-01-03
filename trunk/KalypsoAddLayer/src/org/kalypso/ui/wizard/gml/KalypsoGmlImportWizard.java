@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -51,6 +52,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
@@ -83,14 +85,13 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
   public void addPages( )
   {
     m_page = new GmlFileImportPage( "GML:importPage", Messages.getString( "org.kalypso.ui.wizard.gml.KalypsoGmlImportWizard.0" ), ImageProvider.IMAGE_UTIL_UPLOAD_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_page.setProjectSelection( m_mapModel.getProject() );
+
+    final IProject project = ResourceUtilities.findProjectFromURL( m_mapModel.getContext() );
+    m_page.setProjectSelection( project );
 
     addPage( m_page );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#performFinish()
-   */
   @Override
   public boolean performFinish( )
   {
