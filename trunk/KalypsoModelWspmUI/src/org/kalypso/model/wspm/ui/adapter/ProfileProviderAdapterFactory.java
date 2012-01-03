@@ -90,6 +90,7 @@ public class ProfileProviderAdapterFactory implements IAdapterFactory
   public Object getAdapter( final Object adaptableObject, @SuppressWarnings("rawtypes") final Class adapterType )
   {
     if( adapterType == IProfilProvider.class )
+    {
       if( adaptableObject instanceof IWorkbenchPart )
       {
         final IWorkbenchPart part = (IWorkbenchPart) adaptableObject;
@@ -122,6 +123,7 @@ public class ProfileProviderAdapterFactory implements IAdapterFactory
           return featureSelectionProfileProvider;
         }
       }
+    }
 
     return null;
   }
