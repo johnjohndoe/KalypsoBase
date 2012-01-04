@@ -214,7 +214,7 @@ public class WPSSimulationThread extends Thread
   @Override
   public void run( )
   {
-    m_jobInfo.setState( ISimulationConstants.STATE.RUNNING );
+    //m_jobInfo.setState( ISimulationConstants.STATE.RUNNING );
 
     final String jobID = m_jobInfo.getId();
     try
