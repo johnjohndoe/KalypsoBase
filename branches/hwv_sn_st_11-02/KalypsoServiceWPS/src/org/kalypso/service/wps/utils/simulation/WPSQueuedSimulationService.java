@@ -314,6 +314,7 @@ public class WPSQueuedSimulationService
         if( jobInfo.getState() == ISimulationConstants.STATE.WAITING )
         {
           LOGGER.info( "Scheduler: Starting job: " + jobInfo.getId() ); //$NON-NLS-1$
+          jobInfo.setState( ISimulationConstants.STATE.RUNNING );
           cjt.start();
           return;
         }
