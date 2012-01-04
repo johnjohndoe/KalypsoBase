@@ -71,7 +71,7 @@ import de.openali.odysseus.chartconfig.x020.ChartType;
  * mechanism and after that relative to the current url.context (TODO: the last thing does not work yet).</li>
  * <li>featureKeyName: The key-name under which the current feature will be put into the ChartDataProvider.</li>
  * </ul>
- * 
+ *
  * @author Gernot Belger
  */
 public class ChartFeatureControlFactory implements IExtensionsFeatureControlFactory2
@@ -110,7 +110,7 @@ public class ChartFeatureControlFactory implements IExtensionsFeatureControlFact
       }
     }
 
-    final String configurationUrl = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog().resolve( configurationUrn, configurationUrn );
+    final String configurationUrl = KalypsoCorePlugin.getDefault().getCatalogManager().resolve( configurationUrn, configurationUrn );
 
     try
     {

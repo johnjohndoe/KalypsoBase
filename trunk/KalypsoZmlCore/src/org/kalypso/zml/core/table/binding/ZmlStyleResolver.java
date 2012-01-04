@@ -54,7 +54,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.zml.core.table.ZmlTableConfigurationLoader;
 import org.kalypso.zml.core.table.schema.CellStyleType;
 import org.kalypso.zml.core.table.schema.StyleReferenceType;
@@ -162,8 +161,7 @@ public final class ZmlStyleResolver
 
   private CellStyle findUrnStyle( final String urn, final String identifier ) throws MalformedURLException, JAXBException
   {
-    final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
-    final String uri = baseCatalog.resolve( urn, urn );
+    final String uri = KalypsoCorePlugin.getDefault().getCatalogManager().resolve( urn, urn );
 
     return findUrlStyle( uri, identifier );
   }

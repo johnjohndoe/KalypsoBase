@@ -61,7 +61,6 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.catalog.ICatalog;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.MapMaker;
@@ -201,8 +200,7 @@ public final class ChartTypeResolver implements IReferenceResolver
 
   private LayerType findUrnLayerType( final URL context, final String urn, final String identifier ) throws XmlException, IOException
   {
-    final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
-    final String uri = baseCatalog.resolve( urn, urn );
+    final String uri = KalypsoCorePlugin.getDefault().getCatalogManager().resolve( urn, urn );
 
     return findUrlLayerType( context, uri, identifier );
   }
@@ -314,8 +312,7 @@ public final class ChartTypeResolver implements IReferenceResolver
 
   private MapperType findUrnMapperType( final URL context, final String urn, final String identifier ) throws XmlException, IOException
   {
-    final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
-    final String uri = baseCatalog.resolve( urn, urn );
+    final String uri = KalypsoCorePlugin.getDefault().getCatalogManager().resolve( urn, urn );
 
     return findUrlMapperType( context, uri, identifier );
   }
@@ -351,8 +348,7 @@ public final class ChartTypeResolver implements IReferenceResolver
 
   private AbstractStyleType findUrnStyleType( final URL context, final String urn, final String identifier ) throws XmlException, IOException
   {
-    final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
-    final String uri = baseCatalog.resolve( urn, urn );
+    final String uri = KalypsoCorePlugin.getDefault().getCatalogManager().resolve( urn, urn );
 
     return findUrlStyleType( context, uri, identifier );
   }

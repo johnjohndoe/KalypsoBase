@@ -62,6 +62,8 @@ import oasis.names.tc.entity.xmlns.xml.catalog.Catalog;
 import oasis.names.tc.entity.xmlns.xml.catalog.ObjectFactory;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -77,9 +79,10 @@ import org.kalypso.core.i18n.Messages;
  * <p>
  * the default-catalog is dynamic, but changes will not be saved
  * </p>
- * 
+ *
  * @author doemming
  */
+@SuppressWarnings("restriction")
 public class CatalogManager
 {
   public static final JAXBContext JAX_CONTEXT_CATALOG = JaxbUtilities.createQuiet( ObjectFactory.class );
@@ -111,7 +114,7 @@ public class CatalogManager
     m_urnGenerators.put( key, urnGenerator );
   }
 
-  public synchronized ICatalog getBaseCatalog( )
+  private synchronized ICatalog getBaseCatalog( )
   {
     if( m_baseCatalog != null )
       return m_baseCatalog;
@@ -136,7 +139,7 @@ public class CatalogManager
     }
   }
 
-  public synchronized ICatalog getCatalog( final URI catalogURI )
+  synchronized ICatalog getCatalog( final URI catalogURI )
   {
     if( !m_openCatalogs.containsKey( catalogURI ) )
     {
@@ -200,7 +203,7 @@ public class CatalogManager
       m_openCatalogs.remove( catalogURI );
   }
 
-  public synchronized void ensureExisting( final String baseURN ) throws MalformedURLException, URISyntaxException
+  synchronized void ensureExisting( final String baseURN ) throws MalformedURLException, URISyntaxException
   {
     if( !baseURN.endsWith( ":" ) ) //$NON-NLS-1$
       throw new UnsupportedOperationException( Messages.getString( "org.kalypso.core.catalog.CatalogManager.6" ) + baseURN ); //$NON-NLS-1$
@@ -257,11 +260,27 @@ public class CatalogManager
     return new DynamicCatalog( this, catalogURL, catalog );
   }
 
-  /**
-   * @see org.kalypso.core.catalog.IURNGenerator#generateURNFor(java.lang.Object)
-   */
   public synchronized IURNGenerator getURNGeneratorFor( final Class< ? > supportingClass )
   {
     return m_urnGenerators.get( supportingClass );
+  }
+
+  public synchronized String resolve( final String systemID, final String publicID )
+  {
+    /* First try, use wst to resolve uri */
+    final URIResolver uriResolver = URIResolverPlugin.createResolver();
+    final String resolvedUri = uriResolver.resolve( null, publicID, systemID );
+    if( resolvedUri != null && !resolvedUri.equals( systemID ) )
+      return resolvedUri;
+
+    /* FIXME: remove our old implementation */
+    final ICatalog baseCatalog = getBaseCatalog();
+    return baseCatalog.resolve( systemID, publicID );
+  }
+
+  public void addNextCatalog( final URL catalogURL )
+  {
+    final ICatalog baseCatalog = getBaseCatalog();
+    baseCatalog.addNextCatalog( catalogURL );
   }
 }

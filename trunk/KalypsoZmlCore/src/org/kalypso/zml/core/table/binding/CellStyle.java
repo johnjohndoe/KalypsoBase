@@ -59,7 +59,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.contribs.eclipse.swt.graphics.RGBUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.zml.core.table.schema.CellStyleType;
 import org.kalypso.zml.core.table.schema.StylePropertyName;
 import org.kalypso.zml.core.table.schema.StylePropertyType;
@@ -217,8 +216,7 @@ public class CellStyle implements Cloneable
     if( cached != null )
       return cached;
 
-    final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
-    final String uri = baseCatalog.resolve( urlString, urlString );
+    final String uri = KalypsoCorePlugin.getDefault().getCatalogManager().resolve( urlString, urlString );
 
     final ImageDescriptor descriptor = ImageDescriptor.createFromURL( new URL( uri ) );
     final Image image = descriptor.createImage();
