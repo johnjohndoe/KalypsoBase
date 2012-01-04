@@ -1612,5 +1612,6 @@
   <extension point="org.kalypso.core.layout">
       <layoutPartFactory id="gisMap" class="org.kalypso.ui.internal.layoutwizard.map.MapLayoutPartFactory"/>
       <layoutPartFactory id="gisTable" class="org.kalypso.ui.internal.layoutwizard.gistable.GisTableLayoutPartFactory"/>
+      <layoutPartFactory id="featureView" class="org.kalypso.ui.internal.layoutwizard.featureview.FeatureViewLayoutPartFactory"/>
   </extension>    
 </plugin>
