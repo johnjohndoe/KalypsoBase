@@ -40,16 +40,23 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.core.layoutwizard;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.arguments.Arguments;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.internal.layoutwizard.ChildWizardContext;
-import org.kalypso.core.internal.layoutwizard.part.StatusLayoutPart;
 
 /**
  * @author Gernot Belger
  */
 public final class LayoutFactory
 {
+  private static final String PROP_LAYOUT_LOCATION = "pageLayout"; //$NON-NLS-1$
+
   private LayoutFactory( )
   {
     throw new UnsupportedOperationException();
@@ -65,8 +72,35 @@ public final class LayoutFactory
     return new ChildWizardContext( defaultContext, specificArgs );
   }
 
-  public static ILayoutPart createStatusPart( final ILayoutPageContext context, final IStatus status )
+  public static LayoutParser readLayout( final ILayoutPageContext context )
   {
-    return new StatusLayoutPart( "rootStatus", context, status );
+    final LayoutParser layoutParser = new LayoutParser( context );
+    layoutParser.read();
+    return layoutParser;
   }
+
+  static URL findLayoutLocation( final ILayoutPageContext context ) throws CoreException
+  {
+    final Arguments arguments = context.getArguments();
+
+    final String relativeLayoutLocation = arguments.getProperty( PROP_LAYOUT_LOCATION );
+    if( relativeLayoutLocation == null )
+    {
+      final String message = String.format( "Layoutkonfiguration fehlt (Argument '%s')", PROP_LAYOUT_LOCATION );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), message );
+      throw new CoreException( status );
+    }
+
+    try
+    {
+      return context.resolveURI( relativeLayoutLocation );
+    }
+    catch( final MalformedURLException e )
+    {
+      final String message = String.format( "Ungültige Layoutkonfiguration '%s'", relativeLayoutLocation );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), message, e );
+      throw new CoreException( status );
+    }
+  }
+
 }
