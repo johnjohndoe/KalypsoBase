@@ -172,9 +172,6 @@ public class MapLayoutPart extends AbstractWizardLayoutPart implements IMapPanel
       m_mapPanel.dispose();
   }
 
-  /**
-   * @see org.kalypso.hwv.ui.wizards.calculation.modelpages.layout.AbstractWizardLayoutPart#createSourceProvider(org.eclipse.ui.services.IServiceLocator)
-   */
   @Override
   protected ISourceProvider createSourceProvider( final IServiceLocator context )
   {

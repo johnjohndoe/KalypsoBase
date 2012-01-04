@@ -49,7 +49,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.commons.command.ICommand;
@@ -73,12 +72,15 @@ public class LayoutPageContext implements ILayoutPageContext
 
   private final Arguments m_arguments;
 
-  public LayoutPageContext( final ILayoutWizardPage page, final URL context, final ICommandTarget commandTarget, final Arguments arguments )
+  private final IServiceLocator m_locator;
+
+  public LayoutPageContext( final ILayoutWizardPage page, final URL context, final ICommandTarget commandTarget, final Arguments arguments, final IServiceLocator locator )
   {
     m_page = page;
     m_context = context;
     m_commandTarget = commandTarget;
     m_arguments = arguments;
+    m_locator = locator;
   }
 
   @Override
@@ -139,30 +141,19 @@ public class LayoutPageContext implements ILayoutPageContext
   @Override
   public Object getService( @SuppressWarnings("rawtypes") final Class api )
   {
-    final IServiceLocator serviceLocator = getServiceLocator();
-    if( serviceLocator == null )
+    if( m_locator == null )
       return null;
 
-    return serviceLocator.getService( api );
+    return m_locator.getService( api );
   }
 
   @Override
   public boolean hasService( @SuppressWarnings("rawtypes") final Class api )
   {
-    final IServiceLocator serviceLocator = getServiceLocator();
-    if( serviceLocator == null )
+    if( m_locator == null )
       return false;
 
-    return serviceLocator.hasService( api );
-  }
-
-  private IServiceLocator getServiceLocator( )
-  {
-    final IWizardContainer container = getContainer();
-    if( container instanceof IViewPart )
-      return ((IViewPart) container).getSite();
-
-    return null;
+    return m_locator.hasService( api );
   }
 
   @Override
