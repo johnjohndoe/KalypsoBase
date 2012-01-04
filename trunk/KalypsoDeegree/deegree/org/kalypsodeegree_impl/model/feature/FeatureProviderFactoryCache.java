@@ -39,7 +39,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureProvider;
+import org.kalypsodeegree.model.feature.IWorkspaceProvider;
 
 /**
  * Abstract feature provider factory which parses the href and caches the providers.
@@ -48,7 +48,7 @@ import org.kalypsodeegree.model.feature.IFeatureProvider;
  */
 public class FeatureProviderFactoryCache
 {
-  private final Map<String, IFeatureProvider> m_providers = new HashMap<String, IFeatureProvider>();
+  private final Map<String, IWorkspaceProvider> m_providers = new HashMap<String, IWorkspaceProvider>();
 
   private final IFeatureProviderFactory m_factory;
 
@@ -59,7 +59,7 @@ public class FeatureProviderFactoryCache
 
   public synchronized void dispose( )
   {
-    for( final IFeatureProvider provider : m_providers.values() )
+    for( final IWorkspaceProvider provider : m_providers.values() )
       provider.dispose();
   }
 
@@ -68,7 +68,7 @@ public class FeatureProviderFactoryCache
     return m_factory;
   }
 
-  public synchronized IFeatureProvider getFeatureProvider( final GMLWorkspace context, final String urn )
+  public synchronized IWorkspaceProvider getFeatureProvider( final GMLWorkspace context, final String urn )
   {
     if( m_providers.containsKey( urn ) )
       return m_providers.get( urn );
@@ -76,7 +76,7 @@ public class FeatureProviderFactoryCache
     if( m_factory == null )
       return null;
 
-    final IFeatureProvider provider = m_factory.createFeatureProvider( context, urn );
+    final IWorkspaceProvider provider = m_factory.createFeatureProvider( context, urn );
     m_providers.put( urn, provider );
     return provider;
   }

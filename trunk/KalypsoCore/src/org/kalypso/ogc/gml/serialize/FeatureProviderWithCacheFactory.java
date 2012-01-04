@@ -51,7 +51,7 @@ import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureProvider;
+import org.kalypsodeegree.model.feature.IWorkspaceProvider;
 import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 
 /**
@@ -64,12 +64,12 @@ import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
  */
 public class FeatureProviderWithCacheFactory implements IFeatureProviderFactory
 {
-  private final Map<String, IFeatureProvider> m_cache = new HashMap<String, IFeatureProvider>();
+  private final Map<String, IWorkspaceProvider> m_cache = new HashMap<String, IWorkspaceProvider>();
 
   private final IUrlResolver m_urlResolver = new UrlResolver();
 
   @Override
-  public synchronized IFeatureProvider createFeatureProvider( final GMLWorkspace context, final String urn )
+  public synchronized IWorkspaceProvider createFeatureProvider( final GMLWorkspace context, final String urn )
   {
     final String uri = KalypsoCorePlugin.getDefault().getCatalogManager().resolve( urn, urn );
 
@@ -93,7 +93,7 @@ public class FeatureProviderWithCacheFactory implements IFeatureProviderFactory
     }
   }
 
-  private IFeatureProvider getFailedFromCache( final String uri )
+  private IWorkspaceProvider getFailedFromCache( final String uri )
   {
     if( m_cache.containsKey( uri ) )
       return m_cache.get( uri );
@@ -105,7 +105,7 @@ public class FeatureProviderWithCacheFactory implements IFeatureProviderFactory
     return provider;
   }
 
-  private IFeatureProvider getFromCache( final GMLWorkspace context, final String uri )
+  private IWorkspaceProvider getFromCache( final GMLWorkspace context, final String uri )
   {
     if( m_cache.containsKey( uri ) )
       return m_cache.get( uri );
@@ -118,8 +118,8 @@ public class FeatureProviderWithCacheFactory implements IFeatureProviderFactory
 
   public void dispose( )
   {
-    final Collection<IFeatureProvider> values = m_cache.values();
-    for( final IFeatureProvider provider : values )
+    final Collection<IWorkspaceProvider> values = m_cache.values();
+    for( final IWorkspaceProvider provider : values )
       provider.dispose();
     m_cache.clear();
   }

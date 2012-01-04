@@ -57,7 +57,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureProvider;
+import org.kalypsodeegree.model.feature.IWorkspaceProvider;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
@@ -684,7 +684,7 @@ public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
 
   protected GMLWorkspace getLinkedWorkspace( final String uri )
   {
-    final IFeatureProvider provider = m_factory.getFeatureProvider( this, uri );
+    final IWorkspaceProvider provider = m_factory.getFeatureProvider( this, uri );
     if( provider == null )
       return null;
 
