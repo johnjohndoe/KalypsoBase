@@ -42,7 +42,6 @@ package org.kalypso.core.layoutwizard;
 
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.commons.arguments.Arguments;
 
 /**
  * @author Gernot Belger
@@ -57,8 +56,5 @@ public interface ILayoutWizardPage extends IWizardPage
 
   ILayoutPageContext getWizardContext( );
 
-  // FIXME: move into context?
   ILayoutPart findLayoutPart( String id );
-
-  Arguments getArguments( );
 }

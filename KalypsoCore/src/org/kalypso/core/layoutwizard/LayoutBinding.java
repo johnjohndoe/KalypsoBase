@@ -47,8 +47,6 @@ import javax.xml.bind.Unmarshaller;
 import net.sourceforge.projects.kalypsobase.layout.ObjectFactory;
 
 import org.kalypso.commons.bind.JaxbUtilities;
-import org.kalypso.commons.bind.SchemaCache;
-import org.kalypso.core.KalypsoCorePlugin;
 
 /**
  * Utilities for bound layout schema.
@@ -57,7 +55,7 @@ import org.kalypso.core.KalypsoCorePlugin;
  */
 public final class LayoutBinding
 {
-  private static final SchemaCache SCHEMA_CACHE = new SchemaCache( KalypsoCorePlugin.getID(), "etc/schemas/" ); //$NON-NLS-1$
+  // private static final SchemaCache SCHEMA_CACHE = new SchemaCache( KalypsoCorePlugin.getID(), "etc/schemas/" ); //$NON-NLS-1$
 
   private static JAXBContext JC = null;
 

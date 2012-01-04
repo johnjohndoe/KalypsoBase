@@ -73,6 +73,7 @@ import org.kalypso.core.internal.layoutwizard.controller.SelectionLayoutControll
 import org.kalypso.core.internal.layoutwizard.part.GridLayoutContainer;
 import org.kalypso.core.internal.layoutwizard.part.SashConfiguration;
 import org.kalypso.core.internal.layoutwizard.part.SashContainer;
+import org.kalypso.core.internal.layoutwizard.part.StatusLayoutPart;
 import org.kalypso.core.internal.layoutwizard.part.TabFolderContainer;
 import org.kalypso.core.internal.layoutwizard.part.TabItemContainer;
 import org.kalypso.core.internal.layoutwizard.part.ViewLayoutPart;
@@ -90,20 +91,29 @@ public class LayoutParser
 
   private ILayoutPart m_layoutPart;
 
-  private ILayoutController[] m_controllers;
+  private ILayoutController[] m_controllers = new ILayoutController[0];
 
   public LayoutParser( final ILayoutPageContext defaultContext )
   {
     m_defaultContext = defaultContext;
   }
 
-  public void read( final URL location ) throws CoreException
+  public void read( )
   {
-    final Page page = readXml( location );
+    try
+    {
+      final URL location = LayoutFactory.findLayoutLocation( m_defaultContext );
 
-    m_layoutPart = buildLayout( page.getAbstractPart().getValue() );
+      final Page page = readXml( location );
 
-    m_controllers = createControllers( page.getController() );
+      m_layoutPart = buildLayout( page.getAbstractPart().getValue() );
+
+      m_controllers = createControllers( page.getController() );
+    }
+    catch( final CoreException e )
+    {
+      m_layoutPart = new StatusLayoutPart( "rootStatus", m_defaultContext, e.getStatus() ); //$NON-NLS-1$
+    }
   }
 
   private Page readXml( final URL location ) throws CoreException
