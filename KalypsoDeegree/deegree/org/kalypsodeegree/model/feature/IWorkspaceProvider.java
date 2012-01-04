@@ -33,51 +33,14 @@
  * lat/lon GmbH
  * http://www.lat-lon.de
  */
-package org.kalypsodeegree_impl.model.feature;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IWorkspaceProvider;
+package org.kalypsodeegree.model.feature;
 
 /**
- * Abstract feature provider factory which parses the href and caches the providers.
- * 
  * @author Gernot Belger
  */
-public class FeatureProviderFactoryCache
+public interface IWorkspaceProvider
 {
-  private final Map<String, IWorkspaceProvider> m_providers = new HashMap<String, IWorkspaceProvider>();
+  void dispose( );
 
-  private final IFeatureProviderFactory m_factory;
-
-  public FeatureProviderFactoryCache( final IFeatureProviderFactory factory )
-  {
-    m_factory = factory;
-  }
-
-  public synchronized void dispose( )
-  {
-    for( final IWorkspaceProvider provider : m_providers.values() )
-      provider.dispose();
-  }
-
-  public IFeatureProviderFactory getFactory( )
-  {
-    return m_factory;
-  }
-
-  public synchronized IWorkspaceProvider getFeatureProvider( final GMLWorkspace context, final String urn )
-  {
-    if( m_providers.containsKey( urn ) )
-      return m_providers.get( urn );
-
-    if( m_factory == null )
-      return null;
-
-    final IWorkspaceProvider provider = m_factory.createFeatureProvider( context, urn );
-    m_providers.put( urn, provider );
-    return provider;
-  }
+  GMLWorkspace getWorkspace( );
 }

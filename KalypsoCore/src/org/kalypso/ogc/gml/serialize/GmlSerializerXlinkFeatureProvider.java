@@ -48,13 +48,13 @@ import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureProvider;
+import org.kalypsodeegree.model.feature.IWorkspaceProvider;
 import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 
 /**
  * @author Gernot Belger
  */
-public class GmlSerializerXlinkFeatureProvider extends AbstractXLinkFeatureProvider implements IFeatureProvider
+public class GmlSerializerXlinkFeatureProvider extends AbstractXLinkFeatureProvider implements IWorkspaceProvider
 {
   private GMLWorkspace m_workspace;
 

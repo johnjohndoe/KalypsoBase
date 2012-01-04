@@ -41,14 +41,14 @@
 package org.kalypso.ogc.gml.serialize;
 
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureProvider;
+import org.kalypsodeegree.model.feature.IWorkspaceProvider;
 
 /**
  * This implementation does nothing but returns an already existent workspace.
  * 
  * @author Gernot Belger
  */
-public class PlainFeatureProvider implements IFeatureProvider
+public class PlainFeatureProvider implements IWorkspaceProvider
 {
   private GMLWorkspace m_workspace;
 

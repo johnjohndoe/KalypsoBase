@@ -42,7 +42,7 @@ package org.kalypso.ogc.gml.serialize;
 
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureProvider;
+import org.kalypsodeegree.model.feature.IWorkspaceProvider;
 import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 
 /**
@@ -53,7 +53,7 @@ import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 public class GmlSerializerFeatureProviderFactory implements IFeatureProviderFactory
 {
   @Override
-  public IFeatureProvider createFeatureProvider( final GMLWorkspace context, final String urn )
+  public IWorkspaceProvider createFeatureProvider( final GMLWorkspace context, final String urn )
   {
     final String uri = KalypsoCorePlugin.getDefault().getCatalogManager().resolve( urn, urn );
 
