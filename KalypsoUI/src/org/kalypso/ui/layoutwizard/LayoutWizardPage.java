@@ -43,9 +43,12 @@ package org.kalypso.ui.layoutwizard;
 import java.net.URL;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.commons.command.DefaultCommandManager;
@@ -71,26 +74,22 @@ public class LayoutWizardPage extends WizardPage implements ILayoutWizardPage
 
   private ILayoutController[] m_controllers;
 
-  private final URL m_context;
+  private final LayoutPageContext m_wizardContext;
 
-  private LayoutPageContext m_wizardContext;
-
-  private final Arguments m_arguments;
+  private final LayoutWizardActivationHandler m_activationHandler = new LayoutWizardActivationHandler( this );
 
   public LayoutWizardPage( final String pageName, final URL context, final Arguments arguments )
   {
     super( pageName );
 
-    m_context = context;
-    m_arguments = arguments;
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    m_wizardContext = new LayoutPageContext( this, context, m_commandTarget, arguments, workbench );
   }
 
   @Override
   public void createControl( final Composite parent )
   {
     final FormToolkit toolkit = ToolkitUtils.createToolkit( parent );
-
-    m_wizardContext = new LayoutPageContext( this, m_context, m_commandTarget, m_arguments );
 
     try
     {
@@ -124,6 +123,16 @@ public class LayoutWizardPage extends WizardPage implements ILayoutWizardPage
     m_commandTarget.dispose();
 
     super.dispose();
+  }
+
+  @Override
+  public void setWizard( final IWizard newWizard )
+  {
+    final IWizard oldWizard = getWizard();
+
+    super.setWizard( newWizard );
+
+    m_activationHandler.setWizard( oldWizard, newWizard );
   }
 
   @Override
