@@ -43,7 +43,6 @@ package org.kalypso.core.layoutwizard;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.validation.Schema;
 
 import net.sourceforge.projects.kalypsobase.layout.ObjectFactory;
 
@@ -76,7 +75,7 @@ public final class LayoutBinding
   private static Unmarshaller createUnmarshaller( final String schemaFile ) throws JAXBException
   {
     final Unmarshaller unmarshaller = getJaxbContext().createUnmarshaller();
-    final Schema schema = SCHEMA_CACHE.getSchema( schemaFile );
+    // final Schema schema = SCHEMA_CACHE.getSchema( schemaFile );
     // FIXME: make a tracing option
     // unmarshaller.setSchema( schema );
     return unmarshaller;
