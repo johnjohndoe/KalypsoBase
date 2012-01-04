@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.core.layoutwizard;
+package org.kalypso.ui.layoutwizard;
 
 import java.net.URL;
 
@@ -48,8 +48,15 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.arguments.Arguments;
-import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
+import org.kalypso.core.layoutwizard.ILayoutController;
+import org.kalypso.core.layoutwizard.ILayoutPageContext;
+import org.kalypso.core.layoutwizard.ILayoutPart;
+import org.kalypso.core.layoutwizard.ILayoutWizardPage;
+import org.kalypso.core.layoutwizard.LayoutFactory;
+import org.kalypso.core.layoutwizard.LayoutParser;
+import org.kalypso.util.command.JobExclusiveCommandTarget;
 
 /**
  * A default {@link ILayoutWizardPage} implementation.
@@ -58,7 +65,7 @@ import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
  */
 public class LayoutWizardPage extends WizardPage implements ILayoutWizardPage
 {
-  private final ICommandTarget m_commandTarget;
+  private final JobExclusiveCommandTarget m_commandTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
 
   private ILayoutPart m_layoutPart;
 
@@ -70,11 +77,10 @@ public class LayoutWizardPage extends WizardPage implements ILayoutWizardPage
 
   private final Arguments m_arguments;
 
-  public LayoutWizardPage( final String pageName, final ICommandTarget commandTarget, final URL context, final Arguments arguments )
+  public LayoutWizardPage( final String pageName, final URL context, final Arguments arguments )
   {
     super( pageName );
 
-    m_commandTarget = commandTarget;
     m_context = context;
     m_arguments = arguments;
   }
@@ -114,6 +120,8 @@ public class LayoutWizardPage extends WizardPage implements ILayoutWizardPage
 
     if( m_layoutPart != null )
       m_layoutPart.dispose();
+
+    m_commandTarget.dispose();
 
     super.dispose();
   }

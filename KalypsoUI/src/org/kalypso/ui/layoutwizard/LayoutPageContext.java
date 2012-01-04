@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.core.layoutwizard;
+package org.kalypso.ui.layoutwizard;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -57,6 +57,8 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.CatalogManager;
+import org.kalypso.core.layoutwizard.ILayoutPageContext;
+import org.kalypso.core.layoutwizard.ILayoutWizardPage;
 
 /**
  * @author Gernot Belger

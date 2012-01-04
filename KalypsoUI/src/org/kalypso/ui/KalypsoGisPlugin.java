@@ -73,6 +73,8 @@ import org.osgi.framework.BundleContext;
  */
 public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChangeListener
 {
+  public static final String PLUGIN_ID = "org.kalypso.ui"; //$NON-NLS-1$
+
   private static KalypsoGisPlugin THE_PLUGIN = null;
 
   private DefaultFeatureModifierFactory m_defaultFeatureControlFactory;
@@ -171,7 +173,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   /**
    * This method is called when the plug-in is stopped
-   * 
+   *
    * @param context
    * @throws Exception
    */
@@ -198,7 +200,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   /**
    * Returns the shared instance.
-   * 
+   *
    * @return singleton
    */
   public static KalypsoGisPlugin getDefault( )
