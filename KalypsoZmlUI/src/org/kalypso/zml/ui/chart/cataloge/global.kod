@@ -28,6 +28,13 @@
         <FontWeight>NORMAL</FontWeight>
         <FontStyle>NORMAL</FontStyle>
       </TextStyle>
+      <TextStyle role="headerBold">
+        <Size>10</Size>
+        <TextColor>000000</TextColor>
+        <FontFamily>Arial</FontFamily>
+        <FontWeight>BOLD</FontWeight>
+        <FontStyle>NORMAL</FontStyle>
+      </TextStyle>
       <!-- invisible styles -->
       <LineStyle role="invisible_line" isVisible="false" />
       <PointStyle role="invisible_point" isVisible="false" />
@@ -874,8 +881,6 @@
           <LineColor>000040</LineColor>
         </Stroke>
       </AreaStyle>
-
-
     </Styles>
     <Layers>
       <Layer id="W">
