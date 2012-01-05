@@ -43,6 +43,7 @@ package org.kalypso.ui.layoutwizard;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IExecutionListener;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.IPageChangingListener;
@@ -56,6 +57,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.commands.ICommandService;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.view.WizardView;
+import org.kalypso.core.layoutwizard.ILayoutPageContext;
 import org.kalypso.core.layoutwizard.ILayoutWizardPage;
 import org.kalypso.core.status.StatusDialog;
 
@@ -118,6 +120,8 @@ public class LayoutWizardActivationHandler
 
   public LayoutWizardActivationHandler( final ILayoutWizardPage page )
   {
+    Assert.isNotNull( page );
+
     m_page = page;
   }
 
@@ -133,9 +137,13 @@ public class LayoutWizardActivationHandler
 
   private void hookWizard( final IWizard newWizard )
   {
+    final ILayoutPageContext wizardContext = m_page.getWizardContext();
+    if( wizardContext == null )
+      return;
+
     // TODO: not good: will answer to any command execution
     // We should restrict this somehow to commands from the map toolbar
-    final ICommandService cmdService = (ICommandService) m_page.getWizardContext().getService( ICommandService.class );
+    final ICommandService cmdService = (ICommandService) wizardContext.getService( ICommandService.class );
     if( cmdService != null )
       cmdService.addExecutionListener( m_cmdExecutionListener );
 

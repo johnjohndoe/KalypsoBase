@@ -51,8 +51,8 @@ import javax.xml.bind.JAXBElement;
 import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.ogc.gml.CascadingLayerKalypsoTheme;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme;
@@ -75,7 +75,7 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
 
   private CascadingLayer m_layer;
 
-  private CascadingLayerKalypsoTheme m_theme;
+  private IKalypsoCascadingTheme m_theme;
 
   private final ADD_THEME_POSITION m_position;
 
@@ -244,11 +244,11 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
     if( ADD_THEME_POSITION.eFront.equals( m_position ) )
     {
       final IKalypsoTheme[] themes = m_mapModell.getAllThemes();
-      m_theme = (CascadingLayerKalypsoTheme) m_mapModell.insertLayer( m_layer, getPosition( themes ) );
+      m_theme = (IKalypsoCascadingTheme) m_mapModell.insertLayer( m_layer, getPosition( themes ) );
     }
     else if( ADD_THEME_POSITION.eBack.equals( m_position ) )
     {
-      m_theme = (CascadingLayerKalypsoTheme) m_mapModell.addLayer( m_layer );
+      m_theme = (IKalypsoCascadingTheme) m_mapModell.addLayer( m_layer );
     }
 
     m_mapModell.activateTheme( m_theme );

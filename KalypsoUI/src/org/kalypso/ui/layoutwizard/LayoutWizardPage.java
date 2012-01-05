@@ -90,6 +90,9 @@ public class LayoutWizardPage extends WizardPage implements ILayoutWizardPage
   public void createControl( final Composite parent )
   {
     final FormToolkit toolkit = ToolkitUtils.createToolkit( parent );
+    // REMARK: removes the gray border from the wizard page; however does not work nice
+    // with pages of different type (with and wo toolkit).
+    toolkit.adapt( parent );
 
     try
     {

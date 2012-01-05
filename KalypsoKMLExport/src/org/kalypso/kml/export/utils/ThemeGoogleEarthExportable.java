@@ -40,10 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.kml.export.utils;
 
-import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
-import org.kalypso.ogc.gml.GisTemplateFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.KalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
 
 /**
@@ -51,18 +50,12 @@ import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
  */
 public class ThemeGoogleEarthExportable implements IKalypsoThemePredicate
 {
-
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate#decide(org.kalypso.ogc.gml.IKalypsoTheme)
-   */
   @Override
   public boolean decide( final IKalypsoTheme theme )
   {
-    if( theme instanceof GisTemplateFeatureTheme )
+    if( theme instanceof IKalypsoFeatureTheme )
       return theme.isVisible();
-    else if( theme instanceof KalypsoFeatureTheme )
-      return theme.isVisible();
-    else if( theme instanceof AbstractCascadingLayerTheme )
+    else if( theme instanceof IKalypsoCascadingTheme )
       return theme.isVisible();
 
     return false;
