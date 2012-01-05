@@ -4,15 +4,10 @@
 package org.kalypso.kml.export.wizard;
 
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
@@ -29,8 +24,7 @@ import org.kalypso.kml.export.KalypsoKMLPlugin;
 import org.kalypso.kml.export.constants.IKMLExportSettings;
 import org.kalypso.kml.export.interfaces.IKMLAdapter;
 import org.kalypso.kml.export.utils.ThemeGoogleEarthExportable;
-import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
-import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -47,7 +41,7 @@ import de.micromata.opengis.kml.v_2_2_0.Kml;
 
 /**
  * basic runnable to export a map view into a kml file.
- * 
+ *
  * @author Dirk Kuch
  */
 public class KMLExporter implements ICoreRunnableWithProgress
@@ -86,28 +80,6 @@ public class KMLExporter implements ICoreRunnableWithProgress
     }
 
     m_provider = provider.toArray( new IKMLAdapter[] {} );
-  }
-
-  /**
-   * @return
-   * @throws IOException
-   */
-  private File createTmpDir( ) throws IOException
-  {
-    final URL urlTmpDir = new File( System.getProperty( "java.io.tmpdir" ) ).toURI().toURL(); //$NON-NLS-1$
-
-    Assert.isNotNull( urlTmpDir );
-
-    /* delete old test dir */
-    final URL urlBaseDir = new URL( urlTmpDir + "kalypsoGoogleEarthExport/" ); //$NON-NLS-1$
-
-    final File fBaseDir = new File( urlBaseDir.getFile() );
-    if( !fBaseDir.exists() )
-      FileUtils.forceMkdir( fBaseDir );
-
-    FileUtils.cleanDirectory( fBaseDir );
-
-    return fBaseDir;
   }
 
   /*
@@ -192,13 +164,13 @@ public class KMLExporter implements ICoreRunnableWithProgress
       return;
 
     /* get inner themes */
-    if( theme instanceof AbstractCascadingLayerTheme )
+    if( theme instanceof IKalypsoCascadingTheme )
     {
       final Folder folder = parentFolder.createAndAddFolder();
       folder.setName( theme.getName().getValue() );
 
-      final AbstractCascadingLayerTheme cascading = (AbstractCascadingLayerTheme) theme;
-      final GisTemplateMapModell inner = cascading.getInnerMapModel();
+      final IKalypsoCascadingTheme cascading = (IKalypsoCascadingTheme) theme;
+      final IMapModell inner = cascading.getInnerMapModel();
 
       final IKalypsoTheme[] themes = inner.getAllThemes();
       for( final IKalypsoTheme t : themes )

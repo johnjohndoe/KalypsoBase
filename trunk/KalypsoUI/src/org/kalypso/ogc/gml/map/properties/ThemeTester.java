@@ -47,7 +47,7 @@ import org.eclipse.core.expressions.PropertyTester;
 import org.kalypso.contribs.eclipse.core.runtime.AdapterUtils;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
+import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ui.KalypsoUIDebug;
@@ -55,7 +55,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * This property tester tests a {@link IKalypsoTheme}'s.
- * 
+ *
  * @author Gernot Belger
  */
 public class ThemeTester extends PropertyTester
@@ -175,7 +175,7 @@ public class ThemeTester extends PropertyTester
 
   private boolean testIsCascading( final IKalypsoTheme theme )
   {
-    if( theme instanceof AbstractCascadingLayerTheme )
+    if( theme instanceof IKalypsoCascadingTheme )
       return true;
 
     return false;

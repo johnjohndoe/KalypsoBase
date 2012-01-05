@@ -62,26 +62,18 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 /**
  * @author Stefan Kurzbach extended by Dirk Kuch
  */
-public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme implements IKalypsoCascadingTheme, IKalypsoSaveableTheme, IKalypsoLayerModell
+abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme implements IKalypsoCascadingTheme, IKalypsoSaveableTheme, IKalypsoLayerModell
 {
   private GisTemplateMapModell m_innerMapModel;
 
   private final IMapModellListener m_modelListener = new MapModellAdapter()
   {
-    /**
-     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeActivated(org.kalypso.ogc.gml.mapmodel.IMapModell,
-     *      org.kalypso.ogc.gml.IKalypsoTheme, org.kalypso.ogc.gml.IKalypsoTheme)
-     */
     @Override
     public void themeActivated( final IMapModell source, final IKalypsoTheme previouslyActive, final IKalypsoTheme nowActive )
     {
       handleThemeActivated( nowActive );
     }
 
-    /**
-     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeAdded(org.kalypso.ogc.gml.mapmodel.IMapModell,
-     *      org.kalypso.ogc.gml.IKalypsoTheme)
-     */
     @Override
     public void themeAdded( final IMapModell source, final IKalypsoTheme theme )
     {
@@ -289,15 +281,13 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
     return m_innerMapModel.getFullExtentBoundingBox();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getDefaultIcon()
-   */
   @Override
   public ImageDescriptor getDefaultIcon( )
   {
     return KalypsoGisPlugin.getImageProvider().getImageDescriptor( ImageProvider.DESCRIPTORS.IMAGE_THEME_CASCADING );
   }
 
+  @Override
   public GisTemplateMapModell getInnerMapModel( )
   {
     return m_innerMapModel;
@@ -305,7 +295,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
 
   /**
    * Overwritten in order to have correct parent for tree strucutures.
-   * 
+   *
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getThemeParent(org.kalypso.ogc.gml.IKalypsoTheme)
    */
   @Override

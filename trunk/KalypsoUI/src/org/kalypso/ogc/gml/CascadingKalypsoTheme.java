@@ -75,9 +75,6 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
 {
   private boolean m_resolved = false;
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#isLoaded()
-   */
   @Override
   public boolean isLoaded( )
   {

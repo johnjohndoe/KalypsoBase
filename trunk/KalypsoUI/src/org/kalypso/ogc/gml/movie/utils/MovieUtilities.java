@@ -53,12 +53,12 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ogc.gml.movie.IMovieImageProvider;
 import org.kalypso.ogc.gml.movie.standard.DefaultMovieImageProvider;
@@ -73,15 +73,8 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  *
  * @author Holger Albert
  */
-public class MovieUtilities
+public final class MovieUtilities
 {
-  /**
-   * The constructor.
-   */
-  private MovieUtilities( )
-  {
-  }
-
   /**
    * This function searches the map model for a {@link AbstractCascadingLayerTheme} with the property "movieTheme" set.
    *
@@ -89,17 +82,17 @@ public class MovieUtilities
    *          The map model.
    * @return The {@link AbstractCascadingLayerTheme} or null. FIXME: return IKalypsoCascadingTheme instead!
    */
-  public static AbstractCascadingLayerTheme findMovieTheme( final GisTemplateMapModell mapModel ) throws Exception
+  public static IKalypsoCascadingTheme findMovieTheme( final IMapModell mapModel ) throws Exception
   {
     final IKalypsoTheme[] themes = MapModellHelper.findThemeByProperty( mapModel, IKalypsoUIConstants.MOVIE_THEME_PROPERTY, IKalypsoThemeVisitor.DEPTH_ZERO );
     if( themes == null || themes.length == 0 )
       throw new Exception( "Es wurde kein Filmthema in der aktiven Karte gefunden..." );
 
     final IKalypsoTheme theme = themes[0];
-    if( !(theme instanceof AbstractCascadingLayerTheme) )
+    if( !(theme instanceof IKalypsoCascadingTheme) )
       throw new Exception( "Es wurde kein Filmthema in der aktiven Karte gefunden..." );
 
-    return (AbstractCascadingLayerTheme) theme;
+    return (IKalypsoCascadingTheme) theme;
   }
 
   /**
