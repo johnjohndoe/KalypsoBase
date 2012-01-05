@@ -64,7 +64,7 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * some basic feature utils
- * 
+ *
  * @author Dirk Kuch
  */
 public final class FeatureUtils
@@ -293,7 +293,21 @@ public final class FeatureUtils
     }
 
     return base;
-
   }
+
+  /**
+   * Checks, if one of the isUsed flags has changed. Checks only feature with the given owner.
+   */
+  public static boolean checkChange( final Feature owner, final FeatureChange[] changes, final QName property )
+  {
+    for( final FeatureChange change : changes )
+    {
+      if( change.getFeature().getOwner() == owner && change.getProperty().getQName().equals( property ) )
+        return true;
+    }
+
+    return false;
+  }
+
 
 }
