@@ -41,8 +41,10 @@
 package org.kalypso.ogc.sensor.timeseries.merged;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -88,57 +90,95 @@ public class MergedObservation extends AbstractObservationDecorator implements I
   }
 
   /**
+   * Same as {@link MergedObservation#MergedObservation(String, ObservationSource[], MetadataList, null)}
+   */
+  public MergedObservation( final String href, final ObservationSource[] sources, final MetadataList metadata )
+  {
+    this( href, sources, metadata, null );
+  }
+
+  /**
+   * @param forceAxisType
+   *          If set to non-<code>null</code>, we use the axis from the source that contains an persistable axis of this
+   *          type. Else, the axes from the first source are used.
    * @param metadata
    *          The metadata for this new observation. During merge process, all data-source information will be cleared
    *          and replaced by the new data source information.
    */
-  public MergedObservation( final String href, final ObservationSource[] sources, final MetadataList metadata )
+  public MergedObservation( final String href, final ObservationSource[] sources, final MetadataList metadata, final String forceAxisType )
   {
-    super( merge( href, sources, metadata ) );
+    super( merge( href, sources, metadata, forceAxisType ) );
   }
 
-  private static IObservation merge( final String href, final ObservationSource[] sources, final MetadataList metadata )
+  private static IObservation merge( final String href, final ObservationSource[] sources, final MetadataList metadata, final String forceAxisType )
   {
-    final IAxis[] axes = getAxisList( sources );
+    final IAxis[] axes = getAxisList( sources, forceAxisType );
+    final IAxis[] axesWithSources = addSourceAxes( axes );
 
-    final MergeObservationWorker worker = new MergeObservationWorker( href, sources, axes, metadata );
+    final MergeObservationWorker worker = new MergeObservationWorker( href, sources, axesWithSources, metadata );
     worker.execute( new NullProgressMonitor() );
 
     return worker.getObservation();
   }
 
-  private static IAxis[] getAxisList( final ObservationSource[] sources )
+  private static IAxis[] addSourceAxes( final IAxis[] axes )
   {
-    for( final ObservationSource source : sources )
+    final Collection<IAxis> resultAxes = new ArrayList<IAxis>();
+
+    resultAxes.addAll( Arrays.asList( axes ) );
+
+    for( final IAxis axis : axes )
     {
-      // *grmml* first model defines axes of result model?
-      final IObservation observation = source.getObservation();
-      final Collection<IAxis> resultAxes = new ArrayList<IAxis>();
+      if( !AxisUtils.isValueAxis( axis ) )
+        continue;
 
-      final IAxis[] axes = observation.getAxes();
-      for( final IAxis axis : axes )
+      if( AxisUtils.findDataSourceAxis( axes, axis ) == null )
       {
-        if( axis.isPersistable() )
-          resultAxes.add( axis );
+        final IAxis dataSourceAxis = DataSourceHelper.createSourceAxis( axis );
+        resultAxes.add( dataSourceAxis );
       }
-
-      for( final IAxis axis : resultAxes )
-      {
-        if( !AxisUtils.isValueAxis( axis ) )
-          continue;
-
-        if( AxisUtils.findDataSourceAxis( axes, axis ) == null )
-        {
-          final IAxis dataSourceAxis = DataSourceHelper.createSourceAxis( axis );
-          resultAxes.add( dataSourceAxis );
-        }
-
-      }
-
-      return resultAxes.toArray( new IAxis[resultAxes.size()] );
     }
 
-    return new IAxis[] {};
+    return resultAxes.toArray( new IAxis[resultAxes.size()] );
   }
 
+  private static IAxis[] getAxisList( final ObservationSource[] sources, final String forceAxisType )
+  {
+    final ObservationSource source = findAxesSource( sources, forceAxisType );
+    if( source == null )
+      return new IAxis[] {};
+
+    // *grmml* first model defines axes of result model?
+    final IObservation observation = source.getObservation();
+    final Collection<IAxis> resultAxes = new ArrayList<IAxis>();
+
+    final IAxis[] axes = observation.getAxes();
+    for( final IAxis axis : axes )
+    {
+      if( axis.isPersistable() )
+        resultAxes.add( axis );
+    }
+
+    return resultAxes.toArray( new IAxis[resultAxes.size()] );
+  }
+
+  private static ObservationSource findAxesSource( final ObservationSource[] sources, final String forceAxisType )
+  {
+    if( sources.length < 1 )
+      return null;
+
+    if( StringUtils.isBlank( forceAxisType ) )
+      return sources[0];
+
+    /* If axis type is set: search for observation with that (persistable) axis */
+    for( final ObservationSource observationSource : sources )
+    {
+      final IAxis[] axes = observationSource.getObservation().getAxes();
+      final IAxis forcedAxis = AxisUtils.findAxis( axes, forceAxisType );
+      if( forcedAxis != null && forcedAxis.isPersistable() )
+        return observationSource;
+    }
+
+    return sources[0];
+  }
 }
