@@ -469,16 +469,35 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
     m_innerMapModel.removeTheme( theme );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.ITemplateTheme#saveFeatures(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public void saveFeatures( final IProgressMonitor monitor ) throws CoreException
   {
-    if( getInnerMapModel() != null )
-      for( final IKalypsoTheme theme : getInnerMapModel().getAllThemes() )
-        if( theme instanceof GisTemplateFeatureTheme )
-          ((IKalypsoSaveableTheme) theme).saveFeatures( monitor );
+    if( getInnerMapModel() == null )
+      return;
+
+    for( final IKalypsoTheme theme : getInnerMapModel().getAllThemes() )
+    {
+      if( theme instanceof IKalypsoSaveableTheme )
+        ((IKalypsoSaveableTheme) theme).saveFeatures( monitor );
+    }
+  }
+
+  @Override
+  public boolean isDirty( )
+  {
+    if( getInnerMapModel() == null )
+      return false;
+
+    for( final IKalypsoTheme theme : getInnerMapModel().getAllThemes() )
+    {
+      if( theme instanceof IKalypsoSaveableTheme )
+      {
+        if( ((IKalypsoSaveableTheme) theme).isDirty() )
+          return true;
+      }
+    }
+
+    return false;
   }
 
   protected void setInnerMapModel( final GisTemplateMapModell model )
