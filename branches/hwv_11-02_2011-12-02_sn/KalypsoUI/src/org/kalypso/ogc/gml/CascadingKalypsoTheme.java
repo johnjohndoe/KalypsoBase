@@ -183,18 +183,6 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
     return m_mapViewRefUrl;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.ITemplateTheme#saveFeatures(org.eclipse.core.runtime.IProgressMonitor)
-   */
-  @Override
-  public void saveFeatures( final IProgressMonitor monitor ) throws CoreException
-  {
-    if( getInnerMapModel() != null )
-      for( final IKalypsoTheme theme : getInnerMapModel().getAllThemes() )
-        if( theme instanceof GisTemplateFeatureTheme )
-          ((IKalypsoSaveableTheme) theme).saveFeatures( monitor );
-  }
-
   protected synchronized IStatus loadJob( final IFile file )
   {
     InputStream contents = null;
