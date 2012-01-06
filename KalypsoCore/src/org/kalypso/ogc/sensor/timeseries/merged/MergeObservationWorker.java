@@ -171,7 +171,7 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
 
     m_result = new SimpleObservation( m_href, m_href, m_metadata, baseModel );
 
-    return StatusUtilities.createStatus( statis, "Combing tuple models." );
+    return StatusUtilities.createStatus( statis, "Combining tuple models." );
   }
 
   /**
