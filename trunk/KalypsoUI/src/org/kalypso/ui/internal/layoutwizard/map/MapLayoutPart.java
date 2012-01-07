@@ -157,9 +157,6 @@ public class MapLayoutPart extends AbstractWizardLayoutPart implements IMapPanel
     super( id, context );
   }
 
-  /**
-   * @see org.kalypso.hwv.ui.wizards.calculation.modelpages.layout.ILayoutPart#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -241,7 +238,7 @@ public class MapLayoutPart extends AbstractWizardLayoutPart implements IMapPanel
   @Override
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
-    final Composite mapAndToolbar = toolkit.createComposite( parent, SWT.NONE );
+    final Composite mapAndToolbar = toolkit.createComposite( parent, getStyle() );
     final GridLayout mapAndToolbarLayout = new GridLayout();
     mapAndToolbarLayout.marginHeight = 0;
     mapAndToolbarLayout.marginWidth = 0;
