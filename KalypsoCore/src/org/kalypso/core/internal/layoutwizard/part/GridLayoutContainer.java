@@ -52,15 +52,13 @@ import org.kalypso.core.layoutwizard.ILayoutPart;
  */
 public class GridLayoutContainer extends AbstractLayoutContainer
 {
-  private final int m_style;
-
   private final GridLayout m_gridLayout;
 
   private final String m_groupText;
 
-  public GridLayoutContainer( final String id, final int style, final GridLayout gridLayout )
+  public GridLayoutContainer( final String id, final GridLayout gridLayout )
   {
-    this( id, style, gridLayout, null );
+    this( id, gridLayout, null );
   }
 
   /**
@@ -68,11 +66,10 @@ public class GridLayoutContainer extends AbstractLayoutContainer
    *          If not-<code>null</code> a {@link Group} is created instead of a {@link Composite} and the text is set as
    *          the group's lable.
    */
-  public GridLayoutContainer( final String id, final int style, final GridLayout gridLayout, final String groupText )
+  public GridLayoutContainer( final String id, final GridLayout gridLayout, final String groupText )
   {
     super( id );
 
-    m_style = style;
     m_gridLayout = gridLayout;
     m_groupText = groupText;
   }
@@ -101,9 +98,9 @@ public class GridLayoutContainer extends AbstractLayoutContainer
   private Composite createComposite( final FormToolkit toolkit, final Composite parent )
   {
     if( m_groupText == null )
-      return toolkit.createComposite( parent, m_style );
+      return toolkit.createComposite( parent, getStyle() );
 
-    final Group group = new Group( parent, m_style );
+    final Group group = new Group( parent, getStyle() );
     toolkit.adapt( group );
     group.setText( m_groupText );
 

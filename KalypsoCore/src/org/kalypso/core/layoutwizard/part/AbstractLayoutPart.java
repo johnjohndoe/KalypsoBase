@@ -65,6 +65,8 @@ public abstract class AbstractLayoutPart implements ILayoutPart
 
   private final ILayoutPageContext m_context;
 
+  private int m_style;
+
   public AbstractLayoutPart( final String id, final ILayoutPageContext context )
   {
     this( id, context, new SelectionProviderAdapter() );
@@ -77,6 +79,17 @@ public abstract class AbstractLayoutPart implements ILayoutPart
     m_id = id;
     m_context = context;
     m_selectionProvider = selectionProvider;
+  }
+
+  @Override
+  public void setStyle( final int style )
+  {
+    m_style = style;
+  }
+
+  protected int getStyle( )
+  {
+    return m_style;
   }
 
   @Override
