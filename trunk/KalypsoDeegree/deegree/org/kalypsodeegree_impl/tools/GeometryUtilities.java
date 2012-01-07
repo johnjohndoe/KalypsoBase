@@ -52,6 +52,7 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -163,7 +164,7 @@ public final class GeometryUtilities
 
   /**
    * guess point that is on the surface
-   * 
+   *
    * @param surface
    *          surface that should contain the result point
    * @param pointGuess
@@ -513,7 +514,7 @@ public final class GeometryUtilities
 
   /**
    * Classifies the property as a geometry.
-   * 
+   *
    * @return <code>null</code>, if the property is not a geometry property.
    */
   public static GeometryType classifyGeometry( final IPropertyType pt )
@@ -624,7 +625,7 @@ public final class GeometryUtilities
   /**
    * This method ensure to return a multi polygon (GM_MultiSurface ). the geomToCheck is a polygon ( GM_Surface) the
    * polygon is wrapped to a multi polygon.
-   * 
+   *
    * @param geomToCheck
    *          geometry object to check
    * @return multi polygon, if geomToCheck is null, null is returned, if the geomToCheck is a multi polygon it returns
@@ -671,7 +672,7 @@ public final class GeometryUtilities
 
   /**
    * Finds the first geometry property of the given feature type.
-   * 
+   *
    * @param aPreferedGeometryClass
    *          If non null, the first property of this type is returned.
    */
@@ -695,7 +696,7 @@ public final class GeometryUtilities
 
   /**
    * clones a GM_Linestring as GM_Curve and sets its z-value to a given value.
-   * 
+   *
    * @param newLine
    *          the input linestring
    * @param value
@@ -716,7 +717,7 @@ public final class GeometryUtilities
 
   /**
    * creates a new curve by simplifying a given curve by using Douglas-Peucker Algorithm.
-   * 
+   *
    * @param curve
    *          input curve to be simplified
    * @param epsThinning
@@ -772,7 +773,7 @@ public final class GeometryUtilities
   /**
    * Same as {@link #findNearestFeature(GM_Point, double, FeatureList, QName)}, but only regards features of certain
    * qnames.
-   * 
+   *
    * @param allowedQNames
    *          Only features that substitute one of these qnames are considered.
    */
@@ -891,7 +892,7 @@ public final class GeometryUtilities
 
   /**
    * Calculates the direction (in degrees) from one position to another.
-   * 
+   *
    * @return The angle in degree or {@link Double#NaN} if the points coincide.
    */
   public static double directionFromPositions( final GM_Position from, final GM_Position to )
@@ -908,7 +909,7 @@ public final class GeometryUtilities
    * <p>
    * Orientation is anti.clockwise (i.e. positive).
    * </p>
-   * 
+   *
    * @return The angle in degree or {@link Double#NaN} if the given vector has length 0.
    */
   public static double directionFromVector( final double vx, final double vy )
@@ -947,7 +948,7 @@ public final class GeometryUtilities
 
   /**
    * checks, if a position lies inside or outside of an polygon defined by a position array
-   * 
+   *
    * @param pos
    *          position array of the polygon object
    * @param position
@@ -1077,7 +1078,7 @@ public final class GeometryUtilities
    * The ring is simply produced by adding all positions of the first curve and the positions of the second curve in
    * inverse order.<br>
    * Produces a closed ring.
-   * 
+   *
    * @param curves
    *          the curves as {@link GM_Curve}
    */
@@ -1103,7 +1104,7 @@ public final class GeometryUtilities
 
   /**
    * converts two given curves into a position array of a non-self-intersecting, ccw oriented, closed polygon
-   * 
+   *
    * @param curves
    *          the curves as {@link GM_Curve}
    */
@@ -1123,7 +1124,7 @@ public final class GeometryUtilities
 
   /**
    * Orientates a ring counter clock wise.
-   * 
+   *
    * @return The inverted list of position, or the original list, if the ring was already oriented in the right way.
    */
   public static GM_Position[] orientateRing( final GM_Position[] polygonPositions )
@@ -1139,7 +1140,7 @@ public final class GeometryUtilities
    * Triangulates a closed ring (must be oriented counter-clock-wise). <br>
    * <b>It uses floats, so there can occur rounding problems!</b><br>
    * To avoid this, we substract all values with its minimum value. And add it later.
-   * 
+   *
    * @return An array of triangles: GM_Position[numberOfTriangles][3]
    */
   public static GM_Position[][] triangulateRing( final GM_Position[] ring )
@@ -1334,7 +1335,7 @@ public final class GeometryUtilities
 
   @SuppressWarnings("unchecked")
   /**
-   * Adapts a given object to one or more GM_Objects of a given type. 
+   * Adapts a given object to one or more GM_Objects of a given type.
    */
   public static <T extends GM_Object> T[] findGeometries( final Object geomOrList, final Class<T> type )
   {
@@ -1375,5 +1376,19 @@ public final class GeometryUtilities
     final T[] store = (T[]) Array.newInstance( arrayType.getComponentType(), result.size() );
 
     return result.toArray( store );
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <G extends GM_Object> G[] transform( final G[] input, final IGeoTransformer transformer ) throws Exception
+  {
+    final G[] result = (G[]) Array.newInstance( input.getClass().getComponentType(), input.length );
+
+    for( int i = 0; i < result.length; i++ )
+    {
+      if( input[i] != null )
+        result[i] = (G) transformer.transform( input[i] );
+    }
+
+    return result;
   }
 }
