@@ -88,4 +88,6 @@ public interface ILayoutPart
 
   // FIXME: check???
   IModificationProvider getModificationProvider( );
+
+  void setStyle( int createStyleFromString );
 }

@@ -106,7 +106,9 @@ public class LayoutParser
 
       final Page page = readXml( location );
 
-      m_layoutPart = buildLayout( page.getAbstractPart().getValue() );
+      final JAXBElement< ? extends AbstractPartType> abstractPart = page.getAbstractPart();
+
+      m_layoutPart = buildLayout( abstractPart.getValue() );
 
       m_controllers = createControllers( page.getController() );
     }
@@ -114,6 +116,21 @@ public class LayoutParser
     {
       m_layoutPart = new StatusLayoutPart( "rootStatus", m_defaultContext, e.getStatus() ); //$NON-NLS-1$
     }
+  }
+
+  private ILayoutPart buildLayout( final AbstractPartType xmlPart ) throws CoreException
+  {
+    final ILayoutPart layoutPart = createLayoutPart( xmlPart );
+    layoutPart.setStyle( SWTUtilities.createStyleFromString( xmlPart.getStyle() ) );
+
+    final JAXBElement< ? extends AbstractDataType> dataElement = xmlPart.getData();
+    if( dataElement != null )
+    {
+      final AbstractDataType dataType = dataElement.getValue();
+      layoutPart.setLayoutData( parseData( dataType ) );
+    }
+
+    return layoutPart;
   }
 
   private Page readXml( final URL location ) throws CoreException
@@ -131,17 +148,15 @@ public class LayoutParser
     }
   }
 
-  private ILayoutPart buildLayout( final AbstractPartType part ) throws CoreException
+  private ILayoutPart createLayoutPart( final AbstractPartType part ) throws CoreException
   {
-    final String id = part.getId();
-
     if( part instanceof AbstractContainerType )
       return buildContainer( (AbstractContainerType) part );
 
-    final String[] idSplit = id.split( "\\." );
-
-    return buildPart( idSplit[0], id );
+    final ILayoutPart layoutPart = buildPart( part );
+    return layoutPart;
   }
+
 
   /**
    * This function builds the layout part from the primary id. It will first check the extension point
@@ -155,8 +170,13 @@ public class LayoutParser
    *          The complete id of the layout part.
    * @return The layout part.
    */
-  private ILayoutPart buildPart( final String primaryId, final String id ) throws CoreException
+  private ILayoutPart buildPart( final AbstractPartType part ) throws CoreException
   {
+    final String id = part.getId();
+    final String[] idSplit = id.split( "\\." );
+
+    final String primaryId = idSplit[0];
+
     /* Get the context. */
     final ILayoutPageContext context = getContext( id );
 
@@ -188,13 +208,6 @@ public class LayoutParser
     {
       final AbstractPartType partType = partElement.getValue();
       final ILayoutPart childPart = buildLayout( partType );
-      final JAXBElement< ? extends AbstractDataType> dataElement = partType.getData();
-      if( dataElement != null )
-      {
-        final AbstractDataType dataType = dataElement.getValue();
-        childPart.setLayoutData( parseData( dataType ) );
-      }
-
       container.addChild( childPart );
     }
 
@@ -232,7 +245,7 @@ public class LayoutParser
   private ILayoutContainer createContainer( final AbstractContainerType containerType )
   {
     final String id = containerType.getId();
-    final int style = SWTUtilities.createStyleFromString( containerType.getStyle() );
+// final int style = SWTUtilities.createStyleFromString( containerType.getStyle() );
 
     if( containerType instanceof net.sourceforge.projects.kalypsobase.layout.SashContainer )
     {
@@ -242,7 +255,7 @@ public class LayoutParser
       final String maximizedChildId = maximizedChild == null ? null : maximizedChild.getId();
 
       final int[] sashWeights = ArrayUtils.toPrimitive( weights.toArray( new Integer[weights.size()] ) );
-      return new SashContainer( id, new SashConfiguration( style, sashWeights, maximizedChildId ) );
+      return new SashContainer( id, new SashConfiguration( sashWeights, maximizedChildId ) );
     }
 
     if( containerType instanceof GridContainer )
@@ -261,12 +274,12 @@ public class LayoutParser
       gridLayout.verticalSpacing = gridContainer.getVerticalSpacing();
 
       final String groupText = gridContainer.getText();
-      return new GridLayoutContainer( id, style, gridLayout, groupText );
+      return new GridLayoutContainer( id, gridLayout, groupText );
     }
 
     if( containerType instanceof TabFolder )
     {
-      return new TabFolderContainer( id, style );
+      return new TabFolderContainer( id );
     }
 
     if( containerType instanceof TabItem )
