@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.core.layoutwizard;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.widgets.Shell;
 
@@ -57,4 +59,12 @@ public interface ILayoutWizardPage extends IWizardPage
   ILayoutPageContext getWizardContext( );
 
   ILayoutPart findLayoutPart( String id );
+
+  /**
+   * Save all data of the page
+   * 
+   * @param doSaveGml
+   *          Obscure and dangerous: flag, if gml should be saved; solves problem of deselection when pressing next
+   */
+  IStatus saveData( boolean doSaveGml, final IProgressMonitor monitor );
 }

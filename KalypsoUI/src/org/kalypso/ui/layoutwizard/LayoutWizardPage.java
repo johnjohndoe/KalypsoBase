@@ -43,6 +43,9 @@ package org.kalypso.ui.layoutwizard;
 import java.net.URL;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
@@ -162,5 +165,23 @@ public class LayoutWizardPage extends WizardPage implements ILayoutWizardPage
   public ILayoutPart findLayoutPart( final String id )
   {
     return m_layoutPart.findPart( id );
+  }
+
+  @Override
+  public IStatus saveData( final boolean doSaveGml, final IProgressMonitor monitor )
+  {
+    monitor.beginTask( "Daten speichern", 2000 );
+
+    try
+    {
+      if( m_layoutPart != null )
+        m_layoutPart.saveData( doSaveGml );
+    }
+    catch( final CoreException e )
+    {
+      return e.getStatus();
+    }
+
+    return Status.OK_STATUS;
   }
 }
