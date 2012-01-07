@@ -265,6 +265,12 @@ public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
   }
 
   @Override
+  public void accept( final FeatureVisitor fv, final int depth )
+  {
+    accept( fv, m_rootFeature, depth );
+  }
+
+  @Override
   public void accept( final FeatureVisitor fv, final Feature feature, final int depth )
   {
     accept( fv, feature, depth, feature.getFeatureType().getProperties() );

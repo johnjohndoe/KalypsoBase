@@ -155,6 +155,12 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   }
 
   @Override
+  public void accept( final FeatureVisitor fv, final int depth )
+  {
+    m_workspace.accept( fv, depth );
+  }
+
+  @Override
   public void accept( final FeatureVisitor fv, final IFeatureType ft, final int depth )
   {
     m_workspace.accept( fv, ft, depth );
