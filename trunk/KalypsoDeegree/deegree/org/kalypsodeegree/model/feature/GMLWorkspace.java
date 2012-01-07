@@ -90,6 +90,10 @@ public interface GMLWorkspace extends ModellEventProvider, IAdaptable
   void accept( FeatureVisitor fv, IFeatureType ft, int depth );
 
   // FIXME: move into feature api
+  /** Visit allfeatures of this workspace */
+  void accept( FeatureVisitor fv, int depth );
+
+  // FIXME: move into feature api
   /** Visit the given feature */
   void accept( FeatureVisitor fv, Feature feature, int depth );
 
