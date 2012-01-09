@@ -48,6 +48,7 @@ import java.util.TreeSet;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -76,6 +77,22 @@ public class ProfileWrapper
   public ProfileWrapper( final IProfil profile )
   {
     m_profile = profile;
+  }
+
+  public void accept( final IProfilePointWrapperVisitor visitor )
+  {
+    final ProfilePointWrapper[] points = getPoints();
+    for( final ProfilePointWrapper point : points )
+    {
+      try
+      {
+        visitor.visit( point );
+      }
+      catch( final CancelVisitorException ex )
+      {
+        return;
+      }
+    }
   }
 
   public double getStation( )
