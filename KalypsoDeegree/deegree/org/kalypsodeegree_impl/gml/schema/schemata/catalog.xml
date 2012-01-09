@@ -10,4 +10,6 @@
   
   <uri name="org.kalypso.gml.common" uri="commons/commons.xsd" />
 
+  <uri name="http://org.kalypso.updateObservationMapping" uri="updateObservationMapping/V1.0/updateObservationMapping.xsd" />
+
 </catalog>

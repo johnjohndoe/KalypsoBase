@@ -54,9 +54,6 @@ public class DeegreeUrlCatalog extends AbstractUrlCatalog
 
   private static final String NAMESPACE_ZML_INLINE = "inline.zml.kalypso.org"; //$NON-NLS-1$
 
-  /**
-   * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map, java.util.Map)
-   */
   @Override
   protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> catalog, final Map<String, String> prefixes )
   {
