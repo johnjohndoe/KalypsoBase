@@ -373,9 +373,10 @@ public class ProfileWrapper
     }
   }
 
-  public double getLowestHeight( )
+  public ProfilePointWrapper findLowestPoint( )
   {
     Double height = Double.MAX_VALUE;
+    ProfilePointWrapper ptr = null;
 
     final ProfilePointWrapper[] points = getPoints();
     for( final ProfilePointWrapper point : points )
@@ -383,10 +384,18 @@ public class ProfileWrapper
       if( point.getHoehe() < height )
       {
         height = point.getHoehe();
+        ptr = point;
       }
     }
 
-    return height;
+    return ptr;
+  }
+
+  public double findLowestHeight( )
+  {
+    final ProfilePointWrapper point = findLowestPoint();
+    return point.getHoehe();
+
   }
 
   public double getWidth( final Point point ) throws GM_Exception
@@ -414,4 +423,5 @@ public class ProfileWrapper
 
     return myMarkers.toArray( new ProfilePointMarkerWrapper[] {} );
   }
+
 }
