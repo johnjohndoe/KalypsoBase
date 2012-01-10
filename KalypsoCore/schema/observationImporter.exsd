@@ -51,6 +51,16 @@
          </documentation>
       </annotation>
       <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Unique id of the registered importer.
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="identifier"/>
+               </appInfo>
+            </annotation>
+         </attribute>
          <attribute name="label" type="string" use="required">
             <annotation>
                <documentation>
@@ -73,6 +83,15 @@
          </attribute>
       </complexType>
    </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         [Enter API information here.]
+      </documentation>
+   </annotation>
 
    <annotation>
       <appInfo>
@@ -101,14 +120,5 @@
       </documentation>
    </annotation>
 
-
-   <annotation>
-      <appInfo>
-         <meta.section type="apiInfo"/>
-      </appInfo>
-      <documentation>
-         [Enter API information here.]
-      </documentation>
-   </annotation>
 
 </schema>

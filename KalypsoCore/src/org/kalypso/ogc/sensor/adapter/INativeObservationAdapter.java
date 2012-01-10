@@ -43,15 +43,16 @@ package org.kalypso.ogc.sensor.adapter;
 import java.io.File;
 import java.util.TimeZone;
 
-import org.eclipse.core.runtime.IExecutableExtension;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 
 /**
  * @author doemming
  */
-public interface INativeObservationAdapter extends IExecutableExtension
+public interface INativeObservationAdapter
 {
+  String getId( );
+
   /**
    * @deprecated Do not use, this is an implementation detail.
    */
