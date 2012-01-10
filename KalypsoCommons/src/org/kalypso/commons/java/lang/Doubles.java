@@ -82,4 +82,22 @@ public final class Doubles
 
     return max;
   }
+
+  /**
+   * @return first non null double value. Double.NaN is filtered too
+   */
+  public static Double firstNonNull( final Double... numbers )
+  {
+    for( final Double number : numbers )
+    {
+      if( Objects.isNull( number ) )
+        continue;
+      else if( Double.isNaN( number ) )
+        continue;
+
+      return number;
+    }
+
+    return null;
+  }
 }
