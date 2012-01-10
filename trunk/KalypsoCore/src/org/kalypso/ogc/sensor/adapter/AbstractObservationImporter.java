@@ -44,6 +44,7 @@ import java.io.File;
 import java.util.TimeZone;
 
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExecutableExtension;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
@@ -52,17 +53,26 @@ import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 /**
  * @author Gernot Belger
  */
-public abstract class AbstractObservationImporter implements INativeObservationAdapter
+public abstract class AbstractObservationImporter implements INativeObservationAdapter, IExecutableExtension
 {
   private String m_title;
 
   private String m_axisTypeValue;
 
+  private String m_id;
+
   @Override
   public final void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
+    m_id = config.getAttribute( "id" ); //$NON-NLS-1$
     m_title = config.getAttribute( "label" ); //$NON-NLS-1$
     m_axisTypeValue = config.getAttribute( "axisType" ); //$NON-NLS-1$
+  }
+
+  @Override
+  public String getId( )
+  {
+    return m_id;
   }
 
   @Override

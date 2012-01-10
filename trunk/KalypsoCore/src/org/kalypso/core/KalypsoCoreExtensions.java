@@ -42,6 +42,7 @@
 package org.kalypso.core;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,6 +96,8 @@ public final class KalypsoCoreExtensions
   private static final String THEME_INFO_EXTENSION_POINT = "org.kalypso.core.themeInfo"; //$NON-NLS-1$
 
   private static Map<String, IConfigurationElement> THE_THEME_INFO_MAP = null;
+
+  private static Map<String, INativeObservationAdapter> OBSERVATION_IMPORTERS = null;
 
   /* GmlSourceProvider Extension-Point */
   private static final String GML_SOURCE_PROVIDER_EXTENSION_POINT = "org.kalypso.core.gmlSourceProvider"; //$NON-NLS-1$
@@ -330,15 +333,23 @@ public final class KalypsoCoreExtensions
     throw new CoreException( missingStatus );
   }
 
-  public static INativeObservationAdapter[] createObservationImporters( )
+  public static INativeObservationAdapter[] getObservationImporters( )
   {
-    final List<INativeObservationAdapter> adapters = new ArrayList<INativeObservationAdapter>();
+    if( OBSERVATION_IMPORTERS == null )
+      OBSERVATION_IMPORTERS = readImporters();
+
+    return OBSERVATION_IMPORTERS.values().toArray( new INativeObservationAdapter[OBSERVATION_IMPORTERS.size()] );
+  }
+
+  private static Map<String, INativeObservationAdapter> readImporters( )
+  {
+    final Map<String, INativeObservationAdapter> importers = new HashMap<>();
 
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
     final IExtensionPoint extensionPoint = registry.getExtensionPoint( "org.kalypso.core.observationImporter" ); //$NON-NLS-1$
     if( extensionPoint == null )
-      return new INativeObservationAdapter[] {};
+      return Collections.unmodifiableMap( importers );
 
     final IExtension[] extensions = extensionPoint.getExtensions();
     for( final IExtension extension : extensions )
@@ -350,7 +361,7 @@ public final class KalypsoCoreExtensions
         try
         {
           final INativeObservationAdapter adapter = (INativeObservationAdapter) element.createExecutableExtension( "class" ); //$NON-NLS-1$
-          adapters.add( adapter );
+          importers.put( adapter.getId(), adapter );
         }
         catch( final CoreException e )
         {
@@ -359,7 +370,7 @@ public final class KalypsoCoreExtensions
       }
     }
 
-    return adapters.toArray( new INativeObservationAdapter[adapters.size()] );
+    return Collections.unmodifiableMap( importers );
   }
 
   /**
@@ -396,5 +407,17 @@ public final class KalypsoCoreExtensions
     }
 
     return adapters.toArray( new INativeObservationAdapter[adapters.size()] );
+  }
+
+  public static INativeObservationAdapter getObservationImporter( final String id )
+  {
+    final INativeObservationAdapter[] allImporters = getObservationImporters();
+    for( final INativeObservationAdapter importer : allImporters )
+    {
+      if( importer.getId().equals( id ) )
+        return importer;
+    }
+
+    return null;
   }
 }
