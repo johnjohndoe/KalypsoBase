@@ -93,7 +93,7 @@ public class ImportObservationData extends AbstractModelObject
 
   public ImportObservationData( final String[] allowedParameterTypes )
   {
-    m_adapters = KalypsoCoreExtensions.createObservationImporters();
+    m_adapters = KalypsoCoreExtensions.getObservationImporters();
     m_allowedParameterTypes = allowedParameterTypes;
 
     if( m_adapters.length > 0 )
@@ -112,28 +112,36 @@ public class ImportObservationData extends AbstractModelObject
 
     m_sourceFileData.init( settings );
 
-    m_parameterType = DialogSettingsUtils.getString( settings, PROPERTY_PARAMETER_TYPE, m_parameterType );
+    setParameterType( DialogSettingsUtils.getString( settings, PROPERTY_PARAMETER_TYPE, m_parameterType ) );
 
     /* Adapter */
-    final String currentAdapterId = m_adapter == null ? null : m_adapter.getClass().getName();
+    final String currentAdapterId = m_adapter == null ? null : m_adapter.getId();
     final String adapterId = DialogSettingsUtils.getString( settings, PROPERTY_ADAPTER, currentAdapterId );
-    if( m_adapter == null )
-    {
+    setAdapter( KalypsoCoreExtensions.getObservationImporter( adapterId ) );
 
-
-    }
+    setTimezone( DialogSettingsUtils.getString( settings, PROPERTY_TIMEZONE, m_timezone ) );
   }
 
-  protected void handleSourceFileChanged( final File newSourceFile )
+  public void storeSettings( final IDialogSettings settings )
+  {
+    if( settings == null )
+      return;
+
+    m_sourceFileData.storeSettings( settings );
+
+    settings.put( PROPERTY_PARAMETER_TYPE, m_parameterType );
+
+    if( m_adapter != null )
+      settings.put( PROPERTY_ADAPTER, m_adapter.getId() );
+
+    settings.put( PROPERTY_TIMEZONE, m_timezone );
+  }
+
+  protected void handleSourceFileChanged( @SuppressWarnings("unused") final File newSourceFile )
   {
     // this is probably too slow for big timeseries, so we cannot show a preview?
-
-// IObservation sourceObservation = read
-//
-// ZmlFactory.parseXML( newSourceFile.toURI().toURL() );
-
+    // IObservation sourceObservation = ZmlFactory.parseXML( newSourceFile.toURI().toURL() );
   }
-
 
   public FileAndHistoryData getSourceFileData( )
   {
