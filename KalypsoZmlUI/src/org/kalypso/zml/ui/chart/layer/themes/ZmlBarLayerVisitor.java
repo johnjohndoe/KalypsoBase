@@ -45,6 +45,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IAxis;
@@ -69,7 +70,7 @@ public class ZmlBarLayerVisitor implements IObservationVisitor
 
   private final ZmlBarLayer m_layer;
 
-  List<Point[]> m_points = new ArrayList<Point[]>();
+  List<Rectangle> m_rectangles = new ArrayList<Rectangle>();
 
   public ZmlBarLayerVisitor( final ZmlBarLayer layer, final ZmlBarLayerRangeHandler range )
   {
@@ -104,8 +105,9 @@ public class ZmlBarLayerVisitor implements IObservationVisitor
         points.add( new Point( x, screen.y ) );
         points.add( screen );
         points.add( new Point( screen.x, base.y ) );
+        final Point[] p = points.toArray( new Point[] {} );
 
-        m_points.add( points.toArray( new Point[] {} ) );
+        m_rectangles.add( new Rectangle( x, screen.y, screen.x - x, base.y - screen.y ) );
       }
 
       m_lastScreen = screen;
@@ -116,9 +118,9 @@ public class ZmlBarLayerVisitor implements IObservationVisitor
     }
   }
 
-  public Point[][] getPoints( )
+  public Rectangle[] getRectangles( )
   {
-    return m_points.toArray( new Point[][] {} );
+    return m_rectangles.toArray( new Rectangle[] {} );
   }
 
   private Object getTargetValue( final IObservationValueContainer container ) throws SensorException

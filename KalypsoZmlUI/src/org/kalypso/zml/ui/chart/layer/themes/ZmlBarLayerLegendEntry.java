@@ -45,8 +45,9 @@ import java.util.List;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 
-import de.openali.odysseus.chart.framework.model.figure.impl.PolygonFigure;
+import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 
@@ -62,7 +63,7 @@ public class ZmlBarLayerLegendEntry
     m_layer = layer;
   }
 
-  public ILegendEntry[] createLegendEntries( final PolygonFigure polygonFigure )
+  public ILegendEntry[] createLegendEntries( final FullRectangleFigure polygonFigure )
   {
     final List<ILegendEntry> entries = new ArrayList<ILegendEntry>();
     if( polygonFigure.getStyle().isVisible() )
@@ -75,21 +76,26 @@ public class ZmlBarLayerLegendEntry
         {
           final int height = size.x;
           final int width = size.y;
-          ArrayList<Point> path = new ArrayList<Point>();
-          path.add( new Point( 0, height ) );
-          path.add( new Point( 0, height / 2 ) );
-          path.add( new Point( width / 2, height / 2 ) );
-          path.add( new Point( width / 2, height ) );
-          polygonFigure.setPoints( path.toArray( new Point[] {} ) );
+          polygonFigure.setRectangle( new Rectangle( 0, height / 2, width / 2, height / 2 ) );
+          polygonFigure.paint( gc );
+          polygonFigure.setRectangle( new Rectangle( width / 2, 0, width/2, height ) );
           polygonFigure.paint( gc );
 
-          path = new ArrayList<Point>();
-          path.add( new Point( width / 2, height ) );
-          path.add( new Point( width / 2, 0 ) );
-          path.add( new Point( width, 0 ) );
-          path.add( new Point( width, height ) );
-          polygonFigure.setPoints( path.toArray( new Point[] {} ) );
-          polygonFigure.paint( gc );
+// ArrayList<Point> path = new ArrayList<Point>();
+// path.add( new Point( 0, height ) );
+// path.add( new Point( 0, height / 2 ) );
+// path.add( new Point( width / 2, height / 2 ) );
+// path.add( new Point( width / 2, height ) );
+// polygonFigure.setPoints( path.toArray( new Point[] {} ) );
+// polygonFigure.paint( gc );
+//
+// path = new ArrayList<Point>();
+// path.add( new Point( width / 2, height ) );
+// path.add( new Point( width / 2, 0 ) );
+// path.add( new Point( width, 0 ) );
+// path.add( new Point( width, height ) );
+// polygonFigure.setPoints( path.toArray( new Point[] {} ) );
+// polygonFigure.paint( gc );
         }
       };
 
