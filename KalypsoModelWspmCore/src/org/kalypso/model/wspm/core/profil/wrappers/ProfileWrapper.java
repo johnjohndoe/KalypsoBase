@@ -79,19 +79,39 @@ public class ProfileWrapper
     m_profile = profile;
   }
 
-  public void accept( final IProfilePointWrapperVisitor visitor )
+  public void accept( final IProfilePointWrapperVisitor visitor, final int direction )
   {
-    final ProfilePointWrapper[] points = getPoints();
-    for( final ProfilePointWrapper point : points )
+    doAccept( visitor, getPoints(), direction );
+  }
+
+  public void accept( final IProfilePointWrapperVisitor visitor, final Double p1, final Double p2, final boolean includeVertexPoints, final int direction )
+  {
+    doAccept( visitor, findPointsBetween( p1, p2, includeVertexPoints ), direction );
+  }
+
+  private void doAccept( final IProfilePointWrapperVisitor visitor, final ProfilePointWrapper[] points, final int direction )
+  {
+    try
     {
-      try
+      if( direction >= 0 )
       {
-        visitor.visit( this, point );
+        for( final ProfilePointWrapper point : points )
+        {
+          visitor.visit( this, point );
+        }
       }
-      catch( final CancelVisitorException ex )
+      else
       {
-        return;
+        for( int index = ArrayUtils.getLength( points ) - 1; index > 0; index-- )
+        {
+          final ProfilePointWrapper point = points[index];
+          visitor.visit( this, point );
+        }
       }
+    }
+    catch( final CancelVisitorException ex )
+    {
+      return;
     }
   }
 
