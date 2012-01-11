@@ -51,6 +51,7 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
@@ -486,5 +487,26 @@ public class TupleResultUtilities
     else
       throw new UnsupportedOperationException();
 
+  }
+
+  public static TupleResult clone( final TupleResult base )
+  {
+    final IComponent[] components = base.getComponents();
+    final TupleResult clone = new TupleResult( components );
+
+    for( int index = 0; index < base.size(); index++ )
+    {
+      final IRecord target = clone.createRecord();
+      final IRecord record = base.get( index );
+
+      for( int component = 0; component < ArrayUtils.getLength( components ); component++ )
+      {
+        target.setValue( component, record.getValue( component ) );
+      }
+
+      clone.add( target );
+    }
+
+    return clone;
   }
 }

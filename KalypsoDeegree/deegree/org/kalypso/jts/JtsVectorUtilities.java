@@ -106,11 +106,11 @@ public final class JtsVectorUtilities
   {
     final Coordinate v = getVector( vector.getStartPoint().getCoordinate(), vector.getEndPoint().getCoordinate() );
 
-    return movePoint( point, v, direction, distance );
+    return movePoint( point, v, distance, direction );
 
   }
 
-  public static Point movePoint( final Point point, final Coordinate vector, final int direction, final double distance )
+  public static Point movePoint( final Point point, final Coordinate vector, final double distance, final int direction )
   {
 
     final Coordinate normalized = getNormalizedVector( vector );

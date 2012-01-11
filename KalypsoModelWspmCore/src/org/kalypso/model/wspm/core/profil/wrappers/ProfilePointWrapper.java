@@ -42,11 +42,13 @@ package org.kalypso.model.wspm.core.profil.wrappers;
 
 import java.util.Comparator;
 
+import org.kalypso.jts.JTSConverter;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.observation.result.IRecord;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Point;
 
 /**
  * @author Dirk Kuch
@@ -239,6 +241,11 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
       return ((Number) value).doubleValue();
 
     return null;
+  }
+
+  public Point toPoint( )
+  {
+    return JTSConverter.toPoint( new Coordinate( getRechtswert(), getHochwert() ) );
   }
 
 }

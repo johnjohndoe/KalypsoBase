@@ -86,7 +86,7 @@ public class ProfileWrapper
     {
       try
       {
-        visitor.visit( point );
+        visitor.visit( this, point );
       }
       catch( final CancelVisitorException ex )
       {
