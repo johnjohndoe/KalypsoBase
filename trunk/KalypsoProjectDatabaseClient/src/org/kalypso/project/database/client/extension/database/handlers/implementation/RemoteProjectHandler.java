@@ -163,7 +163,7 @@ public class RemoteProjectHandler extends AbstractProjectHandle implements IRemo
     final String projectType = m_bean.getProjectType();
     if( "PlanerClientProject".equals( projectType ) )
       return "PlanerClientModule";
-    else if( "PlanerClientManagerProject".equals( projectType ) )
+    else if( "PlanerClientManagerProject".equals( projectType ) || "PlanerClientProjectTemplate".equals( projectType ) )
       return "PlanerClientManagerModule";
     else if( "KalypsRrmModel".equals( projectType ) )
       return "KalypsRrmModel";
