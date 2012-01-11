@@ -49,6 +49,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.chart.ui.editor.mousehandler.ZoomPanMaximizeHandler;
 import org.kalypso.chart.ui.editor.mousehandler.ZoomPanMaximizeHandler.DIRECTION;
 import org.kalypso.chart.ui.internal.workbench.ChartPartComposite;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
 import org.kalypso.zml.core.diagram.base.ChartTypeHandler;
 import org.kalypso.zml.core.diagram.base.visitors.ResetZmlLayerVisitor;
@@ -60,6 +61,7 @@ import de.openali.odysseus.chart.factory.config.ChartFactory;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
+import de.openali.odysseus.chart.framework.view.IPlotHandler;
 
 /**
  * @author Dirk Kuch
@@ -111,8 +113,13 @@ public class ZmlDiagramChartPartComposite extends ChartPartComposite
     control.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     final IChartComposite chartComposite = getChartComposite();
+    if( Objects.isNull( chartComposite ) )
+      return control;
+
     final ZoomPanMaximizeHandler handler = new ZoomPanMaximizeHandler( chartComposite, DIRECTION.eBoth );
-    chartComposite.getPlotHandler().activatePlotHandler( handler );
+    final IPlotHandler plot = chartComposite.getPlotHandler();
+    if( Objects.isNotNull( plot ) )
+      plot.activatePlotHandler( handler );
 
     return control;
   }

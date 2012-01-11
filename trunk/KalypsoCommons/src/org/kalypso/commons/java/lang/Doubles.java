@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.java.lang;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 /**
  * @author Dirk Kuch
  */
@@ -99,5 +101,19 @@ public final class Doubles
     }
 
     return null;
+  }
+
+  public static boolean isNaN( final double... numbers )
+  {
+    if( ArrayUtils.isEmpty( numbers ) )
+      return true;
+
+    for( final double number : numbers )
+    {
+      if( Double.isNaN( number ) )
+        return true;
+    }
+
+    return false;
   }
 }

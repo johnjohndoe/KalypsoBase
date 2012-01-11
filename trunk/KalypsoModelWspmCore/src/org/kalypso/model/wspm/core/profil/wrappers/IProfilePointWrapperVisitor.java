@@ -47,5 +47,5 @@ import org.kalypso.commons.exception.CancelVisitorException;
  */
 public interface IProfilePointWrapperVisitor
 {
-  void visit( ProfilePointWrapper point ) throws CancelVisitorException;
+  void visit( ProfileWrapper profile, ProfilePointWrapper point ) throws CancelVisitorException;
 }
