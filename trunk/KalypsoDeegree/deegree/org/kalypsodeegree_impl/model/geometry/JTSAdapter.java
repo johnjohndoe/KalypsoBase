@@ -185,6 +185,9 @@ public final class JTSAdapter
    */
   public static GM_Object wrap( final Geometry geometry, final String crs ) throws GM_Exception
   {
+    if( geometry == null )
+      return null;
+
     if( geometry instanceof Point )
       return wrap( (Point) geometry, crs );
 
@@ -676,7 +679,7 @@ public final class JTSAdapter
 
   /**
    * Exports an array of deegree geometries as JTS geometries.
-   * 
+   *
    * @param resultType
    *          The geometry type of the results. All input geometries must be convertible to that type, else a
    *          {@link ClassCastException} is thrown.
