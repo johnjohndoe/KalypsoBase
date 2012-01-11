@@ -79,7 +79,7 @@ import de.openali.odysseus.chart.framework.util.resource.IPair;
  */
 public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
 {
-  private IZmlLayerDataHandler m_data;
+  private IZmlLayerDataHandler m_dataHandler;
 
   private String m_labelDescriptor;
 
@@ -127,8 +127,8 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   @Override
   public void dispose( )
   {
-    if( m_data != null )
-      m_data.dispose();
+    if( m_dataHandler != null )
+      m_dataHandler.dispose();
 
     super.dispose();
   }
@@ -136,7 +136,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   @Override
   public IZmlLayerDataHandler getDataHandler( )
   {
-    return m_data;
+    return m_dataHandler;
   }
 
   public ZmlLineLayerRangeHandler getRangeHandler( )
@@ -196,12 +196,12 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   @SuppressWarnings("unchecked")
   IPair<Number, Number>[] getFilteredPoints( final IDataRange<Number> domainIntervall ) throws SensorException
   {
-    final IObservation observation = (IObservation) m_data.getAdapter( IObservation.class );
+    final IObservation observation = (IObservation) m_dataHandler.getAdapter( IObservation.class );
     if( observation == null )
       return new IPair[0];
 
     final LineLayerModelVisitor visitor = new LineLayerModelVisitor( this, getFilters(), domainIntervall );
-    observation.accept( visitor, m_data.getRequest(), 1 );
+    observation.accept( visitor, m_dataHandler.getRequest(), 1 );
 
     return visitor.getPoints();
   }
@@ -292,7 +292,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
 
   private DateRange getRange( )
   {
-    final IRequest request = m_data.getRequest();
+    final IRequest request = m_dataHandler.getRequest();
     if( request == null )
       return null;
 
@@ -302,10 +302,10 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   @Override
   public void setDataHandler( final IZmlLayerDataHandler handler )
   {
-    if( m_data != null )
-      m_data.dispose();
+    if( m_dataHandler != null )
+      m_dataHandler.dispose();
 
-    m_data = handler;
+    m_dataHandler = handler;
   }
 
   @Override
