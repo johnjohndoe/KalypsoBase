@@ -1,6 +1,7 @@
 package de.openali.odysseus.chart.ext.base.layer;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
@@ -56,7 +57,7 @@ public class DefaultLineLayer extends AbstractLineLayer
       final ICoordinateMapper coordinateMapper = getCoordinateMapper();
       final int screenMin = coordinateMapper.numericToScreen( min, 0 ).x;
       final int screenMax = coordinateMapper.numericToScreen( max, 0 ).x;
-      final ArrayList<Point> path = new ArrayList<Point>();
+      final List<Point> path = new ArrayList<Point>();
       for( int i = 0; i < domainData.length; i++ )
       {
         final Object domVal = domainData[i];

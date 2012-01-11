@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 import de.openali.odysseus.chart.ext.base.data.AbstractDomainIntervalValueFileData;
+import de.openali.odysseus.chart.ext.base.layer.DomainIntervalBarLayer;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.factory.util.ChartFactoryUtilities;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -33,7 +34,7 @@ public class CSVBarLayerProvider extends AbstractLayerProvider
   @Override
   public IChartLayer getLayer( final URL context )
   {
-    return new DefaultBarLayer( this, getDataContainer(), getStyleSet().getStyle( ROLE_BAR_STYLE, IAreaStyle.class ) );
+    return new DomainIntervalBarLayer( this, getDataContainer(), getStyleSet().getStyle( ROLE_BAR_STYLE, IAreaStyle.class ) );
   }
 
   private Calendar createDate( final String s )

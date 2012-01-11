@@ -43,7 +43,7 @@ package org.kalypso.zml.ui.chart.layer.themes;
 import java.net.URL;
 
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IObservation;
@@ -57,7 +57,6 @@ import org.kalypso.zml.ui.KalypsoZmlUI;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractBarLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.figure.impl.PolygonFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
@@ -77,34 +76,10 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
 
   private final ZmlBarLayerRangeHandler m_range = new ZmlBarLayerRangeHandler( this );
 
-  private PolygonFigure m_polygonFigure;
-
   public ZmlBarLayer( final IZmlLayerProvider layerProvider, final IStyleSet styleSet, final URL context )
   {
     super( layerProvider, styleSet );
     setup( context );
-  }
-
-  @Override
-  public IZmlLayerProvider getProvider( )
-  {
-    return (IZmlLayerProvider) super.getProvider();
-  }
-
-  private void setup( final URL context )
-  {
-    final IZmlLayerProvider provider = getProvider();
-    final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( this, provider.getTargetAxisId() );
-    try
-    {
-      handler.load( provider, context );
-    }
-    catch( final Throwable t )
-    {
-      t.printStackTrace();
-    }
-
-    setDataHandler( handler );
   }
 
   @Override
@@ -119,15 +94,21 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
   }
 
   @Override
-  public void onObservationChanged( )
+  protected IAreaStyle getAreaStyle( )
   {
-    getEventHandler().fireLayerContentChanged( this );
+    final IStyleSet styleSet = getStyleSet();
+    final int index = ZmlLayerHelper.getLayerIndex( getIdentifier() );
+
+    final StyleSetVisitor visitor = new StyleSetVisitor( true );
+    final IAreaStyle style = visitor.visit( styleSet, IAreaStyle.class, index );
+
+    return style;
   }
 
   @Override
-  public synchronized ILegendEntry[] getLegendEntries( )
+  public IZmlLayerDataHandler getDataHandler( )
   {
-    return m_legend.createLegendEntries( getPolygonFigure() );
+    return m_handler;
   }
 
   @Override
@@ -137,9 +118,40 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
   }
 
   @Override
+  public synchronized ILegendEntry[] getLegendEntries( )
+  {
+    return m_legend.createLegendEntries( getRectangleFigure() );
+  }
+
+  @Override
+  public IZmlLayerProvider getProvider( )
+  {
+    return (IZmlLayerProvider) super.getProvider();
+  }
+
+  @Override
   public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
   {
     return m_range.getTargetRange();
+  }
+
+  @Override
+  public String getTitle( )
+  {
+    if( m_labelDescriptor == null )
+      return super.getTitle();
+
+    final IObservation observation = (IObservation) getDataHandler().getAdapter( IObservation.class );
+    if( observation == null )
+      return m_labelDescriptor;
+
+    return ObservationTokenHelper.replaceTokens( m_labelDescriptor, observation, getDataHandler().getValueAxis() );
+  }
+
+  @Override
+  public void onObservationChanged( )
+  {
+    getEventHandler().fireLayerContentChanged( this );
   }
 
   @Override
@@ -154,12 +166,10 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
       final ZmlBarLayerVisitor visitor = new ZmlBarLayerVisitor( this, m_range );
       observation.accept( visitor, m_handler.getRequest(), 1 );
 
-      final PolygonFigure figure = getPolygonFigure();
-      final Point[][] points = visitor.getPoints();
-      for( final Point[] p : points )
+      final Rectangle[] rects = visitor.getRectangles();
+      for( final Rectangle rect : rects )
       {
-        figure.setPoints( p );
-        figure.paint( gc );
+        paint( gc, rect );
       }
 
     }
@@ -167,12 +177,6 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
     {
       KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
-  }
-
-  @Override
-  public IZmlLayerDataHandler getDataHandler( )
-  {
-    return m_handler;
   }
 
   @Override
@@ -192,41 +196,33 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
     m_labelDescriptor = labelDescriptor;
   }
 
-  @Override
-  public String getTitle( )
+// @Override
+// protected FullRectangleFigure getRectangleFigure( )
+// {
+// if( m_polygonFigure == null )
+// {
+// final IAreaStyle as = getAreaStyle();
+// m_polygonFigure = new PolygonFigure();
+// m_polygonFigure.setStyle( as );
+// }
+//
+// return m_polygonFigure;
+// }
+
+  private void setup( final URL context )
   {
-    if( m_labelDescriptor == null )
-      return super.getTitle();
-
-    final IObservation observation = (IObservation) getDataHandler().getAdapter( IObservation.class );
-    if( observation == null )
-      return m_labelDescriptor;
-
-    return ObservationTokenHelper.replaceTokens( m_labelDescriptor, observation, getDataHandler().getValueAxis() );
-  }
-
-  @Override
-  protected PolygonFigure getPolygonFigure( )
-  {
-    if( m_polygonFigure == null )
+    final IZmlLayerProvider provider = getProvider();
+    final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( this, provider.getTargetAxisId() );
+    try
     {
-      final IAreaStyle as = getAreaStyle();
-      m_polygonFigure = new PolygonFigure();
-      m_polygonFigure.setStyle( as );
+      handler.load( provider, context );
+    }
+    catch( final Throwable t )
+    {
+      t.printStackTrace();
     }
 
-    return m_polygonFigure;
-  }
-
-  protected IAreaStyle getAreaStyle( )
-  {
-    final IStyleSet styleSet = getStyleSet();
-    final int index = ZmlLayerHelper.getLayerIndex( getIdentifier() );
-
-    final StyleSetVisitor visitor = new StyleSetVisitor( true );
-    final IAreaStyle style = visitor.visit( styleSet, IAreaStyle.class, index );
-
-    return style;
+    setDataHandler( handler );
   }
 
 // @Override
