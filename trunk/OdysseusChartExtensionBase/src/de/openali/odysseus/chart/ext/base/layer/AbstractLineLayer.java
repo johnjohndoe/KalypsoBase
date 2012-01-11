@@ -23,6 +23,7 @@ import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 public abstract class AbstractLineLayer extends AbstractChartLayer
 {
   private ILegendEntry[] m_legendEntries;
+
   public AbstractLineLayer( final ILayerProvider provider, final IStyleSet styleSet )
   {
     super( provider, styleSet );
@@ -35,10 +36,10 @@ public abstract class AbstractLineLayer extends AbstractChartLayer
   public synchronized ILegendEntry[] getLegendEntries( )
   {
 
-    if( ArrayUtils.isEmpty(m_legendEntries ) )
+    if( ArrayUtils.isEmpty( m_legendEntries ) )
     {
       m_legendEntries = createLegendEntries();
-     }
+    }
     return m_legendEntries;
   }
 
@@ -97,15 +98,6 @@ public abstract class AbstractLineLayer extends AbstractChartLayer
     lf.paint( gc );
   }
 
-// /**
-// * @see de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer#getHover(org.eclipse.swt.graphics.Point)
-// */
-// @Override
-// public EditInfo getHover( final Point pos )
-// {
-// return null;
-// }
-
   protected final ILineStyle getLineStyle( )
   {
     IStyle lineStyle = getStyleSet().getStyle( "line_" + getIdentifier() );
@@ -114,6 +106,22 @@ public abstract class AbstractLineLayer extends AbstractChartLayer
     if( lineStyle == null )
       return getStyle( ILineStyle.class );
     return (ILineStyle) lineStyle;
+  }
+
+  protected PolylineFigure getPolyLineFigure( )
+  {
+    final ILineStyle ls = getLineStyle();
+    final PolylineFigure lf = new PolylineFigure();
+    lf.setStyle( ls );
+    return lf;
+  }
+
+  protected PointFigure getPointFigure( )
+  {
+    final IPointStyle ps = getPointStyle();
+    final PointFigure pf = new PointFigure();
+    pf.setStyle( ps );
+    return pf;
   }
 
   protected final IPointStyle getPointStyle( )
@@ -128,18 +136,12 @@ public abstract class AbstractLineLayer extends AbstractChartLayer
 
   protected final void paint( final GC gc, final Point... points )
   {
-    final ILineStyle ls = getLineStyle();
-    final PolylineFigure lf = new PolylineFigure();
-    lf.setStyle( ls );
+    final PolylineFigure lf = getPolyLineFigure();
     lf.setPoints( points );
     lf.paint( gc );
-
-    final IPointStyle ps = getPointStyle();
-    final PointFigure pf = new PointFigure();
-    pf.setStyle( ps );
+    final PointFigure pf = getPointFigure();
     pf.setPoints( points );
     pf.paint( gc );
-
   }
 
 }
