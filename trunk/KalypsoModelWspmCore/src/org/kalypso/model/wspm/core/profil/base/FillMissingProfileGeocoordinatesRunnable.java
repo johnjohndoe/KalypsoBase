@@ -63,20 +63,10 @@ public class FillMissingProfileGeocoordinatesRunnable implements ICoreRunnableWi
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
-    doInterpolation();
-    doExtrapolation();
+    m_profile.accept( new InterpolateMissingCoordinatesVisitor(), 1 );
+    m_profile.accept( new ExtrapolateMissingCoordinatesVisitor(), 1 );
 
     return new Status( IStatus.OK, KalypsoModelWspmCorePlugin.getID(), "Adding of missing profile geo coordinates" );
-  }
-
-  private void doInterpolation( )
-  {
-    m_profile.accept( new InterpolateMissingCoordinatesVisitor(), 1 );
-  }
-
-  private void doExtrapolation( )
-  {
-    m_profile.accept( new ExtrapolateMissingCoordinatesVisitor(), 1 );
   }
 
 }
