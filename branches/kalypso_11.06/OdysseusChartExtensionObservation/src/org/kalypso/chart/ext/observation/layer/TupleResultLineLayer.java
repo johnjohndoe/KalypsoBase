@@ -32,11 +32,11 @@ public class TupleResultLineLayer extends AbstractLineLayer
   @Override
   public synchronized ILegendEntry[] getLegendEntries( )
   {
-    // supress PointStyle LegendEntry if LineStyle is visible
+    // suppress PointStyle LegendEntry if LineStyle is visible
     final ILegendEntry[] le = super.getLegendEntries();
-    if( le.length < 2 )
-      return le;
-    return new ILegendEntry[] { le[0] };
+    // if( le.length < 2 )
+    return le;
+    // return new ILegendEntry[] { le[0] };
   }
 
   /**
