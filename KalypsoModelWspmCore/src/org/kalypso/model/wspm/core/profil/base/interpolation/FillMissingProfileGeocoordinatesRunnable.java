@@ -38,68 +38,37 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core.profil.base;
+package org.kalypso.model.wspm.core.profil.base.interpolation;
 
-import org.kalypso.commons.exception.CancelVisitorException;
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.jts.JTSConverter;
-import org.kalypso.jts.JtsVectorUtilities;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfilePointWrapperVisitor;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
+import org.kalypso.model.wspm.core.profil.base.ExtrapolateMissingCoordinatesVisitor;
+import org.kalypso.model.wspm.core.profil.base.InterpolateMissingCoordinatesVisitor;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Point;
 
 /**
  * @author Dirk Kuch
  */
-public class FindVectorVisitor implements IProfilePointWrapperVisitor
+public class FillMissingProfileGeocoordinatesRunnable implements ICoreRunnableWithProgress
 {
-  private Coordinate m_c0 = null;
 
-  private Coordinate m_c1 = null;
+  private final ProfileWrapper m_profile;
 
-  private Double m_p0 = null;
+  public FillMissingProfileGeocoordinatesRunnable( final ProfileWrapper profile )
+  {
+    m_profile = profile;
+  }
 
   @Override
-  public void visit( final ProfileWrapper profile, final ProfilePointWrapper point ) throws CancelVisitorException
+  public IStatus execute( final IProgressMonitor monitor )
   {
-    final Coordinate coordinate = point.getCoordinate();
-    if( Objects.isNull( coordinate ) )
-      return;
+    m_profile.accept( new InterpolateMissingCoordinatesVisitor(), 1 );
+    m_profile.accept( new ExtrapolateMissingCoordinatesVisitor(), 1 );
 
-    if( Objects.isNull( m_c0 ) )
-    {
-      m_c0 = coordinate;
-      m_p0 = point.getBreite();
-    }
-    else
-    {
-      m_c1 = coordinate;
-
-      throw new CancelVisitorException();
-    }
-
+    return new Status( IStatus.OK, KalypsoModelWspmCorePlugin.getID(), "Adding of missing profile geo coordinates" );
   }
 
-  public double getP0( )
-  {
-    return m_p0;
-  }
-
-  public boolean isValid( )
-  {
-    return Objects.allNotNull( m_p0, m_c0, m_c1 );
-  }
-
-  public Coordinate getVector( )
-  {
-    return JtsVectorUtilities.getVector( m_c0, m_c1 );
-  }
-
-  public Point getP0Coordinate( )
-  {
-    return JTSConverter.toPoint( m_c0 );
-  }
 }
