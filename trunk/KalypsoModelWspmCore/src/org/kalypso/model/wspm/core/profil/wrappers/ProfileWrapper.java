@@ -263,9 +263,6 @@ public class ProfileWrapper
     return wrappers.toArray( new ProfilePointWrapper[] {} );
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {

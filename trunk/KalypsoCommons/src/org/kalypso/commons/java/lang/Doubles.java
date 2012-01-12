@@ -103,13 +103,16 @@ public final class Doubles
     return null;
   }
 
-  public static boolean isNaN( final double... numbers )
+  public static boolean isNaN( final Double... numbers )
   {
     if( ArrayUtils.isEmpty( numbers ) )
       return true;
 
-    for( final double number : numbers )
+    for( final Double number : numbers )
     {
+      if( Objects.isNull( number ) )
+        return true;
+
       if( Double.isNaN( number ) )
         return true;
     }
