@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.core.profil.base;
 
 import org.kalypso.commons.exception.CancelVisitorException;
-import org.kalypso.commons.java.lang.Doubles;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.jts.JTSConverter;
 import org.kalypso.jts.JtsVectorUtilities;
@@ -57,35 +56,27 @@ import com.vividsolutions.jts.geom.Point;
  */
 public class FindVectorVisitor implements IProfilePointWrapperVisitor
 {
-  private Double m_x0 = null;
+  private Coordinate m_c0 = null;
 
-  private Double m_y0 = null;
-
-  private Double m_x1 = null;
-
-  private Double m_y1 = null;
+  private Coordinate m_c1 = null;
 
   private Double m_p0 = null;
 
   @Override
   public void visit( final ProfileWrapper profile, final ProfilePointWrapper point ) throws CancelVisitorException
   {
-    final double x = point.getRechtswert();
-    final double y = point.getHochwert();
-
-    if( Doubles.isNaN( x, y ) )
+    final Coordinate coordinate = point.getCoordinate();
+    if( Objects.isNull( coordinate ) )
       return;
 
-    if( Objects.allNull( m_x0, m_y0 ) )
+    if( Objects.isNull( m_c0 ) )
     {
-      m_x0 = x;
-      m_y0 = y;
+      m_c0 = coordinate;
       m_p0 = point.getBreite();
     }
     else
     {
-      m_x1 = x;
-      m_y1 = y;
+      m_c1 = coordinate;
 
       throw new CancelVisitorException();
     }
@@ -99,17 +90,16 @@ public class FindVectorVisitor implements IProfilePointWrapperVisitor
 
   public boolean isValid( )
   {
-    return Objects.allNotNull( m_p0, m_x0, m_x1, m_y0, m_y1 );
+    return Objects.allNotNull( m_p0, m_c0, m_c1 );
   }
 
   public Coordinate getVector( )
   {
-    return JtsVectorUtilities.getVector( new Coordinate( m_x0, m_y0 ), new Coordinate( m_x1, m_y1 ) );
+    return JtsVectorUtilities.getVector( m_c0, m_c1 );
   }
 
   public Point getP0Coordinate( )
   {
-    return JTSConverter.toPoint( new Coordinate( m_x0, m_y0 ) );
+    return JTSConverter.toPoint( m_c0 );
   }
-
 }

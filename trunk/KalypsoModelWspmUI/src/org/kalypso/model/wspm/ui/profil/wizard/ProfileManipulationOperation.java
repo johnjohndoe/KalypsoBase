@@ -23,6 +23,7 @@ import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.base.IProfileManipulator;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
@@ -34,10 +35,6 @@ import org.kalypsodeegree_impl.model.feature.AbstractCachedFeature2;
  */
 public final class ProfileManipulationOperation implements ICoreRunnableWithProgress
 {
-  public interface IProfileManipulator
-  {
-    void performProfileManipulation( IProfil profile, IProgressMonitor monitor ) throws CoreException;
-  }
 
   private final Object[] m_profileFeatures;
 

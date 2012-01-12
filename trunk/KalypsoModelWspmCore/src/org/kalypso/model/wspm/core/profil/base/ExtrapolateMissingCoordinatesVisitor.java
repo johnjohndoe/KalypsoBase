@@ -47,7 +47,6 @@ import org.kalypso.model.wspm.core.profil.wrappers.IProfilePointWrapperVisitor;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
 
-import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Point;
 
 /**
@@ -80,9 +79,11 @@ public class ExtrapolateMissingCoordinatesVisitor implements IProfilePointWrappe
     final double p0 = profile.getFirstPoint().getBreite();
     final double pn = profile.getLastPoint().getBreite();
 
+    // before
     final FindVectorVisitor v0 = new FindVectorVisitor();
     profile.accept( v0, p0, point.getBreite(), true, -1 );
 
+    // after
     final FindVectorVisitor vn = new FindVectorVisitor();
     profile.accept( vn, point.getBreite(), pn, true, 1 );
 
@@ -90,12 +91,16 @@ public class ExtrapolateMissingCoordinatesVisitor implements IProfilePointWrappe
     if( Objects.isNull( visitor ) )
       return;
 
-    final Coordinate vector = JtsVectorUtilities.getInverse( visitor.getVector() );
+    final double distance = Math.abs( visitor.getP0() - point.getBreite() );
 
-    final Point moved = JtsVectorUtilities.movePoint( visitor.getP0Coordinate(), vector, Math.abs( visitor.getP0() - point.getBreite() ), 1 );
+    Point moved = null;
+    if( visitor == v0 )
+      moved = JtsVectorUtilities.movePoint( visitor.getP0Coordinate(), visitor.getVector(), distance, 1 );
+    else
+      moved = JtsVectorUtilities.movePoint( visitor.getP0Coordinate(), visitor.getVector(), distance, -1 );
+
     point.setRechtswert( moved.getX() );
     point.setHochwert( moved.getY() );
-
   }
 
   private FindVectorVisitor getVector( final ProfilePointWrapper point, final FindVectorVisitor... visitors )

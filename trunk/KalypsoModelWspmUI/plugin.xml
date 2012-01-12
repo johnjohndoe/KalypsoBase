@@ -526,6 +526,13 @@
              <description>Guessing of roughness / vegetation classes from profile point properties</description>
        </wizard>
        <wizard
+             class="org.kalypso.model.wspm.ui.profil.wizard.interpolate.geomtry.FillMissingProfilesGeometriesWizard"
+             id="org.kalypso.model.wspm.ui.profil.wizard.interpolate.geomtry.FillMissingProfilesGeometriesWizard"
+             icon="icons/obj16/snap-orthogonal.png"
+             name="Fill missing profile geometries">
+             <description>Fill missing profile geometries from existing profile point geometries</description>
+       </wizard>
+       <wizard
              class="org.kalypso.model.wspm.ui.profil.wizard.classification.apply.ApplyClassificationsWizard"
              id="org.kalypso.model.wspm.ui.profil.wizard.classification.ApplyClassificationsWizard"
              icon="icons/obj16/apply_classes.png"
