@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -51,7 +51,7 @@ import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * default implementierung of the GM_Aggregate interface ------------------------------------------------------------
- * 
+ *
  * @version 8.6.2001
  * @author Andreas Poth href="mailto:poth@lat-lon.de"
  */
@@ -64,7 +64,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
 
   /**
    * Creates a new GM_Aggregate_Impl object.
-   * 
+   *
    * @param crs
    */
   public GM_Aggregate_Impl( final String crs )
@@ -76,7 +76,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
 
   /**
    * Creates a new GM_Aggregate_Impl object.
-   * 
+   *
    * @param crs
    */
   public GM_Aggregate_Impl( final GM_Object[] children, final String crs )
@@ -99,7 +99,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
 
   /**
    * merges this aggregation with another one
-   * 
+   *
    * @exception GM_Exception
    *              a GM_Exception will be thrown if the submitted isn't the same type as the recieving one.
    */
@@ -133,7 +133,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   /**
    * inserts a GM_Object in the aggregation. all elements with an index equal or larger index will be moved. if index is
    * larger then getSize() - 1 or smaller then 0 or gmo equals null an exception will be thrown.
-   * 
+   *
    * @param gmo
    *          GM_Object to insert.
    * @param index
@@ -160,7 +160,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   /**
    * sets the submitted GM_Object at the submitted index. the element at the position <code>index</code> will be
    * removed. if index is larger then getSize() - 1 or smaller then 0 or gmo equals null an exception will be thrown.
-   * 
+   *
    * @param gmo
    *          GM_Object to set.
    * @param index
@@ -186,7 +186,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
 
   /**
    * removes the submitted GM_Object from the aggregation
-   * 
+   *
    * @return the removed GM_Object
    */
   @Override
@@ -218,7 +218,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   /**
    * removes the GM_Object at the submitted index from the aggregation. if index is larger then getSize() - 1 or smaller
    * then 0 an exception will be thrown.
-   * 
+   *
    * @return the removed GM_Object
    */
   @Override
@@ -301,7 +301,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
 
   /**
    * sets the spatial reference system
-   * 
+   *
    * @param crs
    *          new spatial reference system
    */
@@ -427,35 +427,29 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
     super.invalidate();
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#getAdapter(java.lang.Class)
-   */
   @Override
   public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     /* An array of GM_xxx adapts to the array of its adapters. */
     final Class< ? > componentType = adapter.getComponentType();
-    if( componentType != null && GM_Object.class.isAssignableFrom( componentType ) )
+    if( componentType == null )
+      return super.getAdapter( adapter );
+
+    /* If it is a component type, we adapt each member of this aggregate to the component and combine the result */
+
+    final List<Object> adaptedObjects = new ArrayList<>();
+
+    for( final GM_Object objectToAdapt : m_aggregate )
     {
-      final List<GM_Object> adaptedObjects = new ArrayList<GM_Object>();
-
-      for( final GM_Object objectToAdapt : m_aggregate )
-      {
-        final GM_Object adaptedObject = (GM_Object) objectToAdapt.getAdapter( componentType );
-        if( adaptedObject != null && componentType.isAssignableFrom( adaptedObject.getClass() ) )
-          adaptedObjects.add( adaptedObject );
-      }
-
-      final Object adaptedArray = Array.newInstance( componentType, adaptedObjects.size() );
-      return adaptedObjects.toArray( (GM_Object[]) adaptedArray );
+      final Object adaptedObject = objectToAdapt.getAdapter( componentType );
+      if( adaptedObject != null && componentType.isAssignableFrom( adaptedObject.getClass() ) )
+        adaptedObjects.add( adaptedObject );
     }
 
-    return super.getAdapter( adapter );
+    final Object adaptedArray = Array.newInstance( componentType, adaptedObjects.size() );
+    return adaptedObjects.toArray( (Object[]) adaptedArray );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#calculateBoundary()
-   */
   @Override
   protected GM_Boundary calculateBoundary( )
   {
