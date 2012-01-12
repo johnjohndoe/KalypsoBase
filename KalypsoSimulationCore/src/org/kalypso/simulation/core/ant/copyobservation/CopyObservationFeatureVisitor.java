@@ -103,6 +103,8 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
       setCurrentSubTask( targetHref );
 
       final ObservationSource[] sources = m_sources.getObservationSources( feature );
+      if( sources.length == 0 )
+        return true;
 
       final URL targetLocation = UrlResolverSingleton.getDefault().resolveURL( m_target.getContext(), targetHref );
       final File targetFile = getTargetFile( targetLocation );
