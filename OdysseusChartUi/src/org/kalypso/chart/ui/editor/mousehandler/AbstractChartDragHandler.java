@@ -104,9 +104,6 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
     m_startY = down.y;
   }
 
-  /**
-   * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
-   */
   @Override
   public void mouseDown( final MouseEvent e )
   {

@@ -1,11 +1,16 @@
 package org.kalypso.chart.ui.editor.mousehandler;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.lang.Objects;
 
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
@@ -39,7 +44,27 @@ public abstract class AbstractChartHandler implements IChartHandler
 
     m_tooltip = editInfo;
 
-    getChart().invalidate();
+    forceRedrawEvent();
+  }
+
+  protected void forceRedrawEvent( )
+  {
+    final UIJob job = new UIJob( "Redrawing chart tooltip" )
+    {
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        final Composite composite = (Composite) getChart();
+        composite.redraw();
+
+        return Status.OK_STATUS;
+      }
+    };
+
+    job.setUser( false );
+    job.setSystem( true );
+
+    job.schedule();
   }
 
   public IChartComposite getChart( )
