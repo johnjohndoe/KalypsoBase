@@ -59,18 +59,12 @@ public class SimplePointsProvider implements IPointsProvider
     m_points = points;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.wizard.douglasPeucker.IPointsProvider#getPoints()
-   */
   @Override
   public IRecord[] getPoints( )
   {
     return m_points;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.wizard.douglasPeucker.IPointsProvider#getErrorMessage()
-   */
   @Override
   public String getErrorMessage( )
   {

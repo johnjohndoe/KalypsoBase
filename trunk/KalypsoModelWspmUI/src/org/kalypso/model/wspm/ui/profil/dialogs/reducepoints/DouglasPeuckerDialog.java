@@ -150,9 +150,6 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
     setShellStyle( getShellStyle() | SWT.RESIZE );
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.Dialog#create()
-   */
   @Override
   public void create( )
   {
@@ -164,9 +161,6 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
     updateDialog();
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.Dialog#close()
-   */
   @Override
   public boolean close( )
   {

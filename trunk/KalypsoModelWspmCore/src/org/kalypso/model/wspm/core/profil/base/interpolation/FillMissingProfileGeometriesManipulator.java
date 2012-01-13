@@ -67,7 +67,6 @@ public class FillMissingProfileGeometriesManipulator implements IProfileManipula
     wrapper.accept( new InterpolateMissingCoordinatesVisitor(), 1 );
     if( m_extrapolate )
       wrapper.accept( new ExtrapolateMissingCoordinatesVisitor(), 1 );
-
   }
 
 }
