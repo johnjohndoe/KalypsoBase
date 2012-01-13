@@ -309,9 +309,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
 
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getId()
-   */
   @Override
   public String getIdentifier( )
   {
@@ -324,10 +321,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
 // return m_layerManager;
 // }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetComponent()
-   */
-
   @Override
   public IComponent getTargetComponent( )
   {
@@ -335,9 +328,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
     return layer == null ? null : layer.getTargetComponent();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetRange()
-   */
   @Override
   public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
   {

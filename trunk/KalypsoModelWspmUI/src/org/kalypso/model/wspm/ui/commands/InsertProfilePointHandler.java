@@ -11,7 +11,6 @@ import org.eclipse.ui.menus.UIElement;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.ElementUpdateHelper;
 import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
-import org.kalypso.chart.ui.editor.mousehandler.DragEditHandler;
 
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.IChartHandlerManager;
@@ -28,7 +27,7 @@ public class InsertProfilePointHandler extends AbstractHandler implements IEleme
       return Status.CANCEL_STATUS;
 
     final IChartHandlerManager handler = chart.getPlotHandler();
-    handler.activatePlotHandler( new DragEditHandler( chart ) );
+    handler.activatePlotHandler( new InsertProfilePointChartHandler( chart ) );
 
     final IChartPart part = ChartHandlerUtilities.findChartComposite( context );
     if( part != null )
@@ -40,6 +39,6 @@ public class InsertProfilePointHandler extends AbstractHandler implements IEleme
   @Override
   public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
   {
-    ElementUpdateHelper.updateElement( element, DragEditHandler.class );
+    ElementUpdateHelper.updateElement( element, InsertProfilePointChartHandler.class );
   }
 }

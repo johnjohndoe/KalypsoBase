@@ -458,4 +458,20 @@ public class ProfileWrapper
     return myMarkers.toArray( new ProfilePointMarkerWrapper[] {} );
   }
 
+  public ProfilePointWrapper hasPoint( final double width, final double fuzziness )
+  {
+    final double min = width - fuzziness;
+    final double max = width + fuzziness;
+
+    final ProfilePointWrapper[] points = getPoints();
+    for( final ProfilePointWrapper point : points )
+    {
+      final double p = point.getBreite();
+      if( p >= min && p <= max )
+        return point;
+    }
+
+    return null;
+  }
+
 }
