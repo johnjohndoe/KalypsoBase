@@ -48,17 +48,12 @@ import de.openali.odysseus.chart.framework.model.mapper.IMapper;
  */
 public class ChartImageMapperRegistryEventListener extends AbstractMapperRegistryEventListener
 {
-  /**
-   * @see de.openali.odysseus.chart.framework.axis.IMapperRegistryEventListener#onMapperAdded(de.openali.odysseus.chart.framework.axis.IAxis)
-   *      adds an AxisComponent for any newly added axis and reports Axis and its AxisComponent to the AxisRegistry
-   */
-
   private final ChartImageComposite m_chartImageComposite;
 
-  public ChartImageMapperRegistryEventListener( ChartImageComposite chartImageComposite )
+  public ChartImageMapperRegistryEventListener( final ChartImageComposite composite )
   {
     super();
-    m_chartImageComposite = chartImageComposite;
+    m_chartImageComposite = composite;
   }
 
   @Override
@@ -67,9 +62,6 @@ public class ChartImageMapperRegistryEventListener extends AbstractMapperRegistr
     m_chartImageComposite.invalidate();
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.impl.model.event.AbstractMapperRegistryEventListener#onMapperRangeChanged(de.openali.odysseus.chart.framework.model.mapper.IMapper)
-   */
   @Override
   public void onMapperChanged( final IMapper mapper )
   {

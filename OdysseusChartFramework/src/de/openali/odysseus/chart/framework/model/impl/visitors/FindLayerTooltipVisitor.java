@@ -38,23 +38,57 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.openali.odysseus.chart.framework.view;
+package de.openali.odysseus.chart.framework.model.impl.visitors;
+
+import org.eclipse.swt.graphics.Point;
+import org.kalypso.commons.exception.CancelVisitorException;
+import org.kalypso.commons.java.lang.Objects;
+
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLayerVisitor;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
+ * @author kimwerner
  * @author Dirk Kuch
  */
-public interface IPlotHandler
+public class FindLayerTooltipVisitor extends AbstractChartLayerVisitor
 {
-  /**
-   * remove all active plot handlers and activate this drag handler only!
-   */
-  void activatePlotHandler( final IChartDragHandler handler );
+  final IChartComposite m_chart;
 
-  void addPlotHandler( final IChartDragHandler handler );
+  final Point m_point;
 
-  void removePlotHandler( final IChartDragHandler handler );
+  private EditInfo m_info;
 
-  void removeAllPlotHandler( );
+  public FindLayerTooltipVisitor( final IChartComposite chart, final Point point )
+  {
+    super();
+    m_chart = chart;
+    m_point = point;
+  }
 
-  IChartDragHandler[] getActiveHandlers( );
+  @Override
+  public void visit( final IChartLayer chartLayer ) throws CancelVisitorException
+  {
+    if( !(chartLayer instanceof ITooltipChartLayer) )
+      return;
+
+    final ITooltipChartLayer layer = (ITooltipChartLayer) chartLayer;
+    final EditInfo info = layer.getHover( m_point );
+    if( Objects.isNotNull( info ) )
+    {
+      m_info = info;
+
+      throw new CancelVisitorException();
+    }
+
+    layer.getLayerManager().accept( this );
+  }
+
+  public EditInfo getEditInfo( )
+  {
+    return m_info;
+  }
 }

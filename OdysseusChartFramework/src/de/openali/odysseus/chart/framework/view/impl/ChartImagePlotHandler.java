@@ -45,16 +45,16 @@ import java.util.Set;
 
 import org.eclipse.swt.SWT;
 
-import de.openali.odysseus.chart.framework.view.IChartDragHandler;
-import de.openali.odysseus.chart.framework.view.IPlotHandler;
+import de.openali.odysseus.chart.framework.view.IChartHandler;
+import de.openali.odysseus.chart.framework.view.IChartHandlerManager;
 
 /**
  * @author Dirk Kuch
  */
-public class ChartImagePlotHandler implements IPlotHandler
+public class ChartImagePlotHandler implements IChartHandlerManager
 {
 
-  private final Set<IChartDragHandler> m_dragHandlers = new LinkedHashSet<IChartDragHandler>();
+  private final Set<IChartHandler> m_dragHandlers = new LinkedHashSet<IChartHandler>();
 
   private final ChartImageComposite m_chart;
 
@@ -67,7 +67,7 @@ public class ChartImagePlotHandler implements IPlotHandler
    * @see de.openali.odysseus.chart.framework.view.IPlotHandler#activatePlotHanlder(de.openali.odysseus.chart.framework.view.IChartDragHandler)
    */
   @Override
-  public void activatePlotHandler( final IChartDragHandler handler )
+  public void activatePlotHandler( final IChartHandler handler )
   {
     removeAllPlotHandler();
     addPlotHandler( handler );
@@ -77,7 +77,7 @@ public class ChartImagePlotHandler implements IPlotHandler
    * @see de.openali.odysseus.chart.framework.view.IPlotHandler#addPlotHandler(de.openali.odysseus.ch0art.framework.view.IChartDragHandler)
    */
   @Override
-  public void addPlotHandler( final IChartDragHandler handler )
+  public void addPlotHandler( final IChartHandler handler )
   {
     if( handler == null )
       m_chart.setCursor( m_chart.getDisplay().getSystemCursor( SWT.CURSOR_ARROW ) );
@@ -95,7 +95,7 @@ public class ChartImagePlotHandler implements IPlotHandler
    * @see de.openali.odysseus.chart.framework.view.IPlotHandler#removePlotHandler(de.openali.odysseus.chart.framework.view.IChartDragHandler)
    */
   @Override
-  public void removePlotHandler( final IChartDragHandler handler )
+  public void removePlotHandler( final IChartHandler handler )
   {
     if( handler != null )
     {
@@ -113,8 +113,8 @@ public class ChartImagePlotHandler implements IPlotHandler
   @Override
   public void removeAllPlotHandler( )
   {
-    final IChartDragHandler[] handlers = m_dragHandlers.toArray( new IChartDragHandler[] {} );
-    for( final IChartDragHandler handler : handlers )
+    final IChartHandler[] handlers = m_dragHandlers.toArray( new IChartHandler[] {} );
+    for( final IChartHandler handler : handlers )
     {
       removePlotHandler( handler );
     }
@@ -126,9 +126,9 @@ public class ChartImagePlotHandler implements IPlotHandler
    * @see de.openali.odysseus.chart.framework.view.IPlotHandler#getActiveHandlers()
    */
   @Override
-  public IChartDragHandler[] getActiveHandlers( )
+  public IChartHandler[] getActiveHandlers( )
   {
-    return m_dragHandlers.toArray( new IChartDragHandler[] {} );
+    return m_dragHandlers.toArray( new IChartHandler[] {} );
   }
 
 }

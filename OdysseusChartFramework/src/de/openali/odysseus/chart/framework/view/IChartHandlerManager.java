@@ -38,49 +38,23 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.openali.odysseus.chart.framework.model.impl.visitors;
-
-import org.eclipse.swt.graphics.Point;
-
-import de.openali.odysseus.chart.framework.model.layer.EditInfo;
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLayerVisitor;
-import de.openali.odysseus.chart.framework.view.IChartComposite;
+package de.openali.odysseus.chart.framework.view;
 
 /**
- * @author kimwerner
+ * @author Dirk Kuch
  */
-public class LayerTooltipVisitor extends AbstractChartLayerVisitor
+public interface IChartHandlerManager
 {
-  final IChartComposite m_chart;
-
-  final Point m_point;
-
-  public LayerTooltipVisitor( final IChartComposite chart, final Point point )
-  {
-    super();
-    m_chart = chart;
-    m_point = point;
-  }
-
   /**
-   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+   * remove all active plot handlers and activate this drag handler only!
    */
-  @Override
-  public void visit( final IChartLayer layer )
-  {
-    if( !(layer instanceof ITooltipChartLayer) )
-      return;
-    final EditInfo info = ((ITooltipChartLayer) layer).getHover( m_point );
-    if( info != null )
-    {
-      m_chart.setTooltipInfo( info );
-      return;
-    }
+  void activatePlotHandler( final IChartHandler handler );
 
-    layer.getLayerManager().accept( this );
+  void addPlotHandler( final IChartHandler handler );
 
-  }
+  void removePlotHandler( final IChartHandler handler );
 
+  void removeAllPlotHandler( );
+
+  IChartHandler[] getActiveHandlers( );
 }

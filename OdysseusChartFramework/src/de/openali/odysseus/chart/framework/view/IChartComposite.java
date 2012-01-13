@@ -51,12 +51,9 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
  */
 public interface IChartComposite extends IChartView
 {
-
-  IPlotHandler getPlotHandler( );
+  IChartHandlerManager getPlotHandler( );
 
   Rectangle getPlotRect( );
-
-  EditInfo getTooltipInfo( );
 
   void invalidate( );
 
@@ -65,6 +62,4 @@ public interface IChartComposite extends IChartView
   void setEditInfo( final EditInfo editInfo );
 
   void setPanOffset( final IAxis[] axes, final Point start, final Point end );
-
-  void setTooltipInfo( EditInfo tooltipInfo );
 }

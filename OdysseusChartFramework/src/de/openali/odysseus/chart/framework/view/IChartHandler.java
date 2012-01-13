@@ -43,10 +43,11 @@ package de.openali.odysseus.chart.framework.view;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseMoveListener;
+import org.eclipse.swt.events.PaintListener;
 
 /**
  * @author alibu
  */
-public interface IChartDragHandler extends MouseListener, MouseMoveListener, KeyListener
+public interface IChartHandler extends MouseListener, MouseMoveListener, KeyListener, PaintListener
 {
 }

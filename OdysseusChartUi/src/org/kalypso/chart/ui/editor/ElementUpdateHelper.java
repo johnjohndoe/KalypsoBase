@@ -49,8 +49,8 @@ import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.commons.java.lang.Objects;
 
 import de.openali.odysseus.chart.framework.view.IChartComposite;
-import de.openali.odysseus.chart.framework.view.IChartDragHandler;
-import de.openali.odysseus.chart.framework.view.IPlotHandler;
+import de.openali.odysseus.chart.framework.view.IChartHandler;
+import de.openali.odysseus.chart.framework.view.IChartHandlerManager;
 
 /**
  * @author burtscher1
@@ -70,10 +70,10 @@ public class ElementUpdateHelper
     if( chart == null )
       return;
 
-    final IPlotHandler plotDragHandler = chart == null ? null : chart.getPlotHandler();
+    final IChartHandlerManager plotDragHandler = chart == null ? null : chart.getPlotHandler();
     if( Objects.isNotNull( plotDragHandler ) )
     {
-      final IChartDragHandler[] handlers = plotDragHandler.getActiveHandlers();
+      final IChartHandler[] handlers = plotDragHandler.getActiveHandlers();
       element.setChecked( isChecked( handlers, handlerClass ) );
     }
     else
@@ -83,12 +83,12 @@ public class ElementUpdateHelper
 
   }
 
-  private static boolean isChecked( final IChartDragHandler[] handlers, final Class< ? > clazz )
+  private static boolean isChecked( final IChartHandler[] handlers, final Class< ? > clazz )
   {
     if( ArrayUtils.isEmpty( handlers ) )
       return false;
 
-    for( final IChartDragHandler handler : handlers )
+    for( final IChartHandler handler : handlers )
     {
       if( handler.getClass().equals( clazz ) )
         return true;

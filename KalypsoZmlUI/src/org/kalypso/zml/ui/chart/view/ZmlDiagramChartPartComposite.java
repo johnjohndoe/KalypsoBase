@@ -61,7 +61,7 @@ import de.openali.odysseus.chart.factory.config.ChartFactory;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
-import de.openali.odysseus.chart.framework.view.IPlotHandler;
+import de.openali.odysseus.chart.framework.view.IChartHandlerManager;
 
 /**
  * @author Dirk Kuch
@@ -117,7 +117,7 @@ public class ZmlDiagramChartPartComposite extends ChartPartComposite
       return control;
 
     final ZoomPanMaximizeHandler handler = new ZoomPanMaximizeHandler( chartComposite, DIRECTION.eBoth );
-    final IPlotHandler plot = chartComposite.getPlotHandler();
+    final IChartHandlerManager plot = chartComposite.getPlotHandler();
     if( Objects.isNotNull( plot ) )
       plot.activatePlotHandler( handler );
 

@@ -2,24 +2,44 @@ package org.kalypso.chart.ui.editor.mousehandler;
 
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.graphics.Cursor;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Canvas;
+import org.kalypso.commons.java.lang.Objects;
 
+import de.openali.odysseus.chart.framework.model.figure.IPaintable;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
+import de.openali.odysseus.chart.framework.util.img.ChartTooltipPainter;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
-import de.openali.odysseus.chart.framework.view.IChartDragHandler;
+import de.openali.odysseus.chart.framework.view.IChartHandler;
 
 /**
  * @author kimwerner
  */
-public abstract class AbstractChartHandler implements IChartDragHandler
+public abstract class AbstractChartHandler implements IChartHandler
 {
   private final IChartComposite m_chart;
 
   private int m_cursor = -1;
 
+  private EditInfo m_tooltip;
+
+  private final ChartTooltipPainter m_tooltipPainter = new ChartTooltipPainter();
+
   public AbstractChartHandler( final IChartComposite chart )
   {
     m_chart = chart;
+  }
+
+  protected void setTooltip( final EditInfo editInfo )
+  {
+    if( Objects.equal( m_tooltip, editInfo ) )
+      return;
+
+    m_tooltip = editInfo;
+
+    getChart().invalidate();
   }
 
   public IChartComposite getChart( )
@@ -27,41 +47,26 @@ public abstract class AbstractChartHandler implements IChartDragHandler
     return m_chart;
   }
 
-  /**
-   * @see org.eclipse.swt.events.KeyListener#keyPressed(org.eclipse.swt.events.KeyEvent)
-   */
   @Override
   public void keyPressed( final KeyEvent e )
   {
   }
 
-  /**
-   * @see org.eclipse.swt.events.KeyListener#keyReleased(org.eclipse.swt.events.KeyEvent)
-   */
   @Override
   public void keyReleased( final KeyEvent e )
   {
   }
 
-  /**
-   * @see org.eclipse.swt.events.MouseListener#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
-   */
   @Override
   public void mouseDoubleClick( final MouseEvent e )
   {
   }
 
-  /**
-   * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
-   */
   @Override
   public void mouseDown( final MouseEvent e )
   {
   }
 
-  /**
-   * @see org.eclipse.swt.events.MouseMoveListener#mouseMove(org.eclipse.swt.events.MouseEvent)
-   */
   @Override
   public void mouseMove( final MouseEvent e )
   {
@@ -72,11 +77,9 @@ public abstract class AbstractChartHandler implements IChartDragHandler
       if( plot.getCursor() != plot.getDisplay().getSystemCursor( m_cursor ) )
         plot.setCursor( swtCursor );
     }
+
   }
 
-  /**
-   * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
-   */
   @Override
   public void mouseUp( final MouseEvent e )
   {
@@ -89,4 +92,27 @@ public abstract class AbstractChartHandler implements IChartDragHandler
 
     m_cursor = cursor;
   }
+
+  /**
+   * default implementation - paints only tool tip of current chart handler
+   */
+  @Override
+  public void paintControl( final PaintEvent e )
+  {
+    paintTooltipInfo( e.gc );
+  }
+
+  protected final void paintTooltipInfo( final GC gc )
+  {
+    if( Objects.isNull( m_tooltip ) )
+      return;
+
+    final IPaintable hoverFigure = m_tooltip.getHoverFigure();
+    if( Objects.isNotNull( hoverFigure ) )
+      hoverFigure.paint( gc );
+
+    m_tooltipPainter.setTooltip( m_tooltip.getText() );
+    m_tooltipPainter.paint( gc, m_tooltip.getPosition() );
+  }
+
 }
