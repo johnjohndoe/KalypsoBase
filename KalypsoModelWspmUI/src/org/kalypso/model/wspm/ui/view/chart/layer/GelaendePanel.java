@@ -44,10 +44,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
@@ -91,36 +89,6 @@ public class GelaendePanel extends AbstractProfilView
     final Composite panel = toolkit.createComposite( parent );
     panel.setLayout( new GridLayout() );
 
-    final Group editgroup = new Group( panel, SWT.NONE );
-    editgroup.setText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.GelaendePanel.0" ) ); //$NON-NLS-1$
-    final GridData gridData = new GridData( SWT.FILL, SWT.CENTER, true, false );
-    editgroup.setLayoutData( gridData );
-    editgroup.setLayout( new GridLayout() );
-
-    toolkit.adapt( editgroup );
-
-    final Button horzbutton = toolkit.createButton( editgroup, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.GelaendePanel.1" ), SWT.CHECK ); //$NON-NLS-1$
-    horzbutton.setSelection( allowHorizontal() );
-    final Button vertbutton = toolkit.createButton( editgroup, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.GelaendePanel.2" ), SWT.CHECK ); //$NON-NLS-1$
-    vertbutton.setSelection( allowVertical() );
-
-    horzbutton.addSelectionListener( new SelectionAdapter()
-    {
-      @Override
-      public void widgetSelected( final org.eclipse.swt.events.SelectionEvent e )
-      {
-        setLayerData( horzbutton.getSelection(), vertbutton.getSelection() );
-      }
-    } );
-
-    vertbutton.addSelectionListener( new SelectionAdapter()
-    {
-      @Override
-      public void widgetSelected( final org.eclipse.swt.events.SelectionEvent e )
-      {
-        setLayerData( horzbutton.getSelection(), vertbutton.getSelection() );
-      }
-    } );
     final Group cg = new Group( panel, SWT.None );
     cg.setText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.GelaendePanel.3" ) ); //$NON-NLS-1$
     final GridData cgData = new GridData( SWT.FILL, SWT.FILL, true, true );
