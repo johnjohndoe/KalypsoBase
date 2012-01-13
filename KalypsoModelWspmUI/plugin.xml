@@ -47,6 +47,14 @@
                  style="push"
                  tooltip="%com.bce.profil.eclipse.view.table.propertyedit.tooltip">
            </action>
+           <action
+                 class="org.kalypso.model.wspm.ui.view.table.FillMissingGeometriesActionDelegate"
+                 id="com.bce.profil.eclipse.view.table.fill.missing"
+                 label="Fill missing profile point geometries"
+                 menubarPath="points"
+                 style="push"
+                 tooltip="Guess missing profile point geometries from existing ones.">
+           </action>
         </viewContribution>
      </extension>
      <extension

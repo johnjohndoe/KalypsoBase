@@ -123,27 +123,18 @@ public class SelectionPointsProvider implements IPointsProvider
     m_errorMessage = org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider.4" ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.wizard.douglasPeucker.IPointsProvider#getPoints()
-   */
   @Override
   public IRecord[] getPoints( )
   {
     return m_points;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.wizard.douglasPeucker.IPointsProvider#getErrorMessage()
-   */
   @Override
   public String getErrorMessage( )
   {
     return m_errorMessage;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.wizard.douglasPeucker.IPointsProvider#getName()
-   */
   @Override
   public String getName( )
   {
