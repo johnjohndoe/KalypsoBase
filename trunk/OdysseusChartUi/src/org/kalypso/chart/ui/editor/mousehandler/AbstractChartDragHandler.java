@@ -7,7 +7,7 @@ import org.eclipse.swt.graphics.Point;
 import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.impl.visitors.LayerTooltipVisitor;
+import de.openali.odysseus.chart.framework.model.impl.visitors.FindLayerTooltipVisitor;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
@@ -116,14 +116,12 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
     mouseDown( new Point( e.x, e.y ) );
   }
 
-  /**
-   * @see org.eclipse.swt.events.MouseMoveListener#mouseMove(org.eclipse.swt.events.MouseEvent)
-   */
   @Override
   public void mouseMove( final MouseEvent e )
   {
     super.mouseMove( e );
-    getChart().setTooltipInfo( null );
+    setTooltip( null );
+
     final Point p = new Point( e.x, e.y );
     if( m_clickInfo == null )
       doSetTooltip( p );
@@ -133,9 +131,13 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
 
   private void doSetTooltip( final Point point )
   {
-    final LayerTooltipVisitor visitor = new LayerTooltipVisitor( getChart(), ChartHandlerUtilities.screen2plotPoint( point,getChart().getPlotRect() ) );
-    final IChartModel model = getChart().getChartModel();
+    final IChartComposite chart = getChart();
+    final IChartModel model = chart.getChartModel();
+
+    final FindLayerTooltipVisitor visitor = new FindLayerTooltipVisitor( chart, ChartHandlerUtilities.screen2plotPoint( point, chart.getPlotRect() ) );
     model.getLayerManager().accept( visitor );
+
+    setTooltip( visitor.getEditInfo() );
   }
 
   protected void mouseMove( final Point move )
@@ -143,13 +145,10 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
     if( m_editInfo == null && (Math.abs( move.x - m_startX ) > m_trashold || Math.abs( move.y - m_startY ) > m_trashold) )
       m_editInfo = m_clickInfo.clone();
 
-    final Point plotPoint = ChartHandlerUtilities.screen2plotPoint( new Point( move.x - m_deltaSnapX, move.y - m_deltaSnapY ),getChart().getPlotRect() );
+    final Point plotPoint = ChartHandlerUtilities.screen2plotPoint( new Point( move.x - m_deltaSnapX, move.y - m_deltaSnapY ), getChart().getPlotRect() );
     doMouseMoveAction( plotPoint, m_editInfo == null ? m_clickInfo : m_editInfo );
   }
 
-  /**
-   * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
-   */
   @Override
   public void mouseUp( final MouseEvent e )
   {
@@ -163,7 +162,7 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
     {
       if( m_editInfo != null )
       {
-        final Point plotPoint = ChartHandlerUtilities.screen2plotPoint( new Point( up.x - m_deltaSnapX, up.y - m_deltaSnapY ),getChart().getPlotRect() );
+        final Point plotPoint = ChartHandlerUtilities.screen2plotPoint( new Point( up.x - m_deltaSnapX, up.y - m_deltaSnapY ), getChart().getPlotRect() );
         doMouseUpAction( plotPoint, m_editInfo );
       }
       else if( m_clickInfo != null )
@@ -188,4 +187,5 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
     if( editInfo != null && editInfo.getLayer() != null )
       ((IEditableChartLayer) editInfo.getLayer()).commitDrag( editInfo.getPosition(), editInfo );
   }
+
 }

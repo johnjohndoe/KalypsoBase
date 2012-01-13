@@ -52,7 +52,7 @@ import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.commons.java.lang.Objects;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.impl.visitors.LayerTooltipVisitor;
+import de.openali.odysseus.chart.framework.model.impl.visitors.FindLayerTooltipVisitor;
 import de.openali.odysseus.chart.framework.model.impl.visitors.PanToVisitor;
 import de.openali.odysseus.chart.framework.model.impl.visitors.SetActivePointVisitor;
 import de.openali.odysseus.chart.framework.model.impl.visitors.ZoomInVisitor;
@@ -108,7 +108,7 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
     final Point currentPos = EventUtils.getPoint( e );
     m_startPos = currentPos;
 
-    m_startPlot = ChartHandlerUtilities.screen2plotPoint( currentPos,getChart().getPlotRect() );
+    m_startPlot = ChartHandlerUtilities.screen2plotPoint( currentPos, getChart().getPlotRect() );
   }
 
   private int cursorFromButton( final MouseEvent e )
@@ -131,8 +131,9 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
     super.mouseMove( e );
 
     final Point currentPos = EventUtils.getPoint( e );
-    final Point currentPlot = ChartHandlerUtilities.screen2plotPoint( currentPos,getChart().getPlotRect() );
-    getChart().setTooltipInfo( null );
+    final Point currentPlot = ChartHandlerUtilities.screen2plotPoint( currentPos, getChart().getPlotRect() );
+    setTooltip( null );
+
     if( m_startPlot == null )
     {
       doSetTooltip( currentPlot );
@@ -156,9 +157,11 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
 
   private void doSetTooltip( final Point point )
   {
-    final LayerTooltipVisitor visitor = new LayerTooltipVisitor( getChart(), point );
+    final FindLayerTooltipVisitor visitor = new FindLayerTooltipVisitor( getChart(), point );
     final IChartModel model = getChart().getChartModel();
     model.getLayerManager().accept( visitor );
+
+    setTooltip( visitor.getEditInfo() );
   }
 
   private boolean isMoved( final Point currentPos )
@@ -195,9 +198,6 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
     getChart().setDragArea( new Rectangle( start.x, start.y, end.x - start.x, end.y - start.y ) );
   }
 
-  /**
-   * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
-   */
   @Override
   public void mouseUp( final MouseEvent e )
   {
@@ -222,7 +222,7 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
   private void doMouseUpAction( final MouseEvent e )
   {
     final Point currentPos = EventUtils.getPoint( e );
-    final Point currentPlot = ChartHandlerUtilities.screen2plotPoint( currentPos,getChart().getPlotRect() );
+    final Point currentPlot = ChartHandlerUtilities.screen2plotPoint( currentPos, getChart().getPlotRect() );
 
     final boolean isMoved = isMoved( currentPos );
     if( !isMoved )
