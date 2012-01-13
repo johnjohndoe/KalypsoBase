@@ -190,6 +190,14 @@ public class ChartPartComposite implements IChartPart
 
         ChartFactory.doConfiguration( m_chartModel, loader, chart, cel, context );
       }
+      else if( input instanceof IDatabaseStorageEditorInput )
+      {
+        final IStorage storage = ((IStorageEditorInput) input).getStorage();
+        final ChartConfigurationLoader loader = new ChartConfigurationLoader( storage );
+        final IExtensionLoader cel = ChartExtensionLoader.getInstance();
+        final ChartType chart = loader.getCharts()[0];
+        ChartFactory.doConfiguration( m_chartModel, loader, chart, cel, null );
+      }
     }
     catch( final Exception e )
     {

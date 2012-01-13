@@ -10,7 +10,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.wst.xml.core;resolution:=optional,
  org.kalypso.core,
  org.junit4;resolution:=optional
-Export-Package: de.openali.odysseus.chart.factory.config;
+Export-Package: de.openali.odysseus.chart.factory,
+ de.openali.odysseus.chart.factory.config;
   uses:="de.openali.odysseus.chart.framework.model,
    de.openali.odysseus.chart.factory.config.parameters,
    org.apache.xmlbeans,
