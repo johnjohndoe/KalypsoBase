@@ -136,10 +136,22 @@ public class ImportShapeWizardPage extends WizardPage
         }
       } );
     }
-
+    // container for extended functionality
+    final Composite extensionContainer = new Composite( container, SWT.NONE );
+    final GridLayout extensionContainerLayout = new GridLayout(1,true);
+    extensionContainer.setLayout( extensionContainerLayout );
+    extensionContainer.setLayoutData( new GridData( SWT.FILL, SWT.TOP, true, false, 3, 1 ) );
+    addCustomControls( extensionContainer );
+    
     setPageComplete( m_shapeChooser.getFile() != null );
 
     setControl( container );
+  }
+  
+  /**
+   * ancestors may override this for extended functionality
+   */
+  protected void addCustomControls(final Composite container){
   }
 
   protected void handleShapeFileChanged( final File file )
