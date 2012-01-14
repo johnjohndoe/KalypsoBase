@@ -149,7 +149,8 @@ public final class FeatureUtils
   public static FeatureChange getLinkedFeatureChange( final Feature parentFeature, final QName propertyName, final String value )
   {
     final IPropertyType chgProp = parentFeature.getFeatureType().getProperty( propertyName );
-    final IXLinkedFeature impl = new XLinkedFeature_Impl( parentFeature, (IRelationType) chgProp, parentFeature.getFeatureType(), value, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+
+    final IXLinkedFeature impl = new XLinkedFeature_Impl( parentFeature, (IRelationType) chgProp, parentFeature.getFeatureType(), value );
 
     return new FeatureChange( parentFeature, chgProp, impl );
   }
@@ -242,11 +243,8 @@ public final class FeatureUtils
   public static FeatureChange getExternalLinkedFeatureCommand( final Feature feature, final QName qname, final String value )
   {
     final IPropertyType chgProp = feature.getFeatureType().getProperty( qname );
-    final IXLinkedFeature impl = new XLinkedFeature_Impl( feature, (IRelationType) chgProp, feature.getFeatureType(), value, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-
-    final FeatureChange change = new FeatureChange( feature, chgProp, impl );
-
-    return change;
+    final IXLinkedFeature impl = new XLinkedFeature_Impl( feature, (IRelationType) chgProp, feature.getFeatureType(), value );
+    return new FeatureChange( feature, chgProp, impl );
   }
 
   @Deprecated

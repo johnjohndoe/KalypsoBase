@@ -242,8 +242,7 @@ public class Polynomial1D extends Feature_Impl implements IPolynomial1D
     final IRelationType relation = (IRelationType) getFeatureType().getProperty( QNAME_PROP_DOMAIN_PHENOMENON );
     final IFeatureType featureType = GMLSchemaUtilities.getFeatureTypeQuiet( new QName( NS.SWE, "Phenomenon" ) );
 
-    final Feature ref = new XLinkedFeature_Impl( this, relation, featureType, domainId, null, null, null, null, null );
-    return ref;
+    return new XLinkedFeature_Impl( this, relation, featureType, domainId );
   }
 
   /**

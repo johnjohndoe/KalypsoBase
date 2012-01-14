@@ -420,38 +420,38 @@ public class XLinkedFeature_Impl extends PlatformObject implements IXLinkedFeatu
   }
 
   @Override
-  public IXLinkedFeature createLink( final IRelationType relation, final String href )
+  public IXLinkedFeature setLink( final IRelationType relation, final String href )
   {
-    return getFeature().createLink( relation, href );
+    return getFeature().setLink( relation, href );
   }
 
   @Override
-  public IXLinkedFeature createLink( final QName relationName, final String href )
+  public IXLinkedFeature setLink( final QName relationName, final String href )
   {
-    return getFeature().createLink( relationName, href );
+    return getFeature().setLink( relationName, href );
   }
 
   @Override
-  public IXLinkedFeature createLink( final IRelationType relation, final String href, final QName featureType )
+  public IXLinkedFeature setLink( final IRelationType relation, final String href, final QName featureType )
   {
-    return getFeature().createLink( relation, href, featureType );
+    return getFeature().setLink( relation, href, featureType );
   }
 
   @Override
-  public IXLinkedFeature createLink( final IRelationType relation, final String href, final IFeatureType featureType )
+  public IXLinkedFeature setLink( final IRelationType relation, final String href, final IFeatureType featureType )
   {
-    return getFeature().createLink( relation, href, featureType );
+    return getFeature().setLink( relation, href, featureType );
   }
 
   @Override
-  public IXLinkedFeature createLink( final QName relation, final String href, final QName featureType )
+  public IXLinkedFeature setLink( final QName relation, final String href, final QName featureType )
   {
-    return getFeature().createLink( relation, href, featureType );
+    return getFeature().setLink( relation, href, featureType );
   }
 
   @Override
-  public IXLinkedFeature createLink( final QName relation, final String href, final IFeatureType featureType )
+  public IXLinkedFeature setLink( final QName relation, final String href, final IFeatureType featureType )
   {
-    return getFeature().createLink( relation, href, featureType );
+    return getFeature().setLink( relation, href, featureType );
   }
 }

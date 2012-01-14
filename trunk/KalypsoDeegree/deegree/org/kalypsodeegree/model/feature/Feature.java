@@ -99,16 +99,16 @@ public interface Feature extends BaseFeature, Deegree2Feature, IAdaptable
   void setLocation( final GM_Object location );
 
   /**
-   * Same as {@link #createLink(IRelationType, String, IFeatureType)} using the target feature type of the relation as
+   * Same as {@link #setLink(IRelationType, String, IFeatureType)} using the target feature type of the relation as
    * feature type of the xlink.
    */
-  IXLinkedFeature createLink( final IRelationType relation, final String href );
+  IXLinkedFeature setLink( final IRelationType relation, final String href );
 
   /**
-   * Same as {@link #createLink(QName, String, IFeatureType)} using the target feature type of the relation as feature
-   * type of the xlink.
+   * Same as {@link #setLink(QName, String, IFeatureType)} using the target feature type of the relation as feature type
+   * of the xlink.
    */
-  IXLinkedFeature createLink( final QName relationName, final String href );
+  IXLinkedFeature setLink( final QName relationName, final String href );
 
   /**
    * Creates an xlink to a linked feature and sets it as a property of this feature. If the property was already set, it
@@ -120,39 +120,40 @@ public interface Feature extends BaseFeature, Deegree2Feature, IAdaptable
    *          The reference to the linked feature. Must be of the form <code>url#anchor</code>, where <code>url</code>
    *          my be an absolute, relative (to the context of this {@link Feature}'s {@link GMLWorkspace}-context, or
    *          empty (i.e. a reference within the workspace of this {@link Feature}). <code>anchor</code> is the id of
-   *          the referenced {@link Feature}.
+   *          the referenced {@link Feature}. If this parameter is blank (<code>null</code> or contains only
+   *          whitespace), the link is set to {@link null}.
    * @param featureType
    *          Name of the type of the feature this link points to.
    * @throws IllegalArgumentException
    *           If <code>relation</code> is not a property of this feature.
    * @return The freshly created feature.
    */
-  IXLinkedFeature createLink( IRelationType relation, String href, QName featureType );
+  IXLinkedFeature setLink( IRelationType relation, String href, QName featureType );
 
   /**
    * @param featureType
    *          Type of the feature this link points to.
-   * @see #createLink(IRelationType, String, QName)
+   * @see #setLink(IRelationType, String, QName)
    */
-  IXLinkedFeature createLink( IRelationType relation, String href, IFeatureType featureType );
+  IXLinkedFeature setLink( IRelationType relation, String href, IFeatureType featureType );
 
   /**
    * @param relation
    *          Name of a property of this feature (must be a relation) that allows for linked {@link Feature}s.
-   * @see #createLink(IRelationType, String)
+   * @see #setLink(IRelationType, String)
    * @throws IllegalArgumentException
    *           If <code>relation</code> is not the name of a relation type.
    */
-  IXLinkedFeature createLink( QName relation, String href, QName featureType );
+  IXLinkedFeature setLink( QName relation, String href, QName featureType );
 
   /**
-   * @see #createLink(QName, String)
+   * @see #setLink(QName, String)
    * @param featureType
    *          Type of the feature this link points to.
    * @throws IllegalArgumentException
    *           If <code>relation</code> is not the name of a relation type.
    */
-  IXLinkedFeature createLink( QName relation, String href, IFeatureType featureType );
+  IXLinkedFeature setLink( QName relation, String href, IFeatureType featureType );
 
   // FIXME: do it!
 // Feature createSubFeature( IRelationType relation );

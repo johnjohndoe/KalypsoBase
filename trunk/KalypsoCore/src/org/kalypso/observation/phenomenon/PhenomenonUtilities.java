@@ -68,9 +68,10 @@ public class PhenomenonUtilities
     {
       final DictionaryPhenomenon dictPhen = (DictionaryPhenomenon) phenomenon;
 
-      final Feature f = new XLinkedFeature_Impl( parentFeature, parentRelation, parentRelation.getTargetFeatureType(), dictPhen.getID(), null, null, null, null, null );
-      FeatureHelper.addProperty( f, Feature.QN_NAME, dictPhen.getName() );
-      f.setProperty( Feature.QN_DESCRIPTION, dictPhen.getDescription() );
+      final Feature f = new XLinkedFeature_Impl( parentFeature, parentRelation, parentRelation.getTargetFeatureType(), dictPhen.getID() );
+      f.setDescription( dictPhen.getDescription() );
+      f.setName( dictPhen.getName() );
+
       return f;
     }
 

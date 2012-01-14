@@ -40,6 +40,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.PlatformObject;
@@ -596,31 +597,31 @@ public class Feature_Impl extends PlatformObject implements Feature
   }
 
   @Override
-  public IXLinkedFeature createLink( final QName relationName, final String href )
+  public IXLinkedFeature setLink( final QName relationName, final String href )
   {
     final IRelationType relation = ensureRelation( relationName );
-    return createLink( relation, href );
+    return setLink( relation, href );
   }
 
   @Override
-  public IXLinkedFeature createLink( final IRelationType relation, final String href )
+  public IXLinkedFeature setLink( final IRelationType relation, final String href )
   {
     final IFeatureType targetFeatureType = relation.getTargetFeatureType();
-    return createLink( relation, href, targetFeatureType );
+    return setLink( relation, href, targetFeatureType );
   }
 
   @Override
-  public IXLinkedFeature createLink( final QName relationName, final String href, final QName featureTypeName )
+  public IXLinkedFeature setLink( final QName relationName, final String href, final QName featureTypeName )
   {
     final IRelationType relation = ensureRelation( relationName );
-    return createLink( relation, href, featureTypeName );
+    return setLink( relation, href, featureTypeName );
   }
 
   @Override
-  public IXLinkedFeature createLink( final QName relationName, final String href, final IFeatureType featureType )
+  public IXLinkedFeature setLink( final QName relationName, final String href, final IFeatureType featureType )
   {
     final IRelationType relation = ensureRelation( relationName );
-    return createLink( relation, href, featureType );
+    return setLink( relation, href, featureType );
   }
 
   private IRelationType ensureRelation( final QName relationName )
@@ -641,7 +642,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   }
 
   @Override
-  public IXLinkedFeature createLink( final IRelationType relation, final String href, final QName featureTypeName )
+  public IXLinkedFeature setLink( final IRelationType relation, final String href, final QName featureTypeName )
   {
     final IFeatureType featureType = GMLSchemaUtilities.getFeatureTypeQuiet( featureTypeName );
     if( featureType == null )
@@ -650,16 +651,16 @@ public class Feature_Impl extends PlatformObject implements Feature
       throw new IllegalArgumentException( message );
     }
 
-    return createLink( relation, href, featureType );
+    return setLink( relation, href, featureType );
   }
 
   @Override
-  public IXLinkedFeature createLink( final IRelationType relation, final String href, final IFeatureType featureType )
+  public IXLinkedFeature setLink( final IRelationType relation, final String href, final IFeatureType featureType )
   {
     Assert.isNotNull( relation );
-    Assert.isNotNull( href );
-    // TODO: check, old code often created xlinks with null-feature type. Probably we should use the target feature type
-// in this case
+
+    // TODO: check, old code often created xlinks with null-feature type.
+    // Probably we should use the target feature type in this case
     // Assert.isNotNull( featureType );
 
     /* Check if the target relation is a property of this feature */
@@ -690,11 +691,17 @@ public class Feature_Impl extends PlatformObject implements Feature
       throw new IllegalArgumentException( message );
     }
 
-    /* Create link and set to myself as property */
-    final XLinkedFeature_Impl link = new XLinkedFeature_Impl( this, relation, featureType, href );
-
-    setProperty( relation, link );
-
-    return link;
+    if( StringUtils.isBlank( href ) )
+    {
+      setProperty( relation, null );
+      return null;
+    }
+    else
+    {
+      /* Create link and set to myself as property */
+      final IXLinkedFeature link = new XLinkedFeature_Impl( this, relation, featureType, href );
+      setProperty( relation, link );
+      return link;
+    }
   }
 }
