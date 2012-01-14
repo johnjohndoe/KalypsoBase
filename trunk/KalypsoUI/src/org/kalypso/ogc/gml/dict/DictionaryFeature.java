@@ -48,6 +48,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
@@ -298,5 +299,29 @@ public class DictionaryFeature implements Feature
   public Feature getMember( final IRelationType relation )
   {
     return m_feature.getMember( relation );
+  }
+
+  @Override
+  public IXLinkedFeature createLink( final IRelationType relation, final String href, final QName featureType )
+  {
+    return m_feature.createLink( relation, href, featureType );
+  }
+
+  @Override
+  public IXLinkedFeature createLink( final IRelationType relation, final String href, final IFeatureType featureType )
+  {
+    return m_feature.createLink( relation, href, featureType );
+  }
+
+  @Override
+  public IXLinkedFeature createLink( final QName relation, final String href, final QName featureType )
+  {
+    return m_feature.createLink( relation, href, featureType );
+  }
+
+  @Override
+  public IXLinkedFeature createLink( final QName relation, final String href, final IFeatureType featureType )
+  {
+    return m_feature.createLink( relation, href, featureType );
   }
 }

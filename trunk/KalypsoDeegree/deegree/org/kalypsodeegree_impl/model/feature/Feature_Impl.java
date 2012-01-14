@@ -40,9 +40,11 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.PlatformObject;
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -51,6 +53,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeaturePropertyHandler;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
@@ -541,9 +544,6 @@ public class Feature_Impl extends PlatformObject implements Feature
     return value;
   }
 
-  /**
-   * @see org.eclipse.core.runtime.PlatformObject#getAdapter(java.lang.Class)
-   */
   @Override
   public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
@@ -593,5 +593,87 @@ public class Feature_Impl extends PlatformObject implements Feature
       return null;
 
     return workspace.getFeature( linkID );
+  }
+
+  @Override
+  public IXLinkedFeature createLink( final QName relationName, final String href, final QName featureTypeName )
+  {
+    final IRelationType relation = ensureRelation( relationName );
+    return createLink( relation, href, featureTypeName );
+  }
+
+  @Override
+  public IXLinkedFeature createLink( final QName relationName, final String href, final IFeatureType featureType )
+  {
+    final IRelationType relation = ensureRelation( relationName );
+    return createLink( relation, href, featureType );
+  }
+
+  private IRelationType ensureRelation( final QName relationName )
+  {
+    final IPropertyType relation = getFeatureType().getProperty( relationName );
+
+    if( relation == null )
+    {
+      final String message = String.format( "Unknown property: %s", relationName ); //$NON-NLS-1$
+      throw new IllegalArgumentException( message );
+    }
+
+    if( relation instanceof IRelationType )
+      return (IRelationType) relation;
+
+    final String message = String.format( "Property is not a relation: '%s'", relationName ); //$NON-NLS-1$
+    throw new IllegalArgumentException( message );
+  }
+
+  @Override
+  public IXLinkedFeature createLink( final IRelationType relation, final String href, final QName featureTypeName )
+  {
+    final IFeatureType featureType = GMLSchemaUtilities.getFeatureTypeQuiet( featureTypeName );
+    if( featureType == null )
+    {
+      final String message = String.format( "Unknown feature type: %s", featureTypeName ); //$NON-NLS-1$
+      throw new IllegalArgumentException( message );
+    }
+
+    return createLink( relation, href, featureType );
+  }
+
+  @Override
+  public IXLinkedFeature createLink( final IRelationType relation, final String href, final IFeatureType featureType )
+  {
+    Assert.isNotNull( relation );
+    Assert.isNotNull( href );
+    Assert.isNotNull( featureType );
+
+    /* Check if the target relation is a property of this feature */
+    if( relation != getProperty( relation.getQName() ) )
+    {
+      final String message = String.format( "Relation '%s' is not a property of this feature", relation.getQName() ); //$NON-NLS-1$
+      throw new IllegalArgumentException( message );
+    }
+
+    /* Are links allowed? */
+    if( !relation.isLinkAble() )
+    {
+      final String message = String.format( "Relation '%s' does not support linked features", relation.getQName() ); //$NON-NLS-1$
+      throw new IllegalArgumentException( message );
+    }
+
+    if( !relation.isList() )
+    {
+      final String message = String.format( "Relation '%s' is a list, single links cannot be created.", relation.getQName() ); //$NON-NLS-1$
+      throw new IllegalArgumentException( message );
+    }
+
+    /* Check if the target type is a substitute of the target type of the relation */
+    final IFeatureType targetType = relation.getTargetFeatureType();
+    if( !GMLSchemaUtilities.substitutes( targetType, targetType.getQName() ) )
+    {
+      final String message = String.format( "featureType '%s' does not substitute the allowed target type '%s' of the relation '%s'", featureType.getQName(), targetType.getQName(), relation.getQName() );
+      throw new IllegalArgumentException( message );
+    }
+
+    return new XLinkedFeature_Impl( this, relation, featureType, href );
   }
 }
