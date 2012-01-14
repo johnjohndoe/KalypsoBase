@@ -75,6 +75,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -453,11 +454,11 @@ public final class FeatureHelper
           // TODO: not yet supported; internal links will be broken after clone
           return null;
       }
-      else if( object instanceof XLinkedFeature_Impl )
+      else if( object instanceof IXLinkedFeature )
       {
-        final XLinkedFeature_Impl xlink = (XLinkedFeature_Impl) object;
+        final IXLinkedFeature xlink = (IXLinkedFeature) object;
         // retarget xlink
-        return new XLinkedFeature_Impl( targetFeature, rt, xlink.getFeatureType(), xlink.getHref(), xlink.getRole(), xlink.getArcrole(), xlink.getTitle(), xlink.getShow(), xlink.getActuate() );
+        return new XLinkedFeature_Impl( targetFeature, rt, xlink.getFeatureType(), xlink.getHref() );
       }
       else if( object instanceof Feature )
         return FeatureHelper.cloneFeature( targetFeature, rt, (Feature) object );
