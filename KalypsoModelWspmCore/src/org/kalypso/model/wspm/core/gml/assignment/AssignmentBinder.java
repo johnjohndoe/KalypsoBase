@@ -50,7 +50,7 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 
 /**
  * Binding for Assignment-Gml
@@ -106,7 +106,7 @@ public class AssignmentBinder
       for( final Object o2 : pointAssignments )
       {
         final Feature pointFeature = (Feature) o2;
-        final XLinkedFeature_Impl pp = (XLinkedFeature_Impl) pointFeature.getProperty( QNAME_POINT_PROPERTY );
+        final IXLinkedFeature pp = (IXLinkedFeature) pointFeature.getProperty( QNAME_POINT_PROPERTY );
         final Double value = (Double) pointFeature.getProperty( QNAME_VALUE );
         values.put( pp.getHref(), value );
       }

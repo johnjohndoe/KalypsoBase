@@ -58,6 +58,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IWorkspaceProvider;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
@@ -291,7 +292,7 @@ public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
           if( value == null )
             continue;
 
-          if( value instanceof XLinkedFeature_Impl )
+          if( value instanceof IXLinkedFeature )
           {
             if( depth == FeatureVisitor.DEPTH_INFINITE_LINKS )
             {

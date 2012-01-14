@@ -51,8 +51,8 @@ import org.kalypso.ogc.gml.featureview.maker.IFeatureviewFactory;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * Helper class that wraps a tabItem as a feature conrol.
@@ -145,7 +145,7 @@ public class FeatureTabItem
 
   public ICommand deleteFeature( )
   {
-    if( m_featureObject instanceof XLinkedFeature_Impl )
+    if( m_featureObject instanceof IXLinkedFeature )
       throw new UnsupportedOperationException();
 
     if( m_featureObject instanceof Feature )

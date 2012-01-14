@@ -282,7 +282,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements IXLinkedFeatu
   @Override
   public boolean equals( final Object obj )
   {
-    if( !(obj instanceof XLinkedFeature_Impl) )
+    if( !(obj instanceof IXLinkedFeature) )
       return false;
 
     final XLinkedFeature_Impl other = (XLinkedFeature_Impl) obj;

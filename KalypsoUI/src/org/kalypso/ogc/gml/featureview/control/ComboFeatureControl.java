@@ -63,8 +63,8 @@ import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
 import org.kalypso.ui.editor.gmleditor.part.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.model.feature.DefaultReferenceCollectorStrategy;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.feature.search.IReferenceCollectorStrategy;
 
 /**
@@ -155,7 +155,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
         for( final Feature foundFeature : features )
         {
           final String featureLabel = labelProvider.getText( foundFeature );
-          if( foundFeature instanceof XLinkedFeature_Impl )
+          if( foundFeature instanceof IXLinkedFeature )
             m_entries.put( foundFeature, featureLabel );
           else
             m_entries.put( foundFeature.getId(), featureLabel );

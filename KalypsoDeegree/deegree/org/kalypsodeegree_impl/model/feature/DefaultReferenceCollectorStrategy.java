@@ -49,6 +49,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.model.feature.search.IReferenceCollectorStrategy;
 import org.kalypsodeegree_impl.model.feature.visitors.CollectorVisitor;
 
@@ -86,9 +87,9 @@ public class DefaultReferenceCollectorStrategy implements IReferenceCollectorStr
 
     /* Special case: if we already have a link, we may guess the referenced document */
     final Object value = m_parentFeature.getProperty( m_parentRelation );
-    if( value instanceof XLinkedFeature_Impl )
+    if( value instanceof IXLinkedFeature )
     {
-      final XLinkedFeature_Impl xlink = (XLinkedFeature_Impl) value;
+      final IXLinkedFeature xlink = (IXLinkedFeature) value;
       final String href = xlink.getHref();
       final int indexOfHref = href.indexOf( '#' );
       final String uri = indexOfHref == -1 ? null : href.substring( 0, indexOfHref );

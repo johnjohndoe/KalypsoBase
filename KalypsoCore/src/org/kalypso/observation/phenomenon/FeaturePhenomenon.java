@@ -41,8 +41,8 @@
 package org.kalypso.observation.phenomenon;
 
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * @author Dirk Kuch
@@ -71,8 +71,8 @@ public class FeaturePhenomenon implements IPhenomenon
   @Override
   public String getID( )
   {
-    if( m_feature instanceof XLinkedFeature_Impl )
-      return ((XLinkedFeature_Impl) m_feature).getHref();
+    if( m_feature instanceof IXLinkedFeature )
+      return ((IXLinkedFeature) m_feature).getHref();
 
     return m_feature.getId();
   }

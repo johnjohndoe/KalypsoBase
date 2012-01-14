@@ -59,6 +59,7 @@ import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
@@ -148,7 +149,7 @@ public final class FeatureUtils
   public static FeatureChange getLinkedFeatureChange( final Feature parentFeature, final QName propertyName, final String value )
   {
     final IPropertyType chgProp = parentFeature.getFeatureType().getProperty( propertyName );
-    final XLinkedFeature_Impl impl = new XLinkedFeature_Impl( parentFeature, (IRelationType) chgProp, parentFeature.getFeatureType(), value, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+    final IXLinkedFeature impl = new XLinkedFeature_Impl( parentFeature, (IRelationType) chgProp, parentFeature.getFeatureType(), value, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
     return new FeatureChange( parentFeature, chgProp, impl );
   }
@@ -241,7 +242,7 @@ public final class FeatureUtils
   public static FeatureChange getExternalLinkedFeatureCommand( final Feature feature, final QName qname, final String value )
   {
     final IPropertyType chgProp = feature.getFeatureType().getProperty( qname );
-    final XLinkedFeature_Impl impl = new XLinkedFeature_Impl( feature, (IRelationType) chgProp, feature.getFeatureType(), value, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+    final IXLinkedFeature impl = new XLinkedFeature_Impl( feature, (IRelationType) chgProp, feature.getFeatureType(), value, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
     final FeatureChange change = new FeatureChange( feature, chgProp, impl );
 

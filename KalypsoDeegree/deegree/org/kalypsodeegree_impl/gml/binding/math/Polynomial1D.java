@@ -46,6 +46,7 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
@@ -272,8 +273,8 @@ public class Polynomial1D extends Feature_Impl implements IPolynomial1D
     if( property == null )
       return null;
 
-    if( property instanceof XLinkedFeature_Impl )
-      return ((XLinkedFeature_Impl) property).getHref();
+    if( property instanceof IXLinkedFeature )
+      return ((IXLinkedFeature) property).getHref();
 
     if( property instanceof Feature )
       return ((Feature) property).getId();

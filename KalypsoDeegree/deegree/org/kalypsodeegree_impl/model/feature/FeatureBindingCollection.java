@@ -53,6 +53,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollectionVisitor;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -697,9 +698,9 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
       return null;
 
     // EXPERIMENTAL: if this function is on, we even try to adapt the linked feature.
-    if( feature instanceof XLinkedFeature_Impl )
+    if( feature instanceof IXLinkedFeature )
     {
-      final XLinkedFeature_Impl xlinkedFeature = (XLinkedFeature_Impl) feature;
+      final IXLinkedFeature xlinkedFeature = (IXLinkedFeature) feature;
       final Feature linkedFeature = xlinkedFeature.getFeature();
       if( linkedFeature == null )
         return null;

@@ -63,7 +63,7 @@ import org.kalypso.gmlschema.types.ISimpleMarshallingTypeHandler;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.ErrorHandler;
@@ -275,7 +275,7 @@ public class GMLSAXFactory
     {
       // Write the feature as content. If it is a reference (i.e. no feature), nothing is written, as the href was
       // already set as an attribute
-      if( propertyValue instanceof Feature && !(propertyValue instanceof XLinkedFeature_Impl) )
+      if( propertyValue instanceof Feature && !(propertyValue instanceof IXLinkedFeature) )
         processFeature( (Feature) propertyValue, new AttributesImpl() );
     }
     else if( pt instanceof IValuePropertyType )
@@ -296,8 +296,8 @@ public class GMLSAXFactory
       final String href;
       if( propertyValue instanceof String )
         href = "#" + (String) propertyValue;
-      else if( propertyValue instanceof XLinkedFeature_Impl )
-        href = ((XLinkedFeature_Impl) propertyValue).getHref();
+      else if( propertyValue instanceof IXLinkedFeature )
+        href = ((IXLinkedFeature) propertyValue).getHref();
       else
         href = null;
 
