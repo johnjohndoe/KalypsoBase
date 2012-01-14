@@ -46,12 +46,14 @@ import java.util.ListIterator;
 import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.javax.xml.namespace.QNameUnique;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.FilteredFeatureVisitor;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -442,126 +444,10 @@ public class FilteredFeatureList implements FeatureList
     return features[0];
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#searchFeatures(org.kalypsodeegree.model.geometry.GM_Object)
-   */
   @Override
   public List<Feature> searchFeatures( final GM_Object geometry )
   {
     return filterList( m_original.searchFeatures( geometry ) );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#addNew(javax.xml.namespace.QName)
-   */
-  @Override
-  public Feature addNew( final QName newChildType )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#addNew(javax.xml.namespace.QName, java.lang.String)
-   */
-  @Override
-  public Feature addNew( final QName newChildType, final String newFeatureId )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#addNew(javax.xml.namespace.QName, java.lang.Class)
-   */
-  @Override
-  public <T extends Feature> T addNew( final QName newChildType, final Class<T> classToAdapt )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#addNew(javax.xml.namespace.QName, java.lang.String,
-   *      java.lang.Class)
-   */
-  @Override
-  public <T extends Feature> T addNew( final QName newChildType, final String newFeatureId, final Class<T> classToAdapt )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#addRef(org.kalypsodeegree.model.feature.Feature)
-   */
-  @Override
-  public <T extends Feature> boolean addRef( final T toAdd ) throws IllegalArgumentException
-  {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#insertNew(int, javax.xml.namespace.QName)
-   */
-  @Override
-  public Feature insertNew( final int index, final QName newChildType )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#insertNew(int, javax.xml.namespace.QName, java.lang.String)
-   */
-  @Override
-  public Feature insertNew( final int index, final QName newChildType, final String newFeatureId )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#insertNew(int, javax.xml.namespace.QName, java.lang.Class)
-   */
-  @Override
-  public <T extends Feature> T insertNew( final int index, final QName newChildType, final Class<T> classToAdapt )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#insertNew(int, javax.xml.namespace.QName, java.lang.String,
-   *      java.lang.Class)
-   */
-  @Override
-  public <T extends Feature> T insertNew( final int index, final QName newChildType, final String newFeatureId, final Class<T> classToAdapt )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#insertNew(int, javax.xml.namespace.QName, java.lang.String,
-   *      java.lang.Class, java.lang.Object[])
-   */
-  @Override
-  public <T extends Feature> T insertNew( final int index, final QName newChildType, final String newFeatureId, final Class<T> classToAdapt, final Object[] properties )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#insertRef(int, org.kalypsodeegree.model.feature.Feature)
-   */
-  @Override
-  public <T extends Feature> boolean insertRef( final int index, final T toAdd ) throws IllegalArgumentException
-  {
-    // TODO Auto-generated method stub
-    return false;
   }
 
   @Override
@@ -576,12 +462,58 @@ public class FilteredFeatureList implements FeatureList
     return this;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.IFeatureProperty#setValue(java.lang.Object)
-   */
   @Override
   public void setValue( final Object value )
   {
     throw new UnsupportedOperationException();
+  }
+
+  // TODO (for all addLink, insertLink implementations): should we only allow elements that may go into this list?
+  @Override
+  public <T extends Feature> IXLinkedFeature addLink( final T toAdd ) throws IllegalArgumentException
+  {
+    return m_original.addLink( toAdd );
+  }
+
+  @Override
+  public <T extends Feature> IXLinkedFeature addLink( final String href ) throws IllegalArgumentException
+  {
+    return m_original.addLink( href );
+  }
+
+  @Override
+  public <T extends Feature> IXLinkedFeature addLink( final String href, final QName featureTypeName ) throws IllegalArgumentException
+  {
+    return m_original.addLink( href, featureTypeName );
+  }
+
+  @Override
+  public <T extends Feature> IXLinkedFeature addLink( final String href, final IFeatureType featureType ) throws IllegalArgumentException
+  {
+    return m_original.addLink( href, featureType );
+  }
+
+  @Override
+  public <T extends Feature> IXLinkedFeature insertLink( final int index, final T toLink ) throws IllegalArgumentException
+  {
+    return m_original.insertLink( index, toLink );
+  }
+
+  @Override
+  public <T extends Feature> IXLinkedFeature insertLink( final int index, final String href ) throws IllegalArgumentException
+  {
+    return m_original.insertLink( index, href );
+  }
+
+  @Override
+  public <T extends Feature> IXLinkedFeature insertLink( final int index, final String href, final QName featureTypeName ) throws IllegalArgumentException
+  {
+    return m_original.insertLink( index, href, featureTypeName );
+  }
+
+  @Override
+  public <T extends Feature> IXLinkedFeature insertLink( final int index, final String href, final IFeatureType featureType ) throws IllegalArgumentException
+  {
+    return m_original.insertLink( index, href, featureType );
   }
 }
