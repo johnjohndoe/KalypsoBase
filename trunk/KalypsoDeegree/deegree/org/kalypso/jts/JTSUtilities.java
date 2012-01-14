@@ -570,6 +570,19 @@ public final class JTSUtilities
     return gf.createPolygon( linearRing, null );
   }
 
+  /** Converts an envelope to a polygon that covers the envelope. */
+  public static Polygon convertEnvelopeToPolygon( final Envelope envelope, final GeometryFactory gf )
+  {
+    final Coordinate minCoord = new Coordinate( envelope.getMinX(), envelope.getMinY() );
+    final Coordinate maxCoord = new Coordinate( envelope.getMaxX(), envelope.getMaxY() );
+    final Coordinate tmp1Coord = new Coordinate( minCoord.x, maxCoord.y );
+    final Coordinate tmp2Coord = new Coordinate( maxCoord.x, minCoord.y );
+
+    final Coordinate[] coordinates = new Coordinate[] { minCoord, tmp1Coord, maxCoord, tmp2Coord, minCoord };
+    final LinearRing linearRing = gf.createLinearRing( coordinates );
+    return gf.createPolygon( linearRing, null );
+  }
+
   /**
    * TODO: move to helper class Given 3 coordinate this methode return the equation of a plan containing those points.
    * The return equation as the form: z = Q*x+P*y+O The coefficients Q, P amd O are return as array
