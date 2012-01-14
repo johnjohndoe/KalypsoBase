@@ -420,6 +420,18 @@ public class XLinkedFeature_Impl extends PlatformObject implements IXLinkedFeatu
   }
 
   @Override
+  public IXLinkedFeature createLink( final IRelationType relation, final String href )
+  {
+    return getFeature().createLink( relation, href );
+  }
+
+  @Override
+  public IXLinkedFeature createLink( final QName relationName, final String href )
+  {
+    return getFeature().createLink( relationName, href );
+  }
+
+  @Override
   public IXLinkedFeature createLink( final IRelationType relation, final String href, final QName featureType )
   {
     return getFeature().createLink( relation, href, featureType );

@@ -596,6 +596,20 @@ public class Feature_Impl extends PlatformObject implements Feature
   }
 
   @Override
+  public IXLinkedFeature createLink( final QName relationName, final String href )
+  {
+    final IRelationType relation = ensureRelation( relationName );
+    return createLink( relation, href );
+  }
+
+  @Override
+  public IXLinkedFeature createLink( final IRelationType relation, final String href )
+  {
+    final IFeatureType targetFeatureType = relation.getTargetFeatureType();
+    return createLink( relation, href, targetFeatureType );
+  }
+
+  @Override
   public IXLinkedFeature createLink( final QName relationName, final String href, final QName featureTypeName )
   {
     final IRelationType relation = ensureRelation( relationName );
@@ -644,7 +658,9 @@ public class Feature_Impl extends PlatformObject implements Feature
   {
     Assert.isNotNull( relation );
     Assert.isNotNull( href );
-    Assert.isNotNull( featureType );
+    // TODO: check, old code often created xlinks with null-feature type. Probably we should use the target feature type
+// in this case
+    // Assert.isNotNull( featureType );
 
     /* Check if the target relation is a property of this feature */
     if( relation != getProperty( relation.getQName() ) )
@@ -668,7 +684,7 @@ public class Feature_Impl extends PlatformObject implements Feature
 
     /* Check if the target type is a substitute of the target type of the relation */
     final IFeatureType targetType = relation.getTargetFeatureType();
-    if( !GMLSchemaUtilities.substitutes( targetType, targetType.getQName() ) )
+    if( featureType != null && !GMLSchemaUtilities.substitutes( targetType, targetType.getQName() ) )
     {
       final String message = String.format( "featureType '%s' does not substitute the allowed target type '%s' of the relation '%s'", featureType.getQName(), targetType.getQName(), relation.getQName() );
       throw new IllegalArgumentException( message );

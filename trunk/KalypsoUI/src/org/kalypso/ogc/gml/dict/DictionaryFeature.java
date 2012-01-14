@@ -302,6 +302,18 @@ public class DictionaryFeature implements Feature
   }
 
   @Override
+  public IXLinkedFeature createLink( final IRelationType relation, final String href )
+  {
+    return m_feature.createLink( relation, href );
+  }
+
+  @Override
+  public IXLinkedFeature createLink( final QName relationName, final String href )
+  {
+    return m_feature.createLink( relationName, href );
+  }
+
+  @Override
   public IXLinkedFeature createLink( final IRelationType relation, final String href, final QName featureType )
   {
     return m_feature.createLink( relation, href, featureType );

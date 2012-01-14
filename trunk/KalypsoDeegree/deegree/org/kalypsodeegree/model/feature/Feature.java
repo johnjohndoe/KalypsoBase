@@ -99,6 +99,18 @@ public interface Feature extends BaseFeature, Deegree2Feature, IAdaptable
   void setLocation( final GM_Object location );
 
   /**
+   * Same as {@link #createLink(IRelationType, String, IFeatureType)} using the target feature type of the relation as
+   * feature type of the xlink.
+   */
+  IXLinkedFeature createLink( final IRelationType relation, final String href );
+
+  /**
+   * Same as {@link #createLink(QName, String, IFeatureType)} using the target feature type of the relation as feature
+   * type of the xlink.
+   */
+  IXLinkedFeature createLink( final QName relationName, final String href );
+
+  /**
    * Creates an xlink to a linked feature and sets it as a property of this feature. If the property was already set, it
    * is replaced by the newly created link.
    *
