@@ -36,6 +36,9 @@
 package org.kalypsodeegree_impl.model.sort;
 
 import java.awt.Graphics;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -48,6 +51,9 @@ import java.util.Map.Entry;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.URIUtil;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -55,11 +61,13 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
@@ -389,11 +397,11 @@ public class SplitSort implements FeatureList
   }
 
   /**
-   * @deprecated SLOW (as we are using ArrayList internally) TODO: better comment, make deprecated in interface
+   * WARNING: SLOW (as we are using ArrayList internally) TODO: better comment
+   *
    * @see java.util.List#add(int, java.lang.Object)
    */
   @Override
-  @Deprecated
   public void add( final int index, final Object item )
   {
     final Envelope env = getEnvelope( item );
@@ -407,11 +415,11 @@ public class SplitSort implements FeatureList
   }
 
   /**
-   * @deprecated SLOW TODO: better comment, make deprecated in interface
+   * WARNING SLOW TODO: better comment
+   *
    * @see java.util.List#indexOf(java.lang.Object)
    */
   @Override
-  @Deprecated
   public int indexOf( final Object item )
   {
     synchronized( this )
@@ -421,11 +429,11 @@ public class SplitSort implements FeatureList
   }
 
   /**
-   * @deprecated SLOW TODO: better comment, make deprecated in interface
+   * WARNING SLOW TODO: better comment
+   *
    * @see java.util.List#lastIndexOf(java.lang.Object)
    */
   @Override
-  @Deprecated
   public int lastIndexOf( final Object item )
   {
     synchronized( this )
@@ -670,9 +678,6 @@ public class SplitSort implements FeatureList
     accept( visitor, FeatureVisitor.DEPTH_INFINITE );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#accept(org.kalypsodeegree.model.feature.FeatureVisitor, int)
-   */
   @Override
   public void accept( final FeatureVisitor visitor, final int depth )
   {
@@ -778,119 +783,6 @@ public class SplitSort implements FeatureList
     return result;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#addNew(javax.xml.namespace.QName)
-   */
-  @Override
-  public Feature addNew( final QName newChildType )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#addNew(javax.xml.namespace.QName, java.lang.String)
-   */
-  @Override
-  public Feature addNew( final QName newChildType, final String newFeatureId )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#addNew(javax.xml.namespace.QName, java.lang.Class)
-   */
-  @Override
-  public <T extends Feature> T addNew( final QName newChildType, final Class<T> classToAdapt )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#addNew(javax.xml.namespace.QName, java.lang.String,
-   *      java.lang.Class)
-   */
-  @Override
-  public <T extends Feature> T addNew( final QName newChildType, final String newFeatureId, final Class<T> classToAdapt )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#addRef(org.kalypsodeegree.model.feature.Feature)
-   */
-  @Override
-  public <T extends Feature> boolean addRef( final T toAdd ) throws IllegalArgumentException
-  {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#insertNew(int, javax.xml.namespace.QName)
-   */
-  @Override
-  public Feature insertNew( final int index, final QName newChildType )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#insertNew(int, javax.xml.namespace.QName, java.lang.String)
-   */
-  @Override
-  public Feature insertNew( final int index, final QName newChildType, final String newFeatureId )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#insertNew(int, javax.xml.namespace.QName, java.lang.Class)
-   */
-  @Override
-  public <T extends Feature> T insertNew( final int index, final QName newChildType, final Class<T> classToAdapt )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#insertNew(int, javax.xml.namespace.QName, java.lang.String,
-   *      java.lang.Class)
-   */
-  @Override
-  public <T extends Feature> T insertNew( final int index, final QName newChildType, final String newFeatureId, final Class<T> classToAdapt )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#insertNew(int, javax.xml.namespace.QName, java.lang.String,
-   *      java.lang.Class, java.lang.Object[])
-   */
-  @Override
-  public <T extends Feature> T insertNew( final int index, final QName newChildType, final String newFeatureId, final Class<T> classToAdapt, final Object[] properties )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#insertRef(int, org.kalypsodeegree.model.feature.Feature)
-   */
-  @Override
-  public <T extends Feature> boolean insertRef( final int index, final T toAdd ) throws IllegalArgumentException
-  {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
   @Override
   public QName getName( )
   {
@@ -907,5 +799,86 @@ public class SplitSort implements FeatureList
   public void setValue( final Object value )
   {
     throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public <T extends Feature> IXLinkedFeature addLink( final T toAdd ) throws IllegalArgumentException
+  {
+    return insertLink( size(), toAdd );
+  }
+
+  @Override
+  public <T extends Feature> IXLinkedFeature addLink( final String href ) throws IllegalArgumentException
+  {
+    return insertLink( size(), href );
+  }
+
+  @Override
+  public <T extends Feature> IXLinkedFeature addLink( final String href, final QName featureTypeName ) throws IllegalArgumentException
+  {
+    return insertLink( size(), href, featureTypeName );
+  }
+
+  @Override
+  public <T extends Feature> IXLinkedFeature addLink( final String href, final IFeatureType featureType ) throws IllegalArgumentException
+  {
+    return insertLink( size(), href, featureType );
+  }
+
+  @Override
+  public <T extends Feature> IXLinkedFeature insertLink( final int index, final T toLink ) throws IllegalArgumentException
+  {
+    final String path = findLinkPath( toLink );
+    final String id = toLink.getId();
+
+    final String href = String.format( "%s#%s", path, id );
+
+    return insertLink( index, href, toLink.getFeatureType() );
+  }
+
+  private String findLinkPath( final Feature toLink )
+  {
+    final URL targetContext = toLink.getWorkspace().getContext();
+    final URL sourceContext = m_parentFeature.getWorkspace().getContext();
+
+    try
+    {
+      final URI targetURI = targetContext.toURI();
+      final URI sourceURI = sourceContext.toURI();
+      final URI relativeURI = URIUtil.makeRelative( targetURI, sourceURI );
+      return relativeURI.toString();
+    }
+    catch( final URISyntaxException e )
+    {
+      e.printStackTrace();
+      return targetContext.toString();
+    }
+  }
+
+  @Override
+  public <T extends Feature> IXLinkedFeature insertLink( final int index, final String href ) throws IllegalArgumentException
+  {
+    return insertLink( index, href, getPropertyType().getTargetFeatureType() );
+  }
+
+  @Override
+  public <T extends Feature> IXLinkedFeature insertLink( final int index, final String href, final QName featureTypeName ) throws IllegalArgumentException
+  {
+    final IFeatureType featureType = GMLSchemaUtilities.getFeatureTypeQuiet( featureTypeName );
+    if( featureType == null )
+    {
+      final String message = String.format( "Unknown feature type: %s", featureTypeName ); //$NON-NLS-1$
+      throw new IllegalArgumentException( message );
+    }
+
+    return insertLink( index, href, featureType );
+  }
+
+  @Override
+  public <T extends Feature> IXLinkedFeature insertLink( final int index, final String href, final IFeatureType featureType ) throws IllegalArgumentException
+  {
+    final IXLinkedFeature link = new XLinkedFeature_Impl( m_parentFeature, m_parentFeatureTypeProperty, featureType, href );
+    add( index, link );
+    return link;
   }
 }

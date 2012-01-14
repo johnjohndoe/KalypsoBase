@@ -61,7 +61,7 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 
 /**
  * TODO: replaces FeatureWrapperCollection.... refaktor and use this stuff instead<br>
- * 
+ *
  * @author Gernot Belger
  * @author Dirk Kuch
  */
@@ -100,7 +100,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
 
   /**
    * Creates a new {@link FeatureWrapperCollection} wrapping the provided feature
-   * 
+   *
    * @param featureCol
    *          the feature or feature collection with a list property to wrap
    * @param fwClass
@@ -578,9 +578,16 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
   public boolean addRef( final FWCls toAdd )
   {
     final String gmlID = toAdd.getId();
+
     // TODO: this can cause major performance leaks
+
+    // FIXME: breaks the (assumed) contract of this method: the element is not always added...! -> should be clear from
+    // the method name or should be tested outside
     if( getFeatureList().contains( gmlID ) )
       return false;
+
+    // FIXME: does only handle element of the same workspace, else this will make this workspace inconsistent
+
     return getFeatureList().add( gmlID );
   }
 

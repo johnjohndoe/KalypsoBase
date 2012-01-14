@@ -45,6 +45,7 @@ import java.util.ListIterator;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -502,108 +503,6 @@ public class CascadingFeatureList implements FeatureList
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#addNew(javax.xml.namespace.QName)
-   */
-  @Override
-  public Feature addNew( final QName newChildType )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#addNew(javax.xml.namespace.QName, java.lang.String)
-   */
-  @Override
-  public Feature addNew( final QName newChildType, final String newFeatureId )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#addNew(javax.xml.namespace.QName, java.lang.Class)
-   */
-  @Override
-  public <T extends Feature> T addNew( final QName newChildType, final Class<T> classToAdapt )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#addNew(javax.xml.namespace.QName, java.lang.String,
-   *      java.lang.Class)
-   */
-  @Override
-  public <T extends Feature> T addNew( final QName newChildType, final String newFeatureId, final Class<T> classToAdapt )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#addRef(org.kalypsodeegree.model.feature.Feature)
-   */
-  @Override
-  public <T extends Feature> boolean addRef( final T toAdd ) throws IllegalArgumentException
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#insertNew(int, javax.xml.namespace.QName)
-   */
-  @Override
-  public Feature insertNew( final int index, final QName newChildType )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#insertNew(int, javax.xml.namespace.QName, java.lang.String)
-   */
-  @Override
-  public Feature insertNew( final int index, final QName newChildType, final String newFeatureId )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#insertNew(int, javax.xml.namespace.QName, java.lang.Class)
-   */
-  @Override
-  public <T extends Feature> T insertNew( final int index, final QName newChildType, final Class<T> classToAdapt )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#insertNew(int, javax.xml.namespace.QName, java.lang.String,
-   *      java.lang.Class)
-   */
-  @Override
-  public <T extends Feature> T insertNew( final int index, final QName newChildType, final String newFeatureId, final Class<T> classToAdapt )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#insertNew(int, javax.xml.namespace.QName, java.lang.String,
-   *      java.lang.Class, java.lang.Object[])
-   */
-  @Override
-  public <T extends Feature> T insertNew( final int index, final QName newChildType, final String newFeatureId, final Class<T> classToAdapt, final Object[] properties )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#insertRef(int, org.kalypsodeegree.model.feature.Feature)
-   */
-  @Override
-  public <T extends Feature> boolean insertRef( final int index, final T toAdd ) throws IllegalArgumentException
-  {
-    throw new UnsupportedOperationException();
-  }
-
   @Override
   public QName getName( )
   {
@@ -618,6 +517,54 @@ public class CascadingFeatureList implements FeatureList
 
   @Override
   public void setValue( final Object value )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public <T extends Feature> IXLinkedFeature addLink( final T toAdd ) throws IllegalArgumentException
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public <T extends Feature> IXLinkedFeature addLink( final String href ) throws IllegalArgumentException
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public <T extends Feature> IXLinkedFeature addLink( final String href, final QName featureTypeName ) throws IllegalArgumentException
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public <T extends Feature> IXLinkedFeature addLink( final String href, final IFeatureType featureType ) throws IllegalArgumentException
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public <T extends Feature> IXLinkedFeature insertLink( final int index, final T toLink ) throws IllegalArgumentException
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public <T extends Feature> IXLinkedFeature insertLink( final int index, final String href ) throws IllegalArgumentException
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public <T extends Feature> IXLinkedFeature insertLink( final int index, final String href, final QName featureTypeName ) throws IllegalArgumentException
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public <T extends Feature> IXLinkedFeature insertLink( final int index, final String href, final IFeatureType featureType ) throws IllegalArgumentException
   {
     throw new UnsupportedOperationException();
   }
