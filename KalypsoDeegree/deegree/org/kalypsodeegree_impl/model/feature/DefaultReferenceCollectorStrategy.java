@@ -140,7 +140,7 @@ public class DefaultReferenceCollectorStrategy implements IReferenceCollectorStr
         if( id != null )
         {
           final String href = uri + "#" + id; //$NON-NLS-1$
-          final XLinkedFeature_Impl linkedFeature = new XLinkedFeature_Impl( m_parentFeature, m_parentRelation, targetFeatureType, href, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+          final IXLinkedFeature linkedFeature = new XLinkedFeature_Impl( m_parentFeature, m_parentRelation, targetFeatureType, href );
           foundFeatures.add( linkedFeature );
         }
       }

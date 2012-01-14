@@ -479,7 +479,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final String id = comp.getId();
     // try to find a dictionary entry for this component, if it exists, create xlinked-feature to it
     final IFeatureType itemDefType = GMLSchemaUtilities.getFeatureTypeQuiet( ObservationFeatureFactory.SWE_ITEMDEFINITION );
-    final XLinkedFeature_Impl xlink = new XLinkedFeature_Impl( recordDefinition, itemDefinitionRelation, itemDefType, id, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+    final IXLinkedFeature xlink = new XLinkedFeature_Impl( recordDefinition, itemDefinitionRelation, itemDefType, id );
     if( xlink.getFeature() != null )
       return xlink;
 
@@ -653,7 +653,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
     final IRelationType componentRelation = (IRelationType) recordDefinition.getFeatureType().getProperty( ObservationFeatureFactory.SWE_COMPONENT );
 
-    final Feature itemDef = new XLinkedFeature_Impl( recordDefinition, componentRelation, featureType, dictUrn, null, null, null, null, null );
+    final Feature itemDef = new XLinkedFeature_Impl( recordDefinition, componentRelation, featureType, dictUrn );
 
     final List<Feature> componentList = (List<Feature>) recordDefinition.getProperty( componentRelation );
     componentList.add( itemDef );

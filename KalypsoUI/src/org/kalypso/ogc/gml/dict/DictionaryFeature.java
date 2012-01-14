@@ -302,38 +302,38 @@ public class DictionaryFeature implements Feature
   }
 
   @Override
-  public IXLinkedFeature createLink( final IRelationType relation, final String href )
+  public IXLinkedFeature setLink( final IRelationType relation, final String href )
   {
-    return m_feature.createLink( relation, href );
+    return m_feature.setLink( relation, href );
   }
 
   @Override
-  public IXLinkedFeature createLink( final QName relationName, final String href )
+  public IXLinkedFeature setLink( final QName relationName, final String href )
   {
-    return m_feature.createLink( relationName, href );
+    return m_feature.setLink( relationName, href );
   }
 
   @Override
-  public IXLinkedFeature createLink( final IRelationType relation, final String href, final QName featureType )
+  public IXLinkedFeature setLink( final IRelationType relation, final String href, final QName featureType )
   {
-    return m_feature.createLink( relation, href, featureType );
+    return m_feature.setLink( relation, href, featureType );
   }
 
   @Override
-  public IXLinkedFeature createLink( final IRelationType relation, final String href, final IFeatureType featureType )
+  public IXLinkedFeature setLink( final IRelationType relation, final String href, final IFeatureType featureType )
   {
-    return m_feature.createLink( relation, href, featureType );
+    return m_feature.setLink( relation, href, featureType );
   }
 
   @Override
-  public IXLinkedFeature createLink( final QName relation, final String href, final QName featureType )
+  public IXLinkedFeature setLink( final QName relation, final String href, final QName featureType )
   {
-    return m_feature.createLink( relation, href, featureType );
+    return m_feature.setLink( relation, href, featureType );
   }
 
   @Override
-  public IXLinkedFeature createLink( final QName relation, final String href, final IFeatureType featureType )
+  public IXLinkedFeature setLink( final QName relation, final String href, final IFeatureType featureType )
   {
-    return m_feature.createLink( relation, href, featureType );
+    return m_feature.setLink( relation, href, featureType );
   }
 }

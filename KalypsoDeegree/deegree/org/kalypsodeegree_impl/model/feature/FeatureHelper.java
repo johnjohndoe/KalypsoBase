@@ -1210,6 +1210,7 @@ public final class FeatureHelper
    *           If the property argument is not suitable for a link (not an {@link IRelationType}). If the
    *           targetWorksapce has not a suitable context for the link.
    */
+  // TODO: check: move to Feature? Similar to Feature#setLink
   public static void setAsLink( final Feature sourceFeature, final QName property, final Feature targetFeature )
   {
     Assert.isNotNull( sourceFeature );
@@ -1243,6 +1244,10 @@ public final class FeatureHelper
     }
   }
 
+  /**
+   * Use {@link Feature#createLink(IRelationType, String)} instead.
+   */
+  @Deprecated
   public static Object createLinkToID( final String id, final Feature parentFeature, final IRelationType parentRelation, final IFeatureType ft )
   {
     if( id == null )
@@ -1251,7 +1256,7 @@ public final class FeatureHelper
     if( id.startsWith( "#" ) ) //$NON-NLS-1$
       return id;
 
-    return new XLinkedFeature_Impl( parentFeature, parentRelation, ft, id, "", "", "", "", "" );
+    return new XLinkedFeature_Impl( parentFeature, parentRelation, ft, id );
   }
 
   /**
