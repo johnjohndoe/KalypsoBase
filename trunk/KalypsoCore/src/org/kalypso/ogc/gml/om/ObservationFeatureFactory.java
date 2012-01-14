@@ -77,6 +77,7 @@ import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerString;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerXMLGregorianCalendar;
@@ -139,7 +140,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final IPhenomenon phenomenon;
     if( phenFeature != null )
     {
-      final String phenId = phenFeature instanceof XLinkedFeature_Impl ? ((XLinkedFeature_Impl) phenFeature).getHref() : phenFeature.getId();
+      final String phenId = phenFeature instanceof IXLinkedFeature ? ((IXLinkedFeature) phenFeature).getHref() : phenFeature.getId();
       final String phenName = NamedFeatureHelper.getName( phenFeature );
       final String phenDesc = NamedFeatureHelper.getDescription( phenFeature );
       phenomenon = new Phenomenon( phenId, phenName, phenDesc );
@@ -403,10 +404,10 @@ public class ObservationFeatureFactory implements IAdapterFactory
     if( phenomenonRef == null || phenomenonRef instanceof String )
       return phenomenonRef;
 
-    if( phenomenonRef instanceof XLinkedFeature_Impl )
+    if( phenomenonRef instanceof IXLinkedFeature )
     {
       // check if link exists, if not, we create an inline phenonemon
-      if( ((XLinkedFeature_Impl) phenomenonRef).getFeatureId() != null )
+      if( ((IXLinkedFeature) phenomenonRef).getFeatureId() != null )
       {
         return phenomenonRef;
       }

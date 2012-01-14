@@ -334,8 +334,8 @@ public final class FeatureHelper
     {
       if( sourceValue instanceof String )
         return (String) sourceValue;
-      else if( sourceValue instanceof XLinkedFeature_Impl )
-        return ((XLinkedFeature_Impl) sourceValue).getHref();
+      else if( sourceValue instanceof IXLinkedFeature )
+        return ((IXLinkedFeature) sourceValue).getHref();
       else if( sourceValue instanceof Feature )
         return ((Feature) sourceValue).getId();
     }
@@ -418,7 +418,7 @@ public final class FeatureHelper
       {
         final Object cloneData = FeatureHelper.cloneData( sourceFeature, targetFeature, pt, listElement );
         // TODO: this is not nice! Better: d not add feature to list within the cloneFeature Method
-        if( cloneData instanceof XLinkedFeature_Impl || !(cloneData instanceof Feature) )
+        if( cloneData instanceof IXLinkedFeature || !(cloneData instanceof Feature) )
         {
           targetList.add( cloneData );
         }
@@ -898,16 +898,16 @@ public final class FeatureHelper
     if( value == null )
       return null;
 
-    if( value instanceof XLinkedFeature_Impl && followXLinks )
-      return ((XLinkedFeature_Impl) value).getFeature();
+    if( value instanceof IXLinkedFeature && followXLinks )
+      return ((IXLinkedFeature) value).getFeature();
 
     if( value instanceof Feature )
       return (Feature) value;
 
-    if( feature instanceof XLinkedFeature_Impl )
+    if( feature instanceof IXLinkedFeature )
     {
       /* Its a local link inside a xlinked-feature */
-      final XLinkedFeature_Impl xlinkedFeature = (XLinkedFeature_Impl) feature;
+      final IXLinkedFeature xlinkedFeature = (IXLinkedFeature) feature;
       final String href = xlinkedFeature.getUri() + "#" + value; //$NON-NLS-1$
       return new XLinkedFeature_Impl( feature, property, property.getTargetFeatureType(), href, "", "", "", "", "" );
     }
@@ -944,10 +944,10 @@ public final class FeatureHelper
       return null;
     else
     {
-      if( propFeature instanceof XLinkedFeature_Impl )
+      if( propFeature instanceof IXLinkedFeature )
       {
         // here is also possible to get IllegalArgumentException, if (phantom) xlinked feature points to nothing
-        propFeature = ((XLinkedFeature_Impl) propFeature).getFeature();
+        propFeature = ((IXLinkedFeature) propFeature).getFeature();
       }
       final T adaptedFeature = (T) propFeature.getAdapter( adapterTargetClass );
       return adaptedFeature;
@@ -1130,11 +1130,11 @@ public final class FeatureHelper
    */
   public static String getAnnotationValue( final Feature feature, final String annotationKey )
   {
-    if( feature instanceof XLinkedFeature_Impl )
+    if( feature instanceof IXLinkedFeature )
     {
       // BUGFIX: access the feature here once, before the annotation is fetched.
       // This is necessary in order to force the featureType to be known.
-      ((XLinkedFeature_Impl) feature).getFeature();
+      ((IXLinkedFeature) feature).getFeature();
     }
 
     final IFeatureType featureType = feature.getFeatureType();
@@ -1513,11 +1513,11 @@ public final class FeatureHelper
     if( property == null )
       return null;
 
-    if( property instanceof XLinkedFeature_Impl )
+    if( property instanceof IXLinkedFeature )
     {
       try
       {
-        final XLinkedFeature_Impl xLnk = (XLinkedFeature_Impl) property;
+        final IXLinkedFeature xLnk = (IXLinkedFeature) property;
         return xLnk.getFeature();
       }
       catch( final IllegalStateException e )

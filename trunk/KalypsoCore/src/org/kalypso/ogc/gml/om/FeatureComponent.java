@@ -54,8 +54,8 @@ import org.kalypso.observation.phenomenon.IPhenomenon;
 import org.kalypso.observation.result.AbstractComponent;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * A component which was previously read from a feature.
@@ -127,8 +127,8 @@ public class FeatureComponent extends AbstractComponent
   @Override
   public String getId( )
   {
-    if( m_itemDef instanceof XLinkedFeature_Impl )
-      return ((XLinkedFeature_Impl) m_itemDef).getHref();
+    if( m_itemDef instanceof IXLinkedFeature )
+      return ((IXLinkedFeature) m_itemDef).getHref();
 
     if( m_itemDef == null )
       return m_uri;

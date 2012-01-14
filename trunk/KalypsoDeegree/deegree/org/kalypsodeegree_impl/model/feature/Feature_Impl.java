@@ -674,6 +674,11 @@ public class Feature_Impl extends PlatformObject implements Feature
       throw new IllegalArgumentException( message );
     }
 
-    return new XLinkedFeature_Impl( this, relation, featureType, href );
+    /* Create link and set to myself as property */
+    final XLinkedFeature_Impl link = new XLinkedFeature_Impl( this, relation, featureType, href );
+
+    setProperty( relation, link );
+
+    return link;
   }
 }

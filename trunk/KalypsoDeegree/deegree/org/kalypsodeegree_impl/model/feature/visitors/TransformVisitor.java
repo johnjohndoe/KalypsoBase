@@ -46,9 +46,9 @@ import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -94,7 +94,7 @@ public class TransformVisitor implements FeatureVisitor
       // TRICKY: directly fetch an xlinked featuee, else we might get an error as the feature types of the link
       // and the linked feature may be different.
       // We should check, if we want to transform through xlinks anyways...
-      if( f instanceof XLinkedFeature_Impl )
+      if( f instanceof IXLinkedFeature )
         return false;
 
       doVisit( f );
