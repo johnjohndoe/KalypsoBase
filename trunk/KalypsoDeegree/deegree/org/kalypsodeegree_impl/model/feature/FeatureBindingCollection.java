@@ -46,6 +46,7 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -719,9 +720,6 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     return null;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection#getBoundingBox()
-   */
   @Override
   public GM_Envelope getBoundingBox( )
   {
@@ -734,9 +732,6 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     return m_parentFeature;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.IFeatureBindingCollection#accept(org.kalypsodeegree.model.feature.IFeatureBindingCollectionVisitor)
-   */
   @Override
   public void accept( final IFeatureBindingCollectionVisitor<FWCls> visitor )
   {
@@ -753,4 +748,51 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     }
   }
 
+  @Override
+  public IXLinkedFeature addLink( final FWCls toAdd ) throws IllegalArgumentException
+  {
+    return m_featureLst.addLink( toAdd );
+  }
+
+  @Override
+  public IXLinkedFeature addLink( final String href ) throws IllegalArgumentException
+  {
+    return m_featureLst.addLink( href );
+  }
+
+  @Override
+  public IXLinkedFeature addLink( final String href, final QName featureTypeName ) throws IllegalArgumentException
+  {
+    return m_featureLst.addLink( href, featureTypeName );
+  }
+
+  @Override
+  public IXLinkedFeature addLink( final String href, final IFeatureType featureType ) throws IllegalArgumentException
+  {
+    return m_featureLst.addLink( href, featureType );
+  }
+
+  @Override
+  public IXLinkedFeature insertLink( final int index, final FWCls toLink ) throws IllegalArgumentException
+  {
+    return m_featureLst.insertLink( index, toLink );
+  }
+
+  @Override
+  public IXLinkedFeature insertLink( final int index, final String href ) throws IllegalArgumentException
+  {
+    return m_featureLst.insertLink( index, href );
+  }
+
+  @Override
+  public IXLinkedFeature insertLink( final int index, final String href, final QName featureTypeName ) throws IllegalArgumentException
+  {
+    return m_featureLst.insertLink( index, href, featureTypeName );
+  }
+
+  @Override
+  public IXLinkedFeature insertLink( final int index, final String href, final IFeatureType featureType ) throws IllegalArgumentException
+  {
+    return m_featureLst.insertLink( index, href, featureType );
+  }
 }

@@ -476,19 +476,19 @@ public class FilteredFeatureList implements FeatureList
   }
 
   @Override
-  public <T extends Feature> IXLinkedFeature addLink( final String href ) throws IllegalArgumentException
+  public IXLinkedFeature addLink( final String href ) throws IllegalArgumentException
   {
     return m_original.addLink( href );
   }
 
   @Override
-  public <T extends Feature> IXLinkedFeature addLink( final String href, final QName featureTypeName ) throws IllegalArgumentException
+  public IXLinkedFeature addLink( final String href, final QName featureTypeName ) throws IllegalArgumentException
   {
     return m_original.addLink( href, featureTypeName );
   }
 
   @Override
-  public <T extends Feature> IXLinkedFeature addLink( final String href, final IFeatureType featureType ) throws IllegalArgumentException
+  public IXLinkedFeature addLink( final String href, final IFeatureType featureType ) throws IllegalArgumentException
   {
     return m_original.addLink( href, featureType );
   }
@@ -500,19 +500,19 @@ public class FilteredFeatureList implements FeatureList
   }
 
   @Override
-  public <T extends Feature> IXLinkedFeature insertLink( final int index, final String href ) throws IllegalArgumentException
+  public IXLinkedFeature insertLink( final int index, final String href ) throws IllegalArgumentException
   {
     return m_original.insertLink( index, href );
   }
 
   @Override
-  public <T extends Feature> IXLinkedFeature insertLink( final int index, final String href, final QName featureTypeName ) throws IllegalArgumentException
+  public IXLinkedFeature insertLink( final int index, final String href, final QName featureTypeName ) throws IllegalArgumentException
   {
     return m_original.insertLink( index, href, featureTypeName );
   }
 
   @Override
-  public <T extends Feature> IXLinkedFeature insertLink( final int index, final String href, final IFeatureType featureType ) throws IllegalArgumentException
+  public IXLinkedFeature insertLink( final int index, final String href, final IFeatureType featureType ) throws IllegalArgumentException
   {
     return m_original.insertLink( index, href, featureType );
   }

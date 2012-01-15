@@ -47,8 +47,8 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.types.AbstractGmlContentHandler;
 import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -73,10 +73,6 @@ public class XLinkedFeatureContentHandler extends AbstractGmlContentHandler
     m_scopeProperty = scopeProperty;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler#endElement(java.lang.String, java.lang.String,
-   *      java.lang.String)
-   */
   @Override
   public void endElement( final String uri, final String localName, final String qName ) throws SAXException
   {
@@ -84,10 +80,6 @@ public class XLinkedFeatureContentHandler extends AbstractGmlContentHandler
     getParentContentHandler().endElement( uri, localName, qName );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler#startElement(java.lang.String,
-   *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
-   */
   @Override
   public void startElement( final String uri, final String localName, final String qName, final Attributes atts )
   {
@@ -103,8 +95,14 @@ public class XLinkedFeatureContentHandler extends AbstractGmlContentHandler
     else
     {
       final IFeatureType targetFeatureType = m_scopeProperty.getTargetFeatureType();
-      final Feature childFeature = new XLinkedFeature_Impl( m_scopeFeature, m_scopeProperty, targetFeatureType, href );
-      FeatureHelper.addChild( m_scopeFeature, m_scopeProperty, childFeature );
+
+      if( m_scopeProperty.isList() )
+      {
+        final FeatureList list = (FeatureList) m_scopeFeature.getProperty( m_scopeProperty );
+        list.addLink( href, targetFeatureType );
+      }
+      else
+        m_scopeFeature.setLink( m_scopeProperty, href, targetFeatureType );
     }
   }
 }

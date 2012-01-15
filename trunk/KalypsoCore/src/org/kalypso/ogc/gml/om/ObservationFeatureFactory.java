@@ -84,7 +84,6 @@ import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerXMLGregorianCalend
 import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * @author schlienger
@@ -479,7 +478,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final String id = comp.getId();
     // try to find a dictionary entry for this component, if it exists, create xlinked-feature to it
     final IFeatureType itemDefType = GMLSchemaUtilities.getFeatureTypeQuiet( ObservationFeatureFactory.SWE_ITEMDEFINITION );
-    final IXLinkedFeature xlink = new XLinkedFeature_Impl( recordDefinition, itemDefinitionRelation, itemDefType, id );
+    final IXLinkedFeature xlink = FeatureFactory.createXLink( recordDefinition, itemDefinitionRelation, itemDefType, id );
     if( xlink.getFeature() != null )
       return xlink;
 
@@ -651,12 +650,9 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
     final IFeatureType featureType = GMLSchemaUtilities.getFeatureTypeQuiet( ObservationFeatureFactory.SWE_ITEMDEFINITION );
 
-    final IRelationType componentRelation = (IRelationType) recordDefinition.getFeatureType().getProperty( ObservationFeatureFactory.SWE_COMPONENT );
+    final FeatureList componentList = (FeatureList) recordDefinition.getProperty( ObservationFeatureFactory.SWE_COMPONENT );
 
-    final Feature itemDef = new XLinkedFeature_Impl( recordDefinition, componentRelation, featureType, dictUrn );
-
-    final List<Feature> componentList = (List<Feature>) recordDefinition.getProperty( componentRelation );
-    componentList.add( itemDef );
+    final IXLinkedFeature itemDef = componentList.addLink( dictUrn, featureType );
 
     return new FeatureComponent( itemDef );
   }

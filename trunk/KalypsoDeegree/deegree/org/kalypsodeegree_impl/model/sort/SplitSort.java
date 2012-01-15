@@ -65,9 +65,9 @@ import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
@@ -808,19 +808,19 @@ public class SplitSort implements FeatureList
   }
 
   @Override
-  public <T extends Feature> IXLinkedFeature addLink( final String href ) throws IllegalArgumentException
+  public IXLinkedFeature addLink( final String href ) throws IllegalArgumentException
   {
     return insertLink( size(), href );
   }
 
   @Override
-  public <T extends Feature> IXLinkedFeature addLink( final String href, final QName featureTypeName ) throws IllegalArgumentException
+  public IXLinkedFeature addLink( final String href, final QName featureTypeName ) throws IllegalArgumentException
   {
     return insertLink( size(), href, featureTypeName );
   }
 
   @Override
-  public <T extends Feature> IXLinkedFeature addLink( final String href, final IFeatureType featureType ) throws IllegalArgumentException
+  public IXLinkedFeature addLink( final String href, final IFeatureType featureType ) throws IllegalArgumentException
   {
     return insertLink( size(), href, featureType );
   }
@@ -856,13 +856,13 @@ public class SplitSort implements FeatureList
   }
 
   @Override
-  public <T extends Feature> IXLinkedFeature insertLink( final int index, final String href ) throws IllegalArgumentException
+  public IXLinkedFeature insertLink( final int index, final String href ) throws IllegalArgumentException
   {
     return insertLink( index, href, getPropertyType().getTargetFeatureType() );
   }
 
   @Override
-  public <T extends Feature> IXLinkedFeature insertLink( final int index, final String href, final QName featureTypeName ) throws IllegalArgumentException
+  public IXLinkedFeature insertLink( final int index, final String href, final QName featureTypeName ) throws IllegalArgumentException
   {
     final IFeatureType featureType = GMLSchemaUtilities.getFeatureTypeQuiet( featureTypeName );
     if( featureType == null )
@@ -875,10 +875,15 @@ public class SplitSort implements FeatureList
   }
 
   @Override
-  public <T extends Feature> IXLinkedFeature insertLink( final int index, final String href, final IFeatureType featureType ) throws IllegalArgumentException
+  public IXLinkedFeature insertLink( final int index, final String href, final IFeatureType featureType ) throws IllegalArgumentException
   {
-    final IXLinkedFeature link = new XLinkedFeature_Impl( m_parentFeature, m_parentFeatureTypeProperty, featureType, href );
-    add( index, link );
+    final IXLinkedFeature link = FeatureFactory.createXLink( m_parentFeature, m_parentFeatureTypeProperty, featureType, href );
+
+    if( index < 0 )
+      add( link );
+    else
+      add( index, link );
+
     return link;
   }
 }

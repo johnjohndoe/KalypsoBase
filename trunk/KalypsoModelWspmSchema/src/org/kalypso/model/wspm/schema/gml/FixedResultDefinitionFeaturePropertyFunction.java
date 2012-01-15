@@ -55,7 +55,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * @author Gernot Belger
@@ -126,7 +125,7 @@ public class FixedResultDefinitionFeaturePropertyFunction extends FeaturePropert
     final FeatureList components = (FeatureList) feature.getProperty( QNAME_RECORD_COMPONENT );
 
     for( final String href : m_compHrefs )
-      components.add( new XLinkedFeature_Impl( components.getOwner(), components.getPropertyType(), recordSchemaType, href ) );
+      components.addLink( href, recordSchemaType );
 
     return feature;
   }
