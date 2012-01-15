@@ -287,7 +287,7 @@ public class SldLoader extends AbstractLoader implements ISaveUrnLoader
 
       /* Really save to this location */
       final String sldXMLwithHeader = marshallObject( data, CharEncoding.UTF_8 );
-      FileUtils.writeStringToFile( userFile, sldXMLwithHeader );
+      FileUtils.writeStringToFile( userFile, sldXMLwithHeader, CharEncoding.UTF_8 );
 
       /* Just for formal reasons, should already be empty */
       setResources( null );
