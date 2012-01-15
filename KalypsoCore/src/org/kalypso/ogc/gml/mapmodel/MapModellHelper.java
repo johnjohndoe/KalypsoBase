@@ -69,7 +69,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Utility class for {@link IMapModell} associated functions.
- * 
+ *
  * @author Gernot Belger
  */
 public final class MapModellHelper
@@ -82,7 +82,7 @@ public final class MapModellHelper
   /**
    * Waits for a {@link MapPanel} to be completely loaded. A progress dialog opens if this operation takes long.<br>
    * If an error occurs, an error dialog will be shown.
-   * 
+   *
    * @param panelOrModell
    *          An {@link IMapPanel} or an {@link IMapModell}. Use a panel, if the modell is stil about to be loaded. Use
    *          a modell, if you do not have a panel (i.e. for image export or similar).
@@ -90,6 +90,7 @@ public final class MapModellHelper
    * @see ProgressUtilities#busyCursorWhile(ICoreRunnableWithProgress)
    * @see #createWaitForMapOperation(MapPanel)
    */
+  // FIXME: we need to use default texts here. The same text is i10n a 1000 times now... :-(
   public static boolean waitForAndErrorDialog( final Shell shell, final Object panelOrModell, final String windowTitle, final String message )
   {
     final ICoreRunnableWithProgress operation = createWaitForMapOperation( panelOrModell );
@@ -101,7 +102,7 @@ public final class MapModellHelper
   /**
    * Creates an {@link ICoreRunnableWithProgress} which waits for a {@link MapPanel} to be loaded.<br>
    * Uses the {@link IMapModell#isLoaded()} and {@link IKalypsoTheme#isLoaded()} methods.
-   * 
+   *
    * @param panelOrModell
    *          An {@link IMapPanel} or an {@link IMapModell}. Use a panel, if the modell is stil about to be loaded. Use
    *          a modell, if you do not have a panel (i.e. for image export or similar).
@@ -113,7 +114,7 @@ public final class MapModellHelper
 
   /**
    * This function creates an image of a map model and keeps aspect ratio of the displayed map and its extend.
-   * 
+   *
    * @param panel
    *          The map panel.
    * @param width
@@ -139,7 +140,7 @@ public final class MapModellHelper
 
   /**
    * This function creates an image of a map model and keeps aspect ratio of the displayed map and its extend.
-   * 
+   *
    * @param mapModel
    *          The map model.
    * @param width
@@ -187,7 +188,7 @@ public final class MapModellHelper
    * This function is used to create an image of a map model. It does not wait until all themes are loaded. It is used
    * from the map panel as well, where the drawing is done every refresh of the map. So it does not matter, when some
    * themes finish, if they finish at all.
-   * 
+   *
    * @param panel
    *          The map panel.
    * @param width
@@ -302,7 +303,7 @@ public final class MapModellHelper
 
   /**
    * Calculates the common extent of all given themes.
-   * 
+   *
    * @param predicate
    *          If not <code>null</code>, only themes applying to the predicate are considered.
    * @return <code>null</code>, if the array of themes is empty or null.
@@ -380,7 +381,7 @@ public final class MapModellHelper
 
   /**
    * Finds all themes with the given theme property from the map model.
-   * 
+   *
    * @param depth
    *          One of the {@link IKalypsoThemeVisitor#DEPTH_} constants.
    * @param mapModel
