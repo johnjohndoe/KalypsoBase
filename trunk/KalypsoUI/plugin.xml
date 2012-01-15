@@ -566,6 +566,13 @@
 			<separator name="navigation" visible="true"/>
 			<command commandId="org.kalypso.ui.map.outline.command.ZoomToSelectedTheme" style="push"/>
 			<separator name="style" visible="true"/>
+			<!-- FIXME: this already works fine, but we needs some more control wat the user can edit. I.e. introduce 
+			             parameter (on theme?) and/or command to control the followingf things:
+			                 - featureTypeStyle properties should never we allowed to be edited
+			                 - resolve i18n strings
+			                 - only allow simple mode editing?
+			-->
+			<command commandId="org.kalypso.ui.map.outline.command.OpenStyleDialog" style="push"/>
 			<separator name="additions" visible="true"/>
 		</menuContribution>
 
