@@ -664,7 +664,7 @@ public class Feature_Impl extends PlatformObject implements Feature
     // Assert.isNotNull( featureType );
 
     /* Check if the target relation is a property of this feature */
-    if( relation != getProperty( relation.getQName() ) )
+    if( relation != getFeatureType().getProperty( relation.getQName() ) )
     {
       final String message = String.format( "Relation '%s' is not a property of this feature", relation.getQName() ); //$NON-NLS-1$
       throw new IllegalArgumentException( message );
@@ -677,7 +677,7 @@ public class Feature_Impl extends PlatformObject implements Feature
       throw new IllegalArgumentException( message );
     }
 
-    if( !relation.isList() )
+    if( relation.isList() )
     {
       final String message = String.format( "Relation '%s' is a list, single links cannot be created.", relation.getQName() ); //$NON-NLS-1$
       throw new IllegalArgumentException( message );
