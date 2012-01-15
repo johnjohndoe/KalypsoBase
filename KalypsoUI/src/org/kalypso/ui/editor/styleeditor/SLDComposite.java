@@ -55,8 +55,6 @@ import org.kalypso.ogc.gml.IKalypsoStyle;
 import org.kalypso.ogc.gml.IKalypsoStyleListener;
 import org.kalypso.ui.editor.styleeditor.style.FeatureTypeStyleComposite;
 import org.kalypso.ui.editor.styleeditor.style.FeatureTypeStyleInput;
-import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
-import org.kalypsodeegree.graphics.sld.UserStyle;
 
 /**
  * @author F.Lindemann
@@ -93,7 +91,7 @@ public class SLDComposite extends Composite
 
   private FeatureTypeStyleComposite m_styleComposite;
 
-  private IKalypsoStyle m_style;
+// private IKalypsoStyle m_style;
 
   public SLDComposite( final Composite parent )
   {
@@ -114,7 +112,7 @@ public class SLDComposite extends Composite
     toolBarManager.add( m_saveAction );
     toolBarManager.update( true );
 
-    setKalypsoStyle( null, null, -1 );
+    setInput( null );
   }
 
   public IFeatureType getFeatureType( )
@@ -133,14 +131,10 @@ public class SLDComposite extends Composite
     return m_styleComposite.getSelectedStyle();
   }
 
-  public void setKalypsoStyle( final IKalypsoStyle style, final IFeatureType featureType )
-  {
-    setKalypsoStyle( style, featureType, -1 );
-  }
+  // final FeatureTypeStyleInput input = createInput( style, featureType, styleToSelect, config );
 
-  public void setKalypsoStyle( final IKalypsoStyle style, final IFeatureType featureType, final int styleToSelect )
+  public void setInput( final FeatureTypeStyleInput input )
   {
-    final FeatureTypeStyleInput input = createInput( style, featureType, styleToSelect );
     if( ObjectUtils.equals( input, m_input ) )
     {
       if( !m_form.isDisposed() )
@@ -148,14 +142,22 @@ public class SLDComposite extends Composite
       return;
     }
 
-    if( m_style != null )
-      m_style.removeStyleListener( m_styleListener );
+    if( m_input != null )
+    {
+      final IKalypsoStyle oldStyle = m_input.getStyle();
+      if( oldStyle != null )
+        oldStyle.removeStyleListener( m_styleListener );
+    }
+
 
     m_input = input;
-    m_style = style;
 
-    if( style != null )
-      m_style.addStyleListener( m_styleListener );
+    if( m_input != null )
+    {
+      final IKalypsoStyle newStyle = input.getStyle();
+      if( newStyle != null )
+        newStyle.addStyleListener( m_styleListener );
+    }
 
     /* Update form */
     if( m_form.isDisposed() )
@@ -170,59 +172,17 @@ public class SLDComposite extends Composite
     updateControl();
   }
 
-  private FeatureTypeStyleInput createInput( final IKalypsoStyle style, final IFeatureType featureType, final int styleToSelect )
-  {
-    if( style == null )
-      return null;
-
-    /* Use config with default values */
-    final IStyleEditorConfig config = createConfiguration( style );
-
-    final FeatureTypeStyle fts = findFeatureTypeStyle( style, styleToSelect );
-    return new FeatureTypeStyleInput( fts, style, styleToSelect, featureType, config );
-  }
-
-  private StyleEditorConfig createConfiguration( final IKalypsoStyle style )
-  {
-    final StyleEditorConfig config = new StyleEditorConfig();
-
-    if( style.isCatalogStyle() )
-    {
-      config.setFeatureTypeStyleCompositeShowProperties( false );
-    }
-
-    return config;
-  }
-
-  private FeatureTypeStyle findFeatureTypeStyle( final IKalypsoStyle style, final int styleToSelect )
-  {
-    if( style instanceof FeatureTypeStyle )
-      return (FeatureTypeStyle) style;
-
-    if( style instanceof UserStyle )
-    {
-      final FeatureTypeStyle[] styles = ((UserStyle) style).getFeatureTypeStyles();
-      if( styles.length == 0 )
-        return null;
-
-      if( styleToSelect == -1 )
-        return styles[0];
-      else
-        return styles[styleToSelect];
-    }
-
-    return null;
-  }
-
   protected void updateControl( )
   {
     updateActions();
 
-    if( m_style == null )
+    final IKalypsoStyle style = m_input == null ? null : m_input.getStyle();
+
+    if( style == null )
       m_form.setText( MessageBundle.STYLE_EDITOR_NO_STYLE_FOR_EDITOR );
     else
     {
-      final String formTitle = m_style.getTitle();
+      final String formTitle = style.getTitle();
       if( formTitle == null )
         m_form.setText( "<Unknown Title>" );
       else
@@ -236,12 +196,15 @@ public class SLDComposite extends Composite
   @Override
   public void dispose( )
   {
-    setKalypsoStyle( null, null );
+    setInput( null );
   }
 
   public IKalypsoStyle getKalypsoStyle( )
   {
-    return m_style;
+    if( m_input == null )
+      return null;
+
+    return m_input.getStyle();
   }
 
   public void updateActions( )
