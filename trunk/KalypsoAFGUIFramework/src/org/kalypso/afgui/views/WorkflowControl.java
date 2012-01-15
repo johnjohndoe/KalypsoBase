@@ -128,16 +128,20 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
   final void doTask( final ITask task )
   {
     if( m_treeViewer.getTree().isDisposed() )
-    {
       return;
-    }
 
     final IStatus result = m_taskExecutor.execute( task );
+    if( result.matches( IStatus.CANCEL ) )
+    {
+      /* Task is probably a task group with no own functionality -> just toggle expansion state */
+      m_treeViewer.setExpandedState( task, !m_treeViewer.getExpandedState( task ) );
+    }
+
     // TODO: error handling should be done by the task executor!; why isn't there a job?
     final Shell shell = m_treeViewer.getControl().getShell();
     final String title = Messages.getString( "org.kalypso.afgui.views.WorkflowControl.2" );//$NON-NLS-1$
     final String message = Messages.getString( "org.kalypso.afgui.views.WorkflowControl.3" ); //$NON-NLS-1$
-    if( !result.isOK() )
+    if( !result.isOK() && !result.matches( IStatus.CANCEL ) )
     {
       KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( result );
     }

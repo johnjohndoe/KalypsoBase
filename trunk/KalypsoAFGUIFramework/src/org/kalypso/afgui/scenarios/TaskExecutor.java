@@ -144,6 +144,14 @@ public class TaskExecutor implements ITaskExecutor
     final Command command = getCommand( m_commandService, name, task instanceof ITaskGroup ? TaskExecutionListener.CATEGORY_TASKGROUP : TaskExecutionListener.CATEGORY_TASK );
 
     final ContextType context = task.getContext();
+
+    if( !command.isHandled() && context == null )
+    {
+      // if command is neither handled nor has a context nothing is to do.
+      // This also prohibits the activation of task-groups that do nothing themselves
+      return Status.CANCEL_STATUS;
+    }
+
     final IStatus contextStatus = context == null ? Status.OK_STATUS : activateContext( context );
 
     // collect the views that were just opened
@@ -214,7 +222,7 @@ public class TaskExecutor implements ITaskExecutor
 
   /**
    * This function activates the context, which is given and all its parents.
-   * 
+   *
    * @param context
    *          The context.
    * @return A status object indicating the success of the function.
@@ -240,7 +248,7 @@ public class TaskExecutor implements ITaskExecutor
 
   /**
    * This function activates the context, which is given.
-   * 
+   *
    * @param context
    *          The context, which should be activated.
    * @return A status object indicating the success of the function.
@@ -310,7 +318,7 @@ public class TaskExecutor implements ITaskExecutor
 
   /**
    * This function notifies all registered listeners.
-   * 
+   *
    * @param results
    *          The results of the task, which was activated, as well of all of its associated tasks.
    * @param task
@@ -327,7 +335,7 @@ public class TaskExecutor implements ITaskExecutor
 
   /**
    * This function notifies all registered listeners.
-   * 
+   *
    * @param task
    *          The final task, that was activated.
    */
