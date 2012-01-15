@@ -88,7 +88,7 @@ public class MapViewInputContextHandler extends AbstractHandler
     {
       // there is a map view and a file
       final MapView mapView = (MapView) view;
-      mapView.doSave( new NullProgressMonitor() );
+      mapView.doSave( false, new NullProgressMonitor() );
       mapView.setInput( input );
 
       final IMapPanel mapPanel = (IMapPanel) mapView.getAdapter( IMapPanel.class );

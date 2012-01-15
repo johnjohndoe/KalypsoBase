@@ -182,6 +182,16 @@ public abstract class AbstractWorkbenchPart extends WorkbenchPart implements IRe
 
   public void doSave( final IProgressMonitor monitor )
   {
+    doSave( true, monitor );
+  }
+
+  /**
+   * @param allowSaveAs
+   *          If <code>false</code>, view will not show a 'save as' dialog if the file for saving the map cnanot be
+   *          determined. If this case, the dirty map is selently disposed off.
+   */
+  public void doSave( final boolean allowSaveAs, final IProgressMonitor monitor )
+  {
     final IEditorInput eInput = getEditorInput();
     if( eInput == null )
       return;
@@ -190,7 +200,8 @@ public abstract class AbstractWorkbenchPart extends WorkbenchPart implements IRe
     if( file == null )
     {
       // If input is not a file, allow user to save as
-      doSaveAs();
+      if( allowSaveAs )
+        doSaveAs();
       return;
     }
 
