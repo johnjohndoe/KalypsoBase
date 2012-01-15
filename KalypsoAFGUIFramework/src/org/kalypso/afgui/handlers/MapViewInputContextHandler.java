@@ -3,12 +3,15 @@
  */
 package org.kalypso.afgui.handlers;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Properties;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -20,6 +23,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.ISources;
+import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -28,6 +32,10 @@ import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.resources.UrlStorage;
+import org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.widgets.IWidgetManager;
@@ -38,7 +46,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 /**
  * Loads a template file in the current map view. Requires that the current context contains the map view. Use a
  * {@link ViewContextHandler} for this purpose.
- * 
+ *
  * @author Stefan Kurzbach
  */
 public class MapViewInputContextHandler extends AbstractHandler
@@ -61,52 +69,11 @@ public class MapViewInputContextHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    IFile iMap;
 
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
     /* project absolute location */
-    if( m_url.startsWith( "project://" ) ) //$NON-NLS-1$
-    {
-      final String url = m_url.substring( 10 );
-      final IProject project = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getProject();
-
-      iMap = project.getFile( url );
-    }
-    /* base scenario relative location */
-    else if( m_url.startsWith( "base://" ) ) //$NON-NLS-1$
-    {
-      try
-      {
-        final String url = m_url.substring( 7 );
-        final IScenario caze = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase();
-        final IScenario root = ScenarioHelper.resolveRootScenario( caze );
-
-        final IFolder rootFolder = root.getFolder();
-        iMap = rootFolder.getFile( url );
-      }
-      catch( final CoreException e )
-      {
-        throw new ExecutionException( Messages.getString( "org.kalypso.afgui.handlers.MapViewInputContextHandler.3" ) ); //$NON-NLS-1$
-      }
-    }
-    /* current scenario relative location */
-    else
-    {
-
-      final IFolder folder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
-      if( folder == null )
-      {
-        throw new ExecutionException( Messages.getString( "org.kalypso.afgui.handlers.MapViewInputContextHandler.4" ) ); //$NON-NLS-1$
-      }
-      else if( m_url == null )
-      {
-        throw new ExecutionException( Messages.getString( "org.kalypso.afgui.handlers.MapViewInputContextHandler.5" ) ); //$NON-NLS-1$
-      }
-
-      // find file in active scenario folder
-      iMap = folder.getFile( m_url );
-    }
+    final IStorageEditorInput input = findInput( context );
 
     // find map view
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
@@ -122,7 +89,7 @@ public class MapViewInputContextHandler extends AbstractHandler
       // there is a map view and a file
       final MapView mapView = (MapView) view;
       mapView.doSave( new NullProgressMonitor() );
-      mapView.setInput( new FileEditorInput( iMap ) );
+      mapView.setInput( input );
 
       final IMapPanel mapPanel = (IMapPanel) mapView.getAdapter( IMapPanel.class );
 
@@ -151,5 +118,73 @@ public class MapViewInputContextHandler extends AbstractHandler
 
       return Status.OK_STATUS;
     }
+  }
+
+  private IStorageEditorInput findInput( final IEvaluationContext context ) throws ExecutionException
+  {
+    if( m_url.startsWith( "project://" ) ) //$NON-NLS-1$
+    {
+      final String url = m_url.substring( 10 );
+      final IProject project = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getProject();
+
+      final IFile file = project.getFile( url );
+      return new FileEditorInput( file );
+    }
+
+    /* base scenario relative location */
+    if( m_url.startsWith( "base://" ) ) //$NON-NLS-1$
+    {
+      try
+      {
+        final String url = m_url.substring( 7 );
+        final IScenario caze = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase();
+        final IScenario root = ScenarioHelper.resolveRootScenario( caze );
+
+        final IFolder rootFolder = root.getFolder();
+        final IFile file = rootFolder.getFile( url );
+        return new FileEditorInput( file );
+      }
+      catch( final CoreException e )
+      {
+        throw new ExecutionException( Messages.getString( "org.kalypso.afgui.handlers.MapViewInputContextHandler.3" ) ); //$NON-NLS-1$
+      }
+    }
+
+    if( m_url.startsWith( "urn:" ) ) //$NON-NLS-1$
+    {
+      final String resolvedUrl = KalypsoCorePlugin.getDefault().getCatalogManager().resolve( m_url, m_url );
+
+      try
+      {
+        final URL content = new URL( resolvedUrl );
+
+        final IContainer scenarioFolder = ScenarioHelper.getScenarioDataProvider().getScenarioFolder();
+        final URL scnearioContext = ResourceUtilities.createURL( scenarioFolder );
+
+        final UrlStorage storage = new UrlStorage( content, scnearioContext );
+        return new StorageEditorInput( storage );
+      }
+      catch( final MalformedURLException | CoreException e )
+      {
+        e.printStackTrace();
+        final String message = String.format( "Failed to resolve urn: %s", m_url );
+        throw new ExecutionException( message, e );
+      }
+    }
+
+    /* current scenario relative location */
+    final IFolder folder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+    if( folder == null )
+    {
+      throw new ExecutionException( Messages.getString( "org.kalypso.afgui.handlers.MapViewInputContextHandler.4" ) ); //$NON-NLS-1$
+    }
+    else if( m_url == null )
+    {
+      throw new ExecutionException( Messages.getString( "org.kalypso.afgui.handlers.MapViewInputContextHandler.5" ) ); //$NON-NLS-1$
+    }
+
+    // find file in active scenario folder
+    final IFile file = folder.getFile( m_url );
+    return new FileEditorInput( file );
   }
 }
