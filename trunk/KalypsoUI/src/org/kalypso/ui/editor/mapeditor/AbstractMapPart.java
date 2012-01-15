@@ -41,6 +41,8 @@
 package org.kalypso.ui.editor.mapeditor;
 
 import java.awt.Component;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.net.URL;
 
 import javax.swing.SwingUtilities;
@@ -64,6 +66,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.forms.widgets.Form;
@@ -194,6 +197,19 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
 
     m_control = MapForm.createMapForm( parent );
     m_mapPanel = m_control.createMapPanel( this, m_selectionManager );
+
+    if( m_mapPanel instanceof Component )
+    {
+      ((Component) m_mapPanel).addFocusListener( new FocusAdapter()
+      {
+        @Override
+        public void focusGained( final FocusEvent e )
+        {
+          handleFocuesGained();
+        }
+      } );
+    }
+
     updatePanel( m_mapModell, m_initialEnv );
     m_mapPanel.addMapPanelListener( m_mapPanelListener );
 
@@ -208,6 +224,22 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
     }
 
     site.setSelectionProvider( m_mapPanel );
+  }
+
+  protected void handleFocuesGained( )
+  {
+    final IWorkbenchPartSite site = getSite();
+    final IWorkbenchPage activePage = site.getWorkbenchWindow().getActivePage();
+
+    final Display display = site.getShell().getDisplay();
+    display.asyncExec( new Runnable()
+    {
+      @Override
+      public void run( )
+      {
+        activePage.activate( AbstractMapPart.this );
+      }
+    } );
   }
 
   @Override
