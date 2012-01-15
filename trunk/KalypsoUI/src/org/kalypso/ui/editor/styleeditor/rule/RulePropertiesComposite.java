@@ -91,7 +91,10 @@ public class RulePropertiesComposite extends Composite
     body.setLayout( new GridLayout( 3, false ) );
 
     /* Text Panel for Rule-Titel */
-    createNameControl( toolkit, body );
+
+    if( m_input.getConfig().isRuleEditName() )
+      createNameControl( toolkit, body );
+
     createTitleControl( toolkit, body );
     createAbstractControl( toolkit, body );
     createMinDenomControl( toolkit, body );
