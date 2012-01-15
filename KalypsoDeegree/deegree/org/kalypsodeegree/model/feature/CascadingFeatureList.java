@@ -528,19 +528,19 @@ public class CascadingFeatureList implements FeatureList
   }
 
   @Override
-  public <T extends Feature> IXLinkedFeature addLink( final String href ) throws IllegalArgumentException
+  public IXLinkedFeature addLink( final String href ) throws IllegalArgumentException
   {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public <T extends Feature> IXLinkedFeature addLink( final String href, final QName featureTypeName ) throws IllegalArgumentException
+  public IXLinkedFeature addLink( final String href, final QName featureTypeName ) throws IllegalArgumentException
   {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public <T extends Feature> IXLinkedFeature addLink( final String href, final IFeatureType featureType ) throws IllegalArgumentException
+  public IXLinkedFeature addLink( final String href, final IFeatureType featureType ) throws IllegalArgumentException
   {
     throw new UnsupportedOperationException();
   }
@@ -552,19 +552,19 @@ public class CascadingFeatureList implements FeatureList
   }
 
   @Override
-  public <T extends Feature> IXLinkedFeature insertLink( final int index, final String href ) throws IllegalArgumentException
+  public IXLinkedFeature insertLink( final int index, final String href ) throws IllegalArgumentException
   {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public <T extends Feature> IXLinkedFeature insertLink( final int index, final String href, final QName featureTypeName ) throws IllegalArgumentException
+  public IXLinkedFeature insertLink( final int index, final String href, final QName featureTypeName ) throws IllegalArgumentException
   {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public <T extends Feature> IXLinkedFeature insertLink( final int index, final String href, final IFeatureType featureType ) throws IllegalArgumentException
+  public IXLinkedFeature insertLink( final int index, final String href, final IFeatureType featureType ) throws IllegalArgumentException
   {
     throw new UnsupportedOperationException();
   }

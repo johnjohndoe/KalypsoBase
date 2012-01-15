@@ -146,8 +146,8 @@ public interface GMLWorkspace extends ModellEventProvider, IAdaptable
 
   /**
    * TODO: we should replace this method by: createAsComposition! First, it is always used as such (that is first
-   * created, that this method is called).; Second: a featuree hsould never live without workspace
-   *
+   * created, that this method is called).; Second: a featuree should never live without workspace
+   * 
    * @param pos
    *          Position at which the new element is inserted into the list. If -1, the new element is added to the end of
    *          the list.

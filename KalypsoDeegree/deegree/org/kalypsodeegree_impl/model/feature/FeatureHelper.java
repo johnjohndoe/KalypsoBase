@@ -909,7 +909,7 @@ public final class FeatureHelper
       /* Its a local link inside a xlinked-feature */
       final IXLinkedFeature xlinkedFeature = (IXLinkedFeature) feature;
       final String href = xlinkedFeature.getUri() + "#" + value; //$NON-NLS-1$
-      return new XLinkedFeature_Impl( feature, property, property.getTargetFeatureType(), href, "", "", "", "", "" );
+      return new XLinkedFeature_Impl( feature, property, property.getTargetFeatureType(), href );
     }
 
     /* A normal local link inside the same workspace */
@@ -951,19 +951,6 @@ public final class FeatureHelper
       }
       final T adaptedFeature = (T) propFeature.getAdapter( adapterTargetClass );
       return adaptedFeature;
-    }
-  }
-
-  public static void addChild( final Feature parentFE, final IRelationType rt, final Feature childFE )
-  {
-    if( rt.isList() )
-    {
-      final FeatureList list = (FeatureList) parentFE.getProperty( rt );
-      list.add( childFE );
-    }
-    else
-    {
-      parentFE.setProperty( rt, childFE );
     }
   }
 

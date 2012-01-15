@@ -61,7 +61,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * some basic feature utils
@@ -144,15 +144,6 @@ public final class FeatureUtils
       return Messages.getString( "org.kalypso.ogc.gml.FeatureUtils.9" ); //$NON-NLS-1$
 
     return (String) objString;
-  }
-
-  public static FeatureChange getLinkedFeatureChange( final Feature parentFeature, final QName propertyName, final String value )
-  {
-    final IPropertyType chgProp = parentFeature.getFeatureType().getProperty( propertyName );
-
-    final IXLinkedFeature impl = new XLinkedFeature_Impl( parentFeature, (IRelationType) chgProp, parentFeature.getFeatureType(), value );
-
-    return new FeatureChange( parentFeature, chgProp, impl );
   }
 
   public static String getProperty( final Feature fa, final QName qname )
@@ -243,7 +234,7 @@ public final class FeatureUtils
   public static FeatureChange getExternalLinkedFeatureCommand( final Feature feature, final QName qname, final String value )
   {
     final IPropertyType chgProp = feature.getFeatureType().getProperty( qname );
-    final IXLinkedFeature impl = new XLinkedFeature_Impl( feature, (IRelationType) chgProp, feature.getFeatureType(), value );
+    final IXLinkedFeature impl = FeatureFactory.createXLink( feature, (IRelationType) chgProp, feature.getFeatureType(), value );
     return new FeatureChange( feature, chgProp, impl );
   }
 

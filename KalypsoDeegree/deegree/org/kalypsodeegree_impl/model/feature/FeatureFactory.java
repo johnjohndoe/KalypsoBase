@@ -59,6 +59,7 @@ import org.kalypso.gmlschema.xml.Mapper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.model.sort.IEnvelopeProvider;
 import org.kalypsodeegree_impl.model.sort.SplitSort;
 
@@ -319,5 +320,14 @@ public final class FeatureFactory
     final String schemaLocation = null;
     final Feature rootFeature = FeatureFactory.createFeature( null, null, "root", rootFeatureType, true, depth );
     return FeatureFactory.createGMLWorkspace( schema, rootFeature, context, schemaLocation, factory, null );
+  }
+
+  /**
+   * Only for backwards compatibility. Create a raw xlink without inserting it into the linking workspace.
+   */
+  @Deprecated
+  public static IXLinkedFeature createXLink( final Feature parentFeature, final IRelationType relation, final IFeatureType linkedType, final String href )
+  {
+    return new XLinkedFeature_Impl( parentFeature, relation, linkedType, href );
   }
 }

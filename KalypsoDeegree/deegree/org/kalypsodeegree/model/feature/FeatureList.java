@@ -92,17 +92,17 @@ public interface FeatureList extends List, JMSpatialIndex, IFeatureRelation
   /**
    * Same as {@link #insertRef(size(), href)}
    */
-  <T extends Feature> IXLinkedFeature addLink( String href ) throws IllegalArgumentException;
+  IXLinkedFeature addLink( String href ) throws IllegalArgumentException;
 
   /**
    * Same as {@link #insertRef(size(), href, featureTypeName)}
    */
-  <T extends Feature> IXLinkedFeature addLink( String href, QName featureTypeName ) throws IllegalArgumentException;
+  IXLinkedFeature addLink( String href, QName featureTypeName ) throws IllegalArgumentException;
 
   /**
    * Same as {@link #insertRef(size(), href, featureType)}
    */
-  <T extends Feature> IXLinkedFeature addLink( String href, IFeatureType featureType ) throws IllegalArgumentException;
+  IXLinkedFeature addLink( String href, IFeatureType featureType ) throws IllegalArgumentException;
 
   /**
    * Add this feature as a link to this list.<br>
@@ -129,7 +129,7 @@ public interface FeatureList extends List, JMSpatialIndex, IFeatureRelation
    * @see Feature#setLink(org.kalypso.gmlschema.property.relation.IRelationType, String) for the interpreatation of the
    *      parameters.
    */
-  <T extends Feature> IXLinkedFeature insertLink( int index, String href ) throws IllegalArgumentException;
+  IXLinkedFeature insertLink( int index, String href ) throws IllegalArgumentException;
 
   /**
    * Same as {@link #insertLink(int, Feature)}, using a given href.
@@ -137,7 +137,7 @@ public interface FeatureList extends List, JMSpatialIndex, IFeatureRelation
    * @see Feature#setLink(org.kalypso.gmlschema.property.relation.IRelationType, String) for the interpreatation of the
    *      parameters.
    */
-  <T extends Feature> IXLinkedFeature insertLink( int index, String href, QName featureTypeName ) throws IllegalArgumentException;
+  IXLinkedFeature insertLink( int index, String href, QName featureTypeName ) throws IllegalArgumentException;
 
   /**
    * Same as {@link #insertLink(int, Feature)}, using a given href.
@@ -145,7 +145,7 @@ public interface FeatureList extends List, JMSpatialIndex, IFeatureRelation
    * @see Feature#setLink(org.kalypso.gmlschema.property.relation.IRelationType, String) for the interpreatation of the
    *      parameters.
    */
-  <T extends Feature> IXLinkedFeature insertLink( int index, String href, IFeatureType featureType ) throws IllegalArgumentException;
+  IXLinkedFeature insertLink( int index, String href, IFeatureType featureType ) throws IllegalArgumentException;
 
   // TODO: uncomment only if implemented
 
