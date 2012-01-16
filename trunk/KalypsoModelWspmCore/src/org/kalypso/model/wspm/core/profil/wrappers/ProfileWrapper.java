@@ -159,10 +159,10 @@ public class ProfileWrapper
     return new ProfilePointWrapper( added );
   }
 
-  private double getHoehe( final Double width )
+  public double getHoehe( final Double width )
   {
-    final ProfilePointWrapper before = findPointBefore( width );
-    final ProfilePointWrapper after = findPointAfter( width );
+    final ProfilePointWrapper before = findPreviousPoint( width );
+    final ProfilePointWrapper after = findNextPoint( width );
 
     if( before == null || after == null )
       return 0.0;
@@ -174,41 +174,6 @@ public class ProfileWrapper
     final double hoehe = deltaH / distanceDeltaH * distance;
 
     return before.getHoehe() + hoehe;
-  }
-
-  /**
-   * TODO obselete? use getNextPoint()
-   */
-  private ProfilePointWrapper findPointAfter( final Double width )
-  {
-    ProfilePointWrapper before = null;
-    final ProfilePointWrapper[] points = getPoints();
-    for( final ProfilePointWrapper point : points )
-    {
-      if( point.getBreite() < width )
-      {
-        before = point;
-      }
-      else
-        return before;
-    }
-
-    return null;
-  }
-
-  /**
-   * TODO obselete? use getPreviousPoint()
-   */
-  private ProfilePointWrapper findPointBefore( final Double width )
-  {
-    final ProfilePointWrapper[] points = getPoints();
-    for( final ProfilePointWrapper point : points )
-    {
-      if( point.getBreite() > width )
-        return point;
-    }
-
-    return null;
   }
 
   public ProfilePointWrapper[] findPointsBetween( final Double p1, final Double p2, final boolean includeVertexPoints )
@@ -340,7 +305,7 @@ public class ProfileWrapper
     return builder.toHashCode();
   }
 
-  public ProfilePointWrapper getNextPoint( final double breite )
+  public ProfilePointWrapper findNextPoint( final double breite )
   {
     final ProfilePointWrapper lastPoint = getLastPoint();
     if( lastPoint == null )
@@ -359,7 +324,7 @@ public class ProfileWrapper
     return null;
   }
 
-  public ProfilePointWrapper getPreviousPoint( final double breite )
+  public ProfilePointWrapper findPreviousPoint( final double breite )
   {
     final ProfilePointWrapper firstPoint = getFirstPoint();
     if( firstPoint == null )

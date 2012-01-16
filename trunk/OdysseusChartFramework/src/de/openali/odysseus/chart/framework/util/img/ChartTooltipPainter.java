@@ -96,13 +96,8 @@ public class ChartTooltipPainter
     return m_labelRenderer;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.style.IChartLabelRenderer#paint(org.eclipse.swt.graphics.GC)
-   */
-
   public void paint( final GC gcw, final Point mousePos )
   {
-
     final Rectangle toolsize = getLabelRenderer().getSize();
     if( toolsize.width == 0 || toolsize.height == 0 )
       return;
@@ -139,7 +134,6 @@ public class ChartTooltipPainter
     getLabelRenderer().getTitleTypeBean().setTextAnchorX( posX );
     getLabelRenderer().getTitleTypeBean().setTextAnchorY( posY );
     getLabelRenderer().paint( gcw, new Point( mousePos.x + offsetX, mousePos.y + offsetY ) );
-
   }
 
   public void setTooltip( final String tooltip )

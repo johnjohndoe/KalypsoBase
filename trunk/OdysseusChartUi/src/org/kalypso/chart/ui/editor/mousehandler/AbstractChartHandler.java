@@ -37,7 +37,12 @@ public abstract class AbstractChartHandler implements IChartHandler
     m_chart = chart;
   }
 
-  protected void setTooltip( final EditInfo editInfo )
+  protected ChartTooltipPainter getTooltipPainter( )
+  {
+    return m_tooltipPainter;
+  }
+
+  protected void setToolInfo( final EditInfo editInfo )
   {
     if( Objects.equal( m_tooltip, editInfo ) )
       return;

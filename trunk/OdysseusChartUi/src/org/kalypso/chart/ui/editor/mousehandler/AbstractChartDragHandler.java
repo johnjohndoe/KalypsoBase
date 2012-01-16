@@ -117,7 +117,7 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
   public void mouseMove( final MouseEvent e )
   {
     super.mouseMove( e );
-    setTooltip( null );
+    setToolInfo( null );
 
     final Point p = new Point( e.x, e.y );
     if( m_clickInfo == null )
@@ -134,7 +134,7 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
     final FindLayerTooltipVisitor visitor = new FindLayerTooltipVisitor( chart, ChartHandlerUtilities.screen2plotPoint( point, chart.getPlotRect() ) );
     model.getLayerManager().accept( visitor );
 
-    setTooltip( visitor.getEditInfo() );
+    setToolInfo( visitor.getEditInfo() );
   }
 
   protected void mouseMove( final Point move )
@@ -159,7 +159,8 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
     {
       if( m_editInfo != null )
       {
-        final Point plotPoint = ChartHandlerUtilities.screen2plotPoint( new Point( up.x - m_deltaSnapX, up.y - m_deltaSnapY ), getChart().getPlotRect() );
+        Point position = new Point( up.x - m_deltaSnapX, up.y - m_deltaSnapY );
+        final Point plotPoint = ChartHandlerUtilities.screen2plotPoint( position, getChart().getPlotRect() );
         doMouseUpAction( plotPoint, m_editInfo );
       }
       else if( m_clickInfo != null )

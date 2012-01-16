@@ -60,9 +60,6 @@ public class ActiveObjectEdit implements IProfilChange
     m_point = point;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#doChange(ProfilChangeHint)
-   */
   @Override
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
