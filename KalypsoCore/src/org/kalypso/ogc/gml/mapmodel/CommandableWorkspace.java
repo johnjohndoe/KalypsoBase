@@ -222,12 +222,6 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   }
 
   @Override
-  public Feature[] resolveWhoLinksTo( final Feature linkTargetfeature, final IFeatureType linkSrcFeatureType, final IRelationType linkPropertyName )
-  {
-    return m_workspace.resolveWhoLinksTo( linkTargetfeature, linkSrcFeatureType, linkPropertyName );
-  }
-
-  @Override
   public boolean isDirty( )
   {
     return m_commandManager.isDirty();

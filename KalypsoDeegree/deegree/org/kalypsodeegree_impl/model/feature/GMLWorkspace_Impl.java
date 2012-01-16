@@ -47,7 +47,6 @@ import javax.xml.namespace.NamespaceContext;
 
 import org.eclipse.core.runtime.PlatformObject;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -209,42 +208,6 @@ public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
         KalypsoDeegreePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
       }
     }
-  }
-
-  @Override
-  public Feature[] resolveWhoLinksTo( final Feature linkTargetfeature, final IFeatureType linkSrcFeatureType, final IRelationType linkProperty )
-  {
-    if( linkTargetfeature == null )
-      return new Feature[0];
-
-    final List<Feature> result = new ArrayList<Feature>();
-    final Feature[] features = FeatureHelper.getFeaturesWithType( this, linkSrcFeatureType );
-    for( final Feature element : features )
-    {
-      final Object prop = element.getProperty( linkProperty );
-      if( prop == linkTargetfeature )
-        result.add( element );
-      if( linkTargetfeature.getId().equals( prop ) )
-        result.add( element );
-    }
-
-    // FIXME: directly search with substitutes instead
-    final IFeatureType[] substiFTs = GMLSchemaUtilities.getSubstituts( linkSrcFeatureType, m_schema, false, true );
-
-    for( final IFeatureType element : substiFTs )
-    {
-      final Feature[] substiFeatures = FeatureHelper.getFeaturesWithType( this, element );
-
-      for( final Feature element2 : substiFeatures )
-      {
-        final Object prop = element2.getProperty( linkProperty );
-        if( prop == linkTargetfeature )
-          result.add( element2 );
-        if( linkTargetfeature.getId().equals( prop ) )
-          result.add( element2 );
-      }
-    }
-    return result.toArray( new Feature[result.size()] );
   }
 
   @Override
