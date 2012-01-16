@@ -52,6 +52,7 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeaturePropertyHandler;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
@@ -68,14 +69,6 @@ import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 public class Feature_Impl extends PlatformObject implements Feature
 {
   private static final GM_Envelope INVALID_ENV = new GM_Envelope_Impl();
-
-// /**
-// * FIXME - bad idea to cache a geometry in the generic feature implementation. A feature can constists of more than
-// * one geometries. Who decides a cached geometry is valid / dirty? instead use feature binding and the
-// * AbstractCachedFeature Implementation to cache properties of a feature!
-// */
-// @Deprecated
-// private Object m_geometry = null;
 
   /**
    * all property-values are stored here in sequential order (as defined in application-schema) properties with
@@ -404,9 +397,6 @@ public class Feature_Impl extends PlatformObject implements Feature
     return getFeatureType().getQName();
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#setEnvelopesUpdated()
-   */
   @Override
   public void setEnvelopesUpdated( )
   {
@@ -703,5 +693,91 @@ public class Feature_Impl extends PlatformObject implements Feature
       setProperty( relation, link );
       return link;
     }
+  }
+
+  @Override
+  public Feature createSubFeature( final QName relationName )
+  {
+    final IRelationType relation = ensureRelation( relationName );
+    return createSubFeature( relation );
+  }
+
+  @Override
+  public Feature createSubFeature( final QName relationName, final QName featureTypeName )
+  {
+    final IRelationType relation = ensureRelation( relationName );
+    return createSubFeature( relation, featureTypeName );
+  }
+
+  @Override
+  public Feature createSubFeature( final IRelationType relation )
+  {
+    final IFeatureType targetFeatureType = relation.getTargetFeatureType();
+    return createSubFeature( relation, targetFeatureType );
+  }
+
+  @Override
+  public Feature createSubFeature( final IRelationType relation, final QName featureTypeName )
+  {
+    final IFeatureType featureType = getWorkspace().getGMLSchema().getFeatureType( featureTypeName );
+
+    if( featureType == null )
+    {
+      final String message = String.format( "Unknown feature type: %s", featureTypeName );
+      throw new IllegalArgumentException( message );
+    }
+
+    return createSubFeature( relation, featureType );
+  }
+
+  private Feature createSubFeature( final IRelationType relation, final IFeatureType featureType )
+  {
+    if( featureType.isAbstract() )
+    {
+      final String message = String.format( "Cannot create feature for type '%s': type is abstract", featureType.getQName() ); //$NON-NLS-1$
+      throw new IllegalArgumentException( message );
+    }
+
+    if( relation.isList() )
+    {
+      final String message = String.format( "Cannot create feature for list property: '%s'", relation.getQName() ); //$NON-NLS-1$
+      throw new IllegalArgumentException( message );
+    }
+
+    if( !relation.isInlineAble() )
+    {
+      final String message = String.format( "Inline feature not supported for property '%s': ", relation.getQName() ); //$NON-NLS-1$
+      throw new IllegalArgumentException( message );
+    }
+
+    /* Remove and unregister old feature */
+    final Object oldFeature = getProperty( relation );
+    setProperty( relation, null );
+    unregisterSubFeature( oldFeature );
+
+    /* Create and set new feature */
+    // Using null id here, it will be created when the feature is registered into the workspace.
+    final String id = null;
+    final Feature newFeature = FeatureFactory.createFeature( this, relation, id, featureType, true, -1 );
+    setProperty( relation, newFeature );
+
+    /* Register new feature into workspace */
+    final GMLWorkspace_Impl workspace = (GMLWorkspace_Impl) getWorkspace();
+    workspace.accept( new RegisterVisitor( workspace ), newFeature, FeatureVisitor.DEPTH_INFINITE );
+
+    return newFeature;
+  }
+
+  private void unregisterSubFeature( final Object oldValue )
+  {
+    /* Nothing to do for linked featrues */
+    if( oldValue instanceof String || oldValue instanceof IXLinkedFeature )
+      return;
+
+    final Feature oldFeature = (Feature) oldValue;
+
+    final GMLWorkspace_Impl workspace = (GMLWorkspace_Impl) getWorkspace();
+    /* Unregister everything below the old feature that is no linked */
+    workspace.accept( new UnRegisterVisitor( workspace ), oldFeature, FeatureVisitor.DEPTH_INFINITE );
   }
 }

@@ -78,11 +78,6 @@ public interface GMLWorkspace extends ModellEventProvider, IAdaptable
 
   URL getContext( );
 
-  // FIXME: remove; use filtered visitor instead
-  /** Visit all Features of the given IFeatureType */
-  void accept( FeatureVisitor fv, IFeatureType ft, int depth );
-
-  // FIXME: move into feature api
   /** Visit allfeatures of this workspace */
   void accept( FeatureVisitor fv, int depth );
 
@@ -122,6 +117,9 @@ public interface GMLWorkspace extends ModellEventProvider, IAdaptable
   /**
    * Creates a feature an puts it into this workspace.<br/>
    * Generates a unique id throughout this workspace.<br/>
+   * <br/>
+   * Not-yet deprecated... but: for single-sub features (not-lists), use
+   * {@link Feature#createSubFeature(IRelationType, QName)} instead.
    */
   // FIXME: move into feature api
   Feature createFeature( Feature parent, IRelationType parentRelation, IFeatureType type );
@@ -129,6 +127,9 @@ public interface GMLWorkspace extends ModellEventProvider, IAdaptable
   /**
    * Creates a feature an puts it into this workspace. Also create sub features where appropriate.<br/>
    * Generates a unique id throughout this workspace.<br/>
+   * <br/>
+   * Not-yet deprecated... but: for single-sub features (not-lists), use
+   * {@link Feature#createSubFeature(IRelationType, QName)} instead.
    *
    * @param depth
    *          Number of levels of sub features which shall be created. -1 means infinite, 0 means none (only normal
@@ -148,9 +149,6 @@ public interface GMLWorkspace extends ModellEventProvider, IAdaptable
   // FIXME: move into feature api
   void addFeatureAsComposition( Feature parent, IRelationType linkProperty, int pos, Feature newFeature ) throws Exception;
 
-  // FIXME: move into feature api
-  void setFeatureAsAggregation( Feature parent, IRelationType linkProperty, String featureID, boolean overwrite ) throws Exception;
-
   /**
    * removes a related feature from the parent. Works only if the child is linked <br>
    * <i>and the relation is not a composition </i> see also
@@ -167,13 +165,6 @@ public interface GMLWorkspace extends ModellEventProvider, IAdaptable
    */
   // FIXME: move into feature api
   boolean removeLinkedAsCompositionFeature( Feature parentFeature, IRelationType linkProperty, Feature childFeature );
-
-  /**
-   * @deprecated Should not be used any more. Does not handle external xlinks correctly.
-   */
-  // FIXME: move into feature api
-  @Deprecated
-  void setFeatureAsComposition( Feature parentFE, IRelationType linkProperty, Feature linkedFE, boolean overwrite ) throws Exception;
 
   boolean contains( Feature feature );
 

@@ -304,36 +304,60 @@ public class DictionaryFeature implements Feature
   @Override
   public IXLinkedFeature setLink( final IRelationType relation, final String href )
   {
-    return m_feature.setLink( relation, href );
+    throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
   }
 
   @Override
   public IXLinkedFeature setLink( final QName relationName, final String href )
   {
-    return m_feature.setLink( relationName, href );
+    throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
   }
 
   @Override
   public IXLinkedFeature setLink( final IRelationType relation, final String href, final QName featureType )
   {
-    return m_feature.setLink( relation, href, featureType );
+    throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
   }
 
   @Override
   public IXLinkedFeature setLink( final IRelationType relation, final String href, final IFeatureType featureType )
   {
-    return m_feature.setLink( relation, href, featureType );
+    throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
   }
 
   @Override
   public IXLinkedFeature setLink( final QName relation, final String href, final QName featureType )
   {
-    return m_feature.setLink( relation, href, featureType );
+    throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
   }
 
   @Override
   public IXLinkedFeature setLink( final QName relation, final String href, final IFeatureType featureType )
   {
-    return m_feature.setLink( relation, href, featureType );
+    throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
+  }
+
+  @Override
+  public Feature createSubFeature( final IRelationType relation, final QName featureTypeName )
+  {
+    throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
+  }
+
+  @Override
+  public Feature createSubFeature( final IRelationType relation )
+  {
+    throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
+  }
+
+  @Override
+  public Feature createSubFeature( final QName relationName, final QName featureTypeName )
+  {
+    throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
+  }
+
+  @Override
+  public Feature createSubFeature( final QName relationName )
+  {
+    throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
   }
 }
