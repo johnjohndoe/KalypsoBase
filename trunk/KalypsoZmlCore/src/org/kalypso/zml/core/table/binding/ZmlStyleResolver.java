@@ -42,7 +42,6 @@ package org.kalypso.zml.core.table.binding;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.xml.bind.JAXBException;
@@ -60,24 +59,25 @@ import org.kalypso.zml.core.table.schema.StyleReferenceType;
 import org.kalypso.zml.core.table.schema.StyleSetType;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 
-import com.google.common.collect.MapMaker;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 
 /**
  * @author Dirk Kuch
  */
 public final class ZmlStyleResolver
 {
-  private final Map<String, StyleSetType> m_styleSetCache;
+  private final Cache<String, StyleSetType> m_styleSetCache;
 
-  private final Map<String, CellStyle> m_styleCache;
+  private final Cache<String, CellStyle> m_styleCache;
 
   private static ZmlStyleResolver INSTANCE;
 
   private ZmlStyleResolver( )
   {
-    final MapMaker marker = new MapMaker().expireAfterAccess( 30, TimeUnit.MINUTES );
-    m_styleSetCache = marker.makeMap();
-    m_styleCache = marker.makeMap();
+    final CacheBuilder builder = CacheBuilder.newBuilder().expireAfterAccess( 30, TimeUnit.MINUTES );
+    m_styleSetCache = builder.build();
+    m_styleCache = builder.build();
   }
 
   public static ZmlStyleResolver getInstance( )
@@ -135,7 +135,7 @@ public final class ZmlStyleResolver
 
   private CellStyle findUrlStyle( final String uri, final String identifier ) throws MalformedURLException, JAXBException
   {
-    StyleSetType styleSet = m_styleSetCache.get( uri );
+    StyleSetType styleSet = m_styleSetCache.asMap().get( uri );
     if( styleSet == null )
     {
       final URL url = new URL( uri );
