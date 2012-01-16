@@ -51,10 +51,8 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.observation.result.IInterpolationHandler;
 import org.kalypso.observation.result.IRecord;
@@ -87,33 +85,8 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
   }
 
   @Override
-  public void mouseMove( final MouseEvent e )
+  protected void doMouseMove( final AbstractProfilTheme theme, final Point position )
   {
-    super.mouseMove( e );
-
-    final IChartComposite chart = getChart();
-    final Rectangle bounds = chart.getPlotRect();
-
-    final Point position = ChartHandlerUtilities.screen2plotPoint( new Point( e.x, e.y ), bounds );
-    if( !isValid( bounds, position ) )
-    {
-      doReset();
-
-      return;
-    }
-
-    final AbstractProfilTheme theme = findProfileTheme( chart );
-    final ICoordinateMapper mapper = theme.getCoordinateMapper();
-
-    setProfile( new ProfileWrapper( theme.getProfil() ) );
-    setBreite( mapper.getDomainAxis().screenToNumeric( position.x ).doubleValue() );
-    setPoint( getProfile().hasPoint( getBreite(), 0.1 ) );
-
-    if( isOutOfRange() )
-    {
-      doReset();
-      return;
-    }
 
     if( Objects.isNotNull( getPoint() ) )
     {
@@ -131,14 +104,12 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
     }
     else
     {
+      final ICoordinateMapper mapper = theme.getCoordinateMapper();
+
       final double hoehe = getProfile().getHoehe( getBreite() );
       position.y = mapper.getTargetAxis().numericToScreen( hoehe );
 
-      final StringBuilder builder = new StringBuilder();
-      builder.append( String.format( "Neuer Punkt:\nx=%.2f m, y=%.2f m", getBreite(), hoehe ) );
-
-      final String msg = builder.toString();
-      final Point p = calculatePosition( chart, msg );
+      final String msg = String.format( "Neuer Punkt:\nx=%.2f m, y=%.2f m", getBreite(), hoehe );
 
       final EditInfo info = new EditInfo( theme, getHoverFigure( position ), null, getBreite(), msg, new Point( position.x + 5, position.y + 45 ) );
       setToolInfo( info );
@@ -146,16 +117,6 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
       setCursor( SWT.CURSOR_CROSS );
     }
 
-  }
-
-  private boolean isValid( final Rectangle bounds, final Point position )
-  {
-    if( position.x < 0 )
-      return false;
-    else if( position.x > bounds.width )
-      return false;
-
-    return true;
   }
 
   private IPaintable getHoverFigure( final Point position )

@@ -40,12 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.commands;
 
-import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
@@ -66,43 +63,13 @@ public class MousePositionChartHandler extends AbstractProfilePointHandler
   }
 
   @Override
-  public void mouseMove( final MouseEvent e )
+  protected void doMouseMove( final AbstractProfilTheme theme, final Point position )
   {
-    super.mouseMove( e );
-
-    final IChartComposite chart = getChart();
-    final Rectangle bounds = chart.getPlotRect();
-
-    final Point position = ChartHandlerUtilities.screen2plotPoint( new Point( e.x, e.y ), bounds );
-    if( !isValid( bounds, position ) )
-    {
-      doReset();
-
-      return;
-    }
-
-    final AbstractProfilTheme theme = findProfileTheme( chart );
     final ICoordinateMapper mapper = theme.getCoordinateMapper();
-
-    setProfile( new ProfileWrapper( theme.getProfil() ) );
-    setBreite( mapper.getDomainAxis().screenToNumeric( position.x ).doubleValue() );
-    setPoint( getProfile().hasPoint( getBreite().doubleValue(), 0.1 ) );
-
-    if( isOutOfRange() )
-    {
-      doReset();
-      return;
-    }
-
     final Number hoehe = mapper.getTargetAxis().screenToNumeric( position.y );
 
-    final StringBuilder builder = new StringBuilder();
-    builder.append( "Position: " );
-    builder.append( String.format( "Breite %6.2f m, ", getBreite() ) );
-    builder.append( String.format( "Höhe %6.2f m", hoehe ) );
-
-    final String msg = builder.toString();
-    final Point p = calculatePosition( chart, msg );
+    final String msg = String.format( "Position: Breite %6.2f m, Höhe %6.2f m", getBreite(), hoehe );
+    final Point p = calculatePosition( getChart(), msg );
 
     final EditInfo info = new EditInfo( theme, null, null, getBreite(), msg, p );
     setToolInfo( info );
@@ -123,16 +90,6 @@ public class MousePositionChartHandler extends AbstractProfilePointHandler
     final int y = bounds.y + bounds.height;
 
     return new Point( x, y );
-  }
-
-  private boolean isValid( final Rectangle bounds, final Point position )
-  {
-    if( position.x < 0 )
-      return false;
-    else if( position.x > bounds.width )
-      return false;
-
-    return true;
   }
 
   @Override
