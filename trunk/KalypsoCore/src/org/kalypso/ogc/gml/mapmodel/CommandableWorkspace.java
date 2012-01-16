@@ -269,19 +269,6 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   }
 
   @Override
-  public void addFeatureAsAggregation( final Feature parent, final IRelationType propName, final int pos, final String featureID ) throws Exception
-  {
-    m_workspace.addFeatureAsAggregation( parent, propName, pos, featureID );
-  }
-
-  @Deprecated
-  @Override
-  public void setFeatureAsAggregation( final Feature srcFE, final IRelationType propName, final int pos, final String featureID ) throws Exception
-  {
-    m_workspace.setFeatureAsAggregation( srcFE, propName, pos, featureID );
-  }
-
-  @Override
   public boolean removeLinkedAsAggregationFeature( final Feature parentFeature, final IRelationType propName, final String linkFeatureId )
   {
     return m_workspace.removeLinkedAsAggregationFeature( parentFeature, propName, linkFeatureId );
@@ -297,12 +284,6 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   public void accept( final FeatureVisitor fv, final String featurePath, final int depth )
   {
     m_workspace.accept( fv, featurePath, depth );
-  }
-
-  @Override
-  public boolean isAggregatedLink( final Feature parent, final IRelationType linkPropName, final int pos )
-  {
-    return m_workspace.isAggregatedLink( parent, linkPropName, pos );
   }
 
   @Deprecated

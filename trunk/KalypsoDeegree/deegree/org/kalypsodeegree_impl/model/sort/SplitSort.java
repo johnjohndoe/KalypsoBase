@@ -51,9 +51,11 @@ import java.util.Map.Entry;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.URIUtil;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -190,7 +192,7 @@ public class SplitSort implements FeatureList
   @Override
   public boolean add( final Object object )
   {
-    // IMPORTANT/REMARK: 1) we mustn't call getEnvelope() in the synchronised block<br>
+    // IMPORTANT/REMARK: 1) we mustn't call getEnvelope() in the synchronized block<br>
     // 2) Calling getEnvelope() will eventually cause other workspace to be loaded<br>
     // 3) So calling getEnvelope() during workspace load is not advisable<br>
     // 4) So we should'nt call getEnvelope() if the index is null<br>
@@ -802,31 +804,31 @@ public class SplitSort implements FeatureList
   }
 
   @Override
-  public <T extends Feature> IXLinkedFeature addLink( final T toAdd ) throws IllegalArgumentException
+  public <T extends Feature> IXLinkedFeature addLink( final T toAdd ) throws IllegalArgumentException, IllegalStateException
   {
     return insertLink( size(), toAdd );
   }
 
   @Override
-  public IXLinkedFeature addLink( final String href ) throws IllegalArgumentException
+  public IXLinkedFeature addLink( final String href ) throws IllegalArgumentException, IllegalStateException
   {
     return insertLink( size(), href );
   }
 
   @Override
-  public IXLinkedFeature addLink( final String href, final QName featureTypeName ) throws IllegalArgumentException
+  public IXLinkedFeature addLink( final String href, final QName featureTypeName ) throws IllegalArgumentException, IllegalStateException
   {
     return insertLink( size(), href, featureTypeName );
   }
 
   @Override
-  public IXLinkedFeature addLink( final String href, final IFeatureType featureType ) throws IllegalArgumentException
+  public IXLinkedFeature addLink( final String href, final IFeatureType featureType ) throws IllegalArgumentException, IllegalStateException
   {
     return insertLink( size(), href, featureType );
   }
 
   @Override
-  public <T extends Feature> IXLinkedFeature insertLink( final int index, final T toLink ) throws IllegalArgumentException
+  public <T extends Feature> IXLinkedFeature insertLink( final int index, final T toLink ) throws IllegalArgumentException, IllegalStateException
   {
     final String path = findLinkPath( toLink );
     final String id = toLink.getId();
@@ -838,8 +840,15 @@ public class SplitSort implements FeatureList
 
   private String findLinkPath( final Feature toLink )
   {
-    final URL targetContext = toLink.getWorkspace().getContext();
-    final URL sourceContext = m_parentFeature.getWorkspace().getContext();
+    final GMLWorkspace linkedWorkspace = toLink.getWorkspace();
+    final GMLWorkspace sourceWorkspace = m_parentFeature.getWorkspace();
+
+    /* Internal link, no uri */
+    if( linkedWorkspace == sourceWorkspace )
+      return StringUtils.EMPTY;
+
+    final URL targetContext = linkedWorkspace.getContext();
+    final URL sourceContext = sourceWorkspace.getContext();
 
     try
     {
@@ -856,13 +865,13 @@ public class SplitSort implements FeatureList
   }
 
   @Override
-  public IXLinkedFeature insertLink( final int index, final String href ) throws IllegalArgumentException
+  public IXLinkedFeature insertLink( final int index, final String href ) throws IllegalArgumentException, IllegalStateException
   {
     return insertLink( index, href, getPropertyType().getTargetFeatureType() );
   }
 
   @Override
-  public IXLinkedFeature insertLink( final int index, final String href, final QName featureTypeName ) throws IllegalArgumentException
+  public IXLinkedFeature insertLink( final int index, final String href, final QName featureTypeName ) throws IllegalArgumentException, IllegalStateException
   {
     final IFeatureType featureType = GMLSchemaUtilities.getFeatureTypeQuiet( featureTypeName );
     if( featureType == null )
@@ -875,9 +884,13 @@ public class SplitSort implements FeatureList
   }
 
   @Override
-  public IXLinkedFeature insertLink( final int index, final String href, final IFeatureType featureType ) throws IllegalArgumentException
+  public IXLinkedFeature insertLink( final int index, final String href, final IFeatureType featureType ) throws IllegalArgumentException, IllegalStateException
   {
     final IXLinkedFeature link = FeatureFactory.createXLink( m_parentFeature, m_parentFeatureTypeProperty, featureType, href );
+
+    // REMARK: this should be checked o nevery add. Probably this will cause problems due to old buggy code.
+    // So we at least check in this new method. Should be moved into the add methods.
+    checkCanAdd();
 
     if( index < 0 )
       add( link );
@@ -885,5 +898,13 @@ public class SplitSort implements FeatureList
       add( index, link );
 
     return link;
+  }
+
+  private void checkCanAdd( )
+  {
+    final int maxOccurs = m_parentFeatureTypeProperty.getMaxOccurs();
+
+    if( maxOccurs != IPropertyType.UNBOUND_OCCURENCY && size() >= maxOccurs )
+      throw new IllegalArgumentException( "Adding a new element violates maxOccurs" ); //$NON-NLS-1$
   }
 }

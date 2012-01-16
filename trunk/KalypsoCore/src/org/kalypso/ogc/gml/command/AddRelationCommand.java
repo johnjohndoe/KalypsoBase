@@ -38,12 +38,10 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.editor.gmleditor.command;
+package org.kalypso.ogc.gml.command;
 
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.ogc.gml.command.FeatureChange;
-import org.kalypso.ogc.gml.command.FeatureChangeModellEvent;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
@@ -66,39 +64,29 @@ public class AddRelationCommand implements ICommand
     m_linkFeature = destFE;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
-   */
   @Override
   public boolean isUndoable( )
   {
     return true;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#process()
-   */
   @Override
   public void process( ) throws Exception
   {
     final GMLWorkspace workspace = m_srcFE.getWorkspace();
-    workspace.addFeatureAsAggregation( m_srcFE, m_propName, m_pos, m_linkFeature.getId() );
+
+    FeatureLinkUtils.insertLink( m_srcFE, m_propName, m_pos, m_linkFeature.getId() );
+
     workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_srcFE, m_linkFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
     workspace.fireModellEvent( new FeatureChangeModellEvent( workspace, new FeatureChange[] { new FeatureChange( m_srcFE, m_propName, null ) } ) );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#redo()
-   */
   @Override
   public void redo( ) throws Exception
   {
     process();
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#undo()
-   */
   @Override
   public void undo( ) throws Exception
   {
@@ -110,9 +98,6 @@ public class AddRelationCommand implements ICommand
     workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_srcFE, m_linkFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
-   */
   @Override
   public String getDescription( )
   {

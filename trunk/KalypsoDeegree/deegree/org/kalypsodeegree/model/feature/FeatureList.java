@@ -87,22 +87,22 @@ public interface FeatureList extends List, JMSpatialIndex, IFeatureRelation
   /**
    * Same as {@link #insertRef(size(), Feature)}
    */
-  <T extends Feature> IXLinkedFeature addLink( T toAdd ) throws IllegalArgumentException;
+  <T extends Feature> IXLinkedFeature addLink( T toAdd ) throws IllegalArgumentException, IllegalStateException;
 
   /**
    * Same as {@link #insertRef(size(), href)}
    */
-  IXLinkedFeature addLink( String href ) throws IllegalArgumentException;
+  IXLinkedFeature addLink( String href ) throws IllegalArgumentException, IllegalStateException;
 
   /**
    * Same as {@link #insertRef(size(), href, featureTypeName)}
    */
-  IXLinkedFeature addLink( String href, QName featureTypeName ) throws IllegalArgumentException;
+  IXLinkedFeature addLink( String href, QName featureTypeName ) throws IllegalArgumentException, IllegalStateException;
 
   /**
    * Same as {@link #insertRef(size(), href, featureType)}
    */
-  IXLinkedFeature addLink( String href, IFeatureType featureType ) throws IllegalArgumentException;
+  IXLinkedFeature addLink( String href, IFeatureType featureType ) throws IllegalArgumentException, IllegalStateException;
 
   /**
    * Add this feature as a link to this list.<br>
@@ -119,9 +119,11 @@ public interface FeatureList extends List, JMSpatialIndex, IFeatureRelation
    * @throws IllegalArgumentException
    *           If the list may not contain references (either at all or to this kind of features) according to its
    *           definition.
+   * @throws IllegalStateException
+   *           If maxOccurs of this list is exceeded.
    * @throws {@link NullPointerException} If the argument toLink is null
    */
-  <T extends Feature> IXLinkedFeature insertLink( int index, T toLink ) throws IllegalArgumentException;
+  <T extends Feature> IXLinkedFeature insertLink( int index, T toLink ) throws IllegalArgumentException, IllegalStateException;
 
   /**
    * Same as {@link #insertLink(int, Feature)}, using a given href.
@@ -129,7 +131,7 @@ public interface FeatureList extends List, JMSpatialIndex, IFeatureRelation
    * @see Feature#setLink(org.kalypso.gmlschema.property.relation.IRelationType, String) for the interpreatation of the
    *      parameters.
    */
-  IXLinkedFeature insertLink( int index, String href ) throws IllegalArgumentException;
+  IXLinkedFeature insertLink( int index, String href ) throws IllegalArgumentException, IllegalStateException;
 
   /**
    * Same as {@link #insertLink(int, Feature)}, using a given href.
@@ -137,7 +139,7 @@ public interface FeatureList extends List, JMSpatialIndex, IFeatureRelation
    * @see Feature#setLink(org.kalypso.gmlschema.property.relation.IRelationType, String) for the interpreatation of the
    *      parameters.
    */
-  IXLinkedFeature insertLink( int index, String href, QName featureTypeName ) throws IllegalArgumentException;
+  IXLinkedFeature insertLink( int index, String href, QName featureTypeName ) throws IllegalArgumentException, IllegalStateException;
 
   /**
    * Same as {@link #insertLink(int, Feature)}, using a given href.
@@ -145,7 +147,7 @@ public interface FeatureList extends List, JMSpatialIndex, IFeatureRelation
    * @see Feature#setLink(org.kalypso.gmlschema.property.relation.IRelationType, String) for the interpreatation of the
    *      parameters.
    */
-  IXLinkedFeature insertLink( int index, String href, IFeatureType featureType ) throws IllegalArgumentException;
+  IXLinkedFeature insertLink( int index, String href, IFeatureType featureType ) throws IllegalArgumentException, IllegalStateException;
 
   // TODO: uncomment only if implemented
 

@@ -208,7 +208,7 @@ public class GMLContentProvider implements ITreeContentProvider
       final Feature feature = features[i];
       if( feature != null )
       {
-        if( m_workspace.isAggregatedLink( parentFeature, ftp, i ) || feature instanceof IXLinkedFeature )
+        if( isLink( parentFeature, ftp, i ) )
           result.add( new LinkedFeatureElement( fate, feature ) );
         else
           result.add( feature );
@@ -217,8 +217,37 @@ public class GMLContentProvider implements ITreeContentProvider
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
+   * FIXME: this method does not use any members of this class and so does not depends on this specific implementation.
+   * Move it into a utility class.
    */
+  private boolean isLink( final Feature parent, final IRelationType linkProp, final int pos )
+  {
+    final Object value = parent.getProperty( linkProp );
+
+    if( linkProp.isList() )
+    {
+      final List< ? > list = (List< ? >) value;
+      if( pos < 0 || pos >= list.size() )
+        return false;
+
+      final Object object = list.get( pos );
+      return isLinkObject( object );
+    }
+
+    return isLinkObject( value );
+  }
+
+  private boolean isLinkObject( final Object object )
+  {
+    if( object instanceof IXLinkedFeature )
+      return true;
+
+    if( object instanceof String )
+      return true;
+
+    return false;
+  }
+
   @Override
   public Object getParent( final Object element )
   {

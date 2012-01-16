@@ -147,23 +147,13 @@ public interface GMLWorkspace extends ModellEventProvider, IAdaptable
   /**
    * TODO: we should replace this method by: createAsComposition! First, it is always used as such (that is first
    * created, that this method is called).; Second: a featuree should never live without workspace
-   * 
+   *
    * @param pos
    *          Position at which the new element is inserted into the list. If -1, the new element is added to the end of
    *          the list.
    */
   // FIXME: move into feature api
   void addFeatureAsComposition( Feature parent, IRelationType linkProperty, int pos, Feature newFeature ) throws Exception;
-
-  // FIXME: move into feature api
-  void addFeatureAsAggregation( Feature parent, IRelationType linkProperty, int pos, String featureID ) throws Exception;
-
-  /**
-   * @deprecated Should not be used any more. Does not handle external xlinks correctly.
-   */
-  // FIXME: move into feature api
-  @Deprecated
-  void setFeatureAsAggregation( Feature srcFE, IRelationType linkProperty, int pos, String featureID ) throws Exception;
 
   // FIXME: move into feature api
   void setFeatureAsAggregation( Feature parent, IRelationType linkProperty, String featureID, boolean overwrite ) throws Exception;
@@ -184,17 +174,6 @@ public interface GMLWorkspace extends ModellEventProvider, IAdaptable
    */
   // FIXME: move into feature api
   boolean removeLinkedAsCompositionFeature( Feature parentFeature, IRelationType linkProperty, Feature childFeature );
-
-  /**
-   * @param parent
-   * @param linkPropName
-   * @param pos
-   * @return <code>true</code> if it is a aggregation <br>
-   *         <code>false</code> if it is a composition <br>
-   *         caution: is link is <code>null</code> return value is undefined
-   */
-  // FIXME: move into feature api
-  boolean isAggregatedLink( Feature parent, IRelationType linkProperty, int pos );
 
   /**
    * @deprecated Should not be used any more. Does not handle external xlinks correctly.
