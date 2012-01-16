@@ -460,70 +460,6 @@ public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
     throw new Exception( "New Feature violates maxOccurs" );
   }
 
-  @Override
-  public void addFeatureAsAggregation( final Feature srcFE, final IRelationType linkProp, final int pos, final String featureID ) throws Exception
-  {
-    // test if feature exists in workspace
-    final GMLWorkspace workspace = srcFE.getWorkspace();
-    if( workspace.getFeature( featureID ) == null )
-      throw new Exception( "tried to link a feature that does not exist in the workspace" );
-    if( linkProp.isList() )
-    {
-      final int maxOccurs = linkProp.getMaxOccurs();
-      final List list = (List< ? >) srcFE.getProperty( linkProp );
-      if( list.size() < maxOccurs || maxOccurs == IPropertyType.UNBOUND_OCCURENCY )
-        // when pos = -1 -> append to end of the list
-        if( pos == -1 )
-        {
-          list.add( featureID );
-        }
-        else
-        {
-          list.add( pos, featureID );
-        }
-      else
-        throw new Exception( "New Feature violates maxOccurs" );
-    }
-    else if( srcFE.getProperty( linkProp ) == null )
-      srcFE.setProperty( linkProp, featureID );
-    else
-      throw new Exception( "New Feature as already set" );
-  }
-
-  @Override
-  @Deprecated
-  public void setFeatureAsAggregation( final Feature srcFE, final IRelationType linkProp, final int pos, final String featureID ) throws Exception
-  {
-    if( linkProp.isList() )
-    {
-      // TODO check remove existing correctly
-      final int maxOccurs = linkProp.getMaxOccurs();
-      final List list = (List< ? >) srcFE.getProperty( linkProp );
-      if( list.size() < maxOccurs || maxOccurs == IPropertyType.UNBOUND_OCCURENCY )
-      {
-        if( pos >= 0 )
-        {
-          list.set( pos, featureID );
-        }
-        else
-        {
-          list.add( featureID );
-        }
-      }
-      else
-      {
-        throw new Exception( "New Feature violates maxOccurs" );
-      }
-    }
-    else if( srcFE.getProperty( linkProp ) == null )
-    {
-      // TODO check remove existing correctly
-      srcFE.setProperty( linkProp, featureID );
-    }
-    else
-      throw new Exception( "New Feature as allready set" );
-  }
-
   /**
    * Sets the link to a feature into a property. The property must be a relation wich is no list and allows linked
    * features.
@@ -607,36 +543,6 @@ public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
       accept( fv, (FeatureList) featureFromPath, depth );
     else
       throw new IllegalArgumentException( "FeaturePath is neither Feature nor FeatureList: " + featurePath );
-  }
-
-  /**
-   * FIXME: this method does not use any members of this class and so does not depends on this specific implementation.
-   * Move it into a utility class.
-   */
-  @Override
-  public boolean isAggregatedLink( final Feature parent, final IRelationType linkProp, final int pos )
-  {
-    final boolean undefined = false;
-    final Object value = parent.getProperty( linkProp );
-    if( linkProp.isList() )
-    {
-      // else must be a list
-      final List< ? > list = (List< ? >) value;
-      // TODO: test for 0 does not suffice, test also if length < pos
-      if( list.size() == 0 )
-        return false;
-      final Object object = list.get( pos );
-      if( object instanceof Feature )
-        return false;
-      if( object instanceof String )
-        return true;
-      return undefined;
-    }
-    if( value instanceof Feature )
-      return false;
-    if( value instanceof String )
-      return true;
-    return undefined;
   }
 
   @Override

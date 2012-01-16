@@ -38,13 +38,10 @@
  v.doemming@tuhh.de
 
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ui.editor.gmleditor.command;
+package org.kalypso.ogc.gml.command;
 
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.command.FeatureChange;
-import org.kalypso.ogc.gml.command.FeatureChangeModellEvent;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
@@ -52,7 +49,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * class RemoveRelationCommand Command to remove a normal relation created by
- * 
+ *
  * @author doemming (13.05.2005)
  */
 public class RemoveRelationCommand implements ICommand
@@ -103,18 +100,12 @@ public class RemoveRelationCommand implements ICommand
     workspace.fireModellEvent( new FeatureChangeModellEvent( workspace, new FeatureChange[] { new FeatureChange( m_srcFE, m_linkPropName, null ) } ) );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#redo()
-   */
   @Override
   public void redo( ) throws Exception
   {
     process();
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#undo()
-   */
   @Override
   public void undo( ) throws Exception
   {
@@ -123,17 +114,14 @@ public class RemoveRelationCommand implements ICommand
     if( m_isComposition )
       workspace.addFeatureAsComposition( m_srcFE, m_linkPropName, m_pos, m_destFE );
     else
-      workspace.addFeatureAsAggregation( m_srcFE, m_linkPropName, m_pos, m_destFE.getId() );
+      FeatureLinkUtils.insertLink( m_srcFE, m_linkPropName, m_pos, m_destFE.getId() );
 
     workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_srcFE, m_destFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
-   */
   @Override
   public String getDescription( )
   {
-    return Messages.getString("org.kalypso.ui.editor.gmleditor.command.RemoveRelationCommand.0"); //$NON-NLS-1$
+    return "Remove link"; //$NON-NLS-1$
   }
 }
