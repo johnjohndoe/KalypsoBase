@@ -41,6 +41,10 @@
 package org.kalypso.model.wspm.ui.commands;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.chart.ui.editor.mousehandler.AbstractChartHandler;
 import org.kalypso.model.wspm.core.IWspmLayers;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
@@ -50,6 +54,7 @@ import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.manager.visitors.FindLayerVisitor;
+import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
@@ -98,6 +103,40 @@ public abstract class AbstractProfilePointHandler extends AbstractChartHandler
     m_profile = profile;
   }
 
+  @Override
+  public final void mouseMove( final MouseEvent e )
+  {
+    super.mouseMove( e );
+
+    final IChartComposite chart = getChart();
+    final Rectangle bounds = chart.getPlotRect();
+
+    final Point position = ChartHandlerUtilities.screen2plotPoint( new Point( e.x, e.y ), bounds );
+    if( !isValid( bounds, position ) )
+    {
+      doReset();
+
+      return;
+    }
+
+    final AbstractProfilTheme theme = findProfileTheme( chart );
+    final ICoordinateMapper mapper = theme.getCoordinateMapper();
+
+    setProfile( new ProfileWrapper( theme.getProfil() ) );
+    setBreite( mapper.getDomainAxis().screenToNumeric( position.x ).doubleValue() );
+    setPoint( getProfile().hasPoint( getBreite().doubleValue(), 0.1 ) );
+
+    if( isOutOfRange() )
+    {
+      doReset();
+      return;
+    }
+
+    doMouseMove( theme, position );
+  }
+
+  protected abstract void doMouseMove( AbstractProfilTheme theme, final Point position );
+
   protected final AbstractProfilTheme findProfileTheme( final IChartComposite chart )
   {
     final IChartModel model = chart.getChartModel();
@@ -108,6 +147,16 @@ public abstract class AbstractProfilePointHandler extends AbstractChartHandler
     final IChartLayer layer = visitor.getLayer();
 
     return (AbstractProfilTheme) layer;
+  }
+
+  protected final boolean isValid( final Rectangle bounds, final Point position )
+  {
+    if( position.x < 0 )
+      return false;
+    else if( position.x > bounds.width )
+      return false;
+
+    return true;
   }
 
   protected final boolean isOutOfRange( )

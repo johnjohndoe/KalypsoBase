@@ -46,14 +46,11 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
-import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINECAP;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINEJOIN;
@@ -74,46 +71,14 @@ public class ProfilePointSelectionChartHandler extends AbstractProfilePointHandl
   }
 
   @Override
-  public void mouseMove( final MouseEvent e )
+  protected void doMouseMove( final AbstractProfilTheme theme, final Point position )
   {
-    super.mouseMove( e );
 
     final IChartComposite chart = getChart();
     final Rectangle bounds = chart.getPlotRect();
 
-    final Point position = ChartHandlerUtilities.screen2plotPoint( new Point( e.x, e.y ), bounds );
-    if( !isValid( bounds, position ) )
-    {
-      doReset();
-
-      return;
-    }
-
-    final AbstractProfilTheme theme = findProfileTheme( chart );
-    final ICoordinateMapper mapper = theme.getCoordinateMapper();
-
-    setProfile( new ProfileWrapper( theme.getProfil() ) );
-    setBreite( mapper.getDomainAxis().screenToNumeric( position.x ).doubleValue() );
-    setPoint( getProfile().hasPoint( getBreite(), 0.1 ) );
-
-    if( isOutOfRange() )
-    {
-      doReset();
-      return;
-    }
-
     final EditInfo info = new EditInfo( theme, getHoverFigure( position, bounds ), null, getBreite(), null, null );
     setToolInfo( info );
-  }
-
-  private boolean isValid( final Rectangle bounds, final Point position )
-  {
-    if( position.x < 0 )
-      return false;
-    else if( position.x > bounds.width )
-      return false;
-
-    return true;
   }
 
   private IPaintable getHoverFigure( final Point position, final Rectangle bounds )
