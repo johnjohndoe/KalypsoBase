@@ -132,7 +132,7 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
 
     final Point currentPos = EventUtils.getPoint( e );
     final Point currentPlot = ChartHandlerUtilities.screen2plotPoint( currentPos, getChart().getPlotRect() );
-    setTooltip( null );
+    setToolInfo( null );
 
     if( m_startPlot == null )
     {
@@ -161,7 +161,7 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
     final IChartModel model = getChart().getChartModel();
     model.getLayerManager().accept( visitor );
 
-    setTooltip( visitor.getEditInfo() );
+    setToolInfo( visitor.getEditInfo() );
   }
 
   private boolean isMoved( final Point currentPos )

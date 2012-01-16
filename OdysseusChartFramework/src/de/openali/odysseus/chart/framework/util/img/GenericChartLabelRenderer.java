@@ -275,9 +275,6 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
 
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#getSize()
-   */
   @Override
   public Rectangle getSize( )
   {
@@ -288,6 +285,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
     {
       m_titleBean.getTextStyle().apply( gc );
       final Rectangle textRectangle = calcSize( gc, m_titleBean.getRotation() );
+
       return textRectangle;
     }
     finally

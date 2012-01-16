@@ -79,10 +79,6 @@ public class GelaendePanel extends AbstractProfilView
     m_layer = layer;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.AbstractProfilView#doCreateControl(org.eclipse.swt.widgets.Composite,
-   *      org.eclipse.ui.forms.widgets.FormToolkit)
-   */
   @Override
   protected Control doCreateControl( final Composite parent, final FormToolkit toolkit )
   {
@@ -112,9 +108,6 @@ public class GelaendePanel extends AbstractProfilView
 
     m_comment.addFocusListener( new FocusAdapter()
     {
-      /**
-       * @see org.eclipse.swt.events.FocusAdapter#focusLost(org.eclipse.swt.events.FocusEvent)
-       */
       @Override
       public void focusLost( final FocusEvent e )
       {
@@ -158,40 +151,6 @@ public class GelaendePanel extends AbstractProfilView
     if( old != data )
     {
       m_layer.setData( IProfilChartLayer.VIEW_DATA_KEY, data.toString() );
-    }
-  }
-
-  private boolean allowVertical( )
-  {
-
-    final Object o = m_layer.getData( IProfilChartLayer.VIEW_DATA_KEY );
-    if( o == null )
-      return true;
-    try
-    {
-      final int i = Integer.valueOf( o.toString() );
-      return (i & 2) == 2;
-    }
-    catch( final NumberFormatException e )
-    {
-      return true;
-    }
-  }
-
-  private boolean allowHorizontal( )
-  {
-    final Object o = m_layer.getData( IProfilChartLayer.VIEW_DATA_KEY );
-    if( o == null )
-      return false;
-
-    try
-    {
-      final int i = Integer.valueOf( o.toString() );
-      return (i & 1) == 1;
-    }
-    catch( final NumberFormatException e )
-    {
-      return false;
     }
   }
 

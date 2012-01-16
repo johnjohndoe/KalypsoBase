@@ -97,10 +97,9 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   private final String m_targetRangeProperty;
 
- 
   public AbstractProfilLayer( final String id, final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
   {
-    super( null ,new StyleSet());
+    super( null, new StyleSet() );
 
     m_profil = profil;
     m_targetRangeProperty = targetRangeProperty;
@@ -109,10 +108,6 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     createStyles( styleProvider, id );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#commitDrag(org.eclipse.swt.graphics.Point,
-   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
-   */
   @Override
   public EditInfo commitDrag( final Point point, final EditInfo dragStartData )
   {
@@ -143,8 +138,6 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     // override this method
     return null;
   }
-
- 
 
   private void createStyles( final ILayerStyleProvider styleProvider, final String id )
   {

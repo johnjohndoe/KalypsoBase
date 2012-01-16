@@ -75,10 +75,6 @@ public class PointsLineLayer extends AbstractProfilLayer
     setData( IProfilChartLayer.VIEW_DATA_KEY, IProfilChartLayer.ALLOW_VERTICAL_EDITING );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#drag(org.eclipse.swt.graphics.Point,
-   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
-   */
   @Override
   public EditInfo drag( final Point newPos, final EditInfo dragStartData )
   {
@@ -117,11 +113,6 @@ public class PointsLineLayer extends AbstractProfilLayer
         point.getY(), ComponentUtilities.getComponentUnitLabel( getTargetComponent() ) } ), dragStartData.getPosition() );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.chart.AbstractProfilLayer#executeDrop(org.eclipse.swt.graphics.Point,
-   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
-   */
-
   @Override
   public void executeDrop( final Point point, final EditInfo dragStartData )
   {
@@ -146,10 +137,6 @@ public class PointsLineLayer extends AbstractProfilLayer
     }
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getHoverRect(org.kalypso.observation.result.IRecord)
-   */
-
   @Override
   public Rectangle getHoverRect( final IRecord profilPoint )
   {
@@ -157,9 +144,6 @@ public class PointsLineLayer extends AbstractProfilLayer
     return cm == null ? null : RectangleUtils.buffer( toScreen( profilPoint ) );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getLegendEntries()
-   */
   @Override
   public synchronized ILegendEntry[] getLegendEntries( )
   {
@@ -188,10 +172,6 @@ public class PointsLineLayer extends AbstractProfilLayer
 
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
-   *      org.kalypso.model.wspm.core.profil.IProfilChange[])
-   */
   @Override
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
@@ -201,9 +181,6 @@ public class PointsLineLayer extends AbstractProfilLayer
     }
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
-   */
   @Override
   public void paint( final GC gc )
   {
