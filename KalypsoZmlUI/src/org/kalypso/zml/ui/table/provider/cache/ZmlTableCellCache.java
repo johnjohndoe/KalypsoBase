@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider.cache;
 
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -56,7 +55,8 @@ import org.kalypso.zml.ui.table.model.ZmlTableRow;
 import org.kalypso.zml.ui.table.provider.ZmlTableCellPainter;
 
 import com.google.common.base.Objects;
-import com.google.common.collect.MapMaker;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 
 /**
  * @author Dirk Kuch
@@ -109,12 +109,12 @@ public class ZmlTableCellCache
     }
   }
 
-  private final Map<IndexItem, AbstractCacheItem> m_cache;
+  private final Cache<IndexItem, AbstractCacheItem> m_cache;
 
   public ZmlTableCellCache( )
   {
-    final MapMaker marker = new MapMaker().expireAfterAccess( 10, TimeUnit.MINUTES );
-    m_cache = marker.makeMap();
+    final CacheBuilder builder = CacheBuilder.newBuilder().expireAfterAccess( 10, TimeUnit.MINUTES );
+    m_cache = builder.build();
   }
 
   public ZmlTableCellPainter getPainter( final IZmlModelRow row, final IZmlTableColumn column )
@@ -128,7 +128,7 @@ public class ZmlTableCellCache
       try
       {
         final IndexItem entry = new IndexItem( row, column.getModelColumn() );
-        AbstractCacheItem item = m_cache.get( entry );
+        AbstractCacheItem item = m_cache.asMap().get( entry );
         if( item == null )
         {
           item = AbstractCacheItem.toItem( cell );
@@ -174,7 +174,6 @@ public class ZmlTableCellCache
 
   public synchronized void clear( )
   {
-    m_cache.clear();
+    m_cache.cleanUp();
   }
-
 }

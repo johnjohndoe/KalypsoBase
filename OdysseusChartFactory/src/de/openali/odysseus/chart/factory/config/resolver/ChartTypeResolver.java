@@ -46,7 +46,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import jregex.Pattern;
@@ -63,7 +62,8 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.MapMaker;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 
 import de.openali.odysseus.chart.factory.OdysseusChartFactory;
 import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
@@ -92,15 +92,14 @@ import de.openali.odysseus.chartconfig.x020.StylesDocument.Styles;
 public final class ChartTypeResolver implements IReferenceResolver
 {
 
-  private final Map<String, ChartConfigurationLoader> m_loaderCache;
+  private final Cache<String, ChartConfigurationLoader> m_loaderCache;
 
   private static ChartTypeResolver INSTANCE;
 
   private ChartTypeResolver( )
   {
-    final MapMaker marker = new MapMaker().expireAfterAccess( 10, TimeUnit.MINUTES );
-
-    m_loaderCache = marker.makeMap();
+    final CacheBuilder<Object, Object> builder = CacheBuilder.newBuilder().expireAfterAccess( 10, TimeUnit.MINUTES );
+    m_loaderCache = builder.build();
   }
 
   public static ChartTypeResolver getInstance( )
@@ -113,7 +112,7 @@ public final class ChartTypeResolver implements IReferenceResolver
 
   private ChartConfigurationLoader getLoader( final URL context, final String uri ) throws XmlException, IOException
   {
-    ChartConfigurationLoader loader = m_loaderCache.get( uri );
+    ChartConfigurationLoader loader = m_loaderCache.asMap().get( uri );
     if( loader != null )
       return loader;
 
@@ -392,13 +391,10 @@ public final class ChartTypeResolver implements IReferenceResolver
     return null;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.factory.util.IReferenceResolver#resolveReference(java.lang.String)
-   */
   @Override
   public Object resolveReference( final String id )
   {
-    final ChartConfigurationLoader[] loaders = m_loaderCache.values().toArray( new ChartConfigurationLoader[] {} );
+    final ChartConfigurationLoader[] loaders = m_loaderCache.asMap().values().toArray( new ChartConfigurationLoader[] {} );
     for( final ChartConfigurationLoader loader : loaders )
     {
       final XmlObject reference = loader.resolveReference( id );
@@ -411,6 +407,6 @@ public final class ChartTypeResolver implements IReferenceResolver
 
   public void clear( )
   {
-    m_loaderCache.clear();
+    m_loaderCache.cleanUp();
   }
 }
