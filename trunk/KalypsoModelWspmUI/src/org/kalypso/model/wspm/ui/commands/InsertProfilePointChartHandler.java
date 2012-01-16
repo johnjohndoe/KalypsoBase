@@ -117,16 +117,15 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
 
     if( Objects.isNotNull( getPoint() ) )
     {
-      final StringBuilder builder = new StringBuilder();
-      builder.append( "Bestehender Punkt: " );
-      builder.append( String.format( "Breite %.2f m, ", getPoint().getBreite() ) );
-      builder.append( String.format( "Höhe %.2f m", getPoint().getHoehe() ) );
-
-      final String msg = builder.toString();
-      final Point p = calculatePosition( chart, msg );
-
-      final EditInfo info = new EditInfo( theme, null, null, getPoint().getBreite(), msg, p );
-      setToolInfo( info );
+// final StringBuilder builder = new StringBuilder();
+// builder.append( "Bestehender Punkt: " );
+// builder.append( String.format( "Höhe %.2f m", getPoint().getHoehe() ) );
+//
+// final String msg = builder.toString();
+// final Point p = calculatePosition( chart, msg );
+//
+// final EditInfo info = new EditInfo( theme, null, null, getPoint().getBreite(), msg, position );
+// setToolInfo( info );
 
       setCursor( SWT.CURSOR_ARROW );
     }
@@ -136,14 +135,12 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
       position.y = mapper.getTargetAxis().numericToScreen( hoehe );
 
       final StringBuilder builder = new StringBuilder();
-      builder.append( "Neuen Punkt einfügen: " );
-      builder.append( String.format( "Breite %.2f m, ", getBreite() ) );
-      builder.append( String.format( "Höhe %.2f m", hoehe ) );
+      builder.append( String.format( "Neuer Punkt:\nx=%.2f m, y=%.2f m", getBreite(), hoehe ) );
 
       final String msg = builder.toString();
       final Point p = calculatePosition( chart, msg );
 
-      final EditInfo info = new EditInfo( theme, getHoverFigure( position ), null, getBreite(), msg, p );
+      final EditInfo info = new EditInfo( theme, getHoverFigure( position ), null, getBreite(), msg, new Point( position.x + 5, position.y + 45 ) );
       setToolInfo( info );
 
       setCursor( SWT.CURSOR_CROSS );
