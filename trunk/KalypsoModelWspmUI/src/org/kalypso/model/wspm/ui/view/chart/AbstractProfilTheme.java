@@ -215,11 +215,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
     }
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.chart.AbstractProfilLayer#executeDrop(org.eclipse.swt.graphics.Point,
-   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
-   */
-
   @Override
   public void executeDrop( final Point point, final EditInfo dragStartData )
   {
@@ -245,10 +240,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
     return null;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getDomainComponent()
-   */
-
   @Override
   public IComponent getDomainComponent( )
   {
@@ -256,9 +247,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
     return layer == null ? null : layer.getDomainComponent();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getDomainRange()
-   */
   @Override
   public IDataRange< ? > getDomainRange( )
   {

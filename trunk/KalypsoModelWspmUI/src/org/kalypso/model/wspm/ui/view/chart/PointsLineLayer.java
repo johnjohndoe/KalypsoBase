@@ -126,12 +126,18 @@ public class PointsLineLayer extends AbstractProfilLayer
       final IProfil profil = getProfil();
       final IRecord profilPoint = profil.getPoint( pos );
       final Integer hoehe = profil.indexOfProperty( getTargetComponent() );
-      final Integer breite = profil.indexOfProperty( getDomainComponent() );
+// final Integer breite = profil.indexOfProperty( getDomainComponent() );
       final ICoordinateMapper cm = getCoordinateMapper();
-      final Double x = cm.getDomainAxis().screenToNumeric( newPoint.x ).doubleValue();
+
+      // Object editMode = getData( IProfilChartLayer.VIEW_DATA_KEY );
+      // if( editMode == IProfilChartLayer.ALLOW_VERTICAL_EDITING )
+
+      // final Double x = cm.getDomainAxis().screenToNumeric( newPoint.x ).doubleValue();
+      // profilPoint.setValue( breite, x );
+
       final Double y = cm.getTargetAxis().screenToNumeric( newPoint.y ).doubleValue();
-      profilPoint.setValue( breite, x );
       profilPoint.setValue( hoehe, y );
+
       profil.setActivePoint( profilPoint );
       getEventHandler().fireLayerContentChanged( this );
     }
