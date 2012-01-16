@@ -77,9 +77,6 @@ public class ActiveObjectEdit implements IProfilChange
     return new ActiveObjectEdit( m_profil, oldPoint, oldProperty == null ? null : oldProperty );
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {

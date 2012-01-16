@@ -50,4 +50,13 @@ import org.eclipse.swt.events.PaintListener;
  */
 public interface IChartHandler extends MouseListener, MouseMoveListener, KeyListener, PaintListener
 {
+
+  public enum CHART_HANDLER_TYPE
+  {
+    eBackground,
+    eRadio,
+    eToggle;
+  }
+
+  CHART_HANDLER_TYPE getType( );
 }

@@ -74,9 +74,6 @@ public class PointMove implements IProfilChange
     m_direction = direction;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#doChange()
-   */
   @Override
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
@@ -99,9 +96,6 @@ public class PointMove implements IProfilChange
     return new PointMove( m_profil, m_points, -m_direction );
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {

@@ -58,10 +58,6 @@ public final class ProfilPropertyEdit implements IProfilChange
     m_newValue = newValue;
   }
 
-  /**
-   * @throws IllegalProfileOperationException
-   * @see org.kalypso.model.wspm.core.profil.changes.AbstractChange#doChange(PlainProfil)
-   */
   @Override
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
@@ -76,9 +72,6 @@ public final class ProfilPropertyEdit implements IProfilChange
     return new ProfilPropertyEdit( m_profil, m_property, oldValue );
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {

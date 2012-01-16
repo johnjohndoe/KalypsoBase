@@ -70,9 +70,6 @@ public class PointRemove implements IProfilChange
     m_pointPositions = new int[m_points.length];
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#doChange()
-   */
   @Override
   public IProfilChange doChange( final ProfilChangeHint hint ) throws IllegalProfileOperationException
   {
@@ -98,9 +95,6 @@ public class PointRemove implements IProfilChange
     }
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {

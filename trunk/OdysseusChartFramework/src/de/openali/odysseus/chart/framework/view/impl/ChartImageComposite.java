@@ -123,7 +123,6 @@ public class ChartImageComposite extends Canvas implements IChartComposite
 
     setBackground( OdysseusChartFramework.getDefault().getColorRegistry().getResource( parent.getDisplay(), backgroundRGB ) );
     setChartModel( model );
-
   }
 
   @Override

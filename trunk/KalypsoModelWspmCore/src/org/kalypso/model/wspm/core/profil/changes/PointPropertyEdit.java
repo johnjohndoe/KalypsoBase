@@ -76,10 +76,6 @@ public final class PointPropertyEdit implements IProfilChange
     m_newValues = newValues;
   }
 
-  /**
-   * @throws IllegalProfileOperationException
-   * @see org.kalypso.model.wspm.core.profil.changes.AbstractChange#doChange(PlainProfil)
-   */
   @Override
   public IProfilChange doChange( final ProfilChangeHint hint )
   {

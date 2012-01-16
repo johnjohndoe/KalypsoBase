@@ -46,6 +46,7 @@ import java.util.Set;
 import org.eclipse.swt.SWT;
 
 import de.openali.odysseus.chart.framework.view.IChartHandler;
+import de.openali.odysseus.chart.framework.view.IChartHandler.CHART_HANDLER_TYPE;
 import de.openali.odysseus.chart.framework.view.IChartHandlerManager;
 
 /**
@@ -53,7 +54,6 @@ import de.openali.odysseus.chart.framework.view.IChartHandlerManager;
  */
 public class ChartImagePlotHandler implements IChartHandlerManager
 {
-
   private final Set<IChartHandler> m_dragHandlers = new LinkedHashSet<IChartHandler>();
 
   private final ChartImageComposite m_chart;
@@ -63,19 +63,15 @@ public class ChartImagePlotHandler implements IChartHandlerManager
     m_chart = chart;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.view.IPlotHandler#activatePlotHanlder(de.openali.odysseus.chart.framework.view.IChartDragHandler)
-   */
   @Override
   public void activatePlotHandler( final IChartHandler handler )
   {
-    removeAllPlotHandler();
+    if( CHART_HANDLER_TYPE.eToggle.equals( handler.getType() ) )
+      clean();
+
     addPlotHandler( handler );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.view.IPlotHandler#addPlotHandler(de.openali.odysseus.ch0art.framework.view.IChartDragHandler)
-   */
   @Override
   public void addPlotHandler( final IChartHandler handler )
   {
@@ -91,9 +87,6 @@ public class ChartImagePlotHandler implements IChartHandlerManager
     }
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.view.IPlotHandler#removePlotHandler(de.openali.odysseus.chart.framework.view.IChartDragHandler)
-   */
   @Override
   public void removePlotHandler( final IChartHandler handler )
   {
@@ -108,23 +101,20 @@ public class ChartImagePlotHandler implements IChartHandlerManager
   }
 
   /**
-   * @see de.openali.odysseus.chart.framework.view.IPlotHandler#removeAllPlotHandler()
+   * disable all ChartHandler with getType() == CHART_HANDLER_TYPE.eToggle
    */
   @Override
-  public void removeAllPlotHandler( )
+  public void clean( )
   {
     final IChartHandler[] handlers = m_dragHandlers.toArray( new IChartHandler[] {} );
     for( final IChartHandler handler : handlers )
     {
-      removePlotHandler( handler );
+      if( CHART_HANDLER_TYPE.eToggle.equals( handler.getType() ) )
+        removePlotHandler( handler );
     }
 
-    m_dragHandlers.clear(); // "normally" not necessary removePlotHandler(handler) removes handler from list!
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.view.IPlotHandler#getActiveHandlers()
-   */
   @Override
   public IChartHandler[] getActiveHandlers( )
   {

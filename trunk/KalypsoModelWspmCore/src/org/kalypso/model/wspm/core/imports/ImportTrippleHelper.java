@@ -71,7 +71,7 @@ import org.kalypso.observation.result.IRecord;
 import com.vividsolutions.jts.geom.Coordinate;
 
 /**
- * small refactoring Lanu and nofdp uses this helper!
+ * small refactoring - projects Lanu and nofdp uses this helper!
  * 
  * @author Dirk Kuch
  */

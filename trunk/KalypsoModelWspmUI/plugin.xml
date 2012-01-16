@@ -355,6 +355,9 @@
                   commandId="org.kalypso.chart.ui.commands.insert.profile.point" style="toggle">
             </command>
             <command
+                  commandId="org.kalypso.chart.ui.commands.profile.selection" style="toggle">
+            </command>
+            <command
                   commandId="org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand"
                   style="push">
                <visibleWhen
@@ -682,6 +685,12 @@
             id="org.kalypso.chart.ui.commands.insert.profile.point"
             name="Profilpunkt einfügen">
       </command>
+      <command
+            categoryId="org.kalypso.chart.ui.commands.category"
+            description="Selektion und Abgleich der Selektion zwischen Profildiagramm, Karte und Tabelle"
+            id="org.kalypso.chart.ui.commands.profile.selection"
+            name="Selektiere Profilpunkt">
+      </command>
     </extension>
     <extension
           point="org.eclipse.ui.handlers">
@@ -689,12 +698,20 @@
              class="org.kalypso.model.wspm.ui.commands.InsertProfilePointHandler"
              commandId="org.kalypso.chart.ui.commands.insert.profile.point">
        </handler>
+       <handler
+             class="org.kalypso.model.wspm.ui.commands.ProfilePointSelectionHandler"
+             commandId="org.kalypso.chart.ui.commands.profile.selection">
+       </handler>
     </extension>
     <extension
           point="org.eclipse.ui.commandImages">
        <image
              commandId="org.kalypso.chart.ui.commands.insert.profile.point"
              icon="icons/obj16/insert_profile_point.png">
+       </image>
+       <image
+             commandId="org.kalypso.chart.ui.commands.profile.selection"
+             icon="icons/obj16/select-point.png">
        </image>
     </extension>
 </plugin>

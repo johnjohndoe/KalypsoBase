@@ -55,10 +55,6 @@ public class PointMarkerEdit implements IProfilChange
     m_newValue = newValue;
   }
 
-  /**
-   * @throws IllegalProfileOperationException
-   * @see org.kalypso.model.wspm.core.profil.changes.AbstractChange#doChange(PlainProfil)
-   */
   @Override
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
@@ -73,9 +69,6 @@ public class PointMarkerEdit implements IProfilChange
     return new PointMarkerEdit( m_pointMarker, oldValue );
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {
