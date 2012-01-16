@@ -62,9 +62,6 @@ public class PointsAdd implements IProfilChange
     m_points = points;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#doChange(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint)
-   */
   @Override
   public IProfilChange doChange( final ProfilChangeHint hint )
   {

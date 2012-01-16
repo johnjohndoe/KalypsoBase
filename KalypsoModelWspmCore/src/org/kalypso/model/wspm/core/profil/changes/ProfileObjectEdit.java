@@ -62,10 +62,6 @@ public class ProfileObjectEdit implements IProfilChange
     m_newValue = newValue;
   }
 
-  /**
-   * @throws IllegalProfileOperationException
-   * @see org.kalypso.model.wspm.core.profil.changes.AbstractChange#doChange(PlainProfil)
-   */
   @Override
   public IProfilChange doChange( final ProfilChangeHint hint )
   {

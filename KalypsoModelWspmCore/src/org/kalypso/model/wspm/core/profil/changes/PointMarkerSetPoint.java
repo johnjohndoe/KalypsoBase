@@ -59,10 +59,6 @@ public class PointMarkerSetPoint implements IProfilChange
     m_oldPosition = pointMarker.getPoint();
   }
 
-  /**
-   * @throws IllegalProfileOperationException
-   * @see org.kalypso.model.wspm.core.profil.changes.AbstractChange#doChange(PlainProfil)
-   */
   @Override
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
@@ -76,9 +72,6 @@ public class PointMarkerSetPoint implements IProfilChange
     return new PointMarkerSetPoint( m_pointMarker, m_oldPosition );
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {

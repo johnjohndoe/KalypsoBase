@@ -123,9 +123,6 @@ public final class PointPropertyAdd implements IProfilChange
     return new PointPropertyRemove( m_profil, m_property );
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {

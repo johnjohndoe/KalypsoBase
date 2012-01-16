@@ -129,9 +129,6 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     return null;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#createLayerPanel()
-   */
   @Override
   public IProfilView createLayerPanel( )
   {
@@ -158,22 +155,13 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     m_pointStyleHover = styleProvider.getStyleFor( id + "_POINT_HOVER", null ); //$NON-NLS-1$
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#dispose()
-   */
   @Override
   public void dispose( )
   {
     /**
      * don't dispose Styles, StyleProvider will do
      */
-
   }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#drag(org.eclipse.swt.graphics.Point,
-   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
-   */
 
   @Override
   public EditInfo drag( final Point newPos, final EditInfo dragStartData )
@@ -182,9 +170,6 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     return dragStartData;// return new EditInfo( this, null, null, dragStartData.m_data, "", newPos );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.ui.chart.AbstractProfilLayer#executeClick(de.openali.odysseus.chart.framework.model.layer.EditInfo)
-   */
   @Override
   public void executeClick( final EditInfo clickInfo )
   {
@@ -201,9 +186,6 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   /**
    * To be implemented by subclasses - if needed
-   * 
-   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#executeDrop(org.eclipse.swt.graphics.Point,
-   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
   @Override
   public void executeDrop( final Point point, final EditInfo dragStartData )
@@ -216,9 +198,6 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     return getProfil() == null ? null : getProfil().hasPointProperty( m_domainComponent );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
-   */
   @Override
   public IDataRange< ? > getDomainRange( )
   {
@@ -232,9 +211,6 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     return new DataRange<Number>( min, max );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#getHover(org.eclipse.swt.graphics.Point)
-   */
   @Override
   public EditInfo getHover( final Point pos )
   {
@@ -366,9 +342,6 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#getProfil()
-   */
   @Override
   public IProfil getProfil( )
   {
@@ -398,9 +371,6 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     return m_targetPropIndex;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
-   */
   @Override
   public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
   {
@@ -419,9 +389,6 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     return new DataRange<Number>( min, max );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getTitle()
-   */
   @Override
   public String getTitle( )
   {
@@ -450,28 +417,18 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#isLocked()
-   */
   @Override
   public boolean isLocked( )
   {
     return m_isLocked;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#lockLayer(boolean)
-   */
   @Override
   public void lockLayer( final boolean isLocked )
   {
     m_isLocked = isLocked;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
-   *      org.kalypso.model.wspm.core.profil.IProfilChange[])
-   */
   @Override
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
@@ -484,18 +441,12 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     }
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
-   */
   @Override
   public void paint( final GC gc )
   {
     // override this method
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#removeYourself()
-   */
   @Override
   public void removeYourself( )
   {
@@ -532,9 +483,6 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     m_pointStyleHover = pointStyleHover;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#setProfil(org.kalypso.model.wspm.core.profil.IProfil)
-   */
   @Override
   public void setProfil( final IProfil profil )
   {

@@ -54,7 +54,7 @@ public interface IChartHandlerManager
 
   void removePlotHandler( final IChartHandler handler );
 
-  void removeAllPlotHandler( );
+  void clean( );
 
   IChartHandler[] getActiveHandlers( );
 }

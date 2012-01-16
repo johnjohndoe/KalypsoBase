@@ -70,27 +70,18 @@ public class PointMarker implements IProfilPointMarker
     }
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarker#getId()
-   */
   @Override
   public IComponent getComponent( )
   {
     return m_type;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarker#getPoint()
-   */
   @Override
   public IRecord getPoint( )
   {
     return m_point;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarker#getValue()
-   */
   @Override
   public Object getValue( )
   {
@@ -112,9 +103,6 @@ public class PointMarker implements IProfilPointMarker
     setValue( value );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarker#setPoint(org.kalypso.observation.result.IRecord)
-   */
   @Override
   public IRecord setPoint( final IRecord newPosition )
   {
@@ -137,9 +125,6 @@ public class PointMarker implements IProfilPointMarker
     return oldPoint;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarker#setValue(java.lang.Object)
-   */
   @Override
   public void setValue( final Object value )
   {

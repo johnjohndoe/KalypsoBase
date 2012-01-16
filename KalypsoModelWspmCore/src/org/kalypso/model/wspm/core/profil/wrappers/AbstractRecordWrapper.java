@@ -75,6 +75,7 @@ public class AbstractRecordWrapper implements IRecord
     return m_record.getOwner();
   }
 
+  @SuppressWarnings("deprecation")
   @Deprecated
   @Override
   public Object getValue( final IComponent comp ) throws IllegalArgumentException
@@ -88,6 +89,7 @@ public class AbstractRecordWrapper implements IRecord
     return m_record.getValue( index );
   }
 
+  @SuppressWarnings("deprecation")
   @Deprecated
   @Override
   public void setValue( final IComponent comp, final Object value )

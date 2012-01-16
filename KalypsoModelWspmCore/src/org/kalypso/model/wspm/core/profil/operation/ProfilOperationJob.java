@@ -53,7 +53,7 @@ import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
  */
 public class ProfilOperationJob extends Job
 {
-  private final static MutexRule MUTEX = new MutexRule();
+  private static final MutexRule MUTEX = new MutexRule();
 
   private final ProfilOperationRunnable m_runnable;
 

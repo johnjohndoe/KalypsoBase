@@ -54,18 +54,12 @@ public class IllegalChange implements IProfilChange
     m_message = msg;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilChange#doChange()
-   */
   @Override
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
     return null;
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {

@@ -50,6 +50,7 @@ import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
+import org.kalypso.model.wspm.ui.commands.MousePositionChartHandler;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChart;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartModel;
@@ -86,6 +87,8 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
     new PlotDragHandlerDelegate( this );
 
     invalidate( profile, null );
+
+    getPlotHandler().addPlotHandler( new MousePositionChartHandler( this ) );
   }
 
   /**

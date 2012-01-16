@@ -8,6 +8,7 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.progress.UIJob;
@@ -141,8 +142,17 @@ public abstract class AbstractChartHandler implements IChartHandler
     if( Objects.isNotNull( hoverFigure ) )
       hoverFigure.paint( gc );
 
-    m_tooltipPainter.setTooltip( m_tooltip.getText() );
-    m_tooltipPainter.paint( gc, m_tooltip.getPosition() );
+    final Point position = m_tooltip.getPosition();
+    if( Objects.isNotNull( position ) )
+    {
+      m_tooltipPainter.setTooltip( m_tooltip.getText() );
+      m_tooltipPainter.paint( gc, position );
+    }
   }
 
+  @Override
+  public CHART_HANDLER_TYPE getType( )
+  {
+    return CHART_HANDLER_TYPE.eToggle;
+  }
 }
