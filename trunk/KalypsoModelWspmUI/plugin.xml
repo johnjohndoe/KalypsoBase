@@ -651,6 +651,13 @@
                 <reference definitionId="org.kalypso.model.wspm.ui.definition.oneProfileThemeSelected"/>
           </enablement>
        </wizardEnablement>
+       <wizardEnablement
+             wizardID="org.kalypso.model.wspm.ui.profil.wizard.interpolate.geomtry.FillMissingProfilesGeometriesWizard">
+          <enablement>
+             <reference
+                   definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+             </reference></enablement>
+       </wizardEnablement>
     </extension>
     <extension point="org.eclipse.core.expressions.definitions">
        <definition id="isProfileContainerSelection">
