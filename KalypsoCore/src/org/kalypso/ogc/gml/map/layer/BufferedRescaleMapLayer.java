@@ -217,6 +217,9 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
   {
     stopPainting();
 
+    if( world2screen == null )
+      return;
+
     final ThemePaintable paintable = new ThemePaintable( getTheme(), world2screen );
     final BufferedTile runningTile = new BufferedTile( paintable, world2screen, m_imageCache );
 
