@@ -217,18 +217,6 @@ public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
   }
 
   @Override
-  public void accept( final FeatureVisitor fv, final IFeatureType ft, final int depth )
-  {
-    // FIXME: ugly implementation; use a visitor that delegates and filters instead
-    final Feature[] features = FeatureHelper.getFeaturesWithType( this, ft );
-
-    for( final Feature feature : features )
-    {
-      accept( fv, feature, depth );
-    }
-  }
-
-  @Override
   public void accept( final FeatureVisitor fv, final int depth )
   {
     accept( fv, m_rootFeature, depth );
@@ -348,9 +336,11 @@ public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
     // TODO: @andreas: merge createFeature method with the addFeatureAsComposite method (add the IRelationType )
     final String newId = createFeatureId( type );
     final Feature newFeature = FeatureFactory.createFeature( parent, parentRelation, newId, type, true, depth );
+
     // TODO: because we nowadys do recurse, another feature might be created meanwhile
     // so there is a chance, that an id is used twice
-    m_indexMap.put( newId, newFeature );
+    accept( new RegisterVisitor( this ), newFeature, FeatureVisitor.DEPTH_INFINITE );
+
     return newFeature;
   }
 
@@ -401,40 +391,6 @@ public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
     // register also features in subtree of new feature
     accept( new RegisterVisitor( this ), newFeature, FeatureVisitor.DEPTH_INFINITE );
     return;
-  }
-
-  @Override
-  @Deprecated
-  public void setFeatureAsComposition( final Feature parentFE, final IRelationType linkProp, final Feature linkedFE, final boolean overwrite ) throws Exception
-  {
-    final Object value = parentFE.getProperty( linkProp );
-    if( linkProp.isList() )
-      throw new Exception( "can not set feature with maxoccurs > 1, use addFeatureAsComposition instead" );
-
-    if( value == null | overwrite )
-    {
-      // TODO check if value is already a feature, then remove it from gmlworkspace
-      parentFE.setProperty( linkProp, linkedFE );
-      m_indexMap.put( linkedFE.getId(), linkedFE );
-      // accept all subfeatures
-      accept( new RegisterVisitor( this ), linkedFE, FeatureVisitor.DEPTH_INFINITE );
-      return;
-    }
-    throw new Exception( "New Feature violates maxOccurs" );
-  }
-
-  /**
-   * Sets the link to a feature into a property. The property must be a relation wich is no list and allows linked
-   * features.
-   */
-  @Override
-  public void setFeatureAsAggregation( final Feature srcFE, final IRelationType linkProp, final String featureID, final boolean overwrite ) throws Exception
-  {
-    // TODO remove existing link correctly
-    if( srcFE.getProperty( linkProp ) == null || overwrite )
-      srcFE.setProperty( linkProp, featureID );
-    else
-      throw new Exception( "feature is allready set" );
   }
 
   @Override

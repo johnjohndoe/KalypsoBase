@@ -161,12 +161,6 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   }
 
   @Override
-  public void accept( final FeatureVisitor fv, final IFeatureType ft, final int depth )
-  {
-    m_workspace.accept( fv, ft, depth );
-  }
-
-  @Override
   public void accept( final FeatureVisitor fv, final List< ? > features, final int depth )
   {
     m_workspace.accept( fv, features, depth );
@@ -278,19 +272,6 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   public void accept( final FeatureVisitor fv, final String featurePath, final int depth )
   {
     m_workspace.accept( fv, featurePath, depth );
-  }
-
-  @Deprecated
-  @Override
-  public void setFeatureAsComposition( final Feature parentFE, final IRelationType linkPropName, final Feature linkedFE, final boolean overwrite ) throws Exception
-  {
-    m_workspace.setFeatureAsComposition( parentFE, linkPropName, linkedFE, overwrite );
-  }
-
-  @Override
-  public void setFeatureAsAggregation( final Feature parent, final IRelationType propName, final String featureID, final boolean overwrite ) throws Exception
-  {
-    m_workspace.setFeatureAsAggregation( parent, propName, featureID, overwrite );
   }
 
   @Override

@@ -156,9 +156,40 @@ public interface Feature extends BaseFeature, Deegree2Feature, IAdaptable
   IXLinkedFeature setLink( QName relation, String href, IFeatureType featureType );
 
   // FIXME: do it!
-// Feature createSubFeature( IRelationType relation );
-//
-// Feature createSubFeature( QName relation );
+  /**
+   * Creates a sub-feature for the given relation and directly sets it to this property.<br/>
+   * If this sub feature is already present, it is replaced by the newly created sub feature.<br/>
+   * This method also registers / unregisters the involved feature to/from the workspace.<br/>
+   * The relation must not be a list and must allow for inline features.
+   *
+   * @param relation
+   *          The property for which a sub feature is created and set.
+   * @param featureType
+   *          The feature type of the newly created feature
+   * @return The newly created feature
+   * @throws IllegalArgumentException
+   *           If the relation is either a list or does not allow inline features.
+   */
+  Feature createSubFeature( IRelationType relation, QName featureTypeName );
+
+  /**
+   * Same as {@link #createSubFeature(IRelationType)} but uses the target type of the relation as default.
+   */
+  Feature createSubFeature( IRelationType relation );
+
+  /**
+   * Creates a sub-feature for the relation with the given name.
+   * 
+   * @throws IllegalArgumentExcveption
+   *           If the relationName does not point to a suitable relation.
+   * @see #createSubFeature(IRelationType relation)
+   */
+  Feature createSubFeature( QName relationName, QName featureTypeName );
+
+  /**
+   * Same as {@link #createSubFeature(QName)} but uses the target type of the relation as default.
+   */
+  Feature createSubFeature( QName relationName );
 
   /**
    * Resolves a related member feature.<br/>
