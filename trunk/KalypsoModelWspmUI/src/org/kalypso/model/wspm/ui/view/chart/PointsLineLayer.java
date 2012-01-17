@@ -138,7 +138,7 @@ public class PointsLineLayer extends AbstractProfilLayer
       final Double y = cm.getTargetAxis().screenToNumeric( newPoint.y ).doubleValue();
       profilPoint.setValue( hoehe, y );
 
-      profil.setActivePoint( profilPoint );
+      profil.getSelection().setActivePoint( profilPoint );
       getEventHandler().fireLayerContentChanged( this );
     }
   }
@@ -201,7 +201,7 @@ public class PointsLineLayer extends AbstractProfilLayer
     Point activePoint2 = null;
 
     final List<Point> points = new ArrayList<Point>();
-    final int active = profil.indexOfPoint( profil.getActivePoint() );
+    final int active = profil.indexOfPoint( profil.getSelection().getActivePoint() );
     for( int i = 0; i < len; i++ )
     {
       final Point p = toScreen( profilPoints[i] );

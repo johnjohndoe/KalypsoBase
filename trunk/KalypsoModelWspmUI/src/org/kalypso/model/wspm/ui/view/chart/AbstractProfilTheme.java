@@ -97,16 +97,12 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
     }
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#commitDrag(org.eclipse.swt.graphics.Point,
-   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
-   */
   @Override
   public EditInfo commitDrag( final Point point, final EditInfo dragStartData )
   {
     if( getTargetComponent() != null )
     {
-      getProfil().setActivePointProperty( getTargetComponent() );
+      getProfil().getSelection().setActivePointProperty( getTargetComponent() );
     }
     final IProfilChartLayer layer = getActiveLayer();
     if( layer == null )
@@ -129,9 +125,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
     return getLayerManager().getLayers();
   }
 
-  /**
-   * @see de.openali.odysseus.chart.factory.layer.AbstractChartLayer#getLegendEntries()
-   */
   @Override
   public synchronized ILegendEntry[] getLegendEntries( )
   {
@@ -188,10 +181,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
     m_title = title;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#drag(org.eclipse.swt.graphics.Point,
-   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
-   */
   @Override
   public EditInfo drag( final Point newPos, final EditInfo dragStartData )
   {
@@ -200,10 +189,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
       return null;
     return layer.drag( newPos, dragStartData );
   }
-
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#executeClick(de.openali.odysseus.chart.framework.model.layer.EditInfo)
-   */
 
   @Override
   public void executeClick( final EditInfo clickInfo )
@@ -268,10 +253,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
       return null;
     return new DataRange<Number>( min, max );
   }
-
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getHover(org.eclipse.swt.graphics.Point)
-   */
 
   @Override
   public EditInfo getHover( final Point pos )
@@ -351,9 +332,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
     return new DataRange<Number>( min, max );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#lockLayer(boolean)
-   */
   @Override
   public void lockLayer( final boolean locked )
   {
@@ -371,10 +349,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
     super.lockLayer( locked );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
-   *      org.kalypso.model.wspm.core.profil.IProfilChange[])
-   */
   @Override
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
@@ -394,9 +368,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
     }
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
-   */
   @Override
   public void paint( final GC gc )
   {
@@ -407,18 +378,12 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
       }
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#removeYourself()
-   */
   @Override
   public void removeYourself( )
   {
     throw new UnsupportedOperationException( Messages.getString( "org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme.0" ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#setProfil(org.kalypso.model.wspm.core.profil.IProfil)
-   */
   @Override
   public void setProfil( final IProfil profil )
   {

@@ -115,7 +115,7 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
     final IRecord point = getSelectedPoint( layer );
     if( point != null )
     {
-      getProfil().setActivePoint( point );
+      getProfil().getSelection().setActivePoint( point );
     }
 
     return super.doInvalidateChart();
@@ -176,7 +176,7 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
       }
       final Double deltaX = Math.abs( activeDom.getMin().doubleValue() - activeDom.getMax().doubleValue() );
       final IRecord record = ProfilUtil.findPoint( getProfil(), activeDom.getMin().doubleValue() + deltaX / 2, deltaX );
-      if( record != null && record != getProfil().getActivePoint() )
+      if( record != null && record != getProfil().getSelection().getActivePoint() )
       {
         if( hoehe > activeVal.getMin().doubleValue() && hoehe < activeVal.getMax().doubleValue() && breite > activeDom.getMin().doubleValue() && breite < activeDom.getMax().doubleValue() )
           return record;

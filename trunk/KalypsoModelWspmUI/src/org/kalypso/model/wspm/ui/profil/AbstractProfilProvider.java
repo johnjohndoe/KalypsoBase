@@ -54,18 +54,12 @@ public abstract class AbstractProfilProvider implements IProfilProvider
 
   private IProfil m_profile = null;
 
-  /**
-   * @see com.bce.profil.ui.view.IProfilProvider2#addProfilProviderListener(com.bce.profil.ui.view.IProfilProviderListener)
-   */
   @Override
   public void addProfilProviderListener( final IProfilProviderListener l )
   {
     m_listeners.add( l );
   }
 
-  /**
-   * @see com.bce.profil.ui.view.IProfilProvider2#removeProfilProviderListener(com.bce.profil.ui.view.IProfilProviderListener)
-   */
   @Override
   public void removeProfilProviderListener( final IProfilProviderListener l )
   {
@@ -81,9 +75,6 @@ public abstract class AbstractProfilProvider implements IProfilProvider
     }
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.IProfilProvider#getProfil()
-   */
   @Override
   public IProfil getProfil( )
   {

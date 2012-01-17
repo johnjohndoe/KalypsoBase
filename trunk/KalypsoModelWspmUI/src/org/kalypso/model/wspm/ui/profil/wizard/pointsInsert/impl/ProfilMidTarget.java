@@ -75,12 +75,12 @@ public class ProfilMidTarget extends AbstractPointsTarget
     }
   }
 
-  private final void addPointInternal( final IProfil profile )
+  private void addPointInternal( final IProfil profile )
   {
 
     final TupleResult tupleResult = profile.getResult();
 
-    final int index = tupleResult.indexOf( profile.getActivePoint() );
+    final int index = tupleResult.indexOf( profile.getSelection().getActivePoint() );
 
     final IRecord row = tupleResult.createRecord();
 
@@ -97,7 +97,7 @@ public class ProfilMidTarget extends AbstractPointsTarget
 
   }
 
-  private final void insertPointsInternal( final IProfil profile, final List<IRecord> points )
+  private void insertPointsInternal( final IProfil profile, final List<IRecord> points )
   {
     final int pointsCount = points.size();
 
@@ -111,7 +111,7 @@ public class ProfilMidTarget extends AbstractPointsTarget
     final IProfilChange[] changes = new IProfilChange[pointsCount];
     try
     {
-      final IRecord activePkt = profile.getActivePoint();
+      final IRecord activePkt = profile.getSelection().getActivePoint();
       final IRecord targetPkt = activePkt != null ? activePkt : profile.createProfilPoint();
       final double deltaX = (Double) points.get( 0 ).getValue( iPointsBreite ) - (Double) targetPkt.getValue( iBreite );
       final double deltaY = (Double) points.get( 0 ).getValue( iPointsHoehe ) - (Double) targetPkt.getValue( iHoehe );

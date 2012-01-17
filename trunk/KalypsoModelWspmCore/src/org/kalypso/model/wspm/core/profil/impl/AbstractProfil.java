@@ -62,11 +62,12 @@ import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.core.profil.MarkerIndex;
-import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectAdd;
 import org.kalypso.model.wspm.core.profil.impl.marker.PointMarker;
+import org.kalypso.model.wspm.core.profil.selection.RangeSelection;
 import org.kalypso.observation.IObservationVisitor;
 import org.kalypso.observation.phenomenon.IPhenomenon;
 import org.kalypso.observation.result.IComponent;
@@ -109,11 +110,21 @@ public abstract class AbstractProfil implements IProfil
 
   private final Object m_source;
 
+  private final RangeSelection m_selection;
+
   public AbstractProfil( final String type, final TupleResult result, final Object source )
   {
     m_type = type;
     m_source = source;
     setResult( result );
+
+    m_selection = new RangeSelection( this );
+  }
+
+  @Override
+  public final IRangeSelection getSelection( )
+  {
+    return m_selection;
   }
 
   @Override
@@ -233,26 +244,6 @@ public abstract class AbstractProfil implements IProfil
         KalypsoModelWspmCorePlugin.getDefault().getLog().log( status );
       }
     }
-  }
-
-  /**
-   * @return the active point.
-   */
-  @Override
-  public IRecord getActivePoint( )
-  {
-    if( m_result.isEmpty() )
-      return null;
-    else if( m_activePoint == null )
-      return m_result.get( 0 );
-    else
-      return m_activePoint;
-  }
-
-  @Override
-  public IComponent getActiveProperty( )
-  {
-    return m_activePointProperty;
   }
 
   @Override
@@ -559,26 +550,6 @@ public abstract class AbstractProfil implements IProfil
     final Object old = m_additionalProfileSettings.get( key );
     m_additionalProfileSettings.remove( key );
     return old;
-  }
-
-  @Override
-  public void setActivePoint( final IRecord point )
-  {
-    if( m_activePoint == point )
-      return;
-    m_activePoint = point;
-    final ProfilChangeHint hint = new ProfilChangeHint();
-    hint.setActivePointChanged();
-    fireProfilChanged( hint, new IProfilChange[] { new ActiveObjectEdit( this, point, m_activePointProperty ) } );
-  }
-
-  @Override
-  public void setActivePointProperty( final IComponent pointProperty )
-  {
-    m_activePointProperty = pointProperty;
-    final ProfilChangeHint hint = new ProfilChangeHint();
-    hint.setActivePropertyChanged( true );
-    fireProfilChanged( hint, new IProfilChange[] { new ActiveObjectEdit( this, m_activePoint, m_activePointProperty ) } );
   }
 
   @Override
