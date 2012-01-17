@@ -398,7 +398,7 @@ public class ProfileWrapper
   {
     final IProfilPointMarker[] markers = m_profile.getPointMarkerFor( point );
     if( ArrayUtils.isEmpty( markers ) )
-      return new ProfilePointMarkerWrapper[] {};
+      return new IProfilPointMarker[] {};
 
     final List<IProfilPointMarker> myMarkers = new ArrayList<IProfilPointMarker>();
 
