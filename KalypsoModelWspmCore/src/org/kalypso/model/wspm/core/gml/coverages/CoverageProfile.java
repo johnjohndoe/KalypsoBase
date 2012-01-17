@@ -52,6 +52,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -137,7 +138,7 @@ public final class CoverageProfile
 
     for( final Coordinate coordinate : points )
     {
-      final IRecord profilePoint = createPoint( profile, coordinate, breite );
+      final IProfileRecord profilePoint = createPoint( profile, coordinate, breite );
 
       /* Add the new point to the profile. */
       profile.addPoint( profilePoint );
@@ -154,7 +155,7 @@ public final class CoverageProfile
     return profile;
   }
 
-  private static IRecord createPoint( final IProfil profile, final Coordinate coordinate, final double breite )
+  private static IProfileRecord createPoint( final IProfil profile, final Coordinate coordinate, final double breite )
   {
     /* The needed components. */
     final IComponent cRechtswert = profile.getPointPropertyFor( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT );
@@ -199,7 +200,7 @@ public final class CoverageProfile
     final Object rauheit = cRauheit.getDefaultValue();
 
     /* Create a new profile point. */
-    final IRecord profilePoint = profile.createProfilPoint();
+    final IProfileRecord profilePoint = profile.createProfilPoint();
 
     /* Add geo values. */
     profilePoint.setValue( iRechtswert, rechtswert );
@@ -289,7 +290,7 @@ public final class CoverageProfile
     {
       final Coordinate coordinate = jtsCurve.getCoordinateN( i );
 
-      final IRecord newPoint = createPoint( profile, coordinate, breite );
+      final IProfileRecord newPoint = createPoint( profile, coordinate, breite );
 
       /* calculate breite */
       if( i > 0 )
@@ -318,7 +319,7 @@ public final class CoverageProfile
     {
       final Coordinate coordinate = points[i];
 
-      final IRecord newPoint = createPoint( profile, coordinate, breite );
+      final IProfileRecord newPoint = createPoint( profile, coordinate, breite );
 
       /* calculate breite */
       if( i > 0 )

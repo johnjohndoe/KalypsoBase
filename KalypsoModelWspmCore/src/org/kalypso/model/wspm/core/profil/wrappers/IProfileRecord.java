@@ -38,44 +38,82 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core.profil.changes;
+package org.kalypso.model.wspm.core.profil.wrappers;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.observation.result.IRecord;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Point;
 
 /**
- * @author Gernot Belger
+ * @author Dirk Kuch
  */
-public class PointsAdd implements IProfilChange
+public interface IProfileRecord extends IRecord
 {
-  private final IProfil m_profil;
+  IRecord getRecord( );
 
-  private final int[] m_pointPositions;
+  double getHoehe( );
 
-  private final IProfileRecord[] m_points;
+  double getBreite( );
 
-  public PointsAdd( final IProfil profil, final int[] pointPositions, final IProfileRecord[] points )
-  {
-    m_profil = profil;
-    m_pointPositions = pointPositions;
-    m_points = points;
-  }
+  double getHochwert( );
+
+  double getRechtswert( );
+
+  void setBreite( final double width );
+
+  void setHoehe( final double hoehe );
+
+  void setKsValue( final Double ksValue );
+
+  void setKstValue( final Double kstValue );
+
+  /**
+   * Returns the geo coordinate (hochwert, rechtswert) of this point. The returned coordinate is in the coordinate
+   * system of the profile.
+   */
+  Coordinate getCoordinate( );
+
+  Double getKsValue( );
+
+  Double getKstValue( );
+
+  /**
+   * FIXME use BigDecimal
+   */
+  void setBewuchsAx( final Double bewuchsAx );
+
+  /**
+   * FIXME use BigDecimal
+   */
+  void setBewuchsAy( final Double bewuchsAy );
+
+  /**
+   * FIXME use BigDecimal
+   */
+  void setBewuchsDp( final Double bewuchsDp );
+
+  void setRechtswert( final double x );
+
+  void setHochwert( final double y );
+
+  /**
+   * FIXME use BigDecimal
+   */
+  Double getBewuchsAx( );
+
+  /**
+   * FIXME use BigDecimal
+   */
+  Double getBewuchsAy( );
+
+  /**
+   * FIXME use BigDecimal
+   */
+  Double getBewuchsDp( );
+
+  Point toPoint( );
 
   @Override
-  public IProfilChange doChange( final ProfilChangeHint hint )
-  {
-    if( hint != null )
-    {
-      hint.setPointsChanged();
-    }
-
-    for( int i = 0; i < m_points.length; i++ )
-    {
-      m_profil.addPoint( m_pointPositions[i], m_points[i] );
-    }
-
-    return new PointRemove( m_profil, m_points );
-  }
-
+  public IProfileRecord cloneRecord( );
 }

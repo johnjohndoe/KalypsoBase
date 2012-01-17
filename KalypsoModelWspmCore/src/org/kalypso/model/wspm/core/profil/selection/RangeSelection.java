@@ -40,17 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.selection;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.Range;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
-import org.kalypso.observation.result.TupleResult;
 
 /**
  * @author Dirk Kuch
@@ -59,7 +59,7 @@ public class RangeSelection implements IRangeSelection
 {
   private final ProfileWrapper m_profile;
 
-  private IRecord m_activePoint;
+  private IProfileRecord m_activePoint;
 
   private IComponent m_activePointProperty;
 
@@ -72,16 +72,13 @@ public class RangeSelection implements IRangeSelection
    * @return the active point.
    */
   @Override
-  public IRecord getActivePoint( )
+  public IProfileRecord getActivePoint( )
   {
-    final TupleResult result = m_profile.getProfile().getResult();
-
-    if( result.isEmpty() )
+    final IProfileRecord[] points = m_profile.getPoints();
+    if( ArrayUtils.isEmpty( points ) )
       return null;
-    else if( m_activePoint == null )
-      return result.get( 0 );
-    else
-      return m_activePoint;
+
+    return (IProfileRecord) Objects.firstNonNull( m_activePoint, points[0] );
   }
 
   @Override
@@ -91,7 +88,7 @@ public class RangeSelection implements IRangeSelection
   }
 
   @Override
-  public void setActivePoint( final IRecord point )
+  public void setActivePoint( final IProfileRecord point )
   {
     if( m_activePoint == point )
       return;
@@ -122,15 +119,16 @@ public class RangeSelection implements IRangeSelection
   }
 
   @Override
-  public ProfilePointWrapper getSelection( )
+  public void setRange( final Double p0, final Double pn )
   {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void setRange( final Double p0, final Double pn )
+  public IProfileRecord[] toPoints( )
   {
-    throw new UnsupportedOperationException();
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }

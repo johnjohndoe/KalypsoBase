@@ -51,6 +51,7 @@ import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.PointRemove;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.result.IRecord;
 
 /**
@@ -131,11 +132,11 @@ public final class DouglasPeuckerHelper
    *          The profile.
    * @return The profile changes.
    */
-  public static IProfilChange[] reduce( final double allowedDistance, final IRecord[] points, final IProfil profile )
+  public static IProfilChange[] reduce( final double allowedDistance, final IProfileRecord[] points, final IProfil profile )
   {
     /* Reduce points. */
-    final IRecord[] pointsToKeep = profile.getMarkedPoints();
-    final IRecord[] pointsToRemove = reducePoints( points, pointsToKeep, allowedDistance );
+    final IProfileRecord[] pointsToKeep = profile.getMarkedPoints();
+    final IProfileRecord[] pointsToRemove = reducePoints( points, pointsToKeep, allowedDistance );
     if( pointsToRemove.length == 0 )
       return new IProfilChange[] {};
 
@@ -153,15 +154,15 @@ public final class DouglasPeuckerHelper
    *          The allowed distance.
    * @return The points to remove.
    */
-  public static IRecord[] reducePoints( final IRecord[] points, final IRecord[] pointsToKeep, final double allowedDistance )
+  public static IProfileRecord[] reducePoints( final IProfileRecord[] points, final IProfileRecord[] pointsToKeep, final double allowedDistance )
   {
     /* Cannot reduce 2 or less points */
     if( points.length <= 2 )
-      return new IRecord[0];
+      return new IProfileRecord[0];
 
     /* Reduce segment wise. */
-    final Set<IRecord> pointsToKeepList = new HashSet<IRecord>( Arrays.asList( pointsToKeep ) );
-    final List<IRecord> pointsToRemove = new ArrayList<IRecord>( points.length - 2 );
+    final Set<IProfileRecord> pointsToKeepList = new HashSet<IProfileRecord>( Arrays.asList( pointsToKeep ) );
+    final List<IProfileRecord> pointsToRemove = new ArrayList<IProfileRecord>( points.length - 2 );
 
     int segmentBegin = 0;
     for( int i = 0; i < points.length; i++ )
@@ -174,20 +175,20 @@ public final class DouglasPeuckerHelper
       final IRecord point = points[i];
       if( pointsToKeepList.contains( point ) || i == points.length - 1 )
       {
-        final IRecord[] toRemove = reduceIt( points, segmentBegin, i, allowedDistance );
+        final IProfileRecord[] toRemove = reduceIt( points, segmentBegin, i, allowedDistance );
         pointsToRemove.addAll( Arrays.asList( toRemove ) );
         segmentBegin = i;
       }
     }
 
-    return pointsToRemove.toArray( new IRecord[pointsToRemove.size()] );
+    return pointsToRemove.toArray( new IProfileRecord[pointsToRemove.size()] );
   }
 
   /** @return the points with are redundant */
-  private static IRecord[] reduceIt( final IRecord[] points, final int begin, final int end, final double allowedDistance )
+  private static IProfileRecord[] reduceIt( final IProfileRecord[] points, final int begin, final int end, final double allowedDistance )
   {
     if( end - begin < 2 )
-      return new IRecord[0];
+      return new IProfileRecord[0];
 
     // für alle punkte abstand zu segment[begin-end] ausrechnen
     final double[] distances = new double[end - (begin + 1)];
@@ -208,18 +209,18 @@ public final class DouglasPeuckerHelper
     // falls ein punkt dabei, dessen diff > maxdiff, splitten
     if( maxdistance > allowedDistance && maxdistIndex != -1 )
     {
-      final IRecord[] beginReduced = reduceIt( points, begin, maxdistIndex, allowedDistance );
-      final IRecord[] endReduced = reduceIt( points, maxdistIndex, end, allowedDistance );
+      final IProfileRecord[] beginReduced = reduceIt( points, begin, maxdistIndex, allowedDistance );
+      final IProfileRecord[] endReduced = reduceIt( points, maxdistIndex, end, allowedDistance );
 
       final List<IRecord> reduced = new ArrayList<IRecord>( beginReduced.length + endReduced.length );
 
       reduced.addAll( Arrays.asList( beginReduced ) );
       reduced.addAll( Arrays.asList( endReduced ) );
-      return reduced.toArray( new IRecord[reduced.size()] );
+      return reduced.toArray( new IProfileRecord[reduced.size()] );
     }
 
     // kein Punkt mehr wichtig: alle zwischenpunkte zurückgeben
-    final IRecord[] reduced = new IRecord[end - (begin + 1)];
+    final IProfileRecord[] reduced = new IProfileRecord[end - (begin + 1)];
     for( int i = 0; i < reduced.length; i++ )
     {
       reduced[i] = points[i + begin + 1];

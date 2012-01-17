@@ -51,6 +51,8 @@ import org.kalypso.model.wspm.core.profil.changes.PointPropertyAdd;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.model.wspm.core.profil.wrappers.ProfileRecord;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.ITupleResultChangedListener;
@@ -133,8 +135,10 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
 
       if( m_profil.isPointMarker( component.getId() ) )
       {
+        final IRecord r = change.getRecord();
+
         IProfilPointMarker marker = null;
-        for( final IProfilPointMarker m : m_profil.getPointMarkerFor( change.getRecord() ) )
+        for( final IProfilPointMarker m : m_profil.getPointMarkerFor( r instanceof IProfileRecord ? (IProfileRecord) r : new ProfileRecord( r ) ) )
         {
           if( m.getComponent() == component )
           {
@@ -149,7 +153,9 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
         else
         {
           profChanges.add( m_onMarkerMovedDelete );
-          profChanges.add( new PointMarkerSetPoint( marker, change.getRecord() ) );
+          final IRecord record = change.getRecord();
+
+          profChanges.add( new PointMarkerSetPoint( marker, record instanceof IProfileRecord ? (IProfileRecord) record : new ProfileRecord( record ) ) );
           m_onMarkerMovedDelete = null;
           hint.setPointValuesChanged();
           hint.setMarkerMoved();
@@ -167,5 +173,4 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
     }
 
   }
-
 }

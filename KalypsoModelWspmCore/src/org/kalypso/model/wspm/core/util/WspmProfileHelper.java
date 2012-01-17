@@ -53,6 +53,7 @@ import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
@@ -655,7 +656,7 @@ public final class WspmProfileHelper
     final double heigth1 = WspmProfileHelper.getHeightByWidth( startWidth, orgIProfil );
     final double heigth2 = WspmProfileHelper.getHeightByWidth( endWidth, orgIProfil );
 
-    final IRecord[] profilPointList = profile.getPoints();
+    final IProfileRecord[] profilPointList = profile.getPoints();
     final IProfil tmpProfil = ProfilFactory.createProfil( profile.getType() );
 
     /* set the coordinate system */
@@ -689,8 +690,8 @@ public final class WspmProfileHelper
     final int iRechtswert = tmpProfil.indexOfProperty( cRechtswert );
     final int iHochwert = tmpProfil.indexOfProperty( cHochwert );
 
-    final IRecord point1 = tmpProfil.createProfilPoint();
-    final IRecord point2 = tmpProfil.createProfilPoint();
+    final IProfileRecord point1 = tmpProfil.createProfilPoint();
+    final IProfileRecord point2 = tmpProfil.createProfilPoint();
 
     /* calculate the width of the intersected profile */
     // sort intersection points by width
@@ -706,12 +707,12 @@ public final class WspmProfileHelper
 
     tmpProfil.addPoint( point1 );
 
-    for( final IRecord point : profilPointList )
+    for( final IProfileRecord point : profilPointList )
     {
       final double currentWidth = (Double) point.getValue( iBreite );
       if( currentWidth > startWidth & currentWidth < endWidth )
       {
-        final IRecord pt = tmpProfil.createProfilPoint();
+        final IProfileRecord pt = tmpProfil.createProfilPoint();
 
         final IComponent[] properties = orgIProfil.getPointProperties();
         for( final IComponent property : properties )
@@ -733,16 +734,16 @@ public final class WspmProfileHelper
     return tmpProfil;
   }
 
-  public static IRecord addRecordByWidth( final IProfil profile, final IRecord record, final boolean overwritePointMarkers )
+  public static IProfileRecord addRecordByWidth( final IProfil profile, final IProfileRecord record, final boolean overwritePointMarkers )
   {
     final Double width = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, record );
 
-    final IRecord[] records = profile.getPoints();
+    final IProfileRecord[] records = profile.getPoints();
     final int iBreite = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE );
 
     for( int i = 0; i < records.length; i++ )
     {
-      final IRecord r = records[i];
+      final IProfileRecord r = records[i];
       final Double rw = (Double) r.getValue( iBreite );
 
       if( Math.abs( width - rw ) < FUZZINESS )
@@ -779,7 +780,7 @@ public final class WspmProfileHelper
    * Adds a record by its width. If this record(point) already exists in the profile, the existing record will be
    * updated
    */
-  public static IRecord addRecordByWidth( final IProfil profile, final IRecord record )
+  public static IProfileRecord addRecordByWidth( final IProfil profile, final IProfileRecord record )
   {
     return addRecordByWidth( profile, record, false );
   }

@@ -42,12 +42,11 @@ package org.kalypso.model.wspm.core.profil.wrappers;
 
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Dirk Kuch
  */
-public class ProfilePointMarkerWrapper extends ProfilePointWrapper implements IProfilPointMarker
+public class ProfilePointMarkerWrapper extends ProfileRecord implements IProfilPointMarker
 {
   private final IProfilPointMarker m_marker;
 
@@ -58,44 +57,24 @@ public class ProfilePointMarkerWrapper extends ProfilePointWrapper implements IP
     m_marker = marker;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarker#getId()
-   */
   @Override
   public IComponent getComponent( )
   {
     return m_marker.getComponent();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarker#getPoint()
-   */
   @Override
-  public IRecord getPoint( )
+  public IProfileRecord getPoint( )
   {
     return m_marker.getPoint();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarker#setPoint(org.kalypso.observation.result.IRecord)
-   */
   @Override
-  public IRecord setPoint( final IRecord newPosition )
+  public IProfileRecord setPoint( final IProfileRecord newPosition )
   {
     return m_marker.setPoint( newPosition );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarker#setPoint(org.kalypso.observation.result.IRecord)
-   */
-  public void setPoint( final ProfilePointWrapper wrapper )
-  {
-    m_marker.setPoint( wrapper.getRecord() );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarker#setValue(java.lang.Object)
-   */
   @Override
   public void setValue( final Object newValue )
   {
@@ -103,27 +82,18 @@ public class ProfilePointMarkerWrapper extends ProfilePointWrapper implements IP
 
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarker#getValue()
-   */
   @Override
   public Object getValue( )
   {
     return m_marker.getValue();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarker#getIntepretedValue()
-   */
   @Override
   public Object getIntepretedValue( )
   {
     return m_marker.getIntepretedValue();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointMarker#setInterpretedValue(java.lang.Object)
-   */
   @Override
   public void setInterpretedValue( final Object value )
   {

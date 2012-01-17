@@ -51,6 +51,7 @@ import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IRecord;
@@ -124,7 +125,7 @@ public class PointsLineLayer extends AbstractProfilLayer
     if( pos > -1 )
     {
       final IProfil profil = getProfil();
-      final IRecord profilPoint = profil.getPoint( pos );
+      final IProfileRecord profilPoint = profil.getPoint( pos );
       final Integer hoehe = profil.indexOfProperty( getTargetComponent() );
 // final Integer breite = profil.indexOfProperty( getDomainComponent() );
       final ICoordinateMapper cm = getCoordinateMapper();

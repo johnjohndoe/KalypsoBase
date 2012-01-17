@@ -53,14 +53,14 @@ import com.vividsolutions.jts.geom.Point;
 /**
  * @author Dirk Kuch
  */
-public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecord
+public class ProfileRecord extends AbstractRecordWrapper implements IProfileRecord
 {
 
-  public static final Comparator<ProfilePointWrapper> COMPARATOR = new Comparator<ProfilePointWrapper>()
+  public static final Comparator<IProfileRecord> COMPARATOR = new Comparator<IProfileRecord>()
   {
 
     @Override
-    public int compare( final ProfilePointWrapper o1, final ProfilePointWrapper o2 )
+    public int compare( final IProfileRecord o1, final IProfileRecord o2 )
     {
       final double b1 = o1.getBreite();
       final double b2 = o2.getBreite();
@@ -69,33 +69,38 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
     }
   };
 
-  public ProfilePointWrapper( final IRecord record )
+  public ProfileRecord( final IRecord record )
   {
     super( record );
   }
 
+  @Override
   public double getHoehe( )
   {
     return ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, this );
   }
 
+  @Override
   public double getBreite( )
   {
 
     return ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, this );
   }
 
+  @Override
   public double getHochwert( )
   {
 
     return ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOCHWERT, this );
   }
 
+  @Override
   public double getRechtswert( )
   {
     return ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT, this );
   }
 
+  @Override
   public void setBreite( final double width )
   {
     final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_BREITE );
@@ -103,21 +108,20 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
 
   }
 
+  @Override
   public void setHoehe( final double hoehe )
   {
     final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_HOEHE );
     getRecord().setValue( index, Double.valueOf( hoehe ) );
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {
     return String.format( "[%.2f, %.2f]", getBreite(), getHoehe() ); //$NON-NLS-1$
   }
 
+  @Override
   public void setKsValue( final Double ksValue )
   {
     final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS );
@@ -127,6 +131,7 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
     getRecord().setValue( index, ksValue );
   }
 
+  @Override
   public void setKstValue( final Double kstValue )
   {
     final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST );
@@ -140,6 +145,7 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
    * Returns the geo coordinate (hochwert, rechtswert) of this point. The returned coordinate is in the coordinate
    * system of the profile.
    */
+  @Override
   public Coordinate getCoordinate( )
   {
     final double x = getRechtswert();
@@ -154,16 +160,22 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
     return new Coordinate( x, y, z );
   }
 
+  @Override
   public Double getKsValue( )
   {
     return ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS, this );
   }
 
+  @Override
   public Double getKstValue( )
   {
     return ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST, this );
   }
 
+  /**
+   * FIXME use BigDecimal
+   */
+  @Override
   public void setBewuchsAx( final Double bewuchsAx )
   {
     final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX );
@@ -173,6 +185,10 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
     getRecord().setValue( index, bewuchsAx );
   }
 
+  /**
+   * FIXME use BigDecimal
+   */
+  @Override
   public void setBewuchsAy( final Double bewuchsAy )
   {
     final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY );
@@ -182,6 +198,10 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
     getRecord().setValue( index, bewuchsAy );
   }
 
+  /**
+   * FIXME use BigDecimal
+   */
+  @Override
   public void setBewuchsDp( final Double bewuchsDp )
   {
     final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP );
@@ -191,6 +211,7 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
     getRecord().setValue( index, bewuchsDp );
   }
 
+  @Override
   public void setRechtswert( final double x )
   {
     final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT );
@@ -199,6 +220,7 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
     getRecord().setValue( index, x );
   }
 
+  @Override
   public void setHochwert( final double y )
   {
     final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_HOCHWERT );
@@ -208,6 +230,10 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
     getRecord().setValue( index, y );
   }
 
+  /**
+   * FIXME use BigDecimal
+   */
+  @Override
   public Double getBewuchsAx( )
   {
     final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX );
@@ -221,6 +247,10 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
     return null;
   }
 
+  /**
+   * FIXME use BigDecimal
+   */
+  @Override
   public Double getBewuchsAy( )
   {
     final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY );
@@ -234,6 +264,10 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
     return null;
   }
 
+  /**
+   * FIXME use BigDecimal
+   */
+  @Override
   public Double getBewuchsDp( )
   {
     final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP );
@@ -247,9 +281,15 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
     return null;
   }
 
+  @Override
   public Point toPoint( )
   {
     return JTSConverter.toPoint( new Coordinate( getRechtswert(), getHochwert() ) );
   }
 
+  @Override
+  public IProfileRecord cloneRecord( )
+  {
+    return new ProfileRecord( getRecord().cloneRecord() );
+  }
 }

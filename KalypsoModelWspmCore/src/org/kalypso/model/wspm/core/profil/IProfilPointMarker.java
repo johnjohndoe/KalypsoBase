@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil;
 
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Dirk Kuch
@@ -53,14 +53,14 @@ public interface IProfilPointMarker
   /**
    * @return returns mapped profile point (type of IRecord)
    */
-  IRecord getPoint( );
+  IProfileRecord getPoint( );
 
   /**
    * @param newPosition
    *          new profile point
    * @return returns old mapped profile point
    */
-  IRecord setPoint( IRecord newPosition );
+  IProfileRecord setPoint( IProfileRecord newPosition );
 
   void setValue( Object newValue );
 

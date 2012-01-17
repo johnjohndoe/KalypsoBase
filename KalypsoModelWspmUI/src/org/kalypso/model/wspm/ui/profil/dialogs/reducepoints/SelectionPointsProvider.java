@@ -47,7 +47,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-import org.kalypso.observation.result.IRecord;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 
 /**
  * Delivers points from a selection.
@@ -60,7 +60,7 @@ public class SelectionPointsProvider implements IPointsProvider
 
   private String m_errorMessage;
 
-  private IRecord[] m_points = new IRecord[] {};
+  private IProfileRecord[] m_points = new IProfileRecord[] {};
 
   public SelectionPointsProvider( final IProfil profil, final ISelection selection )
   {
@@ -86,13 +86,13 @@ public class SelectionPointsProvider implements IPointsProvider
 
       final Object[] objects = structSel.toArray();
 
-      IRecord lastPoint = null;
-      final List<IRecord> points = new ArrayList<IRecord>( objects.length );
+      IProfileRecord lastPoint = null;
+      final List<IProfileRecord> points = new ArrayList<IProfileRecord>( objects.length );
       for( final Object object : objects )
       {
-        if( object instanceof IRecord )
+        if( object instanceof IProfileRecord )
         {
-          final IRecord point = (IRecord) object;
+          final IProfileRecord point = (IProfileRecord) object;
           if( lastPoint != null && lastPoint != ProfilUtil.getPointBefore( m_profil, point ) )
           {
             m_errorMessage = org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider.2" ); //$NON-NLS-1$
@@ -110,7 +110,7 @@ public class SelectionPointsProvider implements IPointsProvider
       }
 
       m_errorMessage = null;
-      m_points = points.toArray( new IRecord[points.size()] );
+      m_points = points.toArray( new IProfileRecord[points.size()] );
       return;
 // }
 // catch( final IllegalProfileOperationException e )
@@ -124,7 +124,7 @@ public class SelectionPointsProvider implements IPointsProvider
   }
 
   @Override
-  public IRecord[] getPoints( )
+  public IProfileRecord[] getPoints( )
   {
     return m_points;
   }

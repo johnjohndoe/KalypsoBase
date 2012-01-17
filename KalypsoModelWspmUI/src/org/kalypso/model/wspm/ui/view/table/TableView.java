@@ -82,6 +82,8 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.model.wspm.core.profil.wrappers.ProfileRecord;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
@@ -319,7 +321,8 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
           final IRecord point = (IRecord) selection.getFirstElement();
           if( point != m_profile.getSelection().getActivePoint() )
           {
-            m_profile.getSelection().setActivePoint( point );
+
+            m_profile.getSelection().setActivePoint( point instanceof IProfileRecord ? (IProfileRecord) point : new ProfileRecord( point ) );
           }
         }
       }
@@ -337,7 +340,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
           final IRecord point = (IRecord) element;
           if( point != m_profile.getSelection().getActivePoint() )
           {
-            m_profile.getSelection().setActivePoint( point );
+            m_profile.getSelection().setActivePoint( point instanceof IProfileRecord ? (IProfileRecord) point : new ProfileRecord( point ) );
           }
         }
       }

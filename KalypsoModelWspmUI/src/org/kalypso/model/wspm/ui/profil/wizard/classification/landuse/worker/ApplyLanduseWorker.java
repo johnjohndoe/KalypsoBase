@@ -64,6 +64,7 @@ import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -106,7 +107,7 @@ public class ApplyLanduseWorker implements IRunnableWithProgress
 
       // TODO: check if the profile has all components already.
       // but how to do, we don't know here what components are necessary for the current profile...
-      final IRecord[] points = profile.getPoints();
+      final IProfileRecord[] points = profile.getPoints();
 
       final int indexWidth = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE );
       final int indexRechtswert = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT );
@@ -121,7 +122,7 @@ public class ApplyLanduseWorker implements IRunnableWithProgress
       {
         try
         {
-          final IRecord point = points[index];
+          final IProfileRecord point = points[index];
 
           if( count % 10 == 0 )
           {

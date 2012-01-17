@@ -52,10 +52,9 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.observation.result.IInterpolationHandler;
-import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
@@ -140,15 +139,15 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
     if( Objects.isNull( getBreite(), getProfile() ) )
       return;
 
-    final ProfilePointWrapper before = getProfile().findPreviousPoint( getBreite() );
-    final ProfilePointWrapper next = getProfile().findNextPoint( getBreite() );
+    final IProfileRecord before = getProfile().findPreviousPoint( getBreite() );
+    final IProfileRecord next = getProfile().findNextPoint( getBreite() );
     if( Objects.isNull( before, next ) )
       return;
 
     final double distance = (getBreite() - before.getBreite()) / (next.getBreite() - before.getBreite());
 
     final TupleResult result = getProfile().getProfile().getResult();
-    final IRecord record = result.createRecord();
+    final IProfileRecord record = getProfile().getProfile().createProfilPoint();
     final IInterpolationHandler interpolation = result.getInterpolationHandler();
 
     final int index = result.indexOf( before.getRecord() );
