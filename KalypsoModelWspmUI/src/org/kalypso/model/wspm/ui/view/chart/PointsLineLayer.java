@@ -202,7 +202,8 @@ public class PointsLineLayer extends AbstractProfilLayer
     Point activePoint2 = null;
 
     final List<Point> points = new ArrayList<Point>();
-    final int active = profil.indexOfPoint( profil.getSelection().getActivePoint() );
+
+    final int active = profil.getSelection().getActivePoint().getIndex();
     for( int i = 0; i < len; i++ )
     {
       final Point p = toScreen( profilPoints[i] );

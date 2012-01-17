@@ -173,8 +173,8 @@ public class WaterlevelRenderWorker
     if( point1 == null || point2 == null )
       return null;
 
-    final int index1 = m_profile.indexOfPoint( point1 );
-    final int index2 = m_profile.indexOfPoint( point2 );
+    final int index1 = point1.getIndex();
+    final int index2 = point2.getIndex();
 
     final Double[] widths = ProfilUtil.getValuesFor( m_profile, IWspmConstants.POINT_PROPERTY_BREITE, Double.class );
     final Double[] heights = ProfilUtil.getValuesFor( m_profile, IWspmConstants.POINT_PROPERTY_HOEHE, Double.class );

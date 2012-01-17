@@ -130,8 +130,6 @@ public interface IProfil extends IObservation<TupleResult>
    */
   IComponent[] getPointMarkerTypes( );
 
-  int indexOfPoint( IProfileRecord point );
-
   int indexOfProperty( IComponent pointProperty );
 
   int indexOfProperty( String id );

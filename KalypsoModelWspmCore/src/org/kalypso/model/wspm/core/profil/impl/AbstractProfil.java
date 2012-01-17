@@ -495,12 +495,6 @@ public abstract class AbstractProfil implements IProfil
   }
 
   @Override
-  public int indexOfPoint( final IProfileRecord point )
-  {
-    return getResult().indexOf( point.getRecord() );
-  }
-
-  @Override
   public int indexOfProperty( final IComponent pointProperty )
   {
     return getResult().indexOfComponent( pointProperty );

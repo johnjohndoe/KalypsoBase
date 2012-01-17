@@ -46,6 +46,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.observation.result.ITupleResultChangedListener.TYPE;
 import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
@@ -72,18 +73,12 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
       m_values.add( component.getDefaultValue() );
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {
     return ArrayUtils.toString( m_values );
   }
 
-  /**
-   * @see org.kalypso.om.tuple.IRecord#getValue(org.kalypso.om.tuple.IComponent)
-   */
   @Override
   @Deprecated
   public Object getValue( final IComponent comp )
@@ -92,9 +87,6 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
     return getValue( index );
   }
 
-  /**
-   * @see org.kalypso.observation.result.IRecord#getValue(int)
-   */
   @Override
   public Object getValue( final int index ) throws IndexOutOfBoundsException
   {
@@ -110,9 +102,6 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
     return index;
   }
 
-  /**
-   * @see org.kalypso.om.tuple.IRecord#setValue(org.kalypso.om.tuple.IComponent, java.lang.Object)
-   */
   @Override
   @Deprecated
   public void setValue( final IComponent comp, final Object value )
@@ -121,18 +110,12 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
     setValue( index, value );
   }
 
-  /**
-   * @see org.kalypso.observation.result.IRecord#setValue(int, java.lang.Object)
-   */
   @Override
   public void setValue( final int index, final Object value ) throws IndexOutOfBoundsException
   {
     setValue( index, value, false );
   }
 
-  /**
-   * @see org.kalypso.observation.result.IRecord#setValue(int, java.lang.Object, boolean)
-   */
   @Override
   public void setValue( final int index, final Object value, final boolean fireNoEvent ) throws IndexOutOfBoundsException
   {
@@ -161,18 +144,12 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
     m_values.remove( index );
   }
 
-  /**
-   * @see org.kalypso.observation.result.IRecord#getOwner()
-   */
   @Override
   public TupleResult getOwner( )
   {
     return m_owner;
   }
 
-  /**
-   * @see org.kalypso.observation.result.IRecord#cloneRecord()
-   */
   @Override
   public IRecord cloneRecord( )
   {
@@ -208,9 +185,6 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
     m_components = components;
   }
 
-  /**
-   * @see org.kalypso.observation.result.IRecord#indexOfComponent(java.lang.String)
-   */
   @Override
   public int indexOfComponent( final String componentID )
   {
@@ -224,4 +198,13 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
     return -1;
   }
 
+  @Override
+  public int getIndex( )
+  {
+    final TupleResult owner = getOwner();
+    if( Objects.isNull( owner ) )
+      return -1;
+
+    return owner.indexOf( this );
+  }
 }

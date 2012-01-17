@@ -120,4 +120,10 @@ public class AbstractRecordWrapper implements IRecord
   {
     return m_record.indexOfComponent( componentID );
   }
+
+  @Override
+  public int getIndex( )
+  {
+    return m_record.getIndex();
+  }
 }

@@ -342,7 +342,7 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
     for( int i = 0; i < asPoints.length; i++ )
     {
       final IProfileRecord markerPoint = existingMarkers[i].getPoint();
-      asPoints[i] = profil.indexOfPoint( markerPoint );
+      asPoints[i] = markerPoint.getIndex();
     }
 
     return asPoints;

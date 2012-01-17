@@ -111,8 +111,8 @@ public final class WspmGeometryUtilities
         if( durchstroemte.length < 2 )
           return null;
 
-        left = profil.indexOfPoint( durchstroemte[0].getPoint() );
-        right = profil.indexOfPoint( durchstroemte[1].getPoint() );
+        left = durchstroemte[0].getPoint().getIndex();
+        right = durchstroemte[1].getPoint().getIndex();
       }
 
       // for( final IRecord point : points )
