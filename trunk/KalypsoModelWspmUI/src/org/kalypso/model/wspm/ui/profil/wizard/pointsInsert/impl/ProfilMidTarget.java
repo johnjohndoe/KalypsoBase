@@ -48,6 +48,7 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.PointAdd;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.AbstractPointsTarget;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -111,14 +112,14 @@ public class ProfilMidTarget extends AbstractPointsTarget
     final IProfilChange[] changes = new IProfilChange[pointsCount];
     try
     {
-      final IRecord activePkt = profile.getSelection().getActivePoint();
-      final IRecord targetPkt = activePkt != null ? activePkt : profile.createProfilPoint();
+      final IProfileRecord activePkt = profile.getSelection().getActivePoint();
+      final IProfileRecord targetPkt = activePkt != null ? activePkt : profile.createProfilPoint();
       final double deltaX = (Double) points.get( 0 ).getValue( iPointsBreite ) - (Double) targetPkt.getValue( iBreite );
       final double deltaY = (Double) points.get( 0 ).getValue( iPointsHoehe ) - (Double) targetPkt.getValue( iHoehe );
       int i = changes.length - 1;
       for( final IRecord point : points )
       {
-        final IRecord newPoint = targetPkt.cloneRecord();
+        final IProfileRecord newPoint = targetPkt.cloneRecord();
         newPoint.setValue( iBreite, (Double) point.getValue( iPointsBreite ) - deltaX );
         newPoint.setValue( iHoehe, (Double) point.getValue( iPointsHoehe ) - deltaY );
         for( final IComponent prop : owner.getComponents() )

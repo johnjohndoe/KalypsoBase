@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.core.profil.base;
 import org.kalypso.commons.java.lang.Doubles;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfilePointWrapperVisitor;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -55,7 +55,7 @@ public class InterpolateMissingCoordinatesVisitor implements IProfilePointWrappe
 {
 
   @Override
-  public void visit( final ProfileWrapper profile, final ProfilePointWrapper point )
+  public void visit( final ProfileWrapper profile, final IProfileRecord point )
   {
     if( !Doubles.isNaN( point.getHochwert(), point.getRechtswert() ) )
       return;

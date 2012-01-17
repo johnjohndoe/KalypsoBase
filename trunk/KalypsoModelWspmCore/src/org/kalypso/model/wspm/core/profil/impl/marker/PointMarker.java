@@ -41,8 +41,8 @@
 package org.kalypso.model.wspm.core.profil.impl.marker;
 
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
 /**
@@ -52,9 +52,9 @@ public class PointMarker implements IProfilPointMarker
 {
   private final IComponent m_type;
 
-  IRecord m_point = null;
+  IProfileRecord m_point = null;
 
-  public PointMarker( final IComponent typ, final IRecord point )
+  public PointMarker( final IComponent typ, final IProfileRecord point )
   {
     if( typ == null || point == null )
       throw new IllegalStateException();
@@ -77,7 +77,7 @@ public class PointMarker implements IProfilPointMarker
   }
 
   @Override
-  public IRecord getPoint( )
+  public IProfileRecord getPoint( )
   {
     return m_point;
   }
@@ -104,9 +104,9 @@ public class PointMarker implements IProfilPointMarker
   }
 
   @Override
-  public IRecord setPoint( final IRecord newPosition )
+  public IProfileRecord setPoint( final IProfileRecord newPosition )
   {
-    final IRecord oldPoint = m_point;
+    final IProfileRecord oldPoint = m_point;
     if( newPosition != null && newPosition.getOwner() == m_point.getOwner() )
     {
 

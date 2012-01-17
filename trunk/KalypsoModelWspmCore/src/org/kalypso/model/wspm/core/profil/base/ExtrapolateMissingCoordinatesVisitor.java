@@ -44,7 +44,7 @@ import org.kalypso.commons.java.lang.Doubles;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.jts.JtsVectorUtilities;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfilePointWrapperVisitor;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
 
 import com.vividsolutions.jts.geom.Point;
@@ -71,7 +71,7 @@ public class ExtrapolateMissingCoordinatesVisitor implements IProfilePointWrappe
    * </pre>
    */
   @Override
-  public void visit( final ProfileWrapper profile, final ProfilePointWrapper point )
+  public void visit( final ProfileWrapper profile, final IProfileRecord point )
   {
     if( !Doubles.isNaN( point.getRechtswert(), point.getHochwert() ) )
       return;
@@ -103,7 +103,7 @@ public class ExtrapolateMissingCoordinatesVisitor implements IProfilePointWrappe
     point.setHochwert( moved.getY() );
   }
 
-  private FindVectorVisitor getVector( final ProfilePointWrapper point, final FindVectorVisitor... visitors )
+  private FindVectorVisitor getVector( final IProfileRecord point, final FindVectorVisitor... visitors )
   {
     FindVectorVisitor ptr = null;
     for( final FindVectorVisitor visitor : visitors )

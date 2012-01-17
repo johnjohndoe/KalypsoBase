@@ -42,18 +42,18 @@ package org.kalypso.model.wspm.core.profil.changes;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
 
 public class ActiveObjectEdit implements IProfilChange
 {
   private final IComponent m_property;
 
-  private final IRecord m_point;
+  private final IProfileRecord m_point;
 
   private final IProfil m_profil;
 
-  public ActiveObjectEdit( final IProfil profil, final IRecord point, final IComponent property )
+  public ActiveObjectEdit( final IProfil profil, final IProfileRecord point, final IComponent property )
   {
     m_profil = profil;
     m_property = property;
@@ -68,7 +68,7 @@ public class ActiveObjectEdit implements IProfilChange
       hint.setActivePointChanged();
     }
 
-    final IRecord oldPoint = m_profil.getSelection().getActivePoint();
+    final IProfileRecord oldPoint = m_profil.getSelection().getActivePoint();
     final IComponent oldProperty = m_profil.getSelection().getActiveProperty();
 
     m_profil.getSelection().setActivePoint( m_point );

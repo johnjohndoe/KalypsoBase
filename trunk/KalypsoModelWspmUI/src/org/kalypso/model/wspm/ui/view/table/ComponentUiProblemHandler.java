@@ -61,6 +61,8 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.core.profil.MarkerIndex;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.model.wspm.core.profil.wrappers.ProfileRecord;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
@@ -283,7 +285,7 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
    */
 
   @Deprecated
-  public final IComponent getDeviderTyp( final IRecord point )
+  public final IComponent getDeviderTyp( final IProfileRecord point )
   {
     final IProfilPointMarker[] markers = m_profile.getPointMarkerFor( point );
     if( markers == null )
@@ -298,7 +300,7 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
 
   public final String[] getMarkerTypes( final IRecord point )
   {
-    final IProfilPointMarker[] markers = m_profile.getPointMarkerFor( point );
+    final IProfilPointMarker[] markers = m_profile.getPointMarkerFor( point instanceof IProfileRecord ? (IProfileRecord) point : new ProfileRecord( point ) );
     if( markers == null || markers.length == 0 )
       return null;
     final HashSet<String> types = new HashSet<String>();

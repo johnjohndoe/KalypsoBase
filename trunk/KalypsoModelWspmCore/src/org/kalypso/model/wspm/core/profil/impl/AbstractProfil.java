@@ -42,11 +42,12 @@ package org.kalypso.model.wspm.core.profil.impl;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.resources.IMarker;
@@ -68,6 +69,8 @@ import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectAdd;
 import org.kalypso.model.wspm.core.profil.impl.marker.PointMarker;
 import org.kalypso.model.wspm.core.profil.selection.RangeSelection;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.model.wspm.core.profil.wrappers.ProfileRecord;
 import org.kalypso.observation.IObservationVisitor;
 import org.kalypso.observation.phenomenon.IPhenomenon;
 import org.kalypso.observation.result.IComponent;
@@ -89,10 +92,6 @@ public abstract class AbstractProfil implements IProfil
   private double m_station;
 
   private IPhenomenon m_phenomenon;
-
-  private IRecord m_activePoint;
-
-  private IComponent m_activePointProperty;
 
   private TupleResult m_result;
 
@@ -140,9 +139,9 @@ public abstract class AbstractProfil implements IProfil
   }
 
   @Override
-  public boolean addPoint( final IRecord point )
+  public boolean addPoint( final IProfileRecord point )
   {
-    return getResult().add( point );
+    return getResult().add( point.getRecord() );
   }
 
   @Override
@@ -203,9 +202,11 @@ public abstract class AbstractProfil implements IProfil
   }
 
   @Override
-  public IRecord createProfilPoint( )
+  public IProfileRecord createProfilPoint( )
   {
-    return m_result.createRecord();
+    final IRecord record = m_result.createRecord();
+
+    return new ProfileRecord( record );
   }
 
   private void fireProblemMarkerChanged( )
@@ -263,16 +264,20 @@ public abstract class AbstractProfil implements IProfil
   }
 
   @Override
-  public IRecord[] getMarkedPoints( )
+  public IProfileRecord[] getMarkedPoints( )
   {
-    final ArrayList<IRecord> records = new ArrayList<IRecord>();
+    final ArrayList<IProfileRecord> records = new ArrayList<IProfileRecord>();
 
-    for( final IRecord record : getResult() )
-      if( getPointMarkerFor( record ).length > 0 )
+    final IProfileRecord[] points = getPoints();
+    for( final IProfileRecord point : points )
+    {
+      if( getPointMarkerFor( point ).length > 0 )
       {
-        records.add( record );
+        records.add( point );
       }
-    return records.toArray( new IRecord[] {} );
+    }
+
+    return records.toArray( new IProfileRecord[] {} );
   }
 
   @Override
@@ -288,16 +293,14 @@ public abstract class AbstractProfil implements IProfil
   }
 
   @Override
-  public IRecord getPoint( final int index )
+  public IProfileRecord getPoint( final int index )
   {
-
-    return getResult().get( index );
+    return getPoints()[index];
   }
 
   @Override
   public IProfilPointMarker[] getPointMarkerFor( final IComponent markerColumn )
   {
-
     if( markerColumn == null )
       return new IProfilPointMarker[] {};
     final int index = getResult().indexOfComponent( markerColumn );
@@ -305,19 +308,21 @@ public abstract class AbstractProfil implements IProfil
       return new IProfilPointMarker[] {};
 
     final List<IProfilPointMarker> markers = new ArrayList<IProfilPointMarker>();
-    for( final IRecord record : getResult() )
+
+    final IProfileRecord[] points = getPoints();
+    for( final IProfileRecord point : points )
     {
-      final Object value = record.getValue( index );
+      final Object value = point.getValue( index );
       if( value != null )
       {
-        markers.add( new PointMarker( markerColumn, record ) );
+        markers.add( new PointMarker( markerColumn, point ) );
       }
     }
     return markers.toArray( new IProfilPointMarker[] {} );
   }
 
   @Override
-  public IProfilPointMarker[] getPointMarkerFor( final IRecord record )
+  public IProfilPointMarker[] getPointMarkerFor( final IProfileRecord record )
   {
     final ArrayList<IProfilPointMarker> pointMarkers = new ArrayList<IProfilPointMarker>();
     final IComponent[] markers = getPointMarkerTypes();
@@ -387,21 +392,32 @@ public abstract class AbstractProfil implements IProfil
   }
 
   @Override
-  public IRecord[] getPoints( )
+  public IProfileRecord[] getPoints( )
   {
-    return getResult().toArray( new IRecord[] {} );
+    final Set<IProfileRecord> collection = new LinkedHashSet<>();
+    final IRecord[] records = getResult().toArray( new IRecord[] {} );
+    for( final IRecord record : records )
+    {
+      collection.add( new ProfileRecord( record ) );
+    }
+
+    return collection.toArray( new IProfileRecord[] {} );
   }
 
   @Override
-  public IRecord[] getPoints( final int startPoint, final int endPoint )
+  public IProfileRecord[] getPoints( final int startPoint, final int endPoint )
   {
+    final IProfileRecord[] records = getPoints();
+
     // TODO visitor pattern
     final int size = endPoint - startPoint + 1;
-    final IRecord[] subList = new IRecord[size];
-    for( int i = 0; i < size; i++ )
+    final IProfileRecord[] subList = new IProfileRecord[size];
+
+    for( int index = 0; index < size; index++ )
     {
-      subList[i] = getResult().get( startPoint + i );
+      subList[index] = records[startPoint + index];
     }
+
     return subList;
   }
 
@@ -479,9 +495,9 @@ public abstract class AbstractProfil implements IProfil
   }
 
   @Override
-  public int indexOfPoint( final IRecord point )
+  public int indexOfPoint( final IProfileRecord point )
   {
-    return getResult().indexOf( point );
+    return getResult().indexOf( point.getRecord() );
   }
 
   @Override
@@ -500,15 +516,22 @@ public abstract class AbstractProfil implements IProfil
   }
 
   @Override
-  public boolean removePoint( final IRecord point )
+  public boolean removePoint( final IProfileRecord point )
   {
-    return getResult().remove( point );
+    return getResult().remove( point.getRecord() );
   }
 
   @Override
-  public boolean removePoints( final IRecord[] points )
+  public boolean removePoints( final IProfileRecord[] points )
   {
-    return getResult().removeAll( Arrays.asList( points ) );
+    boolean state = true;
+    for( final IProfileRecord point : points )
+    {
+      if( !getResult().remove( point.getRecord() ) )
+        state = false;
+    }
+
+    return state;
   }
 
   @Override

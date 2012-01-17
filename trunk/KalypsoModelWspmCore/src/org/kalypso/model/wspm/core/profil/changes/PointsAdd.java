@@ -42,7 +42,7 @@ package org.kalypso.model.wspm.core.profil.changes;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.observation.result.IRecord;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 
 /**
  * @author Gernot Belger
@@ -53,9 +53,9 @@ public class PointsAdd implements IProfilChange
 
   private final int[] m_pointPositions;
 
-  private final IRecord[] m_points;
+  private final IProfileRecord[] m_points;
 
-  public PointsAdd( final IProfil profil, final int[] pointPositions, final IRecord[] points )
+  public PointsAdd( final IProfil profil, final int[] pointPositions, final IProfileRecord[] points )
   {
     m_profil = profil;
     m_pointPositions = pointPositions;

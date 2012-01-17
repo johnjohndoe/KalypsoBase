@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.core.profil;
 
 import org.eclipse.core.resources.IMarker;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -60,7 +61,7 @@ public interface IProfil extends IObservation<TupleResult>
    *         adds a new Record at the end of this Observation and copies the values of the Components existing in both
    *         records
    */
-  boolean addPoint( IRecord point );
+  boolean addPoint( IProfileRecord point );
 
   /**
    * @param pointProperty
@@ -94,9 +95,9 @@ public interface IProfil extends IObservation<TupleResult>
    * @return a valid profilPoint, addable to this profile
    * @see #addPoint(IRecord)
    */
-  IRecord createProfilPoint( );
+  IProfileRecord createProfilPoint( );
 
-  IProfilPointMarker createPointMarker( String markerID, IRecord point );
+  IProfilPointMarker createPointMarker( String markerID, IProfileRecord point );
 
   IRangeSelection getSelection( );
 
@@ -105,7 +106,7 @@ public interface IProfil extends IObservation<TupleResult>
    */
   String getComment( );
 
-  IRecord[] getMarkedPoints( );
+  IProfileRecord[] getMarkedPoints( );
 
   /**
    * Gets all PointMarker of the given type in this profile.
@@ -120,7 +121,7 @@ public interface IProfil extends IObservation<TupleResult>
   /**
    * Gets all markers for this record.
    */
-  IProfilPointMarker[] getPointMarkerFor( IRecord record );
+  IProfilPointMarker[] getPointMarkerFor( IProfileRecord record );
 
   /**
    * @return all Marker-Types stored in This profile, NOT all available Marker-Types registered for this
@@ -129,18 +130,18 @@ public interface IProfil extends IObservation<TupleResult>
    */
   IComponent[] getPointMarkerTypes( );
 
-  int indexOfPoint( IRecord point );
+  int indexOfPoint( IProfileRecord point );
 
   int indexOfProperty( IComponent pointProperty );
 
   int indexOfProperty( String id );
 
-  IRecord getPoint( int index );
+  IProfileRecord getPoint( int index );
 
   /**
    * @return include both , startPoint and endPoint
    */
-  IRecord[] getPoints( int startPoint, int endPoint );
+  IProfileRecord[] getPoints( int startPoint, int endPoint );
 
   /**
    * @return all PointProperties used by this profile
@@ -150,7 +151,7 @@ public interface IProfil extends IObservation<TupleResult>
   /**
    * @return Points of profile
    */
-  IRecord[] getPoints( );
+  IProfileRecord[] getPoints( );
 
   /**
    * @return the current building(Tuhh) or other kind of ProfileObject, maybe null
@@ -202,9 +203,9 @@ public interface IProfil extends IObservation<TupleResult>
    */
   IComponent hasPointProperty( String propertyId );
 
-  boolean removePoint( IRecord point );
+  boolean removePoint( IProfileRecord point );
 
-  boolean removePoints( IRecord[] points );
+  boolean removePoints( IProfileRecord[] points );
 
   /*
    * obsolete - point markers will be automatically set by their own setValue() implementation (value will be directly

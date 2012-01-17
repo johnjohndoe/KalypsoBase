@@ -49,6 +49,7 @@ import org.kalypso.model.wspm.core.IWspmLayers;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.commands.MousePositionChartHandler;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChart;
@@ -112,7 +113,7 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
   {
     final IChartLayer layer = getChartModel().getLayerManager().findLayer( IWspmLayers.LAYER_GELAENDE );
 
-    final IRecord point = getSelectedPoint( layer );
+    final IProfileRecord point = getSelectedPoint( layer );
     if( point != null )
     {
       getProfil().getSelection().setActivePoint( point );
@@ -155,7 +156,7 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
     return m_profilLayerProvider;
   }
 
-  final IRecord getSelectedPoint( final IChartLayer layer )
+  final IProfileRecord getSelectedPoint( final IChartLayer layer )
   {
     final ICoordinateMapper cm = layer == null ? null : layer.getCoordinateMapper();
     final IAxis domAxis = cm == null ? null : cm.getDomainAxis();
@@ -175,7 +176,7 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
         continue;
       }
       final Double deltaX = Math.abs( activeDom.getMin().doubleValue() - activeDom.getMax().doubleValue() );
-      final IRecord record = ProfilUtil.findPoint( getProfil(), activeDom.getMin().doubleValue() + deltaX / 2, deltaX );
+      final IProfileRecord record = ProfilUtil.findPoint( getProfil(), activeDom.getMin().doubleValue() + deltaX / 2, deltaX );
       if( record != null && record != getProfil().getSelection().getActivePoint() )
       {
         if( hoehe > activeVal.getMin().doubleValue() && hoehe < activeVal.getMax().doubleValue() && breite > activeDom.getMin().doubleValue() && breite < activeDom.getMax().doubleValue() )

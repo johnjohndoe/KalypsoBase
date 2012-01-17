@@ -41,9 +41,8 @@
 package org.kalypso.model.wspm.core.profil;
 
 import org.apache.commons.lang3.Range;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Dirk Kuch
@@ -53,20 +52,20 @@ public interface IRangeSelection
   /**
    * @return the active point.
    */
-  IRecord getActivePoint( );
+  IProfileRecord getActivePoint( );
 
   /**
    * @return the active point property.
    */
   IComponent getActiveProperty( );
 
-  void setActivePoint( IRecord point );
+  void setActivePoint( IProfileRecord point );
 
   void setActivePointProperty( IComponent activeProperty );
 
   Range<Double> getRange( );
 
-  ProfilePointWrapper getSelection( );
-
   void setRange( Double p0, Double pn );
+
+  IProfileRecord[] toPoints( );
 }

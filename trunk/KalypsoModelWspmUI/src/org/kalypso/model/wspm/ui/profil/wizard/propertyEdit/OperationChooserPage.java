@@ -76,6 +76,7 @@ import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.core.profil.filter.ProfilePointFilterComposite;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.pointpropertycalculator.IPointPropertyCalculator;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
@@ -303,7 +304,7 @@ public class OperationChooserPage extends WizardPage
     }
 
     final Set<IRecord> selectedPoints = new HashSet<IRecord>();
-    for( final IRecord point : profil.getResult() )
+    for( final IProfileRecord point : profil.getPoints() )
     {
       if( m_filterChooser.accept( profil, point ) )
       {

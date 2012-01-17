@@ -62,6 +62,8 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.model.wspm.core.profil.wrappers.ProfileRecord;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -389,10 +391,10 @@ public final class ProfilUtil
 
   }
 
-  public static IRecord[] getSegment( final IProfil profile, final double breite )
+  public static IProfileRecord[] getSegment( final IProfil profile, final double breite )
   {
-    final IRecord[] points = profile.getPoints();
-    final IRecord[] segment = new IRecord[] { null, null };
+    final IProfileRecord[] points = profile.getPoints();
+    final IProfileRecord[] segment = new IProfileRecord[] { null, null };
 
     for( int i = 0; i < points.length - 1; i++ )
     {
@@ -407,7 +409,7 @@ public final class ProfilUtil
     return segment;
   }
 
-  public static IRecord findNearestPoint( final IProfil profil, final double breite )
+  public static IProfileRecord findNearestPoint( final IProfil profil, final double breite )
   {
     final Integer index = findNearestPointIndices( profil, new double[] { breite } )[0];
     if( index == null )
@@ -476,9 +478,9 @@ public final class ProfilUtil
     return found.toArray( new IRecord[] {} );
   }
 
-  public static IRecord findPoint( final IProfil profil, final double breite, final double delta )
+  public static IProfileRecord findPoint( final IProfil profil, final double breite, final double delta )
   {
-    final IRecord pkt = findNearestPoint( profil, breite );
+    final IProfileRecord pkt = findNearestPoint( profil, breite );
     final double xpos = getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, pkt );
     return Math.abs( xpos - breite ) <= delta ? pkt : null;
   }
@@ -496,19 +498,20 @@ public final class ProfilUtil
     return points.get( i - 1 );
   }
 
-  public static IRecord getPointBefore( final IProfil profil, final double breite )
+  public static IProfileRecord getPointBefore( final IProfil profil, final double breite )
   {
-    final IRecord[] points = profil.getPoints();
+    final IProfileRecord[] points = profil.getPoints();
     if( points.length == 0 )
       return null;
 
-    IRecord thePointBefore = null;
-    for( final IRecord point : points )
+    IProfileRecord thePointBefore = null;
+    for( final IProfileRecord point : points )
     {
       if( getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, point ) > breite )
         return thePointBefore;
       thePointBefore = point;
     }
+
     return thePointBefore;
   }
 
@@ -789,7 +792,7 @@ public final class ProfilUtil
     final int iBreite = profil.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE );
     if( iBreite >= 0 && iHoehe >= 0 )
     {
-      final IRecord point = profil.createProfilPoint();
+      final IProfileRecord point = profil.createProfilPoint();
       point.setValue( iHoehe, hoehe );
       point.setValue( iBreite, breite );
       if( profil.addPoint( point ) )
@@ -877,8 +880,8 @@ public final class ProfilUtil
   public static void croppProfile( final IProfil profile, final double start, final double end )
   {
     final TupleResult points = profile.getResult();
-    final IRecord[] segment1 = getSegment( profile, start );
-    final IRecord[] segment2 = getSegment( profile, end );
+    final IProfileRecord[] segment1 = getSegment( profile, start );
+    final IProfileRecord[] segment2 = getSegment( profile, end );
     IRecord startPoint = null;
     IRecord endPoint = null;
     int index1 = 0;
@@ -917,12 +920,12 @@ public final class ProfilUtil
 
     for( final IRecord element : toDelete1 )
     {
-      profile.removePoint( element );
+      profile.removePoint( new ProfileRecord( element ) );
     }
 
     for( final IRecord element : toDelete2 )
     {
-      profile.removePoint( element );
+      profile.removePoint( new ProfileRecord( element ) );
     }
   }
 
@@ -975,7 +978,7 @@ public final class ProfilUtil
     for( final Object object : values )
     {
       if( object instanceof Double )
-        myValues.add( ((Double) object) );
+        myValues.add( (Double) object );
       else if( object instanceof Number )
         myValues.add( ((Number) object).doubleValue() );
       else if( object instanceof String )
@@ -993,11 +996,11 @@ public final class ProfilUtil
   /**
    * Searches for a point at the given position.<br>
    */
-  public static IRecord findPointAt( final IProfil profil, final BigDecimal distance )
+  public static IProfileRecord findPointAt( final IProfil profil, final BigDecimal distance )
   {
     final int indexOfDistance = profil.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE );
 
-    final IRecord nearestPoint = findNearestPoint( profil, distance.doubleValue() );
+    final IProfileRecord nearestPoint = findNearestPoint( profil, distance.doubleValue() );
     if( nearestPoint != null )
     {
       final Double nearestDistance = (Double) nearestPoint.getValue( indexOfDistance );
@@ -1009,14 +1012,14 @@ public final class ProfilUtil
     return null;
   }
 
-  public static IRecord insertPointAt( final IProfil profil, final BigDecimal distance )
+  public static IProfileRecord insertPointAt( final IProfil profil, final BigDecimal distance )
   {
     final int indexOfDistance = profil.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE );
 
-    final IRecord newPoint = profil.createProfilPoint();
+    final IProfileRecord newPoint = profil.createProfilPoint();
     newPoint.setValue( indexOfDistance, new Double( distance.doubleValue() ) );
 
-    final IRecord pointBefore = getPointBefore( profil, distance.doubleValue() );
+    final IProfileRecord pointBefore = getPointBefore( profil, distance.doubleValue() );
     insertPoint( profil, newPoint, pointBefore );
     return newPoint;
   }
@@ -1025,9 +1028,9 @@ public final class ProfilUtil
    * Searches for a point at the given position.<br>
    * If no point (within the standard tolerance of profile points) is found, a new one is created at the given position.
    */
-  public static IRecord findOrInsertPointAt( final IProfil profil, final BigDecimal distance )
+  public static IProfileRecord findOrInsertPointAt( final IProfil profil, final BigDecimal distance )
   {
-    final IRecord nearestPoint = findPointAt( profil, distance );
+    final IProfileRecord nearestPoint = findPointAt( profil, distance );
     if( nearestPoint != null )
       return nearestPoint;
 
@@ -1195,7 +1198,7 @@ public final class ProfilUtil
   public static void simplifyProfile( final IProfil profile, final double allowedDistance ) throws IllegalProfileOperationException
   {
     /* Get the profile changes. */
-    final IRecord[] pointsToSimplify = profile.getPoints();
+    final IProfileRecord[] pointsToSimplify = profile.getPoints();
 
     final IProfilChange[] removeChanges = DouglasPeuckerHelper.reduce( allowedDistance, pointsToSimplify, profile );
     for( final IProfilChange profilChange : removeChanges )
@@ -1215,7 +1218,7 @@ public final class ProfilUtil
   public static void simplifyProfile( final IProfil profile, final double allowedDistance, final int startPoint, final int endPoint ) throws IllegalProfileOperationException
   {
     /* Get the profile changes. */
-    final IRecord[] pointsToSimplify = profile.getPoints( startPoint, endPoint );
+    final IProfileRecord[] pointsToSimplify = profile.getPoints( startPoint, endPoint );
 
     final IProfilChange[] removeChanges = DouglasPeuckerHelper.reduce( allowedDistance, pointsToSimplify, profile );
     for( final IProfilChange profilChange : removeChanges )

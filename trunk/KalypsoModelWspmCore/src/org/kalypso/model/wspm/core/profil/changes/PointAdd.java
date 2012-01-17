@@ -44,6 +44,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.result.IRecord;
 
 /**
@@ -53,11 +54,11 @@ public class PointAdd implements IProfilChange
 {
   private final IProfil m_profil;
 
-  private final IRecord m_pointBefore;
+  private final IProfileRecord m_pointBefore;
 
-  private final IRecord m_point;
+  private final IProfileRecord m_point;
 
-  public PointAdd( final IProfil profil, final IRecord pointBefore, final IRecord point )
+  public PointAdd( final IProfil profil, final IProfileRecord pointBefore, final IProfileRecord point )
   {
     m_profil = profil;
     m_pointBefore = pointBefore;
@@ -71,7 +72,7 @@ public class PointAdd implements IProfilChange
     {
       hint.setPointsChanged();
     }
-    IRecord pointToAdd = null;
+    IProfileRecord pointToAdd = null;
     if( m_point != null )
     {
       pointToAdd = m_point;

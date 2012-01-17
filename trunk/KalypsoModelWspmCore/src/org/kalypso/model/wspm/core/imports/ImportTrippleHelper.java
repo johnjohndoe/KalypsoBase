@@ -65,6 +65,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -164,7 +165,7 @@ public final class ImportTrippleHelper
             profiles.add( currentProfile );
           }
 
-          final IRecord point = ImportTrippleHelper.createProfilePoint( currentProfile, tokens, lastPoint );
+          final IProfileRecord point = ImportTrippleHelper.createProfilePoint( currentProfile, tokens, lastPoint );
           if( point != null )
           {
             currentProfile.addPoint( point );
@@ -206,9 +207,9 @@ public final class ImportTrippleHelper
    * @param tokenizer
    *          holds the point data (x, y, z)
    */
-  private static IRecord createProfilePoint( final IProfil profile, final String[] tokens, final IRecord lastPoint )
+  private static IProfileRecord createProfilePoint( final IProfil profile, final String[] tokens, final IRecord lastPoint )
   {
-    final IRecord point = profile.createProfilPoint();
+    final IProfileRecord point = profile.createProfilPoint();
 
     /* observation of profile */
     final int iRechtswert = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT );

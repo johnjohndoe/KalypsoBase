@@ -47,7 +47,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
-import org.kalypso.observation.result.IRecord;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 
 /**
  * @author Gernot Belger
@@ -78,7 +78,7 @@ public class MarkerInfoAction extends Action
     if( pointPos < 0 )
       return;
 
-    final IRecord record = m_profil.getPoint( pointPos );
+    final IProfileRecord record = m_profil.getPoint( pointPos );
     m_profil.getSelection().setActivePoint( record );
   }
 

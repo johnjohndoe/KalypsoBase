@@ -69,6 +69,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
@@ -340,7 +341,7 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
     final Integer[] asPoints = new Integer[existingMarkers.length];
     for( int i = 0; i < asPoints.length; i++ )
     {
-      final IRecord markerPoint = existingMarkers[i].getPoint();
+      final IProfileRecord markerPoint = existingMarkers[i].getPoint();
       asPoints[i] = profil.indexOfPoint( markerPoint );
     }
 
@@ -433,7 +434,7 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
     {
       if( markerIndex != null )
       {
-        final IRecord markerPoint = profil.getPoint( markerIndex );
+        final IProfileRecord markerPoint = profil.getPoint( markerIndex );
         final IProfilPointMarker marker = profil.createPointMarker( id, markerPoint );
         final Object defaultValue = provider.getDefaultValue( id );
         marker.setValue( defaultValue );

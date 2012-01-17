@@ -52,10 +52,10 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.WaterlevelIntersectionWorker;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.preferences.Preferences;
-import org.kalypso.observation.result.IRecord;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -167,8 +167,8 @@ public class WaterlevelRenderWorker
     // FIXME: not yet perfekt: we need to cut at d1/d2 instead of finding the nearest point.
     // So this is nt yet to be used to show final the area, but it final can be used final to calculate the final area.
 
-    final IRecord point1 = ProfilUtil.findNearestPoint( m_profile, x1 );
-    final IRecord point2 = ProfilUtil.findNearestPoint( m_profile, x2 );
+    final IProfileRecord point1 = ProfilUtil.findNearestPoint( m_profile, x1 );
+    final IProfileRecord point2 = ProfilUtil.findNearestPoint( m_profile, x2 );
 
     if( point1 == null || point2 == null )
       return null;

@@ -75,8 +75,8 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperationRunnable;
 import org.kalypso.model.wspm.core.profil.util.DouglasPeuckerHelper;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Belger
@@ -463,7 +463,7 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
 
     /* Get important values. */
     final double allowedDistance = m_distance;
-    final IRecord[] points = m_provider.getPoints();
+    final IProfileRecord[] points = m_provider.getPoints();
 
     /* Get the profile changes. */
     final IProfilChange[] removeChanges = DouglasPeuckerHelper.reduce( allowedDistance, points, m_profile );

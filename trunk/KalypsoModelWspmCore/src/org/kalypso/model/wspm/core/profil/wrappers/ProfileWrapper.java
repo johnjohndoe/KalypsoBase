@@ -46,6 +46,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.Range;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.kalypso.commons.exception.CancelVisitorException;
@@ -89,13 +90,13 @@ public class ProfileWrapper
     doAccept( visitor, findPointsBetween( p1, p2, includeVertexPoints ), direction );
   }
 
-  private void doAccept( final IProfilePointWrapperVisitor visitor, final ProfilePointWrapper[] points, final int direction )
+  private void doAccept( final IProfilePointWrapperVisitor visitor, final IProfileRecord[] points, final int direction )
   {
     try
     {
       if( direction >= 0 )
       {
-        for( final ProfilePointWrapper point : points )
+        for( final IProfileRecord point : points )
         {
           visitor.visit( this, point );
         }
@@ -104,7 +105,7 @@ public class ProfileWrapper
       {
         for( int index = ArrayUtils.getLength( points ) - 1; index > 0; index-- )
         {
-          final ProfilePointWrapper point = points[index];
+          final IProfileRecord point = points[index];
           visitor.visit( this, point );
         }
       }
@@ -131,12 +132,12 @@ public class ProfileWrapper
   /**
    * Returns the point with exactly the same width value as the given one.
    */
-  public ProfilePointWrapper findPoint( final double width )
+  public IProfileRecord findPoint( final double width )
   {
     final IRecord[] points = m_profile.getPoints();
     for( final IRecord point : points )
     {
-      final ProfilePointWrapper wrapper = new ProfilePointWrapper( point );
+      final ProfileRecord wrapper = new ProfileRecord( point );
       final double breite = wrapper.getBreite();
       if( breite == width )
         return wrapper;
@@ -145,24 +146,22 @@ public class ProfileWrapper
     return null;
   }
 
-  public ProfilePointWrapper addPoint( final Double width )
+  public IProfileRecord addPoint( final Double width )
   {
     if( hasPoint( width ) )
       return findPoint( width );
 
-    final IRecord add = m_profile.createProfilPoint();
-    final ProfilePointWrapper addWrapper = new ProfilePointWrapper( add );
-    addWrapper.setBreite( width );
-    addWrapper.setHoehe( getHoehe( width ) );
+    final IProfileRecord add = m_profile.createProfilPoint();
+    add.setBreite( width );
+    add.setHoehe( getHoehe( width ) );
 
-    final IRecord added = WspmProfileHelper.addRecordByWidth( m_profile, add );
-    return new ProfilePointWrapper( added );
+    return WspmProfileHelper.addRecordByWidth( m_profile, add );
   }
 
   public double getHoehe( final Double width )
   {
-    final ProfilePointWrapper before = findPreviousPoint( width );
-    final ProfilePointWrapper after = findNextPoint( width );
+    final IProfileRecord before = findPreviousPoint( width );
+    final IProfileRecord after = findNextPoint( width );
 
     if( before == null || after == null )
       return 0.0;
@@ -176,30 +175,32 @@ public class ProfileWrapper
     return before.getHoehe() + hoehe;
   }
 
-  public ProfilePointWrapper[] findPointsBetween( final Double p1, final Double p2, final boolean includeVertexPoints )
+  public IProfileRecord[] findPointsBetween( final Double p1, final Double p2, final boolean includeVertexPoints )
   {
-    final Double min = Math.min( p1, p2 );
-    final Double max = Math.max( p1, p2 );
+    final Range<Double> range = Range.between( p1, p2 );
 
-    final Set<ProfilePointWrapper> between = new TreeSet<ProfilePointWrapper>( ProfilePointWrapper.COMPARATOR );
+    return findPointsBetween( range, includeVertexPoints );
+  }
 
-    final IRecord[] points = m_profile.getPoints();
-    for( final IRecord point : points )
+  public IProfileRecord[] findPointsBetween( final Range<Double> range, final boolean includeVertexPoints )
+  {
+    final Set<IProfileRecord> found = new TreeSet<IProfileRecord>( ProfileRecord.COMPARATOR );
+
+    final IProfileRecord[] points = getPoints();
+    for( final IProfileRecord point : points )
     {
-      final ProfilePointWrapper wrapper = new ProfilePointWrapper( point );
-      final double breite = wrapper.getBreite();
+      final double breite = point.getBreite();
 
-      if( breite > min && breite < max )
+      if( range.contains( breite ) )
       {
-        between.add( wrapper );
-      }
-      else if( includeVertexPoints && (breite == min || breite == max) )
-      {
-        between.add( wrapper );
+        if( !includeVertexPoints && range.getMinimum() == breite || range.getMaximum() == breite )
+          continue;
+
+        found.add( point );
       }
     }
 
-    return between.toArray( new ProfilePointWrapper[] {} );
+    return found.toArray( new ProfileRecord[] {} );
   }
 
   public ProfilePointMarkerWrapper[] getProfilePointMarkerWrapper( final String marker )
@@ -215,17 +216,17 @@ public class ProfileWrapper
     return wrappers.toArray( new ProfilePointMarkerWrapper[] {} );
   }
 
-  public ProfilePointWrapper[] getPoints( )
+  public IProfileRecord[] getPoints( )
   {
-    final List<ProfilePointWrapper> wrappers = new ArrayList<ProfilePointWrapper>();
+    final List<IProfileRecord> wrappers = new ArrayList<IProfileRecord>();
 
     final TupleResult result = m_profile.getResult();
     for( final IRecord record : result )
     {
-      wrappers.add( new ProfilePointWrapper( record ) );
+      wrappers.add( new ProfileRecord( record ) );
     }
 
-    return wrappers.toArray( new ProfilePointWrapper[] {} );
+    return wrappers.toArray( new IProfileRecord[] {} );
   }
 
   @Override
@@ -234,23 +235,23 @@ public class ProfileWrapper
     return String.format( Messages.getString( "ProfileWrapper_0" ), m_profile.getStation() ); //$NON-NLS-1$
   }
 
-  public ProfilePointWrapper getFirstPoint( )
+  public IProfileRecord getFirstPoint( )
   {
     final TupleResult result = m_profile.getResult();
     if( result.isEmpty() )
       return null;
 
-    return new ProfilePointWrapper( result.get( 0 ) );
+    return new ProfileRecord( result.get( 0 ) );
 
   }
 
-  public ProfilePointWrapper getLastPoint( )
+  public IProfileRecord getLastPoint( )
   {
     final TupleResult result = m_profile.getResult();
     if( result.isEmpty() )
       return null;
 
-    return new ProfilePointWrapper( result.get( result.size() - 1 ) );
+    return new ProfileRecord( result.get( result.size() - 1 ) );
 
   }
 
@@ -305,17 +306,17 @@ public class ProfileWrapper
     return builder.toHashCode();
   }
 
-  public ProfilePointWrapper findNextPoint( final double breite )
+  public IProfileRecord findNextPoint( final double breite )
   {
-    final ProfilePointWrapper lastPoint = getLastPoint();
+    final IProfileRecord lastPoint = getLastPoint();
     if( lastPoint == null )
       return null;
 
     if( breite == lastPoint.getBreite() )
       return lastPoint;
 
-    final ProfilePointWrapper[] points = getPoints();
-    for( final ProfilePointWrapper point : points )
+    final IProfileRecord[] points = getPoints();
+    for( final IProfileRecord point : points )
     {
       if( point.getBreite() > breite )
         return point;
@@ -324,19 +325,19 @@ public class ProfileWrapper
     return null;
   }
 
-  public ProfilePointWrapper findPreviousPoint( final double breite )
+  public IProfileRecord findPreviousPoint( final double breite )
   {
-    final ProfilePointWrapper firstPoint = getFirstPoint();
+    final IProfileRecord firstPoint = getFirstPoint();
     if( firstPoint == null )
       return null;
 
     if( breite == firstPoint.getBreite() )
       return firstPoint;
 
-    ProfilePointWrapper last = null;
+    IProfileRecord last = null;
 
-    final ProfilePointWrapper[] points = getPoints();
-    for( final ProfilePointWrapper point : points )
+    final IProfileRecord[] points = getPoints();
+    for( final IProfileRecord point : points )
     {
       if( point.getBreite() < breite )
       {
@@ -364,21 +365,21 @@ public class ProfileWrapper
     return p.getCoordinate();
   }
 
-  public void remove( final ProfilePointWrapper... remove )
+  public void remove( final IProfileRecord... remove )
   {
-    for( final ProfilePointWrapper wrapper : remove )
+    for( final IProfileRecord record : remove )
     {
-      m_profile.removePoint( wrapper.getRecord() );
+      m_profile.removePoint( record );
     }
   }
 
-  public ProfilePointWrapper findLowestPoint( )
+  public IProfileRecord findLowestPoint( )
   {
     Double height = Double.MAX_VALUE;
-    ProfilePointWrapper ptr = null;
+    IProfileRecord ptr = null;
 
-    final ProfilePointWrapper[] points = getPoints();
-    for( final ProfilePointWrapper point : points )
+    final IProfileRecord[] points = getPoints();
+    for( final IProfileRecord point : points )
     {
       if( point.getHoehe() < height )
       {
@@ -392,7 +393,7 @@ public class ProfileWrapper
 
   public double findLowestHeight( )
   {
-    final ProfilePointWrapper point = findLowestPoint();
+    final IProfileRecord point = findLowestPoint();
     return point.getHoehe();
 
   }
@@ -407,9 +408,9 @@ public class ProfileWrapper
     return width;
   }
 
-  public ProfilePointMarkerWrapper[] getPointMarkers( final ProfilePointWrapper point )
+  public ProfilePointMarkerWrapper[] getPointMarkers( final IProfileRecord point )
   {
-    final IProfilPointMarker[] markers = m_profile.getPointMarkerFor( point.getRecord() );
+    final IProfilPointMarker[] markers = m_profile.getPointMarkerFor( point );
     if( ArrayUtils.isEmpty( markers ) )
       return new ProfilePointMarkerWrapper[] {};
 
@@ -423,13 +424,13 @@ public class ProfileWrapper
     return myMarkers.toArray( new ProfilePointMarkerWrapper[] {} );
   }
 
-  public ProfilePointWrapper hasPoint( final double width, final double fuzziness )
+  public IProfileRecord hasPoint( final double width, final double fuzziness )
   {
     final double min = width - fuzziness;
     final double max = width + fuzziness;
 
-    final ProfilePointWrapper[] points = getPoints();
-    for( final ProfilePointWrapper point : points )
+    final IProfileRecord[] points = getPoints();
+    for( final IProfileRecord point : points )
     {
       final double p = point.getBreite();
       if( p >= min && p <= max )

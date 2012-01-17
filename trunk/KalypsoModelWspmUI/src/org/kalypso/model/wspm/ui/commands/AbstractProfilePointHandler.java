@@ -47,7 +47,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.chart.ui.editor.mousehandler.AbstractChartHandler;
 import org.kalypso.model.wspm.core.IWspmLayers;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 
@@ -64,7 +64,7 @@ public abstract class AbstractProfilePointHandler extends AbstractChartHandler
 {
   private Double m_breite;
 
-  private ProfilePointWrapper m_point;
+  private IProfileRecord m_point;
 
   private ProfileWrapper m_profile;
 
@@ -83,12 +83,12 @@ public abstract class AbstractProfilePointHandler extends AbstractChartHandler
     m_breite = breite;
   }
 
-  protected final ProfilePointWrapper getPoint( )
+  protected final IProfileRecord getPoint( )
   {
     return m_point;
   }
 
-  protected final void setPoint( final ProfilePointWrapper point )
+  protected final void setPoint( final IProfileRecord point )
   {
     m_point = point;
   }
@@ -161,8 +161,8 @@ public abstract class AbstractProfilePointHandler extends AbstractChartHandler
 
   protected final boolean isOutOfRange( )
   {
-    final ProfilePointWrapper p0 = getProfile().getFirstPoint();
-    final ProfilePointWrapper pn = getProfile().getLastPoint();
+    final IProfileRecord p0 = getProfile().getFirstPoint();
+    final IProfileRecord pn = getProfile().getLastPoint();
 
     if( getBreite() < p0.getBreite() )
       return true;

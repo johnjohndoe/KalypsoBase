@@ -58,7 +58,7 @@ import org.kalypso.contribs.eclipse.jface.dialog.ListSelectionComposite;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.observation.result.IRecord;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 
 /**
  * Presents all registered profile filters as check-buttons and let the user choose a subset of them.<br>
@@ -167,12 +167,9 @@ public class ProfilePointFilterComposite extends ListSelectionComposite implemen
 
   /**
    * This implementation accepts a point, if any of the selected filters accepts the point.
-   * 
-   * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#accept(org.kalypso.model.wspm.core.profil.IProfil,
-   *      org.kalypso.observation.result.IRecord)
    */
   @Override
-  public boolean accept( final IProfil profil, final IRecord point )
+  public boolean accept( final IProfil profil, final IProfileRecord point )
   {
     final Object[] checkedElements = getCheckedElements();
     for( final Object filter : checkedElements )
@@ -201,51 +198,39 @@ public class ProfilePointFilterComposite extends ListSelectionComposite implemen
 
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#getUsageHint()
-   */
   @Override
   public String getUsageHint( )
   {
     return m_usageHint;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#getDescription()
-   */
   @Override
   public String getDescription( )
   {
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#getId()
-   */
   @Override
   public String getId( )
   {
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#getName()
-   */
   @Override
   public String getName( )
   {
     throw new UnsupportedOperationException();
   }
 
-  public IRecord[] getSelectedPoints( final IProfil profile )
+  public IProfileRecord[] getSelectedPoints( final IProfil profile )
   {
-    final IRecord[] points = profile.getPoints();
+    final IProfileRecord[] points = profile.getPoints();
     final Object[] checkedElements = getCheckedElements();
     if( checkedElements.length == 0 )
       return points;
 
-    final Collection<IRecord> filteredPoints = new ArrayList<IRecord>( points.length );
-    for( final IRecord point : points )
+    final Collection<IProfileRecord> filteredPoints = new ArrayList<IProfileRecord>( points.length );
+    for( final IProfileRecord point : points )
     {
       if( accept( profile, point ) )
       {
@@ -253,7 +238,7 @@ public class ProfilePointFilterComposite extends ListSelectionComposite implemen
       }
     }
 
-    return filteredPoints.toArray( new IRecord[filteredPoints.size()] );
+    return filteredPoints.toArray( new IProfileRecord[filteredPoints.size()] );
   }
 
 }
