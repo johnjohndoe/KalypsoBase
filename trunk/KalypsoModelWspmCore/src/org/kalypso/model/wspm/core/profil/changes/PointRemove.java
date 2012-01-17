@@ -75,7 +75,7 @@ public class PointRemove implements IProfilChange
 
     for( int i = 0; i < m_points.length; i++ )
     {
-      m_pointPositions[i] = m_profil.indexOfPoint( m_points[i] );
+      m_pointPositions[i] = m_points[i].getIndex();
     }
 
     if( m_profil.removePoints( m_points ) )
