@@ -44,8 +44,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.lang.math.DoubleRange;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.Range;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.IWspmConstants;
@@ -65,7 +65,7 @@ import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Calculates the {@link WaterlevelRenderData} for a given profile and water levels.
- *
+ * 
  * @author Gernot Belger
  */
 public class WaterlevelRenderWorker
@@ -79,7 +79,6 @@ public class WaterlevelRenderWorker
   private final double m_value;
 
   private final int m_widthComponent;
-
 
   public WaterlevelRenderWorker( final IProfil profile, final double value )
   {
@@ -98,7 +97,7 @@ public class WaterlevelRenderWorker
     if( Double.isNaN( m_value ) )
       return Status.OK_STATUS;
 
-    final DoubleRange restriction = getRestriction();
+    final Range<Double> restriction = getRestriction();
 
     final WaterlevelIntersectionWorker worker = new WaterlevelIntersectionWorker( m_profile, m_value );
     worker.execute();
@@ -121,11 +120,11 @@ public class WaterlevelRenderWorker
     return Status.OK_STATUS;
   }
 
-  private WaterlevelRenderSegment buildSegment( final LineSegment segment, final DoubleRange restriction ) throws Exception
+  private WaterlevelRenderSegment buildSegment( final LineSegment segment, final Range<Double> restriction ) throws Exception
   {
-    final DoubleRange segmentRange = new DoubleRange( segment.p0.x, segment.p1.x );
 
-    if( restriction != null && !restriction.overlapsRange( segmentRange ) )
+    final Range<Double> segmentRange = Range.between( segment.p0.x, segment.p1.x );
+    if( restriction != null && !segmentRange.isOverlappedBy( restriction ) )
       return null;
 
     final Polygon area = buildSegmentArea( segment );
@@ -133,7 +132,7 @@ public class WaterlevelRenderWorker
     return new WaterlevelRenderSegment( segment, area );
   }
 
-  private DoubleRange getRestriction( )
+  private Range<Double> getRestriction( )
   {
     final String markerType = Preferences.getWaterlevelRestrictionMarker();
     final IProfilPointMarker[] markers = m_profile.getPointMarkerFor( markerType );
@@ -147,7 +146,7 @@ public class WaterlevelRenderWorker
     if( Double.isNaN( leftLimit ) || Double.isNaN( rightLimit ) )
       return null;
 
-    return new DoubleRange( leftLimit, rightLimit );
+    return Range.between( leftLimit, rightLimit );
   }
 
   private double findLimit( final IProfilPointMarker[] markers, final int index )

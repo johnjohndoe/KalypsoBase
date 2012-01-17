@@ -53,7 +53,7 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.apache.commons.lang.math.Range;
+import org.apache.commons.lang3.Range;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -795,9 +795,10 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       final Collection<ColorMapEntry> values = input.values();
       final ColorMapEntry[] entries = values.toArray( new ColorMapEntry[values.size()] );
 
-      final Range minMax = GeoGridUtilities.calculateRange( m_coverages.getCoverages() );
-      final BigDecimal min = (BigDecimal) minMax.getMinimumNumber();
-      final BigDecimal max = (BigDecimal) minMax.getMaximumNumber();
+      final Range<BigDecimal> minMax = GeoGridUtilities.calculateRange( m_coverages.getCoverages() );
+
+      final BigDecimal min = minMax.getMinimum();
+      final BigDecimal max = minMax.getMaximum();
 
       // open dialog
       final GridStyleDialog dialog = new GridStyleDialog( event.display.getActiveShell(), entries, min, max );
@@ -1048,9 +1049,9 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     if( colorMap.isEmpty() )
     {
       /* IN order to show anything to the user, create a default color map, if no colors have been defined yet */
-      final Range minMax = GeoGridUtilities.calculateRange( m_coverages.getCoverages() );
-      final BigDecimal min = (BigDecimal) minMax.getMinimumNumber();
-      final BigDecimal max = (BigDecimal) minMax.getMaximumNumber();
+      final Range<BigDecimal> minMax = GeoGridUtilities.calculateRange( m_coverages.getCoverages() );
+      final BigDecimal min = minMax.getMinimum();
+      final BigDecimal max = minMax.getMaximum();
       final BigDecimal stepWidth = new BigDecimal( 0.1 );
       final Color fromColor = new Color( 0, 255, 0, 200 );
       final Color toColor = new Color( 255, 0, 0, 200 );

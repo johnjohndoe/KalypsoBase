@@ -52,7 +52,7 @@ import javax.media.jai.TiledImage;
 import ogc31.www.opengis.net.gml.FileType;
 import ogc31.www.opengis.net.gml.FileValueModelType;
 
-import org.apache.commons.lang.math.Range;
+import org.apache.commons.lang3.Range;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -1185,7 +1185,7 @@ public final class GeoGridUtilities
     return true;
   }
 
-  public static Range calculateRange( final Collection<ICoverage> coverages )
+  public static Range<BigDecimal> calculateRange( final Collection<ICoverage> coverages )
   {
     // get min / max
     BigDecimal min = new BigDecimal( Double.MAX_VALUE );
@@ -1211,25 +1211,6 @@ public final class GeoGridUtilities
     final BigDecimal rangeMin = min;
     final BigDecimal rangeMax = max;
 
-    return new Range()
-    {
-      @Override
-      public boolean containsNumber( final Number number )
-      {
-        throw new UnsupportedOperationException();
-      }
-
-      @Override
-      public Number getMaximumNumber( )
-      {
-        return rangeMax;
-      }
-
-      @Override
-      public Number getMinimumNumber( )
-      {
-        return rangeMin;
-      }
-    };
+    return Range.between( rangeMin, rangeMax );
   }
 }
