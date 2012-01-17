@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.wrappers;
 
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.observation.result.IComponent;
 
@@ -50,9 +51,9 @@ public class ProfilePointMarkerWrapper extends ProfileRecord implements IProfilP
 {
   private final IProfilPointMarker m_marker;
 
-  public ProfilePointMarkerWrapper( final IProfilPointMarker marker )
+  public ProfilePointMarkerWrapper( final IProfil parent, final IProfilPointMarker marker )
   {
-    super( marker.getPoint() );
+    super( parent, marker.getPoint() );
 
     m_marker = marker;
   }

@@ -74,10 +74,6 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
     m_profil = profil;
   }
 
-  /**
-   * @see org.kalypso.observation.result.ITupleResultChangedListener#componentsChanged(org.kalypso.observation.result.IComponent[],
-   *      org.kalypso.observation.result.ITupleResultChangedListener.TYPE)
-   */
   @Override
   public void componentsChanged( final IComponent[] components, final TYPE type )
   {
@@ -138,7 +134,7 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
         final IRecord r = change.getRecord();
 
         IProfilPointMarker marker = null;
-        for( final IProfilPointMarker m : m_profil.getPointMarkerFor( r instanceof IProfileRecord ? (IProfileRecord) r : new ProfileRecord( r ) ) )
+        for( final IProfilPointMarker m : m_profil.getPointMarkerFor( r instanceof IProfileRecord ? (IProfileRecord) r : new ProfileRecord( m_profil, r ) ) )
         {
           if( m.getComponent() == component )
           {
@@ -155,7 +151,7 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
           profChanges.add( m_onMarkerMovedDelete );
           final IRecord record = change.getRecord();
 
-          profChanges.add( new PointMarkerSetPoint( marker, record instanceof IProfileRecord ? (IProfileRecord) record : new ProfileRecord( record ) ) );
+          profChanges.add( new PointMarkerSetPoint( marker, record instanceof IProfileRecord ? (IProfileRecord) record : new ProfileRecord( m_profil, record ) ) );
           m_onMarkerMovedDelete = null;
           hint.setPointValuesChanged();
           hint.setMarkerMoved();

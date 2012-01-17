@@ -300,7 +300,7 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
 
   public final String[] getMarkerTypes( final IRecord point )
   {
-    final IProfilPointMarker[] markers = m_profile.getPointMarkerFor( point instanceof IProfileRecord ? (IProfileRecord) point : new ProfileRecord( point ) );
+    final IProfilPointMarker[] markers = m_profile.getPointMarkerFor( point instanceof IProfileRecord ? (IProfileRecord) point : new ProfileRecord( m_profile, point ) );
     if( markers == null || markers.length == 0 )
       return null;
     final HashSet<String> types = new HashSet<String>();
