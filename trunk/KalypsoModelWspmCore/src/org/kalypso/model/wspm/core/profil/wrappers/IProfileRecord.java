@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.wrappers;
 
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -135,4 +136,6 @@ public interface IProfileRecord extends IRecord
 
   @Override
   IProfileRecord cloneRecord( );
+
+  IProfil getProfile( );
 }

@@ -303,8 +303,9 @@ public abstract class AbstractProfil implements IProfil
   @Override
   public IProfilPointMarker[] getPointMarkerFor( final IComponent markerColumn )
   {
-    if( markerColumn == null )
+    if( Objects.isNull( markerColumn ) )
       return new IProfilPointMarker[] {};
+
     final int index = getResult().indexOfComponent( markerColumn );
     if( index < 0 )
       return new IProfilPointMarker[] {};
@@ -315,7 +316,7 @@ public abstract class AbstractProfil implements IProfil
     for( final IProfileRecord point : points )
     {
       final Object value = point.getValue( index );
-      if( value != null )
+      if( Objects.isNotNull( value ) )
       {
         markers.add( new PointMarker( markerColumn, point ) );
       }
