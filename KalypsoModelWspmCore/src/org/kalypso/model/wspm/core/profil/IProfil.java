@@ -98,15 +98,7 @@ public interface IProfil extends IObservation<TupleResult>
 
   IProfilPointMarker createPointMarker( String markerID, IRecord point );
 
-  /**
-   * @return the active Point.
-   */
-  IRecord getActivePoint( );
-
-  /**
-   * @return the active Pointproperty.
-   */
-  IComponent getActiveProperty( );
+  IRangeSelection getSelection( );
 
   /**
    * @return something stored in the profile as Strings
@@ -234,10 +226,6 @@ public interface IProfil extends IObservation<TupleResult>
    *          removes the key and its value from the profiles internal HashMap<Object,Object>
    */
   Object removeProperty( Object key );
-
-  void setActivePoint( IRecord point );
-
-  void setActivePointProperty( IComponent activeProperty );
 
   void setComment( String comment );
 

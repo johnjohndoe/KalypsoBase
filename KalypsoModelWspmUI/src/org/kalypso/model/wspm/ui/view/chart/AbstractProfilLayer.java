@@ -114,7 +114,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     final IComponent targetComponent = getTargetComponent();
     if( targetComponent != null )
     {
-      getProfil().setActivePointProperty( targetComponent );
+      getProfil().getSelection().setActivePointProperty( targetComponent );
     }
 
     if( point == null || dragStartData.getPosition() == point )
@@ -179,8 +179,8 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     if( !Objects.isNull( cmp, pos ) )
     {
       final IProfil profil = getProfil();
-      profil.setActivePoint( profil.getPoint( pos ) );
-      profil.setActivePointProperty( cmp );
+      profil.getSelection().setActivePoint( profil.getPoint( pos ) );
+      profil.getSelection().setActivePointProperty( cmp );
     }
   }
 

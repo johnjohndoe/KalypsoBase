@@ -160,7 +160,7 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
       @Override
       protected IStatus run( final IProgressMonitor monitor )
       {
-        getProfile().getProfile().setActivePoint( record );
+        getProfile().getProfile().getSelection().setActivePoint( record );
         return Status.OK_STATUS;
       }
     };

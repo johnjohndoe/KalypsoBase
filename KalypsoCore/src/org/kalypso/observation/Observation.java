@@ -65,72 +65,48 @@ public class Observation<T extends List< ? >> implements IObservation<T>
     m_result = result;
   }
 
-  /**
-   * @see org.kalypso.om.IObservation#getName()
-   */
   @Override
   public String getName( )
   {
     return m_name;
   }
 
-  /**
-   * @see org.kalypso.om.IObservation#setName(java.lang.String)
-   */
   @Override
   public void setName( final String name )
   {
     m_name = name;
   }
 
-  /**
-   * @see org.kalypso.om.IObservation#getDescription()
-   */
   @Override
   public String getDescription( )
   {
     return m_desc;
   }
 
-  /**
-   * @see org.kalypso.om.IObservation#setDescription(java.lang.String)
-   */
   @Override
   public void setDescription( final String desc )
   {
     m_desc = desc;
   }
 
-  /**
-   * @see org.kalypso.om.IObservation#getResult()
-   */
   @Override
   public T getResult( )
   {
     return m_result;
   }
 
-  /**
-   * @see org.kalypso.om.IObservation#setResult(T)
-   */
   @Override
   public void setResult( final T values )
   {
     m_result = values;
   }
 
-  /**
-   * @see org.kalypso.observation.IObservation#getPhenomenon()
-   */
   @Override
   public IPhenomenon getPhenomenon( )
   {
     return m_phenomenon;
   }
 
-  /**
-   * @see org.kalypso.observation.IObservation#setPhenomenon(java.lang.String)
-   */
   @Override
   public void setPhenomenon( final IPhenomenon phenomenon )
   {

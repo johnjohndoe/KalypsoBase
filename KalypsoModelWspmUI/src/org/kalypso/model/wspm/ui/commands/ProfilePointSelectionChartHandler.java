@@ -46,6 +46,8 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
@@ -73,7 +75,6 @@ public class ProfilePointSelectionChartHandler extends AbstractProfilePointHandl
   @Override
   protected void doMouseMove( final AbstractProfilTheme theme, final Point position )
   {
-
     final IChartComposite chart = getChart();
     final Rectangle bounds = chart.getPlotRect();
 
@@ -84,8 +85,7 @@ public class ProfilePointSelectionChartHandler extends AbstractProfilePointHandl
   private IPaintable getHoverFigure( final Point position, final Rectangle bounds )
   {
     final PolylineFigure figure = new PolylineFigure();
-
-    final ILineStyle lineStyle = new LineStyle( 3, new RGB( 0x1C, 0xEC, 0x23 ), 180, 0F, new float[] { 2, 2, 2 }, LINEJOIN.MITER, LINECAP.ROUND, 1, true );
+    final ILineStyle lineStyle = new LineStyle( 3, new RGB( 0x8D, 0xC3, 0xFC ), 180, 0F, new float[] { 2, 2, 2 }, LINEJOIN.MITER, LINECAP.ROUND, 1, true );
     figure.setStyle( lineStyle );
 
     figure.setPoints( new Point[] { new Point( position.x, 0 ), new Point( position.x, bounds.y + bounds.height ) } );
@@ -98,10 +98,11 @@ public class ProfilePointSelectionChartHandler extends AbstractProfilePointHandl
   {
     super.mouseDown( e );
 
-// if( Objects.isNull( m_breite, m_profile ) )
-// return;
-//
-// final ProfilePointWrapper before = m_profile.findPreviousPoint( m_breite );
+    if( Objects.isNull( getBreite(), getProfile() ) )
+      return;
+
+    final IProfil profile = getProfile().getProfile();
+    // final ProfilePointWrapper before = m_profile.findPreviousPoint( m_breite );
 // final ProfilePointWrapper next = m_profile.findNextPoint( m_breite );
 // if( Objects.isNull( before, next ) )
 // return;

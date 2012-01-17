@@ -163,7 +163,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
         return Status.OK_STATUS;
 
       EditorFirstAdapterFinder.<IProfilProvider> instance();
-      final IRecord activePoint = m_profile.getActivePoint();
+      final IRecord activePoint = m_profile.getSelection().getActivePoint();
       m_view.setSelection( new StructuredSelection( activePoint ) );
       m_view.reveal( activePoint );
       return Status.OK_STATUS;
@@ -317,9 +317,9 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
         if( !selection.isEmpty() )
         {
           final IRecord point = (IRecord) selection.getFirstElement();
-          if( point != m_profile.getActivePoint() )
+          if( point != m_profile.getSelection().getActivePoint() )
           {
-            m_profile.setActivePoint( point );
+            m_profile.getSelection().setActivePoint( point );
           }
         }
       }
@@ -335,9 +335,9 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
         if( element instanceof IRecord )
         {
           final IRecord point = (IRecord) element;
-          if( point != m_profile.getActivePoint() )
+          if( point != m_profile.getSelection().getActivePoint() )
           {
-            m_profile.setActivePoint( point );
+            m_profile.getSelection().setActivePoint( point );
           }
         }
       }

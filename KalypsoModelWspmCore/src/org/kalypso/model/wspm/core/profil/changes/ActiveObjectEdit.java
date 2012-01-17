@@ -68,11 +68,11 @@ public class ActiveObjectEdit implements IProfilChange
       hint.setActivePointChanged();
     }
 
-    final IRecord oldPoint = m_profil.getActivePoint();
-    final IComponent oldProperty = m_profil.getActiveProperty();
+    final IRecord oldPoint = m_profil.getSelection().getActivePoint();
+    final IComponent oldProperty = m_profil.getSelection().getActiveProperty();
 
-    m_profil.setActivePoint( m_point );
-    m_profil.setActivePointProperty( m_property );
+    m_profil.getSelection().setActivePoint( m_point );
+    m_profil.getSelection().setActivePointProperty( m_property );
 
     return new ActiveObjectEdit( m_profil, oldPoint, oldProperty == null ? null : oldProperty );
   }
