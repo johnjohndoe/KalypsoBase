@@ -96,7 +96,7 @@ public class FillMissingProfileGeometriesWizard extends Wizard implements IWorkb
 
     for( final IRecord record : records )
     {
-      final ProfileRecord point = new ProfileRecord( record );
+      final ProfileRecord point = new ProfileRecord( m_profile, record );
       interpolation.visit( profile, point );
     }
 
@@ -106,7 +106,7 @@ public class FillMissingProfileGeometriesWizard extends Wizard implements IWorkb
 
       for( final IRecord record : records )
       {
-        final ProfileRecord point = new ProfileRecord( record );
+        final ProfileRecord point = new ProfileRecord( m_profile, record );
         extrapolation.visit( profile, point );
       }
     }

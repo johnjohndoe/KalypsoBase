@@ -152,7 +152,7 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
 
     final int index = result.indexOf( before.getRecord() );
     if( interpolation.doInterpolation( result, record, index, distance ) )
-      result.add( index + 1, record );
+      result.add( index + 1, record.getRecord() );
 
     final Job job = new Job( "Active point changed" )
     {

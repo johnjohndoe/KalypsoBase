@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.wrappers;
 
+import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -51,6 +52,24 @@ import com.vividsolutions.jts.geom.Point;
 public interface IProfileRecord extends IRecord
 {
   IRecord getRecord( );
+
+  int indexOfProperty( IComponent pointProperty );
+
+  int indexOfProperty( String id );
+
+  /**
+   * @return true if the profile contains the property
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider to get addable properties
+   */
+  boolean hasPointProperty( IComponent property );
+
+  /**
+   * @return the FIRST component with the given Id, if the profile contains the property otherwise null
+   * @note the Id maybe NOT unique in the profiles TupleResult
+   * @see #hasPointProperty(IComponent)
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider to get addable properties
+   */
+  IComponent hasPointProperty( String propertyId );
 
   double getHoehe( );
 
@@ -115,5 +134,5 @@ public interface IProfileRecord extends IRecord
   Point toPoint( );
 
   @Override
-  public IProfileRecord cloneRecord( );
+  IProfileRecord cloneRecord( );
 }

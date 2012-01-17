@@ -50,9 +50,11 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
@@ -206,7 +208,7 @@ public abstract class AbstractProfil implements IProfil
   {
     final IRecord record = m_result.createRecord();
 
-    return new ProfileRecord( record );
+    return new ProfileRecord( this, record );
   }
 
   private void fireProblemMarkerChanged( )
@@ -398,7 +400,7 @@ public abstract class AbstractProfil implements IProfil
     final IRecord[] records = getResult().toArray( new IRecord[] {} );
     for( final IRecord record : records )
     {
-      collection.add( new ProfileRecord( record ) );
+      collection.add( new ProfileRecord( this, record ) );
     }
 
     return collection.toArray( new IProfileRecord[] {} );
@@ -477,36 +479,6 @@ public abstract class AbstractProfil implements IProfil
   public String getType( )
   {
     return m_type;
-  }
-
-  @Override
-  public boolean hasPointProperty( final IComponent property )
-  {
-    return property == null ? false : getResult().hasComponent( property );
-  }
-
-  @Override
-  public IComponent hasPointProperty( final String propertyId )
-  {
-    for( final IComponent component : getResult().getComponents() )
-      if( component.getId().equals( propertyId ) )
-        return component;
-    return null;
-  }
-
-  @Override
-  public int indexOfProperty( final IComponent pointProperty )
-  {
-    return getResult().indexOfComponent( pointProperty );
-  }
-
-  @Override
-  public int indexOfProperty( final String id )
-  {
-    final IComponent comp = hasPointProperty( id );
-    if( comp != null )
-      return getResult().indexOfComponent( comp );
-    return -1;
   }
 
   @Override
@@ -656,5 +628,53 @@ public abstract class AbstractProfil implements IProfil
   public void accept( final IObservationVisitor visitor )
   {
     throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public int indexOfProperty( final IComponent pointProperty )
+  {
+    return getResult().indexOfComponent( pointProperty );
+  }
+
+  @Override
+  public int indexOfProperty( final String id )
+  {
+    final IComponent component = hasPointProperty( id );
+    if( Objects.isNull( component ) )
+      return -1;
+
+    return getResult().indexOfComponent( component );
+  }
+
+  @Override
+  public int indexOf( final IProfileRecord record )
+  {
+    final int index = record.getIndex();
+    if( index == -1 ) // fallback - this should never happen
+      return getResult().indexOf( record.getRecord() );
+
+    return index;
+  }
+
+  @Override
+  public boolean hasPointProperty( final IComponent component )
+  {
+    if( Objects.isNull( component ) )
+      return false;
+
+    return getResult().hasComponent( component );
+  }
+
+  @Override
+  public IComponent hasPointProperty( final String identifier )
+  {
+    final IComponent[] components = getResult().getComponents();
+    for( final IComponent component : components )
+    {
+      if( StringUtils.equals( component.getId(), identifier ) )
+        return component;
+    }
+
+    return null;
   }
 }

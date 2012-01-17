@@ -920,12 +920,12 @@ public final class ProfilUtil
 
     for( final IRecord element : toDelete1 )
     {
-      profile.removePoint( new ProfileRecord( element ) );
+      profile.removePoint( new ProfileRecord( profile, element ) );
     }
 
     for( final IRecord element : toDelete2 )
     {
-      profile.removePoint( new ProfileRecord( element ) );
+      profile.removePoint( new ProfileRecord( profile, element ) );
     }
   }
 

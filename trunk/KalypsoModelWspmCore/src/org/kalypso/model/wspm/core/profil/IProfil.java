@@ -130,10 +130,6 @@ public interface IProfil extends IObservation<TupleResult>
    */
   IComponent[] getPointMarkerTypes( );
 
-  int indexOfProperty( IComponent pointProperty );
-
-  int indexOfProperty( String id );
-
   IProfileRecord getPoint( int index );
 
   /**
@@ -187,20 +183,6 @@ public interface IProfil extends IObservation<TupleResult>
    */
   String getType( );
 
-  /**
-   * @return true if the profile contains the property
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider to get addable properties
-   */
-  boolean hasPointProperty( IComponent property );
-
-  /**
-   * @return the FIRST component with the given Id, if the profile contains the property otherwise null
-   * @note the Id maybe NOT unique in the profiles TupleResult
-   * @see #hasPointProperty(IComponent)
-   * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider to get addable properties
-   */
-  IComponent hasPointProperty( String propertyId );
-
   boolean removePoint( IProfileRecord point );
 
   boolean removePoints( IProfileRecord[] points );
@@ -252,5 +234,25 @@ public interface IProfil extends IObservation<TupleResult>
    * @return source of the profile
    */
   Object getSource( );
+
+  /**
+   * @return true if the profile contains the property
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider to get addable properties
+   */
+  boolean hasPointProperty( IComponent property );
+
+  /**
+   * @return the FIRST component with the given Id, if the profile contains the property otherwise null
+   * @note the Id maybe NOT unique in the profiles TupleResult
+   * @see #hasPointProperty(IComponent)
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider to get addable properties
+   */
+  IComponent hasPointProperty( String propertyId );
+
+  int indexOfProperty( IComponent pointProperty );
+
+  int indexOfProperty( String id );
+
+  int indexOf( IProfileRecord record );
 
 }

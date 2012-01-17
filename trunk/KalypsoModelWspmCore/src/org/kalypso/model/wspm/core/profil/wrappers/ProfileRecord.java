@@ -44,7 +44,9 @@ import java.util.Comparator;
 
 import org.kalypso.jts.JTSConverter;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -69,9 +71,13 @@ public class ProfileRecord extends AbstractRecordWrapper implements IProfileReco
     }
   };
 
-  public ProfileRecord( final IRecord record )
+  private IProfil m_profile;
+
+  public ProfileRecord( final IProfil parent, final IRecord record )
   {
     super( record );
+
+    setProfile( parent );
   }
 
   @Override
@@ -287,9 +293,49 @@ public class ProfileRecord extends AbstractRecordWrapper implements IProfileReco
     return JTSConverter.toPoint( new Coordinate( getRechtswert(), getHochwert() ) );
   }
 
+  public IProfil getProfile( )
+  {
+    return m_profile;
+  }
+
   @Override
   public IProfileRecord cloneRecord( )
   {
-    return new ProfileRecord( getRecord().cloneRecord() );
+    return new ProfileRecord( getProfile(), getRecord().cloneRecord() );
+  }
+
+  public void setProfile( final IProfil profile )
+  {
+    m_profile = profile;
+  }
+
+  @Override
+  public int getIndex( )
+  {
+    return getRecord().getIndex();
+  }
+
+  @Override
+  public int indexOfProperty( final IComponent pointProperty )
+  {
+    return getProfile().indexOfProperty( pointProperty );
+  }
+
+  @Override
+  public int indexOfProperty( final String id )
+  {
+    return getProfile().indexOfProperty( id );
+  }
+
+  @Override
+  public boolean hasPointProperty( final IComponent component )
+  {
+    return getProfile().hasPointProperty( component );
+  }
+
+  @Override
+  public IComponent hasPointProperty( final String identifier )
+  {
+    return getProfile().hasPointProperty( identifier );
   }
 }

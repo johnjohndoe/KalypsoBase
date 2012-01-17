@@ -74,7 +74,7 @@ public class RangeSelection implements IRangeSelection
   @Override
   public IProfileRecord getActivePoint( )
   {
-    final IProfileRecord[] points = m_profile.getPoints();
+    final IProfileRecord[] points = m_profile.getProfile().getPoints();
     if( ArrayUtils.isEmpty( points ) )
       return null;
 

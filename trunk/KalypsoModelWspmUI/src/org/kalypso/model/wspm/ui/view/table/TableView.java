@@ -322,7 +322,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
           if( point != m_profile.getSelection().getActivePoint() )
           {
 
-            m_profile.getSelection().setActivePoint( point instanceof IProfileRecord ? (IProfileRecord) point : new ProfileRecord( point ) );
+            m_profile.getSelection().setActivePoint( point instanceof IProfileRecord ? (IProfileRecord) point : new ProfileRecord( m_profile, point ) );
           }
         }
       }
@@ -340,7 +340,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
           final IRecord point = (IRecord) element;
           if( point != m_profile.getSelection().getActivePoint() )
           {
-            m_profile.getSelection().setActivePoint( point instanceof IProfileRecord ? (IProfileRecord) point : new ProfileRecord( point ) );
+            m_profile.getSelection().setActivePoint( point instanceof IProfileRecord ? (IProfileRecord) point : new ProfileRecord( m_profile, point ) );
           }
         }
       }
