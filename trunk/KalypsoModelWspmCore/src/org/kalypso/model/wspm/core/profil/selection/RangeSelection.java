@@ -40,11 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.selection;
 
+import org.apache.commons.lang3.Range;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.wrappers.ProfilePointWrapper;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -111,6 +113,24 @@ public class RangeSelection implements IRangeSelection
 
     final IProfil profile = m_profile.getProfile();
     profile.fireProfilChanged( hint, new IProfilChange[] { new ActiveObjectEdit( profile, m_activePoint, m_activePointProperty ) } );
+  }
+
+  @Override
+  public Range<Double> getRange( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public ProfilePointWrapper getSelection( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void setRange( final Double p0, final Double pn )
+  {
+    throw new UnsupportedOperationException();
   }
 
 }
