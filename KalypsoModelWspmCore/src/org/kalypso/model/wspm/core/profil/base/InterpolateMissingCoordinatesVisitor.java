@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.core.profil.base;
 
 import org.kalypso.commons.java.lang.Doubles;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecordVisitor;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
@@ -55,14 +54,14 @@ public class InterpolateMissingCoordinatesVisitor implements IProfileRecordVisit
 {
 
   @Override
-  public void visit( final IProfil profile, final IProfileRecord point, final int searchDirection )
+  public void visit( final IProfileRecord point, final int searchDirection )
   {
     if( !Doubles.isNaN( point.getHochwert(), point.getRechtswert() ) )
       return;
 
     try
     {
-      final GM_Point position = WspmProfileHelper.getGeoPosition( point.getBreite(), profile );
+      final GM_Point position = WspmProfileHelper.getGeoPosition( point.getBreite(), point.getProfile() );
       if( Objects.isNotNull( position ) )
       {
         point.setRechtswert( position.getX() );

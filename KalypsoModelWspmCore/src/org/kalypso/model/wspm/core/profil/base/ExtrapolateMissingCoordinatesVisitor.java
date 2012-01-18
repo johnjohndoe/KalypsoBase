@@ -71,11 +71,12 @@ public class ExtrapolateMissingCoordinatesVisitor implements IProfileRecordVisit
    * </pre>
    */
   @Override
-  public void visit( final IProfil profile, final IProfileRecord point, final int searchDirection )
+  public void visit( final IProfileRecord point, final int searchDirection )
   {
     if( !Doubles.isNaN( point.getRechtswert(), point.getHochwert() ) )
       return;
 
+    final IProfil profile = point.getProfile();
     final double p0 = profile.getFirstPoint().getBreite();
     final double pn = profile.getLastPoint().getBreite();
 

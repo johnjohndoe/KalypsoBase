@@ -42,11 +42,13 @@ package org.kalypso.model.wspm.core.profil.wrappers;
 
 import java.util.Comparator;
 
+import org.apache.commons.lang3.Range;
 import org.kalypso.commons.java.lang.Doubles;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.jts.JTSConverter;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -382,5 +384,26 @@ public class ProfileRecord extends AbstractRecordWrapper implements IProfileReco
       return new ProfileRecord( getProfile(), result.get( index - 1 ) );
 
     return getProfile().findPreviousPoint( getBreite() );
+  }
+
+  @Override
+  public Range<Double> getBreiteAsRange( )
+  {
+    return Range.is( getBreite() );
+  }
+
+  @Override
+  public boolean isSelected( )
+  {
+    final IProfil profile = getProfile();
+    if( Objects.isNull( profile ) )
+      return false;
+
+    final IRangeSelection selection = profile.getSelection();
+    final Range<Double> range = selection.getRange();
+    if( Objects.isNull( range ) )
+      return false;
+
+    return range.contains( getBreite() );
   }
 }

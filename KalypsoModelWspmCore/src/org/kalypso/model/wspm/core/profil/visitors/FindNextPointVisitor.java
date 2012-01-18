@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.core.profil.visitors;
 
 import org.kalypso.commons.exception.CancelVisitorException;
-import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecordVisitor;
 
@@ -61,7 +60,7 @@ public class FindNextPointVisitor implements IProfileRecordVisitor
   }
 
   @Override
-  public void visit( final IProfil profile, final IProfileRecord point, final int searchDirection ) throws CancelVisitorException
+  public void visit( final IProfileRecord point, final int searchDirection ) throws CancelVisitorException
   {
     if( searchDirection < 0 )
     {

@@ -62,19 +62,12 @@ public class CrossSectionTheme extends AbstractProfilTheme
     super( profil, IWspmLayers.LAYER_GELAENDE, TITLE, chartLayers, cm );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#createLayerPanel(org.kalypso.model.wspm.core.profil.IProfil)
-   */
   @Override
   public IProfilView createLayerPanel( )
   {
     return new GelaendePanel( getProfil(), this );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
-   *      org.kalypso.model.wspm.core.profil.IProfilChange[])
-   */
   @Override
   public void onProfilChanged( final ProfilChangeHint hint )
   {

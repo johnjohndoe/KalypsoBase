@@ -61,7 +61,7 @@ public final class ProfilPropertyEdit implements IProfilChange
   @Override
   public void configureHint( final ProfilChangeHint hint )
   {
-    hint.setProfilPropertyChanged( true );
+    hint.setProfilPropertyChanged();
   }
 
   @Override

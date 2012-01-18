@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.core.profil.visitors;
 
 import org.apache.commons.lang3.Range;
 import org.kalypso.commons.exception.CancelVisitorException;
-import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecordVisitor;
 
@@ -61,7 +60,7 @@ public class FindPointVisior implements IProfileRecordVisitor
   }
 
   @Override
-  public void visit( final IProfil profile, final IProfileRecord point, final int direction ) throws CancelVisitorException
+  public void visit( final IProfileRecord point, final int direction ) throws CancelVisitorException
   {
     if( m_range.contains( point.getBreite() ) )
     {

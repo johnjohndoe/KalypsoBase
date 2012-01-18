@@ -41,12 +41,13 @@
 package org.kalypso.model.wspm.ui.view.chart;
 
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
@@ -138,7 +139,7 @@ public class PointsLineLayer extends AbstractProfilLayer
       final Double y = cm.getTargetAxis().screenToNumeric( newPoint.y ).doubleValue();
       profilPoint.setValue( hoehe, y );
 
-      profil.getSelection().setActivePoint( profilPoint );
+      profil.getSelection().setRange( profilPoint );
       getEventHandler().fireLayerContentChanged( this );
     }
   }
@@ -191,63 +192,48 @@ public class PointsLineLayer extends AbstractProfilLayer
   public void paint( final GC gc )
   {
     final IProfil profil = getProfil();
-
     if( profil == null )
       return;
-    final IRecord[] profilPoints = profil.getPoints();
-    final int len = profilPoints.length;
 
-    Point activePoint = null;
-    Point activePoint2 = null;
+    /** differ between selected and plain (not selected) points */
+    final Set<Point> plain = new LinkedHashSet<>();
+    final Set<Point> selected = new LinkedHashSet<>();
 
-    final List<Point> points = new ArrayList<Point>();
-
-    final int active = profil.getSelection().getActivePoint().getIndex();
-    for( int i = 0; i < len; i++ )
+    final IProfileRecord[] points = profil.getPoints();
+    for( final IProfileRecord point : points )
     {
-      final Point p = toScreen( profilPoints[i] );
-      if( p == null )
-      {
-        // TODO: user message
-      }
-      else
-      {
-        points.add( p );
+      final Point screen = toScreen( point );
+      if( Objects.isNull( screen ) )
+        continue;
 
-        if( i == active )
-        {
-          activePoint = p;
-        }
-        else if( i > active && activePoint2 == null )
-        {
-          activePoint2 = p;
-        }
-      }
-    }
-    final Point[] pointsArray = points.toArray( new Point[points.size()] );
+      if( point.isSelected() )
+        selected.add( screen );
 
-    final PolylineFigure pf = new PolylineFigure();
-    pf.setStyle( getLineStyle() );
-    pf.setPoints( pointsArray );
-    pf.paint( gc );
-
-    if( activePoint != null && activePoint2 != null )
-    {
-      pf.setStyle( getLineStyleActive() );
-      pf.setPoints( new Point[] { activePoint, activePoint2 } );
-      pf.paint( gc );
+      plain.add( screen );
     }
 
-    final PointFigure pf2 = new PointFigure();
+    final PolylineFigure lineFigure = new PolylineFigure();
+    lineFigure.setStyle( getLineStyle() );
+    lineFigure.setPoints( plain.toArray( new Point[] {} ) );
+    lineFigure.paint( gc );
 
-    pf2.setStyle( getPointStyle() );
-    pf2.setPoints( pointsArray );
-    pf2.paint( gc );
-    if( activePoint != null )
+    if( !selected.isEmpty() )
     {
-      pf2.setStyle( getPointStyleActive() );
-      pf2.setPoints( new Point[] { activePoint } );
-      pf2.paint( gc );
+      lineFigure.setStyle( getLineStyleActive() );
+      lineFigure.setPoints( selected.toArray( new Point[] {} ) );
+      lineFigure.paint( gc );
+    }
+
+    final PointFigure pointFigure = new PointFigure();
+    pointFigure.setStyle( getPointStyle() );
+    pointFigure.setPoints( plain.toArray( new Point[] {} ) );
+    pointFigure.paint( gc );
+
+    if( !selected.isEmpty() )
+    {
+      pointFigure.setStyle( getPointStyleActive() );
+      pointFigure.setPoints( selected.toArray( new Point[] {} ) );
+      pointFigure.paint( gc );
     }
   }
 

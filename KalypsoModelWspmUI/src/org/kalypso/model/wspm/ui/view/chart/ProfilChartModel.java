@@ -60,19 +60,12 @@ public class ProfilChartModel extends ChartModel
 {
   private final IProfilListener m_profilListener = new IProfilListener()
   {
-    /**
-     * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProblemMarkerChanged(org.kalypso.model.wspm.core.profil.IProfil)
-     */
     @Override
     public void onProblemMarkerChanged( final IProfil source )
     {
       // TODO: what?
     }
 
-    /**
-     * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
-     *      org.kalypso.model.wspm.core.profil.IProfilChange[])
-     */
     @Override
     public void onProfilChanged( final ProfilChangeHint hint )
     {

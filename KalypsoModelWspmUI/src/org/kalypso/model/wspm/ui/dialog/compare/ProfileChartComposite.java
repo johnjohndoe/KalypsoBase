@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.dialog.compare;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
@@ -116,7 +117,7 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
     final IProfileRecord point = getSelectedPoint( layer );
     if( point != null )
     {
-      getProfil().getSelection().setActivePoint( point );
+      getProfil().getSelection().setRange( point );
     }
 
     return super.doInvalidateChart();
@@ -177,7 +178,10 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
       }
       final Double deltaX = Math.abs( activeDom.getMin().doubleValue() - activeDom.getMax().doubleValue() );
       final IProfileRecord record = ProfilUtil.findPoint( getProfil(), activeDom.getMin().doubleValue() + deltaX / 2, deltaX );
-      if( record != null && record != getProfil().getSelection().getActivePoint() )
+
+      final IProfileRecord[] selection = getProfil().getSelection().toPoints();
+
+      if( record != null && !ArrayUtils.contains( selection, record ) )
       {
         if( hoehe > activeVal.getMin().doubleValue() && hoehe < activeVal.getMax().doubleValue() && breite > activeDom.getMin().doubleValue() && breite < activeDom.getMax().doubleValue() )
           return record;
