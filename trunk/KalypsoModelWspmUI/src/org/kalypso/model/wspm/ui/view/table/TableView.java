@@ -85,8 +85,8 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.model.wspm.core.profil.wrappers.ProfileRecord;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
@@ -143,7 +143,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
 
   protected final UIJob m_updateSelectionJob = new UpdateSelectionJob( this );
 
-  // TODO: consider moving this in the contentprovider: to do this, extends the TupleResultContentProvider to a
+  // TODO: consider moving this in the content provider: to do this, extends the TupleResultContentProvider to a
   // ProfileContentProvider
   private final IProfilListener m_profileListener = new IProfilListener()
   {
@@ -401,19 +401,11 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     onProfilProviderChanged( m_provider, m_profile, newProfile );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.view.IProfilProviderListener#onProfilProviderChanged(org.kalypso.model.wspm.ui.profil.view.IProfilProvider2,
-   *      org.kalypso.model.wspm.core.profil.IProfilEventManager,
-   *      org.kalypso.model.wspm.core.profil.IProfilEventManager, org.kalypso.model.wspm.ui.profil.view.ProfilViewData,
-   *      org.kalypso.model.wspm.ui.profil.view.ProfilViewData)
-   */
   @Override
   public void onProfilProviderChanged( final IProfilProvider provider, final IProfil oldProfile, final IProfil newProfile )
   {
     if( m_profile != null )
-    {
       m_profile.removeProfilListener( m_profileListener );
-    }
 
     m_profile = newProfile;
 
@@ -429,7 +421,6 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
         @Override
         public void run( )
         {
-
           updateControl();
           updateProblemView();
         }
@@ -503,7 +494,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
       return new IProfileRecord[] {};
 
     final IStructuredSelection structured = (IStructuredSelection) selection;
-    final Iterator itr = structured.iterator();
+    final Iterator< ? > itr = structured.iterator();
 
     final Set<IProfileRecord> records = new LinkedHashSet<>();
 
@@ -521,10 +512,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
         if( Objects.isNull( component ) )
           continue;
 
-        final Double breite = (Double) record.getValue( component );
-        final IProfileRecord point = ProfileVisitors.findPoint( m_profile, breite );
-
-        records.add( point );
+        records.add( new ProfileRecord( m_profile, record ) );
       }
     }
 
