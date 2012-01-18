@@ -216,11 +216,11 @@ public abstract class AbstractProfil implements IProfil
   private void fireProblemMarkerChanged( )
   {
     final IProfilListener[] listeners = m_listeners.toArray( new IProfilListener[m_listeners.size()] );
-    for( final IProfilListener l : listeners )
+    for( final IProfilListener listener : listeners )
     {
       try
       {
-        l.onProblemMarkerChanged( this );
+        listener.onProblemMarkerChanged( this );
       }
       catch( final Throwable e )
       {
@@ -351,15 +351,17 @@ public abstract class AbstractProfil implements IProfil
   @Override
   public IComponent[] getPointMarkerTypes( )
   {
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( getType() );
     final List<IComponent> marker = new ArrayList<IComponent>();
+
+    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( getType() );
     final IComponent[] properties = getPointProperties();
 
     for( final IComponent component : properties )
+    {
       if( provider.isMarker( component.getId() ) )
-      {
         marker.add( component );
-      }
+    }
+
     return marker.toArray( new IComponent[] {} );
   }
 
