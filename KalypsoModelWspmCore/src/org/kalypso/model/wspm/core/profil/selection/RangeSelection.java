@@ -63,6 +63,8 @@ public class RangeSelection implements IRangeSelection
 
   private IComponent m_activePointProperty;
 
+  private Range<Double> m_selection;
+
   public RangeSelection( final IProfil profile )
   {
     m_profile = new ProfileWrapper( profile );
@@ -115,13 +117,13 @@ public class RangeSelection implements IRangeSelection
   @Override
   public Range<Double> getRange( )
   {
-    throw new UnsupportedOperationException();
+    return m_selection;
   }
 
   @Override
-  public void setRange( final Double p0, final Double pn )
+  public void setRange( final Range<Double> selection )
   {
-    throw new UnsupportedOperationException();
+    m_selection = selection;
   }
 
   @Override

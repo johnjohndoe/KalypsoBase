@@ -3,6 +3,7 @@ package org.kalypso.chart.ui.editor.mousehandler;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.PaintEvent;
@@ -32,6 +33,10 @@ public abstract class AbstractChartHandler implements IChartHandler
   private EditInfo m_tooltip;
 
   private final ChartTooltipPainter m_tooltipPainter = new ChartTooltipPainter();
+
+  private boolean m_shiftPressed = false;
+
+  private boolean m_controlPressed = false;
 
   public AbstractChartHandler( final IChartComposite chart )
   {
@@ -81,11 +86,29 @@ public abstract class AbstractChartHandler implements IChartHandler
   @Override
   public void keyPressed( final KeyEvent e )
   {
+    if( (e.keyCode & SWT.SHIFT) != 0 )
+      m_shiftPressed = true;
+    else if( (e.keyCode & SWT.CTRL) != 0 )
+      m_controlPressed = true;
   }
 
   @Override
   public void keyReleased( final KeyEvent e )
   {
+    if( (e.keyCode & SWT.SHIFT) != 0 )
+      m_shiftPressed = false;
+    else if( (e.keyCode & SWT.CTRL) != 0 )
+      m_controlPressed = false;
+  }
+
+  public boolean isControlPressed( )
+  {
+    return m_controlPressed;
+  }
+
+  public boolean isShiftPressed( )
+  {
+    return m_shiftPressed;
   }
 
   @Override

@@ -112,7 +112,7 @@ public final class ImportTrippleHelper
       /* File Header */
       fileReader.readLine();
 
-      IRecord lastPoint = null;
+      IProfileRecord lastPoint = null;
       while( fileReader.ready() )
       {
         final String line = fileReader.readLine();
@@ -207,7 +207,7 @@ public final class ImportTrippleHelper
    * @param tokenizer
    *          holds the point data (x, y, z)
    */
-  private static IProfileRecord createProfilePoint( final IProfil profile, final String[] tokens, final IRecord lastPoint )
+  private static IProfileRecord createProfilePoint( final IProfil profile, final String[] tokens, final IProfileRecord lastPoint )
   {
     final IProfileRecord point = profile.createProfilPoint();
 

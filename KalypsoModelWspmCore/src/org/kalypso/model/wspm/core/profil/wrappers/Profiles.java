@@ -38,34 +38,49 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core.profil;
+package org.kalypso.model.wspm.core.profil.wrappers;
 
-import org.apache.commons.lang3.Range;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-import org.kalypso.observation.result.IComponent;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
+import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 
 /**
  * @author Dirk Kuch
  */
-public interface IRangeSelection
+public final class Profiles
 {
-  /**
-   * @return the active point.
-   */
-  IProfileRecord getActivePoint( );
+  private Profiles( )
+  {
+  }
 
-  /**
-   * @return the active point property.
-   */
-  IComponent getActiveProperty( );
+  public static IProfileRecord addPoint( final IProfil profile, final Double width )
+  {
+    final IProfileRecord point = ProfileVisitors.findPoint( profile, width );
+    if( Objects.isNotNull( point ) )
+      return point;
 
-  void setActivePoint( IProfileRecord point );
+    final IProfileRecord add = profile.createProfilPoint();
+    add.setBreite( width );
+    add.setHoehe( getHoehe( profile, width ) );
 
-  void setActivePointProperty( IComponent activeProperty );
+    return WspmProfileHelper.addRecordByWidth( profile, add );
+  }
 
-  Range<Double> getRange( );
+  public static double getHoehe( final IProfil profile, final Double width )
+  {
+    final IProfileRecord before = profile.findPreviousPoint( width );
+    final IProfileRecord after = profile.findNextPoint( width );
+    if( Objects.isNull( before, after ) )
+      return 0.0;
 
-  void setRange( Range<Double> range );
+    final double deltaH = after.getHoehe() - before.getHoehe();
+    final double distanceDeltaH = Math.abs( before.getBreite() - after.getBreite() );
 
-  IProfileRecord[] toPoints( );
+    final double distance = Math.abs( before.getBreite() - width );
+    final double hoehe = deltaH / distanceDeltaH * distance;
+
+    return before.getHoehe() + hoehe;
+  }
+
 }

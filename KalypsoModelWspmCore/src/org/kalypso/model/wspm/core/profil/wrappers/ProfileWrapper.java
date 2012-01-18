@@ -92,36 +92,6 @@ public class ProfileWrapper
     return false;
   }
 
-  public IProfileRecord addPoint( final Double width )
-  {
-    final IProfileRecord point = ProfileVisitors.findPoint( m_profile, width );
-    if( Objects.isNotNull( point ) )
-      return point;
-
-    final IProfileRecord add = m_profile.createProfilPoint();
-    add.setBreite( width );
-    add.setHoehe( getHoehe( width ) );
-
-    return WspmProfileHelper.addRecordByWidth( m_profile, add );
-  }
-
-  public double getHoehe( final Double width )
-  {
-    final IProfileRecord before = getProfile().findPreviousPoint( width );
-    final IProfileRecord after = getProfile().findNextPoint( width );
-
-    if( before == null || after == null )
-      return 0.0;
-
-    final double deltaH = after.getHoehe() - before.getHoehe();
-    final double distanceDeltaH = Math.abs( before.getBreite() - after.getBreite() );
-
-    final double distance = Math.abs( before.getBreite() - width );
-    final double hoehe = deltaH / distanceDeltaH * distance;
-
-    return before.getHoehe() + hoehe;
-  }
-
   public IProfilPointMarker[] getProfilePointMarkerWrapper( final String marker )
   {
 

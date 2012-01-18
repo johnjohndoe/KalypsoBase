@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.Range;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
@@ -54,12 +57,15 @@ import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
+import de.openali.odysseus.chart.framework.model.figure.impl.PolygonFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINECAP;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINEJOIN;
+import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
+import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
 import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 
@@ -68,6 +74,10 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
  */
 public class ProfilePointSelectionChartHandler extends AbstractProfilePointHandler
 {
+
+  private Double m_mouse0 = null;
+
+  private Double m_mouse1 = null;
 
   public ProfilePointSelectionChartHandler( final IChartComposite chart )
   {
@@ -79,22 +89,32 @@ public class ProfilePointSelectionChartHandler extends AbstractProfilePointHandl
   @Override
   protected void doMouseMove( final AbstractProfilTheme theme, final Point position )
   {
-    final IChartComposite chart = getChart();
-    final Rectangle bounds = chart.getPlotRect();
 
-    final EditInfo info = new EditInfo( theme, getHoverFigure( position, bounds ), null, getBreite(), null, null );
+    final EditInfo info = new EditInfo( theme, getMouseMoveHoverFigure( position ), null, getBreite(), null, null );
     setToolInfo( info );
   }
 
-  private IPaintable getHoverFigure( final Point position, final Rectangle bounds )
+  private IPaintable getMouseMoveHoverFigure( final Point position )
   {
-    final PolylineFigure figure = new PolylineFigure();
-    final ILineStyle lineStyle = new LineStyle( 3, new RGB( 0x8D, 0xC3, 0xFC ), 180, 0F, new float[] { 2, 2, 2 }, LINEJOIN.MITER, LINECAP.ROUND, 1, true );
-    figure.setStyle( lineStyle );
+    final IChartComposite chart = getChart();
 
-    figure.setPoints( new Point[] { new Point( position.x, 0 ), new Point( position.x, bounds.y + bounds.height ) } );
+    if( isShiftPressed() )
+    {
+      final AbstractProfilTheme theme = findProfileTheme( chart );
+      final ICoordinateMapper mapper = theme.getCoordinateMapper();
 
-    return figure;
+      final Integer x0 = mapper.getDomainAxis().numericToScreen( m_mouse0 );
+
+      return getHoverFigure( x0, position.x );
+    }
+    else
+    {
+      final PolylineFigure figure = getHoverFigure( position.x );
+      figure.getStyle().setDash( 0F, new float[] { 2, 2, 2 } );
+
+      return figure;
+    }
+
   }
 
   @Override
@@ -108,29 +128,55 @@ public class ProfilePointSelectionChartHandler extends AbstractProfilePointHandl
     final Point position = ChartHandlerUtilities.screen2plotPoint( new Point( e.x, e.y ), bounds );
     if( !isValid( bounds, position ) )
     {
-      doReset();
-
       return;
     }
 
     final AbstractProfilTheme theme = findProfileTheme( chart );
     final ICoordinateMapper mapper = theme.getCoordinateMapper();
 
-// setP0( mapper.getDomainAxis().screenToNumeric( position.x ).doubleValue() );
-// setPoint( getProfile().hasPoint( getBreite().doubleValue(), 0.1 ) );
+    if( !isShiftPressed() )
+      m_mouse0 = mapper.getDomainAxis().screenToNumeric( position.x ).doubleValue();
+    else
+      m_mouse1 = mapper.getDomainAxis().screenToNumeric( position.x ).doubleValue();
 
-// doMouseMove( theme, position );
-//
-// if( Objects.isNull( getBreite(), getProfile() ) )
-// return;
+    final IProfil profile = getProfile();
 
-// final IProfil profile = getProfile().getProfile();
+    final IRangeSelection selection = profile.getSelection();
+    selection.setRange( Range.is( m_mouse0 ) );
+  }
 
+  @Override
+  public void mouseUp( final MouseEvent e )
+  {
+    if( !isShiftPressed() )
+      return;
+
+    final IChartComposite chart = getChart();
+    final Rectangle bounds = chart.getPlotRect();
+
+    final Point position = ChartHandlerUtilities.screen2plotPoint( new Point( e.x, e.y ), bounds );
+    if( !isValid( bounds, position ) )
+    {
+      return;
+    }
+
+    final AbstractProfilTheme theme = findProfileTheme( chart );
+    final ICoordinateMapper mapper = theme.getCoordinateMapper();
+
+    m_mouse1 = mapper.getDomainAxis().screenToNumeric( position.x ).doubleValue();
+
+    final IProfil profile = getProfile();
+
+    final IRangeSelection selection = profile.getSelection();
+    selection.setRange( Range.between( m_mouse0, m_mouse1 ) );
   }
 
   @Override
   public void paintControl( final PaintEvent e )
   {
+    // paint mouse move hover figure
+    super.paintControl( e );
+
     final IProfil profile = getProfile();
     if( Objects.isNull( profile ) )
       return;
@@ -140,6 +186,74 @@ public class ProfilePointSelectionChartHandler extends AbstractProfilePointHandl
     if( Objects.isNull( range ) )
       return;
 
-    throw new UnsupportedOperationException();
+    if( range.getMinimum() == range.getMaximum() )
+      doPaintSinglePoint( range, e );
+    else
+      doPaintRange( range, e );
+  }
+
+  private void doPaintSinglePoint( final Range<Double> range, final PaintEvent e )
+  {
+    final IChartComposite chart = getChart();
+    final AbstractProfilTheme theme = findProfileTheme( chart );
+    final ICoordinateMapper mapper = theme.getCoordinateMapper();
+
+    final Integer x = mapper.getDomainAxis().numericToScreen( range.getMinimum() );
+
+    final IPaintable figure = getHoverFigure( x );
+    figure.paint( e.gc );
+  }
+
+  private void doPaintRange( final Range<Double> range, final PaintEvent e )
+  {
+    final IChartComposite chart = getChart();
+    final AbstractProfilTheme theme = findProfileTheme( chart );
+    final ICoordinateMapper mapper = theme.getCoordinateMapper();
+
+    final Integer x0 = mapper.getDomainAxis().numericToScreen( range.getMinimum() );
+    final Integer x1 = mapper.getDomainAxis().numericToScreen( range.getMaximum() );
+
+    final IPaintable figure = getHoverFigure( x0, x1 );
+    figure.paint( e.gc );
+  }
+
+  private IPaintable getHoverFigure( final Integer x0, final Integer x1 )
+  {
+    final IChartComposite chart = getChart();
+    final Rectangle bounds = chart.getPlotRect();
+
+    final int yMax = bounds.y + bounds.height;
+
+    final RGB rgb = new RGB( 0x8D, 0xC3, 0xFC );
+
+    final ILineStyle lineStyle = new LineStyle( 3, rgb, 180, 0F, new float[] { 2, 2, 2 }, LINEJOIN.MITER, LINECAP.ROUND, 1, true );
+
+    final AreaStyle areaStyle = new AreaStyle( new ColorFill( rgb ), 60, lineStyle, true );
+    final PolygonFigure figure = new PolygonFigure();
+    figure.setStyle( areaStyle );
+
+    final List<Point> points = new ArrayList<Point>();
+    points.add( new Point( x0, 0 ) );
+    points.add( new Point( x0, yMax ) );
+    points.add( new Point( x1, yMax ) );
+    points.add( new Point( x1, 0 ) );
+
+    figure.setPoints( points.toArray( new Point[] {} ) );
+
+    return figure;
+  }
+
+  private PolylineFigure getHoverFigure( final Integer x0 )
+  {
+    final IChartComposite chart = getChart();
+    final Rectangle bounds = chart.getPlotRect();
+
+    final PolylineFigure figure = new PolylineFigure();
+    final ILineStyle lineStyle = new LineStyle( 3, new RGB( 0x8D, 0xC3, 0xFC ), 180, 0F, null, LINEJOIN.MITER, LINECAP.ROUND, 1, true );
+    figure.setStyle( lineStyle );
+
+    figure.setPoints( new Point[] { new Point( x0, 0 ), new Point( x0, bounds.y + bounds.height ) } );
+
+    return figure;
   }
 }
