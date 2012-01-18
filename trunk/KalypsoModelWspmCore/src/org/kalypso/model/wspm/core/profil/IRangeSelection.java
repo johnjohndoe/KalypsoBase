@@ -65,7 +65,7 @@ public interface IRangeSelection
 
   Range<Double> getRange( );
 
-  void setRange( Double p0, Double pn );
+  void setRange( Range<Double> range );
 
   IProfileRecord[] toPoints( );
 }
