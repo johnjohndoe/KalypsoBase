@@ -41,7 +41,6 @@
 package org.kalypso.ogc.sensor.filter.filters;
 
 import java.math.BigDecimal;
-import java.net.URL;
 
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
@@ -51,7 +50,6 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.ogc.sensor.proxy.AutoProxyFactory;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.zml.filters.RoundFilterType;
 
@@ -67,14 +65,9 @@ public class RoundFilter extends AbstractObservationFilter
 
   private final String m_type;
 
-  private IObservation m_baseobservation = null;
-
   public RoundFilter( final RoundFilterType filter )
   {
-    m_factor = filter.getFactor();
-    m_mode = toBigDecimalRoundingConstant( filter.getMode() );
-    m_type = filter.getAxisType();
-    m_baseobservation = null;
+    this( filter.getFactor(), filter.getMode(), filter.getAxisType() );
   }
 
   public RoundFilter( final int factor, final String mode, final String type )
@@ -82,7 +75,6 @@ public class RoundFilter extends AbstractObservationFilter
     m_factor = factor;
     m_mode = toBigDecimalRoundingConstant( mode );
     m_type = type;
-    m_baseobservation = null;
   }
 
   private static int toBigDecimalRoundingConstant( final String mode )
@@ -107,65 +99,40 @@ public class RoundFilter extends AbstractObservationFilter
     throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.RoundFilter.0" ) + mode ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#initFilter(java.lang.Object,
-   *      org.kalypso.ogc.sensor.IObservation, java.net.URL)
-   */
-  @Override
-  public void initFilter( final Object dummy, final IObservation baseObs, final URL context ) throws SensorException
-  {
-    m_baseobservation = baseObs;
-
-    super.initFilter( dummy, baseObs, context );
-  }
-
-  /**
-   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#appendSettings(org.kalypso.ogc.sensor.metadata.MetadataList)
-   */
   @Override
   protected void appendSettings( final MetadataList metadata )
   {
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#getValues(org.kalypso.ogc.sensor.request.IRequest)
-   */
   @Override
   public ITupleModel getValues( final IRequest request ) throws SensorException
   {
-    /* Create a proxied observation. */
-    // FIXME: dubious: all observations we get already should have been decorated. Why is this needed here?
-    final IObservation proxiedObservation = AutoProxyFactory.proxyObservation( m_baseobservation );
-    final ITupleModel proxiedValues = proxiedObservation.getValues( request );
+    final IObservation baseObservation = getObservation();
+    final ITupleModel values = baseObservation.getValues( request );
 
     /* Get all non-virtual Double-Axises. */
-    final IAxis proxiedAxis = ObservationUtilities.findAxisByTypeNoEx( proxiedValues.getAxes(), m_type );
+    final IAxis proxiedAxis = ObservationUtilities.findAxisByTypeNoEx( values.getAxes(), m_type );
     if( proxiedAxis == null )
       throw new SensorException( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.RoundFilter.1" ) + m_type ); //$NON-NLS-1$
 
     /* Apply the filter. */
-    final int valueCount = proxiedValues.size();
+    final int valueCount = values.size();
     for( int j = 0; j < valueCount; j++ )
     {
-      final Double proxiedValue = (Double) proxiedValues.get( j, proxiedAxis );
-      if( proxiedValue != null && !proxiedValue.isNaN() )
+      final Double value = (Double) values.get( j, proxiedAxis );
+      if( value != null && !value.isNaN() )
       {
-        final double factoredValue = proxiedValue.doubleValue() / m_factor;
+        final double factoredValue = value.doubleValue() / m_factor;
         final BigDecimal decimal = new BigDecimal( factoredValue );
         final BigDecimal roundedDecimal = decimal.setScale( 0, m_mode );
         final double newValue = roundedDecimal.doubleValue() * m_factor;
-        proxiedValues.set( j, proxiedAxis, new Double( newValue ) );
+        values.set( j, proxiedAxis, new Double( newValue ) );
       }
     }
 
-    final ITupleModel orgValues = m_baseobservation.getValues( request );
-    final SimpleTupleModel simpleTuppleModel = new SimpleTupleModel( orgValues );
-    return simpleTuppleModel;
+    return new SimpleTupleModel( values );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#setValues(org.kalypso.ogc.sensor.ITupleModel)
-   */
   @Override
   public void setValues( final ITupleModel values )
   {
