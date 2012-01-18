@@ -71,7 +71,7 @@ public class CrossSectionTheme extends AbstractProfilTheme
   @Override
   public void onProfilChanged( final ProfilChangeHint hint )
   {
-    if( hint.isActivePointChanged() || hint.isPointValuesChanged() || hint.isPointsChanged() )
+    if( hint.isSelectionChanged() || hint.isPointValuesChanged() || hint.isPointsChanged() )
     {
       fireLayerContentChanged();
     }

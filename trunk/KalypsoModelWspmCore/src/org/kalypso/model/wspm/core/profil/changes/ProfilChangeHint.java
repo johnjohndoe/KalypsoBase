@@ -61,11 +61,9 @@ public class ProfilChangeHint
 
   public static final int PROFILE_PROPERTY_CHANGED = 128;
 
-  public static final int ACTIVE_POINT_CHANGED = 256;
+  public static final int ACTIVE_PROPERTY_CHANGED = 256;
 
-  public static final int ACTIVE_PROPERTY_CHANGED = 512;
-
-  public static final int SELECTION_CHANGED = 1024;
+  public static final int SELECTION_CHANGED = 512;
 
   private int m_event = 0;
 
@@ -181,21 +179,6 @@ public class ProfilChangeHint
    * true if profilPropertyChanged.
    */
   public boolean isProfilPropertyChanged( )
-  {
-    return (m_event | PROFILE_PROPERTY_CHANGED) != 0;
-  }
-
-  public void setActivePointChanged( )
-  {
-    m_event |= ACTIVE_POINT_CHANGED;
-  }
-
-  /**
-   * true, if the active point or the active property of the profile changes.
-   * 
-   * @return
-   */
-  public boolean isActivePointChanged( )
   {
     return (m_event | PROFILE_PROPERTY_CHANGED) != 0;
   }

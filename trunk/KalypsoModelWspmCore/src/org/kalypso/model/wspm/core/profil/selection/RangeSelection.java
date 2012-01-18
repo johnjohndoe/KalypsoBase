@@ -94,7 +94,7 @@ public class RangeSelection implements IRangeSelection
       return;
 
     m_selection = selection;
-    final ProfilChangeHint hint = new ProfilChangeHint( ProfilChangeHint.SELECTION_CHANGED | ProfilChangeHint.ACTIVE_POINT_CHANGED );
+    final ProfilChangeHint hint = new ProfilChangeHint( ProfilChangeHint.SELECTION_CHANGED );
     m_profile.fireProfilChanged( hint );
   }
 
@@ -113,7 +113,7 @@ public class RangeSelection implements IRangeSelection
     if( ArrayUtils.isEmpty( points ) )
     {
       m_selection = null;
-      m_profile.fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.SELECTION_CHANGED | ProfilChangeHint.ACTIVE_POINT_CHANGED ) );
+      m_profile.fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.SELECTION_CHANGED ) );
     }
     else
     {

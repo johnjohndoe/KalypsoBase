@@ -434,7 +434,8 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     final IProfil profil = getProfil();
     if( profil == null )
       return;
-    if( hint.isActivePointChanged() )
+
+    if( hint.isSelectionChanged() )
     {
       getEventHandler().fireLayerContentChanged( this );
     }
