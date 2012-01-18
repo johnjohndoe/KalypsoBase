@@ -46,9 +46,11 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.chart.ui.editor.mousehandler.AbstractChartHandler;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmLayers;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
@@ -66,7 +68,7 @@ public abstract class AbstractProfilePointHandler extends AbstractChartHandler
 
   private IProfileRecord m_point;
 
-  private ProfileWrapper m_profile;
+  private IProfil m_profile;
 
   public AbstractProfilePointHandler( final IChartComposite chart )
   {
@@ -93,12 +95,12 @@ public abstract class AbstractProfilePointHandler extends AbstractChartHandler
     m_point = point;
   }
 
-  protected final ProfileWrapper getProfile( )
+  protected final IProfil getProfile( )
   {
     return m_profile;
   }
 
-  protected final void setProfile( final ProfileWrapper profile )
+  protected final void setProfile( final IProfil profile )
   {
     m_profile = profile;
   }
@@ -120,11 +122,19 @@ public abstract class AbstractProfilePointHandler extends AbstractChartHandler
     }
 
     final AbstractProfilTheme theme = findProfileTheme( chart );
+    if( Objects.isNull( theme ) )
+    {
+      doReset();
+
+      return;
+    }
+
     final ICoordinateMapper mapper = theme.getCoordinateMapper();
 
-    setProfile( new ProfileWrapper( theme.getProfil() ) );
+    setProfile( theme.getProfil() );
     setBreite( mapper.getDomainAxis().screenToNumeric( position.x ).doubleValue() );
-    setPoint( getProfile().hasPoint( getBreite().doubleValue(), 0.1 ) );
+
+    setPoint( ProfileVisitors.findPoint( m_profile, getBreite().doubleValue(), 0.1 ) );
 
     if( isOutOfRange() )
     {

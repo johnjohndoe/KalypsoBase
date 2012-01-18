@@ -38,68 +38,56 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core.profil.base;
+package org.kalypso.model.wspm.core.profil.visitors;
 
 import org.kalypso.commons.exception.CancelVisitorException;
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.jts.JTSConverter;
-import org.kalypso.jts.JtsVectorUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecordVisitor;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Point;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecordVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public class FindVectorVisitor implements IProfileRecordVisitor
+public class FindPreviousPointVisitor implements IProfileRecordVisitor
 {
-  private Coordinate m_c0 = null;
 
-  private Coordinate m_c1 = null;
+  private final double m_position;
 
-  private Double m_p0 = null;
+  private IProfileRecord m_point;
+
+  public FindPreviousPointVisitor( final double position )
+  {
+    m_position = position;
+  }
 
   @Override
-  public void visit( final IProfil profile, final IProfileRecord point, int searchDirection ) throws CancelVisitorException
+  public void visit( final IProfil profile, final IProfileRecord point, final int searchDirection ) throws CancelVisitorException
   {
-    final Coordinate coordinate = point.getCoordinate();
-    if( Objects.isNull( coordinate ) )
-      return;
-
-    if( Objects.isNull( m_c0 ) )
+    if( searchDirection < 0 )
     {
-      m_c0 = coordinate;
-      m_p0 = point.getBreite();
+      if( point.getBreite() <= m_position )
+      {
+        m_point = point;
+        throw new CancelVisitorException();
+      }
     }
     else
     {
-      m_c1 = coordinate;
-
-      throw new CancelVisitorException();
+      if( point.getBreite() < m_position )
+      {
+        if( m_point == null )
+          m_point = point;
+        else if( m_point.getBreite() < point.getBreite() )
+          m_point = point;
+      }
+      else
+        throw new CancelVisitorException();
     }
-
   }
 
-  public double getP0( )
+  IProfileRecord getPoint( )
   {
-    return m_p0;
+    return m_point;
   }
 
-  public boolean isValid( )
-  {
-    return Objects.allNotNull( m_p0, m_c0, m_c1 );
-  }
-
-  public Coordinate getVector( )
-  {
-    return JtsVectorUtilities.getVector( m_c0, m_c1 );
-  }
-
-  public Point getP0Coordinate( )
-  {
-    return JTSConverter.toPoint( m_c0 );
-  }
 }

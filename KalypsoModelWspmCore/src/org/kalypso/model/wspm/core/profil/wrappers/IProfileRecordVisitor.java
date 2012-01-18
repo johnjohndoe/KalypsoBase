@@ -38,68 +38,15 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core.profil.base;
+package org.kalypso.model.wspm.core.profil.wrappers;
 
 import org.kalypso.commons.exception.CancelVisitorException;
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.jts.JTSConverter;
-import org.kalypso.jts.JtsVectorUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecordVisitor;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Point;
 
 /**
  * @author Dirk Kuch
  */
-public class FindVectorVisitor implements IProfileRecordVisitor
+public interface IProfileRecordVisitor
 {
-  private Coordinate m_c0 = null;
-
-  private Coordinate m_c1 = null;
-
-  private Double m_p0 = null;
-
-  @Override
-  public void visit( final IProfil profile, final IProfileRecord point, int searchDirection ) throws CancelVisitorException
-  {
-    final Coordinate coordinate = point.getCoordinate();
-    if( Objects.isNull( coordinate ) )
-      return;
-
-    if( Objects.isNull( m_c0 ) )
-    {
-      m_c0 = coordinate;
-      m_p0 = point.getBreite();
-    }
-    else
-    {
-      m_c1 = coordinate;
-
-      throw new CancelVisitorException();
-    }
-
-  }
-
-  public double getP0( )
-  {
-    return m_p0;
-  }
-
-  public boolean isValid( )
-  {
-    return Objects.allNotNull( m_p0, m_c0, m_c1 );
-  }
-
-  public Coordinate getVector( )
-  {
-    return JtsVectorUtilities.getVector( m_c0, m_c1 );
-  }
-
-  public Point getP0Coordinate( )
-  {
-    return JTSConverter.toPoint( m_c0 );
-  }
+  void visit( IProfil profile, IProfileRecord point, int searchDirection ) throws CancelVisitorException;
 }

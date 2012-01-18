@@ -38,68 +38,73 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core.profil.base;
+package org.kalypso.model.wspm.core.profil.visitors;
 
 import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.jts.JTSConverter;
-import org.kalypso.jts.JtsVectorUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecordVisitor;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Point;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecordVisitor;
+import org.kalypso.observation.result.IComponent;
 
 /**
  * @author Dirk Kuch
  */
-public class FindVectorVisitor implements IProfileRecordVisitor
+public class FindMinMaxVisitor implements IProfileRecordVisitor
 {
-  private Coordinate m_c0 = null;
+  IProfileRecord m_min;
 
-  private Coordinate m_c1 = null;
+  IProfileRecord m_max;
 
-  private Double m_p0 = null;
+  private final String m_property;
+
+  public FindMinMaxVisitor( final String property )
+  {
+    m_property = property;
+  }
 
   @Override
-  public void visit( final IProfil profile, final IProfileRecord point, int searchDirection ) throws CancelVisitorException
+  public void visit( final IProfil profile, final IProfileRecord point, final int searchDirection ) throws CancelVisitorException
   {
-    final Coordinate coordinate = point.getCoordinate();
-    if( Objects.isNull( coordinate ) )
+    final IComponent property = point.hasPointProperty( m_property );
+    if( Objects.isNull( property ) )
       return;
 
-    if( Objects.isNull( m_c0 ) )
-    {
-      m_c0 = coordinate;
-      m_p0 = point.getBreite();
-    }
+    final Object value = point.getValue( property );
+    if( !(value instanceof Number) )
+      return;
+
+    final Number number = (Number) value;
+
+    if( Objects.isNull( m_min ) )
+      m_min = point;
     else
     {
-      m_c1 = coordinate;
+      final Number minValue = (Number) m_min.getValue( property );
 
-      throw new CancelVisitorException();
+      if( number.doubleValue() < minValue.doubleValue() )
+        m_min = point;
     }
 
+    if( Objects.isNull( m_max ) )
+      m_max = point;
+    else
+    {
+      final Number maxValue = (Number) m_max.getValue( property );
+
+      if( number.doubleValue() > maxValue.doubleValue() )
+        m_max = point;
+    }
   }
 
-  public double getP0( )
+  public IProfileRecord getMinimum( )
   {
-    return m_p0;
+    return m_min;
   }
 
-  public boolean isValid( )
+  public IProfileRecord getMaximum( )
   {
-    return Objects.allNotNull( m_p0, m_c0, m_c1 );
+    return m_max;
   }
 
-  public Coordinate getVector( )
-  {
-    return JtsVectorUtilities.getVector( m_c0, m_c1 );
-  }
-
-  public Point getP0Coordinate( )
-  {
-    return JTSConverter.toPoint( m_c0 );
-  }
 }

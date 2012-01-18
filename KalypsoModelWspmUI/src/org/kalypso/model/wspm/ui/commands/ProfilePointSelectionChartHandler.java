@@ -49,8 +49,8 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IRangeSelection;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
@@ -131,11 +131,11 @@ public class ProfilePointSelectionChartHandler extends AbstractProfilePointHandl
   @Override
   public void paintControl( final PaintEvent e )
   {
-    final ProfileWrapper profile = getProfile();
+    final IProfil profile = getProfile();
     if( Objects.isNull( profile ) )
       return;
 
-    final IRangeSelection selection = profile.getProfile().getSelection();
+    final IRangeSelection selection = profile.getSelection();
     final Range<Double> range = selection.getRange();
     if( Objects.isNull( range ) )
       return;

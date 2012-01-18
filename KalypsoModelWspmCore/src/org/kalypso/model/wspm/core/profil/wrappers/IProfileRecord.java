@@ -72,17 +72,17 @@ public interface IProfileRecord extends IRecord
    */
   IComponent hasPointProperty( String propertyId );
 
-  double getHoehe( );
+  Double getHoehe( );
 
-  double getBreite( );
+  Double getBreite( );
 
-  double getHochwert( );
+  Double getHochwert( );
 
-  double getRechtswert( );
+  Double getRechtswert( );
 
-  void setBreite( final double width );
+  void setBreite( final Double width );
 
-  void setHoehe( final double hoehe );
+  void setHoehe( final Double hoehe );
 
   void setKsValue( final Double ksValue );
 
@@ -138,4 +138,8 @@ public interface IProfileRecord extends IRecord
   IProfileRecord cloneRecord( );
 
   IProfil getProfile( );
+
+  IProfileRecord getNextPoint( );
+
+  IProfileRecord getPreviousPoint( );
 }

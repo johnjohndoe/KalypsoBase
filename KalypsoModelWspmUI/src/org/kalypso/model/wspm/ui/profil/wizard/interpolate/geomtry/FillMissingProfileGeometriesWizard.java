@@ -47,10 +47,8 @@ import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.base.ExtrapolateMissingCoordinatesVisitor;
 import org.kalypso.model.wspm.core.profil.base.InterpolateMissingCoordinatesVisitor;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfileRecord;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.IPointsProvider;
-import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Dirk Kuch
@@ -87,28 +85,22 @@ public class FillMissingProfileGeometriesWizard extends Wizard implements IWorkb
   @Override
   public boolean performFinish( )
   {
-    final ProfileWrapper profile = new ProfileWrapper( m_profile );
-
     final IPointsProvider provider = m_page.getProvider();
-    final IRecord[] records = provider.getPoints();
+    final IProfileRecord[] points = provider.getPoints();
 
     final InterpolateMissingCoordinatesVisitor interpolation = new InterpolateMissingCoordinatesVisitor();
 
-    for( final IRecord record : records )
+    for( final IProfileRecord point : points )
     {
-      final ProfileRecord point = new ProfileRecord( m_profile, record );
-      interpolation.visit( profile, point );
+      interpolation.visit( m_profile, point, 1 );
     }
 
     if( m_page.doExtrapolation() )
     {
       final ExtrapolateMissingCoordinatesVisitor extrapolation = new ExtrapolateMissingCoordinatesVisitor();
 
-      for( final IRecord record : records )
-      {
-        final ProfileRecord point = new ProfileRecord( m_profile, record );
-        extrapolation.visit( profile, point );
-      }
+      for( final IProfileRecord point : points )
+        extrapolation.visit( m_profile, point, 1 );
     }
 
     return true;

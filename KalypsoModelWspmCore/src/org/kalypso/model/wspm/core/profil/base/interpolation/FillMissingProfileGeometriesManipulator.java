@@ -45,7 +45,6 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.base.ExtrapolateMissingCoordinatesVisitor;
 import org.kalypso.model.wspm.core.profil.base.IProfileManipulator;
 import org.kalypso.model.wspm.core.profil.base.InterpolateMissingCoordinatesVisitor;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
 
 /**
  * @author Dirk Kuch
@@ -62,11 +61,10 @@ public class FillMissingProfileGeometriesManipulator implements IProfileManipula
   @Override
   public void performProfileManipulation( final IProfil profile, final IProgressMonitor monitor )
   {
-    final ProfileWrapper wrapper = new ProfileWrapper( profile );
 
-    wrapper.accept( new InterpolateMissingCoordinatesVisitor(), 1 );
+    profile.accept( new InterpolateMissingCoordinatesVisitor(), 1 );
     if( m_extrapolate )
-      wrapper.accept( new ExtrapolateMissingCoordinatesVisitor(), 1 );
+      profile.accept( new ExtrapolateMissingCoordinatesVisitor(), 1 );
   }
 
 }

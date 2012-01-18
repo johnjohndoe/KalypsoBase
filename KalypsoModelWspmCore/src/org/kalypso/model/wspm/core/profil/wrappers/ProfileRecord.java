@@ -42,12 +42,15 @@ package org.kalypso.model.wspm.core.profil.wrappers;
 
 import java.util.Comparator;
 
+import org.kalypso.commons.java.lang.Doubles;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.jts.JTSConverter;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.TupleResult;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Point;
@@ -81,44 +84,57 @@ public class ProfileRecord extends AbstractRecordWrapper implements IProfileReco
   }
 
   @Override
-  public double getHoehe( )
+  public Double getHoehe( )
   {
-    return ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, this );
+    final double value = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, this );
+    if( Double.isNaN( value ) )
+      return null;
+
+    return value;
   }
 
   @Override
-  public double getBreite( )
+  public Double getBreite( )
   {
+    final double value = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, this );
+    if( Double.isNaN( value ) )
+      return null;
 
-    return ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, this );
+    return value;
   }
 
   @Override
-  public double getHochwert( )
+  public Double getHochwert( )
   {
+    final double value = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOCHWERT, this );
+    if( Double.isNaN( value ) )
+      return null;
 
-    return ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOCHWERT, this );
+    return value;
   }
 
   @Override
-  public double getRechtswert( )
+  public Double getRechtswert( )
   {
-    return ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT, this );
+    final double value = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT, this );
+    if( Double.isNaN( value ) )
+      return null;
+
+    return value;
   }
 
   @Override
-  public void setBreite( final double width )
+  public void setBreite( final Double width )
   {
     final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_BREITE );
-    getRecord().setValue( index, Double.valueOf( width ) );
-
+    getRecord().setValue( index, width );
   }
 
   @Override
-  public void setHoehe( final double hoehe )
+  public void setHoehe( final Double hoehe )
   {
     final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_HOEHE );
-    getRecord().setValue( index, Double.valueOf( hoehe ) );
+    getRecord().setValue( index, hoehe );
   }
 
   @Override
@@ -154,13 +170,11 @@ public class ProfileRecord extends AbstractRecordWrapper implements IProfileReco
   @Override
   public Coordinate getCoordinate( )
   {
-    final double x = getRechtswert();
-    final double y = getHochwert();
-    final double z = getHoehe();
+    final Double x = getRechtswert();
+    final Double y = getHochwert();
+    final Double z = getHoehe();
 
-    if( Double.isNaN( x ) )
-      return null;
-    else if( Double.isNaN( y ) )
+    if( Doubles.isNaN( x, y ) )
       return null;
 
     return new Coordinate( x, y, z );
@@ -293,6 +307,7 @@ public class ProfileRecord extends AbstractRecordWrapper implements IProfileReco
     return JTSConverter.toPoint( new Coordinate( getRechtswert(), getHochwert() ) );
   }
 
+  @Override
   public IProfil getProfile( )
   {
     return m_profile;
@@ -337,5 +352,35 @@ public class ProfileRecord extends AbstractRecordWrapper implements IProfileReco
   public IComponent hasPointProperty( final String identifier )
   {
     return getProfile().hasPointProperty( identifier );
+  }
+
+  @Override
+  public IProfileRecord getNextPoint( )
+  {
+    final TupleResult result = getOwner();
+    if( Objects.isNull( result ) )
+      return getProfile().findNextPoint( getBreite() );
+
+    final int index = getIndex();
+    if( result.size() > index )
+      return new ProfileRecord( getProfile(), result.get( index + 1 ) );
+
+    return getProfile().findNextPoint( getBreite() );
+  }
+
+  @Override
+  public IProfileRecord getPreviousPoint( )
+  {
+    final TupleResult result = getOwner();
+    if( Objects.isNull( result ) )
+      return getProfile().findPreviousPoint( getBreite() );
+
+    final int index = getIndex();
+    if( index == 0 )
+      return null;
+    if( result.size() >= index )
+      return new ProfileRecord( getProfile(), result.get( index - 1 ) );
+
+    return getProfile().findPreviousPoint( getBreite() );
   }
 }

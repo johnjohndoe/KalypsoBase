@@ -42,14 +42,14 @@ package org.kalypso.model.wspm.core.profil.base;
 
 import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Doubles;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfilePointWrapperVisitor;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecordVisitor;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
 
 /**
  * @author Dirk Kuch
  */
-public class ChangeProfilePointHeight implements IProfilePointWrapperVisitor
+public class ChangeProfilePointHeight implements IProfileRecordVisitor
 {
 
   private final double m_diff;
@@ -60,7 +60,7 @@ public class ChangeProfilePointHeight implements IProfilePointWrapperVisitor
   }
 
   @Override
-  public void visit( final ProfileWrapper profile, final IProfileRecord point ) throws CancelVisitorException
+  public void visit( final IProfil profile, final IProfileRecord point, int searchDirection ) throws CancelVisitorException
   {
     if( m_diff == 0.0 )
       throw new CancelVisitorException();

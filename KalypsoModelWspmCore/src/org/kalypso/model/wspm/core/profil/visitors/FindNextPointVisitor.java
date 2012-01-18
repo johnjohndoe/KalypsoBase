@@ -38,14 +38,62 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core.profil.wrappers;
+package org.kalypso.model.wspm.core.profil.visitors;
 
 import org.kalypso.commons.exception.CancelVisitorException;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecordVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public interface IProfilePointWrapperVisitor
+public class FindNextPointVisitor implements IProfileRecordVisitor
 {
-  void visit( ProfileWrapper profile, IProfileRecord point ) throws CancelVisitorException;
+
+  private final double m_position;
+
+  private IProfileRecord m_point;
+
+  public FindNextPointVisitor( final double position )
+  {
+    m_position = position;
+  }
+
+  @Override
+  public void visit( final IProfil profile, final IProfileRecord point, final int searchDirection ) throws CancelVisitorException
+  {
+    if( searchDirection < 0 )
+    {
+      if( point.getBreite() < m_position )
+        throw new CancelVisitorException();
+
+      if( point.getBreite() > m_position )
+      {
+        if( m_point == null )
+        {
+          m_point = point;
+        }
+        else if( point.getBreite() < m_point.getBreite() )
+        {
+          m_point = point;
+        }
+      }
+
+    }
+    else
+    {
+
+      if( point.getBreite() > m_position )
+      {
+        m_point = point;
+        throw new CancelVisitorException();
+      }
+    }
+  }
+
+  IProfileRecord getPoint( )
+  {
+    return m_point;
+  }
 }

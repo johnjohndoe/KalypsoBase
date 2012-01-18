@@ -38,68 +38,55 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core.profil.base;
+package org.kalypso.model.wspm.core.profil.visitors;
 
-import org.kalypso.commons.exception.CancelVisitorException;
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.jts.JTSConverter;
-import org.kalypso.jts.JtsVectorUtilities;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import org.apache.commons.lang3.Range;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecordVisitor;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Point;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecordVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public class FindVectorVisitor implements IProfileRecordVisitor
+public class FindPointsBetweenVisitor implements IProfileRecordVisitor
 {
-  private Coordinate m_c0 = null;
+  private final Range<Double> m_range;
 
-  private Coordinate m_c1 = null;
+  private final boolean m_includeVertexPoints;
 
-  private Double m_p0 = null;
+  Set<IProfileRecord> m_points = new LinkedHashSet<>();
+
+  public FindPointsBetweenVisitor( final Range<Double> range, final boolean includeVertexPoints )
+  {
+    m_range = range;
+    m_includeVertexPoints = includeVertexPoints;
+  }
+
+  public FindPointsBetweenVisitor( final double p0, final double pn, final boolean includeVertexPoints )
+  {
+    this( Range.between( p0, pn ), includeVertexPoints );
+  }
 
   @Override
-  public void visit( final IProfil profile, final IProfileRecord point, int searchDirection ) throws CancelVisitorException
+  public void visit( final IProfil profile, final IProfileRecord point, final int searchDirection )
   {
-    final Coordinate coordinate = point.getCoordinate();
-    if( Objects.isNull( coordinate ) )
-      return;
+    final double breite = point.getBreite();
 
-    if( Objects.isNull( m_c0 ) )
+    if( m_range.contains( breite ) )
     {
-      m_c0 = coordinate;
-      m_p0 = point.getBreite();
+      if( !m_includeVertexPoints && m_range.getMinimum() == breite || m_range.getMaximum() == breite )
+        return;
+
+      m_points.add( point );
     }
-    else
-    {
-      m_c1 = coordinate;
-
-      throw new CancelVisitorException();
-    }
-
   }
 
-  public double getP0( )
+  public IProfileRecord[] getPoints( )
   {
-    return m_p0;
+    return m_points.toArray( new IProfileRecord[] {} );
   }
 
-  public boolean isValid( )
-  {
-    return Objects.allNotNull( m_p0, m_c0, m_c1 );
-  }
-
-  public Coordinate getVector( )
-  {
-    return JtsVectorUtilities.getVector( m_c0, m_c1 );
-  }
-
-  public Point getP0Coordinate( )
-  {
-    return JTSConverter.toPoint( m_c0 );
-  }
 }
