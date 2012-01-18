@@ -44,9 +44,9 @@ import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.jts.JTSConverter;
 import org.kalypso.jts.JtsVectorUtilities;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfilePointWrapperVisitor;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecordVisitor;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Point;
@@ -54,7 +54,7 @@ import com.vividsolutions.jts.geom.Point;
 /**
  * @author Dirk Kuch
  */
-public class FindVectorVisitor implements IProfilePointWrapperVisitor
+public class FindVectorVisitor implements IProfileRecordVisitor
 {
   private Coordinate m_c0 = null;
 
@@ -63,7 +63,7 @@ public class FindVectorVisitor implements IProfilePointWrapperVisitor
   private Double m_p0 = null;
 
   @Override
-  public void visit( final ProfileWrapper profile, final IProfileRecord point ) throws CancelVisitorException
+  public void visit( final IProfil profile, final IProfileRecord point, int searchDirection ) throws CancelVisitorException
   {
     final Coordinate coordinate = point.getCoordinate();
     if( Objects.isNull( coordinate ) )

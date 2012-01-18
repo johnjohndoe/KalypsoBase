@@ -50,10 +50,12 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.Range;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
@@ -71,7 +73,9 @@ import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfileObjectAdd;
 import org.kalypso.model.wspm.core.profil.impl.marker.PointMarker;
 import org.kalypso.model.wspm.core.profil.selection.RangeSelection;
+import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecordVisitor;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfileRecord;
 import org.kalypso.observation.IObservationVisitor;
 import org.kalypso.observation.phenomenon.IPhenomenon;
@@ -84,6 +88,7 @@ import org.kalypso.observation.result.TupleResult;
  * FIXME: event handling for all setters! Basisprofil with Events
  * 
  * @author kimwerner
+ * @author Dirk Kuch
  */
 public abstract class AbstractProfil implements IProfil
 {
@@ -410,18 +415,7 @@ public abstract class AbstractProfil implements IProfil
   @Override
   public IProfileRecord[] getPoints( final int startPoint, final int endPoint )
   {
-    final IProfileRecord[] records = getPoints();
-
-    // TODO visitor pattern
-    final int size = endPoint - startPoint + 1;
-    final IProfileRecord[] subList = new IProfileRecord[size];
-
-    for( int index = 0; index < size; index++ )
-    {
-      subList[index] = records[startPoint + index];
-    }
-
-    return subList;
+    return ProfileVisitors.findPointsBetween( this, startPoint, endPoint );
   }
 
   @Override
@@ -651,7 +645,7 @@ public abstract class AbstractProfil implements IProfil
   public int indexOf( final IProfileRecord record )
   {
     final int index = record.getIndex();
-    if( index == -1 ) // fallback - this should never happen
+    if( index == -1 ) // fall back - this should never happen
       return getResult().indexOf( record.getRecord() );
 
     return index;
@@ -677,5 +671,80 @@ public abstract class AbstractProfil implements IProfil
     }
 
     return null;
+  }
+
+  @Override
+  public IProfileRecord getFirstPoint( )
+  {
+    if( getResult().isEmpty() )
+      return null;
+
+    return new ProfileRecord( this, getResult().get( 0 ) );
+  }
+
+  @Override
+  public IProfileRecord getLastPoint( )
+  {
+    final TupleResult result = getResult();
+    if( result.isEmpty() )
+      return null;
+
+    return new ProfileRecord( this, result.get( result.size() - 1 ) );
+  }
+
+  @Override
+  public void accept( final IProfileRecordVisitor visitor, final int direction )
+  {
+    doAccept( visitor, getPoints(), direction );
+  }
+
+  @Override
+  public void accept( final IProfileRecordVisitor visitor, final Double p1, final Double pn, final boolean includeVertexPoints, final int direction )
+  {
+    accept( visitor, Range.between( p1, pn ), includeVertexPoints, direction );
+  }
+
+  @Override
+  public void accept( final IProfileRecordVisitor visitor, final Range<Double> range, final boolean includeVertexPoints, final int direction )
+  {
+    doAccept( visitor, ProfileVisitors.findPointsBetween( this, range, includeVertexPoints ), direction );
+  }
+
+  private void doAccept( final IProfileRecordVisitor visitor, final IProfileRecord[] points, final int direction )
+  {
+    try
+    {
+      if( direction >= 0 )
+      {
+        for( final IProfileRecord point : points )
+        {
+          visitor.visit( this, point, 1 );
+        }
+      }
+      else
+      {
+        for( int index = ArrayUtils.getLength( points ) - 1; index > 0; index-- )
+        {
+          final IProfileRecord point = points[index];
+          visitor.visit( this, point, 1 );
+        }
+      }
+    }
+    catch( final CancelVisitorException ex )
+    {
+      return;
+    }
+  }
+
+  @Override
+  public IProfileRecord findNextPoint( final double breite )
+  {
+    return ProfileVisitors.findNextPoint( this, breite );
+  }
+
+  @Override
+  public IProfileRecord findPreviousPoint( final double breite )
+  {
+    return ProfileVisitors.findPreviousPoint( this, breite );
   }
 }

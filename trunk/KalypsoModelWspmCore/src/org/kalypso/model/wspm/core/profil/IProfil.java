@@ -40,9 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil;
 
+import org.apache.commons.lang3.Range;
 import org.eclipse.core.resources.IMarker;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecordVisitor;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -50,9 +52,20 @@ import org.kalypso.observation.result.TupleResult;
 
 /**
  * @author kimwerner
+ * @author Dirk Kuch
  */
 public interface IProfil extends IObservation<TupleResult>
 {
+  void accept( final IProfileRecordVisitor visitor, final int direction );
+
+  void accept( final IProfileRecordVisitor visitor, Double p1, Double pn, final boolean includeVertexPoints, final int direction );
+
+  void accept( final IProfileRecordVisitor visitor, final Range<Double> range, final boolean includeVertexPoints, final int direction );
+
+  IProfileRecord getFirstPoint( );
+
+  IProfileRecord getLastPoint( );
+
   void addPoint( int index, IRecord point );
 
   /**
@@ -68,11 +81,9 @@ public interface IProfil extends IObservation<TupleResult>
    */
   void addPointProperty( IComponent pointProperty );
 
-  void addPointProperty( IComponent pointProperty, Object defaultValue );
-
-  IComponent getPointPropertyFor( String propertyID );
-
   void addPointProperty( IComponent pointProperty, IComponent initialValues );
+
+  void addPointProperty( IComponent pointProperty, Object defaultValue );
 
   /**
    * remove the current ProfileObject and adds the given ProfileObject
@@ -83,13 +94,9 @@ public interface IProfil extends IObservation<TupleResult>
    */
   IProfileObject[] addProfileObjects( IProfileObject... profileObjects );
 
-  void addProfilListener( IProfilListener pl );
+  void addProfilListener( IProfilListener listener );
 
-  boolean isPointMarker( String propertyID );
-
-  void fireProfilChanged( ProfilChangeHint hint, IProfilChange[] changes );
-
-  void removeProfilListener( IProfilListener pl );
+  IProfilPointMarker createPointMarker( String markerID, IProfileRecord point );
 
   /**
    * @return a valid profilPoint, addable to this profile
@@ -97,9 +104,7 @@ public interface IProfil extends IObservation<TupleResult>
    */
   IProfileRecord createProfilPoint( );
 
-  IProfilPointMarker createPointMarker( String markerID, IProfileRecord point );
-
-  IRangeSelection getSelection( );
+  void fireProfilChanged( ProfilChangeHint hint, IProfilChange[] changes );
 
   /**
    * @return something stored in the profile as Strings
@@ -108,20 +113,22 @@ public interface IProfil extends IObservation<TupleResult>
 
   IProfileRecord[] getMarkedPoints( );
 
+  IProfileRecord getPoint( int index );
+
   /**
    * Gets all PointMarker of the given type in this profile.
    */
   IProfilPointMarker[] getPointMarkerFor( IComponent pointMarker );
 
   /**
-   * Gets all PointMarker of the given type in this profile.
-   */
-  IProfilPointMarker[] getPointMarkerFor( String pointMarkerID );
-
-  /**
    * Gets all markers for this record.
    */
   IProfilPointMarker[] getPointMarkerFor( IProfileRecord record );
+
+  /**
+   * Gets all PointMarker of the given type in this profile.
+   */
+  IProfilPointMarker[] getPointMarkerFor( String pointMarkerID );
 
   /**
    * @return all Marker-Types stored in This profile, NOT all available Marker-Types registered for this
@@ -130,7 +137,17 @@ public interface IProfil extends IObservation<TupleResult>
    */
   IComponent[] getPointMarkerTypes( );
 
-  IProfileRecord getPoint( int index );
+  /**
+   * @return all PointProperties used by this profile
+   */
+  IComponent[] getPointProperties( );
+
+  IComponent getPointPropertyFor( String propertyID );
+
+  /**
+   * @return Points of profile
+   */
+  IProfileRecord[] getPoints( );
 
   /**
    * @return include both , startPoint and endPoint
@@ -138,14 +155,9 @@ public interface IProfil extends IObservation<TupleResult>
   IProfileRecord[] getPoints( int startPoint, int endPoint );
 
   /**
-   * @return all PointProperties used by this profile
+   * Returns the current problem markers, if any, attached to this profile.
    */
-  IComponent[] getPointProperties( );
-
-  /**
-   * @return Points of profile
-   */
-  IProfileRecord[] getPoints( );
+  MarkerIndex getProblemMarker( );
 
   /**
    * @return the current building(Tuhh) or other kind of ProfileObject, maybe null
@@ -169,6 +181,13 @@ public interface IProfil extends IObservation<TupleResult>
   @Deprecated
   Object getProperty( Object key );
 
+  IRangeSelection getSelection( );
+
+  /**
+   * @return source of the profile
+   */
+  Object getSource( );
+
   double getStation( );
 
   /**
@@ -182,58 +201,6 @@ public interface IProfil extends IObservation<TupleResult>
    * </ul>
    */
   String getType( );
-
-  boolean removePoint( IProfileRecord point );
-
-  boolean removePoints( IProfileRecord[] points );
-
-  /*
-   * obsolete - point markers will be automatically set by their own setValue() implementation (value will be directly
-   * added to observation, and so the point marker is registered)
-   */
-  Object removePointMarker( IProfilPointMarker devider );
-
-  /**
-   * @param pointProperty
-   *          to remove
-   * @return false if the pointProperty is not used in this profile
-   */
-  boolean removePointProperty( IComponent pointProperty );
-
-  boolean removeProfileObject( IProfileObject profileObject );
-
-  /**
-   * @param key
-   *          removes the key and its value from the profiles internal HashMap<Object,Object>
-   */
-  Object removeProperty( Object key );
-
-  void setComment( String comment );
-
-  /**
-   * @param key
-   * @param value
-   *          saves any (key,value-Object) in the profiles internal HashMap
-   */
-  void setProperty( Object key, Object value );
-
-  void setStation( double station );
-
-  /**
-   * Returns the current problem markers, if any, attached to this profile.
-   */
-  MarkerIndex getProblemMarker( );
-
-  /**
-   * Sets the current problem markers of this profile.<br>
-   * A profile event is fired upon this action.
-   */
-  void setProblemMarker( IMarker[] markers );
-
-  /**
-   * @return source of the profile
-   */
-  Object getSource( );
 
   /**
    * @return true if the profile contains the property
@@ -249,10 +216,60 @@ public interface IProfil extends IObservation<TupleResult>
    */
   IComponent hasPointProperty( String propertyId );
 
+  int indexOf( IProfileRecord record );
+
   int indexOfProperty( IComponent pointProperty );
 
   int indexOfProperty( String id );
 
-  int indexOf( IProfileRecord record );
+  boolean isPointMarker( String propertyID );
+
+  boolean removePoint( IProfileRecord point );
+
+  /*
+   * obsolete - point markers will be automatically set by their own setValue() implementation (value will be directly
+   * added to observation, and so the point marker is registered)
+   */
+  Object removePointMarker( IProfilPointMarker devider );
+
+  /**
+   * @param pointProperty
+   *          to remove
+   * @return false if the pointProperty is not used in this profile
+   */
+  boolean removePointProperty( IComponent pointProperty );
+
+  boolean removePoints( IProfileRecord[] points );
+
+  boolean removeProfileObject( IProfileObject profileObject );
+
+  void removeProfilListener( IProfilListener pl );
+
+  /**
+   * @param key
+   *          removes the key and its value from the profiles internal HashMap<Object,Object>
+   */
+  Object removeProperty( Object key );
+
+  void setComment( String comment );
+
+  /**
+   * Sets the current problem markers of this profile.<br>
+   * A profile event is fired upon this action.
+   */
+  void setProblemMarker( IMarker[] markers );
+
+  /**
+   * @param key
+   * @param value
+   *          saves any (key,value-Object) in the profiles internal HashMap
+   */
+  void setProperty( Object key, Object value );
+
+  void setStation( double station );
+
+  IProfileRecord findNextPoint( double breite );
+
+  IProfileRecord findPreviousPoint( double breite );
 
 }

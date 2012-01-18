@@ -45,9 +45,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.base.ExtrapolateMissingCoordinatesVisitor;
 import org.kalypso.model.wspm.core.profil.base.InterpolateMissingCoordinatesVisitor;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
 
 /**
  * @author Dirk Kuch
@@ -55,9 +55,9 @@ import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
 public class FillMissingProfileGeocoordinatesRunnable implements ICoreRunnableWithProgress
 {
 
-  private final ProfileWrapper m_profile;
+  private final IProfil m_profile;
 
-  public FillMissingProfileGeocoordinatesRunnable( final ProfileWrapper profile )
+  public FillMissingProfileGeocoordinatesRunnable( final IProfil profile )
   {
     m_profile = profile;
   }
