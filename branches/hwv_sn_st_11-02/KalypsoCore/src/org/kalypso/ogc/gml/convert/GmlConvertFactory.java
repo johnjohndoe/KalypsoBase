@@ -106,7 +106,7 @@ public final class GmlConvertFactory
     final GMLWorkspace gml = GmlConvertFactory.loadSource( resolver, context, convert.getSource().getValue(), externData );
     final TargetType target = convert.getTarget().getValue();
     GmlConvertFactory.writeIntoTarget( resolver, context, gml, target );
-    final String message = Messages.getString( "org.kalypso.ogc.gml.convert.GmlConvertFactory.0" ) + convert.getTarget().getValue().getHref() + Messages.getString( "org.kalypso.ogc.gml.convert.GmlConvertFactory.1" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String message = Messages.getString( "org.kalypso.ogc.gml.convert.GmlConvertFactory.0" ) + " " + convert.getTarget().getValue().getHref() + Messages.getString( "org.kalypso.ogc.gml.convert.GmlConvertFactory.1" ); //$NON-NLS-1$ //$NON-NLS-2$
     return new Status( IStatus.OK, IKalypsoCoreConstants.PLUGIN_ID, 0, message, null );
   }
 
