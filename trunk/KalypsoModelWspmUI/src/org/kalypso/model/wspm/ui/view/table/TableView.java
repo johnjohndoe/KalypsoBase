@@ -40,6 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.table;
 
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -47,6 +52,7 @@ import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -71,6 +77,7 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor;
@@ -78,17 +85,19 @@ import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor.ADVANCE_MODE;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfileRecord;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.IProfilProvider;
 import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
+import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.featureview.control.TupleResultTableViewer;
@@ -164,9 +173,9 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
         return Status.OK_STATUS;
 
       EditorFirstAdapterFinder.<IProfilProvider> instance();
-      final IRecord activePoint = m_profile.getSelection().getActivePoint();
-      m_view.setSelection( new StructuredSelection( activePoint ) );
-      m_view.reveal( activePoint );
+      final IProfileRecord[] selection = m_profile.getSelection().toPoints();
+      m_view.setSelection( new StructuredSelection( selection ) );
+      m_view.reveal( selection );
       return Status.OK_STATUS;
     }
   };
@@ -178,7 +187,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     @Override
     public void onProfilChanged( final ProfilChangeHint hint )
     {
-      if( hint.isActivePointChanged() )
+      if( hint.isActivePointChanged() || hint.isSelectionChanged() )
       {
         m_setActivePointJob.cancel();
         m_setActivePointJob.schedule( 100 );
@@ -314,17 +323,13 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-        if( !selection.isEmpty() )
+        final IProfileRecord[] selection = toPoints( event.getSelection() );
+        if( ArrayUtils.isNotEmpty( selection ) )
         {
-          final IRecord point = (IRecord) selection.getFirstElement();
-          if( point != m_profile.getSelection().getActivePoint() )
-          {
-
-            m_profile.getSelection().setActivePoint( point instanceof IProfileRecord ? (IProfileRecord) point : new ProfileRecord( m_profile, point ) );
-          }
+          m_profile.getSelection().setRange( selection );
         }
       }
+
     } );
 
     cursor.addSelectionListener( new SelectionAdapter()
@@ -332,15 +337,10 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        final IStructuredSelection selection = (IStructuredSelection) m_view.getSelection();
-        final Object element = selection.getFirstElement();
-        if( element instanceof IRecord )
+        final IProfileRecord[] selection = toPoints( m_view.getSelection() );
+        if( ArrayUtils.isNotEmpty( selection ) )
         {
-          final IRecord point = (IRecord) element;
-          if( point != m_profile.getSelection().getActivePoint() )
-          {
-            m_profile.getSelection().setActivePoint( point instanceof IProfileRecord ? (IProfileRecord) point : new ProfileRecord( m_profile, point ) );
-          }
+          m_profile.getSelection().setRange( selection );
         }
       }
     } );
@@ -527,12 +527,44 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     return (TupleResult) m_view.getInput();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.command.ITupleResultViewerProvider#getTupleResultViewer()
-   */
   @Override
   public TableViewer getTupleResultViewer( )
   {
     return m_view;
+  }
+
+  @SuppressWarnings("deprecation")
+  protected IProfileRecord[] toPoints( final ISelection selection )
+  {
+    if( !(selection instanceof IStructuredSelection) )
+      return new IProfileRecord[] {};
+
+    final IStructuredSelection structured = (IStructuredSelection) selection;
+    final Iterator itr = structured.iterator();
+
+    final Set<IProfileRecord> records = new LinkedHashSet<>();
+
+    while( itr.hasNext() )
+    {
+      final Object object = itr.next();
+      if( object instanceof IProfileRecord )
+      {
+        records.add( (IProfileRecord) object );
+      }
+      else if( object instanceof IRecord )
+      {
+        final IRecord record = (IRecord) object;
+        final IComponent component = m_profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+        if( Objects.isNull( component ) )
+          continue;
+
+        final Double breite = (Double) record.getValue( component );
+        final IProfileRecord point = ProfileVisitors.findPoint( m_profile, breite );
+
+        records.add( point );
+      }
+    }
+
+    return records.toArray( new IProfileRecord[] {} );
   }
 }

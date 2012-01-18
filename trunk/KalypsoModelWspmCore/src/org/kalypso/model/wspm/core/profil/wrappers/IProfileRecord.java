@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.wrappers;
 
+import org.apache.commons.lang3.Range;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -75,6 +76,8 @@ public interface IProfileRecord extends IRecord
   Double getHoehe( );
 
   Double getBreite( );
+
+  Range<Double> getBreiteAsRange( );
 
   Double getHochwert( );
 
@@ -142,4 +145,9 @@ public interface IProfileRecord extends IRecord
   IProfileRecord getNextPoint( );
 
   IProfileRecord getPreviousPoint( );
+
+  /**
+   * @return point is part of selected range
+   */
+  boolean isSelected( );
 }

@@ -41,12 +41,11 @@
 package org.kalypso.model.wspm.core.profil.wrappers;
 
 import org.kalypso.commons.exception.CancelVisitorException;
-import org.kalypso.model.wspm.core.profil.IProfil;
 
 /**
  * @author Dirk Kuch
  */
 public interface IProfileRecordVisitor
 {
-  void visit( IProfil profile, IProfileRecord point, int searchDirection ) throws CancelVisitorException;
+  void visit( IProfileRecord point, int searchDirection ) throws CancelVisitorException;
 }

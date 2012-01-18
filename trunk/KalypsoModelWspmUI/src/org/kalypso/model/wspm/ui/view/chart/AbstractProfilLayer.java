@@ -178,7 +178,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     if( !Objects.isNull( cmp, pos ) )
     {
       final IProfil profil = getProfil();
-      profil.getSelection().setActivePoint( profil.getPoint( pos ) );
+      profil.getSelection().setRange( profil.getPoint( pos ) );
       profil.getSelection().setActivePointProperty( cmp );
     }
   }

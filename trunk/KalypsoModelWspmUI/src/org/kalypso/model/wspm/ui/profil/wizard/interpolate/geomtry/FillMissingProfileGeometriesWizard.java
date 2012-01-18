@@ -92,7 +92,7 @@ public class FillMissingProfileGeometriesWizard extends Wizard implements IWorkb
 
     for( final IProfileRecord point : points )
     {
-      interpolation.visit( m_profile, point, 1 );
+      interpolation.visit( point, 1 );
     }
 
     if( m_page.doExtrapolation() )
@@ -100,7 +100,7 @@ public class FillMissingProfileGeometriesWizard extends Wizard implements IWorkb
       final ExtrapolateMissingCoordinatesVisitor extrapolation = new ExtrapolateMissingCoordinatesVisitor();
 
       for( final IProfileRecord point : points )
-        extrapolation.visit( m_profile, point, 1 );
+        extrapolation.visit( point, 1 );
     }
 
     return true;

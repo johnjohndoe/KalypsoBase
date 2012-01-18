@@ -42,9 +42,11 @@ package org.kalypso.model.wspm.core.profil.visitors;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.Range;
+import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecordVisitor;
 
 /**
  * @author Dirk Kuch
@@ -115,6 +117,21 @@ public final class ProfileVisitors
     profile.accept( visitor, 1 );
 
     return visitor.getMinimum();
+  }
+
+  public static void visit( final IProfileRecordVisitor visitor, final IProfileRecord... points )
+  {
+    for( final IProfileRecord point : points )
+    {
+      try
+      {
+        visitor.visit( point, 1 );
+      }
+      catch( final CancelVisitorException e )
+      {
+        return;
+      }
+    }
   }
 
 }

@@ -108,9 +108,7 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
     /*
      * we only need a refresh here, so fire a "null-change"
      */
-    final ProfilChangeHint hint = new ProfilChangeHint();
-    hint.setProfilPropertyChanged( true );
-    m_profil.fireProfilChanged( hint );
+    m_profil.fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.PROFILE_PROPERTY_CHANGED ) );
 // }
 
   }

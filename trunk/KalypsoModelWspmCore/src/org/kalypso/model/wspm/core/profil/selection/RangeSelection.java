@@ -43,9 +43,11 @@ package org.kalypso.model.wspm.core.profil.selection;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.Range;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.visitors.FindMinMaxVisitor;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.result.IComponent;
@@ -55,9 +57,6 @@ import org.kalypso.observation.result.IComponent;
  */
 public class RangeSelection implements IRangeSelection
 {
-
-  private IProfileRecord m_activePoint;
-
   private IComponent m_activePointProperty;
 
   private Range<Double> m_selection;
@@ -69,19 +68,6 @@ public class RangeSelection implements IRangeSelection
     m_profile = profile;
   }
 
-  /**
-   * @return the active point.
-   */
-  @Override
-  public IProfileRecord getActivePoint( )
-  {
-    final IProfileRecord[] points = m_profile.getPoints();
-    if( ArrayUtils.isEmpty( points ) )
-      return null;
-
-    return (IProfileRecord) Objects.firstNonNull( m_activePoint, points[0] );
-  }
-
   @Override
   public IComponent getActiveProperty( )
   {
@@ -89,26 +75,10 @@ public class RangeSelection implements IRangeSelection
   }
 
   @Override
-  public void setActivePoint( final IProfileRecord point )
-  {
-    if( m_activePoint == point )
-      return;
-
-    m_activePoint = point;
-    final ProfilChangeHint hint = new ProfilChangeHint();
-    hint.setActivePointChanged();
-
-    m_profile.fireProfilChanged( hint );
-  }
-
-  @Override
   public void setActivePointProperty( final IComponent pointProperty )
   {
     m_activePointProperty = pointProperty;
-    final ProfilChangeHint hint = new ProfilChangeHint();
-    hint.setActivePropertyChanged( true );
-
-    m_profile.fireProfilChanged( hint );
+    m_profile.fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.ACTIVE_PROPERTY_CHANGED ) );
   }
 
   @Override
@@ -120,13 +90,37 @@ public class RangeSelection implements IRangeSelection
   @Override
   public void setRange( final Range<Double> selection )
   {
+    if( Objects.equal( m_selection, selection ) )
+      return;
+
     m_selection = selection;
+    final ProfilChangeHint hint = new ProfilChangeHint( ProfilChangeHint.SELECTION_CHANGED | ProfilChangeHint.ACTIVE_POINT_CHANGED );
+    m_profile.fireProfilChanged( hint );
   }
 
   @Override
   public IProfileRecord[] toPoints( )
   {
+    if( Objects.isNull( m_selection ) )
+      return new IProfileRecord[] {};
+
     return ProfileVisitors.findPointsBetween( m_profile, m_selection, true );
   }
 
+  @Override
+  public void setRange( final IProfileRecord... points )
+  {
+    if( ArrayUtils.isEmpty( points ) )
+    {
+      m_selection = null;
+      m_profile.fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.SELECTION_CHANGED | ProfilChangeHint.ACTIVE_POINT_CHANGED ) );
+    }
+    else
+    {
+      final FindMinMaxVisitor visitor = new FindMinMaxVisitor( IWspmConstants.POINT_PROPERTY_BREITE );
+      ProfileVisitors.visit( visitor, points );
+
+      setRange( Range.between( visitor.getMinimum().getBreite(), visitor.getMaximum().getBreite() ) );
+    }
+  }
 }

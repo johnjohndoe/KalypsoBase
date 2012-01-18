@@ -45,40 +45,58 @@ package org.kalypso.model.wspm.core.profil.changes;
  */
 public class ProfilChangeHint
 {
-  private boolean m_objectChanged = false;
+  public static final int OBJECT_CHANGED = 1;
 
-  private boolean m_objectDataChanged = false;
+  public static final int OBJECT_DATA_CHANGED = 2;
 
-  private boolean m_pointValuesChanged = false;
+  public static final int POINT_VALUES_CHANGED = 4;
 
-  private boolean m_pointPropertiesChanged = false;
+  public static final int POINT_PROPERTIES_CHANGED = 8;
 
-  private boolean m_pointsChanged = false;
+  public static final int POINTS_CHANGED = 16;
 
-  private boolean m_markerDataChanged = false;
+  public static final int MARKER_DATA_CHANGED = 32;
 
-  private boolean m_markerMoved = false;
+  public static final int MARKER_MOVED = 64;
 
-  private boolean m_profilePropertyChanged = false;
+  public static final int PROFILE_PROPERTY_CHANGED = 128;
 
-  private boolean m_activePointChanged = false;
+  public static final int ACTIVE_POINT_CHANGED = 256;
 
-  private boolean m_activePropertyChanged = false;
+  public static final int ACTIVE_PROPERTY_CHANGED = 512;
+
+  public static final int SELECTION_CHANGED = 1024;
+
+  private int m_event = 0;
+
+  public ProfilChangeHint( )
+  {
+  }
+
+  public ProfilChangeHint( final int mask )
+  {
+    m_event = mask;
+  }
+
+  public int getEvent( )
+  {
+    return m_event;
+  }
 
   public void setObjectChanged( )
   {
-    m_objectChanged = true;
+    m_event |= OBJECT_CHANGED;
   }
 
   /** true, if building was added or removed or replaced */
   public boolean isObjectChanged( )
   {
-    return m_objectChanged;
+    return (m_event | OBJECT_CHANGED) != 0;
   }
 
   public void setObjectDataChanged( )
   {
-    m_objectDataChanged = true;
+    m_event |= OBJECT_DATA_CHANGED;
   }
 
   /**
@@ -86,12 +104,12 @@ public class ProfilChangeHint
    */
   public boolean isObjectDataChanged( )
   {
-    return m_objectDataChanged;
+    return (m_event | OBJECT_DATA_CHANGED) != 0;
   }
 
   public void setPointValuesChanged( )
   {
-    m_pointValuesChanged = true;
+    m_event |= POINT_VALUES_CHANGED;
   }
 
   /**
@@ -99,12 +117,12 @@ public class ProfilChangeHint
    */
   public boolean isPointValuesChanged( )
   {
-    return m_pointValuesChanged;
+    return (m_event | POINT_VALUES_CHANGED) != 0;
   }
 
   public void setPointPropertiesChanged( )
   {
-    m_pointPropertiesChanged = true;
+    m_event |= POINT_PROPERTIES_CHANGED;
   }
 
   /**
@@ -112,12 +130,12 @@ public class ProfilChangeHint
    */
   public boolean isPointPropertiesChanged( )
   {
-    return m_pointPropertiesChanged;
+    return (m_event | POINT_PROPERTIES_CHANGED) != 0;
   }
 
   public void setPointsChanged( )
   {
-    m_pointsChanged = true;
+    m_event |= POINTS_CHANGED;
   }
 
   /**
@@ -125,12 +143,12 @@ public class ProfilChangeHint
    */
   public boolean isPointsChanged( )
   {
-    return m_pointsChanged;
+    return (m_event | POINTS_CHANGED) != 0;
   }
 
   public void setMarkerMoved( )
   {
-    m_markerMoved = true;
+    m_event |= MARKER_MOVED;
   }
 
   /**
@@ -138,12 +156,12 @@ public class ProfilChangeHint
    */
   public boolean isMarkerMoved( )
   {
-    return m_markerMoved;
+    return (m_event | MARKER_MOVED) != 0;
   }
 
   public void setMarkerDataChanged( )
   {
-    m_markerDataChanged = true;
+    m_event |= MARKER_DATA_CHANGED;
   }
 
   /**
@@ -151,7 +169,12 @@ public class ProfilChangeHint
    */
   public boolean isMarkerDataChanged( )
   {
-    return m_markerDataChanged;
+    return (m_event | MARKER_DATA_CHANGED) != 0;
+  }
+
+  public void setProfilPropertyChanged( )
+  {
+    m_event |= PROFILE_PROPERTY_CHANGED;
   }
 
   /**
@@ -159,36 +182,42 @@ public class ProfilChangeHint
    */
   public boolean isProfilPropertyChanged( )
   {
-    return m_profilePropertyChanged;
-  }
-
-  public void setProfilPropertyChanged( final boolean profilPropertyChanged )
-  {
-    m_profilePropertyChanged = profilPropertyChanged;
+    return (m_event | PROFILE_PROPERTY_CHANGED) != 0;
   }
 
   public void setActivePointChanged( )
   {
-    m_activePointChanged = true;
+    m_event |= ACTIVE_POINT_CHANGED;
   }
 
   /**
-   * true, if the active point or the active property of the profil changes.
+   * true, if the active point or the active property of the profile changes.
    * 
    * @return
    */
   public boolean isActivePointChanged( )
   {
-    return m_activePointChanged;
+    return (m_event | PROFILE_PROPERTY_CHANGED) != 0;
+  }
+
+  public void setActivePropertyChanged( )
+  {
+    m_event |= ACTIVE_PROPERTY_CHANGED;
   }
 
   public boolean isActivePropertyChanged( )
   {
-    return m_activePropertyChanged;
+    return (m_event | ACTIVE_PROPERTY_CHANGED) != 0;
   }
 
-  public void setActivePropertyChanged( final boolean activePropertyChanged )
+  public void setSelectionChanged( )
   {
-    m_activePropertyChanged = activePropertyChanged;
+    m_event |= SELECTION_CHANGED;
   }
+
+  public boolean isSelectionChanged( )
+  {
+    return (m_event | SELECTION_CHANGED) != 0;
+  }
+
 }

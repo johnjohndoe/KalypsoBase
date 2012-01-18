@@ -44,7 +44,6 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.apache.commons.lang3.Range;
-import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecordVisitor;
 
@@ -71,7 +70,7 @@ public class FindPointsBetweenVisitor implements IProfileRecordVisitor
   }
 
   @Override
-  public void visit( final IProfil profile, final IProfileRecord point, final int searchDirection )
+  public void visit( final IProfileRecord point, final int searchDirection )
   {
     final double breite = point.getBreite();
 

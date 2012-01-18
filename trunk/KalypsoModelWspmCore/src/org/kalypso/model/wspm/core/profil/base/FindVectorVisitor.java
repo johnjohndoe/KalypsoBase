@@ -44,7 +44,6 @@ import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.jts.JTSConverter;
 import org.kalypso.jts.JtsVectorUtilities;
-import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecordVisitor;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 
@@ -63,7 +62,7 @@ public class FindVectorVisitor implements IProfileRecordVisitor
   private Double m_p0 = null;
 
   @Override
-  public void visit( final IProfil profile, final IProfileRecord point, int searchDirection ) throws CancelVisitorException
+  public void visit( final IProfileRecord point, int searchDirection ) throws CancelVisitorException
   {
     final Coordinate coordinate = point.getCoordinate();
     if( Objects.isNull( coordinate ) )

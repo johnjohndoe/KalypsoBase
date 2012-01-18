@@ -57,6 +57,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
@@ -253,7 +254,7 @@ public abstract class AbstractProfil implements IProfil
   public String getComment( )
   {
     final String description = getDescription();
-    if( description == null )
+    if( Strings.isEmpty( description ) )
       return ""; //$NON-NLS-1$
 
     return description;
@@ -713,7 +714,7 @@ public abstract class AbstractProfil implements IProfil
       {
         for( final IProfileRecord point : points )
         {
-          visitor.visit( this, point, 1 );
+          visitor.visit( point, 1 );
         }
       }
       else
@@ -721,7 +722,7 @@ public abstract class AbstractProfil implements IProfil
         for( int index = ArrayUtils.getLength( points ) - 1; index > 0; index-- )
         {
           final IProfileRecord point = points[index];
-          visitor.visit( this, point, 1 );
+          visitor.visit( point, 1 );
         }
       }
     }

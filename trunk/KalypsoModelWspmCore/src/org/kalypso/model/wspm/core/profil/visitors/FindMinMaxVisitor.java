@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.core.profil.visitors;
 
 import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecordVisitor;
 import org.kalypso.observation.result.IComponent;
@@ -64,7 +63,7 @@ public class FindMinMaxVisitor implements IProfileRecordVisitor
   }
 
   @Override
-  public void visit( final IProfil profile, final IProfileRecord point, final int searchDirection ) throws CancelVisitorException
+  public void visit( final IProfileRecord point, final int searchDirection ) throws CancelVisitorException
   {
     final IComponent property = point.hasPointProperty( m_property );
     if( Objects.isNull( property ) )

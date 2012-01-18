@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl;
 
 import java.util.List;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
@@ -81,10 +82,14 @@ public class ProfilMidTarget extends AbstractPointsTarget
 
     final TupleResult tupleResult = profile.getResult();
 
-    final int index = tupleResult.indexOf( profile.getSelection().getActivePoint() );
+    final IProfileRecord[] selection = profile.getSelection().toPoints();
+    if( ArrayUtils.isEmpty( selection ) )
+      return;
+
+    final IProfileRecord active = selection[0];
+    final int index = active.getIndex();
 
     final IRecord row = tupleResult.createRecord();
-
     final boolean success = tupleResult.doInterpolation( tupleResult, row, index, 0.5 );
 
     if( success )
@@ -95,7 +100,6 @@ public class ProfilMidTarget extends AbstractPointsTarget
     {
       tupleResult.add( row );
     }
-
   }
 
   private void insertPointsInternal( final IProfil profile, final List<IRecord> points )
@@ -112,7 +116,11 @@ public class ProfilMidTarget extends AbstractPointsTarget
     final IProfilChange[] changes = new IProfilChange[pointsCount];
     try
     {
-      final IProfileRecord activePkt = profile.getSelection().getActivePoint();
+      final IProfileRecord[] selection = profile.getSelection().toPoints();
+      if( ArrayUtils.isEmpty( selection ) )
+        return;
+
+      final IProfileRecord activePkt = selection[0];
       final IProfileRecord targetPkt = activePkt != null ? activePkt : profile.createProfilPoint();
       final double deltaX = (Double) points.get( 0 ).getValue( iPointsBreite ) - (Double) targetPkt.getValue( iBreite );
       final double deltaY = (Double) points.get( 0 ).getValue( iPointsHoehe ) - (Double) targetPkt.getValue( iHoehe );

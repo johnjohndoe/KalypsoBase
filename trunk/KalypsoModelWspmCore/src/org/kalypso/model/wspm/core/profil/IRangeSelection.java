@@ -50,22 +50,17 @@ import org.kalypso.observation.result.IComponent;
 public interface IRangeSelection
 {
   /**
-   * @return the active point.
-   */
-  IProfileRecord getActivePoint( );
-
-  /**
    * @return the active point property.
    */
   IComponent getActiveProperty( );
-
-  void setActivePoint( IProfileRecord point );
 
   void setActivePointProperty( IComponent activeProperty );
 
   Range<Double> getRange( );
 
   void setRange( Range<Double> range );
+
+  void setRange( IProfileRecord... points );
 
   IProfileRecord[] toPoints( );
 }
