@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.core.profil.wrappers;
 import java.util.Comparator;
 
 import org.apache.commons.lang3.Range;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.kalypso.commons.java.lang.Doubles;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.jts.JTSConverter;
@@ -83,6 +84,28 @@ public class ProfileRecord extends AbstractRecordWrapper implements IProfileReco
     super( record );
 
     setProfile( parent );
+  }
+
+  @Override
+  public boolean equals( final Object object )
+  {
+    if( object instanceof IProfileRecord )
+    {
+      final IProfileRecord other = (IProfileRecord) object;
+      return Objects.equal( this, other );
+    }
+
+    return super.equals( object );
+  }
+
+  @Override
+  public int hashCode( )
+  {
+    final HashCodeBuilder builder = new HashCodeBuilder();
+    builder.append( getClass().getName() );
+    builder.append( getRecord() );
+
+    return builder.toHashCode();
   }
 
   @Override
