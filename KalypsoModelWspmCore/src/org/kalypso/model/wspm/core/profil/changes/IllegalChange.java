@@ -55,7 +55,12 @@ public class IllegalChange implements IProfilChange
   }
 
   @Override
-  public IProfilChange doChange( final ProfilChangeHint hint )
+  public void configureHint( final ProfilChangeHint hint )
+  {
+  }
+
+  @Override
+  public IProfilChange doChange( )
   {
     return null;
   }

@@ -66,13 +66,14 @@ public class PointRemove implements IProfilChange
   }
 
   @Override
-  public IProfilChange doChange( final ProfilChangeHint hint ) throws IllegalProfileOperationException
+  public void configureHint( final ProfilChangeHint hint )
   {
-    if( hint != null )
-    {
-      hint.setPointsChanged();
-    }
+    hint.setPointsChanged();
+  }
 
+  @Override
+  public IProfilChange doChange( ) throws IllegalProfileOperationException
+  {
     for( int i = 0; i < m_points.length; i++ )
     {
       m_pointPositions[i] = m_points[i].getIndex();

@@ -63,12 +63,14 @@ public class PointsAdd implements IProfilChange
   }
 
   @Override
-  public IProfilChange doChange( final ProfilChangeHint hint )
+  public void configureHint( final ProfilChangeHint hint )
   {
-    if( hint != null )
-    {
-      hint.setPointsChanged();
-    }
+    hint.setPointsChanged();
+  }
+
+  @Override
+  public IProfilChange doChange( )
+  {
 
     for( int i = 0; i < m_points.length; i++ )
     {

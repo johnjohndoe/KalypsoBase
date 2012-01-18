@@ -75,12 +75,18 @@ public class PointMove implements IProfilChange
   }
 
   @Override
-  public IProfilChange doChange( final ProfilChangeHint hint )
+  public void configureHint( final ProfilChangeHint hint )
   {
     if( hint != null )
     {
       hint.setPointsChanged();
     }
+  }
+
+  @Override
+  public IProfilChange doChange( )
+  {
+
     if( m_direction == 0 )
       return new PointMove( m_profil, m_points, 0 );
     final IRecord[] points = m_profil.getPoints();

@@ -44,12 +44,10 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.Range;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IRangeSelection;
-import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfileWrapper;
 import org.kalypso.observation.result.IComponent;
 
 /**
@@ -57,7 +55,6 @@ import org.kalypso.observation.result.IComponent;
  */
 public class RangeSelection implements IRangeSelection
 {
-  private final ProfileWrapper m_profile;
 
   private IProfileRecord m_activePoint;
 
@@ -65,9 +62,11 @@ public class RangeSelection implements IRangeSelection
 
   private Range<Double> m_selection;
 
+  private final IProfil m_profile;
+
   public RangeSelection( final IProfil profile )
   {
-    m_profile = new ProfileWrapper( profile );
+    m_profile = profile;
   }
 
   /**
@@ -76,7 +75,7 @@ public class RangeSelection implements IRangeSelection
   @Override
   public IProfileRecord getActivePoint( )
   {
-    final IProfileRecord[] points = m_profile.getProfile().getPoints();
+    final IProfileRecord[] points = m_profile.getPoints();
     if( ArrayUtils.isEmpty( points ) )
       return null;
 
@@ -99,8 +98,7 @@ public class RangeSelection implements IRangeSelection
     final ProfilChangeHint hint = new ProfilChangeHint();
     hint.setActivePointChanged();
 
-    final IProfil profile = m_profile.getProfile();
-    profile.fireProfilChanged( hint, new IProfilChange[] { new ActiveObjectEdit( profile, point, m_activePointProperty ) } );
+    m_profile.fireProfilChanged( hint );
   }
 
   @Override
@@ -110,8 +108,7 @@ public class RangeSelection implements IRangeSelection
     final ProfilChangeHint hint = new ProfilChangeHint();
     hint.setActivePropertyChanged( true );
 
-    final IProfil profile = m_profile.getProfile();
-    profile.fireProfilChanged( hint, new IProfilChange[] { new ActiveObjectEdit( profile, m_activePoint, m_activePointProperty ) } );
+    m_profile.fireProfilChanged( hint );
   }
 
   @Override
@@ -129,8 +126,7 @@ public class RangeSelection implements IRangeSelection
   @Override
   public IProfileRecord[] toPoints( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    return ProfileVisitors.findPointsBetween( m_profile, m_selection, true );
   }
 
 }

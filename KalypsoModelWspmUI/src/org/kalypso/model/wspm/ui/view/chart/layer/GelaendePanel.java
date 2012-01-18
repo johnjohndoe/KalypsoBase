@@ -52,7 +52,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfilPropertyEdit;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
@@ -155,7 +154,7 @@ public class GelaendePanel extends AbstractProfilView
   }
 
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
+  public void onProfilChanged( final ProfilChangeHint hint )
   {
     if( hint.isProfilPropertyChanged() )
     {

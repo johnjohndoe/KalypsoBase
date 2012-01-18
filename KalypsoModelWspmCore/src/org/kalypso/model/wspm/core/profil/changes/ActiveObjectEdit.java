@@ -61,13 +61,14 @@ public class ActiveObjectEdit implements IProfilChange
   }
 
   @Override
-  public IProfilChange doChange( final ProfilChangeHint hint )
+  public void configureHint( final ProfilChangeHint hint )
   {
-    if( hint != null )
-    {
-      hint.setActivePointChanged();
-    }
+    hint.setActivePointChanged();
+  }
 
+  @Override
+  public IProfilChange doChange( )
+  {
     final IProfileRecord oldPoint = m_profil.getSelection().getActivePoint();
     final IComponent oldProperty = m_profil.getSelection().getActiveProperty();
 

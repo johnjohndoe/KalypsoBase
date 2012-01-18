@@ -59,13 +59,14 @@ public final class ProfilPropertyEdit implements IProfilChange
   }
 
   @Override
-  public IProfilChange doChange( final ProfilChangeHint hint )
+  public void configureHint( final ProfilChangeHint hint )
   {
-    if( hint != null )
-    {
-      hint.setProfilPropertyChanged( true );
-    }
+    hint.setProfilPropertyChanged( true );
+  }
 
+  @Override
+  public IProfilChange doChange( )
+  {
     final Object oldValue = m_profil.getProperty( m_property );
     m_profil.setProperty( m_property, m_newValue );
 

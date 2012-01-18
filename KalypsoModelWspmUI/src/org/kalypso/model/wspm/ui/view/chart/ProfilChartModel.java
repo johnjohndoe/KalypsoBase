@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.ui.view.chart;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
@@ -75,7 +74,7 @@ public class ProfilChartModel extends ChartModel
      *      org.kalypso.model.wspm.core.profil.IProfilChange[])
      */
     @Override
-    public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
+    public void onProfilChanged( final ProfilChangeHint hint )
     {
       if( hint.isObjectChanged() )
       {
@@ -83,13 +82,13 @@ public class ProfilChartModel extends ChartModel
       }
       else if( hint.isPointPropertiesChanged() )
       {
-        handlePropertyOrBuildingChanged( changes );
+        handlePropertyOrBuildingChanged();
       }
       else
       {
         for( final IChartLayer layer : getLayerManager().getLayers() )
         {
-          ((IProfilChartLayer) layer).onProfilChanged( hint, changes );
+          ((IProfilChartLayer) layer).onProfilChanged( hint );
         }
       }
     }
@@ -168,7 +167,7 @@ public class ProfilChartModel extends ChartModel
     return m_profil;
   }
 
-  protected void handlePropertyOrBuildingChanged( @SuppressWarnings("unused") final IProfilChange[] changes )
+  protected void handlePropertyOrBuildingChanged( )
   {
     updateLayers();
   }

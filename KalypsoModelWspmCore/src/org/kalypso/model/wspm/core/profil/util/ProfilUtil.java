@@ -1203,7 +1203,7 @@ public final class ProfilUtil
     final IProfilChange[] removeChanges = DouglasPeuckerHelper.reduce( allowedDistance, pointsToSimplify, profile );
     for( final IProfilChange profilChange : removeChanges )
     {
-      profilChange.doChange( null );
+      profilChange.doChange();
     }
   }
 
@@ -1223,7 +1223,7 @@ public final class ProfilUtil
     final IProfilChange[] removeChanges = DouglasPeuckerHelper.reduce( allowedDistance, pointsToSimplify, profile );
     for( final IProfilChange profilChange : removeChanges )
     {
-      profilChange.doChange( null );
+      profilChange.doChange();
     }
   }
 

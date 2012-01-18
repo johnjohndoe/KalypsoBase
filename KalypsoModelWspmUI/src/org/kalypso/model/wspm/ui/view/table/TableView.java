@@ -79,7 +79,6 @@ import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
@@ -177,7 +176,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
   private final IProfilListener m_profileListener = new IProfilListener()
   {
     @Override
-    public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
+    public void onProfilChanged( final ProfilChangeHint hint )
     {
       if( hint.isActivePointChanged() )
       {

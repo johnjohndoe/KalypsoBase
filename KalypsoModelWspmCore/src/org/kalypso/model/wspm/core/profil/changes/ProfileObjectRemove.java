@@ -63,16 +63,15 @@ public class ProfileObjectRemove implements IProfilChange
   }
 
   @Override
-  public IProfilChange doChange( final ProfilChangeHint hint )
+  public void configureHint( final ProfilChangeHint hint )
   {
-    if( hint != null )
-    {
-      hint.setObjectChanged();
-    }
-    if( hint != null )
-    {
-      hint.setPointPropertiesChanged();
-    }
+    hint.setObjectChanged();
+    hint.setPointPropertiesChanged();
+  }
+
+  @Override
+  public IProfilChange doChange( )
+  {
 
     for( final IProfileObject element : m_objectsToRemove )
     {

@@ -58,7 +58,6 @@ import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.base.IProfileManipulator;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
@@ -198,7 +197,7 @@ public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
 
     final ProfilChangeHint hint = new ProfilChangeHint();
     hint.setPointValuesChanged();
-    m_profile.fireProfilChanged( hint, new IProfilChange[] { null } );
+    m_profile.fireProfilChanged( hint );
 
     return true;
   }

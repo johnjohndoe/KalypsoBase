@@ -44,7 +44,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
@@ -350,7 +349,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
   }
 
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
+  public void onProfilChanged( final ProfilChangeHint hint )
   {
     if( hint.isActivePointChanged() )
     {
@@ -362,7 +361,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
       {
         if( layer instanceof IProfilChartLayer )
         {
-          ((IProfilChartLayer) layer).onProfilChanged( hint, changes );
+          ((IProfilChartLayer) layer).onProfilChanged( hint );
         }
       }
     }

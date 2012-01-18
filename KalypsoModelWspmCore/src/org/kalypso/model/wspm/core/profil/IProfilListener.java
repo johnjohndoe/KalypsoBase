@@ -47,7 +47,7 @@ import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
  */
 public interface IProfilListener
 {
-  void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes );
+  void onProfilChanged( final ProfilChangeHint hint );
 
   void onProblemMarkerChanged( final IProfil source );
 }

@@ -92,7 +92,7 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
         changes[i] = new PointPropertyRemove( m_profil, components[i] );
       }
     }
-    m_profil.fireProfilChanged( hint, changes );
+    m_profil.fireProfilChanged( hint );
 
   }
 
@@ -110,7 +110,7 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
      */
     final ProfilChangeHint hint = new ProfilChangeHint();
     hint.setProfilPropertyChanged( true );
-    m_profil.fireProfilChanged( hint, new IProfilChange[] { null } );
+    m_profil.fireProfilChanged( hint );
 // }
 
   }
@@ -165,7 +165,7 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
     }
     if( profChanges.size() > 0 )
     {
-      m_profil.fireProfilChanged( hint, profChanges.toArray( new IProfilChange[profChanges.size()] ) );
+      m_profil.fireProfilChanged( hint );
     }
 
   }
