@@ -63,9 +63,6 @@ public class PosListMarshaller extends AbstractMarshaller<GM_Position[]>
     super( reader, ELEMENT_POS_LIST, posList );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#startMarshalling()
-   */
   @Override
   protected void startMarshalling( ) throws SAXException
   {
