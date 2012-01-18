@@ -55,6 +55,7 @@ import org.eclipse.swt.widgets.Event;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCoreImages;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -67,7 +68,7 @@ public class CopyStatusClipboardAction extends Action
   {
     m_data = createClipboardString( status );
 
-    setToolTipText( "Copy message to clipboard" );
+    setToolTipText( Messages.getString( "CopyStatusClipboardAction_0" ) ); //$NON-NLS-1$
 
     final ImageDescriptor image = KalypsoCorePlugin.getImageProvider().getImageDescriptor( KalypsoCoreImages.DESCRIPTORS.STATUS_COPY_CLIPBOARD );
     setImageDescriptor( image );
@@ -96,7 +97,7 @@ public class CopyStatusClipboardAction extends Action
 
     final String indent = StringUtils.repeat( " ", level * 4 ); //$NON-NLS-1$
 
-    pw.format( "%s%s: %s%n", indent, severity, message );
+    pw.format( "%s%s: %s%n", indent, severity, message ); //$NON-NLS-1$
 
     final Throwable exception = status.getException();
     if( exception != null )
