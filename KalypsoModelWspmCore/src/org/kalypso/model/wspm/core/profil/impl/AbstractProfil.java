@@ -105,7 +105,7 @@ public abstract class AbstractProfil implements IProfil
 
   private String m_description;
 
-  private final List<IProfilListener> m_listeners = new ArrayList<IProfilListener>( 10 );
+  private final Set<IProfilListener> m_listeners = new LinkedHashSet<IProfilListener>( 10 );
 
   private final Map<Object, Object> m_additionalProfileSettings = new HashMap<Object, Object>();
 
@@ -192,11 +192,9 @@ public abstract class AbstractProfil implements IProfil
   @Override
   public IProfileObject[] addProfileObjects( final IProfileObject... profileObjects )
   {
-
     Collections.addAll( m_profileObjects, profileObjects );
-    final ProfilChangeHint hint = new ProfilChangeHint();
-    hint.setObjectChanged();
-    fireProfilChanged( hint );
+
+    fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.OBJECT_CHANGED ) );
 
     return m_profileObjects.toArray( new IProfileObject[] {} );
   }

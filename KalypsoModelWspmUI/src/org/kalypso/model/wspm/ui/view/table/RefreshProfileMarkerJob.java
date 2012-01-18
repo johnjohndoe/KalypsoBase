@@ -38,42 +38,54 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.view.chart.layer;
+package org.kalypso.model.wspm.ui.view.table;
 
-import org.kalypso.model.wspm.core.IWspmLayers;
+import org.apache.commons.lang3.ArrayUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.ui.progress.UIJob;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.view.IProfilView;
-import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
-import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
-
-import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
- * @author kimwerner
+ * @author Dirk Kuch
  */
-public class CrossSectionTheme extends AbstractProfilTheme
+public class RefreshProfileMarkerJob extends UIJob
 {
-  public static final String TITLE = Messages.getString( "org.kalypso.model.wspm.ui.view.chart.CrossSectionTheme.0" ); //$NON-NLS-1$
 
-  public CrossSectionTheme( final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
+  private final TableView m_tableView;
+
+  public RefreshProfileMarkerJob( final TableView tableView )
   {
-    super( profil, IWspmLayers.LAYER_GELAENDE, TITLE, chartLayers, cm );
+    super( Messages.getString( "org.kalypso.model.wspm.ui.view.table.TableView.0" ) );
+    m_tableView = tableView;
+
+    setUser( false );
+    setSystem( true );
   }
 
   @Override
-  public IProfilView createLayerPanel( )
+  public IStatus runInUIThread( final IProgressMonitor monitor )
   {
-    return new GelaendePanel( getProfil(), this );
-  }
+    final IProfil profile = m_tableView.getProfil();
+    if( Objects.isNull( profile ) )
+      return Status.CANCEL_STATUS;
 
-  @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
-  {
-    if( hint.isSelectionChanged() || hint.isPointValuesChanged() || hint.isPointsChanged() )
+    final IProfileRecord[] points = profile.getPoints();
+
+    if( ArrayUtils.isNotEmpty( points ) )
     {
-      fireLayerContentChanged();
+      final TableViewer viewer = m_tableView.getTupleResultViewer();
+      if( Objects.isNotNull( viewer ) && !viewer.getTable().isDisposed() )
+        viewer.update( points, new String[] { "" } ); //$NON-NLS-1$
     }
+
+    m_tableView.updateProblemView();
+
+    return Status.OK_STATUS;
   }
 }

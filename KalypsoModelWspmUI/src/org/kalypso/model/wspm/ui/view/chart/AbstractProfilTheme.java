@@ -351,7 +351,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
   @Override
   public void onProfilChanged( final ProfilChangeHint hint )
   {
-    if( hint.isActivePointChanged() )
+    if( hint.isSelectionChanged() )
     {
       fireLayerContentChanged();
     }

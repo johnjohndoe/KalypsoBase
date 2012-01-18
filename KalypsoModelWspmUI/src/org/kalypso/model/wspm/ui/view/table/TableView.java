@@ -45,9 +45,6 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -56,7 +53,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ControlEditor;
@@ -143,42 +139,9 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
 
   private String m_registeredName;
 
-  protected final UIJob m_markerRefreshJob = new UIJob( Messages.getString( "org.kalypso.model.wspm.ui.view.table.TableView.0" ) ) //$NON-NLS-1$
-  {
-    @Override
-    public IStatus runInUIThread( final IProgressMonitor monitor )
-    {
-      if( m_profile != null )
-      {
-        final IRecord[] points = m_profile.getPoints();
-        if( points.length > 0 )
-        {
-          if( m_view != null && !m_view.getTable().isDisposed() )
-          {
-            m_view.update( points, new String[] { "" } ); //$NON-NLS-1$
-          }
-        }
-      }
-      updateProblemView();
-      return Status.OK_STATUS;
-    }
-  };
+  protected final UIJob m_markerRefreshJob = new RefreshProfileMarkerJob( this );
 
-  protected final UIJob m_setActivePointJob = new UIJob( Messages.getString( "org.kalypso.model.wspm.ui.view.table.TableView.1" ) ) //$NON-NLS-1$
-  {
-    @Override
-    public IStatus runInUIThread( final IProgressMonitor monitor )
-    {
-      if( m_view == null || m_view.getTable().isDisposed() )
-        return Status.OK_STATUS;
-
-      EditorFirstAdapterFinder.<IProfilProvider> instance();
-      final IProfileRecord[] selection = m_profile.getSelection().toPoints();
-      m_view.setSelection( new StructuredSelection( selection ) );
-      m_view.reveal( selection );
-      return Status.OK_STATUS;
-    }
-  };
+  protected final UIJob m_updateSelectionJob = new UpdateSelectionJob( this );
 
   // TODO: consider moving this in the contentprovider: to do this, extends the TupleResultContentProvider to a
   // ProfileContentProvider
@@ -187,10 +150,10 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     @Override
     public void onProfilChanged( final ProfilChangeHint hint )
     {
-      if( hint.isActivePointChanged() || hint.isSelectionChanged() )
+      if( hint.isSelectionChanged() )
       {
-        m_setActivePointJob.cancel();
-        m_setActivePointJob.schedule( 100 );
+        m_updateSelectionJob.cancel();
+        m_updateSelectionJob.schedule( 100 );
       }
     }
 
