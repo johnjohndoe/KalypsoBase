@@ -63,13 +63,14 @@ public class ProfileObjectEdit implements IProfilChange
   }
 
   @Override
-  public IProfilChange doChange( final ProfilChangeHint hint )
+  public void configureHint( final ProfilChangeHint hint )
   {
-    if( hint != null )
-    {
-      hint.setObjectDataChanged();
-    }
+    hint.setObjectDataChanged();
+  }
 
+  @Override
+  public IProfilChange doChange( )
+  {
     // FIXME at the moment we can only one value of the profile object tuple result
     final IObservation<TupleResult> observation = m_object.getObservation();
     final TupleResult result = observation.getResult();

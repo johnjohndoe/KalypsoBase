@@ -63,7 +63,7 @@ public class ProfilAdapter implements IProfilListener
    *      org.kalypso.model.wspm.core.profil.IProfilChange[])
    */
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
+  public void onProfilChanged( final ProfilChangeHint hint )
   {
     // nothing to do, overwrite to implement
   }

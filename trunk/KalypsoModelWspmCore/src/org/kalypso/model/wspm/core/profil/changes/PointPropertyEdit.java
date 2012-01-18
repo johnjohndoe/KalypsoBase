@@ -77,12 +77,14 @@ public final class PointPropertyEdit implements IProfilChange
   }
 
   @Override
-  public IProfilChange doChange( final ProfilChangeHint hint )
+  public void configureHint( final ProfilChangeHint hint )
   {
-    if( hint != null )
-    {
-      hint.setPointValuesChanged();
-    }
+    hint.setPointValuesChanged();
+  }
+
+  @Override
+  public IProfilChange doChange( )
+  {
     final int index = m_points[0].getOwner().indexOfComponent( m_property );
     if( m_points.length < 1 || index < 0 )
       return new PointPropertyEdit( m_points, m_property, m_newValues );

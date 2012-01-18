@@ -129,7 +129,16 @@ public final class ProfilOperation extends AbstractOperation
     {
       for( final IProfilChange change : changes )
       {
-        final IProfilChange undoChange = change == null ? null : change.doChange( hint );
+        // FIXME: suspect, why can any change be null here=?
+        final IProfilChange undoChange;
+        if( change == null )
+          undoChange = null;
+        else
+        {
+          change.configureHint( hint );
+          undoChange = change.doChange();
+        }
+
         if( undoChange instanceof IllegalChange )
           throw new IllegalProfileOperationException( undoChange.toString(), change );
 
@@ -173,7 +182,7 @@ public final class ProfilOperation extends AbstractOperation
       // TODO: doch! fast jede aktion auf einem Profil feuert zwei events...!
       m_canUndo = undoChanges.size() > 0;
       monitor.done();
-      m_profile.fireProfilChanged( hint, doneChanges.toArray( new IProfilChange[doneChanges.size()] ) );
+      m_profile.fireProfilChanged( hint );
     }
     // auf jeden Fall OK zurückgeben da sonst die UNDO-Liste nicht gefüllt wird
     return Status.OK_STATUS;
@@ -188,7 +197,8 @@ public final class ProfilOperation extends AbstractOperation
       {
         if( undo != null )
         {
-          undo.doChange( hint );
+          undo.configureHint( hint );
+          undo.doChange();
         }
       }
       catch( final IllegalProfileOperationException e )

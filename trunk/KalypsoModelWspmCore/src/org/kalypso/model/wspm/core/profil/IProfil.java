@@ -104,7 +104,7 @@ public interface IProfil extends IObservation<TupleResult>
    */
   IProfileRecord createProfilPoint( );
 
-  void fireProfilChanged( ProfilChangeHint hint, IProfilChange[] changes );
+  void fireProfilChanged( ProfilChangeHint hint );
 
   /**
    * @return something stored in the profile as Strings

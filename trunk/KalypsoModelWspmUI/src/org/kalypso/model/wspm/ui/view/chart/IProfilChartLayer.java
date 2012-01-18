@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.ui.view.chart;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.observation.result.IComponent;
@@ -86,7 +85,7 @@ public interface IProfilChartLayer extends IEditableChartLayer
 
   void removeYourself( );
 
-  void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes );
+  void onProfilChanged( final ProfilChangeHint hint );
 
   IProfil getProfil( );
 

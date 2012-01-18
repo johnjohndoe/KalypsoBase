@@ -62,7 +62,6 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
@@ -70,7 +69,6 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.core.profil.MarkerIndex;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.changes.ProfileObjectAdd;
 import org.kalypso.model.wspm.core.profil.impl.marker.PointMarker;
 import org.kalypso.model.wspm.core.profil.selection.RangeSelection;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
@@ -197,7 +195,7 @@ public abstract class AbstractProfil implements IProfil
     Collections.addAll( m_profileObjects, profileObjects );
     final ProfilChangeHint hint = new ProfilChangeHint();
     hint.setObjectChanged();
-    fireProfilChanged( hint, new IProfilChange[] { new ProfileObjectAdd( this, profileObjects ) } );
+    fireProfilChanged( hint );
 
     return m_profileObjects.toArray( new IProfileObject[] {} );
   }
@@ -234,17 +232,14 @@ public abstract class AbstractProfil implements IProfil
   }
 
   @Override
-  public void fireProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
+  public void fireProfilChanged( final ProfilChangeHint hint )
   {
-    if( ArrayUtils.isEmpty( changes ) )
-      return;
-
     final IProfilListener[] listeners = m_listeners.toArray( new IProfilListener[m_listeners.size()] );
-    for( final IProfilListener l : listeners )
+    for( final IProfilListener listener : listeners )
     {
       try
       {
-        l.onProfilChanged( hint, changes );
+        listener.onProfilChanged( hint );
       }
       catch( final Throwable e )
       {

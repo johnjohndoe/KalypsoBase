@@ -60,12 +60,15 @@ public class PointMarkerSetPoint implements IProfilChange
   }
 
   @Override
-  public IProfilChange doChange( final ProfilChangeHint hint )
+  public void configureHint( final ProfilChangeHint hint )
   {
-    if( hint != null )
-    {
-      hint.setMarkerMoved();
-    }
+    hint.setMarkerMoved();
+
+  }
+
+  @Override
+  public IProfilChange doChange( )
+  {
 
     m_oldPosition = m_pointMarker.setPoint( m_newPosition );
 
