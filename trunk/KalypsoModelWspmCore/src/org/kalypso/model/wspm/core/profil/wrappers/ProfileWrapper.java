@@ -51,12 +51,6 @@ import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
-import org.kalypso.model.wspm.core.util.WspmProfileHelper;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Point;
 
 /**
  * @deprecated use IProfile / IProfileRecord implementation
@@ -130,9 +124,6 @@ public class ProfileWrapper
     return super.equals( obj );
   }
 
-  /**
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode( )
   {
@@ -142,19 +133,6 @@ public class ProfileWrapper
     builder.append( station );
 
     return builder.toHashCode();
-  }
-
-  public GM_Point getPosition( final double breite ) throws Exception
-  {
-    return WspmProfileHelper.getGeoPosition( breite, m_profile );
-  }
-
-  public Coordinate getJtsPosition( final double breite ) throws Exception
-  {
-    final GM_Point point = getPosition( breite );
-    final Point p = (Point) JTSAdapter.export( point );
-
-    return p.getCoordinate();
   }
 
   public void remove( final IProfileRecord... remove )
