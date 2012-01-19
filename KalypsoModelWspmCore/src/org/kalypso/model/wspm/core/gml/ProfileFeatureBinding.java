@@ -89,45 +89,30 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     }
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.gml.IProfileFeature#getBigStation()
-   */
   @Override
   public BigDecimal getBigStation( )
   {
     return (BigDecimal) getProperty( ProfileFeatureFactory.QNAME_STATION );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.gml.IProfileFeature#getLine()
-   */
   @Override
   public GM_Curve getLine( )
   {
     return getProperty( QN_PROPERTY_LINE, GM_Curve.class );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.gml.IProfileFeature#getProfil()
-   */
   @Override
   public IProfil getProfil( )
   {
     return getProperty( QNAME_PSEUDO_PROFILE, IProfil.class );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.gml.IProfileFeature#getSrsName()
-   */
   @Override
   public String getSrsName( )
   {
     return (String) getProperty( QN_PROPERTY_SRS );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.gml.IProfileFeature#getStation()
-   */
   @Override
   public double getStation( )
   {
@@ -136,9 +121,6 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     return profileStation == null ? Double.NaN : profileStation.doubleValue();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.gml.IProfileFeature#getWater()
-   */
   @Override
   public WspmWaterBody getWater( )
   {
@@ -149,18 +131,12 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     return null;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.gml.IProfileFeature#setBigStation(java.math.BigDecimal)
-   */
   @Override
   public void setBigStation( final BigDecimal bigStation )
   {
     setProperty( ProfileFeatureFactory.QNAME_STATION, bigStation );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.gml.IProfileFeature#setSrsName(java.lang.String)
-   */
   @Override
   public void setSrsName( final String srsName )
   {
@@ -168,9 +144,6 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     setEnvelopesUpdated();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.gml.IProfileFeature#setStation(double)
-   */
   @Deprecated
   @Override
   public void setStation( final double station )

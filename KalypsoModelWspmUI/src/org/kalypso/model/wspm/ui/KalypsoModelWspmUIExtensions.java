@@ -139,7 +139,7 @@ public final class KalypsoModelWspmUIExtensions
   }
 
   /**
-   * @return the first LayerProvider for the given profiletype
+   * @return the first LayerProvider for the given profile type
    */
   public static IProfilLayerProvider createProfilLayerProvider( final String profiletype )
   {

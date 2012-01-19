@@ -123,9 +123,6 @@ public class MapWidgetView extends ViewPart
 
   private final AdapterPartListener<IMapPanel> m_partListener = new AdapterPartListener<IMapPanel>( IMapPanel.class, m_adapterEater, m_adapterFinder, m_adapterFinder )
   {
-    /**
-     * @see org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener#partActivated(org.eclipse.ui.IWorkbenchPartReference)
-     */
     @Override
     public void partActivated( final IWorkbenchPartReference partRef )
     {

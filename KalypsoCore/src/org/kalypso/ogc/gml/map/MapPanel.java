@@ -56,6 +56,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -162,9 +163,9 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   private GM_Envelope m_wishBBox;
 
-  private final Collection<IMapPanelListener> m_mapPanelListeners = Collections.synchronizedSet( new HashSet<IMapPanelListener>() );
+  private final Collection<IMapPanelListener> m_mapPanelListeners = Collections.synchronizedSet( new LinkedHashSet<IMapPanelListener>() );
 
-  private final Collection<IMapPanelPaintListener> m_paintListeners = Collections.synchronizedSet( new HashSet<IMapPanelPaintListener>() );
+  private final Collection<IMapPanelPaintListener> m_paintListeners = Collections.synchronizedSet( new LinkedHashSet<IMapPanelPaintListener>() );
 
   private final Map<IKalypsoTheme, IMapLayer> m_layers = Collections.synchronizedMap( new HashMap<IKalypsoTheme, IMapLayer>() );
 
