@@ -54,6 +54,7 @@ import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IRangeSelection;
+import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
@@ -82,16 +83,23 @@ public class ProfilePointSelectionChartHandler extends AbstractProfilePointHandl
   public ProfilePointSelectionChartHandler( final IChartComposite chart )
   {
     super( chart );
-
     super.setCursor( SWT.CURSOR_CROSS );
   }
 
   @Override
   protected void doMouseMove( final AbstractProfilTheme theme, final Point position )
   {
-
     final EditInfo info = new EditInfo( theme, getMouseMoveHoverFigure( position ), null, getBreite(), null, null );
     setToolInfo( info );
+  }
+
+  @Override
+  protected void profileChanged( final ProfilChangeHint hint )
+  {
+    if( !hint.isSelectionChanged() )
+      return;
+
+    forceRedrawEvent();
   }
 
   private IPaintable getMouseMoveHoverFigure( final Point position )

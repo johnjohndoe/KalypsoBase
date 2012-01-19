@@ -115,6 +115,11 @@ public class RangeSelection implements IRangeSelection
       m_selection = null;
       m_profile.fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.SELECTION_CHANGED ) );
     }
+    else if( ArrayUtils.getLength( points ) == 1 )
+    {
+      final IProfileRecord point = points[0];
+      setRange( Range.is( point.getBreite() ) );
+    }
     else
     {
       final FindMinMaxVisitor visitor = new FindMinMaxVisitor( IWspmConstants.POINT_PROPERTY_BREITE );

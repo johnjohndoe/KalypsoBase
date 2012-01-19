@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.commands;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
@@ -49,6 +53,8 @@ import org.kalypso.chart.ui.editor.mousehandler.AbstractChartHandler;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmLayers;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilListener;
+import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
@@ -70,9 +76,58 @@ public abstract class AbstractProfilePointHandler extends AbstractChartHandler
 
   private IProfil m_profile;
 
+  private final IProfilListener m_listener = new IProfilListener()
+  {
+    @Override
+    public void onProfilChanged( final ProfilChangeHint hint )
+    {
+      profileChanged( hint );
+    }
+
+    @Override
+    public void onProblemMarkerChanged( final IProfil source )
+    {
+      profileProblemMarkerChanged( source );
+    }
+  };
+
   public AbstractProfilePointHandler( final IChartComposite chart )
   {
     super( chart );
+
+    doInit( chart );
+  }
+
+  private void doInit( final IChartComposite chart )
+  {
+    final Job job = new Job( "Initializing Profile Point Handler" )
+    {
+
+      @Override
+      protected IStatus run( final IProgressMonitor monitor )
+      {
+        final AbstractProfilTheme theme = findProfileTheme( chart );
+        if( Objects.isNull( theme ) )
+          return Status.CANCEL_STATUS;
+
+        setProfile( theme.getProfil() );
+
+        return Status.OK_STATUS;
+      }
+    };
+    job.setUser( false );
+    job.setSystem( true );
+
+    job.schedule();
+
+  }
+
+  protected void profileChanged( final ProfilChangeHint hint )
+  {
+  }
+
+  protected void profileProblemMarkerChanged( final IProfil source )
+  {
   }
 
   protected final Double getBreite( )
@@ -102,7 +157,16 @@ public abstract class AbstractProfilePointHandler extends AbstractChartHandler
 
   protected final void setProfile( final IProfil profile )
   {
+    if( Objects.equal( m_profile, profile ) )
+      return;
+
+    if( Objects.isNotNull( m_profile ) )
+      m_profile.removeProfilListener( m_listener );
+
     m_profile = profile;
+
+    if( Objects.isNotNull( m_profile ) )
+      m_profile.addProfilListener( m_listener );
   }
 
   @Override
