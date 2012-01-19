@@ -46,8 +46,8 @@ import java.util.Set;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
-import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.ogc.gml.map.MapPanelSelection;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypsodeegree.model.feature.Feature;
@@ -69,12 +69,12 @@ public class SelectedProfilesMapPanelListener implements ISelectionChangedListen
   public void selectionChanged( final SelectionChangedEvent event )
   {
     final ISelection selection = event.getSelection();
-    final IProfil[] profiles = doSelection( selection );
+    final IProfileFeature[] profiles = doSelection( selection );
 
     m_widget.onSelectionChange( profiles );
   }
 
-  IProfil[] doSelection( final ISelection selection )
+  IProfileFeature[] doSelection( final ISelection selection )
   {
     if( selection instanceof MapPanelSelection )
     {
@@ -84,12 +84,12 @@ public class SelectedProfilesMapPanelListener implements ISelectionChangedListen
       return resovleProfiles( features );
     }
 
-    return new IProfil[] {};
+    return new IProfileFeature[] {};
   }
 
-  private IProfil[] resovleProfiles( final EasyFeatureWrapper[] features )
+  private IProfileFeature[] resovleProfiles( final EasyFeatureWrapper[] features )
   {
-    final Set<IProfil> profiles = new LinkedHashSet<>();
+    final Set<IProfileFeature> profiles = new LinkedHashSet<>();
 
     for( final EasyFeatureWrapper eft : features )
     {
@@ -98,11 +98,11 @@ public class SelectedProfilesMapPanelListener implements ISelectionChangedListen
       if( feature instanceof ProfileFeatureBinding )
       {
         final ProfileFeatureBinding binding = (ProfileFeatureBinding) feature;
-        profiles.add( binding.getProfil() );
+        profiles.add( binding );
       }
     }
 
-    return profiles.toArray( new IProfil[] {} );
+    return profiles.toArray( new IProfileFeature[] {} );
   }
 
 }

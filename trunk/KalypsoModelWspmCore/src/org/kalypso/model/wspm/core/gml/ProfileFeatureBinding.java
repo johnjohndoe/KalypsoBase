@@ -22,14 +22,19 @@ import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.gml.binding.commons.Image;
 import org.kalypsodeegree_impl.model.feature.AbstractCachedFeature2;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureCacheDefinition;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.LineString;
 
 // FIXME: we have in parallel still the feature type handler for this kind of feature.
 // These two concepts should not be used both at the same time. Remove the feature type handler!
@@ -275,5 +280,16 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
       m_images = new FeatureBindingCollection<Image>( this, Image.class, QN_PROPERTY_IMAGE_MEMBER, true );
 
     return m_images;
+  }
+
+  @Override
+  public LineString getJtsLine( ) throws GM_Exception
+  {
+    final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+
+    final GM_Curve profileCurve = WspmGeometryUtilities.createProfileSegment( getProfil(), crs );
+    final LineString profileLineString = (LineString) JTSAdapter.export( profileCurve );
+
+    return profileLineString;
   }
 }

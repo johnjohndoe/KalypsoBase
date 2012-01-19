@@ -1,15 +1,28 @@
 package org.kalypso.model.wspm.ui.action.selection;
 
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.jts.SnapUtilities;
+import org.kalypso.jts.SnapUtilities.SNAP_TYPE;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
+import org.kalypso.ogc.gml.map.widgets.advanced.utils.GeometryPainter;
+import org.kalypso.ogc.gml.map.widgets.advanced.utils.IPointHighLighter;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.LineString;
 
 /**
  * @author Dirk Kuch
@@ -25,7 +38,7 @@ public class ProfileSelctionWidget extends AbstractWidget
    */
   private Point m_currentPoint;
 
-  private IProfil[] m_profiles;
+  private IProfileFeature[] m_profiles;
 
   public ProfileSelctionWidget( )
   {
@@ -103,9 +116,50 @@ public class ProfileSelctionWidget extends AbstractWidget
     repaintMap();
   }
 
+  protected static final Color COLOR_VERTEX = new Color( 0x36, 0x7c, 0xc7 );
+
+  static final IPointHighLighter POSSIBLE_VERTEX_POINT = new IPointHighLighter()
+  {
+    @Override
+    public void draw( final Graphics g, final java.awt.Point point )
+    {
+      final int size = 14;
+
+      final Color original = g.getColor();
+      g.setColor( COLOR_VERTEX );
+      g.fillOval( point.x - size / 2, point.y - size / 2, size, size );
+      g.setColor( original );
+    }
+  };
+
   @Override
   public void paint( final Graphics g )
   {
+    try
+    {
+      if( Objects.isNull( m_currentPoint ) )
+        return;
+
+      final GM_Point gmCurrent = MapUtilities.transform( getMapPanel(), m_currentPoint );
+      final com.vividsolutions.jts.geom.Point position = (com.vividsolutions.jts.geom.Point) JTSAdapter.export( gmCurrent );
+
+      final IProfileFeature profile = findClosestProfile( position );
+      if( Objects.isNull( profile ) )
+        return;
+
+      final LineString lineString = profile.getJtsLine();
+
+      com.vividsolutions.jts.geom.Point snapped = SnapUtilities.snapToLine( lineString, position.buffer( 2 ), SNAP_TYPE.SNAP_TO_POINT );
+      if( Objects.isNull( snapped ) )
+        snapped = SnapUtilities.snapToLine( lineString, position.buffer( lineString.getCentroid().distance( position ) + 1.0 ), SNAP_TYPE.SNAP_TO_LINE );
+
+      GeometryPainter.highlightPoints( g, getMapPanel(), new Geometry[] { snapped }, POSSIBLE_VERTEX_POINT );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
+
 // final IMapPanel mapPanel = getMapPanel();
 // if( mapPanel == null )
 // return;
@@ -126,6 +180,43 @@ public class ProfileSelctionWidget extends AbstractWidget
 //
 // m_tooltip.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
 // }
+  }
+
+  private IProfileFeature findClosestProfile( final com.vividsolutions.jts.geom.Point point )
+  {
+    if( ArrayUtils.isEmpty( m_profiles ) )
+      return null;
+    else if( ArrayUtils.getLength( m_profiles ) == 1 )
+      return m_profiles[0];
+
+    double distance = Double.MAX_VALUE;
+    IProfileFeature ptr = null;
+
+    for( final IProfileFeature profile : m_profiles )
+    {
+      try
+      {
+        if( Objects.isNull( ptr ) )
+          ptr = profile;
+        else
+        {
+          final LineString curve = profile.getJtsLine();
+          final double d = point.distance( curve.getCentroid() );
+
+          if( d < distance )
+          {
+            ptr = profile;
+            distance = d;
+          }
+        }
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+      }
+    }
+
+    return ptr;
   }
 
   @Override
@@ -160,7 +251,7 @@ public class ProfileSelctionWidget extends AbstractWidget
     }
   }
 
-  public void onSelectionChange( final IProfil[] profiles )
+  public void onSelectionChange( final IProfileFeature[] profiles )
   {
     m_profiles = profiles;
   }
