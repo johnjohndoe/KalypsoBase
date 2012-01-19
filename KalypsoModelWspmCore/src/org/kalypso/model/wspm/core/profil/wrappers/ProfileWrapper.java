@@ -47,21 +47,15 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
-import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 
 /**
@@ -110,16 +104,6 @@ public class ProfileWrapper
   public String toString( )
   {
     return String.format( Messages.getString( "ProfileWrapper_0" ), m_profile.getStation() ); //$NON-NLS-1$
-  }
-
-  public LineString getGeometry( ) throws GM_Exception
-  {
-    final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-
-    final GM_Curve profileCurve = WspmGeometryUtilities.createProfileSegment( m_profile, crs );
-    final LineString profileLineString = (LineString) JTSAdapter.export( profileCurve );
-
-    return profileLineString;
   }
 
   public IProfil getProfile( )
@@ -186,16 +170,6 @@ public class ProfileWrapper
     final IProfileRecord point = ProfileVisitors.findLowestPoint( m_profile );
     return point.getHoehe();
 
-  }
-
-  public double getWidth( final Point point ) throws GM_Exception
-  {
-    // TODO: dangerous: widht/rw/hw are not alwayws related!
-    // TODO: maybe delegate to WspProfileHelper#getWidthPosition
-    final double jtsDistance = JTSUtilities.pointDistanceOnLine( getGeometry(), point );
-    final double width = getProfile().getFirstPoint().getBreite() + jtsDistance;
-
-    return width;
   }
 
   public IProfilPointMarker[] getPointMarkers( final IProfileRecord point )

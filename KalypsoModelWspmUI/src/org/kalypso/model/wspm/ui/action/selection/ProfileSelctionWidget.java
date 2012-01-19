@@ -1,27 +1,31 @@
 package org.kalypso.model.wspm.ui.action.selection;
 
-import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.Range;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.jts.SnapUtilities;
 import org.kalypso.jts.SnapUtilities.SNAP_TYPE;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IRangeSelection;
+import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
-import org.kalypso.ogc.gml.map.widgets.advanced.utils.GeometryPainter;
-import org.kalypso.ogc.gml.map.widgets.advanced.utils.IPointHighLighter;
+import org.kalypso.ogc.gml.map.widgets.advanced.utils.SLDPainter;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
-import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 
 /**
@@ -87,25 +91,29 @@ public class ProfileSelctionWidget extends AbstractWidget
     super.finish();
   }
 
+  private void updateSelection( )
+  {
+    if( Objects.isNull( m_profile, m_snapPoint ) )
+      return;
+
+    try
+    {
+      final IProfil profile = m_profile.getProfil();
+      final IRangeSelection selection = profile.getSelection();
+
+      final double breite = Profiles.getWidth( m_profile.getProfil(), m_snapPoint );
+      selection.setRange( Range.is( breite ) );
+    }
+    catch( final GM_Exception e )
+    {
+      e.printStackTrace();
+    }
+  }
+
   @Override
   public void leftPressed( final Point p )
   {
-// if( m_strategy == null )
-// return;
-//
-// try
-// {
-// final GM_Point pos = MapUtilities.transform( getMapPanel(), p );
-// m_strategy.addPoint( pos );
-// repaintMap();
-// }
-// catch( final Exception e )
-// {
-// e.printStackTrace();
-//
-// /* Reset the widget. */
-// activate( getCommandTarget(), getMapPanel() );
-// }
+    updateSelection();
   }
 
   @Override
@@ -116,21 +124,9 @@ public class ProfileSelctionWidget extends AbstractWidget
     repaintMap();
   }
 
-  protected static final Color COLOR_VERTEX = new Color( 0x36, 0x7c, 0xc7 );
+  private com.vividsolutions.jts.geom.Point m_snapPoint;
 
-  static final IPointHighLighter POSSIBLE_VERTEX_POINT = new IPointHighLighter()
-  {
-    @Override
-    public void draw( final Graphics g, final java.awt.Point point )
-    {
-      final int size = 14;
-
-      final Color original = g.getColor();
-      g.setColor( COLOR_VERTEX );
-      g.fillOval( point.x - size / 2, point.y - size / 2, size, size );
-      g.setColor( original );
-    }
-  };
+  private IProfileFeature m_profile;
 
   @Override
   public void paint( final Graphics g )
@@ -143,17 +139,20 @@ public class ProfileSelctionWidget extends AbstractWidget
       final GM_Point gmCurrent = MapUtilities.transform( getMapPanel(), m_currentPoint );
       final com.vividsolutions.jts.geom.Point position = (com.vividsolutions.jts.geom.Point) JTSAdapter.export( gmCurrent );
 
-      final IProfileFeature profile = findClosestProfile( position );
-      if( Objects.isNull( profile ) )
+      m_profile = findClosestProfile( position );
+      if( Objects.isNull( m_profile ) )
         return;
 
-      final LineString lineString = profile.getJtsLine();
+      final LineString lineString = m_profile.getJtsLine();
 
-      com.vividsolutions.jts.geom.Point snapped = SnapUtilities.snapToLine( lineString, position.buffer( 2 ), SNAP_TYPE.SNAP_TO_POINT );
-      if( Objects.isNull( snapped ) )
-        snapped = SnapUtilities.snapToLine( lineString, position.buffer( lineString.getCentroid().distance( position ) + 1.0 ), SNAP_TYPE.SNAP_TO_LINE );
+      m_snapPoint = SnapUtilities.snapToLine( lineString, position.buffer( 2 ), SNAP_TYPE.SNAP_TO_POINT );
+      if( Objects.isNull( m_snapPoint ) )
+        m_snapPoint = SnapUtilities.snapToLine( lineString, position.buffer( lineString.getCentroid().distance( position ) + 1.0 ), SNAP_TYPE.SNAP_TO_LINE );
 
-      GeometryPainter.highlightPoints( g, getMapPanel(), new Geometry[] { snapped }, POSSIBLE_VERTEX_POINT );
+      final GeoTransform projection = getMapPanel().getProjection();
+      final SLDPainter sldPainter = new SLDPainter( projection, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+      sldPainter.paint( g, getClass().getResource( "symbolization/selection.snap.point.sld" ), m_snapPoint.getCoordinate() ); //$NON-NLS-1$
+
     }
     catch( final Exception e )
     {
