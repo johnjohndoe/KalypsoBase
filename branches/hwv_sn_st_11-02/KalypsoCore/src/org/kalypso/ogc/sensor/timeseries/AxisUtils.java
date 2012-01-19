@@ -52,6 +52,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
+import org.kalypso.ogc.sensor.timeseries.wq.IWQConverter;
 
 /**
  * @author Dirk Kuch
@@ -273,4 +274,46 @@ public final class AxisUtils implements ITimeseriesConstants
     return builder.isEquals();
   }
 
+  /**
+   * @param converter
+   *          Needed to guess the right persistent axis for a non-persistent one.
+   */
+  public static IAxis findPersistentAxis( final IAxis[] axes, final IWQConverter converter, final IAxis axis )
+  {
+    if( axis.isPersistable() )
+      return axis;
+
+    final boolean isStatusAxis = isStatusAxis( axis );
+
+    IAxis inputAxis;
+    if( isStatusAxis )
+      inputAxis = KalypsoStatusUtils.findAxisForStatusAxis( axes, axis );
+    else
+      inputAxis = axis;
+
+    final String type = inputAxis.getType();
+    final String persistentType = findConvertedType( converter, type );
+    if( persistentType == null )
+      throw new IllegalArgumentException( String.format( "Unable to find persistent axis for type: %s", type ) ); //$NON-NLS-1$
+
+    final IAxis persistentAxis = findAxis( axes, persistentType );
+    if( persistentAxis == null )
+      throw new IllegalArgumentException( String.format( "Persistent axis with type does not exist: %s", persistentType ) );
+
+    if( isStatusAxis )
+      return AxisUtils.findStatusAxis( axes, persistentAxis );
+    else
+      return persistentAxis;
+  }
+
+  private static String findConvertedType( final IWQConverter converter, final String type )
+  {
+    if( type.equals( converter.getFromType() ) )
+      return converter.getToType();
+
+    if( type.equals( converter.getToType() ) )
+      return converter.getFromType();
+
+    return null;
+  }
 }

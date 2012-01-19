@@ -52,6 +52,7 @@ import javax.swing.ImageIcon;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
+import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 
@@ -97,7 +98,7 @@ public final class KalypsoStatusUtils
    *          the observation axis for which to return the status axis name
    * @return the name of the corresponding status axis
    */
-  public static String getStatusAxisLabelFor( final IAxis axis )
+  public static String getStatusAxisNameFor( final IAxis axis )
   {
     if( isStatusAxis( axis ) )
       return axis.getName();
@@ -110,9 +111,9 @@ public final class KalypsoStatusUtils
    * 
    * @return just axis label
    */
-  public static String getAxisLabelFor( final IAxis axis )
+  public static String getAxisNameFor( final IAxis statusAxis )
   {
-    return axis.getName().replaceAll( STATUS_AXIS_LABELPREFIX, "" ); //$NON-NLS-1$
+    return statusAxis.getName().replaceAll( STATUS_AXIS_LABELPREFIX, "" ); //$NON-NLS-1$
   }
 
   /**
@@ -127,7 +128,8 @@ public final class KalypsoStatusUtils
     if( isStatusAxis( axis ) )
       throw new IllegalArgumentException( "Axis " + axis + Messages.getString( "org.kalypso.ogc.sensor.status.KalypsoStatusUtils.12" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    return new DefaultAxis( STATUS_AXIS_LABELPREFIX + axis.getName(), STATUS_AXIS_TYPE, STATUS_AXIS_UNIT, STATUS_AXIS_DATACLASS, false, persistable );
+    final String statusAxisName = getStatusAxisNameFor( axis );
+    return new DefaultAxis( statusAxisName, STATUS_AXIS_TYPE, STATUS_AXIS_UNIT, STATUS_AXIS_DATACLASS, false, persistable );
   }
 
   /**
@@ -135,6 +137,7 @@ public final class KalypsoStatusUtils
    * 
    * @return true if status-axis
    */
+  // FIXME: also returns treu for Data-Source axes!
   public static boolean isStatusAxis( final IAxis axis )
   {
     if( axis.getType().equals( STATUS_AXIS_TYPE ) )
@@ -150,7 +153,7 @@ public final class KalypsoStatusUtils
    */
   public static boolean isStatusAxisFor( final IAxis axis, final IAxis statusCandidate )
   {
-    final String statusAxisLabel = getStatusAxisLabelFor( axis );
+    final String statusAxisLabel = getStatusAxisNameFor( axis );
 
     return statusCandidate.getName().equals( statusAxisLabel );
   }
@@ -542,5 +545,11 @@ public final class KalypsoStatusUtils
     }
 
     return count;
+  }
+
+  public static IAxis findAxisForStatusAxis( final IAxis[] axes, final IAxis statusAxis )
+  {
+    final String valueAxisName = getAxisNameFor( statusAxis );
+    return ObservationUtilities.findAxisByNameNoEx( axes, valueAxisName );
   }
 }
