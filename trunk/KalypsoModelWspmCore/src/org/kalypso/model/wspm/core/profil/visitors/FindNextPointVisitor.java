@@ -70,22 +70,18 @@ public class FindNextPointVisitor implements IProfileRecordVisitor
       if( point.getBreite() > m_position )
       {
         if( m_point == null )
-        {
           m_point = point;
-        }
         else if( point.getBreite() < m_point.getBreite() )
-        {
           m_point = point;
-        }
       }
 
     }
     else
     {
-
       if( point.getBreite() > m_position )
       {
         m_point = point;
+
         throw new CancelVisitorException();
       }
     }

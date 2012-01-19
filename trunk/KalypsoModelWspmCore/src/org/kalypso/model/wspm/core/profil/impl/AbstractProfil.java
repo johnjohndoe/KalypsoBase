@@ -722,7 +722,7 @@ public abstract class AbstractProfil implements IProfil
         for( int index = ArrayUtils.getLength( points ) - 1; index > 0; index-- )
         {
           final IProfileRecord point = points[index];
-          visitor.visit( point, 1 );
+          visitor.visit( point, direction );
         }
       }
     }
