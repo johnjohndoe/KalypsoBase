@@ -60,6 +60,7 @@ import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.manager.visitors.FindLayerVisitor;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
@@ -120,6 +121,14 @@ public abstract class AbstractProfilePointHandler extends AbstractChartHandler
 
     job.schedule();
 
+    chart.addListener( new IChartModelEventListener()
+    {
+      @Override
+      public void onModelChanged( final IChartModel oldModel, final IChartModel newModel )
+      {
+        job.schedule();
+      }
+    } );
   }
 
   protected void profileChanged( final ProfilChangeHint hint )
