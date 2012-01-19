@@ -76,7 +76,6 @@ import com.vividsolutions.jts.geom.Geometry;
  */
 public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvancedSelectionWidgetDelegate
 {
-
   static Document SLD_ADD;
 
   static Document SLD_REMOVE;

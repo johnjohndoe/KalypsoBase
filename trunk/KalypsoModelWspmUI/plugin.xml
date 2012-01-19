@@ -714,4 +714,38 @@
              icon="icons/obj16/select-point.png">
        </image>
     </extension>
+    <extension
+          point="org.eclipse.ui.commands">
+       <command
+             categoryId="org.kalypso.ogc.gml.map.category"
+             description="Selektion von Profilpunkten"
+             id="org.kalypso.ogc.gml.map.widgets.ProfileSelectionWidget"
+             name="Profilpunktselektion">
+       </command>
+    </extension>
+    <extension
+          point="org.eclipse.ui.commandImages">
+       <image
+             commandId="org.kalypso.ogc.gml.map.widgets.ProfileSelectionWidget"
+             icon="icons/obj16/select-point.png">
+       </image>
+    </extension>
+    <extension
+          point="org.eclipse.ui.handlers">
+       <handler
+             commandId="org.kalypso.ogc.gml.map.widgets.ProfileSelectionWidget">
+          <class
+                class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+             <parameter
+                   name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+                   value="org.kalypso.model.wspm.ui.action.selection.ProfileSelctionWidget">
+             </parameter>
+          </class>
+          <enabledWhen>
+             <reference
+                   definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent">
+             </reference>
+          </enabledWhen>
+       </handler>
+    </extension>
 </plugin>
