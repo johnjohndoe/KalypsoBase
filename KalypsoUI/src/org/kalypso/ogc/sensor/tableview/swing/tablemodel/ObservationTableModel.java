@@ -224,7 +224,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
   private IAxis getStatusAxis( final IObservation obs, final IAxis axis )
   {
     final IAxis[] obsAxes = obs.getAxes();
-    final String statusAxisLabel = KalypsoStatusUtils.getStatusAxisLabelFor( axis );
+    final String statusAxisLabel = KalypsoStatusUtils.getStatusAxisNameFor( axis );
     final IAxis statusAxis = ObservationUtilities.findAxisByNameNoEx( obsAxes, statusAxisLabel );
 
     return statusAxis;
