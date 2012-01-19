@@ -6,9 +6,9 @@ import java.awt.Point;
 import java.awt.event.KeyEvent;
 
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
 
 /**
@@ -16,16 +16,16 @@ import org.kalypso.ogc.gml.widgets.AbstractWidget;
  */
 public class ProfileSelctionWidget extends AbstractWidget
 {
-  private final ToolTipRenderer m_standardTooltip = ToolTipRenderer.createStandardTooltip();
+  private final ToolTipRenderer m_tooltip = ToolTipRenderer.createStandardTooltip();
 
-  private final ToolTipRenderer m_errorTooltip = ToolTipRenderer.createErrorTooltip();
-
-  private ToolTipRenderer m_tooltip = null;
+  private final SelectedProfilesMapPanelListener m_mapPanelListener = new SelectedProfilesMapPanelListener( this );
 
   /**
    * The current point on the map screen.
    */
   private Point m_currentPoint;
+
+  private IProfil[] m_profiles;
 
   public ProfileSelctionWidget( )
   {
@@ -42,7 +42,6 @@ public class ProfileSelctionWidget extends AbstractWidget
 // m_strategy.dispose();
 // m_strategy = null;
 // }
-    m_tooltip = null;
     m_currentPoint = null;
 
     final Cursor cursor = Cursor.getPredefinedCursor( Cursor.DEFAULT_CURSOR );
@@ -54,17 +53,10 @@ public class ProfileSelctionWidget extends AbstractWidget
   {
     super.activate( commandPoster, mapPanel );
 
+    mapPanel.addSelectionChangedListener( m_mapPanelListener );
+    m_profiles = m_mapPanelListener.doSelection( mapPanel.getSelection() );
+
     reset();
-
-    final IMapModell model = mapPanel == null ? null : mapPanel.getMapModell();
-    if( model == null )
-    {
-      m_errorTooltip.setTooltip( "Unable to find map." ); //$NON-NLS-1$
-      m_tooltip = m_errorTooltip;
-      return;
-    }
-
-    m_tooltip = m_standardTooltip;
 
     /* Init the cursor. */
     final Cursor cursor = Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR );
@@ -74,24 +66,12 @@ public class ProfileSelctionWidget extends AbstractWidget
   @Override
   public void finish( )
   {
+    getMapPanel().removeSelectionChangedListener( m_mapPanelListener );
     reset();
 
     repaintMap();
 
     super.finish();
-  }
-
-  @Override
-  public void doubleClickedLeft( final Point p )
-  {
-// if( m_strategy == null )
-// {
-// activate( getCommandTarget(), getMapPanel() );
-// }
-// else
-// {
-// m_strategy.run();
-// }
   }
 
   @Override
@@ -178,6 +158,11 @@ public class ProfileSelctionWidget extends AbstractWidget
 // repaintMap();
         break;
     }
+  }
+
+  public void onSelectionChange( final IProfil[] profiles )
+  {
+    m_profiles = profiles;
   }
 
 }
