@@ -76,8 +76,11 @@ public class FindPointsBetweenVisitor implements IProfileRecordVisitor
 
     if( m_range.contains( breite ) )
     {
-      if( !m_includeVertexPoints && m_range.getMinimum() == breite || m_range.getMaximum() == breite )
-        return;
+      if( !m_includeVertexPoints )
+      {
+        if( m_range.getMinimum() == breite || m_range.getMaximum() == breite )
+          return;
+      }
 
       m_points.add( point );
     }

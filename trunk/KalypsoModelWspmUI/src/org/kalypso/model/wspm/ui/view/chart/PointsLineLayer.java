@@ -197,7 +197,8 @@ public class PointsLineLayer extends AbstractProfilLayer
 
     /** differ between selected and plain (not selected) points */
     final Set<Point> plain = new LinkedHashSet<>();
-    final Set<Point> selected = new LinkedHashSet<>();
+    final Set<Point> selectedPoints = new LinkedHashSet<>();
+    final Set<Point> selectedLinePoints = new LinkedHashSet<>();
 
     final IProfileRecord[] points = profil.getPoints();
     for( final IProfileRecord point : points )
@@ -207,7 +208,19 @@ public class PointsLineLayer extends AbstractProfilLayer
         continue;
 
       if( point.isSelected() )
-        selected.add( screen );
+      {
+        selectedPoints.add( screen );
+        selectedLinePoints.add( screen );
+
+        /** draw profile segment as activated, too */
+        final IProfileRecord next = point.getNextPoint();
+        if( Objects.isNotNull( next ) && !next.isSelected() )
+        {
+          final Point nextScreen = toScreen( next );
+          selectedLinePoints.add( nextScreen );
+        }
+
+      }
 
       plain.add( screen );
     }
@@ -217,10 +230,10 @@ public class PointsLineLayer extends AbstractProfilLayer
     lineFigure.setPoints( plain.toArray( new Point[] {} ) );
     lineFigure.paint( gc );
 
-    if( !selected.isEmpty() )
+    if( !selectedLinePoints.isEmpty() )
     {
       lineFigure.setStyle( getLineStyleActive() );
-      lineFigure.setPoints( selected.toArray( new Point[] {} ) );
+      lineFigure.setPoints( selectedLinePoints.toArray( new Point[] {} ) );
       lineFigure.paint( gc );
     }
 
@@ -229,10 +242,10 @@ public class PointsLineLayer extends AbstractProfilLayer
     pointFigure.setPoints( plain.toArray( new Point[] {} ) );
     pointFigure.paint( gc );
 
-    if( !selected.isEmpty() )
+    if( !selectedPoints.isEmpty() )
     {
       pointFigure.setStyle( getPointStyleActive() );
-      pointFigure.setPoints( selected.toArray( new Point[] {} ) );
+      pointFigure.setPoints( selectedPoints.toArray( new Point[] {} ) );
       pointFigure.paint( gc );
     }
   }
