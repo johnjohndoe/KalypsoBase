@@ -50,7 +50,10 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.gml.binding.commons.Image;
+
+import com.vividsolutions.jts.geom.LineString;
 
 /**
  * @author Dirk Kuch
@@ -100,6 +103,8 @@ public interface IProfileFeature extends Feature
    * IMPORTANT: this geometry is (in contrast to {@link #getSrsName()} always in the Kalypso-Coorindate-System.
    */
   GM_Curve getLine( );
+
+  LineString getJtsLine( ) throws GM_Exception;
 
   String getSrsName( );
 

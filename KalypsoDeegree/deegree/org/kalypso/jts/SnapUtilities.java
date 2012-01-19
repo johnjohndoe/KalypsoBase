@@ -143,12 +143,15 @@ public class SnapUtilities
 
         for( final LineString lineString : lineStrings )
         {
-          final Point point = JTSUtilities.pointOnLinePercent( lineString, 50 );
-          if( Objects.isNull( point ) )
-            continue;
+          for( int percent = 2; percent < 100; percent += 2 )
+          {
+            final Point point = JTSUtilities.pointOnLinePercent( lineString, percent );
+            if( Objects.isNull( point ) )
+              continue;
 
-          final double distance = pointBuffer.getCentroid().distance( point );
-          map.put( distance, point );
+            final double distance = pointBuffer.getCentroid().distance( point );
+            map.put( distance, point );
+          }
         }
 
         final Collection<Point> results = map.values();
