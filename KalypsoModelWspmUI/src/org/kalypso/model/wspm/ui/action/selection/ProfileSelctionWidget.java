@@ -8,16 +8,20 @@ import java.awt.event.KeyEvent;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.Range;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.jts.JTSConverter;
+import org.kalypso.jts.JTSUtilities;
 import org.kalypso.jts.SnapUtilities;
 import org.kalypso.jts.SnapUtilities.SNAP_TYPE;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.IRangeSelection;
+import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
-import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.advanced.utils.SLDPainter;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -26,6 +30,8 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 
 /**
@@ -33,13 +39,8 @@ import com.vividsolutions.jts.geom.LineString;
  */
 public class ProfileSelctionWidget extends AbstractWidget
 {
-  private final ToolTipRenderer m_tooltip = ToolTipRenderer.createStandardTooltip();
-
   private final SelectedProfilesMapPanelListener m_mapPanelListener = new SelectedProfilesMapPanelListener( this );
 
-  /**
-   * The current point on the map screen.
-   */
   private Point m_currentPoint;
 
   private IProfileFeature[] m_profiles;
@@ -71,7 +72,7 @@ public class ProfileSelctionWidget extends AbstractWidget
     super.activate( commandPoster, mapPanel );
 
     mapPanel.addSelectionChangedListener( m_mapPanelListener );
-    m_profiles = m_mapPanelListener.doSelection( mapPanel.getSelection() );
+    onSelectionChange( m_mapPanelListener.doSelection( mapPanel.getSelection() ) );
 
     reset();
 
@@ -84,6 +85,10 @@ public class ProfileSelctionWidget extends AbstractWidget
   public void finish( )
   {
     getMapPanel().removeSelectionChangedListener( m_mapPanelListener );
+
+    // purge profile change listener
+    onSelectionChange( new IProfileFeature[] {} );
+
     reset();
 
     repaintMap();
@@ -131,6 +136,70 @@ public class ProfileSelctionWidget extends AbstractWidget
   @Override
   public void paint( final Graphics g )
   {
+    final GeoTransform projection = getMapPanel().getProjection();
+    final SLDPainter painter = new SLDPainter( projection, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+
+    doPaintSelection( g, painter );
+    doPaintSnapPoint( g, painter );
+
+  }
+
+  private void doPaintSelection( final Graphics g, final SLDPainter painter )
+  {
+    if( Arrays.isEmpty( m_profiles ) )
+      return;
+
+    for( final IProfileFeature profile : m_profiles )
+    {
+      try
+      {
+        final IProfil iProfil = profile.getProfil();
+        final IRangeSelection selection = iProfil.getSelection();
+        if( selection.isEmpty() )
+          continue;
+
+        final Geometry geometry = toGeometry( profile, selection );
+        if( geometry instanceof com.vividsolutions.jts.geom.Point )
+        {
+          final com.vividsolutions.jts.geom.Point point = (com.vividsolutions.jts.geom.Point) geometry;
+          painter.paint( g, getClass().getResource( "symbolization/selection.points.sld" ), point ); //$NON-NLS-1$
+        }
+        else if( geometry instanceof LineString )
+        {
+          final LineString lineString = (LineString) geometry;
+          painter.paint( g, getClass().getResource( "symbolization/selection.line.sld" ), lineString ); //$NON-NLS-1$
+        }
+
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  private Geometry toGeometry( final IProfileFeature profile, final IRangeSelection selection ) throws Exception
+  {
+    final Range<Double> range = selection.getRange();
+    final Double minimum = range.getMinimum();
+    final Double maximum = range.getMaximum();
+
+    if( Objects.equal( minimum, maximum ) )
+    {
+      final Coordinate coorinate = Profiles.getJtsPosition( profile.getProfil(), minimum );
+      return JTSConverter.toPoint( coorinate );
+    }
+    else
+    {
+      final Coordinate c1 = Profiles.getJtsPosition( profile.getProfil(), minimum );
+      final Coordinate c2 = Profiles.getJtsPosition( profile.getProfil(), minimum );
+
+      return JTSUtilities.createLineString( profile.getJtsLine(), JTSConverter.toPoint( c1 ), JTSConverter.toPoint( c2 ) );
+    }
+  }
+
+  private void doPaintSnapPoint( final Graphics g, final SLDPainter painter )
+  {
     try
     {
       if( Objects.isNull( m_currentPoint ) )
@@ -149,36 +218,12 @@ public class ProfileSelctionWidget extends AbstractWidget
       if( Objects.isNull( m_snapPoint ) )
         m_snapPoint = SnapUtilities.snapToLine( lineString, position.buffer( lineString.getCentroid().distance( position ) + 1.0 ), SNAP_TYPE.SNAP_TO_LINE );
 
-      final GeoTransform projection = getMapPanel().getProjection();
-      final SLDPainter sldPainter = new SLDPainter( projection, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
-      sldPainter.paint( g, getClass().getResource( "symbolization/selection.snap.point.sld" ), m_snapPoint.getCoordinate() ); //$NON-NLS-1$
-
+      painter.paint( g, getClass().getResource( "symbolization/selection.snap.point.sld" ), m_snapPoint.getCoordinate() ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
       e.printStackTrace();
     }
-
-// final IMapPanel mapPanel = getMapPanel();
-// if( mapPanel == null )
-// return;
-//
-// if( m_strategy != null )
-// {
-// m_strategy.paint( g, mapPanel, m_currentPoint );
-// }
-//
-// if( m_tooltip != null )
-// {
-// final Rectangle bounds = mapPanel.getScreenBounds();
-//
-// if( m_strategy != null )
-// {
-// m_standardTooltip.setTooltip( STR_DEFAULT_TOOLTIP + m_strategy.getLabel() );
-// }
-//
-// m_tooltip.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
-// }
   }
 
   private IProfileFeature findClosestProfile( final com.vividsolutions.jts.geom.Point point )
@@ -250,9 +295,35 @@ public class ProfileSelctionWidget extends AbstractWidget
     }
   }
 
+  private final IProfilListener m_listener = new IProfilListener()
+  {
+    @Override
+    public void onProfilChanged( final ProfilChangeHint hint )
+    {
+      if( hint.isSelectionChanged() )
+        repaintMap();
+    }
+
+    @Override
+    public void onProblemMarkerChanged( final IProfil source )
+    {
+    }
+  };
+
   public void onSelectionChange( final IProfileFeature[] profiles )
   {
-    m_profiles = profiles;
-  }
+    if( Arrays.isNotEmpty( m_profiles ) )
+      for( final IProfileFeature profile : m_profiles )
+      {
+        profile.getProfil().removeProfilListener( m_listener );
+      }
 
+    m_profiles = profiles;
+
+    if( Arrays.isNotEmpty( m_profiles ) )
+      for( final IProfileFeature profile : m_profiles )
+      {
+        profile.getProfil().addProfilListener( m_listener );
+      }
+  }
 }

@@ -49,8 +49,10 @@ import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 
@@ -112,5 +114,18 @@ public final class Profiles
     final LineString profileLineString = (LineString) JTSAdapter.export( profileCurve );
 
     return profileLineString;
+  }
+
+  public static GM_Point getPosition( final IProfil profile, final double breite ) throws Exception
+  {
+    return WspmProfileHelper.getGeoPosition( breite, profile );
+  }
+
+  public static Coordinate getJtsPosition( final IProfil profile, final double breite ) throws Exception
+  {
+    final GM_Point point = getPosition( profile, breite );
+    final Point p = (Point) JTSAdapter.export( point );
+
+    return p.getCoordinate();
   }
 }

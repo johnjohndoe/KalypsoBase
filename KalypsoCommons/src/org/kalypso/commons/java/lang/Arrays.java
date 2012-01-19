@@ -56,6 +56,17 @@ public class Arrays
     return Objects.allNull( objects );
   }
 
+  public static boolean isNotEmpty( final Object[] objects )
+  {
+    if( ArrayUtils.isNotEmpty( objects ) )
+      return true;
+
+    if( ArrayUtils.getLength( objects ) == 0 )
+      return false;
+
+    return Objects.allNotNull( objects );
+  }
+
   public static boolean isLastItem( final Object[] array, final Object item )
   {
     return array[array.length - 1] == item;
