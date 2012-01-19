@@ -172,7 +172,7 @@ public class SLDPainter
     }
   }
 
-  public void paint( final Graphics g, final Symbolizer symbolizer, final GM_Object gmo ) throws CoreException
+  private void paint( final Graphics g, final Symbolizer symbolizer, final GM_Object gmo ) throws CoreException
   {
     try
     {

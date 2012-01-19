@@ -128,4 +128,10 @@ public class RangeSelection implements IRangeSelection
       setRange( Range.between( visitor.getMinimum().getBreite(), visitor.getMaximum().getBreite() ) );
     }
   }
+
+  @Override
+  public boolean isEmpty( )
+  {
+    return Objects.isNull( m_selection );
+  }
 }

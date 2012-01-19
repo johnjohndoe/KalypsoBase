@@ -63,4 +63,6 @@ public interface IRangeSelection
   void setRange( IProfileRecord... points );
 
   IProfileRecord[] toPoints( );
+
+  boolean isEmpty( );
 }

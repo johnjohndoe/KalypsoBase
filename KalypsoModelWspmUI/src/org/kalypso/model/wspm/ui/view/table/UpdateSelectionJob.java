@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.table;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -48,9 +52,12 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.IProfilProvider;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Dirk Kuch
@@ -77,11 +84,45 @@ public class UpdateSelectionJob extends UIJob
       return Status.CANCEL_STATUS;
 
     EditorFirstAdapterFinder.<IProfilProvider> instance();
-    final IProfileRecord[] selection = m_tableView.getProfil().getSelection().toPoints();
-    viewer.setSelection( new StructuredSelection( selection ) );
-    viewer.reveal( selection );
+    final IProfil profile = m_tableView.getProfil();
+    final IRangeSelection selection = profile.getSelection();
+
+    final IRecord[] records = toSelection( profile, selection );
+
+    viewer.setSelection( new StructuredSelection( records ) );
+    viewer.reveal( records );
 
     return Status.OK_STATUS;
 
+  }
+
+  private IRecord[] toSelection( final IProfil profile, final IRangeSelection selection )
+  {
+    if( selection.isEmpty() )
+      return new IRecord[] {};
+
+    final IProfileRecord[] points = selection.toPoints();
+    if( ArrayUtils.isNotEmpty( points ) )
+      return toRecords( points ); // table is based on original tuple result!
+
+    final IProfileRecord point = profile.findPreviousPoint( selection.getRange().getMinimum() );
+    if( Objects.isNotNull( point ) )
+      return new IRecord[] { point.getRecord() };
+
+    return new IRecord[] {};
+  }
+
+  private IRecord[] toRecords( final IProfileRecord[] selection )
+  {
+    if( ArrayUtils.isEmpty( selection ) )
+      return new IRecord[] {};
+
+    final Set<IRecord> records = new LinkedHashSet<>();
+    for( final IProfileRecord record : selection )
+    {
+      records.add( record.getRecord() );
+    }
+
+    return records.toArray( new IRecord[] {} );
   }
 }
