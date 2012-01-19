@@ -41,9 +41,18 @@
 package org.kalypso.model.wspm.core.profil.wrappers;
 
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
+import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Point;
 
 /**
  * @author Dirk Kuch
@@ -83,4 +92,25 @@ public final class Profiles
     return before.getHoehe() + hoehe;
   }
 
+  public static double getWidth( final IProfil profile, final Point point ) throws GM_Exception
+  {
+
+    final LineString lineString = getGeometry( profile );
+    // TODO: dangerous: width/rechtswert/hochwert are not alwayws related!
+    // TODO: maybe delegate to WspProfileHelper#getWidthPosition
+    final double jtsDistance = JTSUtilities.pointDistanceOnLine( lineString, point );
+    final double width = profile.getFirstPoint().getBreite() + jtsDistance;
+
+    return width;
+  }
+
+  public static LineString getGeometry( final IProfil profile ) throws GM_Exception
+  {
+    final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+
+    final GM_Curve profileCurve = WspmGeometryUtilities.createProfileSegment( profile, crs );
+    final LineString profileLineString = (LineString) JTSAdapter.export( profileCurve );
+
+    return profileLineString;
+  }
 }
