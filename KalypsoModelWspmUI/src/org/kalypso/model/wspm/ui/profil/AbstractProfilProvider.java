@@ -87,5 +87,4 @@ public abstract class AbstractProfilProvider implements IProfilProvider
 
     fireOnProfilProviderChanged( this, oldProfile, newProfile );
   }
-
 }

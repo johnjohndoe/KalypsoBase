@@ -37,7 +37,7 @@ import com.vividsolutions.jts.geom.LineString;
 /**
  * @author Dirk Kuch
  */
-public class ProfileSelctionWidget extends AbstractWidget
+public class ProfileSelectionWidget extends AbstractWidget
 {
   private final SelectedProfilesMapPanelListener m_mapPanelListener = new SelectedProfilesMapPanelListener( this );
 
@@ -45,7 +45,7 @@ public class ProfileSelctionWidget extends AbstractWidget
 
   private IProfileFeature[] m_profiles;
 
-  public ProfileSelctionWidget( )
+  public ProfileSelectionWidget( )
   {
     super( "", "" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
@@ -55,11 +55,6 @@ public class ProfileSelctionWidget extends AbstractWidget
    */
   private void reset( )
   {
-// if( m_strategy != null )
-// {
-// m_strategy.dispose();
-// m_strategy = null;
-// }
     m_currentPoint = null;
 
     final Cursor cursor = Cursor.getPredefinedCursor( Cursor.DEFAULT_CURSOR );
@@ -69,6 +64,7 @@ public class ProfileSelctionWidget extends AbstractWidget
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
+
     super.activate( commandPoster, mapPanel );
 
     mapPanel.addSelectionChangedListener( m_mapPanelListener );
@@ -85,12 +81,9 @@ public class ProfileSelctionWidget extends AbstractWidget
   public void finish( )
   {
     getMapPanel().removeSelectionChangedListener( m_mapPanelListener );
-
-    // purge profile change listener
-    onSelectionChange( new IProfileFeature[] {} );
+    onSelectionChange( new IProfileFeature[] {} ); // purge profile change listener
 
     reset();
-
     repaintMap();
 
     super.finish();

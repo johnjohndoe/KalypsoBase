@@ -110,7 +110,7 @@ public class ProfileProviderAdapterFactory implements IAdapterFactory
             if( oldSelectionProvider.equals( selectionProvider ) )
               return oldFeatureSelectionProvider;
 
-            // If selectino provider changed, dipose old FeatureSelectionProvider and create a new one
+            // If selection provider changed, dispose old FeatureSelectionProvider and create a new one
             oldFeatureSelectionProvider.dispose();
             m_providers.remove( part );
           }

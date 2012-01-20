@@ -223,9 +223,6 @@ public class SelectFeatureWidget extends AbstractWidget
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
-   */
   @Override
   public void moved( final Point p )
   {
@@ -257,11 +254,11 @@ public class SelectFeatureWidget extends AbstractWidget
         final GMLXPath[] geomQNames = findGeometryPathes( theme, m_geomQName, IKalypsoFeatureTheme.PROPERTY_SELECTABLE_GEOMETRIES, null );
         final FeatureList visibleFeatures = theme.getFeatureListVisible( reqEnvelope );
 
-        if( visibleFeatures.size() > 0 )
-        {
-          int x = 1;
-          x++;
-        }
+// if( visibleFeatures.size() > 0 )
+// {
+// int x = 1;
+// x++;
+// }
 
         /* Grab to the first feature that you can get. */
         m_hoverFeature = GeometryUtilities.findNearestFeature( currentPos, grabDistance, visibleFeatures, geomQNames, m_qnamesToSelect );
@@ -276,9 +273,6 @@ public class SelectFeatureWidget extends AbstractWidget
     repaintMap();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#dragged(java.awt.Point)
-   */
   @Override
   public void dragged( final Point p )
   {
@@ -291,9 +285,6 @@ public class SelectFeatureWidget extends AbstractWidget
     super.dragged( p );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftPressed(java.awt.Point)
-   */
   @Override
   public void leftPressed( final Point p )
   {
@@ -342,9 +333,6 @@ public class SelectFeatureWidget extends AbstractWidget
     super.leftPressed( p );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftClicked(java.awt.Point)
-   */
   @Override
   public void leftClicked( final Point p )
   {
@@ -511,9 +499,6 @@ public class SelectFeatureWidget extends AbstractWidget
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftReleased(java.awt.Point)
-   */
   @Override
   public void leftReleased( final Point p )
   {
