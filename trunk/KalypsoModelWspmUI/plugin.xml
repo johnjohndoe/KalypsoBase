@@ -738,7 +738,7 @@
                 class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
              <parameter
                    name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
-                   value="org.kalypso.model.wspm.ui.action.selection.ProfileSelctionWidget">
+                   value="org.kalypso.model.wspm.ui.action.selection.ProfileSelectionWidget">
              </parameter>
           </class>
           <enabledWhen>

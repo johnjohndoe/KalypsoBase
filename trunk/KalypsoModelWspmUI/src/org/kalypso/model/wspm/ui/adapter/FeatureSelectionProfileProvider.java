@@ -245,6 +245,8 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider impl
 
       if( newProfile != null && m_file != null )
       {
+
+        // TODO move to profilefeaturebinding.toProfile();
         m_profilValidator = new ValidationProfilListener( newProfile, m_file, null, m_feature.getId() );
 
         newProfile.addProfilListener( m_profilValidator );
