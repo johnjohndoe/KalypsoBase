@@ -65,7 +65,9 @@ import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
 
 /**
  * @author Dirk Kuch
+ * @deprecated not used
  */
+@Deprecated
 public class AxisSelectionLayer extends AbstractChartLayer
 {
   private Point m_position;

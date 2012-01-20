@@ -131,6 +131,7 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
       pf.setPoints( new Point[] { p1, p2 } );
       pf.paint( gc );
     }
+    //TODO:Use Area Style in StyleSet
     final FullRectangleFigure figureRect = new FullRectangleFigure();
     final IPointStyle pointStyle = getStyle( IPointStyle.class );
     if( pointStyle.isVisible() )
