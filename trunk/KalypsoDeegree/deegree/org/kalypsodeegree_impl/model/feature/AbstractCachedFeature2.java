@@ -147,12 +147,14 @@ public class AbstractCachedFeature2 extends Feature_Impl
     return super.getProperty( pt );
   }
 
-  private Object getCachedProperty( final QName property )
+  private synchronized Object getCachedProperty( final QName property )
   {
-    if( !isDirty( property ) )
-      return m_cache.get( property );
+    final Object currentValue = m_cache.get( property );
 
-    final Object newValue = recalculateProperty( property );
+    if( !isDirty( property ) )
+      return currentValue;
+
+    final Object newValue = recalculateProperty( property, currentValue );
     m_cache.put( property, newValue );
     m_dirty.remove( property );
     return newValue;
@@ -164,7 +166,7 @@ public class AbstractCachedFeature2 extends Feature_Impl
    * Overwrite to recalculate the property in the implementing class. Alternatively, use feature functions (do not
    * overwrite in this case).
    */
-  protected Object recalculateProperty( final QName property )
+  protected Object recalculateProperty( final QName property, @SuppressWarnings("unused") final Object oldValue )
   {
     return super.getProperty( property );
   }

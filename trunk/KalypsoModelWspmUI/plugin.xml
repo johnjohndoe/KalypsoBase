@@ -150,37 +150,7 @@
               id="org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl.ProfilEndTarget"
               label="%org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl.ProfilEndTarget"/>
      </extension>
-   <extension
-         point="org.eclipse.core.runtime.adapters">
-      <factory
-            adaptableType="org.kalypso.ui.editor.mapeditor.GisMapEditor"
-            class="org.kalypso.model.wspm.ui.adapter.ProfileProviderAdapterFactory">
-         <adapter type="org.kalypso.model.wspm.ui.profil.IProfilProvider"/>
-      </factory>
-      <factory
-            adaptableType="org.kalypso.ui.editor.gistableeditor.GisTableEditor"
-            class="org.kalypso.model.wspm.ui.adapter.ProfileProviderAdapterFactory">
-         <adapter type="org.kalypso.model.wspm.ui.profil.IProfilProvider"/>
-      </factory>
-      <factory
-            adaptableType="org.kalypso.ui.editor.gmleditor.part.GmlEditor"
-            class="org.kalypso.model.wspm.ui.adapter.ProfileProviderAdapterFactory">
-         <adapter type="org.kalypso.model.wspm.ui.profil.IProfilProvider"/>
-      </factory>
-      <factory
-            adaptableType="org.kalypso.ui.views.map.MapView"
-            class="org.kalypso.model.wspm.ui.adapter.ProfileProviderAdapterFactory">
-         <adapter type="org.kalypso.model.wspm.ui.profil.IProfilProvider"/>
-      </factory>
-      <factory
-            adaptableType="org.kalypso.ui.editor.gmleditor.part.GmvViewPart"
-            class="org.kalypso.model.wspm.ui.adapter.ProfileProviderAdapterFactory">
-         <adapter
-               type="org.kalypso.model.wspm.ui.profil.IProfilProvider">
-         </adapter>
-      </factory>
-   </extension>
-      <extension
+     <extension
          point="org.eclipse.ui.popupMenus">
         <objectContribution
               adaptable="true"

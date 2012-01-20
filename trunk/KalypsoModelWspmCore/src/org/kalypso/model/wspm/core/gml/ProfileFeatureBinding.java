@@ -9,21 +9,30 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.util.pool.KeyInfo;
+import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.ProfileObjectFactory;
+import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
+import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -60,6 +69,20 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     CACHE_DEFINITION.addCachedProperty( QNAME_PSEUDO_PROFILE, QN_PROPERTY_OBS_MEMBERS );
   }
 
+  private final IProfilListener m_profilListener = new IProfilListener()
+  {
+    @Override
+    public void onProfilChanged( final ProfilChangeHint hint )
+    {
+      handleCachedProfileChanged( hint );
+    }
+
+    @Override
+    public void onProblemMarkerChanged( final IProfil source )
+    {
+    }
+  };
+
   private IFeatureBindingCollection<Image> m_images = null;
 
   public ProfileFeatureBinding( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
@@ -68,22 +91,31 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
   }
 
   @Override
-  protected Object recalculateProperty( final QName property )
+  protected Object recalculateProperty( final QName property, final Object oldValue )
   {
     if( property == QNAME_PSEUDO_PROFILE )
-      return createProfile();
+      return createProfile( (IProfil) oldValue );
 
     if( property.equals( QN_PROPERTY_LINE ) )
       return createProfileSegment( this, null );
 
-    return super.recalculateProperty( property );
+    return super.recalculateProperty( property, oldValue );
   }
 
-  private Object createProfile( )
+  private Object createProfile( final IProfil oldProfile )
   {
     try
     {
-      return toProfile();
+      if( oldProfile != null )
+        oldProfile.removeProfilListener( m_profilListener );
+
+      final IProfil profile = toProfile();
+
+      if( profile != null )
+        // TODO: validation
+        profile.addProfilListener( m_profilListener );
+
+      return profile;
     }
     catch( final Exception e )
     {
@@ -291,5 +323,101 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     final LineString profileLineString = (LineString) JTSAdapter.export( profileCurve );
 
     return profileLineString;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.gml.IProfileProvider#addProfilProviderListener(org.kalypso.model.wspm.core.gml.IProfileProviderListener)
+   */
+  @Override
+  public void addProfilProviderListener( final IProfileProviderListener l )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.gml.IProfileProvider#removeProfilProviderListener(org.kalypso.model.wspm.core.gml.IProfileProviderListener)
+   */
+  @Override
+  public void removeProfilProviderListener( final IProfileProviderListener l )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.gml.IProfileProvider#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.gml.IProfileProvider#getResult()
+   */
+  @Override
+  public Object getResult( )
+  {
+    // FIXME
+    // final ProfileAndResults profileAndResults = ProfileAndResults.search( fs );
+
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  // Validation
+// final CommandableWorkspace workspace = profileAndResults.getWorkspace();
+// final URL workspaceContext = workspace == null ? null : workspace.getContext();
+// m_file = workspaceContext == null ? null : ResourceUtilities.findFileFromURL( workspaceContext );
+
+  protected void handleCachedProfileChanged( final ProfilChangeHint hint )
+  {
+    final IProfil profile = getProfil();
+    if( profile == null )
+      return;
+
+    final CommandableWorkspace workspace = findCommanableWorkspace();
+    if( workspace == null )
+      return;
+
+    try
+    {
+      if( (hint.getEvent() & ProfilChangeHint.DATA_CHANGED) != 0 )
+      {
+        final FeatureChange[] featureChanges = ProfileFeatureFactory.toFeatureAsChanges( profile, this );
+
+        final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, featureChanges );
+        workspace.postCommand( command );
+      }
+    }
+    catch( final Exception e )
+    {
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      KalypsoModelWspmCorePlugin.getDefault().getLog().log( status );
+    }
+  }
+
+  // FIXME: MEGA-HACK - find right commandbleWorkspace via Pool, should be solved otherwise
+  private CommandableWorkspace findCommanableWorkspace( )
+  {
+    final GMLWorkspace myWorkspace = getWorkspace();
+
+    final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
+    final KeyInfo[] infos = pool.getInfos();
+    for( final KeyInfo info : infos )
+    {
+      final Object object = info.getObject();
+      if( object instanceof CommandableWorkspace )
+      {
+        final CommandableWorkspace cmdWorkspace = (CommandableWorkspace) object;
+        if( cmdWorkspace.getWorkspace() == myWorkspace )
+          return cmdWorkspace;
+      }
+    }
+
+    return null;
   }
 }

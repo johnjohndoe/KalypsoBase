@@ -38,22 +38,14 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.profil;
+package org.kalypso.model.wspm.core.gml;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 
 /**
  * @author Gernot Belger
  */
-public interface IProfilProvider
+public interface IProfileProviderListener
 {
-  IProfil getProfil( );
-
-  void addProfilProviderListener( final IProfilProviderListener l );
-
-  void removeProfilProviderListener( final IProfilProviderListener l );
-
-  void dispose( );
-
-  Object getResult( );
+  void onProfilProviderChanged( final IProfileProvider provider, final IProfil oldProfile, final IProfil newProfile );
 }

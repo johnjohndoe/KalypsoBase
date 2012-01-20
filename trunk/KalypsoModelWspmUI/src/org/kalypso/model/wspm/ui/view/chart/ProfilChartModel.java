@@ -129,7 +129,7 @@ public class ProfilChartModel extends ChartModel
   {
     final AutoScaleVisitor visitor = new AutoScaleVisitor( this );
 
-    // TODO ?!? auto scaled axes will be updated when?!? strange behaviour
+    // TODO ?!? auto scaled axes will be updated when?!? strange behavior
     final IAxis[] autoscaledAxes = ArrayUtils.isEmpty( axes ) ? getMapperRegistry().getAxes() : axes;
     for( final IAxis axis : autoscaledAxes )
     {

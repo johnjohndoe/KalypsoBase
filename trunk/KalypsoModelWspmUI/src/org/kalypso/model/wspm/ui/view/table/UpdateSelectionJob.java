@@ -52,11 +52,11 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
+import org.kalypso.model.wspm.core.gml.IProfileProvider;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.profil.IProfilProvider;
 import org.kalypso.observation.result.IRecord;
 
 /**
@@ -83,7 +83,7 @@ public class UpdateSelectionJob extends UIJob
     if( Objects.isNull( viewer ) || viewer.getTable().isDisposed() )
       return Status.CANCEL_STATUS;
 
-    EditorFirstAdapterFinder.<IProfilProvider> instance();
+    EditorFirstAdapterFinder.<IProfileProvider> instance();
     final IProfil profile = m_tableView.getProfil();
     final IRangeSelection selection = profile.getSelection();
 
