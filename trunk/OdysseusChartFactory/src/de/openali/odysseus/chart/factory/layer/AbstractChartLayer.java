@@ -178,14 +178,6 @@ public abstract class AbstractChartLayer implements IChartLayer
     return m_coordinateMapper;
   }
 
-// /**
-// * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#createLegendEntries()
-// */
-// protected ILegendEntry[] createLegendEntries( )
-// {
-// return new ILegendEntry[] {};
-// }
-
   /**
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#getData()
    */
@@ -295,15 +287,6 @@ public abstract class AbstractChartLayer implements IChartLayer
     return m_styleSet;
   }
 
-// @Deprecated
-// /**
-// * FIXME: not used
-// */
-// public Map<String, ImageData> getSymbolMap( )
-// {
-// return null;
-// }
-
   /**
    * convenience method; same as getCoordinateMapper().getTargetAxis()
    */
@@ -333,12 +316,6 @@ public abstract class AbstractChartLayer implements IChartLayer
   {
     return m_title;
   }
-
-// @Override
-// public void init( )
-// {
-//
-// }
 
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#isActive()
