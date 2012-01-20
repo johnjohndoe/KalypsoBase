@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package de.openali.odysseus.chart.factory.layer;
+package de.openali.odysseus.chart.factory.util;
 
 import org.kalypso.commons.java.lang.Objects;
 

@@ -49,7 +49,7 @@ import org.w3c.dom.Node;
 
 import de.openali.odysseus.chart.factory.OdysseusChartFactory;
 import de.openali.odysseus.chart.factory.config.IExtensionLoader;
-import de.openali.odysseus.chart.factory.layer.PlainLayerProvider;
+import de.openali.odysseus.chart.factory.provider.PlainLayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chartconfig.x020.ChartDocument;
 import de.openali.odysseus.chartconfig.x020.DerivedLayerType;

@@ -38,11 +38,11 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package de.openali.odysseus.chart.factory.layer;
+package de.openali.odysseus.chart.factory.provider;
 
 import java.net.URL;
 
-import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
+import de.openali.odysseus.chart.factory.layer.PlainLayer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
 /**

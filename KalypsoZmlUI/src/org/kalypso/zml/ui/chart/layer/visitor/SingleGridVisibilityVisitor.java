@@ -46,7 +46,7 @@ import org.kalypso.zml.core.diagram.base.IZmlLayer;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 
 import de.openali.odysseus.chart.ext.base.layer.DefaultTickRasterLayer;
-import de.openali.odysseus.chart.factory.layer.Layers;
+import de.openali.odysseus.chart.factory.util.Layers;
 import de.openali.odysseus.chart.framework.model.ILayerContainer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLayerVisitor;

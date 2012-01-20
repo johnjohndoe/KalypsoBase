@@ -286,11 +286,4 @@
              file-extensions="kod">
        </file-association>
     </extension>
-    <extension
-          point="de.openali.odysseus.chart.factory.LayerProvider">
-       <provider
-             class="org.kalypso.chart.ui.layer.selection.AxisSelectionLayerProvider"
-             id="org.kalypso.chart.ui.layer.provider.axis.selection">
-       </provider>
-    </extension>
 </plugin>
