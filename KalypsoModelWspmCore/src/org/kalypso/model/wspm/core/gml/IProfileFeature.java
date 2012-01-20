@@ -58,7 +58,7 @@ import com.vividsolutions.jts.geom.LineString;
 /**
  * @author Dirk Kuch
  */
-public interface IProfileFeature extends Feature
+public interface IProfileFeature extends Feature, IProfileProvider
 {
   QName QN_PROFILE = new QName( IWspmConstants.NS_WSPMPROF, "Profile" ); //$NON-NLS-1$
 
@@ -96,6 +96,7 @@ public interface IProfileFeature extends Feature
 
   void setBigStation( BigDecimal bigStation );
 
+  @Override
   IProfil getProfil( );
 
   /**

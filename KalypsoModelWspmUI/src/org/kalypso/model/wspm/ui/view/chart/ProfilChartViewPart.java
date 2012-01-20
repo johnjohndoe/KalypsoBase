@@ -56,17 +56,15 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.ChartPartListener;
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
-import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
-import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
-import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
+import org.kalypso.model.wspm.core.gml.IProfileProvider;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.dialog.compare.ProfileChartComposite;
 import org.kalypso.model.wspm.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.profil.IProfilProvider;
-import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
+import org.kalypso.model.wspm.ui.view.IProfileFeatureSelectionListener;
+import org.kalypso.model.wspm.ui.view.ProfileFeatureSeletionHandler;
+import org.kalypso.ogc.gml.selection.IFeatureSelection;
 
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.IChartView;
@@ -74,17 +72,13 @@ import de.openali.odysseus.chart.framework.view.IChartView;
 /**
  * @author kimwerner
  */
-public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfilProviderListener, IAdapterEater<IProfilProvider>
+public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfileFeatureSelectionListener
 {
   public static final String ID = "org.kalypso.model.wspm.ui.view.chart.ChartView"; //$NON-NLS-1$
-
-  private final AdapterPartListener<IProfilProvider> m_adapterPartListener = new AdapterPartListener<IProfilProvider>( IProfilProvider.class, this, new EditorFirstAdapterFinder<IProfilProvider>(), new EditorFirstAdapterFinder<IProfilProvider>() );
 
   private Composite m_control;
 
   private ProfileChartComposite m_profilChartComposite;
-
-  private IProfilProvider m_provider;
 
   private FormToolkit m_toolkit;
 
@@ -92,9 +86,8 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
 
   private ChartPartListener m_partListener = null;
 
-  /**
-   * @see com.bce.profil.eclipse.view.AbstractProfilViewPart2#createContent(org.eclipse.swt.widgets.Composite)
-   */
+  private final ProfileFeatureSeletionHandler m_handler = new ProfileFeatureSeletionHandler( this );
+
   protected Control createContent( final Composite parent )
   {
     if( parent == null )
@@ -114,7 +107,7 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
       m_form.getBody().setLayout( new FillLayout() );
       m_toolkit.decorateFormHeading( m_form );
 
-      final IProfil profile = m_provider == null ? null : m_provider.getProfil();
+      final IProfil profile = m_handler.getProfile();
 
       m_profilChartComposite = new ProfileChartComposite( m_form.getBody(), parent.getStyle(), getProfilLayerProvider(), profile );
       m_partListener.setChart( m_profilChartComposite );
@@ -123,9 +116,6 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
     return m_profilChartComposite;
   }
 
-  /**
-   * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public final void createPartControl( final Composite parent )
   {
@@ -133,33 +123,22 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
     m_control.setLayout( Layouts.createGridLayout() );
     createContent( m_control );
 
-    if( m_provider != null )
-    {
-      onProfilProviderChanged( m_provider, null, m_provider.getProfil() );
-    }
+    final IProfil profile = m_handler.getProfile();
+    final IProfileProvider profileFeature = m_handler.getProfileFeature();
+
+    handleProfilProviderChanged( profileFeature, null, profile );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.AbstractProfilViewPart#dispose()
-   */
   @Override
   public void dispose( )
   {
+    m_handler.dispose();
+
     if( m_partListener != null )
     {
       m_partListener.dispose();
       getSite().getPage().removePartListener( m_partListener );
       m_partListener = null;
-    }
-
-    if( m_provider != null )
-    {
-      m_provider.removeProfilProviderListener( this );
-    }
-
-    if( m_adapterPartListener != null )
-    {
-      m_adapterPartListener.dispose();
     }
 
     if( m_profilChartComposite != null )
@@ -175,14 +154,10 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
     m_form = null;
     m_profilChartComposite = null;
     m_toolkit = null;
-    m_provider = null;
 
     super.dispose();
   }
 
-  /**
-   * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
-   */
   @Override
   public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
@@ -194,9 +169,6 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
     return super.getAdapter( adapter );
   }
 
-  /**
-   * @see org.kalypso.chart.ui.IChartPart#getChartComposite()
-   */
   @Override
   public IChartComposite getChartComposite( )
   {
@@ -220,20 +192,16 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
   {
     super.init( site );
 
+    m_handler.doInit( site );
+
     final IWorkbenchPage page = site.getPage();
-    m_adapterPartListener.init( page );
 
     m_partListener = new ChartPartListener( this, site );
     page.addPartListener( m_partListener );
   }
 
-  /**
-   * @see com.bce.profil.ui.view.IProfilProviderListener#onProfilProviderChanged(com.bce.eind.core.profil.IProfilEventManager,
-   *      com.bce.eind.core.profil.IProfilEventManager, com.bce.profil.ui.view.ProfilViewData,
-   *      com.bce.profil.ui.view.ProfilViewData)
-   */
   @Override
-  public void onProfilProviderChanged( final IProfilProvider provider, final IProfil oldProfile, final IProfil newProfile )
+  public void handleProfilProviderChanged( final IProfileProvider provider, final IProfil oldProfile, final IProfil newProfile )
   {
     setPartNames( Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_1" ), Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -249,26 +217,6 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
     }
 
     setChartModel( newProfile, provider == null ? null : provider.getResult() );
-  }
-
-  @Override
-  public void setAdapter( final IWorkbenchPart part, final IProfilProvider adapter )
-  {
-    if( Objects.equal( adapter, m_provider ) )
-      return;
-
-    if( m_provider != null )
-    {
-      m_provider.removeProfilProviderListener( this );
-    }
-
-    m_provider = adapter;
-    if( m_provider != null )
-    {
-      m_provider.addProfilProviderListener( this );
-    }
-
-    onProfilProviderChanged( m_provider, null, m_provider == null ? null : m_provider.getProfil() );
   }
 
   private void setChartModel( final IProfil newProfile, final Object result )
@@ -321,6 +269,7 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
         }
       }
     };
+
     display.syncExec( runnable );
   }
 
@@ -342,6 +291,12 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
       };
       control.getDisplay().asyncExec( object );
     }
+  }
+
+  @Override
+  public void setAdapter( final IWorkbenchPart part, final IFeatureSelection selection )
+  {
+    m_handler.setAdapter( part, selection );
   }
 
   protected void setPartNamesInternal( final String partName, final String tooltip )

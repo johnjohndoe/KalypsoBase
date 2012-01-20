@@ -78,10 +78,8 @@ import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor.ADVANCE_MODE;
-import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
-import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
-import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.gml.IProfileProvider;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
@@ -90,8 +88,8 @@ import org.kalypso.model.wspm.core.profil.wrappers.ProfileRecord;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.profil.IProfilProvider;
-import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
+import org.kalypso.model.wspm.ui.view.IProfileFeatureSelectionListener;
+import org.kalypso.model.wspm.ui.view.ProfileFeatureSeletionHandler;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -102,6 +100,7 @@ import org.kalypso.ogc.gml.om.table.TupleResultContentProvider;
 import org.kalypso.ogc.gml.om.table.TupleResultLabelProvider;
 import org.kalypso.ogc.gml.om.table.command.ITupleResultViewerProvider;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
+import org.kalypso.ogc.gml.selection.IFeatureSelection;
 
 /**
  * TableView für ein Profil. Ist eine feste View auf genau einem Profil.
@@ -109,7 +108,7 @@ import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
  * @author Gernot Belger
  * @author kimwerner
  */
-public class TableView extends ViewPart implements IAdapterEater<IProfilProvider>, IProfilProviderListener, ITupleResultViewerProvider
+public class TableView extends ViewPart implements ITupleResultViewerProvider, IProfileFeatureSelectionListener
 {
   public static final String ID = "org.kalypso.model.wspm.ui.view.table.TableView"; //$NON-NLS-1$
 
@@ -117,15 +116,11 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
 
   private static final String SETTINGS_SASH_WEIGHT = "sashWeight"; //$NON-NLS-1$
 
-  private final AdapterPartListener<IProfilProvider> m_profilProviderListener = new AdapterPartListener<IProfilProvider>( IProfilProvider.class, this, EditorFirstAdapterFinder.<IProfilProvider> instance(), EditorFirstAdapterFinder.<IProfilProvider> instance() );
-
   private final IDialogSettings m_settings = DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), ID );
 
   private Form m_form;
 
   private FormToolkit m_toolkit;
-
-  private IProfilProvider m_provider;
 
   protected IProfil m_profile;
 
@@ -142,6 +137,8 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
   protected final UIJob m_markerRefreshJob = new RefreshProfileMarkerJob( this );
 
   protected final UIJob m_updateSelectionJob = new UpdateSelectionJob( this );
+
+  private final ProfileFeatureSeletionHandler m_handler = new ProfileFeatureSeletionHandler( this );
 
   // TODO: consider moving this in the content provider: to do this, extends the TupleResultContentProvider to a
   // ProfileContentProvider
@@ -173,8 +170,10 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
   public void init( final IViewSite site ) throws PartInitException
   {
     super.init( site );
+
     m_registeredName = site.getRegisteredName();
-    m_profilProviderListener.init( site.getPage() );
+
+    m_handler.doInit( site );
 
     m_menuManager = new MenuManager();
     m_menuManager.add( new GroupMarker( IWorkbenchActionConstants.MB_ADDITIONS ) );
@@ -185,6 +184,9 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
   {
     super.dispose();
 
+    if( Objects.isNotNull( m_handler ) )
+      m_handler.dispose();
+
     if( m_profile != null )
     {
       m_profile.removeProfilListener( m_profileListener );
@@ -192,8 +194,6 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
 
     m_menuManager.dispose();
     m_menuManager = null;
-
-    unhookProvider();
 
     if( m_tupleResultContentProvider != null )
     {
@@ -205,23 +205,12 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
       m_tupleResultLabelProvider.dispose();
     }
 
-    m_profilProviderListener.dispose();
-
     if( m_form != null )
     {
       m_form.dispose();
     }
 
     m_view = null;
-  }
-
-  private void unhookProvider( )
-  {
-    if( m_provider != null )
-    {
-      m_provider.removeProfilProviderListener( this );
-      m_provider = null;
-    }
   }
 
   @Override
@@ -383,26 +372,13 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
   }
 
   @Override
-  public void setAdapter( final IWorkbenchPart part, final IProfilProvider provider )
+  public void setAdapter( final IWorkbenchPart part, final IFeatureSelection selection )
   {
-    if( m_provider == provider && provider != null )
-      return;
-
-    unhookProvider();
-
-    m_provider = provider;
-
-    if( m_provider != null )
-    {
-      m_provider.addProfilProviderListener( this );
-    }
-
-    final IProfil newProfile = m_provider == null ? null : m_provider.getProfil();
-    onProfilProviderChanged( m_provider, m_profile, newProfile );
+    m_handler.setAdapter( part, selection );
   }
 
   @Override
-  public void onProfilProviderChanged( final IProfilProvider provider, final IProfil oldProfile, final IProfil newProfile )
+  public void handleProfilProviderChanged( final IProfileProvider provider, final IProfil oldProfile, final IProfil newProfile )
   {
     if( m_profile != null )
       m_profile.removeProfilListener( m_profileListener );
@@ -487,7 +463,6 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     return m_view;
   }
 
-  @SuppressWarnings("deprecation")
   protected IProfileRecord[] toPoints( final ISelection selection )
   {
     if( !(selection instanceof IStructuredSelection) )

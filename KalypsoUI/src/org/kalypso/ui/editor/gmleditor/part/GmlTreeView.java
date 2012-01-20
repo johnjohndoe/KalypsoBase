@@ -365,9 +365,6 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
   @Override
   public IStructuredSelection getSelection( )
   {
-    if( m_treeViewer.getContentProvider() != m_contentProvider )
-      return (IStructuredSelection) m_treeViewer.getSelection();
-
     return new TreeFeatureSelection( (IStructuredSelection) m_treeViewer.getSelection() );
   }
 

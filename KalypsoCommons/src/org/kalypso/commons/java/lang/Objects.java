@@ -46,6 +46,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import com.sun.istack.Nullable;
+
 /**
  * @author Dirk Kuch
  */
@@ -103,7 +105,7 @@ public final class Objects
     return !equal( a, b );
   }
 
-  public static Object firstNonNull( final Object a, final Object b )
+  public static <T> T firstNonNull( @Nullable final T a, @Nullable final T b )
   {
     return com.google.common.base.Objects.firstNonNull( a, b );
   }

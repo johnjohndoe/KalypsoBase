@@ -186,13 +186,18 @@ public class AdapterPartListener<C> implements IPartListener2
     if( part == null )
       return false;
 
-    final C adapter = (C) part.getAdapter( m_adapter );
+    final C adapter = doAdaptPart( part );
     if( adapter == null )
       return false;
 
     setAdapter( part, adapter );
 
     return true;
+  }
+
+  protected C doAdaptPart( final IWorkbenchPart part )
+  {
+    return (C) part.getAdapter( m_adapter );
   }
 
   public void setAdapter( final IWorkbenchPart part, final C adapter )

@@ -43,33 +43,35 @@ package org.kalypso.model.wspm.ui.profil;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.model.wspm.core.gml.IProfileProvider;
+import org.kalypso.model.wspm.core.gml.IProfileProviderListener;
 import org.kalypso.model.wspm.core.profil.IProfil;
 
 /**
  * @author Gernot Belger
  */
-public abstract class AbstractProfilProvider implements IProfilProvider
+public abstract class AbstractProfilProvider implements IProfileProvider
 {
-  private final List<IProfilProviderListener> m_listeners = new ArrayList<IProfilProviderListener>( 5 );
+  private final List<IProfileProviderListener> m_listeners = new ArrayList<IProfileProviderListener>( 5 );
 
   private IProfil m_profile = null;
 
   @Override
-  public void addProfilProviderListener( final IProfilProviderListener l )
+  public void addProfilProviderListener( final IProfileProviderListener l )
   {
     m_listeners.add( l );
   }
 
   @Override
-  public void removeProfilProviderListener( final IProfilProviderListener l )
+  public void removeProfilProviderListener( final IProfileProviderListener l )
   {
     m_listeners.remove( l );
   }
 
-  protected void fireOnProfilProviderChanged( final IProfilProvider provider, final IProfil oldProfile, final IProfil newProfile )
+  protected void fireOnProfilProviderChanged( final IProfileProvider provider, final IProfil oldProfile, final IProfil newProfile )
   {
-    final IProfilProviderListener[] ls = m_listeners.toArray( new IProfilProviderListener[m_listeners.size()] );
-    for( final IProfilProviderListener l : ls )
+    final IProfileProviderListener[] ls = m_listeners.toArray( new IProfileProviderListener[m_listeners.size()] );
+    for( final IProfileProviderListener l : ls )
     {
       l.onProfilProviderChanged( provider, oldProfile, newProfile );
     }
