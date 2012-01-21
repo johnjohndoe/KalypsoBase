@@ -32,7 +32,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.afgui.ScenarioHandlingProjectNature;
 import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.afgui.model.ICommandPoster;
 import org.kalypso.afgui.model.IModel;
@@ -52,6 +51,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 import de.renew.workflow.connector.cases.ICaseDataProvider;
 import de.renew.workflow.connector.cases.IScenario;
+import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 
 /**
  * Objects of this class are responsible for loading the gml-workspaces for the current selected simulation model and

@@ -52,26 +52,26 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
-import de.renew.workflow.connector.WorkflowConnectorPlugin;
+import de.renew.workflow.connector.internal.WorkflowConnectorPlugin;
 
 /**
  * This project nature add the possibility to handle cases inside the project and keep information about the current
  * workflow state of cases
- * 
+ *
  * @author Stefan Kurzbach
  */
-public abstract class CaseHandlingProjectNature<T extends IScenario> implements IProjectNature, ICaseManagerListener<T>
+public abstract class CaseHandlingProjectNature implements IProjectNature, ICaseManagerListener
 {
-  private ICaseManager<T> m_caseManager;
+  private IScenarioManager m_caseManager;
 
   private IProject m_project;
 
   /**
    * Creates a specific case manager for this project
    */
-  protected abstract ICaseManager<T> createCaseManager( final IProject project );
+  protected abstract IScenarioManager createCaseManager( final IProject project );
 
-  public ICaseManager<T> getCaseManager( )
+  public IScenarioManager getCaseManager( )
   {
     return m_caseManager;
   }
@@ -133,9 +133,6 @@ public abstract class CaseHandlingProjectNature<T extends IScenario> implements 
     return Path.EMPTY;// caze.getName() );
   }
 
-  /**
-   * @see de.renew.workflow.connector.context.ICaseManagerListener#caseAdded(de.renew.workflow.cases.Case)
-   */
   @Override
   public void caseAdded( final IScenario caze )
   {

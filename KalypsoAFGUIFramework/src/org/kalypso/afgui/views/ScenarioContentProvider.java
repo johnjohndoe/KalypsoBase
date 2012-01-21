@@ -17,22 +17,22 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.ScenarioHandlingProjectNature;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
-import de.renew.workflow.connector.cases.ICaseManager;
+import de.renew.workflow.connector.cases.IScenarioManager;
 import de.renew.workflow.connector.cases.ICaseManagerListener;
 import de.renew.workflow.connector.cases.IScenario;
 import de.renew.workflow.connector.cases.IScenarioList;
+import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 import de.renew.workflow.connector.context.IActiveScenarioChangeListener;
 
 /**
  * @author Stefan Kurzbach
  */
-public class ScenarioContentProvider extends WorkbenchContentProvider implements ICaseManagerListener<IScenario>, IActiveScenarioChangeListener<IScenario>
+public class ScenarioContentProvider extends WorkbenchContentProvider implements ICaseManagerListener, IActiveScenarioChangeListener
 {
   private final IResourceChangeListener m_resourceListener = new IResourceChangeListener()
   {
@@ -58,7 +58,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
   {
     m_showResources = showResources;
 
-    final ActiveWorkContext<IScenario> activeWorkContext = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext();
+    final ActiveWorkContext activeWorkContext = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext();
     activeWorkContext.addActiveContextChangeListener( this );
 
     ResourcesPlugin.getWorkspace().addResourceChangeListener( m_resourceListener, IResourceChangeEvent.POST_CHANGE );
@@ -93,7 +93,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
             // is of correct nature
             final List<Object> resultList = new ArrayList<Object>( children.length + 3 );
             resultList.addAll( Arrays.asList( children ) );
-            final ICaseManager<IScenario> caseManager = nature.getCaseManager();
+            final IScenarioManager caseManager = nature.getCaseManager();
             if( caseManager != null )
             {
               caseManager.addCaseManagerListener( this );
@@ -144,7 +144,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
           final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
           if( nature != null )
           {
-            final ICaseManager<IScenario> caseManager = nature.getCaseManager();
+            final IScenarioManager caseManager = nature.getCaseManager();
             if( caseManager != null )
             {
               final List<IScenario> rootScenarios = caseManager.getCases();
@@ -195,7 +195,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
   }
 
   @Override
-  public void activeScenarioChanged( final CaseHandlingProjectNature<IScenario> newProject, final IScenario caze )
+  public void activeScenarioChanged( final CaseHandlingProjectNature newProject, final IScenario caze )
   {
     refreshViewer( null );
   }
@@ -244,7 +244,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
   @Override
   public void dispose( )
   {
-    final ActiveWorkContext<IScenario> activeWorkContext = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext();
+    final ActiveWorkContext activeWorkContext = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext();
     activeWorkContext.removeActiveContextChangeListener( this );
     super.dispose();
   }

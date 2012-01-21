@@ -38,11 +38,12 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package de.renew.workflow.connector.cases;
+package de.renew.workflow.connector.internal.cases;
 
 import java.util.List;
 
 import de.renew.workflow.cases.CaseList;
+import de.renew.workflow.connector.cases.IScenario;
 
 /**
  * Wrapper Class of workflow {@link de.renew.workflow.cases.CaseList}

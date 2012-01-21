@@ -17,23 +17,21 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
-import de.renew.workflow.connector.WorkflowConnectorPlugin;
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
+import de.renew.workflow.connector.cases.IScenarioManager;
 import de.renew.workflow.connector.cases.IScenario;
-import de.renew.workflow.connector.cases.ICaseManager;
+import de.renew.workflow.connector.internal.WorkflowConnectorPlugin;
 
 /**
  * Represents the work context for a user.
- * 
+ *
  * @author Stefan Kurzbach
  */
-public class ActiveWorkContext<T extends IScenario> implements IResourceChangeListener
+public class ActiveWorkContext implements IResourceChangeListener
 {
-  // private ICaseManager<T> m_caseManager;
+  private CaseHandlingProjectNature m_currentProjectNature;
 
-  private CaseHandlingProjectNature<T> m_currentProjectNature;
-
-  private final List<IActiveScenarioChangeListener<T>> m_activeContextChangeListeners = new ArrayList<IActiveScenarioChangeListener<T>>();
+  private final List<IActiveScenarioChangeListener> m_activeContextChangeListeners = new ArrayList<IActiveScenarioChangeListener>();
 
   private final String m_natureID;
 
@@ -53,7 +51,7 @@ public class ActiveWorkContext<T extends IScenario> implements IResourceChangeLi
   /**
    * Sets the active case handling project
    */
-  private void setCurrentProject( final CaseHandlingProjectNature<T> nature )
+  private void setCurrentProject( final CaseHandlingProjectNature nature )
   {
     if( m_currentProjectNature == nature )
       return;
@@ -78,7 +76,7 @@ public class ActiveWorkContext<T extends IScenario> implements IResourceChangeLi
     m_currentProjectNature = nature;
   }
 
-  public CaseHandlingProjectNature<T> getCurrentProject( )
+  public CaseHandlingProjectNature getCurrentProject( )
   {
     return m_currentProjectNature;
   }
@@ -86,16 +84,16 @@ public class ActiveWorkContext<T extends IScenario> implements IResourceChangeLi
   /**
    * The same as {@link #getCaseManager()#getCurrentCase()}
    */
-  public T getCurrentCase( )
+  public IScenario getCurrentCase( )
   {
-    final ICaseManager<T> caseManager = getCaseManager();
+    final IScenarioManager caseManager = getCaseManager();
     if( caseManager == null )
       return null;
 
     return caseManager.getCurrentCase();
   }
 
-  private ICaseManager<T> getCaseManager( )
+  private IScenarioManager getCaseManager( )
   {
     if( m_currentProjectNature == null )
       return null;
@@ -103,31 +101,30 @@ public class ActiveWorkContext<T extends IScenario> implements IResourceChangeLi
     return m_currentProjectNature.getCaseManager();
   }
 
-  public void addActiveContextChangeListener( final IActiveScenarioChangeListener<T> l )
+  public void addActiveContextChangeListener( final IActiveScenarioChangeListener l )
   {
     m_activeContextChangeListeners.add( l );
   }
 
-  public void removeActiveContextChangeListener( final IActiveScenarioChangeListener<T> l )
+  public void removeActiveContextChangeListener( final IActiveScenarioChangeListener l )
   {
     m_activeContextChangeListeners.remove( l );
   }
 
-  @SuppressWarnings("unchecked")
-  protected void fireActiveContextChanged( final CaseHandlingProjectNature<T> newProject, final T caze )
+  protected void fireActiveContextChanged( final CaseHandlingProjectNature newProject, final IScenario caze )
   {
     // Convert to array to avoid concurrent modification exceptions
-    final IActiveScenarioChangeListener<T>[] listeners = m_activeContextChangeListeners.toArray( new IActiveScenarioChangeListener[m_activeContextChangeListeners.size()] );
-    for( final IActiveScenarioChangeListener<T> l : listeners )
+    final IActiveScenarioChangeListener[] listeners = m_activeContextChangeListeners.toArray( new IActiveScenarioChangeListener[m_activeContextChangeListeners.size()] );
+    for( final IActiveScenarioChangeListener l : listeners )
     {
       l.activeScenarioChanged( newProject, caze );
     }
   }
 
-  public synchronized void setCurrentCase( final T caze ) throws CoreException
+  public synchronized void setCurrentCase( final IScenario caze ) throws CoreException
   {
-    final ICaseManager<T> currentCaseManager = getCaseManager();
-    final T currentCase = currentCaseManager == null ? null : currentCaseManager.getCurrentCase();
+    final IScenarioManager currentCaseManager = getCaseManager();
+    final IScenario currentCase = currentCaseManager == null ? null : currentCaseManager.getCurrentCase();
     if( currentCase == null && caze == null )
       return;
 
@@ -142,8 +139,8 @@ public class ActiveWorkContext<T extends IScenario> implements IResourceChangeLi
       final IProject project = caze.getProject();
       if( project.exists() && project.isOpen() )
       {
-        final CaseHandlingProjectNature< ? > nature = (CaseHandlingProjectNature< ? >) project.getNature( m_natureID );
-        setCurrentProject( (CaseHandlingProjectNature<T>) nature );
+        final CaseHandlingProjectNature nature = (CaseHandlingProjectNature) project.getNature( m_natureID );
+        setCurrentProject( nature );
       }
       else
       {
@@ -151,7 +148,7 @@ public class ActiveWorkContext<T extends IScenario> implements IResourceChangeLi
       }
     }
 
-    final ICaseManager<T> newCaseManager = getCaseManager();
+    final IScenarioManager newCaseManager = getCaseManager();
     if( newCaseManager != null )
       newCaseManager.setCurrentCase( caze );
 

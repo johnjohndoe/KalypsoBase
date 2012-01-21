@@ -54,7 +54,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 
-import de.renew.workflow.connector.WorkflowConnectorPlugin;
+import de.renew.workflow.connector.internal.WorkflowConnectorPlugin;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**

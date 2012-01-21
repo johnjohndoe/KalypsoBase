@@ -109,7 +109,7 @@ public class ScenarioHelper
     return findRootScenario( parentScenario );
   }
 
-  public static IWorkflow findWorkflow( final IScenario scenario, final CaseHandlingProjectNature<IScenario> newProject )
+  public static IWorkflow findWorkflow( final IScenario scenario, final CaseHandlingProjectNature newProject )
   {
     try
     {
@@ -134,7 +134,7 @@ public class ScenarioHelper
     return null;
   }
 
-  public static boolean ensureBackwardsCompatibility( final IScenario caze, final CaseHandlingProjectNature<IScenario> nature )
+  public static boolean ensureBackwardsCompatibility( final IScenario caze, final CaseHandlingProjectNature nature )
   {
     // FIXME: this is dirty fix only for this release 2.3
     // should be implemented in other way, we just do not have any time now

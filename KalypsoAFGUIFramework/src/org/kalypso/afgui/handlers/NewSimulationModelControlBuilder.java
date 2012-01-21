@@ -21,14 +21,14 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.ScenarioHandlingProjectNature;
 import org.kalypso.afgui.i18n.Messages;
-import org.kalypso.afgui.scenarios.ScenarioManager;
 import org.kalypso.afgui.scenarios.TaskExecutionAuthority;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 import de.renew.workflow.base.ITask;
+import de.renew.workflow.connector.cases.IScenarioManager;
 import de.renew.workflow.connector.cases.IScenario;
+import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 
 /**
@@ -220,11 +220,11 @@ public class NewSimulationModelControlBuilder
       final String name = wpage.getNewSimulaionControlBuilder().getNewName();
       logger.info( "newName=" + name ); //$NON-NLS-1$
       final KalypsoAFGUIFrameworkPlugin plugin = KalypsoAFGUIFrameworkPlugin.getDefault();
-      final ActiveWorkContext<IScenario> activeWorkContext = plugin.getActiveWorkContext();
+      final ActiveWorkContext activeWorkContext = plugin.getActiveWorkContext();
       try
       {
         final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
-        final ScenarioManager scenarioManager = (ScenarioManager) nature.getCaseManager();
+        final IScenarioManager scenarioManager = nature.getCaseManager();
         final TaskExecutionAuthority taskExecutionAuthority = plugin.getTaskExecutionAuthority();
         final ITask activeTask = plugin.getTaskExecutor().getActiveTask();
         if( taskExecutionAuthority.canStopTask( activeTask ) )
