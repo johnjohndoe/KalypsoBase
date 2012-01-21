@@ -38,52 +38,65 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package de.renew.workflow.connector.cases;
+package de.renew.workflow.connector.internal.cases;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.resources.IProject;
 import org.kalypso.afgui.scenarios.Scenario;
+import org.kalypso.afgui.scenarios.ScenarioList;
 
-import de.renew.workflow.cases.Case;
-import de.renew.workflow.cases.CaseList;
+import de.renew.workflow.connector.cases.IScenario;
+import de.renew.workflow.connector.cases.IScenarioList;
 
 /**
- * Wrapper Class of workflow {@link Case}
- *
  * @author Dirk Kuch
  */
-public class CaseListHandler implements ICaseList
+public class ScenarioListHandler implements IScenarioList
 {
-  private final CaseList m_cases;
+  private final ScenarioHandler m_scenarioHandler;
 
-  private final IProject m_project;
-
-  public CaseListHandler( final CaseList cases, final IProject project )
+  public ScenarioListHandler( final ScenarioHandler scenarioHandler )
   {
-    m_cases = cases;
-    m_project = project;
+    m_scenarioHandler = scenarioHandler;
   }
 
   @Override
-  public List<IScenario> getCases( )
+  public List<IScenario> getScenarios( )
   {
-    final List<IScenario> myCases = new ArrayList<IScenario>();
+    final Scenario scenario = m_scenarioHandler.getScenario();
+    final ScenarioList derived = scenario.getDerivedScenarios();
+    if( derived == null )
+      return new ArrayList<IScenario>();
 
-    final List<Case> cases = m_cases.getCases();
-    for( final Case caze : cases )
+    final List<IScenario> myScenarios = new ArrayList<IScenario>()
     {
-      // REMARK: we know that all instances of cases are really scenarios!
-      myCases.add( new ScenarioHandler( (Scenario) caze, m_project ) );
+      @Override
+      public boolean remove( final Object o )
+      {
+        if( o instanceof ScenarioHandler )
+        {
+          final ScenarioHandler handler = (ScenarioHandler) o;
+          derived.getScenarios().remove( handler.getScenario() );
+        }
+
+        return super.remove( o );
+      }
+    };
+
+    final List<Scenario> scenarios = derived.getScenarios();
+    for( final Scenario scen : scenarios )
+    {
+      final Scenario parent = scen.getParentScenario();
+      if( parent == null )
+      {
+        scen.setParentScenario( m_scenarioHandler.getScenario() );
+      }
+
+      final ScenarioHandler handler = new ScenarioHandler( scen, m_scenarioHandler.getProject() );
+      myScenarios.add( handler );
     }
 
-    return myCases;
-  }
-
-  @Override
-  public CaseList getCaseList( )
-  {
-    return m_cases;
+    return myScenarios;
   }
 }

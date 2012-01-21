@@ -42,15 +42,15 @@ public class WorkflowView extends ViewPart
 
   private WorkflowControl m_workflowControl;
 
-  protected ActiveWorkContext<IScenario> m_activeWorkContext;
+  protected ActiveWorkContext m_activeWorkContext;
 
-  private final IActiveScenarioChangeListener<IScenario> m_contextListener = new IActiveScenarioChangeListener<IScenario>()
+  private final IActiveScenarioChangeListener m_contextListener = new IActiveScenarioChangeListener()
   {
     /**
      * @see org.kalypso.kalypso1d2d.pjt.IActiveContextChangeListener#activeProjectChanged(org.eclipse.core.resources.IProject)
      */
     @Override
-    public void activeScenarioChanged( final CaseHandlingProjectNature<IScenario> newProject, final IScenario scenario )
+    public void activeScenarioChanged( final CaseHandlingProjectNature newProject, final IScenario scenario )
     {
       handleScenarioChanged( newProject, scenario );
     }
@@ -66,7 +66,7 @@ public class WorkflowView extends ViewPart
     handleScenarioChanged( m_activeWorkContext.getCurrentProject(), m_activeWorkContext.getCurrentCase() );
   }
 
-  protected void handleScenarioChanged( final CaseHandlingProjectNature<IScenario> newProject, final IScenario scenario )
+  protected void handleScenarioChanged( final CaseHandlingProjectNature newProject, final IScenario scenario )
   {
     final String projectName = newProject == null ? null : newProject.getProject().getName();
 

@@ -39,6 +39,7 @@ import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.cases.IScenario;
+import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 import de.renew.workflow.connector.context.IActiveScenarioChangeListener;
 import de.renew.workflow.connector.worklist.ITaskExecutor;
@@ -57,9 +58,9 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
   // The shared instance
   private static KalypsoAFGUIFrameworkPlugin plugin;
 
-  private ActiveWorkContext<IScenario> m_activeWorkContext;
+  private ActiveWorkContext m_activeWorkContext;
 
-  private CaseHandlingSourceProvider<IScenario, IModel> m_szenarioSourceProvider;
+  private CaseHandlingSourceProvider<IModel> m_szenarioSourceProvider;
 
   private SzenarioDataProvider m_szenarioDataProvider;
 
@@ -70,10 +71,10 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
   private TaskExecutionListener m_taskExecutionListener;
 
   // Executes the default task as soon as the scenario was activated
-  private final IActiveScenarioChangeListener<IScenario> m_activeContextChangeListener = new IActiveScenarioChangeListener<IScenario>()
+  private final IActiveScenarioChangeListener m_activeContextChangeListener = new IActiveScenarioChangeListener()
   {
     @Override
-    public void activeScenarioChanged( final CaseHandlingProjectNature<IScenario> newProject, final IScenario caze )
+    public void activeScenarioChanged( final CaseHandlingProjectNature newProject, final IScenario caze )
     {
       handleScenarioChanged( newProject, caze );
     }
@@ -162,7 +163,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
   {
     if( m_activeWorkContext == null )
     {
-      m_activeWorkContext = new ActiveWorkContext<IScenario>( ScenarioHandlingProjectNature.ID );
+      m_activeWorkContext = new ActiveWorkContext( ScenarioHandlingProjectNature.ID );
       m_activeWorkContext.addActiveContextChangeListener( m_activeContextChangeListener );
     }
 
@@ -170,7 +171,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     {
       // This can only be called if the platform has already been started
       m_szenarioDataProvider = new SzenarioDataProvider();
-      m_szenarioSourceProvider = new CaseHandlingSourceProvider<IScenario, IModel>( m_activeWorkContext, m_szenarioDataProvider );
+      m_szenarioSourceProvider = new CaseHandlingSourceProvider<IModel>( m_activeWorkContext, m_szenarioDataProvider );
 
       if( PlatformUI.isWorkbenchRunning() )
       {
@@ -228,7 +229,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     super.stop( context );
   }
 
-  public ActiveWorkContext<IScenario> getActiveWorkContext( )
+  public ActiveWorkContext getActiveWorkContext( )
   {
     startActiveWorkContext();
     return m_activeWorkContext;
@@ -289,7 +290,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     m_activeWorkContext = null;
   }
 
-  protected void handleScenarioChanged( final CaseHandlingProjectNature<IScenario> nature, final IScenario caze )
+  protected void handleScenarioChanged( final CaseHandlingProjectNature nature, final IScenario caze )
   {
     // First initialize the context (and loading of all the models); else the default task does not work
     // REMARK: normally, this should be done inside the scenario framework (for example at the activeWorkContext)

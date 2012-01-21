@@ -26,5 +26,6 @@
             id="de.renew.workflow.tasks.category"
             name="de.renew.workflow.tasks.category"/>
    </extension>   	
+   
 </plugin>
 

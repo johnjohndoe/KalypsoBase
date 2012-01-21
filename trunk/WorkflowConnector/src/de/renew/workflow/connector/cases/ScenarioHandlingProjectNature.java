@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.afgui;
+package de.renew.workflow.connector.cases;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,19 +63,17 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
-import org.kalypso.afgui.i18n.Messages;
-import org.kalypso.afgui.scenarios.IDerivedScenarioCopyFilter;
-import org.kalypso.afgui.scenarios.IScenarioManager;
-import org.kalypso.afgui.scenarios.ScenarioManager;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 
-import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
-import de.renew.workflow.connector.cases.IScenario;
+import de.renew.workflow.connector.internal.WorkflowConnectorPlugin;
+import de.renew.workflow.connector.internal.cases.AbstractCaseManager;
+import de.renew.workflow.connector.internal.i18n.Messages;
+
 
 /**
  * @author Stefan Kurzbach
  */
-public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature<IScenario>
+public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
 {
   public final static String ID = "org.kalypso.afgui.ScenarioHandlingProjectNature"; //$NON-NLS-1$
 
@@ -95,22 +93,10 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature<ISc
     m_filter = filter;
   }
 
-  /**
-   * @see de.renew.workflow.connector.context.CaseHandlingProjectNature#createCaseManager(org.eclipse.core.resources.IProject)
-   */
   @Override
   public IScenarioManager createCaseManager( final IProject project )
   {
-    return new ScenarioManager( project );
-  }
-
-  /**
-   * @see de.renew.workflow.connector.context.CaseHandlingProjectNature#getCaseManager()
-   */
-  @Override
-  public IScenarioManager getCaseManager( )
-  {
-    return (IScenarioManager) super.getCaseManager();
+    return new AbstractCaseManager( project );
   }
 
   /**
@@ -174,7 +160,7 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature<ISc
       if( !resultStatus.isOK() )
       {
         ErrorDialog.openError( window.getShell(), Messages.getString( "org.kalypso.afgui.ScenarioHandlingProjectNature.1" ), Messages.getString( "org.kalypso.afgui.ScenarioHandlingProjectNature.2" ), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
-        KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( resultStatus );
+        WorkflowConnectorPlugin.getDefault().getLog().log( resultStatus );
       }
 
       final IFolder parentFolder = getProject().getFolder( parentPath );
@@ -256,7 +242,7 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature<ISc
       if( !resultStatus.isOK() )
       {
         ErrorDialog.openError( window.getShell(), Messages.getString( "org.kalypso.afgui.ScenarioHandlingProjectNature.1" ), Messages.getString( "org.kalypso.afgui.ScenarioHandlingProjectNature.2" ), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
-        KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( resultStatus );
+        WorkflowConnectorPlugin.getDefault().getLog().log( resultStatus );
       }
     }
   }
@@ -278,7 +264,7 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature<ISc
     catch( final CoreException e )
     {
       e.printStackTrace();
-      KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( e.getStatus() );
+      WorkflowConnectorPlugin.getDefault().getLog().log( e.getStatus() );
       return null;
     }
   }

@@ -56,7 +56,6 @@ import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 import de.renew.workflow.base.ITask;
-import de.renew.workflow.connector.WorkflowConnectorPlugin;
 import de.renew.workflow.connector.cases.ICaseDataProvider;
 import de.renew.workflow.connector.worklist.ITaskExecutionAuthority;
 
@@ -110,7 +109,7 @@ public class TaskExecutionAuthority implements ITaskExecutionAuthority
       {
         final IStatus status = StatusUtilities.statusFromThrowable( e );
         ErrorDialog.openError( activeShell, Messages.getString( "org.kalypso.afgui.scenarios.TaskExecutionAuthority.5" ), Messages.getString( "org.kalypso.afgui.scenarios.TaskExecutionAuthority.6" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
-        WorkflowConnectorPlugin.getDefault().getLog().log( status );
+        KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
       }
       catch( final InterruptedException e )
       {

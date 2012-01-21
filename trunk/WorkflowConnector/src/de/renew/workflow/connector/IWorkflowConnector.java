@@ -40,13 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package de.renew.workflow.connector;
 
-import de.renew.workflow.connector.cases.IScenario;
 import de.renew.workflow.connector.context.IActiveScenarioChangeListener;
 
 /**
  * @author Stefan Kurzbach
  */
-public interface IWorkflowConnector extends IActiveScenarioChangeListener<IScenario>
+public interface IWorkflowConnector extends IActiveScenarioChangeListener
 {
   public boolean isConnected( );
 

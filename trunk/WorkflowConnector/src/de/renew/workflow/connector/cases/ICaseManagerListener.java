@@ -3,9 +3,9 @@ package de.renew.workflow.connector.cases;
 /**
  * @author Stefan Kurzbach
  */
-public interface ICaseManagerListener<T extends IScenario>
+public interface ICaseManagerListener
 {
-  public void caseAdded( final T caze );
+  public void caseAdded( final IScenario scneario );
 
-  public void caseRemoved( final T caze );
+  public void caseRemoved( final IScenario scenario );
 }

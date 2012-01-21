@@ -32,7 +32,7 @@ public class ActivateScenarioHandler extends AbstractHandler
       {
         final IScenario scenario = (IScenario) firstElement;
         final KalypsoAFGUIFrameworkPlugin plugin = KalypsoAFGUIFrameworkPlugin.getDefault();
-        final ActiveWorkContext<IScenario> activeWorkContext = plugin.getActiveWorkContext();
+        final ActiveWorkContext activeWorkContext = plugin.getActiveWorkContext();
         try
         {
           final ITaskExecutor taskExecutor = plugin.getTaskExecutor();

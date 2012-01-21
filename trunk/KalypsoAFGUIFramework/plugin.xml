@@ -4,16 +4,6 @@
    <extension-point id="scenarioData" name="Scenario data" schema="schema/scenarioData.exsd"/>
    <extension-point id="scenarioDataChangeListener" name="scenarioDataChangeListener" schema="schema/scenarioDataChangeListener.exsd"/>   	
    <extension
-         id="org.kalypso.afgui.ScenarioHandlingProjectNature"
-         name="ScenarioHandlingProjectNature"
-         point="org.eclipse.core.resources.natures">
-      <runtime>
-         <run
-               class="org.kalypso.afgui.ScenarioHandlingProjectNature">
-         </run>
-      </runtime>
-   </extension>
-   <extension
          point="org.eclipse.ui.views">
       <view
             allowMultiple="false"
@@ -314,7 +304,7 @@
        point="org.eclipse.core.runtime.adapters">
     <factory
           adaptableType="de.renew.workflow.connector.cases.CaseHandlingProjectNature"
-          class="de.renew.workflow.connector.cases.CaseAdapterFactory">
+          class="org.kalypso.afgui.scenarios.CaseAdapterFactory">
        <adapter
              type="org.eclipse.ui.model.IWorkbenchAdapter">
        </adapter>
@@ -324,7 +314,7 @@
     </factory>
     <factory
           adaptableType="de.renew.workflow.connector.cases.IScenario"
-          class="de.renew.workflow.connector.cases.CaseAdapterFactory">
+          class="org.kalypso.afgui.scenarios.CaseAdapterFactory">
        <adapter
              type="org.eclipse.ui.model.IWorkbenchAdapter">
        </adapter>
@@ -333,6 +323,16 @@
        </adapter>
     </factory>
  </extension>
- 
+
+   <extension
+         id="org.kalypso.afgui.ScenarioHandlingProjectNature"
+         name="ScenarioHandlingProjectNature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="de.renew.workflow.connector.cases.ScenarioHandlingProjectNature">
+         </run>
+      </runtime>
+   </extension>
    
 </plugin>

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package de.renew.workflow.connector.cases;
+package de.renew.workflow.connector.internal.cases;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -53,7 +53,9 @@ import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 import de.renew.workflow.cases.Case;
-import de.renew.workflow.connector.WorkflowConnectorPlugin;
+import de.renew.workflow.connector.cases.IScenario;
+import de.renew.workflow.connector.cases.IScenarioList;
+import de.renew.workflow.connector.internal.WorkflowConnectorPlugin;
 
 /**
  * Wrapper interface for handling {@link Case} Objects

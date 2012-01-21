@@ -12,7 +12,7 @@ import org.eclipse.ui.AbstractSourceProvider;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
-public class CaseHandlingSourceProvider<T extends IScenario, D extends Object> extends AbstractSourceProvider implements ICaseHandlingSourceProvider
+public class CaseHandlingSourceProvider<D extends Object> extends AbstractSourceProvider implements ICaseHandlingSourceProvider
 {
   private static final Logger LOGGER = Logger.getLogger( CaseHandlingSourceProvider.class.getName() );
 
@@ -27,12 +27,12 @@ public class CaseHandlingSourceProvider<T extends IScenario, D extends Object> e
 
   private static final String[] PROVIDED_SOURCE_NAMES = new String[] { ACTIVE_CASE_FOLDER_NAME, ACTIVE_CASE_DATA_PROVIDER_NAME, ACTIVE_CASE_URI_NAME };
 
-  protected ActiveWorkContext<T> m_activeWorkContext;
+  protected ActiveWorkContext m_activeWorkContext;
 
   /** data provider for the current szenario */
   private ICaseDataProvider<D> m_dataProvider;
 
-  public CaseHandlingSourceProvider( final ActiveWorkContext<T> context, final ICaseDataProvider<D> dataProvider )
+  public CaseHandlingSourceProvider( final ActiveWorkContext context, final ICaseDataProvider<D> dataProvider )
   {
     m_activeWorkContext = context;
     m_dataProvider = dataProvider;
@@ -78,7 +78,7 @@ public class CaseHandlingSourceProvider<T extends IScenario, D extends Object> e
 
   private String getSzenarioUri( )
   {
-    final T currentCase = m_activeWorkContext.getCurrentCase();
+    final IScenario currentCase = m_activeWorkContext.getCurrentCase();
     if( currentCase == null )
     {
       return null;
@@ -91,8 +91,8 @@ public class CaseHandlingSourceProvider<T extends IScenario, D extends Object> e
 
   private IContainer getSzenarioFolder( )
   {
-    final T currentCase = m_activeWorkContext.getCurrentCase();
-    final CaseHandlingProjectNature<T> currentProject = m_activeWorkContext.getCurrentProject();
+    final IScenario currentCase = m_activeWorkContext.getCurrentCase();
+    final CaseHandlingProjectNature currentProject = m_activeWorkContext.getCurrentProject();
     if( currentProject == null || currentCase == null )
     {
       return null;

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.afgui.scenarios;
+package de.renew.workflow.connector.cases;
 
 import org.eclipse.core.resources.IResource;
 
