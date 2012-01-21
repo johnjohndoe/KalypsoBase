@@ -12,7 +12,8 @@ Require-Bundle: org.eclipse.core.expressions,
  org.eclipse.ui.ide
 Export-Package: de.renew.workflow.base,
  de.renew.workflow.cases,
- de.renew.workflow.contexts
+ de.renew.workflow.contexts,
+ org.kalypso.afgui.scenarios
 Bundle-Activator: de.renew.workflow.base.WorkflowModelPlugin
 Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

@@ -23,10 +23,10 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.ScenarioHandlingProjectNature;
 import org.kalypso.afgui.i18n.Messages;
-import org.kalypso.afgui.scenarios.IScenario;
-import org.kalypso.afgui.scenarios.IScenarioList;
 
 import de.renew.workflow.connector.cases.ICaseManager;
+import de.renew.workflow.connector.cases.IScenario;
+import de.renew.workflow.connector.cases.IScenarioList;
 
 /**
  * @author Stefan Kurzbach

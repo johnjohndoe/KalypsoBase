@@ -54,7 +54,7 @@ public interface ICaseList
   /**
    * @return list of {@link ICase}s
    */
-  List<ICase> getCases( );
+  List<IScenario> getCases( );
 
   /**
    * @return wrapped workflow {@link CaseList}

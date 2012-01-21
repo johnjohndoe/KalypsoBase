@@ -41,7 +41,7 @@
 package de.renew.workflow.connector;
 
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
-import de.renew.workflow.connector.cases.ICase;
+import de.renew.workflow.connector.cases.IScenario;
 
 /**
  * @author Gernot Belger
@@ -129,7 +129,7 @@ public class DummyConnector implements IWorkflowConnector
    *      de.renew.workflow.connector.cases.ICase)
    */
   @Override
-  public void activeScenarioChanged( final CaseHandlingProjectNature<ICase> newProject, final ICase caze )
+  public void activeScenarioChanged( final CaseHandlingProjectNature<IScenario> newProject, final IScenario caze )
   {
   }
 

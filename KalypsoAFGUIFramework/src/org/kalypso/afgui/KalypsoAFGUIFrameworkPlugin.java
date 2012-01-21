@@ -24,7 +24,6 @@ import org.eclipse.ui.services.IEvaluationService;
 import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.afgui.model.IModel;
 import org.kalypso.afgui.perspective.Perspective;
-import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.PerspectiveWatcher;
 import org.kalypso.afgui.scenarios.ScenarioDataChangeListenerExtension;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
@@ -39,6 +38,7 @@ import de.renew.workflow.base.ITask;
 import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
+import de.renew.workflow.connector.cases.IScenario;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 import de.renew.workflow.connector.context.IActiveScenarioChangeListener;
 import de.renew.workflow.connector.worklist.ITaskExecutor;
@@ -252,7 +252,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 
   /**
    * Returns the shared instance
-   * 
+   *
    * @return the shared instance
    */
   public static KalypsoAFGUIFrameworkPlugin getDefault( )
@@ -262,7 +262,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 
   /**
    * Returns an image descriptor for the image file at the given plug-in relative path
-   * 
+   *
    * @param path
    *          the path
    * @return the image descriptor

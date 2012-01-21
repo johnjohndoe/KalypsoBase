@@ -64,6 +64,7 @@ import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.connector.WorkflowProjectNature;
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
+import de.renew.workflow.connector.cases.IScenario;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**

@@ -40,60 +40,60 @@
  *  ---------------------------------------------------------------------------*/
 package de.renew.workflow.connector.cases;
 
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
+import java.util.ArrayList;
+import java.util.List;
 
-import de.renew.workflow.cases.Case;
+import org.kalypso.afgui.scenarios.Scenario;
+import org.kalypso.afgui.scenarios.ScenarioList;
 
 /**
- * Wrapper Class of workflow {@link Case}
- * 
  * @author Dirk Kuch
  */
-public interface ICase
+public class ScenarioListHandler implements IScenarioList
 {
-  /** old case base uri (before refactoring case://{projectname}/{foldername} */
-  public static final String OLD_CASE_BASE_URI = "case://";
+  private final ScenarioHandler m_scenarioHandler;
 
-  /** old case base uri (before refactoring case://{foldername} */
-  public static final String NEW_CASE_BASE_URI = "scenario://";
+  public ScenarioListHandler( final ScenarioHandler scenarioHandler )
+  {
+    m_scenarioHandler = scenarioHandler;
+  }
 
-  /**
-   * @return the workflow {@link Case}
-   */
-  Case getCase( );
+  @Override
+  public List<IScenario> getScenarios( )
+  {
+    final Scenario scenario = m_scenarioHandler.getScenario();
+    final ScenarioList derived = scenario.getDerivedScenarios();
+    if( derived == null )
+      return new ArrayList<IScenario>();
 
-  /**
-   * @param name
-   *          name of workflow {@link Case}
-   */
-  String getName( );
+    final List<IScenario> myScenarios = new ArrayList<IScenario>()
+    {
+      @Override
+      public boolean remove( final Object o )
+      {
+        if( o instanceof ScenarioHandler )
+        {
+          final ScenarioHandler handler = (ScenarioHandler) o;
+          derived.getScenarios().remove( handler.getScenario() );
+        }
 
-  /**
-   * @return {@link IProject} of workflow {@link Case}
-   */
-  IProject getProject( );
+        return super.remove( o );
+      }
+    };
 
-  /**
-   * @return working folder of this caze
-   */
-  IFolder getFolder( ) throws CoreException;
+    final List<Scenario> scenarios = derived.getScenarios();
+    for( final Scenario scen : scenarios )
+    {
+      final Scenario parent = scen.getParentScenario();
+      if( parent == null )
+      {
+        scen.setParentScenario( m_scenarioHandler.getScenario() );
+      }
 
-  /**
-   * @return URI of workflow {@link Case}
-   */
-  String getURI( );
+      final ScenarioHandler handler = new ScenarioHandler( scen, m_scenarioHandler.getProject() );
+      myScenarios.add( handler );
+    }
 
-  /**
-   * @param name
-   *          name of workflow {@link Case}
-   */
-  void setName( String name );
-
-  /**
-   * @param uri
-   *          URI of workflow {@link Case}
-   */
-  void setURI( String uri );
+    return myScenarios;
+  }
 }

@@ -3,7 +3,7 @@ package de.renew.workflow.connector.cases;
 /**
  * @author Stefan Kurzbach
  */
-public interface ICaseManagerListener<T extends ICase>
+public interface ICaseManagerListener<T extends IScenario>
 {
   public void caseAdded( final T caze );
 

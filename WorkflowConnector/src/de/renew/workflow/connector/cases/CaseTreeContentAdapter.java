@@ -108,7 +108,7 @@ public class CaseTreeContentAdapter extends WorkbenchAdapter
       final IWorkbenchAdapter adapter = (IWorkbenchAdapter) project.getAdapter( IWorkbenchAdapter.class );
       return adapter.getImageDescriptor( project );
     }
-    else if( o instanceof ICase )
+    else if( o instanceof IScenario )
       return m_caseImage;
     else
       return null;
@@ -127,8 +127,8 @@ public class CaseTreeContentAdapter extends WorkbenchAdapter
       final IWorkbenchAdapter adapter = (IWorkbenchAdapter) project.getAdapter( IWorkbenchAdapter.class );
       return adapter.getLabel( project );
     }
-    else if( o instanceof ICase )
-      return ((ICase) o).getName();
+    else if( o instanceof IScenario )
+      return ((IScenario) o).getName();
     return null;
   }
 
@@ -145,9 +145,9 @@ public class CaseTreeContentAdapter extends WorkbenchAdapter
       final IWorkbenchAdapter2 adapter = (IWorkbenchAdapter2) project.getAdapter( IWorkbenchAdapter2.class );
       return adapter.getFont( project );
     }
-    else if( o instanceof ICase )
+    else if( o instanceof IScenario )
     {
-      final ICase caze = (ICase) o;
+      final IScenario caze = (IScenario) o;
       final IWorkbench workbench = PlatformUI.getWorkbench();
       if( !workbench.isClosing() )
       {

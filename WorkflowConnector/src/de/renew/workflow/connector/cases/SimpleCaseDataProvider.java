@@ -13,7 +13,7 @@ public class SimpleCaseDataProvider implements ICaseDataProvider<Object>
    * @see de.renew.workflow.cases.ICaseDataProvider#setCurrent(org.eclipse.core.resources.IFolder)
    */
   @Override
-  public void setCurrent( final ICase scenario )
+  public void setCurrent( final IScenario scenario )
   {
     try
     {
