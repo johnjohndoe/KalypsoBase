@@ -3,4 +3,6 @@
   <uri name="http://www.renew.de/workflow/cases" uri="binding/workflow/cases.xsd" />
   <uri name="http://www.renew.de/workflow/base" uri="binding/workflow/base.xsd" />
   <uri name="http://www.renew.de/workflow/contexts" uri="binding/workflow/contexts.xsd" />
+  
+  <uri name="http://www.kalypso.org/afgui/scenarios" uri="binding/workflow/scenarios.xsd" />
 </catalog>

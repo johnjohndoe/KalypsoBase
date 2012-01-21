@@ -12,7 +12,7 @@ import org.eclipse.ui.AbstractSourceProvider;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
-public class CaseHandlingSourceProvider<T extends ICase, D extends Object> extends AbstractSourceProvider implements ICaseHandlingSourceProvider
+public class CaseHandlingSourceProvider<T extends IScenario, D extends Object> extends AbstractSourceProvider implements ICaseHandlingSourceProvider
 {
   private static final Logger LOGGER = Logger.getLogger( CaseHandlingSourceProvider.class.getName() );
 

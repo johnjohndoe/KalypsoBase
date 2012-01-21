@@ -13,7 +13,8 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
-import org.kalypso.afgui.scenarios.IScenario;
+
+import de.renew.workflow.connector.cases.IScenario;
 
 /**
  * @author Patrice Congo, Stefan Kurzbach

@@ -30,7 +30,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.part.FileEditorInput;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.i18n.Messages;
-import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.resources.UrlStorage;
@@ -41,6 +40,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.widgets.IWidgetManager;
 import org.kalypso.ui.views.map.MapView;
 
+import de.renew.workflow.connector.cases.IScenario;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**

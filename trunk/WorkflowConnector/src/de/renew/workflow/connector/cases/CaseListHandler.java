@@ -44,13 +44,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
+import org.kalypso.afgui.scenarios.Scenario;
 
 import de.renew.workflow.cases.Case;
 import de.renew.workflow.cases.CaseList;
 
 /**
  * Wrapper Class of workflow {@link Case}
- * 
+ *
  * @author Dirk Kuch
  */
 public class CaseListHandler implements ICaseList
@@ -65,30 +66,24 @@ public class CaseListHandler implements ICaseList
     m_project = project;
   }
 
-  /**
-   * @see de.renew.workflow.connector.cases.ICaseList#getCases()
-   */
   @Override
-  public List<ICase> getCases( )
+  public List<IScenario> getCases( )
   {
-    final List<ICase> myCases = new ArrayList<ICase>();
+    final List<IScenario> myCases = new ArrayList<IScenario>();
 
     final List<Case> cases = m_cases.getCases();
     for( final Case caze : cases )
     {
-      myCases.add( new CaseHandler( caze, m_project ) );
+      // REMARK: we know that all instances of cases are really scenarios!
+      myCases.add( new ScenarioHandler( (Scenario) caze, m_project ) );
     }
 
     return myCases;
   }
 
-  /**
-   * @see de.renew.workflow.connector.cases.ICaseList#getCaseList()
-   */
   @Override
   public CaseList getCaseList( )
   {
     return m_cases;
   }
-
 }

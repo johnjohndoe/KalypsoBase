@@ -50,8 +50,8 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
-import de.renew.workflow.connector.cases.ICase;
 import de.renew.workflow.connector.cases.ICaseDataProvider;
+import de.renew.workflow.connector.cases.IScenario;
 
 /**
  * Objects of this class are responsible for loading the gml-workspaces for the current selected simulation model and
@@ -198,7 +198,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
    * @see de.renew.workflow.connector.cases.ICaseDataProvider#setCurrent(org.eclipse.core.resources.IContainer)
    */
   @Override
-  public void setCurrent( final ICase scenario )
+  public void setCurrent( final IScenario scenario )
   {
     /* Nothing to do if scenario folder stays the same */
     if( ObjectUtils.equals( m_scenario, scenario ) )
@@ -221,7 +221,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
           m_dataSetScope = afguiNode.get( "dataSetScope", null ); //$NON-NLS-1$
       }
 
-      m_scenario = (IScenario) scenario;
+      m_scenario = scenario;
     }
 
     fireCazeChanged( m_scenario );

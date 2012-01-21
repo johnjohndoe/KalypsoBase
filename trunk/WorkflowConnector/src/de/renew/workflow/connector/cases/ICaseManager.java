@@ -49,7 +49,7 @@ import org.eclipse.core.runtime.IStatus;
 /**
  * @author Stefan Kurzbach
  */
-public interface ICaseManager<T extends ICase>
+public interface ICaseManager<T extends IScenario>
 {
   /** The status of this case manager, will be set to non-ok, if the cases could not be loaded. */
   IStatus getStatus( );

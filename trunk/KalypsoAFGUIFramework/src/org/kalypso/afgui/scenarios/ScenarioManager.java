@@ -27,7 +27,9 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 import de.renew.workflow.cases.Case;
 import de.renew.workflow.connector.cases.AbstractCaseManager;
-import de.renew.workflow.connector.cases.ICase;
+import de.renew.workflow.connector.cases.IScenario;
+import de.renew.workflow.connector.cases.IScenarioList;
+import de.renew.workflow.connector.cases.ScenarioHandler;
 
 /**
  * This implementation of {@link ICaseManager} persists the scenario model data in the project workspace. Information
@@ -250,8 +252,8 @@ public class ScenarioManager extends AbstractCaseManager<IScenario> implements I
   public List<IScenario> getCases( )
   {
     final List<IScenario> resultList = new ArrayList<IScenario>();
-    final List<ICase> internalCases = internalGetCases();
-    for( final ICase caze : internalCases )
+    final List<IScenario> internalCases = internalGetCases();
+    for( final IScenario caze : internalCases )
     {
       final Case myCaze = caze.getCase();
       if( myCaze instanceof Scenario )

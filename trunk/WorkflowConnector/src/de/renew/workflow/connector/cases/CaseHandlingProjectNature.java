@@ -60,7 +60,7 @@ import de.renew.workflow.connector.WorkflowConnectorPlugin;
  * 
  * @author Stefan Kurzbach
  */
-public abstract class CaseHandlingProjectNature<T extends ICase> implements IProjectNature, ICaseManagerListener<T>
+public abstract class CaseHandlingProjectNature<T extends IScenario> implements IProjectNature, ICaseManagerListener<T>
 {
   private ICaseManager<T> m_caseManager;
 
@@ -128,7 +128,7 @@ public abstract class CaseHandlingProjectNature<T extends ICase> implements IPro
   /**
    * Constructs a path for the case relative to the project location.
    */
-  public IPath getRelativeProjectPath( @SuppressWarnings("unused") final ICase caze )
+  public IPath getRelativeProjectPath( @SuppressWarnings("unused") final IScenario caze )
   {
     return Path.EMPTY;// caze.getName() );
   }
@@ -137,7 +137,7 @@ public abstract class CaseHandlingProjectNature<T extends ICase> implements IPro
    * @see de.renew.workflow.connector.context.ICaseManagerListener#caseAdded(de.renew.workflow.cases.Case)
    */
   @Override
-  public void caseAdded( final ICase caze )
+  public void caseAdded( final IScenario caze )
   {
     final IFolder newFolder = m_project.getFolder( getRelativeProjectPath( caze ) );
 
@@ -158,7 +158,7 @@ public abstract class CaseHandlingProjectNature<T extends ICase> implements IPro
   }
 
   @Override
-  public void caseRemoved( final ICase caze )
+  public void caseRemoved( final IScenario caze )
   {
     final IFolder folder = m_project.getFolder( getRelativeProjectPath( caze ) );
     try

@@ -38,18 +38,16 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.afgui.scenarios;
+package de.renew.workflow.connector.cases;
 
 import java.util.List;
 
 /**
  * Wrapper Class of {@link ScenarioList}
- * 
+ *
  * @author Dirk Kuch
  */
 public interface IScenarioList
 {
-
   List<IScenario> getScenarios( );
-
 }

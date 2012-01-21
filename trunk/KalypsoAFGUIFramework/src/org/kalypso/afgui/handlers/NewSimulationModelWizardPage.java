@@ -5,7 +5,8 @@ package org.kalypso.afgui.handlers;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.afgui.scenarios.IScenario;
+
+import de.renew.workflow.connector.cases.IScenario;
 
 /**
  * @author Stefan Kurzbach

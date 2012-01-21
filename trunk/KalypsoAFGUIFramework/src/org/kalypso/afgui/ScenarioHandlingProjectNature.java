@@ -65,13 +65,12 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.afgui.scenarios.IDerivedScenarioCopyFilter;
-import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.IScenarioManager;
 import org.kalypso.afgui.scenarios.ScenarioManager;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
-import de.renew.workflow.connector.cases.ICase;
+import de.renew.workflow.connector.cases.IScenario;
 
 /**
  * @author Stefan Kurzbach
@@ -118,7 +117,7 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature<ISc
    * Constructs a path for the scenario relative to the project location.
    */
   @Override
-  public IPath getRelativeProjectPath( final ICase caze )
+  public IPath getRelativeProjectPath( final IScenario caze )
   {
     return getProjectRelativePath( caze );
   }
@@ -126,9 +125,9 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature<ISc
   /**
    * Static version of {@link #getRelativeProjectPath(Case)}.
    */
-  public static IPath getProjectRelativePath( final ICase caze )
+  public static IPath getProjectRelativePath( final IScenario caze )
   {
-    final IScenario scenario = (IScenario) caze;
+    final IScenario scenario = caze;
     if( scenario.getParentScenario() != null )
     {
       return getProjectRelativePath( scenario.getParentScenario() ).append( scenario.getName() );

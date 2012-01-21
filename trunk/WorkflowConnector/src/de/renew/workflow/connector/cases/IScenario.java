@@ -38,17 +38,71 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.afgui.scenarios;
+package de.renew.workflow.connector.cases;
 
-import de.renew.workflow.connector.cases.ICase;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.afgui.scenarios.Scenario;
+
+import de.renew.workflow.cases.Case;
 
 /**
- * Wrapper class of {@link Scenario}
- * 
+ * Wrapper Class of workflow {@link Case}
+ *
  * @author Dirk Kuch
  */
-public interface IScenario extends ICase
+public interface IScenario
 {
+  /** old case base uri (before refactoring case://{projectname}/{foldername} */
+  String OLD_CASE_BASE_URI = "case://";
+
+  /** old case base uri (before refactoring case://{foldername} */
+  String NEW_CASE_BASE_URI = "scenario://";
+
+  /**
+   * @return workflow {@link Scenario}
+   */
+  Scenario getScenario( );
+
+  /**
+   * @return the workflow {@link Case}
+   */
+  Case getCase( );
+
+  /**
+   * @param name
+   *          name of workflow {@link Case}
+   */
+  String getName( );
+
+  /**
+   * @return {@link IProject} of workflow {@link Case}
+   */
+  IProject getProject( );
+
+  /**
+   * @return working folder of this caze
+   */
+  IFolder getFolder( ) throws CoreException;
+
+  /**
+   * @return URI of workflow {@link Case}
+   */
+  String getURI( );
+
+  /**
+   * @param name
+   *          name of workflow {@link Case}
+   */
+  void setName( String name );
+
+  /**
+   * @param uri
+   *          URI of workflow {@link Case}
+   */
+  void setURI( String uri );
+
   /**
    * @return list of derived {@link IScenario}s of the workflow {@link IScenario}
    */
@@ -60,20 +114,9 @@ public interface IScenario extends ICase
   IScenario getParentScenario( );
 
   /**
-   * @return workflow {@link Scenario}
-   */
-  Scenario getScenario( );
-
-  /**
-   * @param parentScenario
-   *          parent {@link IScenario} of this workflow {@link IScenario}
-   */
-  void setParentScenario( IScenario parentScenario );
-
-  /**
    * Hierarchical Level of IScenario. Base/Root Scenario returns 0, SubScenarion returns 1, SubSubScenario returns 2,
    * aso
-   * 
+   *
    * @return hierarchical Level of IScenario
    */
   int getHierarchicalLevel( );

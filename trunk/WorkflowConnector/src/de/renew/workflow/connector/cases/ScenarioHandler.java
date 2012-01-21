@@ -49,6 +49,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 import de.renew.workflow.cases.Case;
@@ -56,21 +57,21 @@ import de.renew.workflow.connector.WorkflowConnectorPlugin;
 
 /**
  * Wrapper interface for handling {@link Case} Objects
- * 
+ *
  * @author Dirk Kuch
  */
-public class CaseHandler implements ICase
+public class ScenarioHandler implements IScenario
 {
-  private final Case m_caze;
+  private final Scenario m_scenario;
 
   private final IProject m_project;
 
-  public CaseHandler( final Case caze, final IProject project )
+  public ScenarioHandler( final Scenario scenario, final IProject project )
   {
-    m_caze = caze;
+    m_scenario = scenario;
     m_project = project;
 
-    if( m_caze.getURI() == null )
+    if( m_scenario.getURI() == null )
     {
       setURI( String.format( "%s%s", NEW_CASE_BASE_URI, getName() ) );
     }
@@ -80,78 +81,57 @@ public class CaseHandler implements ICase
     }
   }
 
-  /**
-   * @see de.renew.workflow.connector.cases.ICase#getName()
-   */
   @Override
   public String getName( )
   {
-    return m_caze.getName();
+    return m_scenario.getName();
   }
 
-  /**
-   * @see de.renew.workflow.connector.cases.ICase#getURI()
-   */
   @Override
   public String getURI( )
   {
     try
     {
-      return URLDecoder.decode( m_caze.getURI(), "UTF-8" );
+      return URLDecoder.decode( m_scenario.getURI(), "UTF-8" );
     }
     catch( final UnsupportedEncodingException e )
     {
       WorkflowConnectorPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
 
-    return m_caze.getURI();
+    return m_scenario.getURI();
   }
 
-  /**
-   * @see de.renew.workflow.connector.cases.ICase#setName(java.lang.String)
-   */
   @Override
   public void setName( final String name )
   {
-    m_caze.setName( name );
+    m_scenario.setName( name );
   }
 
-  /**
-   * @see de.renew.workflow.connector.cases.ICase#setURI(java.lang.String)
-   */
   @Override
   public void setURI( final String uri )
   {
-    m_caze.setURI( uri );
+    m_scenario.setURI( uri );
   }
 
-  /**
-   * @see org.kalypso.afgui.scenarios.IScenario#getProject()
-   */
   @Override
   public IProject getProject( )
   {
     return m_project;
   }
 
-  /**
-   * @see de.renew.workflow.connector.cases.ICase#getCase()
-   */
   @Override
   public Case getCase( )
   {
-    return m_caze;
+    return m_scenario;
   }
 
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals( final Object obj )
   {
-    if( obj instanceof ICase )
+    if( obj instanceof IScenario )
     {
-      final ICase other = (ICase) obj;
+      final IScenario other = (IScenario) obj;
 
       final EqualsBuilder builder = new EqualsBuilder();
 
@@ -174,9 +154,6 @@ public class CaseHandler implements ICase
     return super.equals( obj );
   }
 
-  /**
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode( )
   {
@@ -196,9 +173,6 @@ public class CaseHandler implements ICase
     return builder.toHashCode();
   }
 
-  /**
-   * @see de.renew.workflow.connector.cases.ICase#getFolder()
-   */
   @Override
   public IFolder getFolder( ) throws CoreException
   {
@@ -227,4 +201,43 @@ public class CaseHandler implements ICase
     return folder;
   }
 
+  @Override
+  public IScenarioList getDerivedScenarios( )
+  {
+    return new ScenarioListHandler( this );
+  }
+
+  @Override
+  public IScenario getParentScenario( )
+  {
+    final Scenario parentScenario = m_scenario.getParentScenario();
+    if( parentScenario == null )
+      return null;
+
+    return new ScenarioHandler( parentScenario, getProject() );
+  }
+
+  @Override
+  public Scenario getScenario( )
+  {
+    return m_scenario;
+  }
+
+  @Override
+  public int getHierarchicalLevel( )
+  {
+    final IScenario parent = getParentScenario();
+    if( parent == null )
+      return 0;
+
+    final int level = parent.getHierarchicalLevel();
+
+    return level + 1;
+  }
+
+  @Override
+  public String toString( )
+  {
+    return getName();
+  }
 }

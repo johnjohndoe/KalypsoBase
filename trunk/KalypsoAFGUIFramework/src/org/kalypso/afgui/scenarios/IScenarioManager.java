@@ -7,6 +7,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import de.renew.workflow.connector.cases.ICaseManager;
+import de.renew.workflow.connector.cases.IScenario;
 
 /**
  * An {@link IScenarioManager} manages all the scenarios in a project. It provides metadata about the scenarios and

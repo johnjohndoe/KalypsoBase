@@ -19,7 +19,7 @@ import org.eclipse.ui.PlatformUI;
 
 import de.renew.workflow.connector.WorkflowConnectorPlugin;
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
-import de.renew.workflow.connector.cases.ICase;
+import de.renew.workflow.connector.cases.IScenario;
 import de.renew.workflow.connector.cases.ICaseManager;
 
 /**
@@ -27,7 +27,7 @@ import de.renew.workflow.connector.cases.ICaseManager;
  * 
  * @author Stefan Kurzbach
  */
-public class ActiveWorkContext<T extends ICase> implements IResourceChangeListener
+public class ActiveWorkContext<T extends IScenario> implements IResourceChangeListener
 {
   // private ICaseManager<T> m_caseManager;
 

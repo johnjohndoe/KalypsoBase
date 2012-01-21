@@ -18,14 +18,14 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.ScenarioHandlingProjectNature;
-import org.kalypso.afgui.scenarios.IScenario;
-import org.kalypso.afgui.scenarios.IScenarioList;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.connector.cases.ICaseManager;
 import de.renew.workflow.connector.cases.ICaseManagerListener;
+import de.renew.workflow.connector.cases.IScenario;
+import de.renew.workflow.connector.cases.IScenarioList;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 import de.renew.workflow.connector.context.IActiveScenarioChangeListener;
 

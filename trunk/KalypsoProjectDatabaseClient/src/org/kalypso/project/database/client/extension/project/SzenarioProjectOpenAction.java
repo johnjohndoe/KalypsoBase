@@ -47,8 +47,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IWorkbenchPage;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.ScenarioHandlingProjectNature;
-import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.IScenarioManager;
+
+import de.renew.workflow.connector.cases.IScenario;
 
 /**
  * FIXME: awful: dependency hell in Kalypso!

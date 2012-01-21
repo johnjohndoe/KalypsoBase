@@ -65,7 +65,7 @@ import de.renew.workflow.connector.WorkflowConnectorPlugin;
 /**
  * @author Stefan Kurzbach
  */
-public abstract class AbstractCaseManager<T extends ICase> implements ICaseManager<T>
+public abstract class AbstractCaseManager<T extends IScenario> implements ICaseManager<T>
 {
   public static final String METADATA_FOLDER = ".metadata"; //$NON-NLS-1$
 
@@ -160,12 +160,12 @@ public abstract class AbstractCaseManager<T extends ICase> implements ICaseManag
   @Override
   public abstract void removeCase( final T caze, IProgressMonitor monitor ) throws CoreException;
 
-  protected final void internalAddCase( final ICase caze )
+  protected final void internalAddCase( final IScenario caze )
   {
     m_cases.getCaseList().getCases().add( caze.getCase() );
   }
 
-  protected final void internalRemoveCase( final ICase caze )
+  protected final void internalRemoveCase( final IScenario caze )
   {
     m_cases.getCaseList().getCases().remove( caze.getCase() );
   }
@@ -188,10 +188,7 @@ public abstract class AbstractCaseManager<T extends ICase> implements ICaseManag
     m_currentCase = caze;
   }
 
-  /**
-   * @see de.renew.workflow.connector.context.ICaseManager#getCases()
-   */
-  public List<ICase> internalGetCases( )
+  protected List<IScenario> internalGetCases( )
   {
     return m_cases.getCases();
   }
