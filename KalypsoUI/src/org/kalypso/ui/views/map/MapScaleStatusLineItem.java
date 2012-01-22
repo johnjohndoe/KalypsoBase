@@ -70,16 +70,16 @@ import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterFinder;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * This class dipslays a small bar which enables the user to change the scale.
- * 
+ *
  * @author Holger Albert
  */
 public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution implements IAdapterEater<IMapPanel>, IMapPanelListener
@@ -150,7 +150,7 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
 
   /**
    * The constructor.
-   * 
+   *
    * @param The
    *          id of this contribution.
    */
@@ -301,12 +301,8 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onMapModelChanged(org.kalypso.ogc.gml.map.MapPanel,
-   *      org.kalypso.ogc.gml.mapmodel.IMapModell, org.kalypso.ogc.gml.mapmodel.IMapModell)
-   */
   @Override
-  public void onMapModelChanged( final IMapPanel source, final IMapModell oldModel, final IMapModell newModel )
+  public void onMapModelChanged( final IMapPanel source, final IKalypsoLayerModell oldModel, final IKalypsoLayerModell newModel )
   {
   }
 
