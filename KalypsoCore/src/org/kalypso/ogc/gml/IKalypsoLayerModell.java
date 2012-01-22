@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
-import java.net.URL;
-
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.template.types.StyledLayerType;
@@ -49,7 +47,7 @@ import org.kalypso.template.types.StyledLayerType;
 /**
  * {@link IMapModell}s which implement additional methods to add {@link org.deegree.graphics.sld.StyledLayerDescriptor}
  * s.
- * 
+ *
  * @author Gernot Belger
  */
 public interface IKalypsoLayerModell extends IMapModell
@@ -57,6 +55,4 @@ public interface IKalypsoLayerModell extends IMapModell
   IKalypsoTheme addLayer( final StyledLayerType layer ) throws CoreException;
 
   IKalypsoTheme insertLayer( final StyledLayerType layer, final int position ) throws Exception;
-
-  URL getContext( );
 }

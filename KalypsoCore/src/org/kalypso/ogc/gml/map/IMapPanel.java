@@ -48,9 +48,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelPaintListener;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.widgets.IWidgetManager;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -74,7 +74,7 @@ public interface IMapPanel extends ISelectionProvider
 
   double getCurrentScale( );
 
-  IMapModell getMapModell( );
+  IKalypsoLayerModell getMapModell( );
 
   String getMessage( );
 
@@ -106,7 +106,7 @@ public interface IMapPanel extends ISelectionProvider
 
   /**
    * Set the bounding box of the panel.
-   * 
+   *
    * @param wishBBox
    *          The new extent, will be adapted so it fits into the current size of the panel. Call
    *          {@link #getBoundingBox()} to get the adjusted extent.
@@ -117,7 +117,7 @@ public interface IMapPanel extends ISelectionProvider
    */
   void setBoundingBox( final GM_Envelope wishBBox, final boolean useHistory, final boolean invalidateMap );
 
-  void setMapModell( final IMapModell modell );
+  void setMapModell( final IKalypsoLayerModell modell );
 
   void setMessage( final String message );
 
