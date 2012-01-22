@@ -56,6 +56,7 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoUserStyle;
 import org.kalypso.ogc.gml.outline.nodes.FeatureTypeStyleNode;
 import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
+import org.kalypso.ogc.gml.outline.nodes.ThemeNodeUtils;
 import org.kalypso.ogc.gml.outline.nodes.UserStyleNode;
 import org.kalypso.ui.editor.styleeditor.SLDComposite;
 import org.kalypso.ui.editor.styleeditor.StyleEditorConfig;
@@ -150,7 +151,7 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
       return null;
 
     final IThemeNode node = (IThemeNode) o;
-    final IKalypsoTheme theme = findTheme( node );
+    final IKalypsoTheme theme = ThemeNodeUtils.findTheme( node );
     if( !(theme instanceof IKalypsoFeatureTheme) )
       return null;
 
@@ -232,18 +233,6 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
       return (IKalypsoStyle) element;
 
     return findStyle( node.getParent() );
-  }
-
-  private IKalypsoTheme findTheme( final IThemeNode node )
-  {
-    if( node == null )
-      return null;
-
-    final Object element = node.getElement();
-    if( element instanceof IKalypsoTheme )
-      return (IKalypsoTheme) element;
-
-    return findTheme( node.getParent() );
   }
 
   private static FeatureTypeStyleInput createInput( final IKalypsoStyle style, final IFeatureType featureType, final int styleToSelect )
