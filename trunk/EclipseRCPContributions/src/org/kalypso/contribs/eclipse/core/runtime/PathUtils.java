@@ -47,7 +47,7 @@ import org.eclipse.core.runtime.Path;
 
 /**
  * Helper class for {@link org.eclipse.core.runtime.IPath}.
- * 
+ *
  * @author Gernot Belger
  */
 public final class PathUtils
@@ -67,6 +67,9 @@ public final class PathUtils
    */
   public static IPath makeRelativ( final IPath context, final IPath child )
   {
+    if( context.isRoot() )
+      return child;
+
     if( context.isPrefixOf( child ) )
       return child.removeFirstSegments( context.segmentCount() );
 
