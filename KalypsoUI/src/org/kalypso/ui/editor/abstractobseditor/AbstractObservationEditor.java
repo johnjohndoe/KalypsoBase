@@ -68,6 +68,7 @@ import org.kalypso.ogc.sensor.template.TemplateStorage;
 import org.kalypso.template.obsdiagview.Obsdiagview;
 import org.kalypso.template.obstableview.Obstableview;
 import org.kalypso.ui.editor.AbstractWorkbenchPart;
+import org.kalypso.ui.editor.abstractobseditor.commands.DropZmlCommand;
 
 /**
  * AbstractObsEditor
@@ -243,12 +244,19 @@ public abstract class AbstractObservationEditor extends AbstractWorkbenchPart im
       fireDirty();
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.template.IObsViewEventListener#onPrintObsView(org.kalypso.ogc.sensor.template.ObsViewEvent)
-   */
   @Override
   public void onPrintObsView( final ObsViewEvent evt )
   {
     // empty
+  }
+
+  boolean addFiles( final String[] files )
+  {
+    if( m_view == null )
+      return false;
+
+    postCommand( new DropZmlCommand( this, m_view, files ), null );
+
+    return true;
   }
 }
