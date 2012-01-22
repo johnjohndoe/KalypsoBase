@@ -18,8 +18,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
-import de.renew.workflow.connector.cases.IScenarioManager;
 import de.renew.workflow.connector.cases.IScenario;
+import de.renew.workflow.connector.cases.IScenarioManager;
 import de.renew.workflow.connector.internal.WorkflowConnectorPlugin;
 
 /**
@@ -121,6 +121,7 @@ public class ActiveWorkContext implements IResourceChangeListener
     }
   }
 
+  // TODO: do this in ui thread + monitor
   public synchronized void setCurrentCase( final IScenario caze ) throws CoreException
   {
     final IScenarioManager currentCaseManager = getCaseManager();

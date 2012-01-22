@@ -93,5 +93,4 @@ public class ScenarioDataChangeListenerExtension
 
     return m_instance;
   }
-
 }

@@ -290,6 +290,8 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     m_activeWorkContext = null;
   }
 
+  // FIXME: move this into scenari oactivation code; should not be handled via listeners, probably only works because
+  // this listener is always the first one to be executed...
   protected void handleScenarioChanged( final CaseHandlingProjectNature nature, final IScenario caze )
   {
     // First initialize the context (and loading of all the models); else the default task does not work
