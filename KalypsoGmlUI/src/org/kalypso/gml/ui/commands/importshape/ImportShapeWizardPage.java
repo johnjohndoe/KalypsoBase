@@ -40,6 +40,8 @@ import org.kalypso.ui.ImageProvider;
  */
 public class ImportShapeWizardPage extends WizardPage
 {
+  public static final String FILTER_NAME_SHP = Messages.getString( "org.kalypso.gml.ui.commands.importshape.ImportShapeWizardPage.1" );
+
   protected static final String DATA_PROPERTY = "property"; //$NON-NLS-1$
 
   private final Map<String, ComboViewer> m_propertyViewers = new HashMap<String, ComboViewer>();
@@ -65,7 +67,7 @@ public class ImportShapeWizardPage extends WizardPage
   /**
    * Creates the top level control for this dialog page under the given parent composite, then calls
    * <code>setControl</code> so that the created control can be accessed via <code>getControl</code>
-   * 
+   *
    * @param parent
    *          the parent composite
    */
@@ -79,7 +81,7 @@ public class ImportShapeWizardPage extends WizardPage
     setControl( container );
 
     final FileChooserDelegateOpen shapeChooser = new FileChooserDelegateOpen();
-    shapeChooser.addFilter( Messages.getString( "org.kalypso.gml.ui.commands.importshape.ImportShapeWizardPage.1" ), ".shp" ); //$NON-NLS-1$ //$NON-NLS-2$
+    shapeChooser.addFilter( FILTER_NAME_SHP, ShapeFile.EXTENSION_SHP ); //$NON-NLS-1$
     m_shapeChooser = new FileChooserGroup( shapeChooser );
     m_shapeChooser.setDialogSettings( getDialogSettings() );
     m_shapeChooser.setLabel( Messages.getString( "org.kalypso.gml.ui.commands.importshape.ImportShapeWizardPage.2" ) ); //$NON-NLS-1$
@@ -142,12 +144,12 @@ public class ImportShapeWizardPage extends WizardPage
     extensionContainer.setLayout( extensionContainerLayout );
     extensionContainer.setLayoutData( new GridData( SWT.FILL, SWT.TOP, true, false, 3, 1 ) );
     addCustomControls( extensionContainer );
-    
+
     setPageComplete( m_shapeChooser.getFile() != null );
 
     setControl( container );
   }
-  
+
   /**
    * ancestors may override this for extended functionality
    */
