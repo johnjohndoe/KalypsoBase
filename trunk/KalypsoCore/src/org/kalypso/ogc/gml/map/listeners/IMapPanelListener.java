@@ -40,25 +40,25 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.listeners;
 
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * This interface provides a set of functions for listeners, that should be notified in special events of the mapPanel.
- * 
+ *
  * @author Holger Albert
  */
 public interface IMapPanelListener
 {
   void onExtentChanged( final IMapPanel source, final GM_Envelope oldExtent, final GM_Envelope newExtent );
 
-  void onMapModelChanged( final IMapPanel source, final IMapModell oldModel, final IMapModell newModel );
+  void onMapModelChanged( final IMapPanel source, final IKalypsoLayerModell oldModel, final IKalypsoLayerModell newModel );
 
   /**
    * This function is invoked from the mapPanel, in cases its message has changed.
-   * 
+   *
    * @param message
    *          The new message, which is set in the mapPanel.
    */
@@ -69,5 +69,4 @@ public interface IMapPanelListener
   // REMARK: we are using mouseX and mouseY (instead of some point) in order to be independent of the window toolkit
   // Should be changed as soon as we totally switch so SWT
   void onMouseMoveEvent( final IMapPanel source, GM_Point gmPoint, final int mouseX, int mouseY );
-
 }

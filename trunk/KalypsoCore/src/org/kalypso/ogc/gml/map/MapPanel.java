@@ -88,6 +88,7 @@ import org.kalypso.core.KalypsoCoreDebug;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.layer.BufferedRescaleMapLayer;
 import org.kalypso.ogc.gml.map.layer.CacscadingMapLayer;
@@ -114,7 +115,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * AWT canvas that displays a {@link org.kalypso.ogc.gml.mapmodel.MapModell}.
- * 
+ *
  * @author Andreas von Dömming
  * @author Gernot Belger
  */
@@ -125,7 +126,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   /**
    * Maximum delay by which repaints to the map are produced.
-   * 
+   *
    * @see java.awt.Component#repaint(long)
    */
   private static final long LAYER_REPAINT_MILLIS = 500;
@@ -155,7 +156,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     }
   };
 
-  private IMapModell m_model = null;
+  private IKalypsoLayerModell m_model = null;
 
   private final WidgetManager m_widgetManager;
 
@@ -403,7 +404,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     } );
   }
 
-  protected void fireMapModelChanged( final IMapModell oldModel, final IMapModell newModel )
+  protected void fireMapModelChanged( final IKalypsoLayerModell oldModel, final IKalypsoLayerModell newModel )
   {
     acceptListenersRunnable( new IListenerRunnable()
     {
@@ -463,7 +464,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
           {
             /**
              * Overwritten because opening the message dialog here results in a NPE
-             * 
+             *
              * @see org.eclipse.jface.util.SafeRunnable#handleException(java.lang.Throwable)
              */
             @Override
@@ -502,7 +503,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   /**
    * calculates the current map scale (denominator) as defined in the OGC SLD 1.0.0 specification
-   * 
+   *
    * @return scale of the map
    */
   @Override
@@ -520,7 +521,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
    * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#getMapModell()
    */
   @Override
-  public IMapModell getMapModell( )
+  public IKalypsoLayerModell getMapModell( )
   {
     return m_model;
   }
@@ -653,7 +654,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
    * <li>all 'paint-listeners'</li>
    * <li>the current widget</li>
    * </ul>
-   * 
+   *
    * @see java.awt.Component#paint(java.awt.Graphics)
    */
   @Override
@@ -798,7 +799,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   /**
    * This function sets the bounding box to this map panel and all its themes.
-   * 
+   *
    * @param wishBBox
    *          The new extent, will be adapted so it fits into the current size of the panel.
    */
@@ -871,13 +872,10 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     return boundingBox;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#setMapModell(org.kalypso.ogc.gml.mapmodel.IMapModell)
-   */
   @Override
-  public void setMapModell( final IMapModell modell )
+  public void setMapModell( final IKalypsoLayerModell modell )
   {
-    final IMapModell oldModel;
+    final IKalypsoLayerModell oldModel;
     synchronized( this )
     {
       oldModel = m_model;

@@ -134,6 +134,7 @@ public class MapModell implements IMapModell
     }
   }
 
+  @Override
   public URL getContext( )
   {
     return m_context;
