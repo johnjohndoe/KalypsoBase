@@ -65,6 +65,7 @@ import org.eclipse.ui.services.IServiceLocator;
 import org.eclipse.ui.services.IServiceWithSources;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.ui.commands.CommandUtilities;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.map.listeners.MapPanelAdapter;
@@ -122,12 +123,8 @@ public class MapPanelSourceProvider extends AbstractSourceProvider implements IS
   {
     // TODO: we should fire a source change on any change of the panel
 
-    /**
-     * @see org.kalypso.ogc.gml.map.listeners.MapPanelAdapter#onMapModelChanged(org.kalypso.ogc.gml.map.MapPanel,
-     *      org.kalypso.ogc.gml.mapmodel.IMapModell, org.kalypso.ogc.gml.mapmodel.IMapModell)
-     */
     @Override
-    public void onMapModelChanged( final IMapPanel source, final IMapModell oldModel, final IMapModell newModel )
+    public void onMapModelChanged( final IMapPanel source, final IKalypsoLayerModell oldModel, final IKalypsoLayerModell newModel )
     {
       if( oldModel != null )
         oldModel.removeMapModelListener( m_mapModellListener );
@@ -243,6 +240,7 @@ public class MapPanelSourceProvider extends AbstractSourceProvider implements IS
     return PROVIDED_SOURCE_NAMES;
   }
 
+  @Override
   public void fireSourceChanged( )
   {
     final UIJob job = new UIJob( "Activate theme context job" ) //$NON-NLS-1$
