@@ -70,11 +70,11 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.map.listeners.MapPanelAdapter;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ogc.gml.outline.handler.ToggleCompactOutlineHandler;
 import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
@@ -83,7 +83,7 @@ import org.kalypso.util.command.JobExclusiveCommandTarget;
 
 /**
  * OutlinePage für das MapView-Template
- * 
+ *
  * @author Gernot Belger
  */
 public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPageBookViewPage, ICommandTarget
@@ -94,12 +94,8 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
 
   private final IMapPanelListener m_mapPanelListener = new MapPanelAdapter()
   {
-    /**
-     * @see org.kalypso.ogc.gml.map.MapPanelAdapter#onMapModelChanged(org.kalypso.ogc.gml.map.MapPanel,
-     *      org.kalypso.ogc.gml.mapmodel.IMapModell, org.kalypso.ogc.gml.mapmodel.IMapModell)
-     */
     @Override
-    public void onMapModelChanged( final IMapPanel source, final IMapModell oldModel, final IMapModell newModel )
+    public void onMapModelChanged( final IMapPanel source, final IKalypsoLayerModell oldModel, final IKalypsoLayerModell newModel )
     {
       handleMapModelChanged( newModel );
     }
@@ -323,7 +319,7 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
     m_commandTarget.postCommand( command, runnable );
   }
 
-  protected void handleMapModelChanged( final IMapModell newModel )
+  protected void handleMapModelChanged( final IKalypsoLayerModell newModel )
   {
     if( m_outlineViewer != null )
       m_outlineViewer.setMapModel( newModel );
@@ -412,7 +408,7 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
 
   /**
    * This function searches the content of the viewer for a node, which contains the given theme.
-   * 
+   *
    * @param theme
    *          The theme.
    * @return The node or null.

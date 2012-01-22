@@ -81,12 +81,12 @@ import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.IExportableObjectFactory;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.map.BaseMapSchedulingRule;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.MapPanelSourceProvider;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.map.listeners.MapPanelAdapter;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapPanelProvider;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.gismapview.Gismapview;
@@ -458,7 +458,7 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
     return label;
   }
 
-  protected void updatePanel( final IMapModell mapModell, final GM_Envelope initialEnv )
+  protected void updatePanel( final IKalypsoLayerModell mapModell, final GM_Envelope initialEnv )
   {
     if( m_mapPanel != null )
     {
@@ -473,9 +473,6 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
     return m_mapModell;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapPanelProvider#getMapPanel()
-   */
   @Override
   public IMapPanel getMapPanel( )
   {
