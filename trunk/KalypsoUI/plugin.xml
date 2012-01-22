@@ -10,6 +10,8 @@
     <extension-point id="movieImageProvider" name="movieImageProvider" schema="schema/movieImageProvider.exsd"/>
     <extension-point id="exportWizards" name="exportWizards" schema="schema/exportWizards.exsd"/>
     <extension-point id="importWizards" name="importWizards" schema="schema/importWizards.exsd"/>
+    <extension-point id="addLayerWizard" name="addLayerWizard" schema="schema/addLayerWizard.exsd"/>
+    <extension-point id="mapDropTarget" name="mapDropTarget" schema="schema/mapDropTarget.exsd"/>
 	
 	<extension id="preferences" name="preferences" point="org.eclipse.core.runtime.preferences">
 		<initializer class="org.kalypso.ui.preferences.KalypsoPreferenceInitializer"/>
@@ -1620,5 +1622,11 @@
       <layoutPartFactory id="gisMap" class="org.kalypso.ui.internal.layoutwizard.map.MapLayoutPartFactory"/>
       <layoutPartFactory id="gisTable" class="org.kalypso.ui.internal.layoutwizard.gistable.GisTableLayoutPartFactory"/>
       <layoutPartFactory id="featureView" class="org.kalypso.ui.internal.layoutwizard.featureview.FeatureViewLayoutPartFactory"/>
-  </extension>    
+  </extension>
+  
+  <extension point="org.kalypso.ui.mapDropTarget">
+     <target extension="shp" wizardId="org.kalypso.ui.wizard.shape">
+     </target>
+  </extension>
+      
 </plugin>
