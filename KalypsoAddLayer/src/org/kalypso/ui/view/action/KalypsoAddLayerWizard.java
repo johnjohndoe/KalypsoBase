@@ -45,9 +45,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.internal.IWorkbenchGraphicConstants;
 import org.eclipse.ui.internal.WorkbenchImages;
-import org.eclipse.ui.internal.registry.WizardsRegistryReader;
-import org.eclipse.ui.model.AdaptableList;
-import org.kalypso.ui.KalypsoAddLayerPlugin;
+import org.kalypso.ui.addlayer.MapExtensions;
 import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
 import org.kalypso.ui.i18n.Messages;
 
@@ -78,16 +76,9 @@ public class KalypsoAddLayerWizard extends Wizard
     setNeedsProgressMonitor( true );
 
     final String message = Messages.getString( "org.kalypso.ui.view.action.KalypsoAddLayerWizard.0" ); //$NON-NLS-1$
-    final KalypsoWizardSelectionPage page = new KalypsoWizardSelectionPage( m_workbench, m_selection, getAvailableWizards(), message, m_outlineviewer );
+    final KalypsoWizardSelectionPage page = new KalypsoWizardSelectionPage( m_workbench, m_selection, MapExtensions.getAvailableWizards(), message, m_outlineviewer );
     page.setDescription( Messages.getString( "org.kalypso.ui.view.action.KalypsoAddLayerWizard.1" ) ); //$NON-NLS-1$
     addPage( page );
-  }
-
-  private static AdaptableList getAvailableWizards( )
-  {
-    final String pluginId = KalypsoAddLayerPlugin.getId();
-    final String plugInpointId = KalypsoAddLayerPlugin.PL_IMPORT;
-    return new WizardsRegistryReader( pluginId, plugInpointId ).getWizardElements();
   }
 
   @Override

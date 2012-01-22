@@ -46,14 +46,13 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.action.AddThemeCommand;
-import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 
 /**
  * The wizard for a image theme.
- * 
+ *
  * @author Holger Albert
  */
-public class ImageThemeWizard extends AbstractOtherThemeWizard implements IKalypsoDataImportWizard
+public class ImageThemeWizard extends AbstractOtherThemeWizard
 {
   /**
    * The wizard page for entering properties for a image theme.

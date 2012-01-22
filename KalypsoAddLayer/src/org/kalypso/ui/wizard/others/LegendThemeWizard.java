@@ -47,15 +47,14 @@ import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.i18n.Messages;
-import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 
 /**
  * The wizard for a legend theme.
- * 
+ *
  * @author unknown (original)
  * @author Holger Albert (modifications)
  */
-public class LegendThemeWizard extends AbstractOtherThemeWizard implements IKalypsoDataImportWizard
+public class LegendThemeWizard extends AbstractOtherThemeWizard
 {
   /**
    * The wizard page for entering properties for a legend theme.

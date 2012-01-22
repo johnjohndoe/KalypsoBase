@@ -17,15 +17,8 @@ public class KalypsoAddLayerPlugin extends AbstractUIPlugin
   // Resource bundle.
   private ResourceBundle resourceBundle;
 
-  /** Constant for all Kalypso data import wizards (Extenstion point schema org.kalypso.ui.wizard.dataImportWizard.exsd) */
-  public static final String PL_IMPORT = "addLayerWizard"; //$NON-NLS-1$
-
-  /**
-   * The constructor.
-   */
   public KalypsoAddLayerPlugin( )
   {
-    super();
     plugin = this;
     try
     {
