@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.databinding.swt;
 
@@ -45,12 +45,14 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.kalypso.commons.java.util.AbstractModelObject;
 
 /**
- * A data object that holds a file (or dir) and a file hisotry.
- * 
+ * A data object that holds a file (or dir) and a file history.
+ *
  * @author Gernot Belger
  */
 public class FileAndHistoryData extends AbstractModelObject
@@ -59,7 +61,9 @@ public class FileAndHistoryData extends AbstractModelObject
 
   public static final String PROPERTY_FILE = "file"; //$NON-NLS-1$
 
-  private File m_file;
+  public static final String PROPERTY_PATH = "path"; //$NON-NLS-1$
+
+  private IPath m_path;
 
   private String[] m_history = new String[0];
 
@@ -81,12 +85,7 @@ public class FileAndHistoryData extends AbstractModelObject
     final String section = getHistorySettingName();
     final String[] names = settings.getArray( section );
     if( names != null )
-    {
       setHistory( names );
-
-      if( names.length > 0 )
-        setFile( new File( names[0] ) );
-    }
   }
 
   protected String getHistorySettingName( )
@@ -99,14 +98,14 @@ public class FileAndHistoryData extends AbstractModelObject
     if( settings == null )
       return;
 
-    final File file = getFile();
+    final IPath path = getPath();
 
     // update source names history
     final String[] history = getHistory();
     final Set<String> historySet = new LinkedHashSet<String>();
     // New entry on, top; avoid duplicate entries
-    if( file != null )
-      historySet.add( file.getAbsolutePath() );
+    if( path != null )
+      historySet.add( path.toPortableString() );
     historySet.addAll( Arrays.asList( history ) );
 
     final String section = getHistorySettingName();
@@ -115,7 +114,10 @@ public class FileAndHistoryData extends AbstractModelObject
 
   public File getFile( )
   {
-    return m_file;
+    if( m_path == null )
+      return null;
+
+    return m_path.toFile();
   }
 
   public String[] getHistory( )
@@ -132,12 +134,26 @@ public class FileAndHistoryData extends AbstractModelObject
     firePropertyChange( PROPERTY_HISTORY, oldValue, history );
   }
 
-  public void setFile( final File outputDir )
+  public void setFile( final File file )
   {
-    final Object oldValue = m_file;
+    final IPath path = file == null ? null : new Path( file.getAbsolutePath() );
+    setPath( path );
 
-    m_file = outputDir;
+  }
 
-    firePropertyChange( PROPERTY_FILE, oldValue, outputDir );
+  public void setPath( final IPath path )
+  {
+    final File oldFile = getFile();
+    final Object oldValue = m_path;
+
+    m_path = path;
+
+    firePropertyChange( PROPERTY_PATH, oldValue, path );
+    firePropertyChange( PROPERTY_FILE, oldFile, getFile() );
+  }
+
+  public IPath getPath( )
+  {
+    return m_path;
   }
 }
