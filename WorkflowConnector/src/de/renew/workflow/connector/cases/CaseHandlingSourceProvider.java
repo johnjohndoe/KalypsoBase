@@ -40,6 +40,7 @@ public class CaseHandlingSourceProvider<D extends Object> extends AbstractSource
 
   public void resetCase( )
   {
+    // FIXME: move into scenario activation code
     m_dataProvider.setCurrent( m_activeWorkContext.getCurrentCase() );
     fireSourceChanged( 0, getCurrentState() );
   }

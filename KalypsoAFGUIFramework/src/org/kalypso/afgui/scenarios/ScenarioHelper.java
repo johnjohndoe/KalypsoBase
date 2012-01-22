@@ -134,6 +134,7 @@ public class ScenarioHelper
     return null;
   }
 
+  // FIXME: probably (hopefully) not needed any more...; remove?
   public static boolean ensureBackwardsCompatibility( final IScenario caze, final CaseHandlingProjectNature nature )
   {
     // FIXME: this is dirty fix only for this release 2.3
