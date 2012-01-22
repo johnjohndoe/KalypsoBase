@@ -47,14 +47,17 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.FileTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerTooltipListener;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
 import org.kalypso.ogc.gml.outline.nodes.NodeFactory;
 import org.kalypso.ogc.gml.outline.nodes.NodeFinder;
@@ -72,7 +75,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
 
   private CheckboxTreeViewer m_viewer;
 
-  private IMapModell m_mapModell;
+  private IKalypsoLayerModell m_mapModell;
 
   protected IThemeNode m_input;
 
@@ -83,7 +86,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
    *          If this parameter is set, the name of single styles of a theme is added to the theme name. For multiple
    *          styles of a theme, this is not necessary, because their level will be displayed in the outline then.
    */
-  public GisMapOutlineViewer( final ICommandTarget commandTarget, final IMapModell mapModel )
+  public GisMapOutlineViewer( final ICommandTarget commandTarget, final IKalypsoLayerModell mapModel )
   {
     m_contentProvider = new ThemeNodeContentProvider();
     setMapModel( mapModel );
@@ -103,6 +106,12 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
   {
     final CheckboxTreeViewer viewer = new CheckboxTreeViewer( parent, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
     m_viewer = viewer;
+
+    /* Add drop support */
+    // drop support for files
+    final Transfer[] transfers = new Transfer[] { FileTransfer.getInstance() };
+    m_viewer.addDropSupport( DND.DROP_LINK, transfers, new GisMapOutlineDropAdapter( m_viewer, m_commandTarget, m_mapModell ) );
+
     viewer.setContentProvider( m_contentProvider );
     viewer.setLabelProvider( new ThemeNodeLabelProvider() );
     viewer.setCheckStateProvider( new ThemeNodeCheckStateProvider() );
@@ -121,25 +130,6 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
 
     ColumnViewerTooltipListener.hookViewer( viewer, true );
 
-// final Tree tree = m_viewer.getTree();
-// tree.addMouseMoveListener( new MouseMoveListener()
-// {
-// public void mouseMove( final MouseEvent e )
-// {
-// final TreeItem item = tree.getItem( new Point( e.x, e.y ) );
-// final String text;
-// if( item == null )
-// text = null; // remove tooltip
-// else
-// {
-// final Object data = item.getData();
-// final ITooltipProvider ttProvider = (ITooltipProvider) Util.getAdapter( data, ITooltipProvider.class );
-// text = ttProvider == null ? null : ttProvider.getTooltip( data );
-// }
-// tree.setToolTipText( text );
-// }
-// } );
-
     setMapModel( m_mapModell );
   }
 
@@ -152,10 +142,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
     return m_viewer.getControl();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#setMapModell(org.kalypso.ogc.gml.mapmodel.IMapModell)
-   */
-  public void setMapModel( final IMapModell model )
+  public void setMapModel( final IKalypsoLayerModell model )
   {
     m_mapModell = model;
 
@@ -249,7 +236,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
 
   /**
    * This function searches the content of the viewer for a node, which contains the given theme.
-   * 
+   *
    * @param theme
    *          The theme.
    * @return The node or null.
