@@ -2,13 +2,12 @@
 <?eclipse version="3.0"?>
 <plugin>
 
-   <extension-point id="addLayerWizard" name="addLayerWizard" schema="schema/addLayerWizard.exsd"/>
    <extension-point id="WMSImageProvider" name="WMSImageProvider" schema="schema/WMSImageProvider.exsd"/>
 
    <extension
          id="addLayerWizard"
          name="dataimport"
-         point="org.kalypso.ui.addlayer.addLayerWizard">
+         point="org.kalypso.ui.addLayerWizard">
       <wizard
             class="org.kalypso.ui.wizard.shape.ImportShapeSourceWizard"
             icon="icon/file_shp.GIF"

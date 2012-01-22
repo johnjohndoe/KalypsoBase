@@ -48,10 +48,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.IWorkbench;
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
@@ -62,10 +59,11 @@ import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.action.AddThemeCommand;
+import org.kalypso.ui.addlayer.dnd.MapDropData;
 import org.kalypso.ui.editor.actions.FeatureActionUtilities;
 import org.kalypso.ui.editor.gmleditor.part.FeatureAssociationTypeElement;
 import org.kalypso.ui.i18n.Messages;
-import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
+import org.kalypso.ui.wizard.AbstractDataImportWizard;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
@@ -73,23 +71,30 @@ import org.kalypsodeegree_impl.model.feature.FeaturePath;
 /**
  * @author Kuepferle
  */
-public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImportWizard
+public class KalypsoGmlImportWizard extends AbstractDataImportWizard
 {
-  private ICommandTarget m_outlineviewer;
-
-  private IKalypsoLayerModell m_mapModel;
-
   private GmlFileImportPage m_page;
+
+  public KalypsoGmlImportWizard( )
+  {
+    setWindowTitle( Messages.getString( "org.kalypso.ui.wizard.gml.KalypsoGmlImportWizard.2" ) ); //$NON-NLS-1$
+  }
 
   @Override
   public void addPages( )
   {
     m_page = new GmlFileImportPage( "GML:importPage", Messages.getString( "org.kalypso.ui.wizard.gml.KalypsoGmlImportWizard.0" ), ImageProvider.IMAGE_UTIL_UPLOAD_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    final IProject project = ResourceUtilities.findProjectFromURL( m_mapModel.getContext() );
+    final IProject project = ResourceUtilities.findProjectFromURL( getMapModel().getContext() );
     m_page.setProjectSelection( project );
 
     addPage( m_page );
+  }
+
+  @Override
+  public void initFromDrop( final MapDropData data )
+  {
+    throw new UnsupportedOperationException();
   }
 
   @Override
@@ -97,11 +102,11 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
   {
     try
     {
-      final ICommand[] commands = getCommands( m_mapModel );
+      final ICommand[] commands = getCommands();
 
       for( final ICommand command : commands )
       {
-        m_outlineviewer.postCommand( command, null );
+        postCommand( command, null );
       }
     }
     catch( final Throwable e )
@@ -115,8 +120,10 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
     return true;
   }
 
-  private ICommand[] getCommands( final IKalypsoLayerModell model )
+  private ICommand[] getCommands( )
   {
+    final IKalypsoLayerModell model = getMapModel();
+
     final String source = m_page.getSource();
     final IStructuredSelection selection = m_page.getSelection();
 
@@ -182,33 +189,4 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
     }
     return result;
   }
-
-  /**
-   * @see org.kalypso.ui.wizard.data.IKalypsoDataImportWizard#setOutlineViewer(org.kalypso.ogc.gml.outline.GisMapOutlineViewer)
-   */
-  @Override
-  public void setCommandTarget( final ICommandTarget commandTarget )
-  {
-    m_outlineviewer = commandTarget;
-  }
-
-  /**
-   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
-   *      org.eclipse.jface.viewers.IStructuredSelection)
-   */
-  @Override
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
-  {
-    setWindowTitle( Messages.getString( "org.kalypso.ui.wizard.gml.KalypsoGmlImportWizard.2" ) ); //$NON-NLS-1$
-  }
-
-  /**
-   * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setMapModel(org.kalypso.ogc.gml.IKalypsoLayerModell)
-   */
-  @Override
-  public void setMapModel( final IKalypsoLayerModell modell )
-  {
-    m_mapModel = modell;
-  }
-
 }

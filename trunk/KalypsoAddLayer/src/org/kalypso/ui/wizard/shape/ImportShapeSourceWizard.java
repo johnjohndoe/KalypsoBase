@@ -47,23 +47,24 @@ import java.nio.charset.Charset;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.IWorkbench;
-import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.commons.databinding.swt.FileAndHistoryData;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PathUtils;
 import org.kalypso.contribs.java.net.IUrlResolver2;
+import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.CatalogSLD;
 import org.kalypso.core.catalog.CatalogSLDUtils;
@@ -78,20 +79,17 @@ import org.kalypso.shape.deegree.GenericShapeDataFactory;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.action.AddThemeCommand;
+import org.kalypso.ui.addlayer.dnd.MapDropData;
 import org.kalypso.ui.i18n.Messages;
-import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
+import org.kalypso.ui.wizard.AbstractDataImportWizard;
 import org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.StyleImport;
 
 /**
  * @author Kuepferle
  */
-public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImportWizard
+public class ImportShapeSourceWizard extends AbstractDataImportWizard
 {
-  private ImportShapeFileImportPage m_page;
-
-  private ICommandTarget m_outlineviewer;
-
-  private IKalypsoLayerModell m_modell;
+  private final ImportShapeFileData m_data = new ImportShapeFileData();
 
   private final String m_title;
 
@@ -100,38 +98,49 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
     m_title = Messages.getString( "org.kalypso.ui.wizard.shape.ImportShapeSourceWizard.0" ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.IWizard#performFinish()
-   */
+  @Override
+  public void setDialogSettings( final IDialogSettings settings )
+  {
+    super.setDialogSettings( settings );
+
+    m_data.init( settings );
+  }
+
   @Override
   public boolean performFinish( )
   {
+    m_data.storeSettings( getDialogSettings() );
+
+    // TODO: move into operation
+
     // Add Layer to mapModell
-    final IKalypsoLayerModell mapModell = m_modell;
-    final URL mapContext = m_modell.getContext();
+    final IKalypsoLayerModell mapModell = getMapModel();
+    final URL mapContext = mapModell.getContext();
     final IFile mapFile = ResourceUtilities.findFileFromURL( mapContext );
+    final IPath mapPath = mapFile.getFullPath();
 
     /* Add new theme to map */
-    final IFile shapeFile = m_page.getShapeFile();
-    final String shapePath = m_page.getRelativeShapePath( mapFile );
-    final String themeName = FileUtilities.nameWithoutExtension( shapeFile.getName() );
-    final String fileName = shapePath + '#' + m_page.getCRS(); //$NON-NLS-1$
+    final IPath shapePath = m_data.getShapeFile().getPath().removeFileExtension();
+    final String relativeShapePath = makeRelativeOrProjectRelative( mapPath, shapePath );
+
+    final String themeName = FileUtilities.nameWithoutExtension( shapePath.lastSegment() );
+    final String fileName = relativeShapePath + '#' + m_data.getSrs(); //$NON-NLS-1$
 
     final AddThemeCommand command = new AddThemeCommand( mapModell, themeName, "shape", ShapeSerializer.PROPERTY_FEATURE_MEMBER.getLocalPart(), fileName ); //$NON-NLS-1$
 
     /* Add style according to choice */
-    if( !addStyleCommand( mapFile, shapeFile, command ) )
+    if( !addStyleCommand( mapPath, shapePath, command ) )
       return false;
 
     /* Do it */
-    m_outlineviewer.postCommand( command, null );
+    postCommand( command, null );
 
     return true;
   }
 
-  private boolean addStyleCommand( final IFile mapFile, final IFile shapeFile, final AddThemeCommand command )
+  private boolean addStyleCommand( final IPath mapPath, final IPath shapePath, final AddThemeCommand command )
   {
-    final StyleImport styleImportType = m_page.getStyleImportType();
+    final StyleImport styleImportType = m_data.getStyleImportType();
     switch( styleImportType )
     {
       case useDefault:
@@ -139,13 +148,14 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
         return true;
 
       case generateDefault:
-        return generateDefaultStyle( mapFile, shapeFile, command );
+        return generateDefaultStyle( mapPath, shapePath, command );
 
       case selectExisting:
         /* Add reference to existing style file */
-        final String stylePath = m_page.getRelativeStylePath( mapFile );
-        final String styleName = m_page.getStyleName();
-        command.addStyle( styleName, stylePath );
+        final IPath stylePath = m_data.getStyleFile().getPath();
+        final String relativeStylePath = makeRelativeOrProjectRelative( mapPath, stylePath );
+        final String styleName = m_data.getStyleName();
+        command.addStyle( styleName, relativeStylePath );
         return true;
     }
 
@@ -155,12 +165,12 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
   /**
    * Copies a registered default style into the workspace under the name of the shape file.
    */
-  private boolean generateDefaultStyle( final IFile mapFile, final IFile shapeFile, final AddThemeCommand command )
+  private boolean generateDefaultStyle( final IPath mapPath, final IPath shapePath, final AddThemeCommand command )
   {
     ShapeFile shpFile = null;
     try
     {
-      final IPath sldPath = shapeFile.getFullPath().removeFileExtension().addFileExtension( "sld" );
+      final IPath sldPath = shapePath.removeFileExtension().addFileExtension( ImportShapeFileData.EXTENSIONS_SLD );
       final IFile sldFile = PathUtils.toFile( sldPath );
       if( sldFile.exists() )
       {
@@ -169,10 +179,12 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
           return false;
       }
 
+      final IFile shapeFile = PathUtils.toFile( shapePath );
       final String shapeBasePath = shapeFile.getLocation().removeFileExtension().toOSString();
       shpFile = new ShapeFile( shapeBasePath, Charset.defaultCharset(), FileMode.READ );
       final ShapeType shapeType = shpFile.getShapeType();
       shpFile.close();
+
       final QName geometryType = GenericShapeDataFactory.findGeometryType( shapeType );
 
       final String ftsURN = CatalogSLDUtils.getDefaultStyleURN( geometryType );
@@ -196,7 +208,7 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
       else
         sldFile.create( IOUtils.toInputStream( sldContent ), false, new NullProgressMonitor() );
 
-      final String relativeSldPath = ImportShapeFileImportPage.makeRelativeOrProjectRelative( mapFile, sldPath );
+      final String relativeSldPath = makeRelativeOrProjectRelative( mapPath, sldPath );
       command.addStyle( null, relativeSldPath );
       return true;
     }
@@ -218,42 +230,41 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
     {
       ShapeFileUtils.closeQuiet( shpFile );
     }
-
-  }
-
-  @Override
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
-  {
-    // do nothing
   }
 
   @Override
   public void addPages( )
   {
-    m_page = new ImportShapeFileImportPage( "shapefileimport", m_title, ImageProvider.IMAGE_KALYPSO_ICON_BIG ); //$NON-NLS-1$
+    final IProject project = ResourceUtilities.findProjectFromURL( getMapModel().getContext() );
 
-    final IProject project = ResourceUtilities.findProjectFromURL( m_modell.getContext() );
-    m_page.setProjectSelection( project );
+    final ImportShapeFileImportPage page = new ImportShapeFileImportPage( "shapefileimport", m_title, ImageProvider.IMAGE_KALYPSO_ICON_BIG, m_data ); //$NON-NLS-1$
 
-    addPage( m_page );
+    page.setProjectSelection( project );
+
+    addPage( page );
   }
 
-  /**
-   * @see org.kalypso.ui.wizard.data.IKalypsoDataImportWizard#setOutlineViewer(org.kalypso.ogc.gml.outline.GisMapOutlineViewer)
-   */
   @Override
-  public void setCommandTarget( final ICommandTarget commandTarget )
+  public void initFromDrop( final MapDropData data )
   {
-    m_outlineviewer = commandTarget;
+    final String path = data.getPath();
+
+    final FileAndHistoryData shapeFile = m_data.getShapeFile();
+    if( StringUtils.isEmpty( path ) )
+      shapeFile.setPath( null );
+    else
+      shapeFile.setPath( new Path( path ) );
   }
 
-  /**
-   * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setMapModel(org.kalypso.ogc.gml.IKalypsoLayerModell)
-   */
-  @Override
-  public void setMapModel( final IKalypsoLayerModell modell )
+  private static String makeRelativeOrProjectRelative( final IPath mapPath, final IPath path )
   {
-    m_modell = modell;
-  }
+    if( path == null )
+      return null;
 
+    final IPath relativeStylePath = PathUtils.makeRelativ( mapPath, path );
+    if( "..".equals( relativeStylePath.segment( 0 ) ) ) //$NON-NLS-1$
+      return UrlResolver.createProjectPath( path );
+    else
+      return relativeStylePath.toPortableString();
+  }
 }
