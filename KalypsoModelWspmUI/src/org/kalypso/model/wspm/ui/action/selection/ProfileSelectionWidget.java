@@ -3,6 +3,7 @@ package org.kalypso.model.wspm.ui.action.selection;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -22,6 +23,7 @@ import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
+import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.advanced.utils.SLDPainter;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -140,6 +142,8 @@ public class ProfileSelectionWidget extends AbstractWidget
 
   private boolean m_shift = false;
 
+  private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
+
   @Override
   public void paint( final Graphics g )
   {
@@ -150,6 +154,37 @@ public class ProfileSelectionWidget extends AbstractWidget
     doPaintSelection( g, painter );
     doPaintSnapPoint( g, painter );
 
+    paintTooltip( g );
+  }
+
+  private void paintTooltip( final Graphics g )
+  {
+    final Rectangle screenBounds = getMapPanel().getScreenBounds();
+    final Point point = new Point( 5, Double.valueOf( screenBounds.getHeight() ).intValue() );
+
+    m_toolTipRenderer.setTooltip( getToolTip() );
+    m_toolTipRenderer.paintToolTip( point, g, screenBounds );
+  }
+
+  @Override
+  public String getToolTip( )
+  {
+    if( Objects.isNull( m_profile, m_snapPoint ) )
+      return "";
+
+    try
+    {
+      final double width = Profiles.getWidth( m_profile.getProfil(), m_snapPoint );
+
+      return String.format( "Profilpunkt Breite: %.2f m", width );
+
+    }
+    catch( final GM_Exception e )
+    {
+      e.printStackTrace();
+    }
+
+    return super.getToolTip();
   }
 
   private void doPaintProfilePoints( final Graphics g, final SLDPainter painter )
@@ -365,4 +400,5 @@ public class ProfileSelectionWidget extends AbstractWidget
         profile.getProfil().addProfilListener( m_listener );
       }
   }
+
 }
