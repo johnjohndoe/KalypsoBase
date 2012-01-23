@@ -73,10 +73,6 @@ public class AbstractCachedFeature2 extends Feature_Impl
     m_cacheDefinition = definition;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.feature.Feature_Impl#setProperty(org.kalypso.gmlschema.property.IPropertyType,
-   *      java.lang.Object)
-   */
   @Override
   public void setProperty( final IPropertyType pt, final Object value )
   {
@@ -101,9 +97,6 @@ public class AbstractCachedFeature2 extends Feature_Impl
     }
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.feature.Feature_Impl#setProperty(javax.xml.namespace.QName, java.lang.Object)
-   */
   @Override
   public void setProperty( final QName propQName, final Object value )
   {
@@ -119,8 +112,6 @@ public class AbstractCachedFeature2 extends Feature_Impl
 
   /**
    * IMPORTANT: both getProperty implementations are overwritten.
-   * 
-   * @see org.kalypsodeegree_impl.model.feature.Feature_Impl#getProperty(javax.xml.namespace.QName)
    */
   @Override
   public Object getProperty( final QName property )
@@ -133,8 +124,6 @@ public class AbstractCachedFeature2 extends Feature_Impl
 
   /**
    * IMPORTANT: both getProperty implementations are overwritten.
-   * 
-   * @see org.kalypsodeegree_impl.model.feature.Feature_Impl#getProperty(org.kalypso.gmlschema.property.IPropertyType)
    */
   @Override
   public Object getProperty( final IPropertyType pt )
