@@ -75,7 +75,7 @@ public class DBFField
     m_formatter = createFormatter( type, fieldLength, decimalCount );
 
     if( m_decimalCount > 15 )
-      throw new DBaseException( "Deicmal count must be smaller than 16" );
+      throw new DBaseException( "Decimal count must be smaller than 16" );
 
     /* Validate arguments */
     if( fieldLength < 0 || fieldLength > 255 )
