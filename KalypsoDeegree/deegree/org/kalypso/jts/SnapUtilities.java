@@ -118,6 +118,23 @@ public class SnapUtilities
    */
   public static Point snapToLine( final LineString geometryJTS, final Geometry pointBuffer, final SNAP_TYPE type )
   {
+    /**
+     * FIXME: use JTS implementation, like:
+     * 
+     * <pre>
+     * final LengthIndexedLine lineIndex = new LengthIndexedLine( lineString );
+     * final double ptIndex = lineIndex.project( position.getCoordinate() );
+     * 
+     * final int intPtIndex = Double.valueOf( ptIndex ).intValue();
+     * final double diff = Math.abs( ptIndex - intPtIndex );
+     * 
+     * if( diff &lt; 0.1 || diff &gt; 0.9 )
+     *   return JTSConverter.toPoint( lineIndex.extractPoint( intPtIndex ) );
+     * 
+     * return JTSConverter.toPoint( lineIndex.extractPoint( ptIndex ) );
+     * </pre>
+     */
+
     try
     {
       if( type.equals( SNAP_TYPE.SNAP_TO_POINT ) )
@@ -138,6 +155,7 @@ public class SnapUtilities
       }
       else if( type.equals( SNAP_TYPE.SNAP_TO_LINE ) )
       {
+
         final LineString[] lineStrings = toLineString( pointBuffer.intersection( geometryJTS ) );
         final Map<Double, Point> map = new TreeMap<Double, Point>();
 

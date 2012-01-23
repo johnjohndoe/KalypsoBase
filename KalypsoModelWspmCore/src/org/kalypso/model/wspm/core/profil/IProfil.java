@@ -272,4 +272,5 @@ public interface IProfil extends IObservation<TupleResult>
 
   IProfileRecord findPreviousPoint( double breite );
 
+  IProfilPointMarker[] getPointMarkers( );
 }
