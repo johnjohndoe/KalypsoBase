@@ -122,16 +122,11 @@ public class SnapUtilities
      * FIXME: use JTS implementation, like:
      * 
      * <pre>
-     * final LengthIndexedLine lineIndex = new LengthIndexedLine( lineString );
-     * final double ptIndex = lineIndex.project( position.getCoordinate() );
+     * final LocationIndexedLine lineIndex = new LocationIndexedLine( lineString );
+     * final LinearLocation location = lineIndex.project( position.getCoordinate() );
+     * location.snapToVertex( lineString, 0.2 );
      * 
-     * final int intPtIndex = Double.valueOf( ptIndex ).intValue();
-     * final double diff = Math.abs( ptIndex - intPtIndex );
-     * 
-     * if( diff &lt; 0.1 || diff &gt; 0.9 )
-     *   return JTSConverter.toPoint( lineIndex.extractPoint( intPtIndex ) );
-     * 
-     * return JTSConverter.toPoint( lineIndex.extractPoint( ptIndex ) );
+     * return JTSConverter.toPoint( lineIndex.extractPoint( location ) );
      * </pre>
      */
 

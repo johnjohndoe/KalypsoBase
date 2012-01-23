@@ -58,9 +58,9 @@ import org.kalypsodeegree.model.feature.Feature;
 public class SelectedProfilesMapPanelListener implements ISelectionChangedListener
 {
 
-  private final ProfileSelectionWidget m_widget;
+  private final AbstractProfileSelectionWidget m_widget;
 
-  public SelectedProfilesMapPanelListener( final ProfileSelectionWidget widget )
+  public SelectedProfilesMapPanelListener( final AbstractProfileSelectionWidget widget )
   {
     m_widget = widget;
   }
@@ -74,7 +74,7 @@ public class SelectedProfilesMapPanelListener implements ISelectionChangedListen
     m_widget.onSelectionChange( profiles );
   }
 
-  IProfileFeature[] doSelection( final ISelection selection )
+  public IProfileFeature[] doSelection( final ISelection selection )
   {
     if( selection instanceof MapPanelSelection )
     {
