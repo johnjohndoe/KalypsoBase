@@ -71,11 +71,14 @@ public class FeatureCacheDefinition
   private void addToDirtyMap( final QName dependsOnName, final QName cachedProperty )
   {
     if( !m_dirtyMap.containsKey( dependsOnName ) )
-      m_dirtyMap.put( dependsOnName, new QName[] { cachedProperty } );
+      m_dirtyMap.put( dependsOnName, new QName[] {} );
 
     final QName[] dependencies = m_dirtyMap.get( dependsOnName );
-    final QName[] newDependencies = ArrayUtils.add( dependencies, cachedProperty );
-    m_dirtyMap.put( dependsOnName, newDependencies );
+    if( !ArrayUtils.contains( dependencies, cachedProperty ) )
+    {
+      final QName[] newDependencies = ArrayUtils.add( dependencies, cachedProperty );
+      m_dirtyMap.put( dependsOnName, newDependencies );
+    }
   }
 
   public QName[] getDirtyProperties( final QName changedProperty )

@@ -38,17 +38,15 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.view;
-
-import org.eclipse.ui.IViewPart;
-import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
-import org.kalypso.model.wspm.core.gml.IProfileProvider;
-import org.kalypso.ogc.gml.selection.IFeatureSelection;
+package org.kalypso.model.wspm.core.gml.validation;
 
 /**
- * @author kuch
+ * Constant definitions for plug-in preferences
  */
-public interface IProfileFeatureSelectionListener extends IViewPart, IAdapterEater<IFeatureSelection>
+public interface ValidationPreferenceConstants
 {
-  void handleProfilProviderChanged( final IProfileProvider provider );
+  String P_VALIDATE_PROFILE = "validateProfile"; //$NON-NLS-1$
+
+  String P_VALIDATE_RULES_TO_EXCLUDE = "validateRulesToApply"; //$NON-NLS-1$
+
 }

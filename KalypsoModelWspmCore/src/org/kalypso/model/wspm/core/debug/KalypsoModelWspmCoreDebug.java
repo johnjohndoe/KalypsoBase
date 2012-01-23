@@ -38,17 +38,19 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.view;
+package org.kalypso.model.wspm.core.debug;
 
-import org.eclipse.ui.IViewPart;
-import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
-import org.kalypso.model.wspm.core.gml.IProfileProvider;
-import org.kalypso.ogc.gml.selection.IFeatureSelection;
+import org.kalypso.contribs.eclipse.core.runtime.Debug;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 
 /**
- * @author kuch
+ * @author Gernot Belger
  */
-public interface IProfileFeatureSelectionListener extends IViewPart, IAdapterEater<IFeatureSelection>
+public final class KalypsoModelWspmCoreDebug
 {
-  void handleProfilProviderChanged( final IProfileProvider provider );
+  public static final Debug DEBUG_VALIDATION_MARKER = new Debug( KalypsoModelWspmCorePlugin.getDefault(), "/debug/validationMarkers" ); //$NON-NLS-1$
+
+  private KalypsoModelWspmCoreDebug( )
+  {
+  }
 }

@@ -123,10 +123,9 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
     m_control.setLayout( Layouts.createGridLayout() );
     createContent( m_control );
 
-    final IProfil profile = m_handler.getProfile();
     final IProfileProvider profileFeature = m_handler.getProfileFeature();
 
-    handleProfilProviderChanged( profileFeature, null, profile );
+    handleProfilProviderChanged( profileFeature );
   }
 
   @Override
@@ -201,9 +200,11 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
   }
 
   @Override
-  public void handleProfilProviderChanged( final IProfileProvider provider, final IProfil oldProfile, final IProfil newProfile )
+  public void handleProfilProviderChanged( final IProfileProvider provider )
   {
     setPartNames( Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_1" ), Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    final IProfil newProfile = provider == null ? null : provider.getProfil();
 
     if( newProfile == null )
     {
@@ -270,7 +271,7 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
       }
     };
 
-    display.syncExec( runnable );
+    display.asyncExec( runnable );
   }
 
   private void setPartNames( final String partName, final String tooltip )

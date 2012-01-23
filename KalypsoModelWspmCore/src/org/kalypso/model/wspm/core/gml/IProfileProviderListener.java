@@ -40,12 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
-
 /**
  * @author Gernot Belger
  */
 public interface IProfileProviderListener
 {
-  void onProfilProviderChanged( final IProfileProvider provider, final IProfil oldProfile, final IProfil newProfile );
+  void onProfilProviderChanged( final IProfileProvider provider );
 }

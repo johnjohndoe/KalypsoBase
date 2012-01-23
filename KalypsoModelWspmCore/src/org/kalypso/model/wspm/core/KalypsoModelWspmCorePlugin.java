@@ -8,6 +8,9 @@ import org.osgi.framework.BundleContext;
 
 public class KalypsoModelWspmCorePlugin extends Plugin
 {
+
+  public static final String MARKER_ID = "org.kalypso.model.wspm.ui.profilemarker"; //$NON-NLS-1$
+
   /** The shared instance. */
   private static KalypsoModelWspmCorePlugin PLUGIN;
 

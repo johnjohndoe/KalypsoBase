@@ -83,18 +83,32 @@ public class AbstractCachedFeature2 extends Feature_Impl
 
   private void setDirty( final QName changedProperty )
   {
-    final QName[] dirtyQName = m_cacheDefinition.getDirtyProperties( changedProperty );
-    for( final QName dirtyName : dirtyQName )
+    final QName[] cachedProperties = m_cacheDefinition.getDirtyProperties( changedProperty );
+    for( final QName cachedProperty : cachedProperties )
     {
-      m_dirty.add( dirtyName );
+      m_dirty.add( cachedProperty );
 
-      final IPropertyType property = getFeatureType().getProperty( dirtyName );
+      final IPropertyType property = getFeatureType().getProperty( cachedProperty );
       if( property instanceof IValuePropertyType )
       {
         if( ((IValuePropertyType) property).isGeometry() )
           setEnvelopesUpdated();
       }
     }
+
+    dirtyChanged( cachedProperties );
+
+    // TODO: firePropertyChange for dirty properties...
+  }
+
+  /**
+   * Allows implementors to react to dirty changes to cached properties.<br/>
+   * 
+   * @param cachedProperties
+   *          The properties that got dirty and need to be recalculated next time getProperty is called.
+   */
+  protected void dirtyChanged( @SuppressWarnings("unused") final QName[] cachedProperties )
+  {
   }
 
   @Override
