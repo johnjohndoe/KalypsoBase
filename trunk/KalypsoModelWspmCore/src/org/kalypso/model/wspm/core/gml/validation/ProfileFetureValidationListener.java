@@ -64,7 +64,7 @@ public class ProfileFetureValidationListener implements IProfileProviderListener
 
   public ProfileFetureValidationListener( final IProfileFeature feature )
   {
-    final Job job = new Job( "" )
+    final Job job = new Job( "Registering initial profile validation listener" )
     {
       @Override
       protected IStatus run( final IProgressMonitor monitor )

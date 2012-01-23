@@ -83,9 +83,6 @@ public class FeatureComponent extends AbstractComponent
     this( itemDef, null );
   }
 
-  /**
-   * @see org.kalypso.observation.result.IComponent#getDefaultValue()
-   */
   @Override
   public Object getDefaultValue( )
   {
@@ -112,18 +109,12 @@ public class FeatureComponent extends AbstractComponent
     return NamedFeatureHelper.getDescription( m_itemDef );
   }
 
-  /**
-   * @see org.kalypso.observation.result.IComponent#getFrame()
-   */
   @Override
   public String getFrame( )
   {
     return getRepresentationType().getFrame();
   }
 
-  /**
-   * @see org.kalypso.observation.result.IComponent#getId()
-   */
   @Override
   public String getId( )
   {
@@ -176,36 +167,24 @@ public class FeatureComponent extends AbstractComponent
     return (RepresentationType) m_itemDef.getProperty( ObservationFeatureFactory.SWE_REPRESENTATION );
   }
 
-  /**
-   * @see org.kalypso.observation.result.IComponent#getUnit()
-   */
   @Override
   public String getUnit( )
   {
     return getRepresentationType().getUnit();
   }
 
-  /**
-   * @see org.kalypso.observation.result.IComponent#getValueTypeName()
-   */
   @Override
   public QName getValueTypeName( )
   {
     return getRepresentationType().getValueTypeName();
   }
 
-  /**
-   * @see org.kalypso.observation.result.IComponent#getRestrictions()
-   */
   @Override
   public IRestriction[] getRestrictions( )
   {
     return getRepresentationType().getRestrictions();
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {

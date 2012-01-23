@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml.validation;
 
+import java.text.DateFormat;
+import java.util.Calendar;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -53,6 +56,7 @@ import org.eclipse.ui.progress.IProgressConstants;
 import org.joda.time.DateTime;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
+import org.kalypso.model.wspm.core.debug.KalypsoModelWspmCoreDebug;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
@@ -92,14 +96,15 @@ public class ValidationProfilListener implements IProfilListener
           // TODO: only reset markers of this profile
           collector.reset( featureID );
 
-          System.out.println( "(validation_performance_check)    startValidation :" + DateTime.now().toString( "mm:ss:" ) + DateTime.now().getMillisOfSecond() );
+          KalypsoModelWspmCoreDebug.DEBUG_VALIDATION_MARKER.printf( " (validation_performance_check)    startValidation : %s\n", DateFormat.getTimeInstance().format( Calendar.getInstance().getTime() ) );
 
           // TODO: use monitor and check for cancel
-          final IStatus status = rules.validateProfile( profile, collector, validate, excludes.split( ";" ) ); //$NON-NLS-1$
+          final IStatus status = rules.validateProfile( profile, collector, validate, excludes.split( ";" ), monitor ); //$NON-NLS-1$
 
           final IMarker[] markers = collector.getMarkers();
           profile.setProblemMarker( markers );
-          System.out.println( "(validation_performance_check)    endValidation :" + DateTime.now().toString( "mm:ss:" ) + DateTime.now().getMillisOfSecond() );
+
+          KalypsoModelWspmCoreDebug.DEBUG_VALIDATION_MARKER.printf( " (validation_performance_check)    endValidation : %s\n", DateFormat.getTimeInstance().format( Calendar.getInstance().getTime() ) );
 
           return status;
         }
