@@ -17,6 +17,7 @@ import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.model.wspm.ui.action.base.ProfilePainter;
 import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.advanced.utils.SLDPainter;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -51,7 +52,7 @@ public class ProfileSelectionWidget extends AbstractProfileSelectionWidget
 
     reset();
 
-    /* Init the cursor. */
+    /* init the cursor. */
     final Cursor cursor = Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR );
     mapPanel.setCursor( cursor );
   }
@@ -78,18 +79,16 @@ public class ProfileSelectionWidget extends AbstractProfileSelectionWidget
       final IProfil profile = getSelectedProfile().getProfil();
       final IRangeSelection selection = profile.getSelection();
 
-      final double breite = Profiles.getWidth( profile, m_snapPoint );
+      final double pn = Profiles.getWidth( profile, m_snapPoint );
 
       if( isShiftKeyPressed() )
       {
-        final Range<Double> range = selection.getRange();
-        final Double p0 = range.getMinimum();
-
-        selection.setRange( Range.between( p0, breite ) );
+        final double p0 = Profiles.getWidth( profile, m_p0 );
+        selection.setRange( Range.between( p0, pn ) );
       }
       else
       {
-        selection.setRange( Range.is( breite ) );
+        selection.setRange( Range.is( pn ) );
       }
 
     }
@@ -102,12 +101,17 @@ public class ProfileSelectionWidget extends AbstractProfileSelectionWidget
   @Override
   public void leftPressed( final Point p )
   {
+    if( !isShiftKeyPressed() )
+      m_p0 = m_snapPoint;
+
     updateSelection();
   }
 
+  private boolean m_shift = false;
+
   private com.vividsolutions.jts.geom.Point m_snapPoint;
 
-  private boolean m_shift = false;
+  private com.vividsolutions.jts.geom.Point m_p0;
 
   @Override
   public void paint( final Graphics g )
@@ -169,7 +173,7 @@ public class ProfileSelectionWidget extends AbstractProfileSelectionWidget
         else if( geometry instanceof LineString )
         {
           final LineString lineString = (LineString) geometry;
-          final Geometry selectionGeometry = lineString.buffer( 2.0 );
+          final Geometry selectionGeometry = lineString.buffer( MapUtilities.calculateWorldDistance( getMapPanel(), 8 ) );
 
           painter.paint( g, getClass().getResource( "symbolization/selection.line.sld" ), selectionGeometry ); //$NON-NLS-1$
         }
@@ -228,10 +232,9 @@ public class ProfileSelectionWidget extends AbstractProfileSelectionWidget
   {
     final LocationIndexedLine lineIndex = new LocationIndexedLine( lineString );
     final LinearLocation location = lineIndex.project( position.getCoordinate() );
-    location.snapToVertex( lineString, 0.2 );
+    location.snapToVertex( lineString, MapUtilities.calculateWorldDistance( getMapPanel(), 10 ) );
 
     return JTSConverter.toPoint( lineIndex.extractPoint( location ) );
-
   }
 
   @Override
@@ -243,7 +246,6 @@ public class ProfileSelectionWidget extends AbstractProfileSelectionWidget
       case KeyEvent.VK_SHIFT:
         m_shift = true;
         break;
-
     }
   }
 
@@ -267,5 +269,4 @@ public class ProfileSelectionWidget extends AbstractProfileSelectionWidget
   {
     return m_shift;
   }
-
 }
