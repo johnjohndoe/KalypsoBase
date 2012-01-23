@@ -743,4 +743,19 @@ public abstract class AbstractProfil implements IProfil
   {
     return ProfileVisitors.findPreviousPoint( this, breite );
   }
+
+  @Override
+  public IProfilPointMarker[] getPointMarkers( )
+  {
+    final Set<IProfilPointMarker> markers = new LinkedHashSet<>();
+
+    final IComponent[] types = getPointMarkerTypes();
+    for( final IComponent type : types )
+    {
+      Collections.addAll( markers, getPointMarkerFor( type ) );
+    }
+
+    return markers.toArray( new IProfilPointMarker[] {} );
+  }
+
 }

@@ -5,19 +5,22 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
+import java.net.URL;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.Range;
+import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.jts.JTSConverter;
 import org.kalypso.jts.JTSUtilities;
-import org.kalypso.jts.SnapUtilities;
-import org.kalypso.jts.SnapUtilities.SNAP_TYPE;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
@@ -35,6 +38,7 @@ import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.linearref.LengthIndexedLine;
 
 /**
  * @author Dirk Kuch
@@ -152,9 +156,34 @@ public class ProfileSelectionWidget extends AbstractWidget
 
     doPaintProfilePoints( g, painter );
     doPaintSelection( g, painter );
+    doPaintPointMarkers( g, painter );
     doPaintSnapPoint( g, painter );
 
     paintTooltip( g );
+  }
+
+  private void doPaintPointMarkers( final Graphics g, final SLDPainter painter )
+  {
+    if( Objects.isNull( m_profile ) )
+      return;
+
+    final IProfil profile = m_profile.getProfil();
+    final IProfilPointMarkerProvider provider = KalypsoModelWspmCoreExtensions.getMarkerProviders( profile.getType() );
+
+    final IProfilPointMarker[] markers = profile.getPointMarkers();
+    for( final IProfilPointMarker marker : markers )
+    {
+      try
+      {
+        final URL sld = provider.getSld( marker.getComponent().getId() );
+        painter.paint( g, sld, marker.getPoint().getCoordinate() );
+      }
+      catch( final CoreException e )
+      {
+        e.printStackTrace();
+      }
+    }
+
   }
 
   private void paintTooltip( final Graphics g )
@@ -181,7 +210,6 @@ public class ProfileSelectionWidget extends AbstractWidget
     }
     catch( final GM_Exception e )
     {
-      e.printStackTrace();
     }
 
     return super.getToolTip();
@@ -234,7 +262,7 @@ public class ProfileSelectionWidget extends AbstractWidget
         else if( geometry instanceof LineString )
         {
           final LineString lineString = (LineString) geometry;
-          final Geometry selectionGeometry = lineString.buffer( 3.0 );
+          final Geometry selectionGeometry = lineString.buffer( 2.0 );
 
           painter.paint( g, getClass().getResource( "symbolization/selection.line.sld" ), selectionGeometry ); //$NON-NLS-1$
         }
@@ -281,11 +309,7 @@ public class ProfileSelectionWidget extends AbstractWidget
       if( Objects.isNull( m_profile ) )
         return;
 
-      final LineString lineString = m_profile.getJtsLine();
-
-      m_snapPoint = SnapUtilities.snapToLine( lineString, position.buffer( 2 ), SNAP_TYPE.SNAP_TO_POINT );
-      if( Objects.isNull( m_snapPoint ) )
-        m_snapPoint = SnapUtilities.snapToLine( lineString, position.buffer( lineString.getCentroid().distance( position ) + 1.0 ), SNAP_TYPE.SNAP_TO_LINE );
+      m_snapPoint = getSnapPoint( m_profile.getJtsLine(), position );
 
       if( Objects.isNull( m_snapPoint ) )
         return;
@@ -296,6 +320,21 @@ public class ProfileSelectionWidget extends AbstractWidget
     {
       e.printStackTrace();
     }
+  }
+
+  private com.vividsolutions.jts.geom.Point getSnapPoint( final LineString lineString, final com.vividsolutions.jts.geom.Point position )
+  {
+    final LengthIndexedLine lineIndex = new LengthIndexedLine( lineString );
+    final double ptIndex = lineIndex.project( position.getCoordinate() );
+
+    final int intPtIndex = Double.valueOf( ptIndex ).intValue();
+    final double diff = Math.abs( ptIndex - intPtIndex );
+
+    if( diff < 0.1 || diff > 0.9 )
+      return JTSConverter.toPoint( lineIndex.extractPoint( intPtIndex ) );
+
+    return JTSConverter.toPoint( lineIndex.extractPoint( ptIndex ) );
+
   }
 
   private IProfileFeature findClosestProfile( final com.vividsolutions.jts.geom.Point point )
