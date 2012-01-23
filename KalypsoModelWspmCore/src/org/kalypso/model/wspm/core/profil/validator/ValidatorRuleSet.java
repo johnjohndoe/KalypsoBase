@@ -40,15 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.validator;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
-import org.joda.time.DateTime;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
+import org.kalypso.model.wspm.core.debug.KalypsoModelWspmCoreDebug;
 import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 
@@ -66,34 +71,42 @@ public class ValidatorRuleSet
     m_rules = rules;
   }
 
-  public IStatus validateProfile( final IProfil profil, final IValidatorMarkerCollector collector, final boolean validate, final String[] excludeIDs )
+  public IStatus validateProfile( final IProfil profil, final IValidatorMarkerCollector collector, final boolean validate, final String[] excludeIDs, final IProgressMonitor monitor )
   {
     final IValidatorRule[] rules = m_rules;
+    if( Objects.isNull( validate, rules ) )
+      return Status.OK_STATUS;
+
     final List<IStatus> stati = new ArrayList<IStatus>();
     final List<String> excludeRules = java.util.Arrays.asList( excludeIDs );
 
-    if( validate && rules != null )
+    monitor.beginTask( "Validating profile", ArrayUtils.getLength( rules ) );
+
+    for( final IValidatorRule rule : rules )
     {
-      for( final IValidatorRule r : rules )
+      if( monitor.isCanceled() )
+        return Status.CANCEL_STATUS;
+
+      if( !excludeRules.contains( rule.getID() ) )
       {
-        if( !excludeRules.contains( r.getID() ) )
+        try
         {
-          try
-          {
-            System.out.print( "(validation_performance_check)        rule: " + r.getID() + "start: " + DateTime.now().toString( "mm:ss:" ) + DateTime.now().getMillisOfSecond() );
+          KalypsoModelWspmCoreDebug.DEBUG_VALIDATION_MARKER.printf( " (validation_performance_check)    rule: %s, %s\n", rule.getID(), DateFormat.getTimeInstance().format( Calendar.getInstance().getTime() ) );
 
-            r.validate( profil, collector );
+          rule.validate( profil, collector );
 
-            System.out.println( " end: " + DateTime.now().toString( "mm:ss:" ) + DateTime.now().getMillisOfSecond() );
-
-          }
-          catch( final CoreException e )
-          {
-            stati.add( e.getStatus() );
-          }
+          KalypsoModelWspmCoreDebug.DEBUG_VALIDATION_MARKER.printf( " end: %s, %s\n", rule.getID(), DateFormat.getTimeInstance().format( Calendar.getInstance().getTime() ) );
+        }
+        catch( final CoreException e )
+        {
+          stati.add( e.getStatus() );
         }
       }
+
+      monitor.worked( 1 );
     }
+
+    monitor.done();
 
     if( stati.size() == 0 )
       return Status.OK_STATUS;
