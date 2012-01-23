@@ -100,7 +100,19 @@ public class ProfileSelectionWidget extends AbstractWidget
       final IRangeSelection selection = profile.getSelection();
 
       final double breite = Profiles.getWidth( m_profile.getProfil(), m_snapPoint );
-      selection.setRange( Range.is( breite ) );
+
+      if( isShiftKeyPressed() )
+      {
+        final Range<Double> range = selection.getRange();
+        final Double p0 = range.getMinimum();
+
+        selection.setRange( Range.between( p0, breite ) );
+      }
+      else
+      {
+        selection.setRange( Range.is( breite ) );
+      }
+
     }
     catch( final GM_Exception e )
     {
@@ -125,6 +137,8 @@ public class ProfileSelectionWidget extends AbstractWidget
   private com.vividsolutions.jts.geom.Point m_snapPoint;
 
   private IProfileFeature m_profile;
+
+  private boolean m_shift = false;
 
   @Override
   public void paint( final Graphics g )
@@ -262,35 +276,37 @@ public class ProfileSelectionWidget extends AbstractWidget
   }
 
   @Override
+  public void keyPressed( final KeyEvent e )
+  {
+    final int keyCode = e.getKeyCode();
+    switch( keyCode )
+    {
+      case KeyEvent.VK_SHIFT:
+        m_shift = true;
+        break;
+
+    }
+  }
+
+  @Override
   public void keyReleased( final KeyEvent e )
   {
     final int keyCode = e.getKeyCode();
     switch( keyCode )
     {
       case KeyEvent.VK_ESCAPE:
-// activate( getCommandTarget(), getMapPanel() );
-// repaintMap();
+        finish();
         break;
 
-      case KeyEvent.VK_BACK_SPACE:
-// if( m_strategy != null )
-// {
-// m_strategy.removeLastPoint();
-// repaintMap();
-// }
-        break;
-
-      case KeyEvent.VK_SPACE:
-// m_strategyExtendProfile = !m_strategyExtendProfile;
-// final IDialogSettings settings = getSettings();
-// if( settings != null )
-// {
-// settings.put( SETTINGS_MODE, m_strategyExtendProfile );
-// }
-// activate( getCommandTarget(), getMapPanel() );
-// repaintMap();
+      case KeyEvent.VK_SHIFT:
+        m_shift = false;
         break;
     }
+  }
+
+  protected boolean isShiftKeyPressed( )
+  {
+    return m_shift;
   }
 
   private final IProfilListener m_listener = new IProfilListener()

@@ -103,8 +103,6 @@ public abstract class AbstractKeyListenerWidget extends AbstractWidget
 
   /**
    * Escape Key pressed? -> reset / deactivate widget
-   * 
-   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#keyReleased(java.awt.event.KeyEvent)
    */
   @Override
   public void keyReleased( final KeyEvent e )
@@ -122,9 +120,6 @@ public abstract class AbstractKeyListenerWidget extends AbstractWidget
     super.keyPressed( e );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
-   */
   @Override
   public void moved( final Point p )
   {
@@ -138,9 +133,6 @@ public abstract class AbstractKeyListenerWidget extends AbstractWidget
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#dragged(java.awt.Point)
-   */
   @Override
   public void dragged( final java.awt.Point p )
   {

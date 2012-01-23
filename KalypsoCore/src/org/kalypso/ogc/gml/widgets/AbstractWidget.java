@@ -83,10 +83,6 @@ public abstract class AbstractWidget implements IWidget
     m_parameter = null;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#activate(org.kalypso.commons.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.map.MapPanel)
-   */
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
@@ -94,9 +90,6 @@ public abstract class AbstractWidget implements IWidget
     m_mapPanel = mapPanel;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilderExtensionProvider#setCursor(java.awt.Cursor)
-   */
   public void setCursor( final Cursor cursor )
   {
     final IMapPanel mapPanel = getMapPanel();
@@ -104,9 +97,6 @@ public abstract class AbstractWidget implements IWidget
       mapPanel.setCursor( cursor );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#setSelection(org.kalypso.ogc.gml.selection.IFeatureSelection)
-   */
   @Override
   public void setSelection( final ISelection selection )
   {
