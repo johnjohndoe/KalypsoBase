@@ -3,11 +3,18 @@ package org.kalypso.model.wspm.core.gml;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.KeyInfo;
@@ -16,6 +23,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
+import org.kalypso.model.wspm.core.gml.validation.ProfileFetureValidationListener;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
@@ -23,6 +31,7 @@ import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.ProfileObjectFactory;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.result.ProfileAndResults;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
@@ -50,7 +59,7 @@ import com.vividsolutions.jts.geom.LineString;
 public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IProfileFeature
 {
   // HACK: we define a pseudo qname that simulates a property. We use this property to cache the generated IProfil.
-  private static final QName QNAME_PSEUDO_PROFILE = new QName( "--", "--" ); //$NON-NLS-1$ //$NON-NLS-2$
+  private static final QName PROPERTY_PSEUDO_PROFILE = new QName( "--", "--" ); //$NON-NLS-1$ //$NON-NLS-2$
 
   private static final FeatureCacheDefinition CACHE_DEFINITION = new FeatureCacheDefinition();
   static
@@ -60,13 +69,13 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     CACHE_DEFINITION.addCachedProperty( QN_PROPERTY_LINE, ObservationFeatureFactory.OM_RESULT );
     CACHE_DEFINITION.addCachedProperty( QN_PROPERTY_LINE, ObservationFeatureFactory.OM_RESULTDEFINITION );
 
-    CACHE_DEFINITION.addCachedProperty( QNAME_PSEUDO_PROFILE, QN_NAME );
-    CACHE_DEFINITION.addCachedProperty( QNAME_PSEUDO_PROFILE, QN_DESCRIPTION );
-    CACHE_DEFINITION.addCachedProperty( QNAME_PSEUDO_PROFILE, QN_PROPERTY_SRS );
-    CACHE_DEFINITION.addCachedProperty( QNAME_PSEUDO_PROFILE, QN_PROFILE );
-    CACHE_DEFINITION.addCachedProperty( QNAME_PSEUDO_PROFILE, ObservationFeatureFactory.OM_RESULT );
-    CACHE_DEFINITION.addCachedProperty( QNAME_PSEUDO_PROFILE, ObservationFeatureFactory.OM_RESULTDEFINITION );
-    CACHE_DEFINITION.addCachedProperty( QNAME_PSEUDO_PROFILE, QN_PROPERTY_OBS_MEMBERS );
+    CACHE_DEFINITION.addCachedProperty( PROPERTY_PSEUDO_PROFILE, QN_NAME );
+    CACHE_DEFINITION.addCachedProperty( PROPERTY_PSEUDO_PROFILE, QN_DESCRIPTION );
+    CACHE_DEFINITION.addCachedProperty( PROPERTY_PSEUDO_PROFILE, QN_PROPERTY_SRS );
+    CACHE_DEFINITION.addCachedProperty( PROPERTY_PSEUDO_PROFILE, QN_PROFILE );
+    CACHE_DEFINITION.addCachedProperty( PROPERTY_PSEUDO_PROFILE, ObservationFeatureFactory.OM_RESULT );
+    CACHE_DEFINITION.addCachedProperty( PROPERTY_PSEUDO_PROFILE, ObservationFeatureFactory.OM_RESULTDEFINITION );
+    CACHE_DEFINITION.addCachedProperty( PROPERTY_PSEUDO_PROFILE, QN_PROPERTY_OBS_MEMBERS );
   }
 
   private final IProfilListener m_profilListener = new IProfilListener()
@@ -83,17 +92,35 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     }
   };
 
+  private final Job m_profilListenerJob = new Job( "Inform profile provider listeners" ) //$NON-NLS-1$
+  {
+    @Override
+    protected IStatus run( final IProgressMonitor monitor )
+    {
+      fireProfileChanged();
+      return Status.OK_STATUS;
+    }
+  };
+
+  private final Set<IProfileProviderListener> m_listeners = new HashSet<>( 5 );
+
   private IFeatureBindingCollection<Image> m_images = null;
+
+  protected ProfileFetureValidationListener m_validator;
 
   public ProfileFeatureBinding( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues, CACHE_DEFINITION );
+
+    m_profilListenerJob.setUser( false );
+    m_profilListenerJob.setSystem( true );
+
   }
 
   @Override
   protected Object recalculateProperty( final QName property, final Object oldValue )
   {
-    if( property == QNAME_PSEUDO_PROFILE )
+    if( property == PROPERTY_PSEUDO_PROFILE )
       return createProfile( (IProfil) oldValue );
 
     if( property.equals( QN_PROPERTY_LINE ) )
@@ -106,20 +133,27 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
   {
     try
     {
-      if( oldProfile != null )
+      if( Objects.isNotNull( oldProfile ) )
         oldProfile.removeProfilListener( m_profilListener );
 
       final IProfil profile = toProfile();
 
-      if( profile != null )
-        // TODO: validation
+      if( Objects.isNotNull( profile ) )
+      {
+        if( Objects.isNull( m_validator ) ) // "late binding"
+        {
+          m_validator = new ProfileFetureValidationListener( this );
+          addProfilProviderListener( m_validator );
+        }
+
         profile.addProfilListener( m_profilListener );
+      }
 
       return profile;
     }
-    catch( final Exception e )
+    catch( final Exception ex )
     {
-      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      final IStatus status = StatusUtilities.statusFromThrowable( ex );
       KalypsoModelWspmCorePlugin.getDefault().getLog().log( status );
 
       return null;
@@ -141,7 +175,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
   @Override
   public IProfil getProfil( )
   {
-    return getProperty( QNAME_PSEUDO_PROFILE, IProfil.class );
+    return getProperty( PROPERTY_PSEUDO_PROFILE, IProfil.class );
   }
 
   @Override
@@ -325,53 +359,26 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     return profileLineString;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.gml.IProfileProvider#addProfilProviderListener(org.kalypso.model.wspm.core.gml.IProfileProviderListener)
-   */
-  @Override
-  public void addProfilProviderListener( final IProfileProviderListener l )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.gml.IProfileProvider#removeProfilProviderListener(org.kalypso.model.wspm.core.gml.IProfileProviderListener)
-   */
-  @Override
-  public void removeProfilProviderListener( final IProfileProviderListener l )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.gml.IProfileProvider#dispose()
-   */
   @Override
   public void dispose( )
   {
-    // TODO Auto-generated method stub
-
+    m_profilListenerJob.cancel();
+    m_listeners.clear();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.gml.IProfileProvider#getResult()
-   */
   @Override
   public Object getResult( )
   {
-    // FIXME
-    // final ProfileAndResults profileAndResults = ProfileAndResults.search( fs );
+    // HACK: If type not set, force it to be the tuhh-profile. We need this, as tuhh-profile are created via
+    // the gml-tree which knows nothing about profiles... Everyone else should create profile programatically
+    // and directly set the preferred type.
+    if( getProfileType() == null )
+    {
+      setProfileType( "org.kalypso.model.wspm.tuhh.profiletype" ); //$NON-NLS-1$
+    }
 
-    // TODO Auto-generated method stub
-    return null;
+    return ProfileAndResults.findResultNode( this );
   }
-
-  // Validation
-// final CommandableWorkspace workspace = profileAndResults.getWorkspace();
-// final URL workspaceContext = workspace == null ? null : workspace.getContext();
-// m_file = workspaceContext == null ? null : ResourceUtilities.findFileFromURL( workspaceContext );
 
   protected void handleCachedProfileChanged( final ProfilChangeHint hint )
   {
@@ -419,5 +426,36 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     }
 
     return null;
+  }
+
+  @Override
+  protected void dirtyChanged( final QName[] cachedProperties )
+  {
+    if( ArrayUtils.contains( cachedProperties, PROPERTY_PSEUDO_PROFILE ) )
+    {
+      m_profilListenerJob.cancel();
+      m_profilListenerJob.schedule( 100 );
+    }
+  }
+
+  @Override
+  public void addProfilProviderListener( final IProfileProviderListener l )
+  {
+    m_listeners.add( l );
+  }
+
+  @Override
+  public void removeProfilProviderListener( final IProfileProviderListener l )
+  {
+    m_listeners.remove( l );
+  }
+
+  protected synchronized void fireProfileChanged( )
+  {
+    final IProfileProviderListener[] ls = m_listeners.toArray( new IProfileProviderListener[m_listeners.size()] );
+    for( final IProfileProviderListener l : ls )
+    {
+      l.onProfilProviderChanged( this );
+    }
   }
 }

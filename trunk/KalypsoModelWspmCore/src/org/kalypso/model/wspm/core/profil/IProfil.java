@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.core.profil;
 
 import org.apache.commons.lang3.Range;
 import org.eclipse.core.resources.IMarker;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecordVisitor;
@@ -186,7 +187,7 @@ public interface IProfil extends IObservation<TupleResult>
   /**
    * @return source of the profile
    */
-  Object getSource( );
+  IProfileFeature getSource( );
 
   double getStation( );
 

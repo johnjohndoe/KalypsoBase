@@ -61,6 +61,7 @@ import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
@@ -113,11 +114,11 @@ public abstract class AbstractProfil implements IProfil
 
   private MarkerIndex m_markerIndex;
 
-  private final Object m_source;
+  private final IProfileFeature m_source;
 
   private final RangeSelection m_selection;
 
-  public AbstractProfil( final String type, final TupleResult result, final Object source )
+  public AbstractProfil( final String type, final TupleResult result, final IProfileFeature source )
   {
     m_type = type;
     m_source = source;
@@ -133,7 +134,7 @@ public abstract class AbstractProfil implements IProfil
   }
 
   @Override
-  public Object getSource( )
+  public IProfileFeature getSource( )
   {
     return m_source;
   }

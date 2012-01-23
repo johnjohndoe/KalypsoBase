@@ -78,9 +78,9 @@ public class ProfileFeatureSeletionHandler
   private final IProfileProviderListener m_providerListener = new IProfileProviderListener()
   {
     @Override
-    public void onProfilProviderChanged( final IProfileProvider provider, final IProfil oldProfile, final IProfil newProfile )
+    public void onProfilProviderChanged( final IProfileProvider provider )
     {
-      m_part.handleProfilProviderChanged( provider, oldProfile, newProfile );
+      m_part.handleProfilProviderChanged( provider );
     }
   };
 
@@ -131,7 +131,7 @@ public class ProfileFeatureSeletionHandler
     if( m_profileFeature != null )
       m_profileFeature.addProfilProviderListener( m_providerListener );
 
-    m_part.handleProfilProviderChanged( m_profileFeature, null, m_profileFeature == null ? null : m_profileFeature.getProfil() );
+    m_part.handleProfilProviderChanged( m_profileFeature );
   }
 
   public void dispose( )

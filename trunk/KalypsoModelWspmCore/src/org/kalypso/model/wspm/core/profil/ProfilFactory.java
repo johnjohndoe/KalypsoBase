@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.core.profil;
 
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
@@ -62,7 +63,7 @@ public final class ProfilFactory
     return provider.createProfil();
   }
 
-  public static IProfil createProfil( final String type, final IObservation<TupleResult> observation, final Object source )
+  public static IProfil createProfil( final String type, final IObservation<TupleResult> observation, final IProfileFeature source )
   {
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( type );
     Assert.isNotNull( provider, Messages.getString( "org.kalypso.model.wspm.core.profil.ProfilFactory.0", type ) ); //$NON-NLS-1$

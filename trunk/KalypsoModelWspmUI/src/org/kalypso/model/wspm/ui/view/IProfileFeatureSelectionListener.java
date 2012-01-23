@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.ui.view;
 import org.eclipse.ui.IViewPart;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.model.wspm.core.gml.IProfileProvider;
-import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 
 /**
@@ -51,5 +50,5 @@ import org.kalypso.ogc.gml.selection.IFeatureSelection;
  */
 public interface IProfileFeatureSelectionListener extends IViewPart, IAdapterEater<IFeatureSelection>
 {
-  void handleProfilProviderChanged( final IProfileProvider provider, final IProfil oldProfile, final IProfil newProfile );
+  void handleProfilProviderChanged( final IProfileProvider provider );
 }

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.profil.validation;
+package org.kalypso.model.wspm.core.gml.validation;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -51,14 +51,13 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.progress.IProgressConstants;
 import org.joda.time.DateTime;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.core.profil.validator.ValidatorRuleSet;
-import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.model.wspm.ui.preferences.PreferenceConstants;
 
 /**
  * Profil-listener which repairs and validates the profile, each time it changes.
@@ -77,14 +76,14 @@ public class ValidationProfilListener implements IProfilListener
 
     final ValidatorRuleSet rules = KalypsoModelWspmCorePlugin.getValidatorSet( profiletype );
 
-    m_validateJob = new WorkspaceJob( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.validation.ValidationProfilListener.0" ) ) //$NON-NLS-1$
+    m_validateJob = new WorkspaceJob( "Querprofil wird validiert" )
     {
       @Override
       public IStatus runInWorkspace( final IProgressMonitor monitor )
       {
-        final IPreferenceStore preferenceStore = KalypsoModelWspmUIPlugin.getDefault().getPreferenceStore();
-        final boolean validate = preferenceStore.getBoolean( PreferenceConstants.P_VALIDATE_PROFILE );
-        final String excludes = preferenceStore.getString( PreferenceConstants.P_VALIDATE_RULES_TO_EXCLUDE );
+        final IPreferenceStore preferenceStore = KalypsoCorePlugin.getDefault().getPreferenceStore();
+        final boolean validate = preferenceStore.getBoolean( ValidationPreferenceConstants.P_VALIDATE_PROFILE );
+        final String excludes = preferenceStore.getString( ValidationPreferenceConstants.P_VALIDATE_RULES_TO_EXCLUDE );
 
         final IValidatorMarkerCollector collector = new ResourceValidatorMarkerCollector( file, editorID, "" + profile.getStation(), featureID ); //$NON-NLS-1$
 
@@ -93,9 +92,9 @@ public class ValidationProfilListener implements IProfilListener
           // TODO: only reset markers of this profile
           collector.reset( featureID );
 
-          // TODO: use monitor and check for cancel
           System.out.println( "(validation_performance_check)    startValidation :" + DateTime.now().toString( "mm:ss:" ) + DateTime.now().getMillisOfSecond() );
 
+          // TODO: use monitor and check for cancel
           final IStatus status = rules.validateProfile( profile, collector, validate, excludes.split( ";" ) ); //$NON-NLS-1$
 
           final IMarker[] markers = collector.getMarkers();
@@ -112,6 +111,8 @@ public class ValidationProfilListener implements IProfilListener
         }
       }
     };
+
+    m_validateJob.setSystem( true );
     m_validateJob.setRule( file.getWorkspace().getRuleFactory().markerRule( file ) );
     m_validateJob.setProperty( IProgressConstants.NO_IMMEDIATE_ERROR_PROMPT_PROPERTY, Boolean.TRUE );
 
@@ -120,21 +121,21 @@ public class ValidationProfilListener implements IProfilListener
       @Override
       public void propertyChange( final PropertyChangeEvent event )
       {
-        if( PreferenceConstants.P_VALIDATE_PROFILE.equals( event.getProperty() ) || PreferenceConstants.P_VALIDATE_RULES_TO_EXCLUDE.equals( event.getProperty() ) )
+        if( ValidationPreferenceConstants.P_VALIDATE_PROFILE.equals( event.getProperty() ) || ValidationPreferenceConstants.P_VALIDATE_RULES_TO_EXCLUDE.equals( event.getProperty() ) )
         {
           revalidate(); // TODO: validate all profiles... in that case!
         }
       }
     };
 
-    KalypsoModelWspmUIPlugin.getDefault().getPreferenceStore().addPropertyChangeListener( m_propertyListener );
+    KalypsoCorePlugin.getDefault().getPreferenceStore().addPropertyChangeListener( m_propertyListener );
 
     revalidate();
   }
 
   public void dispose( )
   {
-    KalypsoModelWspmUIPlugin.getDefault().getPreferenceStore().removePropertyChangeListener( m_propertyListener );
+    KalypsoCorePlugin.getDefault().getPreferenceStore().removePropertyChangeListener( m_propertyListener );
   }
 
   protected void revalidate( )
@@ -147,12 +148,9 @@ public class ValidationProfilListener implements IProfilListener
   @Override
   public void onProfilChanged( final ProfilChangeHint hint )
   {
-    // only revalidate if rellay data has changed
-    if( hint.isObjectChanged() || hint.isObjectDataChanged() || hint.isMarkerDataChanged() || hint.isMarkerMoved() || hint.isPointPropertiesChanged() || hint.isPointsChanged()
-        || hint.isPointValuesChanged() || hint.isProfilPropertyChanged() )
-    {
+
+    if( (hint.getEvent() & ProfilChangeHint.DATA_CHANGED) != 0 )
       revalidate();
-    }
   }
 
   /**

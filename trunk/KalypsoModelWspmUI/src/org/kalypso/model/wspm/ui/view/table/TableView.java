@@ -378,12 +378,13 @@ public class TableView extends ViewPart implements ITupleResultViewerProvider, I
   }
 
   @Override
-  public void handleProfilProviderChanged( final IProfileProvider provider, final IProfil oldProfile, final IProfil newProfile )
+  public void handleProfilProviderChanged( final IProfileProvider provider )
   {
     if( m_profile != null )
       m_profile.removeProfilListener( m_profileListener );
 
-    m_profile = newProfile;
+    // TODO: get the profile in the async method call
+    m_profile = provider == null ? null : provider.getProfil();
 
     if( m_profile != null )
     {

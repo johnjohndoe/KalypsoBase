@@ -44,5 +44,8 @@
             qname="{org.kalypso.model.wspm.classifications}CodeClass">
       </feature>
    </extension>
-   
+   <extension
+           point="org.eclipse.core.runtime.preferences">
+        <initializer class="org.kalypso.model.wspm.core.gml.validation.ValidationPreferenceInitializer"/>
+   </extension>
 </plugin>

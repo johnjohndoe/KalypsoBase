@@ -40,33 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml;
 
-import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
  */
 public class DefaultProfileFeatureProvider implements IProfileFeatureProvider
 {
-  /**
-   * @see org.kalypso.model.wspm.core.gml.IProfileFeatureProvider#getProfile(org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
-  public IProfileFeature getProfile( final Feature feature )
-  {
-    if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), IProfileFeature.QN_PROFILE ) )
-      return (IProfileFeature) feature;
-
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.gml.IProfileFeatureProvider#getResult(org.kalypsodeegree.model.feature.Feature)
-   */
-  @Override
-  public Object getResult( final Feature feature )
+  public Object getResult( final IProfileFeature profile )
   {
     return null;
   }
-
 }

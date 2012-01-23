@@ -53,8 +53,6 @@ public class KalypsoModelWspmUIPlugin extends AbstractUIPluginExt
   // The shared instance.
   private static KalypsoModelWspmUIPlugin PLUGIN;
 
-  public static final String MARKER_ID = "org.kalypso.model.wspm.ui.profilemarker"; //$NON-NLS-1$
-
   /**
    * The constructor.
    */
