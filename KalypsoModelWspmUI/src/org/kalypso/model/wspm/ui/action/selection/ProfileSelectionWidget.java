@@ -146,8 +146,33 @@ public class ProfileSelectionWidget extends AbstractWidget
     final GeoTransform projection = getMapPanel().getProjection();
     final SLDPainter painter = new SLDPainter( projection, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
 
+    doPaintProfilePoints( g, painter );
     doPaintSelection( g, painter );
     doPaintSnapPoint( g, painter );
+
+  }
+
+  private void doPaintProfilePoints( final Graphics g, final SLDPainter painter )
+  {
+    if( Arrays.isEmpty( m_profiles ) )
+      return;
+
+    for( final IProfileFeature profile : m_profiles )
+    {
+      try
+      {
+        final LineString lineString = profile.getJtsLine();
+        if( Objects.isNull( lineString ) )
+          continue;
+
+        final Coordinate[] coordinates = lineString.getCoordinates();
+        painter.paint( g, getClass().getResource( "symbolization/profile.points.sld" ), coordinates ); //$NON-NLS-1$
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+      }
+    }
 
   }
 
