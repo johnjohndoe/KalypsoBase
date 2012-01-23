@@ -124,7 +124,7 @@ public class SnapUtilities
      * <pre>
      * final LocationIndexedLine lineIndex = new LocationIndexedLine( lineString );
      * final LinearLocation location = lineIndex.project( position.getCoordinate() );
-     * location.snapToVertex( lineString, 0.2 );
+     * location.snapToVertex( lineString, MapUtilities.calculateWorldDistance( getMapPanel(), 10 ) );
      * 
      * return JTSConverter.toPoint( lineIndex.extractPoint( location ) );
      * </pre>

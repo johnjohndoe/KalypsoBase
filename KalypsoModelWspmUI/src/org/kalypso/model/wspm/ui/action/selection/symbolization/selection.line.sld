@@ -3,14 +3,14 @@
     <ogc:PropertyName>geometry</ogc:PropertyName>
   </Geometry>
   <Fill>
-    <CssParameter name="fill-opacity">0.5</CssParameter>
+    <CssParameter name="fill-opacity">0.2</CssParameter>
     <CssParameter name="fill">#5DAAF7</CssParameter>
   </Fill>
   <Stroke>
     <CssParameter name="stroke">#5DAAF7</CssParameter>
     <CssParameter name="stroke-width">1.0</CssParameter>
     <CssParameter name="stroke-dashoffset">0.0</CssParameter>
-    <!-- <CssParameter name="stroke-dasharray">10.0,10.0</CssParameter> -->
+    <CssParameter name="stroke-dasharray">2.0,2.0</CssParameter>
     <CssParameter name="stroke-linejoin">mitre</CssParameter>
     <CssParameter name="stroke-opacity">0.8</CssParameter>
     <CssParameter name="stroke-linecap">butt</CssParameter>
