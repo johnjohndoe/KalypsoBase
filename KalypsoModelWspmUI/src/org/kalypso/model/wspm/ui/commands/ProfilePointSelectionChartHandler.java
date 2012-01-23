@@ -204,7 +204,7 @@ public class ProfilePointSelectionChartHandler extends AbstractProfilePointHandl
   {
     final IChartComposite chart = getChart();
     final AbstractProfilTheme theme = findProfileTheme( chart );
-    if( theme == null )
+    if( Objects.isNull( theme ) )
       return;
 
     final ICoordinateMapper mapper = theme.getCoordinateMapper();
@@ -219,6 +219,9 @@ public class ProfilePointSelectionChartHandler extends AbstractProfilePointHandl
   {
     final IChartComposite chart = getChart();
     final AbstractProfilTheme theme = findProfileTheme( chart );
+    if( Objects.isNull( theme ) )
+      return;
+
     final ICoordinateMapper mapper = theme.getCoordinateMapper();
 
     final Integer x0 = mapper.getDomainAxis().numericToScreen( range.getMinimum() );

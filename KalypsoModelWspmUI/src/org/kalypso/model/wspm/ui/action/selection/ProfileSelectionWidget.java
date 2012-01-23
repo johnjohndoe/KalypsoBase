@@ -215,10 +215,13 @@ public class ProfileSelectionWidget extends AbstractProfileSelectionWidget
       if( Objects.isNull( profile ) )
         return;
 
-      m_snapPoint = getSnapPoint( profile.getJtsLine(), position );
-
+      final LineString curve = profile.getJtsLine();
+      m_snapPoint = getSnapPoint( curve, position );
       if( Objects.isNull( m_snapPoint ) )
         return;
+
+      if( isVertexPoint( curve, m_snapPoint.getCoordinate() ) )
+        painter.paint( g, getClass().getResource( "symbolization/selection.snap.vertex.point.sld" ), m_snapPoint.getCoordinate() ); //$NON-NLS-1$
 
       painter.paint( g, getClass().getResource( "symbolization/selection.snap.point.sld" ), m_snapPoint.getCoordinate() ); //$NON-NLS-1$
     }
@@ -226,6 +229,18 @@ public class ProfileSelectionWidget extends AbstractProfileSelectionWidget
     {
       e.printStackTrace();
     }
+  }
+
+  private boolean isVertexPoint( final Geometry geometry, final Coordinate point )
+  {
+    final Coordinate[] coordinates = geometry.getCoordinates();
+    for( final Coordinate c : coordinates )
+    {
+      if( c.distance( point ) < 0.001 )
+        return true;
+    }
+
+    return false;
   }
 
   private com.vividsolutions.jts.geom.Point getSnapPoint( final LineString lineString, final com.vividsolutions.jts.geom.Point position )
