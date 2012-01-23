@@ -63,7 +63,7 @@ import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 
 /**
  * Implementation of ogc feature
- *
+ * 
  * @author doemming
  */
 public class Feature_Impl extends PlatformObject implements Feature
@@ -100,18 +100,12 @@ public class Feature_Impl extends PlatformObject implements Feature
     m_properties = propValues;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#getId()
-   */
   @Override
   public String getId( )
   {
     return m_id;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#getFeatureType()
-   */
   @Override
   public IFeatureType getFeatureType( )
   {
@@ -132,7 +126,7 @@ public class Feature_Impl extends PlatformObject implements Feature
 
   /**
    * Accesses a property value of this feature.
-   *
+   * 
    * @return Value of the given properties. Properties with maxoccurency > 0 (as defined in applicationschema) will be
    *         embedded in java.util.List-objects
    * @see org.kalypsodeegree.model.feature.Feature#getProperty(java.lang.String)
@@ -224,9 +218,6 @@ public class Feature_Impl extends PlatformObject implements Feature
     return getProperty( pt );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#getProperty(javax.xml.namespace.QName)
-   */
   @Override
   public Object getProperty( final QName propQName )
   {
@@ -263,9 +254,6 @@ public class Feature_Impl extends PlatformObject implements Feature
     m_parent = workspace;
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {
@@ -281,9 +269,6 @@ public class Feature_Impl extends PlatformObject implements Feature
     return buffer.toString();
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.Feature#setProperty(javax.xml.namespace.QName, java.lang.Object)
-   */
   @Override
   public void setProperty( final QName propQName, final Object value )
   {
@@ -321,9 +306,6 @@ public class Feature_Impl extends PlatformObject implements Feature
     return m_envelope;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getDefaultGeometryPropertyValue()
-   */
   @Override
   public GM_Object getDefaultGeometryPropertyValue( )
   {
@@ -344,9 +326,6 @@ public class Feature_Impl extends PlatformObject implements Feature
     throw new IllegalStateException( "Wrong geometry type: " + prop.getClass().getName() );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getGeometryPropertyValues()
-   */
   @Override
   public GM_Object[] getGeometryPropertyValues( )
   {
@@ -376,9 +355,6 @@ public class Feature_Impl extends PlatformObject implements Feature
     return result.toArray( new GM_Object[result.size()] );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getOwner()
-   */
   @Override
   public Feature getOwner( )
   {
@@ -388,9 +364,6 @@ public class Feature_Impl extends PlatformObject implements Feature
     return null;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getQualifiedName()
-   */
   @Override
   public QName getQualifiedName( )
   {
@@ -421,63 +394,42 @@ public class Feature_Impl extends PlatformObject implements Feature
     }
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#setFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
-   */
   @Override
   public void setFeatureType( final IFeatureType ft )
   {
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#setId(java.lang.String)
-   */
   @Override
   public void setId( final String fid )
   {
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getName()
-   */
   @Override
   public String getName( )
   {
     return NamedFeatureHelper.getName( this );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setName(java.lang.String)
-   */
   @Override
   public void setName( final String name )
   {
     NamedFeatureHelper.setName( this, name );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getDescription()
-   */
   @Override
   public String getDescription( )
   {
     return NamedFeatureHelper.getDescription( this );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setDescription(java.lang.String)
-   */
   @Override
   public void setDescription( final String desc )
   {
     NamedFeatureHelper.setDescription( this, desc );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getLocation()
-   */
   @Override
   public GM_Object getLocation( )
   {
@@ -488,9 +440,6 @@ public class Feature_Impl extends PlatformObject implements Feature
     return null;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setLocation(org.kalypsodeegree.model.geometry.GM_Object)
-   */
   @Override
   public void setLocation( final GM_Object location )
   {
@@ -499,7 +448,7 @@ public class Feature_Impl extends PlatformObject implements Feature
 
   /**
    * feature given the property {@link QName}
-   *
+   * 
    * @param propertyQName
    *          the {@link QName} of the property to get.
    */

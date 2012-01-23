@@ -160,7 +160,9 @@ public class ProfileSelectionWidget extends AbstractWidget
         else if( geometry instanceof LineString )
         {
           final LineString lineString = (LineString) geometry;
-          painter.paint( g, getClass().getResource( "symbolization/selection.line.sld" ), lineString ); //$NON-NLS-1$
+          final Geometry selectionGeometry = lineString.buffer( 3.0 );
+
+          painter.paint( g, getClass().getResource( "symbolization/selection.line.sld" ), selectionGeometry ); //$NON-NLS-1$
         }
 
       }
@@ -185,7 +187,7 @@ public class ProfileSelectionWidget extends AbstractWidget
     else
     {
       final Coordinate c1 = Profiles.getJtsPosition( profile.getProfil(), minimum );
-      final Coordinate c2 = Profiles.getJtsPosition( profile.getProfil(), minimum );
+      final Coordinate c2 = Profiles.getJtsPosition( profile.getProfil(), maximum );
 
       return JTSUtilities.createLineString( profile.getJtsLine(), JTSConverter.toPoint( c1 ), JTSConverter.toPoint( c2 ) );
     }
@@ -210,6 +212,9 @@ public class ProfileSelectionWidget extends AbstractWidget
       m_snapPoint = SnapUtilities.snapToLine( lineString, position.buffer( 2 ), SNAP_TYPE.SNAP_TO_POINT );
       if( Objects.isNull( m_snapPoint ) )
         m_snapPoint = SnapUtilities.snapToLine( lineString, position.buffer( lineString.getCentroid().distance( position ) + 1.0 ), SNAP_TYPE.SNAP_TO_LINE );
+
+      if( Objects.isNull( m_snapPoint ) )
+        return;
 
       painter.paint( g, getClass().getResource( "symbolization/selection.snap.point.sld" ), m_snapPoint.getCoordinate() ); //$NON-NLS-1$
     }
