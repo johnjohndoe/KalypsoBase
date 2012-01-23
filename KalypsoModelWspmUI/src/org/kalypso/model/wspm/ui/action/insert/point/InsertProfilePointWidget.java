@@ -1,29 +1,27 @@
-package org.kalypso.model.wspm.ui.action.selection;
+package org.kalypso.model.wspm.ui.action.insert.point;
 
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 
-import org.apache.commons.lang3.Range;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.jts.JTSConverter;
-import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IRangeSelection;
+import org.kalypso.model.wspm.core.profil.IProfilListener;
+import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.model.wspm.ui.action.base.ProfilePainter;
+import org.kalypso.model.wspm.ui.action.selection.AbstractProfileSelectionWidget;
+import org.kalypso.model.wspm.ui.action.selection.SelectedProfilesMapPanelListener;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.advanced.utils.SLDPainter;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.linearref.LinearLocation;
 import com.vividsolutions.jts.linearref.LocationIndexedLine;
@@ -31,11 +29,11 @@ import com.vividsolutions.jts.linearref.LocationIndexedLine;
 /**
  * @author Dirk Kuch
  */
-public class ProfileSelectionWidget extends AbstractProfileSelectionWidget
+public class InsertProfilePointWidget extends AbstractProfileSelectionWidget
 {
   private final SelectedProfilesMapPanelListener m_mapPanelListener = new SelectedProfilesMapPanelListener( this );
 
-  public ProfileSelectionWidget( )
+  public InsertProfilePointWidget( )
   {
     super( "", "" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
@@ -68,46 +66,13 @@ public class ProfileSelectionWidget extends AbstractProfileSelectionWidget
     super.finish();
   }
 
-  private void updateSelection( )
-  {
-    if( Objects.isNull( getSelectedProfile(), m_snapPoint ) )
-      return;
-
-    try
-    {
-      final IProfil profile = getSelectedProfile().getProfil();
-      final IRangeSelection selection = profile.getSelection();
-
-      final double breite = Profiles.getWidth( profile, m_snapPoint );
-
-      if( isShiftKeyPressed() )
-      {
-        final Range<Double> range = selection.getRange();
-        final Double p0 = range.getMinimum();
-
-        selection.setRange( Range.between( p0, breite ) );
-      }
-      else
-      {
-        selection.setRange( Range.is( breite ) );
-      }
-
-    }
-    catch( final GM_Exception e )
-    {
-      e.printStackTrace();
-    }
-  }
-
   @Override
   public void leftPressed( final Point p )
   {
-    updateSelection();
+    throw new UnsupportedOperationException();
   }
 
   private com.vividsolutions.jts.geom.Point m_snapPoint;
-
-  private boolean m_shift = false;
 
   @Override
   public void paint( final Graphics g )
@@ -119,9 +84,6 @@ public class ProfileSelectionWidget extends AbstractProfileSelectionWidget
 
     ProfilePainter.paintProfilePoints( g, painter, profile );
     ProfilePainter.paintProfilePointMarkers( g, painter, profile );
-
-    doPaintSelection( g, painter );
-    doPaintSnapPoint( g, painter );
 
     paintTooltip( g );
   }
@@ -144,62 +106,6 @@ public class ProfileSelectionWidget extends AbstractProfileSelectionWidget
     }
 
     return super.getToolTip();
-  }
-
-  private void doPaintSelection( final Graphics g, final SLDPainter painter )
-  {
-    if( Arrays.isEmpty( getProfiles() ) )
-      return;
-
-    for( final IProfileFeature profile : getProfiles() )
-    {
-      try
-      {
-        final IProfil iProfil = profile.getProfil();
-        final IRangeSelection selection = iProfil.getSelection();
-        if( selection.isEmpty() )
-          continue;
-
-        final Geometry geometry = toGeometry( profile, selection );
-        if( geometry instanceof com.vividsolutions.jts.geom.Point )
-        {
-          final com.vividsolutions.jts.geom.Point point = (com.vividsolutions.jts.geom.Point) geometry;
-          painter.paint( g, getClass().getResource( "symbolization/selection.points.sld" ), point ); //$NON-NLS-1$
-        }
-        else if( geometry instanceof LineString )
-        {
-          final LineString lineString = (LineString) geometry;
-          final Geometry selectionGeometry = lineString.buffer( 2.0 );
-
-          painter.paint( g, getClass().getResource( "symbolization/selection.line.sld" ), selectionGeometry ); //$NON-NLS-1$
-        }
-
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-      }
-    }
-  }
-
-  private Geometry toGeometry( final IProfileFeature profile, final IRangeSelection selection ) throws Exception
-  {
-    final Range<Double> range = selection.getRange();
-    final Double minimum = range.getMinimum();
-    final Double maximum = range.getMaximum();
-
-    if( Objects.equal( minimum, maximum ) )
-    {
-      final Coordinate coorinate = Profiles.getJtsPosition( profile.getProfil(), minimum );
-      return JTSConverter.toPoint( coorinate );
-    }
-    else
-    {
-      final Coordinate c1 = Profiles.getJtsPosition( profile.getProfil(), minimum );
-      final Coordinate c2 = Profiles.getJtsPosition( profile.getProfil(), maximum );
-
-      return JTSUtilities.createLineString( profile.getJtsLine(), JTSConverter.toPoint( c1 ), JTSConverter.toPoint( c2 ) );
-    }
   }
 
   private void doPaintSnapPoint( final Graphics g, final SLDPainter painter )
@@ -231,20 +137,6 @@ public class ProfileSelectionWidget extends AbstractProfileSelectionWidget
     location.snapToVertex( lineString, 0.2 );
 
     return JTSConverter.toPoint( lineIndex.extractPoint( location ) );
-
-  }
-
-  @Override
-  public void keyPressed( final KeyEvent e )
-  {
-    final int keyCode = e.getKeyCode();
-    switch( keyCode )
-    {
-      case KeyEvent.VK_SHIFT:
-        m_shift = true;
-        break;
-
-    }
   }
 
   @Override
@@ -256,16 +148,22 @@ public class ProfileSelectionWidget extends AbstractProfileSelectionWidget
       case KeyEvent.VK_ESCAPE:
         finish();
         break;
-
-      case KeyEvent.VK_SHIFT:
-        m_shift = false;
-        break;
     }
   }
 
-  protected boolean isShiftKeyPressed( )
+  private final IProfilListener m_listener = new IProfilListener()
   {
-    return m_shift;
-  }
+    @Override
+    public void onProfilChanged( final ProfilChangeHint hint )
+    {
+      if( hint.isSelectionChanged() )
+        repaintMap();
+    }
+
+    @Override
+    public void onProblemMarkerChanged( final IProfil source )
+    {
+    }
+  };
 
 }
