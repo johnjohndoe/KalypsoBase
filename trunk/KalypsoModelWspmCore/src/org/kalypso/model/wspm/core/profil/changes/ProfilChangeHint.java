@@ -92,7 +92,7 @@ public class ProfilChangeHint
   /** true, if building was added or removed or replaced */
   public boolean isObjectChanged( )
   {
-    return (m_event | OBJECT_CHANGED) != 0;
+    return (m_event & OBJECT_CHANGED) != 0;
   }
 
   public void setObjectDataChanged( )
@@ -105,7 +105,7 @@ public class ProfilChangeHint
    */
   public boolean isObjectDataChanged( )
   {
-    return (m_event | OBJECT_DATA_CHANGED) != 0;
+    return (m_event & OBJECT_DATA_CHANGED) != 0;
   }
 
   public void setPointValuesChanged( )
@@ -118,7 +118,7 @@ public class ProfilChangeHint
    */
   public boolean isPointValuesChanged( )
   {
-    return (m_event | POINT_VALUES_CHANGED) != 0;
+    return (m_event & POINT_VALUES_CHANGED) != 0;
   }
 
   public void setPointPropertiesChanged( )
@@ -131,7 +131,7 @@ public class ProfilChangeHint
    */
   public boolean isPointPropertiesChanged( )
   {
-    return (m_event | POINT_PROPERTIES_CHANGED) != 0;
+    return (m_event & POINT_PROPERTIES_CHANGED) != 0;
   }
 
   public void setPointsChanged( )
@@ -144,7 +144,7 @@ public class ProfilChangeHint
    */
   public boolean isPointsChanged( )
   {
-    return (m_event | POINTS_CHANGED) != 0;
+    return (m_event & POINTS_CHANGED) != 0;
   }
 
   public void setMarkerMoved( )
@@ -157,7 +157,7 @@ public class ProfilChangeHint
    */
   public boolean isMarkerMoved( )
   {
-    return (m_event | MARKER_MOVED) != 0;
+    return (m_event & MARKER_MOVED) != 0;
   }
 
   public void setMarkerDataChanged( )
@@ -170,7 +170,7 @@ public class ProfilChangeHint
    */
   public boolean isMarkerDataChanged( )
   {
-    return (m_event | MARKER_DATA_CHANGED) != 0;
+    return (m_event & MARKER_DATA_CHANGED) != 0;
   }
 
   public void setProfilPropertyChanged( )
@@ -183,7 +183,7 @@ public class ProfilChangeHint
    */
   public boolean isProfilPropertyChanged( )
   {
-    return (m_event | PROFILE_PROPERTY_CHANGED) != 0;
+    return (m_event & PROFILE_PROPERTY_CHANGED) != 0;
   }
 
   public void setActivePropertyChanged( )
@@ -193,7 +193,7 @@ public class ProfilChangeHint
 
   public boolean isActivePropertyChanged( )
   {
-    return (m_event | ACTIVE_PROPERTY_CHANGED) != 0;
+    return (m_event & ACTIVE_PROPERTY_CHANGED) != 0;
   }
 
   public void setSelectionChanged( )
@@ -203,7 +203,7 @@ public class ProfilChangeHint
 
   public boolean isSelectionChanged( )
   {
-    return (m_event | SELECTION_CHANGED) != 0;
+    return (m_event & SELECTION_CHANGED) != 0;
   }
 
 }
