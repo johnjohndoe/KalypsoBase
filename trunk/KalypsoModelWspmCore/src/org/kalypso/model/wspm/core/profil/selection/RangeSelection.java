@@ -63,6 +63,8 @@ public class RangeSelection implements IRangeSelection
 
   private final IProfil m_profile;
 
+  private Double m_cursor;
+
   public RangeSelection( final IProfil profile )
   {
     m_profile = profile;
@@ -133,5 +135,18 @@ public class RangeSelection implements IRangeSelection
   public boolean isEmpty( )
   {
     return Objects.isNull( m_selection );
+  }
+
+  @Override
+  public void setCursor( final Double breite )
+  {
+    m_cursor = breite;
+    m_profile.fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.SELECTION_CURSOR_CHANGED ) );
+  }
+
+  @Override
+  public Double getCursor( )
+  {
+    return m_cursor;
   }
 }
