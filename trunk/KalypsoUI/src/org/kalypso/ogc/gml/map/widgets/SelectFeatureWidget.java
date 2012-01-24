@@ -55,8 +55,14 @@ import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.commons.java.lang.Arrays;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -145,6 +151,10 @@ public class SelectFeatureWidget extends AbstractWidget
   };
 
   private int m_currentMode = 0;
+
+  private UIJob m_selectOnHoverJob;
+
+  private static final int MODE_HOVER = 3;
 
   /**
    * @param qnamesToSelect
@@ -247,19 +257,41 @@ public class SelectFeatureWidget extends AbstractWidget
         final GMLXPath[] geomQNames = findGeometryPathes( theme, m_geomQName, IKalypsoFeatureTheme.PROPERTY_SELECTABLE_GEOMETRIES, null );
         final FeatureList visibleFeatures = theme.getFeatureListVisible( reqEnvelope );
 
-// if( visibleFeatures.size() > 0 )
-// {
-// int x = 1;
-// x++;
-// }
-
         /* Grab to the first feature that you can get. */
         m_hoverFeature = GeometryUtilities.findNearestFeature( currentPos, grabDistance, visibleFeatures, geomQNames, m_qnamesToSelect );
         if( m_hoverFeature != null )
         {
           m_hoverTheme = theme;
+
+          if( MODE_HOVER == m_currentMode )
+          {
+            if( Objects.isNotNull( m_selectOnHoverJob ) )
+              m_selectOnHoverJob.cancel();
+
+            m_selectOnHoverJob = new UIJob( "Select on hover" )
+            {
+              @Override
+              public IStatus runInUIThread( final IProgressMonitor monitor )
+              {
+                if( monitor.isCanceled() )
+                  return Status.CANCEL_STATUS;
+
+                leftPressed( p );
+
+                return Status.OK_STATUS;
+              }
+            };
+
+            m_selectOnHoverJob.setSystem( true );
+            m_selectOnHoverJob.setUser( false );
+            m_selectOnHoverJob.schedule( 50 );
+
+          }
+
           break;
+
         }
+
       }
     }
 
@@ -282,21 +314,15 @@ public class SelectFeatureWidget extends AbstractWidget
   public void leftPressed( final Point p )
   {
     final IMapPanel mapPanel = getMapPanel();
-    if( mapPanel == null || m_geometryBuilder == null )
+    if( Objects.isNull( mapPanel, m_geometryBuilder ) )
       return;
 
     try
     {
-      GM_Point point = null;
       if( m_geometryBuilder instanceof RectangleGeometryBuilder )
       {
-        point = MapUtilities.transform( mapPanel, p );
-        final GM_Object object = m_geometryBuilder.addPoint( point );
-        if( object != null )
-        {
-          doSelect( object );
-          m_geometryBuilder.reset();
-        }
+        final GM_Point point = MapUtilities.transform( mapPanel, p );
+        m_geometryBuilder.addPoint( point );
       }
       else if( m_geometryBuilder instanceof PointGeometryBuilder )
       {
@@ -314,7 +340,7 @@ public class SelectFeatureWidget extends AbstractWidget
       }
       else if( m_geometryBuilder instanceof PolygonGeometryBuilder )
       {
-        point = MapUtilities.transform( mapPanel, p );
+        final GM_Point point = MapUtilities.transform( mapPanel, p );
         m_geometryBuilder.addPoint( point );
       }
     }
@@ -340,14 +366,14 @@ public class SelectFeatureWidget extends AbstractWidget
   public void doubleClickedLeft( final Point p )
   {
     final IMapPanel mapPanel = getMapPanel();
-    if( mapPanel == null || m_geometryBuilder == null )
+    if( Objects.isNull( mapPanel, m_geometryBuilder ) )
       return;
 
-    final GM_Point point = MapUtilities.transform( mapPanel, p );
     try
     {
       if( m_geometryBuilder instanceof PolygonGeometryBuilder )
       {
+        final GM_Point point = MapUtilities.transform( mapPanel, p );
         m_geometryBuilder.addPoint( point );
         final GM_Object selectGeometry = m_geometryBuilder.finish();
         doSelect( selectGeometry );
@@ -358,6 +384,7 @@ public class SelectFeatureWidget extends AbstractWidget
     {
       e.printStackTrace();
     }
+
     super.doubleClickedLeft( p );
   }
 
@@ -423,7 +450,7 @@ public class SelectFeatureWidget extends AbstractWidget
 
   private void changeGeometryBuilder( )
   {
-    m_currentMode = (m_currentMode + 1) % 3;
+    m_currentMode = (m_currentMode + 1) % 4;
     final IDialogSettings settings = getSettings();
     if( settings != null )
       settings.put( SETTINGS_MODE, m_currentMode );
@@ -478,15 +505,15 @@ public class SelectFeatureWidget extends AbstractWidget
   public void leftReleased( final Point p )
   {
     final IMapPanel mapPanel = getMapPanel();
-    if( mapPanel == null || m_geometryBuilder == null )
+    if( Objects.isNull( mapPanel, m_geometryBuilder ) )
       return;
 
     if( m_geometryBuilder instanceof RectangleGeometryBuilder )
     {
-      final GM_Point point = MapUtilities.transform( mapPanel, p );
-
       try
       {
+        final GM_Point point = MapUtilities.transform( mapPanel, p );
+
         final GM_Object selectGeometry = m_geometryBuilder.addPoint( point );
         if( selectGeometry != null )
         {
@@ -507,11 +534,9 @@ public class SelectFeatureWidget extends AbstractWidget
 
   private void doSelect( final GM_Object selectGeometry )
   {
-    if( selectGeometry == null )
+    if( Objects.isNull( selectGeometry ) )
       return;
-
-    // select feature from featureList by using the selectGeometry
-    if( m_themes == null )
+    if( Arrays.isEmpty( m_themes ) )
       return;
 
     final Map<IKalypsoFeatureTheme, List<Feature>> selection = new HashMap<IKalypsoFeatureTheme, List<Feature>>();
@@ -551,7 +576,7 @@ public class SelectFeatureWidget extends AbstractWidget
    *          The property of the theme, that may provide the geometry pathes.
    * @param feature
    *          The feature that provides the geometries. If <code>null</code>, the target feature type of the given theme
-   *          is analysed.
+   *          is analyzed.
    */
   public static GMLXPath[] findGeometryPathes( final IKalypsoFeatureTheme theme, final QName defaultGeometry, final String propertyName, final Feature feature )
   {
@@ -717,7 +742,12 @@ public class SelectFeatureWidget extends AbstractWidget
     else if( m_geometryBuilder instanceof RectangleGeometryBuilder )
       sb.append( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.3" ) ); //$NON-NLS-1$
     else
-      sb.append( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.4" ) ); //$NON-NLS-1$
+    {
+      if( m_currentMode == 2 )
+        sb.append( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.4" ) ); //$NON-NLS-1$
+      if( m_currentMode == 3 )
+        sb.append( "Punkt (Hover-Mode) <SPACE>" );
+    }
 
     if( m_addMode == true )
       sb.append( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.5" ) ); //$NON-NLS-1$
