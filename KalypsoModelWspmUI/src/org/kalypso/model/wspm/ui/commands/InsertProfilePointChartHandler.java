@@ -53,6 +53,8 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
@@ -81,6 +83,8 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
 
   private boolean m_doMouseDown;
 
+  private Integer m_y0;
+
   public InsertProfilePointChartHandler( final IChartComposite chart )
   {
     super( chart );
@@ -91,6 +95,11 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
   @Override
   protected void doMouseMove( final AbstractProfilTheme theme, final Point position )
   {
+    final ICoordinateMapper mapper = theme.getCoordinateMapper();
+
+    final double hoehe = Profiles.getHoehe( getProfile(), getBreite() );
+    m_y0 = mapper.getTargetAxis().numericToScreen( hoehe );
+
     if( isSnapPoint( theme, position.x ) )
     {
       m_doMouseDown = false;
@@ -102,18 +111,17 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
     {
       m_doMouseDown = true;
 
-      final ICoordinateMapper mapper = theme.getCoordinateMapper();
-
-      final double hoehe = Profiles.getHoehe( getProfile(), getBreite() );
-      position.y = mapper.getTargetAxis().numericToScreen( hoehe );
-
+      position.y = m_y0;
       final String msg = String.format( "Neuer Punkt:\nx=%.2f m, y=%.2f m", getBreite(), hoehe );
 
-      final EditInfo info = new EditInfo( theme, getHoverFigure( position ), null, getBreite(), msg, new Point( position.x + 5, position.y + 45 ) );
+      final EditInfo info = new EditInfo( theme, null, null, getBreite(), msg, new Point( position.x + 5, position.y + 45 ) );
       setToolInfo( info );
 
       setCursor( SWT.CURSOR_CROSS );
     }
+
+    final IRangeSelection selection = getProfile().getSelection();
+    selection.setCursor( getBreite() );
   }
 
   private boolean isSnapPoint( final AbstractProfilTheme theme, final int screenX )
@@ -137,7 +145,7 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
     return false;
   }
 
-  private IPaintable getHoverFigure( final Point position )
+  private IPaintable getHoverFigure( final int x )
   {
     final PointFigure pointFigure = new PointFigure();
 
@@ -145,7 +153,7 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
     final PointStyle pointStyle = new PointStyle( lineStyle, 9, 9, 255, new RGB( 255, 255, 255 ), true, null, true );
 
     pointFigure.setStyle( pointStyle );
-    pointFigure.setPoints( new Point[] { new Point( position.x, position.y ) } );
+    pointFigure.setPoints( new Point[] { new Point( x, m_y0 ) } );
 
     return pointFigure;
   }
@@ -217,5 +225,28 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
   public void paintControl( final PaintEvent e )
   {
     super.paintControl( e );
+
+    doPaintCursor( e, getProfile() );
   }
+
+  private void doPaintCursor( final PaintEvent e, final IProfil profile )
+  {
+    final IRangeSelection selection = profile.getSelection();
+    final Double cursor = selection.getCursor();
+    if( Objects.isNull( cursor ) || Double.isNaN( cursor ) )
+      return;
+
+    final IChartComposite chart = getChart();
+    final AbstractProfilTheme theme = findProfileTheme( chart );
+    if( Objects.isNull( theme ) )
+      return;
+
+    final ICoordinateMapper mapper = theme.getCoordinateMapper();
+    final IAxis domainAxis = mapper.getDomainAxis();
+    final Integer x = domainAxis.numericToScreen( cursor );
+
+    final IPaintable figure = getHoverFigure( x );
+    figure.paint( e.gc );
+  }
+
 }

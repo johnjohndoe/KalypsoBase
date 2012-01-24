@@ -65,4 +65,11 @@ public interface IRangeSelection
   IProfileRecord[] toPoints( );
 
   boolean isEmpty( );
+
+  /**
+   * generic profile cursor. cursor points to a profile position without changing the selection of an iprofile
+   */
+  void setCursor( Double breite );
+
+  Double getCursor( );
 }

@@ -77,10 +77,9 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
  */
 public class SelectProfilePointChartHandler extends AbstractProfilePointHandler
 {
+  private Double m_p0 = null;
 
-  private Double m_mouse0 = null;
-
-  private Double m_mouse1 = null;
+  private Double m_p1 = null;
 
   public SelectProfilePointChartHandler( final IChartComposite chart )
   {
@@ -93,24 +92,23 @@ public class SelectProfilePointChartHandler extends AbstractProfilePointHandler
   {
     final double breite = snapToPoint( getProfile(), position.x );
 
-    final ICoordinateMapper mapper = theme.getCoordinateMapper();
-    final IAxis domainAxis = mapper.getDomainAxis();
-    position.x = domainAxis.numericToScreen( breite );
-
-    final EditInfo info = new EditInfo( theme, getMouseMoveHoverFigure( position ), null, getBreite(), null, null );
+    final EditInfo info = new EditInfo( theme, null, null, getBreite(), null, null );
     setToolInfo( info );
+
+    final IRangeSelection selection = getProfile().getSelection();
+    selection.setCursor( breite );
   }
 
   @Override
   protected void profileChanged( final ProfilChangeHint hint )
   {
-    if( !hint.isSelectionChanged() )
+    if( !hint.isSelectionChanged() || !hint.isSelectionCursorChanged() )
       return;
 
     forceRedrawEvent();
   }
 
-  private IPaintable getMouseMoveHoverFigure( final Point position )
+  private IPaintable getMouseMoveHoverFigure( final int x )
   {
     final IChartComposite chart = getChart();
 
@@ -119,13 +117,13 @@ public class SelectProfilePointChartHandler extends AbstractProfilePointHandler
       final AbstractProfilTheme theme = findProfileTheme( chart );
       final ICoordinateMapper mapper = theme.getCoordinateMapper();
 
-      final Integer x0 = mapper.getDomainAxis().numericToScreen( m_mouse0 );
+      final Integer x0 = mapper.getDomainAxis().numericToScreen( m_p0 );
 
-      return getHoverFigure( x0, position.x );
+      return getHoverFigure( x0, x );
     }
     else
     {
-      final PolylineFigure figure = getHoverFigure( position.x );
+      final PolylineFigure figure = getHoverFigure( x );
       figure.getStyle().setDash( 0F, new float[] { 2, 2, 2 } );
 
       return figure;
@@ -151,12 +149,12 @@ public class SelectProfilePointChartHandler extends AbstractProfilePointHandler
     final double breite = snapToPoint( profile, position.x );
 
     if( !isShiftPressed() )
-      m_mouse0 = breite;
+      m_p0 = breite;
     else
-      m_mouse1 = breite;
+      m_p1 = breite;
 
     final IRangeSelection selection = profile.getSelection();
-    selection.setRange( Range.is( m_mouse0 ) );
+    selection.setRange( Range.is( m_p0 ) );
   }
 
   private double snapToPoint( final IProfil profile, final int screenX )
@@ -200,25 +198,52 @@ public class SelectProfilePointChartHandler extends AbstractProfilePointHandler
     final AbstractProfilTheme theme = findProfileTheme( chart );
     final ICoordinateMapper mapper = theme.getCoordinateMapper();
 
-    m_mouse1 = mapper.getDomainAxis().screenToNumeric( position.x ).doubleValue();
+    m_p1 = mapper.getDomainAxis().screenToNumeric( position.x ).doubleValue();
 
     final IProfil profile = getProfile();
 
     final IRangeSelection selection = profile.getSelection();
-    selection.setRange( Range.between( m_mouse0, m_mouse1 ) );
+    selection.setRange( Range.between( m_p0, m_p1 ) );
   }
 
   @Override
   public void paintControl( final PaintEvent e )
   {
-    // paint mouse move hover figure
     super.paintControl( e );
 
     final IProfil profile = getProfile();
     if( Objects.isNull( profile ) )
       return;
 
+    doPaintSelection( e, profile );
+    doPaintCursor( e, profile );
+
+  }
+
+  private void doPaintCursor( final PaintEvent e, final IProfil profile )
+  {
     final IRangeSelection selection = profile.getSelection();
+    final Double cursor = selection.getCursor();
+    if( Objects.isNull( cursor ) || Double.isNaN( cursor ) )
+      return;
+
+    final IChartComposite chart = getChart();
+    final AbstractProfilTheme theme = findProfileTheme( chart );
+    if( Objects.isNull( theme ) )
+      return;
+
+    final ICoordinateMapper mapper = theme.getCoordinateMapper();
+    final IAxis domainAxis = mapper.getDomainAxis();
+    final Integer x = domainAxis.numericToScreen( cursor );
+
+    final IPaintable figure = getMouseMoveHoverFigure( x );
+    figure.paint( e.gc );
+  }
+
+  private void doPaintSelection( final PaintEvent e, final IProfil profile )
+  {
+    final IRangeSelection selection = profile.getSelection();
+
     final Range<Double> range = selection.getRange();
     if( Objects.isNull( range ) )
       return;
@@ -227,6 +252,7 @@ public class SelectProfilePointChartHandler extends AbstractProfilePointHandler
       doPaintSinglePoint( range, e );
     else
       doPaintRange( range, e );
+
   }
 
   private void doPaintSinglePoint( final Range<Double> range, final PaintEvent e )
