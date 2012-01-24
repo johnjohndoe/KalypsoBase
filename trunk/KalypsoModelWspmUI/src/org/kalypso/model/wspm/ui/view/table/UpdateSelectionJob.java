@@ -89,6 +89,8 @@ public class UpdateSelectionJob extends UIJob
 
     final IRecord[] records = toSelection( profile, selection );
 
+    m_tableView.disableFireSelectionChanged();
+
     viewer.setSelection( new StructuredSelection( records ) );
     viewer.reveal( records );
 

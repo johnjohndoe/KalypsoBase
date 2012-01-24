@@ -166,6 +166,8 @@ public class TableView extends ViewPart implements ITupleResultViewerProvider, I
 
   private SashForm m_sashForm;
 
+  protected boolean m_fireSelectionChanged = true;
+
   @Override
   public void init( final IViewSite site ) throws PartInitException
   {
@@ -275,6 +277,13 @@ public class TableView extends ViewPart implements ITupleResultViewerProvider, I
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
+        // new selection was triggered from IProfile Selection Change?
+        if( !m_fireSelectionChanged )
+        {
+          m_fireSelectionChanged = true;
+          return;
+        }
+
         final IProfileRecord[] selection = toPoints( event.getSelection() );
         if( ArrayUtils.isNotEmpty( selection ) )
         {
@@ -493,5 +502,10 @@ public class TableView extends ViewPart implements ITupleResultViewerProvider, I
     }
 
     return records.toArray( new IProfileRecord[] {} );
+  }
+
+  public void disableFireSelectionChanged( )
+  {
+    m_fireSelectionChanged = false;
   }
 }
