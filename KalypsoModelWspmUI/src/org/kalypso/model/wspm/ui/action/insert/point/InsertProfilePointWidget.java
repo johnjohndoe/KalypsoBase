@@ -5,20 +5,15 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.jts.JTSConverter;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilListener;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.model.wspm.ui.action.base.ProfilePainter;
 import org.kalypso.model.wspm.ui.action.selection.AbstractProfileSelectionWidget;
 import org.kalypso.model.wspm.ui.action.selection.SelectedProfilesMapPanelListener;
@@ -29,11 +24,6 @@ import org.kalypso.ogc.gml.map.widgets.advanced.utils.SLDPainter;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.linearref.LinearLocation;
-import com.vividsolutions.jts.linearref.LocationIndexedLine;
 
 /**
  * @author Dirk Kuch
@@ -50,7 +40,6 @@ public class InsertProfilePointWidget extends AbstractProfileSelectionWidget
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
-
     super.activate( commandPoster, mapPanel );
 
     mapPanel.addSelectionChangedListener( m_mapPanelListener );
@@ -81,22 +70,24 @@ public class InsertProfilePointWidget extends AbstractProfileSelectionWidget
     try
     {
       final IProfileFeature profileFeature = getProfile();
-      if( Objects.isNull( profileFeature ) )
+      final com.vividsolutions.jts.geom.Point snapped = getSnapPoint();
+      if( Objects.isNull( profileFeature, profileFeature ) )
         return;
 
-      if( isVertexPoint( profileFeature.getJtsLine(), m_snapPoint ) )
+      if( isVertexPoint( profileFeature.getJtsLine(), snapped.getCoordinate() ) )
         return;
-
-      final double breite = Profiles.getWidth( getProfile().getProfil(), m_snapPoint );
 
       final IProfil profile = profileFeature.getProfil();
+      final Double cursor = profile.getSelection().getCursor();
+      if( Objects.isNull( cursor ) )
+        return;
 
-      final IProfileRecord before = profile.findPreviousPoint( breite );
-      final IProfileRecord next = profile.findNextPoint( breite );
+      final IProfileRecord before = profile.findPreviousPoint( cursor );
+      final IProfileRecord next = profile.findNextPoint( cursor );
       if( Objects.isNull( before, next ) )
         return;
 
-      final double distance = (breite - before.getBreite()) / (next.getBreite() - before.getBreite());
+      final double distance = (cursor - before.getBreite()) / (next.getBreite() - before.getBreite());
 
       final TupleResult result = profile.getResult();
       final IProfileRecord record = profile.createProfilPoint();
@@ -128,8 +119,6 @@ public class InsertProfilePointWidget extends AbstractProfileSelectionWidget
 
   }
 
-  private com.vividsolutions.jts.geom.Point m_snapPoint;
-
   @Override
   public void paint( final Graphics g )
   {
@@ -140,81 +129,27 @@ public class InsertProfilePointWidget extends AbstractProfileSelectionWidget
 
     ProfilePainter.paintProfilePoints( g, painter, profile );
     ProfilePainter.paintProfilePointMarkers( g, painter, profile );
-
-    doPaintSnapPoint( g, painter );
+    ProfilePainter.doPaintProfileCursor( g, painter, profile, getClass().getResource( "symbolization/selection.snap.point.sld" ), getClass().getResource( "symbolization/selection.snap.vertex.point.sld" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     paintTooltip( g );
-  }
-
-  private void doPaintSnapPoint( final Graphics g, final SLDPainter painter )
-  {
-    try
-    {
-      final IProfileFeature profile = getProfile();
-      if( Objects.isNull( profile ) )
-        return;
-
-      final com.vividsolutions.jts.geom.Point position = getMousePosition();
-      final LineString lineString = profile.getJtsLine();
-
-      m_snapPoint = getSnapPoint( lineString, position );
-      if( isVertexPoint( lineString, m_snapPoint ) )
-      {
-        painter.paint( g, getClass().getResource( "symbolization/selection.snap.vertex.point.sld" ), m_snapPoint.getCoordinate() ); //$NON-NLS-1$
-      }
-      else
-      {
-        painter.paint( g, getClass().getResource( "symbolization/selection.snap.point.sld" ), m_snapPoint.getCoordinate() ); //$NON-NLS-1$
-      }
-
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-  }
-
-  private boolean isVertexPoint( final LineString lineString, final com.vividsolutions.jts.geom.Point snapPoint )
-  {
-    final Coordinate[] coordinates = lineString.getCoordinates();
-    final Coordinate coordinate = snapPoint.getCoordinate();
-
-    return ArrayUtils.contains( coordinates, coordinate );
   }
 
   @Override
   public String getToolTip( )
   {
-    if( Objects.isNull( getProfile(), m_snapPoint ) )
+    final IProfileFeature profileFeature = getProfile();
+    if( Objects.isNull( profileFeature ) )
       return null;
 
-    try
-    {
-      final double width = Profiles.getWidth( getProfile().getProfil(), m_snapPoint );
+    final IProfil profile = profileFeature.getProfil();
+    if( Objects.isNull( profile ) )
+      return null;
 
-      return String.format( "Profilpunkt Breite: %.2f m", width );
+    final Double cursor = profile.getSelection().getCursor();
+    if( Objects.isNull( cursor ) )
+      return null;
 
-    }
-    catch( final GM_Exception e )
-    {
-      e.printStackTrace();
-    }
-    catch( final IllegalStateException e )
-    {
-      // point is not on line
-    }
-
-    return super.getToolTip();
-  }
-
-  private com.vividsolutions.jts.geom.Point getSnapPoint( final LineString lineString, final com.vividsolutions.jts.geom.Point position )
-  {
-    final LocationIndexedLine lineIndex = new LocationIndexedLine( lineString );
-    final LinearLocation location = lineIndex.project( position.getCoordinate() );
-    location.snapToVertex( lineString, 0.2 );
-
-    return JTSConverter.toPoint( lineIndex.extractPoint( location ) );
-
+    return String.format( "Profilpunkt Breite: %.2f m", cursor );
   }
 
   @Override
@@ -228,20 +163,5 @@ public class InsertProfilePointWidget extends AbstractProfileSelectionWidget
         break;
     }
   }
-
-  private final IProfilListener m_listener = new IProfilListener()
-  {
-    @Override
-    public void onProfilChanged( final ProfilChangeHint hint )
-    {
-      if( hint.isSelectionChanged() )
-        repaintMap();
-    }
-
-    @Override
-    public void onProblemMarkerChanged( final IProfil source )
-    {
-    }
-  };
 
 }

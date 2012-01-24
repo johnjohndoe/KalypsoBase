@@ -51,17 +51,27 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.jts.JTSConverter;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.IProfileProvider;
 import org.kalypso.model.wspm.core.gml.IProfileProviderListener;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
+import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.linearref.LinearLocation;
+import com.vividsolutions.jts.linearref.LocationIndexedLine;
 
 /**
  * @author Dirk Kuch
@@ -85,9 +95,9 @@ public class AbstractProfileSelectionWidget extends AbstractWidget implements IP
     }
   };
 
-  private Point m_currentPoint;
-
   private IProfileFeature m_profile;
+
+  private com.vividsolutions.jts.geom.Point m_snapPoint;
 
   public AbstractProfileSelectionWidget( final String name, final String toolTip )
   {
@@ -96,8 +106,6 @@ public class AbstractProfileSelectionWidget extends AbstractWidget implements IP
 
   protected void reset( )
   {
-    m_currentPoint = null;
-
     final Cursor cursor = Cursor.getPredefinedCursor( Cursor.DEFAULT_CURSOR );
     getMapPanel().setCursor( cursor );
   }
@@ -105,9 +113,65 @@ public class AbstractProfileSelectionWidget extends AbstractWidget implements IP
   @Override
   public void moved( final Point p )
   {
-    m_currentPoint = p;
+    try
+    {
+      final IProfileFeature profileFeature = getProfile();
+      if( Objects.isNull( profileFeature ) )
+        return;
 
-    repaintMap();
+      final com.vividsolutions.jts.geom.Point point = toJtsPosition( p );
+      if( Objects.isNull( point ) )
+        return;
+
+      final IProfil profile = profileFeature.getProfil();
+      final IRangeSelection selection = profile.getSelection();
+
+      m_snapPoint = getSnapPoint( profileFeature.getJtsLine(), point );
+      if( Objects.isNull( m_snapPoint ) )
+        selection.setCursor( null );
+      else
+      {
+        final double cursor = Profiles.getWidth( getProfile().getProfil(), m_snapPoint );
+        selection.setCursor( cursor );
+      }
+    }
+    catch( final GM_Exception e )
+    {
+      e.printStackTrace();
+    }
+  }
+
+  protected com.vividsolutions.jts.geom.Point getSnapPoint( )
+  {
+    return m_snapPoint;
+  }
+
+  private com.vividsolutions.jts.geom.Point getSnapPoint( final LineString lineString, final com.vividsolutions.jts.geom.Point position )
+  {
+
+    final LocationIndexedLine lineIndex = new LocationIndexedLine( lineString );
+    final LinearLocation location = lineIndex.project( position.getCoordinate() );
+    location.snapToVertex( lineString, MapUtilities.calculateWorldDistance( getMapPanel(), 10 ) );
+
+    return JTSConverter.toPoint( lineIndex.extractPoint( location ) );
+  }
+
+  private com.vividsolutions.jts.geom.Point toJtsPosition( final Point position )
+  {
+    try
+    {
+      if( Objects.isNull( position ) )
+        return null;
+
+      final GM_Point gmCurrent = MapUtilities.transform( getMapPanel(), position );
+      return (com.vividsolutions.jts.geom.Point) JTSAdapter.export( gmCurrent );
+    }
+    catch( final Throwable t )
+    {
+      t.printStackTrace();
+    }
+
+    return null;
   }
 
   public final void onSelectionChange( final IProfileFeature[] profiles )
@@ -122,10 +186,9 @@ public class AbstractProfileSelectionWidget extends AbstractWidget implements IP
 
   }
 
-  private void doSelectionChange( final IProfileFeature profile )
+  protected void doSelectionChange( final IProfileFeature profile )
   {
-    if( Objects.equal( m_profile, profile ) )
-      return;
+    // always set and reset profile listener, because of changed underlying iprofile!
 
     if( Objects.isNotNull( m_profile ) )
     {
@@ -147,24 +210,6 @@ public class AbstractProfileSelectionWidget extends AbstractWidget implements IP
     return m_profile;
   }
 
-  protected com.vividsolutions.jts.geom.Point getMousePosition( )
-  {
-    try
-    {
-      if( Objects.isNull( m_currentPoint ) )
-        return null;
-
-      final GM_Point gmCurrent = MapUtilities.transform( getMapPanel(), m_currentPoint );
-      return (com.vividsolutions.jts.geom.Point) JTSAdapter.export( gmCurrent );
-    }
-    catch( final Throwable t )
-    {
-      t.printStackTrace();
-    }
-
-    return null;
-  }
-
   protected void paintTooltip( final Graphics g )
   {
     final Rectangle screenBounds = getMapPanel().getScreenBounds();
@@ -174,10 +219,22 @@ public class AbstractProfileSelectionWidget extends AbstractWidget implements IP
     m_toolTipRenderer.paintToolTip( point, g, screenBounds );
   }
 
+  protected final boolean isVertexPoint( final Geometry geometry, final Coordinate point )
+  {
+    final Coordinate[] coordinates = geometry.getCoordinates();
+    for( final Coordinate c : coordinates )
+    {
+      if( c.distance( point ) < 0.001 )
+        return true;
+    }
+
+    return false;
+  }
+
   @Override
   public void onProfilProviderChanged( final IProfileProvider provider )
   {
-    new Job( "Forcing repaint event" )
+    final Job job = new Job( "Forcing repaint event" )
     {
       @Override
       protected IStatus run( final IProgressMonitor monitor )
@@ -190,6 +247,11 @@ public class AbstractProfileSelectionWidget extends AbstractWidget implements IP
         return Status.OK_STATUS;
       }
     };
+
+    job.setSystem( true );
+    job.setUser( false );
+
+    job.schedule();
 
   }
 

@@ -50,9 +50,12 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
+import org.kalypso.model.wspm.core.profil.IRangeSelection;
+import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.ogc.gml.map.widgets.advanced.utils.SLDPainter;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 
 /**
@@ -106,5 +109,43 @@ public final class ProfilePainter
       }
     }
 
+  }
+
+  public static void doPaintProfileCursor( final Graphics g, final SLDPainter painter, final IProfileFeature profileFeature, final URL sldLinePoint, final URL sldVertexPoint )
+  {
+    try
+    {
+      if( Objects.isNull( profileFeature ) )
+        return;
+
+      final IProfil profile = profileFeature.getProfil();
+      final IRangeSelection selection = profile.getSelection();
+      final Double cursor = selection.getCursor();
+      if( Objects.isNull( cursor ) )
+        return;
+
+      final Coordinate position = Profiles.getJtsPosition( profile, cursor );
+
+      if( isVertexPoint( profileFeature.getJtsLine(), position ) )
+        painter.paint( g, sldVertexPoint, position ); //$NON-NLS-1$
+      else
+        painter.paint( g, sldLinePoint, position ); //$NON-NLS-1$
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
+  }
+
+  private static boolean isVertexPoint( final Geometry geometry, final Coordinate point )
+  {
+    final Coordinate[] coordinates = geometry.getCoordinates();
+    for( final Coordinate c : coordinates )
+    {
+      if( c.distance( point ) < 0.001 )
+        return true;
+    }
+
+    return false;
   }
 }

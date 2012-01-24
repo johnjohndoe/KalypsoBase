@@ -130,6 +130,9 @@ public abstract class AbstractProfilePointHandler extends AbstractChartHandler
 
   protected void profileChanged( final ProfilChangeHint hint )
   {
+    if( hint.isSelectionChanged() || hint.isSelectionCursorChanged() )
+      forceRedrawEvent();
+
   }
 
   protected void profileProblemMarkerChanged( final IProfil source )
