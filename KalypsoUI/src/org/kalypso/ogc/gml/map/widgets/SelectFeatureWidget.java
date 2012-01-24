@@ -159,10 +159,6 @@ public class SelectFeatureWidget extends AbstractWidget
     m_geomQName = geomQName;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.map.MapPanel)
-   */
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
@@ -175,9 +171,6 @@ public class SelectFeatureWidget extends AbstractWidget
     reinit();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#finish()
-   */
   @Override
   public void finish( )
   {
@@ -340,19 +333,9 @@ public class SelectFeatureWidget extends AbstractWidget
     if( mapPanel == null || m_geometryBuilder == null )
       return;
 
-    try
-    {
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
     super.leftClicked( p );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#doubleClickedLeft(java.awt.Point)
-   */
   @Override
   public void doubleClickedLeft( final Point p )
   {
@@ -378,9 +361,6 @@ public class SelectFeatureWidget extends AbstractWidget
     super.doubleClickedLeft( p );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyPressed(java.awt.event.KeyEvent)
-   */
   @Override
   public void keyPressed( final KeyEvent e )
   {
@@ -415,6 +395,7 @@ public class SelectFeatureWidget extends AbstractWidget
       case KeyEvent.VK_SPACE:
         changeGeometryBuilder();
         break;
+
       // "ESC": deselection
       case KeyEvent.VK_ESCAPE:
         m_geometryBuilder.reset();
@@ -426,9 +407,6 @@ public class SelectFeatureWidget extends AbstractWidget
     mapPanel.repaintMap();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyReleased(java.awt.event.KeyEvent)
-   */
   @Override
   public void keyReleased( final KeyEvent e )
   {
@@ -472,9 +450,6 @@ public class SelectFeatureWidget extends AbstractWidget
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
-   */
   @Override
   public void paint( final Graphics g )
   {
@@ -732,9 +707,6 @@ public class SelectFeatureWidget extends AbstractWidget
     return selectGeom.contains( geom );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#getToolTip()
-   */
   @Override
   public String getToolTip( )
   {
