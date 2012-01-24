@@ -225,7 +225,11 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
   {
     super.paintControl( e );
 
-    doPaintCursor( e, getProfile() );
+    final IProfil profile = getProfile();
+    if( Objects.isNull( profile ) )
+      return;
+
+    doPaintCursor( e, profile );
   }
 
   private void doPaintCursor( final PaintEvent e, final IProfil profile )

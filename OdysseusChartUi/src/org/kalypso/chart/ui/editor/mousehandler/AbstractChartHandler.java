@@ -155,6 +155,6 @@ public abstract class AbstractChartHandler implements IChartHandler
   @Override
   public CHART_HANDLER_TYPE getType( )
   {
-    return CHART_HANDLER_TYPE.eToggle;
+    return CHART_HANDLER_TYPE.eRadio;
   }
 }

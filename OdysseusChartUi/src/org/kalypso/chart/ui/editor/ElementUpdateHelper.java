@@ -41,7 +41,10 @@
 package org.kalypso.chart.ui.editor;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.menus.UIElement;
 import org.eclipse.ui.services.IEvaluationService;
 import org.eclipse.ui.services.IServiceLocator;
@@ -70,11 +73,12 @@ public class ElementUpdateHelper
     if( chart == null )
       return;
 
-    final IChartHandlerManager plotDragHandler = chart == null ? null : chart.getPlotHandler();
+    final IChartHandlerManager plotDragHandler = chart.getPlotHandler();
     if( Objects.isNotNull( plotDragHandler ) )
     {
       final IChartHandler[] handlers = plotDragHandler.getActiveHandlers();
-      element.setChecked( isChecked( handlers, handlerClass ) );
+      final boolean checked = isChecked( handlers, handlerClass );
+      element.setChecked( checked );
     }
     else
     {
@@ -94,6 +98,28 @@ public class ElementUpdateHelper
         return true;
     }
 
+    return false;
+  }
+
+  public static boolean getSelection( final ExecutionEvent event )
+  {
+    try
+    {
+      final Event e = (Event) event.getTrigger();
+
+      if( e.widget instanceof ToolItem )
+      {
+        final ToolItem item = (ToolItem) e.widget;
+
+        return item.getSelection();
+      }
+
+      throw new UnsupportedOperationException();
+    }
+    catch( final Throwable t )
+    {
+      t.printStackTrace();
+    }
     return false;
   }
 
