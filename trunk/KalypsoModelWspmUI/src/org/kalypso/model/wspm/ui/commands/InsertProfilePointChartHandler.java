@@ -80,7 +80,6 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
  */
 public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
 {
-
   private boolean m_doMouseDown;
 
   private Integer m_y0;

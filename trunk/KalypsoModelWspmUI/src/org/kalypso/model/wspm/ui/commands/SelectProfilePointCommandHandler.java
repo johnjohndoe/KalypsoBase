@@ -27,7 +27,7 @@ public class SelectProfilePointCommandHandler extends AbstractHandler implements
       return Status.CANCEL_STATUS;
 
     final IChartHandlerManager handler = chart.getPlotHandler();
-    handler.activatePlotHandler( new SelectProfilePointChartHandler( chart ) );
+    handler.activatePlotHandler( new UpdateProfileSelectionChartHandler( chart ) );
 
     final IChartPart part = ChartHandlerUtilities.findChartComposite( context );
     if( part != null )
@@ -39,6 +39,6 @@ public class SelectProfilePointCommandHandler extends AbstractHandler implements
   @Override
   public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
   {
-    ElementUpdateHelper.updateElement( element, SelectProfilePointChartHandler.class );
+    ElementUpdateHelper.updateElement( element, UpdateProfileSelectionChartHandler.class );
   }
 }

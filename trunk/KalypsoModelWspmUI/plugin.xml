@@ -322,10 +322,13 @@
                   style="toggle">
             </command>
             <command
-                  commandId="org.kalypso.chart.ui.commands.insert.profile.point" style="toggle">
+                  commandId="org.kalypso.chart.ui.commands.insert.profile.point" style="radio">
             </command>
             <command
-                  commandId="org.kalypso.chart.ui.commands.profile.selection" style="toggle">
+                  commandId="org.kalypso.chart.ui.commands.profile.selection" style="radio">
+            </command>
+            <command
+                  commandId="org.kalypso.chart.ui.commands.profile.update.cursor" style="toggle">
             </command>
             <command
                   commandId="org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand"
@@ -661,6 +664,12 @@
             id="org.kalypso.chart.ui.commands.profile.selection"
             name="Selektiere Profilpunkt">
       </command>
+      <command
+            categoryId="org.kalypso.chart.ui.commands.category"
+            description="Aktualisiere Profil-Cursor"
+            id="org.kalypso.chart.ui.commands.profile.update.cursor"
+            name="Aktualisiere Profil-Cursor">
+      </command>
     </extension>
     <extension
           point="org.eclipse.ui.handlers">
@@ -672,6 +681,11 @@
              class="org.kalypso.model.wspm.ui.commands.SelectProfilePointCommandHandler"
              commandId="org.kalypso.chart.ui.commands.profile.selection">
        </handler>
+       <handler
+             class="org.kalypso.model.wspm.ui.commands.UpdateProfileCursorCommandHandler"
+             commandId="org.kalypso.chart.ui.commands.profile.update.cursor">
+       </handler>
+       
     </extension>
     <extension
           point="org.eclipse.ui.commandImages">
@@ -682,6 +696,10 @@
        <image
              commandId="org.kalypso.chart.ui.commands.profile.selection"
              icon="icons/obj16/select-point.png">
+       </image>
+       <image
+             commandId="org.kalypso.chart.ui.commands.profile.update.cursor"
+             icon="icons/obj16/update_point_cursor.png">
        </image>
     </extension>
     <extension
