@@ -183,9 +183,6 @@ public abstract class AbstractWidget implements IWidget
     return m_parameter.get( key );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#clickPopup(java.awt.Point)
-   */
   @Override
   @SuppressWarnings("deprecation")
   @Deprecated
@@ -194,62 +191,41 @@ public abstract class AbstractWidget implements IWidget
     // not implemented by default
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#dragged(java.awt.Point)
-   */
   @Override
   public void dragged( final Point p )
   {
     // not implemented by default
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#finish()
-   */
   @Override
   public void finish( )
   {
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#leftClicked(java.awt.Point)
-   */
   @Override
   public void leftClicked( final Point p )
   {
     // not implemented by default
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#leftPressed(java.awt.Point)
-   */
   @Override
   public void leftPressed( final Point p )
   {
     // not implemented by default
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#leftReleased(java.awt.Point)
-   */
   @Override
   public void leftReleased( final Point p )
   {
     // not implemented by default
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#moved(java.awt.Point)
-   */
   @Override
   public void moved( final Point p )
   {
     // not implemented by default
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#rightClicked(java.awt.Point)
-   */
   @Override
   @SuppressWarnings("deprecation")
   @Deprecated
@@ -258,9 +234,6 @@ public abstract class AbstractWidget implements IWidget
     // not implemented by default
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#rightPressed(java.awt.Point)
-   */
   @Override
   @SuppressWarnings("deprecation")
   @Deprecated
@@ -269,9 +242,6 @@ public abstract class AbstractWidget implements IWidget
     // not implemented by default
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#rightReleased(java.awt.Point)
-   */
   @Override
   @SuppressWarnings("deprecation")
   @Deprecated
