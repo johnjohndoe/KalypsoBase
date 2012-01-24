@@ -7,7 +7,6 @@ import java.awt.event.KeyEvent;
 
 import org.apache.commons.lang3.Range;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.jts.JTSConverter;
 import org.kalypso.jts.JTSUtilities;
@@ -44,7 +43,6 @@ public class ProfileSelectionWidget extends AbstractProfileSelectionWidget
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
-
     super.activate( commandPoster, mapPanel );
 
     mapPanel.addSelectionChangedListener( m_mapPanelListener );
@@ -71,12 +69,12 @@ public class ProfileSelectionWidget extends AbstractProfileSelectionWidget
 
   private void updateSelection( )
   {
-    if( Objects.isNull( getSelectedProfile(), m_snapPoint ) )
+    if( Objects.isNull( getProfile(), m_snapPoint ) )
       return;
 
     try
     {
-      final IProfil profile = getSelectedProfile().getProfil();
+      final IProfil profile = getProfile().getProfil();
       final IRangeSelection selection = profile.getSelection();
 
       final double pn = Profiles.getWidth( profile, m_snapPoint );
@@ -95,6 +93,10 @@ public class ProfileSelectionWidget extends AbstractProfileSelectionWidget
     catch( final GM_Exception e )
     {
       e.printStackTrace();
+    }
+    catch( final IllegalStateException e )
+    {
+      // if point is not on line
     }
   }
 
@@ -119,7 +121,7 @@ public class ProfileSelectionWidget extends AbstractProfileSelectionWidget
     final GeoTransform projection = getMapPanel().getProjection();
     final SLDPainter painter = new SLDPainter( projection, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
 
-    final IProfileFeature profile = getSelectedProfile();
+    final IProfileFeature profile = getProfile();
 
     ProfilePainter.paintProfilePoints( g, painter, profile );
     ProfilePainter.paintProfilePointMarkers( g, painter, profile );
@@ -133,18 +135,23 @@ public class ProfileSelectionWidget extends AbstractProfileSelectionWidget
   @Override
   public String getToolTip( )
   {
-    if( Objects.isNull( getSelectedProfile(), m_snapPoint ) )
-      return "";
+    if( Objects.isNull( getProfile(), m_snapPoint ) )
+      return null;
 
     try
     {
-      final double width = Profiles.getWidth( getSelectedProfile().getProfil(), m_snapPoint );
+      final double width = Profiles.getWidth( getProfile().getProfil(), m_snapPoint );
 
       return String.format( "Profilpunkt Breite: %.2f m", width );
 
     }
     catch( final GM_Exception e )
     {
+      e.printStackTrace();
+    }
+    catch( final IllegalStateException e )
+    {
+      // snap point is not on line
     }
 
     return super.getToolTip();
@@ -152,37 +159,35 @@ public class ProfileSelectionWidget extends AbstractProfileSelectionWidget
 
   private void doPaintSelection( final Graphics g, final SLDPainter painter )
   {
-    if( Arrays.isEmpty( getProfiles() ) )
-      return;
-
-    for( final IProfileFeature profile : getProfiles() )
+    try
     {
-      try
+      final IProfileFeature profile = getProfile();
+      if( Objects.isNull( profile ) )
+        return;
+
+      final IProfil iProfil = profile.getProfil();
+      final IRangeSelection selection = iProfil.getSelection();
+      if( selection.isEmpty() )
+        return;
+
+      final Geometry geometry = toGeometry( profile, selection );
+      if( geometry instanceof com.vividsolutions.jts.geom.Point )
       {
-        final IProfil iProfil = profile.getProfil();
-        final IRangeSelection selection = iProfil.getSelection();
-        if( selection.isEmpty() )
-          continue;
-
-        final Geometry geometry = toGeometry( profile, selection );
-        if( geometry instanceof com.vividsolutions.jts.geom.Point )
-        {
-          final com.vividsolutions.jts.geom.Point point = (com.vividsolutions.jts.geom.Point) geometry;
-          painter.paint( g, getClass().getResource( "symbolization/selection.points.sld" ), point ); //$NON-NLS-1$
-        }
-        else if( geometry instanceof LineString )
-        {
-          final LineString lineString = (LineString) geometry;
-          final Geometry selectionGeometry = lineString.buffer( MapUtilities.calculateWorldDistance( getMapPanel(), 8 ) );
-
-          painter.paint( g, getClass().getResource( "symbolization/selection.line.sld" ), selectionGeometry ); //$NON-NLS-1$
-        }
-
+        final com.vividsolutions.jts.geom.Point point = (com.vividsolutions.jts.geom.Point) geometry;
+        painter.paint( g, getClass().getResource( "symbolization/selection.points.sld" ), point ); //$NON-NLS-1$
       }
-      catch( final Exception e )
+      else if( geometry instanceof LineString )
       {
-        e.printStackTrace();
+        final LineString lineString = (LineString) geometry;
+        final Geometry selectionGeometry = lineString.buffer( MapUtilities.calculateWorldDistance( getMapPanel(), 8 ) );
+
+        painter.paint( g, getClass().getResource( "symbolization/selection.line.sld" ), selectionGeometry ); //$NON-NLS-1$
       }
+
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
     }
   }
 
@@ -210,9 +215,12 @@ public class ProfileSelectionWidget extends AbstractProfileSelectionWidget
   {
     try
     {
-      final com.vividsolutions.jts.geom.Point position = getMousePosition();
-      final IProfileFeature profile = selectProfile( position );
+      final IProfileFeature profile = getProfile();
       if( Objects.isNull( profile ) )
+        return;
+
+      final com.vividsolutions.jts.geom.Point position = getMousePosition();
+      if( Objects.isNull( position ) )
         return;
 
       final LineString curve = profile.getJtsLine();
@@ -245,6 +253,7 @@ public class ProfileSelectionWidget extends AbstractProfileSelectionWidget
 
   private com.vividsolutions.jts.geom.Point getSnapPoint( final LineString lineString, final com.vividsolutions.jts.geom.Point position )
   {
+
     final LocationIndexedLine lineIndex = new LocationIndexedLine( lineString );
     final LinearLocation location = lineIndex.project( position.getCoordinate() );
     location.snapToVertex( lineString, MapUtilities.calculateWorldDistance( getMapPanel(), 10 ) );

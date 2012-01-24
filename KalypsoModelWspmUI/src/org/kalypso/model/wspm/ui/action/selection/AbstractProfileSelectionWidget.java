@@ -46,9 +46,14 @@ import java.awt.Point;
 import java.awt.Rectangle;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.kalypso.commons.java.lang.Arrays;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.gml.IProfileProvider;
+import org.kalypso.model.wspm.core.gml.IProfileProviderListener;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
@@ -58,14 +63,11 @@ import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
-import com.vividsolutions.jts.geom.LineString;
-
 /**
  * @author Dirk Kuch
  */
-public class AbstractProfileSelectionWidget extends AbstractWidget
+public class AbstractProfileSelectionWidget extends AbstractWidget implements IProfileProviderListener
 {
-  private IProfileFeature[] m_profiles;
 
   private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
 
@@ -110,76 +112,39 @@ public class AbstractProfileSelectionWidget extends AbstractWidget
 
   public final void onSelectionChange( final IProfileFeature[] profiles )
   {
-    if( Arrays.isNotEmpty( m_profiles ) )
-      for( final IProfileFeature profile : m_profiles )
-      {
-        profile.getProfil().removeProfilListener( m_listener );
-      }
+    if( ArrayUtils.getLength( profiles ) > 1 )
+      throw new UnsupportedOperationException();
 
-    m_profiles = profiles;
+    if( ArrayUtils.isEmpty( profiles ) )
+      doSelectionChange( null );
+    else
+      doSelectionChange( profiles[0] );
 
-    if( Arrays.isNotEmpty( m_profiles ) )
-      for( final IProfileFeature profile : m_profiles )
-      {
-        profile.getProfil().addProfilListener( m_listener );
-      }
   }
 
-  protected IProfileFeature selectProfile( final com.vividsolutions.jts.geom.Point position )
+  private void doSelectionChange( final IProfileFeature profile )
   {
-    if( Objects.isNull( position ) )
-      return null;
+    if( Objects.equal( m_profile, profile ) )
+      return;
 
-    m_profile = findClosestProfile( position );
-
-    return m_profile;
-  }
-
-  protected IProfileFeature[] getProfiles( )
-  {
-    return m_profiles;
-  }
-
-  protected IProfileFeature getSelectedProfile( )
-  {
-    return m_profile;
-  }
-
-  private IProfileFeature findClosestProfile( final com.vividsolutions.jts.geom.Point point )
-  {
-    if( ArrayUtils.isEmpty( m_profiles ) )
-      return null;
-    else if( ArrayUtils.getLength( m_profiles ) == 1 )
-      return m_profiles[0];
-
-    double distance = Double.MAX_VALUE;
-    IProfileFeature ptr = null;
-
-    for( final IProfileFeature profile : m_profiles )
+    if( Objects.isNotNull( m_profile ) )
     {
-      try
-      {
-        if( Objects.isNull( ptr ) )
-          ptr = profile;
-        else
-        {
-          final LineString curve = profile.getJtsLine();
-          final double d = point.distance( curve.getCentroid() );
-
-          if( d < distance )
-          {
-            ptr = profile;
-            distance = d;
-          }
-        }
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-      }
+      m_profile.removeProfilProviderListener( this );
+      m_profile.getProfil().removeProfilListener( m_listener );
     }
 
-    return ptr;
+    m_profile = profile;
+
+    if( Objects.isNotNull( m_profile ) )
+    {
+      m_profile.addProfilProviderListener( this );
+      m_profile.getProfil().addProfilListener( m_listener );
+    }
+  }
+
+  protected IProfileFeature getProfile( )
+  {
+    return m_profile;
   }
 
   protected com.vividsolutions.jts.geom.Point getMousePosition( )
@@ -207,6 +172,25 @@ public class AbstractProfileSelectionWidget extends AbstractWidget
 
     m_toolTipRenderer.setTooltip( getToolTip() );
     m_toolTipRenderer.paintToolTip( point, g, screenBounds );
+  }
+
+  @Override
+  public void onProfilProviderChanged( final IProfileProvider provider )
+  {
+    new Job( "Forcing repaint event" )
+    {
+      @Override
+      protected IStatus run( final IProgressMonitor monitor )
+      {
+        if( provider instanceof IProfileFeature )
+          doSelectionChange( (IProfileFeature) provider );
+
+        repaintMap();
+
+        return Status.OK_STATUS;
+      }
+    };
+
   }
 
 }

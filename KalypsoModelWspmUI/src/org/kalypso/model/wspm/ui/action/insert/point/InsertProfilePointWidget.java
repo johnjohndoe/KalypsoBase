@@ -80,7 +80,7 @@ public class InsertProfilePointWidget extends AbstractProfileSelectionWidget
     final GeoTransform projection = getMapPanel().getProjection();
     final SLDPainter painter = new SLDPainter( projection, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
 
-    final IProfileFeature profile = getSelectedProfile();
+    final IProfileFeature profile = getProfile();
 
     ProfilePainter.paintProfilePoints( g, painter, profile );
     ProfilePainter.paintProfilePointMarkers( g, painter, profile );
@@ -91,12 +91,12 @@ public class InsertProfilePointWidget extends AbstractProfileSelectionWidget
   @Override
   public String getToolTip( )
   {
-    if( Objects.isNull( getSelectedProfile(), m_snapPoint ) )
+    if( Objects.isNull( getProfile(), m_snapPoint ) )
       return "";
 
     try
     {
-      final double width = Profiles.getWidth( getSelectedProfile().getProfil(), m_snapPoint );
+      final double width = Profiles.getWidth( getProfile().getProfil(), m_snapPoint );
 
       return String.format( "Profilpunkt Breite: %.2f m", width );
 
@@ -112,10 +112,11 @@ public class InsertProfilePointWidget extends AbstractProfileSelectionWidget
   {
     try
     {
-      final com.vividsolutions.jts.geom.Point position = getMousePosition();
-      final IProfileFeature profile = selectProfile( position );
+      final IProfileFeature profile = getProfile();
       if( Objects.isNull( profile ) )
         return;
+
+      final com.vividsolutions.jts.geom.Point position = getMousePosition();
 
       m_snapPoint = getSnapPoint( profile.getJtsLine(), position );
 

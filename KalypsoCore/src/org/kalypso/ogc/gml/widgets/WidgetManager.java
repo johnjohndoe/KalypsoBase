@@ -114,7 +114,6 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
     return m_commandTarget;
   }
 
-  // MouseAdapter
   @Override
   public void mouseClicked( final MouseEvent e )
   {
@@ -303,9 +302,6 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
     m_middleDown = false;
   }
 
-  /**
-   * @see java.awt.event.MouseWheelListener#mouseWheelMoved(java.awt.event.MouseWheelEvent)
-   */
   @Override
   public void mouseWheelMoved( final MouseWheelEvent e )
   {
