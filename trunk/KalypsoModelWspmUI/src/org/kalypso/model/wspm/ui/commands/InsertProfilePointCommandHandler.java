@@ -15,7 +15,7 @@ import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.IChartHandlerManager;
 
-public class InsertProfilePointHandler extends AbstractHandler implements IElementUpdater
+public class InsertProfilePointCommandHandler extends AbstractHandler implements IElementUpdater
 {
   @Override
   public Object execute( final ExecutionEvent event )

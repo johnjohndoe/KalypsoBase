@@ -55,7 +55,6 @@ import org.kalypso.model.wspm.core.IWspmLayers;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 
@@ -72,8 +71,6 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
 public abstract class AbstractProfilePointHandler extends AbstractChartHandler
 {
   private Double m_breite;
-
-  private IProfileRecord m_point;
 
   private IProfil m_profile;
 
@@ -149,16 +146,6 @@ public abstract class AbstractProfilePointHandler extends AbstractChartHandler
     m_breite = breite;
   }
 
-  protected final IProfileRecord getPoint( )
-  {
-    return m_point;
-  }
-
-  protected final void setPoint( final IProfileRecord point )
-  {
-    m_point = point;
-  }
-
   protected final IProfil getProfile( )
   {
     return m_profile;
@@ -206,8 +193,6 @@ public abstract class AbstractProfilePointHandler extends AbstractChartHandler
 
     setProfile( theme.getProfil() );
     setBreite( mapper.getDomainAxis().screenToNumeric( position.x ).doubleValue() );
-
-    setPoint( ProfileVisitors.findPoint( m_profile, getBreite().doubleValue(), 0.1 ) );
 
     if( isOutOfRange() )
     {
@@ -259,7 +244,6 @@ public abstract class AbstractProfilePointHandler extends AbstractChartHandler
   {
     setProfile( null );
     setBreite( null );
-    setPoint( null );
 
     setCursor( SWT.CURSOR_ARROW );
   }

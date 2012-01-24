@@ -665,7 +665,7 @@
     <extension
           point="org.eclipse.ui.handlers">
        <handler
-             class="org.kalypso.model.wspm.ui.commands.InsertProfilePointHandler"
+             class="org.kalypso.model.wspm.ui.commands.InsertProfilePointCommandHandler"
              commandId="org.kalypso.chart.ui.commands.insert.profile.point">
        </handler>
        <handler
