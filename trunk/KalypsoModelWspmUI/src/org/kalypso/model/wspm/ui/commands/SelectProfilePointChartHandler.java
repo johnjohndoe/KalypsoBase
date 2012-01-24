@@ -112,7 +112,7 @@ public class SelectProfilePointChartHandler extends AbstractProfilePointHandler
   {
     final IChartComposite chart = getChart();
 
-    if( isShiftPressed() )
+    if( Objects.isNotNull( m_p1 ) )// shift was / is pressed!
     {
       final AbstractProfilTheme theme = findProfileTheme( chart );
       final ICoordinateMapper mapper = theme.getCoordinateMapper();
@@ -148,8 +148,11 @@ public class SelectProfilePointChartHandler extends AbstractProfilePointHandler
 
     final double breite = snapToPoint( profile, position.x );
 
-    if( !isShiftPressed() )
+    if( (e.stateMask & SWT.SHIFT) == 0 )
+    {
       m_p0 = breite;
+      m_p1 = null;
+    }
     else
       m_p1 = breite;
 
@@ -183,7 +186,7 @@ public class SelectProfilePointChartHandler extends AbstractProfilePointHandler
   @Override
   public void mouseUp( final MouseEvent e )
   {
-    if( !isShiftPressed() )
+    if( (e.stateMask & SWT.SHIFT) == 0 )
       return;
 
     final IChartComposite chart = getChart();

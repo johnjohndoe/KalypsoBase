@@ -135,7 +135,7 @@ public abstract class AbstractProfilePointHandler extends AbstractChartHandler
 
   }
 
-  protected void profileProblemMarkerChanged( final IProfil source )
+  protected void profileProblemMarkerChanged( @SuppressWarnings("unused") final IProfil source )
   {
   }
 
