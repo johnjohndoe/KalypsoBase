@@ -669,7 +669,7 @@
              commandId="org.kalypso.chart.ui.commands.insert.profile.point">
        </handler>
        <handler
-             class="org.kalypso.model.wspm.ui.commands.ProfilePointSelectionHandler"
+             class="org.kalypso.model.wspm.ui.commands.SelectProfilePointCommandHandler"
              commandId="org.kalypso.chart.ui.commands.profile.selection">
        </handler>
     </extension>
