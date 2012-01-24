@@ -15,7 +15,7 @@ import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.IChartHandlerManager;
 
-public class ProfilePointSelectionHandler extends AbstractHandler implements IElementUpdater
+public class SelectProfilePointCommandHandler extends AbstractHandler implements IElementUpdater
 {
   @Override
   public Object execute( final ExecutionEvent event )
@@ -27,7 +27,7 @@ public class ProfilePointSelectionHandler extends AbstractHandler implements IEl
       return Status.CANCEL_STATUS;
 
     final IChartHandlerManager handler = chart.getPlotHandler();
-    handler.activatePlotHandler( new ProfilePointSelectionChartHandler( chart ) );
+    handler.activatePlotHandler( new SelectProfilePointChartHandler( chart ) );
 
     final IChartPart part = ChartHandlerUtilities.findChartComposite( context );
     if( part != null )
@@ -39,6 +39,6 @@ public class ProfilePointSelectionHandler extends AbstractHandler implements IEl
   @Override
   public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
   {
-    ElementUpdateHelper.updateElement( element, ProfilePointSelectionChartHandler.class );
+    ElementUpdateHelper.updateElement( element, SelectProfilePointChartHandler.class );
   }
 }

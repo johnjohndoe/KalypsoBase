@@ -53,7 +53,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.progress.IProgressConstants;
-import org.joda.time.DateTime;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.debug.KalypsoModelWspmCoreDebug;
@@ -145,7 +144,8 @@ public class ValidationProfilListener implements IProfilListener
 
   protected void revalidate( )
   {
-    System.out.println( "(validation_performance_check)Revalidate :" + DateTime.now().toString( "mm:ss:" ) + DateTime.now().getMillisOfSecond() );
+    KalypsoModelWspmCoreDebug.DEBUG_VALIDATION_MARKER.printf( "(validation_performance_check)Revalidate : %s\n", DateFormat.getTimeInstance().format( Calendar.getInstance().getTime() ) );
+
     m_validateJob.cancel(); // Just in case, to avoid too much validations
     m_validateJob.schedule( 100 );
   }
@@ -158,9 +158,6 @@ public class ValidationProfilListener implements IProfilListener
       revalidate();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProblemMarkerChanged(org.kalypso.model.wspm.core.profil.IProfil)
-   */
   @Override
   public void onProblemMarkerChanged( final IProfil source )
   {

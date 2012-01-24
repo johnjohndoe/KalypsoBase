@@ -55,12 +55,14 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolygonFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINECAP;
@@ -73,14 +75,14 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
 /**
  * @author Dirk Kuch
  */
-public class ProfilePointSelectionChartHandler extends AbstractProfilePointHandler
+public class SelectProfilePointChartHandler extends AbstractProfilePointHandler
 {
 
   private Double m_mouse0 = null;
 
   private Double m_mouse1 = null;
 
-  public ProfilePointSelectionChartHandler( final IChartComposite chart )
+  public SelectProfilePointChartHandler( final IChartComposite chart )
   {
     super( chart );
     super.setCursor( SWT.CURSOR_CROSS );
@@ -89,6 +91,12 @@ public class ProfilePointSelectionChartHandler extends AbstractProfilePointHandl
   @Override
   protected void doMouseMove( final AbstractProfilTheme theme, final Point position )
   {
+    final double breite = snapToPoint( getProfile(), position.x );
+
+    final ICoordinateMapper mapper = theme.getCoordinateMapper();
+    final IAxis domainAxis = mapper.getDomainAxis();
+    position.x = domainAxis.numericToScreen( breite );
+
     final EditInfo info = new EditInfo( theme, getMouseMoveHoverFigure( position ), null, getBreite(), null, null );
     setToolInfo( info );
   }
@@ -122,7 +130,6 @@ public class ProfilePointSelectionChartHandler extends AbstractProfilePointHandl
 
       return figure;
     }
-
   }
 
   @Override
@@ -139,18 +146,40 @@ public class ProfilePointSelectionChartHandler extends AbstractProfilePointHandl
       return;
     }
 
-    final AbstractProfilTheme theme = findProfileTheme( chart );
-    final ICoordinateMapper mapper = theme.getCoordinateMapper();
+    final IProfil profile = getProfile();
+
+    final double breite = snapToPoint( profile, position.x );
 
     if( !isShiftPressed() )
-      m_mouse0 = mapper.getDomainAxis().screenToNumeric( position.x ).doubleValue();
+      m_mouse0 = breite;
     else
-      m_mouse1 = mapper.getDomainAxis().screenToNumeric( position.x ).doubleValue();
-
-    final IProfil profile = getProfile();
+      m_mouse1 = breite;
 
     final IRangeSelection selection = profile.getSelection();
     selection.setRange( Range.is( m_mouse0 ) );
+  }
+
+  private double snapToPoint( final IProfil profile, final int screenX )
+  {
+
+    final AbstractProfilTheme theme = findProfileTheme( getChart() );
+    final ICoordinateMapper mapper = theme.getCoordinateMapper();
+    final IAxis domainAxis = mapper.getDomainAxis();
+
+    final Number xPosition = domainAxis.screenToNumeric( screenX );
+    final Number xMin = domainAxis.screenToNumeric( screenX - 5 );
+    final Number xMax = domainAxis.screenToNumeric( screenX + 5 );
+
+    final FindClosestPointVisitor visitor = new FindClosestPointVisitor( xPosition.doubleValue() );
+    profile.accept( visitor, 1 );
+
+    final IProfileRecord point = visitor.getPoint();
+    final Range<Double> range = Range.between( xMin.doubleValue(), xMax.doubleValue() );
+
+    if( range.contains( point.getBreite() ) )
+      return point.getBreite();
+
+    return xPosition.doubleValue();
   }
 
   @Override
