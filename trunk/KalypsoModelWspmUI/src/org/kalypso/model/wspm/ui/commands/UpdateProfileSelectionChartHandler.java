@@ -53,4 +53,9 @@ public class UpdateProfileSelectionChartHandler extends AbstractProfileSelection
     super( chart, false );
   }
 
+  @Override
+  public CHART_HANDLER_TYPE getType( )
+  {
+    return CHART_HANDLER_TYPE.eRadio;
+  }
 }

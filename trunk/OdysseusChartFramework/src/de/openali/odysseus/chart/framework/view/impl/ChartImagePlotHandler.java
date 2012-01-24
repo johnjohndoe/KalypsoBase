@@ -86,7 +86,7 @@ public class ChartImagePlotHandler implements IChartHandlerManager
 //
 // }
 
-    if( CHART_HANDLER_TYPE.eToggle.equals( handler.getType() ) )
+    if( CHART_HANDLER_TYPE.eRadio.equals( handler.getType() ) )
       clean();
 
     addPlotHandler( handler );
@@ -129,7 +129,7 @@ public class ChartImagePlotHandler implements IChartHandlerManager
     final IChartHandler[] handlers = m_dragHandlers.toArray( new IChartHandler[] {} );
     for( final IChartHandler handler : handlers )
     {
-      if( CHART_HANDLER_TYPE.eToggle.equals( handler.getType() ) )
+      if( CHART_HANDLER_TYPE.eRadio.equals( handler.getType() ) )
         removePlotHandler( handler );
     }
 

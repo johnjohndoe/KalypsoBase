@@ -44,7 +44,7 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.IChartHandler;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class UpdateProfileCursorChartHandler extends AbstractProfileSelectionChartHandler implements IChartHandler
 {
@@ -54,4 +54,9 @@ public class UpdateProfileCursorChartHandler extends AbstractProfileSelectionCha
     super( chart, true );
   }
 
+  @Override
+  public CHART_HANDLER_TYPE getType( )
+  {
+    return CHART_HANDLER_TYPE.eToggle;
+  }
 }

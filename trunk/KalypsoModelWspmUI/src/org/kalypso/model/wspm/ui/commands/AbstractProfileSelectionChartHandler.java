@@ -92,7 +92,9 @@ public abstract class AbstractProfileSelectionChartHandler extends AbstractProfi
     super( chart );
 
     m_viewMode = viewMode;
-    super.setCursor( SWT.CURSOR_CROSS );
+
+    if( !m_viewMode )
+      super.setCursor( SWT.CURSOR_CROSS );
   }
 
   @Override
@@ -116,34 +118,14 @@ public abstract class AbstractProfileSelectionChartHandler extends AbstractProfi
     forceRedrawEvent();
   }
 
-  private IPaintable getMouseMoveHoverFigure( final int x )
-  {
-    final IChartComposite chart = getChart();
-
-    if( Objects.isNotNull( m_p1 ) )// shift was / is pressed!
-    {
-      final AbstractProfilTheme theme = findProfileTheme( chart );
-      final ICoordinateMapper mapper = theme.getCoordinateMapper();
-
-      final Integer x0 = mapper.getDomainAxis().numericToScreen( m_p0 );
-
-      return getHoverFigure( x0, x );
-    }
-    else
-    {
-      final PolylineFigure figure = getHoverFigure( x );
-      figure.getStyle().setDash( 0F, new float[] { 2, 2, 2 } );
-
-      return figure;
-    }
-  }
-
   @Override
   public void mouseDown( final MouseEvent e )
   {
     super.mouseDown( e );
 
     if( m_viewMode )
+      return;
+    if( e.button != 1 )
       return;
 
     final IChartComposite chart = getChart();
@@ -253,7 +235,9 @@ public abstract class AbstractProfileSelectionChartHandler extends AbstractProfi
     final IAxis domainAxis = mapper.getDomainAxis();
     final Integer x = domainAxis.numericToScreen( cursor );
 
-    final IPaintable figure = getMouseMoveHoverFigure( x );
+    final PolylineFigure figure = getHoverFigure( x );
+    figure.getStyle().setDash( 0F, new float[] { 2, 2, 2 } );
+
     figure.paint( e.gc );
   }
 
