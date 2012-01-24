@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.commands;
 
+import org.apache.commons.lang3.Range;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -61,6 +62,7 @@ import org.kalypso.observation.result.TupleResult;
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
 import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINECAP;
@@ -77,6 +79,8 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
 public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
 {
 
+  private boolean m_doMouseDown;
+
   public InsertProfilePointChartHandler( final IChartComposite chart )
   {
     super( chart );
@@ -87,23 +91,17 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
   @Override
   protected void doMouseMove( final AbstractProfilTheme theme, final Point position )
   {
-
-    if( Objects.isNotNull( getPoint() ) )
+    if( isSnapPoint( theme, position.x ) )
     {
-// final StringBuilder builder = new StringBuilder();
-// builder.append( "Bestehender Punkt: " );
-// builder.append( String.format( "Höhe %.2f m", getPoint().getHoehe() ) );
-//
-// final String msg = builder.toString();
-// final Point p = calculatePosition( chart, msg );
-//
-// final EditInfo info = new EditInfo( theme, null, null, getPoint().getBreite(), msg, position );
-// setToolInfo( info );
+      m_doMouseDown = false;
+      setToolInfo( null );
 
       setCursor( SWT.CURSOR_ARROW );
     }
     else
     {
+      m_doMouseDown = true;
+
       final ICoordinateMapper mapper = theme.getCoordinateMapper();
 
       final double hoehe = Profiles.getHoehe( getProfile(), getBreite() );
@@ -116,7 +114,27 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
 
       setCursor( SWT.CURSOR_CROSS );
     }
+  }
 
+  private boolean isSnapPoint( final AbstractProfilTheme theme, final int screenX )
+  {
+    final ICoordinateMapper mapper = theme.getCoordinateMapper();
+    final IAxis domainAxis = mapper.getDomainAxis();
+
+    final Number xPosition = domainAxis.screenToNumeric( screenX );
+    final Number xMin = domainAxis.screenToNumeric( screenX - 5 );
+    final Number xMax = domainAxis.screenToNumeric( screenX + 5 );
+
+    final FindClosestPointVisitor visitor = new FindClosestPointVisitor( xPosition.doubleValue() );
+    getProfile().accept( visitor, 1 );
+
+    final IProfileRecord point = visitor.getPoint();
+    final Range<Double> range = Range.between( xMin.doubleValue(), xMax.doubleValue() );
+
+    if( range.contains( point.getBreite() ) )
+      return true;
+
+    return false;
   }
 
   private IPaintable getHoverFigure( final Point position )
@@ -136,6 +154,9 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
   public void mouseDown( final MouseEvent e )
   {
     super.mouseDown( e );
+
+    if( !m_doMouseDown )
+      return;
 
     if( Objects.isNull( getBreite(), getProfile() ) )
       return;
@@ -170,7 +191,6 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
     job.schedule();
 
     setBreite( null );
-    setPoint( null );
   }
 
   private Point calculatePosition( final IChartComposite composite, final String msg )
@@ -196,7 +216,6 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
   @Override
   public void paintControl( final PaintEvent e )
   {
-
     super.paintControl( e );
   }
 }
