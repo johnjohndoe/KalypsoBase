@@ -31,11 +31,11 @@ import com.vividsolutions.jts.linearref.LocationIndexedLine;
 /**
  * @author Dirk Kuch
  */
-public class ProfileSelectionWidget extends AbstractProfileSelectionWidget
+public class SelectProfilePointWidget extends AbstractProfileSelectionWidget
 {
   private final SelectedProfilesMapPanelListener m_mapPanelListener = new SelectedProfilesMapPanelListener( this );
 
-  public ProfileSelectionWidget( )
+  public SelectProfilePointWidget( )
   {
     super( "", "" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
