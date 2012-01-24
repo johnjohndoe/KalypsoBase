@@ -83,6 +83,7 @@ public class AbstractProfileSelectionWidget extends AbstractWidget implements IP
 
   private final IProfilListener m_listener = new IProfilListener()
   {
+    @SuppressWarnings("synthetic-access")
     @Override
     public void onProfilChanged( final ProfilChangeHint hint )
     {
@@ -236,6 +237,7 @@ public class AbstractProfileSelectionWidget extends AbstractWidget implements IP
   {
     final Job job = new Job( "Forcing repaint event" )
     {
+      @SuppressWarnings("synthetic-access")
       @Override
       protected IStatus run( final IProgressMonitor monitor )
       {

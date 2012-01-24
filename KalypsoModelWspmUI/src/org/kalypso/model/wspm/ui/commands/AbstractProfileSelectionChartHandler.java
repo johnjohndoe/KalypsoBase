@@ -75,15 +75,23 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
 /**
  * @author Dirk Kuch
  */
-public class SelectProfilePointChartHandler extends AbstractProfilePointHandler
+public abstract class AbstractProfileSelectionChartHandler extends AbstractProfilePointHandler
 {
   private Double m_p0 = null;
 
   private Double m_p1 = null;
 
-  public SelectProfilePointChartHandler( final IChartComposite chart )
+  private final boolean m_viewMode;
+
+  /**
+   * @param viewMode
+   *          don't update selection by left mouse button. only update profile cursor and display profile selction
+   */
+  public AbstractProfileSelectionChartHandler( final IChartComposite chart, final boolean viewMode )
   {
     super( chart );
+
+    m_viewMode = viewMode;
     super.setCursor( SWT.CURSOR_CROSS );
   }
 
@@ -134,6 +142,9 @@ public class SelectProfilePointChartHandler extends AbstractProfilePointHandler
   public void mouseDown( final MouseEvent e )
   {
     super.mouseDown( e );
+
+    if( m_viewMode )
+      return;
 
     final IChartComposite chart = getChart();
     final Rectangle bounds = chart.getPlotRect();
@@ -186,6 +197,9 @@ public class SelectProfilePointChartHandler extends AbstractProfilePointHandler
   @Override
   public void mouseUp( final MouseEvent e )
   {
+    if( m_viewMode )
+      return;
+
     if( (e.stateMask & SWT.SHIFT) == 0 )
       return;
 
