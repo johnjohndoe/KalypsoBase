@@ -42,8 +42,11 @@ package org.kalypso.core.status;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -75,6 +78,8 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public class StatusDialog extends AbstractStatusDialog
 {
+  private final Collection<IAction> m_actions = new ArrayList<IAction>();
+
   private boolean m_showAsTree;
 
   private boolean m_showTime = true;
@@ -124,7 +129,11 @@ public class StatusDialog extends AbstractStatusDialog
 
     final ToolBarManager toolBarManager = new ToolBarManager( SWT.HORIZONTAL );
     final ToolBar toolBar = toolBarManager.createControl( panel );
+
     toolBar.setLayoutData( new GridData( SWT.FILL, SWT.TOP, false, false ) );
+
+    for( final IAction additionalAction : m_actions )
+      toolBarManager.add( additionalAction );
 
     // FIXME
     // toolBarManager.add( new MailStatusAction( getStatus() ) );
@@ -249,5 +258,14 @@ public class StatusDialog extends AbstractStatusDialog
       table.setLinesVisible( true );
       return tableViewer;
     }
+  }
+
+  /**
+   * Adds an action to the toolbar of this dialog.<br/>
+   * Must be called before the dialog is opened.
+   */
+  public void addAction( final IAction action )
+  {
+    m_actions.add( action );
   }
 }
