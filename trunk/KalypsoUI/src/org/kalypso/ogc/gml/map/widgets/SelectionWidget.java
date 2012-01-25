@@ -57,14 +57,14 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.RectangleSelector;
 import org.kalypso.ogc.gml.map.widgets.providers.tooltips.ITooltipProvider;
-import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 
 /**
  * This class is a selection widget over all themes.
  * 
  * @author Holger Albert
  */
-public class SelectionWidget extends AbstractWidget
+public class SelectionWidget extends DeprecatedMouseWidget
 {
   /**
    * This selector is responsible for drawing the rectangle for selecting a feature.

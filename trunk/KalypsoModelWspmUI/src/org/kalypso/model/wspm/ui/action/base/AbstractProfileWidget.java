@@ -62,7 +62,7 @@ import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
-import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -76,7 +76,7 @@ import com.vividsolutions.jts.linearref.LocationIndexedLine;
 /**
  * @author Dirk Kuch
  */
-public class AbstractProfileWidget extends AbstractWidget implements IProfileProviderListener
+public class AbstractProfileWidget extends DeprecatedMouseWidget implements IProfileProviderListener
 {
 
   private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();

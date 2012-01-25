@@ -32,7 +32,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
@@ -44,7 +44,7 @@ import org.kalypsodeegree_impl.tools.GMLConstants;
 /**
  * @author Gernot Belger
  */
-public abstract class AbstractCreateGeometryWidget extends AbstractWidget
+public abstract class AbstractCreateGeometryWidget extends DeprecatedMouseWidget
 {
   private final List<IGeometryBuilder> m_buildersToDraw = new ArrayList<IGeometryBuilder>();
 

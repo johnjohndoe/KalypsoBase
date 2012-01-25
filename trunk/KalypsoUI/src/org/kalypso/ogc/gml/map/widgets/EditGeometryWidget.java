@@ -52,7 +52,7 @@ import org.kalypso.ogc.gml.command.JMSelector;
 import org.kalypso.ogc.gml.command.ModifyFeatureGeometryCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -69,7 +69,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * 
  * @author doemming
  */
-public class EditGeometryWidget extends AbstractWidget
+public class EditGeometryWidget extends DeprecatedMouseWidget
 {
   double m_boxRadiusVisibleHandles = 50;
 

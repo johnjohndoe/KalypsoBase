@@ -61,7 +61,7 @@ import org.kalypso.ogc.gml.map.widgets.providers.handles.IHandle;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
-import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -70,7 +70,7 @@ import org.kalypsodeegree.model.feature.Feature;
  * 
  * @author Holger Albert
  */
-public class DragPointsWidget extends AbstractWidget
+public class DragPointsWidget extends DeprecatedMouseWidget
 {
   /**
    * This list stores all handles of the selected feature.

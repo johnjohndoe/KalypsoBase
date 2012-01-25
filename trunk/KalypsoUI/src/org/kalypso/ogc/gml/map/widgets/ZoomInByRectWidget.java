@@ -45,7 +45,7 @@ import java.awt.Point;
 
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 
 /**
  * This class performs a zoomin event. It will be performed by setting the map boundaries to the rectangle selected by
@@ -54,7 +54,7 @@ import org.kalypso.ogc.gml.widgets.AbstractWidget;
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @author doemming
  */
-public class ZoomInByRectWidget extends AbstractWidget
+public class ZoomInByRectWidget extends DeprecatedMouseWidget
 {
   public ZoomInByRectWidget( final String name, final String tooltip )
   {

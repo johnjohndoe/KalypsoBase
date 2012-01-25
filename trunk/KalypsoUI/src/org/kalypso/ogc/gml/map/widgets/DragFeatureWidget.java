@@ -62,17 +62,17 @@ import org.kalypso.ogc.gml.map.widgets.providers.handles.IHandle;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
-import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * This class is a widget for selecting and dragging a complete feature.
- *
+ * 
  * @author Holger Albert
  */
-public class DragFeatureWidget extends AbstractWidget
+public class DragFeatureWidget extends DeprecatedMouseWidget
 {
   /**
    * This list stores all handles of the selected feature.
@@ -111,7 +111,7 @@ public class DragFeatureWidget extends AbstractWidget
 
   /**
    * The constructor.
-   *
+   * 
    * @param name
    *          The name of this widget.
    * @param toolTip

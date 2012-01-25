@@ -60,7 +60,7 @@ import org.kalypso.ogc.gml.IGetFeatureInfoResultProcessor;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 
@@ -69,7 +69,7 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
  * 
  * @author doemming (19.04.2005)
  */
-public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWithOptions
+public class WMSGetFeatureInfoWidget extends DeprecatedMouseWidget implements IWidgetWithOptions
 {
   protected Composite m_topLevel;
 

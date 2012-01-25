@@ -58,7 +58,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -69,7 +69,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 /**
  * @author doemming
  */
-public abstract class AbstractSelectWidget extends AbstractWidget
+public abstract class AbstractSelectWidget extends DeprecatedMouseWidget
 {
   protected static final int MODE_SELECT = 0;
 

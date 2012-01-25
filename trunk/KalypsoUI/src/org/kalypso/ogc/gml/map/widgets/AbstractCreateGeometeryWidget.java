@@ -39,7 +39,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -60,7 +60,7 @@ import com.vividsolutions.jts.geom.Geometry;
  * 
  * @author Holger Albert
  */
-public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
+public abstract class AbstractCreateGeometeryWidget extends DeprecatedMouseWidget
 {
 // private static double MIN_DRAG_DISTANCE_PIXEL = 20;
   private static double MIN_DRAG_DISTANCE_PIXEL = 0.02;

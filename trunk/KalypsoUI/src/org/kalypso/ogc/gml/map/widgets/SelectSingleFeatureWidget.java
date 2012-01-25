@@ -67,7 +67,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -84,7 +84,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * 
  * @author Gernot Belger
  */
-public class SelectSingleFeatureWidget extends AbstractWidget implements MouseListener
+public class SelectSingleFeatureWidget extends DeprecatedMouseWidget implements MouseListener
 {
   private static final String THEME_PROPERTY_SHOW_INFO = "singleSelectShowInfo";
 

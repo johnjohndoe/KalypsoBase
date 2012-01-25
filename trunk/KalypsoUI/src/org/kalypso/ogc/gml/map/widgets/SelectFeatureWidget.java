@@ -84,7 +84,7 @@ import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.util.MapUtils;
-import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -113,7 +113,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * 
  * @author Thomas Jung
  */
-public class SelectFeatureWidget extends AbstractWidget
+public class SelectFeatureWidget extends DeprecatedMouseWidget
 {
   public static final int GRAB_RADIUS = 20;
 

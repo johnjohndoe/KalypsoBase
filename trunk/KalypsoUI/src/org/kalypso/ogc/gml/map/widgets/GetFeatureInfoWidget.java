@@ -61,14 +61,14 @@ import org.kalypso.ogc.gml.map.widgets.dialogs.GetFeatureInfoDialog;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
-import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 
 /**
  * This widget executes a feature info request.
- *
+ * 
  * @author Holger Albert
  */
-public class GetFeatureInfoWidget extends AbstractWidget
+public class GetFeatureInfoWidget extends DeprecatedMouseWidget
 {
   /**
    * The property of the theme, with with we want to do the get feature info request.
@@ -211,7 +211,7 @@ public class GetFeatureInfoWidget extends AbstractWidget
 
   /**
    * This function searches the map model for a {@link IKalypsoTheme} with the theme property set.
-   *
+   * 
    * @param mapModel
    *          The map model.
    * @return The {@link IKalypsoTheme} or null.

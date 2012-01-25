@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
-import org.kalypso.ogc.gml.widgets.IWidget;
+import org.kalypso.ogc.gml.widgets.IDeprecatedMouseWidget;
 
 /**
  * @author Patrice Congo
@@ -48,5 +48,5 @@ import org.kalypso.ogc.gml.widgets.IWidget;
  */
 public interface IWidgetWithStrategy
 {
-  public void setDelegate( IWidget delegate );
+  public void setDelegate( IDeprecatedMouseWidget delegate );
 }

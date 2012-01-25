@@ -45,13 +45,13 @@ import java.awt.Point;
 
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * @author von Dömming
  */
-public class ZoomInWidget extends AbstractWidget
+public class ZoomInWidget extends DeprecatedMouseWidget
 {
   public ZoomInWidget( final String name, final String toolTip )
   {
