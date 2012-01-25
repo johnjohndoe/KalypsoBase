@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.action.selection;
+package org.kalypso.model.wspm.ui.action.base;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -55,12 +55,12 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author Dirk Kuch
  */
-public class SelectedProfilesMapPanelListener implements ISelectionChangedListener
+public class ProfileWidgetMapPanelListener implements ISelectionChangedListener
 {
 
-  private final AbstractProfileSelectionWidget m_widget;
+  private final AbstractProfileWidget m_widget;
 
-  public SelectedProfilesMapPanelListener( final AbstractProfileSelectionWidget widget )
+  public ProfileWidgetMapPanelListener( final AbstractProfileWidget widget )
   {
     m_widget = widget;
   }

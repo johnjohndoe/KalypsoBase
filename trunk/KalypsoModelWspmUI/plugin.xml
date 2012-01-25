@@ -712,6 +712,12 @@
        </command>
        <command
              categoryId="org.kalypso.ogc.gml.map.category"
+             description="Anzeige der Profilselektion und Aktulaisierung des Profil-Cursors"
+             id="org.kalypso.ogc.gml.map.widgets.display.profile.selection"
+             name="Anzeige Profilpunktselektion">
+       </command>
+       <command
+             categoryId="org.kalypso.ogc.gml.map.category"
              description="Einfügen von Profilpunkten"
              id="org.kalypso.ogc.gml.map.widgets.insert.profile.point"
              name="Profilpunkt einfügen">
@@ -722,6 +728,10 @@
        <image
              commandId="org.kalypso.ogc.gml.map.widgets.select.profile.point"
              icon="icons/obj16/select-point.png">
+       </image>
+       <image
+             commandId="org.kalypso.ogc.gml.map.widgets.display.profile.selection"
+             icon="icons/obj16/update_point_cursor.png">
        </image>
        <image
              commandId="org.kalypso.ogc.gml.map.widgets.insert.profile.point"
@@ -737,6 +747,21 @@
              <parameter
                    name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
                    value="org.kalypso.model.wspm.ui.action.selection.SelectProfilePointWidget">
+             </parameter>
+          </class>
+          <enabledWhen>
+             <reference
+                   definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent">
+             </reference>
+          </enabledWhen>
+       </handler>
+       <handler
+             commandId="org.kalypso.ogc.gml.map.widgets.display.profile.selection">
+          <class
+                class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+             <parameter
+                   name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+                   value="org.kalypso.model.wspm.ui.action.selection.DisplayProfileSelectionWidget">
              </parameter>
           </class>
           <enabledWhen>

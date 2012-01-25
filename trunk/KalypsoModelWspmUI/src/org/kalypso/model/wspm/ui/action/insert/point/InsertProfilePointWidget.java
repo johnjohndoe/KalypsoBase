@@ -54,9 +54,9 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.model.wspm.ui.action.base.AbstractProfileWidget;
 import org.kalypso.model.wspm.ui.action.base.ProfilePainter;
-import org.kalypso.model.wspm.ui.action.selection.AbstractProfileSelectionWidget;
-import org.kalypso.model.wspm.ui.action.selection.SelectedProfilesMapPanelListener;
+import org.kalypso.model.wspm.ui.action.base.ProfileWidgetMapPanelListener;
 import org.kalypso.observation.result.IInterpolationHandler;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -68,9 +68,9 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 /**
  * @author Dirk Kuch
  */
-public class InsertProfilePointWidget extends AbstractProfileSelectionWidget
+public class InsertProfilePointWidget extends AbstractProfileWidget
 {
-  private final SelectedProfilesMapPanelListener m_mapPanelListener = new SelectedProfilesMapPanelListener( this );
+  private final ProfileWidgetMapPanelListener m_mapPanelListener = new ProfileWidgetMapPanelListener( this );
 
   public InsertProfilePointWidget( )
   {

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.action.selection;
+package org.kalypso.model.wspm.ui.action.base;
 
 import java.awt.Cursor;
 import java.awt.Graphics;
@@ -76,7 +76,7 @@ import com.vividsolutions.jts.linearref.LocationIndexedLine;
 /**
  * @author Dirk Kuch
  */
-public class AbstractProfileSelectionWidget extends AbstractWidget implements IProfileProviderListener
+public class AbstractProfileWidget extends AbstractWidget implements IProfileProviderListener
 {
 
   private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
@@ -100,7 +100,7 @@ public class AbstractProfileSelectionWidget extends AbstractWidget implements IP
 
   private com.vividsolutions.jts.geom.Point m_snapPoint;
 
-  public AbstractProfileSelectionWidget( final String name, final String toolTip )
+  public AbstractProfileWidget( final String name, final String toolTip )
   {
     super( name, toolTip );
   }
@@ -139,6 +139,10 @@ public class AbstractProfileSelectionWidget extends AbstractWidget implements IP
     catch( final GM_Exception e )
     {
       e.printStackTrace();
+    }
+    catch( final IllegalStateException e )
+    {
+      // do nothing - point is not on line!
     }
   }
 

@@ -123,7 +123,6 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
   public void mouseClicked( final MouseEvent e )
   {
     // FIXME don't iterate over all widgets - look for event.done flag (e.isConsumed)
-
     final IWidget[] widgets = getWidgets();
     for( final IWidget widget : widgets )
     {
