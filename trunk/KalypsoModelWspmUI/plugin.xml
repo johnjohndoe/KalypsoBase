@@ -327,9 +327,17 @@
             <command
                   commandId="org.kalypso.chart.ui.commands.profile.selection" style="radio">
             </command>
+            <separator
+                  name="seperator.radio.toogle"
+                  visible="true">
+            </separator>
             <command
                   commandId="org.kalypso.chart.ui.commands.profile.update.cursor" style="toggle">
             </command>
+            <separator
+                  name="seperator.toggle.popUp"
+                  visible="true">
+            </separator>
             <command
                   commandId="org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand"
                   style="push">
