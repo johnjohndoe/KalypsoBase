@@ -44,6 +44,7 @@ import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -62,7 +63,7 @@ import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -76,7 +77,7 @@ import com.vividsolutions.jts.linearref.LocationIndexedLine;
 /**
  * @author Dirk Kuch
  */
-public class AbstractProfileWidget extends DeprecatedMouseWidget implements IProfileProviderListener
+public class AbstractProfileWidget extends AbstractWidget implements IProfileProviderListener
 {
 
   private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
@@ -112,7 +113,7 @@ public class AbstractProfileWidget extends DeprecatedMouseWidget implements IPro
   }
 
   @Override
-  public void moved( final Point p )
+  public void mouseMoved( final MouseEvent event )
   {
     try
     {
@@ -120,7 +121,7 @@ public class AbstractProfileWidget extends DeprecatedMouseWidget implements IPro
       if( Objects.isNull( profileFeature ) )
         return;
 
-      final com.vividsolutions.jts.geom.Point point = toJtsPosition( p );
+      final com.vividsolutions.jts.geom.Point point = toJtsPosition( event.getPoint() );
       if( Objects.isNull( point ) )
         return;
 
@@ -136,11 +137,11 @@ public class AbstractProfileWidget extends DeprecatedMouseWidget implements IPro
         selection.setCursor( cursor );
       }
     }
-    catch( final GM_Exception e )
+    catch( final GM_Exception ex )
     {
-      e.printStackTrace();
+      ex.printStackTrace();
     }
-    catch( final IllegalStateException e )
+    catch( final IllegalStateException ex )
     {
       // do nothing - point is not on line!
     }

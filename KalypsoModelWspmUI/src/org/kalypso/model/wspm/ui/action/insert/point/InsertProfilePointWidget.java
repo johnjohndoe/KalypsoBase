@@ -42,8 +42,8 @@ package org.kalypso.model.wspm.ui.action.insert.point;
 
 import java.awt.Cursor;
 import java.awt.Graphics;
-import java.awt.Point;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -105,8 +105,11 @@ public class InsertProfilePointWidget extends AbstractProfileWidget
   }
 
   @Override
-  public void leftPressed( final Point p )
+  public void mousePressed( final MouseEvent event )
   {
+    if( MouseEvent.BUTTON1 != event.getButton() )
+      return;
+
     try
     {
       final IProfileFeature profileFeature = getProfile();
