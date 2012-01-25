@@ -64,11 +64,14 @@ import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 /**
  * This handler opens the legend of the map.<br/>
  * Optionally, only the legend of a given theme is shown.
- *
+ * 
  * @author Holger Albert
  */
 public class OpenLegendHandler extends AbstractHandler
 {
+  /**
+   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+   */
   @Override
   public Object execute( final ExecutionEvent event )
   {
@@ -78,8 +81,6 @@ public class OpenLegendHandler extends AbstractHandler
     /* Get the shell. */
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
 
-    final String themeProperty = ObjectUtils.toString( context.getVariable( "themeProperty" ) ); //$NON-NLS-1$
-
     try
     {
       /* Get the map panel. */
@@ -88,6 +89,8 @@ public class OpenLegendHandler extends AbstractHandler
       /* Get the map model. */
       final IMapModell mapModel = mapPanel.getMapModell();
 
+      /* Find the themes. */
+      final String themeProperty = ObjectUtils.toString( context.getVariable( "themeProperty" ) ); //$NON-NLS-1$
       final IKalypsoTheme[] themes = findThemesForLegend( mapModel, themeProperty );
       if( themes == null )
         throw new Exception( "Diese Karte enthält keine Themen..." );
@@ -126,8 +129,7 @@ public class OpenLegendHandler extends AbstractHandler
     if( StringUtils.isBlank( property ) )
       return mapModel.getAllThemes();
 
-    /* Find the raster theme. */
-    final IKalypsoCascadingTheme cascadingTheme = findCascadingTheme( mapModel );
+    final IKalypsoCascadingTheme cascadingTheme = findCascadingTheme( mapModel, property );
     if( cascadingTheme == null )
       return null;
 
@@ -136,14 +138,16 @@ public class OpenLegendHandler extends AbstractHandler
 
   /**
    * This function searches the map model for a {@link IKalypsoCascadingTheme} with the given property set.
-   *
+   * 
    * @param mapModel
    *          The map model.
+   * @param property
+   *          The property.
    * @return The {@link IKalypsoCascadingTheme} or <code>null</code>.
    */
-  public static IKalypsoCascadingTheme findCascadingTheme( final IMapModell mapModel )
+  public static IKalypsoCascadingTheme findCascadingTheme( final IMapModell mapModel, final String property )
   {
-    final IKalypsoTheme[] themes = MapModellHelper.findThemeByProperty( mapModel, "movieTheme", IKalypsoThemeVisitor.DEPTH_ZERO );
+    final IKalypsoTheme[] themes = MapModellHelper.findThemeByProperty( mapModel, property, IKalypsoThemeVisitor.DEPTH_ZERO );
     if( themes == null || themes.length == 0 )
       return null;
 
@@ -153,5 +157,4 @@ public class OpenLegendHandler extends AbstractHandler
 
     return (IKalypsoCascadingTheme) theme;
   }
-
 }
