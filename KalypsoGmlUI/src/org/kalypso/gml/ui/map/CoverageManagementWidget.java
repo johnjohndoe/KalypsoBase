@@ -131,7 +131,7 @@ import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
-import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 import org.kalypso.ui.editor.gmleditor.command.MoveFeatureCommand;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypso.ui.editor.styleeditor.viewer.ColorMapViewer;
@@ -164,7 +164,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * 
  * @author Thomas Jung
  */
-public class CoverageManagementWidget extends AbstractWidget implements IWidgetWithOptions
+public class CoverageManagementWidget extends DeprecatedMouseWidget implements IWidgetWithOptions
 {
   /** Allows to define on the theme, if the user is allowed to change the grid folde for this theme */
   private static final String THEME_PROPERTY_ALLOW_USER_CHANGE_GRID_FOLDER = "allowUserChangeGridFolder"; //$NON-NLS-1$

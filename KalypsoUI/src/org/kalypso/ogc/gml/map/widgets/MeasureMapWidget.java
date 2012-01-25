@@ -53,7 +53,7 @@ import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder;
 import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
 import org.kalypso.ogc.gml.map.widgets.builders.PolygonGeometryBuilder;
-import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_GenericCurve;
@@ -66,7 +66,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * 
  * @author Gernot Belger
  */
-public class MeasureMapWidget extends AbstractWidget
+public class MeasureMapWidget extends DeprecatedMouseWidget
 {
   private final String m_defaultCrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 

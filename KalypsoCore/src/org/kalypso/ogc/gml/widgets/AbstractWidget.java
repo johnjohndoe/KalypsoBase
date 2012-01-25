@@ -44,6 +44,8 @@ import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.util.Map;
 
 import org.eclipse.jface.viewers.ISelection;
@@ -191,70 +193,8 @@ public abstract class AbstractWidget implements IWidget
   }
 
   @Override
-  @SuppressWarnings("deprecation")
-  @Deprecated
-  public void clickPopup( final Point p )
-  {
-    // not implemented by default
-  }
-
-  @Override
-  public void dragged( final Point p )
-  {
-    // not implemented by default
-  }
-
-  @Override
   public void finish( )
   {
-  }
-
-  @Override
-  public void leftClicked( final Point p )
-  {
-    // not implemented by default
-  }
-
-  @Override
-  public void leftPressed( final Point p )
-  {
-    // not implemented by default
-  }
-
-  @Override
-  public void leftReleased( final Point p )
-  {
-    // not implemented by default
-  }
-
-  @Override
-  public void moved( final Point p )
-  {
-    // not implemented by default
-  }
-
-  @Override
-  @SuppressWarnings("deprecation")
-  @Deprecated
-  public void rightClicked( final Point p )
-  {
-    // not implemented by default
-  }
-
-  @Override
-  @SuppressWarnings("deprecation")
-  @Deprecated
-  public void rightPressed( final Point p )
-  {
-    // not implemented by default
-  }
-
-  @Override
-  @SuppressWarnings("deprecation")
-  @Deprecated
-  public void rightReleased( final Point p )
-  {
-    // not implemented by default
   }
 
   /**
@@ -321,47 +261,18 @@ public abstract class AbstractWidget implements IWidget
     //
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#doubleClickedLeft(java.awt.Point)
-   */
-  @Override
-  public void doubleClickedLeft( final Point p )
-  {
-    // not implemented by default
-
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#doubleClickedRight(java.awt.Point)
-   */
-  @Override
-  public void doubleClickedRight( final Point p )
-  {
-    // not implemented by default
-
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#keyPressed(java.awt.event.KeyEvent)
-   */
   @Override
   public void keyPressed( final KeyEvent e )
   {
     // not implemented by default
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#keyReleased(java.awt.event.KeyEvent)
-   */
   @Override
   public void keyReleased( final KeyEvent e )
   {
     // not implemented by default
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#keyTyped(java.awt.event.KeyEvent)
-   */
   @Override
   public void keyTyped( final KeyEvent e )
   {
@@ -372,5 +283,53 @@ public abstract class AbstractWidget implements IWidget
   public void setParameter( final Map<String, String> parameter )
   {
     m_parameter = parameter;
+  }
+
+  @Override
+  public void mouseClicked( final MouseEvent e )
+  {
+    // not implemented by default
+  }
+
+  @Override
+  public void mouseDragged( final MouseEvent e )
+  {
+    // not implemented by default
+  }
+
+  @Override
+  public void mouseEntered( final MouseEvent e )
+  {
+    // not implemented by default
+  }
+
+  @Override
+  public void mouseExited( final MouseEvent e )
+  {
+    // not implemented by default
+  }
+
+  @Override
+  public void mouseMoved( final MouseEvent e )
+  {
+    // not implemented by default
+  }
+
+  @Override
+  public void mousePressed( final MouseEvent e )
+  {
+    // not implemented by default
+  }
+
+  @Override
+  public void mouseReleased( final MouseEvent e )
+  {
+    // not implemented by default
+  }
+
+  @Override
+  public void mouseWheelMoved( final MouseWheelEvent e )
+  {
+    // not implemented by default
   }
 }

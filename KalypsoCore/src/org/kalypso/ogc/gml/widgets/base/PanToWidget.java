@@ -38,12 +38,16 @@
  v.doemming@tuhh.de
 
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.widgets;
+package org.kalypso.ogc.gml.widgets.base;
 
 import java.awt.Point;
+import java.awt.event.MouseEvent;
 
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.IWidget;
+import org.kalypso.ogc.gml.widgets.IWidget.WIDGET_TYPE;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -71,15 +75,17 @@ public class PanToWidget extends AbstractWidget
   }
 
   @Override
-  public void dragged( final Point p )
+  public void mouseDragged( final MouseEvent e )
   {
     final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null )
       return;
 
+    final Point point = e.getPoint();
+
     if( m_world2screen != null && m_startPoint != null )
     {
-      final GM_Position pixelPos = GeometryFactory.createGM_Position( p.getX(), p.getY() );
+      final GM_Position pixelPos = GeometryFactory.createGM_Position( point.getX(), point.getY() );
       m_endPoint = m_world2screen.getSourcePoint( pixelPos );
 
       final GM_Envelope panExtent = calcPanExtent();
@@ -108,29 +114,42 @@ public class PanToWidget extends AbstractWidget
   }
 
   @Override
-  public void leftPressed( final Point p )
+  public void mousePressed( final MouseEvent e )
   {
+    if( MouseEvent.BUTTON2 != e.getButton() )
+      return;
+
     final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null )
       return;
+
+    final Point point = e.getPoint();
 
     m_world2screen = mapPanel.getProjection();
     if( m_world2screen == null )
       return;
 
-    final GM_Position pixelPos = GeometryFactory.createGM_Position( p.getX(), p.getY() );
+    final GM_Position pixelPos = GeometryFactory.createGM_Position( point.getX(), point.getY() );
     m_startPoint = m_world2screen.getSourcePoint( pixelPos );
 
     m_endPoint = null;
   }
 
+  /**
+   * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
+   */
   @Override
-  public void leftReleased( final Point p )
+  public void mouseReleased( final MouseEvent e )
   {
+    if( MouseEvent.BUTTON2 != e.getButton() )
+      return;
+
     if( m_world2screen == null )
       return;
 
-    final GM_Position pixelPos = GeometryFactory.createGM_Position( p.getX(), p.getY() );
+    final Point point = e.getPoint();
+
+    final GM_Position pixelPos = GeometryFactory.createGM_Position( point.getX(), point.getY() );
     m_endPoint = m_world2screen.getSourcePoint( pixelPos );
 
     perform();
@@ -151,5 +170,11 @@ public class PanToWidget extends AbstractWidget
       final ChangeExtentCommand command = new ChangeExtentCommand( mapPanel, panExtent );
       postViewCommand( command, null );
     }
+  }
+
+  @Override
+  public WIDGET_TYPE getType( )
+  {
+    return WIDGET_TYPE.eBackground;
   }
 }

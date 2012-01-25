@@ -98,7 +98,7 @@ import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.outline.ViewContentOutline;
-import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypso.ui.editor.mapeditor.views.MapWidgetView;
@@ -125,7 +125,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * @author ig
  */
 @SuppressWarnings("unchecked")
-public class FindElementMapWidget extends AbstractWidget implements IWidgetWithOptions
+public class FindElementMapWidget extends DeprecatedMouseWidget implements IWidgetWithOptions
 {
   private static IWorkbenchPage m_activePage;
 

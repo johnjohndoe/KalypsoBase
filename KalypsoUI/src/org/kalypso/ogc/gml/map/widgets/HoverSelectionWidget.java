@@ -47,14 +47,14 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction;
-import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 
 /**
  * This class is a selection widget over all themes.
  * 
  * @author Holger Albert
  */
-public class HoverSelectionWidget extends AbstractWidget
+public class HoverSelectionWidget extends DeprecatedMouseWidget
 {
   private final IRectangleMapFunction m_function;
 

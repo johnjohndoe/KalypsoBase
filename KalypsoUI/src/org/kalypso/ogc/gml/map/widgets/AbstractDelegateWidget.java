@@ -47,17 +47,18 @@ import java.awt.event.KeyEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.IDeprecatedMouseWidget;
 import org.kalypso.ogc.gml.widgets.IWidget;
 
 /**
  * @author Thomas Jung
  */
-public class AbstractDelegateWidget extends AbstractWidget implements IWidgetWithStrategy
+public class AbstractDelegateWidget extends DeprecatedMouseWidget implements IWidgetWithStrategy
 {
-  private IWidget m_delegate = null;
+  private IDeprecatedMouseWidget m_delegate = null;
 
-  public AbstractDelegateWidget( final String name, final String tooltip, final IWidget delegate )
+  public AbstractDelegateWidget( final String name, final String tooltip, final IDeprecatedMouseWidget delegate )
   {
     super( name, tooltip );
 
@@ -70,7 +71,7 @@ public class AbstractDelegateWidget extends AbstractWidget implements IWidgetWit
   }
 
   @Override
-  public void setDelegate( final IWidget delegate )
+  public void setDelegate( final IDeprecatedMouseWidget delegate )
   {
     if( m_delegate != null )
       m_delegate.finish();

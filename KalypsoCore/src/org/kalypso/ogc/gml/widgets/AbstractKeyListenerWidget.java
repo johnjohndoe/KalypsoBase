@@ -65,7 +65,7 @@ import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
  * 
  * @author Dirk Kuch
  */
-public abstract class AbstractKeyListenerWidget extends AbstractWidget
+public abstract class AbstractKeyListenerWidget extends DeprecatedMouseWidget
 {
   private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
 
