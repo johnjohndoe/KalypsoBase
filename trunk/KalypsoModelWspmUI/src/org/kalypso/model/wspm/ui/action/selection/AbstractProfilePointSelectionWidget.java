@@ -42,8 +42,8 @@ package org.kalypso.model.wspm.ui.action.selection;
 
 import java.awt.Cursor;
 import java.awt.Graphics;
-import java.awt.Point;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 
 import org.apache.commons.lang3.Range;
 import org.kalypso.commons.command.ICommandTarget;
@@ -110,7 +110,7 @@ public abstract class AbstractProfilePointSelectionWidget extends AbstractProfil
     super.finish();
   }
 
-  private void updateSelection( )
+  private void updateSelection( final boolean shiftDown )
   {
     if( m_viewMode )
       return;
@@ -127,7 +127,7 @@ public abstract class AbstractProfilePointSelectionWidget extends AbstractProfil
       if( Objects.isNull( cursor ) )
         return;
 
-      if( isShiftKeyPressed() )
+      if( shiftDown )
       {
         final double p0 = Profiles.getWidth( profile, m_p0 );
         selection.setRange( Range.between( p0, cursor ) );
@@ -149,18 +149,21 @@ public abstract class AbstractProfilePointSelectionWidget extends AbstractProfil
   }
 
   @Override
-  public void leftPressed( final Point p )
+  public void mousePressed( final MouseEvent e )
   {
     if( m_viewMode )
       return;
 
-    if( !isShiftKeyPressed() )
+    if( MouseEvent.BUTTON1 != e.getButton() )
+      return;
+
+    final boolean shiftDown = e.isShiftDown();
+
+    if( shiftDown )
       m_p0 = getSnapPoint();
 
-    updateSelection();
+    updateSelection( shiftDown );
   }
-
-  private boolean m_shift = false;
 
   private com.vividsolutions.jts.geom.Point m_p0;
 
@@ -253,18 +256,6 @@ public abstract class AbstractProfilePointSelectionWidget extends AbstractProfil
   }
 
   @Override
-  public void keyPressed( final KeyEvent e )
-  {
-    final int keyCode = e.getKeyCode();
-    switch( keyCode )
-    {
-      case KeyEvent.VK_SHIFT:
-        m_shift = true;
-        break;
-    }
-  }
-
-  @Override
   public void keyReleased( final KeyEvent e )
   {
     final int keyCode = e.getKeyCode();
@@ -273,15 +264,7 @@ public abstract class AbstractProfilePointSelectionWidget extends AbstractProfil
       case KeyEvent.VK_ESCAPE:
         finish();
         break;
-
-      case KeyEvent.VK_SHIFT:
-        m_shift = false;
-        break;
     }
   }
 
-  protected boolean isShiftKeyPressed( )
-  {
-    return m_shift;
-  }
 }
