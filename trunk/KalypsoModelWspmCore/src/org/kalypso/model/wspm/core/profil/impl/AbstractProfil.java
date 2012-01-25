@@ -203,6 +203,9 @@ public abstract class AbstractProfil implements IProfil
   @Override
   public void addProfilListener( final IProfilListener pl )
   {
+    if( Objects.isNull( pl ) )
+      return;
+
     m_listeners.add( pl );
   }
 
