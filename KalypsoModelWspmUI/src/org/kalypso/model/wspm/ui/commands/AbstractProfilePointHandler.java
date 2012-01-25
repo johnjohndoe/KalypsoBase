@@ -242,6 +242,15 @@ public abstract class AbstractProfilePointHandler extends AbstractChartHandler
     return false;
   }
 
+  protected boolean isOutOfRange( final Integer x )
+  {
+    final IChartComposite chart = getChart();
+    if( x < 0 )
+      return true;
+
+    return x > chart.getPlotRect().width;
+  }
+
   protected final void doReset( )
   {
     setProfile( null );

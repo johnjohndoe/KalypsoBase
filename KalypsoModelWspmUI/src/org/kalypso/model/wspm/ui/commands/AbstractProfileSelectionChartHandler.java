@@ -235,6 +235,9 @@ public abstract class AbstractProfileSelectionChartHandler extends AbstractProfi
     final IAxis domainAxis = mapper.getDomainAxis();
     final Integer x = domainAxis.numericToScreen( cursor );
 
+    if( isOutOfRange( x ) )
+      return;
+
     final PolylineFigure figure = getHoverFigure( x );
     figure.getStyle().setDash( 0F, new float[] { 2, 2, 2 } );
 
@@ -266,6 +269,8 @@ public abstract class AbstractProfileSelectionChartHandler extends AbstractProfi
     final ICoordinateMapper mapper = theme.getCoordinateMapper();
 
     final Integer x = mapper.getDomainAxis().numericToScreen( range.getMinimum() );
+    if( isOutOfRange( x ) )
+      return;
 
     final IPaintable figure = getHoverFigure( x );
     figure.paint( e.gc );

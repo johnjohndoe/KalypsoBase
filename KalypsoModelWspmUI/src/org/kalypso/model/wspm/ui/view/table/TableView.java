@@ -158,7 +158,7 @@ public class TableView extends ViewPart implements ITupleResultViewerProvider, I
     public void onProblemMarkerChanged( final IProfil source )
     {
       m_markerRefreshJob.cancel();
-      m_markerRefreshJob.schedule( 500 );
+      m_markerRefreshJob.schedule( 100 );
     }
   };
 

@@ -229,7 +229,8 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
       return;
 
     final IPaintable figure = getHoverFigure( theme, cursor );
-    figure.paint( e.gc );
+    if( Objects.isNotNull( figure ) )
+      figure.paint( e.gc );
   }
 
   private IPaintable getHoverFigure( final AbstractProfilTheme theme, final Double cursor )
@@ -241,6 +242,9 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
 
     final int x = domainAxis.numericToScreen( cursor );
     final int y = mapper.getTargetAxis().numericToScreen( hoehe );
+
+    if( isOutOfRange( x ) )
+      return null;
 
     final PointFigure pointFigure = new PointFigure();
 

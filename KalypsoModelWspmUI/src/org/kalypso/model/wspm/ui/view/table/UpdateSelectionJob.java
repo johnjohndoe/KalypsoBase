@@ -79,6 +79,9 @@ public class UpdateSelectionJob extends UIJob
   @Override
   public IStatus runInUIThread( final IProgressMonitor monitor )
   {
+    if( monitor.isCanceled() )
+      return Status.CANCEL_STATUS;
+
     final TableViewer viewer = m_tableView.getTupleResultViewer();
     if( Objects.isNull( viewer ) || viewer.getTable().isDisposed() )
       return Status.CANCEL_STATUS;
