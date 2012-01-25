@@ -68,9 +68,6 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
    */
   private Map< ? , ? > m_parameter;
 
-  /**
-   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
@@ -139,9 +136,6 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     return null;
   }
 
-  /**
-   * @see org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.menus.UIElement, java.util.Map)
-   */
   @Override
   public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
   {
@@ -176,10 +170,6 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     }
   }
 
-  /**
-   * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
-   *      java.lang.String, java.lang.Object)
-   */
   @Override
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
