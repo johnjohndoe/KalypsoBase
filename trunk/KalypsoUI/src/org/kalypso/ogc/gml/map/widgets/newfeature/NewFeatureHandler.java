@@ -97,7 +97,7 @@ public class NewFeatureHandler extends AbstractHandler implements IHandler
           geomPropertiesQName.add( prop.getQName() );
         }
         final NewFeatureWidget newFeatureWidget = new NewFeatureWidget( ft.getQName(), geomPropertiesQName.toArray( new QName[geomPropertiesQName.size()] ) );
-        mapPanel.getWidgetManager().setActualWidget( newFeatureWidget );
+        mapPanel.getWidgetManager().addWidget( newFeatureWidget );
       }
     }
 

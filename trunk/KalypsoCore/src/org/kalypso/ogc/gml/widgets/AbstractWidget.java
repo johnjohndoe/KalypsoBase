@@ -84,6 +84,13 @@ public abstract class AbstractWidget implements IWidget
   }
 
   @Override
+  public WIDGET_TYPE getType( )
+  {
+    // radio is default activation type
+    return WIDGET_TYPE.eRadio;
+  }
+
+  @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     m_commandPoster = commandPoster;

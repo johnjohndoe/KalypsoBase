@@ -44,6 +44,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.layout.FillLayout;
@@ -260,7 +261,7 @@ public class MapWidgetView extends ViewPart
         widgetParent.setLayout( new FillLayout() );
 
         /* Also, of course, activate the widget */
-        panel.getWidgetManager().setActualWidget( widget );
+        panel.getWidgetManager().addWidget( widget );
 
         widget.createControl( widgetParent, m_toolkit );
 
@@ -341,9 +342,12 @@ public class MapWidgetView extends ViewPart
         /* Activate my widget if not already done so */
         /* Check if already present, in order to suppress map repaint */
         final IWidgetWithOptions widget = info.getWidget();
-        if( widget != null && widget != panel.getWidgetManager().getActualWidget() )
+
+        final IWidget[] widgets = panel.getWidgetManager().getWidgets();
+
+        if( widget != null && !ArrayUtils.contains( widgets, widget ) )
         {
-          panel.getWidgetManager().setActualWidget( widget );
+          panel.getWidgetManager().addWidget( widget );
           setContentDescription( "" ); //$NON-NLS-1$
         }
       }

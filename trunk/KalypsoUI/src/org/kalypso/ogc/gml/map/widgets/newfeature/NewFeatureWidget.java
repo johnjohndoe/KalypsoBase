@@ -93,6 +93,6 @@ public class NewFeatureWidget extends AbstractCreateGeometryWidget
   /** Deactivates myself */
   protected void cancel( )
   {
-    getMapPanel().getWidgetManager().setActualWidget( null );
+    getMapPanel().getWidgetManager().addWidget( null );
   }
 }

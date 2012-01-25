@@ -125,7 +125,7 @@ public class MapView extends AbstractMapPart implements IViewPart, IContentOutli
   @Override
   public void dispose( )
   {
-    getMapPanel().getWidgetManager().setActualWidget( null );
+    getMapPanel().getWidgetManager().addWidget( null );
 
     // FIXME: saving the map here causes dead-locks!
     final String saveOnCloseString = getConfigurationElement().getAttribute( MapView.SAVE_MAP_ON_CLOSE );

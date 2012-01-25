@@ -98,7 +98,7 @@ public abstract class AbstractKeyListenerWidget extends AbstractWidget
     final IMapPanel mapPanel = getMapPanel();
 
     mapPanel.setCursor( java.awt.Cursor.getPredefinedCursor( Cursor.DEFAULT_CURSOR ) );
-    mapPanel.getWidgetManager().setActualWidget( null );
+    mapPanel.getWidgetManager().addWidget( null );
   }
 
   /**

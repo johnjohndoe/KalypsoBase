@@ -65,10 +65,6 @@ public class SwtWidgetManager implements IWidgetManager, MouseListener, MouseMov
 
   private final IFeatureSelectionListener m_featureSelectionListener = new IFeatureSelectionListener()
   {
-    /**
-     * @see org.kalypso.ogc.gml.selection.IFeatureSelectionListener#selectionChanged(java.lang.Object,
-     *      org.kalypso.ogc.gml.selection.IFeatureSelection)
-     */
     @Override
     public void selectionChanged( final Object source, final IFeatureSelection selection )
     {
@@ -95,7 +91,7 @@ public class SwtWidgetManager implements IWidgetManager, MouseListener, MouseMov
   @Override
   public void dispose( )
   {
-    setActualWidget( null );
+    addWidget( null );
 
     m_mapPanel.getSelectionManager().removeSelectionListener( m_featureSelectionListener );
   }
@@ -108,19 +104,18 @@ public class SwtWidgetManager implements IWidgetManager, MouseListener, MouseMov
 
   public void paintWidget( final Graphics g )
   {
-    final IWidget actualWidget = getActualWidget();
-    if( actualWidget != null )
-      actualWidget.paint( g );
+    if( m_actualWidget != null )
+      m_actualWidget.paint( g );
   }
 
   @Override
-  public IWidget getActualWidget( )
+  public IWidget[] getWidgets( )
   {
-    return m_actualWidget;
+    return new IWidget[] { m_actualWidget };
   }
 
   @Override
-  public void setActualWidget( final IWidget newWidget )
+  public void addWidget( final IWidget newWidget )
   {
     if( m_actualWidget != null )
       m_actualWidget.finish();
@@ -190,9 +185,6 @@ public class SwtWidgetManager implements IWidgetManager, MouseListener, MouseMov
 
   // /////////// SWT /////////////
 
-  /**
-   * @see org.eclipse.swt.events.MouseListener#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
-   */
   @Override
   public void mouseDoubleClick( final org.eclipse.swt.events.MouseEvent e )
   {
@@ -200,17 +192,13 @@ public class SwtWidgetManager implements IWidgetManager, MouseListener, MouseMov
 
   }
 
-  /**
-   * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
-   */
   @Override
   public void mouseDown( final org.eclipse.swt.events.MouseEvent e )
   {
     m_mouseDown = true;
 
     // MOUSE PRESSED
-    final IWidget actualWidget = getActualWidget();
-    if( actualWidget == null )
+    if( m_actualWidget == null )
       return;
 
     final Point point = new Point( e.x, e.y );
@@ -218,7 +206,7 @@ public class SwtWidgetManager implements IWidgetManager, MouseListener, MouseMov
     switch( e.button )
     {
       case 1:
-        actualWidget.leftPressed( point );
+        m_actualWidget.leftPressed( point );
         break;
 
       default:
@@ -226,9 +214,6 @@ public class SwtWidgetManager implements IWidgetManager, MouseListener, MouseMov
     }
   }
 
-  /**
-   * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
-   */
   @Override
   public void mouseUp( final org.eclipse.swt.events.MouseEvent e )
   {
@@ -238,8 +223,7 @@ public class SwtWidgetManager implements IWidgetManager, MouseListener, MouseMov
 
     // MOUSE RELEASED
     // MOUSE_CLICKED
-    final IWidget actualWidget = getActualWidget();
-    if( getActualWidget() == null )
+    if( m_actualWidget == null )
       return;
 
     final Point point = new Point( e.x, e.y );
@@ -247,7 +231,7 @@ public class SwtWidgetManager implements IWidgetManager, MouseListener, MouseMov
     switch( e.button )
     {
       case 1:
-        actualWidget.leftReleased( point );
+        m_actualWidget.leftReleased( point );
         break;
 
       default:
@@ -262,14 +246,14 @@ public class SwtWidgetManager implements IWidgetManager, MouseListener, MouseMov
     {
       case 1:
         if( e.count == 1 )
-          actualWidget.leftClicked( point );
+          m_actualWidget.leftClicked( point );
         else if( e.count == 2 )
-          actualWidget.doubleClickedLeft( point );
+          m_actualWidget.doubleClickedLeft( point );
         break;
 
       case 3:
         if( e.count == 2 )
-          actualWidget.doubleClickedRight( point );
+          m_actualWidget.doubleClickedRight( point );
         break;
 
       default:
@@ -277,31 +261,24 @@ public class SwtWidgetManager implements IWidgetManager, MouseListener, MouseMov
     }
   }
 
-  /**
-   * @see org.eclipse.swt.events.MouseMoveListener#mouseMove(org.eclipse.swt.events.MouseEvent)
-   */
   @Override
   public void mouseMove( final org.eclipse.swt.events.MouseEvent e )
   {
     // MOUSE MOVED
-    final IWidget actualWidget = getActualWidget();
-    if( actualWidget == null )
+    if( m_actualWidget == null )
       return;
 
     final Point point = new Point( e.x, e.y );
 
-    actualWidget.moved( point );
+    m_actualWidget.moved( point );
 
     m_mapPanel.fireMouseMouveEvent( e.x, e.y );
 
     // MOUSE DRAGGED
     if( m_mouseDown )
-      actualWidget.dragged( point );
+      m_actualWidget.dragged( point );
   }
 
-  /**
-   * @see org.eclipse.swt.events.MouseWheelListener#mouseScrolled(org.eclipse.swt.events.MouseEvent)
-   */
   @Override
   public void mouseScrolled( final org.eclipse.swt.events.MouseEvent e )
   {
@@ -309,33 +286,32 @@ public class SwtWidgetManager implements IWidgetManager, MouseListener, MouseMov
     // Zoom in/out ...?
   }
 
-  /**
-   * @see org.eclipse.swt.events.KeyListener#keyPressed(org.eclipse.swt.events.KeyEvent)
-   */
   @Override
   public void keyPressed( final org.eclipse.swt.events.KeyEvent e )
   {
     // KEY_PRESSED
-    final IWidget widget = getActualWidget();
-    if( widget == null )
+    if( m_actualWidget == null )
       return;
 
 // KeyEvent evt = new KeyEvent(null, -1, -1, e.stateMask,e.keyCode, e.character );
 // widget.keyPressed( evt );
   }
 
-  /**
-   * @see org.eclipse.swt.events.KeyListener#keyReleased(org.eclipse.swt.events.KeyEvent)
-   */
   @Override
   public void keyReleased( final org.eclipse.swt.events.KeyEvent e )
   {
-    final IWidget widget = getActualWidget();
-    if( widget == null )
+    if( m_actualWidget == null )
       return;
 
 // KeyEvent evt = new KeyEvent(null, -1, -1, e.stateMask,e.keyCode, e.character );
 // widget.keyReleased( e );
 
+  }
+
+  @Override
+  public void removeWidget( final IWidget widget )
+  {
+    if( m_actualWidget == widget )
+      m_actualWidget = null;
   }
 }
