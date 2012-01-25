@@ -82,8 +82,6 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
 {
   private boolean m_doMouseDown;
 
-  private Integer m_y0;
-
   public InsertProfilePointChartHandler( final IChartComposite chart )
   {
     super( chart );
@@ -96,9 +94,6 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
   {
     final ICoordinateMapper mapper = theme.getCoordinateMapper();
 
-    final double hoehe = Profiles.getHoehe( getProfile(), getBreite() );
-    m_y0 = mapper.getTargetAxis().numericToScreen( hoehe );
-
     if( isSnapPoint( theme, position.x ) )
     {
       m_doMouseDown = false;
@@ -110,7 +105,9 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
     {
       m_doMouseDown = true;
 
-      position.y = m_y0;
+      final double hoehe = Profiles.getHoehe( getProfile(), getBreite() );
+      position.y = mapper.getTargetAxis().numericToScreen( hoehe );
+
       final String msg = String.format( "Neuer Punkt:\nx=%.2f m, y=%.2f m", getBreite(), hoehe );
 
       final EditInfo info = new EditInfo( theme, null, null, getBreite(), msg, new Point( position.x + 5, position.y + 45 ) );
@@ -142,19 +139,6 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
       return true;
 
     return false;
-  }
-
-  private IPaintable getHoverFigure( final int x )
-  {
-    final PointFigure pointFigure = new PointFigure();
-
-    final ILineStyle lineStyle = new LineStyle( 3, new RGB( 0x2F, 0x9b, 0x21 ), 255, 0F, null, LINEJOIN.MITER, LINECAP.ROUND, 1, true );
-    final PointStyle pointStyle = new PointStyle( lineStyle, 9, 9, 255, new RGB( 255, 255, 255 ), true, null, true );
-
-    pointFigure.setStyle( pointStyle );
-    pointFigure.setPoints( new Point[] { new Point( x, m_y0 ) } );
-
-    return pointFigure;
   }
 
   @Override
@@ -244,12 +228,29 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
     if( Objects.isNull( theme ) )
       return;
 
+    final IPaintable figure = getHoverFigure( theme, cursor );
+    figure.paint( e.gc );
+  }
+
+  private IPaintable getHoverFigure( final AbstractProfilTheme theme, final Double cursor )
+  {
+    final double hoehe = Profiles.getHoehe( getProfile(), cursor );
+
     final ICoordinateMapper mapper = theme.getCoordinateMapper();
     final IAxis domainAxis = mapper.getDomainAxis();
-    final Integer x = domainAxis.numericToScreen( cursor );
 
-    final IPaintable figure = getHoverFigure( x );
-    figure.paint( e.gc );
+    final int x = domainAxis.numericToScreen( cursor );
+    final int y = mapper.getTargetAxis().numericToScreen( hoehe );
+
+    final PointFigure pointFigure = new PointFigure();
+
+    final ILineStyle lineStyle = new LineStyle( 3, new RGB( 0x2F, 0x9b, 0x21 ), 255, 0F, null, LINEJOIN.MITER, LINECAP.ROUND, 1, true );
+    final PointStyle pointStyle = new PointStyle( lineStyle, 9, 9, 255, new RGB( 255, 255, 255 ), true, null, true );
+
+    pointFigure.setStyle( pointStyle );
+    pointFigure.setPoints( new Point[] { new Point( x, y ) } );
+
+    return pointFigure;
   }
 
 }

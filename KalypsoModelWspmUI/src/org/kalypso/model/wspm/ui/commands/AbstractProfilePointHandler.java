@@ -100,7 +100,6 @@ public abstract class AbstractProfilePointHandler extends AbstractChartHandler
   {
     final Job job = new Job( "Initializing Profile Point Handler" )
     {
-
       @Override
       protected IStatus run( final IProgressMonitor monitor )
       {

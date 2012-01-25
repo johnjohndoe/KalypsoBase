@@ -66,28 +66,8 @@ public class ChartImagePlotHandler implements IChartHandlerManager
   @Override
   public void activatePlotHandler( final IChartHandler handler )
   {
-// try
-// {
-
-// final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService( ICommandService.class );
-// final Command command = service.getCommand( "org.kalypso.chart.ui.commands.insert.profile.point" );
-//
-// final String[] states = command.getStateIds();
-//
-//
-// final IMenuService menuService = (IMenuService) PlatformUI.getWorkbench().getService( IMenuService.class );
-// final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class
-// );
-//
-// final int asdfasdf = 0;
-// }
-// catch( final Throwable t )
-// {
-//
-// }
-
     if( CHART_HANDLER_TYPE.eRadio.equals( handler.getType() ) )
-      clean();
+      doClean();
 
     addPlotHandler( handler );
   }
@@ -124,7 +104,7 @@ public class ChartImagePlotHandler implements IChartHandlerManager
    * disable all ChartHandler with getType() == CHART_HANDLER_TYPE.eToggle
    */
   @Override
-  public void clean( )
+  public void doClean( )
   {
     final IChartHandler[] handlers = m_dragHandlers.toArray( new IChartHandler[] {} );
     for( final IChartHandler handler : handlers )

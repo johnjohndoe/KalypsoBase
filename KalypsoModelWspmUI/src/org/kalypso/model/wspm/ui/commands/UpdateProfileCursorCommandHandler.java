@@ -95,7 +95,6 @@ public class UpdateProfileCursorCommandHandler extends AbstractHandler implement
   @Override
   public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
   {
-
-// ElementUpdateHelper.updateElement( element, UpdateProfileCursorChartHandler.class );
+    element.setChecked( Objects.isNotNull( m_widget ) );
   }
 }
