@@ -59,6 +59,8 @@ public class StatusCollector implements IStatusCollector
 
   private final String m_pluginID;
 
+  private IStatus m_status;
+
   /**
    * @param pluginID
    *          All convenience methods (like {@link #addError(String, String)}) will use this plug-in id to create a
@@ -79,8 +81,23 @@ public class StatusCollector implements IStatusCollector
   public IStatus add( final int severity, final String msgFormat, final Throwable exception, final Object... formatParameters )
   {
     final String msg = String.format( msgFormat, formatParameters );
-    final Status status = new Status( severity, m_pluginID, msg, exception );
-    m_stati.add( status );
+    final IStatus status = new Status( severity, m_pluginID, msg, exception );
+    internalAddStatus( status );
+    return status;
+  }
+
+  private boolean internalAddStatus( final IStatus status )
+  {
+    final IStatus tweakedStatus = tweakStatusBeforeAdd( status );
+    return m_stati.add( tweakedStatus );
+  }
+
+  /**
+   * Allows implementors to override how stati are internally added<br/>
+   * By default,. the original status is returned.
+   */
+  protected IStatus tweakStatusBeforeAdd( final IStatus status )
+  {
     return status;
   }
 
@@ -90,9 +107,6 @@ public class StatusCollector implements IStatusCollector
     return add( severity, msg, exception, new Object[0] );
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.core.runtime.IStatusCollector#getAllStati()
-   */
   @Override
   public IStatus[] getAllStati( )
   {
@@ -130,159 +144,94 @@ public class StatusCollector implements IStatusCollector
     return new Status( IStatus.OK, m_pluginID, okMessage );
   }
 
-  /**
-   * @return
-   * @see java.util.Collection#size()
-   */
   @Override
   public int size( )
   {
     return m_stati.size();
   }
 
-  /**
-   * @return
-   * @see java.util.Collection#isEmpty()
-   */
   @Override
   public boolean isEmpty( )
   {
     return m_stati.isEmpty();
   }
 
-  /**
-   * @param o
-   * @return
-   * @see java.util.Collection#contains(java.lang.Object)
-   */
   @Override
   public boolean contains( final Object o )
   {
     return m_stati.contains( o );
   }
 
-  /**
-   * @return
-   * @see java.util.Collection#iterator()
-   */
   @Override
   public Iterator<IStatus> iterator( )
   {
     return m_stati.iterator();
   }
 
-  /**
-   * @return
-   * @see java.util.Collection#toArray()
-   */
   @Override
   public Object[] toArray( )
   {
     return m_stati.toArray();
   }
 
-  /**
-   * @param <T>
-   * @param a
-   * @return
-   * @see java.util.Collection#toArray(T[])
-   */
   @Override
   public <T> T[] toArray( final T[] a )
   {
     return m_stati.toArray( a );
   }
 
-  /**
-   * @param e
-   * @return
-   * @see java.util.Collection#add(java.lang.Object)
-   */
   @Override
   public boolean add( final IStatus e )
   {
-    return m_stati.add( e );
+    return internalAddStatus( e );
   }
 
-  /**
-   * @param o
-   * @return
-   * @see java.util.Collection#remove(java.lang.Object)
-   */
   @Override
   public boolean remove( final Object o )
   {
     return m_stati.remove( o );
   }
 
-  /**
-   * @param c
-   * @return
-   * @see java.util.Collection#containsAll(java.util.Collection)
-   */
   @Override
   public boolean containsAll( final Collection< ? > c )
   {
     return m_stati.containsAll( c );
   }
 
-  /**
-   * @param c
-   * @return
-   * @see java.util.Collection#addAll(java.util.Collection)
-   */
   @Override
   public boolean addAll( final Collection< ? extends IStatus> c )
   {
-    return m_stati.addAll( c );
+    boolean changed = false;
+    for( final IStatus status : c )
+      changed |= internalAddStatus( status );
+
+    return changed;
   }
 
-  /**
-   * @param c
-   * @return
-   * @see java.util.Collection#removeAll(java.util.Collection)
-   */
   @Override
   public boolean removeAll( final Collection< ? > c )
   {
     return m_stati.removeAll( c );
   }
 
-  /**
-   * @param c
-   * @return
-   * @see java.util.Collection#retainAll(java.util.Collection)
-   */
   @Override
   public boolean retainAll( final Collection< ? > c )
   {
     return m_stati.retainAll( c );
   }
 
-  /**
-   * @see java.util.Collection#clear()
-   */
   @Override
   public void clear( )
   {
     m_stati.clear();
   }
 
-  /**
-   * @param o
-   * @return
-   * @see java.util.Collection#equals(java.lang.Object)
-   */
   @Override
   public boolean equals( final Object o )
   {
     return m_stati.equals( o );
   }
 
-  /**
-   * @return
-   * @see java.util.Collection#hashCode()
-   */
   @Override
   public int hashCode( )
   {
