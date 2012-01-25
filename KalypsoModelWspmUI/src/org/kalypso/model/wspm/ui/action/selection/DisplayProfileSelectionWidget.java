@@ -43,16 +43,16 @@ package org.kalypso.model.wspm.ui.action.selection;
 /**
  * @author Dirk Kuch
  */
-public class SelectProfilePointWidget extends AbstractProfilePointSelectionWidget
+public class DisplayProfileSelectionWidget extends AbstractProfilePointSelectionWidget
 {
-  public SelectProfilePointWidget( )
+  public DisplayProfileSelectionWidget( )
   {
-    super( false );
+    super( true );
   }
 
   @Override
   public WIDGET_TYPE getType( )
   {
-    return WIDGET_TYPE.eRadio;
+    return WIDGET_TYPE.eToggle;
   }
 }
