@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.ui.map.legend;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.PopupDialog;
@@ -65,20 +64,49 @@ import org.kalypso.util.themes.ThemeUtilities;
 
 /**
  * A legend dialog that shows the legend for a set of given themes.
- *
+ * 
  * @author Holger Albert
  */
 public class LegendDialog extends PopupDialog
 {
+  /**
+   * The themes.
+   */
   private final IKalypsoTheme[] m_themes;
 
+  /**
+   * The constructor.
+   * 
+   * @param parentShell
+   *          The parent shell.
+   * @param themes
+   *          The themes.
+   */
   public LegendDialog( final Shell parentShell, final IKalypsoTheme[] themes )
   {
-    super( parentShell, SWT.RESIZE, true, true, true, false, false, "Legende", StringUtils.EMPTY );
+    this( parentShell, "Legende", themes );
+  }
+
+  /**
+   * The constructor.
+   * 
+   * @param parentShell
+   *          The parent shell.
+   * @param title
+   *          The title for the legend.
+   * @param themes
+   *          The themes.
+   */
+  public LegendDialog( final Shell parentShell, final String title, final IKalypsoTheme[] themes )
+  {
+    super( parentShell, SWT.RESIZE, true, true, true, false, false, title, "" );
 
     m_themes = themes;
   }
 
+  /**
+   * @see org.eclipse.jface.dialogs.PopupDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
+   */
   @Override
   protected Control createDialogArea( final Composite parent )
   {
@@ -119,6 +147,9 @@ public class LegendDialog extends PopupDialog
       label.setImage( legendGraphic );
       label.addPaintListener( new PaintListener()
       {
+        /**
+         * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent)
+         */
         @Override
         public void paintControl( final PaintEvent e )
         {
@@ -133,8 +164,7 @@ public class LegendDialog extends PopupDialog
     catch( final Exception ex )
     {
       /* Log the error message. */
-      final Status status = new Status( IStatus.ERROR, KalypsoGmlUIPlugin.id(), ex.getLocalizedMessage(), ex );
-      KalypsoGmlUIPlugin.getDefault().getLog().log( status );
+      KalypsoGmlUIPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoGmlUIPlugin.id(), ex.getLocalizedMessage(), ex ) );
 
       /* Show the error message to the user. */
       setInfoText( String.format( "Fehler: %s", ex.getLocalizedMessage() ) );
