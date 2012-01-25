@@ -107,7 +107,7 @@ public class MoveProfileRunnable implements ICoreRunnableWithProgress
 
     }
 
-    return new Status( IStatus.OK, KalypsoModelWspmCorePlugin.getID(), "Default Knauf Profilexport Bean-Generierung erfolgreich" );
+    return new Status( IStatus.OK, KalypsoModelWspmCorePlugin.getID(), "Verschieben des Profils erfolgreich" );
   }
 
   private Coordinate move( final Coordinate coordinate )

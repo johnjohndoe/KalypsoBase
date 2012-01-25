@@ -73,7 +73,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  */
 public abstract class AbstractKalypsoTheme extends PlatformObject implements IKalypsoTheme
 {
-  protected static interface IListenerRunnable
+  protected interface IListenerRunnable
   {
     void visit( final IKalypsoThemeListener l );
   }

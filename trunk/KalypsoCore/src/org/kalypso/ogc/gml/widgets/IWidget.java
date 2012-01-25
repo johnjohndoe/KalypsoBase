@@ -104,5 +104,5 @@ public interface IWidget extends MouseListener, MouseMotionListener, MouseWheelL
    * @param parameter
    *          The map of all parameter. May be null.
    */
-  public void setParameter( Map<String, String> parameter );
+  void setParameter( Map<String, String> parameter );
 }
