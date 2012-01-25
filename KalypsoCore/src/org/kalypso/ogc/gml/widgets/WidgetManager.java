@@ -48,21 +48,26 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.MapPanelUtilities;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
+import org.kalypso.ogc.gml.widgets.IWidget.WIDGET_TYPE;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
- * Der Controller für die MapView
+ * widget controller of map view
  * 
  * @author vdoemming
+ * @author Dirk Kuch
  */
 public class WidgetManager implements MouseListener, MouseMotionListener, MouseWheelListener, KeyListener, IWidgetManager
 {
@@ -81,7 +86,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
 
   private final ICommandTarget m_commandTarget;
 
-  private IWidget m_actualWidget = null;
+  private final Set<IWidget> m_widgets = Collections.synchronizedSet( new LinkedHashSet<IWidget>() );
 
   /** Widget used for middle mouse actions */
   private final IWidget m_middleWidget = new PanToWidget();
@@ -103,7 +108,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
   @Override
   public void dispose( )
   {
-    setActualWidget( null );
+    addWidget( null );
 
     m_mapPanel.getSelectionManager().removeSelectionListener( m_featureSelectionListener );
   }
@@ -117,61 +122,70 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
   @Override
   public void mouseClicked( final MouseEvent e )
   {
-    final IWidget actualWidget = getActualWidget();
-    if( actualWidget instanceof MouseListener )
-    {
-      ((MouseListener) actualWidget).mouseClicked( e );
-      if( e.isConsumed() )
-        return;
-    }
+    // FIXME don't iterate over all widgets - look for event.done flag (e.isConsumed)
 
-    /* Prevents handling of middle mouse if no widget is active */
-    if( actualWidget == null )
-      return;
-
-    if( e.isPopupTrigger() )
-      actualWidget.clickPopup( e.getPoint() );
-    else
+    final IWidget[] widgets = getWidgets();
+    for( final IWidget widget : widgets )
     {
-      switch( e.getButton() )
+      if( widget instanceof MouseListener )
       {
-        case MouseEvent.BUTTON1:
+        ((MouseListener) widget).mouseClicked( e );
+        if( e.isConsumed() )
+          return;
+      }
+
+      /* Prevents handling of middle mouse if no widget is active */
+      if( widget == null )
+        return;
+
+      if( e.isPopupTrigger() )
+        widget.clickPopup( e.getPoint() );
+      else
+      {
+        switch( e.getButton() )
         {
-          if( e.getClickCount() == 1 )
-            actualWidget.leftClicked( e.getPoint() );
-          else if( e.getClickCount() == 2 )
-            actualWidget.doubleClickedLeft( e.getPoint() );
+          case MouseEvent.BUTTON1:
+          {
+            if( e.getClickCount() == 1 )
+              widget.leftClicked( e.getPoint() );
+            else if( e.getClickCount() == 2 )
+              widget.doubleClickedLeft( e.getPoint() );
+          }
+            break;
+
+          case MouseEvent.BUTTON2:
+            m_middleWidget.leftClicked( e.getPoint() );
+            break;
+
+          case MouseEvent.BUTTON3:
+          {
+            if( e.getClickCount() == 1 )
+              widget.rightClicked( e.getPoint() );
+            else if( e.getClickCount() == 2 )
+              widget.doubleClickedRight( e.getPoint() );
+          }
+            break;
+
+          default:
+            break;
         }
-          break;
-
-        case MouseEvent.BUTTON2:
-          m_middleWidget.leftClicked( e.getPoint() );
-          break;
-
-        case MouseEvent.BUTTON3:
-        {
-          if( e.getClickCount() == 1 )
-            actualWidget.rightClicked( e.getPoint() );
-          else if( e.getClickCount() == 2 )
-            actualWidget.doubleClickedRight( e.getPoint() );
-        }
-          break;
-
-        default:
-          break;
       }
     }
+
   }
 
   @Override
   public void mouseMoved( final MouseEvent e )
   {
-    final IWidget actualWidget = getActualWidget();
-    if( actualWidget instanceof MouseMotionListener )
-      ((MouseMotionListener) actualWidget).mouseMoved( e );
+    final IWidget[] widgets = getWidgets();
+    for( final IWidget widget : widgets )
+    {
+      if( widget instanceof MouseMotionListener )
+        ((MouseMotionListener) widget).mouseMoved( e );
 
-    if( !e.isConsumed() && actualWidget != null )
-      actualWidget.moved( e.getPoint() );
+      if( !e.isConsumed() && widget != null )
+        widget.moved( e.getPoint() );
+    }
 
     m_mapPanel.fireMouseMouveEvent( e.getX(), e.getY() );
   }
@@ -180,122 +194,148 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
   @Override
   public void mouseDragged( final MouseEvent e )
   {
-    final IWidget actualWidget = getActualWidget();
-    if( actualWidget instanceof MouseMotionListener )
+    // FIXME don't iterate over all widgets - look for event.done flag (e.isConsumed)
+
+    final IWidget[] widgets = getWidgets();
+    for( final IWidget widget : widgets )
     {
-      ((MouseMotionListener) actualWidget).mouseDragged( e );
-      if( e.isConsumed() )
+      if( widget instanceof MouseMotionListener )
+      {
+        ((MouseMotionListener) widget).mouseDragged( e );
+        if( e.isConsumed() )
+          return;
+      }
+
+      /* Prevent handling of middle mouse if no widget is active */
+      if( widget == null )
         return;
+
+      if( m_middleDown )
+      {
+        m_middleWidget.dragged( e.getPoint() );
+        return;
+      }
+
+      widget.dragged( e.getPoint() );
     }
 
-    /* Prevent handling of middle mouse if no widget is active */
-    if( actualWidget == null )
-      return;
-
-    if( m_middleDown )
-    {
-      m_middleWidget.dragged( e.getPoint() );
-      return;
-    }
-
-    actualWidget.dragged( e.getPoint() );
   }
 
   @Override
   public void mouseEntered( final MouseEvent e )
   {
-    final IWidget actualWidget = getActualWidget();
-    if( actualWidget instanceof MouseListener )
-      ((MouseListener) actualWidget).mouseEntered( e );
+    // FIXME don't iterate over all widgets - look for event.done flag (e.isConsumed)
+
+    final IWidget[] widgets = getWidgets();
+    for( final IWidget widget : widgets )
+    {
+      if( widget instanceof MouseListener )
+        ((MouseListener) widget).mouseEntered( e );
+    }
   }
 
   @Override
   public void mouseExited( final MouseEvent e )
   {
-    final IWidget actualWidget = getActualWidget();
-    if( actualWidget instanceof MouseListener )
-      ((MouseListener) actualWidget).mouseExited( e );
+    // FIXME don't iterate over all widgets - look for event.done flag (e.isConsumed)
+
+    final IWidget[] widgets = getWidgets();
+    for( final IWidget widget : widgets )
+    {
+      if( widget instanceof MouseListener )
+        ((MouseListener) widget).mouseExited( e );
+    }
   }
 
   @Override
   public void mousePressed( final MouseEvent e )
   {
-    final IWidget actualWidget = getActualWidget();
-    if( actualWidget instanceof MouseListener )
-    {
-      ((MouseListener) actualWidget).mousePressed( e );
-      if( e.isConsumed() )
-        return;
-    }
+    // FIXME don't iterate over all widgets - look for event.done flag (e.isConsumed)
 
-    /* Prevent handling of middle mouse if no widget is active */
-    if( actualWidget == null )
-      return;
-
-    if( e.isPopupTrigger() && actualWidget != null )
-      actualWidget.clickPopup( e.getPoint() );
-    else
+    final IWidget[] widgets = getWidgets();
+    for( final IWidget widget : widgets )
     {
-      switch( e.getButton() )
+      if( widget instanceof MouseListener )
       {
-        case MouseEvent.BUTTON1:
-          if( actualWidget != null )
-            actualWidget.leftPressed( e.getPoint() );
-          break;
+        ((MouseListener) widget).mousePressed( e );
+        if( e.isConsumed() )
+          return;
+      }
 
-        case MouseEvent.BUTTON2:
-          m_middleDown = true;
-          m_middleWidget.leftPressed( e.getPoint() );
-          break;
+      /* Prevent handling of middle mouse if no widget is active */
+      if( widget == null )
+        continue;
 
-        case MouseEvent.BUTTON3:
-          if( actualWidget != null )
-            actualWidget.rightPressed( e.getPoint() );
-          break;
+      if( e.isPopupTrigger() && widget != null )
+        widget.clickPopup( e.getPoint() );
+      else
+      {
+        switch( e.getButton() )
+        {
+          case MouseEvent.BUTTON1:
+            if( widget != null )
+              widget.leftPressed( e.getPoint() );
+            break;
 
-        default:
-          break;
+          case MouseEvent.BUTTON2:
+            m_middleDown = true;
+            m_middleWidget.leftPressed( e.getPoint() );
+            break;
+
+          case MouseEvent.BUTTON3:
+            if( widget != null )
+              widget.rightPressed( e.getPoint() );
+            break;
+
+          default:
+            break;
+        }
       }
     }
+
   }
 
   @Override
   public void mouseReleased( final MouseEvent e )
   {
-    final IWidget actualWidget = getActualWidget();
-    if( actualWidget instanceof MouseListener )
+    // FIXME don't iterate over all widgets - look for event.done flag (e.isConsumed)
+    final IWidget[] widgets = getWidgets();
+    for( final IWidget widget : widgets )
     {
-      ((MouseListener) actualWidget).mouseReleased( e );
-      if( e.isConsumed() )
-        return;
-    }
-
-    /* Prevent handling of middle mouse if no widget is active */
-    if( actualWidget == null )
-      return;
-
-    if( e.isPopupTrigger() && getActualWidget() != null )
-      actualWidget.clickPopup( e.getPoint() );
-    else
-    {
-      switch( e.getButton() )
+      if( widget instanceof MouseListener )
       {
-        case MouseEvent.BUTTON1: // Left
-          if( getActualWidget() != null )
-            actualWidget.leftReleased( e.getPoint() );
-          break;
+        ((MouseListener) widget).mouseReleased( e );
+        if( e.isConsumed() )
+          return;
+      }
 
-        case MouseEvent.BUTTON2:
-          m_middleWidget.leftReleased( e.getPoint() );
-          break;
+      /* Prevent handling of middle mouse if no widget is active */
+      if( widget == null )
+        return;
 
-        case MouseEvent.BUTTON3: // Right
-          if( getActualWidget() != null )
-            actualWidget.rightReleased( e.getPoint() );
-          break;
+      if( e.isPopupTrigger() && getWidgets() != null )
+        widget.clickPopup( e.getPoint() );
+      else
+      {
+        switch( e.getButton() )
+        {
+          case MouseEvent.BUTTON1: // Left
+            if( getWidgets() != null )
+              widget.leftReleased( e.getPoint() );
+            break;
 
-        default:
-          break;
+          case MouseEvent.BUTTON2:
+            m_middleWidget.leftReleased( e.getPoint() );
+            break;
+
+          case MouseEvent.BUTTON3: // Right
+            if( getWidgets() != null )
+              widget.rightReleased( e.getPoint() );
+            break;
+
+          default:
+            break;
+        }
       }
     }
 
@@ -305,63 +345,96 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
   @Override
   public void mouseWheelMoved( final MouseWheelEvent e )
   {
-    final IWidget actualWidget = getActualWidget();
-    if( actualWidget instanceof MouseWheelListener )
+    // FIXME don't iterate over all widgets - look for event.done flag (e.isConsumed)
+
+    final IWidget[] widgets = getWidgets();
+    for( final IWidget widget : widgets )
     {
-      ((MouseWheelListener) actualWidget).mouseWheelMoved( e );
-      if( e.isConsumed() )
-        return;
+      if( widget instanceof MouseWheelListener )
+      {
+        ((MouseWheelListener) widget).mouseWheelMoved( e );
+        if( e.isConsumed() )
+          return;
+      }
+
+      /* Prevent handling of middle mouse if no widget is active */
+      if( widget == null )
+        continue;
+
+      e.consume();
+
+      final int wheelRotation = e.getWheelRotation();
+
+      final boolean in = wheelRotation > 0 ? false : true;
+
+      GM_Envelope boundingBox = m_mapPanel.getBoundingBox();
+      for( int i = 0; i < Math.abs( wheelRotation ); i++ )
+        boundingBox = MapPanelUtilities.calcZoomInBoundingBox( boundingBox, in );
+
+      if( boundingBox != null )
+        getCommandTarget().postCommand( new ChangeExtentCommand( m_mapPanel, boundingBox ), null );
     }
 
-    /* Prevent handling of middle mouse if no widget is active */
-    if( actualWidget == null )
-      return;
-
-    e.consume();
-
-    final int wheelRotation = e.getWheelRotation();
-
-    final boolean in = wheelRotation > 0 ? false : true;
-
-    GM_Envelope boundingBox = m_mapPanel.getBoundingBox();
-    for( int i = 0; i < Math.abs( wheelRotation ); i++ )
-      boundingBox = MapPanelUtilities.calcZoomInBoundingBox( boundingBox, in );
-
-    if( boundingBox != null )
-      getCommandTarget().postCommand( new ChangeExtentCommand( m_mapPanel, boundingBox ), null );
   }
 
   public void paintWidget( final Graphics g )
   {
-    final IWidget actualWidget = getActualWidget();
-    if( actualWidget != null )
-      actualWidget.paint( g );
-  }
-
-  @Override
-  public IWidget getActualWidget( )
-  {
-    return m_actualWidget;
-  }
-
-  @Override
-  public void setActualWidget( final IWidget newWidget )
-  {
-    if( m_actualWidget != null )
-      m_actualWidget.finish();
-
-    m_actualWidget = newWidget;
-
-    if( m_actualWidget != null )
+    final IWidget[] widgets = getWidgets();
+    for( final IWidget widget : widgets )
     {
-      m_actualWidget.activate( m_commandTarget, m_mapPanel );
-      m_actualWidget.setSelection( m_mapPanel.getSelectionManager() );
+      try
+      {
+        widget.paint( g );
+      }
+      catch( final Throwable t )
+      {
+        t.printStackTrace();
+      }
+    }
+  }
+
+  @Override
+  public IWidget[] getWidgets( )
+  {
+    return m_widgets.toArray( new IWidget[] {} );
+  }
+
+  @Override
+  public void addWidget( final IWidget widget )
+  {
+    if( Objects.isNull( widget ) )
+    {
+      doClean();
+      fireWidgetChangeEvent( null );
+
+      return;
     }
 
-    fireWidgetChangeEvent( newWidget );
+    if( WIDGET_TYPE.eRadio.equals( widget.getType() ) )
+      doClean();
 
-    if( m_mapPanel != null )
+    m_widgets.add( widget );
+
+    widget.activate( m_commandTarget, m_mapPanel );
+    widget.setSelection( m_mapPanel.getSelectionManager() );
+
+    fireWidgetChangeEvent( widget );
+
+    if( Objects.isNotNull( m_mapPanel ) )
       m_mapPanel.repaintMap();
+  }
+
+  private void doClean( )
+  {
+    final IWidget[] widgets = getWidgets();
+    for( final IWidget widget : widgets )
+    {
+      if( WIDGET_TYPE.eRadio.equals( widget.getType() ) )
+      {
+        widget.finish();
+        m_widgets.remove( widget );
+      }
+    }
   }
 
   /**
@@ -393,43 +466,51 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
       element.widgetChanged( newWidget );
   }
 
-  /**
-   * @see java.awt.event.KeyListener#keyTyped(java.awt.event.KeyEvent)
-   */
   @Override
   public void keyTyped( final KeyEvent e )
   {
-    final IWidget widget = getActualWidget();
-    if( widget != null )
+    final IWidget[] widgets = getWidgets();
+    for( final IWidget widget : widgets )
+    {
       widget.keyTyped( e );
+    }
   }
 
-  /**
-   * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
-   */
   @Override
   public void keyPressed( final KeyEvent e )
   {
-    final IWidget widget = getActualWidget();
-    if( widget != null )
+    final IWidget[] widgets = getWidgets();
+    for( final IWidget widget : widgets )
+    {
       widget.keyPressed( e );
+    }
   }
 
-  /**
-   * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
-   */
   @Override
   public void keyReleased( final KeyEvent e )
   {
-    final IWidget widget = getActualWidget();
-    if( widget != null )
+    final IWidget[] widgets = getWidgets();
+    for( final IWidget widget : widgets )
+    {
       widget.keyReleased( e );
+    }
   }
 
   protected void onSelectionChanged( final IFeatureSelection selection )
   {
-    if( m_actualWidget != null )
-      m_actualWidget.setSelection( selection );
+    final IWidget[] widgets = getWidgets();
+    for( final IWidget widget : widgets )
+    {
+      widget.setSelection( selection );
+    }
+  }
+
+  @Override
+  public void removeWidget( final IWidget widget )
+  {
+    m_widgets.remove( widget );
+
+    fireWidgetChangeEvent( null );
   }
 
 }

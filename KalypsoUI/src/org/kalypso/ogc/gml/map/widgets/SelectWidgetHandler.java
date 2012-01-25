@@ -2,6 +2,7 @@ package org.kalypso.ogc.gml.map.widgets;
 
 import java.util.Map;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -155,18 +156,21 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
     if( mapPanel != null )
     {
-      final IWidget actualWidget = mapPanel.getWidgetManager().getActualWidget();
-      if( actualWidget != null )
-      {
-        // SelectWidgetHandler ist mehrfach vorhanden, daher muss explizit auf die Klasse des Widgets geprüft werden.
-        final String actualWidgetClass = actualWidget.getClass().getName();
-        if( actualWidgetClass.equals( m_widgetClassFromExtension ) )
-          element.setChecked( true );
-        else
-          element.setChecked( false );
-      }
-      else
+      final IWidget[] widgets = mapPanel.getWidgetManager().getWidgets();
+      if( ArrayUtils.isEmpty( widgets ) )
         element.setChecked( false );
+      else
+      {
+        element.setChecked( false );
+
+        for( final IWidget widget : widgets )
+        {
+          // SelectWidgetHandler ist mehrfach vorhanden, daher muss explizit auf die Klasse des Widgets geprüft werden.
+          final String actualWidgetClass = widget.getClass().getName();
+          if( actualWidgetClass.equals( m_widgetClassFromExtension ) )
+            element.setChecked( true );
+        }
+      }
     }
   }
 

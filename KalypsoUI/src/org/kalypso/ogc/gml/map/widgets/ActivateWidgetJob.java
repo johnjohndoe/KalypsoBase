@@ -58,7 +58,7 @@ public final class ActivateWidgetJob extends UIJob
         widgetView.setWidgetForPanel( m_mapPanel, (IWidgetWithOptions) m_widget );
       }
       else
-        m_mapPanel.getWidgetManager().setActualWidget( m_widget );
+        m_mapPanel.getWidgetManager().addWidget( m_widget );
 
       CommandUtilities.refreshElementsForWindow( PlatformUI.getWorkbench().getActiveWorkbenchWindow(), AbstractMapPart.MAP_COMMAND_CATEGORY );
 

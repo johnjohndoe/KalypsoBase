@@ -54,6 +54,15 @@ import org.kalypso.ogc.gml.map.IMapPanel;
  */
 public interface IWidget
 {
+  public enum WIDGET_TYPE
+  {
+    eBackground,
+    eRadio,
+    eToggle;
+  }
+
+  WIDGET_TYPE getType( );
+
   String getName( );
 
   String getToolTip( );

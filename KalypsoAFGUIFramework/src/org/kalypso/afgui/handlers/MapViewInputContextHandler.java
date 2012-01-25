@@ -114,7 +114,7 @@ public class MapViewInputContextHandler extends AbstractHandler
 
       // make sure that no widget is active
       final IWidgetManager widgetManager = mapPanel.getWidgetManager();
-      widgetManager.setActualWidget( null );
+      widgetManager.addWidget( null );
 
       return Status.OK_STATUS;
     }

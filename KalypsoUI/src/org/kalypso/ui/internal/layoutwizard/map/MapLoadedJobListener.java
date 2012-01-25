@@ -105,7 +105,7 @@ public class MapLoadedJobListener extends JobChangeAdapter
 
     setBoundingBox();
 
-    m_panel.getWidgetManager().setActualWidget( m_widget );
+    m_panel.getWidgetManager().addWidget( m_widget );
   }
 
   private void selectFeature( )
