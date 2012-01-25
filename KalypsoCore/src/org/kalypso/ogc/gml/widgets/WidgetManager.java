@@ -49,10 +49,12 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.java.lang.Objects;
@@ -71,7 +73,7 @@ import org.kalypso.ogc.gml.widgets.base.PanToWidget;
  */
 public class WidgetManager implements MouseListener, MouseMotionListener, MouseWheelListener, KeyListener, IWidgetManager
 {
-  private final Set<IWidgetChangeListener> m_widgetChangeListener = new HashSet<IWidgetChangeListener>();
+  private final Set<IWidgetChangeListener> m_widgetChangeListener = new LinkedHashSet<IWidgetChangeListener>();
 
   private final IFeatureSelectionListener m_featureSelectionListener = new IFeatureSelectionListener()
   {
@@ -86,7 +88,32 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
 
   private final ICommandTarget m_commandTarget;
 
-  private final Set<IWidget> m_widgets = Collections.synchronizedSet( new LinkedHashSet<IWidget>() );
+  // handle widgets as tree set because radio widgets should be processed first
+  private final Set<IWidget> m_widgets = Collections.synchronizedSet( new TreeSet<IWidget>( new Comparator<IWidget>()
+  {
+    @Override
+    public int compare( final IWidget w1, final IWidget w2 )
+    {
+      final String n1 = w1.getClass().getName();
+      final String n2 = w2.getClass().getName();
+
+      if( WIDGET_TYPE.eRadio.equals( w1 ) && WIDGET_TYPE.eRadio.equals( w2 ) )
+      {
+        return n1.compareTo( n2 );
+      }
+      else if( WIDGET_TYPE.eRadio.equals( w1 ) )
+      {
+        return 1;
+      }
+      else if( WIDGET_TYPE.eRadio.equals( w2 ) )
+      {
+        return -1;
+      }
+
+      return n1.compareTo( n2 );
+    }
+
+  } ) );
 
   public WidgetManager( final ICommandTarget commandTarget, final IMapPanel mapPanel )
   {
@@ -230,6 +257,8 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
   public void paintWidget( final Graphics g )
   {
     final IWidget[] widgets = getWidgets();
+    ArrayUtils.reverse( widgets ); // paint background and toggle widgets first
+
     for( final IWidget widget : widgets )
     {
       try
