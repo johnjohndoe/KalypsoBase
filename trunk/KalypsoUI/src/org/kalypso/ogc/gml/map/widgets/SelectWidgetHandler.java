@@ -73,9 +73,6 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext applicationContext = (IEvaluationContext) event.getApplicationContext();
-    if( HandlerUtils.isDeselected( event ) )
-      return null;
-
     applicationContext.getVariable( ISources.ACTIVE_EDITOR_ID_NAME );
 
     final String widgetFromEvent = event.getParameter( PARAM_WIDGET_CLASS );
@@ -104,10 +101,18 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     /* Set the map of all parameter, in case there are additional parameter. */
     widget.setParameter( (Map<String, String>) m_parameter );
 
-    final Shell shell = HandlerUtil.getActiveShellChecked( event );
     final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( applicationContext );
     if( mapPanel == null )
       return StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler.7" ), new IllegalStateException() ); //$NON-NLS-1$
+
+    if( HandlerUtils.isDeselected( event ) )
+    {
+      mapPanel.getWidgetManager().removeWidget( widget );
+
+      return null;
+    }
+
+    final Shell shell = HandlerUtil.getActiveShellChecked( event );
 
     /* Always make sure that the map was fully loaded */
     // REMARK: we first test directly, without ui-operation, in order to enhance performance if the map already is open.

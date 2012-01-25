@@ -208,6 +208,8 @@ public class AbstractProfileWidget extends AbstractWidget implements IProfilePro
       m_profile.addProfilProviderListener( this );
       m_profile.getProfil().addProfilListener( m_listener );
     }
+
+    repaintMap();
   }
 
   protected IProfileFeature getProfile( )

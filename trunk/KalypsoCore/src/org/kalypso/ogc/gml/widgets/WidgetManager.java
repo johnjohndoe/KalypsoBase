@@ -53,6 +53,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
@@ -507,9 +508,17 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
   @Override
   public void removeWidget( final IWidget widget )
   {
-    m_widgets.remove( widget );
+    final String clazz = widget.getClass().getName();
+
+    final IWidget[] widgets = getWidgets();
+    for( final IWidget w : widgets )
+    {
+      final String c = w.getClass().getName();
+      if( StringUtils.equals( clazz, c ) )
+        m_widgets.remove( w );
+
+    }
 
     fireWidgetChangeEvent( null );
   }
-
 }
