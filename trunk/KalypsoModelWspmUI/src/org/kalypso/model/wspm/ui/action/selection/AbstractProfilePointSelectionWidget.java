@@ -77,6 +77,8 @@ public abstract class AbstractProfilePointSelectionWidget extends AbstractProfil
 
   private final boolean m_viewMode;
 
+  private com.vividsolutions.jts.geom.Point m_p0;
+
   public AbstractProfilePointSelectionWidget( final boolean viewMode )
   {
     super( "", "" ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -158,14 +160,11 @@ public abstract class AbstractProfilePointSelectionWidget extends AbstractProfil
       return;
 
     final boolean shiftDown = e.isShiftDown();
-
-    if( shiftDown )
+    if( !shiftDown )
       m_p0 = getSnapPoint();
 
     updateSelection( shiftDown );
   }
-
-  private com.vividsolutions.jts.geom.Point m_p0;
 
   @Override
   public void paint( final Graphics g )
