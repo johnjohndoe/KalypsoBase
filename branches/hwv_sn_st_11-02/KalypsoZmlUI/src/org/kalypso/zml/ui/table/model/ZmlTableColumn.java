@@ -75,7 +75,7 @@ import org.kalypso.zml.ui.table.provider.strategy.labeling.SumValueLabelingStrat
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableColumn extends AbstractZmlTableColumn implements IZmlTableColumn
+public class ZmlTableColumn extends AbstractZmlTableColumn
 {
   private final RuleMapper m_mapper;
 
@@ -262,7 +262,7 @@ public class ZmlTableColumn extends AbstractZmlTableColumn implements IZmlTableC
   @Override
   public String toString( )
   {
-    return getColumnType().getIdentifier();
+    return String.format( "id: %s, label: %s", getColumnType().getIdentifier(), getTableViewerColumn().getColumn().getText() );
   }
 
   public void setEditingSupport( final ZmlTableEditingSupport editingSupport )
