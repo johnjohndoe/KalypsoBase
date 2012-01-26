@@ -195,7 +195,7 @@ public class ODSEnvironment implements IODSEnvironment
 
           // Offerings erzeugen
           final IChartModel model = new ChartModel();
-          ChartFactory.configureChartModel( model, ccl, ccl.getChartIds()[0], ChartExtensionLoader.getInstance(), getConfigDir().toURI().toURL() );
+          ChartFactory.configureChartModel( model, ccl, ccl.getChartIds()[0], ChartExtensionLoader.getInstance(), chartFile.toURI().toURL() );
 
           final CapabilitiesLoader cl = new CapabilitiesLoader( this );
           final ChartOfferingType chartOffering = cl.createChartOffering( model, sceneId );
