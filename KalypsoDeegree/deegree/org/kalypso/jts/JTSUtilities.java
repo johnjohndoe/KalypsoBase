@@ -130,7 +130,7 @@ public final class JTSUtilities
    *          One point lying on the line.
    * @return The distance of the point on the line.
    * @deprecated This method is too slow for long chains. Use {@link com.vividsolutions.jts.linearref.LengthIndexedLine}
-   *             instead.
+   *             instead. And does not work for last line segment!!!!
    */
   @Deprecated
   public static double pointDistanceOnLine( final LineString line, final Point point )
