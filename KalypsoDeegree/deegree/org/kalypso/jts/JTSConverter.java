@@ -141,6 +141,11 @@ public class JTSConverter
     return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Triangle( toPositions( coordinates ), crs );
   }
 
+  public static GM_Point toGMPoint( final Point point, final String crs ) throws GM_Exception
+  {
+    return (GM_Point) JTSAdapter.wrap( point, crs );
+  }
+
   public static GM_Point[] toGMPoints( final Point[] points, final String crs ) throws GM_Exception
   {
     final List<GM_Point> gmpoints = new ArrayList<GM_Point>();
@@ -188,4 +193,5 @@ public class JTSConverter
 
     return new GeometryFactory().createLinearRing( ArrayUtils.add( coordinates, coordinates[0] ) );
   }
+
 }
