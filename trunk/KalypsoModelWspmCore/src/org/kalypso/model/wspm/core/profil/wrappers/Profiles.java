@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.core.profil.wrappers;
 
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.jts.JTSConverter;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
@@ -96,14 +97,21 @@ public final class Profiles
 
   public static double getWidth( final IProfil profile, final Point point ) throws GM_Exception
   {
+    try
+    {
+      final GM_Point gmp = JTSConverter.toGMPoint( point, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+      return WspmProfileHelper.getWidthPosition( gmp, profile );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
 
-    final LineString lineString = getGeometry( profile );
-    // TODO: dangerous: width/rechtswert/hochwert are not alwayws related!
-    // TODO: maybe delegate to WspProfileHelper#getWidthPosition
-    final double jtsDistance = JTSUtilities.pointDistanceOnLine( lineString, point );
-    final double width = profile.getFirstPoint().getBreite() + jtsDistance;
+      final LineString lineString = getGeometry( profile );
+      final double jtsDistance = JTSUtilities.pointDistanceOnLine( lineString, point );
+      final double width = profile.getFirstPoint().getBreite() + jtsDistance;
 
-    return width;
+      return width;
+    }
   }
 
   public static LineString getGeometry( final IProfil profile ) throws GM_Exception

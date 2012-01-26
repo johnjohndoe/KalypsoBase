@@ -154,7 +154,6 @@ public class AbstractProfileWidget extends AbstractWidget implements IProfilePro
 
   private com.vividsolutions.jts.geom.Point getSnapPoint( final LineString lineString, final com.vividsolutions.jts.geom.Point position )
   {
-
     final LocationIndexedLine lineIndex = new LocationIndexedLine( lineString );
     final LinearLocation location = lineIndex.project( position.getCoordinate() );
     location.snapToVertex( lineString, MapUtilities.calculateWorldDistance( getMapPanel(), 10 ) );
