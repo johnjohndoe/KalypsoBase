@@ -1165,6 +1165,10 @@
 		<handler commandId="org.kalypso.ogc.gml.map.PanToCommand">
 			<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
 				<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.ogc.gml.widgets.base.PanToWidget" />
+    <parameter
+          name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
+          value="org.kalypso.core">
+    </parameter>
 			</class>
 		</handler>
 		<handler commandId="org.kalypso.ogc.gml.map.WMSGetFeatureInfoCommand">

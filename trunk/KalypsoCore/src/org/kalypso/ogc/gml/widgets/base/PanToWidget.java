@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml.widgets.base;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
@@ -62,14 +63,25 @@ public class PanToWidget extends AbstractWidget
 
   private GM_Position m_endPoint = null;
 
+  private final int[] m_mouseButtons;
+
   public PanToWidget( final String name, final String toolTip )
   {
     super( name, toolTip );
+
+    m_mouseButtons = new int[] { MouseEvent.BUTTON1, MouseEvent.BUTTON2 };
   }
 
   public PanToWidget( )
   {
     super( "pan to", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_mouseButtons = new int[] { MouseEvent.BUTTON1, MouseEvent.BUTTON2 };
+  }
+
+  public PanToWidget( final int[] mouseButtons )
+  {
+    super( "pan to", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_mouseButtons = mouseButtons;
   }
 
   @Override
@@ -114,7 +126,7 @@ public class PanToWidget extends AbstractWidget
   @Override
   public void mousePressed( final MouseEvent e )
   {
-    if( MouseEvent.BUTTON2 != e.getButton() )
+    if( !ArrayUtils.contains( m_mouseButtons, e.getButton() ) )
       return;
 
     final IMapPanel mapPanel = getMapPanel();
@@ -136,7 +148,7 @@ public class PanToWidget extends AbstractWidget
   @Override
   public void mouseReleased( final MouseEvent e )
   {
-    if( MouseEvent.BUTTON2 != e.getButton() )
+    if( !ArrayUtils.contains( m_mouseButtons, e.getButton() ) )
       return;
 
     if( m_world2screen == null )
@@ -170,6 +182,6 @@ public class PanToWidget extends AbstractWidget
   @Override
   public WIDGET_TYPE getType( )
   {
-    return WIDGET_TYPE.eBackground;
+    return WIDGET_TYPE.eRadio;
   }
 }
