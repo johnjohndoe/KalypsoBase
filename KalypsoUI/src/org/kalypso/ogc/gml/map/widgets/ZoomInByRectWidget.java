@@ -42,10 +42,12 @@ package org.kalypso.ogc.gml.map.widgets;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.MouseEvent;
 
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 
 /**
  * This class performs a zoomin event. It will be performed by setting the map boundaries to the rectangle selected by
@@ -54,7 +56,7 @@ import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @author doemming
  */
-public class ZoomInByRectWidget extends DeprecatedMouseWidget
+public class ZoomInByRectWidget extends AbstractWidget
 {
   public ZoomInByRectWidget( final String name, final String tooltip )
   {
@@ -74,30 +76,43 @@ public class ZoomInByRectWidget extends DeprecatedMouseWidget
   private static final double MIN_PIXEL_ZOOM_BOX = 20;
 
   @Override
-  public void dragged( final Point p )
+  public void mouseDragged( final MouseEvent e )
   {
-    if( m_startPoint == null )
-      m_startPoint = p;
+    // e.getButton() won't work for mouseDragged()
+    if( Objects.isNull( m_startPoint ) )
+      return;
 
-    m_endPoint = p;
+    m_endPoint = e.getPoint();
 
     final IMapPanel panel = getMapPanel();
-    if( panel != null )
+    if( Objects.isNotNull( panel ) )
       panel.repaintMap();
+
+    e.consume();
   }
 
   @Override
-  public void leftPressed( final Point p )
+  public void mousePressed( final MouseEvent e )
   {
-    m_startPoint = p;
+    if( MouseEvent.BUTTON1 != e.getButton() )
+      return;
+
+    m_startPoint = e.getPoint();
     m_endPoint = null;
+
+    e.consume();
   }
 
   @Override
-  public void leftReleased( final Point p )
+  public void mouseReleased( final MouseEvent e )
   {
-    m_endPoint = p;
+    if( MouseEvent.BUTTON1 != e.getButton() )
+      return;
+
+    m_endPoint = e.getPoint();
     perform();
+
+    e.consume();
   }
 
   /**
