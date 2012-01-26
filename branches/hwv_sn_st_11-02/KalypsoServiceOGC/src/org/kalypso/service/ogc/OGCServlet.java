@@ -101,7 +101,7 @@ public class OGCServlet extends HttpServlet implements Servlet
         checkMandadoryParameter( requestBean, foundKey );
 
       /* Execute the operation. */
-      System.out.println( String.format( "Execute operation of '%s' service...", foundKey ) );
+      // System.out.println( String.format( "Execute operation of '%s' service...", foundKey ) );
       foundService.executeOperation( requestBean, responseBean );
     }
     catch( final OWSException e )
