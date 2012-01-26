@@ -55,6 +55,7 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 
@@ -139,7 +140,7 @@ public abstract class AbstractProfileSelectionChartHandler extends AbstractProfi
 
     final IProfil profile = getProfile();
 
-    final double breite = snapToPoint( profile, position.x );
+    final double breite = getSelection( profile, position.x );
 
     if( (e.stateMask & SWT.SHIFT) == 0 )
     {
@@ -151,6 +152,16 @@ public abstract class AbstractProfileSelectionChartHandler extends AbstractProfi
 
     final IRangeSelection selection = profile.getSelection();
     selection.setRange( Range.is( m_p0 ) );
+  }
+
+  private double getSelection( final IProfil profile, final int x )
+  {
+    final double snap = snapToPoint( profile, x );
+
+    if( Objects.isNotNull( ProfileVisitors.findPoint( profile, snap ) ) )
+      return snap;
+
+    return profile.findPreviousPoint( snap ).getBreite();
   }
 
   private double snapToPoint( final IProfil profile, final int screenX )
