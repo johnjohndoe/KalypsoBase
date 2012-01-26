@@ -56,6 +56,7 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.schema.IndexColumnType;
 import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.IZmlTableListener;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 
 /**
@@ -207,9 +208,7 @@ public abstract class AbstractZmlTableColumn extends ZmlTableElement implements 
     {
       m_visible = visibility;
 
-      final IZmlModelColumn modelColumn = getModelColumn();
-      if( Objects.isNotNull( modelColumn ) )
-        modelColumn.fireColumnChangedEvent();
+      getTable().fireTableChanged( IZmlTableListener.TYPE_ACTIVE_RULE_CHANGED, getModelColumn() );
     }
   }
 }
