@@ -46,8 +46,6 @@ import java.awt.event.MouseEvent;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
-import org.kalypso.ogc.gml.widgets.IWidget;
-import org.kalypso.ogc.gml.widgets.IWidget.WIDGET_TYPE;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -135,9 +133,6 @@ public class PanToWidget extends AbstractWidget
     m_endPoint = null;
   }
 
-  /**
-   * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
-   */
   @Override
   public void mouseReleased( final MouseEvent e )
   {
