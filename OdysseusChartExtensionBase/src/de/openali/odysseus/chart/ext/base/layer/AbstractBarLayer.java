@@ -32,9 +32,6 @@ public abstract class AbstractBarLayer extends AbstractChartLayer
     m_areaStyle = areaStyle;
   }
 
-  /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#drawIcon(org.eclipse.swt.graphics.Image, int, int)
-   */
   public void drawIcon( final Image img )
   {
     final PolygonFigure pf = getPolygonFigure();

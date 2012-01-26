@@ -172,22 +172,25 @@ public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionTy
 
   private double findValue( final IZmlValueReference reference, final String boundaryType ) throws SensorException
   {
-    if( boundaryType == null )
+    if( Objects.isNull( boundaryType ) )
       return getReferenceValue( reference );
 
     final IZmlModelColumn column = reference.getColumn();
     final IAxis valueAxis = column.getValueAxis();
+    if( Objects.isNull( valueAxis ) )
+      return getReferenceValue( reference ); // will return Double.NaN
+
     if( ObjectUtils.equals( valueAxis.getType(), boundaryType ) )
       return getReferenceValue( reference );
 
     /* Type of boundary is different from value type -> we need to retrieve the value ourself's */
     final Integer tupleModelIndex = reference.getModelIndex();
-    if( tupleModelIndex == null )
+    if( Objects.isNull( tupleModelIndex ) )
       return Double.NaN;
 
     final IAxis[] axes = column.getAxes();
     final IAxis boundaryAxis = AxisUtils.findAxis( axes, boundaryType );
-    if( boundaryAxis == null )
+    if( Objects.isNull( boundaryAxis ) )
       return Double.NaN;
 
     final Object boundaryValue = column.get( tupleModelIndex, boundaryAxis );
