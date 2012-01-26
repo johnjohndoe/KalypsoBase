@@ -62,8 +62,8 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
 import org.kalypso.ogc.gml.widgets.IWidget.WIDGET_TYPE;
+import org.kalypso.ogc.gml.widgets.base.BackgroundPanToWidget;
 import org.kalypso.ogc.gml.widgets.base.MouseWheelZoomWidget;
-import org.kalypso.ogc.gml.widgets.base.PanToWidget;
 
 /**
  * widget controller of map view
@@ -122,7 +122,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
 
     m_mapPanel.getSelectionManager().addSelectionListener( m_featureSelectionListener );
 
-    addWidget( new PanToWidget() );
+    addWidget( new BackgroundPanToWidget() );
     addWidget( new MouseWheelZoomWidget() );
   }
 
