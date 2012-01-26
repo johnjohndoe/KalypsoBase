@@ -71,6 +71,7 @@ public class WPSSimulationInfo extends SimulationInfo implements Serializable, I
   {
     // nur für wscompile
     super();
+
     m_resultEeater = null;
     m_threadId = -1;
   }
@@ -81,6 +82,7 @@ public class WPSSimulationInfo extends SimulationInfo implements Serializable, I
   public WPSSimulationInfo( final long threadId, final String type, final String description, final ISimulationConstants.STATE state, final int progress, final WPSSimulationResultEater eater )
   {
     super( "use threadId instead", description, type, state, progress, "not finished yet" ); //$NON-NLS-1$ //$NON-NLS-2$
+
     m_threadId = threadId;
     m_resultEeater = eater;
   }
