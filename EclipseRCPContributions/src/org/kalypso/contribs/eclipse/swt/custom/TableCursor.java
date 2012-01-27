@@ -618,7 +618,7 @@ public class TableCursor extends Canvas
         m_table.showColumn( column );
       }
       final int columnIndex = column == null ? 0 : m_table.indexOf( column );
-      if( isVisible() )
+      if( getVisible() )
       {
         setBounds( row.getBounds( columnIndex ) );
         redraw();

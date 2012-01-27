@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.java.io;
 
@@ -56,7 +56,10 @@ public class StreamUtilities
 
   /**
    * Kopiert den Inhalt eines Streams in einen anderen. Die Streams werden nach Ende der Operation geschlossen.
+   * 
+   * @dperecated Use apache commons IOUtils or FileUtils instead.
    */
+  @Deprecated
   public static final void streamCopy( final InputStream is, final OutputStream os ) throws IOException
   {
     final byte[] buffer = new byte[1024 * 16];

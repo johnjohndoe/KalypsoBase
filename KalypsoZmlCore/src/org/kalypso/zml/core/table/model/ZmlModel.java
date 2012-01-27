@@ -180,18 +180,18 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
 
   public void dispose( )
   {
-    doClean();
-
-// final ZmlModelColumn[] columns = m_columns.toArray( new ZmlModelColumn[] {} );
-// m_columns.clear();
-//
-// for( final IZmlModelColumn column : columns )
-// {
-// column.removeListener( this );
-// column.dispose();
-// }
-
     m_memento.dispose();
+
+    final ZmlModelColumn[] columns = m_columns.toArray( new ZmlModelColumn[] {} );
+    m_columns.clear();
+
+    for( final IZmlModelColumn column : columns )
+    {
+      column.removeListener( this );
+      column.dispose();
+    }
+
+    m_rows.clear();
   }
 
   @Override

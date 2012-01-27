@@ -65,7 +65,7 @@ public final class Observations
     accept( observation, visitor, request, 1 );
   }
 
-  public static void accept( final IObservation observation, final IObservationVisitor visitor, final IRequest request, int direction ) throws SensorException
+  public static void accept( final IObservation observation, final IObservationVisitor visitor, final IRequest request, final int direction ) throws SensorException
   {
     final ITupleModel model = observation.getValues( request );
 

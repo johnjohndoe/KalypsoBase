@@ -55,7 +55,7 @@ import org.eclipse.core.runtime.Assert;
  */
 public class MultipleTsLink implements IMultipleZmlSourceElement
 {
-  Set<TsLinkWrapper> m_links = new LinkedHashSet<TsLinkWrapper>();
+  Set<IndexedTsLink> m_links = new LinkedHashSet<IndexedTsLink>();
 
   private final String m_identifier;
 
@@ -131,13 +131,13 @@ public class MultipleTsLink implements IMultipleZmlSourceElement
   @Override
   public void add( final IZmlSourceElement link )
   {
-    m_links.add( (TsLinkWrapper) link );
+    m_links.add( (IndexedTsLink) link );
   }
 
   @Override
-  public TsLinkWrapper[] getSources( )
+  public IndexedTsLink[] getSources( )
   {
-    return m_links.toArray( new TsLinkWrapper[] {} );
+    return m_links.toArray( new IndexedTsLink[] {} );
   }
 
   public boolean isIgnoreType( final String[] currentIgnoreTypes )

@@ -39,7 +39,9 @@ import org.deegree.crs.transformations.TransformationFactory;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.kalypso.preferences.IKalypsoDeegreePreferences;
 import org.osgi.framework.BundleContext;
 
@@ -105,7 +107,18 @@ public class KalypsoDeegreePlugin extends Plugin
    */
   public String getCoordinateSystem( )
   {
-    return Platform.getPreferencesService().getString( getBundle().getSymbolicName(), IKalypsoDeegreePreferences.DEFAULT_CRS_SETTING, IKalypsoDeegreePreferences.DEFAULT_CRS_VALUE, null );
+    final String defaultSrs = getDefaultCoordinateSystem();
+
+    final IPreferencesService preferencesService = Platform.getPreferencesService();
+    final String pluginID = getBundle().getSymbolicName();
+
+    return preferencesService.getString( pluginID, IKalypsoDeegreePreferences.DEFAULT_CRS_SETTING, defaultSrs, null );
+  }
+
+  @SuppressWarnings("restriction")
+  private String getDefaultCoordinateSystem( )
+  {
+    return FrameworkProperties.getProperty( "kalypso.defaultSRS", IKalypsoDeegreePreferences.DEFAULT_CRS_VALUE );
   }
 
   /**

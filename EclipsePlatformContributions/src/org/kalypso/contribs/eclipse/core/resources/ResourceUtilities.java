@@ -113,7 +113,6 @@ public final class ResourceUtilities
   {
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     return root.getFolder( path );
-
   }
 
   /**

@@ -131,9 +131,6 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
     viewer.addSelectionChangedListener( new UpdateChartSelectionListener( this ) );
   }
 
-  /**
-   * @see org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.Event)
-   */
   @Override
   public void handleEvent( final Event event )
   {
@@ -164,10 +161,7 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
     final Point eventPoint = new Point( event.x + selection, event.y );
     final Point controlPoint = table.toControl( eventPoint );
 
-    IZmlTableColumn column = findColumn( controlPoint );
-    if( Objects.isNull( column ) )
-      column = findColumn( eventPoint );
-
+    final IZmlTableColumn column = (IZmlTableColumn) Objects.firstNonNull( findColumn( controlPoint ), findColumn( eventPoint ) );
     if( Objects.isNull( column ) )
       return;
 
@@ -181,6 +175,17 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
     }
     else
     {
+      try
+      {
+        // empty cell?
+        final IZmlTableCell focus = m_table.getFocusHandler().getFocusTableCell();
+        focus.getValueReference().getValue();
+      }
+      catch( final Throwable t )
+      {
+        return;
+      }
+
       final ZmlTableContextMenuProvider menuProvider = new ZmlTableContextMenuProvider();
       menuProvider.fillMenu( column, m_contextMenuManager );
       m_contextMenuManager.update( true );

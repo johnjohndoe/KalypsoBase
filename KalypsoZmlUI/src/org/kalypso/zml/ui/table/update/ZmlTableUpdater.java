@@ -122,8 +122,8 @@ public class ZmlTableUpdater implements Runnable
   private void doLoadModelColumn( final IZmlSourceElement source )
   {
     final ZmlModel model = (ZmlModel) m_table.getModel();
-    model.getLoader().load( source );
     model.getMemento().register( source );
+    model.getLoader().load( source );
   }
 
   private BaseColumn toBaseColumn( final String baseTypeIdentifier, final int index )

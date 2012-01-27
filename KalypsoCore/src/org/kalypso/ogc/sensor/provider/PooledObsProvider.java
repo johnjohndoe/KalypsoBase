@@ -83,7 +83,6 @@ public class PooledObsProvider extends AbstractObsProvider implements IPoolListe
   public void dispose( )
   {
     m_isDisposed = true;
-
     m_pool.removePoolListener( this );
 
     super.dispose();

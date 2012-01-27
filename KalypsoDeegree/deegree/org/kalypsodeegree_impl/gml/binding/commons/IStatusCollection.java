@@ -111,4 +111,6 @@ public interface IStatusCollection extends Feature
   public boolean contains( IStatus simulationStatus );
 
   public boolean isEmpty( );
+
+  IStatus toStatus( );
 }
