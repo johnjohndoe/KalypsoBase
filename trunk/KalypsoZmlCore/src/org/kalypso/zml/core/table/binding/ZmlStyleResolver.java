@@ -109,7 +109,7 @@ public final class ZmlStyleResolver
       if( url == null )
         throw new IllegalStateException();
 
-      final CellStyle cached = m_styleCache.get( url );
+      final CellStyle cached = m_styleCache.asMap().get( url );
       if( cached != null )
         return cached;
 

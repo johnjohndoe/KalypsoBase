@@ -61,6 +61,7 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.metadata.MetadataWQTable;
@@ -171,7 +172,7 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
 
     m_result = new SimpleObservation( m_href, m_href, m_metadata, baseModel );
 
-    return StatusUtilities.createStatus( statis, "Combing tuple models." );
+    return StatusUtilities.createStatus( statis, "Combining tuple models." );
   }
 
   /**
@@ -222,7 +223,7 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
         }
         else
         {
-          targetValues[i] = getDestValue( srcModel, index, sourceAxis, sourceAxis );
+          targetValues[i] = getDestValue( srcModel, index, sourceAxis, targetAxis );
         }
       }
 
@@ -262,8 +263,19 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
 
   private Object getDestValue( final ITupleModel srcModel, final int index, final IAxis srcAxis, final IAxis destAxis ) throws SensorException
   {
-
     final Object srcValue = srcAxis == null ? null : srcModel.get( index, srcAxis );
+
+    // DO NOT MERGE
+    // FIXME: remove this check, shall never happen in 11-02
+    if( srcValue == null )
+    {
+      final String type = destAxis.getType();
+      if( ITimeseriesConstants.TYPE_WECHMANN_E.equals( type ) || ITimeseriesConstants.TYPE_WECHMANN_SCHALTER_V.equals( type ) )
+      {
+        return 0.0;
+      }
+    }
+    // --DO NOT MERGE
 
     /* Special handling for status axes */
     if( AxisUtils.isStatusAxis( destAxis ) )

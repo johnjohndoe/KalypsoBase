@@ -112,7 +112,7 @@ public abstract class AbstractCopyObservationSource implements ICopyObservationS
   private IObservation getObservation( final Feature feature, final Source source ) throws MalformedURLException, SensorException
   {
     final String sourceHref = getSourceLinkHref( feature, source );
-    if( sourceHref == null )
+    if( StringUtils.isBlank( sourceHref ) )
       return null;
 
     final String hrefWithFilter = ZmlURL.insertQueryPart( sourceHref, source.getFilter() );
@@ -139,7 +139,7 @@ public abstract class AbstractCopyObservationSource implements ICopyObservationS
       final Request requestType = RequestFactory.parseRequest( hrefWithFilterAndRange );
       // REMARK: empty axes can happen, if request is inserted into href without any query part
       if( requestType == null || StringUtils.isEmpty( requestType.getAxes() ) )
-        throw new SensorException( Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.10" ) + sourceHref, t );//$NON-NLS-1$
+        throw new SensorException( Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.10" ) + hrefWithFilterAndRange, t );//$NON-NLS-1$
 
       // observation could not be created, use the request now
       final String message = String.format( "Abruf von '%s' fehlgeschlagen. Erzeuge synthetische Zeitreihe.", sourceHref );

@@ -209,7 +209,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
     final ITupleModel model = getTupleModel();
     final IAxis[] axes = model.getAxes();
 
-    final IAxis valueAxis = AxisUtils.findAxis( axes, getIdentifier() );
+    final IAxis valueAxis = AxisUtils.findAxis( axes, m_type.getValueAxis() );
     final IAxis statusAxis = AxisUtils.findStatusAxis( axes, valueAxis );
     final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( axes, valueAxis );
 
@@ -335,7 +335,6 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
     {
       listener.modelColumnChangedEvent( this );
     }
-
   }
 
   @Override

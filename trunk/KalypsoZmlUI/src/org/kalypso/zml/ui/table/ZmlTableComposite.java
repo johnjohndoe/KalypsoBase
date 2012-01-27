@@ -307,9 +307,11 @@ public class ZmlTableComposite extends Composite implements IZmlTable
           return Status.OK_STATUS;
         }
       };
+      m_updateJob.setUser( false );
+      m_updateJob.setSystem( true );
 
       m_updateJob.setRule( MUTEX_TABLE_UPDATE );
-      m_updateJob.schedule( 100 );
+      m_updateJob.schedule( 150 );
     }
   }
 

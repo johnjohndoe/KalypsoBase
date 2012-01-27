@@ -90,7 +90,7 @@ public class ExportAction extends Action
     catch( final CoreException e )
     {
       e.printStackTrace();
-      ErrorDialog.openError( shell, "Exportdialog", "Fehler beim Erstellen des Exportdialog", e.getStatus() );
+      ErrorDialog.openError( shell, "Exportdialog", "Fehler beim Erstellen des Exportdialogs", e.getStatus() );
     }
   }
 

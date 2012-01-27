@@ -263,6 +263,9 @@ public class ZmlLink
       // if( !(linkPT instanceof IPropertyType) )
       // return null;
 
+      if( m_linkPath == null )
+        return null;
+
       final TimeseriesLinkType link = (TimeseriesLinkType) GMLXPathUtilities.query( m_linkPath, m_feature );
       if( link == null )
         return null;

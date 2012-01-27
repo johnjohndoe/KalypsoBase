@@ -193,14 +193,13 @@ public class WPSSimulationHandler extends Thread
     {
       /* Job has finished somehow. */
 
-      /* Delete all files of this job in the temp-directory. */
       try
       {
+        /* Delete all files of this job in the temp-directory. */
         m_service.disposeJob( m_jobID );
       }
       catch( final SimulationException e )
       {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       }
     }

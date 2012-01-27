@@ -159,7 +159,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   /**
    * The unmodified href. This href will be saved again to the map.
    */
-  private String m_href;
+  private final String m_href;
 
   public GisTemplateFeatureTheme( final I10nString layerName, final LayerType layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel )
   {
@@ -941,6 +941,22 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   {
     fireVisibilityChanged( newVisibility );
   }
+  
+  @Override
+  public boolean isDirty( )
+  {
+    final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
+    if( m_layerKey == null )
+      return false;
+
+    final KeyInfo key = pool.getInfoForKey( m_layerKey );
+    if( key == null )
+      return false;
+
+    return key.isDirty();
+  }
+  
+  
   @Override
   public void setActiveEnvelope( final GM_Envelope boundingBox )
   {

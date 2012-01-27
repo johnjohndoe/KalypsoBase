@@ -55,5 +55,7 @@ public interface IDataSourceItem
 
   String SOURCE_UNKNOWN = SOURCE_PREFIX + "unknown";
 
+  String SOURCE_MISSING = SOURCE_PREFIX + "missing";
+
   String SOURCE_MANUAL_CHANGED = SOURCE_PREFIX + "manually.changed";
 }

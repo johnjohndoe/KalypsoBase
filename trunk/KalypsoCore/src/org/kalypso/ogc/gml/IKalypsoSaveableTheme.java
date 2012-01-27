@@ -48,5 +48,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
  */
 public interface IKalypsoSaveableTheme
 {
+  // TODO: check: this one should only save dirty data, but does always save. Check and change this behaviour. If
+  // changed, do we still need the isDirty method?
   void saveFeatures( final IProgressMonitor monitor ) throws CoreException;
+
+  boolean isDirty( );
 }

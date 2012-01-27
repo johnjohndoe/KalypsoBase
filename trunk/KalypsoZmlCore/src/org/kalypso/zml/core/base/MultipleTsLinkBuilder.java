@@ -79,7 +79,7 @@ public class MultipleTsLinkBuilder
         map.put( identifier, multiple );
       }
 
-      multiple.add( new TsLinkWrapper( link, index ) );
+      multiple.add( new IndexedTsLink( link, index ) );
 
     }
 

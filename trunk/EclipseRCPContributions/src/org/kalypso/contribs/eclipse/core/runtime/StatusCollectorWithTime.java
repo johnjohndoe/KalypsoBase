@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,25 +38,35 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.base;
+package org.kalypso.contribs.eclipse.core.runtime;
+
+import java.util.Date;
+
+import org.eclipse.core.runtime.IStatus;
 
 /**
- * @author Dirk Kuch
+ * A {@link IStatusCollector} implementation that makes sure that all added stati get the current timestamp.
+ * 
+ * @author Gernot Belger
  */
-public class TsLinkWrapper extends TSLinkWithName
+public class StatusCollectorWithTime extends StatusCollector
 {
-  private final int m_index;
-
-  public TsLinkWrapper( final TSLinkWithName link, final int index )
+  public StatusCollectorWithTime( final String pluginId )
   {
-    super( link.getIdentifier(), link.getContext(), link.getName(), link.getTimerseriesLinkType(), link.getProperties() );
-    m_index = index;
+    super( pluginId );
   }
 
   @Override
-  public int getIndex( )
+  protected IStatus tweakStatusBeforeAdd( final IStatus status )
   {
-    return m_index;
-  }
+    if( status instanceof IStatusWithTime )
+      return status;
 
+    final Date now = new Date();
+
+    if( status.isMultiStatus() )
+      return new MultiStatusWithTime( status, now );
+
+    return new StatusWithTime( status, now );
+  }
 }
