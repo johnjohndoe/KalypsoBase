@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra�e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,52 +38,54 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.base;
+package org.kalypso.zml.core.table.model.memento;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.ogc.sensor.provider.IObsProvider;
+import org.kalypso.ogc.sensor.provider.IObsProviderListener;
+import org.kalypso.zml.core.base.IZmlSourceElement;
 
 /**
  * @author Dirk Kuch
  */
-public class MultipleTsLinkBuilder
+public class RegisterObsProviderListenerJob extends Job
 {
-  private final TimeserieFeatureProperty[] m_properties;
+  private final IObsProviderListener m_listener;
 
-  private final IMultipleTsLinkBuilderSource m_delegate;
+  private final IZmlSourceElement m_source;
 
-  public MultipleTsLinkBuilder( final IMultipleTsLinkBuilderSource delegate, final TimeserieFeatureProperty[] properties )
+  public RegisterObsProviderListenerJob( final IZmlSourceElement source, final IObsProviderListener listener )
   {
-    m_delegate = delegate;
-    m_properties = properties;
+    super( String.format( "registering obs provider listener for zml source: %s", source.getIdentifier() ) );
+    m_source = source;
+    m_listener = listener;
+
+    setUser( false );
+    setSystem( true );
   }
 
-  public MultipleTsLink[] build( )
+  @Override
+  protected IStatus run( final IProgressMonitor monitor )
   {
-    if( m_properties == null )
-      return new MultipleTsLink[] {};
-
-    final TSLinkWithName[] links = m_delegate.getLinks();
-    final Map<String, MultipleTsLink> map = new LinkedHashMap<String, MultipleTsLink>();
-
-    for( int index = 0; index < links.length; index++ )
+    while( Objects.isNull( m_source.getObsProvider() ) )
     {
-      final TSLinkWithName link = links[index];
-
-      final String identifier = link.getIdentifier();
-      MultipleTsLink multiple = map.get( identifier );
-      if( multiple == null )
+      try
       {
-        multiple = new MultipleTsLink( identifier );
-        map.put( identifier, multiple );
+        Thread.sleep( 250 );
       }
-
-      multiple.add( new IndexedTsLink( link, index ) );
-
+      catch( final InterruptedException e )
+      {
+      }
     }
 
-    return map.values().toArray( new MultipleTsLink[] {} );
+    final IObsProvider provider = m_source.getObsProvider();
+    provider.addListener( m_listener );
+
+    return Status.OK_STATUS;
   }
 
 }

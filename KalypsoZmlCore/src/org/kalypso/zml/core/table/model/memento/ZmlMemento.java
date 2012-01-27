@@ -104,8 +104,9 @@ public class ZmlMemento implements IZmlMemento
 
     sources.add( source );
 
-    final IObsProvider provider = source.getObsProvider();
-    provider.addListener( m_obsListener );
+    // lazy binding of IObsProvider!
+    final RegisterObsProviderListenerJob job = new RegisterObsProviderListenerJob( source, m_obsListener );
+    job.schedule( 50 );
   }
 
   @Override
@@ -162,7 +163,6 @@ public class ZmlMemento implements IZmlMemento
           result.add( source );
         }
       }
-
     }
 
     return result.toArray( new IZmlSourceElement[] {} );

@@ -341,7 +341,6 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
     {
       listener.modelColumnChangedEvent( this );
     }
-
   }
 
   @Override

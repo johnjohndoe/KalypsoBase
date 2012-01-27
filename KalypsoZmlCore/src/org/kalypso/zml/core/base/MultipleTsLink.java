@@ -55,7 +55,7 @@ import org.eclipse.core.runtime.Assert;
  */
 public class MultipleTsLink
 {
-  Set<TsLinkWrapper> m_links = new LinkedHashSet<TsLinkWrapper>();
+  Set<IndexedTsLink> m_links = new LinkedHashSet<IndexedTsLink>();
 
   private final String m_identifier;
 
@@ -127,14 +127,14 @@ public class MultipleTsLink
     return builder.toHashCode();
   }
 
-  public void add( final TsLinkWrapper link )
+  public void add( final IndexedTsLink link )
   {
     m_links.add( link );
   }
 
-  public TsLinkWrapper[] getLinks( )
+  public IndexedTsLink[] getLinks( )
   {
-    return m_links.toArray( new TsLinkWrapper[] {} );
+    return m_links.toArray( new IndexedTsLink[] {} );
   }
 
   public boolean isIgnoreType( final String[] currentIgnoreTypes )

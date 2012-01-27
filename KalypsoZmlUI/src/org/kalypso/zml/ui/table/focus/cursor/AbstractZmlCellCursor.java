@@ -54,6 +54,7 @@ public abstract class AbstractZmlCellCursor extends Canvas implements ITableCurs
       @Override
       public void handleEvent( final Event event )
       {
+
         if( SWT.Paint == event.type )
         {
           paint( event );

@@ -48,7 +48,7 @@ import java.util.TreeMap;
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.zml.core.base.IZmlSourceElement;
 import org.kalypso.zml.core.base.MultipleTsLink;
-import org.kalypso.zml.core.base.TsLinkWrapper;
+import org.kalypso.zml.core.base.IndexedTsLink;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.TableTypes;
 import org.kalypso.zml.core.table.model.ZmlModel;
@@ -79,7 +79,7 @@ public class ZmlTableUpdater implements Runnable
 
     for( final MultipleTsLink multipleLink : m_links )
     {
-      final TsLinkWrapper[] links = multipleLink.getLinks();
+      final IndexedTsLink[] links = multipleLink.getLinks();
       if( ArrayUtils.isEmpty( links ) )
         continue;
 
@@ -87,7 +87,7 @@ public class ZmlTableUpdater implements Runnable
 
       for( int index = 0; index < links.length; index++ )
       {
-        final TsLinkWrapper link = links[index];
+        final IndexedTsLink link = links[index];
         final BaseColumn column = toBaseColumn( baseTypeIdentifier, index );
         link.setIdentifier( column.getIdentifier() ); // update multiple selection index!
 
@@ -101,7 +101,7 @@ public class ZmlTableUpdater implements Runnable
     {
       final Object[] values = entry.getValue();
 
-      final TsLinkWrapper link = (TsLinkWrapper) values[0];
+      final IndexedTsLink link = (IndexedTsLink) values[0];
       final BaseColumn column = (BaseColumn) values[1];
 
       doLoadModelColumn( link );
