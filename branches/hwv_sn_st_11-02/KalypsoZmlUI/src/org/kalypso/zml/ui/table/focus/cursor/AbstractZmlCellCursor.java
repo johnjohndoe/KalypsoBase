@@ -54,30 +54,31 @@ public abstract class AbstractZmlCellCursor extends Canvas implements ITableCurs
       @Override
       public void handleEvent( final Event event )
       {
+        switch( event.type )
+        {
+          case SWT.Paint:
+            paint( event );
+            break;
 
-        if( SWT.Paint == event.type )
-        {
-          paint( event );
-        }
-        else if( SWT.KeyDown == event.type )
-        {
-          keyDown( event );
-        }
-        else if( SWT.MouseDown == event.type )
-        {
-          mouseDown( event );
-        }
-        else if( SWT.MouseDoubleClick == event.type )
-        {
-          getParent().notifyListeners( SWT.MouseDoubleClick, copyEvent( event ) );
-        }
-        else if( SWT.MouseMove == event.type )
-        {
-          getParent().notifyListeners( SWT.MouseMove, copyEvent( event ) );
-        }
-        else if( SWT.FocusIn == event.type )
-        {
-          m_viewer.getControl().forceFocus();
+          case SWT.KeyDown:
+            keyDown( event );
+            break;
+
+          case SWT.MouseDown:
+            mouseDown( event );
+            break;
+
+          case SWT.MouseDoubleClick:
+            getParent().notifyListeners( SWT.MouseDoubleClick, copyEvent( event ) );
+            break;
+
+          case SWT.MouseMove:
+            getParent().notifyListeners( SWT.MouseMove, copyEvent( event ) );
+            break;
+
+          case SWT.FocusIn:
+            m_viewer.getControl().forceFocus();
+            break;
         }
       }
     };
@@ -177,7 +178,11 @@ public abstract class AbstractZmlCellCursor extends Canvas implements ITableCurs
     if( Objects.isNull( m_cellManager ) )
       return null;
 
-    return m_cellManager.getFocusCell();
+    final IZmlTableCell cell = m_cellManager.getFocusTableCell();
+    if( Objects.isNull( cell ) )
+      return null;
+
+    return cell.getViewerCell();
   }
 
   protected Event copyEvent( final Event event )
