@@ -54,6 +54,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Event;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
@@ -192,7 +193,7 @@ public class ZmlTableCellPainter
     try
     {
       final String label = m_provider.getText();
-      if( Objects.isNull( label ) )
+      if( Strings.isEmpty( label ) )
         return new Point( 0, 0 );
 
       final Point extend = gc.textExtent( label );
