@@ -43,11 +43,11 @@ package org.kalypso.zml.core.base;
 /**
  * @author Dirk Kuch
  */
-public class TsLinkWrapper extends TSLinkWithName
+public class IndexedTsLink extends TSLinkWithName
 {
   private final int m_index;
 
-  public TsLinkWrapper( final TSLinkWithName link, final int index )
+  public IndexedTsLink( final TSLinkWithName link, final int index )
   {
     super( link.getIdentifier(), link.getContext(), link.getName(), link.getTimerseriesLinkType(), link.getProperties() );
     m_index = index;

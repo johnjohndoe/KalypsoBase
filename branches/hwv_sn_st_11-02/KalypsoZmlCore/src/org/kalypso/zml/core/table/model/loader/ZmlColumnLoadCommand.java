@@ -118,7 +118,7 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
     KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlColumnLoadCommand.cancel(): %s\n", m_source.getIdentifier() );
 
     m_canceled = true;
-    m_source.getObsProvider().dispose();
+// m_source.getObsProvider().dispose();
   }
 
   @Override

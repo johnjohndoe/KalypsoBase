@@ -86,7 +86,6 @@ public class ResetZmlLayerVisitor extends AbstractChartLayerVisitor
 
   private void reset( final IZmlLayer layer )
   {
-
     final IZmlLayerDataHandler handler = layer.getDataHandler();
     if( handler instanceof ZmlObsProviderDataHandler )
     {
