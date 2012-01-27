@@ -59,9 +59,6 @@ public class UpdateAxisVisibilityVisitor implements IAxisVisitor
 
   // <Parameter name="hideOnMultiSelect" value="true" />
 
-  /**
-   * @see org.kalypso.zml.core.diagram.base.AbstractExternalChartModelVisitor#accept(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
   @Override
   public void visit( final IAxis axis )
   {
