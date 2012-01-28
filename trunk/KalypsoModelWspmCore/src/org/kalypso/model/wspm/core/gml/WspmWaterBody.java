@@ -62,19 +62,19 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProfileSelectionProvider
 {
-  public static final QName QNAME = new QName( NS_WSPM, "WaterBody" ); //$NON-NLS-1$
+  public static final QName FEATURE_WSPM_WATER_BODY = new QName( NS_WSPM, "WaterBody" ); //$NON-NLS-1$
 
-  private static final QName QNAME_MEMBER_WSP_FIX = new QName( NS_WSPM, "waterlevelFixationMember" ); //$NON-NLS-1$
+  private static final QName MEMBER_WSP_FIX = new QName( NS_WSPM, "waterlevelFixationMember" ); //$NON-NLS-1$
 
-  public static final QName QNAME_MEMBER_REACH = new QName( NS_WSPM, "reachMember" ); //$NON-NLS-1$
+  public static final QName MEMBER_REACH = new QName( NS_WSPM, "reachMember" ); //$NON-NLS-1$
 
-  public static final QName QNAME_MEMBER_PROFILE = new QName( NS_WSPM, "profileMember" ); //$NON-NLS-1$
+  public static final QName MEMBER_PROFILE = new QName( NS_WSPM, "profileMember" ); //$NON-NLS-1$
 
-  private static final QName QNAME_PROP_REFNR = new QName( NS_WSPM, "refNr" );//$NON-NLS-1$
+  private static final QName PROPERTY_REFNR = new QName( NS_WSPM, "refNr" );//$NON-NLS-1$
 
-  public static final QName QNAME_PROP_CENTER_LINE = new QName( NS_WSPM, "centerLine" );//$NON-NLS-1$
+  public static final QName PROPERTY_CENTER_LINE = new QName( NS_WSPM, "centerLine" );//$NON-NLS-1$
 
-  public static final QName QNAME_MEMBER_RUNOFF = new QName( NS_WSPM, "runOffEventMember" ); //$NON-NLS-1$
+  public static final QName MEMBER_RUNOFF = new QName( NS_WSPM, "runOffEventMember" ); //$NON-NLS-1$
 
   private final IFeatureBindingCollection<IProfileFeature> m_profileMembers;
 
@@ -88,10 +88,10 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProf
   {
     super( parent, parentRelation, ft, id, propValues );
 
-    m_profileMembers = new FeatureBindingCollection<IProfileFeature>( this, IProfileFeature.class, QNAME_MEMBER_PROFILE );
-    m_fixations = new FeatureBindingCollection<WspmFixation>( this, WspmFixation.class, QNAME_MEMBER_WSP_FIX );
-    m_runoffEvents = new FeatureBindingCollection<IRunOffEvent>( this, IRunOffEvent.class, QNAME_MEMBER_RUNOFF );
-    m_reaches = new FeatureBindingCollection<WspmReach>( this, WspmReach.class, QNAME_MEMBER_REACH );
+    m_profileMembers = new FeatureBindingCollection<IProfileFeature>( this, IProfileFeature.class, MEMBER_PROFILE );
+    m_fixations = new FeatureBindingCollection<WspmFixation>( this, WspmFixation.class, MEMBER_WSP_FIX );
+    m_runoffEvents = new FeatureBindingCollection<IRunOffEvent>( this, IRunOffEvent.class, MEMBER_RUNOFF );
+    m_reaches = new FeatureBindingCollection<WspmReach>( this, WspmReach.class, MEMBER_REACH );
   }
 
   public IFeatureBindingCollection<IProfileFeature> getProfiles( )
@@ -103,7 +103,7 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProf
   {
     try
     {
-      final Feature profile = FeatureHelper.addFeature( this, QNAME_MEMBER_PROFILE, IProfileFeature.QN_PROFILE );
+      final Feature profile = FeatureHelper.addFeature( this, MEMBER_PROFILE, IProfileFeature.QN_PROFILE );
       if( profile instanceof IProfileFeature )
         return (IProfileFeature) profile;
     }
@@ -118,12 +118,12 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProf
 
   public void setRefNr( final String refNr )
   {
-    setProperty( QNAME_PROP_REFNR, refNr );
+    setProperty( PROPERTY_REFNR, refNr );
   }
 
   public String getRefNr( )
   {
-    return getProperty( QNAME_PROP_REFNR, String.class ); //$NON-NLS-1$
+    return getProperty( PROPERTY_REFNR, String.class ); //$NON-NLS-1$
   }
 
   public void setDirectionUpstreams( final boolean directionIsUpstream )
@@ -184,12 +184,12 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProf
 
   public GM_Curve getCenterLine( )
   {
-    return getProperty( QNAME_PROP_CENTER_LINE, GM_Curve.class );
+    return getProperty( PROPERTY_CENTER_LINE, GM_Curve.class );
   }
 
   public void setCenterLine( final GM_Curve centerLine )
   {
-    setProperty( QNAME_PROP_CENTER_LINE, centerLine );
+    setProperty( PROPERTY_CENTER_LINE, centerLine );
   }
 
   public WspmReach findReachByName( final String name )
