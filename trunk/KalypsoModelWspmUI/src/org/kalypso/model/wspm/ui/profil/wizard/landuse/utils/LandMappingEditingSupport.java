@@ -58,18 +58,14 @@ import org.kalypso.ogc.gml.om.table.celleditor.ComboBoxViewerCellEditor;
 /**
  * @author Dirk Kuch
  */
-@SuppressWarnings("deprecation")
 public class LandMappingEditingSupport extends EditingSupport
 {
   private final ILanduseModel m_model;
 
-  @SuppressWarnings("deprecation")
   public LandMappingEditingSupport( final ColumnViewer viewer, final ILanduseModel model )
   {
     super( viewer );
     m_model = model;
-    final Composite parent = (Composite) viewer.getControl();
-
   }
 
   /**
