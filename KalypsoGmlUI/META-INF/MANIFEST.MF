@@ -19,4 +19,5 @@ Export-Package: org.kalypso.gml.ui,
  org.kalypso.gml.ui.commands.importshape,
  org.kalypso.gml.ui.jface,
  org.kalypso.gml.ui.map,
+ org.kalypso.gml.ui.util,
  org.kalypso.gml.ui.map.legend
