@@ -35,7 +35,7 @@ public final class ImportProfilesCommand implements ICommand
     m_water = water;
     m_workspace = m_water.getWorkspace();
     m_profiles = profiles;
-    m_profileList = (FeatureList) m_water.getProperty( WspmWaterBody.QNAME_MEMBER_PROFILE );
+    m_profileList = (FeatureList) m_water.getProperty( WspmWaterBody.MEMBER_PROFILE );
   }
 
   @Override
