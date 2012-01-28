@@ -48,8 +48,9 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 /**
  * Interface to be implemented by classes that wrapped a feature collection to provided a view as a {@link List} of
  * {@link FWCls} <br>
- * TODO: move everything into FeatureList
- *
+ * TODO: move everything into FeatureList or let feature list implement this interface<br/>
+ * TODOwhy 'binding'? rename to IFeatureCollection
+ * 
  * @author Gernot Belger
  * @author Dirk Kuch
  */

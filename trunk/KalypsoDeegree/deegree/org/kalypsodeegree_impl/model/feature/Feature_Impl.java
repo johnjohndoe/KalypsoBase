@@ -54,6 +54,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IFeaturePropertyHandler;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -63,7 +64,7 @@ import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 
 /**
  * Implementation of ogc feature
- * 
+ *
  * @author doemming
  */
 public class Feature_Impl extends PlatformObject implements Feature
@@ -126,7 +127,7 @@ public class Feature_Impl extends PlatformObject implements Feature
 
   /**
    * Accesses a property value of this feature.
-   * 
+   *
    * @return Value of the given properties. Properties with maxoccurency > 0 (as defined in applicationschema) will be
    *         embedded in java.util.List-objects
    * @see org.kalypsodeegree.model.feature.Feature#getProperty(java.lang.String)
@@ -448,7 +449,7 @@ public class Feature_Impl extends PlatformObject implements Feature
 
   /**
    * feature given the property {@link QName}
-   * 
+   *
    * @param propertyQName
    *          the {@link QName} of the property to get.
    */
@@ -728,5 +729,38 @@ public class Feature_Impl extends PlatformObject implements Feature
     final GMLWorkspace_Impl workspace = (GMLWorkspace_Impl) getWorkspace();
     /* Unregister everything below the old feature that is no linked */
     workspace.accept( new UnRegisterVisitor( workspace ), oldFeature, FeatureVisitor.DEPTH_INFINITE );
+  }
+
+  @Override
+  public IFeatureBindingCollection<Feature> getMemberList( final QName relationName )
+  {
+    return getMemberList( relationName, Feature.class );
+  }
+
+  @Override
+  public <T extends Feature> IFeatureBindingCollection<T> getMemberList( final QName relationName, final Class<T> type )
+  {
+    final IRelationType ensureRelation = ensureRelation( relationName );
+    return getMemberList( ensureRelation, type );
+  }
+
+  @Override
+  public IFeatureBindingCollection<Feature> getMemberList( final IRelationType relation )
+  {
+    return getMemberList( relation, Feature.class );
+  }
+
+  @Override
+  public <T extends Feature> IFeatureBindingCollection<T> getMemberList( final IRelationType relation, final Class<T> type )
+  {
+    Assert.isNotNull( relation );
+
+    if( !relation.isList() )
+    {
+      final String message = String.format( "Trying to access a property with maxOccurs='1' as list: %s", relation.getQName() );
+      throw new IllegalArgumentException( message );
+    }
+
+    return new FeatureBindingCollection<>( this, type, relation.getQName() );
   }
 }

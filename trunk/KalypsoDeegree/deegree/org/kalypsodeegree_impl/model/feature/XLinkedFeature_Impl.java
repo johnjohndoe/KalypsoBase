@@ -47,6 +47,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -466,5 +467,29 @@ class XLinkedFeature_Impl extends PlatformObject implements IXLinkedFeature
   public Feature createSubFeature( final QName relationName )
   {
     return getFeature().createSubFeature( relationName );
+  }
+
+  @Override
+  public IFeatureBindingCollection<Feature> getMemberList( final QName relationName )
+  {
+    return getFeature().getMemberList( relationName );
+  }
+
+  @Override
+  public <T extends Feature> IFeatureBindingCollection<T> getMemberList( final QName relationName, final Class<T> type )
+  {
+    return getFeature().getMemberList( relationName, type );
+  }
+
+  @Override
+  public IFeatureBindingCollection<Feature> getMemberList( final IRelationType relation )
+  {
+    return getFeature().getMemberList( relation );
+  }
+
+  @Override
+  public <T extends Feature> IFeatureBindingCollection<T> getMemberList( final IRelationType relation, final Class<T> type )
+  {
+    return getFeature().getMemberList( relation, type );
   }
 }

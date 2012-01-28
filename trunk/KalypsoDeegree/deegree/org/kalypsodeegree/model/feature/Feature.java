@@ -179,7 +179,7 @@ public interface Feature extends BaseFeature, Deegree2Feature, IAdaptable
 
   /**
    * Creates a sub-feature for the relation with the given name.
-   * 
+   *
    * @throws IllegalArgumentExcveption
    *           If the relationName does not point to a suitable relation.
    * @see #createSubFeature(IRelationType relation)
@@ -207,4 +207,28 @@ public interface Feature extends BaseFeature, Deegree2Feature, IAdaptable
    *           If <code>relation</code> is not the name of a relation type.
    */
   Feature getMember( QName relation );
+
+  /**
+   * Gives access to an unbound property containing member features (either linked or inline).
+   */
+  IFeatureBindingCollection<Feature> getMemberList( QName relationName );
+
+  /**
+   * @param type
+   *          All members of the list are assumed to be of this type; the appropriate typed list is returned.
+   */
+  <T extends Feature> IFeatureBindingCollection<T> getMemberList( QName relationName, Class<T> type );
+
+  /**
+   * Gives access to an unbound property containing member features (either linked or inline).
+   */
+  IFeatureBindingCollection<Feature> getMemberList( IRelationType relation );
+
+  /**
+   * Gives access to an unbound property containing member feature (either linked or inline).
+   *
+   * @param type
+   *          All members of the list are assumed to be of this type; the appropriate typed list is returned.
+   */
+  <T extends Feature> IFeatureBindingCollection<T> getMemberList( IRelationType relation, Class<T> type );
 }
