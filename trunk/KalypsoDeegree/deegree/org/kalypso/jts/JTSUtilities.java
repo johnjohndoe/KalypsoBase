@@ -41,6 +41,7 @@
 package org.kalypso.jts;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -61,6 +62,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.CoordinateList;
 import com.vividsolutions.jts.geom.CoordinateSequence;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
@@ -77,7 +79,7 @@ import com.vividsolutions.jts.operation.valid.TopologyValidationError;
 
 /**
  * Utility class for some geometry operations.
- * 
+ *
  * @author Holger Albert
  */
 public final class JTSUtilities
@@ -96,7 +98,7 @@ public final class JTSUtilities
 
   /**
    * This function delivers the first point from a line in another geometry.
-   * 
+   *
    * @param line
    *          The points of this line will be checked. The first, which lies in the given geometry is returned.
    * @param geometry_2nd
@@ -123,7 +125,7 @@ public final class JTSUtilities
 
   /**
    * This function calculates the distance from the start point to a point, lying on the line.
-   * 
+   *
    * @param line
    *          The line.
    * @param point
@@ -178,7 +180,7 @@ public final class JTSUtilities
 
   /**
    * This function calculates a point at a specific length of a line.
-   * 
+   *
    * @param lineJTS
    *          The line string on which the point has to be.
    * @param distance
@@ -194,7 +196,7 @@ public final class JTSUtilities
 
   /**
    * This function calculates a specific position on a line.
-   * 
+   *
    * @param lineJTS
    *          The line string on which the point has to be.
    * @param distanceOnLine
@@ -294,7 +296,7 @@ public final class JTSUtilities
 
   /**
    * This function calculates a point at a specific length of a line.
-   * 
+   *
    * @param lineJTS
    *          The line string on which the point has to be.
    * @param percent
@@ -324,7 +326,7 @@ public final class JTSUtilities
    * on the given line.<br>
    * TODO: The used distance is calculated only by the x- and y-coordinates!! For an 3-dimensaional distance
    * calculation, the start and end point should have z-coordinates.
-   * 
+   *
    * @param line
    *          The original line.
    * @param start
@@ -355,7 +357,7 @@ public final class JTSUtilities
 
   /**
    * Evaluates the two given points and returns true, if the direction is equal of that from line (its points).
-   * 
+   *
    * @param line
    *          The original LineString.
    * @param start
@@ -402,7 +404,7 @@ public final class JTSUtilities
    * done before calling this method. Use {@link JTSUtilities#getLineOrientation(LineString, Point, Point)} for this
    * operation. Both points should have the same orientation than the line, otherwise the new line has only two points,
    * namly the start and end point.
-   * 
+   *
    * @param line
    *          The original LineString.
    * @param start
@@ -468,7 +470,7 @@ public final class JTSUtilities
    * This class is strange, because creating a LineString part of a MultiLineString should be normally done by
    * dissolving the MultiLineString in one LineString-Object and getting the LineString part of it.<br>
    * There can not be quaranteed, that this function works error free!
-   * 
+   *
    * @param line
    *          The original MultiLineString.
    * @param start
@@ -532,7 +534,7 @@ public final class JTSUtilities
   /**
    * This function creates a line segment with the two given points, calculates the length of the line segment and
    * returns the length.
-   * 
+   *
    * @param pointOne
    *          This point will be used as start point of the line segment.
    * @param pointTwo
@@ -547,7 +549,7 @@ public final class JTSUtilities
   /**
    * This function creates a line segment with the two given coordinates, calculates the length of the line segment and
    * returns the length.
-   * 
+   *
    * @param coordinateOne
    *          This coordinate will be used as start point of the line segment.
    * @param coordinateTwo
@@ -589,7 +591,7 @@ public final class JTSUtilities
   /**
    * TODO: move to helper class Given 3 coordinate this methode return the equation of a plan containing those points.
    * The return equation as the form: z = Q*x+P*y+O The coefficients Q, P amd O are return as array
-   * 
+   *
    * @param coords
    *          coordinate of 3 plane points
    * @return the cooeficients of the plane equation z = Q*x+P*y+O as array of double {Q,P,O}
@@ -630,7 +632,7 @@ public final class JTSUtilities
   /**
    * TODO: move to helper class Given 3 coordinate this methode return the equation of a plan containing those points.
    * The return equation as the form: z = Q*x+P*y+O The coefficients Q, P amd O are return as array
-   * 
+   *
    * @param coords
    *          coordinate of 3 plane points
    * @return the cooeficients of the plane equation z = Q*x+P*y+O as array of double {Q,P,O}
@@ -712,7 +714,7 @@ public final class JTSUtilities
   /**
    * This function will check all line segments and return the one, in which the given point lies. If no segment is
    * found it will return null.
-   * 
+   *
    * @param curve
    *          The curve to check.
    * @param point
@@ -743,7 +745,7 @@ public final class JTSUtilities
    * <br>
    * REMARK:<br>
    * It can be very slow, in dependance of the amount of points to be added.
-   * 
+   *
    * @param line
    *          The line, to which the points are added to.
    * @param originalPoints
@@ -755,33 +757,30 @@ public final class JTSUtilities
     return addPointsToLine( line, originalPoints.toArray( new Point[] {} ) );
   }
 
-  public static LineString addPointsToLine( final LineString line, final Point... originalPoints )
+  public static LineString addPointsToLine( final LineString line, final Point... points )
   {
+    final Coordinate[] crds = new Coordinate[points.length];
+    for( int i = 0; i < crds.length; i++ )
+      crds[i] = new Coordinate( points[i].getCoordinate() );
 
-    /* Clone the whole list. */
-    final List<Point> clonedPoints = new ArrayList<Point>();
-    for( final Point originalPoint : originalPoints )
-      clonedPoints.add( (Point) originalPoint.clone() );
+    return addPointsToLine( line, crds );
+  }
 
-    /* Check for intersection. */
-    for( final Point point : clonedPoints )
-    {
-      final double distance = point.distance( line );
-      if( distance >= TOLERANCE )
-        throw new IllegalStateException( String.format( "One of the points does not lie on the line. Distance from line: %s", distance ) );
-    }
-
+  public static LineString addPointsToLine( final LineString line, final Coordinate... locations )
+  {
     /* The geometry factory. */
     final GeometryFactory factory = new GeometryFactory( line.getPrecisionModel(), line.getSRID() );
 
     /* Memory for the new coordinates. */
-    final ArrayList<Coordinate> newCoordinates = new ArrayList<Coordinate>();
+    final CoordinateList newCoordinates = new CoordinateList();
 
     /* Get all coordinates. */
     final Coordinate[] lineCoordinates = line.getCoordinates();
 
     /* Always add the first coordinate. */
-    newCoordinates.add( lineCoordinates[0] );
+    newCoordinates.add( lineCoordinates[0], false );
+
+    final Collection<Coordinate> toIgnore = new HashSet<Coordinate>();
 
     /* Only loop until the one before the last one. */
     for( int i = 0; i < lineCoordinates.length - 1; i++ )
@@ -791,48 +790,43 @@ public final class JTSUtilities
       final Coordinate endCoord = lineCoordinates[i + 1];
 
       /* Create a new line with the coordinates. */
-      final LineString ls = factory.createLineString( new Coordinate[] { startCoord, endCoord } );
+      final LineSegment ls = new LineSegment( startCoord, endCoord );
 
       /* If no one is intersecting, the current end coordinate has to be added. */
-      final ArrayList<Point> toAdd = new ArrayList<Point>();
-      final ArrayList<Point> toRemove = new ArrayList<Point>();
-      for( int j = 0; j < clonedPoints.size(); j++ )
+      final List<Coordinate> toAdd = new ArrayList<Coordinate>();
+
+      for( final Coordinate location : locations )
       {
-        final Point point = clonedPoints.get( j );
-        if( point.distance( ls ) < TOLERANCE )
+        if( toIgnore.contains( location ) )
+          continue;
+
+        if( ls.distance( location ) < TOLERANCE )
         {
           /* The point intersects, and has to be added. */
-          toAdd.add( point );
+          toAdd.add( location );
 
-          /* The points should be removed from the old points list for perfomance reasons. */
-          toRemove.add( point );
+          /* The points should be removed from the old points list for performance reasons. */
+          toIgnore.add( location );
           continue;
         }
-
-        /* The point does not intersect, check the next one. */
-        continue;
       }
 
       /* Add all points. */
       final List<CoordinatePair> coordinatePairs = getCoordinatePairs( startCoord, toAdd );
       for( final CoordinatePair coordinatePair : coordinatePairs )
-        newCoordinates.add( coordinatePair.getSecondCoordinate() );
-
-      /* Remove all added points. */
-      if( toRemove.size() > 0 )
-        clonedPoints.removeAll( toRemove );
+        newCoordinates.add( coordinatePair.getSecondCoordinate(), false );
 
       /* Add the end coordinate. */
-      newCoordinates.add( endCoord );
+      newCoordinates.add( endCoord, false );
     }
 
-    return factory.createLineString( newCoordinates.toArray( new Coordinate[] {} ) );
+    return factory.createLineString( newCoordinates.toCoordinateArray() );
   }
 
   /**
    * This function calculates points every x meter on the line. Also all real points of the line are added to the
    * result.
-   * 
+   *
    * @param curve
    *          The curve with original points.
    * @param distance
@@ -874,7 +868,7 @@ public final class JTSUtilities
 
   /**
    * Inverts a given geometry.
-   * 
+   *
    * @param geometry
    *          The geometry, which should be inverted.
    */
@@ -901,7 +895,7 @@ public final class JTSUtilities
    * This function adds a z-coordinate to each point of a line string. It interpolates the z-coordinate, using the
    * length of the line segment between the start point (parameter start) and the current point. The last point will get
    * the maximum as the z-coordinate (parameter end).
-   * 
+   *
    * @param lineString
    *          To each point on this line string the z-coordinate will be added.
    * @param start
@@ -954,7 +948,7 @@ public final class JTSUtilities
 
   /**
    * This function calculates the center coordinate between two coordinates.
-   * 
+   *
    * @param coordinate_one
    *          The first coordinate.
    * @param coordinate_two
@@ -971,7 +965,7 @@ public final class JTSUtilities
 
   /**
    * This function collects polygons from polygons (which will return itself in the list) or multi polygons.
-   * 
+   *
    * @param geometry
    *          The geometry to collect from. If it is no polygon, an empty list will be returned.
    * @return The list of contained polygons or an empty list.
@@ -1007,7 +1001,7 @@ public final class JTSUtilities
 
   /**
    * This function inspects each coordinate of the given array and removes the z-coordinate from it (sets Double.NaN).
-   * 
+   *
    * @param coordinates
    *          The array of coordinates.
    * @return A new array of new coordinates without the z-coordinate.
@@ -1040,7 +1034,7 @@ public final class JTSUtilities
 
   /**
    * Calculates the fractions some polygons are covering one base geometry (should be a geometry with an area).
-   * 
+   *
    * @see #fractionAreaOf(Geometry, Polygon)
    */
   public static double[] fractionAreasOf( final Geometry baseGeometry, final Polygon[] coverPolygons )
@@ -1054,7 +1048,7 @@ public final class JTSUtilities
 
   /**
    * Calculates the part (as fraction) of one polygon covering another.
-   * 
+   *
    * @param baseGeometry
    *          The geometry (should be a geometry with an area), that is covered (by the calculated fraction) by the
    *          <code>coverPolygon</code>. May NOT be <code>null</code>.
@@ -1183,7 +1177,7 @@ public final class JTSUtilities
 
   /**
    * This function returns the minimal x-value of a sequence of coordinates.
-   * 
+   *
    * @param seq
    *          The coordinate sequence.
    * @return The minimal x-value of a sequence of coordinates. {@link Double#POSITIVE_INFINITY} If the sequence is
@@ -1200,7 +1194,7 @@ public final class JTSUtilities
 
   /**
    * This function returns the maximal x-value of a sequence of coordinates.
-   * 
+   *
    * @param seq
    *          The coordinate sequence.
    * @return The maximal x-value of a sequence of coordinates. {@link Double#NEGATIVE_INFINITY} If the sequence is
@@ -1217,7 +1211,7 @@ public final class JTSUtilities
 
   /**
    * This function returns all x-values of the given sequence as an array.
-   * 
+   *
    * @param seq
    *          The coordinate sequence.
    * @return All x-values of the given sequence as an array.
@@ -1233,7 +1227,7 @@ public final class JTSUtilities
 
   /**
    * This function returns all y-values of the given sequence as an array.
-   * 
+   *
    * @param seq
    *          The coordinate sequence.
    * @return All y-values of the given sequence as an array.
@@ -1249,7 +1243,7 @@ public final class JTSUtilities
 
   /**
    * This function validates geometries.
-   * 
+   *
    * @param msg
    *          Basic error message.
    * @param g
@@ -1277,9 +1271,9 @@ public final class JTSUtilities
   }
 
   /**
-   * This function adds z coordinates to the given geomtry, using the inverse distance weighting on a list of points
+   * This function adds z coordinates to the given geometry, using the inverse distance weighting on a list of points
    * with z coordinates.
-   * 
+   *
    * @param geometry
    *          The geometry for which the z coordinates should be added.
    * @param points
@@ -1289,7 +1283,7 @@ public final class JTSUtilities
    *          parameter is <= 0, all points will be used.
    * @return A new geometry with x, y and z coordinates.
    */
-  public static Geometry addZCoordinates( final Geometry geometry, final List<Point> points, final int numberOfPoints )
+  public static Geometry addZCoordinates( final Geometry geometry, final List<Coordinate> points, final int numberOfPoints )
   {
     /* Check the prerequisites. */
     if( geometry == null )
@@ -1322,7 +1316,7 @@ public final class JTSUtilities
   /**
    * This function adds a z coordinate to the given point, using the inverse distance weighting on a list of points with
    * z coordinates.
-   * 
+   *
    * @param coordinate
    *          The coordinate for which the z coordinates should be added.
    * @param points
@@ -1331,7 +1325,7 @@ public final class JTSUtilities
    *          The number of the nearest points of the list, that will be used in the distance weighting. If this
    *          parameter is <= 0, all points will be used.
    */
-  private static void addZCoordinate( final Coordinate coordinate, final List<Point> points, final int numberOfPoints )
+  private static void addZCoordinate( final Coordinate coordinate, final List<Coordinate> points, final int numberOfPoints )
   {
     /* Check the prerequisites. */
     if( coordinate == null )
@@ -1415,7 +1409,7 @@ public final class JTSUtilities
    * This function returns a list of coordinates pairs. The first coordinate of a pair will be always the parameter
    * coordinate and the second coordinate of a pair will be a coordinate of one point of the list. The list will be
    * sorted by the distance, each pair has.
-   * 
+   *
    * @param coordinate
    *          The coordinate.
    * @param points
@@ -1424,7 +1418,7 @@ public final class JTSUtilities
    *         second coordinate of a pair will be a coordinate of one point of the list. The list will be sorted by the
    *         distance, each pair has.
    */
-  public static List<CoordinatePair> getCoordinatePairs( final Coordinate coordinate, final List<Point> points )
+  public static List<CoordinatePair> getCoordinatePairs( final Coordinate coordinate, final List<Coordinate> points )
   {
     /* Memory for the results. */
     final List<CoordinatePair> results = new ArrayList<CoordinatePair>();
@@ -1432,10 +1426,10 @@ public final class JTSUtilities
     for( int i = 0; i < points.size(); i++ )
     {
       /* Get the point. */
-      final Point point = points.get( i );
+      final Coordinate point = points.get( i );
 
       /* Create the coordinate pair. */
-      final CoordinatePair coordinatePair = new CoordinatePair( coordinate, point.getCoordinate() );
+      final CoordinatePair coordinatePair = new CoordinatePair( coordinate, point );
 
       /* Add to the results. */
       results.add( coordinatePair );
@@ -1449,7 +1443,7 @@ public final class JTSUtilities
 
   /**
    * This function returns the nearest point on the line within a distance of the provided point.
-   * 
+   *
    * @param line
    *          The points on this line will be evaluated.
    * @param point
@@ -1497,7 +1491,7 @@ public final class JTSUtilities
 
   /**
    * This function finds the points via the NEAREST rule. Method was copied from InformDSS class AbstractGeoMeasure
-   * 
+   *
    * @return The list of affected points. Always with size = 2.
    */
   public static Point findNearestProjectionPoints( final Polygon polygone, final Point point )
