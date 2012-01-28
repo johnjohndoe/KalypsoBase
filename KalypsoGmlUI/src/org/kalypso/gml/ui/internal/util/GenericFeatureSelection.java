@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml.ui.util;
+package org.kalypso.gml.ui.internal.util;
 
 import java.util.Arrays;
 import java.util.HashMap;

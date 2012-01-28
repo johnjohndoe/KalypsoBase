@@ -53,7 +53,7 @@ import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.gml.ui.commands.exportshape.ExportShapeUtils;
 import org.kalypso.gml.ui.extensions.FeatureSelectionTester;
 import org.kalypso.gml.ui.i18n.Messages;
-import org.kalypso.gml.ui.util.GenericFeatureSelection;
+import org.kalypso.gml.ui.internal.util.GenericFeatureSelection;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
