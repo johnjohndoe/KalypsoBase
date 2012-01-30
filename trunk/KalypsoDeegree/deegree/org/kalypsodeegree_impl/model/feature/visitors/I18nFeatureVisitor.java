@@ -41,7 +41,7 @@
 package org.kalypsodeegree_impl.model.feature.visitors;
 
 import java.util.List;
-import java.util.Properties;
+import java.util.ResourceBundle;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -53,22 +53,19 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
  * This visitor is used to i10 gml-dictionaries.<br>
  * For every string-property (even lists of strings) that start with '%', the value is retrieved from the given
  * properties for the key (after the '%').
- * 
+ *
  * @author Monika Thül
  * @author Gernot Belger
  */
 public class I18nFeatureVisitor implements FeatureVisitor
 {
-  private final Properties m_properties;
+  private final ResourceBundle m_bundle;
 
-  public I18nFeatureVisitor( final Properties properties )
+  public I18nFeatureVisitor( final ResourceBundle bundle )
   {
-    m_properties = properties;
+    m_bundle = bundle;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
   public boolean visit( final Feature f )
   {
@@ -118,8 +115,9 @@ public class I18nFeatureVisitor implements FeatureVisitor
       return entry;
 
     final String key = entry.substring( 1 );
-    if( m_properties.containsKey( key ) )
-      return m_properties.getProperty( key );
+
+    if( m_bundle.containsKey( key ) )
+      return m_bundle.getString( key );
 
     return entry;
   }

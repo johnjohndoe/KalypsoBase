@@ -60,7 +60,7 @@ import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
  * This is preliminary, because at the moment we assume that there is only one simulation model per project which is
  * always at the same place.
  * </p>
- * 
+ *
  * @author Gernot Belger
  */
 public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommandPoster
@@ -354,7 +354,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
 
   /**
    * Reloads all models.
-   * 
+   *
    * @see de.renew.workflow.connector.cases.ICaseDataProvider#reloadModel()
    */
   @Override
@@ -378,7 +378,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
 
   /**
    * Resets the pool-key for the given folder.
-   * 
+   *
    * @param szenarioFolder
    *          If <code>null</code>, just releases the existing key.
    */
@@ -435,7 +435,6 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
    *      </p>
    */
   @Override
-  @SuppressWarnings("deprecation")
   @Deprecated
   public <T extends IModel> T getModel( final Class<T> modelClass ) throws CoreException
   {
@@ -505,7 +504,6 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
    * @see de.renew.workflow.connector.cases.ICaseDataProvider#isDirty(java.lang.Class)
    */
   @Override
-  @SuppressWarnings("deprecation")
   @Deprecated
   public boolean isDirty( final Class< ? extends IModel> modelClass )
   {
@@ -531,7 +529,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
     final KeyInfo infoForKey = pool.getInfoForKey( key );
     if( infoForKey == null )
-      // TODO throw (core/other) exception?
+      // .
       return false;
 
     return infoForKey.isDirty();
@@ -542,7 +540,6 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  @SuppressWarnings("deprecation")
   @Deprecated
   public synchronized void saveModel( final Class< ? extends IModel> modelClass, final IProgressMonitor monitor ) throws CoreException
   {
