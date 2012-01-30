@@ -16,9 +16,7 @@ Require-Bundle: org.kalypso.simulation.core;visibility:=reexport,
  org.junit;resolution:=optional,
  org.kalypso.ui;bundle-version="11.6.2"
 Bundle-ActivationPolicy: lazy
-Export-Package: com.bce.apps.wspfli,
- com.bce.ext.jargs,
- com.bce.ext.jts,
+Export-Package: com.bce.ext.jts,
  com.bce.gis.io.hmo,
  com.bce.gis.io.zweidm,
  com.bce.gis.operation.hmo2fli,
