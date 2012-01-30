@@ -78,9 +78,6 @@ public class ImportLanduseShapeRunnable implements IRunnableWithProgress
     m_vegetationMapping = vegetationMapping;
   }
 
-  /**
-   * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public void run( final IProgressMonitor monitor ) throws InvocationTargetException
   {
@@ -139,6 +136,8 @@ public class ImportLanduseShapeRunnable implements IRunnableWithProgress
       else
         throw new UnsupportedOperationException(); // TODO
     }
+    else
+      FileUtilities.copyShapeFileToDirectory( lnkShapeFile, landuse.getLocation().toFile() );
 
     landuse.refreshLocal( IResource.DEPTH_INFINITE, monitor );
 

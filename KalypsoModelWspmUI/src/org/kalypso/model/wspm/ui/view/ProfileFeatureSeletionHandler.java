@@ -136,8 +136,12 @@ public class ProfileFeatureSeletionHandler
 
   public void dispose( )
   {
-    if( m_profileSourcePart != null )
-      m_profileSourcePart.getSite().getSelectionProvider().removeSelectionChangedListener( m_selectionListener );
+    if( Objects.isNotNull( m_profileSourcePart ) )
+    {
+      final ISelectionProvider provider = m_profileSourcePart.getSite().getSelectionProvider();
+      if( Objects.isNotNull( provider ) )
+        provider.removeSelectionChangedListener( m_selectionListener );
+    }
 
     if( m_profileFeature != null )
       m_profileFeature.removeProfilProviderListener( m_providerListener );

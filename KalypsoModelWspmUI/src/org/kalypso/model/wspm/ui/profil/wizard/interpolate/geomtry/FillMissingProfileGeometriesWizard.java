@@ -44,7 +44,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
-import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.base.ExtrapolateMissingCoordinatesVisitor;
 import org.kalypso.model.wspm.core.profil.base.InterpolateMissingCoordinatesVisitor;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
@@ -59,11 +58,8 @@ public class FillMissingProfileGeometriesWizard extends Wizard implements IWorkb
 
   private final IPointsProvider[] m_providers;
 
-  private final IProfil m_profile;
-
-  public FillMissingProfileGeometriesWizard( final IProfil profile, final IPointsProvider[] providers )
+  public FillMissingProfileGeometriesWizard( final IPointsProvider[] providers )
   {
-    m_profile = profile;
     m_providers = providers;
     setWindowTitle( "Fill missing profile geometries" ); //$NON-NLS-1$
 

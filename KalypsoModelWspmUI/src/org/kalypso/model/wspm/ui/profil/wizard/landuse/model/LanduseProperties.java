@@ -65,9 +65,6 @@ public class LanduseProperties extends Properties
     m_model = model;
   }
 
-  /**
-   * @see java.util.Properties#load(java.io.InputStream)
-   */
   @Override
   public synchronized void load( final InputStream inStream ) throws IOException
   {
@@ -77,27 +74,18 @@ public class LanduseProperties extends Properties
     remove( SELECTION );
   }
 
-  /**
-   * @see java.util.Properties#load(java.io.Reader)
-   */
   @Override
   public synchronized void load( final Reader reader )
   {
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see java.util.Properties#loadFromXML(java.io.InputStream)
-   */
   @Override
   public synchronized void loadFromXML( final InputStream in )
   {
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see java.util.Properties#store(java.io.OutputStream, java.lang.String)
-   */
   @Override
   public void store( final OutputStream out, final String comments ) throws IOException
   {
@@ -108,18 +96,12 @@ public class LanduseProperties extends Properties
     super.store( out, comments );
   }
 
-  /**
-   * @see java.util.Properties#storeToXML(java.io.OutputStream, java.lang.String)
-   */
   @Override
   public synchronized void storeToXML( final OutputStream os, final String comment )
   {
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see java.util.Properties#storeToXML(java.io.OutputStream, java.lang.String, java.lang.String)
-   */
   @Override
   public synchronized void storeToXML( final OutputStream os, final String comment, final String encoding )
   {

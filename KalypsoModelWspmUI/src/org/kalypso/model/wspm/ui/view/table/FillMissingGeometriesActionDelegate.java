@@ -80,7 +80,7 @@ public class FillMissingGeometriesActionDelegate implements IViewActionDelegate
       m_selection = selectionProvider.getSelection();
     }
 
-    // get profilpoints from selection and view
+    // get profile points from selection and view
     // TODO: this does not work any more
     // final IProfilEventManager pem = (IProfilEventManager) m_view.getAdapter( IProfilEventManager.class );
     final IProfil profile = m_view instanceof TableView ? ((TableView) m_view).getProfil() : null;
@@ -95,15 +95,11 @@ public class FillMissingGeometriesActionDelegate implements IViewActionDelegate
     final IPointsProvider allPointsPointsProvider = new SimplePointsProvider( "From all points of the profile", profile.getPoints() ); //$NON-NLS-1$
     final IPointsProvider selectionPointProvider = new SelectionPointsProvider( profile, m_selection );
 
-    final FillMissingProfileGeometriesWizard wizard = new FillMissingProfileGeometriesWizard( profile, new IPointsProvider[] { allPointsPointsProvider, selectionPointProvider } );
+    final FillMissingProfileGeometriesWizard wizard = new FillMissingProfileGeometriesWizard( new IPointsProvider[] { allPointsPointsProvider, selectionPointProvider } );
     final WizardDialog2 dialog = new WizardDialog2( viewShell, wizard );
     dialog.open();
   }
 
-  /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-   *      org.eclipse.jface.viewers.ISelection)
-   */
   @Override
   public void selectionChanged( final IAction action, final ISelection selection )
   {

@@ -104,6 +104,9 @@ public class LanduseModel extends AbstractModelObject implements ILanduseModel
     firePropertyChange( PROPERTY_MAPPING, oldValue, mapping );
   }
 
+  /**
+   * @return classes defined in the underlying wspm modell.gml
+   */
   @Override
   public final IClassificationClass[] getClasses( )
   {
