@@ -85,3 +85,4 @@ Export-Package: javax.measure,
  org.opengis.webservice,
  org.opengis.webservice.capability,
  org.opengis.webservice.feature
+Require-Bundle: org.kalypso.commons;bundle-version="11.6.4"
