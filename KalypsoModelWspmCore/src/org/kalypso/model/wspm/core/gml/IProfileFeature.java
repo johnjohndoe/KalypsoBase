@@ -86,12 +86,6 @@ public interface IProfileFeature extends Feature, IProfileProvider
    */
   double getStation( );
 
-  /**
-   * @deprecated Use {@link #setBigStation(BigDecimal)} instead.
-   */
-  @Deprecated
-  void setStation( double station );
-
   BigDecimal getBigStation( );
 
   void setBigStation( BigDecimal bigStation );

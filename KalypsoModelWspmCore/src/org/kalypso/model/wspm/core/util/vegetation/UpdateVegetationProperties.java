@@ -59,12 +59,11 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
 /**
  * updates a "simple" ks / kst value from roughness class
- * 
+ *
  * @author Dirk Kuch
  */
 public class UpdateVegetationProperties implements ICoreRunnableWithProgress
@@ -79,16 +78,13 @@ public class UpdateVegetationProperties implements ICoreRunnableWithProgress
     m_overwrite = overwrite;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    final IComponent ax = getPropety( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX );
-    final IComponent ay = getPropety( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY );
-    final IComponent dp = getPropety( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP );
-    final IComponent clazz = getPropety( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS );
+    final int ax = getPropety( m_profile, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX );
+    final int ay = getPropety( m_profile, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY );
+    final int dp = getPropety( m_profile, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP );
+    final int clazz = getPropety( m_profile, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS );
 
     final IWspmClassification clazzes = WspmClassifications.getClassification( m_profile );
     if( Objects.isNull( clazzes ) )
@@ -106,18 +102,18 @@ public class UpdateVegetationProperties implements ICoreRunnableWithProgress
 
       if( Objects.isNull( vegetation ) )
       {
-        final Double width = (Double) point.getValue( m_profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BREITE ) );
+        final Double width = (Double) point.getValue( m_profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE ) );
         final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( "Missing vegetation class - point: %.3f", width ) );
         statis.add( status );
 
         continue;
       }
 
-      if( isWritable( point, ax ) )
+      if( isWritable( m_overwrite, point, ax ) )
         operation.addChange( new PointPropertyEdit( point, ax, vegetation.getAx().doubleValue() ) );
-      if( isWritable( point, ay ) )
+      if( isWritable( m_overwrite, point, ay ) )
         operation.addChange( new PointPropertyEdit( point, ay, vegetation.getAy().doubleValue() ) );
-      if( isWritable( point, dp ) )
+      if( isWritable( m_overwrite, point, dp ) )
         operation.addChange( new PointPropertyEdit( point, dp, vegetation.getDp().doubleValue() ) );
     }
 
@@ -126,21 +122,23 @@ public class UpdateVegetationProperties implements ICoreRunnableWithProgress
     return StatusUtilities.createStatus( statis, String.format( "Updating of roughness from roughness classes for profile %.3f", m_profile.getStation() ) );
   }
 
-  private IComponent getPropety( final String property ) throws CoreException
+  // FIXME move into helper
+  public static int getPropety( final IProfil m_profile, final String property ) throws CoreException
   {
-    final IComponent ax = m_profile.hasPointProperty( property );
-    if( Objects.isNull( ax ) )
+    final int index = m_profile.indexOfProperty( property );
+    if( index == -1 )
     {
       final Status status = new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( "Can't update profile %.3f km. Missing point property: %s", m_profile.getStation(), property ) );
       throw new CoreException( status );
     }
 
-    return ax;
+    return index;
   }
 
-  private boolean isWritable( final IRecord point, final IComponent property )
+  // FIXME: move into helper
+  public static boolean isWritable( final boolean overwrite, final IRecord point, final int property )
   {
-    if( m_overwrite )
+    if( overwrite )
       return true;
 
     return Objects.isNull( point.getValue( property ) );

@@ -30,7 +30,6 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.ProfileObjectFactory;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.result.ProfileAndResults;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.observation.IObservation;
@@ -213,14 +212,6 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
   {
     setProperty( QN_PROPERTY_SRS, srsName );
     setEnvelopesUpdated();
-  }
-
-  @Deprecated
-  @Override
-  public void setStation( final double station )
-  {
-    final BigDecimal bigStation = ProfilUtil.stationToBigDecimal( station );
-    setBigStation( bigStation );
   }
 
   @Override

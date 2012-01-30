@@ -102,7 +102,6 @@ public class FixedResultDefinitionFeaturePropertyFunction extends FeaturePropert
     return getConstValue( feature, (IRelationType) pt );
   }
 
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
   /**
    * Produces the a feature of the following kind:
    *

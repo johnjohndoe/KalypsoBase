@@ -54,6 +54,7 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.DoubleComparator;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
@@ -73,7 +74,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
  * Helper class to import a DA50 file and apply its values to a list of profiles.
- * 
+ *
  * @author Gernot Belger
  * @author kimwerner
  */
@@ -153,7 +154,7 @@ public final class DA50Importer
     double vy = endPos.getY() - startPos.getY();
     final double vl = Math.sqrt( vx * vx + vy * vy );
     if( vl == 0.0 )
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.model.wspm.core.imports.DA50Importer.1", entry.station ) ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), Messages.getString( "org.kalypso.model.wspm.core.imports.DA50Importer.1", entry.station ) ) ); //$NON-NLS-1$
 
     // den Vektor normieren
     vx /= vl;
