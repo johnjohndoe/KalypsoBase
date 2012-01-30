@@ -155,6 +155,7 @@ public class ApplyLanduseShapeWizard extends Wizard implements IWorkbenchWizard
       m_project = ResourceUtilities.findProjectFromURL( model.getContext() );
     }
     else
+      // FIXME: happens, when wizard is activated via GML-Tree on a profile selection
       throw new UnsupportedOperationException();
 
     m_theme = FeatureThemeWizardUtilitites.findTheme( selection );
