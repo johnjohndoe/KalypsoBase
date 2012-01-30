@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.swt.dnd.TransferData;
@@ -50,7 +51,6 @@ import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
-import org.kalypso.ogc.gml.outline.nodes.ThemeNodeUtils;
 import org.kalypso.ui.addlayer.dnd.AddLayerDndSupport;
 
 /**
@@ -74,8 +74,7 @@ class GisMapOutlineDropAdapter extends ViewerDropAdapter
 
     setScrollExpandEnabled( true );
     setSelectionFeedbackEnabled( true );
-    // TODO: allow to insert after/before
-    setFeedbackEnabled( false );
+    setFeedbackEnabled( true );
   }
 
   @Override
@@ -83,46 +82,51 @@ class GisMapOutlineDropAdapter extends ViewerDropAdapter
   {
     final Shell shell = getViewer().getControl().getShell();
 
-    final IMapModell mapModell = findCurrentModell();
-    if( !(mapModell instanceof IKalypsoLayerModell) )
+    final GisMapOutlineDropData dropData = findCurrentModell();
+    if( data == null )
       return false;
 
-    return m_layerDropper.performDrop( shell, data, (IKalypsoLayerModell) mapModell );
+    return m_layerDropper.performDrop( shell, data, dropData );
   }
 
-  // TODO: not only find model but also find insert position
-  private IMapModell findCurrentModell( )
+  private GisMapOutlineDropData findCurrentModell( )
   {
     final int currentLocation = getCurrentLocation();
 
-    switch( currentLocation )
+    final int defaultInsertionIndex = 0;
+
+    if( currentLocation == LOCATION_NONE )
+      return new GisMapOutlineDropData( m_mapModell, defaultInsertionIndex );
+
+    final IKalypsoTheme theme = findCurrentTheme();
+    if( theme == null )
+      return null;
+// return new GisMapOutlineDropData( m_mapModell, defaultInsertionIndex );
+
+    if( theme instanceof IKalypsoCascadingTheme && currentLocation == LOCATION_ON )
+      return new GisMapOutlineDropData( (IKalypsoCascadingTheme) theme, defaultInsertionIndex );
+
+    final IMapModell model = theme.getMapModell();
+    if( model instanceof IKalypsoLayerModell )
     {
-      case LOCATION_NONE:
-        return m_mapModell;
-
-      case LOCATION_ON:
-      {
-        final IKalypsoTheme theme = findCurrentTheme();
-        if( theme == null )
-          return m_mapModell;
-
-        if( theme instanceof IKalypsoCascadingTheme )
-          return (IMapModell) theme;
-
-        return theme.getMapModell();
-      }
-
-      case LOCATION_AFTER:
-      case LOCATION_BEFORE:
-      default:
-      {
-        final IKalypsoTheme theme = findCurrentTheme();
-        if( theme == null )
-          return m_mapModell;
-
-        return theme.getMapModell();
-      }
+      final int insertionIndex = findIndexOf( model, theme, currentLocation );
+      return new GisMapOutlineDropData( (IKalypsoLayerModell) model, insertionIndex );
     }
+
+    return null;
+  }
+
+  private int findIndexOf( final IMapModell model, final IKalypsoTheme theme, final int currentLocation )
+  {
+    final IKalypsoTheme[] allThemes = model.getAllThemes();
+    final int index = ArrayUtils.indexOf( allThemes, theme );
+    if( index == -1 )
+      return 0;
+
+    if( currentLocation == LOCATION_AFTER )
+      return index + 1;
+
+    return index;
   }
 
   private IKalypsoTheme findCurrentTheme( )
@@ -134,7 +138,9 @@ class GisMapOutlineDropAdapter extends ViewerDropAdapter
     if( currentTarget instanceof IThemeNode )
     {
       final IThemeNode node = (IThemeNode) currentTarget;
-      return ThemeNodeUtils.findTheme( node );
+      final Object element = node.getElement();
+      if( element instanceof IKalypsoTheme )
+        return (IKalypsoTheme) element;
     }
 
     return null;
@@ -143,6 +149,11 @@ class GisMapOutlineDropAdapter extends ViewerDropAdapter
   @Override
   public boolean validateDrop( final Object target, final int operation, final TransferData transferType )
   {
+    /* Prvent drop on non-theme nodes like style elements */
+    final GisMapOutlineDropData data = findCurrentModell();
+    if( data == null )
+      return false;
+
     return m_layerDropper.validateDrop( target, operation, transferType );
   }
 }

@@ -126,7 +126,9 @@ public class ImportShapeSourceWizard extends AbstractDataImportWizard
     final String themeName = FileUtilities.nameWithoutExtension( shapePath.lastSegment() );
     final String fileName = relativeShapePath + '#' + m_data.getSrs(); //$NON-NLS-1$
 
-    final AddThemeCommand command = new AddThemeCommand( mapModell, themeName, "shape", ShapeSerializer.PROPERTY_FEATURE_MEMBER.getLocalPart(), fileName ); //$NON-NLS-1$
+    final int insertionIndex = getInsertionIndex();
+
+    final AddThemeCommand command = new AddThemeCommand( mapModell, themeName, "shape", ShapeSerializer.PROPERTY_FEATURE_MEMBER.getLocalPart(), fileName, insertionIndex ); //$NON-NLS-1$
 
     /* Add style according to choice */
     if( !addStyleCommand( mapPath, shapePath, command ) )
