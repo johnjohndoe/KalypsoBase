@@ -44,8 +44,12 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
+import org.eclipse.ui.handlers.HandlerUtil;
+import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.CompositeCommand;
@@ -57,9 +61,6 @@ import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
  */
 public class RemoveThemeHandler extends AbstractHandler
 {
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
@@ -67,6 +68,15 @@ public class RemoveThemeHandler extends AbstractHandler
     final ISelection selection = (ISelection) context.getVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME );
     final IKalypsoTheme[] selectedThemes = MapHandlerUtils.getSelectedThemes( selection );
 
+    /* Ask user */
+    final Shell shell = HandlerUtil.getActiveShellChecked( event );
+    final String commandName = HandlerUtils.getCommandName( event );
+
+    final String message = String.format( "Really remove theme(s)?" );
+    if( !MessageDialog.openConfirm( shell, commandName, message ) )
+      return null;
+
+    /* Remove the themes */
     final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString( "org.kalypso.ogc.gml.outline.handler.RemoveThemeHandler.0" ) ); //$NON-NLS-1$
     for( final IKalypsoTheme theme : selectedThemes )
       compositeCommand.addCommand( new RemoveThemeCommand( theme.getMapModell(), theme ) );
