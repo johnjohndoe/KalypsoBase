@@ -40,14 +40,23 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor;
 
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DropTarget;
+import org.eclipse.swt.dnd.DropTargetListener;
+import org.eclipse.swt.dnd.FileTransfer;
+import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
+import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.util.command.JobExclusiveCommandTarget;
 
 /**
  * <p>
  * Eclipse-Editor zum Editieren der GML-Gis-Templates.
  * </p>
- * 
+ *
  * @author Gernot Belger
  * @author Stefan Kurzbach
  */
@@ -60,6 +69,26 @@ public class GisMapEditor extends AbstractMapPart implements IEditorPart
   private static final String OUTLINE_URI_MENU = "menu:org.kalypso.map.outline.GisMapEditor"; //$NON-NLS-1$
 
   private static final String OUTLINE_URI_POPUP = "popup:org.kalypso.map.outline.GisMapEditor"; //$NON-NLS-1$
+
+  @Override
+  public synchronized void createPartControl( final Composite parent )
+  {
+    super.createPartControl( parent );
+
+    /* Add drop support */
+    final Transfer[] transfers = new Transfer[] { FileTransfer.getInstance() };
+
+    final JobExclusiveCommandTarget commandTarget = getCommandTarget();
+    final GisTemplateMapModell mapModell = getMapModell();
+
+    final Viewer mapViewer = new MapViewer( parent, getMapPanel() );
+
+    final DropTargetListener dropListener = new GisMapDropAdapter( mapViewer, commandTarget, mapModell );
+
+    final DropTarget dropTarget = new DropTarget( parent, DND.DROP_LINK );
+    dropTarget.setTransfer(transfers);
+    dropTarget.addDropListener(dropListener);
+  }
 
   @Override
   public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
