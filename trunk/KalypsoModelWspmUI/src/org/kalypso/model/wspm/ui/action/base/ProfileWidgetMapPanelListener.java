@@ -90,15 +90,16 @@ public class ProfileWidgetMapPanelListener implements ISelectionChangedListener
   private IProfileFeature[] resovleProfiles( final EasyFeatureWrapper[] features )
   {
     final Set<IProfileFeature> profiles = new LinkedHashSet<>();
-
     for( final EasyFeatureWrapper eft : features )
     {
       final Feature feature = eft.getFeature();
-
       if( feature instanceof ProfileFeatureBinding )
+        profiles.add( (ProfileFeatureBinding) feature );
+      else
       {
-        final ProfileFeatureBinding binding = (ProfileFeatureBinding) feature;
-        profiles.add( binding );
+        final Object adapter = feature.getAdapter( IProfileFeature.class );
+        if( adapter instanceof IProfileFeature )
+          profiles.add( (IProfileFeature) adapter );
       }
     }
 
