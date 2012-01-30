@@ -86,9 +86,6 @@ public class LanduseMappingTable extends Composite
 
     m_viewer.setContentProvider( new ArrayTreeContentProvider()
     {
-      /**
-       * @see org.eclipse.jface.viewers.ITreeContentProvider#getElements(java.lang.Object)
-       */
       @Override
       public Object[] getElements( final Object inputElement )
       {

@@ -115,9 +115,6 @@ public class LandMappingEditingSupport extends EditingSupport
     return null;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.EditingSupport#setValue(java.lang.Object, java.lang.Object)
-   */
   @SuppressWarnings("unchecked")
   @Override
   protected void setValue( final Object element, final Object value )

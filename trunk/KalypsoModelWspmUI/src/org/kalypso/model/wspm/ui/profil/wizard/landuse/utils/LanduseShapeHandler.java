@@ -58,18 +58,12 @@ public class LanduseShapeHandler implements ILanduseShapeDataProvider
     m_project = project;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.ILanduseShapeDataProvider#getProject()
-   */
   @Override
   public IProject getProject( )
   {
     return m_project;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.ILanduseShapeDataProvider#getLnkShapeFile()
-   */
   @Override
   public String getLnkShapeFile( )
   {

@@ -84,9 +84,6 @@ public class ProfilesChooserPage extends ArrayChooserPage
     }
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage#createControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public void createControl( final Composite parent )
   {

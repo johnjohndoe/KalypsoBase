@@ -110,9 +110,6 @@ public class ProfilePointFilterComposite extends ListSelectionComposite implemen
     m_filters.addAll( Arrays.asList( filters ) );
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.dialog.ListSelectionComposite#fireCheckStateChanged(org.eclipse.jface.viewers.CheckStateChangedEvent)
-   */
   @Override
   protected void fireCheckStateChanged( final CheckStateChangedEvent event )
   {
@@ -137,10 +134,6 @@ public class ProfilePointFilterComposite extends ListSelectionComposite implemen
     }
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.dialog.ListSelectionComposite#createControl(org.eclipse.swt.widgets.Composite,
-   *      int)
-   */
   @Override
   public Control createControl( final Composite parent, final int style )
   {

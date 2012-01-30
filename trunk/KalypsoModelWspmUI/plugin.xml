@@ -538,9 +538,9 @@
              class="org.kalypso.model.wspm.ui.profil.wizard.landuse.ImportLanduseShapeWizard"
              icon="icons/obj16/landuse.import.png"
              id="org.kalypso.model.wspm.ui.profil.wizard.landuse.ImportLanduseShapeWizard"
-             name="Import landuse shape">
+             name="%org.kalypso.model.wspm.ui.profil.wizard.landuse.ImportLanduseShapeWizard.name">
           <description>
-             Landuse shapes can be used to assign roughness and vegetation classes on profiles
+             %org.kalypso.model.wspm.ui.profil.wizard.landuse.ImportLanduseShapeWizard.description
           </description>
        </wizard>
     </extension>

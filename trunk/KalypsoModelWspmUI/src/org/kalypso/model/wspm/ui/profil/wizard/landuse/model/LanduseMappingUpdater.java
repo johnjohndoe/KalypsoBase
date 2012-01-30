@@ -69,9 +69,6 @@ public class LanduseMappingUpdater implements IRunnableWithProgress
     m_properties = properties;
   }
 
-  /**
-   * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public void run( final IProgressMonitor monitor )
   {

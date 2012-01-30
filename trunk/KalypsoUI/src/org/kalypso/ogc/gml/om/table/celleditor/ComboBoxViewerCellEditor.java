@@ -183,9 +183,6 @@ public class ComboBoxViewerCellEditor extends CellEditor
     return m_viewer.getControl();
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.CellEditor#getLayoutData()
-   */
   @Override
   public LayoutData getLayoutData( )
   {
@@ -196,9 +193,6 @@ public class ComboBoxViewerCellEditor extends CellEditor
     return result;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.CellEditor#doGetValue()
-   */
   @Override
   protected Object doGetValue( )
   {
@@ -219,19 +213,12 @@ public class ComboBoxViewerCellEditor extends CellEditor
   @Override
   public void activate( final ColumnViewerEditorActivationEvent activationEvent )
   {
-    System.out.println( "activate" );
-    // TODO Auto-generated method stub
     super.activate( activationEvent );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.CellEditor#doSetFocus()
-   */
   @Override
   protected void doSetFocus( )
   {
-    System.out.println( "doSetFocus" );
-
     final Combo combo = m_viewer.getCombo();
     combo.setListVisible( true );
     combo.setFocus();
