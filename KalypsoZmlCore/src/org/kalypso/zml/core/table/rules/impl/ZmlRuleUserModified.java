@@ -63,7 +63,6 @@ public class ZmlRuleUserModified extends AbstractZmlTableRule
     return ID;
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   protected boolean doApply( final ZmlRule rule, final IZmlValueReference reference )
   {

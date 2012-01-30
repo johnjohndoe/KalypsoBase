@@ -85,7 +85,6 @@ public class GuessVegetationClassesRunnable implements ICoreRunnableWithProgress
     m_maxDelta = delta;
   }
 
-// @SuppressWarnings("deprecation")
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {

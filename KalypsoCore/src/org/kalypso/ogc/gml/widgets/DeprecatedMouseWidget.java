@@ -163,7 +163,6 @@ public abstract class DeprecatedMouseWidget extends AbstractWidget implements ID
   }
 
   @Override
-  @SuppressWarnings("deprecation")
   @Deprecated
   public void clickPopup( final Point p )
   {
