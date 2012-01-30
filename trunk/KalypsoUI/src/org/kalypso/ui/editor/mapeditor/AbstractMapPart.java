@@ -126,9 +126,6 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
   // for map context changes; it then always gets the current message from the map
   private final IMapPanelListener m_mapPanelListener = new MapPanelAdapter()
   {
-    /**
-     * @see org.kalypso.ogc.gml.map.MapPanelAdapter#onMessageChanged(org.kalypso.ogc.gml.map.MapPanel, java.lang.String)
-     */
     @Override
     public void onMessageChanged( final IMapPanel source, final String message )
     {
@@ -190,9 +187,6 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
     actionBars.updateActionBars();
   }
 
-  /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#createPartControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public synchronized void createPartControl( final Composite parent )
   {

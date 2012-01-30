@@ -101,7 +101,6 @@ class GisMapOutlineDropAdapter extends ViewerDropAdapter
     final IKalypsoTheme theme = findCurrentTheme();
     if( theme == null )
       return null;
-// return new GisMapOutlineDropData( m_mapModell, defaultInsertionIndex );
 
     if( theme instanceof IKalypsoCascadingTheme && currentLocation == LOCATION_ON )
       return new GisMapOutlineDropData( (IKalypsoCascadingTheme) theme, defaultInsertionIndex );
