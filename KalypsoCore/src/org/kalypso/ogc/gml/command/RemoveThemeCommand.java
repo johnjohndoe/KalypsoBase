@@ -81,9 +81,6 @@ public class RemoveThemeCommand implements ICommand
     return true;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#process()
-   */
   @Override
   public void process( ) throws Exception
   {
