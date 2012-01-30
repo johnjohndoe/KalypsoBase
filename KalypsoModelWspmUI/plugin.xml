@@ -543,16 +543,6 @@
              Landuse shapes can be used to assign roughness and vegetation classes on profiles
           </description>
        </wizard>
-       <wizard
-             category="importWizards"
-             class="org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.ApplyLanduseShapeWizard"
-             icon="icons/obj16/landuse.apply.png"
-             id="org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.ApplyLanduseShapeWizard"
-             name="Apply landuse shape">
-          <description>
-             Assign roughness classes
-          </description>
-       </wizard>
     </extension>
     <extension
           point="org.kalypso.gml.ui.toolWizards">
@@ -567,22 +557,22 @@
              class="org.kalypso.model.wspm.ui.profil.wizard.classification.guess.GuessClassificationsWizard"
              id="org.kalypso.model.wspm.ui.profil.wizard.classification.GuessClassificationsWizard"
              icon="icons/obj16/guess_classes.png"
-             name="Guess classification classes">
-             <description>Guessing of roughness / vegetation classes from profile point properties</description>
+             name="%org.kalypso.model.wspm.ui.profil.wizard.classification.GuessClassificationsWizard.name">
+             <description>%org.kalypso.model.wspm.ui.profil.wizard.classification.GuessClassificationsWizard.description</description>
        </wizard>
        <wizard
              class="org.kalypso.model.wspm.ui.profil.wizard.interpolate.geomtry.FillMissingProfilesGeometriesWizard"
              id="org.kalypso.model.wspm.ui.profil.wizard.interpolate.geomtry.FillMissingProfilesGeometriesWizard"
              icon="icons/obj16/snap-orthogonal.png"
-             name="Fill missing profile geometries">
-             <description>Fill missing profile geometries from existing profile point geometries</description>
+             name="%org.kalypso.model.wspm.ui.profil.wizard.interpolate.geomtry.FillMissingProfilesGeometriesWizard.name">
+             <description>%org.kalypso.model.wspm.ui.profil.wizard.interpolate.geomtry.FillMissingProfilesGeometriesWizard.description</description>
        </wizard>
        <wizard
              class="org.kalypso.model.wspm.ui.profil.wizard.classification.apply.ApplyClassificationsWizard"
              id="org.kalypso.model.wspm.ui.profil.wizard.classification.ApplyClassificationsWizard"
              icon="icons/obj16/apply_classes.png"
-             name="Apply classification class vlaues">
-             <description>Apply mapped roughness / vegetation classification class values on selected profile point properties</description>
+             name="%org.kalypso.model.wspm.ui.profil.wizard.classification.ApplyClassificationsWizard.name">
+             <description>%org.kalypso.model.wspm.ui.profil.wizard.classification.ApplyClassificationsWizard.description</description>
        </wizard>
        <wizard
              class="org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard"
@@ -621,14 +611,12 @@
              class="org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.ApplyLanduseShapeWizard"
              icon="icons/obj16/landuse.apply.png"
              id="org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.ApplyLanduseShapeWizard"
-             name="Apply landuse shape">
+             name="%org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.ApplyLanduseShapeWizard.name">
           <description>
-             Assign missing roughness classes
+             %org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.ApplyLanduseShapeWizard.description
           </description>
        </wizard>
-     
     </extension>
-
     <extension point="org.kalypso.contribs.eclipsercp.wizardEnablement">
        <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.importProfile.ImportProfileWizard">
           <enablement>
