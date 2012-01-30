@@ -60,7 +60,6 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathSegment;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * @author Christoph Küpferle
@@ -189,12 +188,14 @@ public class GMLContentProvider implements ITreeContentProvider
           result.addAll( Arrays.asList( children ) );
         }
       }
-      else if( GeometryUtilities.isGeometry( property ) )
-      {
-        final Object value = parentFE.getProperty( property );
-        if( value != null )
-          result.add( value );
-      }
+      // FIXME: showing the geometry does not make much sennse (because we have no actions on it) and
+      // is ugly as well, as we have no nice label provider for it. So this is suppressed for now.
+// else if( GeometryUtilities.isGeometry( property ) )
+// {
+// final Object value = parentFE.getProperty( property );
+// if( value != null )
+// result.add( value );
+// }
     }
   }
 
