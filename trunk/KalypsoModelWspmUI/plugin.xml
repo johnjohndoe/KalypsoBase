@@ -446,15 +446,46 @@
             <test property="org.kalypso.model.wspm.ui.hasProfileSelection"/>
          </with>
       </definition>
+      <definition
+            id="org.kalypso.model.wspm.ui.definition.reachThemeSelected">
+         <with
+               variable="selection">
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate
+                     ifEmpty="false"
+                     operator="and">
+                  <adapt
+                        type="org.kalypso.ogc.gml.IKalypsoTheme">
+                     <test
+                           property="org.kalypso.ui.test.theme.isFeatureTheme">
+                     </test>
+                  </adapt>
+               </iterate>
+               <test
+                     property="org.kalypso.model.wspm.ui.hasReachSelection">
+               </test>
+            </and>
+         </with>
+      </definition>
 	</extension>
 
     <extension
           point="org.eclipse.core.expressions.propertyTesters">
        <propertyTester
-             class="org.kalypso.model.wspm.ui.action.ProfileSelectionTester"
+             class="org.kalypso.model.wspm.ui.action.property.tester.ProfileSelectionTester"
              id="org.kalypso.model.wspm.ui.propertyTester.profiles"
              namespace="org.kalypso.model.wspm.ui"
              properties="hasProfileSelection"
+             type="org.eclipse.jface.viewers.ISelection">
+       </propertyTester>
+        <propertyTester
+             class="org.kalypso.model.wspm.ui.action.property.tester.WspmReachThemeSelectionTester"
+             id="org.kalypso.model.wspm.ui.propertyTester.reach"
+             namespace="org.kalypso.model.wspm.ui"
+             properties="hasReachSelection"
              type="org.eclipse.jface.viewers.ISelection">
        </propertyTester>
     </extension>
@@ -501,6 +532,16 @@
              icon="icons/obj16/wspwin16.gif"
              name="%org.kalypso.model.wspm.ui.action.ImportProfilePrfAction">
           <description>%org.kalypso.model.wspm.ui.action.ImportProfilePrfAction.description</description>
+       </wizard>
+       <wizard
+             category="importWizards"
+             class="org.kalypso.model.wspm.ui.profil.wizard.landuse.ImportLanduseShapeWizard"
+             icon="icons/obj16/landuse.import.png"
+             id="org.kalypso.model.wspm.ui.profil.wizard.landuse.ImportLanduseShapeWizard"
+             name="Import landuse shape">
+          <description>
+             Landuse shapes can be used to assign roughness and vegetation classes on profiles
+          </description>
        </wizard>
     </extension>
     <extension
@@ -566,26 +607,7 @@
              icon="icons/obj16/river.png">
              <description>%org.kalypso.model.wspm.ui.profil.wizard.centerline.DeriveCenterlineWizard.description</description>
        </wizard>
-       
-       <!--
-        FIXME: import does not belong to 'Tools' Wizard
-        
-        FIXME: both wizard are visible everywhere
-        <wizard
-              class="org.kalypso.model.wspm.ui.profil.wizard.landuse.ImportLanduseShapeWizard"
-              icon="icons/obj16/landuse.import.png"
-              id="org.kalypso.model.wspm.ui.profil.wizard.landuse.ImportLanduseShapeWizard"
-              name="Import landuse shape">
-             <description>Landuse shapes can be used to assign roughness and vegetation classes on profiles</description>
-       </wizard>
-       
-        <wizard
-              class="org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.ApplyLanduseShapeWizard"
-              icon="icons/obj16/landuse.apply.png"
-              id="org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.ApplyLanduseShapeWizard"
-              name="Apply landuse shape">
-        </wizard>
-        -->
+     
     </extension>
 
     <extension point="org.kalypso.contribs.eclipsercp.wizardEnablement">
@@ -660,6 +682,14 @@
              <reference
                    definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
              </reference></enablement>
+       </wizardEnablement>
+       <wizardEnablement
+             wizardID="org.kalypso.model.wspm.ui.profil.wizard.landuse.ImportLanduseShapeWizard">
+          <enablement>
+             <reference
+                   definitionId="org.kalypso.model.wspm.ui.definition.reachThemeSelected">
+             </reference>
+          </enablement>
        </wizardEnablement>
     </extension>
     <extension point="org.eclipse.core.expressions.definitions">

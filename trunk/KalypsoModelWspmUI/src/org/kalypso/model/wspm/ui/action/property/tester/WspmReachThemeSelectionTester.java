@@ -38,17 +38,27 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.action;
+package org.kalypso.model.wspm.ui.action.property.tester;
+
+import java.util.Iterator;
 
 import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.kalypso.model.wspm.core.gml.WspmReach;
+import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
+import org.kalypso.ogc.gml.outline.nodes.FeatureThemeNode;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 
 /**
  * @author Gernot Belger
  */
-public class ProfileSelectionTester extends PropertyTester
+public class WspmReachThemeSelectionTester extends PropertyTester
 {
-  private static final String PROPERTY_HAS_PROFILE_SELECTION = "hasProfileSelection"; //$NON-NLS-1$
+
+  private static final String PROPERTY_HAS_REACH_SELECTION = "hasReachSelection"; //$NON-NLS-1$
 
   /**
    * @see org.eclipse.core.expressions.IPropertyTester#test(java.lang.Object, java.lang.String, java.lang.Object[],
@@ -59,8 +69,8 @@ public class ProfileSelectionTester extends PropertyTester
   {
     try
     {
-      if( PROPERTY_HAS_PROFILE_SELECTION.equals( property ) )
-        return testHasProfileSelection( receiver );
+      if( PROPERTY_HAS_REACH_SELECTION.equals( property ) )
+        return testHasReachSelection( receiver );
 
       return false;
     }
@@ -69,6 +79,34 @@ public class ProfileSelectionTester extends PropertyTester
       e.printStackTrace();
       return false;
     }
+  }
+
+  private boolean testHasReachSelection( final Object receiver )
+  {
+    if( !(receiver instanceof IStructuredSelection) )
+      return false;
+
+    final IStructuredSelection selection = (IStructuredSelection) receiver;
+    final Iterator< ? > itr = selection.iterator();
+    while( itr.hasNext() )
+    {
+      final Object next = itr.next();
+      if( next instanceof FeatureThemeNode )
+      {
+        final FeatureThemeNode theme = (FeatureThemeNode) next;
+        final IKalypsoFeatureTheme element = theme.getElement();
+        final FeatureList featureList = element.getFeatureList();
+
+        final Feature owner = featureList.getOwner();
+        if( owner instanceof WspmReach )
+          return true;
+      }
+
+      if( next instanceof WspmReach )
+        return true;
+    }
+
+    return false;
   }
 
   private boolean testHasProfileSelection( final Object receiver )

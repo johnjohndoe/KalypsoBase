@@ -117,9 +117,6 @@ public class IntervalFilter extends AbstractObservationFilter
     return m_metadata;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#appendSettings(org.kalypso.ogc.sensor.metadata.MetadataList)
-   */
   @Override
   protected void appendSettings( final MetadataList metadata )
   {
