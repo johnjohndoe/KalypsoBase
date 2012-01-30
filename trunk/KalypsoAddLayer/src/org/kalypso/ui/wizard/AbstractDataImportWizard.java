@@ -36,6 +36,8 @@ public abstract class AbstractDataImportWizard extends Wizard implements IKalyps
 
   private IKalypsoLayerModell m_modell;
 
+  private int m_insertionIndex;
+
   @Override
   public final void setCommandTarget( final ICommandTarget commandTarget )
   {
@@ -48,9 +50,21 @@ public abstract class AbstractDataImportWizard extends Wizard implements IKalyps
   }
 
   @Override
-  public final void setMapModel( final IKalypsoLayerModell modell )
+  public void setMapModel( final IKalypsoLayerModell modell )
+  {
+    setMapModel( modell, 0 );
+  }
+
+  @Override
+  public void setMapModel( final IKalypsoLayerModell modell, final int insertionIndex )
   {
     m_modell = modell;
+    m_insertionIndex = insertionIndex;
+  }
+
+  protected int getInsertionIndex( )
+  {
+    return m_insertionIndex;
   }
 
   protected final IKalypsoLayerModell getMapModel( )

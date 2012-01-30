@@ -58,7 +58,7 @@ import org.eclipse.ui.wizards.IWizardDescriptor;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.core.status.StatusDialog;
-import org.kalypso.ogc.gml.IKalypsoLayerModell;
+import org.kalypso.ogc.gml.outline.GisMapOutlineDropData;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.addlayer.IKalypsoDataImportWizard;
 import org.kalypso.ui.addlayer.MapExtensions;
@@ -93,7 +93,7 @@ public class AddLayerDndSupport
     return true;
   }
 
-  public boolean performDrop( final Shell shell, final Object data, final IKalypsoLayerModell mapModel )
+  public boolean performDrop( final Shell shell, final Object data, final GisMapOutlineDropData dropData )
   {
     final MapDropData[] themeData = translateData( data );
     if( ArrayUtils.isEmpty( themeData ) )
@@ -115,7 +115,7 @@ public class AddLayerDndSupport
     try
     {
       // TODO: present user with choice dialog if more than one drop target was found
-      return addTheme( shell, targets[0], themeData[0], mapModel );
+      return addTheme( shell, targets[0], themeData[0], dropData );
     }
     catch( final CoreException e )
     {
@@ -156,7 +156,7 @@ public class AddLayerDndSupport
     return targets.toArray( new IMapDropTarget[targets.size()] );
   }
 
-  private boolean addTheme( final Shell shell, final IMapDropTarget target, final MapDropData data, final IKalypsoLayerModell mapModel ) throws CoreException
+  private boolean addTheme( final Shell shell, final IMapDropTarget target, final MapDropData data, final GisMapOutlineDropData dropData ) throws CoreException
   {
     final String wizardId = target.getWizardId();
 
@@ -168,7 +168,7 @@ public class AddLayerDndSupport
     /* Create and initialize wizard */
     final IKalypsoDataImportWizard wizard = (IKalypsoDataImportWizard) wizardDescriptor.createWizard();
     wizard.setCommandTarget( m_commandTarget );
-    wizard.setMapModel( mapModel );
+    wizard.setMapModel( dropData.getLayerModel(), dropData.getInsertionIndex() );
 
     if( wizard instanceof Wizard )
     {

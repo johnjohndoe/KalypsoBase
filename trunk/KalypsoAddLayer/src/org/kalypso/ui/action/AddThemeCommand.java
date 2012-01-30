@@ -60,6 +60,9 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 public class AddThemeCommand implements IThemeCommand
 {
+  /** Default location where the new theme is inserted into the model: at top */
+  private static final int DEFAULT_INSERTION_INDEX = 0;
+
   private final Collection<Style> m_styles = new ArrayList<Style>();
 
   private final Map<String, String> m_properties = new HashMap<String, String>();
@@ -82,25 +85,19 @@ public class AddThemeCommand implements IThemeCommand
 
   private boolean m_shouldActivateTheme = true;
 
+  private final int m_insertionIndex;
+
   /**
    * Same as {@link #AddThemeCommand(IKalypsoLayerModell, String, String, String, String)}, but without feature path.
    */
   public AddThemeCommand( final IKalypsoLayerModell model, final String name, final String type, final String source )
   {
-    this( model, name, type, null, null, source );
-  }
-
-  /**
-   * Sets if the theme should be activated after it is added to the map.
-   */
-  public void setShouldActivateTheme( final boolean shouldActivateTheme )
-  {
-    m_shouldActivateTheme = shouldActivateTheme;
+    this( model, name, type, null, null, source, DEFAULT_INSERTION_INDEX );
   }
 
   /**
    * This command adds a new theme to a map.
-   * 
+   *
    * @param model
    *          active GisTemplateMapModell from the active Map
    * @param name
@@ -118,12 +115,17 @@ public class AddThemeCommand implements IThemeCommand
    */
   public AddThemeCommand( final IKalypsoLayerModell model, final String name, final String type, final String featurePath, final String source )
   {
-    this( model, name, type, null, featurePath, source );
+    this( model, name, type, featurePath, source, DEFAULT_INSERTION_INDEX );
+  }
+
+  public AddThemeCommand( final IKalypsoLayerModell model, final String name, final String type, final String featurePath, final String source, final int insertionIndex )
+  {
+    this( model, name, type, null, featurePath, source, insertionIndex );
   }
 
   /**
    * This command adds a new theme to a map.
-   * 
+   *
    * @param model
    *          active GisTemplateMapModell from the active Map
    * @param name
@@ -141,10 +143,10 @@ public class AddThemeCommand implements IThemeCommand
    */
   public AddThemeCommand( final IKalypsoLayerModell model, final String name, final String type, final GMLXPath featureXPath, final String source )
   {
-    this( model, name, type, featureXPath, null, source );
+    this( model, name, type, featureXPath, null, source, DEFAULT_INSERTION_INDEX );
   }
 
-  private AddThemeCommand( final IKalypsoLayerModell model, final String name, final String type, final GMLXPath featureXPath, final String featurePath, final String source )
+  private AddThemeCommand( final IKalypsoLayerModell model, final String name, final String type, final GMLXPath featureXPath, final String featurePath, final String source, final int insertionIndex )
   {
     /* Only one path should be set */
     Assert.isTrue( featureXPath == null || featurePath == null );
@@ -155,6 +157,15 @@ public class AddThemeCommand implements IThemeCommand
     m_xpath = featureXPath;
     m_featurePath = featurePath;
     m_source = source;
+    m_insertionIndex = insertionIndex;
+  }
+
+  /**
+   * Sets if the theme should be activated after it is added to the map.
+   */
+  public void setShouldActivateTheme( final boolean shouldActivateTheme )
+  {
+    m_shouldActivateTheme = shouldActivateTheme;
   }
 
   /**
@@ -226,31 +237,29 @@ public class AddThemeCommand implements IThemeCommand
     return true;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#process()
-   */
   @Override
   public void process( ) throws Exception
   {
     m_layer = init();
-    m_theme = m_mapModell.insertLayer( m_layer, 0 );
+
+    doInsertLayer();
+  }
+
+
+  @Override
+  public void redo( ) throws Exception
+  {
+    doInsertLayer();
+  }
+
+  private void doInsertLayer( ) throws Exception
+  {
+    m_theme = m_mapModell.insertLayer( m_layer, m_insertionIndex );
 
     if( m_shouldActivateTheme )
       m_mapModell.activateTheme( m_theme );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#redo()
-   */
-  @Override
-  public void redo( ) throws Exception
-  {
-    m_mapModell.addLayer( m_layer );
-  }
-
-  /**
-   * @see org.kalypso.commons.command.ICommand#undo()
-   */
   @Override
   public void undo( ) throws Exception
   {
@@ -263,9 +272,6 @@ public class AddThemeCommand implements IThemeCommand
     return init();
   }
 
-  /**
-   * @see org.kalypso.ui.action.IThemeCommand#toStyledLayerType()
-   */
   @Override
   public StyledLayerType toStyledLayerType( )
   {

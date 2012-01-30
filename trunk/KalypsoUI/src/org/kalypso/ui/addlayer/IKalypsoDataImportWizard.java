@@ -49,7 +49,18 @@ public interface IKalypsoDataImportWizard extends IWorkbenchWizard
 {
   void setCommandTarget( ICommandTarget commandTarget );
 
+  /**
+   * Set the model where the new theme is inserted.
+   */
   void setMapModel( IKalypsoLayerModell modell );
+
+  /**
+   * Set the model where the new theme is inserted.
+   *
+   * @param insertionIndex
+   *          Insert the new theme at this index of the model.
+   */
+  void setMapModel( IKalypsoLayerModell modell, int insertionIndex );
 
   void initFromDrop( MapDropData data );
 }
