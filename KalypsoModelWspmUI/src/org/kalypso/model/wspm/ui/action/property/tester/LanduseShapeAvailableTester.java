@@ -40,37 +40,38 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.action.property.tester;
 
-import java.util.Iterator;
+import java.net.URL;
 
 import org.eclipse.core.expressions.PropertyTester;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.kalypso.model.wspm.core.gml.WspmReach;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.outline.nodes.FeatureThemeNode;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
- * @author Gernot Belger
+ * @author Dirk Kuch
  */
-public class WspmReachThemeSelectionTester extends PropertyTester
+public class LanduseShapeAvailableTester extends PropertyTester
 {
+  private static final String PROPERTY_HAS_LANDUSE_SHAPE = "hasLanduseShape"; //$NON-NLS-1$
 
-  private static final String PROPERTY_HAS_REACH_SELECTION = "hasReachSelection"; //$NON-NLS-1$
-
-  /**
-   * @see org.eclipse.core.expressions.IPropertyTester#test(java.lang.Object, java.lang.String, java.lang.Object[],
-   *      java.lang.Object)
-   */
   @Override
   public boolean test( final Object receiver, final String property, final Object[] args, final Object expectedValue )
   {
     try
     {
-      if( PROPERTY_HAS_REACH_SELECTION.equals( property ) )
-        return testHasReachSelection( receiver );
+      if( PROPERTY_HAS_LANDUSE_SHAPE.equals( property ) )
+      {
+        final IProject project = findProject( receiver );
+        if( Objects.isNull( project ) )
+          return false;
+
+        return testHasReachSelection( project );
+      }
 
       return false;
     }
@@ -81,40 +82,38 @@ public class WspmReachThemeSelectionTester extends PropertyTester
     }
   }
 
-  private boolean testHasReachSelection( final Object receiver )
+  private boolean testHasReachSelection( final IProject project )
   {
-    if( !(receiver instanceof IStructuredSelection) )
+    final IFolder folder = project.getFolder( "data/landuse" );
+    if( !folder.exists() )
       return false;
 
-    final IStructuredSelection selection = (IStructuredSelection) receiver;
-    final Iterator< ? > itr = selection.iterator();
-    while( itr.hasNext() )
+    try
     {
-      final Object next = itr.next();
-      if( next instanceof FeatureThemeNode )
-      {
-        final FeatureThemeNode theme = (FeatureThemeNode) next;
-        final IKalypsoFeatureTheme element = theme.getElement();
-        final FeatureList featureList = element.getFeatureList();
+      final ContainsFileExtensionVisitor visitor = new ContainsFileExtensionVisitor( "shp" ); //$NON-NLS-1$
+      folder.accept( visitor );
 
-        final Feature owner = featureList == null ? null : featureList.getOwner();
-        if( owner instanceof WspmReach )
-          return true;
-      }
-
-      if( next instanceof WspmReach )
-        return true;
+      return visitor.hasFileExtension();
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
     }
 
     return false;
   }
 
-  private boolean testHasProfileSelection( final Object receiver )
+  private IProject findProject( final Object receiver )
   {
-    if( receiver instanceof ISelection )
-      return new ProfileSelection( (ISelection) receiver ).hasProfiles();
+    if( !(receiver instanceof ISelection) )
+      return null;
 
-    return false;
+    final ProfileSelection selection = new ProfileSelection( (ISelection) receiver );
+    final CommandableWorkspace workspace = selection.getWorkspace();
+
+    final URL context = workspace.getContext();
+
+    return ResourceUtilities.findProjectFromURL( context );
   }
 
 }

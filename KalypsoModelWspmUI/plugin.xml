@@ -470,6 +470,15 @@
             </and>
          </with>
       </definition>
+      <definition
+            id="org.kalypso.model.wspm.ui.definition.hasLanduseShape">
+         <with
+               variable="selection">
+            <test
+                  property="org.kalypso.model.wspm.ui.hasLanduseShape">
+            </test>
+         </with>
+      </definition>
 	</extension>
 
     <extension
@@ -482,12 +491,19 @@
              type="org.eclipse.jface.viewers.ISelection">
        </propertyTester>
         <propertyTester
-             class="org.kalypso.model.wspm.ui.action.property.tester.WspmReachThemeSelectionTester"
+             class="org.kalypso.model.wspm.ui.action.property.tester.ReachSelectionThemeTester"
              id="org.kalypso.model.wspm.ui.propertyTester.reach"
              namespace="org.kalypso.model.wspm.ui"
              properties="hasReachSelection"
              type="org.eclipse.jface.viewers.ISelection">
        </propertyTester>
+        <propertyTester
+              class="org.kalypso.model.wspm.ui.action.property.tester.LanduseShapeAvailableTester"
+              id="org.kalypso.model.wspm.ui.propertyTester.landuse.shape"
+              namespace="org.kalypso.model.wspm.ui"
+              properties="hasLanduseShape"
+              type="org.eclipse.jface.viewers.ISelection">
+        </propertyTester>
     </extension>
     <extension point="org.eclipse.ui.commands">
        <command
@@ -554,25 +570,11 @@
              <description>%org.kalypso.model.wspm.ui.action.FlipProfileAction.description</description>
        </wizard>
        <wizard
-             class="org.kalypso.model.wspm.ui.profil.wizard.classification.guess.GuessClassificationsWizard"
-             id="org.kalypso.model.wspm.ui.profil.wizard.classification.GuessClassificationsWizard"
-             icon="icons/obj16/guess_classes.png"
-             name="%org.kalypso.model.wspm.ui.profil.wizard.classification.GuessClassificationsWizard.name">
-             <description>%org.kalypso.model.wspm.ui.profil.wizard.classification.GuessClassificationsWizard.description</description>
-       </wizard>
-       <wizard
              class="org.kalypso.model.wspm.ui.profil.wizard.interpolate.geomtry.FillMissingProfilesGeometriesWizard"
              id="org.kalypso.model.wspm.ui.profil.wizard.interpolate.geomtry.FillMissingProfilesGeometriesWizard"
              icon="icons/obj16/snap-orthogonal.png"
              name="%org.kalypso.model.wspm.ui.profil.wizard.interpolate.geomtry.FillMissingProfilesGeometriesWizard.name">
              <description>%org.kalypso.model.wspm.ui.profil.wizard.interpolate.geomtry.FillMissingProfilesGeometriesWizard.description</description>
-       </wizard>
-       <wizard
-             class="org.kalypso.model.wspm.ui.profil.wizard.classification.apply.ApplyClassificationsWizard"
-             id="org.kalypso.model.wspm.ui.profil.wizard.classification.ApplyClassificationsWizard"
-             icon="icons/obj16/apply_classes.png"
-             name="%org.kalypso.model.wspm.ui.profil.wizard.classification.ApplyClassificationsWizard.name">
-             <description>%org.kalypso.model.wspm.ui.profil.wizard.classification.ApplyClassificationsWizard.description</description>
        </wizard>
        <wizard
              class="org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard"
@@ -616,6 +618,20 @@
              %org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.ApplyLanduseShapeWizard.description
           </description>
        </wizard>
+       <wizard
+             class="org.kalypso.model.wspm.ui.profil.wizard.classification.apply.ApplyClassificationsWizard"
+             id="org.kalypso.model.wspm.ui.profil.wizard.classification.ApplyClassificationsWizard"
+             icon="icons/obj16/apply_classes.png"
+             name="%org.kalypso.model.wspm.ui.profil.wizard.classification.ApplyClassificationsWizard.name">
+             <description>%org.kalypso.model.wspm.ui.profil.wizard.classification.ApplyClassificationsWizard.description</description>
+       </wizard>
+       <wizard
+             class="org.kalypso.model.wspm.ui.profil.wizard.classification.guess.GuessClassificationsWizard"
+             id="org.kalypso.model.wspm.ui.profil.wizard.classification.GuessClassificationsWizard"
+             icon="icons/obj16/guess_classes.png"
+             name="%org.kalypso.model.wspm.ui.profil.wizard.classification.GuessClassificationsWizard.name">
+             <description>%org.kalypso.model.wspm.ui.profil.wizard.classification.GuessClassificationsWizard.description</description>
+       </wizard>
     </extension>
     <extension point="org.kalypso.contribs.eclipsercp.wizardEnablement">
        <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.importProfile.ImportProfileWizard">
@@ -635,20 +651,7 @@
              </reference>
           </enablement>
        </wizardEnablement>
-       <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.classification.GuessClassificationsWizard">
-          <enablement>
-             <reference
-                   definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
-             </reference>
-          </enablement>
-       </wizardEnablement>
-       <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.classification.ApplyClassificationsWizard">
-          <enablement>
-             <reference
-                   definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
-             </reference>
-          </enablement>
-       </wizardEnablement>
+       
        <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard">
           <enablement>
              <reference
@@ -698,12 +701,42 @@
              </reference>
           </enablement>
        </wizardEnablement>
+       <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.classification.ApplyClassificationsWizard">
+          <enablement>
+             <and>
+                <reference
+                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+                </reference>
+                <reference
+                      definitionId="org.kalypso.model.wspm.ui.definition.hasLanduseShape">
+                </reference>
+             </and>
+          </enablement>
+       </wizardEnablement>
        <wizardEnablement
              wizardID="org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.ApplyLanduseShapeWizard">
           <enablement>
-             <reference
-                   definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
-             </reference></enablement>
+             <and>
+                <reference
+                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+                </reference>
+                <reference
+                      definitionId="org.kalypso.model.wspm.ui.definition.hasLanduseShape">
+                </reference>
+             </and>
+          </enablement>
+       </wizardEnablement>
+       <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.classification.GuessClassificationsWizard">
+          <enablement>
+             <and>
+                <reference
+                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+                </reference>
+                <reference
+                      definitionId="org.kalypso.model.wspm.ui.definition.hasLanduseShape">
+                </reference>
+             </and>
+          </enablement>
        </wizardEnablement>
     </extension>
     <extension point="org.eclipse.core.expressions.definitions">
