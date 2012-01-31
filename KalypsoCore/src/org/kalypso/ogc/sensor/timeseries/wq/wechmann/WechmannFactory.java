@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.wq.wechmann;
 
@@ -171,9 +171,10 @@ public final class WechmannFactory
         validityType.setFormat( df.toPattern() );
         validityType.setValue( df.format( wset.getValidity() ) );
         wechmannSet.setValidity( validityType );
-        for( final Iterator<WechmannParams> itp = wset.iterator(); itp.hasNext(); )
+
+        final WechmannParams[] parameters = wset.getParameters();
+        for( final WechmannParams wp : parameters )
         {
-          final WechmannParams wp = itp.next();
           final XMLWechmannParams wechmannParams = OF_WECHMANN.createXMLWechmannParams();
           wechmannParams.setK2( wp.getK2() );
           wechmannParams.setLnk1( wp.getLNK1() );
