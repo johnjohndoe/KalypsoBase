@@ -510,7 +510,7 @@ public final class WspmProfileHelper
   }
 
   /**
-   * calculates the waterlevel segments as pairs of x-coordinates.
+   * calculates the water level segments as pairs of x-coordinates.
    * 
    * @deprecated does not always return correct results. Use {@link WaterlevelIntersectionWorker} instead.
    */

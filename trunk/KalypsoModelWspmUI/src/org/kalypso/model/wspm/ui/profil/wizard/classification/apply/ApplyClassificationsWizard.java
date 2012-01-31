@@ -140,7 +140,6 @@ public class ApplyClassificationsWizard extends ManipulateProfileWizard
           {
             e.printStackTrace();
           }
-
         }
 
         monitor.done();

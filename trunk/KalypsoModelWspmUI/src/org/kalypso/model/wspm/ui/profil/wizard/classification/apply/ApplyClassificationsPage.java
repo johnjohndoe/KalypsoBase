@@ -70,9 +70,6 @@ public class ApplyClassificationsPage extends WizardPage
     setDescription( Messages.getString( "ApplyClassificationsPage.1" ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public void createControl( final Composite parent )
   {

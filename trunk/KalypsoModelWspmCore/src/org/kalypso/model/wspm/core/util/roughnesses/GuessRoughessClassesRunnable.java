@@ -60,12 +60,12 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.vegetation.UpdateVegetationProperties;
-import org.kalypso.observation.result.IRecord;
 
 /**
  * Guess roughness class from existing ks / kst value
- *
+ * 
  * @author Dirk Kuch
  */
 public class GuessRoughessClassesRunnable implements ICoreRunnableWithProgress
@@ -100,9 +100,12 @@ public class GuessRoughessClassesRunnable implements ICoreRunnableWithProgress
 
     final ProfilOperation operation = new ProfilOperation( "guessing roughness class values", m_profile, true );
 
-    final IRecord[] points = m_profile.getPoints();
-    for( final IRecord point : points )
+    final IProfileRecord[] points = m_profile.getPoints();
+    for( final IProfileRecord point : points )
     {
+      if( UpdateVegetationProperties.isWritable( m_overwriteValues, point, propertyClazz ) )
+        continue;
+
       final Double value = (Double) point.getValue( property );
       if( Objects.isNull( value ) )
       {
@@ -116,15 +119,13 @@ public class GuessRoughessClassesRunnable implements ICoreRunnableWithProgress
       final IRoughnessClass clazz = findMatchingClass( clazzes, value );
       if( Objects.isNull( clazz ) )
       {
-        final Double width = (Double) point.getValue( m_profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE ) );
-        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( "Didn't found matching roughness class for %s value %.3f on point: %.3f", m_property, value, width ) );
+        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( "Didn't found matching roughness class for %s value %.3f on point: %.3f", m_property, value, point.getBreite() ) );
         statis.add( status );
 
         continue;
       }
 
-      if( UpdateVegetationProperties.isWritable( m_overwriteValues, point, propertyClazz ) )
-        operation.addChange( new PointPropertyEdit( point, propertyClazz, clazz.getName() ) );
+      operation.addChange( new PointPropertyEdit( point, propertyClazz, clazz.getName() ) );
     }
 
     new ProfilOperationJob( operation ).schedule();

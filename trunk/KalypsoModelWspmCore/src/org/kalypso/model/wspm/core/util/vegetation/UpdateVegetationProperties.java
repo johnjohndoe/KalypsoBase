@@ -63,7 +63,7 @@ import org.kalypso.observation.result.IRecord;
 
 /**
  * updates a "simple" ks / kst value from roughness class
- *
+ * 
  * @author Dirk Kuch
  */
 public class UpdateVegetationProperties implements ICoreRunnableWithProgress
@@ -123,12 +123,12 @@ public class UpdateVegetationProperties implements ICoreRunnableWithProgress
   }
 
   // FIXME move into helper
-  public static int getPropety( final IProfil m_profile, final String property ) throws CoreException
+  public static int getPropety( final IProfil profile, final String property ) throws CoreException
   {
-    final int index = m_profile.indexOfProperty( property );
+    final int index = profile.indexOfProperty( property );
     if( index == -1 )
     {
-      final Status status = new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( "Can't update profile %.3f km. Missing point property: %s", m_profile.getStation(), property ) );
+      final Status status = new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( "Can't update profile %.3f km. Missing point property: %s", profile.getStation(), property ) );
       throw new CoreException( status );
     }
 
