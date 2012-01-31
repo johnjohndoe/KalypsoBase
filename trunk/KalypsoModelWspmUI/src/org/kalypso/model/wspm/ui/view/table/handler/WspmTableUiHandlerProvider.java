@@ -85,9 +85,6 @@ public class WspmTableUiHandlerProvider implements IComponentUiHandlerProvider
     m_profile = profile;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider#createComponentHandler(org.kalypso.observation.result.TupleResult)
-   */
   @Override
   public Map<Integer, IComponentUiHandler> createComponentHandler( final TupleResult tupleResult )
   {

@@ -192,12 +192,15 @@ public abstract class AbstractProfilePointSelectionWidget extends AbstractProfil
       return null;
 
     final IProfileFeature profileFeature = getProfile();
-    final IRangeSelection selection = profileFeature.getProfil().getSelection();
+    final IProfil profile = profileFeature.getProfil();
+    final IRangeSelection selection = profile.getSelection();
     final Double cursor = selection.getCursor();
     if( Objects.isNull( cursor ) )
       return null;
 
-    return String.format( "Profilpunkt Breite: %.2f m", cursor );
+    final double hoehe = Profiles.getHoehe( profile, cursor );
+
+    return String.format( "Position: Breite %6.2f m, Höhe %6.2f m", cursor, hoehe );
   }
 
   private void doPaintSelection( final Graphics g, final SLDPainter painter )
