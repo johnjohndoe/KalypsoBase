@@ -77,23 +77,22 @@ public class ApplyLanduseShapeWizard extends Wizard implements IWorkbenchWizard
   public ApplyLanduseShapeWizard( )
   {
     setWindowTitle( Messages.getString( "ApplyLanduseShapeWizard_0" ) ); //$NON-NLS-1$
-
     setNeedsProgressMonitor( true );
   }
 
   @Override
   public void addPages( )
   {
-    m_page = new ApplyLanduseShapePage( m_project );
-
-    final String msg = Messages.getString( "ApplyLanduseShapeWizard_1" ); //$NON-NLS-1$
     final String title = Messages.getString( "ApplyLanduseShapeWizard_2" ); //$NON-NLS-1$
+    final String msg = Messages.getString( "ApplyLanduseShapeWizard_1" ); //$NON-NLS-1$
 
     m_profileChooserPage = new ProfilesChooserPage( msg, m_profileSelection, false );
     m_profileChooserPage.setTitle( title );
 
-    addPage( m_page );
+    m_page = new ApplyLanduseShapePage( m_project );
+
     addPage( m_profileChooserPage );
+    addPage( m_page );
   }
 
   @Override
@@ -134,7 +133,6 @@ public class ApplyLanduseShapeWizard extends Wizard implements IWorkbenchWizard
   @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
-
     final ProfileSelection profileSelection = ProfileHandlerUtils.getSelectionChecked( selection );
     m_profileSelection = profileSelection;
 
