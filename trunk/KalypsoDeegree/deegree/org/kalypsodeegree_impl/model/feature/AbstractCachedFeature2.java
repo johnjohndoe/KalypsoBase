@@ -66,6 +66,8 @@ public class AbstractCachedFeature2 extends Feature_Impl
 
   private final Map<QName, Object> m_cache = new HashMap<QName, Object>();
 
+  private boolean m_lock;
+
   protected AbstractCachedFeature2( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues, final FeatureCacheDefinition definition )
   {
     super( parent, parentRelation, ft, id, propValues );
@@ -83,6 +85,9 @@ public class AbstractCachedFeature2 extends Feature_Impl
 
   private void setDirty( final QName changedProperty )
   {
+    if( m_lock )
+      return;
+
     final QName[] cachedProperties = m_cacheDefinition.getDirtyProperties( changedProperty );
     for( final QName cachedProperty : cachedProperties )
     {
@@ -184,4 +189,13 @@ public class AbstractCachedFeature2 extends Feature_Impl
       m_dirty.add( cachedProp );
   }
 
+  protected synchronized void lockCache( )
+  {
+    m_lock = true;
+  }
+
+  protected synchronized void unlockCache( )
+  {
+    m_lock = false;
+  }
 }

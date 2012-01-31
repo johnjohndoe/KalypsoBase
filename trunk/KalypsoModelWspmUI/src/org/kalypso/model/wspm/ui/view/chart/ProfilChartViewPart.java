@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -54,6 +57,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.ChartPartListener;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
@@ -223,24 +227,26 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
   private void setChartModel( final IProfil newProfile, final Object result )
   {
     final ProfileChartComposite chartComposite = m_profilChartComposite;
+    if( chartComposite == null )
+      return;
 
-    if( chartComposite != null && !chartComposite.isDisposed() )
+    final UIJob job = new UIJob( "Updating profile chart" )
     {
-      final Display display = chartComposite.getDisplay();
-      if( !display.isDisposed() )
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        final Runnable runnable = new Runnable()
-        {
-          @Override
-          public void run( )
-          {
-            if( !chartComposite.isDisposed() )
-              chartComposite.setProfil( newProfile, result );
-          }
-        };
-        display.syncExec( runnable );
+        if( !chartComposite.isDisposed() )
+          chartComposite.setProfil( newProfile, result );
+
+        return Status.OK_STATUS;
       }
-    }
+    };
+
+    job.setSystem( true );
+    job.setUser( false );
+
+    job.schedule();
+
   }
 
   @Override

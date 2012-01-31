@@ -40,12 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.pages;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -85,9 +87,6 @@ public class ApplyLanduseShapePage extends WizardPage
     setMessage( Messages.getString( "ApplyLanduseShapePage_1" ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public void createControl( final Composite parent )
   {
@@ -100,6 +99,22 @@ public class ApplyLanduseShapePage extends WizardPage
     new Label( body, SWT.NULL ).setText( Messages.getString( "ApplyLanduseShapePage_2" ) ); //$NON-NLS-1$
     final ComboViewer type = getViewer( body, ILanduseModel.PROPERTY_TYPE );
     type.setInput( new String[] { IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS, IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS } );
+    type.setLabelProvider( new LabelProvider()
+    {
+      @Override
+      public String getText( final Object element )
+      {
+        if( StringUtils.equals( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS, (String) element ) )
+        {
+          return "Bewuchsklassen";
+        }
+        else if( StringUtils.equals( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS, (String) element ) )
+        {
+          return "Rauheitsklassen";
+        }
+        return super.getText( element );
+      }
+    } );
 
     /** select landuse shape file */
     new Label( body, SWT.NULL ).setText( Messages.getString( "ApplyLanduseShapePage_3" ) ); //$NON-NLS-1$

@@ -138,7 +138,6 @@ public abstract class AbstractProfilePointSelectionWidget extends AbstractProfil
       {
         selection.setRange( Range.is( cursor ) );
       }
-
     }
     catch( final GM_Exception e )
     {
@@ -187,7 +186,6 @@ public abstract class AbstractProfilePointSelectionWidget extends AbstractProfil
   @Override
   public String getToolTip( )
   {
-
     if( Objects.isNull( getProfile() ) )
       return null;
 
@@ -229,7 +227,6 @@ public abstract class AbstractProfilePointSelectionWidget extends AbstractProfil
 
         painter.paint( g, getClass().getResource( "symbolization/selection.line.sld" ), selectionGeometry ); //$NON-NLS-1$
       }
-
     }
     catch( final Exception e )
     {
