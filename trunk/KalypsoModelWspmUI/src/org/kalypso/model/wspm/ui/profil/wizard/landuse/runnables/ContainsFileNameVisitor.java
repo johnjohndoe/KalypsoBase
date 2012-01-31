@@ -66,9 +66,6 @@ public class ContainsFileNameVisitor implements IResourceVisitor
     m_file = FilenameUtils.removeExtension( FilenameUtils.getBaseName( file ) );
   }
 
-  /**
-   * @see org.eclipse.core.resources.IResourceVisitor#visit(org.eclipse.core.resources.IResource)
-   */
   @Override
   public boolean visit( final IResource resource )
   {
