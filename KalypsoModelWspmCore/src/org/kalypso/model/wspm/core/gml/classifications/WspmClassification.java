@@ -122,9 +122,6 @@ public class WspmClassification extends Feature_Impl implements IWspmClassificat
     return null;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.gml.classifications.IWspmClassification#getCodeClassCollection()
-   */
   @Override
   public IFeatureBindingCollection<ICodeClass> getCodeClassCollection( )
   {
@@ -134,9 +131,6 @@ public class WspmClassification extends Feature_Impl implements IWspmClassificat
     return m_codeClasses;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.gml.classifications.IWspmClassification#getCodeClasses()
-   */
   @Override
   public ICodeClass[] getCodeClasses( )
   {
@@ -145,9 +139,6 @@ public class WspmClassification extends Feature_Impl implements IWspmClassificat
     return collection.toArray( new ICodeClass[] {} );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.gml.classifications.IWspmClassification#findCodeClass(java.lang.String)
-   */
   @Override
   public ICodeClass findCodeClass( final String name )
   {
