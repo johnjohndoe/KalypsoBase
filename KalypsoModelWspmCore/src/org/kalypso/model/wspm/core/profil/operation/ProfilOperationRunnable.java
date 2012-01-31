@@ -67,9 +67,6 @@ public class ProfilOperationRunnable implements ICoreRunnableWithProgress, IAdap
     m_operation = operation;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
@@ -86,9 +83,6 @@ public class ProfilOperationRunnable implements ICoreRunnableWithProgress, IAdap
     }
   }
 
-  /**
-   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-   */
   @Override
   public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {

@@ -59,12 +59,12 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.vegetation.UpdateVegetationProperties;
-import org.kalypso.observation.result.IRecord;
 
 /**
  * updates a "simple" ks / kst value from roughness class
- *
+ * 
  * @author Dirk Kuch
  */
 public class UpdateSimpleRoughnessProperty implements ICoreRunnableWithProgress
@@ -96,16 +96,15 @@ public class UpdateSimpleRoughnessProperty implements ICoreRunnableWithProgress
 
     final ProfilOperation operation = new ProfilOperation( "updating roughness values", m_profile, true );
 
-    final IRecord[] points = m_profile.getPoints();
-    for( final IRecord point : points )
+    final IProfileRecord[] points = m_profile.getPoints();
+    for( final IProfileRecord point : points )
     {
       final String lnkClazz = (String) point.getValue( clazz );
       final IRoughnessClass roughness = clazzes.findRoughnessClass( lnkClazz );
 
       if( Objects.isNull( roughness ) )
       {
-        final Double width = (Double) point.getValue( m_profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE ) );
-        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( "Missing roughness class - point: %.3f", width ) );
+        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( "Missing roughness class - point: %.3f", point.getBreite() ) );
         statis.add( status );
 
         continue;

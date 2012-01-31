@@ -105,6 +105,11 @@ public interface IProfil extends IObservation<TupleResult>
    */
   IProfileRecord createProfilPoint( );
 
+  /**
+   * @deprecated Only for internal use; should not be triggered from client code.
+   */
+  @Deprecated
+  // TODO: remove from this interface, only for internal use
   void fireProfilChanged( ProfilChangeHint hint );
 
   /**
@@ -274,4 +279,14 @@ public interface IProfil extends IObservation<TupleResult>
   IProfileRecord findPreviousPoint( double breite );
 
   IProfilPointMarker[] getPointMarkers( );
+
+  /**
+   * Locks all change events until {@link #stopTransaction(Object, ProfilChangeHint)} is called.
+   */
+  void startTransaction( Object lock );
+
+  /**
+   * Unlocks change events and fire one big event with the given hint.
+   */
+  void stopTransaction( Object lock, ProfilChangeHint hint );
 }

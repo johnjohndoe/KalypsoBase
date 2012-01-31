@@ -46,7 +46,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
-import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.i18n.Messages;
@@ -55,13 +54,9 @@ import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
 import org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.pages.ApplyLanduseShapePage;
 import org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.worker.ApplyLanduseWorker;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ILanduseModel;
-import org.kalypso.model.wspm.ui.profil.wizard.utils.FeatureThemeWizardUtilitites;
-import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -77,7 +72,7 @@ public class ApplyLanduseShapeWizard extends Wizard implements IWorkbenchWizard
 
   private ProfileSelection m_profileSelection;
 
-  private IKalypsoFeatureTheme m_theme;
+  private CommandableWorkspace m_workspace;
 
   public ApplyLanduseShapeWizard( )
   {
@@ -118,8 +113,7 @@ public class ApplyLanduseShapeWizard extends Wizard implements IWorkbenchWizard
         if( !ArrayUtils.isEmpty( changes ) )
         {
           final GMLWorkspace gmlworkspace = changes[0].getFeature().getWorkspace();
-          final ICommand command = new ChangeFeaturesCommand( gmlworkspace, changes );
-          m_theme.postCommand( command, null );
+          m_workspace.postCommand( new ChangeFeaturesCommand( gmlworkspace, changes ) );
         }
 
         return true;
@@ -140,28 +134,11 @@ public class ApplyLanduseShapeWizard extends Wizard implements IWorkbenchWizard
   @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
-    final Object element = selection.getFirstElement();
-
-    if( element instanceof IThemeNode )
-    {
-      final IThemeNode node = (IThemeNode) element;
-      final Object nodeElement = node.getElement();
-      if( !(nodeElement instanceof IKalypsoTheme) )
-        throw new UnsupportedOperationException();
-
-      final IKalypsoTheme theme = (IKalypsoTheme) nodeElement;
-      final IMapModell model = theme.getMapModell();
-
-      m_project = ResourceUtilities.findProjectFromURL( model.getContext() );
-    }
-    else
-      // FIXME: happens, when wizard is activated via GML-Tree on a profile selection
-      throw new UnsupportedOperationException();
-
-    m_theme = FeatureThemeWizardUtilitites.findTheme( selection );
 
     final ProfileSelection profileSelection = ProfileHandlerUtils.getSelectionChecked( selection );
     m_profileSelection = profileSelection;
-  }
 
+    m_workspace = m_profileSelection.getWorkspace();
+    m_project = ResourceUtilities.findProjectFromURL( m_workspace.getContext() );
+  }
 }

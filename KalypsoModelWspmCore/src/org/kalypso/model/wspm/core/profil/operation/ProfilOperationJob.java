@@ -68,9 +68,6 @@ public class ProfilOperationJob extends Job
     setRule( MUTEX );
   }
 
-  /**
-   * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   protected IStatus run( final IProgressMonitor monitor )
   {

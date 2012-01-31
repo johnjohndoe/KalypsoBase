@@ -122,9 +122,11 @@ public final class ProfilOperation extends AbstractOperation
   private IStatus doit( final IProgressMonitor monitor, @SuppressWarnings("unused")//$NON-NLS-1$
   final IAdaptable info, final List<IProfilChange> undoChanges, final List<IProfilChange> changes )
   {
+    m_profile.startTransaction( this );
+
     monitor.beginTask( org.kalypso.model.wspm.core.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.operation.ProfilOperation.0" ), changes.size() ); //$NON-NLS-1$
     final ProfilChangeHint hint = new ProfilChangeHint();
-    final ArrayList<IProfilChange> doneChanges = new ArrayList<IProfilChange>();
+    final List<IProfilChange> doneChanges = new ArrayList<IProfilChange>();
     try
     {
       for( final IProfilChange change : changes )
@@ -182,7 +184,9 @@ public final class ProfilOperation extends AbstractOperation
       // TODO: doch! fast jede aktion auf einem Profil feuert zwei events...!
       m_canUndo = undoChanges.size() > 0;
       monitor.done();
-      m_profile.fireProfilChanged( hint );
+
+      m_profile.stopTransaction( this, hint );
+
     }
     // auf jeden Fall OK zurückgeben da sonst die UNDO-Liste nicht gefüllt wird
     return Status.OK_STATUS;

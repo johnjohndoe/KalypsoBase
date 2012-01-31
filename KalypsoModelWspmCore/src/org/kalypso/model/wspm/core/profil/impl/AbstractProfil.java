@@ -118,6 +118,8 @@ public abstract class AbstractProfil implements IProfil
 
   private final RangeSelection m_selection;
 
+  private Object m_transactionLock;
+
   public AbstractProfil( final String type, final TupleResult result, final IProfileFeature source )
   {
     m_type = type;
@@ -219,6 +221,10 @@ public abstract class AbstractProfil implements IProfil
 
   private void fireProblemMarkerChanged( )
   {
+    if( m_transactionLock != null )
+      return;
+    // FIXME: check: fireProblemMarkerChanged after transaction?
+
     final IProfilListener[] listeners = m_listeners.toArray( new IProfilListener[m_listeners.size()] );
     for( final IProfilListener listener : listeners )
     {
@@ -237,6 +243,11 @@ public abstract class AbstractProfil implements IProfil
   @Override
   public void fireProfilChanged( final ProfilChangeHint hint )
   {
+    // TODO: instead of ProfileOperation, we could combine the hints ourselfs during transaction mode
+
+    if( m_transactionLock != null )
+      return;
+
     final IProfilListener[] listeners = m_listeners.toArray( new IProfilListener[m_listeners.size()] );
     for( final IProfilListener listener : listeners )
     {
@@ -762,4 +773,23 @@ public abstract class AbstractProfil implements IProfil
     return markers.toArray( new IProfilPointMarker[] {} );
   }
 
+  @Override
+  public synchronized void startTransaction( final Object lock )
+  {
+    if( m_transactionLock != null )
+      throw new IllegalStateException();
+
+    m_transactionLock = lock;
+  }
+
+  @Override
+  public synchronized void stopTransaction( final Object lock, final ProfilChangeHint hint )
+  {
+    if( m_transactionLock == null )
+      throw new IllegalStateException();
+
+    m_transactionLock = null;
+
+    fireProfilChanged( hint );
+  }
 }

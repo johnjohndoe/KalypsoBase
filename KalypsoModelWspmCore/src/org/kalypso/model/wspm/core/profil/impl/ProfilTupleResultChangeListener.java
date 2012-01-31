@@ -92,14 +92,10 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
         changes[i] = new PointPropertyRemove( m_profil, components[i] );
       }
     }
-    m_profil.fireProfilChanged( hint );
 
+    m_profil.fireProfilChanged( hint );
   }
 
-  /**
-   * @see org.kalypso.observation.result.ITupleResultChangedListener#recordsChanged(org.kalypso.observation.result.IRecord[],
-   *      org.kalypso.observation.result.ITupleResultChangedListener.TYPE)
-   */
   @Override
   public void recordsChanged( final IRecord[] records, final TYPE type )
   {
@@ -113,9 +109,6 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
 
   }
 
-  /**
-   * @see org.kalypso.observation.result.ITupleResultChangedListener#valuesChanged(org.kalypso.observation.result.ITupleResultChangedListener.ValueChange[])
-   */
   @Override
   public void valuesChanged( final ValueChange[] changes )
   {

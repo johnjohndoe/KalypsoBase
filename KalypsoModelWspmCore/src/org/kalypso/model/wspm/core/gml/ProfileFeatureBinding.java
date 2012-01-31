@@ -387,6 +387,8 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
       {
         final FeatureChange[] featureChanges = ProfileFeatureFactory.toFeatureAsChanges( profile, this );
 
+        lockCache();
+
         final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, featureChanges );
         workspace.postCommand( command );
       }
@@ -395,6 +397,10 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
       KalypsoModelWspmCorePlugin.getDefault().getLog().log( status );
+    }
+    finally
+    {
+      unlockCache();
     }
   }
 
