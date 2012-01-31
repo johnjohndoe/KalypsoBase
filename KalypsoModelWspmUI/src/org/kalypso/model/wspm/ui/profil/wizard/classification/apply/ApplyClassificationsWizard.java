@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.ui.profil.wizard.classification.apply;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
@@ -122,11 +123,18 @@ public class ApplyClassificationsWizard extends ManipulateProfileWizard
 
           try
           {
-            final UpdateSimpleRoughnessProperty updateKsValues = new UpdateSimpleRoughnessProperty( profile, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS, m_page.isOverwriteEnabled() );
-            updateKsValues.execute( monitor );
+            if( Objects.isNotNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS ) ) )
+            {
+              final UpdateSimpleRoughnessProperty updateKsValues = new UpdateSimpleRoughnessProperty( profile, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS, m_page.isOverwriteEnabled() );
+              updateKsValues.execute( monitor );
 
-            final UpdateSimpleRoughnessProperty updateKstValues = new UpdateSimpleRoughnessProperty( profile, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST, m_page.isOverwriteEnabled() );
-            updateKstValues.execute( monitor );
+            }
+
+            if( Objects.isNotNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST ) ) )
+            {
+              final UpdateSimpleRoughnessProperty updateKstValues = new UpdateSimpleRoughnessProperty( profile, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST, m_page.isOverwriteEnabled() );
+              updateKstValues.execute( monitor );
+            }
           }
           catch( final CoreException e )
           {
