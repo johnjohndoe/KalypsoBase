@@ -220,10 +220,11 @@ public class AbstractProfileWidget extends AbstractWidget implements IProfilePro
   protected void paintTooltip( final Graphics g )
   {
     final Rectangle screenBounds = getMapPanel().getScreenBounds();
-    final Point point = new Point( 5, Double.valueOf( screenBounds.getHeight() ).intValue() );
+    final int x = screenBounds.x + screenBounds.width;
+    final int y = screenBounds.y + screenBounds.height - 5;
 
     m_toolTipRenderer.setTooltip( getToolTip() );
-    m_toolTipRenderer.paintToolTip( point, g, screenBounds );
+    m_toolTipRenderer.paintToolTip( new Point( x, y ), g, screenBounds );
   }
 
   protected final boolean isVertexPoint( final Geometry geometry, final Coordinate point )

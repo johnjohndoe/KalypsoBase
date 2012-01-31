@@ -86,7 +86,7 @@ public abstract class AbstractProfileSelectionChartHandler extends AbstractProfi
 
   /**
    * @param viewMode
-   *          don't update selection by left mouse button. only update profile cursor and display profile selction
+   *          don't update selection by left mouse button. only update profile cursor and display profile selection
    */
   public AbstractProfileSelectionChartHandler( final IChartComposite chart, final boolean viewMode )
   {
