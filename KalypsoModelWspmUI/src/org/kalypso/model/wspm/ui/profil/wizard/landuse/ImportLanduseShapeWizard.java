@@ -40,7 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard.landuse;
 
+import java.util.Iterator;
+
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.dialogs.IPageChangeProvider;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;
@@ -49,6 +52,7 @@ import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.IRefreshable;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
@@ -57,7 +61,6 @@ import org.kalypso.model.wspm.ui.profil.wizard.landuse.pages.LanduseMappingPage;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.runnables.ImportLanduseShapeRunnable;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.LanduseShapeHandler;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
 import org.kalypso.ui.wizard.shape.SelectShapeFilePage;
 
@@ -131,22 +134,35 @@ public class ImportLanduseShapeWizard extends Wizard implements IWorkbenchWizard
   @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
-    final Object element = selection.getFirstElement();
+    final Iterator< ? > itr = selection.iterator();
 
-    if( element instanceof IThemeNode )
+    while( itr.hasNext() )
     {
-      final IThemeNode node = (IThemeNode) element;
-      final Object nodeElement = node.getElement();
-      if( !(nodeElement instanceof IKalypsoTheme) )
-        throw new UnsupportedOperationException();
+      final Object next = itr.next();
+      if( next instanceof IThemeNode )
+      {
+        final IThemeNode node = (IThemeNode) next;
+        final Object nodeElement = node.getElement();
+        if( !(nodeElement instanceof IKalypsoTheme) )
+          throw new UnsupportedOperationException();
 
-      final IKalypsoTheme theme = (IKalypsoTheme) nodeElement;
-      final IMapModell model = theme.getMapModell();
+        final IKalypsoTheme theme = (IKalypsoTheme) nodeElement;
+        m_project = ResourceUtilities.findProjectFromURL( theme.getContext() );
 
-      m_project = ResourceUtilities.findProjectFromURL( model.getContext() );
+        break;
+      }
+      else if( next instanceof IResource )
+      {
+        final IResource resource = (IResource) next;
+        m_project = resource.getProject();
+
+        break;
+      }
     }
-    else
-      throw new UnsupportedOperationException();
+
+    if( Objects.isNull( m_project ) )
+      throw new IllegalStateException();
+
   }
 
   @Override

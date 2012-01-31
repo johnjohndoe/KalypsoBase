@@ -479,6 +479,15 @@
             </test>
          </with>
       </definition>
+      <definition
+            id="org.kalypso.model.wspm.ui.definition.selectionHasResource">
+         <with
+               variable="selection">
+            <test
+                  property="org.kalypso.model.wspm.ui.hasResourceSelection">
+            </test>
+         </with>
+      </definition>
 	</extension>
 
     <extension
@@ -497,11 +506,18 @@
              properties="hasReachSelection"
              type="org.eclipse.jface.viewers.ISelection">
        </propertyTester>
-        <propertyTester
+       <propertyTester
               class="org.kalypso.model.wspm.ui.action.property.tester.LanduseShapeAvailableTester"
               id="org.kalypso.model.wspm.ui.propertyTester.landuse.shape"
               namespace="org.kalypso.model.wspm.ui"
               properties="hasLanduseShape"
+              type="org.eclipse.jface.viewers.ISelection">
+       </propertyTester>
+       <propertyTester
+              class="org.kalypso.model.wspm.ui.action.property.tester.ResourceSelectionTester"
+              id="org.kalypso.model.wspm.ui.propertyTester.is.resource"
+              namespace="org.kalypso.model.wspm.ui"
+              properties="hasResourceSelection"
               type="org.eclipse.jface.viewers.ISelection">
         </propertyTester>
     </extension>
@@ -696,9 +712,14 @@
        <wizardEnablement
              wizardID="org.kalypso.model.wspm.ui.profil.wizard.landuse.ImportLanduseShapeWizard">
           <enablement>
-             <reference
-                   definitionId="org.kalypso.model.wspm.ui.definition.reachThemeSelected">
-             </reference>
+             <or>
+                <reference
+                      definitionId="org.kalypso.model.wspm.ui.definition.reachThemeSelected">
+                </reference>
+                <reference
+                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasResource">
+                </reference>
+             </or>
           </enablement>
        </wizardEnablement>
        <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.classification.ApplyClassificationsWizard">
