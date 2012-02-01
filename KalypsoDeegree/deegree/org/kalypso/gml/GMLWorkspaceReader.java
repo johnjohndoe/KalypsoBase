@@ -43,6 +43,7 @@ package org.kalypso.gml;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.xml.sax.ContentHandler;
@@ -60,7 +61,7 @@ public class GMLWorkspaceReader implements XMLReader
 {
   private final List<String> m_enabledFeatures = new ArrayList<String>();
 
-  private final HashMap<String, Object> m_propMap = new HashMap<String, Object>();
+  private final Map<String, Object> m_propMap = new HashMap<String, Object>();
 
   private EntityResolver m_entityResolver;
 
@@ -70,13 +71,6 @@ public class GMLWorkspaceReader implements XMLReader
 
   private ErrorHandler m_errorHandler;
 
-  public GMLWorkspaceReader( )
-  {
-  }
-
-  /**
-   * @see org.xml.sax.XMLReader#parse(org.xml.sax.InputSource)
-   */
   @Override
   public void parse( final InputSource input ) throws SAXException
   {
@@ -99,9 +93,6 @@ public class GMLWorkspaceReader implements XMLReader
     return m_enabledFeatures.contains( name );
   }
 
-  /**
-   * @see org.xml.sax.XMLReader#setFeature(java.lang.String, boolean)
-   */
   @Override
   public void setFeature( final String name, final boolean value )
   {
@@ -111,103 +102,69 @@ public class GMLWorkspaceReader implements XMLReader
       m_enabledFeatures.remove( name );
   }
 
-  /**
-   * @see org.xml.sax.XMLReader#getProperty(java.lang.String)
-   */
   @Override
   public Object getProperty( final String name )
   {
     return m_propMap.get( name );
   }
 
-  /**
-   * @see org.xml.sax.XMLReader#setProperty(java.lang.String, java.lang.Object)
-   */
   @Override
   public void setProperty( final String name, final Object value )
   {
     m_propMap.put( name, value );
   }
 
-  /**
-   * @see org.xml.sax.XMLReader#setEntityResolver(org.xml.sax.EntityResolver)
-   */
   @Override
   public void setEntityResolver( final EntityResolver resolver )
   {
     m_entityResolver = resolver;
   }
 
-  /**
-   * @see org.xml.sax.XMLReader#getEntityResolver()
-   */
   @Override
   public EntityResolver getEntityResolver( )
   {
     return m_entityResolver;
   }
 
-  /**
-   * @see org.xml.sax.XMLReader#setDTDHandler(org.xml.sax.DTDHandler)
-   */
   @Override
   public void setDTDHandler( final DTDHandler handler )
   {
     m_dtdHandler = handler;
   }
 
-  /**
-   * @see org.xml.sax.XMLReader#getDTDHandler()
-   */
   @Override
   public DTDHandler getDTDHandler( )
   {
     return m_dtdHandler;
   }
 
-  /**
-   * @see org.xml.sax.XMLReader#setContentHandler(org.xml.sax.ContentHandler)
-   */
   @Override
   public void setContentHandler( final ContentHandler handler )
   {
     m_contentHandler = handler;
   }
 
-  /**
-   * @see org.xml.sax.XMLReader#getContentHandler()
-   */
   @Override
   public ContentHandler getContentHandler( )
   {
     return m_contentHandler;
   }
 
-  /**
-   * @see org.xml.sax.XMLReader#setErrorHandler(org.xml.sax.ErrorHandler)
-   */
   @Override
   public void setErrorHandler( final ErrorHandler handler )
   {
     m_errorHandler = handler;
   }
 
-  /**
-   * @see org.xml.sax.XMLReader#getErrorHandler()
-   */
   @Override
   public ErrorHandler getErrorHandler( )
   {
     return m_errorHandler;
   }
 
-  /**
-   * @see org.xml.sax.XMLReader#parse(java.lang.String)
-   */
   @Override
   public void parse( final String systemId )
   {
     throw new UnsupportedOperationException();
   }
-
 }
