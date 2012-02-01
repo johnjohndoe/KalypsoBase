@@ -61,8 +61,8 @@ public class FillMissingProfilesGeometriesPage extends WizardPage
   {
     super( "InterpolateMissingProfilesGeometriesPage" ); //$NON-NLS-1$
 
-    setTitle( "Fill missing profile geometries" ); //$NON-NLS-1$
-    setDescription( "Guess missing profile geometries from existing profile point geometries." ); //$NON-NLS-1$
+    setTitle( "Fill missing profile geometries" );
+    setDescription( "Guess missing profile geometries from existing profile point geometries." );
   }
 
   @Override
@@ -74,17 +74,17 @@ public class FillMissingProfilesGeometriesPage extends WizardPage
     final Group group = new Group( body, SWT.NONE );
     group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     group.setLayout( new GridLayout() );
-    group.setText( "Algorithms" ); //$NON-NLS-1$
+    group.setText( "Algorithms" );
 
     final Button buttonInterpolate = new Button( group, SWT.CHECK );
     buttonInterpolate.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    buttonInterpolate.setText( "Interpolate missing profile geometries" ); //$NON-NLS-1$
+    buttonInterpolate.setText( "Interpolate missing profile geometries" );
     buttonInterpolate.setEnabled( false );
     buttonInterpolate.setSelection( true );
 
     final Button buttonExtrapolate = new Button( group, SWT.CHECK );
     buttonExtrapolate.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    buttonExtrapolate.setText( "Extrapolate missing profile geometries" ); //$NON-NLS-1$
+    buttonExtrapolate.setText( "Extrapolate missing profile geometries" );
 
     buttonExtrapolate.addSelectionListener( new SelectionAdapter()
     {

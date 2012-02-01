@@ -55,7 +55,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  * <p>
  * It has NO own member variables, everything is backed by the given feature instance.
  * </p>
- *
+ * 
  * @author Gernot Belger
  */
 public abstract class WspmProject extends Feature_Impl implements IWspmProject
@@ -142,6 +142,7 @@ public abstract class WspmProject extends Feature_Impl implements IWspmProject
     final IFeatureType type = relation.getTargetFeatureType();
     final IWspmClassification classification = (IWspmClassification) getWorkspace().createFeature( this, relation, type );
     setProperty( QN_CLASSIFICATION_MEMBER, classification );
+
     return classification;
   }
 }

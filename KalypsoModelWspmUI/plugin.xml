@@ -49,10 +49,10 @@
            <action
                  class="org.kalypso.model.wspm.ui.view.table.FillMissingGeometriesActionDelegate"
                  id="com.bce.profil.eclipse.view.table.fill.missing"
-                 label="Fill missing profile point geometries"
+                 label="%org.kalypso.model.wspm.ui.profil.wizard.interpolate.geomtry.FillMissingProfilesGeometriesWizard.name"
                  menubarPath="points"
                  style="push"
-                 tooltip="Guess missing profile point geometries from existing ones.">
+                 tooltip="%org.kalypso.model.wspm.ui.profil.wizard.interpolate.geomtry.FillMissingProfilesGeometriesWizard.description">
            </action>
         </viewContribution>
      </extension>

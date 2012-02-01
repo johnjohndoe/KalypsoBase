@@ -61,7 +61,7 @@ public class FillMissingProfileGeometriesWizard extends Wizard implements IWorkb
   public FillMissingProfileGeometriesWizard( final IPointsProvider[] providers )
   {
     m_providers = providers;
-    setWindowTitle( "Fill missing profile geometries" ); //$NON-NLS-1$
+    setWindowTitle( "Fill missing profile geometries" );
 
     setNeedsProgressMonitor( true );
   }

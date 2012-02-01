@@ -49,6 +49,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.IPointsProvider;
 
 /**
@@ -64,11 +65,11 @@ public class FillMissingProfileGeometriesPage extends WizardPage
 
   public FillMissingProfileGeometriesPage( final IPointsProvider[] providers )
   {
-    super( "FillMissingProfileGeometriesPage" );
+    super( "FillMissingProfileGeometriesPage" ); //$NON-NLS-1$
     m_providers = providers;
 
-    setTitle( "Fill missing profile geometries" );
-    setDescription( "Guess missing profile geometries from existing profile point geometries." );
+    setTitle( Messages.getString("FillMissingProfileGeometriesPage_1") ); //$NON-NLS-1$
+    setDescription( Messages.getString("FillMissingProfileGeometriesPage_2") ); //$NON-NLS-1$
   }
 
   @Override
@@ -80,7 +81,7 @@ public class FillMissingProfileGeometriesPage extends WizardPage
     final Group grSelection = new Group( body, SWT.NULL );
     grSelection.setLayout( new GridLayout() );
     grSelection.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    grSelection.setText( "Guess geometries of these points" );
+    grSelection.setText( Messages.getString("FillMissingProfileGeometriesPage_3") ); //$NON-NLS-1$
 
     for( final IPointsProvider provider : m_providers )
     {
