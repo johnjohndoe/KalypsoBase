@@ -455,4 +455,14 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
       l.onProfilProviderChanged( this );
     }
   }
+
+  /**
+   * use with caution - should only be used for IProfiles which has been generated without of an existing
+   * IProfileFeature
+   */
+  public void setProfile( final IProfil profile )
+  {
+    ProfileFeatureFactory.toFeature( profile, this );
+
+  }
 }

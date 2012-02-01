@@ -90,7 +90,7 @@ public final class ProfileFeatureFactory implements IWspmConstants
    * Assumes, that the given feature is empty.
    * </p>
    */
-  public static void toFeature( final IProfil profile, final IProfileFeature targetFeature )
+  protected static void toFeature( final IProfil profile, final IProfileFeature targetFeature )
   {
     final FeatureChange[] changes = ProfileFeatureFactory.toFeatureAsChanges( profile, targetFeature );
     for( final FeatureChange change : changes )
@@ -106,7 +106,7 @@ public final class ProfileFeatureFactory implements IWspmConstants
    * changes.
    */
   @SuppressWarnings("unchecked")//$NON-NLS-1$
-  public static FeatureChange[] toFeatureAsChanges( final IProfil profile, final IProfileFeature targetFeature )
+  protected static FeatureChange[] toFeatureAsChanges( final IProfil profile, final IProfileFeature targetFeature )
   {
     final IFeatureType featureType = targetFeature.getFeatureType();
 

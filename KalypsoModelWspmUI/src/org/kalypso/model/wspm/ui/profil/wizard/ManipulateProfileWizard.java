@@ -48,7 +48,6 @@ import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.model.wspm.core.profil.base.IProfileManipulator;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
  * @author Gernot Belger
@@ -57,8 +56,6 @@ public abstract class ManipulateProfileWizard extends Wizard implements IWorkben
 {
   private ProfilesChooserPage m_profileChooserPage;
 
-  private CommandableWorkspace m_workspace;
-
   @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
@@ -66,8 +63,6 @@ public abstract class ManipulateProfileWizard extends Wizard implements IWorkben
     setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
 
     final ProfileSelection profileSelection = ProfileHandlerUtils.getSelectionChecked( selection );
-    m_workspace = profileSelection.getWorkspace();
-
     m_profileChooserPage = new ProfilesChooserPage( getProfilePageMessage(), profileSelection, false );
 
     addPage( m_profileChooserPage );
@@ -81,7 +76,7 @@ public abstract class ManipulateProfileWizard extends Wizard implements IWorkben
     final Object[] profiles = m_profileChooserPage.getChoosen();
 
     final IProfileManipulator manipulator = getProfileManipulator();
-    final ProfileManipulationOperation operation = new ProfileManipulationOperation( getContainer(), getWindowTitle(), profiles, m_workspace, manipulator );
+    final ProfileManipulationOperation operation = new ProfileManipulationOperation( getContainer(), getWindowTitle(), profiles, manipulator );
     return operation.perform();
   }
 
