@@ -48,7 +48,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.IStructuredSelection;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public final class ProfileFeatureSelections
 {

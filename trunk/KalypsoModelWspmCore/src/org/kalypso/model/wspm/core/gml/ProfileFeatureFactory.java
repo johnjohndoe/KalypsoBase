@@ -80,7 +80,7 @@ public final class ProfileFeatureFactory implements IWspmConstants
 
   private ProfileFeatureFactory( )
   {
-    // private: never instatiate
+    // private: never instantiate
   }
 
   /**

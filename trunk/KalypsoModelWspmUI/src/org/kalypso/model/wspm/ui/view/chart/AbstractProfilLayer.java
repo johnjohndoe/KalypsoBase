@@ -51,6 +51,8 @@ import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.visitors.FindMinMaxVisitor;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.IProfilView;
@@ -202,12 +204,20 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   {
     if( getCoordinateMapper() == null )
       return null;
-    final Double max = ProfilUtil.getMaxValueFor( getProfil(), getDomainComponent() );
-    final Double min = ProfilUtil.getMinValueFor( getProfil(), getDomainComponent() );
+
+    final IComponent domain = getDomainComponent();
+    if( Objects.isNull( domain ) )
+      return null;
+
+    final FindMinMaxVisitor visitor = new FindMinMaxVisitor( domain.getId() );
+    m_profil.accept( visitor, 1 );
+
+    final IProfileRecord min = visitor.getMinimum();
+    final IProfileRecord max = visitor.getMaximum();
     if( Objects.isNull( min, max ) )
       return null;
 
-    return new DataRange<Number>( min, max );
+    return new DataRange<Number>( (Number) min.getValue( domain ), (Number) max.getValue( domain ) );
   }
 
   @Override
@@ -377,15 +387,22 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     if( getCoordinateMapper() == null || targetPropertyIndex == -1 )
       return null;
 
-    final Double max = ProfilUtil.getMaxValueFor( getProfil(), targetPropertyIndex );
-    final Double min = ProfilUtil.getMinValueFor( getProfil(), targetPropertyIndex );
+    final IComponent target = getTargetComponent();
+    final FindMinMaxVisitor visitor = new FindMinMaxVisitor( target.getId() );
+    m_profil.accept( visitor, 1 );
+
+    final IProfileRecord min = visitor.getMinimum();
+    final IProfileRecord max = visitor.getMaximum();
     if( Objects.isNull( min, max ) )
       return null;
 
-    if( Math.abs( min - max ) < 0.001 )
-      return new DataRange<Number>( min - 1, min + 1 );
+    final Number minValue = (Number) min.getValue( target );
+    final Number maxValue = (Number) max.getValue( target );
 
-    return new DataRange<Number>( min, max );
+    if( Math.abs( minValue.doubleValue() - maxValue.doubleValue() ) < 0.001 )
+      return new DataRange<Number>( minValue.doubleValue() - 1, minValue.doubleValue() + 1 );
+
+    return new DataRange<Number>( minValue, maxValue );
   }
 
   @Override

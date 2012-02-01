@@ -46,7 +46,6 @@ import java.util.List;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 
 /**
@@ -93,7 +92,7 @@ public class SelectionPointsProvider implements IPointsProvider
         if( object instanceof IProfileRecord )
         {
           final IProfileRecord point = (IProfileRecord) object;
-          if( lastPoint != null && lastPoint != ProfilUtil.getPointBefore( m_profil, point ) )
+          if( lastPoint != null && lastPoint != point.getPreviousPoint() )
           {
             m_errorMessage = org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider.2" ); //$NON-NLS-1$
             return;

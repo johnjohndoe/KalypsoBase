@@ -47,6 +47,8 @@ import java.util.List;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.result.IComponent;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -94,7 +96,8 @@ public class WaterlevelIntersectionWorker
 // final double lastX = (Double) lastPoint.getValue( iBreite );
 // final double lastY = (Double) lastPoint.getValue( iHoehe );
 
-    final Double maxHeight = ProfilUtil.getMaxValueFor( m_profile, iHoehe );
+    final IProfileRecord record = ProfileVisitors.findMaximum( m_profile, IWspmConstants.POINT_PROPERTY_HOEHE );
+    final Double maxHeight = record.getHoehe();
 
     final double top = Math.max( maxHeight, m_height ) + 1.0;
 
