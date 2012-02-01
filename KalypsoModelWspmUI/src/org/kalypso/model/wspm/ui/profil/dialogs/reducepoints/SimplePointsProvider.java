@@ -71,9 +71,6 @@ public class SimplePointsProvider implements IPointsProvider
     return null;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.wizard.douglasPeucker.IPointsProvider#getName()
-   */
   @Override
   public String getName( )
   {

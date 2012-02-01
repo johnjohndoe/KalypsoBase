@@ -71,10 +71,12 @@ public class PointsAdd implements IProfilChange
   @Override
   public IProfilChange doChange( )
   {
-
     for( int i = 0; i < m_points.length; i++ )
     {
-      m_profil.addPoint( m_pointPositions[i], m_points[i] );
+      final int position = m_pointPositions[i];
+      final IProfileRecord point = m_points[i];
+
+      m_profil.addPoint( position, point );
     }
 
     return new PointRemove( m_profil, m_points );

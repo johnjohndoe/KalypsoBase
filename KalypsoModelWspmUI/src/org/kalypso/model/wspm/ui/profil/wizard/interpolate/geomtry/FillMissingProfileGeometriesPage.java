@@ -68,8 +68,8 @@ public class FillMissingProfileGeometriesPage extends WizardPage
     super( "FillMissingProfileGeometriesPage" ); //$NON-NLS-1$
     m_providers = providers;
 
-    setTitle( Messages.getString("FillMissingProfileGeometriesPage_1") ); //$NON-NLS-1$
-    setDescription( Messages.getString("FillMissingProfileGeometriesPage_2") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "FillMissingProfileGeometriesPage_1" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "FillMissingProfileGeometriesPage_2" ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -81,7 +81,7 @@ public class FillMissingProfileGeometriesPage extends WizardPage
     final Group grSelection = new Group( body, SWT.NULL );
     grSelection.setLayout( new GridLayout() );
     grSelection.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    grSelection.setText( Messages.getString("FillMissingProfileGeometriesPage_3") ); //$NON-NLS-1$
+    grSelection.setText( Messages.getString( "FillMissingProfileGeometriesPage_3" ) ); //$NON-NLS-1$
 
     for( final IPointsProvider provider : m_providers )
     {
@@ -107,17 +107,17 @@ public class FillMissingProfileGeometriesPage extends WizardPage
     final Group grAlgorithms = new Group( body, SWT.NONE );
     grAlgorithms.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     grAlgorithms.setLayout( new GridLayout() );
-    grAlgorithms.setText( "Algorithms" ); //$NON-NLS-1$
+    grAlgorithms.setText( Messages.getString( "FillMissingProfilesGeometriesPage_2" ) );
 
     final Button buttonInterpolate = new Button( grAlgorithms, SWT.CHECK );
     buttonInterpolate.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    buttonInterpolate.setText( "Interpolate missing profile geometries" ); //$NON-NLS-1$
+    buttonInterpolate.setText( Messages.getString( "FillMissingProfilesGeometriesPage_3" ) );
     buttonInterpolate.setEnabled( false );
     buttonInterpolate.setSelection( true );
 
     final Button buttonExtrapolate = new Button( grAlgorithms, SWT.CHECK );
     buttonExtrapolate.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    buttonExtrapolate.setText( "Extrapolate missing profile geometries" ); //$NON-NLS-1$
+    buttonExtrapolate.setText( Messages.getString( "FillMissingProfilesGeometriesPage_4" ) );
 
     buttonExtrapolate.addSelectionListener( new SelectionAdapter()
     {
