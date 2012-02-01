@@ -78,10 +78,10 @@ public abstract class ManipulateProfileWizard extends Wizard implements IWorkben
   @Override
   public boolean performFinish( )
   {
-    final Object[] profileFeatures = m_profileChooserPage.getChoosen();
+    final Object[] profiles = m_profileChooserPage.getChoosen();
 
     final IProfileManipulator manipulator = getProfileManipulator();
-    final ProfileManipulationOperation operation = new ProfileManipulationOperation( getContainer(), getWindowTitle(), profileFeatures, m_workspace, manipulator );
+    final ProfileManipulationOperation operation = new ProfileManipulationOperation( getContainer(), getWindowTitle(), profiles, m_workspace, manipulator );
     return operation.perform();
   }
 

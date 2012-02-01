@@ -288,4 +288,8 @@ public interface IProfil extends IObservation<TupleResult>
    * Unlocks change events and fire one big event with the given hint.
    */
   void stopTransaction( Object lock, ProfilChangeHint hint );
+
+  String getSrsName( );
+
+  void setSrsName( String srsName );
 }

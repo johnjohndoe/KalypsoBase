@@ -42,8 +42,10 @@ package org.kalypso.model.wspm.core.profil.operation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.commands.operations.AbstractOperation;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -91,9 +93,12 @@ public final class ProfilOperation extends AbstractOperation
     m_rollbackAll = rollbackAll;
   }
 
-  public void addChange( final IProfilChange change )
+  public void addChange( final IProfilChange... changes )
   {
-    m_changes.add( change );
+    if( ArrayUtils.isEmpty( changes ) )
+      return;
+
+    Collections.addAll( m_changes, changes );
   }
 
   protected IProfil getProfil( )
@@ -221,4 +226,5 @@ public final class ProfilOperation extends AbstractOperation
   {
     return m_canUndo;
   }
+
 }

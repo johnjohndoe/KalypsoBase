@@ -41,7 +41,9 @@
 package org.kalypso.model.wspm.core.util.vegetation;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -56,9 +58,8 @@ import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.observation.result.IRecord;
 
 /**
@@ -71,6 +72,8 @@ public class UpdateVegetationProperties implements ICoreRunnableWithProgress
   private final IProfil m_profile;
 
   private final boolean m_overwrite;
+
+  final Set<IProfilChange> m_changes = new LinkedHashSet<>();
 
   public UpdateVegetationProperties( final IProfil profile, final boolean overwrite )
   {
@@ -92,8 +95,6 @@ public class UpdateVegetationProperties implements ICoreRunnableWithProgress
 
     final List<IStatus> statis = new ArrayList<IStatus>();
 
-    final ProfilOperation operation = new ProfilOperation( "updating roughness values", m_profile, true );
-
     final IRecord[] points = m_profile.getPoints();
     for( final IRecord point : points )
     {
@@ -110,14 +111,12 @@ public class UpdateVegetationProperties implements ICoreRunnableWithProgress
       }
 
       if( isWritable( m_overwrite, point, ax ) )
-        operation.addChange( new PointPropertyEdit( point, ax, vegetation.getAx().doubleValue() ) );
+        m_changes.add( new PointPropertyEdit( point, ax, vegetation.getAx().doubleValue() ) );
       if( isWritable( m_overwrite, point, ay ) )
-        operation.addChange( new PointPropertyEdit( point, ay, vegetation.getAy().doubleValue() ) );
+        m_changes.add( new PointPropertyEdit( point, ay, vegetation.getAy().doubleValue() ) );
       if( isWritable( m_overwrite, point, dp ) )
-        operation.addChange( new PointPropertyEdit( point, dp, vegetation.getDp().doubleValue() ) );
+        m_changes.add( new PointPropertyEdit( point, dp, vegetation.getDp().doubleValue() ) );
     }
-
-    new ProfilOperationJob( operation ).schedule();
 
     return StatusUtilities.createStatus( statis, String.format( "Updating of roughness from roughness classes for profile %.3f", m_profile.getStation() ) );
   }
@@ -142,5 +141,10 @@ public class UpdateVegetationProperties implements ICoreRunnableWithProgress
       return true;
 
     return Objects.isNull( point.getValue( property ) );
+  }
+
+  public IProfilChange[] getChanges( )
+  {
+    return m_changes.toArray( new IProfilChange[] {} );
   }
 }
