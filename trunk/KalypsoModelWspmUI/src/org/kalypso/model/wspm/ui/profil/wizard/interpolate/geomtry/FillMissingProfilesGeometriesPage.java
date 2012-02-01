@@ -49,6 +49,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 
 /**
  * @author Dirk Kuch
@@ -61,8 +62,8 @@ public class FillMissingProfilesGeometriesPage extends WizardPage
   {
     super( "InterpolateMissingProfilesGeometriesPage" ); //$NON-NLS-1$
 
-    setTitle( "Fill missing profile geometries" );
-    setDescription( "Guess missing profile geometries from existing profile point geometries." );
+    setTitle( Messages.getString("FillMissingProfilesGeometriesPage_0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("FillMissingProfilesGeometriesPage_1") ); //$NON-NLS-1$
   }
 
   @Override
@@ -74,17 +75,17 @@ public class FillMissingProfilesGeometriesPage extends WizardPage
     final Group group = new Group( body, SWT.NONE );
     group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     group.setLayout( new GridLayout() );
-    group.setText( "Algorithms" );
+    group.setText( Messages.getString("FillMissingProfilesGeometriesPage_2") ); //$NON-NLS-1$
 
     final Button buttonInterpolate = new Button( group, SWT.CHECK );
     buttonInterpolate.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    buttonInterpolate.setText( "Interpolate missing profile geometries" );
+    buttonInterpolate.setText( Messages.getString("FillMissingProfilesGeometriesPage_3") ); //$NON-NLS-1$
     buttonInterpolate.setEnabled( false );
     buttonInterpolate.setSelection( true );
 
     final Button buttonExtrapolate = new Button( group, SWT.CHECK );
     buttonExtrapolate.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    buttonExtrapolate.setText( "Extrapolate missing profile geometries" );
+    buttonExtrapolate.setText( Messages.getString("FillMissingProfilesGeometriesPage_4") ); //$NON-NLS-1$
 
     buttonExtrapolate.addSelectionListener( new SelectionAdapter()
     {

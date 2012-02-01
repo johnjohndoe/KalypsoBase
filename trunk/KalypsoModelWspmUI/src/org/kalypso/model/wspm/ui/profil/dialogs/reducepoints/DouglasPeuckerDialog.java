@@ -483,7 +483,8 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
       return operationStatus;
 
     /* Message for the user. */
-    final String message = org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.14" ) + removeChanges.length + org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.15" ) + points.length + org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.16" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+    final String message = String.format( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.14" ), removeChanges.length, points.length ); //$NON-NLS-3$
 
     return new Status( IStatus.OK, KalypsoModelWspmUIPlugin.ID, message );
   }

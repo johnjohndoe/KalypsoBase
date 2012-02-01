@@ -48,7 +48,6 @@ import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecordVisitor;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
 /**
@@ -67,7 +66,7 @@ public interface IProfil extends IObservation<TupleResult>
 
   IProfileRecord getLastPoint( );
 
-  void addPoint( int index, IRecord point );
+  void addPoint( int index, IProfileRecord point );
 
   /**
    * @return true

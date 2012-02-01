@@ -142,9 +142,9 @@ public abstract class AbstractProfil implements IProfil
   }
 
   @Override
-  public void addPoint( final int index, final IRecord point )
+  public void addPoint( final int index, final IProfileRecord point )
   {
-    getResult().add( index, point );
+    getResult().add( index, point.getRecord() );
   }
 
   @Override
