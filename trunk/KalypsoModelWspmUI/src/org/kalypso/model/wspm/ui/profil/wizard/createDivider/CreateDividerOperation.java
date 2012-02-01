@@ -64,7 +64,6 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
@@ -125,9 +124,6 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
     m_commandTarget = commandTarget;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
   {
@@ -166,11 +162,7 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
 
         // create marker for each point
         final Integer[] newMarkerPoints = findNewMarkerPoints( profile );
-
-        if( createNewDevider( profil, newMarkerPoints ) )
-        {
-          Collections.addAll( m_changes, ProfileFeatureFactory.toFeatureAsChanges( profil, profile ) );
-        }
+        createNewDevider( profil, newMarkerPoints );
       }
       catch( final GM_Exception e )
       {

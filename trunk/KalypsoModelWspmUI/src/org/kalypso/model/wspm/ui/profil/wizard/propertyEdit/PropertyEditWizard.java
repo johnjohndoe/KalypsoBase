@@ -69,7 +69,6 @@ import org.kalypso.model.wspm.ui.profil.wizard.ProfileHandlerUtils;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfileManipulationOperation;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
  * @author Kim Werner
@@ -93,8 +92,6 @@ public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
 
   private OperationChooserPage m_operationChooserPage;
 
-  private CommandableWorkspace m_workspace;
-
   public PropertyEditWizard( )
   {
     // empty, needed for tools wizard
@@ -103,7 +100,6 @@ public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
   public PropertyEditWizard( final IProfil profile )
   {
     m_profile = profile;
-    m_workspace = null;
     m_profileChooserPage = null;
 
     init();
@@ -115,7 +111,6 @@ public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
     m_profile = null;
 
     final ProfileSelection profileSelection = ProfileHandlerUtils.getSelectionChecked( selection );
-    m_workspace = profileSelection.getWorkspace();
 
     final String message = Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.2" ); //$NON-NLS-1$
     m_profileChooserPage = new ProfilesChooserPage( message, profileSelection, false );
@@ -222,7 +217,7 @@ public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
         return new IProfilChange[] {};
       }
     };
-    final ProfileManipulationOperation operation = new ProfileManipulationOperation( getContainer(), getWindowTitle(), profileFeatures, m_workspace, manipulator );
+    final ProfileManipulationOperation operation = new ProfileManipulationOperation( getContainer(), getWindowTitle(), profileFeatures, manipulator );
     return operation.perform();
   }
 

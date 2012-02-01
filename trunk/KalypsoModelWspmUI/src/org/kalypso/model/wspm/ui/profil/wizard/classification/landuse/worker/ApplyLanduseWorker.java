@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.worker;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +59,6 @@ import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
@@ -157,9 +155,6 @@ public class ApplyLanduseWorker implements IRunnableWithProgress
 
         count++;
       }
-
-      final FeatureChange[] fcs = ProfileFeatureFactory.toFeatureAsChanges( profile, profileFeature );
-      Collections.addAll( m_changes, fcs );
 
       try
       {

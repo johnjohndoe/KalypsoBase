@@ -3,7 +3,6 @@ package org.kalypso.model.wspm.ui.profil.wizard;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -26,8 +25,6 @@ import org.kalypso.model.wspm.core.profil.base.IProfileManipulator;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.i18n.Messages;
-import org.kalypso.ogc.gml.command.FeatureChange;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
  * @author Gernot Belger
@@ -37,24 +34,19 @@ public final class ProfileManipulationOperation implements ICoreRunnableWithProg
 
   private final Object[] m_profileFeatures;
 
-  private final List<FeatureChange> m_featureChanges = new ArrayList<FeatureChange>();
-
   private final IProfileManipulator m_manipulator;
 
   private final String m_windowTitle;
 
   private final IWizardContainer m_wizardContainer;
 
-  private final CommandableWorkspace m_workspace;
-
   Set<ProfilOperation> m_profileOperations = new LinkedHashSet<>();
 
-  public ProfileManipulationOperation( final IWizardContainer wizardContainer, final String windowTitle, final Object[] profileFeatures, final CommandableWorkspace workspace, final IProfileManipulator manipulator )
+  public ProfileManipulationOperation( final IWizardContainer wizardContainer, final String windowTitle, final Object[] profileFeatures, final IProfileManipulator manipulator )
   {
     m_wizardContainer = wizardContainer;
     m_windowTitle = windowTitle;
     m_profileFeatures = profileFeatures;
-    m_workspace = workspace;
     m_manipulator = manipulator;
   }
 

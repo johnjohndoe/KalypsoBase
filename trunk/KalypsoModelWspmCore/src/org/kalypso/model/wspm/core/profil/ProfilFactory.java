@@ -60,6 +60,7 @@ public final class ProfilFactory
   {
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( type );
     Assert.isNotNull( provider, Messages.getString( "org.kalypso.model.wspm.core.profil.ProfilFactory.0", type ) ); //$NON-NLS-1$
+
     return provider.createProfil();
   }
 
@@ -67,8 +68,8 @@ public final class ProfilFactory
   {
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( type );
     Assert.isNotNull( provider, Messages.getString( "org.kalypso.model.wspm.core.profil.ProfilFactory.0", type ) ); //$NON-NLS-1$
-    final IProfil profile = provider.createProfil( observation.getResult(), source );
 
+    final IProfil profile = provider.createProfil( observation.getResult(), source );
     profile.setName( observation.getName() );
     profile.setDescription( observation.getDescription() );
     profile.setPhenomenon( observation.getPhenomenon() );
