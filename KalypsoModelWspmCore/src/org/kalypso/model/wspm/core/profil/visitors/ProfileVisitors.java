@@ -134,4 +134,28 @@ public final class ProfileVisitors
     }
   }
 
+  public static IProfileRecord findMinimum( final IProfil profile, final String property )
+  {
+    final FindMinMaxVisitor visitor = new FindMinMaxVisitor( property );
+    profile.accept( visitor, 1 );
+
+    return visitor.getMinimum();
+  }
+
+  public static IProfileRecord findMaximum( final IProfil profile, final String property )
+  {
+    final FindMinMaxVisitor visitor = new FindMinMaxVisitor( property );
+    profile.accept( visitor, 1 );
+
+    return visitor.getMaximum();
+  }
+
+  public static IProfileRecord findNearestPoint( final IProfil profile, final double value )
+  {
+    final FindClosestPointVisitor visitor = new FindClosestPointVisitor( value );
+    profile.accept( visitor, 1 );
+
+    return visitor.getPoint();
+  }
+
 }

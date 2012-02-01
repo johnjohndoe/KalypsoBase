@@ -52,6 +52,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.Assert;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
 import org.kalypso.contribs.java.util.Arrays;
@@ -62,6 +63,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
+import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfileRecord;
 import org.kalypso.observation.result.ComponentUtilities;
@@ -72,6 +74,8 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+
+import com.vividsolutions.jts.geom.Coordinate;
 
 /**
  * @author kimwerner
@@ -96,7 +100,7 @@ public final class ProfilUtil
    */
   public static Object[] getValuesFor( final IProfil profil, final IComponent pointProperty, final boolean skipNullValues )
   {
-    final IRecord[] points = profil.getPoints();
+    final IProfileRecord[] points = profil.getPoints();
     return getValuesFor( points, pointProperty, skipNullValues );
   }
 
@@ -118,7 +122,7 @@ public final class ProfilUtil
   /**
    * @return the DoubleValues of each point for this pointProperty in the correct order
    */
-  public static Object[] getValuesFor( final IRecord[] points, final IComponent pointProperty, final boolean skipNullValues )
+  public static Object[] getValuesFor( final IProfileRecord[] points, final IComponent pointProperty, final boolean skipNullValues )
   {
     return getValuesFor( points, pointProperty.getId(), skipNullValues );
   }
@@ -223,7 +227,7 @@ public final class ProfilUtil
   public static List<IRecord> getInnerPoints( final IProfil profil, final IComponent markerTyp )
   {
     final IProfilPointMarker[] markers = profil.getPointMarkerFor( markerTyp );
-    final IRecord[] points = profil.getPoints();
+    final IProfileRecord[] points = profil.getPoints();
 
     // REMARK: check both for length > 1, a single marker does not count
     final int leftPos = markers.length > 1 ? ArrayUtils.indexOf( points, markers[0].getPoint() ) : 0;
@@ -286,14 +290,14 @@ public final class ProfilUtil
   public static void flipProfile( final IProfil profile, final boolean fireNoEvent )
   {
     final IComponent[] components = profile.getPointProperties();
-    final IRecord[] records = profile.getPoints();
+    final IProfileRecord[] records = profile.getPoints();
     final int len = records.length;
     int iBreite = -1;
-    IRecord lastRec = records[0];
+    IProfileRecord lastRec = records[0];
 
     for( int i = 0; i < len / 2; i++ )
     {
-      final IRecord currentRec = records[i].cloneRecord();
+      final IProfileRecord currentRec = records[i].cloneRecord();
       final int k = len - 1 - i;
       for( int j = 0; j < components.length; j++ )
       {
@@ -345,11 +349,11 @@ public final class ProfilUtil
     return propHash;
   }
 
-  public static IRecord splitSegment( final IProfil profile, final IRecord startPoint, final IRecord endPoint )
+  public static IRecord splitSegment( final IProfil profile, final IProfileRecord startPoint, final IProfileRecord endPoint )
   {
     if( startPoint == null || endPoint == null )
       return null;
-    final IRecord point = profile.createProfilPoint();
+    final IProfileRecord point = profile.createProfilPoint();
     final IComponent[] properties = profile.getPointProperties();
 
     for( final IComponent property : properties )
@@ -357,8 +361,8 @@ public final class ProfilUtil
       final int index = profile.indexOfProperty( property );
       if( IWspmPointProperties.POINT_PROPERTY_BREITE.equals( property.getId() ) )
       {
-        final Double b1 = getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, startPoint );
-        final Double l = getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, endPoint ) - b1;
+        final Double b1 = startPoint.getBreite();
+        final Double l = endPoint.getBreite() - b1;
         point.setValue( index, b1 + l / 2.0 );
       }
       else if( IWspmPointProperties.POINT_PROPERTY_HOEHE.equals( property.getId() ) )
@@ -372,6 +376,7 @@ public final class ProfilUtil
         point.setValue( index, startPoint.getValue( index ) );
       }
     }
+
     return point;
   }
 
@@ -381,10 +386,10 @@ public final class ProfilUtil
    */
   public static IRecord findPoint( final IProfil profil, final int index, final double breite, final double delta )
   {
-    final IRecord[] points = profil.getPoints();
-    final IRecord point = index >= points.length || index < 0 ? null : points[index];
+    final IProfileRecord[] points = profil.getPoints();
+    final IProfileRecord point = index >= points.length || index < 0 ? null : points[index];
 
-    if( getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, point ) == breite )
+    if( point.getBreite() == breite )
       return point;
 
     return findPoint( profil, breite, delta );
@@ -395,39 +400,26 @@ public final class ProfilUtil
   {
     final IProfileRecord[] points = profile.getPoints();
     final IProfileRecord[] segment = new IProfileRecord[] { null, null };
-
     for( int i = 0; i < points.length - 1; i++ )
     {
-      final double segmentStartWidth = getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, points[i] );
-      final double segmentEndWidth = getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, points[i + 1] );
+      final double segmentStartWidth = points[i].getBreite();
+      final double segmentEndWidth = points[i + 1].getBreite();
       if( segmentStartWidth <= breite & segmentEndWidth >= breite )
       {
         segment[0] = points[i];
         segment[1] = points[i + 1];
       }
     }
+
     return segment;
-  }
-
-  public static IProfileRecord findNearestPoint( final IProfil profil, final double breite )
-  {
-    final Integer index = findNearestPointIndices( profil, new double[] { breite } )[0];
-    if( index == null )
-      return null;
-
-    return profil.getPoint( index );
   }
 
   public static Integer[] findNearestPointIndices( final IProfil profil, final double[] breite )
   {
     final Integer[] result = new Integer[breite.length];
 
-    final IRecord[] points = profil.getPoints();
+    final IProfileRecord[] points = profil.getPoints();
     if( points.length == 0 )
-      return result;
-
-    final int iBreite = profil.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE );
-    if( iBreite < 0 )
       return result;
 
     final double[] bestDist = new double[result.length];
@@ -438,18 +430,16 @@ public final class ProfilUtil
 
     for( int i = 0; i < points.length; i++ )
     {
-      final IRecord currentPoint = points[i];
-      final Object currentBreiteValue = currentPoint.getValue( iBreite );
-      if( !(currentBreiteValue instanceof Number) )
+      final IProfileRecord currentPoint = points[i];
+      final Double current = currentPoint.getBreite();
+      if( Objects.isNull( current ) )
       {
         continue;
       }
 
-      final double currentBreite = ((Number) currentBreiteValue).doubleValue();
-
       for( int k = 0; k < bestDist.length; k++ )
       {
-        final double dist = Math.abs( currentBreite - breite[k] );
+        final double dist = Math.abs( current - breite[k] );
         if( dist < bestDist[k] )
         {
           bestDist[k] = dist;
@@ -461,111 +451,28 @@ public final class ProfilUtil
     return result;
   }
 
-  public static IRecord[] findPoints( final IProfil profile, final String propertyID, final Point2D point, final Double radius )
+  public static IProfileRecord[] findPoints( final IProfil profile, final String propertyID, final Point2D point, final Double radius )
   {
 
-    final IRecord[] points = profile.getPoints();
+    final IProfileRecord[] points = profile.getPoints();
 
-    final ArrayList<IRecord> found = new ArrayList<IRecord>();
-    for( final IRecord p : points )
+    final ArrayList<IProfileRecord> found = new ArrayList<IProfileRecord>();
+    for( final IProfileRecord p : points )
     {
-      final Point2D p2D = new Point2D.Double( getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, p ), getDoubleValueFor( propertyID, p ) );
+      final Point2D p2D = new Point2D.Double( p.getBreite(), getDoubleValueFor( propertyID, p ) );
       if( p2D.distance( point ) <= radius )
       {
         found.add( p );
       }
     }
-    return found.toArray( new IRecord[] {} );
+    return found.toArray( new IProfileRecord[] {} );
   }
 
   public static IProfileRecord findPoint( final IProfil profil, final double breite, final double delta )
   {
-    final IProfileRecord pkt = findNearestPoint( profil, breite );
-    final double xpos = getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, pkt );
+    final IProfileRecord pkt = ProfileVisitors.findNearestPoint( profil, breite );
+    final double xpos = pkt.getBreite();
     return Math.abs( xpos - breite ) <= delta ? pkt : null;
-  }
-
-  public static IRecord getPointBefore( final IProfil profil, final IRecord point )
-  {
-    final TupleResult points = profil.getResult();
-    if( points.isEmpty() || point == points.get( 0 ) )
-      return null;
-
-    final int i = points.indexOf( point );
-    if( i == -1 )
-      throw new IllegalArgumentException( Messages.getString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.1", point ) ); //$NON-NLS-1$
-
-    return points.get( i - 1 );
-  }
-
-  public static IProfileRecord getPointBefore( final IProfil profil, final double breite )
-  {
-    final IProfileRecord[] points = profil.getPoints();
-    if( points.length == 0 )
-      return null;
-
-    IProfileRecord thePointBefore = null;
-    for( final IProfileRecord point : points )
-    {
-      if( getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, point ) > breite )
-        return thePointBefore;
-      thePointBefore = point;
-    }
-
-    return thePointBefore;
-  }
-
-  public static IRecord getPointAfter( final IProfil profil, final double breite )
-  {
-    final IRecord[] points = profil.getPoints();
-    if( points.length == 0 )
-      return null;
-    for( final IRecord point : points )
-      if( getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, point ) > breite )
-        return point;
-    return null;
-  }
-
-  public static IRecord getPointAfter( final IProfil profil, final IRecord point )
-  {
-    final TupleResult points = profil.getResult();
-    final int pos = points.indexOf( point );
-
-    if( points.isEmpty() || pos == points.size() - 1 )
-      return null;
-    if( pos == -1 )
-      throw new IllegalArgumentException( Messages.getString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.1", point ) ); //$NON-NLS-1$
-
-    return points.get( pos + 1 );
-  }
-
-  public static Double getMaxValueFor( final IProfil profil, final IComponent property )
-  {
-    if( property == null || profil == null )
-      return null;
-    final int index = profil.indexOfProperty( property );
-
-    return getMaxValueFor( profil, index );
-  }
-
-  public static Double getMaxValueFor( final IProfil profil, final int propertyIndex )
-  {
-    if( profil == null )
-      return null;
-
-    final IRecord[] points = profil.getPoints();
-    if( points.length == 0 )
-      return null;
-    double maxValue = -Double.MAX_VALUE;
-    for( final IRecord point : points )
-    {
-      final Object o = point.getValue( propertyIndex );
-      if( o instanceof Number )
-      {
-        maxValue = Math.max( maxValue, ((Number) o).doubleValue() );
-      }
-    }
-    return maxValue > -Double.MAX_VALUE ? maxValue : null;
   }
 
   public static IComponent getComponentForID( final IComponent[] components, final String propertyID )
@@ -722,92 +629,6 @@ public final class ProfilUtil
     return maxValue.doubleValue();
   }
 
-  public static Double getMinValueFor( final IProfil profil, final IComponent property )
-  {
-    final IRecord minPoint = getMinPoint( profil, property );
-    if( minPoint == null )
-      return null;
-    final Object value = minPoint.getValue( profil.indexOfProperty( property ) );
-    return value instanceof Double ? (Double) value : null;
-  }
-
-  public static Double getMinValueFor( final IProfil profil, final int propertyIndex )
-  {
-    final IRecord minPoint = getMinPoint( profil, propertyIndex );
-    if( minPoint == null )
-      return null;
-    final Object value = minPoint.getValue( propertyIndex );
-    return value instanceof Number ? ((Number) value).doubleValue() : null;
-  }
-
-  /**
-   * Return the profile-point of the given profile with the minimum value at the given property.
-   */
-  public static IRecord getMinPoint( final IProfil profil, final IComponent property )
-  {
-    if( profil == null )
-      return null;
-    final int index = profil.indexOfProperty( property );
-    return getMinPoint( profil, index );
-  }
-
-  /**
-   * Return the profile-point of the given profile with the minimum value at the given property.
-   */
-  public static IRecord getMinPoint( final IProfil profil, final int propertyIndex )
-  {
-    if( profil == null )
-      return null;
-    final IRecord[] points = profil.getPoints();
-    if( points.length == 0 )
-      return null;
-
-    Double minValue = Double.MAX_VALUE;
-    IRecord minPoint = null;
-
-    for( final IRecord point : points )
-    {
-      final Object value = point.getValue( propertyIndex );
-      if( value instanceof Number )
-      {
-        final double val = ((Number) value).doubleValue();
-        if( val < minValue )
-        {
-          minValue = val;
-          minPoint = point;
-        }
-      }
-    }
-    return minPoint;
-  }
-
-  /**
-   * return a valid ProfilPoint if operation succeeds, otherwise null
-   * 
-   * @see org.kalypso.model.wspm.core.profil.impl.points.IRecords#addPoint(double, double)
-   */
-  public static IRecord addPoint( final IProfil profil, final double breite, final double hoehe )
-  {
-    final int iHoehe = profil.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_HOEHE );
-    final int iBreite = profil.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE );
-    if( iBreite >= 0 && iHoehe >= 0 )
-    {
-      final IProfileRecord point = profil.createProfilPoint();
-      point.setValue( iHoehe, hoehe );
-      point.setValue( iBreite, breite );
-      if( profil.addPoint( point ) )
-        return point;
-    }
-    return null;
-  }
-
-  public static void insertPoint( final IProfil profil, final IRecord point, final IRecord thePointBefore )
-  {
-    final TupleResult points = profil.getResult();
-    final int index = thePointBefore == null ? 0 : points.indexOf( thePointBefore ) + 1;
-    points.add( index, point );
-  }
-
   /**
    * calculates the area of a given profile for the region between two given profile widths.<br>
    * the area is calculatated in dependence of the max heigth value. input: IProfil, start width, end width<br>
@@ -935,23 +756,20 @@ public final class ProfilUtil
    * @param profile
    *          The input profile.
    */
-  public static IRecord[] getGeoreferencedPoints( final IProfil profile )
+  public static IProfileRecord[] getGeoreferencedPoints( final IProfil profile )
   {
     /* List for storing points of the profile, which have a geo reference. */
-    final IRecord[] points = profile.getPoints();
-    final ArrayList<IRecord> geoReferencedPoints = new ArrayList<IRecord>( points.length );
+    final IProfileRecord[] points = profile.getPoints();
+    final ArrayList<IProfileRecord> geoReferencedPoints = new ArrayList<IProfileRecord>( points.length );
 
-    for( final IRecord point : points )
+    for( final IProfileRecord point : points )
     {
-      final Double rechtsWert = getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT, point );
-      final Double hochWert = getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOCHWERT, point );
-      if( !rechtsWert.isNaN() && !hochWert.isNaN() )
-      {
+      final Coordinate coordinate = point.getCoordinate();
+      if( Objects.isNotNull( coordinate ) )
         geoReferencedPoints.add( point );
-      }
     }
 
-    return geoReferencedPoints.toArray( new IRecord[] {} );
+    return geoReferencedPoints.toArray( new IProfileRecord[] {} );
   }
 
   public static GM_Curve getLine( final IProfil profile, final String crs ) throws GM_Exception
@@ -994,51 +812,7 @@ public final class ProfilUtil
   }
 
   /**
-   * Searches for a point at the given position.<br>
-   */
-  public static IProfileRecord findPointAt( final IProfil profil, final BigDecimal distance )
-  {
-    final int indexOfDistance = profil.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE );
-
-    final IProfileRecord nearestPoint = findNearestPoint( profil, distance.doubleValue() );
-    if( nearestPoint != null )
-    {
-      final Double nearestDistance = (Double) nearestPoint.getValue( indexOfDistance );
-      // TODO: put eps into constant!
-      if( nearestDistance != null && Math.abs( nearestDistance.doubleValue() - distance.doubleValue() ) < 0.00001 )
-        return nearestPoint;
-    }
-
-    return null;
-  }
-
-  public static IProfileRecord insertPointAt( final IProfil profil, final BigDecimal distance )
-  {
-    final int indexOfDistance = profil.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE );
-
-    final IProfileRecord newPoint = profil.createProfilPoint();
-    newPoint.setValue( indexOfDistance, new Double( distance.doubleValue() ) );
-
-    final IProfileRecord pointBefore = getPointBefore( profil, distance.doubleValue() );
-    insertPoint( profil, newPoint, pointBefore );
-    return newPoint;
-  }
-
-  /**
-   * Searches for a point at the given position.<br>
-   * If no point (within the standard tolerance of profile points) is found, a new one is created at the given position.
-   */
-  public static IProfileRecord findOrInsertPointAt( final IProfil profil, final BigDecimal distance )
-  {
-    final IProfileRecord nearestPoint = findPointAt( profil, distance );
-    if( nearestPoint != null )
-      return nearestPoint;
-
-    return insertPointAt( profil, distance );
-  }
-
-  /**
-   * Fills missing values of one property by interpolating between neighbours.
+   * Fills missing values of one property by interpolating between neighbors.
    */
   public static void interpolateProperty( final IProfil profil, final int valueCompIndex )
   {
