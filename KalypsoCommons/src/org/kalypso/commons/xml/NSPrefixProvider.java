@@ -64,7 +64,7 @@ public class NSPrefixProvider
 
   private final HashMap<String, String> m_prefixMap = new HashMap<String, String>();
 
-  public static NSPrefixProvider getInstance( )
+  public static synchronized NSPrefixProvider getInstance( )
   {
     if( THE_NS_MAPPER == null )
     {
@@ -83,7 +83,7 @@ public class NSPrefixProvider
       THE_NS_MAPPER.getPreferredPrefix( NS.ADV_NAS, "adv" ); //$NON-NLS-1$
       THE_NS_MAPPER.getPreferredPrefix( NS.CATALOG, "catalog" ); //$NON-NLS-1$
 
-      // TODO add here all the well known namespaces...
+      // TODO add here all the well known namespaces... from the catalog?!
     }
     return THE_NS_MAPPER;
   }
