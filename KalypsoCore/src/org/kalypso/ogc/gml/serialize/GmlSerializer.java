@@ -202,7 +202,13 @@ public final class GmlSerializer
   {
     try
     {
+      // TODO: error handling
       final XMLReader reader = new GMLWorkspaceReader();
+      // TODO: add an error handler that logs everything into a status
+      // reader.setErrorHandler( null );
+      // TODO: write gml to a temporary location and replace the target file later,
+      // in order to preserve the old version if anything goes wrong
+
       reader.setFeature( "http://xml.org/sax/features/namespaces", true ); //$NON-NLS-1$
       reader.setFeature( "http://xml.org/sax/features/namespace-prefixes", true ); //$NON-NLS-1$
 
