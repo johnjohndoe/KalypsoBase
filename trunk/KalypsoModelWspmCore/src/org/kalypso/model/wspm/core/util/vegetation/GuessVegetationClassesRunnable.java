@@ -42,7 +42,9 @@ package org.kalypso.model.wspm.core.util.vegetation;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -58,9 +60,8 @@ import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -77,6 +78,8 @@ public class GuessVegetationClassesRunnable implements ICoreRunnableWithProgress
   private final boolean m_overwriteValues;
 
   private final Double m_maxDelta;
+
+  private final Set<IProfilChange> m_changes = new LinkedHashSet<>();
 
   public GuessVegetationClassesRunnable( final IProfil profile, final boolean overwriteValues, final Double delta )
   {
@@ -95,8 +98,6 @@ public class GuessVegetationClassesRunnable implements ICoreRunnableWithProgress
       throw new CoreException( new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( "Missing profile feature for profile %.3f km.", m_profile.getStation() ) ) );
 
     final List<IStatus> statis = new ArrayList<IStatus>();
-
-    final ProfilOperation operation = new ProfilOperation( "guessing roughness class values", m_profile, true );
 
     final IProfileRecord[] points = m_profile.getPoints();
     for( final IProfileRecord point : points )
@@ -125,10 +126,8 @@ public class GuessVegetationClassesRunnable implements ICoreRunnableWithProgress
         continue;
       }
 
-      operation.addChange( new PointPropertyEdit( point, propertyClazz, clazz.getName() ) );
+      m_changes.add( new PointPropertyEdit( point, propertyClazz, clazz.getName() ) );
     }
-
-    new ProfilOperationJob( operation ).schedule();
 
     return StatusUtilities.createStatus( statis, String.format( "Updated roughness classes from roughness values on profile %.3f", m_profile.getStation() ) );
   }
@@ -175,5 +174,10 @@ public class GuessVegetationClassesRunnable implements ICoreRunnableWithProgress
       return null;
 
     return new Coordinate( ax.doubleValue(), ax.doubleValue(), dp.doubleValue() );
+  }
+
+  public IProfilChange[] getChanges( )
+  {
+    return m_changes.toArray( new IProfilChange[] {} );
   }
 }

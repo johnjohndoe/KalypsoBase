@@ -1,9 +1,10 @@
 package org.kalypso.model.wspm.ui.profil.wizard;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -11,24 +12,22 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.ui.plugin.AbstractUIPluginExt;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.base.IProfileManipulator;
+import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.i18n.Messages;
-import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypsodeegree_impl.model.feature.AbstractCachedFeature2;
 
 /**
  * @author Gernot Belger
@@ -47,6 +46,8 @@ public final class ProfileManipulationOperation implements ICoreRunnableWithProg
   private final IWizardContainer m_wizardContainer;
 
   private final CommandableWorkspace m_workspace;
+
+  Set<ProfilOperation> m_profileOperations = new LinkedHashSet<>();
 
   public ProfileManipulationOperation( final IWizardContainer wizardContainer, final String windowTitle, final Object[] profileFeatures, final CommandableWorkspace workspace, final IProfileManipulator manipulator )
   {
@@ -68,14 +69,16 @@ public final class ProfileManipulationOperation implements ICoreRunnableWithProg
       try
       {
         final IProfileFeature profileFeature = (IProfileFeature) profileObject;
+        final IProfil profile = profileFeature.getProfil();
 
         final String subTask = String.format( Messages.getString( "ProfileManipulationOperation_1" ), profileFeature.getName(), profileFeature.getBigStation() ); //$NON-NLS-1$
         monitor.subTask( subTask );
 
-        final IProfil profile = profileFeature.getProfil();
-        m_manipulator.performProfileManipulation( profile, new SubProgressMonitor( monitor, 1 ) );
+        final ProfilOperation operation = new ProfilOperation( "Guessing rouhness classes", profile, true );
+        final IProfilChange[] changes = m_manipulator.performProfileManipulation( profile, new SubProgressMonitor( monitor, 1 ) );
+        operation.addChange( changes );
 
-        m_featureChanges.addAll( Arrays.asList( ProfileFeatureFactory.toFeatureAsChanges( profile, profileFeature ) ) );
+        m_profileOperations.add( operation );
       }
       catch( final CoreException e )
       {
@@ -100,8 +103,8 @@ public final class ProfileManipulationOperation implements ICoreRunnableWithProg
     final boolean doContinue = checkResult( result );
     if( doContinue )
       return applyChanges();
-    else
-      return revertChanges();
+
+    return true;
   }
 
   private boolean checkResult( final IStatus result )
@@ -117,36 +120,11 @@ public final class ProfileManipulationOperation implements ICoreRunnableWithProg
 
   private boolean applyChanges( )
   {
-    final FeatureChange[] featureChanges = m_featureChanges.toArray( new FeatureChange[0] );
-    final ChangeFeaturesCommand command = new ChangeFeaturesCommand( m_workspace, featureChanges );
-    try
+    for( final ProfilOperation operation : m_profileOperations )
     {
-      m_workspace.postCommand( command );
-      return true;
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      final IStatus status = StatusUtilities.statusFromThrowable( e );
-      final Shell shell = m_wizardContainer.getShell();
-      ErrorDialog.openError( shell, m_windowTitle, Messages.getString( "ProfileManipulationOperation_3" ), status ); //$NON-NLS-1$
-      return false;
-    }
-  }
-
-  private boolean revertChanges( )
-  {
-    for( final Object profileObject : m_profileFeatures )
-    {
-      final IProfileFeature profileFeature = (IProfileFeature) profileObject;
-      // TODO: introduce ICachedFeature interface or similar?
-      if( profileFeature instanceof AbstractCachedFeature2 )
-      {
-        ((AbstractCachedFeature2) profileFeature).clearCachedProperties();
-        // TODO: fire change event as well?
-      }
+      new ProfilOperationJob( operation ).schedule();
     }
 
-    return false;
+    return true;
   }
 }

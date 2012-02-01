@@ -41,7 +41,9 @@
 package org.kalypso.model.wspm.ui.profil.wizard.classification.landuse;
 
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -85,13 +87,19 @@ public class ApplyLanduseDelegate implements IApplyLanduseData
     m_workspace = new ShapeWorkspace( file.getLocation().toFile() );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.worker.IApplyLanduseData#getProfiles()
-   */
   @Override
   public IProfileFeature[] getProfiles( )
   {
-    return (IProfileFeature[]) m_profilePage.getChoosen();
+    final Set<IProfileFeature> profiles = new LinkedHashSet<>();
+
+    final Object[] choosen = m_profilePage.getChoosen();
+    for( final Object object : choosen )
+    {
+      if( object instanceof IProfileFeature )
+        profiles.add( (IProfileFeature) object );
+    }
+
+    return profiles.toArray( new IProfileFeature[] {} );
   }
 
   /**

@@ -41,7 +41,9 @@
 package org.kalypso.model.wspm.core.util.roughnesses;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -56,9 +58,8 @@ import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.vegetation.UpdateVegetationProperties;
 
@@ -74,6 +75,8 @@ public class UpdateSimpleRoughnessProperty implements ICoreRunnableWithProgress
   private final String m_property;
 
   private final boolean m_overwrite;
+
+  private final Set<IProfilChange> m_changes = new LinkedHashSet<>();
 
   public UpdateSimpleRoughnessProperty( final IProfil profile, final String property, final boolean overwrite )
   {
@@ -94,8 +97,6 @@ public class UpdateSimpleRoughnessProperty implements ICoreRunnableWithProgress
 
     final List<IStatus> statis = new ArrayList<IStatus>();
 
-    final ProfilOperation operation = new ProfilOperation( "updating roughness values", m_profile, true );
-
     final IProfileRecord[] points = m_profile.getPoints();
     for( final IProfileRecord point : points )
     {
@@ -111,11 +112,14 @@ public class UpdateSimpleRoughnessProperty implements ICoreRunnableWithProgress
       }
 
       if( UpdateVegetationProperties.isWritable( m_overwrite, point, property ) )
-        operation.addChange( new PointPropertyEdit( point, property, roughness.getValue( m_property ).doubleValue() ) );
+        m_changes.add( new PointPropertyEdit( point, property, roughness.getValue( m_property ).doubleValue() ) );
     }
 
-    new ProfilOperationJob( operation ).schedule();
-
     return StatusUtilities.createStatus( statis, String.format( "Updating of roughness from roughness classes for profile %.3f", m_profile.getStation() ) );
+  }
+
+  public IProfilChange[] getChanges( )
+  {
+    return m_changes.toArray( new IProfilChange[] {} );
   }
 }

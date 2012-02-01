@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.ui.profil.wizard.flipProfile;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.base.IProfileManipulator;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.i18n.Messages;
@@ -69,11 +70,13 @@ public class FlipProfileWizard extends ManipulateProfileWizard
     return new IProfileManipulator()
     {
       @Override
-      public void performProfileManipulation( final IProfil profile, final IProgressMonitor monitor )
+      public IProfilChange[] performProfileManipulation( final IProfil profile, final IProgressMonitor monitor )
       {
         monitor.beginTask( "", 1 ); //$NON-NLS-1$
         ProfilUtil.flipProfile( profile, true );
         monitor.done();
+
+        return new IProfilChange[] {};
       }
     };
   }

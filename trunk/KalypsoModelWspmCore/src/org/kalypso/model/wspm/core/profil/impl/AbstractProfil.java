@@ -792,4 +792,22 @@ public abstract class AbstractProfil implements IProfil
 
     fireProfilChanged( hint );
   }
+
+  @Override
+  public String getSrsName( )
+  {
+    final IProfileFeature source = getSource();
+    if( Objects.isNotNull( source ) )
+      return source.getSrsName();
+
+    return null;
+  }
+
+  @Override
+  public void setSrsName( final String srsName )
+  {
+    final IProfileFeature source = getSource();
+    if( Objects.isNotNull( source ) )
+      source.setSrsName( srsName );
+  }
 }
