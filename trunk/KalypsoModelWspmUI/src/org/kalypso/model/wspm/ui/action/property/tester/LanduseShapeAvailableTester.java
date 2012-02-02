@@ -110,6 +110,8 @@ public class LanduseShapeAvailableTester extends PropertyTester
 
     final ProfileSelection selection = new ProfileSelection( (ISelection) receiver );
     final CommandableWorkspace workspace = selection.getWorkspace();
+    if( Objects.isNull( workspace ) )
+      return null;
 
     final URL context = workspace.getContext();
 
