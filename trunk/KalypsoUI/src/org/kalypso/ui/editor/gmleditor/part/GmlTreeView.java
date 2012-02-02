@@ -153,6 +153,8 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
   protected boolean m_bHandleGlobalEvents = true;
 
+  private UIJob m_updateControl;
+
   public GmlTreeView( final Composite composite, final IFeatureSelectionManager selectionManager )
   {
     this( composite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER, selectionManager, null );
@@ -192,26 +194,43 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
       return;
 
     final GMLContentProvider contentProvider = m_contentProvider;
-    control.getDisplay().syncExec( new Runnable()
-    {
-      @Override
-      public void run( )
-      {
-        if( !control.isDisposed() )
-        {
-          final Feature[] globalFeatures = FeatureSelectionHelper.getFeatures( selection, getWorkspace() );
-          final Feature[] selectedFeatures = filterSelectedFeatures( treeViewer.getSelection() );
 
-          final boolean isEqual = Arrays.equalsUnordered( globalFeatures, selectedFeatures );
-          if( !isEqual )
-          {
-            for( final Feature element : globalFeatures )
-              contentProvider.expandElement( contentProvider.getParent( element ) );
-            treeViewer.setSelection( selection, true );
-          }
+    if( m_updateControl != null )
+      m_updateControl.cancel();
+
+    m_updateControl = new UIJob( "updating gml tree view" )
+    {
+
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        if( monitor.isCanceled() )
+          return Status.CANCEL_STATUS;
+
+        if( control.isDisposed() )
+          return Status.CANCEL_STATUS;
+
+        final Feature[] globalFeatures = FeatureSelectionHelper.getFeatures( selection, getWorkspace() );
+        final Feature[] selectedFeatures = filterSelectedFeatures( treeViewer.getSelection() );
+
+        final boolean isEqual = Arrays.equalsUnordered( globalFeatures, selectedFeatures );
+        if( !isEqual )
+        {
+          for( final Feature element : globalFeatures )
+            contentProvider.expandElement( contentProvider.getParent( element ) );
+
+          treeViewer.setSelection( selection, true );
         }
+
+        return Status.OK_STATUS;
       }
-    } );
+    };
+
+    m_updateControl.setUser( false );
+    m_updateControl.setSystem( true );
+
+    m_updateControl.schedule( 50 );
+
   }
 
   protected void handleTreeSelectionChanged( final SelectionChangedEvent event )

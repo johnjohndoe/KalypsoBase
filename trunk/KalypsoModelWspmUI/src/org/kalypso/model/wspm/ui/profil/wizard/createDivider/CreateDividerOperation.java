@@ -58,6 +58,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -68,6 +69,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
@@ -212,11 +214,11 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
       case 1:
       {
         final Integer oneIndex = bestMarkers[0];
-        final int lowPointIndex = WspmProfileHelper.findLowestPointIndex( profil );
-        if( lowPointIndex == -1 )
+        final IProfileRecord lowestPoint = ProfileVisitors.findLowestPoint( profil );
+        if( Objects.isNull( lowestPoint ) )
           return new Integer[] { oneIndex };
 
-        if( oneIndex < lowPointIndex )
+        if( oneIndex < lowestPoint.getIndex() )
           return new Integer[] { oneIndex, last };
         else
           return new Integer[] { first, oneIndex };
@@ -298,17 +300,17 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
     final SortedSet<Integer> markerIndices = new TreeSet<Integer>( Arrays.asList( markerPoints ) );
 
     // depends on the side of the profile!
-    final int lowPointIndex = WspmProfileHelper.findLowestPointIndex( profil );
-    if( lowPointIndex == -1 )
+    final IProfileRecord lowestPoint = ProfileVisitors.findLowestPoint( profil );
+    if( Objects.isNull( lowestPoint ) )
       return new Integer[] { intersectionIndex };
 
     final Collection<Integer> result = new ArrayList<Integer>( 2 );
     result.add( intersectionIndex );
 
-    if( intersectionIndex > lowPointIndex )
+    if( intersectionIndex > lowestPoint.getIndex() )
     {
       // use leftmost of all left markers
-      final SortedSet<Integer> leftSet = markerIndices.headSet( lowPointIndex );
+      final SortedSet<Integer> leftSet = markerIndices.headSet( lowestPoint.getIndex() );
       if( !leftSet.isEmpty() )
       {
         result.add( leftSet.first() );
@@ -317,7 +319,7 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
     else
     {
       // use leftmost of all left markers
-      final SortedSet<Integer> rightSet = markerIndices.tailSet( lowPointIndex );
+      final SortedSet<Integer> rightSet = markerIndices.tailSet( lowestPoint.getIndex() );
       if( !rightSet.isEmpty() )
       {
         result.add( rightSet.last() );

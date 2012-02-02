@@ -65,6 +65,7 @@ public class FillMissingProfileGeocoordinatesRunnable implements ICoreRunnableWi
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
+
     m_profile.accept( new InterpolateMissingCoordinatesVisitor(), 1 );
     m_profile.accept( new ExtrapolateMissingCoordinatesVisitor(), 1 );
 

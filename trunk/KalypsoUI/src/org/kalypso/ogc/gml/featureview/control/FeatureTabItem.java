@@ -56,7 +56,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Helper class that wraps a tabItem as a feature conrol.
- *
+ * 
  * @author Gernot Belger
  */
 public class FeatureTabItem
@@ -115,7 +115,6 @@ public class FeatureTabItem
   public void destroy( )
   {
     m_item.dispose();
-
     m_fc.dispose();
   }
 

@@ -53,8 +53,6 @@ import org.eclipse.swt.custom.CTabFolder2Adapter;
 import org.eclipse.swt.custom.CTabFolder2Listener;
 import org.eclipse.swt.custom.CTabFolderEvent;
 import org.eclipse.swt.custom.CTabItem;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -63,6 +61,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.contribs.eclipse.jface.action.DelegateAction;
@@ -83,6 +82,8 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 public class DynamicTabFolderFeatureControl extends AbstractFeatureControl
 {
   private static final String DATA_ADD_ITEM = "addItem"; //$NON-NLS-1$
+
+  private static final Image ADD_IMAGE = ImageProvider.IMAGE_FEATURE_NEW.createImage();
 
   private CTabFolder m_tabFolder;
 
@@ -239,7 +240,11 @@ public class DynamicTabFolderFeatureControl extends AbstractFeatureControl
     for( final CTabItem tabItem : items )
     {
       if( tabItem.getData( DATA_ADD_ITEM ) != null )
+      {
+        final Control control = tabItem.getControl();
         tabItem.dispose();
+        control.dispose();
+      }
     }
   }
 
@@ -252,18 +257,7 @@ public class DynamicTabFolderFeatureControl extends AbstractFeatureControl
     final CTabItem addItem = new CTabItem( m_tabFolder, SWT.NONE );
     addItem.setData( DATA_ADD_ITEM, new Object() );
     addItem.setShowClose( false );
-
-    final Image addImage = ImageProvider.IMAGE_FEATURE_NEW.createImage();
-    addItem.setImage( addImage );
-
-    addItem.addDisposeListener( new DisposeListener()
-    {
-      @Override
-      public void widgetDisposed( final DisposeEvent e )
-      {
-        addImage.dispose();
-      }
-    } );
+    addItem.setImage( ADD_IMAGE );
 
     /* Content */
     final Group tabContent = new Group( m_tabFolder, SWT.NONE );
@@ -286,7 +280,8 @@ public class DynamicTabFolderFeatureControl extends AbstractFeatureControl
         }
       };
 
-      ActionHyperlink.createHyperlink( null, tabContent, SWT.NONE, delegateAction );
+      final ImageHyperlink link = ActionHyperlink.createHyperlink( null, tabContent, SWT.NONE, delegateAction );
+
     }
   }
 
@@ -363,7 +358,11 @@ public class DynamicTabFolderFeatureControl extends AbstractFeatureControl
       if( wrapper != null )
         wrapper.destroy();
       else
+      {
+        final Control control = tabItem.getControl();
         tabItem.dispose();
+        control.dispose();
+      }
     }
   }
 

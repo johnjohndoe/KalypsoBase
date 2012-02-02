@@ -49,10 +49,12 @@ import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.progress.IProgressConstants;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.debug.KalypsoModelWspmCoreDebug;
@@ -84,6 +86,9 @@ public class ValidationProfilListener implements IProfilListener
       @Override
       public IStatus runInWorkspace( final IProgressMonitor monitor )
       {
+        if( monitor.isCanceled() )
+          return Status.CANCEL_STATUS;
+
         final IPreferenceStore preferenceStore = KalypsoCorePlugin.getDefault().getPreferenceStore();
         final boolean validate = preferenceStore.getBoolean( ValidationPreferenceConstants.P_VALIDATE_PROFILE );
         final String excludes = preferenceStore.getString( ValidationPreferenceConstants.P_VALIDATE_RULES_TO_EXCLUDE );
@@ -146,14 +151,15 @@ public class ValidationProfilListener implements IProfilListener
   {
     KalypsoModelWspmCoreDebug.DEBUG_VALIDATION_MARKER.printf( "(validation_performance_check)Revalidate : %s\n", DateFormat.getTimeInstance().format( Calendar.getInstance().getTime() ) );
 
-    m_validateJob.cancel(); // Just in case, to avoid too much validations
+    if( Objects.isNotNull( m_validateJob ) )
+      m_validateJob.cancel(); // Just in case, to avoid too much validations
+
     m_validateJob.schedule( 100 );
   }
 
   @Override
   public void onProfilChanged( final ProfilChangeHint hint )
   {
-
     if( (hint.getEvent() & ProfilChangeHint.DATA_CHANGED) != 0 )
       revalidate();
   }

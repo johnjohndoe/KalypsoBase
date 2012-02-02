@@ -218,13 +218,15 @@ public final class ProfilOperation extends AbstractOperation
     }
   }
 
-  /**
-   * @see org.eclipse.core.commands.operations.AbstractOperation#canUndo()
-   */
   @Override
   public boolean canUndo( )
   {
     return m_canUndo;
+  }
+
+  public boolean isEmpty( )
+  {
+    return m_changes.isEmpty();
   }
 
 }

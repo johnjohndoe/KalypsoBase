@@ -45,6 +45,9 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -167,6 +170,8 @@ public class TableView extends ViewPart implements ITupleResultViewerProvider, I
   private SashForm m_sashForm;
 
   protected boolean m_fireSelectionChanged = true;
+
+  private UIJob m_updateControl;
 
   @Override
   public void init( final IViewSite site ) throws PartInitException
@@ -402,15 +407,29 @@ public class TableView extends ViewPart implements ITupleResultViewerProvider, I
 
     if( m_form != null && !m_form.isDisposed() )
     {
-      m_form.getDisplay().asyncExec( new Runnable()
+      if( m_updateControl != null )
+        m_updateControl.cancel();
+
+      m_updateControl = new UIJob( "updating table view" )
       {
+
         @Override
-        public void run( )
+        public IStatus runInUIThread( final IProgressMonitor monitor )
         {
+          if( monitor.isCanceled() )
+            return Status.CANCEL_STATUS;
+
           updateControl();
           updateProblemView();
+
+          return Status.OK_STATUS;
         }
-      } );
+      };
+
+      m_updateControl.setSystem( true );
+      m_updateControl.setUser( false );
+
+      m_updateControl.schedule( 100 );
     }
   }
 

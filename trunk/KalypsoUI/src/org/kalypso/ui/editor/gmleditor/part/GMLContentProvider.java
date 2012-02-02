@@ -31,17 +31,24 @@ package org.kalypso.ui.editor.gmleditor.part;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.progress.UIJob;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -102,7 +109,7 @@ public class GMLContentProvider implements ITreeContentProvider
 
   /**
    * Likely to be replaced by {@link #GMLContentProvider(boolean)} in the future.<br>
-   *
+   * 
    * @param handleModelEvents
    *          Only for backwards compability. Should always be set to <code>true</code>.
    */
@@ -114,7 +121,7 @@ public class GMLContentProvider implements ITreeContentProvider
 
   /**
    * Gets the children and updates the parent-hash.
-   *
+   * 
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
   @Override
@@ -516,6 +523,12 @@ public class GMLContentProvider implements ITreeContentProvider
     }
   }
 
+  Set<Feature> m_featureChangeStack = new LinkedHashSet<>();
+
+  private UIJob m_featureChangeJob;
+
+  private UIJob m_featureStructureChangedJob;
+
   protected void handleModelChanged( final ModellEvent modellEvent )
   {
     if( !m_handleModelEvents )
@@ -529,46 +542,66 @@ public class GMLContentProvider implements ITreeContentProvider
 
     if( modellEvent instanceof FeatureStructureChangeModellEvent )
     {
-      final FeatureStructureChangeModellEvent structureEvent = (FeatureStructureChangeModellEvent) modellEvent;
-      final Feature[] parentFeature = structureEvent.getParentFeatures();
+      if( m_featureStructureChangedJob != null )
+        m_featureStructureChangedJob.cancel();
 
-      if( !control.isDisposed() )
+      m_featureStructureChangedJob = new UIJob( "GMLContentProfvider feature structure update" )
       {
-        // REMARK: must be sync, if not we get a racing condition with handleGlobalSelection
-        control.getDisplay().syncExec( new Runnable()
+        @Override
+        public IStatus runInUIThread( final IProgressMonitor monitor )
         {
-          @Override
-          public void run( )
-          {
-            // This does not work nicely. In order to refresh the tree in a nice way,
-            // the modell event should also provide which festures where added/removed
-            final Object[] expandedElements = treeViewer.getExpandedElements();
+          if( monitor.isCanceled() )
+            return Status.CANCEL_STATUS;
+          if( Objects.isNull( control ) || control.isDisposed() )
+            return Status.CANCEL_STATUS;
 
-            if( parentFeature == null )
-              treeViewer.refresh();
-            else
-              treeViewer.refresh();
+          final Object[] expandedElements = treeViewer.getExpandedElements();
+          treeViewer.refresh();
 
-            treeViewer.setExpandedElements( expandedElements );
-          }
-        } );
-      }
+          treeViewer.setExpandedElements( expandedElements );
+
+          return Status.OK_STATUS;
+        }
+      };
+
+      m_featureStructureChangedJob.setSystem( true );
+      m_featureStructureChangedJob.setUser( false );
+
+      m_featureStructureChangedJob.schedule( 50 );
+
     }
     else if( modellEvent instanceof FeaturesChangedModellEvent )
     {
       final FeaturesChangedModellEvent fcme = (FeaturesChangedModellEvent) modellEvent;
-      final Feature[] features = fcme.getFeatures();
-      if( control != null && !control.isDisposed() )
-        control.getDisplay().asyncExec( new Runnable()
+      Collections.addAll( m_featureChangeStack, fcme.getFeatures() );
+
+      if( m_featureChangeJob != null )
+        m_featureChangeJob.cancel();
+
+      m_featureChangeJob = new UIJob( "GMLContentProfvider feature update" )
+      {
+        @Override
+        public IStatus runInUIThread( final IProgressMonitor monitor )
         {
-          @Override
-          public void run( )
-          {
-            if( !control.isDisposed() )
-              for( final Feature feature : features )
-                treeViewer.refresh( feature, true );
-          }
-        } );
+          if( monitor.isCanceled() )
+            return Status.CANCEL_STATUS;
+
+          if( Objects.isNull( control ) || control.isDisposed() )
+            return Status.CANCEL_STATUS;
+
+          final Feature[] features = m_featureChangeStack.toArray( new Feature[] {} );
+          m_featureChangeStack.clear();
+          for( final Feature feature : features )
+            treeViewer.refresh( feature, true );
+
+          return Status.OK_STATUS;
+        }
+      };
+
+      m_featureChangeJob.setSystem( true );
+      m_featureChangeJob.setUser( false );
+
+      m_featureChangeJob.schedule( 50 );
     }
   }
 
@@ -581,7 +614,7 @@ public class GMLContentProvider implements ITreeContentProvider
 
   /**
    * Allows to override default behavior regarding visibility of children, defined by the catalog-properties.<br/>
-   *
+   * 
    * @param override
    *          Value that overrides the catalog behavior. Set to <code>null</code>, to use the default behavior.
    */
