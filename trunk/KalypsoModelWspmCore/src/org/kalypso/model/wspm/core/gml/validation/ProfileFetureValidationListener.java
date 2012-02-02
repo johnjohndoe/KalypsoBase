@@ -94,8 +94,13 @@ public class ProfileFetureValidationListener implements IProfileProviderListener
     {
       final IProfileFeature source = profile.getSource();
 
-      m_listener = new ValidationProfilListener( m_profile, getFile( source ), null, source.getId() );
-      m_profile.addProfilListener( m_listener );
+      final IFile file = getFile( source );
+      if( file != null )
+      {
+        m_listener = new ValidationProfilListener( m_profile, file, null, source.getId() );
+        m_profile.addProfilListener( m_listener );
+      }
+
     }
   }
 

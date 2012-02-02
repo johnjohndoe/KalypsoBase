@@ -77,8 +77,15 @@ public class ValidationProfilListener implements IProfilListener
 
   public ValidationProfilListener( final IProfil profile, final IFile file, final String editorID, final String featureID )
   {
-    final String profiletype = profile.getType();
+    if( file == null ) // start calculation
+    {
+      m_validateJob = null;
+      m_propertyListener = null;
 
+      return;
+    }
+
+    final String profiletype = profile.getType();
     final ValidatorRuleSet rules = KalypsoModelWspmCorePlugin.getValidatorSet( profiletype );
 
     m_validateJob = new WorkspaceJob( "Querprofil wird validiert" )
