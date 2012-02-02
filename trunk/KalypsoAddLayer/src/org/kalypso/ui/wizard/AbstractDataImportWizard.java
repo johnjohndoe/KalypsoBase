@@ -23,7 +23,9 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
+import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.addlayer.IKalypsoDataImportWizard;
 import org.kalypso.ui.addlayer.dnd.MapDropData;
 
@@ -37,6 +39,11 @@ public abstract class AbstractDataImportWizard extends Wizard implements IKalyps
   private IKalypsoLayerModell m_modell;
 
   private int m_insertionIndex;
+
+  protected AbstractDataImportWizard( )
+  {
+    setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoAddLayerPlugin.getDefault(), getClass().getName() ) );
+  }
 
   @Override
   public final void setCommandTarget( final ICommandTarget commandTarget )
