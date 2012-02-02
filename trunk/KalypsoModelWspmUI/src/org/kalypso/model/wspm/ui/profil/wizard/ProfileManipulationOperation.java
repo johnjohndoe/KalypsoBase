@@ -112,14 +112,8 @@ public final class ProfileManipulationOperation implements ICoreRunnableWithProg
 
   private boolean applyChanges( )
   {
-    for( final ProfilOperation operation : m_profileOperations )
-    {
-      if( operation.isEmpty() )
-        continue;
-
-      final ProfilOperationJob job = new ProfilOperationJob( operation );
-      job.schedule();
-    }
+    final ProfilOperationJob job = new ProfilOperationJob( m_profileOperations.toArray( new ProfilOperation[] {} ) );
+    job.schedule();
 
     return true;
   }
