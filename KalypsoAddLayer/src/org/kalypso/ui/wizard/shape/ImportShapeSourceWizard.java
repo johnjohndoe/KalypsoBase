@@ -56,7 +56,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.kalypso.commons.databinding.swt.FileAndHistoryData;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -64,7 +63,6 @@ import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PathUtils;
 import org.kalypso.contribs.java.net.IUrlResolver2;
-import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.CatalogSLD;
 import org.kalypso.core.catalog.CatalogSLDUtils;
@@ -80,6 +78,7 @@ import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.addlayer.dnd.MapDropData;
+import org.kalypso.ui.addlayer.internal.util.AddLayerUtils;
 import org.kalypso.ui.i18n.Messages;
 import org.kalypso.ui.wizard.AbstractDataImportWizard;
 import org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.StyleImport;
@@ -99,14 +98,6 @@ public class ImportShapeSourceWizard extends AbstractDataImportWizard
   }
 
   @Override
-  public void setDialogSettings( final IDialogSettings settings )
-  {
-    super.setDialogSettings( settings );
-
-    m_data.init( settings );
-  }
-
-  @Override
   public boolean performFinish( )
   {
     m_data.storeSettings( getDialogSettings() );
@@ -115,13 +106,11 @@ public class ImportShapeSourceWizard extends AbstractDataImportWizard
 
     // Add Layer to mapModell
     final IKalypsoLayerModell mapModell = getMapModel();
-    final URL mapContext = mapModell.getContext();
-    final IFile mapFile = ResourceUtilities.findFileFromURL( mapContext );
-    final IPath mapPath = mapFile.getFullPath();
+    final IPath mapPath = AddLayerUtils.getPathForMap( mapModell );
 
     /* Add new theme to map */
     final IPath shapePath = m_data.getShapeFile().getPath().removeFileExtension();
-    final String relativeShapePath = makeRelativeOrProjectRelative( mapPath, shapePath );
+    final String relativeShapePath = AddLayerUtils.makeRelativeOrProjectRelative( mapPath, shapePath );
 
     final String themeName = FileUtilities.nameWithoutExtension( shapePath.lastSegment() );
     final String fileName = relativeShapePath + '#' + m_data.getSrs(); //$NON-NLS-1$
@@ -155,7 +144,7 @@ public class ImportShapeSourceWizard extends AbstractDataImportWizard
       case selectExisting:
         /* Add reference to existing style file */
         final IPath stylePath = m_data.getStyleFile().getPath();
-        final String relativeStylePath = makeRelativeOrProjectRelative( mapPath, stylePath );
+        final String relativeStylePath = AddLayerUtils.makeRelativeOrProjectRelative( mapPath, stylePath );
         final String styleName = m_data.getStyleName();
         command.addStyle( styleName, relativeStylePath );
         return true;
@@ -210,7 +199,7 @@ public class ImportShapeSourceWizard extends AbstractDataImportWizard
       else
         sldFile.create( IOUtils.toInputStream( sldContent ), false, new NullProgressMonitor() );
 
-      final String relativeSldPath = makeRelativeOrProjectRelative( mapPath, sldPath );
+      final String relativeSldPath = AddLayerUtils.makeRelativeOrProjectRelative( mapPath, sldPath );
       command.addStyle( null, relativeSldPath );
       return true;
     }
@@ -237,6 +226,8 @@ public class ImportShapeSourceWizard extends AbstractDataImportWizard
   @Override
   public void addPages( )
   {
+    m_data.init( getDialogSettings() );
+
     final IProject project = ResourceUtilities.findProjectFromURL( getMapModel().getContext() );
 
     final ImportShapeFileImportPage page = new ImportShapeFileImportPage( "shapefileimport", m_title, ImageProvider.IMAGE_KALYPSO_ICON_BIG, m_data ); //$NON-NLS-1$
@@ -256,17 +247,5 @@ public class ImportShapeSourceWizard extends AbstractDataImportWizard
       shapeFile.setPath( null );
     else
       shapeFile.setPath( new Path( path ) );
-  }
-
-  private static String makeRelativeOrProjectRelative( final IPath mapPath, final IPath path )
-  {
-    if( path == null )
-      return null;
-
-    final IPath relativeStylePath = PathUtils.makeRelativ( mapPath, path );
-    if( "..".equals( relativeStylePath.segment( 0 ) ) ) //$NON-NLS-1$
-      return UrlResolver.createProjectPath( path );
-    else
-      return relativeStylePath.toPortableString();
   }
 }

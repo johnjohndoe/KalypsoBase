@@ -45,9 +45,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IWorkbench;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -60,6 +62,7 @@ import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.addlayer.dnd.MapDropData;
+import org.kalypso.ui.addlayer.internal.util.AddLayerUtils;
 import org.kalypso.ui.editor.actions.FeatureActionUtilities;
 import org.kalypso.ui.editor.gmleditor.part.FeatureAssociationTypeElement;
 import org.kalypso.ui.i18n.Messages;
@@ -75,18 +78,30 @@ public class KalypsoGmlImportWizard extends AbstractDataImportWizard
 {
   private GmlFileImportPage m_page;
 
+  private final GmlFileImportData m_data = new GmlFileImportData();
+
   public KalypsoGmlImportWizard( )
   {
     setWindowTitle( Messages.getString( "org.kalypso.ui.wizard.gml.KalypsoGmlImportWizard.2" ) ); //$NON-NLS-1$
   }
 
   @Override
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
+  {
+    super.init( workbench, selection );
+
+    m_data.init( getDialogSettings() );
+  }
+
+  @Override
   public void addPages( )
   {
-    m_page = new GmlFileImportPage( "GML:importPage", Messages.getString( "org.kalypso.ui.wizard.gml.KalypsoGmlImportWizard.0" ), ImageProvider.IMAGE_UTIL_UPLOAD_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
-
     final IProject project = ResourceUtilities.findProjectFromURL( getMapModel().getContext() );
-    m_page.setProjectSelection( project );
+    m_data.setProjectSelection( project );
+
+    m_page = new GmlFileImportPage( "GML:importPage", Messages.getString( "org.kalypso.ui.wizard.gml.KalypsoGmlImportWizard.0" ), m_data ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_page.setImageDescriptor( ImageProvider.IMAGE_UTIL_UPLOAD_WIZ );
+
 
     addPage( m_page );
   }
@@ -94,12 +109,24 @@ public class KalypsoGmlImportWizard extends AbstractDataImportWizard
   @Override
   public void initFromDrop( final MapDropData data )
   {
+    // data./
+
     throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public boolean performCancel( )
+  {
+    m_data.storeSettings( getDialogSettings() );
+
+    return super.performCancel();
   }
 
   @Override
   public boolean performFinish( )
   {
+    m_data.storeSettings( getDialogSettings() );
+
     try
     {
       final ICommand[] commands = getCommands();
@@ -124,16 +151,18 @@ public class KalypsoGmlImportWizard extends AbstractDataImportWizard
   {
     final IKalypsoLayerModell model = getMapModel();
 
-    final String source = m_page.getSource();
-    final IStructuredSelection selection = m_page.getSelection();
+    final IKalypsoLayerModell mapModell = getMapModel();
+    final IPath mapPath = AddLayerUtils.getPathForMap( mapModell );
+    final String sourcePath = m_data.getSourcePath( mapPath );
 
-    final Object firstElement = selection.getFirstElement();
+    final Object selectedElement = m_data.getSelectedElement();
+
     final List<String> pathList = new ArrayList<String>();
     final List<String> titleList = new ArrayList<String>();
-    if( firstElement instanceof Feature )
+    if( selectedElement instanceof Feature )
     {
       // create featurepath for element
-      final Feature feature = (Feature) firstElement;
+      final Feature feature = (Feature) selectedElement;
       final FeaturePath featurepath = new FeaturePath( feature );
       final IFeatureType ft = feature.getFeatureType();
       // find title
@@ -143,10 +172,10 @@ public class KalypsoGmlImportWizard extends AbstractDataImportWizard
       pathList.add( featurepath.toString() );
       titleList.add( title );
     }
-    else if( firstElement instanceof FeatureAssociationTypeElement )
+    else if( selectedElement instanceof FeatureAssociationTypeElement )
     {
       // create featurepath for association
-      final FeatureAssociationTypeElement link = (FeatureAssociationTypeElement) firstElement;
+      final FeatureAssociationTypeElement link = (FeatureAssociationTypeElement) selectedElement;
       final Feature parent = link.getOwner();
       final FeaturePath parentFeaturePath = new FeaturePath( parent );
       final IRelationType ftp = link.getPropertyType();
@@ -185,7 +214,7 @@ public class KalypsoGmlImportWizard extends AbstractDataImportWizard
     {
       final String title = titleIterator.next();
       final String featurePath = pathIterator.next();
-      result[pos] = new AddThemeCommand( model, title, "gml", featurePath, source ); //$NON-NLS-1$
+      result[pos] = new AddThemeCommand( model, title, "gml", featurePath, sourcePath ); //$NON-NLS-1$
     }
     return result;
   }
