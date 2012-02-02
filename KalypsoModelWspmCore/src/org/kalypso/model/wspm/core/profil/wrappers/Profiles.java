@@ -43,10 +43,13 @@ package org.kalypso.model.wspm.core.profil.wrappers;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.jts.JTSConverter;
 import org.kalypso.jts.JTSUtilities;
+import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
+import org.kalypso.observation.result.IComponent;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -62,6 +65,8 @@ import com.vividsolutions.jts.geom.Point;
  */
 public final class Profiles
 {
+  public static final double FUZZINESS = 0.005; // Inaccuracies profile of points
+
   private Profiles( )
   {
   }
@@ -76,7 +81,49 @@ public final class Profiles
     add.setBreite( width );
     add.setHoehe( getHoehe( profile, width ) );
 
-    return WspmProfileHelper.addRecordByWidth( profile, add );
+    return addRecordByWidth( profile, add, false );
+  }
+
+  private static IProfileRecord addRecordByWidth( final IProfil profile, final IProfileRecord point, final boolean overwritePointMarkers )
+  {
+    final Double width = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, point );
+
+    final IProfileRecord[] records = profile.getPoints();
+    final int iBreite = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE );
+
+    for( int i = 0; i < records.length; i++ )
+    {
+      final IProfileRecord r = records[i];
+      final Double rw = (Double) r.getValue( iBreite );
+
+      if( Math.abs( width - rw ) < FUZZINESS )
+      {
+        /* record already exists - copy values */
+        for( final IComponent component : profile.getPointProperties() )
+        {
+          // don't overwrite existing point markers!
+          if( !overwritePointMarkers && profile.isPointMarker( component.getId() ) )
+          {
+            continue;
+          }
+          final int index = profile.indexOfProperty( component );
+          r.setValue( index, point.getValue( index ) );
+        }
+        return r;
+      }
+      else if( width < rw )
+      {
+        // add new record
+        profile.getResult().add( i, point.getRecord() );
+        return point;
+      }
+      else if( width.equals( rw ) )
+        throw new IllegalStateException();
+    }
+
+    profile.addPoint( point );
+
+    return point;
   }
 
   public static double getHoehe( final IProfil profile, final Double width )

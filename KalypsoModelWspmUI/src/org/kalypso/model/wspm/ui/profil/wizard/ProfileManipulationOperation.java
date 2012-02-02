@@ -32,7 +32,7 @@ import org.kalypso.model.wspm.ui.i18n.Messages;
 public final class ProfileManipulationOperation implements ICoreRunnableWithProgress
 {
 
-  private final Object[] m_profileFeatures;
+  private final IProfileFeature[] m_profileFeatures;
 
   private final IProfileManipulator m_manipulator;
 
@@ -42,7 +42,7 @@ public final class ProfileManipulationOperation implements ICoreRunnableWithProg
 
   Set<ProfilOperation> m_profileOperations = new LinkedHashSet<>();
 
-  public ProfileManipulationOperation( final IWizardContainer wizardContainer, final String windowTitle, final Object[] profileFeatures, final IProfileManipulator manipulator )
+  public ProfileManipulationOperation( final IWizardContainer wizardContainer, final String windowTitle, final IProfileFeature[] profileFeatures, final IProfileManipulator manipulator )
   {
     m_wizardContainer = wizardContainer;
     m_windowTitle = windowTitle;
@@ -56,17 +56,16 @@ public final class ProfileManipulationOperation implements ICoreRunnableWithProg
     monitor.beginTask( Messages.getString( "ProfileManipulationOperation_0" ), m_profileFeatures.length ); //$NON-NLS-1$
 
     final Collection<IStatus> problems = new ArrayList<IStatus>();
-    for( final Object profileObject : m_profileFeatures )
+    for( final IProfileFeature profileFeature : m_profileFeatures )
     {
       try
       {
-        final IProfileFeature profileFeature = (IProfileFeature) profileObject;
         final IProfil profile = profileFeature.getProfil();
 
         final String subTask = String.format( Messages.getString( "ProfileManipulationOperation_1" ), profileFeature.getName(), profileFeature.getBigStation() ); //$NON-NLS-1$
         monitor.subTask( subTask );
 
-        final ProfilOperation operation = new ProfilOperation( "Guessing rouhness classes", profile, true );
+        final ProfilOperation operation = new ProfilOperation( "Performing profile operation", profile, true );
         final IProfilChange[] changes = m_manipulator.performProfileManipulation( profile, new SubProgressMonitor( monitor, 1 ) );
         operation.addChange( changes );
 
@@ -90,6 +89,7 @@ public final class ProfileManipulationOperation implements ICoreRunnableWithProg
 
   public boolean perform( )
   {
+
     final IStatus result = RunnableContextHelper.execute( m_wizardContainer, true, true, this );
 
     final boolean doContinue = checkResult( result );
@@ -114,7 +114,11 @@ public final class ProfileManipulationOperation implements ICoreRunnableWithProg
   {
     for( final ProfilOperation operation : m_profileOperations )
     {
-      new ProfilOperationJob( operation ).schedule();
+      if( operation.isEmpty() )
+        continue;
+
+      final ProfilOperationJob job = new ProfilOperationJob( operation );
+      job.schedule();
     }
 
     return true;

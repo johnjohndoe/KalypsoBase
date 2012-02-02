@@ -120,6 +120,8 @@ public abstract class AbstractProfil implements IProfil
 
   private Object m_transactionLock;
 
+  private int m_transactionChangeEvent;
+
   public AbstractProfil( final String type, final TupleResult result, final IProfileFeature source )
   {
     m_type = type;
@@ -244,9 +246,11 @@ public abstract class AbstractProfil implements IProfil
   public void fireProfilChanged( final ProfilChangeHint hint )
   {
     // TODO: instead of ProfileOperation, we could combine the hints ourselfs during transaction mode
-
     if( m_transactionLock != null )
+    {
+      m_transactionChangeEvent |= hint.getEvent();
       return;
+    }
 
     final IProfilListener[] listeners = m_listeners.toArray( new IProfilListener[m_listeners.size()] );
     for( final IProfilListener listener : listeners )
@@ -723,6 +727,8 @@ public abstract class AbstractProfil implements IProfil
 
   private void doAccept( final IProfileRecordVisitor visitor, final IProfileRecord[] points, final int direction )
   {
+    startTransaction( visitor );
+
     try
     {
       if( direction >= 0 )
@@ -744,6 +750,10 @@ public abstract class AbstractProfil implements IProfil
     catch( final CancelVisitorException ex )
     {
       return;
+    }
+    finally
+    {
+      stopTransaction( visitor, new ProfilChangeHint( m_transactionChangeEvent ) );
     }
   }
 
@@ -780,6 +790,7 @@ public abstract class AbstractProfil implements IProfil
       throw new IllegalStateException();
 
     m_transactionLock = lock;
+    m_transactionChangeEvent = 0;
   }
 
   @Override
@@ -789,6 +800,7 @@ public abstract class AbstractProfil implements IProfil
       throw new IllegalStateException();
 
     m_transactionLock = null;
+    m_transactionChangeEvent = 0;
 
     fireProfilChanged( hint );
   }

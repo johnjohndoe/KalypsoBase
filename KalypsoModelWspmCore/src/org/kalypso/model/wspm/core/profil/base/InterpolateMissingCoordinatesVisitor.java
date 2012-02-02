@@ -67,7 +67,6 @@ public class InterpolateMissingCoordinatesVisitor implements IProfileRecordVisit
         point.setRechtswert( position.getX() );
         point.setHochwert( position.getY() );
       }
-
     }
     catch( final Exception e )
     {

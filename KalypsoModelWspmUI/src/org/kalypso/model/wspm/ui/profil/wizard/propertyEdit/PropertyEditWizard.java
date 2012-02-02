@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.ui.profil.wizard.propertyEdit;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IPageChangeProvider;
@@ -56,6 +57,7 @@ import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
@@ -203,7 +205,14 @@ public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
     final Object[] choosenProperties = m_propertyChooserPage.getChoosen();
     final OperationChooserPage operationChooserPage = m_operationChooserPage;
 
-    final Object[] profileFeatures = m_profileChooserPage.getChoosen();
+    final Set<IProfileFeature> profiles = new LinkedHashSet<>();
+
+    final Object[] choosen = m_profileChooserPage.getChoosen();
+    for( final Object object : choosen )
+    {
+      if( object instanceof IProfileFeature )
+        profiles.add( (IProfileFeature) object );
+    }
 
     final IProfileManipulator manipulator = new IProfileManipulator()
     {
@@ -217,7 +226,8 @@ public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
         return new IProfilChange[] {};
       }
     };
-    final ProfileManipulationOperation operation = new ProfileManipulationOperation( getContainer(), getWindowTitle(), profileFeatures, manipulator );
+
+    final ProfileManipulationOperation operation = new ProfileManipulationOperation( getContainer(), getWindowTitle(), profiles.toArray( new IProfileFeature[] {} ), manipulator );
     return operation.perform();
   }
 

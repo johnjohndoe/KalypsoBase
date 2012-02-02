@@ -78,8 +78,6 @@ public final class WspmProfileHelper
     throw new UnsupportedOperationException( "Helper class, do not instantiate" ); //$NON-NLS-1$
   }
 
-  public static final double FUZZINESS = 0.005; // Inaccuracies profile of points
-
   /**
    * This function returns the width position of a geo point projected on a profile.
    * <p>
@@ -734,97 +732,4 @@ public final class WspmProfileHelper
     return tmpProfil;
   }
 
-  public static IProfileRecord addRecordByWidth( final IProfil profile, final IProfileRecord record, final boolean overwritePointMarkers )
-  {
-    final Double width = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, record );
-
-    final IProfileRecord[] records = profile.getPoints();
-    final int iBreite = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE );
-
-    for( int i = 0; i < records.length; i++ )
-    {
-      final IProfileRecord r = records[i];
-      final Double rw = (Double) r.getValue( iBreite );
-
-      if( Math.abs( width - rw ) < FUZZINESS )
-      {
-        /* record already exists - copy values */
-        for( final IComponent component : profile.getPointProperties() )
-        {
-          // don't overwrite existing point markers!
-          if( !overwritePointMarkers && profile.isPointMarker( component.getId() ) )
-          {
-            continue;
-          }
-          final int index = profile.indexOfProperty( component );
-          r.setValue( index, record.getValue( index ) );
-        }
-        return r;
-      }
-      else if( width < rw )
-      {
-        // add new record
-        profile.getResult().add( i, record );
-        return record;
-      }
-      else if( width.equals( rw ) )
-        throw new IllegalStateException();
-    }
-
-    profile.addPoint( record );
-
-    return record;
-  }
-
-  /**
-   * Adds a record by its width. If this record(point) already exists in the profile, the existing record will be
-   * updated
-   */
-  public static IProfileRecord addRecordByWidth( final IProfil profile, final IProfileRecord record )
-  {
-    return addRecordByWidth( profile, record, false );
-  }
-
-  /**
-   * Returns the profile point with the lowest height.
-   * 
-   * @return The index of the point with the smallest height value. Returns <code>-1</code> if no such point can be
-   *         determined.
-   */
-  public static int findLowestPointIndex( final IProfil profile )
-  {
-    double minHeight = Double.MAX_VALUE;
-    int minIndex = -1;
-
-    final int iHeight = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_HOEHE );
-    final IRecord[] records = profile.getPoints();
-    for( int i = 0; i < records.length; i++ )
-    {
-      final IRecord point = records[i];
-      final Object heightValue = point.getValue( iHeight );
-      if( heightValue instanceof Number )
-      {
-        final double height = ((Number) heightValue).doubleValue();
-        if( height < minHeight )
-        {
-          minHeight = height;
-          minIndex = i;
-        }
-      }
-    }
-
-    return minIndex;
-  }
-
-  /**
-   * Returns the profile point with the lowest height.
-   */
-  public static IRecord findLowestPoint( final IProfil profile )
-  {
-    final int index = findLowestPointIndex( profile );
-    if( index == -1 )
-      return null;
-
-    return profile.getPoint( index );
-  }
 }

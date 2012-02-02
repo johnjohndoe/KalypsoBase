@@ -84,6 +84,7 @@ public class ActionHyperlink
 
     final ImageHyperlink link = createHyperlink( toolkit, parent, style );
     new ActionHyperlink( link, action );
+
     return link;
   }
 

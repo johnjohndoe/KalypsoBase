@@ -40,11 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.base.IProfileManipulator;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
@@ -73,10 +77,17 @@ public abstract class ManipulateProfileWizard extends Wizard implements IWorkben
   @Override
   public boolean performFinish( )
   {
-    final Object[] profiles = m_profileChooserPage.getChoosen();
+    final Set<IProfileFeature> profiles = new LinkedHashSet<>();
+
+    final Object[] choosen = m_profileChooserPage.getChoosen();
+    for( final Object object : choosen )
+    {
+      if( object instanceof IProfileFeature )
+        profiles.add( (IProfileFeature) object );
+    }
 
     final IProfileManipulator manipulator = getProfileManipulator();
-    final ProfileManipulationOperation operation = new ProfileManipulationOperation( getContainer(), getWindowTitle(), profiles, manipulator );
+    final ProfileManipulationOperation operation = new ProfileManipulationOperation( getContainer(), getWindowTitle(), profiles.toArray( new IProfileFeature[] {} ), manipulator );
     return operation.perform();
   }
 
