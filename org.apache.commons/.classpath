@@ -22,6 +22,5 @@
 	<classpathentry exported="true" kind="lib" path="lib/httpclient/modified-httpclient-contribs.jar" sourcepath="lib/httpclient/modified-httpclient-contribs-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/xml/xml-commons-resolver-1.2.jar" sourcepath="lib/xml/xml-commons-resolver-1.2-src.jar.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/httpclient/commons-httpclient-3.1.jar" sourcepath="lib/httpclient/commons-httpclient-3.1-src.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/configuration/commons-configuration-1.7.jar" sourcepath="lib/configuration/commons-configuration-1.7-sources.jar"/>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>
