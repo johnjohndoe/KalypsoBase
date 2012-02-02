@@ -44,6 +44,7 @@ import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
@@ -171,7 +172,9 @@ public class WorkspaceFileBinding
   {
     final IFile currentFile = PathUtils.toFile( (IPath) m_fileValue.getValue() );
 
-    final KalypsoResourceSelectionDialog dialog = new KalypsoResourceSelectionDialog( shell, currentFile, m_dialogMessage, m_filterExtensions, m_inputContainer, new ResourceSelectionValidator() ); //$NON-NLS-1$
+    final IContainer inputContainer = getInputContainer();
+
+    final KalypsoResourceSelectionDialog dialog = new KalypsoResourceSelectionDialog( shell, currentFile, m_dialogMessage, m_filterExtensions, inputContainer, new ResourceSelectionValidator() ); //$NON-NLS-1$
     if( m_filter != null )
       dialog.setViewerFilter( m_filter );
     dialog.open();
@@ -182,6 +185,14 @@ public class WorkspaceFileBinding
 
     final IPath newPath = (IPath) result[0];
     m_fileValue.setValue( newPath );
+  }
+
+  private IContainer getInputContainer( )
+  {
+    if( m_inputContainer == null )
+      return ResourcesPlugin.getWorkspace().getRoot();
+
+    return m_inputContainer;
   }
 
   public Binding getFileBinding( )
