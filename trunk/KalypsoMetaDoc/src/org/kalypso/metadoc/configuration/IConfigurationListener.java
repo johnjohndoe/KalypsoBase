@@ -41,11 +41,11 @@
 
 package org.kalypso.metadoc.configuration;
 
-import org.apache.commons.configuration.Configuration;
+import org.apache.commons.collections.ExtendedProperties;
 
 /**
  * Listens on configuration changes
- * 
+ *
  * @author schlienger
  */
 public interface IConfigurationListener
@@ -54,5 +54,5 @@ public interface IConfigurationListener
    * @param key
    *          [can be null] the key of the property that changed, or null if multiple properties changed
    */
-  public void configurationChanged( final Configuration config, final String key );
+  void configurationChanged( final ExtendedProperties config, final String key );
 }

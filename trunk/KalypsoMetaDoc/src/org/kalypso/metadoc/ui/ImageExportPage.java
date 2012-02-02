@@ -7,10 +7,10 @@
  Institute of River and coastal engineering
  Denickestr. 22
  21073 Hamburg, Germany
- http://www.tuhh.de/wbprivate final ExportMapOptionsPage 
+ http://www.tuhh.de/wbprivate final ExportMapOptionsPage
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,11 +36,11 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.metadoc.ui;
 
-import org.apache.commons.configuration.Configuration;
+import org.apache.commons.collections.ExtendedProperties;
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -70,7 +70,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.metadoc.configuration.IConfigurationListener;
-import org.kalypso.metadoc.configuration.IPublishingConfiguration;
+import org.kalypso.metadoc.configuration.PublishingConfiguration;
 import org.kalypso.metadoc.impl.FileExportTarget;
 
 /**
@@ -100,7 +100,7 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
 
   private final static String[] EXTENSIONS = { /* ".gif", */".jpg", ".png" };
 
-  private final IPublishingConfiguration m_conf;
+  private final PublishingConfiguration m_conf;
 
   private Text m_widthtext;
 
@@ -134,12 +134,12 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
   /**
    * Same as {@link #ImageExportPage(IPublishingConfiguration, String, String, ImageDescriptor, 0)}
    */
-  public ImageExportPage( final IPublishingConfiguration conf, final String pageName, final String title, final ImageDescriptor titleImage )
+  public ImageExportPage( final PublishingConfiguration conf, final String pageName, final String title, final ImageDescriptor titleImage )
   {
     this( conf, pageName, title, titleImage, 0 );
   }
 
-  public ImageExportPage( final IPublishingConfiguration conf, final String pageName, final String title, final ImageDescriptor titleImage, final double hintImageRatio )
+  public ImageExportPage( final PublishingConfiguration conf, final String pageName, final String title, final ImageDescriptor titleImage, final double hintImageRatio )
   {
     super( pageName, title, titleImage );
 
@@ -364,12 +364,8 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
     }
   }
 
-  /**
-   * @see org.kalypso.metadoc.configuration.IConfigurationListener#configurationChanged(org.apache.commons.configuration.Configuration,
-   *      java.lang.String)
-   */
   @Override
-  public void configurationChanged( final Configuration config, final String key )
+  public void configurationChanged( final ExtendedProperties config, final String key )
   {
     final Control control = getControl();
     if( control == null )

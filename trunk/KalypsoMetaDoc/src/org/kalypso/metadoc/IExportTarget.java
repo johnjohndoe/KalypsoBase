@@ -43,39 +43,39 @@ package org.kalypso.metadoc;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.apache.commons.configuration.Configuration;
+import org.apache.commons.collections.ExtendedProperties;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizardPage;
-import org.kalypso.metadoc.configuration.IPublishingConfiguration;
+import org.kalypso.metadoc.configuration.PublishingConfiguration;
 
 /**
  * The target into which the documents will go.
- * 
+ *
  * @author schlienger
  */
 public interface IExportTarget extends IExecutableExtension
 {
-  public String getName( );
+  String getName( );
 
-  public String getDescription( );
+  String getDescription( );
 
-  public boolean isModeSupported( final String mode );
+  boolean isModeSupported( final String mode );
 
-  public ImageDescriptor getImage( );
+  ImageDescriptor getImage( );
 
   /**
    * Set the given property. Special properties might be used by some targets when exporting the documents.
    */
-  public void setProperty( final String key, final String value );
+  void setProperty( final String key, final String value );
 
   /**
    * Provides a list of wizard pages required for this target
    */
-  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration ) throws CoreException;
+  IWizardPage[] createWizardPages( final PublishingConfiguration configuration ) throws CoreException;
 
   /**
    * Commits the document to some destination which is target-dependent.
@@ -88,5 +88,5 @@ public interface IExportTarget extends IExecutableExtension
    * possible
    * </ul>
    */
-  public IStatus commitDocument( final IExportableObject document, final Configuration targetConf, final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException;
+  IStatus commitDocument( IExportableObject document, ExtendedProperties targetConf, IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException;
 }

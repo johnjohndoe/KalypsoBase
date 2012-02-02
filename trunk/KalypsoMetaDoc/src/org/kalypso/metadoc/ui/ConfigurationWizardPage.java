@@ -41,7 +41,7 @@
 
 package org.kalypso.metadoc.ui;
 
-import org.apache.commons.configuration.Configuration;
+import org.apache.commons.collections.ExtendedProperties;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -55,18 +55,18 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * A simple wizard page which takes its contents from a configuration object
- * 
+ *
  * @author schlienger
  */
 public class ConfigurationWizardPage extends WizardPage
 {
-  private final Configuration m_config;
+  private final ExtendedProperties m_config;
 
   private final String[] m_editableKeys;
 
   private final String[] m_labels;
 
-  public ConfigurationWizardPage( final String pageName, final String title, final ImageDescriptor titleImage, final Configuration config, final String[] editableKeys, final String[] labels )
+  public ConfigurationWizardPage( final String pageName, final String title, final ImageDescriptor titleImage, final ExtendedProperties config, final String[] editableKeys, final String[] labels )
   {
     super( pageName, title, titleImage );
 
@@ -98,7 +98,7 @@ public class ConfigurationWizardPage extends WizardPage
       text.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL ) );
       text.setText( m_config.getString( key, "" ) );
 
-      final Configuration config = m_config;
+      final ExtendedProperties config = m_config;
       text.addModifyListener( new ModifyListener()
       {
         @Override

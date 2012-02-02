@@ -44,7 +44,6 @@ package org.kalypso.metadoc.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.configuration.BaseConfiguration;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -64,12 +63,11 @@ import org.kalypso.metadoc.IExportTarget;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.IExportableObjectFactory;
 import org.kalypso.metadoc.KalypsoMetaDocPlugin;
-import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 import org.kalypso.metadoc.configuration.PublishingConfiguration;
 
 /**
  * The export wizard takes care of creating the pages using the given target and exportable-object-factory.
- * 
+ *
  * @author schlienger
  */
 public final class ExportWizard extends Wizard
@@ -88,7 +86,7 @@ public final class ExportWizard extends Wizard
     setNeedsProgressMonitor( true );
     setWindowTitle( windowTitle );
 
-    final IPublishingConfiguration configuration = new PublishingConfiguration( new BaseConfiguration() );
+    final PublishingConfiguration configuration = new PublishingConfiguration();
 
     // one settings-entry per target and factory
     final String settingsName = target.getClass().toString() + "_" + factory.getClass().toString();

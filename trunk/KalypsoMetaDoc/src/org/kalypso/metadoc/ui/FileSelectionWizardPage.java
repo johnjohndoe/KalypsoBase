@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.metadoc.ui;
 
@@ -45,7 +45,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.configuration.Configuration;
+import org.apache.commons.collections.ExtendedProperties;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
@@ -67,7 +67,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.metadoc.configuration.IConfigurationListener;
-import org.kalypso.metadoc.configuration.IPublishingConfiguration;
+import org.kalypso.metadoc.configuration.PublishingConfiguration;
 import org.kalypso.metadoc.impl.FileExportTarget;
 
 /**
@@ -85,9 +85,9 @@ public class FileSelectionWizardPage extends WizardPage implements IConfiguratio
 
   private final String m_groupname;
 
-  private final IPublishingConfiguration m_conf;
+  private final PublishingConfiguration m_conf;
 
-  public FileSelectionWizardPage( final IPublishingConfiguration conf, final String pageName, final String title, final ImageDescriptor titleImage, final String groupname )
+  public FileSelectionWizardPage( final PublishingConfiguration conf, final String pageName, final String title, final ImageDescriptor titleImage, final String groupname )
   {
     super( pageName, title, titleImage );
 
@@ -199,7 +199,7 @@ public class FileSelectionWizardPage extends WizardPage implements IConfiguratio
 
   /**
    * Add the passed value to self's destination widget's history
-   * 
+   *
    * @param value
    *          java.lang.String
    */
@@ -211,7 +211,7 @@ public class FileSelectionWizardPage extends WizardPage implements IConfiguratio
   /**
    * Returns the name of a container with a location that encompasses targetDirectory. Returns null if there is no
    * conflict.
-   * 
+   *
    * @param targetDirectory
    *          the path of the directory to check.
    * @return the conflicting container name or <code>null</code>
@@ -374,12 +374,8 @@ public class FileSelectionWizardPage extends WizardPage implements IConfiguratio
     }
   }
 
-  /**
-   * @see org.kalypso.metadoc.configuration.IConfigurationListener#configurationChanged(org.apache.commons.configuration.Configuration,
-   *      java.lang.String)
-   */
   @Override
-  public void configurationChanged( final Configuration config, final String key )
+  public void configurationChanged( final ExtendedProperties config, final String key )
   {
     final Control control = getControl();
     if( control == null )
