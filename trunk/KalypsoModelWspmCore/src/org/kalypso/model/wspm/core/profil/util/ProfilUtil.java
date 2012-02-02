@@ -46,9 +46,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.Assert;
@@ -65,7 +63,6 @@ import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfileRecord;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -197,29 +194,6 @@ public final class ProfilUtil
     }
   }
 
-  public static boolean rangeIsConstantNumberFor( final IRecord start, final IRecord end, final IComponent component )
-  {
-    final Double p = component.getPrecision();
-    if( p == null )
-      return false;
-    final TupleResult owner = start.getOwner();
-    if( owner == null || owner != end.getOwner() )
-      return false;
-    final int i1 = owner.indexOf( start );
-    final int i2 = owner.indexOf( end );
-
-    if( i2 < i1 )
-      return false;
-    final int index = owner.indexOfComponent( component );
-
-    for( int i = i1; i < i2 - 1; i++ )
-    {
-      if( Math.abs( (Double) owner.get( i ).getValue( index ) - (Double) owner.get( i + 1 ).getValue( index ) ) > p )
-        return false;
-    }
-    return true;
-  }
-
   /**
    * Returns all points between the given markers (closed interval).<br/>
    * If the marker does not exist (or not enough markers of that kind), the whole profile is returned.
@@ -266,22 +240,6 @@ public final class ProfilUtil
   public static boolean compareValues( final Double x1, final Double x2, final double precision )
   {
     return Math.abs( x1 - x2 ) <= precision;
-  }
-
-  /**
-   * return true if getValueFor(property) is equal
-   */
-  public static boolean comparePoints( final IComponent property, final IRecord point1, final IRecord point2 )
-  {
-    return comparePoints( new IComponent[] { property }, point1, point2 );
-  }
-
-  /**
-   * mirror the profiles points (axis 0.0)
-   */
-  public static void flipProfile( final IProfil profile )
-  {
-    flipProfile( profile, false );
   }
 
   /**
@@ -339,16 +297,6 @@ public final class ProfilUtil
     }
   }
 
-  public static Map<String, IComponent> getComponentsFromProfile( final IProfil profile )
-  {
-    final Map<String, IComponent> propHash = new HashMap<String, IComponent>();
-    for( final IComponent component : profile.getPointProperties() )
-    {
-      propHash.put( component.getId(), component );
-    }
-    return propHash;
-  }
-
   public static IRecord splitSegment( final IProfil profile, final IProfileRecord startPoint, final IProfileRecord endPoint )
   {
     if( startPoint == null || endPoint == null )
@@ -388,6 +336,8 @@ public final class ProfilUtil
   {
     final IProfileRecord[] points = profil.getPoints();
     final IProfileRecord point = index >= points.length || index < 0 ? null : points[index];
+    if( Objects.isNull( point ) )
+      return findPoint( profil, breite, delta );
 
     if( point.getBreite() == breite )
       return point;
@@ -451,23 +401,6 @@ public final class ProfilUtil
     return result;
   }
 
-  public static IProfileRecord[] findPoints( final IProfil profile, final String propertyID, final Point2D point, final Double radius )
-  {
-
-    final IProfileRecord[] points = profile.getPoints();
-
-    final ArrayList<IProfileRecord> found = new ArrayList<IProfileRecord>();
-    for( final IProfileRecord p : points )
-    {
-      final Point2D p2D = new Point2D.Double( p.getBreite(), getDoubleValueFor( propertyID, p ) );
-      if( p2D.distance( point ) <= radius )
-      {
-        found.add( p );
-      }
-    }
-    return found.toArray( new IProfileRecord[] {} );
-  }
-
   public static IProfileRecord findPoint( final IProfil profil, final double breite, final double delta )
   {
     final IProfileRecord pkt = ProfileVisitors.findNearestPoint( profil, breite );
@@ -494,69 +427,6 @@ public final class ProfilUtil
     if( x.isNaN() || y.isNaN() )
       throw new IllegalArgumentException( Messages.getString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.7", pointProperty.getName() ) ); //$NON-NLS-1$
     return new Point2D.Double( x, y );
-  }
-
-  /**
-   * Returns the 'nearest' point in a profile. The distance between two points is calculated by the width component and
-   * a given second component.
-   * 
-   * @return null if profil has no points or property does not exists
-   * @return always one point (first point if no match)
-   */
-  public static IRecord findNearestPoint( final IProfil profil, final double breite, final double value, final IComponent property )
-  {
-    final IRecord[] points = profil.getPoints();
-    if( points.length == 0 )
-      return null;
-    IRecord bestPoint = points[0];
-    // TODO: performance!
-    for( final IRecord point : points )
-    {
-      if( Math.abs( getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, bestPoint ) - breite ) > Math.abs( getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, point ) - breite )
-          || Math.abs( getDoubleValueFor( property.getId(), bestPoint ) - value ) > Math.abs( getDoubleValueFor( property.getId(), point ) - value ) )
-      {
-        bestPoint = point;
-      }
-    }
-    return bestPoint;
-  }
-
-  /**
-   * @return null if profil has no points or property does not exists or nomatch
-   */
-  public static IRecord[] findPoint( final IProfil profil, final Double[] values, final IComponent[] properties )
-  {
-    final List<IRecord> points = new ArrayList<IRecord>();
-    final int maxIndex = Math.min( values.length, properties.length );
-    final IRecord[] profilePoints = profil.getPoints();
-    for( final IRecord point : profilePoints )
-    {
-      boolean isEqual = true;
-      for( int i = 0; i < maxIndex; i++ )
-      {
-        final Double delta = properties[i].getPrecision();
-
-        if( Math.abs( getDoubleValueFor( properties[i].getId(), point ) - values[i] ) > delta )
-        {
-          isEqual = false;
-          break;
-        }
-      }
-      if( isEqual )
-      {
-        points.add( point );
-      }
-    }
-    return points.toArray( new IRecord[0] );
-  }
-
-  /**
-   * @deprecated use {@code #getPoints2D(IProfil,String)} instead
-   */
-  @Deprecated
-  public static Point2D[] getPoints2D( final IProfil profil, final IComponent pointProperty )
-  {
-    return getPoints2D( profil, pointProperty.getId() );
   }
 
   public static Point2D[] getPoints2D( final IProfil profil, final String propertyID )
@@ -630,35 +500,6 @@ public final class ProfilUtil
   }
 
   /**
-   * calculates the area of a given profile for the region between two given profile widths.<br>
-   * the area is calculatated in dependence of the max heigth value. input: IProfil, start width, end width<br>
-   * output: area between the two widths<br>
-   */
-  public static double calcArea( final IProfil profil, final double startWidth, final double endWidth )
-  {
-    double area = 0;
-    double width = 0;
-    final double maxZ = calcMaxZ( profil );
-    final IRecord[] points = profil.getPoints();
-    for( int i = 0; i < points.length - 1; i++ )
-    {
-      final double currentWidth = getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, points[i] );
-      // just take the profile points between (inclusive) the two given widths.
-      if( currentWidth >= startWidth & currentWidth <= endWidth )
-      {
-        final double z1 = maxZ - getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, points[i] );
-        final double z2 = maxZ - getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, points[i + 1] );
-        final double width1 = getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, points[i] );
-        final double width2 = getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, points[i + 1] );
-        width = width2 - width1;
-        area = area + (z1 + z2) / 2 * width;
-      }
-    }
-
-    return area;
-  }
-
-  /**
    * calculates the area of a given profile.<br>
    * the area is calculated in dependence of the max heigth value. input: IProfil<br>
    * output: area <br>
@@ -696,58 +537,6 @@ public final class ProfilUtil
       maxZ = Math.max( maxZ, getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, points[i] ) );
     }
     return maxZ;
-  }
-
-  public static void croppProfile( final IProfil profile, final double start, final double end )
-  {
-    final TupleResult points = profile.getResult();
-    final IProfileRecord[] segment1 = getSegment( profile, start );
-    final IProfileRecord[] segment2 = getSegment( profile, end );
-    IRecord startPoint = null;
-    IRecord endPoint = null;
-    int index1 = 0;
-    int index2 = 0;
-
-    startPoint = splitSegment( profile, segment1[0], segment1[1] );
-    if( startPoint == null )
-    {
-      System.out.println( Messages.getString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.3" ) ); //$NON-NLS-1$
-      startPoint = profile.getPoints()[0];
-      index1 = 0;
-    }
-    else
-    {
-      index1 = points.indexOf( segment1[1] );
-    }
-
-    points.add( index1, startPoint );
-
-    endPoint = splitSegment( profile, segment2[0], segment2[1] );
-    if( endPoint == null )
-    {
-      System.out.println( Messages.getString( "org.kalypso.model.wspm.core.profil.util.ProfilUtil.4" ) ); //$NON-NLS-1$
-      endPoint = points.get( points.size() - 1 );
-      index2 = points.size() - 1;
-    }
-    else
-    {
-      index2 = points.indexOf( segment2[1] );
-    }
-
-    points.add( index2, endPoint );
-
-    final IRecord[] toDelete1 = points.subList( 0, index1 ).toArray( new IRecord[0] );
-    final IRecord[] toDelete2 = points.subList( index2 + 1, points.size() ).toArray( new IRecord[0] );
-
-    for( final IRecord element : toDelete1 )
-    {
-      profile.removePoint( new ProfileRecord( profile, element ) );
-    }
-
-    for( final IRecord element : toDelete2 )
-    {
-      profile.removePoint( new ProfileRecord( profile, element ) );
-    }
   }
 
   /**

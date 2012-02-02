@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.ui.view.chart;
 import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
+import org.kalypso.model.wspm.core.profil.ProfilListenerAdapter;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 
@@ -58,13 +59,8 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
  */
 public class ProfilChartModel extends ChartModel
 {
-  private final IProfilListener m_profilListener = new IProfilListener()
+  private final IProfilListener m_profilListener = new ProfilListenerAdapter()
   {
-    @Override
-    public void onProblemMarkerChanged( final IProfil source )
-    {
-      // TODO: what?
-    }
 
     @Override
     public void onProfilChanged( final ProfilChangeHint hint )

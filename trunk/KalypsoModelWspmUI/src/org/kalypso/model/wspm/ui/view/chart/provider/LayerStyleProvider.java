@@ -49,8 +49,10 @@ import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
 
 /**
+ * @deprecated ?!?
  * @author kimwerner
  */
+@Deprecated
 public class LayerStyleProvider extends AbstractLayerStyleProvider
 {
   private static final String LINE = "_LINE"; //$NON-NLS-1$

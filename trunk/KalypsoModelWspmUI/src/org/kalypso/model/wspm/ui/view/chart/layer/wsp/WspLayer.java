@@ -47,7 +47,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -73,7 +72,7 @@ import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 
 /**
  * Displays constant wsp lines in the cross section.
- *
+ * 
  * @author Gernot Belger
  * @author Holger Albert
  */
@@ -88,13 +87,11 @@ public class WspLayer extends AbstractProfilTheme
     }
   };
 
-  private Color m_color;
-
   private final IWspLayerData m_data;
 
   private WaterlevelRenderData[] m_renderData;
-  private ILegendEntry[] m_legendEntries;
 
+  private ILegendEntry[] m_legendEntries;
 
   /**
    * @param fill
@@ -110,19 +107,21 @@ public class WspLayer extends AbstractProfilTheme
 
     m_data = data;
   }
+
   /**
    * @see de.openali.odysseus.chart.factory.layer.AbstractChartLayer#getLegendEntries()
    */
   @Override
   public synchronized ILegendEntry[] getLegendEntries( )
   {
-    
+
     if( ArrayUtils.isEmpty( m_legendEntries ) )
     {
       m_legendEntries = createLegendEntries();
-     }
+    }
     return m_legendEntries;
   }
+
   private ILegendEntry[] createLegendEntries( )
   {
     final ILineStyle lineStyle = getLineStyle();
@@ -142,17 +141,12 @@ public class WspLayer extends AbstractProfilTheme
     final IPreferenceStore store = KalypsoModelWspmUIPlugin.getDefault().getPreferenceStore();
     store.removePropertyChangeListener( m_preferenceListener );
 
-    if( m_color != null )
-    {
-      m_color.dispose();
-    }
-
     super.dispose();
   }
 
   /**
    * This function returns the wsp layer data.
-   *
+   * 
    * @return The wsp layer data.
    */
   public IWspLayerData getData( )
