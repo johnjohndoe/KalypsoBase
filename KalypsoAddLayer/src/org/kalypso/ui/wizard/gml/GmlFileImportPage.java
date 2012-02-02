@@ -192,4 +192,9 @@ public class GmlFileImportPage extends WizardPage
     if( !status.isOK() )
       StatusDialog.open( getShell(), status, getWizard().getWindowTitle() );
   }
+
+  public void setViewerFilter( final ViewerFilter filter )
+  {
+    m_data.setViewerFilter( filter );
+  }
 }
