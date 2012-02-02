@@ -28,6 +28,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
+import org.kalypso.model.wspm.core.profil.ProfilListenerAdapter;
 import org.kalypso.model.wspm.core.profil.ProfileObjectFactory;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.result.ProfileAndResults;
@@ -77,17 +78,12 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     CACHE_DEFINITION.addCachedProperty( PROPERTY_PSEUDO_PROFILE, QN_PROPERTY_OBS_MEMBERS );
   }
 
-  private final IProfilListener m_profilListener = new IProfilListener()
+  private final IProfilListener m_profilListener = new ProfilListenerAdapter()
   {
     @Override
     public void onProfilChanged( final ProfilChangeHint hint )
     {
       handleCachedProfileChanged( hint );
-    }
-
-    @Override
-    public void onProblemMarkerChanged( final IProfil source )
-    {
     }
   };
 

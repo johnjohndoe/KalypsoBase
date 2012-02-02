@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.IAdaptable;
@@ -67,20 +65,6 @@ public final class ProfileFeatureSelections
     }
 
     return null;
-  }
-
-  public static IProfileFeature[] findFeatures( final IStructuredSelection selection )
-  {
-    final Collection<IProfileFeature> profiles = new ArrayList<>( selection.size() );
-
-    for( final Iterator< ? > itr = selection.iterator(); itr.hasNext(); )
-    {
-      final IProfileFeature profile = toProfileFeature( itr.next() );
-      if( profile != null )
-        profiles.add( profile );
-    }
-
-    return profiles.toArray( new IProfileFeature[profiles.size()] );
   }
 
   private static IProfileFeature toProfileFeature( final Object element )

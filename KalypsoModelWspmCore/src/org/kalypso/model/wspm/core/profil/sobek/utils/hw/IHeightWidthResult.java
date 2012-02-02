@@ -49,7 +49,7 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public interface IHeightWidthResult
 {
-  public Polygon getPolygon( );
+  Polygon getPolygon( );
 
   void formatLog( Formatter formatter );
 

@@ -59,6 +59,7 @@ import org.kalypso.model.wspm.core.gml.IProfileProviderListener;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.IRangeSelection;
+import org.kalypso.model.wspm.core.profil.ProfilListenerAdapter;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
@@ -82,7 +83,7 @@ public class AbstractProfileWidget extends AbstractWidget implements IProfilePro
 
   private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
 
-  private final IProfilListener m_listener = new IProfilListener()
+  private final IProfilListener m_listener = new ProfilListenerAdapter()
   {
     @SuppressWarnings("synthetic-access")
     @Override
@@ -91,10 +92,6 @@ public class AbstractProfileWidget extends AbstractWidget implements IProfilePro
       repaintMap();
     }
 
-    @Override
-    public void onProblemMarkerChanged( final IProfil source )
-    {
-    }
   };
 
   private IProfileFeature m_profile;

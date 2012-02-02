@@ -64,15 +64,15 @@ public final class DouglasPeuckerHelper
 {
   private static final class ProfileSegmentData
   {
-    private final IRecord[] m_segmPoints;
+    final IRecord[] m_segmPoints;
 
-    private final int m_startInd;
+    final int m_startInd;
 
-    private final int m_endInd;
+    final int m_endInd;
 
-    private final double m_distance;
+    final double m_distance;
 
-    private int m_distInd;
+    int m_distInd;
 
     public ProfileSegmentData( final IRecord[] points, final int start, final int end )
     {

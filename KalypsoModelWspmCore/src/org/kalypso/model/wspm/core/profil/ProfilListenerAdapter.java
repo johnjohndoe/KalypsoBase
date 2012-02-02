@@ -38,18 +38,34 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.view.legend;
+package org.kalypso.model.wspm.core.profil;
 
-import org.eclipse.jface.action.IAction;
+import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 
 /**
- * @author Belger
+ * Empty implementation of {@link IProfilListener}.
+ * 
+ * @author belger
  */
-public class LayerViewActionDelegate extends AbstractLegendViewActionDelegate
+public class ProfilListenerAdapter implements IProfilListener
 {
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProblemMarkerChanged(org.kalypso.model.wspm.core.profil.IProfil)
+   */
   @Override
-  public void run( final IAction action )
+  public void onProblemMarkerChanged( final IProfil source )
   {
-    // getView().showLayerProperties();
+    // nothing to do, overwrite to implement
   }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
+   *      org.kalypso.model.wspm.core.profil.IProfilChange[])
+   */
+  @Override
+  public void onProfilChanged( final ProfilChangeHint hint )
+  {
+    // nothing to do, overwrite to implement
+  }
+
 }

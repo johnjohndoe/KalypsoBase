@@ -44,6 +44,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -195,7 +196,7 @@ public class ThemeAndPropertyChooserGroup
       {
         for( final IKalypsoTheme theme : polygoneThemes )
         {
-          if( themeSetting.equals( theme.getName() ) )
+          if( StringUtils.equals( themeSetting, theme.getName().getValue() ) )
           {
             themeSelection = new StructuredSelection( theme );
             break;
