@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.operation;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.IOperationHistory;
 import org.eclipse.core.commands.operations.IUndoableOperation;
@@ -50,6 +53,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.swt.widgets.GetShellFromDisplay;
 import org.kalypso.contribs.eclipse.ui.plugin.AbstractUIPluginExt;
@@ -60,27 +64,37 @@ import org.kalypso.model.wspm.core.i18n.Messages;
  */
 public class ProfilOperationRunnable implements ICoreRunnableWithProgress, IAdaptable
 {
-  private final IUndoableOperation m_operation;
+  private final IUndoableOperation[] m_operations;
 
-  public ProfilOperationRunnable( final IUndoableOperation operation )
+  public ProfilOperationRunnable( final IUndoableOperation... operation )
   {
-    m_operation = operation;
+    m_operations = operation;
   }
 
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
-    try
+    final Set<IStatus> stati = new LinkedHashSet<>();
+    for( final IUndoableOperation operation : m_operations )
     {
-      final IOperationHistory operationHistory = PlatformUI.getWorkbench().getOperationSupport().getOperationHistory();
+      try
+      {
+        final IOperationHistory operationHistory = PlatformUI.getWorkbench().getOperationSupport().getOperationHistory();
 
-      // give "this" as adaptable, it can deliver a shell (used for message dialogs for instance)
-      return operationHistory.execute( m_operation, monitor, this );
+        // give "this" as adaptable, it can deliver a shell (used for message dialogs for instance)
+        stati.add( operationHistory.execute( operation, monitor, this ) );
+      }
+      catch( final ExecutionException e )
+      {
+        stati.add( new Status( IStatus.ERROR, AbstractUIPluginExt.ID, 0, Messages.getString( "org.kalypso.model.wspm.ui.profil.operation.ProfilOperationRunnable.0", operation.getLabel() ), e ) ); //$NON-NLS-1$
+      }
+
     }
-    catch( final ExecutionException e )
-    {
-      return new Status( IStatus.ERROR, AbstractUIPluginExt.ID, 0, Messages.getString( "org.kalypso.model.wspm.ui.profil.operation.ProfilOperationRunnable.0", m_operation.getLabel() ), e ); //$NON-NLS-1$
-    }
+
+    if( stati.size() == 1 )
+      return stati.iterator().next();
+
+    return StatusUtilities.createStatus( stati, "Propfile Operation(s) Status" );
   }
 
   @Override

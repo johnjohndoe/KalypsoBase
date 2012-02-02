@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.operation;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.commands.operations.IUndoableOperation;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -57,15 +58,28 @@ public class ProfilOperationJob extends Job
 
   private final ProfilOperationRunnable m_runnable;
 
-  public ProfilOperationJob( final IUndoableOperation operation )
+  public ProfilOperationJob( final IUndoableOperation... operations )
   {
-    super( operation.getLabel() );
+    super( getLabel( operations ) );
 
-    m_runnable = new ProfilOperationRunnable( operation );
+    m_runnable = new ProfilOperationRunnable( operations );
 
     setUser( true );
+    setSystem( false );
     setPriority( Job.SHORT );
+
     setRule( MUTEX );
+  }
+
+  private static String getLabel( final IUndoableOperation[] operations )
+  {
+    if( ArrayUtils.isEmpty( operations ) )
+      return "";
+
+    else if( ArrayUtils.getLength( operations ) == 1 )
+      return operations[0].getLabel();
+
+    return "perfoming multiple profile operations";
   }
 
   @Override
