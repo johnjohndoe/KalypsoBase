@@ -232,21 +232,29 @@ public final class TypeHandlerUtilities
   /**
    * Type handler for GML3 types
    */
-  public static void registerTypeHandlers( final ITypeRegistry<IMarshallingTypeHandler> registry ) throws TypeRegistryException
+  public static synchronized void registerTypeHandlers( final ITypeRegistry<IMarshallingTypeHandler> registry ) throws TypeRegistryException
   {
     final JAXBContextProvider jaxbContextProvider = new JAXBContextProvider()
     {
       @Override
-      public JAXBContext getJaxBContextForGMLVersion( final String gmlVersion )
+      public synchronized JAXBContext getJaxBContextForGMLVersion( final String gmlVersion )
       {
-        if( gmlVersion == null || gmlVersion.startsWith( "2" ) )
+        try
         {
-          return KalypsoOGC2xJAXBcontext.getContext();
+          if( gmlVersion == null || gmlVersion.startsWith( "2" ) )
+          {
+            return KalypsoOGC2xJAXBcontext.getContext();
+          }
+          else if( gmlVersion.startsWith( "3" ) )
+          {
+            return KalypsoOGC31JAXBcontext.getContext();
+          }
         }
-        else if( gmlVersion.startsWith( "3" ) )
+        catch( final NullPointerException e )
         {
-          return KalypsoOGC31JAXBcontext.getContext();
+          e.printStackTrace();
         }
+
         throw new UnsupportedOperationException( "GMLVersion " + gmlVersion + " is not supported" );
       }
     };
