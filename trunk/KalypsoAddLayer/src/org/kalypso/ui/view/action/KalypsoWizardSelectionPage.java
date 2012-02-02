@@ -110,7 +110,7 @@ public class KalypsoWizardSelectionPage extends WorkbenchWizardListSelectionPage
         }
 
         /* Without valid selection, new themes go top-level */
-        return (IKalypsoLayerModell) m_outline.getMapPanel().getMapModell();
+        return m_outline.getMapPanel().getMapModell();
       }
     };
   }
