@@ -41,7 +41,7 @@
 
 package org.kalypso.ogc.sensor;
 
-import org.apache.commons.configuration.Configuration;
+import org.apache.commons.collections.ExtendedProperties;
 import org.kalypso.metadoc.configuration.ConfigurationUtils;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
@@ -49,7 +49,7 @@ import org.kalypso.ogc.sensor.template.ObsViewItem;
 
 /**
  * Extends metadata destinated for the metadoc service with information that it gets from an observation
- * 
+ *
  * @author schlienger
  */
 public class MetadataExtenderWithObservation
@@ -62,7 +62,7 @@ public class MetadataExtenderWithObservation
   /**
    * Helper that calls extendMetadata( Configuration, IObservation ) for each observation of the given items
    */
-  public static void extendMetadata( final Configuration metadata, final ObsViewItem[] items )
+  public static void extendMetadata( final ExtendedProperties metadata, final ObsViewItem[] items )
   {
     for( final ObsViewItem item : items )
       extendMetadata( metadata, item.getObservation() );
@@ -70,13 +70,13 @@ public class MetadataExtenderWithObservation
 
   /**
    * Extend the metadata that can be found in conf with information that it gets from the given observation
-   * 
+   *
    * @param metadata
    *          this represents the metadata that might get extended
    * @param obs
    *          observation used to get some extra information
    */
-  public static void extendMetadata( final Configuration metadata, final IObservation obs )
+  public static void extendMetadata( final ExtendedProperties metadata, final IObservation obs )
   {
     if( obs == null )
       return;

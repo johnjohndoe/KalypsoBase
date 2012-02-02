@@ -42,7 +42,7 @@ package org.kalypso.ui.editor.gistableeditor;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.configuration.Configuration;
+import org.apache.commons.collections.ExtendedProperties;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -73,7 +73,7 @@ import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.IExportableObjectFactory;
-import org.kalypso.metadoc.configuration.IPublishingConfiguration;
+import org.kalypso.metadoc.configuration.PublishingConfiguration;
 import org.kalypso.ogc.gml.IFeaturesProvider;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
@@ -246,7 +246,7 @@ public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart
   }
 
   @Override
-  public IExportableObject[] createExportableObjects( final Configuration configuration )
+  public IExportableObject[] createExportableObjects( final ExtendedProperties configuration )
   {
     final ExportableLayerTable exp = new ExportableLayerTable( getLayerTable() );
 
@@ -254,7 +254,7 @@ public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart
   }
 
   @Override
-  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, final ImageDescriptor defaultImage )
+  public IWizardPage[] createWizardPages( final PublishingConfiguration configuration, final ImageDescriptor defaultImage )
   {
     final IWizardPage page = new ExportTableOptionsPage( "optionPage", Messages.getString( "org.kalypso.ui.editor.gistableeditor.GisTableEditor.6" ), ImageProvider.IMAGE_UTIL_BERICHT_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
 

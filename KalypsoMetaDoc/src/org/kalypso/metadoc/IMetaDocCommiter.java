@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.metadoc;
 
@@ -44,32 +44,32 @@ import java.io.File;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.configuration.Configuration;
+import org.apache.commons.collections.ExtendedProperties;
 import org.kalypso.metadoc.impl.MetaDocException;
 
 /**
  * IMetaDocCommiter. Commits documents with their meta information.
- * 
+ *
  * @author schlienger
  */
 public interface IMetaDocCommiter
 {
-  public static final String KEY_AUTOR = "KEY_AUTOR";
+  String KEY_AUTOR = "KEY_AUTOR"; //$NON-NLS-1$
 
   /**
    * Prepares the metadata with the required Metainformation.
-   * 
+   *
    * @param serviceProps
    *          Properties of the MetaDoc service. Can be used to get additional properties relevant to the commiter
    * @param metadata
    *          the metadata that must be prepared, meaning filled with all the required keys for which the user must give
    *          a value. Default values can also directly be provided
    */
-  public void prepareMetainf( final Properties serviceProps, final Map<Object, Object> metadata ) throws MetaDocException;
+  void prepareMetainf( final Properties serviceProps, final Map<Object, Object> metadata ) throws MetaDocException;
 
   /**
    * Commits the document described by the metadata.
-   * 
+   *
    * @param serviceProps
    *          Properties of the MetaDoc service. Can be used to get additional properties relevant to the commiter
    * @param metadata
@@ -83,5 +83,5 @@ public interface IMetaDocCommiter
    * @param metadataExtensions
    *          some additional metadata that might be used by commiters
    */
-  public void commitDocument( final Properties serviceProps, final Map<Object, Object> metadata, final File doc, final String identifier, final String documentCategory, final Configuration metadataExtensions ) throws MetaDocException;
+  void commitDocument( final Properties serviceProps, final Map<Object, Object> metadata, final File doc, final String identifier, final String documentCategory, final ExtendedProperties metadataExtensions ) throws MetaDocException;
 }

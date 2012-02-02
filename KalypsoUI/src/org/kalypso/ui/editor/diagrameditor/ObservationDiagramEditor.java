@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.diagrameditor;
 
@@ -44,7 +44,7 @@ import java.awt.Frame;
 import java.io.OutputStreamWriter;
 import java.util.logging.Logger;
 
-import org.apache.commons.configuration.Configuration;
+import org.apache.commons.collections.ExtendedProperties;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -61,7 +61,7 @@ import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.IExportableObjectFactory;
-import org.kalypso.metadoc.configuration.IPublishingConfiguration;
+import org.kalypso.metadoc.configuration.PublishingConfiguration;
 import org.kalypso.metadoc.ui.ImageExportPage;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagView;
@@ -75,7 +75,7 @@ import org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor;
 
 /**
  * Observation Diagram Editor.
- * 
+ *
  * @author schlienger
  */
 public class ObservationDiagramEditor extends AbstractObservationEditor implements IExportableObjectFactory, IEditorPart
@@ -187,20 +187,14 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
       m_swingContainer.setFocus();
   }
 
-  /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
-   */
   @Override
-  public IExportableObject[] createExportableObjects( final Configuration conf )
+  public IExportableObject[] createExportableObjects( final ExtendedProperties conf )
   {
     return new IExportableObject[] { new ExportableChart( m_obsChart, conf.getString( ImageExportPage.CONF_IMAGE_FORMAT, ExportableChart.DEFAULT_FORMAT ), conf.getInt( ImageExportPage.CONF_IMAGE_WIDTH, ExportableChart.DEFAULT_WIDTH ), conf.getInt( ImageExportPage.CONF_IMAGE_HEIGHT, ExportableChart.DEFAULT_HEIGHT ), getTitle(), Messages.getString( "org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor.1" ), null ) }; //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(IPublishingConfiguration, ImageDescriptor)
-   */
   @Override
-  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, final ImageDescriptor defaultImage )
+  public IWizardPage[] createWizardPages( final PublishingConfiguration configuration, final ImageDescriptor defaultImage )
   {
     final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoGisPlugin.getId(), "icons/util/img_props.gif" ); //$NON-NLS-1$
     final IWizardPage page = new ImageExportPage( configuration, "diagprops", Messages.getString( "org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor.4" ), imgDesc, 0 ); //$NON-NLS-1$ //$NON-NLS-2$

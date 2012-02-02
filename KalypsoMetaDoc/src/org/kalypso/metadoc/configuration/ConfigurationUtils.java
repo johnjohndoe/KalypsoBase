@@ -42,14 +42,8 @@
 package org.kalypso.metadoc.configuration;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
-import org.apache.commons.configuration.AbstractConfiguration;
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.MapConfiguration;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.collections.ExtendedProperties;
 
 /**
  * We are using commons configuration 1.1 and its bugy: <br>
@@ -58,51 +52,21 @@ import org.apache.commons.lang3.StringUtils;
  * <p>
  * So I decided to use a BaseConfiguration instead of a MapConfiguration. But, I also needed a Map having a
  * Configuration, so I wrote the utility method createMap().
- * 
+ *
  * @author schlienger
  */
 public final class ConfigurationUtils
 {
   private ConfigurationUtils( )
   {
-    // not intended to be instanciated
-  }
-
-  /**
-   * Return a new java.util.Map having a configuration. If the given configuration is already a MapConfiguration, then
-   * its Map is returned.
-   */
-  @SuppressWarnings("unchecked")
-  public static Map<Object, Object> createMap( final Configuration conf )
-  {
-    final Map<Object, Object> map = new HashMap<Object, Object>();
-
-    if( conf instanceof MapConfiguration )
-    {
-      map.putAll( ((MapConfiguration) conf).getMap() );
-      return map;
-    }
-
-    for( final Iterator< ? > it = conf.getKeys(); it.hasNext(); )
-    {
-      final String key = (String) it.next();
-
-      // we don't know when we have an array or not, so let's always
-      // take a string array here. It will be joined later again
-      final String[] values = conf.getStringArray( key );
-
-      // join array again in our map using the delimiter provided by the configuration
-      map.put( key, StringUtils.join( values, AbstractConfiguration.getDelimiter() ) );
-    }
-
-    return map;
+    // not intended to be instantiated
   }
 
   /**
    * Add the value to the given property. If the property is already defined, it adds the value only if it is not
    * already existing in the list of values for that property.
    */
-  public static void addPropertyDistinct( final Configuration conf, final String property, final String value )
+  public static void addPropertyDistinct( final ExtendedProperties conf, final String property, final String value )
   {
     if( conf == null || value == null || property == null )
       return;
