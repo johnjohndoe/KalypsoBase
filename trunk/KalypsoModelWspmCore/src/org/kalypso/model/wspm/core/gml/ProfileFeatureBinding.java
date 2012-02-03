@@ -39,7 +39,6 @@ import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -338,9 +337,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
   @Override
   public LineString getJtsLine( ) throws GM_Exception
   {
-    final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-
-    final GM_Curve profileCurve = WspmGeometryUtilities.createProfileSegment( getProfil(), crs );
+    final GM_Curve profileCurve = WspmGeometryUtilities.createProfileSegment( getProfil() );
     final LineString profileLineString = (LineString) JTSAdapter.export( profileCurve );
 
     return profileLineString;

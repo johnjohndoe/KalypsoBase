@@ -50,6 +50,7 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
 import org.kalypso.ogc.gml.map.MapPanelSelection;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
+import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -80,6 +81,13 @@ public class ProfileWidgetMapPanelListener implements ISelectionChangedListener
     {
       final MapPanelSelection mapPanelSelection = (MapPanelSelection) selection;
       final EasyFeatureWrapper[] features = mapPanelSelection.getAllFeatures();
+
+      return resovleProfiles( features );
+    }
+    else if( selection instanceof FeatureSelectionManager2 )
+    {
+      final FeatureSelectionManager2 manager = (FeatureSelectionManager2) selection;
+      final EasyFeatureWrapper[] features = manager.getAllFeatures();
 
       return resovleProfiles( features );
     }

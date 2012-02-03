@@ -129,4 +129,10 @@ public class ExtrapolateMissingCoordinatesVisitor implements IProfileRecordVisit
     return ptr;
   }
 
+  @Override
+  public boolean isWriter( )
+  {
+    return true;
+  }
+
 }

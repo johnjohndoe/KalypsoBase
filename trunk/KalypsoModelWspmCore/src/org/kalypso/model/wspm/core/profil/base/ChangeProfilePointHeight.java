@@ -42,8 +42,8 @@ package org.kalypso.model.wspm.core.profil.base;
 
 import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Doubles;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecordVisitor;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecordVisitor;
 
 /**
  * @author Dirk Kuch
@@ -59,7 +59,7 @@ public class ChangeProfilePointHeight implements IProfileRecordVisitor
   }
 
   @Override
-  public void visit( final IProfileRecord point, int searchDirection ) throws CancelVisitorException
+  public void visit( final IProfileRecord point, final int searchDirection ) throws CancelVisitorException
   {
     if( m_diff == 0.0 )
       throw new CancelVisitorException();
@@ -70,6 +70,12 @@ public class ChangeProfilePointHeight implements IProfileRecordVisitor
 
     point.setHoehe( hoehe + m_diff );
 
+  }
+
+  @Override
+  public boolean isWriter( )
+  {
+    return true;
   }
 
 }

@@ -74,4 +74,10 @@ public class FindPointVisior implements IProfileRecordVisitor
   {
     return m_point;
   }
+
+  @Override
+  public boolean isWriter( )
+  {
+    return false;
+  }
 }

@@ -49,7 +49,6 @@ import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecordVisitor;
  */
 public class FindPreviousPointVisitor implements IProfileRecordVisitor
 {
-
   private final double m_position;
 
   private IProfileRecord m_point;
@@ -87,6 +86,12 @@ public class FindPreviousPointVisitor implements IProfileRecordVisitor
   IProfileRecord getPoint( )
   {
     return m_point;
+  }
+
+  @Override
+  public boolean isWriter( )
+  {
+    return false;
   }
 
 }

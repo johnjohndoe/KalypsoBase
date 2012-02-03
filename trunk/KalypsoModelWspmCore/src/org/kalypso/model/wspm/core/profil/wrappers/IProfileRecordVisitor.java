@@ -48,4 +48,9 @@ import org.kalypso.commons.exception.CancelVisitorException;
 public interface IProfileRecordVisitor
 {
   void visit( IProfileRecord point, int searchDirection ) throws CancelVisitorException;
+
+  /**
+   * visitor changes profile point? if yes - profile will be accessed and changed in transaction mode
+   */
+  boolean isWriter( );
 }

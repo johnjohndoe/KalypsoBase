@@ -91,4 +91,10 @@ public class FindPointsBetweenVisitor implements IProfileRecordVisitor
     return m_points.toArray( new IProfileRecord[] {} );
   }
 
+  @Override
+  public boolean isWriter( )
+  {
+    return false;
+  }
+
 }
