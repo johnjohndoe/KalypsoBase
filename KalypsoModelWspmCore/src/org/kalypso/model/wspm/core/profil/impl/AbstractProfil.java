@@ -727,7 +727,9 @@ public abstract class AbstractProfil implements IProfil
 
   private void doAccept( final IProfileRecordVisitor visitor, final IProfileRecord[] points, final int direction )
   {
-    startTransaction( visitor );
+
+    if( visitor.isWriter() )
+      startTransaction( visitor );
 
     try
     {
@@ -753,7 +755,8 @@ public abstract class AbstractProfil implements IProfil
     }
     finally
     {
-      stopTransaction( visitor, new ProfilChangeHint( m_transactionChangeEvent ) );
+      if( visitor.isWriter() )
+        stopTransaction( visitor, new ProfilChangeHint( m_transactionChangeEvent ) );
     }
   }
 

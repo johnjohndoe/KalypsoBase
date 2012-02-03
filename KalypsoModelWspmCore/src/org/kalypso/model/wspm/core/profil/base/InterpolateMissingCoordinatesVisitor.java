@@ -73,4 +73,10 @@ public class InterpolateMissingCoordinatesVisitor implements IProfileRecordVisit
       e.printStackTrace();
     }
   }
+
+  @Override
+  public boolean isWriter( )
+  {
+    return true;
+  }
 }

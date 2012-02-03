@@ -104,4 +104,10 @@ public class FindMinMaxVisitor implements IProfileRecordVisitor
     return m_max;
   }
 
+  @Override
+  public boolean isWriter( )
+  {
+    return false;
+  }
+
 }

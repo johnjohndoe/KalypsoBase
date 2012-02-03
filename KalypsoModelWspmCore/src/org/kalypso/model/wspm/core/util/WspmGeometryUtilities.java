@@ -84,6 +84,15 @@ public final class WspmGeometryUtilities
     }
   }
 
+  public static GM_Curve createProfileSegment( final IProfil profil )
+  {
+    return createProfileSegment( profil, profil.getSrsName() );
+  }
+
+  /**
+   * @deprecated use {@link #createProfileSegment(IProfil)}
+   */
+  @Deprecated
   public static GM_Curve createProfileSegment( final IProfil profil, final String srsName )
   {
     return createProfileSegment( profil, srsName, null );
