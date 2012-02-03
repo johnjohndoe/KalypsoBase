@@ -183,7 +183,7 @@ public class ChartFeatureControl extends AbstractFeatureControl
     {
       /* Check for each type, if it is empty... */
       final ChartType chartType = m_chartTypes[i];
-      if( !hasData( chartType ) )
+      if( !hasData( chartType, m_featureKeyName, getFeature() ) )
       {
         m_chartTabs[i] = null;
         m_charts[i] = null;
@@ -301,10 +301,14 @@ public class ChartFeatureControl extends AbstractFeatureControl
     }
   }
 
-  private boolean hasData( final ChartType chartType )
+  // FIXME: all data is loaded twice; we should reuse this already loaded chart model and give it to the ChartTabItem
+  private boolean hasData( final ChartType chartType, final String featureKeyName, final Feature feature )
   {
     /* Make a dummy chart model. */
     final IChartModel chartModel = new ChartModel();
+
+    /* set data object */
+    chartModel.setData( featureKeyName, feature );
 
     /* Configure. */
     ChartFactory.doConfiguration( chartModel, m_ccl, chartType, ChartExtensionLoader.getInstance(), m_context );
