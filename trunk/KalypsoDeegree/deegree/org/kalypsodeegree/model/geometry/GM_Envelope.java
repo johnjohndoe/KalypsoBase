@@ -36,12 +36,22 @@
 
 package org.kalypsodeegree.model.geometry;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.commons.xml.NS;
+
 /**
  * a boundingbox as child of a GM_Polygon isn't part of the iso19107 spec but it simplifies the geometry handling within
  * jago
  */
 public interface GM_Envelope extends Cloneable
 {
+  QName ENVELOPE_ELEMENT = new QName( NS.GML3, "Envelope" ); //$NON-NLS-1$
+
+  QName PROPERTY_LOWER_CORNER = new QName( NS.GML3, "lowerCorner" ); //$NON-NLS-1$
+
+  QName PROPERTY_UPPER_CORNER = new QName( NS.GML3, "upperCorner" ); //$NON-NLS-1$
+
   /**
    * returns the width of bounding box
    */
@@ -97,7 +107,7 @@ public interface GM_Envelope extends Cloneable
 
   /**
    * merges two GM_Envelops and returns the minimum envelope containing both.
-   * 
+   *
    * @return merged envelope
    */
   GM_Envelope getMerged( GM_Envelope envelope );
@@ -115,14 +125,14 @@ public interface GM_Envelope extends Cloneable
 
   /**
    * This function returns the coordinate system, the coordinates of the contained positions are in.
-   * 
+   *
    * @return The coordinate system.
    */
   public String getCoordinateSystem( );
 
   /**
    * Checks if this point is completly equal to the submitted geometry
-   * 
+   *
    * @param exact
    *          If <code>false</code>, the positions are compardd by {@link GM_Position#equals(Object, false)}
    * @see GM_Position#equals(Object, boolean)
