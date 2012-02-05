@@ -68,6 +68,7 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
@@ -243,11 +244,11 @@ public final class GenericShapeDataFactory
     switch( type )
     {
       case NULL:
-        return GMLConstants.QN_GEOMETRY;
+        return GM_Object.GEOMETRY_ELEMENT;
 
       case POINT:
       case POINTZ:
-        return GMLConstants.QN_POINT;
+        return GM_Point.POINT_ELEMENT;
 
       case MULTIPOINT:
       case MULTIPOINTZ:
@@ -255,14 +256,14 @@ public final class GenericShapeDataFactory
 
       case POLYLINE:
       case POLYLINEZ:
-        return GMLConstants.QN_CURVE;
+        return GM_Curve.CURVE_ELEMENT;
 
       case POLYGON:
       case POLYGONZ:
         return GMLConstants.QN_SURFACE;
     }
 
-    return GMLConstants.QN_GEOMETRY;
+    return GM_Object.GEOMETRY_ELEMENT;
   }
 
   public static IFeatureType findLeastCommonType( final Feature[] features )

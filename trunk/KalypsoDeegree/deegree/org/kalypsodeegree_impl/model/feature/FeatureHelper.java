@@ -79,6 +79,7 @@ import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
@@ -308,7 +309,7 @@ public final class FeatureHelper
     if( sourceGeom instanceof GM_MultiSurface )
     {
       final GM_MultiSurface multiSurface = (GM_MultiSurface) sourceGeom;
-      if( GMLConstants.QN_POLYGON.equals( targetQName ) || GMLConstants.QN_SURFACE.equals( targetQName ) )
+      if( GM_Polygon.POLYGON_ELEMENT.equals( targetQName ) || GMLConstants.QN_SURFACE.equals( targetQName ) )
       {
         if( multiSurface.getSize() > 0 )
           return multiSurface.getObjectAt( 0 );

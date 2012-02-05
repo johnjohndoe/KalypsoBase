@@ -71,11 +71,10 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.tools.GMLConstants;
 
 /**
  * Gui type handler for gml:envelopes's.
- * 
+ *
  * @author Holger Albert
  */
 public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHandler
@@ -171,14 +170,11 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
     return GM_Point.class;
   }
 
-  /**
-   * @see org.kalypso.gmlschema.types.ITypeHandler#getTypeName()
-   */
   @Override
   public QName getTypeName( )
   {
     /* This corresponds to the qname, it in defined in GMLConstants. */
-    return GMLConstants.QN_POINT;
+    return GM_Point.POINT_ELEMENT;
   }
 
   /**
