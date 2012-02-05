@@ -105,8 +105,8 @@ public class MarshallMultiLineStringTest
   {
     final ByteArrayOutputStream os = new ByteArrayOutputStream();
     final XMLReader reader = SaxParserTestUtils.createXMLReader( os );
-    final MultiLineStringMarshaller marshaller = new MultiLineStringMarshaller( reader, multiLineString );
-    SaxParserTestUtils.marshallDocument( reader, marshaller );
+    final MultiLineStringMarshaller marshaller = new MultiLineStringMarshaller( reader );
+    SaxParserTestUtils.marshallDocument( reader, marshaller, multiLineString );
     os.close();
 
     return os.toString();

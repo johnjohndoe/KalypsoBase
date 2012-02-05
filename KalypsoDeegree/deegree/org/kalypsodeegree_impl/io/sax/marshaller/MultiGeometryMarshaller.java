@@ -52,9 +52,9 @@ import org.xml.sax.XMLReader;
  */
 public class MultiGeometryMarshaller extends GeometryMarshaller<GM_MultiGeometry>
 {
-  public MultiGeometryMarshaller( final XMLReader reader, final GM_MultiGeometry geometry )
+  public MultiGeometryMarshaller( final XMLReader reader )
   {
-    super( reader, GM_MultiGeometry.MULTI_GEOMETRY_ELEMENT.getLocalPart(), geometry );
+    super( reader, GM_MultiGeometry.MULTI_GEOMETRY_ELEMENT.getLocalPart() );
   }
 
   @Override
@@ -65,8 +65,7 @@ public class MultiGeometryMarshaller extends GeometryMarshaller<GM_MultiGeometry
     final GM_Object[] elements = marshalledObject.getAll();
     for( final GM_Object element : elements )
     {
-      memberMarshaller.setMarshalledObject( element );
-      memberMarshaller.marshall();
+      memberMarshaller.marshall( element );
     }
   }
 }

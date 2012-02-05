@@ -54,9 +54,9 @@ public class MultiCurveMarshaller extends GeometryMarshaller<GM_MultiCurve>
 {
   public static final String TAG_MULTI_CURVE = "MultiCurve"; //$NON-NLS-1$
 
-  public MultiCurveMarshaller( final XMLReader reader, final GM_MultiCurve multiCurve )
+  public MultiCurveMarshaller( final XMLReader reader )
   {
-    super( reader, TAG_MULTI_CURVE, multiCurve );
+    super( reader, TAG_MULTI_CURVE );
   }
 
   @Override
@@ -66,9 +66,6 @@ public class MultiCurveMarshaller extends GeometryMarshaller<GM_MultiCurve>
 
     final GM_Curve[] lineStrings = marshalledObject.getAllCurves();
     for( final GM_Curve lineString : lineStrings )
-    {
-      memberMarshaller.setLineString( lineString );
-      memberMarshaller.marshall();
-    }
+      memberMarshaller.marshall( lineString );
   }
 }

@@ -54,18 +54,13 @@ public class CurveMemberMarshaller extends AbstractMarshaller<GM_Curve>
 {
   public CurveMemberMarshaller( final XMLReader reader )
   {
-    super( reader, GM_MultiCurve.MEMBER_CURVE.getLocalPart(), null );
+    super( reader, GM_MultiCurve.MEMBER_CURVE.getLocalPart() );
   }
 
   @Override
   protected void doMarshallContent( final GM_Curve marshalledObject ) throws SAXException
   {
     // REMARK: for now, we marshall everything as line string....
-    new LineStringMarshaller( getXMLReader(), marshalledObject ).marshall();
-  }
-
-  public void setLineString( final GM_Curve lineString )
-  {
-    setMarshalledObject( lineString );
+    new LineStringMarshaller( getXMLReader() ).marshall( marshalledObject );
   }
 }

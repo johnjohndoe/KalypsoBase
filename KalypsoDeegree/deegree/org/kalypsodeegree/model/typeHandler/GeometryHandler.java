@@ -81,8 +81,8 @@ public class GeometryHandler implements IMarshallingTypeHandler2
   @Override
   public void marshal( final Object value, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
   {
-    final GeometryMarshaller< ? > marshaller = GeometryMemberMarshaller.createMarshaller( reader, (GM_Object) value );
-    marshaller.marshall();
+    final GeometryMarshaller<GM_Object> marshaller = (GeometryMarshaller<GM_Object>) GeometryMemberMarshaller.createMarshaller( reader, (GM_Object) value );
+    marshaller.marshall( (GM_Object) value );
   }
 
   @Override

@@ -55,17 +55,12 @@ public class LineStringMemberMarshaller extends AbstractMarshaller<GM_Curve>
 
   public LineStringMemberMarshaller( final XMLReader reader )
   {
-    super( reader, TAG_LINE_STRING_MEMBER, null );
+    super( reader, TAG_LINE_STRING_MEMBER );
   }
 
   @Override
   protected void doMarshallContent( final GM_Curve marshalledObject ) throws SAXException
   {
-    new LineStringMarshaller( getXMLReader(), marshalledObject ).marshall();
-  }
-
-  public void setLineString( final GM_Curve lineString )
-  {
-    setMarshalledObject( lineString );
+    new LineStringMarshaller( getXMLReader() ).marshall( marshalledObject );
   }
 }

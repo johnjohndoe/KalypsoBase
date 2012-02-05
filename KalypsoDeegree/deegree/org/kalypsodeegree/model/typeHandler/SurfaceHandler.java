@@ -90,7 +90,7 @@ public class SurfaceHandler implements IMarshallingTypeHandler2
 
     // TODO: we can only marshal Surface's as polygons at the moment
     // However we should at least check, if it is really a Polygon
-    new PolygonMarshaller( reader, (GM_Surface<GM_Polygon>) surface ).marshall();
+    new PolygonMarshaller( reader ).marshall( (GM_Surface<GM_Polygon>) surface );
   }
 
   @Override

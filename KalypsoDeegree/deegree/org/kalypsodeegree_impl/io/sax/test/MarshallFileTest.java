@@ -68,8 +68,8 @@ public class MarshallFileTest
     final RangeSetFile file = new RangeSetFile( "testname.tif" ); //$NON-NLS-1$
     file.setMimeType( "image/tif" ); //$NON-NLS-1$
 
-    final RangeSetFileMarshaller marshaller = new RangeSetFileMarshaller( reader, file );
-    SaxParserTestUtils.marshallDocument( reader, marshaller );
+    final RangeSetFileMarshaller marshaller = new RangeSetFileMarshaller( reader );
+    SaxParserTestUtils.marshallDocument( reader, marshaller, file );
     os.close();
 
     final URL url = getClass().getResource( "resources/file_marshall.gml" );

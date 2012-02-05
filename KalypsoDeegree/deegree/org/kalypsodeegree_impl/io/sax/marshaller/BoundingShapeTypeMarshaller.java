@@ -40,27 +40,28 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.marshaller;
 
-import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
+ * A marshaller for gml:BoundingShapeType
+ *
  * @author Gernot Belger
  */
-public class PolygonMemberMarshaller extends AbstractMarshaller<GM_Surface<GM_Polygon>>
+public class BoundingShapeTypeMarshaller implements IGmlMarshaller<GM_Envelope>
 {
-  public static final String TAG_POLYGON_MEMBER = "polygonMember"; //$NON-NLS-1$
+  private final XMLReader m_reader;
 
-  public PolygonMemberMarshaller( final XMLReader xmlReader )
+  public BoundingShapeTypeMarshaller( final XMLReader reader )
   {
-    super( xmlReader, TAG_POLYGON_MEMBER );
+    m_reader = reader;
   }
 
   @Override
-  protected void doMarshallContent( final GM_Surface<GM_Polygon> marshalledObject ) throws SAXException
+  public void marshall( final GM_Envelope element ) throws SAXException
   {
-    new PolygonMarshaller( getXMLReader() ).marshall( marshalledObject );
-  }
+    // TODO Auto-generated method stub
 
+  }
 }
