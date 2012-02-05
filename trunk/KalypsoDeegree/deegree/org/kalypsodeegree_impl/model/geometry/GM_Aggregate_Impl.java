@@ -38,6 +38,7 @@ package org.kalypsodeegree_impl.model.geometry;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -69,9 +70,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
    */
   public GM_Aggregate_Impl( final String crs )
   {
-    super( crs );
-
-    m_aggregate = new ArrayList<GM_Object>();
+    this( new GM_Object[0], crs );
   }
 
   /**
@@ -83,9 +82,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   {
     super( crs );
 
-    m_aggregate = new ArrayList<GM_Object>( children.length );
-    for( final GM_Object gmObject : children )
-      m_aggregate.add( gmObject );
+    m_aggregate = new ArrayList<GM_Object>( Arrays.asList( children ) );
   }
 
   /**

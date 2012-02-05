@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- * 
+ *
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -47,8 +47,10 @@ import org.kalypsodeegree.model.geometry.GM_CurveSegment;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
+import org.kalypsodeegree.model.geometry.GM_MultiGeometry;
 import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_PolyhedralSurface;
@@ -63,7 +65,7 @@ import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
  * <p>
  * ------------------------------------------------------------
  * </p>
- * 
+ *
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  */
@@ -185,7 +187,7 @@ final public class GeometryFactory
 
   /**
    * creates a GM_CurveSegment from an array of points.
-   * 
+   *
    * @param points
    *          array of GM_Point
    * @param crs
@@ -198,7 +200,7 @@ final public class GeometryFactory
 
   /**
    * creates a GM_Curve from an array of GM_Positions.
-   * 
+   *
    * @param positions
    *          positions
    * @param crs
@@ -213,7 +215,7 @@ final public class GeometryFactory
 
   /**
    * creates a GM_Curve from one curve segment.
-   * 
+   *
    * @param segment
    *          GM_CurveSegments
    */
@@ -224,7 +226,7 @@ final public class GeometryFactory
 
   /**
    * creates a GM_Curve from an array of curve segments.
-   * 
+   *
    * @param segments
    *          array of GM_CurveSegments
    */
@@ -255,7 +257,7 @@ final public class GeometryFactory
 
   /**
    * creates a GM_SurfacePatch from array(s) of GM_Position
-   * 
+   *
    * @param exteriorRing
    *          exterior ring of the patch
    * @param interiorRings
@@ -304,7 +306,7 @@ final public class GeometryFactory
 
   /**
    * creates a GM_Curve from a wkb.
-   * 
+   *
    * @param wkb
    *          byte stream that contains the wkb information
    * @param crs
@@ -382,7 +384,7 @@ final public class GeometryFactory
 
   /**
    * creates a GM_Surface composed of one GM_SurfacePatch from array(s) of GM_Position
-   * 
+   *
    * @param exteriorRing
    *          exterior ring of the patch
    * @param interiorRings
@@ -400,7 +402,7 @@ final public class GeometryFactory
 
   /**
    * creates a GM_Surface from an array of GM_SurfacePatch.
-   * 
+   *
    * @param patch
    *          patches that build the surface
    */
@@ -411,7 +413,7 @@ final public class GeometryFactory
 
   /**
    * creates a GM_Surface from a wkb.
-   * 
+   *
    * @param wkb
    *          byte stream that contains the wkb information
    * @param crs
@@ -566,7 +568,7 @@ final public class GeometryFactory
   /**
    * Creates a <tt>GM_Surface</tt> from a <tt>GM_Envelope</tt>.
    * <p>
-   * 
+   *
    * @param bbox
    *          envelope to be converted
    * @param crs
@@ -587,7 +589,7 @@ final public class GeometryFactory
   /**
    * Creates a <tt>GM_Surface</tt> from the ordinates of the exterior ring and the the interior rings
    * <p>
-   * 
+   *
    * @param crs
    *          spatial reference system of the surface
    * @return corresponding surface
@@ -629,7 +631,7 @@ final public class GeometryFactory
 
   /**
    * creates a GM_MultiPoint from an array of GM_Point.
-   * 
+   *
    * @param points
    *          array of GM_Points
    */
@@ -645,7 +647,7 @@ final public class GeometryFactory
 
   /**
    * creates a GM_MultiPoint from a wkb.
-   * 
+   *
    * @param wkb
    *          byte stream that contains the wkb information
    * @param crs
@@ -738,7 +740,7 @@ final public class GeometryFactory
 
   /**
    * creates a GM_MultiCurve from an array of GM_Curves.
-   * 
+   *
    * @param curves
    */
   public static GM_MultiCurve createGM_MultiCurve( final GM_Curve[] curves )
@@ -748,7 +750,7 @@ final public class GeometryFactory
 
   /**
    * creates a GM_MultiCurve from an array of GM_Curves.
-   * 
+   *
    * @param curves
    */
   public static GM_MultiCurve createGM_MultiCurve( final GM_Curve[] curves, final String crs )
@@ -758,7 +760,7 @@ final public class GeometryFactory
 
   /**
    * creates a GM_MultiCurve from a wkb.
-   * 
+   *
    * @param wkb
    *          byte stream that contains the wkb information
    * @param crs
@@ -1112,7 +1114,7 @@ final public class GeometryFactory
 
   /**
    * creates a GM_Curve from an double array of GM_Positions.
-   * 
+   *
    * @param positions
    *          positions
    * @param crs
@@ -1170,5 +1172,15 @@ final public class GeometryFactory
       triangulatedSurface.add( triangle );
 
     return triangulatedSurface;
+  }
+
+  public static GM_MultiGeometry createGM_MultiGeometry( final String srs )
+  {
+    return new GM_MultiGeometry_Impl( srs );
+  }
+
+  public static GM_MultiGeometry createGM_MultiGeometry( final GM_Object[] elements, final String srs )
+  {
+    return new GM_MultiGeometry_Impl( elements, srs );
   }
 }
