@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.marshaller;
 
-import org.kalypso.commons.xml.NS;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -56,36 +56,33 @@ public class PosListMarshaller extends AbstractMarshaller<GM_Position[]>
 {
   public static final String ELEMENT_POS_LIST = "posList";
 
-  private int m_srsDimension;
-
   public PosListMarshaller( final XMLReader reader )
   {
     super( reader, ELEMENT_POS_LIST );
   }
 
   @Override
-  protected void startMarshalling( final GM_Position[] positions ) throws SAXException
+  protected Attributes createAttributesForStartElement( final GM_Position[] element )
   {
-    m_srsDimension = findSrsDimension( positions );
+    final int srsDimension = findSrsDimension( element );
 
     final AttributesImpl atts = new AttributesImpl();
-    atts.addAttribute( "", "srsDimension", "srsDimension", "decimal", String.valueOf( m_srsDimension ) );
 
-    final ContentHandler contentHandler = getXMLReader().getContentHandler();
-    contentHandler.startElement( NS.GML3, getTag(), getQName(), atts );
+    MarshallerUtils.addSrsDimensionAttributes( atts, srsDimension );
+
+    return atts;
   }
 
   private int findSrsDimension( final GM_Position[] positions )
   {
+    // FIXME: mixed coordinate dimensions here will later result in problems later; we should check this and throw an
+    // exception
     int srsDim = 0;
     for( final GM_Position pos : positions )
       srsDim = Math.max( srsDim, pos.getCoordinateDimension() );
     return srsDim;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#doMarshall(java.lang.Object)
-   */
   @Override
   protected void doMarshallContent( final GM_Position[] marshalledObject ) throws SAXException
   {
@@ -100,7 +97,7 @@ public class PosListMarshaller extends AbstractMarshaller<GM_Position[]>
     final double[] asArray = pos.getAsArray();
 
     // REMARK: make sure we write exactly srsDim count of values per position
-    for( int i = 0; i < m_srsDimension; i++ )
+    for( int i = 0; i < pos.getCoordinateDimension(); i++ )
     {
       final double value = i < asArray.length ? asArray[i] : Double.NaN;
       final String dString = Double.toString( value );

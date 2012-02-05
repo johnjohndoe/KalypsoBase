@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.marshaller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.transformation.CRSHelper;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -55,19 +56,38 @@ public final class MarshallerUtils
     throw new UnsupportedOperationException( "Helper class, do not instantiate" );
   }
 
-  public static AttributesImpl createCrsAttributes( final String crs )
+  public static AttributesImpl createSrsAttributes( final String srsName, final int srsDimension )
   {
     final AttributesImpl atts = new AttributesImpl();
-    atts.addAttribute( "", "srsName", "srsName", "CDATA", crs );
-
+    addSrsNameAttributes( atts, srsName );
+    addSrsDimensionAttributes( atts, srsDimension );
     return atts;
   }
 
-  public static AttributesImpl createCrsAttributesWSrsDimension( final String crs )
+  public static void addSrsNameAttributes( final AttributesImpl atts, final String crs )
   {
-    final AttributesImpl atts = createCrsAttributes( crs );
-    atts.addAttribute( "", "srsDimension", "srsDimension", "CDATA", "" + CRSHelper.getDimension( crs ) );
+    atts.addAttribute( "", "srsName", "srsName", "anyURI", crs );
+  }
 
-    return atts;
+  public static void addSrsDimensionAttributes( final AttributesImpl atts, final int srsDimension )
+  {
+    atts.addAttribute( "", "srsDimension", "srsDimension", "positiveInteger", Integer.toString( srsDimension ) );
+  }
+
+  public static void addCrsAttributesWSrsDimension( final AttributesImpl atts, final String srsName )
+  {
+    addSrsNameAttributes( atts, srsName );
+
+    final int srsDimension = CRSHelper.getDimension( srsName );
+    addSrsDimensionAttributes( atts, srsDimension );
+  }
+
+  public static void addSrsAttributes( final AttributesImpl atts, final String srsName, final int srsDimension )
+  {
+    if( !StringUtils.isBlank( srsName ) )
+      addSrsNameAttributes( atts, srsName );
+
+    if( srsDimension > 0 )
+      addSrsDimensionAttributes( atts, srsDimension );
   }
 }

@@ -61,7 +61,9 @@ public class BoundingShapeTypeMarshaller implements IGmlMarshaller<GM_Envelope>
   @Override
   public void marshall( final GM_Envelope element ) throws SAXException
   {
-    // TODO Auto-generated method stub
-
+    if( element == null )
+      new NullMarshaller( m_reader ).marshall( null );
+    else
+      new EnvelopeMarshaller( m_reader ).marshall( element );
   }
 }

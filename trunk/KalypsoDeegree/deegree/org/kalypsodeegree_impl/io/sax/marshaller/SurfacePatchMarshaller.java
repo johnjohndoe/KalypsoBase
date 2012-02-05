@@ -40,10 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.marshaller;
 
-import org.kalypso.commons.xml.NS;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
+import org.xml.sax.Attributes;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -64,22 +62,16 @@ public abstract class SurfacePatchMarshaller<T extends GM_SurfacePatch> extends 
   }
 
   @Override
-  protected void startMarshalling( final T element ) throws SAXException
+  protected Attributes createAttributesForStartElement( final T element )
   {
-    final ContentHandler contentHandler = getXMLReader().getContentHandler();
     final String crsTri = element.getCoordinateSystem();
 
-    final AttributesImpl atts;
+    final AttributesImpl atts = new AttributesImpl();
     if( crsTri != null && m_defaultCrs != null && !crsTri.equals( m_defaultCrs ) )
-    {
-      atts = MarshallerUtils.createCrsAttributesWSrsDimension( crsTri );
-    }
-    else
-    {
-      atts = new AttributesImpl();
-    }
+      MarshallerUtils.addCrsAttributesWSrsDimension( atts, crsTri );
+
     atts.addAttribute( "", "interpolation", "interpolation", "CDATA", "planar" );
 
-    contentHandler.startElement( NS.GML3, getTag(), getQName(), atts );
+    return atts;
   }
 }
