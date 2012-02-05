@@ -40,30 +40,44 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.marshaller;
 
-import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
- * A marshaller for gml:BoundingShapeType
+ * Marshaller for gml:DirectPositionType
  *
  * @author Gernot Belger
  */
-public class BoundingShapeTypeMarshaller implements IGmlMarshaller<GM_Envelope>
+public class DirectPositionTypeMarshaller extends AbstractMarshaller<GM_Position>
 {
-  private final XMLReader m_reader;
-
-  public BoundingShapeTypeMarshaller( final XMLReader reader )
+  public DirectPositionTypeMarshaller( final XMLReader reader, final String tag )
   {
-    m_reader = reader;
+    super( reader, tag );
   }
 
   @Override
-  public void marshall( final GM_Envelope element ) throws SAXException
+  protected void doMarshallContent( final GM_Position marshalledObject ) throws SAXException
   {
-    if( element == null )
-      new NullMarshaller( m_reader ).marshall( null );
-    else
-      new EnvelopeMarshaller( m_reader ).marshall( element );
+    final ContentHandler contentHandler = getXMLReader().getContentHandler();
+
+    final double[] asArray = marshalledObject.getAsArray();
+    for( int i = 0; i < asArray.length; i++ )
+    {
+      final double d = asArray[i];
+      // do not write the third coordinate if not set
+      if( !Double.isNaN( d ) )
+      {
+        final String dString = Double.toString( d );
+        final char[] charArray = dString.toCharArray();
+        contentHandler.characters( charArray, 0, charArray.length );
+
+        if( i != asArray.length - 1 )
+        {
+          contentHandler.characters( WHITESPACE, 0, 1 );
+        }
+      }
+    }
   }
 }

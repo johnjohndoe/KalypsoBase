@@ -57,13 +57,15 @@ public class PointMarshaller extends GeometryMarshaller<GM_Point>
 {
   private static final String TAG_POINT = "Point";
 
-  private final PosMarshaller m_posMarshaller;
+  public static final String TAG_POS = "pos";
+
+  private final DirectPositionTypeMarshaller m_posMarshaller;
 
   public PointMarshaller( final XMLReader reader )
   {
     super( reader, TAG_POINT );
 
-    m_posMarshaller = new PosMarshaller( reader );
+    m_posMarshaller = new DirectPositionTypeMarshaller( reader, TAG_POS );
   }
 
   @Override

@@ -40,30 +40,24 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.marshaller;
 
-import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.xml.sax.SAXException;
+import org.eclipse.core.runtime.Assert;
 import org.xml.sax.XMLReader;
 
 /**
- * A marshaller for gml:BoundingShapeType
- *
  * @author Gernot Belger
  */
-public class BoundingShapeTypeMarshaller implements IGmlMarshaller<GM_Envelope>
+public class NullMarshaller extends AbstractMarshaller<Object>
 {
-  private final XMLReader m_reader;
-
-  public BoundingShapeTypeMarshaller( final XMLReader reader )
+  public NullMarshaller( final XMLReader reader )
   {
-    m_reader = reader;
+    super( reader, "Null" ); //$NON-NLS-1$
   }
 
   @Override
-  public void marshall( final GM_Envelope element ) throws SAXException
+  protected void doMarshallContent( final Object marshalledObject )
   {
-    if( element == null )
-      new NullMarshaller( m_reader ).marshall( null );
-    else
-      new EnvelopeMarshaller( m_reader ).marshall( element );
+    Assert.isTrue( marshalledObject == null );
+
+    // con content
   }
 }

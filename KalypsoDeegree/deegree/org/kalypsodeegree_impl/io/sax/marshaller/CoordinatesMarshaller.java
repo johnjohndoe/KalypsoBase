@@ -42,7 +42,6 @@ package org.kalypsodeegree_impl.io.sax.marshaller;
 
 import java.util.List;
 
-import org.kalypso.commons.xml.NS;
 import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
@@ -82,16 +81,11 @@ public class CoordinatesMarshaller extends AbstractMarshaller<List<double[]>>
     m_decimal = GMLConstants.DEFAULT_DECIMAL;
   }
 
+  /**
+   * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#createAttributesForStartElement(java.lang.Object)
+   */
   @Override
-  protected void startMarshalling( final List<double[]> element ) throws SAXException
-  {
-    final Attributes atts = createCoordinatesDefaultAttributes();
-
-    final ContentHandler contentHandler = getXMLReader().getContentHandler();
-    contentHandler.startElement( NS.GML3, getTag(), getQName(), atts );
-  }
-
-  private AttributesImpl createCoordinatesDefaultAttributes( )
+  protected Attributes createAttributesForStartElement( final List<double[]> element )
   {
     final AttributesImpl atts = new AttributesImpl();
     atts.addAttribute( "", "ts", "ts", "CDATA", m_ts );

@@ -41,29 +41,44 @@
 package org.kalypsodeegree_impl.io.sax.marshaller;
 
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * A marshaller for gml:BoundingShapeType
- *
  * @author Gernot Belger
  */
-public class BoundingShapeTypeMarshaller implements IGmlMarshaller<GM_Envelope>
+public class EnvelopeMarshaller extends AbstractMarshaller<GM_Envelope>
 {
-  private final XMLReader m_reader;
-
-  public BoundingShapeTypeMarshaller( final XMLReader reader )
+  public EnvelopeMarshaller( final XMLReader reader )
   {
-    m_reader = reader;
+    super( reader, GM_Envelope.ENVELOPE_ELEMENT.getLocalPart() );
+  }
+
+
+  @Override
+  protected Attributes createAttributesForStartElement( final GM_Envelope element )
+  {
+    final AttributesImpl atts = new AttributesImpl();
+
+    final int srsDimension = element.getMin().getCoordinateDimension();
+
+    MarshallerUtils.addSrsAttributes( atts, element.getCoordinateSystem(), srsDimension );
+
+    return atts;
   }
 
   @Override
-  public void marshall( final GM_Envelope element ) throws SAXException
+  protected void doMarshallContent( final GM_Envelope marshalledObject ) throws SAXException
   {
-    if( element == null )
-      new NullMarshaller( m_reader ).marshall( null );
-    else
-      new EnvelopeMarshaller( m_reader ).marshall( element );
+    // TODO: srs?
+
+    final GM_Position lowerCorner = marshalledObject.getMin();
+    final GM_Position upperCorner = marshalledObject.getMax();
+
+    new DirectPositionTypeMarshaller( getXMLReader(), GM_Envelope.PROPERTY_LOWER_CORNER.getLocalPart() ).marshall( lowerCorner );
+    new DirectPositionTypeMarshaller( getXMLReader(), GM_Envelope.PROPERTY_UPPER_CORNER.getLocalPart() ).marshall( upperCorner );
   }
 }

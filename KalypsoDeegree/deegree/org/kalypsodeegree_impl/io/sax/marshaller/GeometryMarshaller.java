@@ -40,10 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.marshaller;
 
-import org.kalypso.commons.xml.NS;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
+import org.xml.sax.Attributes;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -62,19 +60,18 @@ public abstract class GeometryMarshaller<T extends GM_Object> extends AbstractMa
   }
 
   @Override
-  protected void startMarshalling( final T element ) throws SAXException
+  protected Attributes createAttributesForStartElement( final T element )
   {
     final String crs = element.getCoordinateSystem();
     final int srsDimension = element.getCoordinateDimension();
 
     final AttributesImpl atts = new AttributesImpl();
     if( crs != null )
-      atts.addAttribute( "", "srsName", "srsName", "CDATA", crs );
+      MarshallerUtils.addSrsNameAttributes( atts, crs );
 
     if( srsDimension != -1 )
-      atts.addAttribute( "", "srsDimension", "srsDimension", "decimal", String.valueOf( srsDimension ) );
+      MarshallerUtils.addSrsDimensionAttributes( atts, srsDimension );
 
-    final ContentHandler contentHandler = getXMLReader().getContentHandler();
-    contentHandler.startElement( NS.GML3, getTag(), getQName(), atts );
+    return atts;
   }
 }

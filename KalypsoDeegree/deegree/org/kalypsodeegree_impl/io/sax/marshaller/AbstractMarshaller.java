@@ -41,6 +41,7 @@
 package org.kalypsodeegree_impl.io.sax.marshaller;
 
 import org.kalypso.commons.xml.NS;
+import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -91,10 +92,18 @@ public abstract class AbstractMarshaller<T> implements IGmlMarshaller<T>
     endMarshalling();
   }
 
-  protected void startMarshalling( @SuppressWarnings("unused") final T element ) throws SAXException
+  protected final void startMarshalling( final T element ) throws SAXException
   {
     final ContentHandler contentHandler = m_reader.getContentHandler();
-    contentHandler.startElement( NS.GML3, m_tag, m_qName, EMPTY_ATTRIBUTES );
+
+    final Attributes attributes = createAttributesForStartElement( element );
+
+    contentHandler.startElement( NS.GML3, m_tag, m_qName, attributes );
+  }
+
+  protected Attributes createAttributesForStartElement( @SuppressWarnings("unused") final T element )
+  {
+    return EMPTY_ATTRIBUTES;
   }
 
   protected abstract void doMarshallContent( T marshalledObject ) throws SAXException;
