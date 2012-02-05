@@ -39,6 +39,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.tools.GMLConstants;
 
 /**
@@ -141,7 +142,7 @@ public abstract class AbstractCreateGeometryWidget extends DeprecatedMouseWidget
     final QName valueQName = vpt.getValueQName();
     final String targetCrs = getMapPanel().getMapModell().getCoordinatesSystem();
 
-    if( GMLConstants.QN_POLYGON.equals( valueQName ) )
+    if( GM_Polygon.POLYGON_ELEMENT.equals( valueQName ) )
       m_builder = new PolygonGeometryBuilder( 0, targetCrs );
     else if( GMLConstants.QN_MULTI_POLYGON.equals( valueQName ) )
       m_builder = new MultiPolygonGeometryBuilder( 0, targetCrs );
@@ -149,7 +150,7 @@ public abstract class AbstractCreateGeometryWidget extends DeprecatedMouseWidget
       m_builder = new LineGeometryBuilder( 0, targetCrs );
     else if( GMLConstants.QN_MULTI_LINE_STRING.equals( valueQName ) )
       m_builder = new LineGeometryBuilder( 0, targetCrs ); // TODO
-    else if( GMLConstants.QN_POINT.equals( valueQName ) )
+    else if( GM_Point.POINT_ELEMENT.equals( valueQName ) )
       m_builder = new PointGeometryBuilder( targetCrs );
     else
     {

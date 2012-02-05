@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -35,7 +35,10 @@
  */
 package org.kalypsodeegree.model.geometry;
 
+import javax.xml.namespace.QName;
+
 import org.eclipse.core.runtime.IAdaptable;
+import org.kalypso.commons.xml.NS;
 
 /**
  * The basic interface for all geometries. it declares the methods that are common to all geometries. this doesn't means
@@ -44,13 +47,15 @@ import org.eclipse.core.runtime.IAdaptable;
  * <p>
  * -----------------------------------------------------
  * </p>
- * 
+ *
  * @author Andreas Poth
  * @version $Revision$ $Date$
  *          <p>
  */
 public interface GM_Object extends IAdaptable
 {
+  QName GEOMETRY_ELEMENT = new QName( NS.GML3, "_Geometry" ); //$NON-NLS-1$
+
   /**
    * returns the bounding box of a geometry
    */
@@ -117,7 +122,7 @@ public interface GM_Object extends IAdaptable
 
   /**
    * The operation "convexHull" shall return a GM_Object that represents the convex hull of this GM_Object.
-   * 
+   *
    * @throws GM_Exception
    */
   GM_Object getConvexHull( ) throws GM_Exception;
@@ -185,7 +190,7 @@ public interface GM_Object extends IAdaptable
 
   /**
    * This function transforms the geometry.
-   * 
+   *
    * @param targetCRS
    *          The target coordinate system.
    * @return The transformed geometry.
