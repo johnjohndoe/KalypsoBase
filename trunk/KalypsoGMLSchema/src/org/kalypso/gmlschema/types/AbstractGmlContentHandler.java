@@ -245,10 +245,6 @@ public abstract class AbstractGmlContentHandler implements IGmlContentHandler
     // no op
   }
 
-  /**
-   * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String,
-   *      org.xml.sax.Attributes)
-   */
   @Override
   @SuppressWarnings("unused")
   public void startElement( final String uri, final String localName, final String qName, final Attributes atts ) throws SAXException

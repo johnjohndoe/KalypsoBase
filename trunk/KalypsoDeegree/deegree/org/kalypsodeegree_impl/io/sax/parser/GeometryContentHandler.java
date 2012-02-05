@@ -51,7 +51,7 @@ import org.xml.sax.XMLReader;
 
 /**
  * A content handler which parses arbitrary gml:Geometry elements.<br>
- * 
+ *
  * @author Gernot Belger
  */
 public class GeometryContentHandler extends GMLElementContentHandler implements IGMLElementHandler<GM_Object>
@@ -129,13 +129,11 @@ public class GeometryContentHandler extends GMLElementContentHandler implements 
    * By default, this methods compares the incoming end xml tag with the expected tag (localName). If they match, the
    * method {@link doEndElement} performs the specific actions. Otherwise, calls {@link HandleUnexpectedEndElement},
    * also to allow specific actions.
-   *
-   * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
    */
   @Override
   public void endElement( final String uri, final String localName, final String name ) throws SAXException
   {
-    final IGmlElementcontentHandler parent = (IGmlElementcontentHandler) getParentContentHandler();
+    final IGmlElementcontentHandler2 parent = (IGmlElementcontentHandler2) getParentContentHandler();
     final String parentTag = parent.getLocalName();
 
     if( getUri().equals( uri ) && parentTag.equals( localName ) )
