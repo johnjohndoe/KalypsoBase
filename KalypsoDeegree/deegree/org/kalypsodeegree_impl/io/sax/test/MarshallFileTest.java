@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -38,29 +38,43 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gmlschema.types;
+package org.kalypsodeegree_impl.io.sax.test;
 
-import javax.xml.namespace.NamespaceContext;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URL;
 
-import org.xml.sax.ContentHandler;
-import org.xml.sax.Locator;
+import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.junit.Test;
+import org.kalypsodeegree.model.coverage.RangeSetFile;
+import org.kalypsodeegree_impl.io.sax.marshaller.RangeSetFileMarshaller;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 
 /**
- * Content handlers that serve as parent content handler for the the {@link AbstractDelegatingContentHandler}
- * implementations.
- *
  * @author Gernot Belger
  */
-public interface IGmlContentHandler extends ContentHandler
+public class MarshallFileTest
 {
-  void activate( );
+  @Test
+  public void writeFile( ) throws IOException, SAXException
+  {
+    /* Output: to stream */
+    final OutputStream os = new ByteArrayOutputStream();
 
-  void activateParent( );
+    final XMLReader reader = SaxParserTestUtils.createXMLReader( os );
 
-  Locator getDocumentLocator( );
+    /* Test data */
+    final RangeSetFile file = new RangeSetFile( "testname.tif" ); //$NON-NLS-1$
+    file.setMimeType( "image/tif" ); //$NON-NLS-1$
 
-  /**
-   * Returns a snapshot of the current prefix mapping as {@link NamespaceContext}.
-   */
-  NamespaceContext getNamespaceContext( );
+    final RangeSetFileMarshaller marshaller = new RangeSetFileMarshaller( reader, file );
+    SaxParserTestUtils.marshallDocument( reader, marshaller );
+    os.close();
+
+    final URL url = getClass().getResource( "resources/file_marshall.gml" );
+    final String actualContent = os.toString();
+
+    SaxParserTestUtils.assertContentEquals( url, actualContent );
+  }
 }

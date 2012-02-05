@@ -66,6 +66,7 @@ import org.xml.sax.XMLReader;
 public abstract class AbstractGmlContentHandler implements IGmlContentHandler
 {
   /* This receiver always holds the currently active content handler */
+  // FIXME: replace with more general interface
   private final XMLReader m_reader;
 
   private Locator m_locator;
@@ -74,7 +75,6 @@ public abstract class AbstractGmlContentHandler implements IGmlContentHandler
 
   private Properties m_prefixMapping;
 
-  // FIXME: introduce interface for the abstract class
   public AbstractGmlContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler )
   {
     m_reader = reader;
@@ -136,8 +136,7 @@ public abstract class AbstractGmlContentHandler implements IGmlContentHandler
     return new SAXParseException( messgae, m_locator, cause );
   }
 
-  @Override
-  public ContentHandler getTopLevel( )
+  protected ContentHandler getTopLevel( )
   {
     return m_reader.getContentHandler();
   }
@@ -198,9 +197,6 @@ public abstract class AbstractGmlContentHandler implements IGmlContentHandler
     // no op
   }
 
-  /**
-   * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
-   */
   @Override
   @SuppressWarnings("unused")
   public void endElement( final String uri, final String localName, final String qName ) throws SAXException
@@ -208,9 +204,6 @@ public abstract class AbstractGmlContentHandler implements IGmlContentHandler
     // endDelegation();
   }
 
-  /**
-   * @see org.xml.sax.ContentHandler#endPrefixMapping(java.lang.String)
-   */
   @SuppressWarnings("unused")
   @Override
   public void endPrefixMapping( final String prefix ) throws SAXException
@@ -218,9 +211,6 @@ public abstract class AbstractGmlContentHandler implements IGmlContentHandler
     m_prefixMapping.remove( prefix );
   }
 
-  /**
-   * @see org.xml.sax.ContentHandler#ignorableWhitespace(char[], int, int)
-   */
   @Override
   @SuppressWarnings("unused")
   public void ignorableWhitespace( final char[] ch, final int start, final int length ) throws SAXException
@@ -228,9 +218,6 @@ public abstract class AbstractGmlContentHandler implements IGmlContentHandler
     // no op
   }
 
-  /**
-   * @see org.xml.sax.ContentHandler#processingInstruction(java.lang.String, java.lang.String)
-   */
   @Override
   @SuppressWarnings("unused")
   public void processingInstruction( final String target, final String data ) throws SAXException
