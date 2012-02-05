@@ -43,8 +43,6 @@ package org.kalypso.ogc.gml;
 import java.awt.Graphics;
 import java.net.URL;
 
-import ogc31.www.opengis.net.gml.FileType;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -56,6 +54,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.coverage.RangeSetFile;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -126,9 +125,9 @@ public class KalypsoPictureThemeGml extends KalypsoPictureTheme
 
         /* imgFile */
         final Object rangeSet = coverage2.getRangeSet();
-        if( rangeSet instanceof FileType )
+        if( rangeSet instanceof RangeSetFile )
         {
-          final FileType type = (FileType) rangeSet;
+          final RangeSetFile type = (RangeSetFile) rangeSet;
           final String filePath = type.getFileName();
           final URL imageURL = loadImage( filePath );
           if( imageURL == null )

@@ -1,6 +1,7 @@
-package org.kalypso.gml.processes.raster2vector.test;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
+
+import java.io.File;
+
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
@@ -40,6 +41,7 @@ package org.kalypso.gml.processes.raster2vector.test;
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.gml.processes.raster2vector.test;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,9 +49,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
-
-import junit.framework.TestCase;
-import ogc31.www.opengis.net.gml.FileType;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -59,10 +58,11 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
 import org.kalypso.gml.processes.raster2vector.Raster2Lines;
 import org.kalypso.gml.processes.raster2vector.Raster2LinesWalkingStrategy;
 import org.kalypso.gml.processes.raster2vector.collector.CollectorDataProvider;
@@ -88,6 +88,7 @@ import org.kalypso.grid.IGeoGrid;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.model.coverage.RangeSetFile;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -107,7 +108,6 @@ import org.kalypsodeegree_impl.tools.GMLConstants;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
-
 /**
  * JUnit Test Case for converting a grid into line and polygon shape.<br>
  * This test extracts demo input data (grid) from resources and converts them into shape files. <br>
@@ -116,11 +116,13 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  *
  * @author Thomas Jung
  */
-public class TestInundationFrequenciesGrid2Shp extends TestCase
+public class TestInundationFrequenciesGrid2Shp
 {
-
   private static final GeometryFactory GF = new GeometryFactory();
 
+  @Test
+  // Takes too much time for normal testing
+  @Ignore
   public void testRiskModel( ) throws Exception
   {
     // unzip test data into workspace
@@ -370,8 +372,7 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
       final Feature coverageFeature = covCollWorkspace.createFeature( covColl, parentRelation, ft );
       final RectifiedGridCoverage coverage = (RectifiedGridCoverage) coverageFeature;
 
-      final FileType rangeSetFile = KalypsoOGC31JAXBcontext.GML3_FAC.createFileType();
-      rangeSetFile.setFileName( binFileName );
+      final RangeSetFile rangeSetFile = new RangeSetFile( binFileName );
       rangeSetFile.setMimeType( "image/bin" ); //$NON-NLS-1$
 
       covColl.getCoverages().add( coverage );
