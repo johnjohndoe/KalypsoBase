@@ -83,7 +83,7 @@ public class RangeSetTypeHandler implements IMarshallingTypeHandler2
   @Override
   public void marshal( final Object value, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
   {
-    new RangeSetFileMarshaller( reader, (RangeSetFile) value ).marshall();
+    new RangeSetFileMarshaller( reader ).marshall( (RangeSetFile) value );
   }
 
   @Override

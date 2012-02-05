@@ -105,8 +105,8 @@ public class MarshallMultiCurveTest
   {
     final ByteArrayOutputStream os = new ByteArrayOutputStream();
     final XMLReader reader = SaxParserTestUtils.createXMLReader( os );
-    final MultiCurveMarshaller marshaller = new MultiCurveMarshaller( reader, multiCurve );
-    SaxParserTestUtils.marshallDocument( reader, marshaller );
+    final MultiCurveMarshaller marshaller = new MultiCurveMarshaller( reader );
+    SaxParserTestUtils.marshallDocument( reader, marshaller, multiCurve );
     os.close();
 
     return os.toString();

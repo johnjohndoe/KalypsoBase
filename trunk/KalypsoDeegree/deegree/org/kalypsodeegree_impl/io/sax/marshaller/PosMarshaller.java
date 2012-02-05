@@ -82,9 +82,4 @@ public class PosMarshaller extends AbstractMarshaller<GM_Position>
       }
     }
   }
-
-  public void setPosition( final GM_Position position )
-  {
-    setMarshalledObject( position );
-  }
 }

@@ -53,9 +53,9 @@ import org.xml.sax.XMLReader;
  */
 public class PolygonMarshaller extends GeometryMarshaller<GM_Surface<GM_Polygon>>
 {
-  public PolygonMarshaller( final XMLReader reader, final GM_Surface<GM_Polygon> polygon )
+  public PolygonMarshaller( final XMLReader reader )
   {
-    super( reader, GM_Polygon.POLYGON_ELEMENT.getLocalPart(), polygon );
+    super( reader, GM_Polygon.POLYGON_ELEMENT.getLocalPart() );
   }
 
   @Override
@@ -64,13 +64,13 @@ public class PolygonMarshaller extends GeometryMarshaller<GM_Surface<GM_Polygon>
     final GM_Polygon polygon = marshalledObject.get( 0 );
 
     final GM_Position[] exteriorRing = polygon.getExteriorRing();
-    new ExteriorMarshaller( getXMLReader(), exteriorRing ).marshall();
+    new ExteriorMarshaller( getXMLReader() ).marshall( exteriorRing );
 
     final GM_Position[][] interiorRings = polygon.getInteriorRings();
     if( interiorRings != null )
     {
       for( final GM_Position[] interior : interiorRings )
-        new InteriorMarshaller( getXMLReader(), interior ).marshall();
+        new InteriorMarshaller( getXMLReader() ).marshall( interior );
     }
   }
 }

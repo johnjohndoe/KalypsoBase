@@ -54,9 +54,9 @@ public class LineStringMarshaller extends GeometryMarshaller<GM_Curve>
 {
   public static final String TAG_LINE_STRING = GMLConstants.QN_LINE_STRING.getLocalPart();
 
-  public LineStringMarshaller( final XMLReader reader, final GM_Curve lineString )
+  public LineStringMarshaller( final XMLReader reader )
   {
-    super( reader, TAG_LINE_STRING, lineString );
+    super( reader, TAG_LINE_STRING );
   }
 
   @Override
@@ -64,7 +64,7 @@ public class LineStringMarshaller extends GeometryMarshaller<GM_Curve>
   {
     try
     {
-      new PosListMarshaller( getXMLReader(), marshalledObject.getAsLineString().getPositions() ).marshall();
+      new PosListMarshaller( getXMLReader() ).marshall( marshalledObject.getAsLineString().getPositions() );
     }
     catch( final GM_Exception e )
     {

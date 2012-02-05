@@ -47,7 +47,6 @@ import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_PolyhedralSurface;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
@@ -66,46 +65,42 @@ public class GeometryMemberMarshaller extends AbstractMarshaller<GM_Object>
     super( reader, GM_MultiGeometry.MEMBER_GEOMETRY.getLocalPart() );
   }
 
-  public GeometryMemberMarshaller( final XMLReader reader, final GM_Object marshalledObject )
-  {
-    super( reader, GM_MultiGeometry.MEMBER_GEOMETRY.getLocalPart(), marshalledObject );
-  }
-
   @Override
   protected void doMarshallContent( final GM_Object marshalledObject ) throws SAXException
   {
-    final GeometryMarshaller< ? > marshaller = createMarshaller( getXMLReader(), marshalledObject );
-    marshaller.marshall();
+    @SuppressWarnings("unchecked")
+    final GeometryMarshaller<GM_Object> marshaller = (GeometryMarshaller<GM_Object>) createMarshaller( getXMLReader(), marshalledObject );
+    marshaller.marshall( marshalledObject );
   }
 
-  public static GeometryMarshaller< ? > createMarshaller( final XMLReader xmlReader, final GM_Object marshalledObject )
+  public static GeometryMarshaller< ? extends GM_Object> createMarshaller( final XMLReader xmlReader, final GM_Object marshalledObject )
   {
     if( marshalledObject instanceof GM_Point )
-      return new PointMarshaller( xmlReader, (GM_Point) marshalledObject );
+      return new PointMarshaller( xmlReader );
 
     if( marshalledObject instanceof GM_Curve )
-      return new LineStringMarshaller( xmlReader, (GM_Curve) marshalledObject );
+      return new LineStringMarshaller( xmlReader );
 
     if( marshalledObject instanceof GM_TriangulatedSurface )
-      return new TriangulatedSurfaceMarshaller( xmlReader, (GM_TriangulatedSurface) marshalledObject );
+      return new TriangulatedSurfaceMarshaller( xmlReader, marshalledObject.getCoordinateSystem() );
 
     if( marshalledObject instanceof GM_PolyhedralSurface )
-      return new PolyhedralSurfaceMarshaller( xmlReader, (GM_Surface<GM_Polygon>) marshalledObject );
+      return new PolyhedralSurfaceMarshaller( xmlReader );
 
     if( marshalledObject instanceof GM_Surface )
-      return new PolygonMarshaller( xmlReader, (GM_Surface<GM_Polygon>) marshalledObject );
+      return new PolygonMarshaller( xmlReader );
 
     if( marshalledObject instanceof GM_MultiGeometry )
-      return new MultiGeometryMarshaller( xmlReader, (GM_MultiGeometry) marshalledObject );
+      return new MultiGeometryMarshaller( xmlReader );
 
     if( marshalledObject instanceof GM_MultiPoint )
-      return new MultiPointMarshaller( xmlReader, (GM_MultiPoint) marshalledObject );
+      return new MultiPointMarshaller( xmlReader );
 
     if( marshalledObject instanceof GM_MultiCurve )
-      return new MultiCurveMarshaller( xmlReader, (GM_MultiCurve) marshalledObject );
+      return new MultiCurveMarshaller( xmlReader );
 
     if( marshalledObject instanceof GM_MultiSurface )
-      return new MultiSurfaceMarshaller( xmlReader, (GM_MultiSurface) marshalledObject );
+      return new MultiSurfaceMarshaller( xmlReader );
 
     final String message = String.format( "Unable to serialize geometry in MultiGeometry: %s", marshalledObject );
     throw new UnsupportedOperationException( message );

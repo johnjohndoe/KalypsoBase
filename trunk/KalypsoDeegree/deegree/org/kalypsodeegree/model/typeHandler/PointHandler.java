@@ -80,7 +80,7 @@ public class PointHandler implements IMarshallingTypeHandler2
   @Override
   public void marshal( final Object value, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
   {
-    new PointMarshaller( reader, (GM_Point) value ).marshall();
+    new PointMarshaller( reader ).marshall( (GM_Point) value );
   }
 
   @Override

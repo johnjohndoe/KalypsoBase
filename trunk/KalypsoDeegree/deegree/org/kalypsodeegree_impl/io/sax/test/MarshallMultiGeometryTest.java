@@ -91,8 +91,8 @@ public class MarshallMultiGeometryTest
   {
     final ByteArrayOutputStream os = new ByteArrayOutputStream();
     final XMLReader reader = SaxParserTestUtils.createXMLReader( os );
-    final MultiGeometryMarshaller marshaller = new MultiGeometryMarshaller( reader, geometry );
-    SaxParserTestUtils.marshallDocument( reader, marshaller );
+    final MultiGeometryMarshaller marshaller = new MultiGeometryMarshaller( reader );
+    SaxParserTestUtils.marshallDocument( reader, marshaller, geometry );
     os.close();
 
     return os.toString();

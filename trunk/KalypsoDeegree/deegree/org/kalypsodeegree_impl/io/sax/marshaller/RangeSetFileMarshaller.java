@@ -58,11 +58,6 @@ public class RangeSetFileMarshaller extends AbstractMarshaller<RangeSetFile>
     super( reader, RangeSetFile.FILE_ELEMENT.getLocalPart() );
   }
 
-  public RangeSetFileMarshaller( final XMLReader reader, final RangeSetFile file )
-  {
-    super( reader, RangeSetFile.FILE_ELEMENT.getLocalPart(), file );
-  }
-
   @Override
   protected void doMarshallContent( final RangeSetFile marshalledObject ) throws SAXException
   {
