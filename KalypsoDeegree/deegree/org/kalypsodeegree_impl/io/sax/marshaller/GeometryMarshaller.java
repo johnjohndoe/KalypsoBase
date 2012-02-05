@@ -61,9 +61,6 @@ public abstract class GeometryMarshaller<T extends GM_Object> extends AbstractMa
     super( reader, tag, object );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#startMarshalling()
-   */
   @Override
   protected void startMarshalling( ) throws SAXException
   {

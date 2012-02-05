@@ -220,4 +220,10 @@ public class FeatureContentHandler extends AbstractGmlContentHandler implements 
   {
     m_scopeProperty = property;
   }
+
+  @Override
+  public String getLocalName( )
+  {
+    throw new UnsupportedOperationException();
+  }
 }

@@ -119,5 +119,4 @@ public final class SaxParserTestUtils
     final String expected = UrlUtilities.toString( expectedContent, ENCODING );
     assertContentEquals( expected, actualContent );
   }
-
 }

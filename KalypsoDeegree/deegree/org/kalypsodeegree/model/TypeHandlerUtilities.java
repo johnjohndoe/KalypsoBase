@@ -51,10 +51,10 @@ import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.JAXBContextProvider;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.typeHandler.GM_EnvelopeBindingTypeHandler;
-import org.kalypsodeegree.model.typeHandler.GenericGM_ObjectBindingTypeHandler;
+import org.kalypsodeegree.model.typeHandler.GeometryHandler;
 import org.kalypsodeegree.model.typeHandler.LineStringHandler;
+import org.kalypsodeegree.model.typeHandler.MultiCurveHandler;
 import org.kalypsodeegree.model.typeHandler.MultiLineStringHandler;
 import org.kalypsodeegree.model.typeHandler.MultiPointHandler;
 import org.kalypsodeegree.model.typeHandler.MultiPolygonHandler;
@@ -84,7 +84,6 @@ import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerString;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerStringArray;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerXMLGregorianCalendar;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomainTypeHandlerGml3;
-import org.kalypsodeegree_impl.tools.GMLConstants;
 
 /**
  * @author doemming
@@ -261,25 +260,17 @@ public final class TypeHandlerUtilities
 
     // Basic GML 3 types
     // TODO: implements as sax handlers
+    // TODO: is this ever used?
     registry.registerTypeHandler( new GM_EnvelopeBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "BoundingShapeType" ), GM_Envelope.class, false ) );
 
-    // Geometries
-    // TODO: probably not needed, as soon as all geometries are parsed with sax: these are just properties pointing to a
-    // gm_object
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_GEOMETRY, GMLConstants.QN_GEOMETRY, GM_Object.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_LOCATION, GMLConstants.QN_LOCATION, GM_Object.class, true ) );
-
-    // TODO: implements as sax handlers
-    // TODO: in adapter supported, but not yet implemented:
-    // - MultiSurface from MultiSurfaceTye
-    // - Surface from SurfaceType
-    // - Surface from PolygonType
+    registry.registerTypeHandler( new GeometryHandler() );
 
     registry.registerTypeHandler( new PointHandler() );
     registry.registerTypeHandler( new MultiPointHandler() );
 
     registry.registerTypeHandler( new LineStringHandler() );
     registry.registerTypeHandler( new MultiLineStringHandler() );
+    registry.registerTypeHandler( new MultiCurveHandler() );
 
     registry.registerTypeHandler( new SurfaceHandler() );
     registry.registerTypeHandler( new PolygonHandler() );
@@ -292,9 +283,11 @@ public final class TypeHandlerUtilities
     // Coverages
     // TODO: implement sax parsers
     registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "RangeSetType" ), new QName( NS.GML3, "File" ), FileType.class, false ) );
+    // TODO: implement sax parsers
     registry.registerTypeHandler( new RectifiedGridDomainTypeHandlerGml3() );
 
     // http://www.opengis.net/swe
+    // TODO: implement sax parsers
     registry.registerTypeHandler( new RepresentationTypeHandler() );
   }
 }

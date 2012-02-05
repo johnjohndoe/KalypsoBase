@@ -71,9 +71,6 @@ public class PointMarshaller extends GeometryMarshaller<GM_Point>
     m_posMarshaller = new PosMarshaller( reader );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#doMarshall(java.lang.Object)
-   */
   @Override
   protected void doMarshallContent( final GM_Point marshalledObject ) throws SAXException
   {

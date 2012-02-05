@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.parser;
 
@@ -53,7 +53,6 @@ import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.io.sax.parser.geometrySpec.PolygonSpecification;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -61,20 +60,16 @@ import org.xml.sax.XMLReader;
 
 /**
  * A content handler which parses a gml:Polygon element.<br>
- * 
+ *
  * @author Gernot Belger
  */
 public class PolygonContentHandler extends GMLElementContentHandler implements IRingHandler
 {
-  public static final String ELEMENT_POLYGON = GMLConstants.QN_POLYGON.getLocalPart();
-
   private final UnmarshallResultEater m_resultEater;
 
   private GM_Surface<GM_Polygon> m_surface = null;
 
   private String m_activeSrs;
-
-  private Integer m_srsDimension;
 
   private GM_Position[] m_exteriorRing = null;
 
@@ -99,16 +94,12 @@ public class PolygonContentHandler extends GMLElementContentHandler implements I
 
   private PolygonContentHandler( final XMLReader xmlReader, final ISurfaceHandler<GM_Polygon> surfaceHandler, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContentHandler, final String defaultSrs )
   {
-    super( xmlReader, NS.GML3, ELEMENT_POLYGON, defaultSrs, parentContentHandler );
+    super( xmlReader, NS.GML3, GM_Polygon.POLYGON_ELEMENT.getLocalPart(), defaultSrs, parentContentHandler );
 
     m_resultEater = resultEater;
     m_surfaceHandler = surfaceHandler;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doEndElement(java.lang.String,
-   *      java.lang.String, java.lang.String)
-   */
   @Override
   protected void doEndElement( final String uri, final String localName, final String name ) throws SAXException
   {
@@ -121,10 +112,6 @@ public class PolygonContentHandler extends GMLElementContentHandler implements I
       m_surfaceHandler.handle( m_surface );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#handleUnexpectedEndElement(java.lang.String,
-   *      java.lang.String, java.lang.String)
-   */
   @Override
   public void handleUnexpectedEndElement( final String uri, final String localName, final String name ) throws SAXException
   {
@@ -138,15 +125,11 @@ public class PolygonContentHandler extends GMLElementContentHandler implements I
       super.handleUnexpectedEndElement( uri, localName, name );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doStartElement(java.lang.String,
-   *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
-   */
   @Override
   protected void doStartElement( final String uri, final String localName, final String name, final Attributes atts )
   {
-    m_activeSrs = ContentHandlerUtils.parseSrsFromAttributes( atts, m_defaultSrs );
-    m_srsDimension = ContentHandlerUtils.parseSrsDimensionFromAttributes( atts );
+    m_activeSrs = ContentHandlerUtils.parseSrsFromAttributes( atts, getDefaultSrs() );
+    /* m_srsDimension = */ContentHandlerUtils.parseSrsDimensionFromAttributes( atts );
 
     final GMLPropertySequenceContentHandler choiceContentHandler = new GMLPropertySequenceContentHandler( getXMLReader(), this, this, m_activeSrs, new PolygonSpecification() );
     setDelegate( choiceContentHandler );
@@ -169,9 +152,6 @@ public class PolygonContentHandler extends GMLElementContentHandler implements I
     }
   }
 
-  /**
-   * @see org.kalypso.gmlschema.types.IGMLElementHandler#handle(java.lang.Object)
-   */
   @Override
   public void handle( final GM_Ring ring )
   {
