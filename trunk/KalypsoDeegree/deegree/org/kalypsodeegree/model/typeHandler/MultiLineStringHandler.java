@@ -62,85 +62,54 @@ public class MultiLineStringHandler implements IMarshallingTypeHandler2
 {
   private static final QName QNAME_TYPE = GMLConstants.QN_MULTI_LINE_STRING;
 
-  /**
-   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler2#createContentHandler(org.xml.sax.XMLReader,
-   *      org.xml.sax.ContentHandler, org.kalypso.gmlschema.types.UnmarshallResultEater, java.lang.String,
-   *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
-   */
   @Override
   public IGmlContentHandler createContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final UnmarshallResultEater resultEater )
   {
     return new MultiLineStringContentHandler( reader, resultEater, parentContentHandler, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
   }
 
-  /**
-   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#cloneObject(java.lang.Object, java.lang.String)
-   */
   @Override
   public Object cloneObject( final Object objectToClone, final String gmlVersion ) throws CloneNotSupportedException
   {
     throw new CloneNotSupportedException();
   }
 
-  /**
-   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#getShortname()
-   */
   @Override
   public String getShortname( )
   {
     return QNAME_TYPE.getLocalPart();
   }
 
-  /**
-   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(java.lang.Object, org.xml.sax.XMLReader,
-   *      java.net.URL, java.lang.String)
-   */
   @Override
   public void marshal( final Object value, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
   {
     new MultiLineStringMarshaller( reader, (GM_MultiCurve) value ).marshall();
   }
 
-  /**
-   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#parseType(java.lang.String)
-   */
   @Override
   public Object parseType( final String text )
   {
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#unmarshal(org.xml.sax.XMLReader, java.net.URL,
-   *      org.kalypso.gmlschema.types.UnmarshallResultEater, java.lang.String)
-   */
   @Override
   public void unmarshal( final XMLReader reader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion )
   {
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see org.kalypso.gmlschema.types.ITypeHandler#getTypeName()
-   */
   @Override
   public QName getTypeName( )
   {
     return QNAME_TYPE;
   }
 
-  /**
-   * @see org.kalypso.gmlschema.types.ITypeHandler#getValueClass()
-   */
   @Override
   public Class< ? > getValueClass( )
   {
     return GM_MultiCurve.class;
   }
 
-  /**
-   * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
-   */
   @Override
   public boolean isGeometry( )
   {

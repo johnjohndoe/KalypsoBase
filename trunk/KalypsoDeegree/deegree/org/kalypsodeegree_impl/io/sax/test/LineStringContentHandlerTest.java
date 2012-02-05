@@ -43,11 +43,10 @@ package org.kalypsodeegree_impl.io.sax.test;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import junit.framework.TestCase;
-
 import org.junit.Test;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.io.sax.parser.LineStringContentHandler;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -58,33 +57,22 @@ import org.xml.sax.XMLReader;
 /**
  * @author Felipe Maximino
  */
-public class LineStringContentHandlerTest extends TestCase
+public class LineStringContentHandlerTest extends AssertGeometry
 {
-  private final SAXParserFactory m_saxFactory = SAXParserFactory.newInstance();
+  private final GM_Position POSITION1 = GeometryFactory.createGM_Position( 0.0, 0.1, 0.2 );
 
-  private static final GM_Position POSITION1 = GeometryFactory.createGM_Position( 0.0, 0.1, 0.2 );
+  private final GM_Position POSITION2 = GeometryFactory.createGM_Position( 1.0, 1.1, 1.2 );
 
-  private static final GM_Position POSITION2 = GeometryFactory.createGM_Position( 1.0, 1.1, 1.2 );
+  private final GM_Position POSITION3 = GeometryFactory.createGM_Position( 2.0, 2.1, 2.2 );
 
-  private static final GM_Position POSITION3 = GeometryFactory.createGM_Position( 2.0, 2.1, 2.2 );
+  private final GM_Position POSITION4 = GeometryFactory.createGM_Position( 3.0, 3.1, 3.2 );
 
-  private static final GM_Position POSITION4 = GeometryFactory.createGM_Position( 3.0, 3.1, 3.2 );
+  private final String FEW_COORDINATES_MSG = "A gml:LineString must contain either 0 or at least two positions!";
 
-  private static final String FEW_COORDINATES_MSG = "A gml:LineString must contain either 0 or at least two positions!";
+  private final GM_Curve LINE_STRING = GeometryFactory.createGM_Curve( new GM_Position[] { POSITION1, POSITION2, POSITION3, POSITION4 }, "EPSG:31467" );
 
-  private static GM_Curve LINE_STRING;
-
-  /**
-   * @see junit.framework.TestCase#setUp()
-   */
-  @Override
-  protected void setUp( ) throws Exception
+  public LineStringContentHandlerTest( ) throws GM_Exception
   {
-    super.setUp();
-    m_saxFactory.setNamespaceAware( true );
-
-    final GM_Position[] positions = new GM_Position[] { POSITION1, POSITION2, POSITION3, POSITION4 };
-    LINE_STRING = GeometryFactory.createGM_Curve( positions, "EPSG:31467" );
   }
 
   /**
@@ -94,7 +82,7 @@ public class LineStringContentHandlerTest extends TestCase
   public void testLineString1( ) throws Exception
   {
     final GM_Curve lineString = parseLineString( "resources/lineString1.gml" );
-    assertLineString( lineString );
+    assertCurve( LINE_STRING, lineString );
   }
 
   /**
@@ -104,7 +92,7 @@ public class LineStringContentHandlerTest extends TestCase
   public void testLineString2( ) throws Exception
   {
     final GM_Curve lineString = parseLineString( "resources/lineString2.gml" );
-    assertLineString( lineString );
+    assertCurve( LINE_STRING, lineString );
   }
 
   /**
@@ -114,7 +102,7 @@ public class LineStringContentHandlerTest extends TestCase
   public void testLineString3( ) throws Exception
   {
     final GM_Curve lineString = parseLineString( "resources/lineString3.gml" );
-    assertLineString( lineString );
+    assertCurve( LINE_STRING, lineString );
   }
 
   /**
@@ -124,7 +112,7 @@ public class LineStringContentHandlerTest extends TestCase
   public void testLineString4( ) throws Exception
   {
     final GM_Curve lineString = parseLineString( "resources/lineString4.gml" );
-    assertLineString( lineString );
+    assertCurve( LINE_STRING, lineString );
   }
 
   /**
@@ -143,19 +131,14 @@ public class LineStringContentHandlerTest extends TestCase
     }
   }
 
-  private void assertLineString( final GM_Curve lineString )
-  {
-    assertEquals( LINE_STRING.getCoordinateSystem(), lineString.getCoordinateSystem() );
-    assertEquals( LINE_STRING.getNumberOfCurveSegments(), lineString.getNumberOfCurveSegments() );
-    assertEquals( LINE_STRING.getStartPoint(), lineString.getStartPoint() );
-    assertEquals( LINE_STRING.getEndPoint(), lineString.getEndPoint() );
-  }
-
   private GM_Curve parseLineString( final String source ) throws Exception
   {
+    final SAXParserFactory saxFactory = SAXParserFactory.newInstance();
+    saxFactory.setNamespaceAware( true );
+
     final InputSource is = new InputSource( getClass().getResourceAsStream( source ) );
 
-    final SAXParser saxParser = m_saxFactory.newSAXParser();
+    final SAXParser saxParser = saxFactory.newSAXParser();
     final XMLReader reader = saxParser.getXMLReader();
 
     final GM_Curve[] result = new GM_Curve[1];

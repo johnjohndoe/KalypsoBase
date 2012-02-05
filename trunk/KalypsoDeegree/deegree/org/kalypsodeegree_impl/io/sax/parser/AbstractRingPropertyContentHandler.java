@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- * 
+ *
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -45,7 +45,7 @@ import org.xml.sax.XMLReader;
 
 /**
  * A content handler which parses a gml:exterior element.<br>
- * 
+ *
  * @author Gernot Belger
  * @author Felipe Maximino
  */
@@ -71,12 +71,9 @@ public class AbstractRingPropertyContentHandler extends GMLElementContentHandler
   @Override
   protected void doStartElement( final String uri, final String localName, final String name, final Attributes attributes )
   {
-    new LinearRingContentHandler( getXMLReader(), this, m_defaultSrs ).activate();
+    new LinearRingContentHandler( getXMLReader(), this, getDefaultSrs() ).activate();
   }
 
-  /**
-   * @see org.xml.sax.helpers.DefaultHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
-   */
   @Override
   public void doEndElement( final String uri, final String localName, final String name ) throws SAXException
   {
@@ -90,10 +87,6 @@ public class AbstractRingPropertyContentHandler extends GMLElementContentHandler
     }
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.sax.GMLElementContentHandler#handleUnexpectedEndElement(java.lang.String,
-   *      java.lang.String, java.lang.String)
-   */
   @Override
   public void handleUnexpectedEndElement( final String uri, final String localName, final String name ) throws SAXException
   {
@@ -107,9 +100,6 @@ public class AbstractRingPropertyContentHandler extends GMLElementContentHandler
       super.handleUnexpectedEndElement( uri, localName, name );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.sax.IRingHandler#handleRing(org.kalypsodeegree.model.geometry.GM_Ring)
-   */
   @Override
   public void handle( final GM_Ring ring )
   {
