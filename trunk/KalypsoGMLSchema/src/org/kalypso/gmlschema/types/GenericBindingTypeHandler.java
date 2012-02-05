@@ -116,7 +116,6 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
   {
     try
     {
-      // memory to xml
       final ContentHandler contentHandler = reader.getContentHandler();
       final JAXBContext jaxbContext = m_jaxbContextProvider.getJaxBContextForGMLVersion( gmlVersion );
       final Marshaller marshaller = JaxbUtilities.createMarshaller( jaxbContext );
@@ -132,7 +131,6 @@ public class GenericBindingTypeHandler implements IMarshallingTypeHandler
   @Override
   public void unmarshal( final XMLReader reader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException
   {
-    // xml to memory
     try
     {
       final JAXBContext jaxbContext = m_jaxbContextProvider.getJaxBContextForGMLVersion( gmlVersion );

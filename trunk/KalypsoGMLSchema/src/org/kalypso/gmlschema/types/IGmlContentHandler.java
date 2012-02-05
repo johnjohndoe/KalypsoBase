@@ -59,8 +59,6 @@ public interface IGmlContentHandler extends ContentHandler
 
   Locator getDocumentLocator( );
 
-  ContentHandler getTopLevel( );
-
   /**
    * Returns a snapshot of the current prefix mapping as {@link NamespaceContext}.
    */

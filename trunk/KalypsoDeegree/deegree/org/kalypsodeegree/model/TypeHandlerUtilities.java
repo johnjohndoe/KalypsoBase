@@ -39,13 +39,10 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.namespace.QName;
 
-import ogc31.www.opengis.net.gml.FileType;
-
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.ogc2x.KalypsoOGC2xJAXBcontext;
 import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
 import org.kalypso.gmlschema.swe.RepresentationTypeHandler;
-import org.kalypso.gmlschema.types.GenericBindingTypeHandler;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.JAXBContextProvider;
@@ -62,6 +59,7 @@ import org.kalypsodeegree.model.typeHandler.MultiSurfaceHandler;
 import org.kalypsodeegree.model.typeHandler.PointHandler;
 import org.kalypsodeegree.model.typeHandler.PolygonHandler;
 import org.kalypsodeegree.model.typeHandler.PolyhedralSurfaceHandler;
+import org.kalypsodeegree.model.typeHandler.RangeSetTypeHandler;
 import org.kalypsodeegree.model.typeHandler.SurfaceHandler;
 import org.kalypsodeegree.model.typeHandler.TriangulatedSurfaceHandler;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerBigDecimal;
@@ -282,12 +280,10 @@ public final class TypeHandlerUtilities
 
     // Coverages
     // TODO: implement sax parsers
-    registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "RangeSetType" ), new QName( NS.GML3, "File" ), FileType.class, false ) );
-    // TODO: implement sax parsers
     registry.registerTypeHandler( new RectifiedGridDomainTypeHandlerGml3() );
+    registry.registerTypeHandler( new RangeSetTypeHandler() );
 
     // http://www.opengis.net/swe
-    // TODO: implement sax parsers
     registry.registerTypeHandler( new RepresentationTypeHandler() );
   }
 }

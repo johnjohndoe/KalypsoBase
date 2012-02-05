@@ -59,9 +59,6 @@ public class PosMarshaller extends AbstractMarshaller<GM_Position>
     super( reader, TAG_POS );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#doMarshall(java.lang.Object)
-   */
   @Override
   protected void doMarshallContent( final GM_Position marshalledObject ) throws SAXException
   {

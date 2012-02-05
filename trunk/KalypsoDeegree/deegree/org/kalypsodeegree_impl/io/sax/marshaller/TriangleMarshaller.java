@@ -64,9 +64,6 @@ public class TriangleMarshaller extends SurfacePatchMarshaller<GM_Triangle>
     super( reader, TAG_TRIANGLE, surfaceCrs );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#doMarshall(java.lang.Object)
-   */
   @Override
   protected void doMarshallContent( final GM_Triangle marshalledObject ) throws SAXException
   {
