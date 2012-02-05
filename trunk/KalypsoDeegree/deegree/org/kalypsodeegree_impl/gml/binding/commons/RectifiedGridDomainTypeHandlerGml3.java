@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- * 
+ *
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -63,7 +63,7 @@ import org.w3c.dom.NodeList;
  * binding classes do not support getting/setting of the grid-domain.
  * </p>
  * TypeHandler for GridDomain of RectifiedGridCoverage
- * 
+ *
  * @author Dejan Antanaskovic
  */
 public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshallingTypeHandlerAdapter
@@ -197,6 +197,8 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
     try
     {
       final AdapterBindingToValue adapter = new AdapterBindingToValue_GML31();
+
+      // FIXME: use sax parser instead!
       final GM_Point origin = (GM_Point) adapter.wrapFromNode( n_point );
 
       final NodeList nl_offSetVector = ((Element) node).getElementsByTagNameNS( NS.GML3, "offsetVector" );

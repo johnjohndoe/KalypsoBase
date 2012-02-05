@@ -6,9 +6,8 @@ import java.net.URL;
 
 import javax.xml.namespace.QName;
 
-import ogc31.www.opengis.net.gml.FileType;
-
 import org.kalypso.commons.xml.NS;
+import org.kalypsodeegree.model.coverage.RangeSetFile;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
@@ -20,7 +19,7 @@ import com.vividsolutions.jts.geom.Envelope;
 /**
  * {@link IGeoGrid} implementation based on {@link org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage}s.<br>
  * This implementation analyzes the wrapped coverage and generates a suitable grid, to which all calls are delegated.
- * 
+ *
  * @author Gernot Belger
  */
 public class RectifiedGridCoverageGeoGrid implements IGeoGrid
@@ -104,9 +103,9 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
     {
       try
       {
-        if( m_rangeSet instanceof FileType )
+        if( m_rangeSet instanceof RangeSetFile )
         {
-          final FileType file = (FileType) m_rangeSet;
+          final RangeSetFile file = (RangeSetFile) m_rangeSet;
           return new URL( m_context, file.getFileName() );
         }
         else
@@ -127,9 +126,9 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
     {
       try
       {
-        if( m_rangeSet instanceof FileType )
+        if( m_rangeSet instanceof RangeSetFile )
         {
-          final FileType file = (FileType) m_rangeSet;
+          final RangeSetFile file = (RangeSetFile) m_rangeSet;
           final URL url = new URL( m_context, file.getFileName() );
 
           m_grid = GeoGridUtilities.openGrid( file.getMimeType(), url, m_origin, m_offsetX, m_offsetY, m_sourceCRS, m_writeable );
@@ -146,9 +145,6 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
     return m_grid;
   }
 
-  /**
-   * @see org.kalypso.grid.IGeoGrid#getEnvelope()
-   */
   @Override
   public Envelope getEnvelope( ) throws GeoGridException
   {

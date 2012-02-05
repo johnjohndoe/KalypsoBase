@@ -1,5 +1,3 @@
-package org.kalypso.gml.processes.raster2vector.test;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -40,6 +38,7 @@ package org.kalypso.gml.processes.raster2vector.test;
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.gml.processes.raster2vector.test;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,9 +46,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
-
-import junit.framework.TestCase;
-import ogc31.www.opengis.net.gml.FileType;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -60,10 +56,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
 import org.kalypso.gml.processes.raster2vector.Raster2Lines;
 import org.kalypso.gml.processes.raster2vector.Raster2LinesWalkingStrategy;
 import org.kalypso.gml.processes.raster2vector.collector.CollectorDataProvider;
@@ -85,6 +82,7 @@ import org.kalypso.grid.IGeoGrid;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
+import org.kalypsodeegree.model.coverage.RangeSetFile;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -107,10 +105,13 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  *
  * @author Thomas Jung
  */
-public class TestGrid2Shp extends TestCase
+public class TestGrid2Shp
 {
   private static final GeometryFactory GF = new GeometryFactory();
 
+  @Test
+  // Ignore for normal testing, this takes much too long
+  @Ignore
   public void testRiskModel( ) throws Exception
   {
     // unzip test data into workspace
@@ -251,8 +252,7 @@ public class TestGrid2Shp extends TestCase
     final RectifiedGridCoverage coverage = (RectifiedGridCoverage) coverageFeature;
     covColl.getCoverages().add( coverage );
 
-    final FileType rangeSetFile = KalypsoOGC31JAXBcontext.GML3_FAC.createFileType();
-    rangeSetFile.setFileName( binFileName );
+    final RangeSetFile rangeSetFile = new RangeSetFile( binFileName );
     rangeSetFile.setMimeType( "image/bin" ); //$NON-NLS-1$
 
     covColl.getCoverages().add( coverage );
@@ -266,10 +266,9 @@ public class TestGrid2Shp extends TestCase
 
   private static RectifiedGridDomain importAsBinaryRaster( final File srcFile, final File dstFile, final String sourceCRS, final IProgressMonitor monitor ) throws IOException, CoreException
   {
-    final ConvertAscii2Binary ascii2Binary = new ConvertAscii2Binary( srcFile.toURL(), dstFile, 2, sourceCRS );
+    final ConvertAscii2Binary ascii2Binary = new ConvertAscii2Binary( srcFile.toURI().toURL(), dstFile, 2, sourceCRS );
     ascii2Binary.doConvert( monitor );
     final RectifiedGridDomain gridDomain = ascii2Binary.getGridDomain();
     return gridDomain;
   }
-
 }

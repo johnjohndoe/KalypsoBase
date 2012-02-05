@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- * 
+ *
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -37,20 +37,19 @@ package org.kalypsodeegree_impl.gml.binding.commons;
 
 import javax.xml.namespace.QName;
 
-import ogc31.www.opengis.net.gml.FileType;
-
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.model.coverage.RangeSetFile;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * TODO: add setters/getters for the coverage-function
- * 
+ *
  * @author Dejan Antanaskovic, Gernot Belger
  */
 public class RectifiedGridCoverage extends Feature_Impl implements ICoverage
@@ -83,7 +82,7 @@ public class RectifiedGridCoverage extends Feature_Impl implements ICoverage
 
   /**
    * Sets the grid domain, also updates the boundedBy property.
-   * 
+   *
    * @param gridDomain
    *          The gridDomain to set.
    */
@@ -117,7 +116,7 @@ public class RectifiedGridCoverage extends Feature_Impl implements ICoverage
    */
   public void setRangeSet( final Object rangeSet )
   {
-    if( !(rangeSet instanceof FileType) )
+    if( !(rangeSet instanceof RangeSetFile) )
       throw new IllegalArgumentException();
 
     setProperty( RectifiedGridCoverage.QNAME_PROP_RANGE_SET, rangeSet );

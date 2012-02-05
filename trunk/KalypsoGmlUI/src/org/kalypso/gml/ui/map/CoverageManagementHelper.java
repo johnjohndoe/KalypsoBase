@@ -44,8 +44,6 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import ogc31.www.opengis.net.gml.FileType;
-
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -56,6 +54,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gml.ui.i18n.Messages;
+import org.kalypsodeegree.model.coverage.RangeSetFile;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
@@ -90,10 +89,10 @@ public class CoverageManagementHelper
     final GMLWorkspace workspace = feature.getWorkspace();
 
     final Object rangeSet = coverage.getRangeSet();
-    if( !(rangeSet instanceof FileType) )
+    if( !(rangeSet instanceof RangeSetFile) )
       return Status.OK_STATUS;
 
-    final String fileName = ((FileType) rangeSet).getFileName();
+    final String fileName = ((RangeSetFile) rangeSet).getFileName();
 
     try
     {
