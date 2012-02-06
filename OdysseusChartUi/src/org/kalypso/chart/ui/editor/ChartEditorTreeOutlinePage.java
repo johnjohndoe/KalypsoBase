@@ -73,7 +73,10 @@ import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.editor.dnd.ChartLayerTransfer;
 
+import com.google.common.base.Objects;
+
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.ILayerContainer;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -85,6 +88,9 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
  */
 public class ChartEditorTreeOutlinePage extends Page implements IContentOutlinePage
 {
+  /** Constant for empty layer selection */
+  private static final String SELECTION_NONE = "<none>"; //$NON-NLS-1$
+
   protected ICheckStateListener m_checkStateListener = null;
 
   protected ITreeContentProvider m_contentProvider;
@@ -108,13 +114,10 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
       super( name );
     }
 
-    /**
-     * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
-     */
     @Override
     public IStatus runInUIThread( final IProgressMonitor monitor )
     {
-      if( notDisposed() )
+      if( !isDisposed() )
         m_treeViewer.refresh();
       return Status.OK_STATUS;
     }
@@ -228,15 +231,66 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
     return m_model;
   }
 
-  protected boolean notDisposed( )
+  protected boolean isDisposed( )
   {
-    return m_treeViewer != null && m_treeViewer.getControl() != null && !m_treeViewer.getControl().isDisposed();
+    if( m_treeViewer == null )
+      return true;
+
+    final Control control = m_treeViewer.getControl();
+    if( control == null )
+      return true;
+
+    return control.isDisposed();
   }
 
   private void setInput( final IChartModel model )
   {
-    if( notDisposed() )
+    if( isDisposed() )
+      return;
+
+    {
+      /* Remember type of selected layer */
+      final IChartModel oldModel = (IChartModel) m_treeViewer.getInput();
+      final String currentSelection = findSelectedLayerId( oldModel );
+
       m_treeViewer.setInput( model );
+
+      final IChartLayer selectedLayer = findSelectedLayer( model, currentSelection );
+      if( selectedLayer != null )
+        m_treeViewer.setSelection( new StructuredSelection( selectedLayer ) );
+    }
+  }
+
+  private IChartLayer findSelectedLayer( final IChartModel model, final String layerId )
+  {
+    if( model == null )
+      return null;
+
+    final IChartLayer[] layers = model.getLayerManager().getLayers();
+    for( final IChartLayer layer : layers )
+    {
+      final String identifier = layer.getIdentifier();
+      if( Objects.equal( layerId, identifier ) )
+        return layer;
+    }
+
+    if( layers.length > 0 )
+      return layers[0];
+
+    return null;
+  }
+
+  private String findSelectedLayerId( final IChartModel model )
+  {
+    if( model == null )
+      return SELECTION_NONE;
+
+    final IStructuredSelection selection = (IStructuredSelection) m_treeViewer.getSelection();
+    final Object firstElement = selection.getFirstElement();
+    if( firstElement instanceof IChartLayer )
+      return ((ILayerContainer) firstElement).getIdentifier();
+
+    return SELECTION_NONE;
   }
 
   public void setModel( final IChartModel model )
@@ -472,20 +526,19 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
     m_treeViewer.getControl().setFocus();
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
-   */
   @Override
   public void setSelection( final ISelection selection )
   {
-    if( notDisposed() )
-      m_treeViewer.setSelection( selection );
+    if( isDisposed() )
+      return;
+
+    m_treeViewer.setSelection( selection );
   }
 
   public void updateControl( )
   {
     if( m_treeViewer.getInput() == null )
-      m_treeViewer.setInput( m_model );
+      setInput( m_model );
     else
       m_treeViewer.refresh();
   }
