@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- * 
+ *
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -37,56 +37,31 @@ package org.kalypsodeegree_impl.model.geometry;
 
 /**
  * factory class to wrap from binding geometries to GM_Object geometries and visa versa
- * 
+ *
  * @author doemming
  */
-public class AdapterGmlIO
+public final class AdapterGmlIO
 {
-  private static AdapterBindingToValue GML31_Binding2Value = null;
+  private static AdapterBindingToValue GML_Binding2Value = null;
 
-  private static AdapterBindingToValue GML21_Binding2Value = null;
-
-  private static AdapterValueToGMLBinding GML31_Value2Binding = null;
-
-  private static AdapterValueToGMLBinding GML21_Value2Binding = null;
+  private static AdapterValueToGMLBinding GML_Value2Binding = null;
 
   private AdapterGmlIO( )
   {
     // do not instantiate
   }
 
-  public static synchronized AdapterBindingToValue getGMLBindingToGM_ObjectAdapter( final String gmlVersion )
+  public static synchronized AdapterBindingToValue getGMLBindingToGM_ObjectAdapter( )
   {
-    if( gmlVersion == null || gmlVersion.startsWith( "2" ) )
-    {
-      if( GML21_Binding2Value == null )
-        GML21_Binding2Value = new AdapterBindingToValue_GML2x();
-      return GML21_Binding2Value;
-    }
-    if( gmlVersion.startsWith( "3" ) )
-    {
-      if( GML31_Binding2Value == null )
-        GML31_Binding2Value = new AdapterBindingToValue_GML31();
-      return GML31_Binding2Value;
-    }
-    throw new UnsupportedOperationException( "GML version " + gmlVersion + " is not supported by this method" );
+    if( GML_Binding2Value == null )
+      GML_Binding2Value = new AdapterBindingToValueImpl();
+    return GML_Binding2Value;
   }
 
-  public static synchronized AdapterValueToGMLBinding getGM_ObjectToGMLBindingAdapter( final String gmlVersion )
+  public static synchronized AdapterValueToGMLBinding getGM_ObjectToGMLBindingAdapter( )
   {
-    if( gmlVersion == null || gmlVersion.startsWith( "2" ) )
-    {
-      if( GML21_Value2Binding == null )
-        GML21_Value2Binding = new AdapterValueToBinding_GML2x();
-      return GML21_Value2Binding;
-    }
-    if( gmlVersion.startsWith( "3" ) )
-    {
-      if( GML31_Value2Binding == null )
-        GML31_Value2Binding = new AdapterValueToBinding_GML31();
-      return GML31_Value2Binding;
-    }
-    throw new UnsupportedOperationException( "GML version " + gmlVersion + " is not supported by this method" );
+    if( GML_Value2Binding == null )
+      GML_Value2Binding = new AdapterValueToBinding();
+    return GML_Value2Binding;
   }
-
 }

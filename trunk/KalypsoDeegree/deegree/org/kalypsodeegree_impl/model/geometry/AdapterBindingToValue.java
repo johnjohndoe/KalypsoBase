@@ -35,7 +35,6 @@
  */
 package org.kalypsodeegree_impl.model.geometry;
 
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.w3c.dom.Node;
 
 /**
@@ -43,15 +42,6 @@ import org.w3c.dom.Node;
  */
 public interface AdapterBindingToValue
 {
-
-  /**
-   * @param bindingGeometry
-   * @param favoredGeometryClass
-   *          the favored geometry class to return or <code>null</code> for default behaviour
-   * @return a GM_Object or a GM_Envelope
-   */
-  Object wrapFromBinding( final Object bindingGeometry, final Class< ? > favoredGeometryClass ) throws GM_Exception;
-
   /**
    * @return a GM_Object or a GM_Envelope
    */

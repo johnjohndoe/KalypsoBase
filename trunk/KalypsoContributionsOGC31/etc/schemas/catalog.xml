@@ -2,9 +2,8 @@
 
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">
 
-  <!-- gml is already defined in KalypsoDeegree -->
-  <!-- uri name="http://www.opengis.net/gml" uri="generated/gml/3.1.1/base/gml.xsd" /-->
-
-    <uri name="http://www.opengis.net/swe" uri="generated/ogc31.www.opengis.net.swe.xsd"/>
+  <!-- GML 3.1 -->
+  <uri name="http://www.opengis.net/gml" uri="gml/3.1.1/base/gml.xsd" />
+  <uri name="http://www.opengis.net/swe" uri="sweCommon/1.0.30/swe.xsd" />
 
 </catalog>
