@@ -52,6 +52,12 @@ public interface GM_Envelope extends Cloneable
 
   QName PROPERTY_UPPER_CORNER = new QName( NS.GML3, "upperCorner" ); //$NON-NLS-1$
 
+  QName PROPERTY_COORD = new QName( NS.GML3, "coord" ); //$NON-NLS-1$
+
+  QName PROPERTY_POS = new QName( NS.GML3, "pos" ); //$NON-NLS-1$
+
+  QName PROPERTY_COORDINATES = new QName( NS.GML3, "coordinates" ); //$NON-NLS-1$
+
   /**
    * returns the width of bounding box
    */

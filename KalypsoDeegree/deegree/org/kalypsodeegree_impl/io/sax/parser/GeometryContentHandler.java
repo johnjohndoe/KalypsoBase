@@ -133,7 +133,7 @@ public class GeometryContentHandler extends GMLElementContentHandler implements 
   @Override
   public void endElement( final String uri, final String localName, final String name ) throws SAXException
   {
-    final IGmlElementcontentHandler2 parent = (IGmlElementcontentHandler2) getParentContentHandler();
+    final IGmlElementContentHandler parent = (IGmlElementContentHandler) getParentContentHandler();
     final String parentTag = parent.getLocalName();
 
     if( getUri().equals( uri ) && parentTag.equals( localName ) )

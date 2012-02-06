@@ -45,7 +45,7 @@ import org.kalypso.gmlschema.types.IGmlContentHandler;
 /**
  * @author "Gernot Belger"
  */
-public interface IGmlElementcontentHandler2 extends IGmlContentHandler
+public interface IGmlElementContentHandler extends IGmlContentHandler
 {
   String getLocalName( );
 }

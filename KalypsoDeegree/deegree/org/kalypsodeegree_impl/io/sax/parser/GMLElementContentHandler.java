@@ -57,7 +57,7 @@ import org.xml.sax.XMLReader;
  * @author Gernot Belger
  * @author Felipe Maximino
  */
-public abstract class GMLElementContentHandler extends AbstractGmlContentHandler implements IGmlElementcontentHandler2
+public abstract class GMLElementContentHandler extends AbstractGmlContentHandler implements IGmlElementContentHandler
 {
   private final String m_uri;
 

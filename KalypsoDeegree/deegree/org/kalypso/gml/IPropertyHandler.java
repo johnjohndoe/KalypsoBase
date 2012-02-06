@@ -41,12 +41,12 @@
 package org.kalypso.gml;
 
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypsodeegree_impl.io.sax.parser.IGmlElementcontentHandler2;
+import org.kalypsodeegree_impl.io.sax.parser.IGmlElementContentHandler;
 
 /**
  * @author Felipe Maximino
  */
-public interface IPropertyHandler extends IGmlElementcontentHandler2
+public interface IPropertyHandler extends IGmlElementContentHandler
 {
   void setPropertyAsScope( IPropertyType property );
 }

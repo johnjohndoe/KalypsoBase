@@ -38,46 +38,42 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.io.sax.marshaller;
+package org.kalypsodeegree_impl.io.sax.parser;
 
-import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * @author Gernot Belger
  */
-public class EnvelopeMarshaller extends AbstractMarshaller<GM_Envelope>
+public class NullContentHandler extends GMLElementContentHandler
 {
-  public EnvelopeMarshaller( final XMLReader reader )
+  private final IEnvelopeHandler m_envelopeHandler;
+
+  public NullContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final IEnvelopeHandler envelopeHandler )
   {
-    super( reader, GM_Envelope.ENVELOPE_ELEMENT.getLocalPart() );
+    super( reader, NS.GML3, "Null", parentContentHandler ); //$NON-NLS-1$
+
+    m_envelopeHandler = envelopeHandler;
   }
 
   @Override
-  protected Attributes createAttributesForStartElement( final GM_Envelope element )
+  protected void doEndElement( final String uri, final String localName, final String name ) throws SAXException
   {
-    final AttributesImpl atts = new AttributesImpl();
-
-    final int srsDimension = element.getMin().getCoordinateDimension();
-
-    MarshallerUtils.addSrsAttributes( atts, element.getCoordinateSystem(), srsDimension );
-
-    return atts;
+    if( getUri().equals( uri ) && getLocalName().equals( localName ) )
+      m_envelopeHandler.handle( null );
+    else
+    throwSAXParseException( "Unexcpected content in Null element: %s", name );
   }
 
   @Override
-  protected void doMarshallContent( final GM_Envelope marshalledObject ) throws SAXException
+  protected void doStartElement( final String uri, final String localName, final String name, final Attributes atts ) throws SAXParseException
   {
-    // TODO: srs?
-
-    final GM_Position lowerCorner = marshalledObject.getMin();
-    final GM_Position upperCorner = marshalledObject.getMax();
-
-    new DirectPositionTypeMarshaller( getXMLReader(), GM_Envelope.PROPERTY_LOWER_CORNER.getLocalPart() ).marshall( lowerCorner );
-    new DirectPositionTypeMarshaller( getXMLReader(), GM_Envelope.PROPERTY_UPPER_CORNER.getLocalPart() ).marshall( upperCorner );
+    if( !getUri().equals( uri ) || !getLocalName().equals( localName ) )
+      throwSAXParseException( "Unexcpected content in Null element: %s", name );
   }
 }

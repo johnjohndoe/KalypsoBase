@@ -43,41 +43,40 @@ package org.kalypsodeegree_impl.io.sax.parser;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.types.AbstractGmlContentHandler;
-import org.kalypso.gmlschema.types.IGMLElementHandler;
 import org.kalypso.gmlschema.types.IGmlContentHandler;
-import org.kalypsodeegree_impl.io.sax.parser.geometrySpec.IGeometrySpecification;
+import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
 /**
- * Handles sequences of properties.
+ * Handles choice elements.
  *
  * @author Gernot Belger
  */
-public class GMLPropertySequenceContentHandler extends AbstractGmlContentHandler implements IGMLElementHandler<Object>
+public abstract class AbstractChoiceContentHandler extends AbstractGmlContentHandler
 {
-  private final IGeometrySpecification m_spec;
+  UnmarshallResultEater m_resultEater = new UnmarshallResultEater()
+  {
+    @Override
+    public void unmarshallSuccesful( final Object value ) throws SAXParseException
+    {
+      setResult( value );
+    }
+  };
 
-  private final String m_defaultSrs;
-
-  private final IGmlContentHandler m_receiver;
-
-  public GMLPropertySequenceContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final IGmlContentHandler receiver, final String defaultSrs, final IGeometrySpecification spec )
+  public AbstractChoiceContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler )
   {
     super( reader, parentContentHandler );
-
-    m_receiver = receiver;
-
-    m_defaultSrs = defaultSrs;
-    m_spec = spec;
   }
+
+  protected abstract void setResult( final Object value ) throws SAXParseException;
 
   @Override
   public void endElement( final String uri, final String localName, final String name ) throws SAXException
   {
-    final GMLElementContentHandler parentContentHandler = (GMLElementContentHandler) getParentContentHandler();
+    final IGmlElementContentHandler parentContentHandler = (IGmlElementContentHandler) getParentContentHandler();
     if( parentContentHandler.getLocalName().equals( localName ) )
     {
       activateParent();
@@ -88,7 +87,7 @@ public class GMLPropertySequenceContentHandler extends AbstractGmlContentHandler
   @Override
   public void startElement( final String uri, final String localName, final String name, final Attributes atts ) throws SAXException
   {
-    final IGmlContentHandler delegate = findDelegate( new QName( uri, localName ) );
+    final IGmlContentHandler delegate = findDelegate( new QName( uri, localName ), m_resultEater );
 
     if( delegate == null )
       throwSAXParseException( "Unexpected start element: %s - %s -  %s", uri, localName, name );
@@ -97,17 +96,5 @@ public class GMLPropertySequenceContentHandler extends AbstractGmlContentHandler
     delegate.startElement( uri, localName, name, atts );
   }
 
-  private IGmlContentHandler findDelegate( final QName property ) throws SAXParseException
-  {
-    return m_spec.getHandler( property, getXMLReader(), this, m_receiver, m_defaultSrs );
-  }
-
-  /**
-   * @see org.kalypso.gmlschema.types.IGMLElementHandler#handle(java.lang.Object)
-   */
-  @Override
-  public void handle( final Object element ) throws SAXException
-  {
-    ((GMLPropertySequenceContentHandler) getParentContentHandler()).handle( element );
-  }
+  protected abstract IGmlContentHandler findDelegate( final QName property, UnmarshallResultEater receiver ) throws SAXParseException;
 }
