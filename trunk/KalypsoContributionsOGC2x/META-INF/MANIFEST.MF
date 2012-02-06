@@ -7,9 +7,4 @@ Bundle-Vendor: kalypsobase.sourceforge.net
 Require-Bundle: org.kalypso.commons,
  org.eclipse.wst.xml.core;resolution:=optional
 Bundle-ActivationPolicy: lazy
-Export-Package: ogc2.www.opengis.net.gml,
- ogc2.www.opengis.net.ogc,
- ogc2.www.opengis.net.ows,
- ogc2.www.opengis.net.sld,
- org.kalypso.contribs.ogc2x
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
