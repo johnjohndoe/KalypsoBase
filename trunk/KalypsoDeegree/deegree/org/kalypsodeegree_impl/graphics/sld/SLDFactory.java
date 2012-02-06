@@ -50,21 +50,16 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import javax.xml.bind.DatatypeConverter;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
 
-import ogc2.www.opengis.net.sld.ColorMap;
-import ogc2.www.opengis.net.sld.ObjectFactory;
-
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.deegree.ogcbase.CommonNamespaces;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver2;
@@ -137,7 +132,7 @@ import org.xml.sax.SAXException;
  * corresponding objects (Fill), but marked as left out (to make it possible to differentiate between explicitly given
  * values and default values).
  * <p>
- * 
+ *
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
@@ -159,7 +154,7 @@ public final class SLDFactory
 
   /**
    * Creates a <tt>StyledLayerDescriptor</tt> -instance from the given file.
-   * 
+   *
    * @param styleFile
    *          The file to read the style from
    * @throws XMLParsingException
@@ -183,7 +178,7 @@ public final class SLDFactory
   /**
    * Creates a <tt>StyledLayerDescriptor</tt> -instance from the given Reader.
    * <p>
-   * 
+   *
    * @param reader
    *          provides the XML document
    * @throws XMLParsingException
@@ -245,7 +240,7 @@ public final class SLDFactory
   /**
    * Reads an sld file from an {@link URL}.<br>
    * The type of the returned element may be any of the top-level types defined in the sld-schema.
-   * 
+   *
    * @throws XMLParsingException
    *           if a syntactic or semantic error in the XML document is encountered
    * @return The read top-Level element
@@ -278,7 +273,7 @@ public final class SLDFactory
   /**
    * Reads an sld file from an {@link InputStream}.<br>
    * The type of the returned element may be any of the top-level types defined in the sld-schema.
-   * 
+   *
    * @throws XMLParsingException
    *           if a syntactic or semantic error in the XML document is encountered
    * @return The read top-Level element
@@ -338,7 +333,7 @@ public final class SLDFactory
    * Creates a <tt>TextSymbolizer</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'TextSymbolizer'- <tt>Element</tt>.
    * <p>
-   * 
+   *
    * @param element
    *          the 'TextSymbolizer'- <tt>Element</tt>
    * @param min
@@ -407,7 +402,7 @@ public final class SLDFactory
    * Creates a <tt>Halo</tt> -instance according to the contents of the DOM-subtree starting at the given 'Halo'-
    * <tt>Element</tt>.
    * <p>
-   * 
+   *
    * @param element
    *          the 'Halo'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -450,7 +445,7 @@ public final class SLDFactory
    * Creates a <tt>LabelPlacement</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'LabelPlacement'- <tt>Element</tt>.
    * <p>
-   * 
+   *
    * @param element
    *          the 'LabelPlacement'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -507,7 +502,7 @@ public final class SLDFactory
    * Creates a <tt>PointPlacement</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'PointPlacement'- <tt>Element</tt>.
    * <p>
-   * 
+   *
    * @param element
    *          the 'PointPlacement'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -573,7 +568,7 @@ public final class SLDFactory
    * Creates a <tt>LinePlacement</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'LinePlacement'- <tt>Element</tt>.
    * <p>
-   * 
+   *
    * @param element
    *          the 'LinePlacement'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -616,7 +611,7 @@ public final class SLDFactory
    * Creates a <tt>Font</tt> -instance according to the contents of the DOM-subtree starting at the given 'Font'-
    * <tt>Element</tt>.
    * <p>
-   * 
+   *
    * @param element
    *          the 'Font'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -642,7 +637,7 @@ public final class SLDFactory
    * Creates a <tt>ParameterValueType</tt> -instance according to the contents of the DOM-subtree starting at the given
    * <tt>Element</tt>.
    * <p>
-   * 
+   *
    * @param element
    *          the <tt>Element</tt> (must be of the type sld:ParameterValueType)
    * @throws XMLParsingException
@@ -687,7 +682,7 @@ public final class SLDFactory
   /**
    * Creates a <tt>StyledLayerDescriptor</tt> -instance according to the contents of the DOM-subtree starting at the
    * given 'StyledLayerDescriptor'- <tt>Element</tt>.
-   * 
+   *
    * @param context
    *          Used as context to resolve any links contained in the document.
    * @param element
@@ -714,7 +709,7 @@ public final class SLDFactory
    * Creates a <tt>StyledLayerDescriptor</tt> -instance according to the contents of the DOM-subtree starting at the
    * given 'StyledLayerDescriptor'- <tt>Element</tt>.
    * <p>
-   * 
+   *
    * @param element
    *          the 'StyledLayerDescriptor'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -771,7 +766,7 @@ public final class SLDFactory
    * Creates a <tt>NamedStyle</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'NamedStyle'- <tt>Element</tt>.
    * <p>
-   * 
+   *
    * @param element
    *          the 'NamedStyle'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -798,7 +793,7 @@ public final class SLDFactory
    * Creates a <tt>RemoteOWS</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'RemoteOWS'- <tt>Element</tt>.
    * <p>
-   * 
+   *
    * @param element
    *          the 'RemoteOWS'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -834,7 +829,7 @@ public final class SLDFactory
    * Creates a <tt>NamedLayer</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'UserLayer'- <tt>Element</tt>.
    * <p>
-   * 
+   *
    * @param element
    *          the 'NamedLayer'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -899,7 +894,7 @@ public final class SLDFactory
    * Creates a <tt>UserLayer</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'UserLayer'- <tt>Element</tt>.
    * <p>
-   * 
+   *
    * @param element
    *          the 'UserLayer'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -941,7 +936,7 @@ public final class SLDFactory
    * Creates a <tt>FeatureTypeConstraint</tt> -instance according to the contents of the DOM-subtree starting at the
    * given 'FeatureTypeConstraint'- <tt>Element</tt>.
    * <p>
-   * 
+   *
    * @param element
    *          the 'FeatureTypeConstraint'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -978,7 +973,7 @@ public final class SLDFactory
    * Creates an <tt>Extent</tt> -instance according to the contents of the DOM-subtree starting at the given 'Extent'-
    * <tt>Element</tt>.
    * <p>
-   * 
+   *
    * @param element
    *          the 'Extent'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -999,7 +994,7 @@ public final class SLDFactory
    * Creates a <tt>LayerFeatureConstraints</tt> -instance according to the contents of the DOM-subtree starting at the
    * given 'LayerFeatureConstraints'- <tt>Element</tt>.
    * <p>
-   * 
+   *
    * @param element
    *          the 'LayerFeatureConstraints'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -1024,7 +1019,7 @@ public final class SLDFactory
    * Creates a <tt>UserStyle</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'UserStyle'- <tt>Element</tt>.
    * <p>
-   * 
+   *
    * @param element
    *          the 'UserStyle'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -1110,7 +1105,7 @@ public final class SLDFactory
    * <p>
    * TODO: The ElseFilter currently does not work correctly with FeatureFilters.
    * <p>
-   * 
+   *
    * @param element
    *          the 'FeatureTypeStyle'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -1224,7 +1219,7 @@ public final class SLDFactory
    * Creates a <tt>Rule</tt> -instance according to the contents of the DOM-subtree starting at the given 'Rule'-
    * <tt>Element</tt>.
    * <p>
-   * 
+   *
    * @param element
    *          the 'Rule'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -1380,7 +1375,7 @@ public final class SLDFactory
    * Creates a <tt>PointSymbolizer</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'PointSymbolizer'- <tt>Element</tt>.
    * <p>
-   * 
+   *
    * @param element
    *          the 'PointSymbolizer'- <tt>Element</tt>
    * @param min
@@ -1418,7 +1413,7 @@ public final class SLDFactory
    * Creates a <tt>LineSymbolizer</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'LineSymbolizer'- <tt>Element</tt>.
    * <p>
-   * 
+   *
    * @param element
    *          the 'LineSymbolizer'- <tt>Element</tt>
    * @param min
@@ -1456,7 +1451,7 @@ public final class SLDFactory
    * Creates a <tt>PolygonSymbolizer</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'PolygonSymbolizer'- <tt>Element</tt>.
    * <p>
-   * 
+   *
    * @param element
    *          the 'PolygonSymbolizer'- <tt>Element</tt>
    * @param min
@@ -1503,7 +1498,7 @@ public final class SLDFactory
    * Creates a <tt>SurfaceLineSymbolizer</tt> -instance according to the contents of the DOM-subtree starting at the
    * given 'SurfaceLineSymbolizer'- <tt>Element</tt>.
    * <p>
-   * 
+   *
    * @param element
    *          the 'SurfaceLineSymbolizer'- <tt>Element</tt>
    * @param min
@@ -1539,7 +1534,7 @@ public final class SLDFactory
    * Creates a <tt>SurfacePolygonSymbolizer</tt> -instance according to the contents of the DOM-subtree starting at the
    * given 'SurfaceLineSymbolizer'- <tt>Element</tt>.
    * <p>
-   * 
+   *
    * @param element
    *          the 'SurfacePolygonSymbolizer'- <tt>Element</tt>
    * @param min
@@ -1686,7 +1681,7 @@ public final class SLDFactory
    * <p>
    * FIXME: Add support for 'Function'-Elements.
    * <p>
-   * 
+   *
    * @param element
    *          the 'Geometry'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -1704,7 +1699,7 @@ public final class SLDFactory
    * Creates a <tt>Fill</tt> -instance according to the contents of the DOM-subtree starting at the given 'Fill'-
    * <tt>Element</tt>.
    * <p>
-   * 
+   *
    * @param element
    *          the 'Fill'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -1739,7 +1734,7 @@ public final class SLDFactory
    * Creates a <tt>LegendGraphic</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'LegendGraphic'-element.
    * <p>
-   * 
+   *
    * @param element
    *          the 'LegendGraphic'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -1759,7 +1754,7 @@ public final class SLDFactory
    * Creates an <tt>ExternalGraphic</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'ExternalGraphic'- <tt>Element</tt>.
    * <p>
-   * 
+   *
    * @param element
    *          the 'ExternalGraphic'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -1783,7 +1778,7 @@ public final class SLDFactory
    * Creates a <tt>Mark</tt> -instance according to the contents of the DOM-subtree starting at the given 'Mark'-
    * <tt>Element</tt>.
    * <p>
-   * 
+   *
    * @param element
    *          the 'Mark'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -1821,7 +1816,7 @@ public final class SLDFactory
    * Creates a <tt>Stroke</tt> -instance according to the contents of the DOM-subtree starting at the given 'Stroke'-
    * <tt>Element</tt>.
    * <p>
-   * 
+   *
    * @param element
    *          the 'Stroke'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -1866,7 +1861,7 @@ public final class SLDFactory
    * Creates a <tt>GraphicFill</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'GraphicFill'- <tt>Element</tt>.
    * <p>
-   * 
+   *
    * @param element
    *          the 'GraphicFill'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -1886,7 +1881,7 @@ public final class SLDFactory
    * Creates a <tt>GraphicStroke</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'GraphicStroke'- <tt>Element</tt>.
    * <p>
-   * 
+   *
    * @param element
    *          the 'GraphicStroke'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -1906,7 +1901,7 @@ public final class SLDFactory
    * Creates a <tt>Graphic</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'Graphic'-element.
    * <p>
-   * 
+   *
    * @param element
    *          the 'Graphic'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -1959,7 +1954,7 @@ public final class SLDFactory
    * Creates a <tt>CssParameter</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'CssParameter'- <tt>Element</tt>.
    * <p>
-   * 
+   *
    * @param element
    *          the 'CssParamter'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -2000,35 +1995,40 @@ public final class SLDFactory
     }
   }
 
-  private static SortedMap<Double, ColorMapEntry> createColorMap( final Element colorMapElement ) throws JAXBException
+  private static SortedMap<Double, ColorMapEntry> createColorMap( final Element colorMapElement )
   {
     final SortedMap<Double, ColorMapEntry> colorMap = new TreeMap<Double, ColorMapEntry>();
     if( colorMapElement == null )
       return null;
 
-    final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class, ogc2.www.opengis.net.gml.ObjectFactory.class, ogc2.www.opengis.net.ogc.ObjectFactory.class );
-    final Unmarshaller unmarshaller = jc.createUnmarshaller();
-    final ogc2.www.opengis.net.sld.ColorMap colorMapObject = (ColorMap) unmarshaller.unmarshal( colorMapElement );
-
-    final List<ogc2.www.opengis.net.sld.ColorMapEntry> colorMapEntries = colorMapObject.getColorMapEntry();
-    for( int i = 0; i < colorMapEntries.size(); i++ )
+    final NodeList entryNodes = colorMapElement.getChildNodes();
+    for( int i = 0; i < entryNodes.getLength(); i++ )
     {
-      final ogc2.www.opengis.net.sld.ColorMapEntry colorMapEntry = colorMapEntries.get( i );
-      final Color color = Color.decode( colorMapEntry.getColor() );
-      final Double opacity = colorMapEntry.getOpacity();
-      final Double quantity = colorMapEntry.getQuantity();
-      final String label = colorMapEntry.getLabel();
+      final Node entryNode = entryNodes.item( i );
+      final String nodeName = entryNode.getNodeName();
+      final String namespaceUri = entryNode.getNamespaceURI();
 
-      final double realOpacity = opacity == null ? 1.0 : opacity;
+      if( entryNode instanceof Element && NS.SLD.equals( namespaceUri ) && "ColorMapEntry".equals( nodeName ) ) //$NON-NLS-1$
+      {
+        final Element entryElement = (Element) entryNode;
+        final String colorAttribute = entryElement.getAttribute( "color" ); //$NON-NLS-1$
+        final String opacityAttribite = entryElement.getAttribute( "opacity" ); //$NON-NLS-1$
+        final String quantityAttribute = entryElement.getAttribute( "quantity" ); //$NON-NLS-1$
+        final String labelAttribute = entryElement.getAttribute( "label" ); //$NON-NLS-1$
 
-      // REMARK: what to do without quantity? i makes no sense, but what else...
-      final double realQuantity = quantity == null ? i : quantity;
+        final Color color = Color.decode( colorAttribute );
+        final Double opacity = NumberUtils.toDouble( opacityAttribite, 1.0 );
+        final Double quantity = NumberUtils.toDouble( quantityAttribute, Double.NaN );
+        final String label = StringUtils.trimToEmpty( labelAttribute );
 
-      final String realLabel = label == null ? "" : label.trim();
-
-      final ColorMapEntry colorMapEntryObject = new ColorMapEntry_Impl( color, realOpacity, realQuantity, realLabel );
-
-      colorMap.put( realQuantity, colorMapEntryObject );
+        if( Double.isNaN( quantity ) )
+          System.err.println( String.format( "SLD-Parser: skipping quantity '%s', not a number.", quantityAttribute ) );
+        else
+        {
+          final ColorMapEntry colorMapEntryObject = new ColorMapEntry_Impl( color, opacity, quantity, label );
+          colorMap.put( quantity, colorMapEntryObject );
+        }
+      }
     }
 
     return colorMap;
