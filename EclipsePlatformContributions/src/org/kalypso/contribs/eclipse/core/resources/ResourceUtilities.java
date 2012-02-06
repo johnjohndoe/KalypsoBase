@@ -30,16 +30,12 @@
 package org.kalypso.contribs.eclipse.core.resources;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLDecoder;
 
-import org.eclipse.core.internal.boot.PlatformURLHandler;
 import org.eclipse.core.internal.resources.PlatformURLResourceConnection;
-import org.eclipse.core.internal.runtime.CommonMessages;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -49,11 +45,8 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.osgi.util.NLS;
 import org.kalypso.contribs.eclipse.core.runtime.PathUtils;
-import org.kalypso.contribs.java.net.UrlUtilities;
 
 /**
  * ResourceUtilities
@@ -113,6 +106,7 @@ public final class ResourceUtilities
   {
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     return root.getFolder( path );
+
   }
 
   /**
@@ -139,78 +133,43 @@ public final class ResourceUtilities
   public static IProject findProjectFromURL( final URL baseURL )
   {
     final IPath path = findPathFromURL( baseURL );
-    if( path == null || path.segmentCount() < 1 )
-      return null;
-
-    final IPath absolutePath = path.makeAbsolute();
-    if( absolutePath.isRoot() )
+    if( path == null || path.isRoot() || path.segmentCount() < 1 || !path.isAbsolute() )
       return null;
 
     final String projectName = path.segment( 0 );
     return ResourcesPlugin.getWorkspace().getRoot().getProject( projectName );
   }
 
-  public static IPath findPathFromURL( final URL location )
+  public static IPath findPathFromURL( final URL u )
   {
-    try
-    {
-      return findPathFromUrlException( location );
-    }
-    catch( final MalformedURLException e )
-    {
-      e.printStackTrace();
-    }
-    catch( final UnsupportedEncodingException e )
-    {
-      e.printStackTrace();
-    }
-
-    return null;
-  }
-
-  private static IPath findPathFromUrlException( final URL location ) throws MalformedURLException, UnsupportedEncodingException
-  {
-    if( location == null )
+    if( u == null )
       return null;
 
-    final URL urlNoQuery = UrlUtilities.removeQuery( location );
+    final String utostring = u.toString();
+    final String urlpath;
+    final int ix = utostring.indexOf( '?' );
+    if( ix != -1 )
+      urlpath = utostring.substring( 0, ix );
+    else
+      urlpath = utostring;
 
-    final String protocol = urlNoQuery.getProtocol();
-
-    // if( urlpath != null && urlpath.startsWith( PlatformURLResourceConnection.RESOURCE_URL_STRING ) )
-    // {
-    // final String path = urlpath.substring( PlatformURLResourceConnection.RESOURCE_URL_STRING.length() - 1 );
-    //      return new Path( path.replaceAll( "//", "/" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    // }
-
-    // FIXME: check
-    if( PlatformURLHandler.PROTOCOL.equals( protocol ) )
+    if( urlpath != null && urlpath.startsWith( PlatformURLResourceConnection.RESOURCE_URL_STRING ) )
     {
-      String spec = urlNoQuery.getFile().trim();
-      if( spec.startsWith( "/" ) ) //$NON-NLS-1$
-        spec = spec.substring( 1 );
-      final int ix = spec.indexOf( "/" ); //$NON-NLS-1$
-      if( ix == -1 )
-        throw new MalformedURLException( NLS.bind( CommonMessages.url_invalidURL, location.toExternalForm() ) );
-
-      final String type = spec.substring( 0, ix );
-      if( PlatformURLResourceConnection.RESOURCE.equals( type ) )
-      {
-        final String filePath = URLDecoder.decode( spec.substring( ix ), "UTF-8" ); //$NON-NLS-1$
-        return new Path( filePath ); //$NON-NLS-1$
-      }
+      final String path = urlpath.substring( PlatformURLResourceConnection.RESOURCE_URL_STRING.length() - 1 );
+      final Path path2 = new Path( path.replaceAll( "//", "/" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      return path2;
     }
-    else if( protocol.equals( "http" ) || protocol.equals( "file" ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    // Checks if the full path lies in the Workspace, if it does, the java.io.File path is converted
+    // to an eclipse path
+    // WARNING: this is quite ugly and probalbly doesn't work as it is intended to do
+    // especially, if we are working with pathes into the .metadata section we get bugs
+    else if( urlpath != null && urlpath.startsWith( "http:/" ) || urlpath.startsWith( "file:/" ) ) //$NON-NLS-1$ //$NON-NLS-2$
     {
-      // Checks if the full path lies in the Workspace, if it does, the java.io.File path is converted
-      // to an eclipse path
-      // WARNING: this is quite ugly and probalbly doesn't work as it is intended to do
-      // especially, if we are working with pathes into the .metadata section we get bugs
       final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-      URL rootUrl = null;
+      URL url = null;
       try
       {
-        rootUrl = root.getLocation().toFile().toURI().toURL();
+        url = root.getLocation().toFile().toURI().toURL();
       }
       catch( final MalformedURLException e )
       {
@@ -218,19 +177,15 @@ public final class ResourceUtilities
         e.printStackTrace();
         return null;
       }
-
-      final String noQuery = urlNoQuery.toString();
-
-      if( noQuery.startsWith( rootUrl.toString() ) ) //$NON-NLS-1$
+      if( urlpath.matches( url.toString() + ".+" ) ) //$NON-NLS-1$
       {
         // split the string at the common part (path to workspace) and always take the second
         // part as the relative eclipse workspace path
-        final String[] array = noQuery.split( rootUrl.toString() );
+        final String[] array = urlpath.split( url.toString() );
         if( array[1].startsWith( ".metadata" ) ) //$NON-NLS-1$
           return null;
 
-        final String filePath = URLDecoder.decode( array[1], "UTF-8" ); //$NON-NLS-1$
-        return new Path( filePath );
+        return new Path( array[1] );
       }
     }
 
@@ -299,6 +254,7 @@ public final class ResourceUtilities
    * @param path
    * @return platform URL
    */
+  @SuppressWarnings("restriction")
   public static String createURLSpec( final IPath path )
   {
     return PlatformURLResourceConnection.RESOURCE_URL_STRING + path.toString();
@@ -446,18 +402,5 @@ public final class ResourceUtilities
   {
     final String urlSpec = createURLSpec( resource );
     return new URI( urlSpec );
-  }
-
-  public static void mkdirs( final IContainer container ) throws CoreException
-  {
-    if( !(container instanceof IFolder) )
-      return;
-
-    final IFolder folder = (IFolder) container;
-
-    final File dir = folder.getFullPath().toFile();
-    dir.mkdirs();
-
-    folder.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
   }
 }

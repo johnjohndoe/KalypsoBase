@@ -30,15 +30,14 @@
 package org.kalypso.ogc.sensor.filter;
 
 import java.io.File;
+import java.util.Calendar;
 
-import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.IMetadataConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.proxy.AutoProxyFactory;
 import org.kalypso.ogc.sensor.request.IRequest;
-import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.timeseries.envelope.TranProLinFilter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 
@@ -52,26 +51,23 @@ public final class TranProLinFilterUtilities
     throw new UnsupportedOperationException();
   }
 
-  public static void transformAndWrite( final IObservation baseObservation, final DateRange range, final double operandBegin, final double operandEnd, final String operator, final String axisTypes, final File resultFile, final String name ) throws SensorException
+  public static void transformAndWrite( final IObservation baseObservation, final Calendar dateBegin, final Calendar dateEnd, final double operandBegin, final double operandEnd, final String operator, final String axisTypes, final int statusToMerge, final File resultFile, final String name, final IRequest request ) throws SensorException
   {
     if( resultFile == null )
       return; // nothing to do
 
-    final IObservation resultObservation = transform( baseObservation, range, operandBegin, operandEnd, operator, axisTypes );
+    final IObservation resultObservation = transform( baseObservation, dateBegin, dateEnd, operandBegin, operandEnd, operator, axisTypes, statusToMerge );
     final MetadataList metadataList = resultObservation.getMetadataList();
     final String oldName = metadataList.getProperty( IMetadataConstants.MD_NAME );
     metadataList.setProperty( IMetadataConstants.MD_NAME, name );
-
-    final IRequest request = new ObservationRequest( range );
     ZmlFactory.writeToFile( resultObservation, resultFile, request );
     metadataList.setProperty( IMetadataConstants.MD_NAME, oldName );
   }
 
-  public static IObservation transform( final IObservation baseObservation, final DateRange range, final double operandBegin, final double operandEnd, final String operator, final String axisTypes ) throws SensorException
+  public static IObservation transform( final IObservation baseObservation, final Calendar dateBegin, final Calendar dateEnd, final double operandBegin, final double operandEnd, final String operator, final String axisTypes, final int statusToMerge ) throws SensorException
   {
-    final TranProLinFilter filter = new TranProLinFilter( range, operator, operandBegin, operandEnd, axisTypes );
+    final TranProLinFilter filter = new TranProLinFilter( dateBegin.getTime(), dateEnd.getTime(), operator, operandBegin, operandEnd, statusToMerge, axisTypes );
     filter.initFilter( null, baseObservation, null );
-    // FIXME: dubious: all observations we get already should have been decorated. Why is this needed here?
-    return AutoProxyFactory.proxyObservation( filter );
+    return AutoProxyFactory.getInstance().proxyObservation( filter );
   }
 }

@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.datasource;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -85,9 +84,9 @@ public class RemoveDataSourceObservationHandler
   public boolean hasDataSouceAxis( )
   {
     final IAxis[] axes = m_observation.getAxes();
-    final IAxis[] dataSourceAxes = AxisUtils.findDataSourceAxes( axes );
+    final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( axes );
 
-    return ArrayUtils.isNotEmpty( dataSourceAxes );
+    return dataSourceAxis != null;
   }
 
 }

@@ -92,14 +92,14 @@ public class ExportShapePage extends WizardPage
   {
     super( pageName );
 
-    setTitle( Messages.getString( "ExportShapePage_0" ) ); //$NON-NLS-1$
-    setDescription( Messages.getString( "ExportShapePage_1" ) ); //$NON-NLS-1$
+    setTitle( Messages.getString("ExportShapePage_0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("ExportShapePage_1") ); //$NON-NLS-1$
 
     m_fileDelegate = new FileChooserDelegateSave();
     m_fileDelegate.setFileName( fileName );
     // TODO: fetch filter from central place
-    m_fileDelegate.addFilter( Messages.getString( "ExportShapePage_2" ), "*.shp" ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_fileDelegate.addFilter( Messages.getString( "ExportShapePage_4" ), "*.dbf" ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_fileDelegate.addFilter( Messages.getString("ExportShapePage_2"), "*.shp" ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_fileDelegate.addFilter( Messages.getString("ExportShapePage_4"), "*.dbf" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -132,8 +132,8 @@ public class ExportShapePage extends WizardPage
       m_writePrj = dialogSettings.getBoolean( SETTINGS_WRITE_PRJ );
 
     final Button button = new Button( panel, SWT.CHECK );
-    button.setText( Messages.getString( "ExportShapePage_6" ) ); //$NON-NLS-1$
-    final String tooltip = String.format( Messages.getString( "ExportShapePage_7" ), PrjHelper.HTTP_SPATIALREFERENCE_ORG ); //$NON-NLS-1$
+    button.setText( Messages.getString("ExportShapePage_6") ); //$NON-NLS-1$
+    final String tooltip = String.format( Messages.getString("ExportShapePage_7"), PrjHelper.HTTP_SPATIALREFERENCE_ORG ); //$NON-NLS-1$
     button.setToolTipText( tooltip );
 
     button.setSelection( m_writePrj );
@@ -164,8 +164,8 @@ public class ExportShapePage extends WizardPage
   private void createCoordinateSystemChooser( final Composite parent )
   {
     final Label label = new Label( parent, SWT.NONE );
-    label.setText( Messages.getString( "ExportShapePage_8" ) ); //$NON-NLS-1$
-    final String tooltip = Messages.getString( "ExportShapePage_9" ); //$NON-NLS-1$
+    label.setText( Messages.getString("ExportShapePage_8") ); //$NON-NLS-1$
+    final String tooltip = Messages.getString("ExportShapePage_9"); //$NON-NLS-1$
     label.setToolTipText( tooltip );
     label.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
 
@@ -210,9 +210,9 @@ public class ExportShapePage extends WizardPage
   private Control createCharsetChooser( final Composite parent )
   {
     final Label charsetLabel = new Label( parent, SWT.NONE );
-    charsetLabel.setText( Messages.getString( "ExportShapePage_10" ) ); //$NON-NLS-1$
+    charsetLabel.setText( Messages.getString("ExportShapePage_10") ); //$NON-NLS-1$
     final Charset shapeDefaultCharset = ShapeSerializer.getShapeDefaultCharset();
-    final String tooltip = String.format( Messages.getString( "ExportShapePage_11" ), shapeDefaultCharset.displayName() ); //$NON-NLS-1$
+    final String tooltip = String.format( Messages.getString("ExportShapePage_11"), shapeDefaultCharset.displayName() ); //$NON-NLS-1$
     charsetLabel.setToolTipText( tooltip );
     charsetLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
 

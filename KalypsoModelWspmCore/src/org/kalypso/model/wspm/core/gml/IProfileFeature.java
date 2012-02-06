@@ -49,16 +49,14 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.gml.binding.commons.Image;
-
-import com.vividsolutions.jts.geom.LineString;
 
 /**
  * @author Dirk Kuch
  */
-public interface IProfileFeature extends Feature, IProfileProvider
+public interface IProfileFeature extends Feature, IFeatureWrapper2
 {
   QName QN_PROFILE = new QName( IWspmConstants.NS_WSPMPROF, "Profile" ); //$NON-NLS-1$
 
@@ -86,11 +84,16 @@ public interface IProfileFeature extends Feature, IProfileProvider
    */
   double getStation( );
 
+  /**
+   * @deprecated Use {@link #setBigStation(BigDecimal)} instead.
+   */
+  @Deprecated
+  void setStation( double station );
+
   BigDecimal getBigStation( );
 
   void setBigStation( BigDecimal bigStation );
 
-  @Override
   IProfil getProfil( );
 
   /**
@@ -98,8 +101,6 @@ public interface IProfileFeature extends Feature, IProfileProvider
    * IMPORTANT: this geometry is (in contrast to {@link #getSrsName()} always in the Kalypso-Coorindate-System.
    */
   GM_Curve getLine( );
-
-  LineString getJtsLine( ) throws GM_Exception;
 
   String getSrsName( );
 

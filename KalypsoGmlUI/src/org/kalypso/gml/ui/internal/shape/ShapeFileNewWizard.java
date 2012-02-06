@@ -80,7 +80,7 @@ public class ShapeFileNewWizard extends Wizard implements INewWizard
     setNeedsProgressMonitor( true );
     setHelpAvailable( false );
 
-    setWindowTitle( Messages.getString( "ShapeFileNewWizard_0" ) ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString("ShapeFileNewWizard_0") ); //$NON-NLS-1$
   }
 
   /**
@@ -93,7 +93,7 @@ public class ShapeFileNewWizard extends Wizard implements INewWizard
     final IContainer container = findSelection( selection );
     if( container != null )
     {
-      final IFile shapeFile = container.getFile( new Path( Messages.getString( "ShapeFileNewWizard_1" ) ) ); //$NON-NLS-1$
+      final IFile shapeFile = container.getFile( new Path( Messages.getString("ShapeFileNewWizard_1") ) ); //$NON-NLS-1$
       m_shapeFileNewData.setShapeFile( shapeFile );
     }
 
@@ -149,8 +149,8 @@ public class ShapeFileNewWizard extends Wizard implements INewWizard
       final IFile[] shapeFileExists = getExistingShapeFiles();
       if( shapeFileExists.length > 0 )
       {
-        final MessageDialog dialog = new MessageDialog( getShell(), getWindowTitle(), null, Messages.getString( "ShapeFileNewWizard_3" ), MessageDialog.WARNING, new String[] { //$NON-NLS-1$
-        IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0 );
+        final MessageDialog dialog = new MessageDialog( getShell(), getWindowTitle(), null, Messages.getString("ShapeFileNewWizard_3"), MessageDialog.WARNING, new String[] { //$NON-NLS-1$
+          IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0 );
         if( dialog.open() != IDialogConstants.OK_ID )
           return Status.CANCEL_STATUS;
       }

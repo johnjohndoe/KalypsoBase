@@ -10,8 +10,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.wst.xml.core;resolution:=optional,
  org.kalypso.core,
  org.junit4;resolution:=optional
-Export-Package: de.openali.odysseus.chart.factory,
- de.openali.odysseus.chart.factory.config;
+Export-Package: de.openali.odysseus.chart.factory.config;
   uses:="de.openali.odysseus.chart.framework.model,
    de.openali.odysseus.chart.factory.config.parameters,
    org.apache.xmlbeans,
@@ -59,6 +58,6 @@ Export-Package: de.openali.odysseus.chart.factory,
    org.apache.xmlbeans,
    de.openali.odysseus.chartconfig.x020.ParameterMapType"
 Bundle-Vendor: kalypsobase.sourceforge.net
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Activator: de.openali.odysseus.chart.factory.OdysseusChartFactory
 Bundle-ActivationPolicy: lazy

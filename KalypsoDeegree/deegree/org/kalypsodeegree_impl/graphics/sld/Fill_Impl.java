@@ -63,7 +63,7 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
   /**
    * Constructs a new <tt>Fill_Impl</tt>.
    */
-  protected Fill_Impl( )
+  protected Fill_Impl()
   {
     super( new HashMap<String, CssParameter>(), null );
   }
@@ -89,7 +89,7 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
   @Override
   public Color getFill( final Feature feature ) throws FilterEvaluationException
   {
-    final CssParameter cssParam = getParameter( CSS_FILL );
+    final CssParameter cssParam = getParameter( "fill" );
 
     if( cssParam == null )
       return FILL_DEFAULT;
@@ -111,6 +111,7 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
       return FILL_DEFAULT;
     }
   }
+
 
   /**
    * sets the value of the fill's CssParameter 'fill' as a simple color
@@ -143,7 +144,7 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
   {
     double opacity = OPACITY_DEFAULT;
 
-    final CssParameter cssParam = getParameter( CSS_OPACITY );
+    final CssParameter cssParam = getParameter( "fill-opacity" );
 
     if( cssParam != null )
     {
@@ -155,12 +156,14 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
       }
       catch( final NumberFormatException e )
       {
-        throw new FilterEvaluationException( "Given value for parameter 'fill-opacity' ('" + value + "') has invalid format!" );
+        throw new FilterEvaluationException( "Given value for parameter 'fill-opacity' ('" + value
+            + "') has invalid format!" );
       }
 
-      if( opacity < 0.0 || opacity > 1.0 )
+      if( ( opacity < 0.0 ) || ( opacity > 1.0 ) )
       {
-        throw new FilterEvaluationException( "Value for parameter 'fill-opacity' (given: '" + value + "') must be between 0.0 and 1.0!" );
+        throw new FilterEvaluationException( "Value for parameter 'fill-opacity' (given: '" + value
+            + "') must be between 0.0 and 1.0!" );
       }
     }
 
@@ -196,7 +199,7 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
    * @return xml representation of the CssParameter
    */
   @Override
-  public String exportAsXML( )
+  public String exportAsXML()
   {
     final StringBuffer sb = new StringBuffer( "<Fill>" );
 

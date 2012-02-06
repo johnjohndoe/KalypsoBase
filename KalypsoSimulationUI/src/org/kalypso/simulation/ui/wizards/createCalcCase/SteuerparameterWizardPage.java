@@ -61,7 +61,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.IProjectProvider;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -78,7 +77,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * Wizard-Page zur Eingabe der Steuerparameter
- *
+ * 
  * @author belger
  */
 public class SteuerparameterWizardPage extends WizardPage
@@ -101,14 +100,10 @@ public class SteuerparameterWizardPage extends WizardPage
 
   private final boolean m_canGoBack;
 
-  private final String m_controlPath;
-
-  public SteuerparameterWizardPage( final IProjectProvider pp, final ImageDescriptor image, final boolean canGoBack, final String controlPath )
+  public SteuerparameterWizardPage( final IProjectProvider pp, final ImageDescriptor image, final boolean canGoBack )
   {
     super( "EditCalcCaseControlPage", Messages.getString( "org.kalypso.simulation.ui.wizards.createCalcCase.SteuerparameterWizardPage.0" ), image ); //$NON-NLS-1$ //$NON-NLS-2$
-
     m_canGoBack = canGoBack;
-    m_controlPath = controlPath;
 
     final FeatureComposite featureComposite = m_featureComposite;
     m_featureComposite.addChangeListener( new IFeatureChangeListener()
@@ -171,7 +166,7 @@ public class SteuerparameterWizardPage extends WizardPage
     monitor.beginTask( Messages.getString( "org.kalypso.simulation.ui.wizards.createCalcCase.SteuerparameterWizardPage.1" ), 1000 ); //$NON-NLS-1$
 
     // SPEICHERN
-    final IFile controlFile = folder.getFile( m_controlPath );
+    final IFile controlFile = folder.getFile( ModelNature.CONTROL_NAME );
 
     if( m_workspace == null )
       return;
@@ -223,7 +218,7 @@ public class SteuerparameterWizardPage extends WizardPage
   /**
    * Setzt die aktuelle Rechenvariante, ist dort schon eine .calculation vorhanden, wird diese geladen, sonst die
    * default.
-   *
+   * 
    * @param currentCalcCase
    */
   public void setFolder( final IFolder currentCalcCase )
@@ -270,7 +265,7 @@ public class SteuerparameterWizardPage extends WizardPage
     try
     {
       final ModelNature nature = (ModelNature) project.getNature( ModelNature.ID );
-      m_workspace = nature.loadOrCreateControl( m_currentCalcCase, m_controlPath );
+      m_workspace = nature.loadOrCreateControl( m_currentCalcCase );
     }
     catch( final CoreException e )
     {
@@ -289,8 +284,7 @@ public class SteuerparameterWizardPage extends WizardPage
     try
     {
       final URL viewURL = new URL( "platform:/resource/" + project.getName() + "/" + ModelNature.CONTROL_VIEW_PATH ); //$NON-NLS-1$ //$NON-NLS-2$
-      if( UrlUtilities.checkIsAccessible( viewURL ) )
-        m_fvFactory.addView( viewURL );
+      m_fvFactory.addView( viewURL );
     }
     catch( final MalformedURLException e )
     {

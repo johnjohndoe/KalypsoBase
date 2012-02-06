@@ -43,7 +43,6 @@ package org.kalypso.util.themes.text;
 import java.util.Locale;
 import java.util.Properties;
 
-import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.util.themes.ThemeUtilities;
 import org.kalypso.util.themes.position.PositionUtilities;
 
@@ -60,43 +59,16 @@ public class TextUtilities
   public static final String THEME_PROPERTY_TEXT = "text";
 
   /**
-   * This constant defines the theme property, used to configure the font size of the text.
-   */
-  public static final String THEME_PROPERTY_FONT_SIZE = "font_size";
-
-  /**
-   * This constant defines the theme property, used to configure the transparency of the background.
-   */
-  public static final String THEME_PROPERTY_TRANSPARENCY = "transparency";
-
-  /**
    * The constructor.
    */
   private TextUtilities( )
   {
   }
 
-  public static String checkText( final String textProperty )
+  public static String checkText( String textProperty )
   {
     // TODO Perhaps we want to validate the text?
     return textProperty;
-  }
-
-  public static int checkFontSize( final String fontSizeProperty )
-  {
-    final Integer fontSize = NumberUtils.parseQuietInteger( fontSizeProperty );
-    if( fontSize != null && fontSize.intValue() > 0 )
-      return fontSize.intValue();
-
-    return -1;
-  }
-
-  public static boolean checkTransparency( final String transparencyProperty )
-  {
-    if( transparencyProperty != null && transparencyProperty.length() > 0 )
-      return Boolean.parseBoolean( transparencyProperty );
-
-    return false;
   }
 
   /**
@@ -106,23 +78,19 @@ public class TextUtilities
    */
   public static Properties getDefaultProperties( )
   { /* Create the properties object. */
-    final Properties properties = new Properties();
+    Properties properties = new Properties();
 
     /* Serialize the properties. */
-    final String horizontalProperty = String.format( Locale.PRC, "%d", PositionUtilities.RIGHT );
-    final String verticalProperty = String.format( Locale.PRC, "%d", PositionUtilities.BOTTOM );
-    final String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", 255, 255, 255 );
-    final String textProperty = "";
-    final String fontSizeProperty = "-1";
-    final String transparencyProperty = "false";
+    String horizontalProperty = String.format( Locale.PRC, "%d", PositionUtilities.RIGHT );
+    String verticalProperty = String.format( Locale.PRC, "%d", PositionUtilities.BOTTOM );
+    String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", 255, 255, 255 );
+    String textProperty = "";
 
     /* Add the properties. */
     properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );
     properties.put( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, verticalProperty );
     properties.put( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR, backgroundColorProperty );
     properties.put( THEME_PROPERTY_TEXT, textProperty );
-    properties.put( THEME_PROPERTY_FONT_SIZE, fontSizeProperty );
-    properties.put( THEME_PROPERTY_TRANSPARENCY, transparencyProperty );
 
     return properties;
   }

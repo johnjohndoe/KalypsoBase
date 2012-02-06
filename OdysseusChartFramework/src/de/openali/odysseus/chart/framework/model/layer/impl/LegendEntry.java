@@ -4,10 +4,10 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Display;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
-import de.openali.odysseus.chart.framework.util.ChartUtilities;
 
 public abstract class LegendEntry implements ILegendEntry
 {
@@ -34,7 +34,7 @@ public abstract class LegendEntry implements ILegendEntry
   public ImageData getSymbol( final Point size )
   {
     final Point realSize = computeSize( size );
-    final Image img = new Image( ChartUtilities.getDisplay(), realSize.x, realSize.y );
+    final Image img = new Image( Display.getDefault(), realSize.x, realSize.y );
     final GC gc = new GC( img );
     paintSymbol( gc, realSize );
     final ImageData id = img.getImageData();

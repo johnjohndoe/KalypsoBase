@@ -48,8 +48,6 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
@@ -66,13 +64,11 @@ import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
  * <p>
  * 2) This feature does not support change of any values, which is prohibited for dictionary entries.
  * </p>
- *
+ * 
  * @author Gernot Belger
  */
 public class DictionaryFeature implements Feature
 {
-  private static final String DICTIONARY_ENTRIES_MAY_NOT_BE_CHANGED = "Dictionary entries may not be changed."; //$NON-NLS-1$
-
   private final Feature m_feature;
 
   public DictionaryFeature( final Feature feature )
@@ -80,150 +76,280 @@ public class DictionaryFeature implements Feature
     m_feature = feature;
   }
 
+  /**
+   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+   */
   @Override
   public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     return m_feature.getAdapter( adapter );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.DeegreeFeature#getDefaultGeometryProperty()
+   */
+  @Override
+  public GM_Object getDefaultGeometryProperty( )
+  {
+    return m_feature.getDefaultGeometryProperty();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.DeegreeFeature#getEnvelope()
+   */
   @Override
   public GM_Envelope getEnvelope( )
   {
     return m_feature.getEnvelope();
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.DeegreeFeature#getFeatureType()
+   */
   @Override
   public IFeatureType getFeatureType( )
   {
     return m_feature.getFeatureType();
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.DeegreeFeature#getGeometryProperties()
+   */
+  @Override
+  public GM_Object[] getGeometryProperties( )
+  {
+    return m_feature.getGeometryProperties();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.DeegreeFeature#getId()
+   */
   @Override
   public String getId( )
   {
     return m_feature.getId();
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.Feature#getParent()
+   */
+  @Override
+  public Feature getParent( )
+  {
+    return m_feature.getParent();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Feature#getParentRelation()
+   */
   @Override
   public IRelationType getParentRelation( )
   {
     return m_feature.getParentRelation();
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.DeegreeFeature#getProperties()
+   */
   @Override
   public Object[] getProperties( )
   {
     return m_feature.getProperties();
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.DeegreeFeature#getProperty(org.kalypso.gmlschema.property.IPropertyType)
+   */
   @Override
   public Object getProperty( final IPropertyType propertyType )
   {
     return m_feature.getProperty( propertyType );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.Feature#getProperty(javax.xml.namespace.QName)
+   */
   @Override
   public Object getProperty( final QName propQName )
   {
     return m_feature.getProperty( propQName );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.Feature#getProperty(java.lang.String)
+   */
   @Override
   public Object getProperty( final String propLocalName )
   {
     return m_feature.getProperty( propLocalName );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.Feature#getWorkspace()
+   */
   @Override
   public GMLWorkspace getWorkspace( )
   {
     return m_feature.getWorkspace();
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.Feature#setProperty(org.kalypso.gmlschema.property.IPropertyType,
+   *      java.lang.Object)
+   */
   @Override
   public void setProperty( final IPropertyType propertyType, final Object value )
   {
-    throw new UnsupportedOperationException( DICTIONARY_ENTRIES_MAY_NOT_BE_CHANGED );
+    throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.Feature#setProperty(javax.xml.namespace.QName, java.lang.Object)
+   */
   @Override
   public void setProperty( final QName propQName, final Object value )
   {
-    throw new UnsupportedOperationException( DICTIONARY_ENTRIES_MAY_NOT_BE_CHANGED );
+    throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.Feature#setProperty(java.lang.String, java.lang.Object)
+   */
+  @Override
+  public void setProperty( final String propLocalName, final Object value )
+  {
+    throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Feature#setWorkspace(org.kalypsodeegree.model.feature.GMLWorkspace)
+   */
+  @Override
+  public void setWorkspace( final GMLWorkspace workspace )
+  {
+    throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Feature#invalidEnvelope()
+   */
+  @Override
+  public void invalidEnvelope( )
+  {
+    m_feature.invalidEnvelope();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getBoundedBy()
+   */
   @Override
   public GM_Envelope getBoundedBy( ) throws GeometryException
   {
     return m_feature.getBoundedBy();
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getDefaultGeometryPropertyValue()
+   */
   @Override
   public GM_Object getDefaultGeometryPropertyValue( )
   {
     return m_feature.getDefaultGeometryPropertyValue();
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getGeometryPropertyValues()
+   */
   @Override
   public GM_Object[] getGeometryPropertyValues( )
   {
     return m_feature.getGeometryPropertyValues();
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getOwner()
+   */
   @Override
   public Feature getOwner( )
   {
     return m_feature.getOwner();
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getQualifiedName()
+   */
   @Override
   public QName getQualifiedName( )
   {
     return m_feature.getQualifiedName();
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#setEnvelopesUpdated()
+   */
   @Override
   public void setEnvelopesUpdated( )
   {
     m_feature.setEnvelopesUpdated();
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#setFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
+   */
   @Override
   public void setFeatureType( final IFeatureType ft )
   {
-    throw new UnsupportedOperationException( DICTIONARY_ENTRIES_MAY_NOT_BE_CHANGED );
+    throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#setId(java.lang.String)
+   */
   @Override
   public void setId( final String fid )
   {
-    throw new UnsupportedOperationException( DICTIONARY_ENTRIES_MAY_NOT_BE_CHANGED );
+    throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getName()
+   */
   @Override
   public String getName( )
   {
     return NamedFeatureHelper.getName( m_feature );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setName(java.lang.String)
+   */
   @Override
   public void setName( final String name )
   {
-    throw new UnsupportedOperationException( DICTIONARY_ENTRIES_MAY_NOT_BE_CHANGED );
+    throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getDescription()
+   */
   @Override
   public String getDescription( )
   {
     return NamedFeatureHelper.getDescription( m_feature );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setDescription(java.lang.String)
+   */
   @Override
   public void setDescription( final String desc )
   {
-    throw new UnsupportedOperationException( DICTIONARY_ENTRIES_MAY_NOT_BE_CHANGED );
+    throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getLocation()
+   */
   @Override
   public GM_Object getLocation( )
   {
@@ -237,102 +363,6 @@ public class DictionaryFeature implements Feature
   @Override
   public void setLocation( final GM_Object location )
   {
-    throw new UnsupportedOperationException( DICTIONARY_ENTRIES_MAY_NOT_BE_CHANGED );
-  }
-
-  @Override
-  public Feature getMember( final QName relation )
-  {
-    return m_feature.getMember( relation );
-  }
-
-  @Override
-  public Feature getMember( final IRelationType relation )
-  {
-    return m_feature.getMember( relation );
-  }
-
-  @Override
-  public IXLinkedFeature setLink( final IRelationType relation, final String href )
-  {
-    throw new UnsupportedOperationException( DICTIONARY_ENTRIES_MAY_NOT_BE_CHANGED );
-  }
-
-  @Override
-  public IXLinkedFeature setLink( final QName relationName, final String href )
-  {
-    throw new UnsupportedOperationException( DICTIONARY_ENTRIES_MAY_NOT_BE_CHANGED );
-  }
-
-  @Override
-  public IXLinkedFeature setLink( final IRelationType relation, final String href, final QName featureType )
-  {
-    throw new UnsupportedOperationException( DICTIONARY_ENTRIES_MAY_NOT_BE_CHANGED );
-  }
-
-  @Override
-  public IXLinkedFeature setLink( final IRelationType relation, final String href, final IFeatureType featureType )
-  {
-    throw new UnsupportedOperationException( DICTIONARY_ENTRIES_MAY_NOT_BE_CHANGED );
-  }
-
-  @Override
-  public IXLinkedFeature setLink( final QName relation, final String href, final QName featureType )
-  {
-    throw new UnsupportedOperationException( DICTIONARY_ENTRIES_MAY_NOT_BE_CHANGED );
-  }
-
-  @Override
-  public IXLinkedFeature setLink( final QName relation, final String href, final IFeatureType featureType )
-  {
-    throw new UnsupportedOperationException( DICTIONARY_ENTRIES_MAY_NOT_BE_CHANGED );
-  }
-
-  @Override
-  public Feature createSubFeature( final IRelationType relation, final QName featureTypeName )
-  {
-    throw new UnsupportedOperationException( DICTIONARY_ENTRIES_MAY_NOT_BE_CHANGED );
-  }
-
-  @Override
-  public Feature createSubFeature( final IRelationType relation )
-  {
-    throw new UnsupportedOperationException( DICTIONARY_ENTRIES_MAY_NOT_BE_CHANGED );
-  }
-
-  @Override
-  public Feature createSubFeature( final QName relationName, final QName featureTypeName )
-  {
-    throw new UnsupportedOperationException( DICTIONARY_ENTRIES_MAY_NOT_BE_CHANGED );
-  }
-
-  @Override
-  public Feature createSubFeature( final QName relationName )
-  {
-    throw new UnsupportedOperationException( DICTIONARY_ENTRIES_MAY_NOT_BE_CHANGED );
-  }
-
-  @Override
-  public IFeatureBindingCollection<Feature> getMemberList( final QName relationName )
-  {
-    throw new UnsupportedOperationException( DICTIONARY_ENTRIES_MAY_NOT_BE_CHANGED );
-  }
-
-  @Override
-  public <T extends Feature> IFeatureBindingCollection<T> getMemberList( final QName relationName, final Class<T> type )
-  {
-    throw new UnsupportedOperationException( DICTIONARY_ENTRIES_MAY_NOT_BE_CHANGED );
-  }
-
-  @Override
-  public IFeatureBindingCollection<Feature> getMemberList( final IRelationType relation )
-  {
-    throw new UnsupportedOperationException( DICTIONARY_ENTRIES_MAY_NOT_BE_CHANGED );
-  }
-
-  @Override
-  public <T extends Feature> IFeatureBindingCollection<T> getMemberList( final IRelationType relation, final Class<T> type )
-  {
-    throw new UnsupportedOperationException( DICTIONARY_ENTRIES_MAY_NOT_BE_CHANGED );
+    throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
   }
 }

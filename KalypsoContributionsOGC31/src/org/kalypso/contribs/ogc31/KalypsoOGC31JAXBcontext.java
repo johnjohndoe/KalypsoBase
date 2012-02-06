@@ -59,18 +59,15 @@ public final class KalypsoOGC31JAXBcontext
 
   // create the context on all of these factories else the binding won't work
   private static Class< ? >[] s_contextClasses = new Class[] {//
-  ogc31.www.opengis.net.gml.ObjectFactory.class//
-      , ogc31.www.opengis.net.swe.ObjectFactory.class//
-      , ogc31.www.isotc211.org.gmd.ObjectFactory.class//
-      , ogc31.org.w3.smil20.ObjectFactory.class//
-      , au.csiro.seegrid.xml.st.ObjectFactory.class };
+    ogc31.www.opengis.net.gml.ObjectFactory.class//
+    , ogc31.www.opengis.net.swe.ObjectFactory.class//
+    , ogc31.www.isotc211.org.gmd.ObjectFactory.class//
+    , au.csiro.seegrid.xml.st.ObjectFactory.class };
 
   public static synchronized JAXBContext getContext( )
   {
     if( s_context == null )
-    {
       s_context = JaxbUtilities.createQuiet( s_contextClasses );
-    }
 
     return s_context;
   }

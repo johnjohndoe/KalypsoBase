@@ -5,17 +5,17 @@ package org.kalypso.gmlschema.types;
  */
 public class TypeRegistryException extends Exception
 {
-  public TypeRegistryException( final String message )
+  public TypeRegistryException( String message )
   {
     super( message );
   }
 
-  public TypeRegistryException( final Throwable cause )
+  public TypeRegistryException( Throwable cause )
   {
     super( cause );
   }
 
-  public TypeRegistryException( final String message, final Throwable cause )
+  public TypeRegistryException( String message, Throwable cause )
   {
     super( message, cause );
   }

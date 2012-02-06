@@ -60,7 +60,7 @@ public class DBFFieldLabelProvider extends LabelProvider
    * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
    */
   @Override
-  public String getText( final Object element )
+  public String getText( Object element )
   {
     if( element instanceof IDBFField )
       return ((IDBFField) element).getName();

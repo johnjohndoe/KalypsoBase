@@ -13,10 +13,13 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IActionBars;
@@ -29,13 +32,14 @@ import org.kalypso.ogc.sensor.template.ObsViewEvent;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
 import org.kalypso.ui.editor.abstractobseditor.actions.RemoveThemeAction;
 import org.kalypso.ui.editor.abstractobseditor.actions.SetIgnoreTypesAction;
+import org.kalypso.ui.editor.abstractobseditor.commands.DropZmlCommand;
 import org.kalypso.ui.editor.abstractobseditor.commands.SetShownCommand;
 import org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor;
 import org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveAction;
 
 /**
  * AbstractObsOutlinePage
- *
+ * 
  * @author schlienger
  */
 public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements IObsViewEventListener, ICheckStateListener
@@ -55,6 +59,9 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
     m_editor = editor;
   }
 
+  /**
+   * @see org.eclipse.ui.part.IPage#createControl(org.eclipse.swt.widgets.Composite)
+   */
   @Override
   public void createControl( final Composite parent )
   {
@@ -64,7 +71,7 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
 
     // drop support for files
     final Transfer[] transfers = new Transfer[] { FileTransfer.getInstance() };
-    tv.addDropSupport( DND.DROP_COPY | DND.DROP_MOVE, transfers, new ObservationEditorDropAdapter( tv, m_editor ) );
+    tv.addDropSupport( DND.DROP_COPY | DND.DROP_MOVE, transfers, new DropAdapter( tv, m_editor ) );
 
     tv.setLabelProvider( new ObsTemplateLabelProvider() );
     tv.setContentProvider( new ObsTemplateContentProvider() );
@@ -249,5 +256,55 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
     toolBarManager.add( m_removeThemeAction );
 
     actionBars.updateActionBars();
+  }
+
+  /**
+   * DropAdapter
+   * 
+   * @author schlienger
+   */
+  private class DropAdapter extends ViewerDropAdapter
+  {
+    protected final AbstractObservationEditor m_editor2;
+
+    protected DropAdapter( final Viewer viewer, final AbstractObservationEditor editor )
+    {
+      super( viewer );
+      m_editor2 = editor;
+
+      setScrollExpandEnabled( false );
+      setFeedbackEnabled( false );
+    }
+
+    /**
+     * @see org.eclipse.jface.viewers.ViewerDropAdapter#performDrop(java.lang.Object)
+     */
+    @Override
+    public boolean performDrop( final Object data )
+    {
+      if( m_view == null )
+        return false;
+
+      final String[] files = (String[]) data;
+
+      m_editor2.postCommand( new DropZmlCommand( m_editor2, m_view, files ), null );
+
+      return true;
+    }
+
+    /**
+     * @see org.eclipse.jface.viewers.ViewerDropAdapter#validateDrop(java.lang.Object, int,
+     *      org.eclipse.swt.dnd.TransferData)
+     */
+    @Override
+    public boolean validateDrop( final Object target, final int operation, final TransferData transferType )
+    {
+      if( !FileTransfer.getInstance().isSupportedType( transferType ) )
+        return false;
+
+      // TODO maybe check that it is a ZML-File...
+
+      return true;
+    }
   }
 }

@@ -87,19 +87,27 @@ public class SelectionProviderAdapter implements IPostSelectionProvider
     fireSelectionChanged();
   }
 
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
+   */
   @Override
   public ISelection getSelection( )
   {
-
     return m_selection;
   }
 
+  /**
+   * @see org.eclipse.jface.viewers.IPostSelectionProvider#addPostSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
+   */
   @Override
   public void addPostSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_postListeners.add( listener );
   }
 
+  /**
+   * @see org.eclipse.jface.viewers.IPostSelectionProvider#removePostSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
+   */
   @Override
   public void removePostSelectionChangedListener( final ISelectionChangedListener listener )
   {
@@ -120,17 +128,16 @@ public class SelectionProviderAdapter implements IPostSelectionProvider
     fireSelectionChanged( new SelectionChangedEvent( this, getSelection() ), listenersArray );
   }
 
-  private void fireSelectionChanged( final SelectionChangedEvent event, final ISelectionChangedListener[] listeners )
+  private void fireSelectionChanged( final SelectionChangedEvent e, final ISelectionChangedListener[] listenersArray )
   {
-    for( final ISelectionChangedListener listener : listeners )
+    for( final ISelectionChangedListener l : listenersArray )
     {
       final SafeRunnable safeRunnable = new SafeRunnable()
       {
         @Override
         public void run( )
         {
-          final ISelectionChangedListener l = listener;
-          listener.selectionChanged( event );
+          l.selectionChanged( e );
         }
       };
 

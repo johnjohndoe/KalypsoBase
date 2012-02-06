@@ -151,6 +151,7 @@ public class ProjectConversionPage extends WizardPage
     return group;
   }
 
+
   protected void handleFileChanged( final File file )
   {
     updateProjectInfo( file );

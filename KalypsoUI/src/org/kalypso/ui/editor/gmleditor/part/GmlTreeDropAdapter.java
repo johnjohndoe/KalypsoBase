@@ -31,10 +31,10 @@ package org.kalypso.ui.editor.gmleditor.part;
 
 import java.util.List;
 
+import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.TransferData;
-import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -120,10 +120,10 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
     if( target instanceof FeatureAssociationTypeElement )
     {
       final FeatureAssociationTypeElement targetFatElement = (FeatureAssociationTypeElement) target;
-      targetAssocFtp = targetFatElement.getPropertyType();
+      targetAssocFtp = targetFatElement.getAssociationTypeProperty();
       // System.out.println( "FeatuerAssociationTypeElement:\n target: " + targetAssocFtp.getName() );
       // String propertyName = targetAssocFtp.getName();
-      targetFeature = targetFatElement.getOwner();
+      targetFeature = targetFatElement.getParentFeature();
       // try to find matching IFeatureType
       final IFeatureType targetFeatureType = targetAssocFtp.getTargetFeatureType();
       matchingFt = hasMatchingFeatureType( selectedFeatures[0].getFeatureType(), GMLSchemaUtilities.getSubstituts( targetFeatureType, null, false, true ) );
@@ -170,7 +170,7 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
       // if( matchingFt == null )
       // return false;
     }
-    if( !LocalSelectionTransfer.getInstance().isSupportedType( transferType ) )
+    if( !LocalSelectionTransfer.getTransfer().isSupportedType( transferType ) )
       return false;
 
     if( matchingFt != null )

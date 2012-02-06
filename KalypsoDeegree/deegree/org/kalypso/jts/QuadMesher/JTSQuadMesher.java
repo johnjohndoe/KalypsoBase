@@ -122,15 +122,15 @@ public class JTSQuadMesher
     }
 
     /*
-     * the beginning of the left sided line string must identical with the begin of the bottom line string, if not then
-     * flip the line if( coordinatesLeft[coordinatesLeft.length - 1].equals2D( coordinatesBottom[0] ) ) { newLeft =
-     * LineStringUtilities.changeOrientation( m_leftLine ); } else { newLeft = m_leftLine; } // the begin of the right
-     * sided line string must identical with the end of the bottom line string, if not then flip // the line if(
-     * coordinatesRight[coordinatesRight.length - 1].equals2D( coordinatesBottom[coordinatesBottom.length - 1] ) ) {
+     * the beginning of the left sided line string must identical with the begin of the bottom line string, if not
+     * then flip the line if( coordinatesLeft[coordinatesLeft.length - 1].equals2D( coordinatesBottom[0] ) ) {
+     * newLeft = LineStringUtilities.changeOrientation( m_leftLine ); } else { newLeft = m_leftLine; } // the begin of
+     * the right sided line string must identical with the end of the bottom line string, if not then flip // the line
+     * if( coordinatesRight[coordinatesRight.length - 1].equals2D( coordinatesBottom[coordinatesBottom.length - 1] ) ) {
      * newRight = LineStringUtilities.changeOrientation( m_rightLine ); } else { newRight = m_rightLine; } // the begin
      * of the top sided line string must identical with the end of the left line string, if not then flip the // line
-     * if( coordinatesTop[coordinatesTop.length - 1].equals2D( coordinatesLeft[coordinatesLeft.length - 1] ) ) { newTop
-     * = LineStringUtilities.changeOrientation( m_topLine ); } else { newTop = m_topLine; } // the bootom line is always
+     * if( coordinatesTop[coordinatesTop.length - 1].equals2D( coordinatesLeft[coordinatesLeft.length - 1] ) ) { newTop =
+     * LineStringUtilities.changeOrientation( m_topLine ); } else { newTop = m_topLine; } // the bootom line is always
      * well oriented! newBottom = m_bottomLine;
      */
 
@@ -147,8 +147,8 @@ public class JTSQuadMesher
     // final double distTop = coordinatesNewTop[0].distance( coordinatesNewTop[coordinatesNewTop.length - 1] );
 
     // better: do it by route than by distance to first point
-    final double distBottom = calcRoute( coordinatesNewBottom, 0, coordinatesNewBottom.length - 1 );
-    final double distTop = calcRoute( coordinatesNewTop, 0, coordinatesNewTop.length - 1 );
+    final double distBottom = calcRoute( coordinatesNewBottom, 0, coordinatesNewBottom.length -1 );
+    final double distTop = calcRoute( coordinatesNewTop, 0, coordinatesNewTop.length -1 );
 
     for( int j = 0; j < coordinatesNewBottom.length; j++ )
     {
@@ -170,7 +170,7 @@ public class JTSQuadMesher
         final double dxLeftToRight = coordinatesNewRight[i].x - coordinatesNewLeft[i].x;
         final double dyLeftToRight = coordinatesNewRight[i].y - coordinatesNewLeft[i].y;
 
-        final double ratio = (double) i / (double) (coordinatesNewLeft.length - 1);
+        final double ratio = ((double)i) / ((double)(coordinatesNewLeft.length - 1));
 
         final double relativeSegmentDistance = distSegmentBottom * (1 - ratio) + distSegmentTop * ratio;
         final double relativeDistance = distBottom * (1 - ratio) + distTop * ratio;
@@ -213,8 +213,8 @@ public class JTSQuadMesher
       {
         // route calculation for the whole way along the coordinates
         route = route + coords[i].distance( coords[i + 1] );
-
-        if( i == endPoint - 1 )
+        
+        if (i==endPoint-1)
           break;
       }
     }

@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always.
+ * interface-compatibility to deegree is wanted but not retained always. 
  * 
- * If you intend to use this software in other ways than in kalypso
+ * If you intend to use this software in other ways than in kalypso 
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree,
+ * all modifications are licensed as deegree, 
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -38,9 +38,10 @@ package org.kalypsodeegree_impl.graphics.displayelements.strokearrow.geometries;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.graphics.displayelements.LabelUtils;
+import org.kalypsodeegree_impl.graphics.displayelements.LabelFactory;
 import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper.ARROW_WIDGET;
 import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 
@@ -94,15 +95,15 @@ public abstract class AbstractArrowGeometry implements IArrowGeometry
     if( points.length < 2 )
       return;
 
-    final int[] p1 = LabelUtils.calcScreenCoordinates( getProjection(), points[0] );
-    final int[] p2 = LabelUtils.calcScreenCoordinates( getProjection(), points[1] );
+    final int[] p1 = LabelFactory.calcScreenCoordinates( getProjection(), points[0] );
+    final int[] p2 = LabelFactory.calcScreenCoordinates( getProjection(), points[1] );
 
     if( p1[0] == p2[0] && p1[1] == p2[1] )
       // point coordinates of p1 and p2 must differ
       return;
 
     // setTransform
-    setAffineTransformation( p1, p2 );
+    setAffineTransformation( p1 );
 
     draw( size.intValue(), m_uom, m_projection );
 
@@ -117,7 +118,7 @@ public abstract class AbstractArrowGeometry implements IArrowGeometry
 
   }
 
-  private void setAffineTransformation( final int[] p1, final int[] p2 )
+  private void setAffineTransformation( final int[] p1 )
   {
     m_savedAT = getGraphic().getTransform();
     final AffineTransform transform = new AffineTransform();
@@ -137,7 +138,7 @@ public abstract class AbstractArrowGeometry implements IArrowGeometry
         return new OpenArrowGeometry( g2, projection, points, uom );
 
       default:
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
   }
 

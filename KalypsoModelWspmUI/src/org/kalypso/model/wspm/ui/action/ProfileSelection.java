@@ -56,7 +56,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ui.editor.gmleditor.part.FeatureAssociationTypeElement;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.IFeatureRelation;
+import org.kalypsodeegree.model.feature.IFeatureProperty;
 
 /**
  * Helper class that extracts profiles from a selection.
@@ -203,10 +203,10 @@ public class ProfileSelection
     m_selectedProfiles.addAll( asList );
   }
 
-  private void addFeatureProperty( final IFeatureRelation featureList )
+  private void addFeatureProperty( final IFeatureProperty featureList )
   {
     final IRelationType rt = featureList.getPropertyType();
-    final Feature parentFeature = featureList.getOwner();
+    final Feature parentFeature = featureList.getParentFeature();
     addParentFeature( parentFeature, rt );
   }
 

@@ -58,11 +58,11 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
+import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
 
 /**
  * @author Dirk Kuch
@@ -73,10 +73,12 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
 
   private IObsProvider m_provider;
 
+  private final ILineStyle m_style;
+
   public ZmlForecastLayer( final ILayerProvider layerProvider, final ILineStyle style )
   {
-    super( layerProvider, new StyleSet() );
-    getStyleSet().addStyle( "line", style );
+    super( layerProvider );
+    m_style = style;
   }
 
   public void setObsProvider( final IObsProvider provider )
@@ -99,6 +101,9 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
     }
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
+   */
   @Override
   public void paint( final GC gc )
   {
@@ -136,7 +141,7 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
     final Integer y1 = targetAxis.numericToScreen( targetRange.getMax() );
 
     final PolylineFigure polylineFigure = new PolylineFigure();
-    polylineFigure.setStyle( getStyleSet().getStyle( "line",ILineStyle.class ) );
+    polylineFigure.setStyle( m_style );
     polylineFigure.setPoints( new Point[] { new Point( x, y0 ), new Point( x, y1 ) } );
     polylineFigure.paint( gc );
   }
@@ -173,8 +178,11 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
     return instance;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
+   */
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Number> getDomainRange( )
   {
     // TODO: all three parameters should eventually be set from outside
     final boolean shouldAutomax = true;
@@ -197,12 +205,18 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
     return new DataRange<Number>( m_dateDataOperator.logicalToNumeric( from.getTime() ), m_dateDataOperator.logicalToNumeric( end.getTime() ) );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange(de.openali.odysseus.chart.framework.model.data.IDataRange)
+   */
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     return null;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#dispose()
+   */
   @Override
   public void dispose( )
   {
@@ -210,8 +224,18 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
       m_provider.dispose();
   }
 
-  
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#createLegendEntries()
+   */
+  @Override
+  protected ILegendEntry[] createLegendEntries( )
+  {
+    return new ILegendEntry[] {};
+  }
 
+  /**
+   * @see org.kalypso.ogc.sensor.template.IObsProviderListener#observationLoadedEvent()
+   */
   @Override
   public void observationReplaced( )
   {
@@ -219,6 +243,9 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
     getEventHandler().fireLayerContentChanged( this );
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.template.IObsProviderListener#observationChangedX(java.lang.Object)
+   */
   @Override
   public void observationChanged( final Object source )
   {

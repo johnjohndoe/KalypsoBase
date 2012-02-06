@@ -42,6 +42,7 @@ package org.kalypso.zml.core.table.binding;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.xml.bind.JAXBException;
@@ -49,35 +50,35 @@ import javax.xml.bind.JAXBException;
 import jregex.Pattern;
 import jregex.RETokenizer;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.zml.core.table.ZmlTableConfigurationLoader;
 import org.kalypso.zml.core.table.schema.CellStyleType;
 import org.kalypso.zml.core.table.schema.StyleReferenceType;
 import org.kalypso.zml.core.table.schema.StyleSetType;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.MapMaker;
 
 /**
  * @author Dirk Kuch
  */
 public final class ZmlStyleResolver
 {
-  private final Cache<String, StyleSetType> m_styleSetCache;
+  private final Map<String, StyleSetType> m_styleSetCache;
 
-  private final Cache<String, CellStyle> m_styleCache;
+  private final Map<String, CellStyle> m_styleCache;
 
   private static ZmlStyleResolver INSTANCE;
 
   private ZmlStyleResolver( )
   {
-    final CacheBuilder builder = CacheBuilder.newBuilder().expireAfterAccess( 30, TimeUnit.MINUTES );
-    m_styleSetCache = builder.build();
-    m_styleCache = builder.build();
+    final MapMaker marker = new MapMaker().expireAfterAccess( 30, TimeUnit.MINUTES );
+    m_styleSetCache = marker.makeMap();
+    m_styleCache = marker.makeMap();
   }
 
   public static ZmlStyleResolver getInstance( )
@@ -109,7 +110,7 @@ public final class ZmlStyleResolver
       if( url == null )
         throw new IllegalStateException();
 
-      final CellStyle cached = m_styleCache.asMap().get( url );
+      final CellStyle cached = m_styleCache.get( url );
       if( cached != null )
         return cached;
 
@@ -117,7 +118,7 @@ public final class ZmlStyleResolver
       final String identifier = getAnchor( url );
 
       CellStyle style;
-      if( plainUrl.startsWith( "urn:" ) ) //$NON-NLS-1$
+      if( plainUrl.startsWith( "urn:" ) )
 
         style = findUrnStyle( plainUrl, identifier );
       else
@@ -135,7 +136,7 @@ public final class ZmlStyleResolver
 
   private CellStyle findUrlStyle( final String uri, final String identifier ) throws MalformedURLException, JAXBException
   {
-    StyleSetType styleSet = m_styleSetCache.asMap().get( uri );
+    StyleSetType styleSet = m_styleSetCache.get( uri );
     if( styleSet == null )
     {
       final URL url = new URL( uri );
@@ -161,7 +162,8 @@ public final class ZmlStyleResolver
 
   private CellStyle findUrnStyle( final String urn, final String identifier ) throws MalformedURLException, JAXBException
   {
-    final String uri = KalypsoCorePlugin.getDefault().getCatalogManager().resolve( urn, urn );
+    final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
+    final String uri = baseCatalog.resolve( urn, urn );
 
     return findUrlStyle( uri, identifier );
   }

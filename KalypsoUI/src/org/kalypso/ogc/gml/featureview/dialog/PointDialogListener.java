@@ -52,33 +52,33 @@ import org.eclipse.swt.widgets.Text;
  */
 final class PointDialogListener implements ModifyListener
 {
-  private final PointDialog m_ptDialog;
+  private PointDialog m_ptDialog;
 
-  private final int m_whichText;
+  private int m_whichText;
 
-  public PointDialogListener( final PointDialog ptDialog, final int whichText )
+  public PointDialogListener( PointDialog ptDialog, int whichText )
   {
     m_ptDialog = ptDialog;
     m_whichText = whichText;
   }
 
   @Override
-  public void modifyText( final ModifyEvent e )
+  public void modifyText( ModifyEvent e )
   {
     final Text text = (Text) e.getSource();
     final String content = text.getText();
 
-    final double[] values = m_ptDialog.getValues();
+    double[] values = m_ptDialog.getValues();
 
     try
     {
-      final double dbl = Double.parseDouble( content );
+      double dbl = Double.parseDouble( content );
 
       values[m_whichText] = dbl;
 
       m_ptDialog.setValues( values );
     }
-    catch( final Exception ex )
+    catch( Exception ex )
     {
       values[m_whichText] = new Double( "0.0" ); //$NON-NLS-1$
 

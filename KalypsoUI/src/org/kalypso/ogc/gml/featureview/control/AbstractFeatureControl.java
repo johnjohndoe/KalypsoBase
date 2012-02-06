@@ -80,6 +80,9 @@ public abstract class AbstractFeatureControl implements IFeatureControl
     m_ftp = ftp;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#dispose()
+   */
   @Override
   public void dispose( )
   {

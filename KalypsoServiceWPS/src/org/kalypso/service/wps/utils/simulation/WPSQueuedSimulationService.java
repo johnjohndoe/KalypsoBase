@@ -52,7 +52,7 @@ import java.util.logging.Logger;
 import javax.activation.DataHandler;
 import javax.activation.URLDataSource;
 
-import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs.FileObject;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.kalypso.contribs.java.net.IUrlCatalog;
@@ -314,7 +314,6 @@ public class WPSQueuedSimulationService
         if( jobInfo.getState() == ISimulationConstants.STATE.WAITING )
         {
           LOGGER.info( "Scheduler: Starting job: " + jobInfo.getId() ); //$NON-NLS-1$
-          jobInfo.setState( ISimulationConstants.STATE.RUNNING );
           cjt.start();
           return;
         }

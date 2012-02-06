@@ -71,11 +71,10 @@ public class TitleTypeBean
 
   private boolean m_mirrorVertical = false;
 
-  public TitleTypeBean( )
+  public TitleTypeBean()
   {
     // default;
   }
-
   public TitleTypeBean( final String text )
   {
     m_text = text;
@@ -154,12 +153,12 @@ public class TitleTypeBean
     m_text = text;
   }
 
-  public void setMirrorHorizontal( final boolean mirrorX )
+  public void setMirrorHorizontal( boolean mirrorX )
   {
     m_mirrorHorizontal = mirrorX;
   }
 
-  public void setMirrorVertical( final boolean mirrorY )
+  public void setMirrorVertical( boolean mirrorY )
   {
     m_mirrorVertical = mirrorY;
   }

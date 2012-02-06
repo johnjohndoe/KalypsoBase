@@ -37,7 +37,7 @@ public abstract class GenericWizardsHandler extends AbstractHandler
     m_service = (IEvaluationService) PlatformUI.getWorkbench().getService( IEvaluationService.class );
 
     final RegisterExpressionsVisitor visitor = new RegisterExpressionsVisitor( m_service, m_listener );
-    visitor.accept( m_registry.getRootCategory() );
+    visitor.accept(  m_registry.getRootCategory() );
   }
 
   @Override

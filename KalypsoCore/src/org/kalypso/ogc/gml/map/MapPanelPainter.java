@@ -58,7 +58,7 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
  * The painter draws a buffered image which gets created in a background job.
  * </p>
  * In order to create the image, schedule this painter as a job. </p>
- * 
+ *
  * @author Gernot Belger
  */
 public class MapPanelPainter implements IPaintable
@@ -71,7 +71,7 @@ public class MapPanelPainter implements IPaintable
 
   /**
    * Creates this painter. Call {@link #schedule()} immediately after creation in order to create the buffered image.
-   * 
+   *
    * @param bgColor
    *          If set, the buffer image is filled with this color before any layer will be painted.
    */

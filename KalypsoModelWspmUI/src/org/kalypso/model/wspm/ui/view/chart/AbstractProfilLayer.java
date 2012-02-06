@@ -47,12 +47,11 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
-import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-import org.kalypso.model.wspm.core.profil.visitors.FindMinMaxVisitor;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.IProfilView;
@@ -64,11 +63,11 @@ import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
+import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINECAP;
-import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
@@ -100,22 +99,26 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   public AbstractProfilLayer( final String id, final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
   {
-    super( null, new StyleSet() );
+    super( null );
 
     m_profil = profil;
     m_targetRangeProperty = targetRangeProperty;
-    m_domainComponent = IWspmPointProperties.POINT_PROPERTY_BREITE;
+    m_domainComponent = IWspmConstants.POINT_PROPERTY_BREITE;
     setIdentifier( id );
     createStyles( styleProvider, id );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#commitDrag(org.eclipse.swt.graphics.Point,
+   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
+   */
   @Override
   public EditInfo commitDrag( final Point point, final EditInfo dragStartData )
   {
     final IComponent targetComponent = getTargetComponent();
     if( targetComponent != null )
     {
-      getProfil().getSelection().setActivePointProperty( targetComponent );
+      getProfil().setActivePointProperty( targetComponent );
     }
 
     if( point == null || dragStartData.getPosition() == point )
@@ -130,8 +133,21 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     return null;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#createLayerPanel()
+   */
   @Override
   public IProfilView createLayerPanel( )
+  {
+    // override this method
+    return null;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#createLegendEntries()
+   */
+  @Override
+  protected ILegendEntry[] createLegendEntries( )
   {
     // override this method
     return null;
@@ -156,13 +172,22 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     m_pointStyleHover = styleProvider.getStyleFor( id + "_POINT_HOVER", null ); //$NON-NLS-1$
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#dispose()
+   */
   @Override
   public void dispose( )
   {
     /**
      * don't dispose Styles, StyleProvider will do
      */
+
   }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#drag(org.eclipse.swt.graphics.Point,
+   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
+   */
 
   @Override
   public EditInfo drag( final Point newPos, final EditInfo dragStartData )
@@ -171,6 +196,9 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     return dragStartData;// return new EditInfo( this, null, null, dragStartData.m_data, "", newPos );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.chart.AbstractProfilLayer#executeClick(de.openali.odysseus.chart.framework.model.layer.EditInfo)
+   */
   @Override
   public void executeClick( final EditInfo clickInfo )
   {
@@ -180,13 +208,16 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     if( !Objects.isNull( cmp, pos ) )
     {
       final IProfil profil = getProfil();
-      profil.getSelection().setRange( profil.getPoint( pos ) );
-      profil.getSelection().setActivePointProperty( cmp );
+      profil.setActivePoint( profil.getPoint( pos ) );
+      profil.setActivePointProperty( cmp );
     }
   }
 
   /**
    * To be implemented by subclasses - if needed
+   * 
+   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#executeDrop(org.eclipse.swt.graphics.Point,
+   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
   @Override
   public void executeDrop( final Point point, final EditInfo dragStartData )
@@ -199,27 +230,25 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     return getProfil() == null ? null : getProfil().hasPointProperty( m_domainComponent );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
+   */
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Number> getDomainRange( )
   {
     if( getCoordinateMapper() == null )
       return null;
-
-    final IComponent domain = getDomainComponent();
-    if( Objects.isNull( domain ) )
-      return null;
-
-    final FindMinMaxVisitor visitor = new FindMinMaxVisitor( domain.getId() );
-    m_profil.accept( visitor, 1 );
-
-    final IProfileRecord min = visitor.getMinimum();
-    final IProfileRecord max = visitor.getMaximum();
+    final Double max = ProfilUtil.getMaxValueFor( getProfil(), getDomainComponent() );
+    final Double min = ProfilUtil.getMinValueFor( getProfil(), getDomainComponent() );
     if( Objects.isNull( min, max ) )
       return null;
 
-    return new DataRange<Number>( (Number) min.getValue( domain ), (Number) max.getValue( domain ) );
+    return new DataRange<Number>( min, max );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#getHover(org.eclipse.swt.graphics.Point)
+   */
   @Override
   public EditInfo getHover( final Point pos )
   {
@@ -351,6 +380,9 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#getProfil()
+   */
   @Override
   public IProfil getProfil( )
   {
@@ -380,31 +412,30 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     return m_targetPropIndex;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
+   */
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     final int targetPropertyIndex = getTargetPropertyIndex();
     if( getCoordinateMapper() == null || targetPropertyIndex == -1 )
       return null;
 
-    final IComponent target = getTargetComponent();
-    final FindMinMaxVisitor visitor = new FindMinMaxVisitor( target.getId() );
-    m_profil.accept( visitor, 1 );
-
-    final IProfileRecord min = visitor.getMinimum();
-    final IProfileRecord max = visitor.getMaximum();
+    final Double max = ProfilUtil.getMaxValueFor( getProfil(), targetPropertyIndex );
+    final Double min = ProfilUtil.getMinValueFor( getProfil(), targetPropertyIndex );
     if( Objects.isNull( min, max ) )
       return null;
 
-    final Number minValue = (Number) min.getValue( target );
-    final Number maxValue = (Number) max.getValue( target );
+    if( Math.abs( min - max ) < 0.001 )
+      return new DataRange<Number>( min - 1, min + 1 );
 
-    if( Math.abs( minValue.doubleValue() - maxValue.doubleValue() ) < 0.001 )
-      return new DataRange<Number>( minValue.doubleValue() - 1, minValue.doubleValue() + 1 );
-
-    return new DataRange<Number>( minValue, maxValue );
+    return new DataRange<Number>( min, max );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getTitle()
+   */
   @Override
   public String getTitle( )
   {
@@ -433,37 +464,52 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#isLocked()
+   */
   @Override
   public boolean isLocked( )
   {
     return m_isLocked;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#lockLayer(boolean)
+   */
   @Override
   public void lockLayer( final boolean isLocked )
   {
     m_isLocked = isLocked;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
+   *      org.kalypso.model.wspm.core.profil.IProfilChange[])
+   */
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     final IProfil profil = getProfil();
     if( profil == null )
       return;
-
-    if( hint.isSelectionChanged() )
+    if( hint.isActivePointChanged() )
     {
       getEventHandler().fireLayerContentChanged( this );
     }
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
+   */
   @Override
   public void paint( final GC gc )
   {
     // override this method
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#removeYourself()
+   */
   @Override
   public void removeYourself( )
   {
@@ -500,6 +546,9 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     m_pointStyleHover = pointStyleHover;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#setProfil(org.kalypso.model.wspm.core.profil.IProfil)
+   */
   @Override
   public void setProfil( final IProfil profil )
   {
@@ -526,10 +575,10 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     final Double y = ProfilUtil.getDoubleValueFor( getTargetPropertyIndex(), point );
     if( Objects.isNull( x, y ) )
       return null;
-    else if( x.isNaN() || y.isNaN() )
+
+    if( x.isNaN() || y.isNaN() )
       return null;
 
     return cm.numericToScreen( x, y );
-
   }
 }

@@ -81,11 +81,12 @@ public class TriangulatedSurfaceContentHandler extends GMLElementContentHandler 
     m_triangles = new ArrayList<GM_Triangle>();
     m_triangulatedSurface = null;
   }
-
+  
   public TriangulatedSurfaceContentHandler( final XMLReader reader, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContentHandler )
   {
     this( reader, resultEater, parentContentHandler, null );
   }
+
 
   @Override
   public void doStartElement( final String uri, final String localName, final String name, final Attributes attributes )
@@ -144,7 +145,7 @@ public class TriangulatedSurfaceContentHandler extends GMLElementContentHandler 
     if( m_triangles == null )
       m_triangles = new ArrayList<GM_Triangle>();
 
-    m_triangles.add( triangle );
-    // TODO: project triangles to my srs?
+      m_triangles.add( triangle );
+      // TODO: project triangles to my srs?
   }
 }

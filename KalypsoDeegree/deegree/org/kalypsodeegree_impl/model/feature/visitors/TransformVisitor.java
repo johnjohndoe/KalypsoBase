@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- *
+ * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always.
- *
- * If you intend to use this software in other ways than in kalypso
+ * interface-compatibility to deegree is wanted but not retained always. 
+ * 
+ * If you intend to use this software in other ways than in kalypso 
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree,
+ * all modifications are licensed as deegree, 
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -46,14 +46,14 @@ import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
-import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * Transforms all visited features to another coordinate system
- *
+ * 
  * @author belger
  */
 public class TransformVisitor implements FeatureVisitor
@@ -94,7 +94,7 @@ public class TransformVisitor implements FeatureVisitor
       // TRICKY: directly fetch an xlinked featuee, else we might get an error as the feature types of the link
       // and the linked feature may be different.
       // We should check, if we want to transform through xlinks anyways...
-      if( f instanceof IXLinkedFeature )
+      if( f instanceof XLinkedFeature_Impl )
         return false;
 
       doVisit( f );
@@ -121,12 +121,12 @@ public class TransformVisitor implements FeatureVisitor
     }
   }
 
-  private boolean transformProperty( final Feature f, final IPropertyType ftp ) throws Exception
+  private boolean transformProperty( Feature f, IPropertyType ftp ) throws Exception
   {
     if( ftp.isVirtual() )
       return false;
 
-    if( f instanceof Feature_Impl && ((Feature_Impl) f).isFunctionProperty( ftp ) )
+    if( (f instanceof Feature_Impl) && ((Feature_Impl) f).isFunctionProperty( ftp ) )
       return false;
 
     if( !GeometryUtilities.isGeometry( ftp ) )
@@ -138,7 +138,7 @@ public class TransformVisitor implements FeatureVisitor
     return transformNonList( f, ftp );
   }
 
-  private boolean transformNonList( final Feature f, final IPropertyType ftp ) throws Exception
+  private boolean transformNonList( Feature f, IPropertyType ftp ) throws Exception
   {
     final GM_Object object = (GM_Object) f.getProperty( ftp );
     final GM_Object transformedGeom = transformProperty( object );
@@ -147,7 +147,7 @@ public class TransformVisitor implements FeatureVisitor
     return object != transformedGeom;
   }
 
-  private boolean transformList( final Feature f, final IPropertyType ftp ) throws Exception
+  private boolean transformList( Feature f, IPropertyType ftp ) throws Exception
   {
     boolean wasTransformed = false;
     final List<GM_Object> geomList = (List<GM_Object>) f.getProperty( ftp );
@@ -157,7 +157,7 @@ public class TransformVisitor implements FeatureVisitor
       final GM_Object geom = geomList.get( i );
       final GM_Object transformedGeom = transformProperty( geom );
 
-      wasTransformed = wasTransformed | geom != transformedGeom;
+      wasTransformed = wasTransformed | (geom != transformedGeom);
 
       geomList.set( i, transformedGeom );
     }
@@ -165,11 +165,11 @@ public class TransformVisitor implements FeatureVisitor
     return wasTransformed;
   }
 
-  private void invalidateFeatureList( final Feature f )
+  private void invalidateFeatureList( Feature f )
   {
     // HACK: we invalidate the complete geo-index, in order to make sure the complete bbox of the list is
     // correctly set.
-    final Feature parent = f.getOwner();
+    final Feature parent = f.getParent();
     if( parent == null )
       return;
 

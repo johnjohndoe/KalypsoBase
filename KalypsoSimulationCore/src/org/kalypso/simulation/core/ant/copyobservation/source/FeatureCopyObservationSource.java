@@ -43,13 +43,10 @@ package org.kalypso.simulation.core.ant.copyobservation.source;
 import java.net.URL;
 import java.util.Properties;
 
-import javax.xml.namespace.NamespaceContext;
-
 import org.kalypso.ogc.sensor.timeseries.merged.Source;
-import org.kalypso.ogc.sensor.util.ZmlLink;
+import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * @author Dirk Kuch
@@ -61,10 +58,12 @@ public class FeatureCopyObservationSource extends AbstractCopyObservationSource
   public FeatureCopyObservationSource( final URL context, final Source[] sources, final String tokens )
   {
     super( context, sources );
-
     m_tokens = tokens;
   }
 
+  /**
+   * @see org.kalypso.ogc.util.copyobservation.source.AbstractCopyObservationSource#getReplaceTokens(org.kalypsodeegree.model.feature.Feature)
+   */
   @Override
   protected final Properties getReplaceTokens( final Feature feature )
   {
@@ -74,17 +73,21 @@ public class FeatureCopyObservationSource extends AbstractCopyObservationSource
     return null;
   }
 
+  /**
+   * @see org.kalypso.ogc.util.copyobservation.source.AbstractCopyObservationSource#getSourceLinkHref()
+   */
   @Override
   protected final String getSourceLinkHref( final Feature feature, final Source source )
   {
-    final String property = source.getProperty();
-    if( property == null )
-      return source.getLink();
+    if( source.getProperty() == null )
+      return null;
 
-    final NamespaceContext namespaceContext = null;
-    final GMLXPath propertyPath = new GMLXPath( property, namespaceContext );
+    final TimeseriesLinkType sourcelink = (TimeseriesLinkType) feature.getProperty( source.getProperty() );
+    if( sourcelink == null )
+      return null;
 
-    final ZmlLink zmlLink = new ZmlLink( feature, propertyPath );
-    return zmlLink.getHref();
+    return sourcelink.getHref();
+
   }
+
 }

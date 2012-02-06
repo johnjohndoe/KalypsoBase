@@ -121,7 +121,7 @@ public class GeoToolsGeoTransformer implements IGeoTransformer
     /* Transform. */
     transformation.transform( sourcePt, targetPt );
 
-    return GeometryFactory.createGM_Position( targetPt.getOrdinate( 0 ), targetPt.getOrdinate( 1 ), targetPt.getDimension() == 3 ? targetPt.getOrdinate( 2 ) : position.getZ() );
+    return GeometryFactory.createGM_Position( targetPt.getOrdinate( 0 ), targetPt.getOrdinate( 1 ), (targetPt.getDimension() == 3) ? targetPt.getOrdinate( 2 ) : position.getZ() );
   }
 
   /**
@@ -138,7 +138,7 @@ public class GeoToolsGeoTransformer implements IGeoTransformer
       return geometry;
 
     if( geometry instanceof GM_Point )
-      return transform( (GM_Point) geometry, sourceCRS, m_targetCRS );
+      return transform( ((GM_Point) geometry), sourceCRS, m_targetCRS );
 
     return geometry.transform( m_targetCRS );
   }
@@ -218,6 +218,6 @@ public class GeoToolsGeoTransformer implements IGeoTransformer
     /* Transform. */
     transformation.transform( sourcePt, targetPt );
 
-    return GeometryFactory.createGM_Point( targetPt.getOrdinate( 0 ), targetPt.getOrdinate( 1 ), targetPt.getDimension() == 3 ? targetPt.getOrdinate( 2 ) : point.getZ(), targetCRS );
+    return GeometryFactory.createGM_Point( targetPt.getOrdinate( 0 ), targetPt.getOrdinate( 1 ), (targetPt.getDimension() == 3) ? targetPt.getOrdinate( 2 ) : point.getZ(), targetCRS );
   }
 }

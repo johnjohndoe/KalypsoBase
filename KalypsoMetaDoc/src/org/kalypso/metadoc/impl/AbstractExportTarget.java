@@ -43,9 +43,10 @@ package org.kalypso.metadoc.impl;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Properties;
 import java.util.Set;
 
+import org.apache.commons.configuration.BaseConfiguration;
+import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -53,7 +54,7 @@ import org.kalypso.metadoc.IExportTarget;
 
 /**
  * Abstract export target, which handles the common extension point stuff.
- *
+ * 
  * @author schlienger
  */
 public abstract class AbstractExportTarget implements IExportTarget
@@ -68,14 +69,14 @@ public abstract class AbstractExportTarget implements IExportTarget
   private final Set<String> m_modes = new HashSet<String>();
 
   /** holder for the properties */
-  private final Properties m_properties = new Properties();
+  private final Configuration m_properties = new BaseConfiguration();
 
   /**
    * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
    *      java.lang.String, java.lang.Object)
    */
   @Override
-  public final void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
+  public final void setInitializationData( final IConfigurationElement config, final String propertyName, Object data )
   {
     m_name = config.getAttribute( "name" );
     m_desc = config.getAttribute( "description" );
@@ -137,7 +138,7 @@ public abstract class AbstractExportTarget implements IExportTarget
   /**
    * @return the properties of this target. Should only be used internally, or by subclasses.
    */
-  protected Properties getProperties( )
+  protected Configuration getProperties( )
   {
     return m_properties;
   }

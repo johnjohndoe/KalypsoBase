@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestra�e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.context;
 
@@ -60,10 +60,8 @@ import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.services.IEvaluationService;
 import org.eclipse.ui.services.IServiceLocator;
 import org.eclipse.ui.services.IServiceWithSources;
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.ui.commands.CommandUtilities;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableListener;
 
@@ -90,10 +88,9 @@ public class TableSourceProvider extends AbstractSourceProvider
   private final IZmlTableListener m_listener = new IZmlTableListener()
   {
     @Override
-    public void eventTableChanged( final String type, final IZmlModelColumn... columns )
+    public void eventTableChanged( )
     {
-      if( IZmlTableListener.TYPE_REFRESH.equals( type ) )
-        refreshUIelements();
+      refreshUIelements();
     }
   };
 
@@ -106,7 +103,7 @@ public class TableSourceProvider extends AbstractSourceProvider
   /** Ensures, that the context are activated in the same order as the themes are activated. */
   private final ISchedulingRule m_mutexRule = new MutexRule();
 
-  private final IZmlTableSource m_source;
+  private IZmlTable m_table;
 
   private final IContextActivation m_tableContext;
 
@@ -116,10 +113,10 @@ public class TableSourceProvider extends AbstractSourceProvider
    * Creates a new {@link ChartSourceProvider} on the given chart.<br>
    * Initializes it state with the given parameters.
    */
-  public TableSourceProvider( final IServiceLocator serviceLocator, final IZmlTableSource source )
+  public TableSourceProvider( final IServiceLocator serviceLocator, final IZmlTable table )
   {
     m_serviceLocator = serviceLocator;
-    m_source = source;
+    m_table = table;
 
     final IContextService contextService = (IContextService) registerServiceWithSources( serviceLocator, IContextService.class );
     registerServiceWithSources( serviceLocator, IEvaluationService.class );
@@ -127,9 +124,7 @@ public class TableSourceProvider extends AbstractSourceProvider
     registerServiceWithSources( serviceLocator, IMenuService.class );
 
     m_tableContext = contextService.activateContext( TABLE_CONTEXT );
-    final IZmlTable table = source.getTable();
-    if( Objects.isNotNull( table ) )
-      table.addListener( m_listener );
+    table.addListener( m_listener );
   }
 
   private IServiceWithSources registerServiceWithSources( final IServiceLocator serviceLocator, final Class< ? extends IServiceWithSources> serviceClass )
@@ -144,6 +139,9 @@ public class TableSourceProvider extends AbstractSourceProvider
     return service;
   }
 
+  /**
+   * @see org.eclipse.ui.ISourceProvider#dispose()
+   */
   @Override
   public void dispose( )
   {
@@ -153,24 +151,28 @@ public class TableSourceProvider extends AbstractSourceProvider
       service.removeSourceProvider( this );
     }
 
-    final IZmlTable table = m_source.getTable();
-    if( Objects.isNotNull( table ) )
-      table.removeListener( m_listener );
+    m_table.removeListener( m_listener );
+    m_table = null;
 
     if( m_tableContext != null )
       m_tableContext.getContextService().deactivateContext( m_tableContext );
   }
 
+  /**
+   * @see org.eclipse.ui.ISourceProvider#getCurrentState()
+   */
   @Override
   public Map< ? , ? > getCurrentState( )
   {
-
     final Map<String, Object> currentState = new TreeMap<String, Object>();
-    currentState.put( ACTIVE_TABLE_NAME, m_source.getTable() );
+    currentState.put( ACTIVE_TABLE_NAME, m_table );
 
     return currentState;
   }
 
+  /**
+   * @see org.eclipse.ui.ISourceProvider#getProvidedSourceNames()
+   */
   @Override
   public String[] getProvidedSourceNames( )
   {

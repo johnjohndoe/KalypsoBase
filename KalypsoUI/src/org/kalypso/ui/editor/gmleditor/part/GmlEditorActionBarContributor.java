@@ -49,7 +49,6 @@ import org.eclipse.ui.actions.ActionContext;
 import org.kalypso.ui.editor.AbstractEditorActionBarContributor;
 import org.kalypso.ui.editor.actions.FeatureSelectionActionGroup;
 import org.kalypso.ui.editor.actions.NewFeatureManagedMenu;
-import org.kalypso.ui.editor.actions.SelectionManagedMenu;
 
 /**
  * Contributes to the actions bars of the {@link org.kalypso.ui.editor.gmleditor.GmlEditor}.

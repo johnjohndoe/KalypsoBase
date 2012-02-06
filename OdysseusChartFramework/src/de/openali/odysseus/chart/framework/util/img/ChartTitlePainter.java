@@ -43,14 +43,16 @@ package de.openali.odysseus.chart.framework.util.img;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.GroupLayout.Alignment;
+
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.ui.PlatformUI;
 
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
-import de.openali.odysseus.chart.framework.util.ChartUtilities;
 
 /**
  * @author kimwerner
@@ -123,7 +125,7 @@ public class ChartTitlePainter
     if( boundsRect.width == 0 || boundsRect.height == 0 )
       return null;
 
-    final Device dev = ChartUtilities.getDisplay();
+    final Device dev = PlatformUI.getWorkbench().getDisplay();
     final Image image = new Image( dev, boundsRect.width, boundsRect.height );
     final GC gcw = new GC( image );
     try
@@ -166,7 +168,7 @@ public class ChartTitlePainter
       final Rectangle textRect = m_renderer.getSize();
       textRect.x += anchorX;
       textRect.y = anchorY;
-      m_renderer.paint( gc, new Point( anchorX, anchorY ) );
+      m_renderer.paint( gc,  new Point( anchorX, anchorY ) );
       titleType.setTextAnchorY( oldAnchor );
       anchorY += textRect.height;
       usedRect = usedRect.union( textRect );
@@ -239,7 +241,7 @@ public class ChartTitlePainter
     final int deltaRight = bottomRight.y - topRight.y - topRight.height - centerRight.height;
     if( deltaRight > 1 )
       centerRight.y += deltaRight / 2;
-
+ 
     // paint
     paint( gc, topLeft, ALIGNMENT.LEFT, ALIGNMENT.TOP );
     paint( gc, topCenter, ALIGNMENT.CENTER, ALIGNMENT.TOP );

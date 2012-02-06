@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
@@ -62,7 +62,7 @@ import org.kalypso.ogc.gml.map.widgets.providers.handles.IHandle;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -72,7 +72,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * 
  * @author Holger Albert
  */
-public class DragFeatureWidget extends DeprecatedMouseWidget
+public class DragFeatureWidget extends AbstractWidget
 {
   /**
    * This list stores all handles of the selected feature.
@@ -113,15 +113,15 @@ public class DragFeatureWidget extends DeprecatedMouseWidget
    * The constructor.
    * 
    * @param name
-   *          The name of this widget.
+   *            The name of this widget.
    * @param toolTip
-   *          The tooltip of this widget.
+   *            The tooltip of this widget.
    * @param handlesProvider
-   *          The class which provides the handles the geometries of a feature.
+   *            The class which provides the handles the geometries of a feature.
    * @param radius
-   *          The radius in which the handles should be selectable.
+   *            The radius in which the handles should be selectable.
    * @param qnames
-   *          The QNames the editable features should substitute from.
+   *            The QNames the editable features should substitute from.
    */
   public DragFeatureWidget( final String name, final String toolTip, final IHandlesProvider handlesProvider, final int radius, final QName[] qnames )
   {
@@ -158,7 +158,7 @@ public class DragFeatureWidget extends DeprecatedMouseWidget
   @Override
   public void leftReleased( final Point p )
   {
-    if( m_handles == null || m_startPoint == null || m_currentPoint == null )
+    if( (m_handles == null) || (m_startPoint == null) || (m_currentPoint == null) )
       return;
 
     /* Memory to collect all active handles. */
@@ -182,7 +182,7 @@ public class DragFeatureWidget extends DeprecatedMouseWidget
       return;
     }
 
-    getMapPanel().setMessage( Messages.getString( "org.kalypso.ogc.gml.map.widgets.DragFeatureWidget.0" ) ); //$NON-NLS-1$
+    getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.DragFeatureWidget.0") ); //$NON-NLS-1$
 
     /* Create the new geometry. */
     final GeoTransform projection = getMapPanel().getProjection();
@@ -209,7 +209,7 @@ public class DragFeatureWidget extends DeprecatedMouseWidget
     m_currentPoint = null;
     m_startPoint = null;
 
-    getMapPanel().setMessage( Messages.getString( "org.kalypso.ogc.gml.map.widgets.DragFeatureWidget.1" ) ); //$NON-NLS-1$
+    getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.DragFeatureWidget.1") ); //$NON-NLS-1$
   }
 
   /**
@@ -240,7 +240,7 @@ public class DragFeatureWidget extends DeprecatedMouseWidget
         for( final IHandle handle : m_handles )
           handle.setActive( true );
 
-        getMapPanel().setMessage( Messages.getString( "org.kalypso.ogc.gml.map.widgets.DragFeatureWidget.2" ) ); //$NON-NLS-1$
+        getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.DragFeatureWidget.2") ); //$NON-NLS-1$
       }
     }
 
@@ -287,7 +287,7 @@ public class DragFeatureWidget extends DeprecatedMouseWidget
      * There must be a start and end point. Further more, the handles must be active. If the first is active, all others
      * are active, too.
      */
-    if( m_startPoint != null && m_currentPoint != null && m_handles.get( 0 ).isActive() )
+    if( (m_startPoint != null) && (m_currentPoint != null) && (m_handles.get( 0 ).isActive()) )
     {
       /* Calculate the difference between the two points. */
       final int da = (int) (m_currentPoint.getX() - m_startPoint.getX());
@@ -361,7 +361,7 @@ public class DragFeatureWidget extends DeprecatedMouseWidget
     /* Collect all handles from the handle provider. */
     m_handles.addAll( m_handlesProvider.collectHandles( feature, m_radius ) );
 
-    getMapPanel().setMessage( Messages.getString( "org.kalypso.ogc.gml.map.widgets.DragFeatureWidget.4" ) ); //$NON-NLS-1$
+    getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.DragFeatureWidget.4") ); //$NON-NLS-1$
 
     return;
   }
@@ -377,7 +377,7 @@ public class DragFeatureWidget extends DeprecatedMouseWidget
     for( final EasyFeatureWrapper wrapper : allFeatures )
     {
       /* Take the first feature, which is in this list and which has geometries. */
-      if( wrapper.getFeature().getGeometryPropertyValues().length > 0 )
+      if( wrapper.getFeature().getGeometryProperties().length > 0 )
       {
         final IFeatureType featureType = wrapper.getFeature().getFeatureType();
 
@@ -385,7 +385,7 @@ public class DragFeatureWidget extends DeprecatedMouseWidget
          * If a list of qnames is specified and at least one qname exists in it, search only for features, which
          * substitutes one of the qnames in the list.
          */
-        if( m_qnames != null && m_qnames.length > 0 )
+        if( (m_qnames != null) && (m_qnames.length > 0) )
         {
           for( final QName qname : m_qnames )
           {

@@ -62,7 +62,7 @@ public class DBFFieldNameValidator implements IValidator
   public IStatus validate( final Object value )
   {
     if( !(value instanceof String) )
-      return ValidationStatus.error( Messages.getString( "DBFFieldNameValidator_0" ) ); //$NON-NLS-1$
+      return ValidationStatus.error( Messages.getString("DBFFieldNameValidator_0") ); //$NON-NLS-1$
 
     try
     {

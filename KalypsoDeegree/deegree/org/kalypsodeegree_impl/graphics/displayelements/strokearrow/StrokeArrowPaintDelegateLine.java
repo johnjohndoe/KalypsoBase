@@ -37,6 +37,7 @@ package org.kalypsodeegree_impl.graphics.displayelements.strokearrow;
 
 import java.awt.Graphics2D;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -57,9 +58,9 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 public class StrokeArrowPaintDelegateLine extends AbstractStrokeArrowPaintDelegate
 {
   private static final double MIN_DISTANCE_OF_POINTS = 4.0; /*
-                                                             * REMARK: GM_POINTS will be transfered to screen
-                                                             * coordinates, and these points must differ!
-                                                             */
+   * REMARK: GM_POINTS will be transfered to screen
+   * coordinates, and these points must differ!
+   */
 
   public StrokeArrowPaintDelegateLine( final ARROW_TYPE arrowType, final ARROW_WIDGET arrowWidget, final ARROW_ALIGNMENT arrowAlignment, final Double arrowSize, final Double strokeWidth )
   {
@@ -101,7 +102,7 @@ public class StrokeArrowPaintDelegateLine extends AbstractStrokeArrowPaintDelega
         return calculateEndPoints( curve );
 
       case middle:
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
 
     return null;

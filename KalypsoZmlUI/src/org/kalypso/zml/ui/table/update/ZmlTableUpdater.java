@@ -40,110 +40,110 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.update;
 
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeMap;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
-import org.kalypso.zml.core.base.IZmlSourceElement;
+import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.core.util.pool.IPoolableObjectType;
+import org.kalypso.ogc.sensor.provider.IObsProvider;
+import org.kalypso.zml.core.diagram.base.zml.MultipleTsLink;
+import org.kalypso.zml.core.diagram.base.zml.TSLinkWithName;
 import org.kalypso.zml.core.table.binding.BaseColumn;
-import org.kalypso.zml.core.table.binding.TableTypes;
-import org.kalypso.zml.core.table.model.IZmlModel;
-import org.kalypso.zml.core.table.model.ZmlModel;
-import org.kalypso.zml.core.table.model.utils.IClonedColumn;
+import org.kalypso.zml.core.table.binding.IClonedColumn;
+import org.kalypso.zml.core.table.binding.TableTypeHelper;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
+import org.kalypso.zml.ui.core.element.ZmlLinkDiagramElement;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.base.helper.ZmlTables;
+import org.kalypso.zml.ui.table.ZmlTableColumnBuilder;
+import org.kalypso.zml.ui.table.memento.ILabeledObsProvider;
+import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlTableUpdater implements Runnable
 {
-  private final IMultipleZmlSourceElement[] m_sources;
+  private final MultipleTsLink[] m_links;
 
-  private final IZmlTable m_table;
+  private final IZmlTableLayoutPart m_part;
 
-  private boolean m_singleSelect;
-
-  public ZmlTableUpdater( final IZmlTable table, final IMultipleZmlSourceElement[] sources )
+  public ZmlTableUpdater( final IZmlTableLayoutPart part, final MultipleTsLink[] links )
   {
-    m_table = table;
-    m_sources = sources;
+    m_part = part;
+    m_links = links;
   }
 
+  /**
+   * @see java.lang.Runnable#run()
+   */
   @Override
   public void run( )
   {
-    /** tricky: map is used for restoring the order of columns from the underlying calcWizard.xml */
-    final Map<Integer, Object[]> map = new TreeMap<Integer, Object[]>();
-
-    for( final IMultipleZmlSourceElement multipleLink : m_sources )
+    for( final MultipleTsLink multipleLink : m_links )
     {
-      final IZmlSourceElement[] links = multipleLink.getSources();
+      if( multipleLink.isIgnoreType( m_part.getIgnoreTypes() ) )
+        continue;
+
+      final TSLinkWithName[] links = multipleLink.getLinks();
       if( ArrayUtils.isEmpty( links ) )
         continue;
 
-      final String baseTypeIdentifier = multipleLink.getIdentifier();
+      final String identifier = multipleLink.getIdentifier();
 
       for( int index = 0; index < links.length; index++ )
       {
-        if( m_singleSelect && index > 1 )
-          continue;
-
-        final IZmlSourceElement source = links[index];
-        final BaseColumn column = toBaseColumn( baseTypeIdentifier, index );
-        if( Objects.isNull( column ) )
-          continue;
-
-        source.setIdentifier( column.getIdentifier() ); // update multiple selection index!
-
-        final int tableIndex = source.getIndex();
-        map.put( tableIndex, new Object[] { source, column } );
+        final TSLinkWithName link = links[index];
+        update( link, identifier, index );
       }
     }
-
-    final Set<Entry<Integer, Object[]>> entries = map.entrySet();
-    for( final Entry<Integer, Object[]> entry : entries )
-    {
-      final Object[] values = entry.getValue();
-
-      final IZmlSourceElement source = (IZmlSourceElement) values[0];
-      final BaseColumn column = (BaseColumn) values[1];
-
-      doLoadModelColumn( source );
-      ZmlTables.addTableColumn( m_table, column );
-    }
   }
 
-  private void doLoadModelColumn( final IZmlSourceElement source )
+  private void update( final TSLinkWithName link, final String identifier, final int index )
   {
-    final ZmlModel model = (ZmlModel) m_table.getModel();
-    model.getMemento().register( source );
-    model.getLoader().load( source );
+    final ZmlLinkDiagramElement element = createZmlDiagrammElement( link, identifier, index );
+    final IObsProvider clonedProvider = element.getObsProvider().copy();
+
+    m_part.getModel().loadColumn( element );
+
+    final ILabeledObsProvider obsWithLabel = new TsLinkObsProvider( link, clonedProvider );
+    final IPoolableObjectType poolKey = element.getPoolKey();
+    m_part.getMemento().register( poolKey, obsWithLabel );
   }
 
-  private BaseColumn toBaseColumn( final String baseTypeIdentifier, final int index )
+  private ZmlLinkDiagramElement createZmlDiagrammElement( final TSLinkWithName link, final String identifier, final int index )
   {
-    final IZmlModel model = m_table.getModel();
-    final AbstractColumnType baseColumnType = model.getColumnType( baseTypeIdentifier );
-    if( Objects.isNull( baseColumnType ) )
-      return null;
-
     if( index == 0 )
+      return new ZmlLinkDiagramElement( link );
+
+    final String multipleIdentifier = duplicateColumn( identifier, index );
+    return new ZmlLinkDiagramElement( link )
     {
-      return new BaseColumn( baseColumnType );
+      @Override
+      public String getIdentifier( )
+      {
+        return multipleIdentifier;
+      }
+    };
+  }
+
+  public String duplicateColumn( final String identifier, final int index )
+  {
+    final String multipleIdentifier = String.format( IClonedColumn.CLONED_COLUMN_POSTFIX_FORMAT, identifier, index );
+    final IZmlTable table = m_part.getTable();
+
+    // column already exists?
+    final IZmlTableColumn[] columns = table.getColumns();
+    for( final IZmlTableColumn column : columns )
+    {
+      final BaseColumn columnType = column.getColumnType();
+      if( columnType.getIdentifier().equals( multipleIdentifier ) )
+        return multipleIdentifier;
     }
 
-    final String multipleIdentifier = String.format( IClonedColumn.CLONED_COLUMN_POSTFIX_FORMAT, baseTypeIdentifier, index );
+    final AbstractColumnType base = TableTypeHelper.finColumn( m_part.getModel().getTableType(), identifier );
+    final AbstractColumnType clone = TableTypeHelper.cloneColumn( base );
+    clone.setId( multipleIdentifier );
 
-    final AbstractColumnType clonedColumnType = TableTypes.cloneColumn( baseColumnType );
-    clonedColumnType.setId( multipleIdentifier );
-
-    return new BaseColumn( clonedColumnType )
+    /** only one rule / style set! */
+    final ZmlTableColumnBuilder builder = new ZmlTableColumnBuilder( m_part.getTable(), new BaseColumn( base )
     {
       @Override
       public String getIdentifier( )
@@ -154,14 +154,12 @@ public class ZmlTableUpdater implements Runnable
       @Override
       public AbstractColumnType getType( )
       {
-        return clonedColumnType;
+        return clone;
       }
-    };
-  }
+    } );
 
-  public void setSingleSelectionMode( final boolean single )
-  {
-    m_singleSelect = single;
-  }
+    builder.execute( new NullProgressMonitor() );
 
+    return multipleIdentifier;
+  }
 }

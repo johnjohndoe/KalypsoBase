@@ -313,7 +313,7 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
     {
       if( loader instanceof ISaveUrnLoader && !((ISaveUrnLoader) loader).isUserSaved( key ) )
         return "This is a globally registered style. Save this style as user style?\nIf a style is saved as user style, "
-            + "the user style will replace the global style wherever used. You can reset the user style in the style editor.";
+        + "the user style will replace the global style wherever used. You can reset the user style in the style editor.";
     }
 
     return String.format( "Save Style '%s'?", getLabel() );
@@ -485,15 +485,6 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
     loader.resetUserStyle( key );
     info.reload( true );
     return Status.OK_STATUS;
-  }
-
-  @Override
-  public boolean isCatalogStyle( )
-  {
-    final KeyInfo info = getPoolInfo();
-    final IPoolableObjectType key = info.getKey();
-    final String location = key.getLocation();
-    return CatalogUtilities.isCatalogResource( location );
   }
 
   abstract protected String getStyleName( );

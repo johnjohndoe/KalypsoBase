@@ -42,7 +42,7 @@ package org.kalypso.ogc.gml.map.widgets.builders.sld;
 
 import java.net.URL;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -95,7 +95,7 @@ public class SldPolygonGeometryBuilder extends AbstractSldGeometryBuilder implem
     final GeometryFactory factory = JTSAdapter.jtsFactory;
 
     Coordinate[] coordinates = getCoordinates();
-    coordinates = ArrayUtils.addAll( coordinates, additional );
+    coordinates = (Coordinate[]) ArrayUtils.addAll( coordinates, additional );
 
     if( coordinates.length < 2 )
       return null;
@@ -107,7 +107,7 @@ public class SldPolygonGeometryBuilder extends AbstractSldGeometryBuilder implem
     }
     else
     {
-      coordinates = ArrayUtils.add( coordinates, coordinates[0] );
+      coordinates = (Coordinate[]) ArrayUtils.add( coordinates, coordinates[0] );
 
       final LinearRing linearRing = factory.createLinearRing( coordinates );
       final Polygon polygon = factory.createPolygon( linearRing, new LinearRing[] {} );

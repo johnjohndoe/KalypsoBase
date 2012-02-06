@@ -64,6 +64,10 @@ public class ForecastFilter extends AbstractObservationFilter
 
   private MetadataList m_metadata;
 
+  /**
+   * @see org.kalypso.ogc.sensor.filter.IObservationFilter#initFilter(java.lang.Object,
+   *      org.kalypso.ogc.sensor.IObservation, java.net.URL)
+   */
   public void initFilter( final IObservation[] observations, final IObservation baseObs, final URL context ) throws SensorException
   {
     super.initFilter( observations, baseObs, context );
@@ -85,13 +89,14 @@ public class ForecastFilter extends AbstractObservationFilter
    *          if <code>args!=null</code>, then the args of the inner observations will be overwritten, usually a
    *          forecastfilter should expect <code>null</code> here.
    */
+  @SuppressWarnings("deprecation")
   @Override
   public ITupleModel getValues( final IRequest args ) throws SensorException
   {
     final ObservationSource[] sources = new ObservationSource[m_observations.length];
     final DateRange daterange = TimeseriesUtils.getDateRange( args );
     for( int i = 0; i < sources.length; i++ )
-      sources[i] = new ObservationSource( null, null, daterange, null, m_observations[i] );
+      sources[i] = new ObservationSource( null, daterange, null, m_observations[i] );
 
     m_metadata = MergedObservation.getMetaData( sources );
 

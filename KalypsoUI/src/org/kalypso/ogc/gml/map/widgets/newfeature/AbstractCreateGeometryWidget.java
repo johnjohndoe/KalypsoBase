@@ -32,20 +32,19 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.tools.GMLConstants;
 
 /**
  * @author Gernot Belger
  */
-public abstract class AbstractCreateGeometryWidget extends DeprecatedMouseWidget
+public abstract class AbstractCreateGeometryWidget extends AbstractWidget
 {
   private final List<IGeometryBuilder> m_buildersToDraw = new ArrayList<IGeometryBuilder>();
 
@@ -142,7 +141,7 @@ public abstract class AbstractCreateGeometryWidget extends DeprecatedMouseWidget
     final QName valueQName = vpt.getValueQName();
     final String targetCrs = getMapPanel().getMapModell().getCoordinatesSystem();
 
-    if( GM_Polygon.POLYGON_ELEMENT.equals( valueQName ) )
+    if( GMLConstants.QN_POLYGON.equals( valueQName ) )
       m_builder = new PolygonGeometryBuilder( 0, targetCrs );
     else if( GMLConstants.QN_MULTI_POLYGON.equals( valueQName ) )
       m_builder = new MultiPolygonGeometryBuilder( 0, targetCrs );
@@ -150,7 +149,7 @@ public abstract class AbstractCreateGeometryWidget extends DeprecatedMouseWidget
       m_builder = new LineGeometryBuilder( 0, targetCrs );
     else if( GMLConstants.QN_MULTI_LINE_STRING.equals( valueQName ) )
       m_builder = new LineGeometryBuilder( 0, targetCrs ); // TODO
-    else if( GM_Point.POINT_ELEMENT.equals( valueQName ) )
+    else if( GMLConstants.QN_POINT.equals( valueQName ) )
       m_builder = new PointGeometryBuilder( targetCrs );
     else
     {
@@ -242,8 +241,8 @@ public abstract class AbstractCreateGeometryWidget extends DeprecatedMouseWidget
     if( m_currentGeometry == -1 )
     {
       final FeatureList featureList = m_theme.getFeatureList();
-      final Feature parentFeature = featureList.getOwner();
-      final IRelationType parentRelation = featureList.getPropertyType();
+      final Feature parentFeature = featureList.getParentFeature();
+      final IRelationType parentRelation = featureList.getParentFeatureTypeProperty();
       final Feature newFeature = parentFeature.getWorkspace().createFeature( parentFeature, parentRelation, m_featureType );
 
       // set builded geometries to feature
@@ -255,7 +254,7 @@ public abstract class AbstractCreateGeometryWidget extends DeprecatedMouseWidget
       }
 
       // add new feature
-      final IRelationType rt = m_theme.getFeatureList().getPropertyType();
+      final IRelationType rt = m_theme.getFeatureList().getParentFeatureTypeProperty();
       final CommandableWorkspace workspace = m_theme.getWorkspace();
       final ICommand command = new AddFeatureCommand( workspace, parentFeature, rt, -1, newFeature, null );
       try

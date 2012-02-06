@@ -45,6 +45,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.xml.bind.JAXBException;
@@ -52,10 +53,11 @@ import javax.xml.bind.JAXBException;
 import jregex.Pattern;
 import jregex.RETokenizer;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.zml.core.table.ZmlTableConfigurationLoader;
 import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.schema.RuleRefernceType;
@@ -63,25 +65,24 @@ import org.kalypso.zml.core.table.schema.RuleSetType;
 import org.kalypso.zml.core.table.schema.RuleType;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.MapMaker;
 
 /**
  * @author Dirk Kuch
  */
 public final class ZmlRuleResolver
 {
-  private final Cache<String, List<ZmlRuleSet>> m_ruleSetCache;
+  private final Map<String, List<ZmlRuleSet>> m_ruleSetCache;
 
-  private final Cache<String, ZmlRule> m_ruleCache;
+  private final Map<String, ZmlRule> m_ruleCache;
 
   private static ZmlRuleResolver INSTANCE;
 
   private ZmlRuleResolver( )
   {
-    final CacheBuilder<Object, Object> builder = CacheBuilder.newBuilder().expireAfterAccess( 30, TimeUnit.MINUTES );
-    m_ruleSetCache = builder.build();
-    m_ruleCache = builder.build();
+    final MapMaker marker = new MapMaker().expireAfterAccess( 30, TimeUnit.MINUTES );
+    m_ruleSetCache = marker.makeMap();
+    m_ruleCache = marker.makeMap();
   }
 
   public static ZmlRuleResolver getInstance( )
@@ -134,14 +135,14 @@ public final class ZmlRuleResolver
   {
     // FIXME: we should consider a timeout based on the modification timestamp of the underlying resource here
     // Else, the referenced resource will never be loaded again, even if it has changed meanwhile
-    return m_ruleCache.asMap().get( url );
+    return m_ruleCache.get( url );
   }
 
   private ZmlRule findUrlRule( final URL context, final String uri, final String identifier ) throws MalformedURLException, JAXBException
   {
     final URL absoluteUri = new URL( context, uri );
 
-    List<ZmlRuleSet> ruleSets = m_ruleSetCache.asMap().get( uri );
+    List<ZmlRuleSet> ruleSets = m_ruleSetCache.get( uri );
     if( ruleSets == null )
     {
       final ZmlTableConfigurationLoader loader = new ZmlTableConfigurationLoader( absoluteUri );
@@ -169,7 +170,8 @@ public final class ZmlRuleResolver
 
   private ZmlRule findUrnRule( final URL context, final String urn, final String identifier ) throws MalformedURLException, JAXBException
   {
-    final String uri = KalypsoCorePlugin.getDefault().getCatalogManager().resolve( urn, urn );
+    final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
+    final String uri = baseCatalog.resolve( urn, urn );
 
     return findUrlRule( context, uri, identifier );
   }

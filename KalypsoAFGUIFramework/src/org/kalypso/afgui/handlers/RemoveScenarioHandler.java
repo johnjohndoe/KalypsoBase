@@ -21,12 +21,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.ScenarioHandlingProjectNature;
 import org.kalypso.afgui.i18n.Messages;
+import org.kalypso.afgui.scenarios.IScenario;
+import org.kalypso.afgui.scenarios.IScenarioList;
 
-import de.renew.workflow.connector.cases.IScenarioManager;
-import de.renew.workflow.connector.cases.IScenario;
-import de.renew.workflow.connector.cases.IScenarioList;
-import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
+import de.renew.workflow.connector.cases.ICaseManager;
 
 /**
  * @author Stefan Kurzbach
@@ -62,7 +62,7 @@ public class RemoveScenarioHandler extends AbstractHandler
           try
           {
             final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
-            final IScenarioManager scenarioManager = nature.getCaseManager();
+            final ICaseManager<IScenario> scenarioManager = nature.getCaseManager();
             final List<IScenario> rootScenarios = scenarioManager.getCases();
             if( rootScenarios.contains( scenario ) && rootScenarios.size() == 1 )
             {
@@ -74,7 +74,7 @@ public class RemoveScenarioHandler extends AbstractHandler
               MessageDialog.openInformation( shell, Messages.getString( "org.kalypso.afgui.handlers.RemoveScenarioHandler.4" ), Messages.getString( "org.kalypso.afgui.handlers.RemoveScenarioHandler.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
               return Status.CANCEL_STATUS;
             }
-            else if( MessageDialog.openConfirm( shell, Messages.getString( "org.kalypso.afgui.handlers.RemoveScenarioHandler.7" ), Messages.getString( "org.kalypso.afgui.handlers.RemoveScenarioHandler.8" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
+            else if( MessageDialog.openConfirm( shell, Messages.getString("org.kalypso.afgui.handlers.RemoveScenarioHandler.7"), Messages.getString("org.kalypso.afgui.handlers.RemoveScenarioHandler.8") ) ) //$NON-NLS-1$ //$NON-NLS-2$
             {
               final UIJob runnable = new UIJob( shell.getDisplay(), Messages.getString( "org.kalypso.afgui.handlers.RemoveScenarioHandler.6" ) ) //$NON-NLS-1$
               {

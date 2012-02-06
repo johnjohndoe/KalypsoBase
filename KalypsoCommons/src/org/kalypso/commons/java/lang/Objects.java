@@ -40,14 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.java.lang;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-
-import com.sun.istack.Nullable;
-
 /**
  * @author Dirk Kuch
  */
@@ -103,42 +95,5 @@ public final class Objects
   public static boolean notEqual( final Object a, final Object b )
   {
     return !equal( a, b );
-  }
-
-  public static <T> T firstNonNull( @Nullable final T a, @Nullable final T b )
-  {
-    return com.google.common.base.Objects.firstNonNull( a, b );
-  }
-
-  public static Object clone( final Object object )
-  {
-    if( Objects.isNull( object ) )
-      return null;
-
-    Object clone = null;
-    try
-    {
-      // Write the object out to a byte array
-      final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-      final ObjectOutputStream out = new ObjectOutputStream( bos );
-      out.writeObject( object );
-      out.flush();
-      out.close();
-
-      // Make an input stream from the byte array and read
-      // a copy of the object back in.
-      final ObjectInputStream in = new ObjectInputStream( new ByteArrayInputStream( bos.toByteArray() ) );
-      clone = in.readObject();
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-    }
-    catch( final ClassNotFoundException cnfe )
-    {
-      cnfe.printStackTrace();
-    }
-
-    return clone;
   }
 }

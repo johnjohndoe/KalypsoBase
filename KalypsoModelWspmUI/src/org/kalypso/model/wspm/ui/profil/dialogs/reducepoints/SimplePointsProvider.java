@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.dialogs.reducepoints;
 
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * Delivers points from a selection.
@@ -49,28 +49,37 @@ import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
  */
 public class SimplePointsProvider implements IPointsProvider
 {
-  private final IProfileRecord[] m_points;
+  private final IRecord[] m_points;
 
   private final String m_name;
 
-  public SimplePointsProvider( final String name, final IProfileRecord[] points )
+  public SimplePointsProvider( final String name, final IRecord[] points )
   {
     m_name = name;
     m_points = points;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.profil.wizard.douglasPeucker.IPointsProvider#getPoints()
+   */
   @Override
-  public IProfileRecord[] getPoints( )
+  public IRecord[] getPoints( )
   {
     return m_points;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.profil.wizard.douglasPeucker.IPointsProvider#getErrorMessage()
+   */
   @Override
   public String getErrorMessage( )
   {
     return null;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.profil.wizard.douglasPeucker.IPointsProvider#getName()
+   */
   @Override
   public String getName( )
   {

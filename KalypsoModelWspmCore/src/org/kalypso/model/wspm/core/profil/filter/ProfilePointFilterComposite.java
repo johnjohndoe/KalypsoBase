@@ -46,7 +46,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -58,7 +58,7 @@ import org.kalypso.contribs.eclipse.jface.dialog.ListSelectionComposite;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * Presents all registered profile filters as check-buttons and let the user choose a subset of them.<br>
@@ -110,6 +110,9 @@ public class ProfilePointFilterComposite extends ListSelectionComposite implemen
     m_filters.addAll( Arrays.asList( filters ) );
   }
 
+  /**
+   * @see org.kalypso.contribs.eclipse.jface.dialog.ListSelectionComposite#fireCheckStateChanged(org.eclipse.jface.viewers.CheckStateChangedEvent)
+   */
   @Override
   protected void fireCheckStateChanged( final CheckStateChangedEvent event )
   {
@@ -134,6 +137,10 @@ public class ProfilePointFilterComposite extends ListSelectionComposite implemen
     }
   }
 
+  /**
+   * @see org.kalypso.contribs.eclipse.jface.dialog.ListSelectionComposite#createControl(org.eclipse.swt.widgets.Composite,
+   *      int)
+   */
   @Override
   public Control createControl( final Composite parent, final int style )
   {
@@ -160,9 +167,12 @@ public class ProfilePointFilterComposite extends ListSelectionComposite implemen
 
   /**
    * This implementation accepts a point, if any of the selected filters accepts the point.
+   * 
+   * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#accept(org.kalypso.model.wspm.core.profil.IProfil,
+   *      org.kalypso.observation.result.IRecord)
    */
   @Override
-  public boolean accept( final IProfil profil, final IProfileRecord point )
+  public boolean accept( final IProfil profil, final IRecord point )
   {
     final Object[] checkedElements = getCheckedElements();
     for( final Object filter : checkedElements )
@@ -191,39 +201,51 @@ public class ProfilePointFilterComposite extends ListSelectionComposite implemen
 
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#getUsageHint()
+   */
   @Override
   public String getUsageHint( )
   {
     return m_usageHint;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#getDescription()
+   */
   @Override
   public String getDescription( )
   {
     throw new UnsupportedOperationException();
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#getId()
+   */
   @Override
   public String getId( )
   {
     throw new UnsupportedOperationException();
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#getName()
+   */
   @Override
   public String getName( )
   {
     throw new UnsupportedOperationException();
   }
 
-  public IProfileRecord[] getSelectedPoints( final IProfil profile )
+  public IRecord[] getSelectedPoints( final IProfil profile )
   {
-    final IProfileRecord[] points = profile.getPoints();
+    final IRecord[] points = profile.getPoints();
     final Object[] checkedElements = getCheckedElements();
     if( checkedElements.length == 0 )
       return points;
 
-    final Collection<IProfileRecord> filteredPoints = new ArrayList<IProfileRecord>( points.length );
-    for( final IProfileRecord point : points )
+    final Collection<IRecord> filteredPoints = new ArrayList<IRecord>( points.length );
+    for( final IRecord point : points )
     {
       if( accept( profile, point ) )
       {
@@ -231,7 +253,7 @@ public class ProfilePointFilterComposite extends ListSelectionComposite implemen
       }
     }
 
-    return filteredPoints.toArray( new IProfileRecord[filteredPoints.size()] );
+    return filteredPoints.toArray( new IRecord[filteredPoints.size()] );
   }
 
 }

@@ -6,7 +6,13 @@
       <provider
             class="de.openali.odysseus.chart.ext.base.layer.provider.GridLayerProvider"
             id="de.openali.odysseus.chart.ext.layer.provider.Grid"/>
-       <provider
+      <provider
+            class="de.openali.odysseus.chart.ext.base.layer.provider.CSVBarLayerProvider"
+            id="de.openali.odysseus.chart.ext.layer.provider.CSVBar"/>
+      <provider
+            class="de.openali.odysseus.chart.ext.base.layer.provider.CSVLineLayerProvider"
+            id="de.openali.odysseus.chart.ext.layer.provider.CSVLine"/>
+      <provider
             class="de.openali.odysseus.chart.ext.base.layer.provider.UVFLayerProvider"
             id="de.openali.odysseus.chart.ext.layer.provider.UVF"/>
       <provider
@@ -19,15 +25,6 @@
       <provider
             class="de.openali.odysseus.chart.ext.base.axis.provider.GenericLinearAxisProvider"
             id="de.openali.odysseus.chart.ext.axis.provider.GenericLinear">
-      </provider>
-      <provider
-            class="de.openali.odysseus.chart.ext.base.axis.provider.GenericCalendarAxisProvider"
-            id="de.openali.odysseus.chart.ext.base.axis.provider.GenericCalendarAxisProvider">
-      </provider>
-      
-       <provider
-            class="de.openali.odysseus.chart.ext.base.axis.provider.BooleanAxisProvider"
-            id="de.openali.odysseus.chart.ext.axis.provider.Boolean">
       </provider>
    </extension>
       <extension
@@ -47,10 +44,6 @@
       <provider
             class="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider"
             id="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
-      </provider>
-      <provider
-            class="de.openali.odysseus.chart.ext.base.axisrenderer.provider.BooleanAxisRendererProvider"
-            id="de.openali.odysseus.chart.ext.base.axisrenderer.provider.BooleanAxisRendererProvider">
       </provider>
    </extension>
 </plugin>

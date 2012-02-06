@@ -105,7 +105,7 @@ public abstract class ObsView implements IObsViewEventProvider
    * If set, each add of an observation of one of these types is ignored (no items are added for this observation in
    * this view)
    */
-  private String[] m_ignoreTypes = new String[] { ITimeseriesConstants.TYPE_WECHMANN_SCHALTER_V, ITimeseriesConstants.TYPE_WECHMANN_E };
+  private String[] m_ignoreTypes = new String[] {};
 
   /** If set, the concerned items are not displayed. Note: this is not to be confused with ignoreTypes */
   private Set<String> m_hiddenTypes = new HashSet<String>();

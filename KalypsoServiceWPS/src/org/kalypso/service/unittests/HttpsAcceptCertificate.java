@@ -87,13 +87,13 @@ public class HttpsAcceptCertificate
     System.setProperty( "javax.net.ssl.trustStorePassword", "key4ssl" );
 
     /* Build the describe process request. */
-    final List<CodeType> identifier = new LinkedList<CodeType>();
+    List<CodeType> identifier = new LinkedList<CodeType>();
     identifier.add( WPS040ObjectFactoryUtilities.buildCodeType( "", "InformDSSHydraulicV1.0" ) );
-    final DescribeProcess describeProcess = WPS040ObjectFactoryUtilities.buildDescribeProcess( identifier );
+    DescribeProcess describeProcess = WPS040ObjectFactoryUtilities.buildDescribeProcess( identifier );
 
     /* Send the request. */
     KalypsoServiceWPSDebug.DEBUG.printf( "Asking for a process description ...\n" );
-    final String describeProcessResponse = WPSUtilities.send( MarshallUtilities.marshall( describeProcess, WPS_VERSION.V040 ), "https://informdss.bafg.de/bridge/ogc?" );
+    String describeProcessResponse = WPSUtilities.send( MarshallUtilities.marshall( describeProcess, WPS_VERSION.V040 ), "https://informdss.bafg.de/bridge/ogc?" );
 
     /* Handle the response. */
     KalypsoServiceWPSDebug.DEBUG.printf( "Response:\n" + describeProcessResponse + "\n" );

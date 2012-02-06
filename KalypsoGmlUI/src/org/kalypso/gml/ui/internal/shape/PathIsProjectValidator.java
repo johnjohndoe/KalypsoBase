@@ -52,7 +52,7 @@ import org.kalypso.gml.ui.i18n.Messages;
  */
 public class PathIsProjectValidator extends TypedValidator<IPath>
 {
-  private static final String DEFAULT_MESSAGE = Messages.getString( "PathIsProjectValidator_0" ); //$NON-NLS-1$
+  private static final String DEFAULT_MESSAGE = Messages.getString("PathIsProjectValidator_0"); //$NON-NLS-1$
 
   public PathIsProjectValidator( final int severity )
   {

@@ -46,24 +46,23 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import jregex.Pattern;
 import jregex.RETokenizer;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.catalog.ICatalog;
 
 import com.google.common.base.Strings;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.MapMaker;
 
 import de.openali.odysseus.chart.factory.OdysseusChartFactory;
 import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
@@ -92,14 +91,15 @@ import de.openali.odysseus.chartconfig.x020.StylesDocument.Styles;
 public final class ChartTypeResolver implements IReferenceResolver
 {
 
-  private final Cache<String, ChartConfigurationLoader> m_loaderCache;
+  private final Map<String, ChartConfigurationLoader> m_loaderCache;
 
   private static ChartTypeResolver INSTANCE;
 
   private ChartTypeResolver( )
   {
-    final CacheBuilder<Object, Object> builder = CacheBuilder.newBuilder().expireAfterAccess( 10, TimeUnit.MINUTES );
-    m_loaderCache = builder.build();
+    final MapMaker marker = new MapMaker().expireAfterAccess( 10, TimeUnit.MINUTES );
+
+    m_loaderCache = marker.makeMap();
   }
 
   public static ChartTypeResolver getInstance( )
@@ -112,7 +112,7 @@ public final class ChartTypeResolver implements IReferenceResolver
 
   private ChartConfigurationLoader getLoader( final URL context, final String uri ) throws XmlException, IOException
   {
-    ChartConfigurationLoader loader = m_loaderCache.asMap().get( uri );
+    ChartConfigurationLoader loader = m_loaderCache.get( uri );
     if( loader != null )
       return loader;
 
@@ -128,9 +128,6 @@ public final class ChartTypeResolver implements IReferenceResolver
   {
     try
     {
-      if( reference == null || reference.length() == 0 )
-        return null;
-
       final String plainUrl = getUrl( reference, context );
       final String identifier = getAnchor( reference );
 
@@ -144,8 +141,7 @@ public final class ChartTypeResolver implements IReferenceResolver
     }
     catch( final Throwable t )
     {
-      final String msg = String.format( "Resolving style type \"%s\" failed  ", reference );
-      throw new CoreException( StatusUtilities.createExceptionalErrorStatus( msg, t ) );
+      throw new CoreException( StatusUtilities.createExceptionalErrorStatus( "Resolving style type failed", t ) );
     }
   }
 
@@ -199,7 +195,8 @@ public final class ChartTypeResolver implements IReferenceResolver
 
   private LayerType findUrnLayerType( final URL context, final String urn, final String identifier ) throws XmlException, IOException
   {
-    final String uri = KalypsoCorePlugin.getDefault().getCatalogManager().resolve( urn, urn );
+    final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
+    final String uri = baseCatalog.resolve( urn, urn );
 
     return findUrlLayerType( context, uri, identifier );
   }
@@ -224,7 +221,7 @@ public final class ChartTypeResolver implements IReferenceResolver
       }
       catch( final CoreException e )
       {
-        OdysseusChartFactory.getDefault().getLog().log( new Status( IStatus.ERROR, OdysseusChartFactory.PLUGIN_ID, e.getLocalizedMessage(), e ) );
+        OdysseusChartFactory.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
       }
     }
 
@@ -301,7 +298,7 @@ public final class ChartTypeResolver implements IReferenceResolver
 
   private String getAnchor( final String url )
   {
-    if( Strings.isNullOrEmpty( url ) )
+    if (Strings.isNullOrEmpty( url ))
       return null;
 
     final RETokenizer tokenizer = new RETokenizer( new Pattern( ".*#" ), url ); //$NON-NLS-1$
@@ -311,7 +308,8 @@ public final class ChartTypeResolver implements IReferenceResolver
 
   private MapperType findUrnMapperType( final URL context, final String urn, final String identifier ) throws XmlException, IOException
   {
-    final String uri = KalypsoCorePlugin.getDefault().getCatalogManager().resolve( urn, urn );
+    final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
+    final String uri = baseCatalog.resolve( urn, urn );
 
     return findUrlMapperType( context, uri, identifier );
   }
@@ -347,7 +345,8 @@ public final class ChartTypeResolver implements IReferenceResolver
 
   private AbstractStyleType findUrnStyleType( final URL context, final String urn, final String identifier ) throws XmlException, IOException
   {
-    final String uri = KalypsoCorePlugin.getDefault().getCatalogManager().resolve( urn, urn );
+    final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
+    final String uri = baseCatalog.resolve( urn, urn );
 
     return findUrlStyleType( context, uri, identifier );
   }
@@ -391,10 +390,13 @@ public final class ChartTypeResolver implements IReferenceResolver
     return null;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.factory.util.IReferenceResolver#resolveReference(java.lang.String)
+   */
   @Override
   public Object resolveReference( final String id )
   {
-    final ChartConfigurationLoader[] loaders = m_loaderCache.asMap().values().toArray( new ChartConfigurationLoader[] {} );
+    final ChartConfigurationLoader[] loaders = m_loaderCache.values().toArray( new ChartConfigurationLoader[] {} );
     for( final ChartConfigurationLoader loader : loaders )
     {
       final XmlObject reference = loader.resolveReference( id );
@@ -407,6 +409,6 @@ public final class ChartTypeResolver implements IReferenceResolver
 
   public void clear( )
   {
-    m_loaderCache.cleanUp();
+    m_loaderCache.clear();
   }
 }

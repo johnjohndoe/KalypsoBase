@@ -63,7 +63,7 @@ public class ColorMapEntryLabelProvider extends LabelProvider implements ITableL
   /**
    * The registry of the images.
    */
-  private final Map<java.awt.Color, Image> m_images;
+  private Map<java.awt.Color, Image> m_images;
 
   /**
    * The constructor.
@@ -79,7 +79,7 @@ public class ColorMapEntryLabelProvider extends LabelProvider implements ITableL
   @Override
   public String getColumnText( final Object element, final int columnIndex )
   {
-    final ColorMapEntry colorMapEntry = (ColorMapEntry) element;
+    ColorMapEntry colorMapEntry = (ColorMapEntry) element;
 
     switch( columnIndex )
     {
@@ -117,20 +117,20 @@ public class ColorMapEntryLabelProvider extends LabelProvider implements ITableL
     try
     {
       /* Cast. */
-      final ColorMapEntry entry = (ColorMapEntry) element;
+      ColorMapEntry entry = (ColorMapEntry) element;
 
       /* Get the display. */
-      final Display display = PlatformUI.getWorkbench().getDisplay();
+      Display display = PlatformUI.getWorkbench().getDisplay();
 
       /* Get the color. */
-      final java.awt.Color awtColor = entry.getColor();
+      java.awt.Color awtColor = entry.getColor();
       if( m_images.containsKey( awtColor ) )
         return m_images.get( awtColor );
 
       swtColor = new Color( display, awtColor.getRed(), awtColor.getGreen(), awtColor.getBlue() );
 
       /* Create the image. */
-      final Image image = new Image( display, 25, 15 );
+      Image image = new Image( display, 25, 15 );
       gc = new GC( image );
 
       /* Change the background of the image. */
@@ -162,7 +162,7 @@ public class ColorMapEntryLabelProvider extends LabelProvider implements ITableL
   @Override
   public void dispose( )
   {
-    for( final Image image : m_images.values() )
+    for( Image image : m_images.values() )
       image.dispose();
 
     super.dispose();

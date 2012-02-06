@@ -259,6 +259,9 @@ public final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements 
     return sp.getPositionAt( 0 ).getCoordinateDimension();
   }
 
+  /**
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#clone()
+   */
   @Override
   public GM_Object clone( ) throws CloneNotSupportedException
   {
@@ -270,6 +273,9 @@ public final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements 
     return new GM_MultiCurve_Impl( clonedCurves, getCoordinateSystem() );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(java.lang.String)
+   */
   @Override
   public GM_Object transform( final String targetCRS ) throws Exception
   {

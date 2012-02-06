@@ -12,4 +12,4 @@ Export-Package: ogc2.www.opengis.net.gml,
  ogc2.www.opengis.net.ows,
  ogc2.www.opengis.net.sld,
  org.kalypso.contribs.ogc2x
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

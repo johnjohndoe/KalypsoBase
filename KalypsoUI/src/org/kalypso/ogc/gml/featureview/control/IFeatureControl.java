@@ -60,12 +60,12 @@ public interface IFeatureControl
 
   void setFeature( Feature feature );
 
+  @Override
   /**
    * Render this control as string
-   *
+   * 
    * @return string
    */
-  @Override
   String toString( );
 
   /** Update Control from Feature */

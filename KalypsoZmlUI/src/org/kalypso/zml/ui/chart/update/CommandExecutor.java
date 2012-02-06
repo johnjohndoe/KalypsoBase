@@ -61,11 +61,11 @@ import org.kalypso.zml.ui.KalypsoZmlUI;
  */
 public class CommandExecutor implements Runnable
 {
-  private final ICommandExecutionTrigger m_trigger;
+  private final ICommandExecutorTrigger m_trigger;
 
   private final boolean m_firstRun;
 
-  public CommandExecutor( final ICommandExecutionTrigger trigger, final boolean firstRun )
+  public CommandExecutor( final ICommandExecutorTrigger trigger, final boolean firstRun )
   {
     m_trigger = trigger;
     m_firstRun = firstRun;
@@ -100,11 +100,10 @@ public class CommandExecutor implements Runnable
 
           final ExecutionEvent event = new ExecutionEvent( command, parameters, this, context );
           handler.execute( event );
-
-          /** don't set parameters, otherwise the updateElement function of the command handler will not called */
-          commandService.refreshElements( id, parameters );
         }
 
+        /** don't set parameters, otherwise the updateElement function of the command handler will not called */
+        commandService.refreshElements( id, null );
       }
       catch( final ExecutionException e )
       {

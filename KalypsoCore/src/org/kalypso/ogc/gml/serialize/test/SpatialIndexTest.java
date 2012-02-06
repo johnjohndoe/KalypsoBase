@@ -86,10 +86,10 @@ public class SpatialIndexTest extends TestCase
   }
 
   // invalid test, depends on KalypsoModel1d2d
-// public void testBigGml( ) throws Exception
-// {
+//  public void testBigGml( ) throws Exception
+//  {
 //    doTheTest( "resources/bigGml.zip", "nodeResult.gml", new QName( "http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults", "nodeResultMember" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-// }
+//  }
 
   private void doTheTest( final String zipResourcePath, final String filename, final QName propQName ) throws Exception
   {

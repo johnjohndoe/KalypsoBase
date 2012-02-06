@@ -91,7 +91,7 @@ public class ChangeFeaturesCommand implements ICommand
    * @see org.kalypso.commons.command.ICommand#process()
    */
   @Override
-  public void process( )
+  public void process( ) throws Exception
   {
     applyChanges( m_newChanges );
   }
@@ -100,7 +100,7 @@ public class ChangeFeaturesCommand implements ICommand
    * @see org.kalypso.commons.command.ICommand#redo()
    */
   @Override
-  public void redo( )
+  public void redo( ) throws Exception
   {
     applyChanges( m_newChanges );
   }
@@ -109,7 +109,7 @@ public class ChangeFeaturesCommand implements ICommand
    * @see org.kalypso.commons.command.ICommand#undo()
    */
   @Override
-  public void undo( )
+  public void undo( ) throws Exception
   {
     applyChanges( m_oldChanges );
   }

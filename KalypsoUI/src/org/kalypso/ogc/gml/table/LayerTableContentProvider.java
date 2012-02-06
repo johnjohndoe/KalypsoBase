@@ -233,7 +233,7 @@ public class LayerTableContentProvider implements IStructuredContentProvider
     {
       final IFeaturesProvider featuresProvider = m_viewer.getInput();
       final FeatureList featureList = featuresProvider == null ? null : featuresProvider.getFeatureList();
-      final Feature parentFeature = featureList == null ? null : featureList.getOwner();
+      final Feature parentFeature = featureList == null ? null : featureList.getParentFeature();
 
       final Feature[] features = ((FeatureStructureChangeModellEvent) event).getParentFeatures();
       for( final Feature feature : features )

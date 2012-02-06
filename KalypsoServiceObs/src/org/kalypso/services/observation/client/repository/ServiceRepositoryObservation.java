@@ -46,6 +46,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -142,6 +143,9 @@ public class ServiceRepositoryObservation implements IObservation
     return m_bean.getName();
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.IObservation#getMetadataList()
+   */
   @Override
   public final MetadataList getMetadataList( )
   {
@@ -157,6 +161,9 @@ public class ServiceRepositoryObservation implements IObservation
     return metadata;
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.IObservation#getAxisList()
+   */
   @Override
   public final IAxis[] getAxes( )
   {
@@ -174,6 +181,9 @@ public class ServiceRepositoryObservation implements IObservation
     }
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
+   */
   @Override
   public final synchronized ITupleModel getValues( final IRequest args ) throws SensorException
   {
@@ -188,11 +198,15 @@ public class ServiceRepositoryObservation implements IObservation
     return values;
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.IObservation#setValues(org.kalypso.ogc.sensor.ITuppleModel)
+   * @deprecated
+   */
   @Override
   @Deprecated
   public final void setValues( final ITupleModel values )
   {
-    throw new UnsupportedOperationException( "Not used anymore. Use repository#setData instead" );
+    throw new NotImplementedException( "Not used anymore. Use repository#setData instead" );
   }
 
   @Override
@@ -219,9 +233,13 @@ public class ServiceRepositoryObservation implements IObservation
     return ObservationServiceUtils.addServerSideId( m_bean.getId() );
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.IObservation#accept(org.kalypso.ogc.sensor.visitor.IObservationVisitor,
+   *      org.kalypso.ogc.sensor.request.IRequest)
+   */
   @Override
-  public void accept( final IObservationVisitor visitor, final IRequest request, final int direction ) throws SensorException
+  public void accept( final IObservationVisitor visitor, final IRequest request ) throws SensorException
   {
-    Observations.accept( this, visitor, request, direction );
+    Observations.accept( this, visitor, request );
   }
 }

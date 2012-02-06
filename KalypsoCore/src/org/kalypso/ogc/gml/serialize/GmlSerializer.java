@@ -53,6 +53,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
@@ -72,9 +73,10 @@ import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -83,7 +85,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -117,7 +118,7 @@ import org.xml.sax.XMLReader;
  */
 public final class GmlSerializer
 {
-  private static TransformerFactory TRANSFORMER_FACTORY = TransformerFactory.newInstance();
+  private static TransformerFactory m_tFac = TransformerFactory.newInstance();
 
   public static final IFeatureProviderFactory DEFAULT_FACTORY = new GmlSerializerFeatureProviderFactory();
 
@@ -210,7 +211,7 @@ public final class GmlSerializer
 
       final Source source = new SAXSource( reader, inputSource );
 
-      final Transformer transformer = TRANSFORMER_FACTORY.newTransformer();
+      final Transformer transformer = m_tFac.newTransformer();
       transformer.setOutputProperty( OutputKeys.ENCODING, charsetEncoding );
       transformer.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
       transformer.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "1" ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -262,7 +263,7 @@ public final class GmlSerializer
       }
       else
       {
-        final long contentLength = UrlUtilities.getContentLength( gmlURL );
+        final long contentLength = getContentLength( gmlURL );
         final String tskMsg = Messages.getString( "org.kalypso.ogc.gml.serialize.GmlSerializer.3", gmlURL ); //$NON-NLS-1$
         monitor.beginTask( tskMsg, (int) contentLength );
         bis = new ProgressInputStream( urlStream, contentLength, monitor );
@@ -302,6 +303,21 @@ public final class GmlSerializer
     // REMARK: this is a quite crude way to decide, if to compress or not. But how should we decide it anyway?
     final String extension = FilenameUtils.getExtension( filename );
     return ArrayUtils.contains( GZ_EXTENSIONS, extension );
+  }
+
+  private static long getContentLength( final URL url ) throws IOException
+  {
+    final File file = FileUtils.toFile( url );
+    if( file != null )
+      return file.length();
+
+    final File platformFile = ResourceUtilities.findJavaFileFromURL( url );
+    if( platformFile != null )
+      return platformFile.length();
+
+    final URLConnection connection = url.openConnection();
+    final int contentLength = connection.getContentLength();
+    return contentLength;
   }
 
   public static GMLWorkspace createGMLWorkspace( final InputSource inputSource, final URL schemaLocationHint, final URL context, final IFeatureProviderFactory factory ) throws ParserConfigurationException, SAXException, IOException, GMLException

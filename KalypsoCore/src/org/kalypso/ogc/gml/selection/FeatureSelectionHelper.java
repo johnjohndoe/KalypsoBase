@@ -56,7 +56,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
  * Helper methods for Feature-selection.
- *
+ * 
  * @author belger
  */
 public final class FeatureSelectionHelper
@@ -78,7 +78,7 @@ public final class FeatureSelectionHelper
    * GMLEditorContentProvider2 is defined in the KalypsoUI plugin and this helper lives in KalypsoCore. adding the
    * linked Element Support would add a new dependency. do we still need the LinkedFeatureElement2 object or can we
    * model it differnetly since the GMLWorkspace api changed considerably?
-   *
+   * 
    * @param filterWorkspace
    *          if null, all features are returned
    */
@@ -98,7 +98,7 @@ public final class FeatureSelectionHelper
 
       if( feature != null )
       {
-        if( filterWorkspace == null || filterWorkspace != null && selection.getWorkspace( feature ) == filterWorkspace )
+        if( filterWorkspace == null || (filterWorkspace != null && selection.getWorkspace( feature ) == filterWorkspace) )
           features.add( feature );
       }
     }
@@ -108,7 +108,7 @@ public final class FeatureSelectionHelper
 
   /**
    * This function returns all features contained in the selection which are part of the given theme.
-   *
+   * 
    * @param selection
    *          The selection.
    * @param filterTheme
@@ -174,7 +174,7 @@ public final class FeatureSelectionHelper
     final ArrayList<Feature> result = new ArrayList<Feature>();
     for( final Feature feature : features )
     {
-      final GM_Object[] geometryProperties = feature.getGeometryPropertyValues();
+      final GM_Object[] geometryProperties = feature.getGeometryProperties();
       if( geometryProperties.length > 0 )
         result.add( feature );
     }

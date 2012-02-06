@@ -69,14 +69,14 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * Changes the contents of a gml file. Loads (ant-)properties from a gml.
- *
+ * 
  * <pre>
  *  &lt;kalypso.changeGml gmlURL=&quot;${calc.url}/.calculation&quot;&gt;
  *     &lt;property featurepath=&quot;&quot; featureProperty=&quot;scenarioId&quot; value=&quot;a&quot;/&gt;
  *     &lt;property featurepath=&quot;&quot; featureProperty=&quot;scenarioName&quot; value=&quot;b&quot;/&gt;
  *   &lt;/kalypso.changeGml&gt;
  * </pre>
- *
+ * 
  * @author Gernot Belger
  */
 public class ChangeGmlTask extends Task
@@ -212,7 +212,7 @@ public class ChangeGmlTask extends Task
     try
     {
       final Object valueObject = parseType( ftp, value );
-      f.setProperty( ftp, valueObject );
+      f.setProperty( featureProperty, valueObject );
     }
     catch( final Throwable e )
     {

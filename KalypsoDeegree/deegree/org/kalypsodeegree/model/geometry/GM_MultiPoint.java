@@ -37,7 +37,9 @@
 package org.kalypsodeegree.model.geometry;
 
 /**
+ * 
  * The interface defines the access to a aggregations of <tt>GM_Point</tt> objects.
+ * 
  * <p>
  * -----------------------------------------------------
  * </p>
@@ -71,8 +73,8 @@ public interface GM_MultiPoint extends GM_MultiPrimitive
   public void insertPointAt( GM_Point gmp, int index ) throws GM_Exception;
 
   /**
-   * sets the submitted GM_Point at the submitted index. the element at the position <code>index</code> will be removed.
-   * if index is larger then getSize() - 1 or smaller then 0 or gmp equals null an exception will be thrown.
+   * sets the submitted GM_Point at the submitted index. the element at the position <code>index</code> will be
+   * removed. if index is larger then getSize() - 1 or smaller then 0 or gmp equals null an exception will be thrown.
    * 
    * @param gmp
    *          GM_Point to set.
@@ -104,6 +106,6 @@ public interface GM_MultiPoint extends GM_MultiPrimitive
   /**
    * returns all GM_Points as array
    */
-  public GM_Point[] getAllPoints( );
+  public GM_Point[] getAllPoints();
 
 }

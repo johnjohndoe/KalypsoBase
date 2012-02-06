@@ -53,14 +53,14 @@ import org.eclipse.jface.dialogs.IInputValidator;
  */
 public class TypeBasedInputValidator implements IInputValidator
 {
-  private final Validator m_val;
+  private Validator m_val;
 
   /**
    * Constructor
    * 
    * @param type
    */
-  public TypeBasedInputValidator( final Class< ? > type )
+  public TypeBasedInputValidator( final Class<?> type )
   {
     m_val = createValidator( type );
   }
@@ -69,7 +69,7 @@ public class TypeBasedInputValidator implements IInputValidator
    * @param type
    * @return validator
    */
-  private Validator createValidator( final Class< ? > type )
+  private Validator createValidator( Class<?> type )
   {
     if( Date.class.isAssignableFrom( type ) )
       return new DateValidator();
@@ -80,7 +80,7 @@ public class TypeBasedInputValidator implements IInputValidator
   /**
    * @return a default value that is valid for this validator.
    */
-  public String defaultValue( )
+  public String defaultValue()
   {
     return m_val.defaultValue();
   }
@@ -89,7 +89,7 @@ public class TypeBasedInputValidator implements IInputValidator
    * @see org.eclipse.jface.dialogs.IInputValidator#isValid(java.lang.String)
    */
   @Override
-  public String isValid( final String newText )
+  public String isValid( String newText )
   {
     return m_val.validate( newText );
   }
@@ -113,7 +113,7 @@ public class TypeBasedInputValidator implements IInputValidator
     /**
      * @return a default value
      */
-    public String defaultValue( );
+    public String defaultValue();
 
     /**
      * @param value
@@ -139,7 +139,7 @@ public class TypeBasedInputValidator implements IInputValidator
      * @see org.kalypso.contribs.eclipse.jface.dialogs.TypeBasedInputValidator.Validator#validate(java.lang.String)
      */
     @Override
-    public String validate( final String value )
+    public String validate( String value )
     {
       return null;
     }
@@ -148,7 +148,7 @@ public class TypeBasedInputValidator implements IInputValidator
      * @see org.kalypso.contribs.eclipse.jface.dialogs.TypeBasedInputValidator.Validator#defaultValue()
      */
     @Override
-    public String defaultValue( )
+    public String defaultValue()
     {
       return "";
     }
@@ -157,7 +157,7 @@ public class TypeBasedInputValidator implements IInputValidator
      * @see org.kalypso.contribs.eclipse.jface.dialogs.TypeBasedInputValidator.Validator#toValue(java.lang.String)
      */
     @Override
-    public Object toValue( final String text )
+    public Object toValue( String text )
     {
       return text;
     }
@@ -176,7 +176,7 @@ public class TypeBasedInputValidator implements IInputValidator
      * @see org.kalypso.contribs.eclipse.jface.dialogs.TypeBasedInputValidator.Validator#validate(java.lang.String)
      */
     @Override
-    public String validate( final String value )
+    public String validate( String value )
     {
       try
       {
@@ -184,7 +184,7 @@ public class TypeBasedInputValidator implements IInputValidator
 
         return null;
       }
-      catch( final ParseException e )
+      catch( ParseException e )
       {
         return e.getLocalizedMessage();
       }
@@ -194,7 +194,7 @@ public class TypeBasedInputValidator implements IInputValidator
      * @see org.kalypso.contribs.eclipse.jface.dialogs.TypeBasedInputValidator.Validator#defaultValue()
      */
     @Override
-    public String defaultValue( )
+    public String defaultValue()
     {
       return DF.format( new Date() );
     }
@@ -203,13 +203,13 @@ public class TypeBasedInputValidator implements IInputValidator
      * @see org.kalypso.contribs.eclipse.jface.dialogs.TypeBasedInputValidator.Validator#toValue(java.lang.String)
      */
     @Override
-    public Object toValue( final String text )
+    public Object toValue( String text )
     {
       try
       {
         return DF.parse( text );
       }
-      catch( final ParseException e )
+      catch( ParseException e )
       {
         // should not be the case
         e.printStackTrace();

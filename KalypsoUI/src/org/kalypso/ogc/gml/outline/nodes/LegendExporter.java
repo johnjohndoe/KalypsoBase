@@ -97,10 +97,10 @@ public class LegendExporter
    *          A progress monitor.
    * @return A status, containing information about the process.
    */
-  public IStatus exportLegends( final IThemeNode[] nodes, final File file, final int format, final Device device, Insets insets, final int sizeWidth, final int sizeHeight, final boolean onlyVisible, final IProgressMonitor monitor )
+  public IStatus exportLegends( IThemeNode[] nodes, File file, int format, Device device, Insets insets, int sizeWidth, int sizeHeight, boolean onlyVisible, IProgressMonitor monitor )
   {
     /* Monitor. */
-    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.ogc.gml.map.utilities.MapUtilities.0" ), 150 ); //$NON-NLS-1$
+    SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.ogc.gml.map.utilities.MapUtilities.0" ), 150 ); //$NON-NLS-1$
 
     /* The legend image. */
     Image image = null;
@@ -112,13 +112,13 @@ public class LegendExporter
         insets = new Insets( 5, 5, 5, 5 );
 
       /* Create the legend image. */
-      image = exportLegends( null, nodes, device, insets, null, sizeWidth, sizeHeight, onlyVisible, -1, progress.newChild( 50 ) );
+      image = exportLegends( null, nodes, device, insets, null, sizeWidth, sizeHeight, onlyVisible, progress.newChild( 50 ) );
 
       /* Monitor. */
       ProgressUtilities.worked( progress, 50 );
 
       /* Save the image. */
-      final ImageLoader imageLoader = new ImageLoader();
+      ImageLoader imageLoader = new ImageLoader();
       imageLoader.data = new ImageData[] { image.getImageData() };
       imageLoader.save( file.toString(), format );
 
@@ -127,7 +127,7 @@ public class LegendExporter
 
       return Status.OK_STATUS;
     }
-    catch( final Exception ex )
+    catch( Exception ex )
     {
       return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), ex.getLocalizedMessage(), ex );
     }
@@ -163,33 +163,27 @@ public class LegendExporter
    *          If one of sizeWidth or sizeHeight is <=0 the width and height of the image is determined automatically.
    * @param onlyVisible
    *          True, if only visible theme nodes should be asked.
-   * @param fontSize
-   *          The font size. If <=0, the font size will be 10.
    * @param monitor
    *          A progress monitor.
    * @return The newly created image, must be disposed by the caller.
    */
-  public Image exportLegends( final String[] whiteList, final IThemeNode[] nodes, final Device device, Insets insets, final RGB backgroundRGB, final int sizeWidth, final int sizeHeight, final boolean onlyVisible, int fontSize, final IProgressMonitor monitor ) throws CoreException
+  public Image exportLegends( String[] whiteList, IThemeNode[] nodes, Device device, Insets insets, RGB backgroundRGB, int sizeWidth, int sizeHeight, boolean onlyVisible, IProgressMonitor monitor ) throws CoreException
   {
     /* Set default insets, if none are given. */
     if( insets == null )
       insets = new Insets( 5, 5, 5, 5 );
 
-    /* Set the default size, if none is given. */
-    if( fontSize <= 0 )
-      fontSize = 10;
-
     /* Monitor. */
-    final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.ogc.gml.map.utilities.MapUtilities.0" ), nodes.length * 100 + 100 ); //$NON-NLS-1$
+    SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.ogc.gml.map.utilities.MapUtilities.0" ), nodes.length * 100 + 100 ); //$NON-NLS-1$
 
     /* This font will be used to generate the legend. */
-    final Font font = new Font( device, JFaceResources.DIALOG_FONT, fontSize, SWT.NORMAL );
+    Font font = new Font( device, JFaceResources.DIALOG_FONT, 10, SWT.NORMAL );
 
     /* Memory for the legends. */
-    final List<Image> legends = new ArrayList<Image>();
+    List<Image> legends = new ArrayList<Image>();
 
     /* Collect the legends. */
-    for( final IThemeNode themeNode : nodes )
+    for( IThemeNode themeNode : nodes )
     {
       /* Monitor. */
       progress.subTask( Messages.getString( "org.kalypso.ogc.gml.map.utilities.MapUtilities.2" ) + themeNode.getLabel() + Messages.getString( "org.kalypso.ogc.gml.map.utilities.MapUtilities.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -200,11 +194,11 @@ public class LegendExporter
           continue;
 
         /* Get the legend. */
-        final Image legend = themeNode.getLegendGraphic( whiteList, onlyVisible, font );
+        Image legend = themeNode.getLegendGraphic( whiteList, onlyVisible, font );
         if( legend != null )
           legends.add( legend );
       }
-      catch( final CoreException e )
+      catch( CoreException e )
       {
         e.printStackTrace();
 
@@ -229,9 +223,9 @@ public class LegendExporter
     }
     else
     {
-      for( final Image legend : legends )
+      for( Image legend : legends )
       {
-        final Rectangle bounds = legend.getBounds();
+        Rectangle bounds = legend.getBounds();
         if( bounds.width > width )
           width = bounds.width;
 
@@ -246,15 +240,15 @@ public class LegendExporter
     ProgressUtilities.worked( progress, 50 );
 
     /* Now create the new image. */
-    final Image image = new Image( device, width, height );
+    Image image = new Image( device, width, height );
 
     /* Need a GC. */
-    final GC gc = new GC( image );
+    GC gc = new GC( image );
 
     /* Set the background color. */
     if( backgroundRGB != null )
     {
-      final Color bgColor = new Color( device, backgroundRGB );
+      Color bgColor = new Color( device, backgroundRGB );
       gc.setBackground( bgColor );
       gc.fillRectangle( image.getBounds() );
       bgColor.dispose();
@@ -262,7 +256,7 @@ public class LegendExporter
 
     /* Draw on it. */
     int heightSoFar = insets.top;
-    for( final Image legend : legends )
+    for( Image legend : legends )
     {
       gc.drawImage( legend, insets.left, heightSoFar );
       heightSoFar = heightSoFar + legend.getBounds().height;

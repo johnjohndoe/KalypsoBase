@@ -93,7 +93,7 @@ public final class ResourceBundleUtils
           try
           {
             // The ResourceBundle replaces all '.' by '/' (assuming it is a classname)
-            // but we know better. The name can never contain a real '/', because we
+            // but we know better. The name can never contain a real '/', because we 
             // truncated it (see above).
             final String resourceName = name.replace( '/', '.' );
             return new URL( _baseURL, resourceName );
@@ -161,7 +161,7 @@ public final class ResourceBundleUtils
       if( resourceBundle.containsKey( key ) )
       {
         final String string = resourceBundle.getString( key );
-        if( string != null )
+        if( !string.isEmpty() )
           return string;
       }
     }

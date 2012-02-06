@@ -97,6 +97,10 @@ public class GMLDocumentContentHandler extends AbstractGmlContentHandler impleme
     m_rootSchema = null;
   }
 
+  /**
+   * @see org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler#startElement(java.lang.String,
+   *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
+   */
   @Override
   public void startElement( final String uri, final String localName, final String qName, final Attributes atts ) throws SAXException
   {
@@ -108,6 +112,10 @@ public class GMLDocumentContentHandler extends AbstractGmlContentHandler impleme
     delegate.startElement( uri, localName, qName, atts );
   }
 
+  /**
+   * @see org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler#endElement(java.lang.String, java.lang.String,
+   *      java.lang.String)
+   */
   @Override
   public void endElement( final String uri, final String localName, final String qName ) throws SAXParseException
   {
@@ -123,6 +131,7 @@ public class GMLDocumentContentHandler extends AbstractGmlContentHandler impleme
       throwSAXParseException( e, "Failed to retreive root feature" );
     }
   }
+
 
   private void loadDocumentSchema( final GMLSchemaLoaderWithLocalCache schemaLoader, final String uri, final Attributes atts ) throws SAXException
   {

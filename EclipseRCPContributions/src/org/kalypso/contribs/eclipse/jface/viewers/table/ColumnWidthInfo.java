@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.viewers.table;
 
@@ -49,13 +49,15 @@ import org.eclipse.swt.widgets.TreeColumn;
  * 
  * @author Gernot Belger
  */
-public class ColumnWidthInfo
+class ColumnWidthInfo
 {
   public static final int NOT_SET = -1;
 
   public static final int PACK = -2;
 
   private final Item m_column;
+
+  private int m_fixedWidth = NOT_SET;
 
   private int m_minimumWidth = NOT_SET;
 
@@ -64,11 +66,19 @@ public class ColumnWidthInfo
   /* The width that will be finally set to the column */
   private int m_columnWidth;
 
-  private boolean m_autoResize;
-
   public ColumnWidthInfo( final Item column )
   {
     m_column = column;
+  }
+
+  public void setFixedWidth( final int fixedWidth )
+  {
+    m_fixedWidth = fixedWidth;
+  }
+
+  public int getFixedWidth( )
+  {
+    return m_fixedWidth;
   }
 
   public void setMinimumWidth( final int minimumWidth )
@@ -88,24 +98,16 @@ public class ColumnWidthInfo
 
   private int doCalculateMinimumWidth( )
   {
+    if( m_fixedWidth != NOT_SET )
+      return m_fixedWidth;
+
     if( m_minimumWidth == NOT_SET )
-      return getWidth( m_column );
+      return NOT_SET;
 
     if( m_minimumWidth >= 0 )
       return m_minimumWidth;
 
     return calculatePack( m_column );
-  }
-
-  private static int getWidth( final Item column )
-  {
-    if( column instanceof TableColumn )
-      return ((TableColumn) column).getWidth();
-
-    if( column instanceof TreeColumn )
-      return ((TreeColumn) column).getWidth();
-
-    throw new IllegalArgumentException();
   }
 
   private int calculatePack( final Item column )
@@ -150,18 +152,13 @@ public class ColumnWidthInfo
     return m_calculatedMinimumWidth;
   }
 
+  public boolean hasFixedWidth( )
+  {
+    return getFixedWidth() != NOT_SET;
+  }
+
   public int getColumnWidth( )
   {
     return m_columnWidth;
-  }
-
-  public boolean isAutoResize( )
-  {
-    return m_autoResize;
-  }
-
-  public void setAutoResize( final boolean autoResize )
-  {
-    m_autoResize = autoResize;
   }
 }

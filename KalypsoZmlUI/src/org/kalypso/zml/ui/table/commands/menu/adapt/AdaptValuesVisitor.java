@@ -53,7 +53,6 @@ import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
 import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 
 /**
@@ -64,22 +63,16 @@ import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
  */
 public class AdaptValuesVisitor implements IObservationVisitor, IZmlModelColumnVisitor
 {
-  private final Map<Date, Number> m_values = new HashMap<Date, Number>();
+  Map<Date, Number> m_values = new HashMap<Date, Number>();
 
-  private final ZmlModelTransaction m_transaction = new ZmlModelTransaction();
-
-  private final String m_type;
-
-  public AdaptValuesVisitor( final String type )
-  {
-    m_type = type;
-  }
-
+  /**
+   * @see org.kalypso.ogc.sensor.visitor.IObservationVisitor#visit(org.kalypso.ogc.sensor.visitor.IObservationValueContainer)
+   */
   @Override
   public void visit( final IObservationValueContainer container )
   {
     final IAxis dateAxis = AxisUtils.findDateAxis( container.getAxes() );
-    final IAxis valueAxis = AxisUtils.findAxis( container.getAxes(), m_type );
+    final IAxis valueAxis = AxisUtils.findValueAxis( container.getAxes() );
 
     try
     {
@@ -90,10 +83,15 @@ public class AdaptValuesVisitor implements IObservationVisitor, IZmlModelColumnV
     }
     catch( final SensorException e )
     {
+      // TODO Auto-generated catch block
       e.printStackTrace();
     }
+
   }
 
+  /**
+   * @see org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor#visit(org.kalypso.zml.core.table.model.references.IZmlValueReference)
+   */
   @Override
   public void visit( final IZmlValueReference reference )
   {
@@ -104,18 +102,11 @@ public class AdaptValuesVisitor implements IObservationVisitor, IZmlModelColumnV
       if( Objects.isNull( value ) )
         return;
 
-      // FIXME: use target axes instead!
-
-      m_transaction.add( reference, value, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
+      reference.update( value, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
     }
     catch( final SensorException e )
     {
       e.printStackTrace();
     }
-  }
-
-  public void doFinish( )
-  {
-    m_transaction.execute();
   }
 }

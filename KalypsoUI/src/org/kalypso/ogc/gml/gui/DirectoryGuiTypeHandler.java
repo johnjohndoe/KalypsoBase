@@ -64,7 +64,6 @@ import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypso.template.featureview.Text;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * This is a gui type handler for the directory-type in commons.xsd
@@ -154,18 +153,23 @@ public class DirectoryGuiTypeHandler extends LabelProvider implements IGuiTypeHa
     return m_handler.convertToXMLString( element );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureModifier(org.kalypso.gmlschema.property.IPropertyType,
+   *      org.kalypso.ogc.gml.selection.IFeatureSelectionManager,
+   *      org.kalypso.ogc.gml.featureview.IFeatureChangeListener, java.lang.String)
+   */
   @Override
-  public IFeatureModifier createFeatureModifier( final GMLXPath propertyPath, final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format )
+  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format )
   {
     // if we get a ClassCastExxception here, something is very wrong
     final IValuePropertyType vpt = (IValuePropertyType) ftp;
 
-    final Class< ? > valueClass = getValueClass();
+    final Class valueClass = getValueClass();
 
     if( Boolean.class == valueClass )
-      return new BooleanModifier( propertyPath, vpt );
+      return new BooleanModifier( vpt );
 
-    return new StringModifier( propertyPath, vpt, format );
+    return new StringModifier( vpt, format );
   }
 
   /**

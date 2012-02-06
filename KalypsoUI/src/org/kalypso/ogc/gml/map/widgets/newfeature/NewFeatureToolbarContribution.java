@@ -55,6 +55,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.contribs.eclipse.ui.actions.CommandContributionItem;
 import org.kalypso.contribs.eclipse.ui.actions.DropDownToolbarItem;
+import org.kalypso.core.catalog.FeatureTypeImageCatalog;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.annotation.IAnnotation;
@@ -64,7 +65,6 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.catalogs.FeatureTypeImageCatalog;
 import org.kalypso.ui.editor.actions.FeatureActionUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -125,8 +125,8 @@ public class NewFeatureToolbarContribution extends DropDownToolbarItem
       return new CommandContributionItem[0];
 
     final FeatureList featureList = featureTheme.getFeatureList();
-    final Feature parentFeature = featureList.getOwner();
-    final IRelationType fatp = featureList.getPropertyType();
+    final Feature parentFeature = featureList.getParentFeature();
+    final IRelationType fatp = featureList.getParentFeatureTypeProperty();
     if( fatp == null )
     {
       // The theme shows a single feature, and hence we cannot add something here

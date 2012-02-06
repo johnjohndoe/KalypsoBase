@@ -44,7 +44,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -68,7 +68,6 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
-import org.kalypso.model.wspm.core.gml.validation.ResourceValidatorMarkerCollector;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
@@ -77,6 +76,7 @@ import org.kalypso.model.wspm.core.profil.validator.ValidatorRuleSet;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.i18n.Messages;
+import org.kalypso.model.wspm.ui.profil.validation.ResourceValidatorMarkerCollector;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfileHandlerUtils;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
@@ -184,7 +184,7 @@ public class ValidateProfilesWizard extends Wizard implements IWorkbenchWizard
 
     final Shell shell = getShell();
 
-    final ICoreRunnableWithProgress validateJob = new ICoreRunnableWithProgress()
+    final ICoreRunnableWithProgress m_validateJob = new ICoreRunnableWithProgress()
     {
       @Override
       public IStatus execute( final IProgressMonitor monitor )
@@ -203,7 +203,7 @@ public class ValidateProfilesWizard extends Wizard implements IWorkbenchWizard
           {
             try
             {
-              final IMarker[] markers = resource.findMarkers( KalypsoModelWspmCorePlugin.MARKER_ID, true, IResource.DEPTH_ZERO );
+              final IMarker[] markers = resource.findMarkers( KalypsoModelWspmUIPlugin.MARKER_ID, true, IResource.DEPTH_ZERO );
               for( final IMarker marker : markers )
               {
                 if( marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_PROFILE_ID ).equals( featureIDs[i] ) )
@@ -296,7 +296,7 @@ public class ValidateProfilesWizard extends Wizard implements IWorkbenchWizard
       @Override
       public void run( )
       {
-        RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, true, validateJob );
+        RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, true, m_validateJob );
 
         try
         {

@@ -132,6 +132,7 @@ public class RectanglePolygonDelegate extends AbstractAdvancedSelectionWidgetDel
     }
   }
 
+
   /**
    * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDelegate#getEditMode()
    */
@@ -147,7 +148,7 @@ public class RectanglePolygonDelegate extends AbstractAdvancedSelectionWidgetDel
   @Override
   public String[] getTooltip( )
   {
-    return new String[] { Messages.getString( "org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates.RectanglePolygonDelegate.0" ) }; //$NON-NLS-1$
+    return new String[] { Messages.getString("org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates.RectanglePolygonDelegate.0") }; //$NON-NLS-1$
   }
 
   /**

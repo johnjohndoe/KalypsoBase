@@ -40,14 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.diagram.base.visitors;
 
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.zml.core.diagram.base.IZmlLayer;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
-
+import org.kalypso.zml.core.diagram.layer.IZmlLayer;
+ 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
-import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLayerVisitor;
 
 /**
@@ -56,29 +53,16 @@ import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLaye
 public class ResetZmlLayerVisitor extends AbstractChartLayerVisitor
 {
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+   */
   @Override
   public void visit( final IChartLayer layer )
   {
-    if( !isCleanedOnRefresh( layer ) )
-      return;
-
     if( layer instanceof IZmlLayer )
       reset( (IZmlLayer) layer );
 
     layer.getLayerManager().accept( this );
-  }
-
-  private boolean isCleanedOnRefresh( final IChartLayer layer )
-  {
-    final ILayerProvider provider = layer.getProvider();
-    if( Objects.isNull( provider ) )
-      return true;
-
-    final IParameterContainer container = provider.getParameterContainer();
-    if( Objects.isNull( container ) )
-      return true;
-
-    return Boolean.valueOf( container.getParameterValue( "cleanLayerOnRefresh", "true" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private void reset( final IZmlLayer layer )

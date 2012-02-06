@@ -59,6 +59,9 @@ public class ProfilComparator implements Comparator<IRecord>
     m_pointProperty = pointProperty;
   }
 
+  /**
+   * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+   */
   @Override
   public int compare( final IRecord p1, final IRecord p2 )
   {

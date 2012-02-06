@@ -48,32 +48,25 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashSet;
+import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.MapPanelUtilities;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
-import org.kalypso.ogc.gml.widgets.IWidget.WIDGET_TYPE;
-import org.kalypso.ogc.gml.widgets.base.BackgroundPanToWidget;
-import org.kalypso.ogc.gml.widgets.base.MouseWheelZoomWidget;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
- * widget controller of map view
+ * Der Controller für die MapView
  * 
  * @author vdoemming
- * @author Dirk Kuch
  */
 public class WidgetManager implements MouseListener, MouseMotionListener, MouseWheelListener, KeyListener, IWidgetManager
 {
-  private final Set<IWidgetChangeListener> m_widgetChangeListener = new LinkedHashSet<IWidgetChangeListener>();
+  private final Set<IWidgetChangeListener> m_widgetChangeListener = new HashSet<IWidgetChangeListener>();
 
   private final IFeatureSelectionListener m_featureSelectionListener = new IFeatureSelectionListener()
   {
@@ -88,32 +81,13 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
 
   private final ICommandTarget m_commandTarget;
 
-  // handle widgets as tree set because radio widgets should be processed first
-  private final Set<IWidget> m_widgets = Collections.synchronizedSet( new TreeSet<IWidget>( new Comparator<IWidget>()
-  {
-    @Override
-    public int compare( final IWidget w1, final IWidget w2 )
-    {
-      final String n1 = w1.getClass().getName();
-      final String n2 = w2.getClass().getName();
+  private IWidget m_actualWidget = null;
 
-      if( WIDGET_TYPE.eRadio.equals( w1 ) && WIDGET_TYPE.eRadio.equals( w2 ) )
-      {
-        return n1.compareTo( n2 );
-      }
-      else if( WIDGET_TYPE.eRadio.equals( w1 ) )
-      {
-        return 1;
-      }
-      else if( WIDGET_TYPE.eRadio.equals( w2 ) )
-      {
-        return -1;
-      }
+  /** Widget used for middle mouse actions */
+  private final IWidget m_middleWidget = new PanToWidget();
 
-      return n1.compareTo( n2 );
-    }
-
-  } ) );
+  /** If middle was pressed down; prohibits dragging any other widget */
+  private boolean m_middleDown = false;
 
   public WidgetManager( final ICommandTarget commandTarget, final IMapPanel mapPanel )
   {
@@ -122,20 +96,13 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
 
     m_mapPanel.getSelectionManager().addSelectionListener( m_featureSelectionListener );
 
-    addWidget( new BackgroundPanToWidget() );
-    addWidget( new MouseWheelZoomWidget() );
+    m_middleWidget.activate( commandTarget, mapPanel );
   }
 
   @Override
   public void dispose( )
   {
-    final IWidget[] widgets = getWidgets();
-    m_widgets.clear();
-
-    for( final IWidget widget : widgets )
-    {
-      widget.finish();
-    }
+    setActualWidget( null );
 
     m_mapPanel.getSelectionManager().removeSelectionListener( m_featureSelectionListener );
   }
@@ -146,30 +113,63 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
     return m_commandTarget;
   }
 
+  // MouseAdapter
   @Override
   public void mouseClicked( final MouseEvent e )
   {
-    final IWidget[] widgets = getWidgets();
-    for( final IWidget widget : widgets )
+    final IWidget actualWidget = getActualWidget();
+    if( actualWidget instanceof MouseListener )
     {
-      widget.mouseClicked( e );
-
+      ((MouseListener) actualWidget).mouseClicked( e );
       if( e.isConsumed() )
         return;
+    }
+    else if( actualWidget == null )
+      return;
+
+    if( e.isPopupTrigger() )
+      actualWidget.clickPopup( e.getPoint() );
+    else
+    {
+      switch( e.getButton() )
+      {
+        case MouseEvent.BUTTON1:
+        {
+          if( e.getClickCount() == 1 )
+            actualWidget.leftClicked( e.getPoint() );
+          else if( e.getClickCount() == 2 )
+            actualWidget.doubleClickedLeft( e.getPoint() );
+        }
+        break;
+
+        case MouseEvent.BUTTON2:
+          m_middleWidget.leftClicked( e.getPoint() );
+          break;
+
+        case MouseEvent.BUTTON3:
+        {
+          if( e.getClickCount() == 1 )
+            actualWidget.rightClicked( e.getPoint() );
+          else if( e.getClickCount() == 2 )
+            actualWidget.doubleClickedRight( e.getPoint() );
+        }
+        break;
+
+        default:
+          break;
+      }
     }
   }
 
   @Override
   public void mouseMoved( final MouseEvent e )
   {
-    final IWidget[] widgets = getWidgets();
-    for( final IWidget widget : widgets )
-    {
-      widget.mouseMoved( e );
+    final IWidget actualWidget = getActualWidget();
+    if( actualWidget instanceof MouseMotionListener )
+      ((MouseMotionListener) actualWidget).mouseMoved( e );
 
-      if( e.isConsumed() )
-        return;
-    }
+    if( !e.isConsumed() && actualWidget != null )
+      actualWidget.moved( e.getPoint() );
 
     m_mapPanel.fireMouseMouveEvent( e.getX(), e.getY() );
   }
@@ -178,143 +178,176 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
   @Override
   public void mouseDragged( final MouseEvent e )
   {
-    final IWidget[] widgets = getWidgets();
-    for( final IWidget widget : widgets )
+    final IWidget actualWidget = getActualWidget();
+    if( actualWidget instanceof MouseMotionListener )
     {
-      widget.mouseDragged( e );
-
+      ((MouseMotionListener) actualWidget).mouseDragged( e );
       if( e.isConsumed() )
         return;
     }
 
+    if( m_middleDown )
+    {
+      m_middleWidget.dragged( e.getPoint() );
+      return;
+    }
+
+    if( actualWidget != null )
+      actualWidget.dragged( e.getPoint() );
   }
 
   @Override
   public void mouseEntered( final MouseEvent e )
   {
-    final IWidget[] widgets = getWidgets();
-    for( final IWidget widget : widgets )
-    {
-      widget.mouseEntered( e );
-
-      if( e.isConsumed() )
-        return;
-    }
+    final IWidget actualWidget = getActualWidget();
+    if( actualWidget instanceof MouseListener )
+      ((MouseListener) actualWidget).mouseEntered( e );
   }
 
   @Override
   public void mouseExited( final MouseEvent e )
   {
-    final IWidget[] widgets = getWidgets();
-    for( final IWidget widget : widgets )
-    {
-      widget.mouseExited( e );
-
-      if( e.isConsumed() )
-        return;
-    }
+    final IWidget actualWidget = getActualWidget();
+    if( actualWidget instanceof MouseListener )
+      ((MouseListener) actualWidget).mouseExited( e );
   }
 
   @Override
   public void mousePressed( final MouseEvent e )
   {
-    final IWidget[] widgets = getWidgets();
-    for( final IWidget widget : widgets )
+    final IWidget actualWidget = getActualWidget();
+    if( actualWidget instanceof MouseListener )
     {
-      widget.mousePressed( e );
-
+      ((MouseListener) actualWidget).mousePressed( e );
       if( e.isConsumed() )
         return;
+    }
+
+    if( e.isPopupTrigger() && actualWidget != null )
+      actualWidget.clickPopup( e.getPoint() );
+    else
+    {
+      switch( e.getButton() )
+      {
+        case MouseEvent.BUTTON1:
+          if( actualWidget != null )
+            actualWidget.leftPressed( e.getPoint() );
+          break;
+
+        case MouseEvent.BUTTON2:
+          m_middleDown = true;
+          m_middleWidget.leftPressed( e.getPoint() );
+          break;
+
+        case MouseEvent.BUTTON3:
+          if( actualWidget != null )
+            actualWidget.rightPressed( e.getPoint() );
+          break;
+
+        default:
+          break;
+      }
     }
   }
 
   @Override
   public void mouseReleased( final MouseEvent e )
   {
-    final IWidget[] widgets = getWidgets();
-    for( final IWidget widget : widgets )
+    final IWidget actualWidget = getActualWidget();
+    if( actualWidget instanceof MouseListener )
     {
-      widget.mouseReleased( e );
-
+      ((MouseListener) actualWidget).mouseReleased( e );
       if( e.isConsumed() )
         return;
     }
+
+    if( e.isPopupTrigger() && getActualWidget() != null )
+      actualWidget.clickPopup( e.getPoint() );
+    else
+    {
+      switch( e.getButton() )
+      {
+        case MouseEvent.BUTTON1: // Left
+          if( getActualWidget() != null )
+            actualWidget.leftReleased( e.getPoint() );
+          break;
+
+        case MouseEvent.BUTTON2:
+          m_middleWidget.leftReleased( e.getPoint() );
+          break;
+
+        case MouseEvent.BUTTON3: // Right
+          if( getActualWidget() != null )
+            actualWidget.rightReleased( e.getPoint() );
+          break;
+
+        default:
+          break;
+      }
+    }
+
+    m_middleDown = false;
   }
 
+  /**
+   * @see java.awt.event.MouseWheelListener#mouseWheelMoved(java.awt.event.MouseWheelEvent)
+   */
   @Override
   public void mouseWheelMoved( final MouseWheelEvent e )
   {
-    final IWidget[] widgets = getWidgets();
-    for( final IWidget widget : widgets )
+    final IWidget actualWidget = getActualWidget();
+    if( actualWidget instanceof MouseWheelListener )
     {
-      ((MouseWheelListener) widget).mouseWheelMoved( e );
-
+      ((MouseWheelListener) actualWidget).mouseWheelMoved( e );
       if( e.isConsumed() )
         return;
     }
+
+    e.consume();
+
+    final int wheelRotation = e.getWheelRotation();
+
+    final boolean in = wheelRotation > 0 ? false : true;
+
+    GM_Envelope boundingBox = m_mapPanel.getBoundingBox();
+    for( int i = 0; i < Math.abs( wheelRotation ); i++ )
+      boundingBox = MapPanelUtilities.calcZoomInBoundingBox( boundingBox, in );
+
+    if( boundingBox != null )
+      getCommandTarget().postCommand( new ChangeExtentCommand( m_mapPanel, boundingBox ), null );
   }
 
   public void paintWidget( final Graphics g )
   {
-    final IWidget[] widgets = getWidgets();
-    ArrayUtils.reverse( widgets ); // paint background and toggle widgets first
-
-    for( final IWidget widget : widgets )
-    {
-      try
-      {
-        widget.paint( g );
-      }
-      catch( final Throwable t )
-      {
-        t.printStackTrace();
-      }
-    }
+    final IWidget actualWidget = getActualWidget();
+    if( actualWidget != null )
+      actualWidget.paint( g );
   }
 
   @Override
-  public IWidget[] getWidgets( )
+  public IWidget getActualWidget( )
   {
-    return m_widgets.toArray( new IWidget[] {} );
+    return m_actualWidget;
   }
 
   @Override
-  public void addWidget( final IWidget widget )
+  public void setActualWidget( final IWidget newWidget )
   {
-    if( Objects.isNull( widget ) )
-    {
-      doClean();
-      fireWidgetChangeEvent( null );
+    if( m_actualWidget != null )
+      m_actualWidget.finish();
 
-      return;
+    m_actualWidget = newWidget;
+
+    if( m_actualWidget != null )
+    {
+      m_actualWidget.activate( m_commandTarget, m_mapPanel );
+      m_actualWidget.setSelection( m_mapPanel.getSelectionManager() );
     }
 
-    if( WIDGET_TYPE.eRadio.equals( widget.getType() ) )
-      doClean();
+    fireWidgetChangeEvent( newWidget );
 
-    m_widgets.add( widget );
-
-    widget.activate( m_commandTarget, m_mapPanel );
-    widget.setSelection( m_mapPanel.getSelectionManager() );
-
-    fireWidgetChangeEvent( widget );
-
-    if( Objects.isNotNull( m_mapPanel ) )
+    if( m_mapPanel != null )
       m_mapPanel.repaintMap();
-  }
-
-  private void doClean( )
-  {
-    final IWidget[] widgets = getWidgets();
-    for( final IWidget widget : widgets )
-    {
-      if( WIDGET_TYPE.eRadio.equals( widget.getType() ) )
-      {
-        m_widgets.remove( widget );
-
-        widget.finish();
-      }
-    }
   }
 
   /**
@@ -346,59 +379,43 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
       element.widgetChanged( newWidget );
   }
 
+  /**
+   * @see java.awt.event.KeyListener#keyTyped(java.awt.event.KeyEvent)
+   */
   @Override
   public void keyTyped( final KeyEvent e )
   {
-    final IWidget[] widgets = getWidgets();
-    for( final IWidget widget : widgets )
-    {
+    final IWidget widget = getActualWidget();
+    if( widget != null )
       widget.keyTyped( e );
-    }
   }
 
+  /**
+   * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
+   */
   @Override
   public void keyPressed( final KeyEvent e )
   {
-    final IWidget[] widgets = getWidgets();
-    for( final IWidget widget : widgets )
-    {
+    final IWidget widget = getActualWidget();
+    if( widget != null )
       widget.keyPressed( e );
-    }
   }
 
+  /**
+   * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
+   */
   @Override
   public void keyReleased( final KeyEvent e )
   {
-    final IWidget[] widgets = getWidgets();
-    for( final IWidget widget : widgets )
-    {
+    final IWidget widget = getActualWidget();
+    if( widget != null )
       widget.keyReleased( e );
-    }
   }
 
   protected void onSelectionChanged( final IFeatureSelection selection )
   {
-    final IWidget[] widgets = getWidgets();
-    for( final IWidget widget : widgets )
-    {
-      widget.setSelection( selection );
-    }
+    if( m_actualWidget != null )
+      m_actualWidget.setSelection( selection );
   }
 
-  @Override
-  public void removeWidget( final IWidget widget )
-  {
-    final String clazz = widget.getClass().getName();
-
-    final IWidget[] widgets = getWidgets();
-    for( final IWidget w : widgets )
-    {
-      final String c = w.getClass().getName();
-      if( StringUtils.equals( clazz, c ) )
-        m_widgets.remove( w );
-
-    }
-
-    fireWidgetChangeEvent( null );
-  }
 }

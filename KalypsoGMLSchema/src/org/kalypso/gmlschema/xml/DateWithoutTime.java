@@ -10,7 +10,7 @@ import java.util.Date;
  */
 public class DateWithoutTime extends Date
 {
-  public DateWithoutTime( )
+  public DateWithoutTime()
   {
     super();
   }
@@ -20,7 +20,7 @@ public class DateWithoutTime extends Date
     this( date.getTime() );
   }
 
-  public DateWithoutTime( final long date )
+  public DateWithoutTime( long date )
   {
     super( date );
   }

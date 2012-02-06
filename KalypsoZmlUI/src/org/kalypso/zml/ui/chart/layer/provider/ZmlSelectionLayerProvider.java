@@ -42,13 +42,16 @@ package org.kalypso.zml.ui.chart.layer.provider;
 
 import java.net.URL;
 
-import org.kalypso.zml.core.base.request.IRequestHandler;
-import org.kalypso.zml.core.base.request.MetadataRequestHandler;
+import org.kalypso.zml.core.diagram.data.IRequestHandler;
+import org.kalypso.zml.core.diagram.data.MetadataRequestHandler;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlSelectionLayer;
 
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
 
 /**
  * @author Dirk Kuch
@@ -57,14 +60,19 @@ public class ZmlSelectionLayerProvider extends AbstractLayerProvider
 {
   public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlSelectionLayerProvider";
 
+  /**
+   * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
+   */
   @Override
   public IChartLayer getLayer( final URL context ) throws ConfigurationException
   {
     try
     {
-      
+      final StyleSetVisitor visitor = new StyleSetVisitor( false );
+      final ILineStyle lineStyle = visitor.visit( getStyleSet(), ILineStyle.class, 0 );
+      final IAreaStyle areaStyle = visitor.visit( getStyleSet(), IAreaStyle.class, 0 );
 
-      return new ZmlSelectionLayer( this, getStyleSet() );
+      return new ZmlSelectionLayer( this, lineStyle, areaStyle );
     }
     catch( final Throwable t )
     {

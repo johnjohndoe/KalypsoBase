@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.changes;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
@@ -58,15 +58,16 @@ public class ProfileObjectAdd implements IProfilChange
   }
 
   @Override
-  public void configureHint( final ProfilChangeHint hint )
+  public IProfilChange doChange( final ProfilChangeHint hint )
   {
-    hint.setObjectChanged();
-    hint.setPointPropertiesChanged();
-  }
-
-  @Override
-  public IProfilChange doChange( )
-  {
+    if( hint != null )
+    {
+      hint.setObjectChanged();
+    }
+    if( hint != null )
+    {
+      hint.setPointPropertiesChanged();
+    }
 
     m_profil.addProfileObjects( m_objectsToAdd );
 

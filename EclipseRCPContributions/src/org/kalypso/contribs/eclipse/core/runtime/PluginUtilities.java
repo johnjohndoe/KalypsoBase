@@ -62,7 +62,6 @@ import org.osgi.framework.Bundle;
  * 
  * @author Belger
  */
-@SuppressWarnings("restriction")
 public final class PluginUtilities
 {
   private PluginUtilities( )
@@ -158,7 +157,7 @@ public final class PluginUtilities
     final Bundle bundle = Platform.getBundle( pluginId );
     if( bundle == null || !BundleUtility.isReady( bundle ) )
     {
-      final String msg = String.format( "Could not load class %s: Bundle not found or not ready: %s", className, pluginId );
+      final String msg = String.format( "Could not load class %s: Bundle not fond or not ready: %s", className, pluginId );
       throw new ClassNotFoundException( msg );
     }
 

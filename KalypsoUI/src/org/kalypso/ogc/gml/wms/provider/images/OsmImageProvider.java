@@ -119,4 +119,5 @@ public class OsmImageProvider implements IKalypsoImageProvider
   {
     return null;
   }
+
 }

@@ -80,6 +80,8 @@ import org.kalypso.ui.editor.actions.NewScopeFactory;
 @SuppressWarnings("restriction")
 public class MapPartHelper
 {
+// final static ISchedulingRule UI_JOB_MUTEXT = new MutexRule();
+
   private MapPartHelper( )
   {
     // will not be instantiated

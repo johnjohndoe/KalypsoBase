@@ -9,13 +9,12 @@ Require-Bundle: org.kalypso.contribs.java,
 Bundle-Activator: de.openali.odysseus.chart.ext.base.Activator
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: kalypsobase.sourceforge.net
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: de.openali.odysseus.chart.ext.base.axis,
  de.openali.odysseus.chart.ext.base.axis.provider,
  de.openali.odysseus.chart.ext.base.axisrenderer,
  de.openali.odysseus.chart.ext.base.axisrenderer.provider,
  de.openali.odysseus.chart.ext.base.data,
- de.openali.odysseus.chart.ext.base.deprecated,
  de.openali.odysseus.chart.ext.base.layer,
  de.openali.odysseus.chart.ext.base.layer.provider
 Bundle-ClassPath: lib/JFreeChart/jcommon-1.0.16.jar,

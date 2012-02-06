@@ -40,10 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.ui.pager;
 
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -60,7 +56,7 @@ import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 /**
  * @author Dirk Kuch
  */
-public class ElementsComposite extends Composite implements IElementsComposite
+public class ElementsComposite extends Composite
 {
 
   private final FormToolkit m_toolkit;
@@ -72,10 +68,6 @@ public class ElementsComposite extends Composite implements IElementsComposite
   protected IElementPage m_selectedPage;
 
   private final int m_style;
-
-  private boolean m_showComboViewer = false;
-
-  Set<IElementPageListener> m_listeners = Collections.synchronizedSet( new LinkedHashSet<IElementPageListener>() );
 
   public ElementsComposite( final Composite parent, final FormToolkit toolkit, final IElementPage[] pages )
   {
@@ -149,7 +141,7 @@ public class ElementsComposite extends Composite implements IElementsComposite
     m_body.setLayout( Layouts.createGridLayout() );
     m_body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
-    if( isComboEnabledHead() )
+    if( m_pages.length > 1 && m_style != SWT.BOTTOM )
     {
       addCombo( m_body );
     }
@@ -164,22 +156,8 @@ public class ElementsComposite extends Composite implements IElementsComposite
       addCombo( m_body );
     }
 
-    m_toolkit.adapt( this );
-
-    m_body.layout();
     this.layout();
-  }
-
-  private boolean isComboEnabledHead( )
-  {
-    if( m_style == SWT.BOTTOM )
-      return false;
-    else if( m_pages.length > 1 )
-      return true;
-    else if( m_showComboViewer )
-      return true;
-
-    return false;
+    m_toolkit.adapt( this );
   }
 
   private void addCombo( final Composite body )
@@ -218,38 +196,10 @@ public class ElementsComposite extends Composite implements IElementsComposite
         if( element instanceof IElementPage )
         {
           m_selectedPage = (IElementPage) element;
-
-          fireSelectedPageChanged( m_selectedPage );
         }
 
         update();
       }
     } );
-
-    fireSelectedPageChanged( m_selectedPage );
-  }
-
-  public void setShowAlwaysComboViewer( final boolean showComboViewer )
-  {
-    m_showComboViewer = showComboViewer;
-  }
-
-  public void addPageListener( final IElementPageListener listener )
-  {
-    m_listeners.add( listener );
-  }
-
-  public void removePageListener( final IElementPageListener listener )
-  {
-    m_listeners.remove( listener );
-  }
-
-  protected void fireSelectedPageChanged( final IElementPage page )
-  {
-    final IElementPageListener[] listeners = m_listeners.toArray( new IElementPageListener[] {} );
-    for( final IElementPageListener listener : listeners )
-    {
-      listener.pageChanged( page.getIdentifier() );
-    }
   }
 }

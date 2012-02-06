@@ -54,6 +54,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.FontMetrics;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -65,22 +66,21 @@ import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.command.AddRelationCommand;
 import org.kalypso.ogc.gml.command.CompositeCommand;
-import org.kalypso.ogc.gml.command.RemoveRelationCommand;
+import org.kalypso.ui.editor.gmleditor.command.AddRelationCommand;
+import org.kalypso.ui.editor.gmleditor.command.RemoveRelationCommand;
 import org.kalypso.ui.editor.gmleditor.part.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.feature.search.IReferenceCollectorStrategy;
 
 /**
  * Support the following parameters:
  * <ul>
  * <li>showSelectButtons : boolean - if true, 'selectAll' and 'deselecAll' buttons are shown
  * </ul>
- *
+ * 
  * @author Gernot Belger
  */
 public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl
@@ -140,10 +140,10 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl
   @Override
   public Control createControl( final Composite parent, final int style )
   {
-// final GC gc = new GC( parent );
-// gc.setFont( JFaceResources.getDialogFont() );
-// final FontMetrics fontMetrics = gc.getFontMetrics();
-// gc.dispose();
+    final GC gc = new GC( parent );
+    gc.setFont( JFaceResources.getDialogFont() );
+    final FontMetrics fontMetrics = gc.getFontMetrics();
+    gc.dispose();
 
     final Composite panel = new Composite( parent, style );
     panel.setLayout( Layouts.createGridLayout() );
@@ -224,9 +224,7 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl
     final IRelationType rt = (IRelationType) getFeatureTypeProperty();
     final GMLWorkspace workspace = feature.getWorkspace();
 
-    final IReferenceCollectorStrategy strategy = ComboFeatureControl.createSearchStrategy( workspace, feature, rt );
-    final Feature[] features = strategy.collectReferences();
-
+    final Feature[] features = ComboFeatureControl.collectReferencableFeatures( workspace, feature, rt );
     m_linkChecklist.setInput( features );
 
     /* check all currently set links */
@@ -251,7 +249,7 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl
    * button will be accesible from <code>getOKButton()</code>. Note that the parent's layout is assumed to be a
    * <code>GridLayout</code> and the number of columns in this layout is incremented. Subclasses may override.
    * </p>
-   *
+   * 
    * @param parent
    *          the parent composite
    * @param id

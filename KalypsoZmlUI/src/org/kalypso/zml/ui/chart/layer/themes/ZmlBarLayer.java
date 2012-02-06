@@ -43,20 +43,21 @@ package org.kalypso.zml.ui.chart.layer.themes;
 import java.net.URL;
 
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.Point;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.core.diagram.base.IZmlLayer;
-import org.kalypso.zml.core.diagram.base.IZmlLayerProvider;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
+import org.kalypso.zml.core.diagram.data.IZmlLayerProvider;
 import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
+import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractBarLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.figure.impl.PolygonFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
@@ -76,138 +77,24 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
 
   private final ZmlBarLayerRangeHandler m_range = new ZmlBarLayerRangeHandler( this );
 
+  private final IStyleSet m_styleSet;
+
   public ZmlBarLayer( final IZmlLayerProvider layerProvider, final IStyleSet styleSet, final URL context )
   {
-    super( layerProvider, styleSet );
+    super( layerProvider, null );
+    m_styleSet = styleSet;
+
     setup( context );
   }
 
-  @Override
-  public void dispose( )
-  {
-    if( Objects.isNotNull( m_handler ) )
-    {
-      m_handler.dispose();
-    }
-
-    super.dispose();
-  }
-
-  @Override
-  protected IAreaStyle getAreaStyle( )
-  {
-    final IStyleSet styleSet = getStyleSet();
-    final int index = ZmlLayerHelper.getLayerIndex( getIdentifier() );
-
-    final StyleSetVisitor visitor = new StyleSetVisitor( true );
-    final IAreaStyle style = visitor.visit( styleSet, IAreaStyle.class, index );
-
-    return style;
-  }
-
-  @Override
-  public IZmlLayerDataHandler getDataHandler( )
-  {
-    return m_handler;
-  }
-
-  @Override
-  public IDataRange< ? > getDomainRange( )
-  {
-    return m_range.getDomainRange();
-  }
-
-  @Override
-  public synchronized ILegendEntry[] getLegendEntries( )
-  {
-    return m_legend.createLegendEntries( getRectangleFigure() );
-  }
-
+  /**
+   * @see de.openali.odysseus.chart.factory.layer.AbstractChartLayer#getProvider()
+   */
   @Override
   public IZmlLayerProvider getProvider( )
   {
     return (IZmlLayerProvider) super.getProvider();
   }
-
-  @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
-  {
-    return m_range.getTargetRange();
-  }
-
-  @Override
-  public String getTitle( )
-  {
-    if( m_labelDescriptor == null )
-      return super.getTitle();
-
-    final IObservation observation = (IObservation) getDataHandler().getAdapter( IObservation.class );
-    if( observation == null )
-      return m_labelDescriptor;
-
-    return ObservationTokenHelper.replaceTokens( m_labelDescriptor, observation, getDataHandler().getValueAxis() );
-  }
-
-  @Override
-  public void onObservationChanged( )
-  {
-    getEventHandler().fireLayerContentChanged( this );
-  }
-
-  @Override
-  public void paint( final GC gc )
-  {
-    try
-    {
-      final IObservation observation = (IObservation) m_handler.getAdapter( IObservation.class );
-      if( Objects.isNull( observation ) )
-        return;
-
-      final ZmlBarLayerVisitor visitor = new ZmlBarLayerVisitor( this, m_range );
-      observation.accept( visitor, m_handler.getRequest(), 1 );
-
-      final Rectangle[] rects = visitor.getRectangles();
-      for( final Rectangle rect : rects )
-      {
-        paint( gc, rect );
-      }
-
-    }
-    catch( final SensorException e )
-    {
-      KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-    }
-  }
-
-  @Override
-  public void setDataHandler( final IZmlLayerDataHandler handler )
-  {
-    if( m_handler != null )
-    {
-      m_handler = handler;
-    }
-
-    m_handler = handler;
-  }
-
-  @Override
-  public void setLabelDescriptor( final String labelDescriptor )
-  {
-    m_labelDescriptor = labelDescriptor;
-  }
-
-// @Override
-// protected FullRectangleFigure getRectangleFigure( )
-// {
-// if( m_polygonFigure == null )
-// {
-// final IAreaStyle as = getAreaStyle();
-// m_polygonFigure = new PolygonFigure();
-// m_polygonFigure.setStyle( as );
-// }
-//
-// return m_polygonFigure;
-// }
 
   private void setup( final URL context )
   {
@@ -225,9 +112,147 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
     setDataHandler( handler );
   }
 
-// @Override
-// protected IStyleSet getStyleSet( )
-// {
-// return m_styleSet;
-// }
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractBarLayer#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    if( Objects.isNotNull( m_handler ) )
+      m_handler.dispose();
+
+    super.dispose();
+  }
+
+  /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#onObservationChanged()
+   */
+  @Override
+  public void onObservationChanged( )
+  {
+    getEventHandler().fireLayerContentChanged( this );
+  }
+
+  @Override
+  public synchronized ILegendEntry[] getLegendEntries( )
+  {
+    return createLegendEntries();
+  }
+
+  @Override
+  public ILegendEntry[] createLegendEntries( )
+  {
+    return m_legend.createLegendEntries( getPolygonFigure() );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
+   */
+  @Override
+  public IDataRange<Number> getDomainRange( )
+  {
+    return m_range.getDomainRange();
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
+   */
+  @Override
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
+  {
+    return m_range.getTargetRange();
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
+   */
+  @Override
+  public void paint( final GC gc )
+  {
+    try
+    {
+      final IObservation observation = m_handler.getObservation();
+      if( Objects.isNull( observation ) )
+        return;
+
+      final ZmlBarLayerVisitor visitor = new ZmlBarLayerVisitor( this, m_range );
+      observation.accept( visitor, m_handler.getRequest() );
+
+      final PolygonFigure figure = getPolygonFigure();
+      final Point[][] points = visitor.getPoints();
+      for( final Point[] p : points )
+      {
+        figure.setPoints( p );
+        figure.paint( gc );
+      }
+
+    }
+    catch( final SensorException e )
+    {
+      KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.chart.layer.themes.IZmlLayer#getDataHandler()
+   */
+  @Override
+  public IZmlLayerDataHandler getDataHandler( )
+  {
+    return m_handler;
+  }
+
+  /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#setDataHandler(org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler)
+   */
+  @Override
+  public void setDataHandler( final IZmlLayerDataHandler handler )
+  {
+    if( m_handler != null )
+      m_handler = handler;
+
+    m_handler = handler;
+  }
+
+  /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#setLabelDescriptor(java.lang.String)
+   */
+  @Override
+  public void setLabelDescriptor( final String labelDescriptor )
+  {
+    m_labelDescriptor = labelDescriptor;
+  }
+
+  @Override
+  public String getTitle( )
+  {
+    if( m_labelDescriptor == null )
+      return super.getTitle();
+
+    final IObservation observation = getDataHandler().getObservation();
+    if( observation == null )
+      return m_labelDescriptor;
+
+    return ObservationTokenHelper.replaceTokens( m_labelDescriptor, observation, getDataHandler().getValueAxis() );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractBarLayer#getAreaStyle()
+   */
+  @Override
+  protected IAreaStyle getAreaStyle( )
+  {
+    final IStyleSet styleSet = getStyleSet();
+    final int index = ZmlLayerHelper.getLayerIndex( getIdentifier() );
+
+    final StyleSetVisitor visitor = new StyleSetVisitor( true );
+    final IAreaStyle style = visitor.visit( styleSet, IAreaStyle.class, index );
+
+    return style;
+  }
+
+  protected IStyleSet getStyleSet( )
+  {
+    return m_styleSet;
+  }
 }

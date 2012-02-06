@@ -53,6 +53,7 @@ import org.kalypso.simulation.core.simspec.Modeldata.ClearAfterCalc;
 
 /**
  * @author Gernot Belger
+ *
  */
 public final class SimulationUtils
 {

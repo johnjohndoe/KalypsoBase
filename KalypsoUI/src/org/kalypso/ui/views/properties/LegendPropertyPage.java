@@ -77,7 +77,6 @@ import org.kalypso.util.themes.ThemeUtilities;
 import org.kalypso.util.themes.legend.LegendUtilities;
 import org.kalypso.util.themes.legend.controls.LegendComposite;
 import org.kalypso.util.themes.legend.listener.ILegendChangedListener;
-import org.kalypso.util.themes.position.PositionUtilities;
 
 /**
  * This page will show a legend for a theme, if one is available.
@@ -97,7 +96,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
   private IKalypsoTheme m_theme;
 
   /**
-   * A up to date properties object, containing all serialised legend properties.
+   * A up to date properties object, containing all serialized legend properties.
    */
   protected Properties m_properties;
 
@@ -206,27 +205,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
     if( !(m_theme instanceof KalypsoLegendTheme) )
       return super.performOk();
 
-    /* Get the properties. */
-    final String horizontalProperty = m_properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
-    final String verticalProperty = m_properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
-    final String backgroundColorProperty = m_properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
-    final String insetsProperty = m_properties.getProperty( LegendUtilities.THEME_PROPERTY_INSETS );
-    final String themeIdsProperty = m_properties.getProperty( LegendUtilities.THEME_PROPERTY_THEME_IDS );
-    final String fontSizeProperty = m_properties.getProperty( LegendUtilities.THEME_PROPERTY_FONT_SIZE );
-
-    /* Set the properties. */
-    if( horizontalProperty != null && horizontalProperty.length() > 0 )
-      m_theme.setProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );
-    if( verticalProperty != null && verticalProperty.length() > 0 )
-      m_theme.setProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, verticalProperty );
-    if( backgroundColorProperty != null && backgroundColorProperty.length() > 0 )
-      m_theme.setProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR, backgroundColorProperty );
-    if( insetsProperty != null && insetsProperty.length() > 0 )
-      m_theme.setProperty( LegendUtilities.THEME_PROPERTY_INSETS, insetsProperty );
-    if( themeIdsProperty != null )
-      m_theme.setProperty( LegendUtilities.THEME_PROPERTY_THEME_IDS, themeIdsProperty );
-    if( fontSizeProperty != null && fontSizeProperty.length() > 0 )
-      m_theme.setProperty( LegendUtilities.THEME_PROPERTY_FONT_SIZE, fontSizeProperty );
+    ((KalypsoLegendTheme) m_theme).updatePosition( m_properties );
 
     return super.performOk();
   }
@@ -244,7 +223,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
 
     /* Get the theme. */
     final Object nodeElement = node.getElement();
-    final IKalypsoTheme theme = nodeElement instanceof IKalypsoTheme ? (IKalypsoTheme) nodeElement : null;
+    final IKalypsoTheme theme = (nodeElement instanceof IKalypsoTheme) ? (IKalypsoTheme) nodeElement : null;
 
     /* Store the members. */
     m_node = node;
@@ -282,7 +261,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
 
       /* Get the legend graphic. */
       final LegendExporter legendExporter = new LegendExporter();
-      final Image legendGraphic = legendExporter.exportLegends( null, new IThemeNode[] { m_node }, display, null, new RGB( 255, 255, 255 ), -1, -1, false, -1, null );
+      final Image legendGraphic = legendExporter.exportLegends( null, new IThemeNode[] { m_node }, display, null, new RGB( 255, 255, 255 ), -1, -1, false, null );
       if( legendGraphic == null )
         throw new Exception( Messages.getString( "org.kalypso.ui.views.properties.LegendPropertyPage.2" ) );//$NON-NLS-1$
 
@@ -387,17 +366,21 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
    */
   private Composite createPropertiesComposite( final CTabFolder parent )
   {
+    /* Create a composite. */
+    final Composite propertiesComposite = new Composite( parent, SWT.NONE );
+    propertiesComposite.setLayout( new GridLayout( 1, false ) );
+
     /* Create the legend composite. */
-    final LegendComposite legendComposite = new LegendComposite( parent, SWT.NONE, m_theme.getMapModell(), m_properties );
+    final LegendComposite legendComposite = new LegendComposite( propertiesComposite, SWT.NONE, m_theme.getMapModell(), m_properties );
     legendComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     legendComposite.addLegendChangedListener( new ILegendChangedListener()
     {
       /**
        * @see org.kalypso.util.themes.legend.listener.ILegendChangedListener#legendPropertyChanged(java.util.Properties,
-       *      int, int, org.eclipse.swt.graphics.Color, int, java.lang.String[], int)
+       *      int, int, org.eclipse.swt.graphics.Color, int, java.lang.String[])
        */
       @Override
-      public void legendPropertyChanged( final Properties properties, final int horizontal, final int vertical, final Color backgroundColor, final int insets, final String[] themeIds, final int fontSize )
+      public void legendPropertyChanged( final Properties properties, final int horizontal, final int vertical, final Color backgroundColor, final int insets, final String[] themeIds )
       {
         /* Update the properties object. */
         m_properties = properties;
@@ -407,7 +390,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
       }
     } );
 
-    return legendComposite;
+    return propertiesComposite;
   }
 
   /**
@@ -465,22 +448,17 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
       final String backgroundColorProperty = m_properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
       final String insetsProperty = m_properties.getProperty( LegendUtilities.THEME_PROPERTY_INSETS );
       final String themeIdsProperty = m_properties.getProperty( LegendUtilities.THEME_PROPERTY_THEME_IDS );
-      final String fontSizeProperty = m_properties.getProperty( LegendUtilities.THEME_PROPERTY_FONT_SIZE );
 
       /* Check the properties. */
       Color backgroundColor = ThemeUtilities.checkBackgroundColor( display, backgroundColorProperty );
       if( backgroundColor == null )
         backgroundColor = display.getSystemColor( SWT.COLOR_WHITE );
-
       int insets = LegendUtilities.checkInsets( insetsProperty );
       if( insets == -1 )
         insets = 5;
-
       final List<String> themeIds = LegendUtilities.verifyThemeIds( m_theme.getMapModell(), themeIdsProperty );
       if( themeIds == null || themeIds.size() == 0 )
         throw new Exception( "Es wurden keine Themen ausgewählt..." );
-
-      final int fontSize = LegendUtilities.checkFontSize( fontSizeProperty );
 
       /* Create the nodes. */
       final IThemeNode rootNode = NodeFactory.createRootNode( m_theme.getMapModell(), null );
@@ -488,7 +466,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
 
       /* Get the legend graphic. */
       final LegendExporter legendExporter = new LegendExporter();
-      final Image legendGraphic = legendExporter.exportLegends( themeIds.toArray( new String[] {} ), nodes, display, new Insets( insets, insets, insets, insets ), backgroundColor.getRGB(), -1, -1, false, fontSize, null );
+      final Image legendGraphic = legendExporter.exportLegends( themeIds.toArray( new String[] {} ), nodes, display, new Insets( insets, insets, insets, insets ), backgroundColor.getRGB(), -1, -1, false, null );
       if( legendGraphic == null )
         throw new Exception( Messages.getString( "org.kalypso.ui.views.properties.LegendPropertyPage.2" ) );//$NON-NLS-1$
 

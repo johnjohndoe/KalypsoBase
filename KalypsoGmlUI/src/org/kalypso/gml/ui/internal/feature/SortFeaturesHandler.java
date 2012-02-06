@@ -45,7 +45,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -75,7 +75,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureRelation;
+import org.kalypsodeegree.model.feature.IFeatureProperty;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree_impl.model.feature.FeatureComparator;
 
@@ -98,13 +98,14 @@ public class SortFeaturesHandler extends AbstractHandler
 
     final IStructuredSelection structSel = (IStructuredSelection) selection;
     final Object firstElement = structSel.getFirstElement();
-    if( !(firstElement instanceof IFeatureRelation) )
+    if( !(firstElement instanceof IFeatureProperty) )
       throw new ExecutionException( "This handler works only for selection on IFeatureProperty, check enablement" ); //$NON-NLS-1$
 
-    final IFeatureRelation fate = (IFeatureRelation) firstElement;
+    final IFeatureProperty fate = (IFeatureProperty) firstElement;
 
-    final Feature parentFeature = fate.getOwner();
+    final Feature parentFeature = fate.getParentFeature();
     final IRelationType rt = fate.getPropertyType();
+
 
     final IFeatureType targetFeatureType = rt.getTargetFeatureType();
     final IPropertyType ptToSort = askForPropertyToSort( shell, targetFeatureType, title );
@@ -189,10 +190,10 @@ public class SortFeaturesHandler extends AbstractHandler
     if( !(propertyToSort instanceof IValuePropertyType) )
       throw new IllegalArgumentException( Messages.getString( "org.kalypso.ui.editor.actions.SortFeaturesActionDelegate.5" ) ); //$NON-NLS-1$
 
-    final Comparator<Object> featureComparator = new FeatureComparator( list.getOwner(), propertyToSort );
+    final Comparator<Object> featureComparator = new FeatureComparator( list.getParentFeature(), propertyToSort );
     Collections.sort( list, featureComparator );
 
-    final Feature parentFeature = list.getOwner();
+    final Feature parentFeature = list.getParentFeature();
     final GMLWorkspace workspace = parentFeature.getWorkspace();
     workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, parentFeature, (Feature[]) null, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE ) );
 

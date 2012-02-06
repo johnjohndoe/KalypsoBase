@@ -84,7 +84,7 @@ public class ActionFilterRegistry implements IActionFilter
   public boolean testAttribute( final Object target, final String name, final String value )
   {
     final Map<IActionFilterEx, String[]> list = getList();
-    for( final Map.Entry<IActionFilterEx, String[]> entry : list.entrySet() )
+    for(final Map.Entry<IActionFilterEx, String[]> entry : list.entrySet() )
     {
       final IActionFilterEx actionFilter = entry.getKey();
       final String[] names = entry.getValue();

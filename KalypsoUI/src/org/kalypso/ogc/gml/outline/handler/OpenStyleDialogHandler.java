@@ -81,7 +81,7 @@ public class OpenStyleDialogHandler extends AbstractHandler
     }
     catch( final PartInitException e )
     {
-      throw new ExecutionException( Messages.getString( "org.kalypso.ogc.gml.outline.handler.OpenStyleDialogHandler.0" ), e ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.outline.handler.OpenStyleDialogHandler.0"), e ); //$NON-NLS-1$
     }
 
     return null;

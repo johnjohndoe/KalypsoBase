@@ -61,9 +61,10 @@ import net.opengeospatial.wps.SupportedCRSsType;
 import net.opengeospatial.wps.SupportedComplexDataType;
 
 import org.apache.commons.httpclient.util.URIUtil;
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
-import org.apache.commons.vfs2.FileSystemManager;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemException;
+import org.apache.commons.vfs.FileSystemManager;
+import org.apache.commons.vfs.FileSystemManagerWrapper;
 import org.eclipse.core.internal.boot.PlatformURLHandler;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -75,8 +76,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.commons.io.VFSUtilities;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.net.UrlUtilities;
-import org.kalypso.commons.vfs.FileSystemManagerWrapper;
 import org.kalypso.contribs.eclipse.core.resources.CollectFilesVisitor;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -533,7 +534,7 @@ public class SimulationDelegate
             wpsInputs.put( identifier.getValue(), hexString );
             continue;
           }
-          else if( protocol == null || protocol.equals( "project" ) || protocol.equals( "platform" ) ) //$NON-NLS-1$ //$NON-NLS-2$
+          else if( (protocol == null) || protocol.equals( "project" ) || protocol.equals( "platform" ) ) //$NON-NLS-1$ //$NON-NLS-2$
           {
             /* If protocol is null or protocol is "project", it is a local file resource. */
             /*
@@ -547,7 +548,7 @@ public class SimulationDelegate
 
             final IProject project = m_calcCaseFolder.getProject();
             final IResource inputResource;
-            if( protocol != null && protocol.equals( PlatformURLHandler.PROTOCOL ) )
+            if( (protocol != null) && protocol.equals( PlatformURLHandler.PROTOCOL ) )
             {
               final IContainer baseresource = project.getWorkspace().getRoot();
               final String path = ResourceUtilities.findPathFromURL( new URL( inputPath ) ).toPortableString();

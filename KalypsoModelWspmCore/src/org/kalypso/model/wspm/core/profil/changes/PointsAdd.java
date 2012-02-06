@@ -42,7 +42,7 @@ package org.kalypso.model.wspm.core.profil.changes;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Gernot Belger
@@ -53,30 +53,29 @@ public class PointsAdd implements IProfilChange
 
   private final int[] m_pointPositions;
 
-  private final IProfileRecord[] m_points;
+  private final IRecord[] m_points;
 
-  public PointsAdd( final IProfil profil, final int[] pointPositions, final IProfileRecord[] points )
+  public PointsAdd( final IProfil profil, final int[] pointPositions, final IRecord[] points )
   {
     m_profil = profil;
     m_pointPositions = pointPositions;
     m_points = points;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilChange#doChange(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint)
+   */
   @Override
-  public void configureHint( final ProfilChangeHint hint )
+  public IProfilChange doChange( final ProfilChangeHint hint )
   {
-    hint.setPointsChanged();
-  }
+    if( hint != null )
+    {
+      hint.setPointsChanged();
+    }
 
-  @Override
-  public IProfilChange doChange( )
-  {
     for( int i = 0; i < m_points.length; i++ )
     {
-      final int position = m_pointPositions[i];
-      final IProfileRecord point = m_points[i];
-
-      m_profil.addPoint( position, point );
+      m_profil.addPoint( m_pointPositions[i], m_points[i] );
     }
 
     return new PointRemove( m_profil, m_points );

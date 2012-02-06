@@ -40,11 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.editor;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.eclipse.core.commands.ExecutionEvent;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.menus.UIElement;
 import org.eclipse.ui.services.IEvaluationService;
 import org.eclipse.ui.services.IServiceLocator;
@@ -52,8 +49,8 @@ import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.commons.java.lang.Objects;
 
 import de.openali.odysseus.chart.framework.view.IChartComposite;
-import de.openali.odysseus.chart.framework.view.IChartHandler;
-import de.openali.odysseus.chart.framework.view.IChartHandlerManager;
+import de.openali.odysseus.chart.framework.view.IChartDragHandler;
+import de.openali.odysseus.chart.framework.view.IPlotHandler;
 
 /**
  * @author burtscher1
@@ -73,12 +70,11 @@ public class ElementUpdateHelper
     if( chart == null )
       return;
 
-    final IChartHandlerManager plotDragHandler = chart.getPlotHandler();
+    final IPlotHandler plotDragHandler = chart == null ? null : chart.getPlotHandler();
     if( Objects.isNotNull( plotDragHandler ) )
     {
-      final IChartHandler[] handlers = plotDragHandler.getActiveHandlers();
-      final boolean checked = isChecked( handlers, handlerClass );
-      element.setChecked( checked );
+      final IChartDragHandler[] handlers = plotDragHandler.getActiveHandlers();
+      element.setChecked( isChecked( handlers, handlerClass ) );
     }
     else
     {
@@ -87,39 +83,17 @@ public class ElementUpdateHelper
 
   }
 
-  private static boolean isChecked( final IChartHandler[] handlers, final Class< ? > clazz )
+  private static boolean isChecked( final IChartDragHandler[] handlers, final Class< ? > clazz )
   {
     if( ArrayUtils.isEmpty( handlers ) )
       return false;
 
-    for( final IChartHandler handler : handlers )
+    for( final IChartDragHandler handler : handlers )
     {
       if( handler.getClass().equals( clazz ) )
         return true;
     }
 
-    return false;
-  }
-
-  public static boolean getSelection( final ExecutionEvent event )
-  {
-    try
-    {
-      final Event e = (Event) event.getTrigger();
-
-      if( e.widget instanceof ToolItem )
-      {
-        final ToolItem item = (ToolItem) e.widget;
-
-        return item.getSelection();
-      }
-
-      throw new UnsupportedOperationException();
-    }
-    catch( final Throwable t )
-    {
-      t.printStackTrace();
-    }
     return false;
   }
 

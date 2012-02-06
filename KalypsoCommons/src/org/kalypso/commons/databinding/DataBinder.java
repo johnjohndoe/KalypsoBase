@@ -144,6 +144,7 @@ public class DataBinder extends AbstractDataBinder
     m_modelBeforeSetValidator.add( validator );
   }
 
+
   @Override
   protected Binding doApply( final DataBindingContext context )
   {

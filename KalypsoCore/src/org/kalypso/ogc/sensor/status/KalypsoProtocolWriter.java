@@ -112,7 +112,7 @@ public final class KalypsoProtocolWriter
           final IAxis axis = statusAxes[iAxes];
 
           final String obsName = observation.getName();
-          final String type = KalypsoStatusUtils.getAxisNameFor( axis );
+          final String type = KalypsoStatusUtils.getAxisLabelFor( axis );
 
           final StringBuffer sb = new StringBuffer( Messages.getString( "org.kalypso.ogc.sensor.status.KalypsoProtocolWriter.0" ) ); //$NON-NLS-1$
           sb.append( obsName );

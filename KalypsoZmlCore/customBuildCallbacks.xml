@@ -8,7 +8,7 @@
 	<property name="gen.srcbind" value="srcbind" />
 
    	<fileset id="binding.fileset" dir="${basedir}">
-	    <include name="etc/schemas/binding/**/*.xsd"/>
+	    <include name="etc/schemas/**/*.xsd"/>
 	</fileset>
 	
 	<import file="../KalypsoBuild/common-binding/build_callbacks.xml" />

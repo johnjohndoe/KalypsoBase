@@ -62,10 +62,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.joda.time.Period;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.awt.ColorUtilities;
@@ -76,7 +75,6 @@ import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
@@ -91,7 +89,7 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
  * Utility for dealing Kalypso time series.
- *
+ * 
  * @author schlienger
  */
 public final class TimeseriesUtils implements ITimeseriesConstants
@@ -135,7 +133,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
    * Allows to overwrite the location of the config.properties file.<br>
    * If international alternatives are present these will be used (i.e. config_de.properties instead of
    * config.properties).
-   *
+   * 
    * @param configUrl
    *          Base location of the config file(s) (i.e. getClass().getResource("resources")).
    * @param basename
@@ -151,7 +149,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
    * Finds out which metadata of the given observation begin with the given prefix.
    * <p>
    * This is for instance useful for the Alarmstufen
-   *
+   * 
    * @param obs
    * @param mdPrefix
    * @return list of metadata keys or empty array if nothing found
@@ -179,7 +177,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
 
   /**
    * Finds out the list of alarmstufen metadata keys
-   *
+   * 
    * @return list of metadata keys
    */
   public static String[] findOutMDAlarmLevel( final IObservation obs )
@@ -189,7 +187,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
 
   /**
    * Returns the color to use when displaying the value of the given Alarmstufe.
-   *
+   * 
    * @return color
    */
   public static Color getColorForAlarmLevel( final String mdAlarm )
@@ -203,7 +201,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
 
   /**
    * Lazy loading of the properties
-   *
+   * 
    * @return config of the timeseries package
    */
   private static synchronized Properties getProperties( )
@@ -268,7 +266,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
    * observation is a forecast.
    * <p>
    * An observation is a forecast when it has the MD_VORHERSAGE Metadata.
-   *
+   * 
    * @param obs
    * @return date range of the forecast or null if obs isn't a forecast.
    */
@@ -329,7 +327,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
 
   /**
    * Units are read from the config.properties file.
-   *
+   * 
    * @param type
    * @return corresponding unit
    */
@@ -342,7 +340,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
    * Returns a user-friendly name for the given type.
    * <p>
    * Note to Developer: keep the config.properties file up-to-date
-   *
+   * 
    * @return corresponding name (user friendly)
    */
   public static String getName( final String type )
@@ -354,7 +352,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
    * Returns a color for the given type.
    * <p>
    * Note to Developer: keep the config.properties file up-to-date
-   *
+   * 
    * @return a Color that is defined to be used with the given axis type, or a random color when no fits
    */
   public static Color[] getColorsFor( final String type )
@@ -397,7 +395,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
    * <p>
    * Uses UNIT_TO_TYPE_ Keys in config.properties
    * </p>
-   *
+   * 
    * @param unit
    * @return type
    */
@@ -417,7 +415,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
   /**
    * Create a default axis for the given type.
    */
-  public static IAxis createDefaultAxis( final String type )
+  public static IAxis createDefaulAxis( final String type )
   {
     return new DefaultAxis( getName( type ), type, getUnit( type ), getDataClass( type ), isKey( type ) );
   }
@@ -425,7 +423,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
   /**
    * Create a default axis for the given type and the key flag.
    */
-  public static IAxis createDefaultAxis( final String type, final boolean isKey )
+  public static IAxis createDefaulAxis( final String type, final boolean isKey )
   {
     return new DefaultAxis( getName( type ), type, getUnit( type ), getDataClass( type ), isKey );
   }
@@ -433,7 +431,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
   /**
    * Returns a NumberFormat instance according to the given timeserie type. If there is no specific instance for the
    * given type, then a default number format is returned.
-   *
+   * 
    * @return instance of NumberFormat that can be used to display the values to the user
    */
   public static NumberFormat getNumberFormatFor( final String type )
@@ -498,7 +496,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
 
   /**
    * It is currently fix and is: "dd.MM.yy HH:mm"
-   *
+   * 
    * @return the date format to use when displaying dates for observations/timeseries
    */
   public static DateFormat getDateFormat( )
@@ -527,10 +525,10 @@ public final class TimeseriesUtils implements ITimeseriesConstants
     final List<IAxis> axisList = new ArrayList<IAxis>();
     if( axisTypes != null && axisTypes.length > 0 )
     {
-      axisList.add( TimeseriesUtils.createDefaultAxis( axisTypes[0], firstWithKey ) );
+      axisList.add( TimeseriesUtils.createDefaulAxis( axisTypes[0], firstWithKey ) );
       for( int i = 1; i < axisTypes.length; i++ )
       {
-        axisList.add( TimeseriesUtils.createDefaultAxis( axisTypes[i], false ) );
+        axisList.add( TimeseriesUtils.createDefaulAxis( axisTypes[i], false ) );
       }
     }
     return axisList.toArray( new IAxis[axisList.size()] );
@@ -559,7 +557,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
   /**
    * Create a test time serie with a date axis and one default axis for each of the given axisTypes. A tupple-model is
    * randomly generated.
-   *
+   * 
    * @param axisTypes
    *          as seen in TimeserieConstants.TYPE_*
    * @param amountRows
@@ -569,10 +567,10 @@ public final class TimeseriesUtils implements ITimeseriesConstants
   public static IObservation createTestTimeserie( final String[] axisTypes, final int amountRows, final boolean allowNegativeValues ) throws SensorException
   {
     final IAxis[] axes = new IAxis[axisTypes.length + 1];
-    axes[0] = TimeseriesUtils.createDefaultAxis( ITimeseriesConstants.TYPE_DATE, true );
+    axes[0] = TimeseriesUtils.createDefaulAxis( ITimeseriesConstants.TYPE_DATE, true );
     for( int i = 0; i < axisTypes.length; i++ )
     {
-      axes[i + 1] = TimeseriesUtils.createDefaultAxis( axisTypes[i] );
+      axes[i + 1] = TimeseriesUtils.createDefaulAxis( axisTypes[i] );
     }
 
     final SimpleObservation obs = new SimpleObservation( axes );
@@ -618,12 +616,12 @@ public final class TimeseriesUtils implements ITimeseriesConstants
   /**
    * Return the value of the alarmLevel in regard to the given axisType. The alarm-levels are stored according to the
    * W-axis. If you want the value according to the Q-axis you should call this function with axisType = Q
-   *
+   * 
    * @param axisType
    *          the type of the axis for which to convert the alarm-level
    * @throws WQException
    */
-  public static Double convertAlarmLevel( final IObservation obs, final ITupleModel model, final Integer index, final String axisType, final Double alarmLevel ) throws SensorException, WQException
+  public static Double convertAlarmLevel( final IObservation obs, final String axisType, final Double alarmLevel, final Date date ) throws SensorException, WQException
   {
     if( axisType.equals( ITimeseriesConstants.TYPE_WATERLEVEL ) )
       return alarmLevel;
@@ -631,7 +629,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
     final IWQConverter converter = WQFactory.createWQConverter( obs );
 
     if( axisType.equals( ITimeseriesConstants.TYPE_RUNOFF ) || axisType.equals( ITimeseriesConstants.TYPE_VOLUME ) )
-      return new Double( converter.computeQ( model, index, alarmLevel.doubleValue() ) );
+      return new Double( converter.computeQ( date, alarmLevel.doubleValue() ) );
 
     throw new WQException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieUtils.22" ) + axisType + Messages.getString( "org.kalypso.ogc.sensor.timeseries.TimeserieUtils.23" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
@@ -639,7 +637,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
   /**
    * Returns the class name for the given axis-type. The class must inherit from
    * <code>org.jfree.chart.axis.ValueAxis</code>.
-   *
+   * 
    * @return The class name for the given axis-type. The class must inherit from
    *         <code>org.jfree.chart.axis.ValueAxis</code>.
    */
@@ -659,14 +657,5 @@ public final class TimeseriesUtils implements ITimeseriesConstants
   public static String getFormat( final String type )
   {
     return getProperties().getProperty( String.format( "FORMAT_%s", type ) );//$NON-NLS-1$
-  }
-
-  /**
-   * Guesses the timestep of a given timeseries from the first 10 timsteps.
-   */
-  public static Period guessTimestep( final ITupleModel timeseries ) throws SensorException
-  {
-    final TimestepGuesser timestepGuesser = new TimestepGuesser( timeseries, 10 );
-    return timestepGuesser.execute();
   }
 }

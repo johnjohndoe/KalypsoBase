@@ -49,7 +49,7 @@ import java.util.TreeSet;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.gmlschema.GMLSchemaFactory;
@@ -113,9 +113,7 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
     if( m_polygon != null )
       return;
 
-    final List<Coordinate> buildPolygon = buildPolygon();
-
-    final List<Coordinate> crds = new ArrayList<Coordinate>( buildPolygon );
+    final List<Coordinate> crds = new ArrayList<Coordinate>( buildPolygon() );
     if( crds.size() < 3 )
     {
       addStatus( IStatus.WARNING, "Invalid geometry (not enough points)", null ); //$NON-NLS-1$
@@ -138,7 +136,7 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
       final TopologyValidationError validationError = isValidOp.getValidationError();
       final String message = validationError.getMessage();
       final Coordinate coordinate = validationError.getCoordinate();
-      final String msg = String.format( "Invalid geometry: '%s' at %s", message, coordinate ); //$NON-NLS-1$
+      final String msg = String.format( "Invalid geometry: '%s' at ", message, coordinate ); //$NON-NLS-1$
       addStatus( IStatus.ERROR, msg, null );
       return;
     }
@@ -232,9 +230,8 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
       maxWidth = Math.max( maxWidth, mWidth );
     }
 
-    final String id = m_id + "_" + getName();
-    final String name = m_name + "_" + getName();
-
+    final String id = m_id;
+    final String name = m_name;
     formatter.format( "CRDS id '%s' nm '%s' ty 0 wm %f w1 0 w2 0 sw 0 gl 0 gu 0 lt lw%n", id, name, maxWidth ); //$NON-NLS-1$
     formatter.format( "TBLE%n" ); //$NON-NLS-1$
     for( int i = 0; i < m_heights.length; i++ )
@@ -341,12 +338,6 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
   {
     final double width = (width1 + width2) / 2;
     return width * height;
-  }
-
-  @Override
-  public Polygon getPolygon( )
-  {
-    return m_polygon;
   }
 
   protected abstract List<Coordinate> buildPolygon( );

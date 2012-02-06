@@ -41,8 +41,8 @@
 package org.kalypso.ogc.gml.mapmodel;
 
 import java.awt.Graphics;
-import java.net.URL;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.i18n.I10nString;
@@ -55,8 +55,6 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  */
 public interface IMapModell
 {
-  URL getContext( );
-
   String getLabel( );
 
   /**
@@ -87,14 +85,14 @@ public interface IMapModell
 
   /**
    * This function returns the name of the coordinate system used.
-   *
+   * 
    * @return The name of the coordinate system.
    */
   String getCoordinatesSystem( );
 
   /**
    * Directly paints all themes contained inside this model. <br>
-   * Blocks until all themes are painted.
+   * Blocks until all themes are painted. .
    */
   IStatus paint( final Graphics g, final GeoTransform p, final IProgressMonitor monitor );
 
@@ -114,11 +112,17 @@ public interface IMapModell
 
   GM_Envelope getFullExtentBoundingBox( );
 
+  /**
+   * @deprecated Should not be here... This is just a ui hack and should be solved otherwise. Do not use any more.
+   */
+  @Deprecated
+  IProject getProject( );
+
   void accept( final IKalypsoThemeVisitor visitor, int depth );
 
   /**
    * Iterates through all themes of this modell, starting at the given theme.
-   *
+   * 
    * @see #accept(KalypsoThemeVisitor, int).
    */
   void accept( final IKalypsoThemeVisitor visitor, final int depth, final IKalypsoTheme theme );
@@ -141,7 +145,7 @@ public interface IMapModell
    * Check if this map modell is still beeing filled with themes.<br>
    * Implementors must ensure, that this flag becomes eventually <code>true</code> (even if there are errors while
    * loading).
-   *
+   * 
    * @return <code>false</code> if this map modell is under construction (for example if many theme are about to be
    *         added in the near future...)
    */

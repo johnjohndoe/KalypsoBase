@@ -7,6 +7,8 @@ import org.eclipse.ui.IPlaceholderFolderLayout;
 import org.kalypso.afgui.views.WorkflowView;
 import org.kalypso.featureview.views.FeatureView;
 import org.kalypso.ogc.gml.outline.ViewContentOutline;
+import org.kalypso.ogc.sensor.view.DiagramViewPart;
+import org.kalypso.ogc.sensor.view.TableViewPart;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;
 import org.kalypso.ui.editor.mapeditor.views.MapWidgetView;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
@@ -44,11 +46,11 @@ public class Perspective implements IPerspectiveFactory
 
     rightTop.addPlaceholder( MapView.ID );
     rightTop.addPlaceholder( FeatureTemplateView.ID );
-    rightTop.addPlaceholder( "org.kalypso.zml.ui.chart.view.DiagramViewPart" );//$NON-NLS-1$
+    rightTop.addPlaceholder( DiagramViewPart.ID );
     rightTop.addPlaceholder( "org.kalypso.risk.views.RiskStatisticsResultView" ); //$NON-NLS-1$
 
     rightBottom.addPlaceholder( FeatureView.ID );
-    rightBottom.addPlaceholder( "org.kalypso.zml.ui.table.view.TableViewPart" );//$NON-NLS-1$
+    rightBottom.addPlaceholder( TableViewPart.ID );
 
     veryRight.addPlaceholder( MapWidgetView.ID );
 
@@ -64,11 +66,10 @@ public class Perspective implements IPerspectiveFactory
     layout.getViewLayout( SCENARIO_VIEW_ID ).setMoveable( false );
     layout.getViewLayout( RepositoryExplorerPart.ID ).setCloseable( false );
     layout.getViewLayout( RepositoryExplorerPart.ID ).setMoveable( false );
-    layout.getViewLayout( "org.kalypso.zml.ui.chart.view.DiagramViewPart" ).setCloseable( false );//$NON-NLS-1$
-    layout.getViewLayout( "org.kalypso.zml.ui.chart.view.DiagramViewPart" ).setMoveable( true );//$NON-NLS-1$
-    layout.getViewLayout( "org.kalypso.zml.ui.table.view.TableViewPart" ).setCloseable( false );//$NON-NLS-1$
-    layout.getViewLayout( "org.kalypso.zml.ui.table.view.TableViewPart" ).setMoveable( true );//$NON-NLS-1$
-
+    layout.getViewLayout( DiagramViewPart.ID ).setCloseable( false );
+    layout.getViewLayout( DiagramViewPart.ID ).setMoveable( false );
+    layout.getViewLayout( TableViewPart.ID ).setCloseable( false );
+    layout.getViewLayout( TableViewPart.ID ).setMoveable( false );
     // TODO: secondary id does not work here: gives assertion failed
     // layout.getViewLayout( MapView.ID + ":*").setCloseable( false );
     layout.getViewLayout( MapView.ID ).setCloseable( false );

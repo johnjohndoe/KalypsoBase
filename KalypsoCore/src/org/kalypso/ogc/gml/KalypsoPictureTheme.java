@@ -47,6 +47,7 @@ import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.template.types.ObjectFactory;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
@@ -98,9 +99,25 @@ public abstract class KalypsoPictureTheme extends AbstractKalypsoTheme
     super.dispose();
   }
 
-  public String getSource( )
+  public void fillLayerType( final StyledLayerType layer, final String id, final boolean visible )
   {
-    return m_layerType.getHref();
+    final ObjectFactory extentFac = new ObjectFactory();
+
+    layer.setName( m_layerType.getName() );
+    layer.setFeaturePath( "" ); //$NON-NLS-1$
+
+    layer.setVisible( visible );
+    layer.setId( id );
+    layer.setHref( m_layerType.getHref() );
+    layer.setLinktype( m_layerType.getLinktype() );
+    layer.setActuate( "onRequest" ); //$NON-NLS-1$
+    layer.setType( "simple" ); //$NON-NLS-1$
+
+    final String legendIcon = getLegendIcon();
+    if( legendIcon != null )
+      layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
+
+    layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( shouldShowLegendChildren() ) );
   }
 
   /**

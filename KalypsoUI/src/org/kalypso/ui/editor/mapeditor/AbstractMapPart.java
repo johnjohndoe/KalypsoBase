@@ -41,18 +41,19 @@
 package org.kalypso.ui.editor.mapeditor;
 
 import java.awt.Component;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.swing.SwingUtilities;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -68,25 +69,27 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.forms.widgets.Form;
+import org.eclipse.ui.ide.ResourceUtil;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-import org.kalypso.contribs.eclipse.core.resources.IStorageWithContext;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.IExportableObjectFactory;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
-import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.map.BaseMapSchedulingRule;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.MapPanelSourceProvider;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.map.listeners.MapPanelAdapter;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapPanelProvider;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.gismapview.Gismapview;
@@ -94,16 +97,17 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractWorkbenchPart;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
- * Abstract superclass for map editor and map view. Inherits from AbstractEditorPart for editor behavior (save when
+ * Abstract superclass for map editor and map view. Inherits from AbstractWorkbenchPart for editor behavior (save when
  * dirty, command target). Based on the old {@link GisMapEditor} implementation.
- *
+ * 
  * @author Stefan Kurzbach
  */
 // TODO: Why is it right here to inherit from AbstractEdtiorPart even when used within a View? Please comment on that.
-// (SK) This might have to be looked at. GisMapEditor used to implement AbstractEditorPart for basic gml editor
+// (SK) This might have to be looked at. GisMapEditor used to implement AbstractWorkbenchPart for basic gml editor
 // functionality (save when dirty, command target).
 public abstract class AbstractMapPart extends AbstractWorkbenchPart implements IMapPanelProvider
 {
@@ -126,6 +130,9 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
   // for map context changes; it then always gets the current message from the map
   private final IMapPanelListener m_mapPanelListener = new MapPanelAdapter()
   {
+    /**
+     * @see org.kalypso.ogc.gml.map.MapPanelAdapter#onMessageChanged(org.kalypso.ogc.gml.map.MapPanel, java.lang.String)
+     */
     @Override
     public void onMessageChanged( final IMapPanel source, final String message )
     {
@@ -143,6 +150,17 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
     }
   };
 
+  private MapPanelSourceProvider m_mapSourceProvider;
+
+  private final PartAdapter2 m_partListener = new PartAdapter2()
+  {
+    @Override
+    public void partActivated( final IWorkbenchPartReference partRef )
+    {
+      handlePartActivated( partRef );
+    }
+  };
+
   private GM_Envelope m_initialEnv;
 
   private BaseMapSchedulingRule m_baseMapSchedulingRule;
@@ -153,7 +171,7 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
+   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
    */
   @Override
   public void init( final IEditorSite site, final IEditorInput input )
@@ -187,6 +205,9 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
     actionBars.updateActionBars();
   }
 
+  /**
+   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
+   */
   @Override
   public synchronized void createPartControl( final Composite parent )
   {
@@ -194,23 +215,9 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
 
     m_control = MapForm.createMapForm( parent );
     m_mapPanel = m_control.createMapPanel( this, m_selectionManager );
-
-    if( m_mapPanel instanceof Component )
-    {
-      ((Component) m_mapPanel).addFocusListener( new FocusAdapter()
-      {
-        @Override
-        public void focusGained( final FocusEvent e )
-        {
-          handleFocuesGained();
-        }
-      } );
-    }
-
     updatePanel( m_mapModell, m_initialEnv );
     m_mapPanel.addMapPanelListener( m_mapPanelListener );
-
-    setSourceProvider( new MapPanelSourceProvider( site, m_mapPanel ) );
+    m_mapSourceProvider = new MapPanelSourceProvider( site, m_mapPanel );
 
     // HACK: at the moment views never have a menu... maybe we could get the information,
     // if a context menu is desired from the defining extension
@@ -223,22 +230,22 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
     site.setSelectionProvider( m_mapPanel );
   }
 
-  protected void handleFocuesGained( )
+  /**
+   * We need to fire a source change event, in order to tell the map context which panel is the currently active one.
+   */
+  protected void handlePartActivated( final IWorkbenchPartReference partRef )
   {
-    final IWorkbenchPartSite site = getSite();
-    final IWorkbenchPage activePage = site.getWorkbenchWindow().getActivePage();
+    if( m_mapSourceProvider == null )
+      return;
 
-    final Display display = site.getShell().getDisplay();
-    display.asyncExec( new Runnable()
-    {
-      @Override
-      public void run( )
-      {
-        activePage.activate( AbstractMapPart.this );
-      }
-    } );
+    final IWorkbenchPart part = partRef.getPart( false );
+    if( part == AbstractMapPart.this )
+      m_mapSourceProvider.fireSourceChanged();
   }
 
+  /**
+   * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
+   */
   @Override
   public void setFocus( )
   {
@@ -270,8 +277,28 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
     return (IViewSite) getSite();
   }
 
+  /**
+   * @see org.eclipse.ui.part.WorkbenchPart#setSite(org.eclipse.ui.IWorkbenchPartSite)
+   */
   @Override
-  protected synchronized void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws CoreException
+  protected void setSite( final IWorkbenchPartSite site )
+  {
+    final IWorkbenchPartSite currentSite = getSite();
+    if( currentSite != null )
+      currentSite.getPage().addPartListener( m_partListener );
+
+    super.setSite( site );
+
+    if( site != null )
+      site.getPage().addPartListener( m_partListener );
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#loadInternal(org.eclipse.core.runtime.IProgressMonitor,
+   *      org.eclipse.ui.IStorageEditorInput)
+   */
+  @Override
+  protected synchronized void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception, CoreException
   {
     monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.6" ), 2 ); //$NON-NLS-1$
 
@@ -298,11 +325,12 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
       monitor.worked( 1 );
 
       final URL context = findContext( input );
+      final IProject project = findProject( input );
 
       if( !m_disposed )
       {
         final GM_Envelope env = GisTemplateHelper.getBoundingBox( gisview );
-        final GisTemplateMapModell mapModell = new GisTemplateMapModell( context, KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), m_selectionManager );
+        final GisTemplateMapModell mapModell = new GisTemplateMapModell( context, KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), project, m_selectionManager );
         mapModell.createFromTemplate( gisview );
         setMapModell( mapModell, env );
       }
@@ -329,18 +357,54 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
     }
   }
 
-  private URL findContext( final IStorageEditorInput input ) throws MalformedURLException, CoreException
+  private URL findContext( final IStorageEditorInput input )
   {
-    final IStorage storage = input.getStorage();
-    if( storage instanceof IStorageWithContext )
-      return ((IStorageWithContext) storage).getContext();
+    try
+    {
+      final IResource resource = findResource( input );
+      if( resource instanceof IFile )
+        return ResourceUtilities.createURL( resource );
 
-    if( storage instanceof IResource )
-      return ResourceUtilities.createURL( (IResource) storage );
+      final IStorage storage = input.getStorage();
+      final IPath fullPath = storage.getFullPath();
+      if( fullPath == null )
+        return null;
 
-    return null;
+      final File file = fullPath.toFile();
+      if( file.exists() )
+        return file.toURI().toURL();
+
+      return null;
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 
+  private IProject findProject( final IStorageEditorInput input )
+  {
+    final IResource resource = findResource( input );
+    if( resource == null )
+      return null;
+
+    return resource.getProject();
+  }
+
+  private IResource findResource( final IStorageEditorInput input )
+  {
+    return ResourceUtil.getResource( input );
+  }
+
+  /**
+   * @see org.eclipse.ui.part.WorkbenchPart#showBusy(boolean)
+   */
   @Override
   public void showBusy( final boolean busy )
   {
@@ -390,7 +454,7 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor,
+   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor,
    *      org.eclipse.core.resources.IFile)
    */
   @Override
@@ -452,7 +516,7 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
     return label;
   }
 
-  protected void updatePanel( final IKalypsoLayerModell mapModell, final GM_Envelope initialEnv )
+  protected void updatePanel( final IMapModell mapModell, final GM_Envelope initialEnv )
   {
     if( m_mapPanel != null )
     {
@@ -499,6 +563,9 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
     if( adapter == IMapPanel.class )
       return m_mapPanel;
 
+    if( adapter == ModellEventProvider.class )
+      return new MapPanelModellEventProvider( m_mapPanel );
+
     if( adapter == Form.class )
       return m_control;
 
@@ -506,11 +573,15 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
+   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#dispose()
    */
   @Override
   public void dispose( )
   {
+    getSite().getPage().removePartListener( m_partListener );
+
+    m_mapSourceProvider.dispose();
+
     m_disposed = true;
 
     setMapModell( null, null );
@@ -530,4 +601,5 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
   {
     super.setPartName( partName );
   }
+
 }

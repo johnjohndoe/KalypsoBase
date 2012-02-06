@@ -42,11 +42,10 @@ package org.kalypso.model.wspm.ui.profil.wizard.flipProfile;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.base.IProfileManipulator;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.ManipulateProfileWizard;
+import org.kalypso.model.wspm.ui.profil.wizard.ProfileManipulationOperation.IProfileManipulator;
 
 /**
  * @author kimwerner
@@ -55,13 +54,13 @@ public class FlipProfileWizard extends ManipulateProfileWizard
 {
   public FlipProfileWizard( )
   {
-    setWindowTitle( Messages.getString( "FlipProfileWizard.0" ) ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.model.wspm.ui.action.FlipProfileActionDelegate.0" ) );//$NON-NLS-1$
   }
 
   @Override
   protected String getProfilePageMessage( )
   {
-    return Messages.getString( "FlipProfileWizard.1" ); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.flipProfile.FlipProfileWizard.2" ); //$NON-NLS-1$
   }
 
   @Override
@@ -70,13 +69,11 @@ public class FlipProfileWizard extends ManipulateProfileWizard
     return new IProfileManipulator()
     {
       @Override
-      public IProfilChange[] performProfileManipulation( final IProfil profile, final IProgressMonitor monitor )
+      public void performProfileManipulation( final IProfil profile, final IProgressMonitor monitor )
       {
         monitor.beginTask( "", 1 ); //$NON-NLS-1$
         ProfilUtil.flipProfile( profile, true );
         monitor.done();
-
-        return new IProfilChange[] {};
       }
     };
   }

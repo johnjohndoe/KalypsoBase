@@ -27,6 +27,6 @@ Require-Bundle: org.eclipse.core.commands,
  org.kalypso.auth,
  org.kalypso.simulation.core,
  org.kalypso.ui,
- org.eclipse.ant.launching;bundle-version="1.0.0",
- org.eclipse.ant.core;bundle-version="3.2.200",
- org.kalypso.service.wps;bundle-version="10.10.0"
+ org.eclipse.ant.launching,
+ org.eclipse.ant.core,
+ org.kalypso.service.wps

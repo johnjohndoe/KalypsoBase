@@ -153,8 +153,6 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
   protected boolean m_bHandleGlobalEvents = true;
 
-  private UIJob m_updateControl;
-
   public GmlTreeView( final Composite composite, final IFeatureSelectionManager selectionManager )
   {
     this( composite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER, selectionManager, null );
@@ -190,47 +188,30 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     final TreeViewer treeViewer = m_treeViewer;
     // must be sync, if not we get a racing condition with handleModelChange
     final Control control = treeViewer.getControl();
-    if( control == null || control.isDisposed() )
+    if( (control == null) || control.isDisposed() )
       return;
 
     final GMLContentProvider contentProvider = m_contentProvider;
-
-    if( m_updateControl != null )
-      m_updateControl.cancel();
-
-    m_updateControl = new UIJob( "updating gml tree view" )
+    control.getDisplay().syncExec( new Runnable()
     {
-
       @Override
-      public IStatus runInUIThread( final IProgressMonitor monitor )
+      public void run( )
       {
-        if( monitor.isCanceled() )
-          return Status.CANCEL_STATUS;
-
-        if( control.isDisposed() )
-          return Status.CANCEL_STATUS;
-
-        final Feature[] globalFeatures = FeatureSelectionHelper.getFeatures( selection, getWorkspace() );
-        final Feature[] selectedFeatures = filterSelectedFeatures( treeViewer.getSelection() );
-
-        final boolean isEqual = Arrays.equalsUnordered( globalFeatures, selectedFeatures );
-        if( !isEqual )
+        if( !control.isDisposed() )
         {
-          for( final Feature element : globalFeatures )
-            contentProvider.expandElement( contentProvider.getParent( element ) );
+          final Feature[] globalFeatures = FeatureSelectionHelper.getFeatures( selection, getWorkspace() );
+          final Feature[] selectedFeatures = filterSelectedFeatures( treeViewer.getSelection() );
 
-          treeViewer.setSelection( selection, true );
+          final boolean isEqual = Arrays.equalsUnordered( globalFeatures, selectedFeatures );
+          if( !isEqual )
+          {
+            for( final Feature element : globalFeatures )
+              contentProvider.expandElement( contentProvider.getParent( element ) );
+            treeViewer.setSelection( selection, true );
+          }
         }
-
-        return Status.OK_STATUS;
       }
-    };
-
-    m_updateControl.setUser( false );
-    m_updateControl.setSystem( true );
-
-    m_updateControl.schedule( 50 );
-
+    } );
   }
 
   protected void handleTreeSelectionChanged( final SelectionChangedEvent event )
@@ -288,7 +269,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
         feature = ((LinkedFeatureElement) treeElement).getDecoratedFeature();
       else if( treeElement instanceof Feature )
         feature = (Feature) treeElement;
-      if( feature != null && !selectedFeatures.contains( feature ) )
+      if( (feature != null) && !selectedFeatures.contains( feature ) )
         selectedFeatures.add( feature );
     }
     return selectedFeatures.toArray( new Feature[selectedFeatures.size()] );
@@ -384,6 +365,9 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
   @Override
   public IStructuredSelection getSelection( )
   {
+    if( m_treeViewer.getContentProvider() != m_contentProvider )
+      return (IStructuredSelection) m_treeViewer.getSelection();
+
     return new TreeFeatureSelection( (IStructuredSelection) m_treeViewer.getSelection() );
   }
 
@@ -402,7 +386,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
         m_workspace = null;
       }
 
-      m_workspace = (CommandableWorkspace) newValue;
+      m_workspace = ((CommandableWorkspace) newValue);
       if( m_workspace != null )
         m_workspace.addModellListener( this );
 
@@ -410,7 +394,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
       final TreeViewer treeViewer = m_treeViewer;
       final Control control = treeViewer.getControl();
-      if( control == null || control.isDisposed() )
+      if( (control == null) || control.isDisposed() )
         return;
 
       final GMLContentProvider contentProvider = m_contentProvider;
@@ -459,7 +443,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
             if( !control.isDisposed() )
             {
               final Object[] elements = contentProvider.getElements( m_workspace );
-              if( elements != null && elements.length > 0 )
+              if( (elements != null) && (elements.length > 0) )
                 treeViewer.setSelection( new StructuredSelection( elements[0] ) );
             }
           }
@@ -674,7 +658,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     if( m_workspace != null )
     {
       final KeyInfo info = m_pool.getInfo( m_workspace );
-      return info != null && info.isDirty();
+      return (info != null) && info.isDirty();
     }
 
     return false;

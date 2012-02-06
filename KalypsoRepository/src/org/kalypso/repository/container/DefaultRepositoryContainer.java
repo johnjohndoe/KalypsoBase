@@ -152,6 +152,7 @@ public class DefaultRepositoryContainer implements IRepositoryContainer
     for( final Object element : m_reps )
     {
       final IRepository rep = (IRepository) element;
+
       if( rep.getIdentifier().equals( id ) )
         return rep;
 

@@ -41,6 +41,7 @@ import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,16 +51,17 @@ import java.util.Properties;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.tokenreplace.ITokenReplacer;
 import org.kalypso.commons.tokenreplace.TokenReplacerEngine;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.MultiException;
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.contribs.javax.xml.namespace.QNameUnique;
+import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -70,24 +72,16 @@ import org.kalypso.gmlschema.types.ISimpleMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IXLinkedFeature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
-import org.kalypsodeegree_impl.model.feature.tokenreplace.AnnotationTokenReplacer;
-import org.kalypsodeegree_impl.model.feature.tokenreplace.FeatureIdTokenReplacer;
-import org.kalypsodeegree_impl.model.feature.tokenreplace.ListPropertyTokenReplacer;
-import org.kalypsodeegree_impl.model.feature.tokenreplace.PropertyTokenReplacer;
-import org.kalypsodeegree_impl.model.feature.visitors.CollectorVisitor;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
@@ -102,16 +96,91 @@ public final class FeatureHelper
     throw new UnsupportedOperationException( "Helper class, do not instantiate" );
   }
 
-  private static ITokenReplacer TR_FEATUREID = new FeatureIdTokenReplacer();
+  private static ITokenReplacer TR_FEATUREID = new ITokenReplacer()
+  {
+    @Override
+    public String replaceToken( final Object value, final String argument )
+    {
+      return ((Feature) value).getId();
+    }
 
-  private static ITokenReplacer TR_PROPERTYVALUE = new PropertyTokenReplacer();
+    @Override
+    public String getToken( )
+    {
+      return "id"; //$NON-NLS-1$
+    }
+  };
 
-  private static ITokenReplacer TR_LISTPROPERTYVALUE = new ListPropertyTokenReplacer();
+  private static ITokenReplacer TR_PROPERTYVALUE = new ITokenReplacer()
+  {
+    @Override
+    public String replaceToken( final Object value, final String argument )
+    {
+      final Feature feature = (Feature) value;
 
-  private static ITokenReplacer TR_ANNOTATION_VALUE = new AnnotationTokenReplacer();
+      final String[] strings = argument.split( ";" ); //$NON-NLS-1$
+      if( strings.length == 0 )
+        return "No argument for property. Must be _qname_;[null-value];[format-string]";
+
+      final String propName = strings[0];
+      final String nullValue = strings.length > 1 ? strings[1] : null;
+      final String formatString = strings.length > 2 ? strings[2] : null;
+
+      final QName qname = QNameUtilities.createQName( propName );
+      final Object property = FeatureHelper.getPropertyLax( feature, qname );
+
+      if( property == null )
+        return "" + nullValue; //$NON-NLS-1$
+
+      if( formatString != null )
+        return String.format( formatString, property );
+
+      return "" + property; //$NON-NLS-1$
+    }
+
+    @Override
+    public String getToken( )
+    {
+      return "property";
+    }
+  };
+
+  private static ITokenReplacer TR_LISTPROPERTYVALUE = new ITokenReplacer()
+  {
+    @Override
+    public String replaceToken( final Object value, final String argument )
+    {
+      final Feature feature = (Feature) value;
+
+      final String[] strings = argument.split( ";" ); //$NON-NLS-1$
+      if( strings.length < 2 )
+        return "Wrong argument for listProperty. Must be _qname_;listindex;[null-Value]";
+
+      final QName qname = QNameUtilities.createQName( strings[0] );
+      final int listindex = Integer.parseInt( strings[1] );
+      final String nullValue = strings.length > 2 ? strings[2] : null;
+
+      final List< ? > list = (List< ? >) FeatureHelper.getPropertyLax( feature, qname );
+
+      if( listindex >= list.size() )
+        return "" + nullValue; //$NON-NLS-1$
+
+      final Object propertyValue = list.get( listindex );
+      if( propertyValue == null )
+        return "" + nullValue; //$NON-NLS-1$
+
+      return "" + propertyValue; //$NON-NLS-1$
+    }
+
+    @Override
+    public String getToken( )
+    {
+      return "listProperty"; //$NON-NLS-1$
+    }
+  };
 
   private static TokenReplacerEngine FEATURE_TOKEN_REPLACE = new TokenReplacerEngine( new ITokenReplacer[] { FeatureHelper.TR_FEATUREID, FeatureHelper.TR_PROPERTYVALUE,
-      FeatureHelper.TR_LISTPROPERTYVALUE, TR_ANNOTATION_VALUE } );
+      FeatureHelper.TR_LISTPROPERTYVALUE } );
 
   /**
    * @deprecated Do not use strings as property names. Use {@link IFeatureType#getProperty(QName)} instead.
@@ -204,7 +273,7 @@ public final class FeatureHelper
    * <li><Bei Referenzen auf andere Features erfolgt nur ein shallow copy, das Referenzierte Feature bleibt gleich./li>
    * <li>Die Typen der Zurodnung müssen passen, sonst gibts ne Exception.</li>
    * </ul>
-   *
+   * 
    * @throws CloneNotSupportedException
    * @throws IllegalArgumentException
    *           Falls eine Zuordnung zwischen Properties unterschiedlkicher Typen erfolgt.
@@ -215,15 +284,18 @@ public final class FeatureHelper
    */
   public static void copyProperties( final Feature sourceFeature, final Feature targetFeature, final Properties propertyMap ) throws Exception
   {
+    final GMLWorkspace workspace = sourceFeature.getWorkspace();
+    final IGMLSchema gmlSchema = workspace == null ? null : workspace.getGMLSchema();
+    final String gmlVersion = gmlSchema == null ? null : gmlSchema.getGMLVersion();
     for( final Entry< ? , ? > entry : propertyMap.entrySet() )
     {
       final String sourceProp = (String) entry.getKey();
       final String targetProp = (String) entry.getValue();
-      copyProperty( sourceFeature, targetFeature, sourceProp, targetProp );
+      copyProperty( sourceFeature, targetFeature, gmlVersion, sourceProp, targetProp );
     }
   }
 
-  private static void copyProperty( final Feature sourceFeature, final Feature targetFeature, final String sourceProp, final String targetProp ) throws Exception
+  private static void copyProperty( final Feature sourceFeature, final Feature targetFeature, final String gmlVersion, final String sourceProp, final String targetProp ) throws Exception
   {
     final IPropertyType sourcePT = FeatureHelper.getPT( sourceFeature, sourceProp );
     if( sourcePT == null )
@@ -238,7 +310,7 @@ public final class FeatureHelper
 
     try
     {
-      final Object convertedValue = convertProperty( sourceFeature, targetFeature, sourcePT, targetPT );
+      final Object convertedValue = convertProperty( sourceFeature, targetFeature, gmlVersion, sourcePT, targetPT );
 
       // Hack: Types are same, but ordinality (i.e. list or not) can be different.
       if( !sourcePT.isList() && targetPT.isList() )
@@ -260,7 +332,7 @@ public final class FeatureHelper
     }
   }
 
-  private static Object convertProperty( final Feature sourceFeature, final Feature targetFeature, final IPropertyType sourcePT, final IPropertyType targetPT ) throws Exception
+  private static Object convertProperty( final Feature sourceFeature, final Feature targetFeature, final String gmlVersion, final IPropertyType sourcePT, final IPropertyType targetPT ) throws Exception
   {
     final Object sourceValue = sourceFeature.getProperty( sourcePT );
 
@@ -270,7 +342,7 @@ public final class FeatureHelper
       final IValuePropertyType sourceFTP = (IValuePropertyType) sourcePT;
       final IValuePropertyType targetFTP = (IValuePropertyType) targetPT;
       if( sourceFTP.getValueQName().equals( targetFTP.getValueQName() ) )
-        return cloneData( sourceFeature, targetFeature, sourcePT, sourceValue );
+        return cloneData( sourceFeature, targetFeature, sourcePT, sourceValue, gmlVersion );
       else if( sourceFTP.isGeometry() && targetFTP.isGeometry() )
       {
         final GM_Object targetGeom = tryConvertGeometry( (GM_Object) sourceValue, targetFTP.getValueQName() );
@@ -309,7 +381,7 @@ public final class FeatureHelper
     if( sourceGeom instanceof GM_MultiSurface )
     {
       final GM_MultiSurface multiSurface = (GM_MultiSurface) sourceGeom;
-      if( GM_Polygon.POLYGON_ELEMENT.equals( targetQName ) || GMLConstants.QN_SURFACE.equals( targetQName ) )
+      if( GMLConstants.QN_POLYGON.equals( targetQName ) || GMLConstants.QN_SURFACE.equals( targetQName ) )
       {
         if( multiSurface.getSize() > 0 )
           return multiSurface.getObjectAt( 0 );
@@ -335,8 +407,8 @@ public final class FeatureHelper
     {
       if( sourceValue instanceof String )
         return (String) sourceValue;
-      else if( sourceValue instanceof IXLinkedFeature )
-        return ((IXLinkedFeature) sourceValue).getHref();
+      else if( sourceValue instanceof XLinkedFeature_Impl )
+        return ((XLinkedFeature_Impl) sourceValue).getHref();
       else if( sourceValue instanceof Feature )
         return ((Feature) sourceValue).getId();
     }
@@ -346,7 +418,7 @@ public final class FeatureHelper
 
   /**
    * Clones a feature and puts it into the given parent feature at the given property.
-   *
+   * 
    * @param newParentFeature
    *          The parent where the cloned feature will be put into. May live in the same or in another workspace.
    * @param relation
@@ -409,6 +481,8 @@ public final class FeatureHelper
 
   private static Object cloneProperty( final Feature sourceFeature, final Feature targetFeature, final IPropertyType pt ) throws Exception
   {
+    final String version = sourceFeature.getWorkspace().getGMLSchema().getGMLVersion();
+
     final Object property = sourceFeature.getProperty( pt );
     if( pt.isList() )
     {
@@ -417,9 +491,9 @@ public final class FeatureHelper
 
       for( final Object listElement : list )
       {
-        final Object cloneData = FeatureHelper.cloneData( sourceFeature, targetFeature, pt, listElement );
+        final Object cloneData = FeatureHelper.cloneData( sourceFeature, targetFeature, pt, listElement, version );
         // TODO: this is not nice! Better: d not add feature to list within the cloneFeature Method
-        if( cloneData instanceof IXLinkedFeature || !(cloneData instanceof Feature) )
+        if( cloneData instanceof XLinkedFeature_Impl || !(cloneData instanceof Feature) )
         {
           targetList.add( cloneData );
         }
@@ -428,16 +502,15 @@ public final class FeatureHelper
       return targetList;
     }
 
-    return FeatureHelper.cloneData( sourceFeature, targetFeature, pt, property );
+    return FeatureHelper.cloneData( sourceFeature, targetFeature, pt, property, version );
   }
 
   /**
    * @throws CloneNotSupportedException
    * @throws UnsupportedOperationException
-   *           If type of object is not supported for clone <br/>
-   *           FIXME: get gml version from source feature type
+   *           If type of object is not supported for clone
    */
-  public static Object cloneData( final Feature sourceFeature, final Feature targetFeature, final IPropertyType pt, final Object object ) throws Exception
+  public static Object cloneData( final Feature sourceFeature, final Feature targetFeature, final IPropertyType pt, final Object object, final String gmlVersion ) throws Exception
   {
     if( object == null )
       return null;
@@ -455,11 +528,11 @@ public final class FeatureHelper
           // TODO: not yet supported; internal links will be broken after clone
           return null;
       }
-      else if( object instanceof IXLinkedFeature )
+      else if( object instanceof XLinkedFeature_Impl )
       {
-        final IXLinkedFeature xlink = (IXLinkedFeature) object;
+        final XLinkedFeature_Impl xlink = (XLinkedFeature_Impl) object;
         // retarget xlink
-        return new XLinkedFeature_Impl( targetFeature, rt, xlink.getFeatureType(), xlink.getHref() );
+        return new XLinkedFeature_Impl( targetFeature, rt, xlink.getFeatureType(), xlink.getHref(), xlink.getRole(), xlink.getArcrole(), xlink.getTitle(), xlink.getShow(), xlink.getActuate() );
       }
       else if( object instanceof Feature )
         return FeatureHelper.cloneFeature( targetFeature, rt, (Feature) object );
@@ -483,7 +556,6 @@ public final class FeatureHelper
     {
       try
       {
-        final String gmlVersion = sourceFeature.getFeatureType().getGMLSchema().getGMLVersion();
         return typeHandler.cloneObject( object, gmlVersion );
       }
       catch( final Exception e )
@@ -494,24 +566,6 @@ public final class FeatureHelper
       }
     }
     throw new CloneNotSupportedException( "Kann Datenobjekt vom Typ '" + pt.getQName() + "' nicht kopieren." );
-  }
-
-  /**
-   * Copies all properties from one feature to another by cloning the data. The features must be of same feature type.
-   */
-  public static void copyData( final Feature source, final Feature target ) throws Exception
-  {
-    final IFeatureType type = source.getFeatureType();
-
-    Assert.isTrue( type.equals( target.getFeatureType() ) );
-
-    final IPropertyType[] properties = type.getProperties();
-    for( final IPropertyType pt : properties )
-    {
-      final Object value = source.getProperty( pt );
-      final Object clonedValue = FeatureHelper.cloneData( source, target, pt, value );
-      target.setProperty( pt, clonedValue );
-    }
   }
 
   public static boolean isCompositionLink( final Feature srcFE, final IRelationType linkProp, final Feature destFE )
@@ -547,7 +601,7 @@ public final class FeatureHelper
 
   /**
    * Checks if one of the feature properties is a collection.
-   *
+   * 
    * @param f
    * @return It returns true after the first occurrenc of a list
    */
@@ -625,7 +679,7 @@ public final class FeatureHelper
 
   /**
    * Create properties by using the property-value of the given feature for each of the replace-tokens
-   *
+   * 
    * @param tokens
    *          replace-tokens (tokenKey-featurePropertyName;...)
    */
@@ -692,7 +746,7 @@ public final class FeatureHelper
 
   /**
    * copys all simple type properties from the source feature into the target feature
-   *
+   * 
    * @param srcFE
    * @param targetFE
    * @throws MultiException
@@ -726,9 +780,12 @@ public final class FeatureHelper
   {
     if( property instanceof IValuePropertyType )
     {
+      final GMLWorkspace workspace = srcFE.getWorkspace();
+      final String gmlVersion = workspace == null ? null : workspace.getGMLSchema().getGMLVersion();
+
       final IValuePropertyType pt = (IValuePropertyType) property;
       final Object valueOriginal = srcFE.getProperty( property );
-      final Object cloneValue = FeatureHelper.cloneData( srcFE, targetFE, pt, valueOriginal );
+      final Object cloneValue = FeatureHelper.cloneData( srcFE, targetFE, pt, valueOriginal, gmlVersion );
       targetFE.setProperty( pt, cloneValue );
     }
   }
@@ -739,7 +796,7 @@ public final class FeatureHelper
    * <li>If the property ist a list, a the given value to the list. If the given value is a list, add all its values to
    * the list.</li>
    * </ul>
-   *
+   * 
    * @see org.kalypsodeegree.model.feature.Feature#addProperty(org.kalypsodeegree.model.feature.FeatureProperty)
    */
   public static void addProperty( final Feature feature, final IPropertyType pt, final Object newValue )
@@ -773,7 +830,7 @@ public final class FeatureHelper
 
   /**
    * Adds a new member to a property of the given feature. The property must be a feature list.
-   *
+   * 
    * @param newFeatureName
    *          The QName of the featureType of the newly generated feature. If null, the target feature-type of the list
    *          is taken.
@@ -782,10 +839,10 @@ public final class FeatureHelper
   public static Feature addFeature( final Feature feature, final QName listProperty, final QName newFeatureName, final int depth ) throws GMLSchemaException
   {
     final FeatureList list = (FeatureList) feature.getProperty( listProperty );
-    final Feature parentFeature = list.getOwner();
+    final Feature parentFeature = list.getParentFeature();
     final GMLWorkspace workspace = parentFeature.getWorkspace();
 
-    final IRelationType parentFeatureTypeProperty = list.getPropertyType();
+    final IRelationType parentFeatureTypeProperty = list.getParentFeatureTypeProperty();
     final IFeatureType targetFeatureType = parentFeatureTypeProperty.getTargetFeatureType();
 
     final IFeatureType newFeatureType;
@@ -795,7 +852,7 @@ public final class FeatureHelper
     }
     else
     {
-      newFeatureType = GMLSchemaUtilities.getFeatureTypeQuiet( newFeatureName );
+      newFeatureType = workspace.getGMLSchema().getFeatureType( newFeatureName );
     }
 
     if( newFeatureName != null && !GMLSchemaUtilities.substitutes( newFeatureType, targetFeatureType.getQName() ) )
@@ -809,7 +866,7 @@ public final class FeatureHelper
 
   /**
    * Only works for non list feature property
-   *
+   * 
    * @param feature
    *          feature which list property receive the new feature
    * @param listProperty
@@ -837,10 +894,10 @@ public final class FeatureHelper
       throw new IllegalArgumentException( "featureProperties and FeaturePropQnames must be all null or all non null with" + "the same length" );
     final FeatureList list = (FeatureList) feature.getProperty( listProperty );
     // TODO Patrice to check can the feature(param) be different from the list property parent
-    final Feature parentFeature = list.getOwner();
+    final Feature parentFeature = list.getParentFeature();
     final GMLWorkspace workspace = parentFeature.getWorkspace();
 
-    final IRelationType parentFeatureTypeProperty = list.getPropertyType();
+    final IRelationType parentFeatureTypeProperty = list.getParentFeatureTypeProperty();
     final IFeatureType targetFeatureType = parentFeatureTypeProperty.getTargetFeatureType();
 
     final IFeatureType newFeatureType;
@@ -850,7 +907,7 @@ public final class FeatureHelper
     }
     else
     {
-      newFeatureType = GMLSchemaUtilities.getFeatureTypeQuiet( newFeatureName );
+      newFeatureType = workspace.getGMLSchema().getFeatureType( newFeatureName );
     }
 
     if( newFeatureName != null && !GMLSchemaUtilities.substitutes( newFeatureType, targetFeatureType.getQName() ) )
@@ -875,7 +932,6 @@ public final class FeatureHelper
     }
   }
 
-  // FIXME: check, if this can be replaced with Feature#getMember
   public static Feature resolveLink( final Feature feature, final QName qname )
   {
     return FeatureHelper.resolveLink( feature, qname, false );
@@ -883,14 +939,13 @@ public final class FeatureHelper
 
   /**
    * Returns a value of the given feature as feature. If it is a link, it will be resolved.
-   *
+   * 
    * @param qname
    *          Must denote a property of type IRelationType of maxoccurs 1.
    * @param followXLinks
    *          If true and the property is an xlinked Feature, return the Feature where the xlink points to. Else the
    *          xlink itself is returned as feature.
    */
-  // FIXME: check, if this can be replaced with Feature#getMember
   public static Feature resolveLink( final Feature feature, final QName qname, final boolean followXLinks )
   {
     final IRelationType property = (IRelationType) feature.getFeatureType().getProperty( qname );
@@ -899,18 +954,18 @@ public final class FeatureHelper
     if( value == null )
       return null;
 
-    if( value instanceof IXLinkedFeature && followXLinks )
-      return ((IXLinkedFeature) value).getFeature();
+    if( value instanceof XLinkedFeature_Impl && followXLinks )
+      return ((XLinkedFeature_Impl) value).getFeature();
 
     if( value instanceof Feature )
       return (Feature) value;
 
-    if( feature instanceof IXLinkedFeature )
+    if( feature instanceof XLinkedFeature_Impl )
     {
       /* Its a local link inside a xlinked-feature */
-      final IXLinkedFeature xlinkedFeature = (IXLinkedFeature) feature;
+      final XLinkedFeature_Impl xlinkedFeature = (XLinkedFeature_Impl) feature;
       final String href = xlinkedFeature.getUri() + "#" + value; //$NON-NLS-1$
-      return new XLinkedFeature_Impl( feature, property, property.getTargetFeatureType(), href );
+      return new XLinkedFeature_Impl( feature, property, property.getTargetFeatureType(), href, "", "", "", "", "" );
     }
 
     /* A normal local link inside the same workspace */
@@ -919,7 +974,7 @@ public final class FeatureHelper
 
   /**
    * Resolves and adapts the linked feature. Note that the real feature is wrapped and return not the xlinked feature.
-   *
+   * 
    * @param feature
    *          the link property holder
    * @param propertyQName
@@ -945,13 +1000,39 @@ public final class FeatureHelper
       return null;
     else
     {
-      if( propFeature instanceof IXLinkedFeature )
+      if( propFeature instanceof XLinkedFeature_Impl )
       {
         // here is also possible to get IllegalArgumentException, if (phantom) xlinked feature points to nothing
-        propFeature = ((IXLinkedFeature) propFeature).getFeature();
+        propFeature = ((XLinkedFeature_Impl) propFeature).getFeature();
       }
       final T adaptedFeature = (T) propFeature.getAdapter( adapterTargetClass );
       return adaptedFeature;
+    }
+  }
+
+  public static <T> T resolveLink( final IFeatureWrapper2 featureWrapper, final QName propertyQName, final Class<T> adapterTargetClass )
+  {
+    if( featureWrapper == null || propertyQName == null || adapterTargetClass == null )
+    {
+      final String message = String.format( "All argument must not be null:" + "\n\tfeatureWrapper=%s" + "\n\tpropertyQname = %s" + "\n\tadapterTargetClass = %s", featureWrapper, propertyQName, adapterTargetClass );
+      throw new IllegalArgumentException( message );
+    }
+
+    final Feature wrappedFeature = featureWrapper.getFeature();
+    final T resolvedLink = FeatureHelper.resolveLink( wrappedFeature, propertyQName, adapterTargetClass );
+    return resolvedLink;
+  }
+
+  public static void addChild( final Feature parentFE, final IRelationType rt, final Feature childFE )
+  {
+    if( rt.isList() )
+    {
+      final FeatureList list = (FeatureList) parentFE.getProperty( rt );
+      list.add( childFE );
+    }
+    else
+    {
+      parentFE.setProperty( rt, childFE );
     }
   }
 
@@ -970,7 +1051,7 @@ public final class FeatureHelper
 
   /**
    * Creates a data object suitable for a feature property out of string.
-   *
+   * 
    * @return null, if the data-type is unknown
    * @throws NumberFormatException
    */
@@ -1027,11 +1108,10 @@ public final class FeatureHelper
    * <p>
    * This method creates directly a feature of the target feature type of the given property.
    * </p>
-   *
+   * 
    * @throws IllegalArgumentException
    *           If the target feature type of the given property is abstract.
    */
-  // FIXME: check, if this can be replaced with Feature#getMember
   public static Feature getSubFeature( final Feature parent, final QName propertyName )
   {
     final Object value = parent.getProperty( propertyName );
@@ -1118,13 +1198,6 @@ public final class FeatureHelper
    */
   public static String getAnnotationValue( final Feature feature, final String annotationKey )
   {
-    if( feature instanceof IXLinkedFeature )
-    {
-      // BUGFIX: access the feature here once, before the annotation is fetched.
-      // This is necessary in order to force the featureType to be known.
-      ((IXLinkedFeature) feature).getFeature();
-    }
-
     final IFeatureType featureType = feature.getFeatureType();
     final IAnnotation annotation = featureType.getAnnotation();
 
@@ -1147,7 +1220,7 @@ public final class FeatureHelper
 
   /**
    * This function creates separate lists of features by qname and collects them in a hash map.
-   *
+   * 
    * @param parent
    *          The parent feature, containing the original feature list.
    * @param propertyQName
@@ -1193,12 +1266,11 @@ public final class FeatureHelper
    * property.<br/>
    * If the parent workspaces of the two features are the same, an internal link (#&lt;id&gt;) is created.<br/>
    * Else, an external xlink is created. In this case, the context of the target workspace must be non <code>null</code>
-   *
+   * 
    * @throws IllegalArgumentException
    *           If the property argument is not suitable for a link (not an {@link IRelationType}). If the
    *           targetWorksapce has not a suitable context for the link.
    */
-  // TODO: check: move to Feature? Similar to Feature#setLink
   public static void setAsLink( final Feature sourceFeature, final QName property, final Feature targetFeature )
   {
     Assert.isNotNull( sourceFeature );
@@ -1232,10 +1304,6 @@ public final class FeatureHelper
     }
   }
 
-  /**
-   * Use {@link Feature#createLink(IRelationType, String)} instead.
-   */
-  @Deprecated
   public static Object createLinkToID( final String id, final Feature parentFeature, final IRelationType parentRelation, final IFeatureType ft )
   {
     if( id == null )
@@ -1244,7 +1312,7 @@ public final class FeatureHelper
     if( id.startsWith( "#" ) ) //$NON-NLS-1$
       return id;
 
-    return new XLinkedFeature_Impl( parentFeature, parentRelation, ft, id );
+    return new XLinkedFeature_Impl( parentFeature, parentRelation, ft, id, "", "", "", "", "" );
   }
 
   /**
@@ -1336,7 +1404,7 @@ public final class FeatureHelper
       return false;
     else if( child.getParentRelation() != null )
     {
-      final Feature childParent = child.getOwner();
+      final Feature childParent = child.getParent();
       final Feature childRoot = child.getWorkspace().getRootFeature();
       if( parent.equals( childParent ) )
         return true;
@@ -1351,7 +1419,7 @@ public final class FeatureHelper
 
   /**
    * Calculates the minimal envelope containing all envelopes of the given features.
-   *
+   * 
    * @return <code>null</code> if none of the given features contains a valid envelope.
    */
   public static GM_Envelope getEnvelope( final Feature[] features )
@@ -1375,10 +1443,10 @@ public final class FeatureHelper
 
   public static Feature createFeatureForListProp( final FeatureList list, final QName newFeatureName, final int index ) throws GMLSchemaException
   {
-    final Feature parentFeature = list.getOwner();
+    final Feature parentFeature = list.getParentFeature();
     final GMLWorkspace workspace = parentFeature.getWorkspace();
 
-    final IRelationType parentRelation = list.getPropertyType();
+    final IRelationType parentRelation = list.getParentFeatureTypeProperty();
     final IFeatureType targetFeatureType = parentRelation.getTargetFeatureType();
 
     final IFeatureType newFeatureType;
@@ -1388,7 +1456,7 @@ public final class FeatureHelper
     }
     else
     {
-      newFeatureType = GMLSchemaUtilities.getFeatureTypeQuiet( newFeatureName );
+      newFeatureType = workspace.getGMLSchema().getFeatureType( newFeatureName );
     }
 
     if( newFeatureName != null && !GMLSchemaUtilities.substitutes( newFeatureType, targetFeatureType.getQName() ) )
@@ -1414,7 +1482,8 @@ public final class FeatureHelper
     Assert.isNotNull( gmlID );
 
     final GMLWorkspace workspace = parentFeature.getWorkspace();
-    final IFeatureType featureType = GMLSchemaUtilities.getFeatureTypeQuiet( newFeatureQName );
+    final IGMLSchema schema = workspace.getGMLSchema();
+    final IFeatureType featureType = schema.getFeatureType( newFeatureQName );
     final IPropertyType parentPT = parentFeature.getFeatureType().getProperty( propQName );
     if( !(parentPT instanceof IRelationType) )
       throw new IllegalArgumentException( "Property not a IRelationType=" + parentPT + " propQname=" + propQName );
@@ -1455,12 +1524,32 @@ public final class FeatureHelper
   }
 
   /**
+   * Converts a list of {@link IFeatureWrapper2}s to a list of features.
+   */
+  public static List<Feature> toFeatureList( final Collection< ? extends IFeatureWrapper2> c )
+  {
+    final List<Feature> fl = new ArrayList<Feature>();
+    if( c != null )
+    {
+      Feature f;
+      for( final IFeatureWrapper2 fw : c )
+      {
+        f = fw.getFeature();
+        if( f == null )
+          throw new IllegalArgumentException( "All feature wrapper must wrapp a non null feature:" + c );
+        fl.add( f );
+      }
+    }
+    return fl;
+  }
+
+  /**
    * Converts a feature list into an array, and resolves all links while dooing this.<br>
    * The size of the resulting array may be smaller than the given list, if contained links cannot be resolved.
    */
   public static Feature[] toArray( final FeatureList featureList )
   {
-    final GMLWorkspace workspace = featureList.getOwner().getWorkspace();
+    final GMLWorkspace workspace = featureList.getParentFeature().getWorkspace();
 
     final List<Feature> features = new ArrayList<Feature>( featureList.size() );
     for( final Object object : featureList )
@@ -1496,21 +1585,44 @@ public final class FeatureHelper
   }
 
   /**
-   * Resolves linked features. Handles XLinks.
-   *
-   * @deprecated Use {@link Feature#getMember(QName)} instead.
+   * Calculates the minimal envelope containing all envelopes of the given features.
+   * 
+   * @return <code>null</code> if none of the given features contains a valid envelope.
    */
-  @Deprecated
+  public static GM_Envelope getEnvelope( final IFeatureWrapper2[] features )
+  {
+    GM_Envelope result = null;
+
+    for( final IFeatureWrapper2 feature : features )
+    {
+      final GM_Envelope envelope = feature.getFeature().getEnvelope();
+      if( envelope != null )
+        if( result == null )
+        {
+          result = envelope;
+        }
+        else
+        {
+          result = result.getMerged( envelope );
+        }
+    }
+
+    return result;
+  }
+
+  /**
+   * Resolves linked features. Handles XLinks.
+   */
   public static Feature resolveLinkedFeature( final GMLWorkspace targetWorkspace, final Object property )
   {
     if( property == null )
       return null;
 
-    if( property instanceof IXLinkedFeature )
+    if( property instanceof XLinkedFeature_Impl )
     {
       try
       {
-        final IXLinkedFeature xLnk = (IXLinkedFeature) property;
+        final XLinkedFeature_Impl xLnk = (XLinkedFeature_Impl) property;
         return xLnk.getFeature();
       }
       catch( final IllegalStateException e )
@@ -1541,55 +1653,4 @@ public final class FeatureHelper
       throw new UnsupportedOperationException( "unexcepted object, can not convert to Feature[]" );
   }
 
-  /**
-   * Returns all features of a certain feature type contained in this workspace.<br>
-   * Comparison with feature type is exact, substitution is not considered.
-   */
-  public static Feature[] getFeaturesWithType( final GMLWorkspace workspace, final IFeatureType type )
-  {
-    final FeatureTypeFilter predicate = new FeatureTypeFilter( type, false );
-    return getFeatures( workspace, predicate );
-  }
-
-  public static Feature[] getFeaturesWithName( final GMLWorkspace workspace, final QName name )
-  {
-    final QNameUnique uniqueName = QNameUnique.create( name );
-
-    final FeatureTypeFilter predicate = new FeatureTypeFilter( uniqueName, null, false );
-
-    return getFeatures( workspace, predicate );
-  }
-
-  /**
-   * Returns all feature with the given local typename.
-   */
-  public static Feature[] getFeaturesWithLocalName( final GMLWorkspace workspace, final String typenameLocalPart )
-  {
-    final QNameUnique localTypename = QNameUnique.create( XMLConstants.NULL_NS_URI, typenameLocalPart );
-
-    final FeatureTypeFilter predicate = new FeatureTypeFilter( null, localTypename, false );
-
-    return getFeatures( workspace, predicate );
-  }
-
-  /**
-   * Returns all feature of a workspace filtered by a given predicate.
-   */
-  public static Feature[] getFeatures( final GMLWorkspace workspace, final Filter predicate )
-  {
-    Assert.isNotNull( workspace );
-
-    final CollectorVisitor collector = new CollectorVisitor( predicate );
-    try
-    {
-      final Feature rootFeature = workspace.getRootFeature();
-      workspace.accept( collector, rootFeature, FeatureVisitor.DEPTH_INFINITE );
-    }
-    catch( final Throwable e )
-    {
-      e.printStackTrace();
-    }
-
-    return collector.getResults( true );
-  }
 }

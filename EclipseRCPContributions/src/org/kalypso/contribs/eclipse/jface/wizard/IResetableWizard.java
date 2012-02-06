@@ -51,16 +51,16 @@ public interface IResetableWizard
   /**
    * @return <code>true</code>, if the wizard container should currently show an 'reset' button..
    */
-  boolean showResetButton( );
+  boolean showResetButton();
 
   /**
    * Return <code>true</code>, if the wizard has something which may be resetted. <br>
    * Should control the enabled-state of the 'reset'button.
    */
-  boolean canReset( );
+  boolean canReset();
 
   /**
    * Reload the data of this wizard. Should only be called if {@link #canReset()}return <code>true</code>.
    */
-  void performReset( );
+  void performReset();
 }

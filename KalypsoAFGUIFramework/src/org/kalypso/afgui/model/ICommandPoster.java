@@ -56,10 +56,26 @@ public interface ICommandPoster
   /**
    * Post the command to a commandable workspace identified by the wrapperClass.<br>
    * 
+   * @deprecated Use {@link #postCommand(String, ICommand)} instead.
+   */
+  @Deprecated
+  public void postCommand( final Class< ? extends IModel> wrapperClass, final ICommand command ) throws InvocationTargetException;
+
+  /**
+   * Post the command to a commandable workspace identified by the wrapperClass.<br>
+   * 
    * @param id
    *          Id of the queried data (probably the extension-id with which this data was registered)
    */
   public void postCommand( final String id, final ICommand command ) throws InvocationTargetException;
+
+  /**
+   * gets the a commandable workspace for the given wrapper class.
+   * 
+   * @deprecated Use {@link #getCommandableWorkSpace(String)} instead.
+   */
+  @Deprecated
+  public CommandableWorkspace getCommandableWorkSpace( final Class< ? extends IModel> wrapperClass ) throws IllegalArgumentException, CoreException;
 
   /**
    * gets the a commandable workspace for the given wrapper class.

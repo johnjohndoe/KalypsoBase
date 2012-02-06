@@ -48,9 +48,9 @@ public class DecoratorOverlayIcon extends CompositeImageDescriptor
    */
   public DecoratorOverlayIcon( final Image baseImage, final ImageDescriptor[] overlaysArray, final Point sizeValue )
   {
-    m_base = baseImage;
-    m_overlays = overlaysArray;
-    m_size = sizeValue;
+    this.m_base = baseImage;
+    this.m_overlays = overlaysArray;
+    this.m_size = sizeValue;
   }
 
   /**

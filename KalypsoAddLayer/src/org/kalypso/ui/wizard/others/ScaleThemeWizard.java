@@ -45,21 +45,29 @@ import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.i18n.Messages;
+import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 
 /**
  * Wizard for adding a scale theme to the map.
- *
+ * 
  * @author Holger Albert
  */
-public class ScaleThemeWizard extends AbstractOtherThemeWizard
+public class ScaleThemeWizard extends AbstractOtherThemeWizard implements IKalypsoDataImportWizard
 {
+  /**
+   * The constructor.
+   */
   public ScaleThemeWizard( )
   {
-    super( new ThemeNameWizardPage( "themeNamePage", Messages.getString( "org.kalypso.ui.wizard.others.ScaleThemeWizard.0" ), ImageProvider.IMAGE_KALYPSO_ICON_BIG, Messages.getString( "org.kalypso.ui.wizard.others.ScaleThemeWizard.1" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    super( new ThemeNameWizardPage( "themeNamePage", Messages.getString("org.kalypso.ui.wizard.others.ScaleThemeWizard.0"), ImageProvider.IMAGE_KALYPSO_ICON_BIG, Messages.getString("org.kalypso.ui.wizard.others.ScaleThemeWizard.1") ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
+  /**
+   * @see org.kalypso.ui.wizard.others.AbstractOtherThemeWizard#createCommand(org.kalypso.ogc.gml.IKalypsoLayerModell,
+   *      java.lang.String)
+   */
   @Override
-  protected ICommand createCommand( final IKalypsoLayerModell mapModell, final String themeName )
+  protected ICommand createCommand( IKalypsoLayerModell mapModell, String themeName )
   {
     return new AddThemeCommand( mapModell, themeName, "scale", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }

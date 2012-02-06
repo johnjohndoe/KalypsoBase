@@ -136,7 +136,7 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
   @SuppressWarnings("unchecked")
   public void endElement( final String uri, String local, String qname ) throws SAXException
   {
-
+    
     if( m_isGML2 && NS.GML3.equals( uri ) )
     {
       // hack for loading invalid gml2 polygons, do not remove (doemming)
@@ -157,10 +157,10 @@ public class BindingUnmarshalingContentHandler implements ContentHandler
       local = "Box"; //$NON-NLS-1$
       qname = qname.replaceFirst( BOX_STRING, "Box" ); //$NON-NLS-1$
     }
-
+    
     // System.out.println( indent() + "</" + qname + ">" );
     m_level--;
-
+    
     m_unmarshallerHandler.endElement( uri, local, qname );
 
     if( m_level < 0 )

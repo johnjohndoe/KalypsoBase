@@ -8,14 +8,14 @@ import org.kalypso.commons.internal.i18n.Messages;
 
 /**
  * SetAllAction
- * 
+ *
  * @author schlienger
  */
 public class SetTopAction extends AbstractObservationTableAction
 {
   public SetTopAction( final JTable table )
   {
-    super( table, Messages.getString( "org.kalypso.commons.java.swing.jtable.SetTopAction.0" ), Messages.getString( "org.kalypso.commons.java.swing.jtable.SetTopAction.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( table, Messages.getString("org.kalypso.commons.java.swing.jtable.SetTopAction.0"), Messages.getString("org.kalypso.commons.java.swing.jtable.SetTopAction.1") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override

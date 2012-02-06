@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- *
+ * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always.
- *
- * If you intend to use this software in other ways than in kalypso
+ * interface-compatibility to deegree is wanted but not retained always. 
+ * 
+ * If you intend to use this software in other ways than in kalypso 
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree,
+ * all modifications are licensed as deegree, 
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -45,7 +45,7 @@ import java.util.ListIterator;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -56,7 +56,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
  * this featurelist cascades serveral lists, so it is possible to merge other lists without resorting or copying
  * listcontents <br>
  * this featurelist is <b>readonly </b>
- *
+ * 
  * @deprecated Only used for relation editing stuff, which also should be used no more...
  * @author doemming
  */
@@ -70,6 +70,9 @@ public class CascadingFeatureList implements FeatureList
     m_lists = lists;
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#toFeatures()
+   */
   @Override
   public Feature[] toFeatures( )
   {
@@ -80,6 +83,9 @@ public class CascadingFeatureList implements FeatureList
     return result.toArray( new Feature[result.size()] );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#accept(org.kalypsodeegree.model.feature.FeatureVisitor)
+   */
   @Override
   public void accept( final FeatureVisitor visitor )
   {
@@ -92,7 +98,7 @@ public class CascadingFeatureList implements FeatureList
   @Override
   public void accept( final FeatureVisitor visitor, final int depth )
   {
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 
   /**
@@ -442,8 +448,12 @@ public class CascadingFeatureList implements FeatureList
     return result;
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#getParentFeature()
+   * @return null, as this are mixed lists
+   */
   @Override
-  public Feature getOwner( )
+  public Feature getParentFeature( )
   {
     return null;
   }
@@ -453,7 +463,7 @@ public class CascadingFeatureList implements FeatureList
    * @return null, as this are mixed lists
    */
   @Override
-  public IRelationType getPropertyType( )
+  public IRelationType getParentFeatureTypeProperty( )
   {
     return null;
   }
@@ -503,69 +513,111 @@ public class CascadingFeatureList implements FeatureList
     throw new UnsupportedOperationException();
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#addNew(javax.xml.namespace.QName)
+   */
   @Override
-  public QName getName( )
+  public Feature addNew( final QName newChildType )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#addNew(javax.xml.namespace.QName, java.lang.String)
+   */
+  @Override
+  public Feature addNew( final QName newChildType, final String newFeatureId )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#addNew(javax.xml.namespace.QName, java.lang.Class)
+   */
+  @Override
+  public <T extends Feature> T addNew( final QName newChildType, final Class<T> classToAdapt )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#addNew(javax.xml.namespace.QName, java.lang.String,
+   *      java.lang.Class)
+   */
+  @Override
+  public <T extends Feature> T addNew( final QName newChildType, final String newFeatureId, final Class<T> classToAdapt )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#addRef(org.kalypsodeegree.model.feature.Feature)
+   */
+  @Override
+  public <T extends Feature> boolean addRef( final T toAdd ) throws IllegalArgumentException
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#insertNew(int, javax.xml.namespace.QName)
+   */
+  @Override
+  public Feature insertNew( final int index, final QName newChildType )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#insertNew(int, javax.xml.namespace.QName, java.lang.String)
+   */
+  @Override
+  public Feature insertNew( final int index, final QName newChildType, final String newFeatureId )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#insertNew(int, javax.xml.namespace.QName, java.lang.Class)
+   */
+  @Override
+  public <T extends Feature> T insertNew( final int index, final QName newChildType, final Class<T> classToAdapt )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#insertNew(int, javax.xml.namespace.QName, java.lang.String,
+   *      java.lang.Class)
+   */
+  @Override
+  public <T extends Feature> T insertNew( final int index, final QName newChildType, final String newFeatureId, final Class<T> classToAdapt )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#insertNew(int, javax.xml.namespace.QName, java.lang.String,
+   *      java.lang.Class, java.lang.Object[])
+   */
+  @Override
+  public <T extends Feature> T insertNew( final int index, final QName newChildType, final String newFeatureId, final Class<T> classToAdapt, final Object[] properties )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#insertRef(int, org.kalypsodeegree.model.feature.Feature)
+   */
+  @Override
+  public <T extends Feature> boolean insertRef( final int index, final T toAdd ) throws IllegalArgumentException
   {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public Object getValue( )
+  public IRelationType getPropertyType( )
   {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void setValue( final Object value )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public <T extends Feature> IXLinkedFeature addLink( final T toAdd ) throws IllegalArgumentException
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public IXLinkedFeature addLink( final String href ) throws IllegalArgumentException
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public IXLinkedFeature addLink( final String href, final QName featureTypeName ) throws IllegalArgumentException
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public IXLinkedFeature addLink( final String href, final IFeatureType featureType ) throws IllegalArgumentException
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public <T extends Feature> IXLinkedFeature insertLink( final int index, final T toLink ) throws IllegalArgumentException
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public IXLinkedFeature insertLink( final int index, final String href ) throws IllegalArgumentException
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public IXLinkedFeature insertLink( final int index, final String href, final QName featureTypeName ) throws IllegalArgumentException
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public IXLinkedFeature insertLink( final int index, final String href, final IFeatureType featureType ) throws IllegalArgumentException
-  {
-    throw new UnsupportedOperationException();
+    return null;
   }
 }

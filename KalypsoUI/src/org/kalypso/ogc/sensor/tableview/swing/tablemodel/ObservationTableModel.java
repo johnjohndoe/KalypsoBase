@@ -57,7 +57,7 @@ import java.util.logging.Logger;
 
 import javax.swing.table.AbstractTableModel;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -224,7 +224,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
   private IAxis getStatusAxis( final IObservation obs, final IAxis axis )
   {
     final IAxis[] obsAxes = obs.getAxes();
-    final String statusAxisLabel = KalypsoStatusUtils.getStatusAxisNameFor( axis );
+    final String statusAxisLabel = KalypsoStatusUtils.getStatusAxisLabelFor( axis );
     final IAxis statusAxis = ObservationUtilities.findAxisByNameNoEx( obsAxes, statusAxisLabel );
 
     return statusAxis;
@@ -243,7 +243,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
       if( isDateColumn( columnIndex ) )
         return m_sharedAxis;
 
-      return m_columns.get( columnIndex - 1 );
+      return (m_columns.get( columnIndex - 1 ));
     }
   }
 
@@ -426,7 +426,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
             if( statusAxis != null )
               model.set( ix, statusAxis, KalypsoStati.STATUS_USERMOD );
 
-            changeDataSource( observation, model, ix, IDataSourceItem.SOURCE_MANUAL_CHANGED, valueAxis );
+            changeDataSource( observation, model, ix, IDataSourceItem.SOURCE_MANUAL_CHANGED );
 
             // then set value
             model.set( ix, valueAxis, changedValue );
@@ -445,9 +445,9 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
     }
   }
 
-  private void changeDataSource( final IObservation observation, final ITupleModel model, final int index, final String source, final IAxis valueAxis ) throws SensorException
+  private void changeDataSource( final IObservation observation, final ITupleModel model, final int index, final String source ) throws SensorException
   {
-    final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( model.getAxes(), valueAxis );
+    final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( model.getAxes() );
     if( dataSourceAxis == null )
       return; // we didn't want to change the model
 

@@ -41,9 +41,9 @@
 package org.kalypsodeegree_impl.model.feature.visitors;
 
 import java.util.List;
-import java.util.ResourceBundle;
+import java.util.Properties;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -59,18 +59,21 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
  */
 public class I18nFeatureVisitor implements FeatureVisitor
 {
-  private final ResourceBundle m_bundle;
+  private final Properties m_properties;
 
-  public I18nFeatureVisitor( final ResourceBundle bundle )
+  public I18nFeatureVisitor( Properties properties )
   {
-    m_bundle = bundle;
+    m_properties = properties;
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
+   */
   @Override
-  public boolean visit( final Feature f )
+  public boolean visit( Feature f )
   {
-    final IPropertyType[] properties = f.getFeatureType().getProperties();
-    for( final IPropertyType propertyType : properties )
+    IPropertyType[] properties = f.getFeatureType().getProperties();
+    for( IPropertyType propertyType : properties )
     {
       if( propertyType instanceof IValuePropertyType )
       {
@@ -114,10 +117,9 @@ public class I18nFeatureVisitor implements FeatureVisitor
     if( entry.charAt( 0 ) != '%' )
       return entry;
 
-    final String key = entry.substring( 1 );
-
-    if( m_bundle.containsKey( key ) )
-      return m_bundle.getString( key );
+    String key = entry.substring( 1 );
+    if( m_properties.containsKey( key ) )
+      return m_properties.getProperty( key );
 
     return entry;
   }

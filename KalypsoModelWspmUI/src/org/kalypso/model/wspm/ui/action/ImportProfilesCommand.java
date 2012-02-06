@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
+import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypsodeegree.model.feature.Feature;
@@ -35,7 +35,7 @@ public final class ImportProfilesCommand implements ICommand
     m_water = water;
     m_workspace = m_water.getWorkspace();
     m_profiles = profiles;
-    m_profileList = (FeatureList) m_water.getProperty( WspmWaterBody.MEMBER_PROFILE );
+    m_profileList = (FeatureList) m_water.getProperty( WspmWaterBody.QNAME_MEMBER_PROFILE );
   }
 
   @Override
@@ -58,10 +58,11 @@ public final class ImportProfilesCommand implements ICommand
     {
       for( final IProfil profile : m_profiles )
       {
-        final IProfileFeature feature = m_water.createNewProfile();
-        ((ProfileFeatureBinding) feature).setProfile( profile );
+        final IProfileFeature gmlProfile = m_water.createNewProfile();
 
-        newFeatureList.add( feature );
+        ProfileFeatureFactory.toFeature( profile, gmlProfile );
+
+        newFeatureList.add( gmlProfile );
       }
     }
     finally

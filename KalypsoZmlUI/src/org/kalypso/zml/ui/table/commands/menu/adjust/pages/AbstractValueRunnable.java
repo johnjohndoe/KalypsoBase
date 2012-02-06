@@ -50,7 +50,6 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 
 /**
@@ -66,29 +65,26 @@ public abstract class AbstractValueRunnable implements ICoreRunnableWithProgress
     m_cells = cells;
   }
 
+  /**
+   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
+   */
   @Override
   public final IStatus execute( final IProgressMonitor monitor )
   {
     final List<IStatus> statis = new ArrayList<IStatus>();
-
-    final ZmlModelTransaction transaction = new ZmlModelTransaction();
-
     for( final IZmlTableCell cell : m_cells )
     {
       try
       {
         final IZmlValueReference reference = cell.getValueReference();
-        final Number value = getValue( reference.getValue() );
 
-        transaction.add( reference, value, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
+        reference.update( getValue( reference.getValue() ), IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
       }
       catch( final Exception e )
       {
         statis.add( StatusUtilities.createExceptionalErrorStatus( "Anpassen eines Wertes fehlgeschlagen", e ) );
       }
     }
-
-    transaction.execute();
 
     return StatusUtilities.createStatus( statis, "Anpassen" );
   }

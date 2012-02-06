@@ -13,7 +13,7 @@ import org.kalypso.chart.ui.editor.ElementUpdateHelper;
 import org.kalypso.chart.ui.editor.mousehandler.DragEditHandler;
 
 import de.openali.odysseus.chart.framework.view.IChartComposite;
-import de.openali.odysseus.chart.framework.view.IChartHandlerManager;
+import de.openali.odysseus.chart.framework.view.IPlotHandler;
 
 public class EditHandler extends AbstractHandler implements IElementUpdater
 {
@@ -26,7 +26,7 @@ public class EditHandler extends AbstractHandler implements IElementUpdater
     if( chart == null )
       return Status.CANCEL_STATUS;
 
-    final IChartHandlerManager handler = chart.getPlotHandler();
+    final IPlotHandler handler = chart.getPlotHandler();
     handler.activatePlotHandler( new DragEditHandler( chart ) );
 
     final IChartPart part = ChartHandlerUtilities.findChartComposite( context );
@@ -36,6 +36,9 @@ public class EditHandler extends AbstractHandler implements IElementUpdater
     return Status.OK_STATUS;
   }
 
+  /**
+   * @see org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.menus.UIElement, java.util.Map)
+   */
   @Override
   public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
   {

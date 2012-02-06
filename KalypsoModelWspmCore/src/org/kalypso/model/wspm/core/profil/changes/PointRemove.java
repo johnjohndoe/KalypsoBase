@@ -44,7 +44,7 @@ import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author kimwerner
@@ -54,29 +54,36 @@ public class PointRemove implements IProfilChange
 {
   private final IProfil m_profil;
 
-  private final IProfileRecord[] m_points;
+  private final IRecord[] m_points;
 
   private final int[] m_pointPositions;
 
-  public PointRemove( final IProfil profil, final IProfileRecord... points )
+  public PointRemove( final IProfil profil, final IRecord point )
+  {
+    this( profil, new IRecord[] { point } );
+  }
+
+  public PointRemove( final IProfil profil, final IRecord[] points )
   {
     m_profil = profil;
     m_points = points;
     m_pointPositions = new int[m_points.length];
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilChange#doChange()
+   */
   @Override
-  public void configureHint( final ProfilChangeHint hint )
+  public IProfilChange doChange( final ProfilChangeHint hint ) throws IllegalProfileOperationException
   {
-    hint.setPointsChanged();
-  }
+    if( hint != null )
+    {
+      hint.setPointsChanged();
+    }
 
-  @Override
-  public IProfilChange doChange( ) throws IllegalProfileOperationException
-  {
     for( int i = 0; i < m_points.length; i++ )
     {
-      m_pointPositions[i] = m_points[i].getIndex();
+      m_pointPositions[i] = m_profil.indexOfPoint( m_points[i] );
     }
 
     if( m_profil.removePoints( m_points ) )
@@ -85,12 +92,15 @@ public class PointRemove implements IProfilChange
     {
       if( m_points.length > 0 )
       {
-        m_profil.getSelection().setRange( m_points[0] );
+        m_profil.setActivePoint( m_points[0] );
       }
       throw new IllegalProfileOperationException( Messages.getString( "org.kalypso.model.wspm.core.profil.changes.PointRemove.1" ), this ); //$NON-NLS-1$
     }
   }
 
+  /**
+   * @see java.lang.Object#toString()
+   */
   @Override
   public String toString( )
   {

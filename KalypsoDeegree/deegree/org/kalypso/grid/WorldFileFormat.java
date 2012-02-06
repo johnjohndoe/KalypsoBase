@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.grid;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.contribs.java.util.Arrays;
 
 /**
@@ -101,7 +101,7 @@ public final class WorldFileFormat
     String[] names = ArrayUtils.EMPTY_STRING_ARRAY;
     final WorldFileFormat[] availableFormats = getAvailableFormats();
     for( final WorldFileFormat worldFileFormat : availableFormats )
-      names = ArrayUtils.add( names, worldFileFormat.getFilterExtension() );
+      names = (String[]) ArrayUtils.add( names, worldFileFormat.getFilterExtension() );
 
     final String allNames = Arrays.implode( names, ", " );
     return String.format( "All Supported Image Formats (%s)", allNames );
@@ -112,7 +112,7 @@ public final class WorldFileFormat
     String[] names = ArrayUtils.EMPTY_STRING_ARRAY;
     final WorldFileFormat[] availableFormats = getAvailableFormats();
     for( final WorldFileFormat worldFileFormat : availableFormats )
-      names = ArrayUtils.add( names, worldFileFormat.getFilterExtension() );
+      names = (String[]) ArrayUtils.add( names, worldFileFormat.getFilterExtension() );
     return Arrays.implode( names, ";" );
   }
 }

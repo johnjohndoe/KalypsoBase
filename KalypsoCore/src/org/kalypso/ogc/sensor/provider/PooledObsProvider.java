@@ -83,6 +83,7 @@ public class PooledObsProvider extends AbstractObsProvider implements IPoolListe
   public void dispose( )
   {
     m_isDisposed = true;
+
     m_pool.removePoolListener( this );
 
     super.dispose();
@@ -96,7 +97,7 @@ public class PooledObsProvider extends AbstractObsProvider implements IPoolListe
   @Override
   public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
   {
-    if( !m_isDisposed )
+    if( key == m_key )
       setObservation( null );
   }
 
@@ -110,9 +111,7 @@ public class PooledObsProvider extends AbstractObsProvider implements IPoolListe
   public final void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {
     if( !m_isDisposed )
-    {
       setObservation( (IObservation) newValue );
-    }
   }
 
   /**

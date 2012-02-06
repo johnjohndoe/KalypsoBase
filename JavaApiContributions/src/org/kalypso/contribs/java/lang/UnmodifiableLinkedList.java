@@ -51,9 +51,9 @@ public class UnmodifiableLinkedList<E> extends LinkedList<E>
 {
   private static final long serialVersionUID = 2405730477279453036L;
 
-  protected final LinkedList< ? extends E> m_list;
+  protected final LinkedList<? extends E> m_list;
 
-  public UnmodifiableLinkedList( final LinkedList< ? extends E> list )
+  public UnmodifiableLinkedList( final LinkedList<? extends E> list )
   {
     m_list = list;
   }
@@ -65,7 +65,7 @@ public class UnmodifiableLinkedList<E> extends LinkedList<E>
   }
 
   @Override
-  public boolean equals( final Object o )
+  public boolean equals( Object o )
   {
     return m_list.equals( o );
   }
@@ -77,43 +77,43 @@ public class UnmodifiableLinkedList<E> extends LinkedList<E>
   }
 
   @Override
-  public E get( final int index )
+  public E get( int index )
   {
     return m_list.get( index );
   }
 
   @Override
-  public E set( final int index, final E element )
+  public E set( int index, E element )
   {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void add( final int index, final E element )
+  public void add( int index, E element )
   {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public E remove( final int index )
+  public E remove( int index )
   {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public int indexOf( final Object o )
+  public int indexOf( Object o )
   {
     return m_list.indexOf( o );
   }
 
   @Override
-  public int lastIndexOf( final Object o )
+  public int lastIndexOf( Object o )
   {
     return m_list.lastIndexOf( o );
   }
 
   @Override
-  public boolean addAll( final int index, final Collection< ? extends E> c )
+  public boolean addAll( int index, Collection<? extends E> c )
   {
     throw new UnsupportedOperationException();
   }
@@ -129,7 +129,7 @@ public class UnmodifiableLinkedList<E> extends LinkedList<E>
   {
     return new ListIterator<E>()
     {
-      ListIterator< ? extends E> i = m_list.listIterator( index );
+      ListIterator<? extends E> i = m_list.listIterator( index );
 
       @Override
       public boolean hasNext( )
@@ -174,13 +174,13 @@ public class UnmodifiableLinkedList<E> extends LinkedList<E>
       }
 
       @Override
-      public void set( final E o )
+      public void set( E o )
       {
         throw new UnsupportedOperationException();
       }
 
       @Override
-      public void add( final E o )
+      public void add( E o )
       {
         throw new UnsupportedOperationException();
       }
@@ -188,13 +188,14 @@ public class UnmodifiableLinkedList<E> extends LinkedList<E>
   }
 
   @Override
-  public List<E> subList( final int fromIndex, final int toIndex )
+  public List<E> subList( int fromIndex, int toIndex )
   {
-    return Collections.unmodifiableList( m_list.subList( fromIndex, toIndex ) );
+    return Collections.unmodifiableList(  m_list.subList(
+        fromIndex, toIndex ) );
   }
 
   @Override
-  public boolean addAll( final Collection< ? extends E> c )
+  public boolean addAll( Collection<? extends E> c )
   {
     throw new UnsupportedOperationException();
   }
@@ -224,13 +225,13 @@ public class UnmodifiableLinkedList<E> extends LinkedList<E>
   }
 
   @Override
-  public boolean remove( final Object o )
+  public boolean remove( Object o )
   {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public boolean removeAll( final Collection< ? > c )
+  public boolean removeAll( Collection<?> c )
   {
     throw new UnsupportedOperationException();
   }
@@ -248,19 +249,19 @@ public class UnmodifiableLinkedList<E> extends LinkedList<E>
   }
 
   @Override
-  public boolean retainAll( final Collection< ? > c )
+  public boolean retainAll( Collection<?> c )
   {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void addFirst( final E o )
+  public void addFirst( E o )
   {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void addLast( final E o )
+  public void addLast( E o )
   {
     throw new UnsupportedOperationException();
   }
@@ -272,13 +273,13 @@ public class UnmodifiableLinkedList<E> extends LinkedList<E>
   }
 
   @Override
-  public boolean contains( final Object o )
+  public boolean contains( Object o )
   {
     return m_list.contains( o );
   }
 
   @Override
-  public boolean containsAll( final Collection< ? > c )
+  public boolean containsAll( Collection<?> c )
   {
     return m_list.containsAll( c );
   }
@@ -320,7 +321,7 @@ public class UnmodifiableLinkedList<E> extends LinkedList<E>
   }
 
   @Override
-  public <T> T[] toArray( final T[] a )
+  public <T> T[] toArray( T[] a )
   {
     return m_list.toArray( a );
   }
@@ -332,13 +333,13 @@ public class UnmodifiableLinkedList<E> extends LinkedList<E>
   }
 
   @Override
-  public boolean add( final E o )
+  public boolean add( E o )
   {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public boolean offer( final E o )
+  public boolean offer( E o )
   {
     throw new UnsupportedOperationException();
   }

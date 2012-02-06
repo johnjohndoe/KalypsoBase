@@ -20,5 +20,5 @@ Require-Bundle: de.renew.workflow.model;visibility:=reexport,
  org.kalypso.contribs.eclipseplatform,
  org.kalypso.commons
 Bundle-ActivationPolicy: lazy
-Bundle-Activator: de.renew.workflow.connector.internal.WorkflowConnectorPlugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-Activator: de.renew.workflow.connector.WorkflowConnectorPlugin
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

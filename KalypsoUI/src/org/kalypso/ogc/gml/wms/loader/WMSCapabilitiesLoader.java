@@ -55,7 +55,7 @@ import org.kalypso.util.net.URLGetter;
 
 /**
  * This loader loads the capabilities.
- * 
+ *
  * @author Holger Albert
  */
 public class WMSCapabilitiesLoader implements ICapabilitiesLoader
@@ -72,9 +72,9 @@ public class WMSCapabilitiesLoader implements ICapabilitiesLoader
 
   /**
    * The conbstructor.
-   * 
+   *
    * @param timeout
-   *          The timeout for the access.
+   *            The timeout for the access.
    */
   public WMSCapabilitiesLoader( final int timeout )
   {
@@ -102,17 +102,17 @@ public class WMSCapabilitiesLoader implements ICapabilitiesLoader
     if( m_baseURL == null )
       return null;
 
-    monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.wms.loader.WMSCapabilitiesLoader.0" ), 100 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString("org.kalypso.ogc.gml.wms.loader.WMSCapabilitiesLoader.0"), 100 ); //$NON-NLS-1$
 
     try
     {
-      monitor.subTask( Messages.getString( "org.kalypso.ogc.gml.wms.loader.WMSCapabilitiesLoader.1" ) ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString("org.kalypso.ogc.gml.wms.loader.WMSCapabilitiesLoader.1") ); //$NON-NLS-1$
 
       /* Create the capabilities URL. */
       final URL capabilitiesURL = getCapabilitiesURL();
 
       monitor.worked( 25 );
-      monitor.subTask( Messages.getString( "org.kalypso.ogc.gml.wms.loader.WMSCapabilitiesLoader.2" ) ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString("org.kalypso.ogc.gml.wms.loader.WMSCapabilitiesLoader.2") ); //$NON-NLS-1$
 
       // TODO: why this getter stuff? why not just open the stream of the url?
       // At least, please comment!
@@ -121,7 +121,7 @@ public class WMSCapabilitiesLoader implements ICapabilitiesLoader
       final URLGetter getter = URLGetter.createURLGetter( capabilitiesURL, m_timeout, 0 );
 
       monitor.worked( 25 );
-      monitor.subTask( Messages.getString( "org.kalypso.ogc.gml.wms.loader.WMSCapabilitiesLoader.3" ) ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString("org.kalypso.ogc.gml.wms.loader.WMSCapabilitiesLoader.3") ); //$NON-NLS-1$
 
       /* Execute. */
       final IStatus status = getter.execute( new SubProgressMonitor( monitor, 50 ) );
@@ -136,7 +136,7 @@ public class WMSCapabilitiesLoader implements ICapabilitiesLoader
     }
     catch( final Exception ex )
     {
-      throw new CoreException( new Status( IStatus.ERROR, "org.kalypso.ui", Messages.getString( "org.kalypso.ogc.gml.wms.loader.WMSCapabilitiesLoader.5" ) + m_baseURL.toExternalForm(), ex ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new CoreException( new Status( IStatus.ERROR, "org.kalypso.ui", Messages.getString("org.kalypso.ogc.gml.wms.loader.WMSCapabilitiesLoader.5") + m_baseURL.toExternalForm(), ex ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     finally
     {

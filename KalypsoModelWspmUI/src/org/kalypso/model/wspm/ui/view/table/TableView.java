@@ -40,11 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.table;
 
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -52,10 +47,10 @@ import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ControlEditor;
@@ -76,25 +71,23 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor.ADVANCE_MODE;
-import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.gml.IProfileProvider;
+import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
+import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
+import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfileRecord;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.view.IProfileFeatureSelectionListener;
-import org.kalypso.model.wspm.ui.view.ProfileFeatureSeletionHandler;
+import org.kalypso.model.wspm.ui.profil.IProfilProvider;
+import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.featureview.control.TupleResultTableViewer;
@@ -103,7 +96,6 @@ import org.kalypso.ogc.gml.om.table.TupleResultContentProvider;
 import org.kalypso.ogc.gml.om.table.TupleResultLabelProvider;
 import org.kalypso.ogc.gml.om.table.command.ITupleResultViewerProvider;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
-import org.kalypso.ogc.gml.selection.IFeatureSelection;
 
 /**
  * TableView für ein Profil. Ist eine feste View auf genau einem Profil.
@@ -111,7 +103,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelection;
  * @author Gernot Belger
  * @author kimwerner
  */
-public class TableView extends ViewPart implements ITupleResultViewerProvider, IProfileFeatureSelectionListener
+public class TableView extends ViewPart implements IAdapterEater<IProfilProvider>, IProfilProviderListener, ITupleResultViewerProvider
 {
   public static final String ID = "org.kalypso.model.wspm.ui.view.table.TableView"; //$NON-NLS-1$
 
@@ -119,11 +111,15 @@ public class TableView extends ViewPart implements ITupleResultViewerProvider, I
 
   private static final String SETTINGS_SASH_WEIGHT = "sashWeight"; //$NON-NLS-1$
 
+  private final AdapterPartListener<IProfilProvider> m_profilProviderListener = new AdapterPartListener<IProfilProvider>( IProfilProvider.class, this, EditorFirstAdapterFinder.<IProfilProvider> instance(), EditorFirstAdapterFinder.<IProfilProvider> instance() );
+
   private final IDialogSettings m_settings = DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), ID );
 
   private Form m_form;
 
   private FormToolkit m_toolkit;
+
+  private IProfilProvider m_provider;
 
   protected IProfil m_profile;
 
@@ -137,23 +133,54 @@ public class TableView extends ViewPart implements ITupleResultViewerProvider, I
 
   private String m_registeredName;
 
-  protected final UIJob m_markerRefreshJob = new RefreshProfileMarkerJob( this );
+  protected final UIJob m_markerRefreshJob = new UIJob( Messages.getString( "org.kalypso.model.wspm.ui.view.table.TableView.0" ) ) //$NON-NLS-1$
+  {
+    @Override
+    public IStatus runInUIThread( final IProgressMonitor monitor )
+    {
+      if( m_profile != null )
+      {
+        final IRecord[] points = m_profile.getPoints();
+        if( points.length > 0 )
+        {
+          if( m_view != null && !m_view.getTable().isDisposed() )
+          {
+            m_view.update( points, new String[] { "" } ); //$NON-NLS-1$
+          }
+        }
+      }
+      updateProblemView();
+      return Status.OK_STATUS;
+    }
+  };
 
-  protected final UIJob m_updateSelectionJob = new UpdateSelectionJob( this );
+  protected final UIJob m_setActivePointJob = new UIJob( Messages.getString( "org.kalypso.model.wspm.ui.view.table.TableView.1" ) ) //$NON-NLS-1$
+  {
+    @Override
+    public IStatus runInUIThread( final IProgressMonitor monitor )
+    {
+      if( m_view == null || m_view.getTable().isDisposed() )
+        return Status.OK_STATUS;
 
-  private final ProfileFeatureSeletionHandler m_handler = new ProfileFeatureSeletionHandler( this );
+      EditorFirstAdapterFinder.<IProfilProvider> instance();
+      final IRecord activePoint = m_profile.getActivePoint();
+      m_view.setSelection( new StructuredSelection( activePoint ) );
+      m_view.reveal( activePoint );
+      return Status.OK_STATUS;
+    }
+  };
 
-  // TODO: consider moving this in the content provider: to do this, extends the TupleResultContentProvider to a
+  // TODO: consider moving this in the contentprovider: to do this, extends the TupleResultContentProvider to a
   // ProfileContentProvider
   private final IProfilListener m_profileListener = new IProfilListener()
   {
     @Override
-    public void onProfilChanged( final ProfilChangeHint hint )
+    public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
     {
-      if( hint.isSelectionChanged() )
+      if( hint.isActivePointChanged() )
       {
-        m_updateSelectionJob.cancel();
-        m_updateSelectionJob.schedule( 100 );
+        m_setActivePointJob.cancel();
+        m_setActivePointJob.schedule( 100 );
       }
     }
 
@@ -161,7 +188,7 @@ public class TableView extends ViewPart implements ITupleResultViewerProvider, I
     public void onProblemMarkerChanged( final IProfil source )
     {
       m_markerRefreshJob.cancel();
-      m_markerRefreshJob.schedule( 100 );
+      m_markerRefreshJob.schedule( 500 );
     }
   };
 
@@ -169,18 +196,12 @@ public class TableView extends ViewPart implements ITupleResultViewerProvider, I
 
   private SashForm m_sashForm;
 
-  protected boolean m_fireSelectionChanged = true;
-
-  private UIJob m_updateControl;
-
   @Override
   public void init( final IViewSite site ) throws PartInitException
   {
     super.init( site );
-
     m_registeredName = site.getRegisteredName();
-
-    m_handler.doInit( site );
+    m_profilProviderListener.init( site.getPage() );
 
     m_menuManager = new MenuManager();
     m_menuManager.add( new GroupMarker( IWorkbenchActionConstants.MB_ADDITIONS ) );
@@ -191,9 +212,6 @@ public class TableView extends ViewPart implements ITupleResultViewerProvider, I
   {
     super.dispose();
 
-    if( Objects.isNotNull( m_handler ) )
-      m_handler.dispose();
-
     if( m_profile != null )
     {
       m_profile.removeProfilListener( m_profileListener );
@@ -201,6 +219,8 @@ public class TableView extends ViewPart implements ITupleResultViewerProvider, I
 
     m_menuManager.dispose();
     m_menuManager = null;
+
+    unhookProvider();
 
     if( m_tupleResultContentProvider != null )
     {
@@ -212,12 +232,23 @@ public class TableView extends ViewPart implements ITupleResultViewerProvider, I
       m_tupleResultLabelProvider.dispose();
     }
 
+    m_profilProviderListener.dispose();
+
     if( m_form != null )
     {
       m_form.dispose();
     }
 
     m_view = null;
+  }
+
+  private void unhookProvider( )
+  {
+    if( m_provider != null )
+    {
+      m_provider.removeProfilProviderListener( this );
+      m_provider = null;
+    }
   }
 
   @Override
@@ -282,20 +313,16 @@ public class TableView extends ViewPart implements ITupleResultViewerProvider, I
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        // new selection was triggered from IProfile Selection Change?
-        if( !m_fireSelectionChanged )
+        final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+        if( !selection.isEmpty() )
         {
-          m_fireSelectionChanged = true;
-          return;
-        }
-
-        final IProfileRecord[] selection = toPoints( event.getSelection() );
-        if( ArrayUtils.isNotEmpty( selection ) )
-        {
-          m_profile.getSelection().setRange( selection );
+          final IRecord point = (IRecord) selection.getFirstElement();
+          if( point != m_profile.getActivePoint() )
+          {
+            m_profile.setActivePoint( point );
+          }
         }
       }
-
     } );
 
     cursor.addSelectionListener( new SelectionAdapter()
@@ -303,10 +330,15 @@ public class TableView extends ViewPart implements ITupleResultViewerProvider, I
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        final IProfileRecord[] selection = toPoints( m_view.getSelection() );
-        if( ArrayUtils.isNotEmpty( selection ) )
+        final IStructuredSelection selection = (IStructuredSelection) m_view.getSelection();
+        final Object element = selection.getFirstElement();
+        if( element instanceof IRecord )
         {
-          m_profile.getSelection().setRange( selection );
+          final IRecord point = (IRecord) element;
+          if( point != m_profile.getActivePoint() )
+          {
+            m_profile.setActivePoint( point );
+          }
         }
       }
     } );
@@ -386,19 +418,39 @@ public class TableView extends ViewPart implements ITupleResultViewerProvider, I
   }
 
   @Override
-  public void setAdapter( final IWorkbenchPart part, final IFeatureSelection selection )
+  public void setAdapter( final IWorkbenchPart part, final IProfilProvider provider )
   {
-    m_handler.setAdapter( part, selection );
+    if( m_provider == provider && provider != null )
+      return;
+
+    unhookProvider();
+
+    m_provider = provider;
+
+    if( m_provider != null )
+    {
+      m_provider.addProfilProviderListener( this );
+    }
+
+    final IProfil newProfile = m_provider == null ? null : m_provider.getProfil();
+    onProfilProviderChanged( m_provider, m_profile, newProfile );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.profil.view.IProfilProviderListener#onProfilProviderChanged(org.kalypso.model.wspm.ui.profil.view.IProfilProvider2,
+   *      org.kalypso.model.wspm.core.profil.IProfilEventManager,
+   *      org.kalypso.model.wspm.core.profil.IProfilEventManager, org.kalypso.model.wspm.ui.profil.view.ProfilViewData,
+   *      org.kalypso.model.wspm.ui.profil.view.ProfilViewData)
+   */
   @Override
-  public void handleProfilProviderChanged( final IProfileProvider provider )
+  public void onProfilProviderChanged( final IProfilProvider provider, final IProfil oldProfile, final IProfil newProfile )
   {
     if( m_profile != null )
+    {
       m_profile.removeProfilListener( m_profileListener );
+    }
 
-    // TODO: get the profile in the async method call
-    m_profile = provider == null ? null : provider.getProfil();
+    m_profile = newProfile;
 
     if( m_profile != null )
     {
@@ -407,29 +459,16 @@ public class TableView extends ViewPart implements ITupleResultViewerProvider, I
 
     if( m_form != null && !m_form.isDisposed() )
     {
-      if( m_updateControl != null )
-        m_updateControl.cancel();
-
-      m_updateControl = new UIJob( "updating table view" )
+      m_form.getDisplay().asyncExec( new Runnable()
       {
-
         @Override
-        public IStatus runInUIThread( final IProgressMonitor monitor )
+        public void run( )
         {
-          if( monitor.isCanceled() )
-            return Status.CANCEL_STATUS;
 
           updateControl();
           updateProblemView();
-
-          return Status.OK_STATUS;
         }
-      };
-
-      m_updateControl.setSystem( true );
-      m_updateControl.setUser( false );
-
-      m_updateControl.schedule( 100 );
+      } );
     }
   }
 
@@ -486,45 +525,12 @@ public class TableView extends ViewPart implements ITupleResultViewerProvider, I
     return (TupleResult) m_view.getInput();
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.om.table.command.ITupleResultViewerProvider#getTupleResultViewer()
+   */
   @Override
   public TableViewer getTupleResultViewer( )
   {
     return m_view;
-  }
-
-  protected IProfileRecord[] toPoints( final ISelection selection )
-  {
-    if( !(selection instanceof IStructuredSelection) )
-      return new IProfileRecord[] {};
-
-    final IStructuredSelection structured = (IStructuredSelection) selection;
-    final Iterator< ? > itr = structured.iterator();
-
-    final Set<IProfileRecord> records = new LinkedHashSet<>();
-
-    while( itr.hasNext() )
-    {
-      final Object object = itr.next();
-      if( object instanceof IProfileRecord )
-      {
-        records.add( (IProfileRecord) object );
-      }
-      else if( object instanceof IRecord )
-      {
-        final IRecord record = (IRecord) object;
-        final IComponent component = m_profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-        if( Objects.isNull( component ) )
-          continue;
-
-        records.add( new ProfileRecord( m_profile, record ) );
-      }
-    }
-
-    return records.toArray( new IProfileRecord[] {} );
-  }
-
-  public void disableFireSelectionChanged( )
-  {
-    m_fireSelectionChanged = false;
   }
 }

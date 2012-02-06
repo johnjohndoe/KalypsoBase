@@ -47,8 +47,6 @@ import java.util.Properties;
 import java.util.Vector;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypso.repository.utils.RepositoryVisitors;
 
@@ -89,12 +87,6 @@ public abstract class AbstractRepository implements IRepository
 
     m_listeners = new Vector<IRepositoryListener>();
     m_properties = new Properties();
-  }
-
-  @Override
-  public IStatus getStatus( final String type )
-  {
-    return Status.OK_STATUS;
   }
 
   /**
@@ -215,6 +207,32 @@ public abstract class AbstractRepository implements IRepository
   @Override
   public IRepositoryItem getParent( )
   {
+    return null;
+  }
+
+  /**
+   * This default implementation uses recursion to find an item with the requested id. Subclasses may use this method if
+   * they want to implement findItem using recursion.
+   * 
+   * @return item if found, else null
+   */
+  protected final IRepositoryItem findItemRecursive( final IRepositoryItem item, final String id ) throws RepositoryException
+  {
+    if( item.getIdentifier().equalsIgnoreCase( id ) )
+      return item;
+
+    final IRepositoryItem[] items = item.getChildren();
+    if( items == null )
+      return null;
+
+    for( final IRepositoryItem item3 : items )
+    {
+      final IRepositoryItem item2 = findItemRecursive( item3, id );
+
+      if( item2 != null )
+        return item2;
+    }
+
     return null;
   }
 

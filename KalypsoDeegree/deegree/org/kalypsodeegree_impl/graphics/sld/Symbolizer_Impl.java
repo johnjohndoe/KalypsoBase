@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- *
+ * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always.
- *
- * If you intend to use this software in other ways than in kalypso
+ * interface-compatibility to deegree is wanted but not retained always. 
+ * 
+ * If you intend to use this software in other ways than in kalypso 
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree,
+ * all modifications are licensed as deegree, 
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -65,7 +65,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
  * <p>
  * ----------------------------------------------------------------------
  * </p>
- *
+ * 
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @version $Revision$ $Date$
  */
@@ -114,8 +114,9 @@ public abstract class Symbolizer_Impl implements Symbolizer
 
   public static Feature createPseudoFeature( )
   {
-    final IFeatureType ft = new CustomFeatureType( new EmptyGMLSchema(), new QName( "", "" ), new IPropertyType[] {}, Feature.QNAME_FEATURE );
-    return FeatureFactory.createFeature( null, null, "legende", ft, false );
+    final IFeatureType ft = new CustomFeatureType( new EmptyGMLSchema(), new QName( "", "" ), new IPropertyType[] {} );
+    final Feature feature = FeatureFactory.createFeature( null, null, "legende", ft, false );
+    return feature;
   }
 
   public static int joinAwt2swt( final int lineJoin )
@@ -211,7 +212,7 @@ public abstract class Symbolizer_Impl implements Symbolizer
    * The Geometry element is optional and if it is absent then the default geometry property of the feature type that is
    * used in the containing FeatureStyleType is used. The precise meaning of default geometry property is
    * system-dependent. Most frequently, feature types will have only a single geometry property.
-   *
+   * 
    * @return the geometry of the symbolizer
    */
   @Override
@@ -222,14 +223,14 @@ public abstract class Symbolizer_Impl implements Symbolizer
 
   /**
    * sets the <Geometry>
-   *
+   * 
    * @param geometry
-   *          the geometry of the symbolizer
+   *            the geometry of the symbolizer
    */
   @Override
   public void setGeometry( final Geometry geometry )
   {
-    m_geometry = geometry;
+    this.m_geometry = geometry;
   }
 
   @Override
@@ -246,7 +247,7 @@ public abstract class Symbolizer_Impl implements Symbolizer
 
   /**
    * Default implementation, draw a black cross to indicate that here is something to do.
-   *
+   * 
    * @see org.kalypsodeegree.graphics.sld.Symbolizer#paintLegendGraphic(org.eclipse.swt.graphics.GC)
    */
   @Override

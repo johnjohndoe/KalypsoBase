@@ -7,7 +7,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
@@ -21,14 +20,14 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.ScenarioHandlingProjectNature;
 import org.kalypso.afgui.i18n.Messages;
+import org.kalypso.afgui.scenarios.IScenario;
+import org.kalypso.afgui.scenarios.ScenarioManager;
 import org.kalypso.afgui.scenarios.TaskExecutionAuthority;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 import de.renew.workflow.base.ITask;
-import de.renew.workflow.connector.cases.IScenarioManager;
-import de.renew.workflow.connector.cases.IScenario;
-import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 
 /**
@@ -140,7 +139,7 @@ public class NewSimulationModelControlBuilder
   {
     newName = newModelTFE.getText();
 
-    newName = newName == null ? "" : newName.trim(); //$NON-NLS-1$
+    newName = (newName == null) ? "" : newName.trim(); //$NON-NLS-1$
     return newName;
   }
 
@@ -181,7 +180,8 @@ public class NewSimulationModelControlBuilder
     return errorMessage;
   }
 
-  public void setUpdateListerner( @SuppressWarnings("hiding") final IUpdateListener updateListener )
+  public void setUpdateListerner( @SuppressWarnings("hiding")
+  final IUpdateListener updateListener )
   {
     this.updateListener = updateListener;
   }
@@ -215,16 +215,16 @@ public class NewSimulationModelControlBuilder
     // wd.setMessage("Neue Simulationsmodell");
     // wd.setBlockOnOpen(true);
     final int decision = wd.open();
-    if( decision == Window.OK )
+    if( decision == WizardDialog.OK )
     {
       final String name = wpage.getNewSimulaionControlBuilder().getNewName();
       logger.info( "newName=" + name ); //$NON-NLS-1$
       final KalypsoAFGUIFrameworkPlugin plugin = KalypsoAFGUIFrameworkPlugin.getDefault();
-      final ActiveWorkContext activeWorkContext = plugin.getActiveWorkContext();
+      final ActiveWorkContext<IScenario> activeWorkContext = plugin.getActiveWorkContext();
       try
       {
         final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
-        final IScenarioManager scenarioManager = nature.getCaseManager();
+        final ScenarioManager scenarioManager = (ScenarioManager) nature.getCaseManager();
         final TaskExecutionAuthority taskExecutionAuthority = plugin.getTaskExecutionAuthority();
         final ITask activeTask = plugin.getTaskExecutor().getActiveTask();
         if( taskExecutionAuthority.canStopTask( activeTask ) )

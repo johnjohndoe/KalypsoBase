@@ -392,7 +392,7 @@ public class ImageComposite extends Composite
     /* Create a label. */
     final Label imageUrlLabel = new Label( imageGroup, SWT.NONE );
     imageUrlLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    imageUrlLabel.setText( "Dateipfad" );
+    imageUrlLabel.setText( "URL" );
     imageUrlLabel.setAlignment( SWT.LEFT );
 
     /* Create a text field. */

@@ -79,11 +79,11 @@ public class LegendElement
    * The constructor.
    * 
    * @param font
-   *          The font, to use for this legend element.
+   *            The font, to use for this legend element.
    * @param level
-   *          The level of this legend element.
+   *            The level of this legend element.
    * @param object
-   *          The object of this legend element.
+   *            The object of this legend element.
    */
   public LegendElement( final org.eclipse.swt.graphics.Font font, final int level, final IThemeNode node )
   {
@@ -104,7 +104,7 @@ public class LegendElement
     final int textHeight = textSize.y;
 
     /* Width. */
-    final int width = textWidth + ICON_SIZE + GAP + m_level * (ICON_SIZE + GAP);
+    final int width = textWidth + (ICON_SIZE + GAP) + m_level * (ICON_SIZE + GAP);
 
     /* Height. */
     int height = ICON_SIZE;

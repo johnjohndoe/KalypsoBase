@@ -12,8 +12,6 @@ Export-Package: org.kalypso.contribs.eclipse.core.commands,
  org.kalypso.contribs.eclipse.core.resources,
  org.kalypso.contribs.eclipse.core.runtime,
  org.kalypso.contribs.eclipse.core.runtime.jobs,
- org.kalypso.contribs.eclipse.core.variables,
- org.kalypso.contribs.eclipse.internal,
  org.kalypso.contribs.eclipse.jface.action,
  org.kalypso.contribs.eclipse.jface.dialog,
  org.kalypso.contribs.eclipse.jface.operation,
@@ -52,9 +50,7 @@ Require-Bundle: org.eclipse.core.expressions,
  org.eclipse.core.runtime,
  org.eclipse.ui,
  org.eclipse.ui.forms;visibility:=reexport,
- org.eclipse.core.variables;visibility:=reexport,
  org.junit;resolution:=optional,
- org.kalypso.contribs.java;visibility:=reexport,
- org.apache.commons;visibility:=reexport
+ org.kalypso.contribs.java;visibility:=reexport
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

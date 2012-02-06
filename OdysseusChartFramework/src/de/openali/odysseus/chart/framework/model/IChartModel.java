@@ -7,6 +7,7 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry
 
 public interface IChartModel extends ILayerContainer
 {
+
   /**
    * When called, all given axes set their DataRange so all their layers data can be shown
    */
@@ -25,4 +26,6 @@ public interface IChartModel extends ILayerContainer
   Object getData( String key );
 
   Object setData( String key, Object value );
+
+  // IChartModelState getState( );
 }

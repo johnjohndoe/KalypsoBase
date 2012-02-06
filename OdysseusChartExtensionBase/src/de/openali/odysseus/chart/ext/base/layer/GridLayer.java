@@ -2,7 +2,6 @@ package de.openali.odysseus.chart.ext.base.layer;
 
 import java.util.ArrayList;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -17,7 +16,7 @@ import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
+import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
  * @author alibu visualization of precipitation data as bar chart; The following configuration parameters are needed for
@@ -36,20 +35,165 @@ public class GridLayer extends AbstractChartLayer
     VERTICAL,
     BOTH
   }
-  private ILegendEntry[] m_legendEntries;
+
   private final GridOrientation m_orientation;
+
+  private final ILineStyle m_gridStyle;
 
   public GridLayer( final ILayerProvider provider, final GridOrientation orientation, final ILineStyle gridStyle )
   {
-    super( provider, new StyleSet() );
+    super( provider );
 
     m_orientation = orientation;
-    getStyleSet().addStyle( "line", gridStyle );
+    m_gridStyle = gridStyle;
   }
 
-  // private final ILineStyle m_gridStyle;
+  /**
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC,
+   *      org.eclipse.swt.graphics.Device)
+   */
+  @Override
+  public void paint( final GC gc )
+  {
 
-  private ILegendEntry[] createLegendEntries( )
+    gc.setLineWidth( 5 );
+
+    final ArrayList<Point> path = new ArrayList<Point>();
+
+    IAxis hAxis = null;
+    IAxis vAxis = null;
+
+    final PolylineFigure figure = getPolylineFigure();
+
+    // Welche ist die horizontale, welche die horizontale Achse?
+    if( getDomainAxis().getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
+    {
+      hAxis = getDomainAxis();
+      vAxis = getTargetAxis();
+    }
+    else
+    {
+      hAxis = getTargetAxis();
+      vAxis = getDomainAxis();
+    }
+
+    // von links nach rechts zeichnen
+    if( (m_orientation == GridOrientation.BOTH) || (m_orientation == GridOrientation.HORIZONTAL) )
+    {
+      final Number[] vTicks = vAxis.getRenderer().getTicks( vAxis, gc );
+      final IDataRange<Number> hRange = hAxis.getNumericRange();
+      final int xfrom = hAxis.numericToScreen( hRange.getMin() );
+      final int xto = hAxis.numericToScreen( hRange.getMax() );
+      if( vTicks != null )
+        for( final Number vTick : vTicks )
+        {
+          path.clear();
+          path.add( new Point( xfrom, vAxis.numericToScreen( vTick ) ) );
+          path.add( new Point( xto, vAxis.numericToScreen( vTick ) ) );
+          figure.setPoints( path.toArray( new Point[] {} ) );
+          figure.paint( gc );
+        }
+    }
+    // von unten nach oben zeichnen
+    if( (m_orientation == GridOrientation.BOTH) || (m_orientation == GridOrientation.VERTICAL) )
+    {
+      final Number[] hTicks = hAxis.getRenderer().getTicks( hAxis, gc );
+      final IDataRange<Number> vRange = vAxis.getNumericRange();
+      final int yfrom = vAxis.numericToScreen( vRange.getMin() );
+      final int yto = vAxis.numericToScreen( vRange.getMax() );
+      if( hTicks != null )
+        for( final Number hTick : hTicks )
+        {
+          path.clear();
+          path.add( new Point( hAxis.numericToScreen( hTick ), yfrom ) );
+          path.add( new Point( hAxis.numericToScreen( hTick ), yto ) );
+          figure.setPoints( path.toArray( new Point[] {} ) );
+          figure.paint( gc );
+        }
+    }
+  }
+
+  /**
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getDomainRange()
+   */
+  @Override
+  public IDataRange<Number> getDomainRange( )
+  {
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getTargetRange()
+   */
+  @Override
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
+  {
+    return null;
+  }
+
+  // FIXME: was soll das? Wird ncith benutzt-....
+  public void drawIcon( final Image img )
+  {
+    final Rectangle bounds = img.getBounds();
+    final int height = bounds.height;
+    final int width = bounds.width;
+    final GC gc = new GC( img );
+
+    final PolylineFigure figure = getPolylineFigure();
+
+    final ArrayList<Point> points = new ArrayList<Point>();
+    // Linie von links nach rechts
+    if( (m_orientation == GridOrientation.BOTH) || (m_orientation == GridOrientation.HORIZONTAL) )
+    {
+      points.add( new Point( 0, (int) (height * 0.3) ) );
+      points.add( new Point( width, (int) (height * 0.3) ) );
+      figure.setPoints( points.toArray( new Point[] {} ) );
+      figure.paint( gc );
+      points.clear();
+      points.add( new Point( 0, (int) (height * 0.7) ) );
+      points.add( new Point( width, (int) (height * 0.7) ) );
+      figure.setPoints( points.toArray( new Point[] {} ) );
+      figure.paint( gc );
+      points.clear();
+    }
+    // Linie von oben nach unten
+    if( (m_orientation == GridOrientation.BOTH) || (m_orientation == GridOrientation.VERTICAL) )
+    {
+      points.add( new Point( (int) (width * 0.3), 0 ) );
+      points.add( new Point( (int) (width * 0.3), height ) );
+      figure.setPoints( points.toArray( new Point[] {} ) );
+      figure.paint( gc );
+      points.clear();
+      points.add( new Point( (int) (width * 0.7), 0 ) );
+      points.add( new Point( (int) (width * 0.7), height ) );
+      figure.setPoints( points.toArray( new Point[] {} ) );
+      figure.paint( gc );
+      points.clear();
+    }
+    gc.dispose();
+  }
+
+  private PolylineFigure getPolylineFigure( )
+  {
+    final ILineStyle style = getGridStyle();
+    final PolylineFigure figure = new PolylineFigure();
+    figure.setStyle( style );
+    return figure;
+
+  }
+
+  private ILineStyle getGridStyle( )
+  {
+    if( m_gridStyle == null )
+      return StyleUtils.getDefaultLineStyle();
+    return m_gridStyle;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getLegendEntries(org.eclipse.swt.graphics.Point)
+   */
+  @Override
+  public ILegendEntry[] createLegendEntries( )
   {
 
     final ArrayList<ILegendEntry> entries = new ArrayList<ILegendEntry>();
@@ -104,160 +248,6 @@ public class GridLayer extends AbstractChartLayer
   @Override
   public void dispose( )
   {
-    // FIXME: warum wird hier nicht super aufgerufen?
-  }
-
-  // FIXME: was soll das? Wird ncith benutzt-....
-  public void drawIcon( final Image img )
-  {
-    final Rectangle bounds = img.getBounds();
-    final int height = bounds.height;
-    final int width = bounds.width;
-    final GC gc = new GC( img );
-
-    final PolylineFigure figure = getPolylineFigure();
-
-    final ArrayList<Point> points = new ArrayList<Point>();
-    // Linie von links nach rechts
-    if( m_orientation == GridOrientation.BOTH || m_orientation == GridOrientation.HORIZONTAL )
-    {
-      points.add( new Point( 0, (int) (height * 0.3) ) );
-      points.add( new Point( width, (int) (height * 0.3) ) );
-      figure.setPoints( points.toArray( new Point[] {} ) );
-      figure.paint( gc );
-      points.clear();
-      points.add( new Point( 0, (int) (height * 0.7) ) );
-      points.add( new Point( width, (int) (height * 0.7) ) );
-      figure.setPoints( points.toArray( new Point[] {} ) );
-      figure.paint( gc );
-      points.clear();
-    }
-    // Linie von oben nach unten
-    if( m_orientation == GridOrientation.BOTH || m_orientation == GridOrientation.VERTICAL )
-    {
-      points.add( new Point( (int) (width * 0.3), 0 ) );
-      points.add( new Point( (int) (width * 0.3), height ) );
-      figure.setPoints( points.toArray( new Point[] {} ) );
-      figure.paint( gc );
-      points.clear();
-      points.add( new Point( (int) (width * 0.7), 0 ) );
-      points.add( new Point( (int) (width * 0.7), height ) );
-      figure.setPoints( points.toArray( new Point[] {} ) );
-      figure.paint( gc );
-      points.clear();
-    }
-    gc.dispose();
-  }
-
-  /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getDomainRange()
-   */
-  @Override
-  public IDataRange< ? > getDomainRange( )
-  {
-    return null;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.factory.layer.AbstractChartLayer#getLegendEntries()
-   */
-  @Override
-  public synchronized ILegendEntry[] getLegendEntries( )
-  {
-    if( ArrayUtils.isEmpty( m_legendEntries ) )
-    {
-     m_legendEntries = createLegendEntries();
-          }
-    return m_legendEntries;
-  }
-
-  private PolylineFigure getPolylineFigure( )
-  {
-    final ILineStyle style = getStyleSet().getStyle( "line", ILineStyle.class );
-    final PolylineFigure figure = new PolylineFigure();
-    figure.setStyle( style );
-    return figure;
-
-  }
-
-// private ILineStyle getGridStyle( )
-// {
-// if( m_gridStyle == null )
-// return StyleUtils.getDefaultLineStyle();
-// return m_gridStyle;
-// }
-
-  /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getTargetRange()
-   */
-  @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
-  {
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC,
-   *      org.eclipse.swt.graphics.Device)
-   */
-  @Override
-  public void paint( final GC gc )
-  {
-
-    gc.setLineWidth( 5 );
-
-    final ArrayList<Point> path = new ArrayList<Point>();
-
-    IAxis hAxis = null;
-    IAxis vAxis = null;
-
-    final PolylineFigure figure = getPolylineFigure();
-
-    // Welche ist die horizontale, welche die horizontale Achse?
-    if( getDomainAxis().getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
-    {
-      hAxis = getDomainAxis();
-      vAxis = getTargetAxis();
-    }
-    else
-    {
-      hAxis = getTargetAxis();
-      vAxis = getDomainAxis();
-    }
-
-    // von links nach rechts zeichnen
-    if( m_orientation == GridOrientation.BOTH || m_orientation == GridOrientation.HORIZONTAL )
-    {
-      final Number[] vTicks = vAxis.getRenderer().getTicks( vAxis, gc );
-      final IDataRange<Number> hRange = hAxis.getNumericRange();
-      final int xfrom = hAxis.numericToScreen( hRange.getMin() );
-      final int xto = hAxis.numericToScreen( hRange.getMax() );
-      if( vTicks != null )
-        for( final Number vTick : vTicks )
-        {
-          path.clear();
-          path.add( new Point( xfrom, vAxis.numericToScreen( vTick ) ) );
-          path.add( new Point( xto, vAxis.numericToScreen( vTick ) ) );
-          figure.setPoints( path.toArray( new Point[] {} ) );
-          figure.paint( gc );
-        }
-    }
-    // von unten nach oben zeichnen
-    if( m_orientation == GridOrientation.BOTH || m_orientation == GridOrientation.VERTICAL )
-    {
-      final Number[] hTicks = hAxis.getRenderer().getTicks( hAxis, gc );
-      final IDataRange<Number> vRange = vAxis.getNumericRange();
-      final int yfrom = vAxis.numericToScreen( vRange.getMin() );
-      final int yto = vAxis.numericToScreen( vRange.getMax() );
-      if( hTicks != null )
-        for( final Number hTick : hTicks )
-        {
-          path.clear();
-          path.add( new Point( hAxis.numericToScreen( hTick ), yfrom ) );
-          path.add( new Point( hAxis.numericToScreen( hTick ), yto ) );
-          figure.setPoints( path.toArray( new Point[] {} ) );
-          figure.paint( gc );
-        }
-    }
+    // FIXME: warum wird hier nicht super aufgerufen? 
   }
 }

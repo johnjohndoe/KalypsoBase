@@ -43,7 +43,7 @@ package org.kalypso.test;
 import java.io.InputStreamReader;
 import java.net.URL;
 
-import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.kalypso.commons.java.io.ReaderUtilities;
 
@@ -55,7 +55,7 @@ public class TestUtilities
 
   public static void compare( final String description, final URL orgiginalResource, final String testText ) throws Exception
   {
-    final InputStreamReader reader = new InputStreamReader( orgiginalResource.openStream(), "UTF-8" );
+    final InputStreamReader reader = new InputStreamReader( orgiginalResource.openStream(),"UTF-8");
     final String orgText = ReaderUtilities.readStringFromReader( reader );
     final String orgText2 = orgText.replaceAll( "\\r", "\n" );
     final String testText2 = testText.replaceAll( "\\r", "\n" );
@@ -95,13 +95,13 @@ public class TestUtilities
         }
         reported++;
         if( reported > 5 )
-          Assert.fail( "broken test: " + description );
+          TestCase.fail( "broken test: " + description );
       }
       i++;
     }
     if( orgLine.length != testLine.length )
-      Assert.fail( "broken test: " + description );
+      TestCase.fail( "broken test: " + description );
     if( error > 0 )
-      Assert.fail( "broken test: " + description );
+      TestCase.fail( "broken test: " + description );
   }
 }

@@ -21,6 +21,8 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 /**
  * @author alibu
@@ -34,7 +36,7 @@ public class UVFLayerProvider extends AbstractLayerProvider
   @SuppressWarnings({ "unused" })
   public IChartLayer getLayer( final URL context ) throws ConfigurationException
   {
-    return new DefaultLineLayer( this, getDataContainer(), getStyleSet());
+    return new DefaultLineLayer( this, getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
   }
 
   private AbstractDomainValueFileData<Calendar, Number> getDataContainer( )

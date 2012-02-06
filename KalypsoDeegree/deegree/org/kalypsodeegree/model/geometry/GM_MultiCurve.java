@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- *
+ * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always.
- *
- * If you intend to use this software in other ways than in kalypso
+ * interface-compatibility to deegree is wanted but not retained always. 
+ * 
+ * If you intend to use this software in other ways than in kalypso 
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree,
+ * all modifications are licensed as deegree, 
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -36,26 +36,20 @@
 
 package org.kalypsodeegree.model.geometry;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.commons.xml.NS;
-
 /**
+ * 
  * The interface defines the access to a aggregations of <tt>GM_Curve</tt> objects.
+ * 
  * <p>
  * -----------------------------------------------------
  * </p>
- *
+ * 
  * @author Andreas Poth
  * @version $Revision$ $Date$
  *          <p>
  */
 public interface GM_MultiCurve extends GM_MultiPrimitive
 {
-  QName MULTI_CURVE_ELEMENT = new QName( NS.GML3, "MultiCurve" ); //$NON-NLS-1$
-
-  QName MEMBER_CURVE = new QName( NS.GML3, "curveMember" ); //$NON-NLS-1$
-
   /**
    * @link aggregation
    * @clientCardinality 0..*
@@ -70,7 +64,7 @@ public interface GM_MultiCurve extends GM_MultiPrimitive
   /**
    * inserts a GM_Curve in the aggregation. all elements with an index equal or larger index will be moved. if index is
    * larger then getSize() - 1 or smaller then 0 or gmc equals null an exception will be thrown.
-   *
+   * 
    * @param gmc
    *          GM_Curve to insert.
    * @param index
@@ -79,9 +73,9 @@ public interface GM_MultiCurve extends GM_MultiPrimitive
   public void insertCurveAt( GM_Curve gmc, int index ) throws GM_Exception;
 
   /**
-   * sets the submitted GM_Curve at the submitted index. the element at the position <code>index</code> will be removed.
-   * if index is larger then getSize() - 1 or smaller then 0 or gmc equals null an exception will be thrown.
-   *
+   * sets the submitted GM_Curve at the submitted index. the element at the position <code>index</code> will be
+   * removed. if index is larger then getSize() - 1 or smaller then 0 or gmc equals null an exception will be thrown.
+   * 
    * @param gmc
    *          GM_Curve to set.
    * @param index
@@ -91,7 +85,7 @@ public interface GM_MultiCurve extends GM_MultiPrimitive
 
   /**
    * removes the submitted GM_Curve from the aggregation
-   *
+   * 
    * @return the removed GM_Curve
    */
   public GM_Curve removeCurve( GM_Curve gmc );
@@ -99,7 +93,7 @@ public interface GM_MultiCurve extends GM_MultiPrimitive
   /**
    * removes the GM_Curve at the submitted index from the aggregation. if index is larger then getSize() - 1 or smaller
    * then 0 an exception will be thrown.
-   *
+   * 
    * @return the removed GM_Curve
    */
   public GM_Curve removeCurveAt( int index ) throws GM_Exception;
@@ -113,6 +107,6 @@ public interface GM_MultiCurve extends GM_MultiPrimitive
   /**
    * returns all GM_Curves as array
    */
-  public GM_Curve[] getAllCurves( );
+  public GM_Curve[] getAllCurves();
 
 }

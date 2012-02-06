@@ -52,8 +52,8 @@ import de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegend
  */
 public interface IBasicChartSettings
 {
-  void clearTitles( );
-
+  void clearTitles();
+  
   String getDescription( );
 
   TitleTypeBean[] getTitles( );

@@ -45,22 +45,23 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.module.project.IProjectHandle;
-import org.kalypso.module.project.local.ILocalProject;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalWorkspaceModel;
 import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
 import org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel;
 import org.kalypso.project.database.client.core.model.local.ILocalWorkspaceListener;
 import org.kalypso.project.database.client.core.model.local.LocalWorkspaceModel;
-import org.kalypso.project.database.client.core.model.projects.IRemoteProject;
 import org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener;
 import org.kalypso.project.database.client.core.model.remote.RemoteWorkspaceModel;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
+import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
+import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
+import org.kalypso.project.database.client.extension.database.handlers.IProjectHandler;
+import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
 import org.kalypso.project.database.client.extension.database.handlers.implementation.RemoteProjectHandler;
 import org.kalypso.project.database.client.extension.database.handlers.implementation.TranscendenceProjectHandler;
 import org.kalypso.project.database.client.i18n.Messages;
@@ -76,7 +77,7 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
 
   private RemoteWorkspaceModel m_remote = null;
 
-  private final Set<IProjectHandle> m_projects = new TreeSet<IProjectHandle>( IProjectHandle.COMPARATOR );
+  private final Set<IProjectHandler> m_projects = new TreeSet<IProjectHandler>( IProjectHandler.COMPARATOR );
 
   private final Set<IProjectDatabaseListener> m_listener = new LinkedHashSet<IProjectDatabaseListener>();
 
@@ -137,7 +138,7 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
       final IRemoteProject remote = findRemoteProject( remoteProjects, handler );
       if( remote != null )
       {
-        remoteProjects = ArrayUtils.removeElement( remoteProjects, remote );
+        remoteProjects = (IRemoteProject[]) ArrayUtils.removeElement( remoteProjects, remote );
         final TranscendenceProjectHandler project = new TranscendenceProjectHandler( handler, remote );
 
         m_projects.add( project );
@@ -167,14 +168,14 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
   }
 
   @Override
-  public synchronized IProjectHandle[] getProjects( )
+  public synchronized IProjectHandler[] getProjects( )
   {
     if( m_projects.isEmpty() )
     {
       buildProjectList();
     }
 
-    return m_projects.toArray( new IProjectHandle[] {} );
+    return m_projects.toArray( new IProjectHandler[] {} );
   }
 
   /**
@@ -235,22 +236,22 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
     m_listener.remove( listener );
   }
 
-// @Override
-// public IProjectHandler[] getProjects( final IProjectDatabaseFilter filter )
-// {
-// final Set<IProjectHandler> myProjects = new HashSet<IProjectHandler>();
-//
-// final IProjectHandler[] projects = getProjects();
-// for( final IProjectHandler handler : projects )
-// {
-// if( filter.select( handler ) )
-// {
-// myProjects.add( handler );
-// }
-// }
-//
-// return myProjects.toArray( new IProjectHandler[] {} );
-// }
+  @Override
+  public IProjectHandler[] getProjects( final IProjectDatabaseFilter filter )
+  {
+    final Set<IProjectHandler> myProjects = new HashSet<IProjectHandler>();
+
+    final IProjectHandler[] projects = getProjects();
+    for( final IProjectHandler handler : projects )
+    {
+      if( filter.select( handler ) )
+      {
+        myProjects.add( handler );
+      }
+    }
+
+    return myProjects.toArray( new IProjectHandler[] {} );
+  }
 
   @Override
   public void setRemoteProjectsDirty( )
@@ -262,7 +263,7 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
   }
 
   @Override
-  public IStatus getConnectionState( )
+  public IStatus getRemoteConnectionState( )
   {
     if( m_remote != null )
       return m_remote.getRemoteConnectionState();
@@ -288,10 +289,10 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
    * @see org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel#findProject(org.eclipse.core.resources.IProject)
    */
   @Override
-  public IProjectHandle findProject( final IProject project )
+  public IProjectHandler findProject( final IProject project )
   {
-    final IProjectHandle[] projects = getProjects();
-    for( final IProjectHandle handler : projects )
+    final IProjectHandler[] projects = getProjects();
+    for( final IProjectHandler handler : projects )
     {
       if( handler.equals( project ) )
         return handler;
@@ -322,15 +323,15 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
    * @see org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel#getProject(java.lang.String)
    */
   @Override
-  public IProjectHandle getProject( String unique )
+  public IProjectHandler getProject( String unique )
   {
     if( unique.startsWith( "/" ) ) //$NON-NLS-1$
     {
       unique = unique.substring( 1 );
     }
 
-    final IProjectHandle[] projects = getProjects();
-    for( final IProjectHandle project : projects )
+    final IProjectHandler[] projects = getProjects();
+    for( final IProjectHandler project : projects )
     {
       if( project.getUniqueName().equals( unique ) )
         return project;

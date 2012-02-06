@@ -51,6 +51,7 @@ import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 
 /**
  * @author Gernot Belger
+ *
  */
 public class StringToFeaturePropertyConverter implements IConverter
 {

@@ -81,9 +81,9 @@ public class SldHelper
     final float minBri = minhsb[2];
     final float maxBri = maxhsb[2];
 
-    final double Hue = minHue + currentClass * (maxHue - minHue) / (numOfClasses - 1);
-    final double Sat = minSat + currentClass * (maxSat - minSat) / (numOfClasses - 1);
-    final double Bri = minBri + currentClass * (maxBri - minBri) / (numOfClasses - 1);
+    final double Hue = minHue + (currentClass * (maxHue - minHue) / (numOfClasses - 1));
+    final double Sat = minSat + (currentClass * (maxSat - minSat) / (numOfClasses - 1));
+    final double Bri = minBri + (currentClass * (maxBri - minBri) / (numOfClasses - 1));
 
     final Color hsbColor = Color.getHSBColor( (float) Hue, (float) Sat, (float) Bri );
     final Color rgbColor = new Color( hsbColor.getRed(), hsbColor.getGreen(), hsbColor.getBlue() );
@@ -96,7 +96,7 @@ public class SldHelper
     if( currentClass == 0 || numOfClasses == 1 )
       return min;
 
-    return min + currentClass * (max - min) / (numOfClasses - 1);
+    return min + (currentClass * (max - min) / (numOfClasses - 1));
   }
 
   /**
@@ -181,7 +181,7 @@ public class SldHelper
     final BigDecimal maxDecimal = maxValue.setScale( 2, BigDecimal.ROUND_CEILING );
 
     final BigDecimal rasterStepWidth = stepWidth.setScale( 2, BigDecimal.ROUND_FLOOR );
-    final int numOfClasses = maxDecimal.subtract( minDecimal ).divide( rasterStepWidth ).intValue() + 1;
+    final int numOfClasses = (maxDecimal.subtract( minDecimal ).divide( rasterStepWidth )).intValue() + 1;
 
     // as quantity represents UPPER BOUNDARY of the class, we should define the behaviour for the values below
     final BigDecimal belowMinQuantity = new BigDecimal( minDecimal.doubleValue() ).setScale( 2, BigDecimal.ROUND_HALF_UP );

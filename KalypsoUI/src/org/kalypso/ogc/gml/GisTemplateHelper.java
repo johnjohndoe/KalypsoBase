@@ -77,7 +77,13 @@ import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.gml.map.themes.KalypsoImageTheme;
+import org.kalypso.ogc.gml.map.themes.KalypsoLegendTheme;
+import org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme;
+import org.kalypso.ogc.gml.map.themes.KalypsoTextTheme;
+import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
 import org.kalypso.template.featureview.Featuretemplate;
+import org.kalypso.template.gismapview.CascadingLayer;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.Gismapview.Layers;
 import org.kalypso.template.gismapview.ObjectFactory;
@@ -86,6 +92,8 @@ import org.kalypso.template.gistableview.Gistableview.Layer;
 import org.kalypso.template.gistreeview.Gistreeview;
 import org.kalypso.template.types.ExtentType;
 import org.kalypso.template.types.StyledLayerType;
+import org.kalypso.template.types.StyledLayerType.Property;
+import org.kalypso.template.types.StyledLayerType.Style;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
@@ -105,7 +113,7 @@ import org.xml.sax.XMLReader;
 
 /**
  * Hilfsklasse, um aus den Binding-Klassen 'echte' Objekte zu erzeugen und umgekehrt
- *
+ * 
  * @author Belger
  */
 public final class GisTemplateHelper
@@ -123,68 +131,7 @@ public final class GisTemplateHelper
     // never instantiate this class
   }
 
-  /**
-   * @param strictType
-   *          If true, use the real FeatureType of the first feature of the given collection to strictly type the layer.
-   */
-  public static final Gismapview createGisMapView( final Map<Feature, IRelationType> layersToCreate, final boolean strictType )
-  {
-    final Gismapview gismapview = TemplateUtilities.OF_GISMAPVIEW.createGismapview();
-    final Layers layers = TemplateUtilities.OF_GISMAPVIEW.createGismapviewLayers();
-    gismapview.setLayers( layers );
-
-    final List<JAXBElement< ? extends StyledLayerType>> layer = layers.getLayer();
-
-    int count = 0;
-    for( final Map.Entry<Feature, IRelationType> entry : layersToCreate.entrySet() )
-    {
-      final Feature feature = entry.getKey();
-      final URL context = feature.getWorkspace().getContext();
-
-      final IRelationType rt = entry.getValue();
-
-      final String parentName = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_NAME );
-      final String parentLabel = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
-      final String layerName = parentName + " - " + parentLabel; //$NON-NLS-1$
-
-      final FeaturePath featurePathToParent = new FeaturePath( feature );
-
-      final Object property = feature.getProperty( rt );
-      String typeName = ""; //$NON-NLS-1$
-      if( strictType && (property instanceof List< ? >) )
-      {
-        final List< ? > list = (List< ? >) property;
-        if( !list.isEmpty() )
-        {
-          final Feature firstChild = FeatureHelper.getFeature( feature.getWorkspace(), list.get( 0 ) );
-          typeName = "[" + firstChild.getFeatureType().getQName().getLocalPart() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
-        }
-      }
-
-      final String memberName = rt.getQName().getLocalPart() + typeName;
-
-      final FeaturePath featurePath = new FeaturePath( featurePathToParent, memberName );
-
-      final StyledLayerType layerType = OF_TEMPLATE_TYPES.createStyledLayerType();
-      layerType.setHref( context.toExternalForm() );
-      layerType.setFeaturePath( featurePath.toString() );
-      layerType.setLinktype( "gml" ); //$NON-NLS-1$
-      layerType.setName( layerName );
-      layerType.setVisible( true );
-      layerType.setId( "ID_" + count++ ); //$NON-NLS-1$
-
-      final JAXBElement<StyledLayerType> layerElement = TemplateUtilities.OF_GISMAPVIEW.createLayer( layerType );
-
-      layer.add( layerElement );
-    }
-
-    if( layer.size() > 0 )
-      layers.setActive( layer.get( 0 ).getValue() );
-
-    return gismapview;
-  }
-
-  public static final Featuretemplate loadGisFeatureTemplate( final IStorage file ) throws CoreException, IOException, JAXBException
+  public static Featuretemplate loadGisFeatureTemplate( final IStorage file ) throws CoreException, IOException, JAXBException
   {
     InputStream is = null;
 
@@ -234,7 +181,7 @@ public final class GisTemplateHelper
     }
   }
 
-  public static final Featuretemplate loadGisFeatureTemplate( final InputStream inputStream, final IProgressMonitor monitor ) throws CoreException
+  public final Featuretemplate loadGisFeatureTemplate( final InputStream inputStream, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.GisTemplateHelper.3" ), 1000 ); //$NON-NLS-1$
     try
@@ -294,16 +241,6 @@ public final class GisTemplateHelper
     }
   }
 
-  /**
-   * @param location
-   *          An absolute (i.e. resolved resource location).
-   */
-  public static final Gismapview loadGisMapView( final URL location ) throws JAXBException, SAXException, ParserConfigurationException, IOException
-  {
-    final InputSource inputSource = new InputSource( location.toString() );
-    return loadGisMapView( inputSource );
-  }
-
   // TODO: for all calling methods: close streams!
   public static final Gismapview loadGisMapView( final InputSource is ) throws JAXBException, SAXException, ParserConfigurationException, IOException
   {
@@ -319,7 +256,7 @@ public final class GisTemplateHelper
     return (Gismapview) unmarshaller.getUnmarshallerHandler().getResult();
   }
 
-  public static final Gistableview loadGisTableview( final IStorage storage ) throws CoreException, JAXBException
+  public static Gistableview loadGisTableview( final IStorage storage ) throws CoreException, JAXBException
   {
     final InputSource is = new InputSource( storage.getContents() );
     if( storage instanceof IEncodedStorage )
@@ -327,34 +264,10 @@ public final class GisTemplateHelper
     return GisTemplateHelper.loadGisTableview( is );
   }
 
-  /**
-   * @param templateLocation
-   *          An absolute (i.e. resolved) resource location
-   */
-  public static final Gistableview loadGisTableview( final URL templateLocation ) throws JAXBException
-  {
-    final InputSource source = new InputSource( templateLocation.toString() );
-    return loadGisTableview( source );
-  }
-
-  public static final Gistableview loadGisTableview( final InputSource is ) throws JAXBException
+  public static Gistableview loadGisTableview( final InputSource is ) throws JAXBException
   {
     final Unmarshaller unmarshaller = TemplateUtilities.JC_GISTABLEVIEW.createUnmarshaller();
     return (Gistableview) unmarshaller.unmarshal( is );
-  }
-
-  public static final Gistreeview loadGisTreeView( final IStorage file ) throws JAXBException, CoreException
-  {
-    final InputSource is = new InputSource( file.getContents() );
-    if( file instanceof IEncodedStorage )
-      is.setEncoding( ((IEncodedStorage) file).getCharset() );
-    return GisTemplateHelper.loadGisTreeView( is );
-  }
-
-  public static final Gistreeview loadGisTreeView( final InputSource is ) throws JAXBException
-  {
-    final Unmarshaller unmarshaller = TemplateUtilities.JC_GISTREEVIEW.createUnmarshaller();
-    return (Gistreeview) unmarshaller.unmarshal( is );
   }
 
   public static void saveGisMapView( final Gismapview modellTemplate, final OutputStream outStream, final String encoding ) throws JAXBException
@@ -367,37 +280,6 @@ public final class GisTemplateHelper
   {
     final Marshaller marshaller = TemplateUtilities.createGismapviewMarshaller( encoding );
     marshaller.marshal( modellTemplate, writer );
-  }
-
-  public static void saveGisMapView( final Gismapview gisMapView, final File outFile, final String encoding ) throws IOException, JAXBException
-  {
-    BufferedOutputStream os = null;
-    try
-    {
-      os = new BufferedOutputStream( new FileOutputStream( outFile ) );
-      GisTemplateHelper.saveGisMapView( gisMapView, os, encoding );
-      os.close();
-    }
-    finally
-    {
-      IOUtils.closeQuietly( os );
-    }
-  }
-
-  public static void saveGisMapView( final Gismapview mapview, final IFile mapFile, final String encoding ) throws JAXBException, IOException, CoreException
-  {
-
-    final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-    GisTemplateHelper.saveGisMapView( mapview, bos, encoding );
-    bos.close();
-
-    final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );
-    if( mapFile.exists() )
-      mapFile.setContents( bis, false, true, new NullProgressMonitor() );
-    else
-      mapFile.create( bis, true, new NullProgressMonitor() );
-
-    bis.close();
   }
 
   public static GM_Envelope getBoundingBox( final Gismapview gisview )
@@ -429,7 +311,7 @@ public final class GisTemplateHelper
 
   /**
    * This method creates a new Map with a bounding box
-   *
+   * 
    * @return gismapview new empty map with a layer list
    */
   public static Gismapview emptyGisView( )
@@ -462,9 +344,302 @@ public final class GisTemplateHelper
     return null;
   }
 
+  /**
+   * @param strictType
+   *          If true, use the real FeatureType of the first feature of the given collection to strictly type the layer.
+   */
+  public static Gismapview createGisMapView( final Map<Feature, IRelationType> layersToCreate, final boolean strictType )
+  {
+    final Gismapview gismapview = TemplateUtilities.OF_GISMAPVIEW.createGismapview();
+    final Layers layers = TemplateUtilities.OF_GISMAPVIEW.createGismapviewLayers();
+    gismapview.setLayers( layers );
+
+    final List<JAXBElement< ? extends StyledLayerType>> layer = layers.getLayer();
+
+    int count = 0;
+    for( final Map.Entry<Feature, IRelationType> entry : layersToCreate.entrySet() )
+    {
+      final Feature feature = entry.getKey();
+      final URL context = feature.getWorkspace().getContext();
+
+      final IRelationType rt = entry.getValue();
+
+      final String parentName = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_NAME );
+      final String parentLabel = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
+      final String layerName = parentName + " - " + parentLabel; //$NON-NLS-1$
+
+      final FeaturePath featurePathToParent = new FeaturePath( feature );
+
+      final Object property = feature.getProperty( rt );
+      String typeName = ""; //$NON-NLS-1$
+      if( strictType && (property instanceof List< ? >) )
+      {
+        final List< ? > list = (List< ? >) property;
+        if( !list.isEmpty() )
+        {
+          final Feature firstChild = FeatureHelper.getFeature( feature.getWorkspace(), list.get( 0 ) );
+          typeName = "[" + firstChild.getFeatureType().getQName().getLocalPart() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
+        }
+      }
+
+      final String memberName = rt.getQName().getLocalPart() + typeName;
+
+      final FeaturePath featurePath = new FeaturePath( featurePathToParent, memberName );
+
+      final StyledLayerType layerType = OF_TEMPLATE_TYPES.createStyledLayerType();
+      layerType.setHref( context.toExternalForm() );
+      layerType.setFeaturePath( featurePath.toString() );
+      layerType.setLinktype( "gml" ); //$NON-NLS-1$
+      layerType.setName( layerName );
+      layerType.setVisible( true );
+      layerType.setId( "ID_" + count++ ); //$NON-NLS-1$
+
+      final JAXBElement<StyledLayerType> layerElement = TemplateUtilities.OF_GISMAPVIEW.createLayer( layerType );
+
+      layer.add( layerElement );
+    }
+
+    if( layer.size() > 0 )
+      layers.setActive( layer.get( 0 ).getValue() );
+
+    return gismapview;
+  }
+
+  public static final Gistreeview loadGisTreeView( final IStorage file ) throws JAXBException, CoreException
+  {
+    final InputSource is = new InputSource( file.getContents() );
+    if( file instanceof IEncodedStorage )
+      is.setEncoding( ((IEncodedStorage) file).getCharset() );
+    return GisTemplateHelper.loadGisTreeView( is );
+  }
+
+  public static final Gistreeview loadGisTreeView( final InputSource is ) throws JAXBException
+  {
+    final Unmarshaller unmarshaller = TemplateUtilities.JC_GISTREEVIEW.createUnmarshaller();
+    return (Gistreeview) unmarshaller.unmarshal( is );
+  }
+
+  public static void saveGisMapView( final Gismapview gisMapView, final File outFile, final String encoding ) throws IOException, JAXBException
+  {
+    BufferedOutputStream os = null;
+    try
+    {
+      os = new BufferedOutputStream( new FileOutputStream( outFile ) );
+      GisTemplateHelper.saveGisMapView( gisMapView, os, encoding );
+      os.close();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( os );
+    }
+  }
+
+  public static JAXBElement< ? extends StyledLayerType> configureLayer( final IKalypsoTheme theme, final String id, final GM_Envelope bbox, final String srsName, final IProgressMonitor monitor ) throws CoreException
+  {
+    if( theme instanceof CascadingLayerKalypsoTheme )
+    {
+      final CascadingLayer cascadingLayer = OF_GISMAPVIEW.createCascadingLayer();
+      final CascadingLayerKalypsoTheme cascadingKalypsoTheme = ((CascadingLayerKalypsoTheme) theme);
+      cascadingKalypsoTheme.fillLayerType( cascadingLayer, id, theme.isVisible(), srsName, monitor ); //$NON-NLS-1$
+      return TemplateUtilities.OF_GISMAPVIEW.createCascadingLayer( cascadingLayer );
+    }
+
+    final StyledLayerType layer = OF_TEMPLATE_TYPES.createStyledLayerType();
+    final String themeNameKey = theme.getName().getKey();
+
+    if( theme instanceof GisTemplateFeatureTheme )
+    {
+      ((GisTemplateFeatureTheme) theme).fillLayerType( layer, id, theme.isVisible() );//$NON-NLS-1$
+      return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
+    }
+    else if( theme instanceof KalypsoWMSTheme )
+    {
+      layer.setName( themeNameKey );
+      layer.setFeaturePath( "" ); //$NON-NLS-1$
+      layer.setVisible( theme.isVisible() );
+      layer.setId( id ); //$NON-NLS-1$
+      layer.setHref( ((KalypsoWMSTheme) theme).getSource() );
+      layer.setLinktype( theme.getType() );
+      layer.setActuate( "onRequest" ); //$NON-NLS-1$
+      layer.setType( "simple" ); //$NON-NLS-1$
+
+      final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
+      final KalypsoWMSTheme wmsTheme = (KalypsoWMSTheme) theme;
+
+      final String legendIcon = wmsTheme.getLegendIcon();
+      if( legendIcon != null )
+        layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
+
+      layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( wmsTheme.shouldShowLegendChildren() ) );
+
+      final Style[] oldStyles = wmsTheme.getStyles();
+      for( final Style oldStyle : oldStyles )
+      {
+        final Style newStyle = extentFac.createStyledLayerTypeStyle();
+        newStyle.setActuate( oldStyle.getActuate() );
+        newStyle.setArcrole( oldStyle.getArcrole() );
+        newStyle.setHref( oldStyle.getHref() );
+        newStyle.setLinktype( oldStyle.getLinktype() );
+        newStyle.setRole( oldStyle.getRole() );
+        newStyle.setShow( oldStyle.getShow() );
+        newStyle.setStyle( oldStyle.getStyle() );
+        newStyle.setTitle( oldStyle.getTitle() );
+        newStyle.setType( oldStyle.getType() );
+
+        layer.getStyle().add( newStyle );
+      }
+
+      return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
+    }
+    else if( theme instanceof KalypsoPictureTheme )
+    {
+      ((KalypsoPictureTheme) theme).fillLayerType( layer, id, theme.isVisible() ); //$NON-NLS-1$
+      return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
+    }
+    else if( theme instanceof CascadingKalypsoTheme )
+    {
+      final CascadingKalypsoTheme cascadingKalypsoTheme = ((CascadingKalypsoTheme) theme);
+      cascadingKalypsoTheme.fillLayerType( layer, id, theme.isVisible() ); //$NON-NLS-1$
+
+      cascadingKalypsoTheme.createGismapTemplate( bbox, srsName, monitor );
+      return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
+    }
+    else if( theme instanceof KalypsoLegendTheme )
+    {
+      layer.setName( themeNameKey );
+      layer.setFeaturePath( "" ); //$NON-NLS-1$
+      layer.setVisible( theme.isVisible() );
+      layer.setId( id );
+      layer.setHref( "" ); //$NON-NLS-1$
+      layer.setLinktype( "legend" ); //$NON-NLS-1$
+
+      final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
+      final AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
+
+      final String legendIcon = abstractKalypsoTheme.getLegendIcon();
+      if( legendIcon != null )
+        layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
+
+      layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowLegendChildren() ) );
+
+      /* Update the properties. */
+      String[] propertyNames = ((KalypsoLegendTheme) theme).getPropertyNames();
+      for( String propertyName : propertyNames )
+      {
+        Property property = TemplateUtilities.OF_TEMPLATE_TYPES.createStyledLayerTypeProperty();
+        property.setName( propertyName );
+        property.setValue( theme.getProperty( propertyName, null ) );
+        layer.getProperty().add( property );
+      }
+
+      return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
+    }
+    else if( theme instanceof KalypsoScaleTheme )
+    {
+      layer.setName( themeNameKey );
+      layer.setVisible( theme.isVisible() );
+      layer.setId( id ); //$NON-NLS-1$
+      layer.setLinktype( "scale" ); //$NON-NLS-1$
+
+      final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
+      final AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
+
+      final String legendIcon = abstractKalypsoTheme.getLegendIcon();
+      if( legendIcon != null )
+        layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
+
+      layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowLegendChildren() ) );
+      return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
+    }
+
+    if( theme instanceof KalypsoImageTheme )
+    {
+      layer.setName( themeNameKey );
+      layer.setFeaturePath( "" ); //$NON-NLS-1$
+      layer.setVisible( theme.isVisible() );
+      layer.setId( id );
+      layer.setHref( "" ); //$NON-NLS-1$
+      layer.setLinktype( "image" ); //$NON-NLS-1$
+
+      final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
+      final AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
+      final String legendIcon = abstractKalypsoTheme.getLegendIcon();
+      if( legendIcon != null )
+        layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
+      layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowLegendChildren() ) );
+
+      /* Update the properties. */
+      String[] propertyNames = ((KalypsoImageTheme) theme).getPropertyNames();
+      for( String propertyName : propertyNames )
+      {
+        Property property = TemplateUtilities.OF_TEMPLATE_TYPES.createStyledLayerTypeProperty();
+        property.setName( propertyName );
+        property.setValue( theme.getProperty( propertyName, null ) );
+        layer.getProperty().add( property );
+      }
+
+      return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
+    }
+
+    if( theme instanceof KalypsoTextTheme )
+    {
+      layer.setName( themeNameKey );
+      layer.setFeaturePath( "" ); //$NON-NLS-1$
+      layer.setVisible( theme.isVisible() );
+      layer.setId( id );
+      layer.setHref( "" ); //$NON-NLS-1$
+      layer.setLinktype( "text" ); //$NON-NLS-1$
+
+      final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
+      final AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
+      final String legendIcon = abstractKalypsoTheme.getLegendIcon();
+      if( legendIcon != null )
+        layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
+      layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowLegendChildren() ) );
+
+      /* Update the properties. */
+      String[] propertyNames = ((KalypsoTextTheme) theme).getPropertyNames();
+      for( String propertyName : propertyNames )
+      {
+        Property property = TemplateUtilities.OF_TEMPLATE_TYPES.createStyledLayerTypeProperty();
+        property.setName( propertyName );
+        property.setValue( theme.getProperty( propertyName, null ) );
+        layer.getProperty().add( property );
+      }
+
+      return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
+    }
+
+    final String type = theme.getType();
+    final IKalypsoThemeFactory themeFactory = ThemeFactoryExtension.getThemeFactory( type );
+    if( themeFactory == null )
+    {
+      // Return null for unknown themes, else we produce invalid XML
+      return null;
+    }
+
+    return themeFactory.configureLayer( theme, id, bbox, srsName );
+  }
+
   public static Filter getFilter( final Layer layer ) throws FilterConstructionException
   {
     final Object filterObject = layer.getFilter();
     return AbstractFilter.buildFromAnyType( filterObject );
+  }
+
+  public static void saveGisMapView( final Gismapview mapview, final IFile mapFile, final String encoding ) throws JAXBException, IOException, CoreException
+  {
+
+    final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    GisTemplateHelper.saveGisMapView( mapview, bos, encoding );
+    bos.close();
+
+    final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );
+    if( mapFile.exists() )
+      mapFile.setContents( bis, false, true, new NullProgressMonitor() );
+    else
+      mapFile.create( bis, true, new NullProgressMonitor() );
+
+    bis.close();
   }
 }

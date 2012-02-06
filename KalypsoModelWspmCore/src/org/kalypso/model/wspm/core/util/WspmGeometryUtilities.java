@@ -43,8 +43,8 @@ package org.kalypso.model.wspm.core.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.apache.commons.lang.StringUtils;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.observation.result.IRecord;
@@ -84,15 +84,6 @@ public final class WspmGeometryUtilities
     }
   }
 
-  public static GM_Curve createProfileSegment( final IProfil profil )
-  {
-    return createProfileSegment( profil, profil.getSrsName() );
-  }
-
-  /**
-   * @deprecated use {@link #createProfileSegment(IProfil)}
-   */
-  @Deprecated
   public static GM_Curve createProfileSegment( final IProfil profil, final String srsName )
   {
     return createProfileSegment( profil, srsName, null );
@@ -105,10 +96,10 @@ public final class WspmGeometryUtilities
       final IRecord[] points = profil.getPoints();
       final List<GM_Position> positions = new ArrayList<GM_Position>( points.length );
 
-      final int compRechtswert = TupleResultUtilities.indexOfComponent( profil, IWspmPointProperties.POINT_PROPERTY_RECHTSWERT );
-      final int compHochwert = TupleResultUtilities.indexOfComponent( profil, IWspmPointProperties.POINT_PROPERTY_HOCHWERT );
-      final int compBreite = TupleResultUtilities.indexOfComponent( profil, IWspmPointProperties.POINT_PROPERTY_BREITE );
-      final int compHoehe = TupleResultUtilities.indexOfComponent( profil, IWspmPointProperties.POINT_PROPERTY_HOEHE );
+      final int compRechtswert = TupleResultUtilities.indexOfComponent( profil, IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+      final int compHochwert = TupleResultUtilities.indexOfComponent( profil, IWspmConstants.POINT_PROPERTY_HOCHWERT );
+      final int compBreite = TupleResultUtilities.indexOfComponent( profil, IWspmConstants.POINT_PROPERTY_BREITE );
+      final int compHoehe = TupleResultUtilities.indexOfComponent( profil, IWspmConstants.POINT_PROPERTY_HOEHE );
 
       int left = 0;
       int right = points.length;
@@ -120,8 +111,8 @@ public final class WspmGeometryUtilities
         if( durchstroemte.length < 2 )
           return null;
 
-        left = durchstroemte[0].getPoint().getIndex();
-        right = durchstroemte[1].getPoint().getIndex();
+        left = profil.indexOfPoint( durchstroemte[0].getPoint() );
+        right = profil.indexOfPoint( durchstroemte[1].getPoint() );
       }
 
       // for( final IRecord point : points )
@@ -197,16 +188,16 @@ public final class WspmGeometryUtilities
 
   public static GM_Point createLocation( final IProfil profil, final IRecord point, final String srsName )
   {
-    return createLocation( profil, point, srsName, IWspmPointProperties.POINT_PROPERTY_HOEHE );
+    return createLocation( profil, point, srsName, IWspmConstants.POINT_PROPERTY_HOEHE );
   }
 
   public static GM_Point createLocation( final IProfil profil, final IRecord point, String srsName, final String heightComponentID )
   {
     try
     {
-      final int compRechtswert = TupleResultUtilities.indexOfComponent( profil, IWspmPointProperties.POINT_PROPERTY_RECHTSWERT );
-      final int compHochwert = TupleResultUtilities.indexOfComponent( profil, IWspmPointProperties.POINT_PROPERTY_HOCHWERT );
-      final int compBreite = TupleResultUtilities.indexOfComponent( profil, IWspmPointProperties.POINT_PROPERTY_BREITE );
+      final int compRechtswert = TupleResultUtilities.indexOfComponent( profil, IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+      final int compHochwert = TupleResultUtilities.indexOfComponent( profil, IWspmConstants.POINT_PROPERTY_HOCHWERT );
+      final int compBreite = TupleResultUtilities.indexOfComponent( profil, IWspmConstants.POINT_PROPERTY_BREITE );
       final int compHoehe = TupleResultUtilities.indexOfComponent( profil, heightComponentID );
 
       /* If there are no rw/hw create pseudo geometries from breite and station */

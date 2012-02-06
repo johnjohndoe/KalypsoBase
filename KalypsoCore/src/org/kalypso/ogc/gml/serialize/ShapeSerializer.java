@@ -64,7 +64,6 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.io.shpapi.DBaseFile;
@@ -77,13 +76,13 @@ import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 /**
  * Helper-Klasse zum lesen und schreiben von GML <br>
  * TODO: Problem: reading/writing a shape will change the precision/size of the columns!
- *
+ * 
  * @author Gernot Belger
  */
 public final class ShapeSerializer
 {
   /** The default charset of a shape (really the .dbf) is IBM850. */
-  private static final String SHAPE_DEFAULT_CHARSET_IBM850 = "IBM850"; //$NON-NLS-1$
+  private static final String SHAPE_DEFAULT_CHARSET_IBM850 = "IBM850";
 
   public static final String SHP_NAMESPACE_URI = DBaseFile.SHP_NAMESPACE_URI;
 
@@ -93,7 +92,7 @@ public final class ShapeSerializer
 
   private static final QName PROPERTY_NAME = new QName( SHP_NAMESPACE_URI, "name" ); //$NON-NLS-1$
 
-  private static final QName PROPERTY_TYPE = new QName( SHP_NAMESPACE_URI, "type" ); //$NON-NLS-1$
+  private static final QName PROPERTY_TYPE = new QName( SHP_NAMESPACE_URI, "type" ); //$NON-NLS-1$ 
 
   public static final String PROPERTY_GEOM = "GEOM";//$NON-NLS-1$
 
@@ -124,8 +123,7 @@ public final class ShapeSerializer
   @Deprecated
   public static void serialize( final GMLWorkspace workspace, final String filenameBase, final IShapeDataProvider shapeDataProvider ) throws GmlSerializeException
   {
-    final String defaultSrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-    serialize( workspace, filenameBase, shapeDataProvider, defaultSrs );
+    serialize( workspace, filenameBase, shapeDataProvider );
   }
 
   /**
@@ -162,16 +160,17 @@ public final class ShapeSerializer
   public static Feature createWorkspaceRootFeature( final IFeatureType featureType, final int shapeFileType )
   {
     final IGMLSchema schema = featureType.getGMLSchema();
+    final IFeatureType[] featureTypes = schema.getAllFeatureTypes();
     final Feature rootFeature = ShapeSerializer.createShapeRootFeature( featureType );
     final String schemaLocation = schema instanceof GMLSchema ? ((GMLSchema) schema).getContext().toExternalForm() : null;
-    new GMLWorkspace_Impl( schema, rootFeature, null, null, schemaLocation, null );
+    new GMLWorkspace_Impl( schema, featureTypes, rootFeature, null, null, schemaLocation, null );
     rootFeature.setProperty( ShapeSerializer.PROPERTY_TYPE, new Integer( shapeFileType ) );
     return rootFeature;
   }
 
   /**
    * Creates to feature type for the root feature of a shape-file-based workspace.
-   *
+   * 
    * @param childFeatureType
    *          The feature type for the children (i.e. the shape-objects) of the root.
    * @return A newly created feature suitable for the root of a workspace. It has the following properties:
@@ -291,7 +290,7 @@ public final class ShapeSerializer
    * This function tries to load a prj file, which contains the coordinate system. If it exists and is a valid one, this
    * coordinate system is returned. If it is not found, the source coordinate system is returned (this should be the one
    * in the gmt). If it does also not exist, null will be returned.
-   *
+   * 
    * @param prjLocation
    *          Location of the .prj file.
    * @param defaultSrs

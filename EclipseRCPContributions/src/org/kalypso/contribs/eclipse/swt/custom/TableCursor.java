@@ -586,39 +586,39 @@ public class TableCursor extends Canvas
     if( DEBUG )
       System.out.println( "setRowColumn" );
 
-    if( m_row == row && m_column == column )
+    if( this.m_row == row && this.m_column == column )
       return;
 
-    if( m_row != null && m_row != row )
+    if( this.m_row != null && this.m_row != row )
     {
-      m_row.removeListener( SWT.Dispose, m_disposeItemListener );
-      m_row = null;
+      this.m_row.removeListener( SWT.Dispose, m_disposeItemListener );
+      this.m_row = null;
     }
-    if( m_column != null && m_column != column )
+    if( this.m_column != null && this.m_column != column )
     {
-      m_column.removeListener( SWT.Dispose, m_disposeColumnListener );
-      m_column.removeListener( SWT.Move, m_resizeListener );
-      m_column.removeListener( SWT.Resize, m_resizeListener );
-      m_column = null;
+      this.m_column.removeListener( SWT.Dispose, m_disposeColumnListener );
+      this.m_column.removeListener( SWT.Move, m_resizeListener );
+      this.m_column.removeListener( SWT.Resize, m_resizeListener );
+      this.m_column = null;
     }
     if( row != null )
     {
-      if( m_row != row )
+      if( this.m_row != row )
       {
-        m_row = row;
+        this.m_row = row;
         row.addListener( SWT.Dispose, m_disposeItemListener );
         m_table.showItem( row );
       }
-      if( m_column != column && column != null )
+      if( this.m_column != column && column != null )
       {
-        m_column = column;
+        this.m_column = column;
         column.addListener( SWT.Dispose, m_disposeColumnListener );
         column.addListener( SWT.Move, m_resizeListener );
         column.addListener( SWT.Resize, m_resizeListener );
         m_table.showColumn( column );
       }
       final int columnIndex = column == null ? 0 : m_table.indexOf( column );
-      if( getVisible() )
+      if( isVisible() )
       {
         setBounds( row.getBounds( columnIndex ) );
         redraw();

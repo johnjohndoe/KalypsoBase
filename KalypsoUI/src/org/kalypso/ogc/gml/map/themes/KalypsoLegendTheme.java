@@ -47,7 +47,9 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.image.BufferedImage;
 import java.util.List;
+import java.util.Properties;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -92,27 +94,21 @@ public class KalypsoLegendTheme extends AbstractImageTheme
   protected String[] m_themeIds;
 
   /**
-   * The font size.
-   */
-  protected int m_fontSize;
-
-  /**
    * The constructor
    * 
    * @param name
    *          The name of the theme.
-   * @param mapModel
-   *          The map model to use.
+   * @param mapModell
+   *          The map modell to use.
    */
-  public KalypsoLegendTheme( final I10nString name, final IMapModell mapModel )
+  public KalypsoLegendTheme( final I10nString name, final IMapModell mapModell )
   {
-    super( name, "legend", mapModel ); //$NON-NLS-1$
+    super( name, "legend", mapModell ); //$NON-NLS-1$
 
     /* Initialize. */
     m_backgroundColor = null;
     m_insets = -1;
     m_themeIds = null;
-    m_fontSize = -1;
   }
 
   /**
@@ -173,7 +169,7 @@ public class KalypsoLegendTheme extends AbstractImageTheme
 
             /* Create the legend. */
             final LegendExporter legendExporter = new LegendExporter();
-            image[0] = legendExporter.exportLegends( m_themeIds, nodes, display, new Insets( m_insets, m_insets, m_insets, m_insets ), m_backgroundColor.getRGB(), -1, -1, true, m_fontSize, subMonitor );
+            image[0] = legendExporter.exportLegends( m_themeIds, nodes, display, new Insets( m_insets, m_insets, m_insets, m_insets ), m_backgroundColor.getRGB(), -1, -1, true, subMonitor );
           }
           catch( final CoreException ex )
           {
@@ -235,7 +231,6 @@ public class KalypsoLegendTheme extends AbstractImageTheme
     m_backgroundColor = null;
     m_insets = -1;
     m_themeIds = null;
-    m_fontSize = -1;
 
     super.dispose();
   }
@@ -250,7 +245,6 @@ public class KalypsoLegendTheme extends AbstractImageTheme
     m_backgroundColor = new org.eclipse.swt.graphics.Color( Display.getCurrent(), 255, 255, 255 );
     m_insets = 10;
     m_themeIds = new String[] {};
-    m_fontSize = 10;
 
     /* Get the properties. */
     final String horizontalProperty = getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, null );
@@ -258,7 +252,6 @@ public class KalypsoLegendTheme extends AbstractImageTheme
     final String backgroundColorProperty = getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR, null );
     final String insetsProperty = getProperty( LegendUtilities.THEME_PROPERTY_INSETS, null );
     final String themeIdsProperty = getProperty( LegendUtilities.THEME_PROPERTY_THEME_IDS, null );
-    final String fontSizeProperty = getProperty( LegendUtilities.THEME_PROPERTY_FONT_SIZE, null );
 
     /* Check the horizontal and vertical position. */
     final int horizontal = PositionUtilities.checkHorizontalPosition( horizontalProperty );
@@ -283,10 +276,32 @@ public class KalypsoLegendTheme extends AbstractImageTheme
     final List<String> themeIds = LegendUtilities.verifyThemeIds( getMapModell(), themeIdsProperty );
     if( themeIds != null && themeIds.size() > 0 )
       m_themeIds = themeIds.toArray( new String[] {} );
+  }
 
-    /* Check the font size. */
-    final int fontSize = LegendUtilities.checkFontSize( fontSizeProperty );
-    if( fontSize >= 1 && fontSize <= 25 )
-      m_fontSize = fontSize;
+  /**
+   * Updates all position properties from a {@link Properties} object.<br/>
+   * See {@link PositionUtilities} for the possible property keys.
+   */
+  public void updatePosition( final Properties m_properties )
+  {
+    /* Get the properties. */
+    final String horizontalProperty = m_properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
+    final String verticalProperty = m_properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
+    final String backgroundColorProperty = m_properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
+    final String insetsProperty = m_properties.getProperty( LegendUtilities.THEME_PROPERTY_INSETS );
+    final String themeIdsProperty = m_properties.getProperty( LegendUtilities.THEME_PROPERTY_THEME_IDS );
+    /* Set the properties. */
+    if( !StringUtils.isBlank( horizontalProperty ) )
+      setProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );
+    if( !StringUtils.isBlank( verticalProperty ) )
+      setProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, verticalProperty );
+    if( !StringUtils.isBlank( backgroundColorProperty ) )
+      setProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR, backgroundColorProperty );
+    if( !StringUtils.isBlank( insetsProperty ) )
+      setProperty( LegendUtilities.THEME_PROPERTY_INSETS, insetsProperty );
+    if( themeIdsProperty != null )
+      setProperty( LegendUtilities.THEME_PROPERTY_THEME_IDS, themeIdsProperty );
+
+    fireRepaintRequested( getActiveEnvelope() );
   }
 }

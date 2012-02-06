@@ -40,10 +40,10 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.wq;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
@@ -132,12 +132,18 @@ public class WQTuppleModel extends AbstractTupleModel
     m_destStatusAxis = destStatusAxis;
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.ITuppleModel#getCount()
+   */
   @Override
   public int size( ) throws SensorException
   {
     return m_model.size();
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.ITuppleModel#getElement(int, org.kalypso.ogc.sensor.IAxis)
+   */
   @Override
   public Object get( final int index, final IAxis axis ) throws SensorException
   {
@@ -169,27 +175,24 @@ public class WQTuppleModel extends AbstractTupleModel
   {
     final Number srcValue = (Number) m_model.get( index, m_srcAxis );
     final Number srcStatus = m_srcStatusAxis == null ? KalypsoStati.BIT_OK : (Number) m_model.get( index, m_srcStatusAxis );
-    if( Objects.isNull( srcValue, srcStatus ) )
+    if( srcValue == null || srcStatus == null )
       return new Number[] { null, null };
 
+    final Date d = (Date) m_model.get( index, m_dateAxis );
     try
     {
       final String type = m_destAxis.getType();
-      final int status = KalypsoStati.STATUS_DERIVATED | srcStatus.intValue();
-
       if( type.equals( m_converter.getFromType() ) )
       {
         final double q = srcValue.doubleValue();
-        final double w = m_converter.computeW( m_model, index, q );
-
-        return new Number[] { w, status };
+        return new Number[] { m_converter.computeW( d, q ), KalypsoStati.STATUS_DERIVATED | srcStatus.intValue() };
       }
       else if( type.equals( m_converter.getToType() ) )
       {
         final double w = srcValue.doubleValue();
-        final double q = m_converter.computeQ( m_model, index, w );
+        final double q = m_converter.computeQ( d, w );
 
-        return new Number[] { q, status };
+        return new Number[] { q, KalypsoStati.STATUS_DERIVATED | srcStatus.intValue() };
       }
 
       return new Number[] { ZERO, KalypsoStati.STATUS_DERIVATION_ERROR };
@@ -200,6 +203,9 @@ public class WQTuppleModel extends AbstractTupleModel
     }
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object, org.kalypso.ogc.sensor.IAxis)
+   */
   @Override
   public void set( final int index, final IAxis axis, final Object element ) throws SensorException
   {
@@ -208,9 +214,10 @@ public class WQTuppleModel extends AbstractTupleModel
     m_stati.remove( objIndex );
     if( axis.equals( m_destAxis ) )
     {
+      final Date d = (Date) m_model.get( index, m_dateAxis );
+
       Double value = null;
       Integer status = null;
-
       try
       {
         final String type = axis.getType();
@@ -222,13 +229,13 @@ public class WQTuppleModel extends AbstractTupleModel
         else if( type.equals( m_converter.getFromType() ) )
         {
           final double w = ((Number) element).doubleValue();
-          value = new Double( m_converter.computeQ( m_model, index, w ) );
+          value = new Double( m_converter.computeQ( d, w ) );
           status = KalypsoStati.STATUS_USERMOD;
         }
         else if( type.equals( m_converter.getToType() ) )
         {
           final double q = ((Number) element).doubleValue();
-          value = new Double( m_converter.computeW( m_model, index, q ) );
+          value = new Double( m_converter.computeW( d, q ) );
           status = KalypsoStati.STATUS_USERMOD;
         }
         else

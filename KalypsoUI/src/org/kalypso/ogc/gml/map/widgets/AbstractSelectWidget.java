@@ -58,7 +58,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -69,7 +69,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 /**
  * @author doemming
  */
-public abstract class AbstractSelectWidget extends DeprecatedMouseWidget
+public abstract class AbstractSelectWidget extends AbstractWidget
 {
   protected static final int MODE_SELECT = 0;
 
@@ -244,7 +244,7 @@ public abstract class AbstractSelectWidget extends DeprecatedMouseWidget
     final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
 
     final IKalypsoTheme activeTheme = model.getActiveTheme();
-    if( activeTheme == null || !(activeTheme instanceof IKalypsoFeatureTheme) )
+    if( (activeTheme == null) || !(activeTheme instanceof IKalypsoFeatureTheme) )
       return;
 
     if( startPoint != null )
@@ -269,13 +269,13 @@ public abstract class AbstractSelectWidget extends DeprecatedMouseWidget
         changeSelection( listFe, (IKalypsoFeatureTheme) activeTheme, selectionManager, selectionMode );
       }
       else
-      // dragged
+        // dragged
       {
         final double g2x = transform.getSourceX( endPoint.getX() );
         final double g2y = transform.getSourceY( endPoint.getY() );
         boolean withinStatus = false;
 
-        if( endPoint.getX() > startPoint.getX() && endPoint.getY() > startPoint.getY() )
+        if( (endPoint.getX() > startPoint.getX()) && (endPoint.getY() > startPoint.getY()) )
           withinStatus = true;
 
         final double minX = g1x < g2x ? g1x : g2x;
@@ -283,7 +283,7 @@ public abstract class AbstractSelectWidget extends DeprecatedMouseWidget
         final double minY = g1y < g2y ? g1y : g2y;
         final double maxY = g1y > g2y ? g1y : g2y;
 
-        if( minX != maxX && minY != maxY )
+        if( (minX != maxX) && (minY != maxY) )
         {
           final GM_Envelope envSelect = GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY, model.getCoordinatesSystem() );
           final List<Object> features = JMSelector.select( envSelect, ((IKalypsoFeatureTheme) activeTheme).getFeatureListVisible( envSelect ), withinStatus );

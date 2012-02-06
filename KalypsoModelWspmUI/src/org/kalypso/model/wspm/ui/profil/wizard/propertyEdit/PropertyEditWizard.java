@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.ui.profil.wizard.propertyEdit;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
-import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IPageChangeProvider;
@@ -54,14 +53,11 @@ import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.base.IProfileManipulator;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
@@ -69,8 +65,10 @@ import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfileHandlerUtils;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfileManipulationOperation;
+import org.kalypso.model.wspm.ui.profil.wizard.ProfileManipulationOperation.IProfileManipulator;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
 import org.kalypso.observation.result.IComponent;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
  * @author Kim Werner
@@ -94,6 +92,8 @@ public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
 
   private OperationChooserPage m_operationChooserPage;
 
+  private CommandableWorkspace m_workspace;
+
   public PropertyEditWizard( )
   {
     // empty, needed for tools wizard
@@ -102,6 +102,7 @@ public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
   public PropertyEditWizard( final IProfil profile )
   {
     m_profile = profile;
+    m_workspace = null;
     m_profileChooserPage = null;
 
     init();
@@ -113,6 +114,7 @@ public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
     m_profile = null;
 
     final ProfileSelection profileSelection = ProfileHandlerUtils.getSelectionChecked( selection );
+    m_workspace = profileSelection.getWorkspace();
 
     final String message = Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.2" ); //$NON-NLS-1$
     m_profileChooserPage = new ProfilesChooserPage( message, profileSelection, false );
@@ -195,7 +197,7 @@ public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
 
     final ProfilChangeHint hint = new ProfilChangeHint();
     hint.setPointValuesChanged();
-    m_profile.fireProfilChanged( hint );
+    m_profile.fireProfilChanged( hint, new IProfilChange[] { null } );
 
     return true;
   }
@@ -205,29 +207,19 @@ public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
     final Object[] choosenProperties = m_propertyChooserPage.getChoosen();
     final OperationChooserPage operationChooserPage = m_operationChooserPage;
 
-    final Set<IProfileFeature> profiles = new LinkedHashSet<>();
-
-    final Object[] choosen = m_profileChooserPage.getChoosen();
-    for( final Object object : choosen )
-    {
-      if( object instanceof IProfileFeature )
-        profiles.add( (IProfileFeature) object );
-    }
+    final Object[] profileFeatures = m_profileChooserPage.getChoosen();
 
     final IProfileManipulator manipulator = new IProfileManipulator()
     {
       @Override
-      public IProfilChange[] performProfileManipulation( final IProfil profile, final IProgressMonitor monitor )
+      public void performProfileManipulation( final IProfil profile, final IProgressMonitor monitor )
       {
         monitor.beginTask( "", 1 ); //$NON-NLS-1$
         operationChooserPage.changeProfile( profile, choosenProperties );
         monitor.done();
-
-        return new IProfilChange[] {};
       }
     };
-
-    final ProfileManipulationOperation operation = new ProfileManipulationOperation( getContainer(), getWindowTitle(), profiles.toArray( new IProfileFeature[] {} ), manipulator );
+    final ProfileManipulationOperation operation = new ProfileManipulationOperation( getContainer(), getWindowTitle(), profileFeatures, m_workspace, manipulator );
     return operation.perform();
   }
 
@@ -235,35 +227,34 @@ public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
   {
     if( selectedPage == m_propertyChooserPage )
     {
-
       final Collection<IComponent> properties = new LinkedHashSet<IComponent>();
       final Object[] profiles = m_profile == null ? m_profileChooserPage.getChoosen() : new Object[] { m_profile };
       for( final Object object : profiles )
       {
-        final IProfil profile = getProfile( object );
-        if( Objects.isNull( profile ) )
+        final IProfil profile;
+        if( object instanceof IProfil )
+        {
+          profile = (IProfil) object;
+        }
+        else if( object instanceof ProfileFeatureBinding )
+        {
+          profile = ((ProfileFeatureBinding) object).getProfil();
+        }
+        else
+        {
           continue;
-
-        final PropertyFilter filter = new PropertyFilter( profile );
+        }
 
         for( final IComponent property : profile.getPointProperties() )
         {
-          if( filter.select( property ) )
+          if( !profile.isPointMarker( property.getId() ) )
+          {
             properties.add( property );
+          }
         }
       }
 
       m_propertyChooserPage.setInput( properties );
     }
-  }
-
-  private IProfil getProfile( final Object object )
-  {
-    if( object instanceof IProfil )
-      return (IProfil) object;
-    else if( object instanceof ProfileFeatureBinding )
-      return ((ProfileFeatureBinding) object).getProfil();
-
-    return null;
   }
 }

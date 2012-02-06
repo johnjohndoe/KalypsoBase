@@ -105,19 +105,19 @@ public class RadioFeatureControl extends AbstractFeatureControl
     m_text = text;
   }
 
-  private Object convertValueToSet( final IPropertyType ftp, final Object valueToSet )
+  private Object convertValueToSet( IPropertyType ftp, Object valueToSet )
   {
     try
     {
       if( valueToSet instanceof String )
       {
-        final IMarshallingTypeHandler typeHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerFor( ftp );
+        IMarshallingTypeHandler typeHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerFor( ftp );
         return typeHandler.parseType( (String) valueToSet );
       }
 
       return null;
     }
-    catch( final ParseException e )
+    catch( ParseException e )
     {
       e.printStackTrace();
       return null;

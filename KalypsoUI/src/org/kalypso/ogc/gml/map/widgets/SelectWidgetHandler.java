@@ -2,7 +2,6 @@ package org.kalypso.ogc.gml.map.widgets;
 
 import java.util.Map;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -12,7 +11,6 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorReference;
@@ -64,15 +62,13 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
 
   private String m_widgetTooltipFromExtension;
 
-  /**
-   * The map of all parameter. May be null.
-   */
-  private Map< ? , ? > m_parameter;
-
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext applicationContext = (IEvaluationContext) event.getApplicationContext();
+    if( HandlerUtils.isDeselected( event ) )
+      return null;
+
     applicationContext.getVariable( ISources.ACTIVE_EDITOR_ID_NAME );
 
     final String widgetFromEvent = event.getParameter( PARAM_WIDGET_CLASS );
@@ -93,26 +89,16 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     if( widget == null )
     {
       final String msg = Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler.6", pluginParameter, widgetParameter ); //$NON-NLS-1$
-      final IStatus status = new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), msg );
+      final IStatus status = StatusUtilities.createWarningStatus( msg );
       KalypsoGisPlugin.getDefault().getLog().log( status );
       return status;
     }
 
-    /* Set the map of all parameter, in case there are additional parameter. */
-    widget.setParameter( (Map<String, String>) m_parameter );
-
+    final Shell shell = HandlerUtil.getActiveShellChecked( event );
     final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( applicationContext );
+
     if( mapPanel == null )
       return StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler.7" ), new IllegalStateException() ); //$NON-NLS-1$
-
-    if( HandlerUtils.isDeselected( event ) )
-    {
-      mapPanel.getWidgetManager().removeWidget( widget );
-
-      return null;
-    }
-
-    final Shell shell = HandlerUtil.getActiveShellChecked( event );
 
     /* Always make sure that the map was fully loaded */
     // REMARK: we first test directly, without ui-operation, in order to enhance performance if the map already is open.
@@ -123,11 +109,11 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
         return null;
     }
 
-    // DIRTY: for some applications, we need to wait for the map to be really loaded,
-    // so there is this scheduling rule...
+    // DIRTY: for some applications, we need to wait for the map to be really loaded, so there is this scheduling
+    // rule...
     // It can only be obtained from the real workebench-part
-    // We also need the part to get its page to open the Widget-Option-Part;
-    // but we do not have a page in all contexts....
+    // We also need the part to get its page to open the Widget-Option-Part; but we do not have a page in all
+    // contexts....
     final IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow( event );
     final AbstractMapPart mapPart = findMapPart( window );
     final IWorkbenchPage page = mapPart == null ? null : mapPart.getSite().getPage();
@@ -140,62 +126,6 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     job.schedule();
 
     return null;
-  }
-
-  @Override
-  public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
-  {
-    // TODO: icon and tooltip should only be set once, but updateElement is called often
-    // Is this icon/tooltip stuff still in use?
-    if( m_widgetIconFromExtension != null )
-    {
-      final ImageDescriptor iconFromBundle = getIconFromBundle( m_pluginIdFromExtension, m_widgetIconFromExtension );
-      element.setIcon( iconFromBundle );
-    }
-
-    if( m_widgetTooltipFromExtension != null )
-      element.setTooltip( m_widgetTooltipFromExtension );
-
-    final IHandlerService handlerService = (IHandlerService) element.getServiceLocator().getService( IHandlerService.class );
-    final IEvaluationContext context = handlerService.getCurrentState();
-    final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
-    if( mapPanel != null )
-    {
-      final IWidget[] widgets = mapPanel.getWidgetManager().getWidgets();
-      if( ArrayUtils.isEmpty( widgets ) )
-        element.setChecked( false );
-      else
-      {
-        element.setChecked( false );
-
-        for( final IWidget widget : widgets )
-        {
-          // SelectWidgetHandler ist mehrfach vorhanden, daher muss explizit auf die Klasse des Widgets geprüft werden.
-          final String actualWidgetClass = widget.getClass().getName();
-          if( actualWidgetClass.equals( m_widgetClassFromExtension ) )
-            element.setChecked( true );
-        }
-      }
-    }
-  }
-
-  @Override
-  public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
-  {
-    if( data != null && data instanceof Map< ? , ? > )
-    {
-      final Map< ? , ? > parameterMap = (Map< ? , ? >) data;
-      m_pluginIdFromExtension = (String) parameterMap.get( PARAM_PLUGIN_ID );
-      m_widgetClassFromExtension = (String) parameterMap.get( PARAM_WIDGET_CLASS );
-      m_widgetIconFromExtension = (String) parameterMap.get( PARAM_WIDGET_ICON );
-      m_widgetTooltipFromExtension = (String) parameterMap.get( PARAM_WIDGET_TOOLTIP );
-
-      /* Store the map of all parameter, in case there are additional parameter. */
-      m_parameter = parameterMap;
-    }
-
-    if( m_pluginIdFromExtension == null )
-      m_pluginIdFromExtension = config.getContributor().getName();
   }
 
   /**
@@ -254,4 +184,66 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     }
     return null;
   }
+
+  /**
+   * @see org.kalypso.ui.GenericCommandActionDelegate#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
+   *      java.lang.String, java.lang.Object)
+   */
+  @Override
+  public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
+  {
+    if( data != null && data instanceof Map< ? , ? > )
+    {
+      final Map< ? , ? > parameterMap = (Map< ? , ? >) data;
+      m_pluginIdFromExtension = (String) parameterMap.get( PARAM_PLUGIN_ID );
+      m_widgetClassFromExtension = (String) parameterMap.get( PARAM_WIDGET_CLASS );
+      m_widgetIconFromExtension = (String) parameterMap.get( PARAM_WIDGET_ICON );
+      m_widgetTooltipFromExtension = (String) parameterMap.get( PARAM_WIDGET_TOOLTIP );
+    }
+
+    if( m_pluginIdFromExtension == null )
+      m_pluginIdFromExtension = config.getContributor().getName();
+  }
+
+  /**
+   * @see org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.menus.UIElement, java.util.Map)
+   */
+  @Override
+  public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
+  {
+    // TODO: icon and toolti should only be set once, but updateElement is called often
+    // Is this icon/tooltip stuff still in use?
+    if( m_widgetIconFromExtension != null )
+    {
+      final ImageDescriptor iconFromBundle = getIconFromBundle( m_pluginIdFromExtension, m_widgetIconFromExtension );
+      element.setIcon( iconFromBundle );
+    }
+    if( m_widgetTooltipFromExtension != null )
+    {
+      element.setTooltip( m_widgetTooltipFromExtension );
+    }
+
+    final IHandlerService handlerService = (IHandlerService) element.getServiceLocator().getService( IHandlerService.class );
+    final IEvaluationContext context = handlerService.getCurrentState();
+
+    final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
+
+    if( mapPanel != null )
+    {
+      final IWidget actualWidget = mapPanel.getWidgetManager().getActualWidget();
+      // SelectWidgetHandler ist mehrfach vorhanden, daher muss explizit auf die Klasse des Widgets geprüft werden.
+      if( actualWidget != null )
+      {
+        final String actualWidgetClass = actualWidget.getClass().getName();
+        if( actualWidgetClass.equals( m_widgetClassFromExtension ) )
+          element.setChecked( true );
+        else
+          element.setChecked( false );
+      }
+      else
+        element.setChecked( false );
+    }
+
+  }
+
 }

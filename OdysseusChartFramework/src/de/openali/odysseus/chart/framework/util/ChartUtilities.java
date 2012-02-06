@@ -4,7 +4,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Display;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -50,7 +49,7 @@ public final class ChartUtilities
   /**
    * finds the smallest and biggest value of all ranges and creates a new DataRange with these values
    */
-  public static IDataRange<Number> mergeDataRanges( final IDataRange< ? >[] ranges )
+  public static IDataRange<Number> mergeDataRanges( final IDataRange<Number>[] ranges )
   {
 
     // if there are no input ranges, we return null
@@ -62,14 +61,14 @@ public final class ChartUtilities
     double min = Double.MAX_VALUE;
     double max = -Double.MAX_VALUE;
 
-    for( final IDataRange< ? > element : ranges )
+    for( final IDataRange<Number> element : ranges )
     {
       try
       {
-        final double eltMin = element.getMin() == null ? Double.NaN : ((Number) element.getMin()).doubleValue();
+        final double eltMin = element.getMin().doubleValue();
         if( Double.isNaN( eltMin ) )
           continue;
-        final double eltMax = element.getMax() == null ? Double.NaN : ((Number) element.getMax()).doubleValue();
+        final double eltMax = element.getMax().doubleValue();
         if( Double.isNaN( eltMax ) )
           continue;
 
@@ -121,17 +120,6 @@ public final class ChartUtilities
         max = rect.y + rect.height;
       }
     }
-
     return new ComparableDataRange<Integer>( new Integer[] { min, max } );
-  }
-
-  /**
-   * This function returns the display.
-   * 
-   * @return The display.
-   */
-  public static Display getDisplay( )
-  {
-    return Display.getCurrent();
   }
 }

@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- *
+ * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always.
- *
- * If you intend to use this software in other ways than in kalypso
+ * interface-compatibility to deegree is wanted but not retained always. 
+ * 
+ * If you intend to use this software in other ways than in kalypso 
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree,
+ * all modifications are licensed as deegree, 
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -38,54 +38,37 @@ package org.kalypsodeegree_impl.model.feature.visitors;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.eclipse.core.runtime.Assert;
-import org.kalypsodeegree.filterencoding.Filter;
-import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
- * Simply collects all visited features that get evaluated by a predicate.
- *
- * @author Gernot Belger
+ * <p>
+ * Simply collects all visited features
+ * </p>
+ * 
+ * @author belger
  */
 public class CollectorVisitor implements FeatureVisitor
 {
   private final Collection<Feature> m_results = new ArrayList<Feature>();
 
-  private final Filter m_predicate;
-
-  public CollectorVisitor( final Filter predicate )
-  {
-    Assert.isNotNull( predicate );
-
-    m_predicate = predicate;
-  }
-
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
+   */
   @Override
   public synchronized boolean visit( final Feature f )
   {
-    try
-    {
-      if( m_predicate.evaluate( f ) )
-        m_results.add( f );
-    }
-    catch( final FilterEvaluationException e )
-    {
-      // FIXME: should be thrown instead
-      e.printStackTrace();
-    }
-
+    m_results.add( f );
     return true;
   }
 
   /**
    * Returns alle visited features.
    * <p>
-   * IMPORTANT: this method has been synchronized since toggle between radio buttons cause a
+   * IMPORTANT: this method has been synchronized since toggel between radio buttons cause a
    * ArrayIndexOutOfBoundsException in the first line.
    * </p>
-   *
+   * 
    * @param reset
    *          if true, resets the inner result set, so next call to getResults results in empty array.
    */

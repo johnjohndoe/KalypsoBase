@@ -40,19 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.dialog.compare;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.model.wspm.core.IWspmLayers;
-import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
-import org.kalypso.model.wspm.ui.commands.MousePositionChartHandler;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChart;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartModel;
@@ -89,8 +85,6 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
     new PlotDragHandlerDelegate( this );
 
     invalidate( profile, null );
-
-    getPlotHandler().addPlotHandler( new MousePositionChartHandler( this ) );
   }
 
   /**
@@ -112,12 +106,12 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
   @Override
   protected IStatus doInvalidateChart( )
   {
-    final IChartLayer layer = getChartModel().getLayerManager().findLayer( IWspmLayers.LAYER_GELAENDE );
+    final IChartLayer layer = getChartModel().getLayerManager().findLayer( IWspmConstants.LAYER_GELAENDE );
 
-    final IProfileRecord point = getSelectedPoint( layer );
+    final IRecord point = getSelectedPoint( layer );
     if( point != null )
     {
-      getProfil().getSelection().setRange( point );
+      getProfil().setActivePoint( point );
     }
 
     return super.doInvalidateChart();
@@ -157,7 +151,7 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
     return m_profilLayerProvider;
   }
 
-  final IProfileRecord getSelectedPoint( final IChartLayer layer )
+  final IRecord getSelectedPoint( final IChartLayer layer )
   {
     final ICoordinateMapper cm = layer == null ? null : layer.getCoordinateMapper();
     final IAxis domAxis = cm == null ? null : cm.getDomainAxis();
@@ -170,18 +164,15 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
 
     for( final IRecord point : getProfil().getPoints() )
     {
-      final Double hoehe = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, point );
-      final Double breite = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, point );
+      final Double hoehe = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, point );
+      final Double breite = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point );
       if( hoehe.isNaN() || breite.isNaN() )
       {
         continue;
       }
       final Double deltaX = Math.abs( activeDom.getMin().doubleValue() - activeDom.getMax().doubleValue() );
-      final IProfileRecord record = ProfilUtil.findPoint( getProfil(), activeDom.getMin().doubleValue() + deltaX / 2, deltaX );
-
-      final IProfileRecord[] selection = getProfil().getSelection().toPoints();
-
-      if( record != null && !ArrayUtils.contains( selection, record ) )
+      final IRecord record = ProfilUtil.findPoint( getProfil(), activeDom.getMin().doubleValue() + deltaX / 2, deltaX );
+      if( record != null && record != getProfil().getActivePoint() )
       {
         if( hoehe > activeVal.getMin().doubleValue() && hoehe < activeVal.getMax().doubleValue() && breite > activeDom.getMin().doubleValue() && breite < activeDom.getMax().doubleValue() )
           return record;
@@ -223,12 +214,9 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
   }
 
   @Override
-  public void setProfil( final IProfil profile, final Object result )
+  public synchronized void setProfil( final IProfil profile, final Object result )
   {
-    synchronized( this )
-    {
-      invalidate( profile, result );
-    }
+    invalidate( profile, result );
   }
 
 }

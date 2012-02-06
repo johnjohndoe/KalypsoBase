@@ -142,7 +142,7 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
     final Double bis = new Double( Math.min( 9999.99, m_intervals[index].max ) );
     final Double volumen = Double.NaN;
 
-    final Feature feature = FeatureFactory.createFeature( m_list.getOwner(), m_list.getPropertyType(), "" + m_list.size(), FT, new Object[] { gmGeo, id, name, von, bis, volumen } ); //$NON-NLS-1$
+    final Feature feature = FeatureFactory.createFeature( m_list.getParentFeature(), m_list.getParentFeatureTypeProperty(), "" + m_list.size(), FT, new Object[] { gmGeo, id, name, von, bis, volumen } ); //$NON-NLS-1$
     m_list.add( feature );
   }
 
@@ -202,7 +202,7 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
 
         for( int i = 0; i < m_intervals.length; i++ )
         {
-          if( m_intervals[i].min == grenze0 && m_intervals[i].max == grenze1 || m_intervals[i].min == grenze1 && m_intervals[i].max == grenze0 )
+          if( (m_intervals[i].min == grenze0 && m_intervals[i].max == grenze1) || (m_intervals[i].min == grenze1 && m_intervals[i].max == grenze0) )
             return i;
         }
       }

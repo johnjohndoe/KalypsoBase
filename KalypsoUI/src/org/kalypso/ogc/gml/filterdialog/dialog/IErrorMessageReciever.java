@@ -41,13 +41,14 @@
 package org.kalypso.ogc.gml.filterdialog.dialog;
 
 /**
+ *
  * TODO: insert type comment here
- * 
+ *
  * @author kuepfer
  */
 public interface IErrorMessageReciever
 {
   public void setErrorMessage( String message );
-
-  public IErrorMessageReciever getErrorMessageReciever( );
+  
+  public IErrorMessageReciever getErrorMessageReciever();
 }

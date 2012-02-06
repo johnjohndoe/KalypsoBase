@@ -56,7 +56,7 @@ public class NamedLayer_Impl extends Layer_Impl implements NamedLayer, Marshalla
   /**
    * constructor initializing the class with the <NamedLayer>
    */
-  NamedLayer_Impl( final String name, final LayerFeatureConstraints layerFeatureConstraints, final Style[] styles )
+  NamedLayer_Impl( String name, LayerFeatureConstraints layerFeatureConstraints, Style[] styles )
   {
     super( name, layerFeatureConstraints, styles );
   }
@@ -67,22 +67,22 @@ public class NamedLayer_Impl extends Layer_Impl implements NamedLayer, Marshalla
    * @return xml representation of the Font
    */
   @Override
-  public String exportAsXML( )
+  public String exportAsXML()
   {
     Debug.debugMethodBegin();
 
-    final StringBuffer sb = new StringBuffer( 1000 );
+    StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<NamedLayer>" );
     sb.append( "<Name>" ).append( name ).append( "</Name>" );
 
     if( layerFeatureConstraints != null )
     {
-      sb.append( ((Marshallable) layerFeatureConstraints).exportAsXML() );
+      sb.append( ( (Marshallable)layerFeatureConstraints ).exportAsXML() );
     }
 
     for( int i = 0; i < styles.size(); i++ )
     {
-      sb.append( ((Marshallable) styles.get( i )).exportAsXML() );
+      sb.append( ( (Marshallable)styles.get( i ) ).exportAsXML() );
     }
     sb.append( "</NamedLayer>" );
 

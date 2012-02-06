@@ -61,27 +61,27 @@ import org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsPlugin;
  * 
  * @author Holger Albert
  */
-public final class CronJobUtilities
+public class CronJobUtilities
 {
   /**
    * The identifier attribute (string).
    */
-  private static final String IDENTIFIER = "identifier"; //$NON-NLS-1$
+  private static final String IDENTIFIER = "identifier";
 
   /**
    * The name attribute (string).
    */
-  private static final String NAME = "name"; //$NON-NLS-1$
+  private static final String NAME = "name";
 
   /**
    * The mutex attribute (string).
    */
-  private static final String MUTEX = "mutex"; //$NON-NLS-1$
+  private static final String MUTEX = "mutex";
 
   /**
    * The job attribute (class).
    */
-  private static final String JOB = "job"; //$NON-NLS-1$
+  private static final String JOB = "job";
 
   /**
    * This listener is responsible for rescheduling the cron jobs.
@@ -190,7 +190,7 @@ public final class CronJobUtilities
       return new Status( IStatus.WARNING, EclipseRCPContributionsPlugin.ID, String.format( "The cron job ('%s') should not be activated, due to a negative schedule delay...", name ) );
 
     /* Get the job manager. */
-    final IJobManager jobManager = Job.getJobManager();
+    final IJobManager jobManager = CronJob.getJobManager();
 
     /* Search all running (waiting, executing and sleeping) jobs with the cron job family. */
     final Job[] runningJobs = jobManager.find( CronJob.CRON_JOB_FAMILY );
@@ -226,7 +226,7 @@ public final class CronJobUtilities
   public static void cancelAllCronJobs( )
   {
     /* Get the job manager. */
-    final IJobManager jobManager = Job.getJobManager();
+    final IJobManager jobManager = CronJob.getJobManager();
 
     /* Search all running (waiting, executing and sleeping) jobs with the cron job family. */
     final Job[] runningJobs = jobManager.find( CronJob.CRON_JOB_FAMILY );

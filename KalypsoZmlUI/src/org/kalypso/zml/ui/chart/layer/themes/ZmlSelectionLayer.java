@@ -54,12 +54,11 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolygonFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
+import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.IStyleSet;
-import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
 
 /**
  * @author Dirk Kuch
@@ -74,15 +73,17 @@ public class ZmlSelectionLayer extends AbstractChartLayer
 
   private final IAreaStyle m_areaStyle;
 
-  public ZmlSelectionLayer( final ILayerProvider layerProvider, final IStyleSet styleSet )
+  public ZmlSelectionLayer( final ILayerProvider layerProvider, final ILineStyle lineStyle, final IAreaStyle areaStyle )
   {
-    super( layerProvider ,styleSet);
-    final StyleSetVisitor visitor = new StyleSetVisitor( false );
-    m_lineStyle = visitor.visit( getStyleSet(), ILineStyle.class, 0 );
-    m_areaStyle = visitor.visit( getStyleSet(), IAreaStyle.class, 0 );
-   
+    super( layerProvider );
+
+    m_lineStyle = lineStyle;
+    m_areaStyle = areaStyle;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
+   */
   @Override
   public void paint( final GC gc )
   {
@@ -188,17 +189,31 @@ public class ZmlSelectionLayer extends AbstractChartLayer
     getEventHandler().fireLayerContentChanged( this );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
+   */
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Number> getDomainRange( )
   {
     return null;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange(de.openali.odysseus.chart.framework.model.data.IDataRange)
+   */
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     return null;
   }
 
- 
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#createLegendEntries()
+   */
+  @Override
+  protected ILegendEntry[] createLegendEntries( )
+  {
+    return new ILegendEntry[] {};
+  }
+
 }

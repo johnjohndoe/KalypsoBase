@@ -70,7 +70,7 @@ public class LineStringCollector implements SegmentCollector
         final String name = grenze.toString();
 
         final GM_Object gmGeo = JTSAdapter.wrap( m_gf.createLineString( new Coordinate[] { lc0.crd, lc1.crd } ) );
-        final Feature feature = FeatureFactory.createFeature( list.getOwner(), list.getPropertyType(), "" + list.size(), FT, new Object[] { gmGeo, id, name, grenze } ); //$NON-NLS-1$
+        final Feature feature = FeatureFactory.createFeature( list.getParentFeature(), list.getParentFeatureTypeProperty(), "" + list.size(), FT, new Object[] { gmGeo, id, name, grenze } ); //$NON-NLS-1$
         // m_fc.appendFeature( FF.createFeature( "" + m_fc.getSize(), FT, new Object[] { gmGeo, id, name, grenze } ) );
         list.add( feature );
       }

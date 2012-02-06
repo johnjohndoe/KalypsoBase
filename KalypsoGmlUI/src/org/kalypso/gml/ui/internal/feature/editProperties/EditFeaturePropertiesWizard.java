@@ -60,7 +60,7 @@ public class EditFeaturePropertiesWizard extends Wizard implements IWorkbenchWiz
   public EditFeaturePropertiesWizard( )
   {
     setNeedsProgressMonitor( true );
-    setWindowTitle( Messages.getString( "EditFeaturePropertiesWizard_0" ) ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString("EditFeaturePropertiesWizard_0") ); //$NON-NLS-1$
   }
 
   @Override

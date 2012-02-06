@@ -73,8 +73,6 @@ import org.osgi.framework.BundleContext;
  */
 public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChangeListener
 {
-  public static final String PLUGIN_ID = "org.kalypso.ui"; //$NON-NLS-1$
-
   private static KalypsoGisPlugin THE_PLUGIN = null;
 
   private DefaultFeatureModifierFactory m_defaultFeatureControlFactory;
@@ -250,6 +248,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     return KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
   }
 
+
   public int getDefaultMapSelectionID( )
   {
     return 0x1;
@@ -263,7 +262,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   {
   }
 
-  public synchronized IFeatureModifierFactory getFeatureTypeCellEditorFactory( )
+  public IFeatureModifierFactory createFeatureTypeCellEditorFactory( )
   {
     if( m_defaultFeatureControlFactory == null )
     {

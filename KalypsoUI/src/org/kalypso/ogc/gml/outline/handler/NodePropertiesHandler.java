@@ -55,7 +55,7 @@ import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
 
 /**
  * Opens the property dialog for a {@link org.kalypso.ogc.gml.IKalypsoTheme}.
- * 
+ *
  * @author Gernot Belger
  */
 public class NodePropertiesHandler extends AbstractHandler
@@ -72,7 +72,7 @@ public class NodePropertiesHandler extends AbstractHandler
     final IThemeNode[] selectedNodes = MapHandlerUtils.getSelectedNodes( selection );
 
     if( selectedNodes.length != 1 )
-      throw new ExecutionException( Messages.getString( "org.kalypso.ogc.gml.outline.handler.NodePropertiesHandler.0" ) ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.outline.handler.NodePropertiesHandler.0") ); //$NON-NLS-1$
 
     final PreferenceDialog dialog = PreferencesUtil.createPropertyDialogOn( shell, selectedNodes[0], null, null, null );
     if( dialog == null )

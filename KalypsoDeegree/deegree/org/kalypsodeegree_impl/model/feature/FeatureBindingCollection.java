@@ -46,7 +46,6 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -54,7 +53,6 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollectionVisitor;
-import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -62,7 +60,7 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 
 /**
  * TODO: replaces FeatureWrapperCollection.... refaktor and use this stuff instead<br>
- *
+ * 
  * @author Gernot Belger
  * @author Dirk Kuch
  */
@@ -101,7 +99,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
 
   /**
    * Creates a new {@link FeatureWrapperCollection} wrapping the provided feature
-   *
+   * 
    * @param featureCol
    *          the feature or feature collection with a list property to wrap
    * @param fwClass
@@ -293,8 +291,6 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
 
         if( cls.equals( o ) )
           return i;
-        else if( cls.getId().equals( ((Feature) o).getId() ) )
-          return i;
       }
     }
 
@@ -465,7 +461,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     boolean ret = false;
     for( final Object o : c )
     {
-      ret = ret | remove( o );
+      ret = ret || remove( o );
     }
     return ret;
   }
@@ -504,7 +500,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     for( int i = 0; i < objs.length; i++ )
     {
       final Object fObj = getFeatureList().get( i );
-      final Feature feature = FeatureHelper.getFeature( getFeatureList().getOwner().getWorkspace(), fObj );
+      final Feature feature = FeatureHelper.getFeature( getFeatureList().getParentFeature().getWorkspace(), fObj );
       if( feature == null )
         throw new RuntimeException( "Type not known:" + fObj );
       final Object object = getAdaptedFeature( feature, m_defaultWrapperClass );
@@ -579,16 +575,9 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
   public boolean addRef( final FWCls toAdd )
   {
     final String gmlID = toAdd.getId();
-
     // TODO: this can cause major performance leaks
-
-    // FIXME: breaks the (assumed) contract of this method: the element is not always added...! -> should be clear from
-    // the method name or should be tested outside
     if( getFeatureList().contains( gmlID ) )
       return false;
-
-    // FIXME: does only handle element of the same workspace, else this will make this workspace inconsistent
-
     return getFeatureList().add( gmlID );
   }
 
@@ -706,9 +695,9 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
       return null;
 
     // EXPERIMENTAL: if this function is on, we even try to adapt the linked feature.
-    if( feature instanceof IXLinkedFeature )
+    if( feature instanceof XLinkedFeature_Impl )
     {
-      final IXLinkedFeature xlinkedFeature = (IXLinkedFeature) feature;
+      final XLinkedFeature_Impl xlinkedFeature = (XLinkedFeature_Impl) feature;
       final Feature linkedFeature = xlinkedFeature.getFeature();
       if( linkedFeature == null )
         return null;
@@ -720,6 +709,9 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     return null;
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection#getBoundingBox()
+   */
   @Override
   public GM_Envelope getBoundingBox( )
   {
@@ -732,6 +724,9 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     return m_parentFeature;
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.IFeatureBindingCollection#accept(org.kalypsodeegree.model.feature.IFeatureBindingCollectionVisitor)
+   */
   @Override
   public void accept( final IFeatureBindingCollectionVisitor<FWCls> visitor )
   {
@@ -748,51 +743,4 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     }
   }
 
-  @Override
-  public IXLinkedFeature addLink( final FWCls toAdd ) throws IllegalArgumentException
-  {
-    return m_featureLst.addLink( toAdd );
-  }
-
-  @Override
-  public IXLinkedFeature addLink( final String href ) throws IllegalArgumentException
-  {
-    return m_featureLst.addLink( href );
-  }
-
-  @Override
-  public IXLinkedFeature addLink( final String href, final QName featureTypeName ) throws IllegalArgumentException
-  {
-    return m_featureLst.addLink( href, featureTypeName );
-  }
-
-  @Override
-  public IXLinkedFeature addLink( final String href, final IFeatureType featureType ) throws IllegalArgumentException
-  {
-    return m_featureLst.addLink( href, featureType );
-  }
-
-  @Override
-  public IXLinkedFeature insertLink( final int index, final FWCls toLink ) throws IllegalArgumentException
-  {
-    return m_featureLst.insertLink( index, toLink );
-  }
-
-  @Override
-  public IXLinkedFeature insertLink( final int index, final String href ) throws IllegalArgumentException
-  {
-    return m_featureLst.insertLink( index, href );
-  }
-
-  @Override
-  public IXLinkedFeature insertLink( final int index, final String href, final QName featureTypeName ) throws IllegalArgumentException
-  {
-    return m_featureLst.insertLink( index, href, featureTypeName );
-  }
-
-  @Override
-  public IXLinkedFeature insertLink( final int index, final String href, final IFeatureType featureType ) throws IllegalArgumentException
-  {
-    return m_featureLst.insertLink( index, href, featureType );
-  }
 }

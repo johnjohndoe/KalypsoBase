@@ -39,14 +39,14 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.sort.JMSpatialIndex;
 
 /**
  * @author Gernot Belger
  */
-public interface FeatureList extends List, JMSpatialIndex, IFeatureRelation
+public interface FeatureList extends List, JMSpatialIndex, IFeatureProperty
 {
   /**
    * Gets ALL features in this list. Resolves any links.
@@ -55,7 +55,7 @@ public interface FeatureList extends List, JMSpatialIndex, IFeatureRelation
 
   /**
    * Visit all Features in the list.
-   *
+   * 
    * @param depth
    *          One of {@link FeatureVisitor#DEPTH_INFINITE}...
    */
@@ -66,15 +66,24 @@ public interface FeatureList extends List, JMSpatialIndex, IFeatureRelation
 
   /**
    * The feature containing this list.
-   *
+   * 
    * @return The parent feature, <code>null</code> if the list has no parent feature.
    */
   @Override
-  Feature getOwner( );
+  Feature getParentFeature( );
+
+  /**
+   * This method returns the property-type of the parent feature that denotes this list.
+   * 
+   * @return Property of parent feature that contains this list or <code>null</code>, if this list has no parent.
+   * @deprecated Use {@link #getPropertyType()} instead.
+   */
+  @Deprecated
+  IRelationType getParentFeatureTypeProperty( );
 
   /**
    * Returns the first element of the list.
-   *
+   * 
    * @return <code>null</code> if the list is empty.
    */
   Object first( );
@@ -85,154 +94,111 @@ public interface FeatureList extends List, JMSpatialIndex, IFeatureRelation
   List<Feature> searchFeatures( final GM_Object geometry );
 
   /**
-   * Same as {@link #insertRef(size(), Feature)}
+   * Same as {@link #insertNew(getSize(), newChildType, 'uniqueRandomFeatureId', Feature.class)}
+   * 
+   * @see #insertNew(int, QName, String, Class)
    */
-  <T extends Feature> IXLinkedFeature addLink( T toAdd ) throws IllegalArgumentException, IllegalStateException;
+  Feature addNew( QName newChildType );
 
   /**
-   * Same as {@link #insertRef(size(), href)}
+   * Same as {@link #insertNew(getSize(), newChildType, newFeatureId, Feature.class)}
+   * 
+   * @see #insertNew(int, QName, String, Class)
    */
-  IXLinkedFeature addLink( String href ) throws IllegalArgumentException, IllegalStateException;
+  Feature addNew( QName newChildType, String newFeatureId );
 
   /**
-   * Same as {@link #insertRef(size(), href, featureTypeName)}
+   * Same as {@link #insertNew(getSize(), newChildType, 'uniqueRandomFeatureId', classToAdapt)}
+   * 
+   * @see #insertNew(int, QName, String, Class)
    */
-  IXLinkedFeature addLink( String href, QName featureTypeName ) throws IllegalArgumentException, IllegalStateException;
+  <T extends Feature> T addNew( QName newChildType, Class<T> classToAdapt );
 
   /**
-   * Same as {@link #insertRef(size(), href, featureType)}
+   * Same as {@link #insertNew(getSize(), newChildType, newFeatureId, classToAdapt)}
+   * 
+   * @see #insertNew(int, QName, String, Class)
    */
-  IXLinkedFeature addLink( String href, IFeatureType featureType ) throws IllegalArgumentException, IllegalStateException;
+  <T extends Feature> T addNew( QName newChildType, String newFeatureId, Class<T> classToAdapt );
 
   /**
-   * Add this feature as a link to this list.<br>
+   * Same as {@link #insertNew(index, newChildType, 'uniqueRandomFeatureId', Feature.class)}
+   * 
+   * @see #insertNew(int, QName, String, Class)
+   */
+  Feature insertNew( int index, QName newChildType );
+
+  /**
+   * Same as {@link #insertNew(index, newChildType, newFeatureId, Feature.class)}
+   * 
+   * @see #insertNew(int, QName, String, Class)
+   */
+  Feature insertNew( int index, QName newChildType, String newFeatureId );
+
+  /**
+   * Same as {@link #insertNew( index, newChildType, 'uniqueRandomFeatureId', classToAdapt)}
+   * 
+   * @see #insertNew(int, QName, String, Class)
+   */
+  <T extends Feature> T insertNew( int index, QName newChildType, Class<T> classToAdapt );
+
+  /**
+   * Creates and adds a new feature of the specified type into the feature collection at the specified position.<br>
+   * The newly created feature is hooked into the {@link GMLWorkspace} hierarchy of the lists parent feature.<br>
+   * Triggers a model-event on the containing workspace.
+   * 
+   * @param index
+   *          index at which the specified element is to be inserted.
+   * @param newChildType
+   *          The type of the element to add, cannot be <code>null</code>.
+   * @throws IllegalArgumentException
+   *           If some aspect of the specified newChildType prevents it from being added to this list. E.g.
+   *           <ul>
+   *           <li/>The underlying feature collection does not accepts elements of the specified type.
+   *           <li/>The type cannot be cast or is not adaptable to the <code>classToAdapt</code>.
+   *           <li>The given <code>newFeatureId</code> is already registered in the workspace of this list's parent
+   *           feature.</li>
+   *           </ul>
+   * @throw {@link NullPointerException} If one of the arguments is <code>null</code>.
+   * @throws IndexOutOfBoundsException
+   *           if the index is out of range (index &lt; 0 || index &gt; size()).
+   */
+  <T extends Feature> T insertNew( int index, QName newChildType, String newFeatureId, Class<T> classToAdapt );
+
+  /**
+   * Same as {@link #insertNew(index, newChildType, newFeatureId, classToAdapt)}, additionally sets the given
+   * properties.
+   * 
+   * @param properties
+   *          Property values to be set to the feature. Must correspond to the feature type of the newly created
+   *          feature.
+   * @see org.kalypso.gmlschema.feature.IFeatureType#getProperties()
+   * @see #insertNew(int, QName, String, Class)
+   */
+  <T extends Feature> T insertNew( int index, QName newChildType, String newFeatureId, Class<T> classToAdapt, Object[] properties );
+
+  /**
+   * Same as {@link #insertRef(getSize(), Feature)}
+   * 
+   * @see #insertRef(int, Feature)
+   */
+  <T extends Feature> boolean addRef( T toAdd ) throws IllegalArgumentException;
+
+  /**
+   * Add this feature as reference to this list.<br>
    * If a feature of the same workspace as the list's owner is given, an internal reference is created, else an xlink to
    * the external feature is inserted.<br>
-   * The <code>href</code> is built using the context of the target workspace. Tries to make it relative to the context
-   * of this workspace.<br/>
-   * Does not check, if the given feature is already contained in this list (the list may be allowed to contain multiple
-   * links to the same feature or even a feature and a link to the same feature at the same time).
-   *
-   * @param toLink
+   * Does not check, if the given feature is already contained in this list (the list may be allowed to contain a
+   * feature and a reference to the same feature at the same time).
+   * 
+   * @param toAdd
    *          a wrapper wrapping the feature to be added as list
-   * @return The freshly created link
+   * @return true if the feature has been added
    * @throws IllegalArgumentException
    *           If the list may not contain references (either at all or to this kind of features) according to its
    *           definition.
-   * @throws IllegalStateException
-   *           If maxOccurs of this list is exceeded.
-   * @throws {@link NullPointerException} If the argument toLink is null
+   * @throws {@link NullPointerException} If the argument toAdd is null
    */
-  <T extends Feature> IXLinkedFeature insertLink( int index, T toLink ) throws IllegalArgumentException, IllegalStateException;
+  <T extends Feature> boolean insertRef( int index, T toAdd ) throws IllegalArgumentException;
 
-  /**
-   * Same as {@link #insertLink(int, Feature)}, using a given href.
-   *
-   * @see Feature#setLink(org.kalypso.gmlschema.property.relation.IRelationType, String) for the interpreatation of the
-   *      parameters.
-   */
-  IXLinkedFeature insertLink( int index, String href ) throws IllegalArgumentException, IllegalStateException;
-
-  /**
-   * Same as {@link #insertLink(int, Feature)}, using a given href.
-   *
-   * @see Feature#setLink(org.kalypso.gmlschema.property.relation.IRelationType, String) for the interpreatation of the
-   *      parameters.
-   */
-  IXLinkedFeature insertLink( int index, String href, QName featureTypeName ) throws IllegalArgumentException, IllegalStateException;
-
-  /**
-   * Same as {@link #insertLink(int, Feature)}, using a given href.
-   *
-   * @see Feature#setLink(org.kalypso.gmlschema.property.relation.IRelationType, String) for the interpreatation of the
-   *      parameters.
-   */
-  IXLinkedFeature insertLink( int index, String href, IFeatureType featureType ) throws IllegalArgumentException, IllegalStateException;
-
-  // TODO: uncomment only if implemented
-
-// /**
-// * Same as {@link #insertNew(size(), newChildType, 'uniqueRandomFeatureId', Feature.class)}
-// *
-// * @see #insertNew(int, QName, String, Class)
-// */
-// Feature addNew( QName newChildType );
-
-// /**
-// * Same as {@link #insertNew(size(), newChildType, newFeatureId, Feature.class)}
-// *
-// * @see #insertNew(int, QName, String, Class)
-// */
-// Feature addNew( QName newChildType, String newFeatureId );
-
-// /**
-// * Same as {@link #insertNew(size(), newChildType, 'uniqueRandomFeatureId', classToAdapt)}
-// *
-// * @see #insertNew(int, QName, String, Class)
-// */
-// <T extends Feature> T addNew( QName newChildType, Class<T> classToAdapt );
-
-// /**
-// * Same as {@link #insertNew(size(), newChildType, newFeatureId, classToAdapt)}
-// *
-// * @see #insertNew(int, QName, String, Class)
-// */
-// <T extends Feature> T addNew( QName newChildType, String newFeatureId, Class<T> classToAdapt );
-
-// /**
-// * Same as {@link #insertNew(index, newChildType, 'uniqueRandomFeatureId', Feature.class)}
-// *
-// * @see #insertNew(int, QName, String, Class)
-// */
-// Feature insertNew( int index, QName newChildType );
-
-// /**
-// * Same as {@link #insertNew(index, newChildType, newFeatureId, Feature.class)}
-// *
-// * @see #insertNew(int, QName, String, Class)
-// */
-// Feature insertNew( int index, QName newChildType, String newFeatureId );
-
-// /**
-// * Same as {@link #insertNew( index, newChildType, 'uniqueRandomFeatureId', classToAdapt)}
-// *
-// * @see #insertNew(int, QName, String, Class)
-// */
-// <T extends Feature> T insertNew( int index, QName newChildType, Class<T> classToAdapt );
-
-// /**
-// * Creates and adds a new feature of the specified type into the feature collection at the specified position.<br>
-// * The newly created feature is hooked into the {@link GMLWorkspace} hierarchy of the lists parent feature.<br>
-// * Triggers a model-event on the containing workspace.
-// *
-// * @param index
-// * index at which the specified element is to be inserted.
-// * @param newChildType
-// * The type of the element to add, cannot be <code>null</code>.
-// * @throws IllegalArgumentException
-// * If some aspect of the specified newChildType prevents it from being added to this list. E.g.
-// * <ul>
-// * <li/>The underlying feature collection does not accepts elements of the specified type.
-// * <li/>The type cannot be cast or is not adaptable to the <code>classToAdapt</code>.
-// * <li>The given <code>newFeatureId</code> is already registered in the workspace of this list's parent
-// * feature.</li>
-// * </ul>
-// * @throw {@link NullPointerException} If one of the arguments is <code>null</code>.
-// * @throws IndexOutOfBoundsException
-// * if the index is out of range (index &lt; 0 || index &gt; size()).
-// */
-// <T extends Feature> T insertNew( int index, QName newChildType, String newFeatureId, Class<T> classToAdapt );
-
-// /**
-// * Same as {@link #insertNew(index, newChildType, newFeatureId, classToAdapt)}, additionally sets the given
-// * properties.
-// *
-// * @param properties
-// * Property values to be set to the feature. Must correspond to the feature type of the newly created
-// * feature.
-// * @see org.kalypso.gmlschema.feature.IFeatureType#getProperties()
-// * @see #insertNew(int, QName, String, Class)
-// */
-// <T extends Feature> T insertNew( int index, QName newChildType, String newFeatureId, Class<T> classToAdapt, Object[]
-// properties );
 }

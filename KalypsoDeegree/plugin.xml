@@ -103,6 +103,30 @@
      </extension>
 
    <extension
+         id="org.kalypso.deegree.featureCommonsAdapterFactory"
+         name="Kalypso Deegree Commons Adapter Factory"
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.kalypsodeegree.model.feature.Feature"
+            class="org.kalypsodeegree_impl.gml.binding.FeatureCommonsAdapterFactory">
+         <adapter type="org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D"/>
+         <adapter type="org.kalypsodeegree_impl.gml.binding.math.IPolynomial2D"/>
+         <adapter
+               type="org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection">
+         </adapter>
+         <adapter
+               type="org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus">
+         </adapter>
+         <adapter
+               type="org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection">
+         </adapter>
+         <adapter
+               type="org.kalypsodeegree_impl.gml.binding.commons.ICoverage">
+         </adapter>
+      </factory>
+      
+   </extension>
+   <extension
          point="org.kalypso.deegree.functionExpression">
       <function
             class="org.kalypsodeegree_impl.filterencoding.FeatureTypeFunctionExpression"
@@ -120,7 +144,6 @@
             name="org.kalypsodeegree_impl.filterencoding.ListSizeExpression">
       </function>
    </extension>
-  
    <extension
          point="org.kalypso.gmlschema.typeHandlers">
       <typeHandler
@@ -139,6 +162,7 @@
             allowSubstitution="true"
             feature="{http://www.opengis.net/gml}RectifiedGridCoverage"
             function="org.kalypsodeegree_impl.gml.schema.virtual.RectifiedGridCoverageBoundaryFunctionProperty"
+            isList="false"
             qname="{virtual}rasterGridDomainBoundary"
             value="{http://www.opengis.net/gml}Polygon">
       </virtualProperty>
@@ -196,27 +220,5 @@
                catalog="deegree/org/kalypsodeegree_impl/gml/schema/schemata/catalog.xml">
          </nextCatalog>
       </catalogContribution>
-   </extension>
-   <extension
-         point="org.kalypso.deegree.featureBinding">
-      <feature
-            class="org.kalypsodeegree_impl.gml.binding.math.Polynomial1D"
-            qname="{org.kalypso.gml.common.math}Polynomial1D">
-      </feature>
-      <feature
-            class="org.kalypsodeegree_impl.gml.binding.math.Polynomial2D"
-            qname="{org.kalypso.gml.common.math}Polynomial2D">
-      </feature>
-   </extension>
-   <extension
-        point="org.kalypso.deegree.featureBinding">
-     <feature
-           class="org.kalypsodeegree_impl.gml.binding.commons.GeoStatus"
-           qname="{org.kalypso.gml.common}Status">
-     </feature>
-     <feature
-           class="org.kalypsodeegree_impl.gml.binding.commons.StatusCollection"
-           qname="{org.kalypso.gml.common}StatusCollection">
-     </feature>
    </extension>
 </plugin>

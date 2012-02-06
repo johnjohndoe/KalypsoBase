@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.creators;
 
@@ -48,7 +48,6 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.IFilterCreator;
 import org.kalypso.ogc.sensor.filter.IObservationFilter;
-import org.kalypso.ogc.sensor.filter.filters.interval.IntervalDefinition;
 import org.kalypso.ogc.sensor.filter.filters.interval.IntervalFilter;
 import org.kalypso.zml.filters.AbstractFilterType;
 import org.kalypso.zml.filters.IntervallFilterType;
@@ -69,10 +68,4 @@ public class IntervallFilterCreator implements IFilterCreator
     return intervallFilter;
   }
 
-  public static IObservation createFilter( final IntervalDefinition definition, final IObservation base, final URL context ) throws SensorException
-  {
-    final IntervalFilter intervalFilter = new IntervalFilter( definition );
-    intervalFilter.initFilter( base, base, context );
-    return intervalFilter;
-  }
 }

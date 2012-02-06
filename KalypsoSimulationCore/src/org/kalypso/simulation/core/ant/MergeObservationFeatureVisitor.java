@@ -61,9 +61,6 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
-import org.kalypso.ogc.sensor.timeseries.AxisUtils;
-import org.kalypso.ogc.sensor.timeseries.wq.IWQConverter;
-import org.kalypso.ogc.sensor.timeseries.wq.WQFactory;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.simulation.core.i18n.Messages;
@@ -187,9 +184,6 @@ public class MergeObservationFeatureVisitor implements FeatureVisitor
     final ITupleModel sourceTuples = sourceObs.getValues( null );
     final ITupleModel targetTuples = targetObs.getValues( null );
 
-    final IWQConverter targetWQ = WQFactory.createWQConverter( targetObs );
-    final IWQConverter sourceWQ = WQFactory.createWQConverter( sourceObs );
-
     final Map<IAxis[], IAxis[]> axisMap = mapAxes( sourceAxes, targetAxes );
 
     final Map<Object, Integer> sourceKeyHash = ObservationUtilities.hashValues( sourceTuples, sourceKeyAxis );
@@ -214,12 +208,12 @@ public class MergeObservationFeatureVisitor implements FeatureVisitor
         final IAxis sourceStatusAxis = sources[1];
 
         // is the target a warned value?
-        final Number targetStatus = getPersistentStatusValue( targetTuples, targetWQ, targetStatusAxis, i );
+        final Number targetStatus = (Number) targetTuples.get( i, targetStatusAxis );
         if( !KalypsoStatusUtils.checkMask( targetStatus.intValue(), KalypsoStati.BIT_CHECK ) )
           continue;
 
         // is the source value user edited?
-        final Number sourceStatus = getPersistentStatusValue( sourceTuples, sourceWQ, sourceStatusAxis, sourceIndex );
+        final Number sourceStatus = (Number) sourceTuples.get( sourceIndex, sourceStatusAxis );
         if( !KalypsoStatusUtils.checkMask( sourceStatus.intValue(), KalypsoStati.BIT_USER_MODIFIED ) )
           continue;
 
@@ -232,31 +226,6 @@ public class MergeObservationFeatureVisitor implements FeatureVisitor
 
     }
 
-  }
-
-  /**
-   * Returns the value of the given status axis. If the axis is not persistent, returns the value of the corresponding
-   * persistent axis.
-   */
-  private Number getPersistentStatusValue( final ITupleModel values, final IWQConverter converter, final IAxis statusAxis, final int row ) throws SensorException
-  {
-    final IAxis persistentAxis = findPersistentAxis( values.getAxes(), converter, statusAxis );
-
-    return (Number) values.get( row, persistentAxis );
-  }
-
-  private IAxis findPersistentAxis( final IAxis[] axes, final IWQConverter converter, final IAxis statusAxis )
-  {
-    try
-    {
-      return AxisUtils.findPersistentAxis( axes, converter, statusAxis );
-    }
-    catch( final IllegalArgumentException e )
-    {
-      // no persistent axis found: return to old behaviour
-      e.printStackTrace();
-      return statusAxis;
-    }
   }
 
   /**

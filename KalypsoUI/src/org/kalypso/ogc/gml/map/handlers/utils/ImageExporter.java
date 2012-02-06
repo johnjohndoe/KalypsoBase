@@ -63,7 +63,7 @@ public class ImageExporter
   /**
    * The map panel.
    */
-  private final IMapPanel m_mapPanel;
+  private IMapPanel m_mapPanel;
 
   /**
    * The image data.
@@ -76,7 +76,7 @@ public class ImageExporter
    * @param mapPanel
    *          The map panel.
    */
-  public ImageExporter( final IMapPanel mapPanel )
+  public ImageExporter( IMapPanel mapPanel )
   {
     m_mapPanel = mapPanel;
     m_imageData = null;
@@ -95,14 +95,14 @@ public class ImageExporter
       monitor.subTask( "Erzeuge Bild..." );
 
       /* Create the image. */
-      final BufferedImage image = MapModellHelper.createWellFormedImageFromModel( m_mapPanel, m_mapPanel.getWidth(), m_mapPanel.getHeight(), new Insets( 10, 10, 10, 10 ), 1 );
+      BufferedImage image = MapModellHelper.createWellFormedImageFromModel( m_mapPanel, m_mapPanel.getWidth(), m_mapPanel.getHeight(), new Insets( 10, 10, 10, 10 ), 1 );
 
       /* Monitor. */
       monitor.worked( 500 );
       monitor.subTask( "Konvertiere Bild ins SWT-Format..." );
 
       /* Convert to a SWT image data. */
-      final ImageData imageData = AWTSWTImageUtils.createImageData( image );
+      ImageData imageData = AWTSWTImageUtils.createImageData( image );
 
       /* Store the result. */
       m_imageData = imageData;
@@ -112,7 +112,7 @@ public class ImageExporter
 
       return new Status( IStatus.OK, KalypsoGisPlugin.getId(), "OK" );
     }
-    catch( final Exception ex )
+    catch( Exception ex )
     {
       return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), ex.getLocalizedMessage(), ex );
     }

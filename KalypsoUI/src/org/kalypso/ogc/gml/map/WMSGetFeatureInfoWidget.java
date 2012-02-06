@@ -58,9 +58,10 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IGetFeatureInfoResultProcessor;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 
@@ -69,7 +70,7 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
  * 
  * @author doemming (19.04.2005)
  */
-public class WMSGetFeatureInfoWidget extends DeprecatedMouseWidget implements IWidgetWithOptions
+public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWithOptions
 {
   protected Composite m_topLevel;
 
@@ -275,7 +276,7 @@ public class WMSGetFeatureInfoWidget extends DeprecatedMouseWidget implements IW
         {
           try
           {
-            if( m_formatCombo != null && !m_formatCombo.isDisposed() )
+            if( m_formatCombo != null && !(m_formatCombo.isDisposed()) )
             {
               final int selectionIndex = m_formatCombo.getSelectionIndex();
               final String format = m_formatCombo.getItem( selectionIndex );

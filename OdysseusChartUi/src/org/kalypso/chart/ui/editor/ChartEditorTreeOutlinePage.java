@@ -133,30 +133,48 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
     m_labelProvider = labelProvider;
     m_eventListener = new AbstractLayerManagerEventListener()
     {
+      /**
+       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+       */
       @Override
       public void onLayerVisibilityChanged( final IChartLayer layer )
       {
         refreshTreeViewer();
       }
 
+      /**
+       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerAdded(de.openali.
+       *      odysseus.chart.framework.model.layer.IChartLayer)
+       */
       @Override
       public void onLayerAdded( final IChartLayer layer )
       {
         refreshTreeViewer();
       }
 
+      /**
+       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerContentChanged(de
+       *      .openali.odysseus.chart.framework.model.layer.IChartLayer)
+       */
       @Override
       public void onLayerContentChanged( final IChartLayer layer )
       {
         refreshTreeViewer();
       }
 
+      /**
+       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerMoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+       */
       @Override
       public void onLayerMoved( final IChartLayer layer )
       {
         refreshTreeViewer();
       }
 
+      /**
+       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerRemoved(de.openali
+       *      .odysseus.chart.framework.model.layer.IChartLayer)
+       */
       @Override
       public void onLayerRemoved( final IChartLayer layer )
       {
@@ -357,10 +375,12 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
       m_treeViewer.removeSelectionChangedListener( m_selectionChangeListener );
       m_selectionChangeListener = null;
     }
-
     m_treeViewer.addSelectionChangedListener( listener );
   }
 
+  /**
+   * @see org.eclipse.ui.part.IPage#createControl(org.eclipse.swt.widgets.Composite)
+   */
   @Override
   public void createControl( final Composite parent )
   {
@@ -376,11 +396,6 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
     addDropSupport();
 
     updateControl();
-  }
-
-  public CheckboxTreeViewer getViewer( )
-  {
-    return m_treeViewer;
   }
 
   private final void addListener( )

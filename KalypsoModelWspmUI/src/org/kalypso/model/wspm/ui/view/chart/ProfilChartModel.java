@@ -40,10 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
-import org.kalypso.model.wspm.core.profil.ProfilListenerAdapter;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 
@@ -59,11 +59,23 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
  */
 public class ProfilChartModel extends ChartModel
 {
-  private final IProfilListener m_profilListener = new ProfilListenerAdapter()
+  private final IProfilListener m_profilListener = new IProfilListener()
   {
-
+    /**
+     * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProblemMarkerChanged(org.kalypso.model.wspm.core.profil.IProfil)
+     */
     @Override
-    public void onProfilChanged( final ProfilChangeHint hint )
+    public void onProblemMarkerChanged( final IProfil source )
+    {
+      // TODO: what?
+    }
+
+    /**
+     * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
+     *      org.kalypso.model.wspm.core.profil.IProfilChange[])
+     */
+    @Override
+    public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
     {
       if( hint.isObjectChanged() )
       {
@@ -71,13 +83,13 @@ public class ProfilChartModel extends ChartModel
       }
       else if( hint.isPointPropertiesChanged() )
       {
-        handlePropertyOrBuildingChanged();
+        handlePropertyOrBuildingChanged( changes );
       }
       else
       {
         for( final IChartLayer layer : getLayerManager().getLayers() )
         {
-          ((IProfilChartLayer) layer).onProfilChanged( hint );
+          ((IProfilChartLayer) layer).onProfilChanged( hint, changes );
         }
       }
     }
@@ -125,7 +137,7 @@ public class ProfilChartModel extends ChartModel
   {
     final AutoScaleVisitor visitor = new AutoScaleVisitor( this );
 
-    // TODO ?!? auto scaled axes will be updated when?!? strange behavior
+    // TODO ?!? auto scaled axes will be updated when?!? strange behaviour
     final IAxis[] autoscaledAxes = ArrayUtils.isEmpty( axes ) ? getMapperRegistry().getAxes() : axes;
     for( final IAxis axis : autoscaledAxes )
     {
@@ -156,7 +168,7 @@ public class ProfilChartModel extends ChartModel
     return m_profil;
   }
 
-  protected void handlePropertyOrBuildingChanged( )
+  protected void handlePropertyOrBuildingChanged( @SuppressWarnings("unused") final IProfilChange[] changes )
   {
     updateLayers();
   }

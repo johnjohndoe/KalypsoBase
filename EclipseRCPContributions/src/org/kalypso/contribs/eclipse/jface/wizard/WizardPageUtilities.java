@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.wizard;
 
-import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.wizard.WizardPage;
 
 /**
@@ -76,9 +75,9 @@ public final class WizardPageUtilities
     }
 
     if( page.getMessage() == null )
-      page.setMessage( message, IMessageProvider.WARNING );
+      page.setMessage( message, WizardPage.WARNING );
     else
-      page.setMessage( page.getMessage() + "\n" + message, IMessageProvider.WARNING );
+      page.setMessage( page.getMessage() + "\n" + message, WizardPage.WARNING );
   }
 
   /**

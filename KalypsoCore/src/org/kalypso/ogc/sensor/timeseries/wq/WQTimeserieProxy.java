@@ -40,19 +40,21 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.wq;
 
-import org.kalypso.commons.java.lang.Objects;
+import java.util.NoSuchElementException;
+
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
 import org.kalypso.ogc.sensor.ITupleModel;
+import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
-import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.util.Observations;
 import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
@@ -95,6 +97,8 @@ public class WQTimeserieProxy implements IObservation
   private ITupleModel m_cachedModel = null;
 
   /**
+   * Constructor
+   * 
    * @param realAxisType
    *          type of the real axis that will be used to proxy another axis
    * @param proxyAxisType
@@ -115,18 +119,25 @@ public class WQTimeserieProxy implements IObservation
   {
     final IAxis[] axes = obs.getAxes();
     m_axes = new IAxis[axes.length + 2];
-    for( int index = 0; index < axes.length; index++ )
+    for( int i = 0; i < axes.length; i++ )
     {
-      m_axes[index] = axes[index];
+      m_axes[i] = axes[i];
     }
 
-    m_dateAxis = AxisUtils.findDateAxis( axes );
+    m_dateAxis = ObservationUtilities.findAxisByType( axes, ITimeseriesConstants.TYPE_DATE );
 
     final String name = TimeseriesUtils.getName( m_proxyAxisType );
     final String unit = TimeseriesUtils.getUnit( m_proxyAxisType );
 
-    m_srcAxis = AxisUtils.findAxis( axes, m_realAxisType );
-    m_srcStatusAxis = AxisUtils.findStatusAxis( axes, m_srcAxis );
+    m_srcAxis = ObservationUtilities.findAxisByType( axes, m_realAxisType );
+    try
+    {
+      m_srcStatusAxis = KalypsoStatusUtils.findStatusAxisFor( axes, m_srcAxis );
+    }
+    catch( final NoSuchElementException ignored )
+    {
+      // this exception is ignored since the source-status axis is optional
+    }
 
     m_destAxis = new DefaultAxis( name, m_proxyAxisType, unit, Double.class, false, false );
     m_destAxisPos = m_axes.length - 2;
@@ -140,30 +151,29 @@ public class WQTimeserieProxy implements IObservation
       throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.wq.WQTimeserieProxy.0" ) + m_proxyAxisType ); //$NON-NLS-1$
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#getAxisList()
+   */
   @Override
   public IAxis[] getAxes( )
   {
     return m_axes;
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
+   */
   @Override
   public ITupleModel getValues( final IRequest args ) throws SensorException
   {
-    if( isValid( args ) )
+    if( m_cachedModel != null && (m_cachedArgs == null && args == null || m_cachedArgs != null && m_cachedArgs.equals( args )) )
       return m_cachedModel;
 
     m_cachedModel = new WQTuppleModel( m_obs.getValues( args ), m_axes, m_dateAxis, m_srcAxis, m_srcStatusAxis, m_destAxis, m_destStatusAxis, getWQConverter(), m_destAxisPos, m_destStatusAxisPos );
+
     m_cachedArgs = args;
 
     return m_cachedModel;
-  }
-
-  private boolean isValid( final IRequest args )
-  {
-    if( m_cachedModel == null )
-      return false;
-
-    return Objects.equal( m_cachedArgs, args );
   }
 
   private IWQConverter getWQConverter( ) throws SensorException
@@ -174,6 +184,9 @@ public class WQTimeserieProxy implements IObservation
     return m_conv;
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#setValues(org.kalypso.ogc.sensor.ITuppleModel)
+   */
   @Override
   public void setValues( final ITupleModel values ) throws SensorException
   {
@@ -195,36 +208,54 @@ public class WQTimeserieProxy implements IObservation
     return m_srcAxis;
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.IObservationEventProvider#addListener(org.kalypso.ogc.sensor.IObservationListener)
+   */
   @Override
   public void addListener( final IObservationListener listener )
   {
     m_eventAdapter.addListener( listener );
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.IObservationEventProvider#removeListener(org.kalypso.ogc.sensor.IObservationListener)
+   */
   @Override
   public void removeListener( final IObservationListener listener )
   {
     m_eventAdapter.removeListener( listener );
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.IObservationEventProvider#fireChangedEvent(java.lang.Object)
+   */
   @Override
   public void fireChangedEvent( final Object source )
   {
     m_eventAdapter.fireChangedEvent( source );
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.IObservation#getName()
+   */
   @Override
   public String getName( )
   {
     return m_obs.getName();
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.IObservation#getMetadataList()
+   */
   @Override
   public MetadataList getMetadataList( )
   {
     return m_obs.getMetadataList();
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.IObservation#getHref()
+   */
   @Override
   public String getHref( )
   {
@@ -243,16 +274,23 @@ public class WQTimeserieProxy implements IObservation
     return m_obs.equals( obj );
   }
 
+  /**
+   * @see java.lang.Object#hashCode()
+   */
   @Override
   public int hashCode( )
   {
     return m_obs.hashCode();
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.IObservation#accept(org.kalypso.ogc.sensor.visitor.IObservationVisitor,
+   *      org.kalypso.ogc.sensor.request.IRequest)
+   */
   @Override
-  public void accept( final IObservationVisitor visitor, final IRequest request, final int direction ) throws SensorException
+  public void accept( final IObservationVisitor visitor, final IRequest request ) throws SensorException
   {
-    Observations.accept( this, visitor, request, direction );
+    Observations.accept( this, visitor, request );
   }
 
 }

@@ -35,7 +35,7 @@ public final class ExportShapeOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
-    monitor.beginTask( Messages.getString( "ExportShapeOperation_0" ), 100 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString("ExportShapeOperation_0"), 100 ); //$NON-NLS-1$
     try
     {
       final IShapeData dataProvider = m_shapeDataFactory.createData();

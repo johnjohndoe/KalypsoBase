@@ -32,7 +32,7 @@ package org.kalypso.ogc.sensor.zml;
 import java.net.URL;
 import java.util.Calendar;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.RequestFactory;
@@ -55,6 +55,25 @@ public final class ZmlURL
   }
 
   /**
+   * Returns true if the given Zml-Url solely denotes a context. In that case the Zml-Url will not be parsed the usual
+   * way.
+   */
+  public static boolean isUseAsContext( final URL zmlUrl )
+  {
+    return isUseAsContext( zmlUrl.toExternalForm() );
+  }
+
+  /**
+   * Returns true if the given Zml-Url solely denotes a context. In that case the Zml-Url will not be parsed the usual
+   * way.
+   */
+  public static boolean isUseAsContext( final String href )
+  {
+    final String test = href.toLowerCase();
+    return test.indexOf( ZmlURLConstants.FRAGMENT_USEASCONTEXT ) != -1;
+  }
+
+  /**
    * Returns only the identifier part of the zml url. The URL may contain a query part which will be ignored by this
    * convenience method.
    * 
@@ -74,6 +93,29 @@ public final class ZmlURL
   public static String getIdentifierPart( final String strUrl )
   {
     final int ix = strUrl.indexOf( '?' );
+    if( ix != -1 )
+      return strUrl.substring( 0, ix );
+
+    return strUrl;
+  }
+
+  /**
+   * Returns the scheme part of the given url
+   */
+  public static String getSchemePart( final URL url )
+  {
+    return getSchemePart( url.toExternalForm() );
+  }
+
+  /**
+   * Returns the scheme part of the given url
+   */
+  public static String getSchemePart( final String strUrl )
+  {
+    // TODO test if this is correct since only the first ':' found
+    // will be returned here. But the url might contain something like
+    // foo:bar://stuff hence results might not be correct!!!
+    final int ix = strUrl.indexOf( ":" ); //$NON-NLS-1$
     if( ix != -1 )
       return strUrl.substring( 0, ix );
 

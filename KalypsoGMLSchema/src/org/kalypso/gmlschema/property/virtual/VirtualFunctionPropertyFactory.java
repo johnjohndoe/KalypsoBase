@@ -89,9 +89,9 @@ public class VirtualFunctionPropertyFactory
    * are already collected.
    * 
    * @param featureType
-   *          the feature type to find the function property for
+   *            the feature type to find the function property for
    * @param funcCursor
-   *          the cursor containing the function property description
+   *            the cursor containing the function property description
    * @return
    */
   public static final IFunctionPropertyType createFromCursor( final IFeatureType featureType, final XmlObject funcProp ) throws GMLSchemaException
@@ -124,7 +124,7 @@ public class VirtualFunctionPropertyFactory
     }
   }
 
-  public static int parseInt( final String attributeText, final int defaultValue )
+  public static int parseInt( String attributeText, int defaultValue )
   {
     if( attributeText == null )
       return defaultValue;
@@ -133,7 +133,7 @@ public class VirtualFunctionPropertyFactory
     else if( "unbounded".equals( attributeText ) ) //$NON-NLS-1$
       return Integer.MAX_VALUE;
 
-    final Integer parseQuietInteger = NumberUtils.parseQuietInteger( attributeText );
+    Integer parseQuietInteger = NumberUtils.parseQuietInteger( attributeText );
     if( parseQuietInteger == null )
       return defaultValue;
 
@@ -152,12 +152,12 @@ public class VirtualFunctionPropertyFactory
    * Get the property, the attribute of an element represented by the given cursor as QName
    * 
    * @param cursor
-   *          the cursor representing the element to get the xml element from
+   *            the cursor representing the element to get the xml element from
    * @param propertyQName
-   *          the q-name to get the property, attribute qname to get as q-name
+   *            the q-name to get the property, attribute qname to get as q-name
    * @return the value of the attribute as q-name
    * @throws GMLSchemaException
-   *           if the property does not have the form &lt;ns&gt;:&lt;localName&gt;
+   *             if the property does not have the form &lt;ns&gt;:&lt;localName&gt;
    */
   public static final QName getPropertyAsQName( final XmlCursor cursor, final QName propertyQName ) throws GMLSchemaException
   {

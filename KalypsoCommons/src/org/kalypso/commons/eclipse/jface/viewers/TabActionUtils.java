@@ -48,6 +48,7 @@ import org.eclipse.swt.custom.CTabFolder;
 
 /**
  * @author Gernot Belger
+ *
  */
 public final class TabActionUtils
 {

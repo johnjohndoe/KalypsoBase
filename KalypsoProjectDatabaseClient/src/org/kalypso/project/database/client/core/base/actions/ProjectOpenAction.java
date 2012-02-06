@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.core.base.actions;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -53,12 +54,13 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.module.IKalypsoModule;
 import org.kalypso.module.IKalypsoModuleProjectOpenAction;
-import org.kalypso.module.project.local.ILocalProject;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.client.core.model.projects.ITranscendenceProject;
+import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
+import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 
@@ -106,7 +108,7 @@ public class ProjectOpenAction implements IProjectAction
       else if( eTranscendenceWriteable.equals( type ) )
         return IMG_PROJECT_TRANSCENDENCE_LOCAL_LOCK;
 
-      throw new UnsupportedOperationException();
+      throw new NotImplementedException();
     }
 
     public String getStatus( )
@@ -123,7 +125,7 @@ public class ProjectOpenAction implements IProjectAction
       else if( eTranscendenceWriteable.equals( type ) )
         return Messages.getString( "org.kalypso.project.database.client.core.base.actions.ProjectOpenAction.9" ); //$NON-NLS-1$
 
-      throw new UnsupportedOperationException();
+      throw new NotImplementedException();
     }
   }
 
@@ -132,48 +134,46 @@ public class ProjectOpenAction implements IProjectAction
     m_module = module;
     m_handler = handler;
 
-    // try
-// {
-    if( handler instanceof ITranscendenceProject )
+    try
     {
-      final ITranscendenceProject transcendence = (ITranscendenceProject) handler;
-      final IRemoteProjectPreferences remotePreferences = transcendence.getRemotePreferences();
-      if( remotePreferences == null )
-        m_type = OPEN_TYPE.eLocal;
+      if( handler instanceof ITranscendenceProject )
+      {
+        final ITranscendenceProject transcendence = (ITranscendenceProject) handler;
+        final IRemoteProjectPreferences remotePreferences = transcendence.getRemotePreferences();
+        if( remotePreferences == null )
+          m_type = OPEN_TYPE.eLocal;
+        else
+        {
+          final boolean localLock = remotePreferences.isLocked();
+          final Boolean serverLock = transcendence.getBean().hasEditLock();
+          if( localLock )
+            m_type = OPEN_TYPE.eTranscendenceWriteable;
+          else if( serverLock )
+            m_type = OPEN_TYPE.eTranscendenceReadableServerLocked;
+          else
+            m_type = OPEN_TYPE.eTranscendenceReadable;
+        }
+      }
       else
       {
-        final boolean localLock = remotePreferences.isLocked();
-        final Boolean serverLock = transcendence.getBean().hasEditLock();
-        if( localLock )
-          m_type = OPEN_TYPE.eTranscendenceWriteable;
-        else if( serverLock )
-          m_type = OPEN_TYPE.eTranscendenceReadableServerLocked;
+        final IRemoteProjectPreferences remotePreferences = handler.getRemotePreferences();
+        if( remotePreferences == null )
+          m_type = OPEN_TYPE.eLocal;
         else
-          m_type = OPEN_TYPE.eTranscendenceReadable;
+        {
+          final boolean onServer = remotePreferences.isOnServer();
+          if( onServer )
+            m_type = OPEN_TYPE.eLocalOffline;
+          else
+            m_type = OPEN_TYPE.eLocal;
+        }
       }
-    }
-    else
-    {
-      throw new UnsupportedOperationException();
-//
-// final IRemoteProjectPreferences remotePreferences = handler.getRemotePreferences();
-// if( remotePreferences == null )
-// m_type = OPEN_TYPE.eLocal;
-// else
-// {
-// final boolean onServer = remotePreferences.isOnServer();
-// if( onServer )
-// m_type = OPEN_TYPE.eLocalOffline;
-// else
-// m_type = OPEN_TYPE.eLocal;
-// }
-    }
 
-// }
-// catch( final CoreException e )
-// {
-// KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-// }
+    }
+    catch( final CoreException e )
+    {
+      KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
 
   }
 

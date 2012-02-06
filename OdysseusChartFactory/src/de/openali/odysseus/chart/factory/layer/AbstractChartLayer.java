@@ -6,8 +6,12 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.java.lang.Objects;
 
 import com.google.common.base.Splitter;
@@ -30,10 +34,6 @@ import de.openali.odysseus.chart.framework.model.layer.manager.LayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.IRetinalMapper;
-import de.openali.odysseus.chart.framework.model.style.IStyle;
-import de.openali.odysseus.chart.framework.model.style.IStyleSet;
-import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
-import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
 
 /**
  * @author alibu
@@ -41,14 +41,12 @@ import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
 public abstract class AbstractChartLayer implements IChartLayer
 {
   /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#init()
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#isAutoScale()
    */
   @Override
-  public void init( )
+  public boolean isAutoScale( )
   {
-    // TODO Auto-generated method stub
-    //FIXME remove from here, this is an abstract class
-    
+    return true;
   }
 
   private ICoordinateMapper m_coordinateMapper;
@@ -70,9 +68,9 @@ public abstract class AbstractChartLayer implements IChartLayer
 
   private boolean m_isVisible = true;
 
-  private boolean m_isAutoScale = true;
-
   private final ILayerManager m_layerManager = new LayerManager( this );
+
+  private ILegendEntry[] m_legendEntries = new ILegendEntry[] {};
 
   private boolean m_legendIsVisible = true;
 
@@ -82,14 +80,12 @@ public abstract class AbstractChartLayer implements IChartLayer
 
   private String m_title = null;
 
-  private IStyleSet m_styleSet;
-
   private ILayerContainer m_parent;
 
   final ILayerManagerEventListener m_layerManagerListener = new ILayerManagerEventListener()
   {
     @Override
-    public void onActivLayerChanged( final IChartLayer layer )
+    public void onLayerMoved( final IChartLayer layer )
     {
       getEventHandler().fireLayerVisibilityChanged( AbstractChartLayer.this );
     }
@@ -98,18 +94,6 @@ public abstract class AbstractChartLayer implements IChartLayer
     public void onLayerAdded( final IChartLayer layer )
     {
       getEventHandler().fireLayerContentChanged( AbstractChartLayer.this );
-    }
-
-    @Override
-    public void onLayerContentChanged( final IChartLayer layer )
-    {
-      getEventHandler().fireLayerContentChanged( AbstractChartLayer.this );
-    }
-
-    @Override
-    public void onLayerMoved( final IChartLayer layer )
-    {
-      getEventHandler().fireLayerVisibilityChanged( AbstractChartLayer.this );
     }
 
     @Override
@@ -123,33 +107,48 @@ public abstract class AbstractChartLayer implements IChartLayer
     {
       getEventHandler().fireLayerVisibilityChanged( AbstractChartLayer.this );
     }
+
+    @Override
+    public void onLayerContentChanged( final IChartLayer layer )
+    {
+      getEventHandler().fireLayerContentChanged( AbstractChartLayer.this );
+    }
+
+    @Override
+    public void onActivLayerChanged( final IChartLayer layer )
+    {
+      getEventHandler().fireLayerVisibilityChanged( AbstractChartLayer.this );
+    }
   };
 
-  public AbstractChartLayer( final ILayerProvider provider, final IStyleSet styleSet )
+  public AbstractChartLayer( final ILayerProvider provider )
   {
     m_provider = provider;
     m_layerManager.addListener( m_layerManagerListener );
 
     setFilters();
-    if( styleSet == null )
-    {
-      m_styleSet = new StyleSet();
-    }
-    else
-    {
-      m_styleSet = styleSet;
-    }
-
   }
 
-  @Override
-  public final void addFilter( final IChartLayerFilter... filters )
+  private void setFilters( )
   {
-    if( ArrayUtils.isEmpty( filters ) )
+    if( Objects.isNull( m_provider ) )
       return;
 
-    Collections.addAll( m_filters, filters );
-    getEventHandler().fireLayerContentChanged( this );
+    final IParameterContainer container = m_provider.getParameterContainer();
+    if( Objects.isNull( container ) )
+      return;
+
+    final String property = container.getParameterValue( "filter", "" ); //$NON-NLS-1$
+    if( Strings.isNullOrEmpty( property ) )
+      return;
+
+    final Iterable<String> filters = Splitter.on( ";" ).split( property ); //$NON-NLS-1$
+    for( final String reference : filters )
+    {
+      final IChartLayerFilter filter = OdysseusChartFramework.getDefault().findFilter( reference );
+      if( Objects.isNotNull( filter ) )
+        addFilter( filter );
+    }
   }
 
   @Override
@@ -164,12 +163,40 @@ public abstract class AbstractChartLayer implements IChartLayer
   }
 
   /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#createLegendEntries()
+   */
+  protected ILegendEntry[] createLegendEntries( )
+  {
+    return new ILegendEntry[] {};
+  }
+
+  /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#dispose()
    */
   @Override
   public void dispose( )
   {
     m_layerManager.clear();
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer#addLayer(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+   */
+  protected final void drawClippingRect( final GC gc )
+  {
+    final Color col = new Color( gc.getDevice(), new RGB( 0, 0, 0 ) );
+    try
+    {
+      gc.setForeground( col );
+      final Rectangle clipping = gc.getClipping();
+      gc.setLineWidth( 1 );
+      gc.drawRectangle( clipping.x, clipping.y, clipping.width - 1, clipping.height - 1 );
+      gc.setClipping( clipping.x + 1, clipping.y + 1, clipping.width - 2, clipping.height - 2 );
+    }
+    finally
+    {
+      col.dispose();
+    }
   }
 
   @Override
@@ -208,7 +235,7 @@ public abstract class AbstractChartLayer implements IChartLayer
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getDomainRange()
    */
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Number> getDomainRange( )
   {
     final LayerDomainRangeVisitor rangeVisitor = new LayerDomainRangeVisitor();
     getLayerManager().accept( rangeVisitor );
@@ -220,12 +247,6 @@ public abstract class AbstractChartLayer implements IChartLayer
     return m_eventHandler;
   }
 
-  @Override
-  public IChartLayerFilter[] getFilters( )
-  {
-    return m_filters.toArray( new IChartLayerFilter[] {} );
-  }
-
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getId()
    */
@@ -233,19 +254,15 @@ public abstract class AbstractChartLayer implements IChartLayer
   public String getIdentifier( )
   {
     return m_identifier;
-  }
+  } 
 
   @Override
-  public ILayerManager getLayerManager( )
-  {
-    return m_layerManager;
-  }
-
-  @Override
-  //TODO:FIXME remove from here. This is an abstract class
   public synchronized ILegendEntry[] getLegendEntries( )
   {
-    return new ILegendEntry[]{};
+    if( ArrayUtils.isEmpty( m_legendEntries ) )
+      m_legendEntries = createLegendEntries();
+
+    return m_legendEntries;
   }
 
   protected IRetinalMapper getMapper( final String role )
@@ -254,37 +271,14 @@ public abstract class AbstractChartLayer implements IChartLayer
   }
 
   @Override
-  public IChartModel getModel( )
-  {
-    return getParent().getModel();
-  }
-
-  @Override
-  public ILayerContainer getParent( )
-  {
-    return m_parent;
-  }
-
-  @Override
   public ILayerProvider getProvider( )
   {
     return m_provider;
   }
 
-  protected final <T extends IStyle> T getStyle( final Class<T> clazz )
+  public Map<String, ImageData> getSymbolMap( )
   {
-    return getStyle( clazz, 0 );
-  }
-
-  public <T extends IStyle> T getStyle( final Class<T> clazz, final int index )
-  {
-    final StyleSetVisitor visitor = new StyleSetVisitor( false );
-    return visitor.visit( getStyleSet(), clazz, index );
-  }
-
-  protected IStyleSet getStyleSet( )
-  {
-    return m_styleSet;
+    return null;
   }
 
   /**
@@ -301,7 +295,7 @@ public abstract class AbstractChartLayer implements IChartLayer
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetRange()
    */
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > intervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> intervall )
   {
     final LayerTargetRangeVisitor rangeVisitor = new LayerTargetRangeVisitor();
     getLayerManager().accept( rangeVisitor );
@@ -317,6 +311,12 @@ public abstract class AbstractChartLayer implements IChartLayer
     return m_title;
   }
 
+  @Override
+  public void init( )
+  {
+
+  }
+
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#isActive()
    */
@@ -324,15 +324,6 @@ public abstract class AbstractChartLayer implements IChartLayer
   public boolean isActive( )
   {
     return m_isActive;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#isAutoScale()
-   */
-  @Override
-  public boolean isAutoScale( )
-  {
-    return m_isAutoScale;
   }
 
   /**
@@ -351,13 +342,36 @@ public abstract class AbstractChartLayer implements IChartLayer
   public boolean isVisible( )
   {
     return m_isVisible;
+//    if( !m_isVisible )
+//      return false;
+//
+//    final ICoordinateMapper mapper = getCoordinateMapper();
+//    if( mapper == null )
+//      return true;
+//
+//    if( isNotVisible( mapper.getDomainAxis() ) )
+//      return false;
+//
+//    if( isNotVisible( mapper.getTargetAxis() ) )
+//      return false;
+//
+//    return true;
   }
+
+//  private boolean isNotVisible( final IAxis axis )
+//  {
+//    if( Objects.isNull( axis ) )
+//      return true;
+//    else if( axis instanceof IScreenAxis )
+//      return false;
+//
+//    return !axis.isVisible();
+//  }
 
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
    */
   @Override
-  // FIXME the layer should paint itself, nothing else.
   public void paint( final GC gc )
   {
     final IChartLayer[] layers = getLayerManager().getLayers();
@@ -368,23 +382,6 @@ public abstract class AbstractChartLayer implements IChartLayer
       if( layer.isVisible() )
         layer.paint( gc );
     }
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#removeFilter(de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter[])
-   */
-  @Override
-  public void removeFilter( final IChartLayerFilter... filters )
-  {
-    if( ArrayUtils.isEmpty( filters ) )
-      return;
-
-    for( final IChartLayerFilter filter : filters )
-    {
-      m_filters.remove( filter );
-    }
-
-    getEventHandler().fireLayerContentChanged( this );
   }
 
   @Override
@@ -406,11 +403,6 @@ public abstract class AbstractChartLayer implements IChartLayer
     }
   }
 
-  protected void setAutoScale( boolean isAutoScale )
-  {
-    m_isAutoScale = isAutoScale;
-  }
-
   @Override
   public final void setCoordinateMapper( final ICoordinateMapper coordinateMapper )
   {
@@ -430,40 +422,6 @@ public abstract class AbstractChartLayer implements IChartLayer
   }
 
   @Override
-  public final void setFilter( final IChartLayerFilter... filters )
-  {
-    if( ArrayUtils.isEmpty( filters ) )
-      return;
-
-    m_filters.clear();
-    Collections.addAll( m_filters, filters );
-
-    getEventHandler().fireLayerContentChanged( this );
-  }
-
-  private void setFilters( )
-  {
-    if( Objects.isNull( m_provider ) )
-      return;
-
-    final IParameterContainer container = m_provider.getParameterContainer();
-    if( Objects.isNull( container ) )
-      return;
-
-    final String property = container.getParameterValue( "filter", "" ); //$NON-NLS-1$
-    if( Strings.isNullOrEmpty( property ) )
-      return;
-
-    final Iterable<String> filters = Splitter.on( ";" ).split( property ); //$NON-NLS-1$
-    for( final String reference : filters )
-    {
-      final IChartLayerFilter filter = OdysseusChartFramework.getDefault().findFilter( reference );
-      if( Objects.isNotNull( filter ) )
-        addFilter( filter );
-    }
-  }
-
-  @Override
   public void setIdentifier( final String identifier )
   {
     m_identifier = identifier;
@@ -478,17 +436,6 @@ public abstract class AbstractChartLayer implements IChartLayer
     m_legendIsVisible = isVisible;
   }
 
-   @Override
-  public void setParent( final ILayerContainer parent )
-  {
-    m_parent = parent;
-  }
-
-  protected void setStyleSet( IStyleSet styleSet )
-  {
-    m_styleSet = styleSet;
-  }
-
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#setTitle(java.lang.String)
    */
@@ -498,6 +445,9 @@ public abstract class AbstractChartLayer implements IChartLayer
     m_title = title;
   }
 
+  /**
+   * @see org.kalypso.swtchart.chart.layer.IChartLayer#setVisibility(boolean)
+   */
   @Override
   public void setVisible( final boolean isVisible )
   {
@@ -509,10 +459,90 @@ public abstract class AbstractChartLayer implements IChartLayer
     }
   }
 
+  /**
+   * @see java.lang.Object#toString()
+   */
   @Override
   public String toString( )
   {
     return String.format( "IChartLayer - id: %s, visible: %s", getIdentifier(), Boolean.valueOf( isVisible() ).toString() );
   }
 
+  @Override
+  public ILayerManager getLayerManager( )
+  {
+    return m_layerManager;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#setParent(java.lang.Object)
+   */
+  @Override
+  public void setParent( final ILayerContainer parent )
+  {
+    m_parent = parent;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getParent()
+   */
+  @Override
+  public ILayerContainer getParent( )
+  {
+    return m_parent;
+  }
+
+  @Override
+  public final void addFilter( final IChartLayerFilter... filters )
+  {
+    if( ArrayUtils.isEmpty( filters ) )
+      return;
+
+    Collections.addAll( m_filters, filters );
+    getEventHandler().fireLayerContentChanged( this );
+  }
+
+  @Override
+  public final void setFilter( final IChartLayerFilter... filters )
+  {
+    if( ArrayUtils.isEmpty( filters ) )
+      return;
+
+    m_filters.clear();
+    Collections.addAll( m_filters, filters );
+
+    getEventHandler().fireLayerContentChanged( this );
+  }
+
+  @Override
+  public IChartLayerFilter[] getFilters( )
+  {
+    return m_filters.toArray( new IChartLayerFilter[] {} );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#removeFilter(de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter[])
+   */
+  @Override
+  public void removeFilter( final IChartLayerFilter... filters )
+  {
+    if( ArrayUtils.isEmpty( filters ) )
+      return;
+
+    for( final IChartLayerFilter filter : filters )
+    {
+      m_filters.remove( filter );
+    }
+
+    getEventHandler().fireLayerContentChanged( this );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.ILayerContainer#getModel()
+   */
+  @Override
+  public IChartModel getModel( )
+  {
+    return getParent().getModel();
+  }
 }

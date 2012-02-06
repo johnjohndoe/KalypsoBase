@@ -50,7 +50,6 @@ import org.kalypso.observation.phenomenon.IPhenomenon;
  */
 public interface IObservation<T>
 {
-
   QName QNAME_OBSERVATION = new QName( NS.OM, "Observation" );
 
   String getName( );

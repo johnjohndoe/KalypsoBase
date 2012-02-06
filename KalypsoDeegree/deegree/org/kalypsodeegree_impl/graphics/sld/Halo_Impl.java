@@ -87,7 +87,7 @@ public class Halo_Impl implements Halo, Marshallable
    * @return the underlying <tt>Fill</tt> -object or null
    */
   @Override
-  public Fill getFill( )
+  public Fill getFill()
   {
     return m_fill;
   }
@@ -102,7 +102,7 @@ public class Halo_Impl implements Halo, Marshallable
   @Override
   public void setFill( final Fill fill )
   {
-    m_fill = fill;
+    this.m_fill = fill;
   }
 
   /**
@@ -115,7 +115,7 @@ public class Halo_Impl implements Halo, Marshallable
    * @return the radius definition as <tt>ParameterValueType</tt>, or null if it has not been specified
    */
   @Override
-  public ParameterValueType getRadius( )
+  public ParameterValueType getRadius()
   {
     return m_radius;
   }
@@ -160,12 +160,14 @@ public class Halo_Impl implements Halo, Marshallable
     }
     catch( final NumberFormatException e )
     {
-      throw new FilterEvaluationException( "Given value ('" + stringValue + "') for radius of Halo does not denote a number." );
+      throw new FilterEvaluationException( "Given value ('" + stringValue
+          + "') for radius of Halo does not denote a number." );
     }
   }
 
   /**
-   * @see org.kalypsodeegree_impl.graphics.sld.Halo_Impl#getRadius(Feature) <p>
+   * @see org.kalypsodeegree_impl.graphics.sld.Halo_Impl#getRadius(Feature)
+   *      <p>
    * @param radius
    *          radius to be set for the halo
    */
@@ -188,7 +190,7 @@ public class Halo_Impl implements Halo, Marshallable
    * @return the underlying <tt>Stroke</tt> -object or null
    */
   @Override
-  public Stroke getStroke( )
+  public Stroke getStroke()
   {
     return m_stroke;
   }
@@ -212,7 +214,7 @@ public class Halo_Impl implements Halo, Marshallable
    * @return xml representation of the Halo
    */
   @Override
-  public String exportAsXML( )
+  public String exportAsXML()
   {
     Debug.debugMethodBegin();
 

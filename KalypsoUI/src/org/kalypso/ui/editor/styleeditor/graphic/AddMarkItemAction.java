@@ -62,7 +62,6 @@ public class AddMarkItemAction extends Action
     setImageDescriptor( ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE );
     setToolTipText( MessageBundle.STYLE_EDITOR_ADD_MARK );
   }
-
   /**
    * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
    */

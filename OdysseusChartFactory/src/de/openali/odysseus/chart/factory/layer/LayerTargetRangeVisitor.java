@@ -45,11 +45,12 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
 /**
  * @author Gernot Belger
+ *
  */
 public class LayerTargetRangeVisitor extends AbstractLayerRangeVisitor
 {
   @Override
-  protected IDataRange< ? > getLayerRange( final IChartLayer layer )
+  protected IDataRange<Number> getLayerRange( final IChartLayer layer )
   {
     return layer.getTargetRange( null );
   }

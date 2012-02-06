@@ -22,7 +22,7 @@ public class ChartModel implements IChartModel
 {
   protected final ChartBehaviour m_behaviour = new ChartBehaviour( this );
 
-  private String m_identifier = ""; //$NON-NLS-1$
+  private String m_identifier = "";
 
   private final ILayerManager m_layerManager = new LayerManager( this );
 
@@ -30,7 +30,7 @@ public class ChartModel implements IChartModel
 
   protected final BasicChartSettings m_settings = new BasicChartSettings();
 
-  private final Map<String, Object> m_dataMap = new HashMap<String, Object>();
+  private Map<String, Object> m_dataMap = new HashMap<String, Object>();
 
   public ChartModel( )
   {
@@ -39,9 +39,6 @@ public class ChartModel implements IChartModel
 
   /**
    * automatically scales all given axes; scaling means here: show all available values
-   *
-   * @param axes
-   *          axes == null -> update all chart model axes
    */
   @Override
   public void autoscale( final IAxis... axes )
@@ -60,9 +57,11 @@ public class ChartModel implements IChartModel
     m_settings.clearTitles();
 
     getLayerManager().clear();
-    getMapperRegistry().clear();
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.IChartModel#dispose()
+   */
   @Override
   public void dispose( )
   {
@@ -76,24 +75,38 @@ public class ChartModel implements IChartModel
     return m_behaviour;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.IChartModel#getId()
+   */
   @Override
   public String getIdentifier( )
   {
     return m_identifier;
   }
 
+  /*
+   * (non-Javadoc)
+   * @see org.kalypso.chart.framework.model.IChartModel#getLayerManager()
+   */
   @Override
   public ILayerManager getLayerManager( )
   {
     return m_layerManager;
   }
 
+  /*
+   * (non-Javadoc)
+   * @see org.kalypso.chart.framework.model.IChartModel#getAxisRegistry()
+   */
   @Override
   public IMapperRegistry getMapperRegistry( )
   {
     return m_mapperRegistry;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.ILayerContainer#getParent()
+   */
   @Override
   public ILayerContainer getParent( )
   {
@@ -101,6 +114,18 @@ public class ChartModel implements IChartModel
     return null;
   }
 
+// /**
+// * @see de.openali.odysseus.chart.framework.model.IChartModel#getState()
+// */
+// @Override
+// public IChartModelState getState( )
+// {
+// return new ChartModelState( getLayerManager() );
+// }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.IChartModel#getSettings()
+   */
   @Override
   public IBasicChartSettings getSettings( )
   {
@@ -115,27 +140,40 @@ public class ChartModel implements IChartModel
     autoscale();
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.IChartModel#setId()
+   */
   @Override
   public void setIdentifier( final String identifier )
   {
     m_identifier = identifier;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.ILayerContainer#getModel()
+   */
   @Override
   public IChartModel getModel( )
   {
     return this;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.IChartModel#getData(java.lang.String)
+   */
   @Override
   public Object getData( final String key )
   {
     return m_dataMap.get( key );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.IChartModel#getData(java.lang.String)
+   */
   @Override
   public Object setData( final String key, final Object value )
   {
     return m_dataMap.put( key, value );
   }
+
 }

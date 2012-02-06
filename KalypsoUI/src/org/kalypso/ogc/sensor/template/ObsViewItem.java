@@ -131,12 +131,18 @@ public abstract class ObsViewItem implements IObsProviderListener, IViewable
     observationChanged( null );
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.template.IObsProviderListener#observationChangedX(java.lang.Object)
+   */
   @Override
   public void observationChanged( final Object source )
   {
     m_view.refreshItemData( this, source );
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.template.IObsProvider#getObservation()
+   */
   public IObservation getObservation( )
   {
     return m_obsProvider.getObservation();
@@ -165,7 +171,7 @@ public abstract class ObsViewItem implements IObsProviderListener, IViewable
    * Return true if this item is concerned by the list of hidden axis-types
    * 
    * @param hiddenTypes
-   *          list of axis-types that the user does not want to see
+   *            list of axis-types that the user does not want to see
    */
   public abstract boolean shouldBeHidden( final Set<String> hiddenTypes );
 }

@@ -47,6 +47,10 @@ public interface PreferenceConstants
 {
   String P_ALLWAYSOPENTABLE = "allwaysOpenTablePreference"; //$NON-NLS-1$
 
+  String P_VALIDATE_PROFILE = "validateProfile"; //$NON-NLS-1$
+
+  String P_VALIDATE_RULES_TO_EXCLUDE = "validateRulesToApply"; //$NON-NLS-1$
+
   /**
    * If set to the id of a marker type, water levels are only painted in the profile view if they overlap the
    * corresponding flow area.<br/>

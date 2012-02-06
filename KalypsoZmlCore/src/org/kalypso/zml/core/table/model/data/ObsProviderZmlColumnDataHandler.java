@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model.data;
 
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
@@ -61,6 +60,9 @@ public class ObsProviderZmlColumnDataHandler extends AbstractZmlColumnDataHandle
       fireObservationChanged();
     }
 
+    /**
+     * @see org.kalypso.ogc.sensor.template.IObsProviderListener#observationChangedX(java.lang.Object)
+     */
     @Override
     public void observationChanged( final Object source )
     {
@@ -76,6 +78,9 @@ public class ObsProviderZmlColumnDataHandler extends AbstractZmlColumnDataHandle
     m_provider.addListener( m_observationProviderListener );
   }
 
+  /**
+   * @see org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler#dispose()
+   */
   @Override
   public void dispose( )
   {
@@ -83,16 +88,19 @@ public class ObsProviderZmlColumnDataHandler extends AbstractZmlColumnDataHandle
     m_provider.dispose();
   }
 
+  /**
+   * @see org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler#getModel()
+   */
   @Override
   public ITupleModel getModel( ) throws SensorException
   {
     final IObservation observation = getObservation();
-    if( Objects.isNull( observation ) )
-      return null;
-
-    return observation.getValues( m_provider.getArguments() );
+    return observation.getValues( null );
   }
 
+  /**
+   * @see org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler#getObservation()
+   */
   @Override
   public IObservation getObservation( )
   {

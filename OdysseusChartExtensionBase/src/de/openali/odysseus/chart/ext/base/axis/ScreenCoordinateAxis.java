@@ -4,6 +4,7 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.IScreenAxis;
+import de.openali.odysseus.chart.framework.util.ChartUtilities;
 
 /**
  * @author kimwerner
@@ -55,7 +56,6 @@ public class ScreenCoordinateAxis extends AbstractAxis implements IScreenAxis
   /**
    * @see org.kalypso.chart.framework.model.mapper.IAxis#setNumericRange(org.kalypso.chart.framework.model.data.IDataRange)
    */
-  @SuppressWarnings("rawtypes")
   @Override
   public void setNumericRange( final IDataRange range )
   {

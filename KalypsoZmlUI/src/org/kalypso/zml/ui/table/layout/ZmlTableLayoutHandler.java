@@ -40,64 +40,72 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.layout;
 
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.ui.table.IZmlTableListener;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
-import org.kalypso.zml.ui.table.model.ZmlTableColumns;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableLayoutHandler implements IZmlTableListener
+public class ZmlTableLayoutHandler
 {
+  private static final Color COLOR_TABLE_DISABLED = new Color( null, new RGB( 0xea, 0xea, 0xea ) );
+
+  private static final Color COLOR_TABLE_ENABLED = new Color( null, new RGB( 0xff, 0xff, 0xff ) );
+
+  protected boolean m_firstChange = true;
+
   protected final ZmlTableComposite m_table;
 
-  final Set<IZmlTableColumn> m_stack = Collections.synchronizedSet( new LinkedHashSet<IZmlTableColumn>() );
+  private final UIJob m_job = new UIJob( "" )
+  {
 
-  private final MutexRule m_rule = new MutexRule( "updating column layout of zml table" );
+    @Override
+    public IStatus runInUIThread( final IProgressMonitor monitor )
+    {
+      if( m_table.isDisposed() )
+        return Status.CANCEL_STATUS;
 
-  private UIJob m_job;
+      updateColumns();
+
+      return Status.OK_STATUS;
+    }
+  };
 
   public ZmlTableLayoutHandler( final ZmlTableComposite table )
   {
     m_table = table;
   }
 
-  @Override
-  public void eventTableChanged( final String type, final IZmlModelColumn... columns )
+  public void tableChanged( )
   {
-    if( IZmlTableListener.TYPE_REFRESH.equals( type ) )
-    {
-      doRefreshColumns( ZmlTableColumns.toTableColumns( m_table, true, columns ) );
-    }
-    else if( IZmlTableListener.TYPE_ACTIVE_RULE_CHANGED.equals( type ) )
-    {
-      doRefreshColumns( ZmlTableColumns.toTableColumns( m_table, false, columns ) );
-    }
+    if( m_job.getState() == Job.SLEEPING || m_job.getState() == Job.WAITING || m_job.getState() == Job.RUNNING )
+      m_job.cancel();
 
+    m_job.schedule();
   }
 
-  private void doRefreshColumns( final IZmlTableColumn... columns )
+  protected void updateColumns( )
   {
-    synchronized( this )
+    final PackTableColumnVisitor visitor = new PackTableColumnVisitor();
+    m_table.accept( visitor );
+
+    visitor.packIndexColumns();
+
+    final TableViewer viewer = m_table.getTableViewer();
+    if( m_table.isEmpty() )
     {
-      Collections.addAll( m_stack, columns );
-      if( Objects.isNotNull( m_job ) )
-        m_job.cancel();
-
-      m_job = new ZmlTableLayoutJob( m_table, m_stack );
-
-      m_job.setRule( m_rule );
-      m_job.schedule( 100 );
+      viewer.getControl().setBackground( COLOR_TABLE_DISABLED );
     }
-
+    else
+    {
+      viewer.getControl().setBackground( COLOR_TABLE_ENABLED );
+    }
   }
 }

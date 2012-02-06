@@ -70,7 +70,7 @@ public final class XMLUtilities
   /**
    * Encapsulates the given string into a CDATA section.
    * <p>
-   * 
+   *
    * @param string
    * @return &lt;![CDATA[...string...]]&gt;
    */
@@ -88,7 +88,7 @@ public final class XMLUtilities
    * TODO Andreas, diese Methode wird scheinbar nur von WQFilterUtilities.createWQFilterInline() und
    * UpdateHelper.createInterpolationFilter() aufgerufen, und beinhaltet ausserdem 'filter'-spezifische Tags. Sollte es
    * nicht besser in WQFilterUtilities verschoben werden?
-   * 
+   *
    * @param xmlString
    */
   public static String prepareInLine( final String xmlString )

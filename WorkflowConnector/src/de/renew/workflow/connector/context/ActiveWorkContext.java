@@ -3,7 +3,7 @@ package de.renew.workflow.connector.context;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -17,21 +17,23 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
+import de.renew.workflow.connector.WorkflowConnectorPlugin;
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
-import de.renew.workflow.connector.cases.IScenario;
-import de.renew.workflow.connector.cases.IScenarioManager;
-import de.renew.workflow.connector.internal.WorkflowConnectorPlugin;
+import de.renew.workflow.connector.cases.ICase;
+import de.renew.workflow.connector.cases.ICaseManager;
 
 /**
  * Represents the work context for a user.
- *
+ * 
  * @author Stefan Kurzbach
  */
-public class ActiveWorkContext implements IResourceChangeListener
+public class ActiveWorkContext<T extends ICase> implements IResourceChangeListener
 {
-  private CaseHandlingProjectNature m_currentProjectNature;
+  // private ICaseManager<T> m_caseManager;
 
-  private final List<IActiveScenarioChangeListener> m_activeContextChangeListeners = new ArrayList<IActiveScenarioChangeListener>();
+  private CaseHandlingProjectNature<T> m_currentProjectNature;
+
+  private final List<IActiveScenarioChangeListener<T>> m_activeContextChangeListeners = new ArrayList<IActiveScenarioChangeListener<T>>();
 
   private final String m_natureID;
 
@@ -51,7 +53,7 @@ public class ActiveWorkContext implements IResourceChangeListener
   /**
    * Sets the active case handling project
    */
-  private void setCurrentProject( final CaseHandlingProjectNature nature )
+  private void setCurrentProject( final CaseHandlingProjectNature<T> nature )
   {
     if( m_currentProjectNature == nature )
       return;
@@ -76,7 +78,7 @@ public class ActiveWorkContext implements IResourceChangeListener
     m_currentProjectNature = nature;
   }
 
-  public CaseHandlingProjectNature getCurrentProject( )
+  public CaseHandlingProjectNature<T> getCurrentProject( )
   {
     return m_currentProjectNature;
   }
@@ -84,16 +86,16 @@ public class ActiveWorkContext implements IResourceChangeListener
   /**
    * The same as {@link #getCaseManager()#getCurrentCase()}
    */
-  public IScenario getCurrentCase( )
+  public T getCurrentCase( )
   {
-    final IScenarioManager caseManager = getCaseManager();
+    final ICaseManager<T> caseManager = getCaseManager();
     if( caseManager == null )
       return null;
 
     return caseManager.getCurrentCase();
   }
 
-  private IScenarioManager getCaseManager( )
+  private ICaseManager<T> getCaseManager( )
   {
     if( m_currentProjectNature == null )
       return null;
@@ -101,31 +103,31 @@ public class ActiveWorkContext implements IResourceChangeListener
     return m_currentProjectNature.getCaseManager();
   }
 
-  public void addActiveContextChangeListener( final IActiveScenarioChangeListener l )
+  public void addActiveContextChangeListener( final IActiveScenarioChangeListener<T> l )
   {
     m_activeContextChangeListeners.add( l );
   }
 
-  public void removeActiveContextChangeListener( final IActiveScenarioChangeListener l )
+  public void removeActiveContextChangeListener( final IActiveScenarioChangeListener<T> l )
   {
     m_activeContextChangeListeners.remove( l );
   }
 
-  protected void fireActiveContextChanged( final CaseHandlingProjectNature newProject, final IScenario caze )
+  @SuppressWarnings("unchecked")
+  protected void fireActiveContextChanged( final CaseHandlingProjectNature<T> newProject, final T caze )
   {
     // Convert to array to avoid concurrent modification exceptions
-    final IActiveScenarioChangeListener[] listeners = m_activeContextChangeListeners.toArray( new IActiveScenarioChangeListener[m_activeContextChangeListeners.size()] );
-    for( final IActiveScenarioChangeListener l : listeners )
+    final IActiveScenarioChangeListener<T>[] listeners = m_activeContextChangeListeners.toArray( new IActiveScenarioChangeListener[m_activeContextChangeListeners.size()] );
+    for( final IActiveScenarioChangeListener<T> l : listeners )
     {
       l.activeScenarioChanged( newProject, caze );
     }
   }
 
-  // TODO: do this in ui thread + monitor
-  public synchronized void setCurrentCase( final IScenario caze ) throws CoreException
+  public synchronized void setCurrentCase( final T caze ) throws CoreException
   {
-    final IScenarioManager currentCaseManager = getCaseManager();
-    final IScenario currentCase = currentCaseManager == null ? null : currentCaseManager.getCurrentCase();
+    final ICaseManager<T> currentCaseManager = getCaseManager();
+    final T currentCase = currentCaseManager == null ? null : currentCaseManager.getCurrentCase();
     if( currentCase == null && caze == null )
       return;
 
@@ -140,16 +142,16 @@ public class ActiveWorkContext implements IResourceChangeListener
       final IProject project = caze.getProject();
       if( project.exists() && project.isOpen() )
       {
-        final CaseHandlingProjectNature nature = (CaseHandlingProjectNature) project.getNature( m_natureID );
-        setCurrentProject( nature );
+        final CaseHandlingProjectNature< ? > nature = (CaseHandlingProjectNature< ? >) project.getNature( m_natureID );
+        setCurrentProject( (CaseHandlingProjectNature<T>) nature );
       }
       else
       {
-        throw new CoreException( new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, "Das Projekt " + project.getName() + " für den Case " + caze.getName() + " existiert nicht." ) );
+        throw new CoreException( new Status( Status.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, "Das Projekt " + project.getName() + " für den Case " + caze.getName() + " existiert nicht." ) );
       }
     }
 
-    final IScenarioManager newCaseManager = getCaseManager();
+    final ICaseManager<T> newCaseManager = getCaseManager();
     if( newCaseManager != null )
       newCaseManager.setCurrentCase( caze );
 

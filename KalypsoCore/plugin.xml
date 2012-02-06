@@ -2,8 +2,7 @@
 <?eclipse version="3.0"?>
 <plugin>
 
-   <extension-point id="nativeObsAdapter" name="Adapter für native Zeitreihen" schema="schema/nativeObsAdapter.exsd"/>
-   <extension-point id="observationImporter" name="Zeitreihen Importer" schema="schema/observationImporter.exsd"/>
+     <extension-point id="nativeObsAdapter" name="Adapter für native Zeitreihen" schema="schema/nativeObsAdapter.exsd"/>
    <extension-point id="featureVisitor" name="featureVisitor" schema="schema/featureVisitor.exsd"/>
    <extension-point id="catalogContribution" name="add or extend catalogs" schema="schema/catalogContribution.exsd"/>
    <extension-point id="componentHandler" name="componentHandler" schema="schema/componentHandler.exsd"/>
@@ -12,23 +11,16 @@
    <extension-point id="gmlSourceProvider" name="GML Source Provider" schema="schema/gmlSourceProvider.exsd"/>
    <extension-point id="poolLoader" name="poolLoader" schema="schema/poolLoader.exsd"/>
    <extension-point id="featureviewFilter" name="featureviewFilter" schema="schema/featureviewFilter.exsd"/>
-   <extension-point id="layout" name="layout" schema="schema/layout.exsd"/>
-
-   <extension point="org.kalypso.core.observationImporter">
-    <importer  id="grap" label="Grap" class="org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter" />
-    <importer id="csv" label="CSV" class="org.kalypso.ogc.sensor.adapter.NativeObservationCSVAdapter" />
-    <importer id="ext2" label="Ext2" class="org.kalypso.ogc.sensor.adapter.NativeObservationEx2Adapter" />
-    <importer id="dwd-5min" label="DWD-5min" class="org.kalypso.ogc.sensor.adapter.NativeObservationDWD5minAdapter" />
-    <importer id="dwd-std" label="DWD-std" class="org.kalypso.ogc.sensor.adapter.NativeObservationDWDstdAdapter" />
-    <importer id="dwd-md" label="DWD-md" class="org.kalypso.ogc.sensor.adapter.NativeObservationDWDmdAdapter" />
-    <importer id="dwdk" label="DVWK" class="org.kalypso.ogc.sensor.adapter.NativeObservationDVWKAdapter" />
-    <importer id="dat" label="DAT" class="org.kalypso.ogc.sensor.adapter.NativeObservationDatAdapter" />
-    <importer id="zrx" label="ZRX" class="org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter" />
-    <importer id="zml" label="ZML" class="org.kalypso.ogc.sensor.adapter.NativeObservationZmlAdapter" />
-   </extension>
 
    <extension
          point="org.kalypso.core.nativeObsAdapter">
+      <!--
+      <adapter
+            axisType="ZML"
+            class="org.kalypso.ogc.sensor.adapter.NativeObservationZmlAdapter"
+            label="%org.kalypso.ogc.sensor.adapter.NativeObservationZmlAdapter.label">
+      </adapter>
+      -->
       <adapter
             label="%org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter.n.label"
             class="org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter"
@@ -42,21 +34,24 @@
             class="org.kalypso.ogc.sensor.adapter.NativeObservationEx2Adapter"
             axisType="N"/>
       <adapter
+            axisType="N"
             class="org.kalypso.ogc.sensor.adapter.NativeObservationDWD5minAdapter"
-            label="%org.kalypso.ogc.sensor.adapter.NativeObservationDWDAdapter.n.label"
-            axisType="N"/>
+            label="%org.kalypso.ogc.sensor.adapter.NativeObservationDWDAdapter.n.label"/>
       <adapter
+            axisType="N"
             class="org.kalypso.ogc.sensor.adapter.NativeObservationDWDstdAdapter"
-            label="%org.kalypso.ogc.sensor.adapter.NativeObservationDWDstdAdapter.n.label"
-            axisType="N"/>
+            label="%org.kalypso.ogc.sensor.adapter.NativeObservationDWDstdAdapter.n.label">
+      </adapter>
       <adapter
+            axisType="N"
             class="org.kalypso.ogc.sensor.adapter.NativeObservationDWDmdAdapter"
-            label="%org.kalypso.ogc.sensor.adapter.NativeObservationDWDmdAdapter.n.label"
-            axisType="N"/>
+            label="%org.kalypso.ogc.sensor.adapter.NativeObservationDWDmdAdapter.n.label">
+      </adapter>
       <adapter
+            axisType="N"
             class="org.kalypso.ogc.sensor.adapter.NativeObservationDVWKAdapter"
-            label="%org.kalypso.ogc.sensor.adapter.NativeObservationDVWKAdapter.n.label"
-            axisType="N"/>
+            label="%org.kalypso.ogc.sensor.adapter.NativeObservationDVWKAdapter.n.label">
+      </adapter>
       <adapter
             label="%org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter.q.label"
             class="org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter"
@@ -74,9 +69,9 @@
             class="org.kalypso.ogc.sensor.adapter.NativeObservationDatAdapter"
             axisType="Q"/>
       <adapter
+            axisType="Q"
             class="org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter"
-            label="%org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.q.label"
-            axisType="Q"/>
+            label="%org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.q.label"/>
       <adapter
             label="%org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter.t.label"
             class="org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter"
@@ -110,9 +105,9 @@
             class="org.kalypso.ogc.sensor.adapter.NativeObservationEx2Adapter"
             axisType="W"/>
       <adapter
+            axisType="W"
             class="org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter"
-            label="%org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.w.label"
-            axisType="W"/>
+            label="%org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.w.label"/>
    </extension>
    <extension
          id="org.kalypso.core.urlcatalog.extentsion"

@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.afgui.wizards;
 
-import java.util.List;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -60,20 +58,17 @@ import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.eclipse.ui.dialogs.WizardNewProjectReferencePage;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.ScenarioHandlingProjectNature;
+import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
 import org.kalypso.core.status.StatusDialog;
-import org.kalypso.module.INewProjectHandler;
-import org.kalypso.module.welcome.INewProjectWizard;
-
-import de.renew.workflow.connector.cases.IScenario;
-import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 
 /**
  * Basic wizard implementation for the various workflow/scenario based projects.<br>
  * Normally, only the location of the project-template (-zip) should be enough.<br>
- *
+ * 
  * @author Gernot Belger
  */
 public class NewProjectWizard extends BasicNewProjectResourceWizard implements INewProjectWizard, INewProjectHandler
@@ -257,7 +252,7 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
    */
   @SuppressWarnings("unused")
   @Override
-  public IStatus postCreateProject( final IProject project, final ProjectTemplate template, final IProgressMonitor monitor ) throws CoreException
+  public IStatus postCreateProject( final IProject project, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.done();
     return Status.OK_STATUS;
@@ -275,11 +270,7 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
     if( nature == null )
       return;
 
-    final List<IScenario> cases = nature.getCaseManager().getCases();
-    if( cases.size() == 0 )
-      return;
-
-    final IScenario caze = cases.get( 0 );
+    final IScenario caze = nature.getCaseManager().getCases().get( 0 );
 
     if( m_activateScenario )
       KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().setCurrentCase( caze );

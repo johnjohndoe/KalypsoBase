@@ -45,8 +45,8 @@ import java.net.URL;
 
 import javax.activation.MimeType;
 
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.deegree.framework.util.MimeTypeMapper;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -94,9 +94,6 @@ public class ImageFeatureControl extends AbstractImageFeatureControl
     super( feature, ftp );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
-   */
   @Override
   public Control createControl( final Composite parent, final int style )
   {
@@ -132,6 +129,9 @@ public class ImageFeatureControl extends AbstractImageFeatureControl
     updateControl();
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#isValid()
+   */
   @Override
   public boolean isValid( )
   {
@@ -205,8 +205,6 @@ public class ImageFeatureControl extends AbstractImageFeatureControl
 
   private void updateImageUrl( final URL url )
   {
-// System.out.println( "Update image: " + url );
-
     if( ObjectUtils.equals( m_imageUrl, url ) )
       return;
 

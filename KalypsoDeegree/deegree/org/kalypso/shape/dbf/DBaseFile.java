@@ -142,22 +142,22 @@ public class DBaseFile
     return fields.readRecord( m_raf, m_charset );
   }
 
-  public Object getValue( final int recordIndex, final String field ) throws DBaseException, IOException
+  public Object getValue( int recordIndex, String field ) throws DBaseException, IOException
   {
-    final int index = getIndex( field );
+    int index = getIndex( field );
     if( index < 0 )
       throw new DBaseException( String.format( "Unknown field '%s'", field ) );
 
-    final Object[] record = getRecord( recordIndex );
+    Object[] record = getRecord( recordIndex );
     return record[index];
   }
 
-  public int getIndex( final String field )
+  public int getIndex( String field )
   {
-    final IDBFField[] fields = getFields();
+    IDBFField[] fields = getFields();
     for( int i = 0; i < fields.length; i++ )
     {
-      final IDBFField dbfField = fields[i];
+      IDBFField dbfField = fields[i];
       if( dbfField.getName().equalsIgnoreCase( field ) )
         return i;
     }

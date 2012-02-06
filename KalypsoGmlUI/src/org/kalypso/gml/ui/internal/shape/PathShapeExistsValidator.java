@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.ui.internal.shape;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -58,7 +58,7 @@ import org.kalypso.shape.ShapeFile;
  */
 public class PathShapeExistsValidator extends TypedValidator<IPath>
 {
-  private static final String DEFAULT_MESSAGE = Messages.getString( "PathShapeExistsValidator_0" ); //$NON-NLS-1$
+  private static final String DEFAULT_MESSAGE = Messages.getString("PathShapeExistsValidator_0"); //$NON-NLS-1$
 
   public PathShapeExistsValidator( final int severity )
   {

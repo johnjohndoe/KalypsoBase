@@ -48,14 +48,14 @@ import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.model.ZmlTableColumn;
+import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
 public class SimpleEditingStrategy extends AbstractEditingStrategy
 {
-  public SimpleEditingStrategy( final ZmlTableColumn column )
+  public SimpleEditingStrategy( final ExtendedZmlTableColumn column )
   {
     super( column );
   }
@@ -85,6 +85,10 @@ public class SimpleEditingStrategy extends AbstractEditingStrategy
     return null;
   }
 
+  /**
+   * @see org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy#setValue(org.kalypso.zml.ui.table.model.IZmlModelRow,
+   *      java.lang.String)
+   */
   @Override
   public void setValue( final IZmlModelRow element, final String value )
   {
@@ -94,17 +98,11 @@ public class SimpleEditingStrategy extends AbstractEditingStrategy
       final IZmlValueReference reference = row.get( getColumn().getColumnType().getType() );
 
       final Number targetValue = getTargetValue( value );
-      reference.doUpdate( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
+      reference.update( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
     }
     catch( final SensorException e )
     {
       KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
-  }
-
-  @Override
-  public boolean isAggregated( )
-  {
-    return false;
   }
 }

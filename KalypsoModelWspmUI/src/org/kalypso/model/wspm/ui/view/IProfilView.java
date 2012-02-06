@@ -65,4 +65,5 @@ public interface IProfilView
   Control getControl( );
 
   void dispose( );
+
 }

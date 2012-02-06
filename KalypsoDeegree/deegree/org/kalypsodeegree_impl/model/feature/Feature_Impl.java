@@ -40,23 +40,17 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.StringUtils;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.PlatformObject;
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IFeaturePropertyHandler;
-import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
@@ -64,12 +58,20 @@ import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 
 /**
  * Implementation of ogc feature
- *
+ * 
  * @author doemming
  */
 public class Feature_Impl extends PlatformObject implements Feature
 {
   private static final GM_Envelope INVALID_ENV = new GM_Envelope_Impl();
+
+// /**
+// * FIXME - bad idea to cache a geometry in the generic feature implementation. A feature can constists of more than
+// * one geometries. Who decides a cached geometry is valid / dirty? instead use feature binding and the
+// * AbstractCachedFeature Implementation to cache properties of a feature!
+// */
+// @Deprecated
+// private Object m_geometry = null;
 
   /**
    * all property-values are stored here in sequential order (as defined in application-schema) properties with
@@ -101,12 +103,18 @@ public class Feature_Impl extends PlatformObject implements Feature
     m_properties = propValues;
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.Feature#getId()
+   */
   @Override
   public String getId( )
   {
     return m_id;
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.Feature#getFeatureType()
+   */
   @Override
   public IFeatureType getFeatureType( )
   {
@@ -127,7 +135,7 @@ public class Feature_Impl extends PlatformObject implements Feature
 
   /**
    * Accesses a property value of this feature.
-   *
+   * 
    * @return Value of the given properties. Properties with maxoccurency > 0 (as defined in applicationschema) will be
    *         embedded in java.util.List-objects
    * @see org.kalypsodeegree.model.feature.Feature#getProperty(java.lang.String)
@@ -151,23 +159,37 @@ public class Feature_Impl extends PlatformObject implements Feature
     return fsh.getValue( this, pt, currentValue );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.Feature#getGeometryProperties()
+   */
+  @Override
+  public GM_Object[] getGeometryProperties( )
+  {
+    return getGeometryPropertyValues();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Feature#getDefaultGeometryProperty()
+   */
+  @Override
+  public GM_Object getDefaultGeometryProperty( )
+  {
+    return getDefaultGeometryPropertyValue();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Feature#getEnvelope()
+   */
   @Override
   public GM_Envelope getEnvelope( )
   {
     return getBoundedBy();
   }
 
-  /**
-   * Recalculates the bounding box of this feature.<br/>
-   * By default the bounding box is calculated by merging all bounding boxes of all contained geometries within this
-   * feature.<br/>
-   * Overwrite the change this behaviour.
-   */
-  protected GM_Envelope calculateEnv( )
+  private void calculateEnv( )
   {
     GM_Envelope env = null;
-
-    final GM_Object[] geoms = getGeometryPropertyValues();
+    final GM_Object[] geoms = getGeometryProperties();
     for( final GM_Object geometry : geoms )
     {
       final GM_Envelope geomEnv = geometry.getEnvelope();
@@ -176,10 +198,18 @@ public class Feature_Impl extends PlatformObject implements Feature
       else
         env = env.getMerged( geomEnv );
     }
-
-    return env;
+    m_envelope = env;
   }
 
+  @Override
+  public void invalidEnvelope( )
+  {
+    setEnvelopesUpdated();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Feature#setProperty(java.lang.String, java.lang.Object)
+   */
   @Override
   public void setProperty( final IPropertyType pt, final Object value )
   {
@@ -196,7 +226,7 @@ public class Feature_Impl extends PlatformObject implements Feature
 
       if( fsh.invalidateEnvelope( pt ) )
       {
-        setEnvelopesUpdated();
+        invalidEnvelope();
       }
     }
   }
@@ -219,6 +249,9 @@ public class Feature_Impl extends PlatformObject implements Feature
     return getProperty( pt );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.Feature#getProperty(javax.xml.namespace.QName)
+   */
   @Override
   public Object getProperty( final QName propQName )
   {
@@ -231,6 +264,22 @@ public class Feature_Impl extends PlatformObject implements Feature
     return getProperty( pt );
   }
 
+  /**
+   * @deprecated
+   * @see org.kalypsodeegree.model.feature.Feature#setProperty(java.lang.String, java.lang.Object)
+   */
+  @Override
+  @Deprecated
+  public void setProperty( final String propLocalName, final Object value )
+  {
+    final IPropertyType property = getFeatureType().getProperty( propLocalName );
+    if( property != null )
+      setProperty( property, value );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Feature#getWorkspace()
+   */
   @Override
   public GMLWorkspace getWorkspace( )
   {
@@ -241,20 +290,41 @@ public class Feature_Impl extends PlatformObject implements Feature
     return null;
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.Feature#getParent()
+   */
+  @Override
+  public Feature getParent( )
+  {
+    return getOwner();
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.Feature#getParentRelation()
+   */
   @Override
   public IRelationType getParentRelation( )
   {
     return m_parentRelation;
   }
 
-  void setWorkspace( final GMLWorkspace workspace )
+  /**
+   * @see org.kalypsodeegree.model.feature.Feature#setWorkspace(org.kalypsodeegree.model.feature.GMLWorkspace)
+   */
+  @Override
+  public void setWorkspace( final GMLWorkspace workspace )
   {
-    if( m_parent != null && m_parent != workspace )
-      throw new UnsupportedOperationException( "is not a root feature" ); //$NON-NLS-1$
-
-    m_parent = workspace;
+    if( (m_parent == null) || (m_parent == workspace) )
+    {
+      m_parent = workspace;
+    }
+    else
+      throw new UnsupportedOperationException( "is not a root feature" );
   }
 
+  /**
+   * @see java.lang.Object#toString()
+   */
   @Override
   public String toString( )
   {
@@ -270,6 +340,9 @@ public class Feature_Impl extends PlatformObject implements Feature
     return buffer.toString();
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.Feature#setProperty(javax.xml.namespace.QName, java.lang.Object)
+   */
   @Override
   public void setProperty( final QName propQName, final Object value )
   {
@@ -298,15 +371,21 @@ public class Feature_Impl extends PlatformObject implements Feature
     return propertyHandler.isFunctionProperty( pt );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getBoundedBy()
+   */
   @Override
   public GM_Envelope getBoundedBy( )
   {
     if( m_envelope == Feature_Impl.INVALID_ENV )
-      m_envelope = calculateEnv();
+      calculateEnv();
 
     return m_envelope;
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getDefaultGeometryPropertyValue()
+   */
   @Override
   public GM_Object getDefaultGeometryPropertyValue( )
   {
@@ -327,6 +406,9 @@ public class Feature_Impl extends PlatformObject implements Feature
     throw new IllegalStateException( "Wrong geometry type: " + prop.getClass().getName() );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getGeometryPropertyValues()
+   */
   @Override
   public GM_Object[] getGeometryPropertyValues( )
   {
@@ -356,6 +438,9 @@ public class Feature_Impl extends PlatformObject implements Feature
     return result.toArray( new GM_Object[result.size()] );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getOwner()
+   */
   @Override
   public Feature getOwner( )
   {
@@ -365,12 +450,18 @@ public class Feature_Impl extends PlatformObject implements Feature
     return null;
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getQualifiedName()
+   */
   @Override
   public QName getQualifiedName( )
   {
     return getFeatureType().getQName();
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#setEnvelopesUpdated()
+   */
   @Override
   public void setEnvelopesUpdated( )
   {
@@ -381,12 +472,12 @@ public class Feature_Impl extends PlatformObject implements Feature
     // invalidated.
     // TODO: This code is probably not very performant. How to improve this?
     // Alternative: instead of invalidating: before every query we check if any feature-envelope is invalid
-    final Feature parent = getOwner();
+    final Feature parent = getParent();
     if( parent == null )
       return;
 
     final IRelationType rt = getParentRelation();
-    if( rt != null && rt.isList() )
+    if( (rt != null) && rt.isList() )
     {
       // rt relation type and this relation type can differ (different feature workspaces!)
       final IRelationType relation = (IRelationType) parent.getFeatureType().getProperty( rt.getQName() );
@@ -395,42 +486,63 @@ public class Feature_Impl extends PlatformObject implements Feature
     }
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#setFeatureType(org.kalypso.gmlschema.feature.IFeatureType)
+   */
   @Override
   public void setFeatureType( final IFeatureType ft )
   {
     throw new UnsupportedOperationException();
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.Deegree2Feature#setId(java.lang.String)
+   */
   @Override
   public void setId( final String fid )
   {
     throw new UnsupportedOperationException();
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getName()
+   */
   @Override
   public String getName( )
   {
     return NamedFeatureHelper.getName( this );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setName(java.lang.String)
+   */
   @Override
   public void setName( final String name )
   {
     NamedFeatureHelper.setName( this, name );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getDescription()
+   */
   @Override
   public String getDescription( )
   {
     return NamedFeatureHelper.getDescription( this );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setDescription(java.lang.String)
+   */
   @Override
   public void setDescription( final String desc )
   {
     NamedFeatureHelper.setDescription( this, desc );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getLocation()
+   */
   @Override
   public GM_Object getLocation( )
   {
@@ -441,6 +553,9 @@ public class Feature_Impl extends PlatformObject implements Feature
     return null;
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setLocation(org.kalypsodeegree.model.geometry.GM_Object)
+   */
   @Override
   public void setLocation( final GM_Object location )
   {
@@ -449,7 +564,7 @@ public class Feature_Impl extends PlatformObject implements Feature
 
   /**
    * feature given the property {@link QName}
-   *
+   * 
    * @param propertyQName
    *          the {@link QName} of the property to get.
    */
@@ -485,6 +600,9 @@ public class Feature_Impl extends PlatformObject implements Feature
     return value;
   }
 
+  /**
+   * @see org.eclipse.core.runtime.PlatformObject#getAdapter(java.lang.Class)
+   */
   @Override
   public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
@@ -507,260 +625,24 @@ public class Feature_Impl extends PlatformObject implements Feature
     return value.doubleValue();
   }
 
-  @Override
-  public Feature getMember( final QName relation )
-  {
-    final IPropertyType property = getFeatureType().getProperty( relation );
-    if( !(property instanceof IRelationType) )
-      throw new IllegalArgumentException( String.format( "'%s' is not a relation", relation ) );
+// /**
+// * @see org.kalypsodeegree.model.feature.BaseFeature#setGeometry(java.lang.Object)
+// */
+// @Deprecated
+// @Override
+// public void setCachedGeometry( final Object value )
+// {
+// m_geometry = value;
+// }
+//
+// /**
+// * @see org.kalypsodeegree.model.feature.BaseFeature#getGeometry()
+// */
+// @Deprecated
+// @Override
+// public Object getCachedGeometry( )
+// {
+// return m_geometry;
+// }
 
-    return getMember( (IRelationType) property );
-  }
-
-  @Override
-  public Feature getMember( final IRelationType relation )
-  {
-    final Object linkValue = getProperty( relation );
-    if( linkValue == null )
-      return null;
-
-    if( linkValue instanceof Feature )
-      return (Feature) linkValue;
-
-    // must be a reference
-    final String linkID = (String) linkValue;
-    final GMLWorkspace workspace = getWorkspace();
-    if( workspace == null )
-      return null;
-
-    return workspace.getFeature( linkID );
-  }
-
-  @Override
-  public IXLinkedFeature setLink( final QName relationName, final String href )
-  {
-    final IRelationType relation = ensureRelation( relationName );
-    return setLink( relation, href );
-  }
-
-  @Override
-  public IXLinkedFeature setLink( final IRelationType relation, final String href )
-  {
-    final IFeatureType targetFeatureType = relation.getTargetFeatureType();
-    return setLink( relation, href, targetFeatureType );
-  }
-
-  @Override
-  public IXLinkedFeature setLink( final QName relationName, final String href, final QName featureTypeName )
-  {
-    final IRelationType relation = ensureRelation( relationName );
-    return setLink( relation, href, featureTypeName );
-  }
-
-  @Override
-  public IXLinkedFeature setLink( final QName relationName, final String href, final IFeatureType featureType )
-  {
-    final IRelationType relation = ensureRelation( relationName );
-    return setLink( relation, href, featureType );
-  }
-
-  private IRelationType ensureRelation( final QName relationName )
-  {
-    final IPropertyType relation = getFeatureType().getProperty( relationName );
-
-    if( relation == null )
-    {
-      final String message = String.format( "Unknown property: %s", relationName ); //$NON-NLS-1$
-      throw new IllegalArgumentException( message );
-    }
-
-    if( relation instanceof IRelationType )
-      return (IRelationType) relation;
-
-    final String message = String.format( "Property is not a relation: '%s'", relationName ); //$NON-NLS-1$
-    throw new IllegalArgumentException( message );
-  }
-
-  @Override
-  public IXLinkedFeature setLink( final IRelationType relation, final String href, final QName featureTypeName )
-  {
-    final IFeatureType featureType = GMLSchemaUtilities.getFeatureTypeQuiet( featureTypeName );
-    if( featureType == null )
-    {
-      final String message = String.format( "Unknown feature type: %s", featureTypeName ); //$NON-NLS-1$
-      throw new IllegalArgumentException( message );
-    }
-
-    return setLink( relation, href, featureType );
-  }
-
-  @Override
-  public IXLinkedFeature setLink( final IRelationType relation, final String href, final IFeatureType featureType )
-  {
-    Assert.isNotNull( relation );
-
-    // TODO: check, old code often created xlinks with null-feature type.
-    // Probably we should use the target feature type in this case
-    // Assert.isNotNull( featureType );
-
-    /* Check if the target relation is a property of this feature */
-    if( relation != getFeatureType().getProperty( relation.getQName() ) )
-    {
-      final String message = String.format( "Relation '%s' is not a property of this feature", relation.getQName() ); //$NON-NLS-1$
-      throw new IllegalArgumentException( message );
-    }
-
-    /* Are links allowed? */
-    if( !relation.isLinkAble() )
-    {
-      final String message = String.format( "Relation '%s' does not support linked features", relation.getQName() ); //$NON-NLS-1$
-      throw new IllegalArgumentException( message );
-    }
-
-    if( relation.isList() )
-    {
-      final String message = String.format( "Relation '%s' is a list, single links cannot be created.", relation.getQName() ); //$NON-NLS-1$
-      throw new IllegalArgumentException( message );
-    }
-
-    /* Check if the target type is a substitute of the target type of the relation */
-    final IFeatureType targetType = relation.getTargetFeatureType();
-    if( featureType != null && !GMLSchemaUtilities.substitutes( targetType, targetType.getQName() ) )
-    {
-      final String message = String.format( "featureType '%s' does not substitute the allowed target type '%s' of the relation '%s'", featureType.getQName(), targetType.getQName(), relation.getQName() );
-      throw new IllegalArgumentException( message );
-    }
-
-    if( StringUtils.isBlank( href ) )
-    {
-      setProperty( relation, null );
-      return null;
-    }
-    else
-    {
-      /* Create link and set to myself as property */
-      final IXLinkedFeature link = new XLinkedFeature_Impl( this, relation, featureType, href );
-      setProperty( relation, link );
-      return link;
-    }
-  }
-
-  @Override
-  public Feature createSubFeature( final QName relationName )
-  {
-    final IRelationType relation = ensureRelation( relationName );
-    return createSubFeature( relation );
-  }
-
-  @Override
-  public Feature createSubFeature( final QName relationName, final QName featureTypeName )
-  {
-    final IRelationType relation = ensureRelation( relationName );
-    return createSubFeature( relation, featureTypeName );
-  }
-
-  @Override
-  public Feature createSubFeature( final IRelationType relation )
-  {
-    final IFeatureType targetFeatureType = relation.getTargetFeatureType();
-    return createSubFeature( relation, targetFeatureType );
-  }
-
-  @Override
-  public Feature createSubFeature( final IRelationType relation, final QName featureTypeName )
-  {
-    final IFeatureType featureType = getWorkspace().getGMLSchema().getFeatureType( featureTypeName );
-
-    if( featureType == null )
-    {
-      final String message = String.format( "Unknown feature type: %s", featureTypeName );
-      throw new IllegalArgumentException( message );
-    }
-
-    return createSubFeature( relation, featureType );
-  }
-
-  private Feature createSubFeature( final IRelationType relation, final IFeatureType featureType )
-  {
-    if( featureType.isAbstract() )
-    {
-      final String message = String.format( "Cannot create feature for type '%s': type is abstract", featureType.getQName() ); //$NON-NLS-1$
-      throw new IllegalArgumentException( message );
-    }
-
-    if( relation.isList() )
-    {
-      final String message = String.format( "Cannot create feature for list property: '%s'", relation.getQName() ); //$NON-NLS-1$
-      throw new IllegalArgumentException( message );
-    }
-
-    if( !relation.isInlineAble() )
-    {
-      final String message = String.format( "Inline feature not supported for property '%s': ", relation.getQName() ); //$NON-NLS-1$
-      throw new IllegalArgumentException( message );
-    }
-
-    /* Remove and unregister old feature */
-    final Object oldFeature = getProperty( relation );
-    setProperty( relation, null );
-    unregisterSubFeature( oldFeature );
-
-    /* Create and set new feature */
-    // Using null id here, it will be created when the feature is registered into the workspace.
-    final String id = null;
-    final Feature newFeature = FeatureFactory.createFeature( this, relation, id, featureType, true, -1 );
-    setProperty( relation, newFeature );
-
-    /* Register new feature into workspace */
-    final GMLWorkspace_Impl workspace = (GMLWorkspace_Impl) getWorkspace();
-    workspace.accept( new RegisterVisitor( workspace ), newFeature, FeatureVisitor.DEPTH_INFINITE );
-
-    return newFeature;
-  }
-
-  private void unregisterSubFeature( final Object oldValue )
-  {
-    /* Nothing to do for linked featrues */
-    if( oldValue instanceof String || oldValue instanceof IXLinkedFeature )
-      return;
-
-    final Feature oldFeature = (Feature) oldValue;
-
-    final GMLWorkspace_Impl workspace = (GMLWorkspace_Impl) getWorkspace();
-    /* Unregister everything below the old feature that is no linked */
-    workspace.accept( new UnRegisterVisitor( workspace ), oldFeature, FeatureVisitor.DEPTH_INFINITE );
-  }
-
-  @Override
-  public IFeatureBindingCollection<Feature> getMemberList( final QName relationName )
-  {
-    return getMemberList( relationName, Feature.class );
-  }
-
-  @Override
-  public <T extends Feature> IFeatureBindingCollection<T> getMemberList( final QName relationName, final Class<T> type )
-  {
-    final IRelationType ensureRelation = ensureRelation( relationName );
-    return getMemberList( ensureRelation, type );
-  }
-
-  @Override
-  public IFeatureBindingCollection<Feature> getMemberList( final IRelationType relation )
-  {
-    return getMemberList( relation, Feature.class );
-  }
-
-  @Override
-  public <T extends Feature> IFeatureBindingCollection<T> getMemberList( final IRelationType relation, final Class<T> type )
-  {
-    Assert.isNotNull( relation );
-
-    if( !relation.isList() )
-    {
-      final String message = String.format( "Trying to access a property with maxOccurs='1' as list: %s", relation.getQName() );
-      throw new IllegalArgumentException( message );
-    }
-
-    return new FeatureBindingCollection<>( this, type, relation.getQName() );
-  }
 }

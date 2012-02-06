@@ -52,6 +52,8 @@ import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
 
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 /**
  * Layer provider for the {@link PolynomeChartLayer}.
@@ -80,7 +82,7 @@ public class PolynomeLayerProvider extends AbstractLayerProvider
     final IParameterContainer pc = getParameterContainer();
     final boolean showPoints = Boolean.parseBoolean( pc.getParameterValue( "showPoints", "false" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     final int pixelsPerTick = Integer.parseInt( pc.getParameterValue( "pixelsPerTick", "5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    return new PolynomeChartLayer( this, getDataContainer(), pixelsPerTick, getStyleSet(), showPoints ); //$NON-NLS-1$ //$NON-NLS-2$
+    return new PolynomeChartLayer( this, getDataContainer(), pixelsPerTick, getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ), showPoints ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**

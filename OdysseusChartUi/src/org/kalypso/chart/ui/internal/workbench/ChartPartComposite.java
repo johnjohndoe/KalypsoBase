@@ -42,7 +42,7 @@ package org.kalypso.chart.ui.internal.workbench;
 
 import java.net.URL;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.IStatus;
@@ -74,6 +74,7 @@ import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
 import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
 import de.openali.odysseus.chart.factory.config.ChartFactory;
 import de.openali.odysseus.chart.factory.config.IExtensionLoader;
+import de.openali.odysseus.chart.factory.util.ChartFactoryUtilities;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractMapperRegistryEventListener;
@@ -100,7 +101,7 @@ public class ChartPartComposite implements IChartPart
 
   private ChartEditorTreeOutlinePage m_outlinePage = null;
 
-  private ChartImageComposite m_chartComposite = null;
+  private IChartComposite m_chartComposite = null;
 
   private boolean m_dirty = false;
 
@@ -132,7 +133,6 @@ public class ChartPartComposite implements IChartPart
         setDirty( true );
       }
     };
-
     m_chartModel.getLayerManager().addListener( layerManagerListener );
   }
 
@@ -152,6 +152,12 @@ public class ChartPartComposite implements IChartPart
     }
 
     m_chartModel.dispose();
+
+    if( m_chartComposite != null )
+    {
+      // FIXME: strange: is this necessary, should happen automatically if IChartComposite is disposed
+      m_chartComposite.getPlot().dispose();
+    }
   }
 
   public IChartModel getChartModel( )
@@ -189,14 +195,8 @@ public class ChartPartComposite implements IChartPart
         final URL context = ResourceUtilities.createURL( file );
 
         ChartFactory.doConfiguration( m_chartModel, loader, chart, cel, context );
-      }
-      else if( input instanceof IDatabaseStorageEditorInput )
-      {
-        final IStorage storage = ((IStorageEditorInput) input).getStorage();
-        final ChartConfigurationLoader loader = new ChartConfigurationLoader( storage );
-        final IExtensionLoader cel = ChartExtensionLoader.getInstance();
-        final ChartType chart = loader.getCharts()[0];
-        ChartFactory.doConfiguration( m_chartModel, loader, chart, cel, null );
+        // FIXME: this needs to be done everywhere a .kod is loaded, not just only in the ChartEditor
+        ChartFactoryUtilities.doAutoscale( m_chartModel, chart );
       }
     }
     catch( final Exception e )
@@ -218,14 +218,12 @@ public class ChartPartComposite implements IChartPart
       m_composite.setFocus();
   }
 
-  public Composite createControl( final Composite parent )
+  public void createControl( final Composite parent )
   {
     m_composite = new Composite( parent, SWT.FILL );
     m_composite.setLayout( new FillLayout() );
 
     updateControl();
-
-    return m_composite;
   }
 
   /**
@@ -238,8 +236,7 @@ public class ChartPartComposite implements IChartPart
 
     /* Reset controls */
     ControlUtils.disposeChildren( m_composite );
-    if( m_chartPartListener != null )
-      m_chartPartListener.setChart( null );
+    m_chartPartListener.setChart( null );
 
     /* Dispose old model */
     if( m_chartComposite != null )
@@ -252,18 +249,14 @@ public class ChartPartComposite implements IChartPart
     final boolean hasChart = hasChart();
 
     if( hasChart )
-    {
       createChart();
-
-    }
     else
     {
       final Label label = new Label( m_composite, SWT.NONE );
       label.setText( Messages.getString( "org.kalypso.chart.ui.editor.ChartEditor.6" ) ); //$NON-NLS-1$
     }
 
-    if( m_chartPartListener != null )
-      m_chartPartListener.setChart( m_chartComposite );
+    m_chartPartListener.setChart( m_chartComposite );
 
     m_composite.layout( true, true );
     if( m_outlinePage != null )
@@ -279,6 +272,7 @@ public class ChartPartComposite implements IChartPart
   private void createChart( )
   {
     m_chartComposite = new ChartImageComposite( m_composite, SWT.BORDER, m_chartModel, new RGB( 255, 255, 255 ) );
+
     // drag delegates
     m_composite.layout();
   }

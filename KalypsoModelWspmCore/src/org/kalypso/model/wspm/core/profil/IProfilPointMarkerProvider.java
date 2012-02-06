@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil;
 
-import java.net.URL;
-
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.RGB;
 
@@ -59,6 +57,4 @@ public interface IProfilPointMarkerProvider
    * @return the color for this markerId, used in the TableView, ChartView
    */
   RGB getColorFor( final String marker );
-
-  URL getSld( String marker );
 }

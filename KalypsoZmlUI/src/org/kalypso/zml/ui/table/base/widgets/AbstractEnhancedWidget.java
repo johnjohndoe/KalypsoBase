@@ -57,7 +57,7 @@ import org.kalypso.zml.ui.table.base.widgets.rules.IWidgetRule;
  */
 public abstract class AbstractEnhancedWidget<T> extends Composite implements IAbstractEnhancedWidget
 {
-  private static final Image IMG_INVALID_PARAMETER = new Image( null, EnhancedTextBox.class.getResourceAsStream( "icons/invalid_parameter.gif" ) ); //$NON-NLS-1$
+  protected static final Image IMG_INVALID_PARAMETER = new Image( null, EnhancedTextBox.class.getResourceAsStream( "icons/invalid_parameter.gif" ) ); //$NON-NLS-1$
 
   private final IWidgetRule<T> m_rule;
 

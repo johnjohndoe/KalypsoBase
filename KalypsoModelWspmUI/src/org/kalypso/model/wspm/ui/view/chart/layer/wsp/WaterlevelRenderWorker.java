@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart.layer.wsp;
 
@@ -44,19 +44,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.Range;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.math.DoubleRange;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.WaterlevelIntersectionWorker;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.preferences.Preferences;
+import org.kalypso.observation.result.IRecord;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -81,6 +80,7 @@ public class WaterlevelRenderWorker
 
   private final int m_widthComponent;
 
+
   public WaterlevelRenderWorker( final IProfil profile, final double value )
   {
     m_profile = profile;
@@ -98,7 +98,7 @@ public class WaterlevelRenderWorker
     if( Double.isNaN( m_value ) )
       return Status.OK_STATUS;
 
-    final Range<Double> restriction = getRestriction();
+    final DoubleRange restriction = getRestriction();
 
     final WaterlevelIntersectionWorker worker = new WaterlevelIntersectionWorker( m_profile, m_value );
     worker.execute();
@@ -121,11 +121,11 @@ public class WaterlevelRenderWorker
     return Status.OK_STATUS;
   }
 
-  private WaterlevelRenderSegment buildSegment( final LineSegment segment, final Range<Double> restriction ) throws Exception
+  private WaterlevelRenderSegment buildSegment( final LineSegment segment, final DoubleRange restriction ) throws Exception
   {
+    final DoubleRange segmentRange = new DoubleRange( segment.p0.x, segment.p1.x );
 
-    final Range<Double> segmentRange = Range.between( segment.p0.x, segment.p1.x );
-    if( restriction != null && !segmentRange.isOverlappedBy( restriction ) )
+    if( restriction != null && !restriction.overlapsRange( segmentRange ) )
       return null;
 
     final Polygon area = buildSegmentArea( segment );
@@ -133,7 +133,7 @@ public class WaterlevelRenderWorker
     return new WaterlevelRenderSegment( segment, area );
   }
 
-  private Range<Double> getRestriction( )
+  private DoubleRange getRestriction( )
   {
     final String markerType = Preferences.getWaterlevelRestrictionMarker();
     final IProfilPointMarker[] markers = m_profile.getPointMarkerFor( markerType );
@@ -147,7 +147,7 @@ public class WaterlevelRenderWorker
     if( Double.isNaN( leftLimit ) || Double.isNaN( rightLimit ) )
       return null;
 
-    return Range.between( leftLimit, rightLimit );
+    return new DoubleRange( leftLimit, rightLimit );
   }
 
   private double findLimit( final IProfilPointMarker[] markers, final int index )
@@ -168,14 +168,14 @@ public class WaterlevelRenderWorker
     // FIXME: not yet perfekt: we need to cut at d1/d2 instead of finding the nearest point.
     // So this is nt yet to be used to show final the area, but it final can be used final to calculate the final area.
 
-    final IProfileRecord point1 = ProfileVisitors.findNearestPoint( m_profile, x1 );
-    final IProfileRecord point2 = ProfileVisitors.findNearestPoint( m_profile, x2 );
+    final IRecord point1 = ProfilUtil.findNearestPoint( m_profile, x1 );
+    final IRecord point2 = ProfilUtil.findNearestPoint( m_profile, x2 );
 
     if( point1 == null || point2 == null )
       return null;
 
-    final int index1 = point1.getIndex();
-    final int index2 = point2.getIndex();
+    final int index1 = m_profile.indexOfPoint( point1 );
+    final int index2 = m_profile.indexOfPoint( point2 );
 
     final Double[] widths = ProfilUtil.getValuesFor( m_profile, IWspmConstants.POINT_PROPERTY_BREITE, Double.class );
     final Double[] heights = ProfilUtil.getValuesFor( m_profile, IWspmConstants.POINT_PROPERTY_HOEHE, Double.class );

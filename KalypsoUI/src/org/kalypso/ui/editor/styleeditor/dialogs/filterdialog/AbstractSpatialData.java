@@ -31,7 +31,9 @@ package org.kalypso.ui.editor.styleeditor.dialogs.filterdialog;
 
 import org.kalypsodeegree.model.geometry.GM_Object;
 
+
 /**
+ * 
  * @author kuepfer
  */
 public abstract class AbstractSpatialData extends AbstractData
@@ -41,22 +43,23 @@ public abstract class AbstractSpatialData extends AbstractData
 
   protected GM_Object m_geomType = null;
 
-  public String getGeometryPropertyName( )
+ 
+  public String getGeometryPropertyName()
   {
     return m_geomPropertyName;
   }
 
-  public void setGeometryPropertyName( final String m_propertyName )
+  public void setGeometryPropertyName( String m_propertyName )
   {
     m_geomPropertyName = m_propertyName.trim();
   }
 
-  public GM_Object getGeomType( )
+  public GM_Object getGeomType()
   {
     return m_geomType;
   }
 
-  public void setGeomType( final GM_Object type )
+  public void setGeomType( GM_Object type )
   {
     m_geomType = type;
   }

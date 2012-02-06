@@ -56,7 +56,7 @@ public class MoviePlayerJob extends Job
   /**
    * The movie player.
    */
-  private final MoviePlayer m_player;
+  private MoviePlayer m_player;
 
   /**
    * The constructor.
@@ -64,28 +64,29 @@ public class MoviePlayerJob extends Job
    * @param player
    *          The movie player.
    */
-  public MoviePlayerJob( final MoviePlayer player )
+  public MoviePlayerJob( MoviePlayer player )
   {
     super( "MoviePlayer" );
 
     m_player = player;
   }
 
+  /**
+   * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
+   */
   @Override
-  protected IStatus run( final IProgressMonitor monitor )
+  protected IStatus run( IProgressMonitor monitor )
   {
     try
     {
       while( true )
       {
-        final long startTime = System.currentTimeMillis();
-
         /* Monitor. */
         if( monitor.isCanceled() )
           return new Status( IStatus.CANCEL, KalypsoGisPlugin.getId(), "Abbruch..." );
 
         /* Get the current step. */
-        final int currentStep = m_player.getCurrentStep();
+        int currentStep = m_player.getCurrentStep();
 
         /* Step and wait. */
         m_player.stepAndWait( currentStep + 1 );
@@ -93,17 +94,11 @@ public class MoviePlayerJob extends Job
         /* Update the controls. */
         m_player.updateControls();
 
-        /* Wait a bit, if the delay was shorter than the set waiting time */
-        final long endTime = System.currentTimeMillis();
-        final long delay = endTime - startTime;
-        final int frameDelay = m_player.getFrameDelay();
-        final long waitTime = frameDelay - delay;
-
-        if( waitTime > 0 )
-          Thread.sleep( waitTime );
+        /* Wait a bit. */
+        Thread.sleep( m_player.getFrameDelay() );
       }
     }
-    catch( final Exception ex )
+    catch( Exception ex )
     {
       return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), ex.getLocalizedMessage(), ex );
     }

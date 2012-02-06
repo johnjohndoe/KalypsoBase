@@ -41,7 +41,7 @@
 
 package org.kalypso.ogc.sensor;
 
-import org.apache.commons.collections.ExtendedProperties;
+import org.apache.commons.configuration.Configuration;
 import org.kalypso.metadoc.configuration.ConfigurationUtils;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
@@ -49,34 +49,34 @@ import org.kalypso.ogc.sensor.template.ObsViewItem;
 
 /**
  * Extends metadata destinated for the metadoc service with information that it gets from an observation
- *
+ * 
  * @author schlienger
  */
 public class MetadataExtenderWithObservation
 {
-  private MetadataExtenderWithObservation( )
+  private MetadataExtenderWithObservation()
   {
-    // not intended to be instanciated
+  // not intended to be instanciated
   }
 
   /**
    * Helper that calls extendMetadata( Configuration, IObservation ) for each observation of the given items
    */
-  public static void extendMetadata( final ExtendedProperties metadata, final ObsViewItem[] items )
+  public static void extendMetadata( final Configuration metadata, final ObsViewItem[] items )
   {
-    for( final ObsViewItem item : items )
-      extendMetadata( metadata, item.getObservation() );
+    for( int i = 0; i < items.length; i++ )
+      extendMetadata( metadata, items[i].getObservation() );
   }
 
   /**
    * Extend the metadata that can be found in conf with information that it gets from the given observation
-   *
+   * 
    * @param metadata
    *          this represents the metadata that might get extended
    * @param obs
    *          observation used to get some extra information
    */
-  public static void extendMetadata( final ExtendedProperties metadata, final IObservation obs )
+  public static void extendMetadata( final Configuration metadata, final IObservation obs )
   {
     if( obs == null )
       return;
@@ -86,7 +86,7 @@ public class MetadataExtenderWithObservation
     // currently we only take this property, but the thing
     // could easily be extended with more
     final String kennz = md.getProperty( ITimeseriesConstants.MD_KENNZIFFER );
-
+    
     ConfigurationUtils.addPropertyDistinct( metadata, ITimeseriesConstants.MD_KENNZIFFER, kennz );
   }
 }

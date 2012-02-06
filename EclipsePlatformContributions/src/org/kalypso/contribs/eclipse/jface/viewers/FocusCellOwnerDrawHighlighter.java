@@ -113,6 +113,6 @@ public class FocusCellOwnerDrawHighlighter extends FocusCellHighlighter
       m_oldCell.getControl().redraw( x, rect.y - 1, width, rect.height + 1, true );
     }
 
-    m_oldCell = cell;
+    this.m_oldCell = cell;
   }
 }

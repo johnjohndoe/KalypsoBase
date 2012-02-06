@@ -42,12 +42,8 @@ package org.kalypso.core.status;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Collection;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
@@ -61,15 +57,11 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.ui.forms.events.ExpansionAdapter;
-import org.eclipse.ui.forms.events.ExpansionEvent;
-import org.eclipse.ui.forms.widgets.ExpandableComposite;
-import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * A dialog showing a status in full details.
@@ -78,21 +70,9 @@ import org.eclipse.ui.forms.widgets.Section;
  */
 public class StatusDialog extends AbstractStatusDialog
 {
-  private final Collection<IAction> m_actions = new ArrayList<IAction>();
-
   private boolean m_showAsTree;
 
   private boolean m_showTime = true;
-
-  public static void open( final Shell parentShell, final IStatus status, final String dialogTitle )
-  {
-    new StatusDialog( parentShell, status, dialogTitle ).open();
-  }
-
-  public static void open( final Shell parentShell, final IStatus status, final String dialogTitle, final String[] dialogButtonLabels, final int defaultIndex )
-  {
-    new StatusDialog( parentShell, status, dialogTitle, dialogButtonLabels, defaultIndex ).open();
-  }
 
   public StatusDialog( final Shell parentShell, final IStatus status, final String dialogTitle )
   {
@@ -119,36 +99,11 @@ public class StatusDialog extends AbstractStatusDialog
   }
 
   @Override
-  protected Control createMessageArea( final Composite parent )
-  {
-    final Composite panel = new Composite( parent, SWT.NONE );
-    panel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    GridLayoutFactory.fillDefaults().numColumns( 3 ).applyTo( panel );
-
-    super.createMessageArea( panel );
-
-    final ToolBarManager toolBarManager = new ToolBarManager( SWT.HORIZONTAL );
-    final ToolBar toolBar = toolBarManager.createControl( panel );
-
-    toolBar.setLayoutData( new GridData( SWT.FILL, SWT.TOP, false, false ) );
-
-    for( final IAction additionalAction : m_actions )
-      toolBarManager.add( additionalAction );
-
-    // FIXME
-    // toolBarManager.add( new MailStatusAction( getStatus() ) );
-    toolBarManager.add( new CopyStatusClipboardAction( getStatus() ) );
-    toolBarManager.update( true );
-
-    return panel;
-  }
-
-  @Override
   protected Control createCustomArea( final Composite parent )
   {
     final Composite composite = new Composite( parent, SWT.NONE );
     composite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    composite.setLayout( new GridLayout() );
+    GridLayoutFactory.fillDefaults().applyTo( composite );
 
     final IStatus status = getStatus();
     createExceptionControl( composite, status );
@@ -158,6 +113,9 @@ public class StatusDialog extends AbstractStatusDialog
     return composite;
   }
 
+  /**
+   * @see org.eclipse.jface.dialogs.Dialog#isResizable()
+   */
   @Override
   protected boolean isResizable( )
   {
@@ -170,32 +128,29 @@ public class StatusDialog extends AbstractStatusDialog
     if( exception == null )
       return;
 
-    final String shortException = exception.toString();
-
     final StringWriter sw = new StringWriter();
-    final PrintWriter pw = new PrintWriter( sw );
-    exception.printStackTrace( pw );
-    pw.flush();
+    exception.printStackTrace( new PrintWriter( sw ) );
 
-    final Section exceptionGroup = new Section( parent, ExpandableComposite.TREE_NODE );
+    final Group exceptionGroup = new Group( parent, SWT.NONE );
     exceptionGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    exceptionGroup.setText( "Exception: " + shortException );
+    exceptionGroup.setLayout( new GridLayout() );
+    exceptionGroup.setText( "Exception" ); //$NON-NLS-1$
+
+    final String excMsg = exception.getLocalizedMessage();
+    if( excMsg != null )
+    {
+      final Text msgLabel = new Text( exceptionGroup, SWT.READ_ONLY );
+      msgLabel.setLayoutData( new GridData( SWT.FILL, SWT.NONE, true, false ) );
+      msgLabel.setText( excMsg );
+    }
 
     final Text stackText = new Text( exceptionGroup, SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL );
+    final GridData stackLayoutData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    stackLayoutData.widthHint = 100;
+    stackLayoutData.heightHint = 100;
+    stackText.setLayoutData( stackLayoutData );
     stackText.setText( sw.toString() );
     stackText.setEnabled( true );
-
-    exceptionGroup.setClient( stackText );
-
-    exceptionGroup.addExpansionListener( new ExpansionAdapter()
-    {
-      @Override
-      public void expansionStateChanged( final ExpansionEvent e )
-      {
-        // TODO: maybe more intelligent behaviour?
-        getShell().pack();
-      }
-    } );
   }
 
   private void createStatusControl( final Composite parent, final IStatus status )
@@ -207,7 +162,10 @@ public class StatusDialog extends AbstractStatusDialog
     final ColumnViewer columnViewer = createViewer( parent );
 
     final Control viewerControl = columnViewer.getControl();
-    viewerControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    final GridData viewerData = new GridData( SWT.FILL, SWT.FILL, true, true );
+// viewerData.widthHint = 200;
+// viewerData.heightHint = 100;
+    viewerControl.setLayoutData( viewerData );
 
     if( columnViewer instanceof TreeViewer )
       StatusLabelProvider.addNavigationColumn( columnViewer );
@@ -258,14 +216,5 @@ public class StatusDialog extends AbstractStatusDialog
       table.setLinesVisible( true );
       return tableViewer;
     }
-  }
-
-  /**
-   * Adds an action to the toolbar of this dialog.<br/>
-   * Must be called before the dialog is opened.
-   */
-  public void addAction( final IAction action )
-  {
-    m_actions.add( action );
   }
 }

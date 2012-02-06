@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.java.lang;
 
-import org.apache.commons.lang3.ArrayUtils;
-
 /**
  * @author Dirk Kuch
  */
@@ -83,40 +81,5 @@ public final class Doubles
       return null;
 
     return max;
-  }
-
-  /**
-   * @return first non null double value. Double.NaN is filtered too
-   */
-  public static Double firstNonNull( final Double... numbers )
-  {
-    for( final Double number : numbers )
-    {
-      if( Objects.isNull( number ) )
-        continue;
-      else if( Double.isNaN( number ) )
-        continue;
-
-      return number;
-    }
-
-    return null;
-  }
-
-  public static boolean isNaN( final Double... numbers )
-  {
-    if( ArrayUtils.isEmpty( numbers ) )
-      return true;
-
-    for( final Double number : numbers )
-    {
-      if( Objects.isNull( number ) )
-        return true;
-
-      if( Double.isNaN( number ) )
-        return true;
-    }
-
-    return false;
   }
 }

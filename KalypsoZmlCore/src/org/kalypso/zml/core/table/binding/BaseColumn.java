@@ -47,9 +47,9 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.zml.core.KalypsoZmlCore;
@@ -78,8 +78,6 @@ public class BaseColumn
   private CellStyle m_editingCellStyle;
 
   private ColumnHeader[] m_headers;
-
-  private String m_headerImage;
 
   public BaseColumn( final AbstractColumnType type )
   {
@@ -128,6 +126,9 @@ public class BaseColumn
     return m_headers;
   }
 
+  /**
+   * @see java.lang.Object#hashCode()
+   */
   @Override
   public int hashCode( )
   {
@@ -249,7 +250,7 @@ public class BaseColumn
     final List<ColumnPropertyType> properties = m_type.getProperty();
     for( final ColumnPropertyType prop : properties )
     {
-      final String propertyName = TableTypes.getPropertyName( prop );
+      final String propertyName = TableTypeHelper.getPropertyName( prop );
       if( property.value().equals( propertyName ) )
         return prop.getValue();
     }
@@ -307,26 +308,5 @@ public class BaseColumn
   public boolean isTooltip( )
   {
     return m_type.isTooltip();
-  }
-
-  public void reset( )
-  {
-    m_rules = null;
-    m_cellStyle = null;
-    m_editingCellStyle = null;
-    m_headers = null;
-    m_headerImage = null;
-  }
-
-  public String getHeaderImageReference( )
-  {
-
-    return m_headerImage;
-  }
-
-  public void setHeaderImageReference( final String reference )
-  {
-    m_headerImage = reference;
-
   }
 }

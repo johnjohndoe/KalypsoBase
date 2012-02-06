@@ -17,7 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
@@ -108,7 +108,7 @@ public class DTriangulationForJTS
       final double widthx = argmaxx - argminx;
       final double widthy = argmaxy - argminy;
 
-      final Pnt lowerLeftPnt1 = new Pnt( argminx - 1.5 * dx, argminy - dy, 0 );
+      final Pnt lowerLeftPnt1 = new Pnt( argminx - (1.5 * dx), argminy - dy, 0 );
 
       // Create a rectangular boundary
       final GeometryFactory gf = new GeometryFactory();
@@ -139,11 +139,11 @@ public class DTriangulationForJTS
     // -- the initial simplex must contain all points
     // -- take the bounding box, move the diagonals (sidewards)
     // the meeting point will be the mirrored bbox-center on the top edge
-    initialTriangle = new Simplex( new Pnt[] { new Pnt( argminx - 1.5 * dx, argminy - dy ), // lower left
-        new Pnt( argmaxx + 1.5 * dx, argminy - dy ), // lower right
-        new Pnt( argminx + dx / 2.0, argmaxy + 1.5 * dy ) } ); // center, top
+    initialTriangle = new Simplex( new Pnt[] { new Pnt( argminx - (1.5 * dx), argminy - dy ), // lower left
+        new Pnt( argmaxx + (1.5 * dx), argminy - dy ), // lower right
+        new Pnt( argminx + (dx / 2.0), argmaxy + 1.5 * dy ) } ); // center, top
 
-    lowerLeftPnt = new Pnt( argminx - 1.5 * dx, argminy - dy, 0 );
+    lowerLeftPnt = new Pnt( argminx - (1.5 * dx), argminy - dy, 0 );
     dt = new DelaunayTriangulation( initialTriangle );
     addPoints( pointList );
   }

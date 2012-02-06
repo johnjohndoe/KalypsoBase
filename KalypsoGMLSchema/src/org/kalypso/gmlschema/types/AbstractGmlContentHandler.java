@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema.types;
 
@@ -59,14 +59,13 @@ import org.xml.sax.XMLReader;
  * A {@link ContentHandler} implementation used to delegate calls to a content handler to a child content handler that
  * parses a sub-element of the current scope. <br>
  * Subclasses should implement the blank methods to application-specific behavior.
- *
+ * 
  * @author Gernot Belger
  * @author Felipe Maximino
  */
-public abstract class AbstractGmlContentHandler implements IGmlContentHandler
+public class AbstractGmlContentHandler implements IGmlContentHandler
 {
   /* This receiver always holds the currently active content handler */
-  // FIXME: replace with more general interface
   private final XMLReader m_reader;
 
   private Locator m_locator;
@@ -75,6 +74,7 @@ public abstract class AbstractGmlContentHandler implements IGmlContentHandler
 
   private Properties m_prefixMapping;
 
+  // FIXME: introduce interface for the abstract class
   public AbstractGmlContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler )
   {
     m_reader = reader;
@@ -90,6 +90,9 @@ public abstract class AbstractGmlContentHandler implements IGmlContentHandler
     return m_prefixMapping;
   }
 
+  /**
+   * @see org.kalypso.gmlschema.types.IGmlContentHandler#getNamespaceContext()
+   */
   @Override
   public NamespaceContext getNamespaceContext( )
   {
@@ -136,7 +139,11 @@ public abstract class AbstractGmlContentHandler implements IGmlContentHandler
     return new SAXParseException( messgae, m_locator, cause );
   }
 
-  protected ContentHandler getTopLevel( )
+  /**
+   * @see org.kalypsodeegree_impl.io.sax.parser.IParentContentHandler#getTopLevel()
+   */
+  @Override
+  public ContentHandler getTopLevel( )
   {
     return m_reader.getContentHandler();
   }
@@ -161,6 +168,9 @@ public abstract class AbstractGmlContentHandler implements IGmlContentHandler
     m_reader.setContentHandler( contentHandler );
   }
 
+  /**
+   * @see org.xml.sax.ContentHandler#setDocumentLocator(org.xml.sax.Locator)
+   */
   @Override
   public void setDocumentLocator( final Locator locator )
   {
@@ -197,6 +207,9 @@ public abstract class AbstractGmlContentHandler implements IGmlContentHandler
     // no op
   }
 
+  /**
+   * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
+   */
   @Override
   @SuppressWarnings("unused")
   public void endElement( final String uri, final String localName, final String qName ) throws SAXException
@@ -204,6 +217,9 @@ public abstract class AbstractGmlContentHandler implements IGmlContentHandler
     // endDelegation();
   }
 
+  /**
+   * @see org.xml.sax.ContentHandler#endPrefixMapping(java.lang.String)
+   */
   @SuppressWarnings("unused")
   @Override
   public void endPrefixMapping( final String prefix ) throws SAXException
@@ -211,6 +227,9 @@ public abstract class AbstractGmlContentHandler implements IGmlContentHandler
     m_prefixMapping.remove( prefix );
   }
 
+  /**
+   * @see org.xml.sax.ContentHandler#ignorableWhitespace(char[], int, int)
+   */
   @Override
   @SuppressWarnings("unused")
   public void ignorableWhitespace( final char[] ch, final int start, final int length ) throws SAXException
@@ -218,6 +237,9 @@ public abstract class AbstractGmlContentHandler implements IGmlContentHandler
     // no op
   }
 
+  /**
+   * @see org.xml.sax.ContentHandler#processingInstruction(java.lang.String, java.lang.String)
+   */
   @Override
   @SuppressWarnings("unused")
   public void processingInstruction( final String target, final String data ) throws SAXException
@@ -245,6 +267,10 @@ public abstract class AbstractGmlContentHandler implements IGmlContentHandler
     // no op
   }
 
+  /**
+   * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String,
+   *      org.xml.sax.Attributes)
+   */
   @Override
   @SuppressWarnings("unused")
   public void startElement( final String uri, final String localName, final String qName, final Attributes atts ) throws SAXException

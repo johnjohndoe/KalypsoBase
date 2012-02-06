@@ -44,8 +44,8 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.core.diagram.base.IZmlLayer;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
+import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 
 import de.openali.odysseus.chart.ext.base.layer.DefaultTextLayer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -68,6 +68,10 @@ public class NoDataLayerVisibilityVisitor implements IChartLayerVisitor
   }
 
   // <Parameter name="hideOnMultiSelect" value="true" />
+
+  /**
+   * @see org.kalypso.zml.core.diagram.base.AbstractExternalChartModelVisitor#accept(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+   */
   @Override
   public void visit( final IChartLayer layer )
   {
@@ -103,7 +107,7 @@ public class NoDataLayerVisibilityVisitor implements IChartLayerVisitor
     if( Objects.isNull( handler ) )
       return false;
 
-    final IObservation observation = (IObservation) handler.getAdapter( IObservation.class );
+    final IObservation observation = handler.getObservation();
     if( Objects.isNull( observation ) )
       return false;
 
@@ -120,6 +124,9 @@ public class NoDataLayerVisibilityVisitor implements IChartLayerVisitor
     return false;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#doFinialize()
+   */
   @Override
   public void doFinialize( )
   {

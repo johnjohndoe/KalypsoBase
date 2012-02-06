@@ -51,5 +51,5 @@ public interface ICatalogContribution
   /**
    * implement here your contributions to the global catalog
    */
-  void contributeTo( CatalogManager catalogManager );
+  public void contributeTo( CatalogManager catalogManager );
 }

@@ -94,7 +94,6 @@ public class ChartPartListener extends PartAdapter2
     if( chart != null )
     {
       m_sourceProvider = new ChartSourceProvider( m_locator, chart );
-      // Execute event now????
       activateDefaultHandler( chart );
     }
   }

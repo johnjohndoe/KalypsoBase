@@ -49,7 +49,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 
 import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * @author belger
@@ -125,9 +124,4 @@ public class ProblemResult implements IHeightWidthResult
     }
   }
 
-  @Override
-  public Polygon getPolygon( )
-  {
-    return null;
-  }
 }

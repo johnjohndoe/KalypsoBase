@@ -41,7 +41,7 @@
 
 package org.kalypso.metadoc.ui;
 
-import org.apache.commons.collections.ExtendedProperties;
+import org.apache.commons.configuration.Configuration;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -55,18 +55,17 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * A simple wizard page which takes its contents from a configuration object
- *
+ * 
  * @author schlienger
  */
 public class ConfigurationWizardPage extends WizardPage
 {
-  private final ExtendedProperties m_config;
-
+  private final Configuration m_config;
   private final String[] m_editableKeys;
-
   private final String[] m_labels;
 
-  public ConfigurationWizardPage( final String pageName, final String title, final ImageDescriptor titleImage, final ExtendedProperties config, final String[] editableKeys, final String[] labels )
+  public ConfigurationWizardPage( final String pageName, final String title, final ImageDescriptor titleImage,
+      final Configuration config, final String[] editableKeys, final String[] labels )
   {
     super( pageName, title, titleImage );
 
@@ -90,25 +89,25 @@ public class ConfigurationWizardPage extends WizardPage
     for( int i = 0; i < m_editableKeys.length; i++ )
     {
       final String key = m_editableKeys[i];
-
+      
       final Label label = new Label( composite, SWT.LEAD );
       label.setText( m_labels[i] );
 
       final Text text = new Text( composite, SWT.LEAD );
       text.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL ) );
       text.setText( m_config.getString( key, "" ) );
-
-      final ExtendedProperties config = m_config;
+      
+      final Configuration config = m_config;
       text.addModifyListener( new ModifyListener()
       {
         @Override
-        public void modifyText( final ModifyEvent e )
+        public void modifyText( ModifyEvent e )
         {
           config.setProperty( key, text.getText() );
         }
       } );
     }
-
+    
     setControl( composite );
   }
 }

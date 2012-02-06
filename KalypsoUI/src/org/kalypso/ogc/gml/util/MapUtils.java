@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.util;
 
@@ -69,11 +69,8 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Primitive;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
+import org.kalypsodeegree_impl.tools.GMLConstants;
 
 /**
  * @author Thomas Jung
@@ -124,7 +121,7 @@ public class MapUtils
     workspace.postCommand( compositeCommand );
   }
 
-  public static void paintGrabbedFeature( final Graphics g, final IMapPanel panel, final Feature feature, final GMLXPath geometryPath )
+  public static void paintGrabbedFeature( final Graphics g, final IMapPanel panel, final Feature feature, final QName geomQName )
   {
     final Graphics2D g2 = (Graphics2D) g;
     final BasicStroke oldStroke = (BasicStroke) g2.getStroke();
@@ -140,28 +137,16 @@ public class MapUtils
 
     try
     {
-      final Object value;
-      if( geometryPath == null )
-        value = feature.getDefaultGeometryPropertyValue();
-      else
-        value = GMLXPathUtilities.query( geometryPath, feature );
-
-      final GM_Object[] geometries = GeometryUtilities.findGeometries( value, GM_Object.class );
-
-      for( final GM_Object geom : geometries )
-      {
-        paintGrabbedGeometry( panel, g2, geom );
-      }
+      final GM_Object geom = (GM_Object) feature.getProperty( geomQName != null ? geomQName : GMLConstants.QN_LOCATION );
+      if( geom == null )
+        return;
+      paintGrabbedGeometry( panel, g2, geom );
     }
-    catch( final IllegalArgumentException e )
+    catch( IllegalArgumentException e )
     {
       e.printStackTrace();
     }
     catch( final GM_Exception e )
-    {
-      e.printStackTrace();
-    }
-    catch( final GMLXPathException e )
     {
       e.printStackTrace();
     }

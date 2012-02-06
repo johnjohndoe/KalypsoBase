@@ -52,33 +52,33 @@ import org.eclipse.swt.widgets.Text;
  */
 final class EnvelopeDialogListener implements ModifyListener
 {
-  private final EnvelopeDialog m_envDialog;
+  private EnvelopeDialog m_envDialog;
 
-  private final int m_whichText;
+  private int m_whichText;
 
-  public EnvelopeDialogListener( final EnvelopeDialog envDialog, final int whichText )
+  public EnvelopeDialogListener( EnvelopeDialog envDialog, int whichText )
   {
     m_envDialog = envDialog;
     m_whichText = whichText;
   }
 
   @Override
-  public void modifyText( final ModifyEvent e )
+  public void modifyText( ModifyEvent e )
   {
     final Text text = (Text) e.getSource();
     final String content = text.getText();
 
-    final Double[] values = m_envDialog.getValues();
+    Double[] values = m_envDialog.getValues();
 
     try
     {
-      final Double dbl = Double.parseDouble( content );
+      Double dbl = Double.parseDouble( content );
 
       values[m_whichText] = dbl;
 
       m_envDialog.setValues( values );
     }
-    catch( final Exception ex )
+    catch( Exception ex )
     {
       values[m_whichText] = new Double( "0.0" ); //$NON-NLS-1$
 

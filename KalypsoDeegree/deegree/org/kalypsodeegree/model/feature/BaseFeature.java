@@ -46,26 +46,57 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
  * Adds additional methods to a Feature A Feature is adaptable, thus allowing Adapter Factories and/or Subclasses to
  * provide another "view" over a feature object. For instance, an observation-feature can be directly represented as an
  * observation.<br>
  * <br>
- *
+ * 
  * @see Deegree2Feature
  */
 public interface BaseFeature extends IAdaptable
 {
   /**
-   * returns the envelope / bounding box of the feature
-   *
+   * returns the property of the feature that matches the submitted propertytype
+   */
+  Object getProperty( IPropertyType propertyType );
+
+  /**
+   * returns all geometry properties of the feature. If no geometry could be found an <tt>GM_Object[]</tt> with zero
+   * length will be returned.
+   * 
+   * @deprecated use {FeatureDeegreeTwo}.getGeometryPropertyValues instead
+   */
+  @Deprecated
+  GM_Object[] getGeometryProperties( );
+
+  /**
+   * Returns the default geometry of the <tt>Feature</tt>.
+   * 
+   * @return default geometry or null, if the <tt>Feature</tt> has none
+   * @deprecated use {@link Deegree2Feature#getDefaultGeometryPropertyValue()} instead
+   */
+  @Deprecated
+  GM_Object getDefaultGeometryProperty( );
+
+  /**
+   * returns the envelope / boundingbox of the feature
+   * 
    * @deprecated Use {@link Deegree2Feature#getBoundedBy()} instead
    */
   @Deprecated
   GM_Envelope getEnvelope( );
 
   GMLWorkspace getWorkspace( );
+
+  /**
+   * Return the parent of this feature, that is, the feature wich contains this feature as inline feature.
+   * 
+   * @see #getParentRelation()
+   */
+  Feature getParent( );
 
   /**
    * Returns the {@link IRelationType} where this feature resides inside its parent feature.
@@ -79,15 +110,28 @@ public interface BaseFeature extends IAdaptable
   void setProperty( QName propQName, Object value );
 
   /**
-   * returns the property of the feature that matches the submitted property type
-   */
-  Object getProperty( IPropertyType propertyType );
-
-  /**
    * @deprecated use getPropery(PropertyType)
    */
   @Deprecated
   Object getProperty( String propLocalName );
 
+  /**
+   * @deprecated
+   */
+  @Deprecated
+  void setProperty( String propLocalName, Object value );
+
   Object getProperty( QName propQName );
+
+  /**
+   * intended to be called from GMLWorkspace when root feature is set.
+   */
+  void setWorkspace( GMLWorkspace workspace );
+
+  /**
+   * @deprecated Use {@link Deegree2Feature#setEnvelopesUpdated()} instead
+   * @see org.kalypsodeegree.model.feature.BaseFeature#invalidEnvelope()
+   */
+  @Deprecated
+  void invalidEnvelope( );
 }

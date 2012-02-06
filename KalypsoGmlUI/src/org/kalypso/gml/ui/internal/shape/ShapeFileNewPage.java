@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.ui.internal.shape;
 
@@ -72,7 +72,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.Form;
-import org.kalypso.commons.databinding.conversion.StringToPathConverter;
 import org.kalypso.commons.databinding.validation.MultiValidator;
 import org.kalypso.commons.databinding.viewers.ComboViewerEditingSupport;
 import org.kalypso.commons.databinding.viewers.TextEditingSupport;
@@ -96,8 +95,8 @@ public class ShapeFileNewPage extends WizardPage
 
     m_input = input;
 
-    setTitle( Messages.getString( "ShapeFileNewPage_0" ) ); //$NON-NLS-1$
-    setDescription( Messages.getString( "ShapeFileNewPage_1" ) ); //$NON-NLS-1$
+    setTitle( Messages.getString("ShapeFileNewPage_0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("ShapeFileNewPage_1") ); //$NON-NLS-1$
   }
 
   /**
@@ -129,14 +128,14 @@ public class ShapeFileNewPage extends WizardPage
   private void createFileChooser( final Composite parent )
   {
     final Label label = new Label( parent, SWT.NONE );
-    label.setText( Messages.getString( "ShapeFileNewPage_2" ) ); //$NON-NLS-1$
+    label.setText( Messages.getString("ShapeFileNewPage_2") ); //$NON-NLS-1$
 
     final Text fileField = new Text( parent, SWT.BORDER );
     fileField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    fileField.setMessage( Messages.getString( "ShapeFileNewPage_3" ) ); //$NON-NLS-1$
+    fileField.setMessage( Messages.getString("ShapeFileNewPage_3") ); //$NON-NLS-1$
 
     final Button fileButton = new Button( parent, SWT.PUSH );
-    fileButton.setText( Messages.getString( "ShapeFileNewPage_4" ) ); //$NON-NLS-1$
+    fileButton.setText( Messages.getString("ShapeFileNewPage_4") ); //$NON-NLS-1$
 
     createFileBinding( fileField, fileButton );
   }
@@ -144,7 +143,7 @@ public class ShapeFileNewPage extends WizardPage
   private void createTypeChooser( final Composite parent )
   {
     final Label label = new Label( parent, SWT.NONE );
-    label.setText( Messages.getString( "ShapeFileNewPage_5" ) ); //$NON-NLS-1$
+    label.setText( Messages.getString("ShapeFileNewPage_5") ); //$NON-NLS-1$
 
     final ComboViewer viewer = new ComboViewer( parent, SWT.READ_ONLY | SWT.DROP_DOWN );
     viewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -161,7 +160,7 @@ public class ShapeFileNewPage extends WizardPage
   private void createFieldEditor( final Composite parent )
   {
     final Label label = new Label( parent, SWT.NONE );
-    label.setText( Messages.getString( "ShapeFileNewPage_6" ) ); //$NON-NLS-1$
+    label.setText( Messages.getString("ShapeFileNewPage_6") ); //$NON-NLS-1$
     label.setLayoutData( new GridData( SWT.BEGINNING, SWT.BEGINNING, false, false ) );
 
     final TableViewer viewer = new TableViewer( parent, SWT.MULTI | SWT.FULL_SELECTION | SWT.BORDER );
@@ -196,7 +195,7 @@ public class ShapeFileNewPage extends WizardPage
     final ISWTObservableValue fileText = SWTObservables.observeText( fileField, SWT.Modify );
     final IObservableValue pathValue = new ShapePathValue( m_input );
 
-    fileButton.addSelectionListener( new FileSaveAsSelectionListener( pathValue, Messages.getString( "ShapeFileNewPage_7" ) ) ); //$NON-NLS-1$
+    fileButton.addSelectionListener( new FileSaveAsSelectionListener( pathValue, Messages.getString("ShapeFileNewPage_7") ) ); //$NON-NLS-1$
 
     final UpdateValueStrategy targetToModel = new UpdateValueStrategy();
     targetToModel.setConverter( new StringToPathConverter() );
@@ -247,7 +246,7 @@ public class ShapeFileNewPage extends WizardPage
   public void createNameColumn( final TableViewer viewer, final IValueProperty nameProperty )
   {
     final TableViewerColumn nameColumn = new TableViewerColumn( viewer, SWT.LEFT );
-    nameColumn.getColumn().setText( Messages.getString( "ShapeFileNewPage_8" ) ); //$NON-NLS-1$
+    nameColumn.getColumn().setText( Messages.getString("ShapeFileNewPage_8") ); //$NON-NLS-1$
     nameColumn.getColumn().setWidth( 100 );
     final TextEditingSupport editingSupport = new TextEditingSupport( viewer, m_context, nameProperty )
     {
@@ -267,7 +266,7 @@ public class ShapeFileNewPage extends WizardPage
   {
     final TableViewerColumn typeColumn = new TableViewerColumn( viewer, SWT.LEFT );
     typeColumn.getColumn().setWidth( 100 );
-    typeColumn.getColumn().setText( Messages.getString( "ShapeFileNewPage_9" ) ); //$NON-NLS-1$
+    typeColumn.getColumn().setText( Messages.getString("ShapeFileNewPage_9") ); //$NON-NLS-1$
     final ComboViewerEditingSupport typeEditingSupport = new ComboViewerEditingSupport( viewer, m_context, typeProperty, SWT.DROP_DOWN | SWT.READ_ONLY )
     {
       @Override
@@ -287,7 +286,7 @@ public class ShapeFileNewPage extends WizardPage
   {
     final TableViewerColumn lengthColumn = new TableViewerColumn( viewer, SWT.LEFT );
     lengthColumn.getColumn().setWidth( 100 );
-    lengthColumn.getColumn().setText( Messages.getString( "ShapeFileNewPage_10" ) ); //$NON-NLS-1$
+    lengthColumn.getColumn().setText( Messages.getString("ShapeFileNewPage_10") ); //$NON-NLS-1$
     final TextEditingSupport editingSupport = new TextEditingSupport( viewer, m_context, lengthProperty )
     {
       @Override
@@ -304,7 +303,7 @@ public class ShapeFileNewPage extends WizardPage
   {
     final TableViewerColumn decimalColumn = new TableViewerColumn( viewer, SWT.LEFT );
     decimalColumn.getColumn().setWidth( 100 );
-    decimalColumn.getColumn().setText( Messages.getString( "ShapeFileNewPage_11" ) ); //$NON-NLS-1$
+    decimalColumn.getColumn().setText( Messages.getString("ShapeFileNewPage_11") ); //$NON-NLS-1$
     final TextEditingSupport editingSupport = new TextEditingSupport( viewer, m_context, decimalsProperty )
     {
       /**

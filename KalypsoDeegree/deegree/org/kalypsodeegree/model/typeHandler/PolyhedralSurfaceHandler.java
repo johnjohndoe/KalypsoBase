@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- *
+ * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- *
+ * 
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -58,57 +58,88 @@ public class PolyhedralSurfaceHandler implements IMarshallingTypeHandler2
 {
   private static final QName QNAME_TYPE = new QName( NS.GML3, "PolyhedralSurface" );
 
+  /**
+   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#cloneObject(java.lang.Object, java.lang.String)
+   */
   @Override
   public Object cloneObject( final Object objectToClone, final String gmlVersion ) throws CloneNotSupportedException
   {
     throw new CloneNotSupportedException();
   }
 
+  /**
+   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#getShortname()
+   */
   @Override
   public String getShortname( )
   {
     return QNAME_TYPE.getLocalPart();
   }
 
+  /**
+   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(javax.xml.namespace.QName, java.lang.Object,
+   *      org.xml.sax.XMLReader, java.net.URL, java.lang.String)
+   */
   @Override
   @SuppressWarnings("unchecked")
   public void marshal( final Object value, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
   {
     final GM_Surface<GM_Polygon> surface = (GM_Surface<GM_Polygon>) value;
 
-    new PolyhedralSurfaceMarshaller( reader ).marshall( surface );
+    new PolyhedralSurfaceMarshaller( reader, surface ).marshall();
   }
 
+  /**
+   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#parseType(java.lang.String)
+   */
   @Override
   public Object parseType( final String text )
   {
     throw new UnsupportedOperationException();
   }
 
+  /**
+   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#unmarshal(org.xml.sax.XMLReader, java.net.URL,
+   *      org.kalypso.gmlschema.types.UnMarshallResultEater, java.lang.String)
+   */
   @Override
   public void unmarshal( final XMLReader reader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion )
   {
     throw new UnsupportedOperationException();
   }
 
+  /**
+   * @see org.kalypso.gmlschema.types.ITypeHandler#getTypeName()
+   */
   @Override
   public QName getTypeName( )
   {
     return QNAME_TYPE;
   }
 
+  /**
+   * @see org.kalypso.gmlschema.types.ITypeHandler#getValueClass()
+   */
   @Override
   public Class< ? > getValueClass( )
   {
     return GM_Surface.class;
   }
 
+  /**
+   * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
+   */
   @Override
   public boolean isGeometry( )
   {
     return true;
   }
 
+  /**
+   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler2#createContentHandler(org.xml.sax.XMLReader,
+   *      org.kalypso.gmlschema.types.UnmarshallResultEater, java.lang.String, java.lang.String, java.lang.String,
+   *      org.xml.sax.Attributes)
+   */
   @Override
   public IGmlContentHandler createContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final UnmarshallResultEater resultEater )
   {

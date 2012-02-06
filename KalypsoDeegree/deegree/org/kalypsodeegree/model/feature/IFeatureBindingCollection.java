@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- *
+ * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- *
+ * 
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -39,17 +39,16 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 
 /**
+ * TODO: replaces FeatureWrapperCollection.... refaktor and use this stuff instead<br>
  * Interface to be implemented by classes that wrapped a feature collection to provided a view as a {@link List} of
  * {@link FWCls} <br>
- * TODO: move everything into FeatureList or let feature list implement this interface<br/>
- * TODOwhy 'binding'? rename to IFeatureCollection
+ * TODO: move everything into FeatureList
  * 
  * @author Gernot Belger
  * @author Dirk Kuch
@@ -59,7 +58,7 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
   /**
    * Creates and Adds a new element of the specified type into the feature collection at the end of the feature
    * collection
-   *
+   * 
    * @param newChildType
    *          the type of the element to add
    * @throws IllegalArgumentException
@@ -80,7 +79,7 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
 
   /**
    * Creates and Adds a new element of the specified type into the feature collection at the specified position
-   *
+   * 
    * @param index
    *          index at which the specified element is to be inserted.
    * @param newChildType
@@ -101,7 +100,7 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
 
   /**
    * Add this feature as reference to this list
-   *
+   * 
    * @param toAdd
    *          a wrapper wrapping the feature to be added as list
    * @return true if the feature has been added
@@ -114,7 +113,7 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
 
   /**
    * Answer all feature wrappers overlapping the selected zone
-   *
+   * 
    * @param selectionSurface
    *          the selection surface
    * @param qname
@@ -135,7 +134,7 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
 
   /**
    * Answer all feature wrappers overlaping the given envelope
-   *
+   * 
    * @param envelope
    *          the envelope specifying the selection area
    * @return a list of feature overlaping the given surface
@@ -145,7 +144,7 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
 
   /**
    * Answer all feature wrappers containing the given position
-   *
+   * 
    * @param selectionSurface
    *          the selection surface
    * @return a list of feature overlaping the given surface
@@ -172,44 +171,4 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
    * Gets the underlying feature list.
    */
   FeatureList getFeatureList( );
-
-  /**
-   * @see FeatureList#addLink(Feature)
-   */
-  IXLinkedFeature addLink( FWCls toAdd ) throws IllegalArgumentException;
-
-  /**
-   * @see FeatureList#addLink(String)
-   */
-  IXLinkedFeature addLink( String href ) throws IllegalArgumentException;
-
-  /**
-   * @see FeatureList#addLink(String, QName)
-   */
-  IXLinkedFeature addLink( String href, QName featureTypeName ) throws IllegalArgumentException;
-
-  /**
-   * @see FeatureList#addLink(String, IFeatureType)
-   */
-  IXLinkedFeature addLink( String href, IFeatureType featureType ) throws IllegalArgumentException;
-
-  /**
-   * @see FeatureList#insertLink(int, Feature)
-   */
-  IXLinkedFeature insertLink( int index, FWCls toLink ) throws IllegalArgumentException;
-
-  /**
-   * @see FeatureList#insertLink(int, String)
-   */
-  IXLinkedFeature insertLink( int index, String href ) throws IllegalArgumentException;
-
-  /**
-   * @see FeatureList#insertLink(int, String, QName)
-   */
-  IXLinkedFeature insertLink( int index, String href, QName featureTypeName ) throws IllegalArgumentException;
-
-  /**
-   * @see FeatureList#insertLink(int, String, IFeatureType)
-   */
-  IXLinkedFeature insertLink( int index, String href, IFeatureType featureType ) throws IllegalArgumentException;
 }

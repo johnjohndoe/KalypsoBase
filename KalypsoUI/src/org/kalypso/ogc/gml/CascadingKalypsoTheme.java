@@ -53,7 +53,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.commons.i18n.ITranslator;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -63,6 +63,8 @@ import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.gismapview.Gismapview;
+import org.kalypso.template.types.LayerType;
+import org.kalypso.template.types.ObjectFactory;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -75,6 +77,9 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
 {
   private boolean m_resolved = false;
 
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#isLoaded()
+   */
   @Override
   public boolean isLoaded( )
   {
@@ -112,11 +117,14 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
 
     m_mapViewRefUrl = layerType.getHref();
 
-    GisTemplateLayerHelper.updateProperties( layerType, this );
+    GisTemplateFeatureTheme.configureProperties( this, layerType );
 
     final URL url = CascadingKalypsoTheme.resolveUrl( context, m_mapViewRefUrl );
-    setInnerMapModel( new GisTemplateMapModell( url, mapModel.getCoordinatesSystem(), selectionManager )
+    setInnerMapModel( new GisTemplateMapModell( url, mapModel.getCoordinatesSystem(), mapModel.getProject(), selectionManager )
     {
+      /**
+       * @see org.kalypso.ogc.gml.GisTemplateMapModell#getThemeParent(org.kalypso.ogc.gml.IKalypsoTheme)
+       */
       @Override
       public Object getThemeParent( final IKalypsoTheme theme )
       {
@@ -169,12 +177,50 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
     super.dispose();
   }
 
+  public void fillLayerType( final LayerType layer, final String id, final boolean isVisible )
+  {
+    layer.setId( id );
+    layer.setHref( m_mapViewRefUrl );
+    layer.setLinktype( "gmt" ); //$NON-NLS-1$
+    layer.setActuate( "onRequest" ); //$NON-NLS-1$
+    layer.setType( "simple" ); //$NON-NLS-1$
+    if( layer instanceof StyledLayerType )
+    {
+      final StyledLayerType styledLayerType = (StyledLayerType) layer;
+      styledLayerType.setName( getName().getKey() );
+      styledLayerType.setVisible( isVisible );
+      styledLayerType.getDepends();
+
+      final ObjectFactory extentFac = new ObjectFactory();
+
+      final String legendIcon = getLegendIcon();
+      if( legendIcon != null )
+        styledLayerType.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
+
+      styledLayerType.setShowChildren( extentFac.createStyledLayerTypeShowChildren( shouldShowLegendChildren() ) );
+
+      GisTemplateFeatureTheme.fillProperties( this, extentFac, styledLayerType );
+    }
+  }
+
   /**
    * Returns the reference to the cascaded .gmt file.
    */
   public String getMapViewRefUrl( )
   {
     return m_mapViewRefUrl;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.ITemplateTheme#saveFeatures(org.eclipse.core.runtime.IProgressMonitor)
+   */
+  @Override
+  public void saveFeatures( final IProgressMonitor monitor ) throws CoreException
+  {
+    if( getInnerMapModel() != null )
+      for( final IKalypsoTheme theme : getInnerMapModel().getAllThemes() )
+        if( theme instanceof GisTemplateFeatureTheme )
+          ((IKalypsoSaveableTheme) theme).saveFeatures( monitor );
   }
 
   protected synchronized IStatus loadJob( final IFile file )
@@ -197,7 +243,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
     }
     catch( final Throwable e )
     {
-      final String msessage = Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.6", file.getName() ); //$NON-NLS-1$
+      final String msessage = Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.6", file.getName() ); //$NON-NLS-1$ 
       final IStatus status = StatusUtilities.statusFromThrowable( e, msessage );
       setStatus( status );
       return status;
@@ -214,10 +260,10 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
   {
     m_resolved = false;
     final IFile file = m_file;
-    final Job job = new Job( Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.5" ) + m_file.getName() ) //$NON-NLS-1$
+    final UIJob job = new UIJob( Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.5" ) + m_file.getName() ) //$NON-NLS-1$
     {
       @Override
-      public IStatus run( final IProgressMonitor monitor )
+      public IStatus runInUIThread( final IProgressMonitor monitor )
       {
         return loadJob( file );
       }

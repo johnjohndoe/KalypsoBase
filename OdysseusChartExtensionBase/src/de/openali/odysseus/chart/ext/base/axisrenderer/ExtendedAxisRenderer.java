@@ -109,12 +109,12 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
       if( isHideCut() )
       {
         if( isIntervallLabeledTick() || tickPos + textSize.x > 0 && tickPos + textSize.x + textSize.width < axis.getScreenHeight() )
-          labelRenderer.paint( gc, new Rectangle( tickPos, getLineStyle().getWidth() + getGap() + getTickLength() + inset.top, tickDistance, -1 ) );
+          labelRenderer.paint( gc, new Rectangle( tickPos, (getLineStyle().getWidth() + getGap() + getTickLength() + inset.top), tickDistance, -1 ) );
       }
       else
       {
         if( tickPos + textSize.x > -inset.left && tickPos + textSize.x + textSize.width < axis.getScreenHeight() + inset.right )
-          labelRenderer.paint( gc, new Rectangle( tickPos, getLineStyle().getWidth() + getGap() + getTickLength() + inset.top, tickDistance, -1 ) );
+          labelRenderer.paint( gc, new Rectangle( tickPos, (getLineStyle().getWidth() + getGap() + getTickLength() + inset.top), tickDistance, -1 ) );
       }
 
     }

@@ -188,7 +188,7 @@ public class ShapeLoader extends WorkspaceLoader
       {
         final IStatus status = ((CoreException) cause).getStatus();
         if( status.matches( IStatus.CANCEL ) )
-          throw new LoaderException( status );
+          throw new LoaderException(status );
       }
 
       ge.printStackTrace();

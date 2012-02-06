@@ -47,11 +47,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.PointRemove;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.result.IRecord;
 
 /**
@@ -64,15 +63,15 @@ public final class DouglasPeuckerHelper
 {
   private static final class ProfileSegmentData
   {
-    final IRecord[] m_segmPoints;
+    public final IRecord[] m_segmPoints;
 
-    final int m_startInd;
+    public final int m_startInd;
 
-    final int m_endInd;
+    public final int m_endInd;
 
-    final double m_distance;
+    public final double m_distance;
 
-    int m_distInd;
+    public int m_distInd;
 
     public ProfileSegmentData( final IRecord[] points, final int start, final int end )
     {
@@ -132,11 +131,11 @@ public final class DouglasPeuckerHelper
    *          The profile.
    * @return The profile changes.
    */
-  public static IProfilChange[] reduce( final double allowedDistance, final IProfileRecord[] points, final IProfil profile )
+  public static IProfilChange[] reduce( final double allowedDistance, final IRecord[] points, final IProfil profile )
   {
     /* Reduce points. */
-    final IProfileRecord[] pointsToKeep = profile.getMarkedPoints();
-    final IProfileRecord[] pointsToRemove = reducePoints( points, pointsToKeep, allowedDistance );
+    final IRecord[] pointsToKeep = profile.getMarkedPoints();
+    final IRecord[] pointsToRemove = reducePoints( points, pointsToKeep, allowedDistance );
     if( pointsToRemove.length == 0 )
       return new IProfilChange[] {};
 
@@ -154,15 +153,15 @@ public final class DouglasPeuckerHelper
    *          The allowed distance.
    * @return The points to remove.
    */
-  public static IProfileRecord[] reducePoints( final IProfileRecord[] points, final IProfileRecord[] pointsToKeep, final double allowedDistance )
+  public static IRecord[] reducePoints( final IRecord[] points, final IRecord[] pointsToKeep, final double allowedDistance )
   {
     /* Cannot reduce 2 or less points */
     if( points.length <= 2 )
-      return new IProfileRecord[0];
+      return new IRecord[0];
 
     /* Reduce segment wise. */
-    final Set<IProfileRecord> pointsToKeepList = new HashSet<IProfileRecord>( Arrays.asList( pointsToKeep ) );
-    final List<IProfileRecord> pointsToRemove = new ArrayList<IProfileRecord>( points.length - 2 );
+    final Set<IRecord> pointsToKeepList = new HashSet<IRecord>( Arrays.asList( pointsToKeep ) );
+    final List<IRecord> pointsToRemove = new ArrayList<IRecord>( points.length - 2 );
 
     int segmentBegin = 0;
     for( int i = 0; i < points.length; i++ )
@@ -175,20 +174,20 @@ public final class DouglasPeuckerHelper
       final IRecord point = points[i];
       if( pointsToKeepList.contains( point ) || i == points.length - 1 )
       {
-        final IProfileRecord[] toRemove = reduceIt( points, segmentBegin, i, allowedDistance );
+        final IRecord[] toRemove = reduceIt( points, segmentBegin, i, allowedDistance );
         pointsToRemove.addAll( Arrays.asList( toRemove ) );
         segmentBegin = i;
       }
     }
 
-    return pointsToRemove.toArray( new IProfileRecord[pointsToRemove.size()] );
+    return pointsToRemove.toArray( new IRecord[pointsToRemove.size()] );
   }
 
   /** @return the points with are redundant */
-  private static IProfileRecord[] reduceIt( final IProfileRecord[] points, final int begin, final int end, final double allowedDistance )
+  private static IRecord[] reduceIt( final IRecord[] points, final int begin, final int end, final double allowedDistance )
   {
     if( end - begin < 2 )
-      return new IProfileRecord[0];
+      return new IRecord[0];
 
     // für alle punkte abstand zu segment[begin-end] ausrechnen
     final double[] distances = new double[end - (begin + 1)];
@@ -209,18 +208,18 @@ public final class DouglasPeuckerHelper
     // falls ein punkt dabei, dessen diff > maxdiff, splitten
     if( maxdistance > allowedDistance && maxdistIndex != -1 )
     {
-      final IProfileRecord[] beginReduced = reduceIt( points, begin, maxdistIndex, allowedDistance );
-      final IProfileRecord[] endReduced = reduceIt( points, maxdistIndex, end, allowedDistance );
+      final IRecord[] beginReduced = reduceIt( points, begin, maxdistIndex, allowedDistance );
+      final IRecord[] endReduced = reduceIt( points, maxdistIndex, end, allowedDistance );
 
       final List<IRecord> reduced = new ArrayList<IRecord>( beginReduced.length + endReduced.length );
 
       reduced.addAll( Arrays.asList( beginReduced ) );
       reduced.addAll( Arrays.asList( endReduced ) );
-      return reduced.toArray( new IProfileRecord[reduced.size()] );
+      return reduced.toArray( new IRecord[reduced.size()] );
     }
 
     // kein Punkt mehr wichtig: alle zwischenpunkte zurückgeben
-    final IProfileRecord[] reduced = new IProfileRecord[end - (begin + 1)];
+    final IRecord[] reduced = new IRecord[end - (begin + 1)];
     for( int i = 0; i < reduced.length; i++ )
     {
       reduced[i] = points[i + begin + 1];
@@ -247,17 +246,17 @@ public final class DouglasPeuckerHelper
 // final int breiteIndexEnd = ownerEnd.indexOfComponent( breiteComp );
 // final int hoeheIndexEnd = ownerEnd.indexOfComponent( hoeheComp );
 
-    final Double bx = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, beginPoint );// (Double)
+    final Double bx = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, beginPoint );// (Double)
 // beginPoint.getValue( breiteIndexBegin );
-    final Double by = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, beginPoint );// (Double)
+    final Double by = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, beginPoint );// (Double)
 // beginPoint.getValue( hoeheIndexBegin );
-    final Double ex = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, endPoint );// (Double)
+    final Double ex = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, endPoint );// (Double)
 // endPoint.getValue( breiteIndexMiddle );
-    final Double ey = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, endPoint );// (Double)
+    final Double ey = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, endPoint );// (Double)
 // endPoint.getValue( hoeheIndexMiddle );
-    final Double mx = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, middlePoint );// (Double)
+    final Double mx = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, middlePoint );// (Double)
 // middlePoint.getValue( breiteIndexEnd );
-    final Double my = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, middlePoint );// (Double)
+    final Double my = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, middlePoint );// (Double)
 // middlePoint.getValue( hoeheIndexEnd );
 
     final double f = (ey - by) / (ex - bx);

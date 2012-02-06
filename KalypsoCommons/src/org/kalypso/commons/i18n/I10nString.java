@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.i18n;
 
-import java.util.Locale;
-
 /**
  * An international string.
  * 
@@ -75,24 +73,13 @@ public class I10nString
 
   public String getValue( )
   {
-    return getValue( Locale.getDefault() );
-  }
-
-  public String getValue( final Locale locale )
-  {
-    return getValue( locale, new Object[] {} );
-  }
-
-  public String getValue( final Locale locale, final Object... context )
-  {
     if( m_key == null || m_key.length() == 0 || m_key.charAt( 0 ) != '%' )
       return m_key;
 
     if( m_translator == null )
       return m_key;
 
-    // FIXME: Caching? To increase performance...
-    return m_translator.get( m_key.substring( 1 ), locale, context );
+    return m_translator.get( m_key.substring( 1 ) );
   }
 
   public ITranslator getTranslator( )

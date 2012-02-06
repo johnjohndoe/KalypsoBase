@@ -57,6 +57,7 @@ import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.core.KalypsoCoreExtensions;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
@@ -77,13 +78,13 @@ import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerString;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerXMLGregorianCalendar;
 import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * @author schlienger
@@ -139,7 +140,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final IPhenomenon phenomenon;
     if( phenFeature != null )
     {
-      final String phenId = phenFeature instanceof IXLinkedFeature ? ((IXLinkedFeature) phenFeature).getHref() : phenFeature.getId();
+      final String phenId = phenFeature instanceof XLinkedFeature_Impl ? ((XLinkedFeature_Impl) phenFeature).getHref() : phenFeature.getId();
       final String phenName = NamedFeatureHelper.getName( phenFeature );
       final String phenDesc = NamedFeatureHelper.getDescription( phenFeature );
       phenomenon = new Phenomenon( phenId, phenName, phenDesc );
@@ -403,10 +404,10 @@ public class ObservationFeatureFactory implements IAdapterFactory
     if( phenomenonRef == null || phenomenonRef instanceof String )
       return phenomenonRef;
 
-    if( phenomenonRef instanceof IXLinkedFeature )
+    if( phenomenonRef instanceof XLinkedFeature_Impl )
     {
       // check if link exists, if not, we create an inline phenonemon
-      if( ((IXLinkedFeature) phenomenonRef).getFeatureId() != null )
+      if( ((XLinkedFeature_Impl) phenomenonRef).getFeatureId() != null )
       {
         return phenomenonRef;
       }
@@ -423,7 +424,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
   /**
    * Helper: builds the record definition according to the components of the tuple result.
-   *
+   * 
    * @param map
    *          ATTENTION: the recordset is written in the same order as this map
    */
@@ -478,7 +479,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final String id = comp.getId();
     // try to find a dictionary entry for this component, if it exists, create xlinked-feature to it
     final IFeatureType itemDefType = GMLSchemaUtilities.getFeatureTypeQuiet( ObservationFeatureFactory.SWE_ITEMDEFINITION );
-    final IXLinkedFeature xlink = FeatureFactory.createXLink( recordDefinition, itemDefinitionRelation, itemDefType, id );
+    final XLinkedFeature_Impl xlink = new XLinkedFeature_Impl( recordDefinition, itemDefinitionRelation, itemDefType, id, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
     if( xlink.getFeature() != null )
       return xlink;
 
@@ -623,7 +624,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
    * <p>
    * TODO do not create an observation twice for the same feature, pooling?
    * </p>
-   *
+   * 
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
    */
   @Override
@@ -648,11 +649,15 @@ public class ObservationFeatureFactory implements IAdapterFactory
   {
     final Feature recordDefinition = ObservationFeatureFactory.getOrCreateRecordDefinition( obsFeature );
 
-    final IFeatureType featureType = GMLSchemaUtilities.getFeatureTypeQuiet( ObservationFeatureFactory.SWE_ITEMDEFINITION );
+    final IGMLSchema schema = obsFeature.getWorkspace().getGMLSchema();
+    final IFeatureType featureType = schema.getFeatureType( ObservationFeatureFactory.SWE_ITEMDEFINITION );
 
-    final FeatureList componentList = (FeatureList) recordDefinition.getProperty( ObservationFeatureFactory.SWE_COMPONENT );
+    final IRelationType componentRelation = (IRelationType) recordDefinition.getFeatureType().getProperty( ObservationFeatureFactory.SWE_COMPONENT );
 
-    final IXLinkedFeature itemDef = componentList.addLink( dictUrn, featureType );
+    final Feature itemDef = new XLinkedFeature_Impl( recordDefinition, componentRelation, featureType, dictUrn, null, null, null, null, null );
+
+    final List<Feature> componentList = (List<Feature>) recordDefinition.getProperty( componentRelation );
+    componentList.add( itemDef );
 
     return new FeatureComponent( itemDef );
   }

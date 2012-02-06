@@ -42,6 +42,7 @@ package org.kalypsodeegree.graphics.sld;
 
 /**
  * @author Gernot Belger
+ *
  */
 public final class DrawingUtils
 {

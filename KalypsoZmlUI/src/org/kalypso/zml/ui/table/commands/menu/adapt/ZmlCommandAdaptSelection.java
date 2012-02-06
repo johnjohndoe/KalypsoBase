@@ -40,21 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands.menu.adapt;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.TranProLinFilterUtilities;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
-import org.kalypso.ogc.sensor.timeseries.wq.WQTimeserieProxy;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
@@ -93,23 +93,16 @@ public class ZmlCommandAdaptSelection extends AbstractHandler
 
       final IZmlTableCell base = selected[0];
 
-      final Date begin = toDate( base );
-      final Date end = toDate( selected[selected.length - 1] );
-      final DateRange range = new DateRange( begin, end );
+      final Calendar begin = toCalendar( base );
+      final Calendar end = toCalendar( selected[selected.length - 1] );
 
-      final IZmlValueReference reference = selected[0].getValueReference();
-      final IZmlModelColumn tableColumn = reference.getColumn();
-      final IAxis axis = findTransformAxisType( tableColumn );
+      final IObservation transformed = transform( column, selected, begin, end );
 
-      final IObservation transformed = transform( column, selected, range, axis );
+      final DateRange dateRange = new DateRange( begin.getTime(), end.getTime() );
 
-      final DateRange dateRange = new DateRange( begin, end );
-
-      final AdaptValuesVisitor visitor = new AdaptValuesVisitor( axis.getType() );
-      transformed.accept( visitor, new ObservationRequest( dateRange ), 1 );
+      final AdaptValuesVisitor visitor = new AdaptValuesVisitor();
+      transformed.accept( visitor, new ObservationRequest( dateRange ) );
       column.getModelColumn().accept( visitor );
-
-      visitor.doFinish();
     }
     catch( final SensorException e )
     {
@@ -120,45 +113,29 @@ public class ZmlCommandAdaptSelection extends AbstractHandler
 
   }
 
-  private IObservation transform( final IZmlTableColumn column, final IZmlTableCell[] selected, final DateRange range, final IAxis axis ) throws SensorException
+  private IObservation transform( final IZmlTableColumn column, final IZmlTableCell[] selected, final Calendar begin, final Calendar end ) throws SensorException
   {
     final IObservation observation = column.getModelColumn().getObservation();
+    final double difference = getDifference( selected );
 
-    final double difference = getDifference( selected, axis );
+    final IZmlValueReference reference = selected[0].getValueReference();
+    final IAxis valueAxis = reference.getColumn().getValueAxis();
 
-    return TranProLinFilterUtilities.transform( observation, range, difference, 0.0, "+", axis.getType() ); //$NON-NLS-1$
+    return TranProLinFilterUtilities.transform( observation, begin, end, difference, 0.0, "+", valueAxis.getType(), KalypsoStati.BIT_DERIVATED ); //$NON-NLS-1$
   }
 
-  private IAxis findTransformAxisType( final IZmlModelColumn tableColumn )
-  {
-    final IAxis valueAxis = tableColumn.getValueAxis();
-    if( valueAxis.isPersistable() )
-      return valueAxis;
-
-    final IObservation observation = tableColumn.getObservation();
-    if( observation instanceof WQTimeserieProxy )
-    {
-      final WQTimeserieProxy wqObservation = (WQTimeserieProxy) observation;
-      final IAxis destAxis = wqObservation.getDestAxis();
-      final IAxis srcAxis = wqObservation.getSrcAxis();
-
-      if( valueAxis == destAxis )
-        return srcAxis;
-
-      if( valueAxis == srcAxis )
-        return destAxis;
-    }
-
-    return null;
-  }
-
-  private Date toDate( final IZmlTableCell cell ) throws SensorException
+  private Calendar toCalendar( final IZmlTableCell cell ) throws SensorException
   {
     final IZmlValueReference reference = cell.getValueReference();
-    return reference.getIndexValue();
+    final Date date = reference.getIndexValue();
+
+    final Calendar calendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
+    calendar.setTime( date );
+
+    return calendar;
   }
 
-  private double getDifference( final IZmlTableCell[] cells, final IAxis axis ) throws SensorException
+  private double getDifference( final IZmlTableCell[] cells ) throws SensorException
   {
     final IZmlTableCell base = cells[0];
     final IZmlTableCell prev = base.findPreviousCell();
@@ -166,15 +143,10 @@ public class ZmlCommandAdaptSelection extends AbstractHandler
     final IZmlValueReference reference1 = base.getValueReference();
     final IZmlValueReference reference2 = prev.getValueReference();
 
-    final ITupleModel tupleModel1 = reference1.getColumn().getTupleModel();
-    final ITupleModel tupleModel2 = reference2.getColumn().getTupleModel();
-
-    final int index1 = reference1.getModelIndex();
-    final int index2 = reference2.getModelIndex();
-
-    final double value1 = ((Number) tupleModel1.get( index1, axis )).doubleValue();
-    final double value2 = ((Number) tupleModel2.get( index2, axis )).doubleValue();
+    final double value1 = reference1.getValue().doubleValue();
+    final double value2 = reference2.getValue().doubleValue();
 
     return value2 - value1;
   }
+
 }

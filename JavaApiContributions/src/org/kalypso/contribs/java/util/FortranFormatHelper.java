@@ -48,6 +48,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 public class FortranFormatHelper
 {
 
@@ -71,9 +72,10 @@ public class FortranFormatHelper
   static
   {
     // TODO remove this dirty hack with java 1.5 and use java printf instead
-    final DecimalFormatSymbols dfs = new DecimalFormatSymbols();
+    DecimalFormatSymbols dfs = new DecimalFormatSymbols();
     dfs.setDecimalSeparator( '.' );
-    decimalFormat = new DecimalFormat( "#################################0.0###########################################" );
+    decimalFormat = new DecimalFormat(
+        "#################################0.0###########################################" );
     decimalFormat.setDecimalSeparatorAlwaysShown( true );
     decimalFormat.setDecimalFormatSymbols( dfs );
   }
@@ -95,39 +97,41 @@ public class FortranFormatHelper
    *          line to scan
    * @return HasMap that contains the values, key as given in formatLine(String),value is scaned value(String)
    */
-  public static HashMap<String, String> scanf( final String formatLine, String line ) throws Exception
+  public static HashMap<String,String> scanf( String formatLine, String line ) throws Exception
   {
     final HashMap<String, String> result = new HashMap<String, String>();
     line = line + "                                                ";
     line = line.replaceAll( "\\t", " " );
     final List<String> nameCollector = new ArrayList<String>();
-    final StringBuffer pattern = new StringBuffer( "^" );
-    final String[] formats = patternBrackets.split( formatLine );
-    for( final String format : formats )
+    StringBuffer pattern = new StringBuffer( "^" );
+    String[] formats = patternBrackets.split( formatLine );
+    for( int i = 0; i < formats.length; i++ )
     {
-      final String regExp = getRegExp( format, nameCollector );
+      String format = formats[i];
+      String regExp = getRegExp( format, nameCollector );
       pattern.append( regExp );
     }
     pattern.append( "\\s*$" );
-    final Pattern linePattern = Pattern.compile( pattern.toString() );
-    final Matcher m = linePattern.matcher( line );
+    Pattern linePattern = Pattern.compile( pattern.toString() );
+    Matcher m = linePattern.matcher( line );
     if( !m.matches() )
     {
-      throw new Exception( "parsingexception " + "\n format:" + formatLine + "\nline:" + line + "\nregExp:" + pattern.toString() + "\n  does not match" );
+      throw new Exception( "parsingexception " + "\n format:" + formatLine + "\nline:" + line + "\nregExp:"
+          + pattern.toString() + "\n  does not match" );
     }
 
     for( int i = 0; i < m.groupCount(); i++ )
     {
-      final String name = nameCollector.get( i );
-      final String value = m.group( i + 1 ).trim();
+      String name = nameCollector.get( i );
+      String value = m.group( i + 1 ).trim();
       result.put( name, value );
-      // propCollector.put( name, FeatureFactory.createFeatureProperty( name,
+      //      propCollector.put( name, FeatureFactory.createFeatureProperty( name,
       // value ) );
     }
     return result;
   }
 
-  private static String getRegExp( final String string, final List<String> nameCollector )
+  private static String getRegExp( String string, List<String> nameCollector )
   {
     Matcher m = pPairFormat.matcher( string );
     if( m.matches() )
@@ -140,7 +144,7 @@ public class FortranFormatHelper
     throw new UnsupportedOperationException();
   }
 
-  private static String getPairRegExp( final String fPair, final List<String> nameCollector )
+  private static String getPairRegExp( String fPair, List<String> nameCollector )
   {
     if( "".equals( fPair ) )
       return "";
@@ -151,36 +155,36 @@ public class FortranFormatHelper
 
     if( "*".equals( format ) || "a".equals( format ) || "A".equals( format ) )
       return freeFormat;
-    final Matcher m = pFortranFormat.matcher( format );
+    Matcher m = pFortranFormat.matcher( format );
     if( m.matches() )
     {
-      final String type = m.group( 1 );
+      String type = m.group( 1 );
       String regExpChar = "";
       if( "aA".indexOf( type ) >= 0 )
         regExpChar = textRegExp;
       if( "iIfF".indexOf( type ) >= 0 )
         regExpChar = decimalValue;
 
-      final String charMax = m.group( 2 ); // gesamt anzahl stellen
-      final String decimalPlace = m.group( 3 ); // Nachkommastellen
+      String charMax = m.group( 2 ); // gesamt anzahl stellen
+      String decimalPlace = m.group( 3 ); // Nachkommastellen
 
       if( "".equals( decimalPlace ) )
       {
         return regExpChar + "{1," + charMax + "}";
       }
-      final int max = Integer.parseInt( charMax );
-      final int decimal = Integer.parseInt( decimalPlace );
-      return regExpChar + "{1," + (max - decimal - 1) + "}" + decimalPoint + regExpChar + "{" + decimal + "}";
+      int max = Integer.parseInt( charMax );
+      int decimal = Integer.parseInt( decimalPlace );
+      return regExpChar + "{1," + ( max - decimal - 1 ) + "}" + decimalPoint + regExpChar + "{" + ( decimal ) + "}";
     }
     throw new UnsupportedOperationException();
   }
 
-  public static String createFormatLine( final String name, final String format, final String separator, final int repeats )
+  public static String createFormatLine( String name, String format, String separator, int repeats )
   {
-    // (ngwzu,*)
+    //    (ngwzu,*)
     if( repeats < 1 )
       return "";
-    final StringBuffer b = new StringBuffer( "(" + name + "" + 0 + "," + format + ")" );
+    StringBuffer b = new StringBuffer( "(" + name + "" + 0 + "," + format + ")" );
     if( repeats > 1 )
     {
       for( int i = 1; i < repeats; i++ )
@@ -198,13 +202,13 @@ public class FortranFormatHelper
    *          to print
    * @return formated String according to format
    */
-  public static String printf( final Double value, final String format )
+  public static String printf( Double value, String format )
   {
     // TODO remove this dirty hack with java 1.5 and use java printf instead
     return printf( decimalFormat.format( value.doubleValue() ), format );
   }
 
-  public static String printf( final int value, final String format )
+  public static String printf( int value, String format )
   {
     // TODO remove this dirty hack with java 1.5 and use java printf instead
     return printf( Integer.toString( value ), format );
@@ -217,19 +221,19 @@ public class FortranFormatHelper
    *          to print
    * @return formated String according to format
    */
-  public static String printf( String value, final String format )
+  public static String printf( String value, String format )
   {
     if( "*".equals( format ) || "a".equals( format ) || "A".equals( format ) )
       return value;
-    final Matcher m = FortranFormatHelper.pFortranFormat.matcher( format );
+    Matcher m = FortranFormatHelper.pFortranFormat.matcher( format );
     if( m.matches() )
     {
-      final String type = m.group( 1 );
-      final String charMax = m.group( 2 ); // gesamt anzahl stellen
-      final int max = Integer.parseInt( charMax );
-      final String decimalPlace = m.group( 3 ); // Nachkommastellen
+      String type = m.group( 1 );
+      String charMax = m.group( 2 ); // gesamt anzahl stellen
+      int max = Integer.parseInt( charMax );
+      String decimalPlace = m.group( 3 ); // Nachkommastellen
       int decimal;
-      final StringBuffer result = new StringBuffer( "" );
+      StringBuffer result = new StringBuffer( "" );
       for( int i = 0; i < max; i++ )
         result.append( " " );
       if( value == null || "".equals( value ) )
@@ -238,9 +242,9 @@ public class FortranFormatHelper
         decimal = Integer.parseInt( decimalPlace );
       else
       {
-        if( "aA".indexOf( type ) >= 0 ) // TEXT
+        if( "aA".indexOf( type ) >= 0 ) //TEXT
         {
-          return result.replace( 0, value.length(), value ).toString();
+          return ( result.replace( 0, value.length(), value ) ).toString();
         }
         decimal = 0;
       }
@@ -248,7 +252,7 @@ public class FortranFormatHelper
       boolean found = false;
       while( !found )
       {
-        final int pointPos = value.indexOf( '.' );
+        int pointPos = value.indexOf( '.' );
         if( pointPos < 0 && decimal > 0 ) // da fehlt ein Komma
         {
           value = value + ".0";
@@ -259,7 +263,7 @@ public class FortranFormatHelper
           found = true;
           continue;
         }
-        final int points = value.length() - pointPos - 1;
+        int points = value.length() - pointPos - 1;
         if( points == decimal )
         {
           found = true;
@@ -281,18 +285,18 @@ public class FortranFormatHelper
 
       value = value.trim();
       // TODO hier ist ein Problem bezüglich Vorkommastellen, da diese Classe beim Umstieg auf 1.5 eh
-      // wegfällt habe ich nur die variable start eingefügt und um -1 verkleinert da der dezimalpunkt im
+      // wegfällt habe ich nur die variable start eingefügt und um -1 verkleinert da der dezimalpunkt im 
       // String auch als Charakter gezählt wird aber in der Formatangabe (z.B. f10.3) nicht!
       int start = max - value.length();
       if( start < 0 )
         start = 0;
-      return result.replace( start, max, value ).toString();
+      return ( result.replace( start, max, value ) ).toString();
     }
     throw new UnsupportedOperationException();
 
   }
 
-  public static String printf( final double value, final String format )
+  public static String printf( double value, String format )
   {
     return printf( decimalFormat.format( value ), format );
   }

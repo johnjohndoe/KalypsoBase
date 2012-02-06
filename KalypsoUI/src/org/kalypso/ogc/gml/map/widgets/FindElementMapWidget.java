@@ -98,7 +98,7 @@ import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.outline.ViewContentOutline;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypso.ui.editor.mapeditor.views.MapWidgetView;
@@ -125,7 +125,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * @author ig
  */
 @SuppressWarnings("unchecked")
-public class FindElementMapWidget extends DeprecatedMouseWidget implements IWidgetWithOptions
+public class FindElementMapWidget extends AbstractWidget implements IWidgetWithOptions
 {
   private static IWorkbenchPage m_activePage;
 
@@ -251,11 +251,12 @@ public class FindElementMapWidget extends DeprecatedMouseWidget implements IWidg
     }
   }
 
+
   public void hideView( )
   {
     m_activePage.hideView( m_activePage.findView( MapWidgetView.ID ) );
   }
-
+  
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#finish()
    */
@@ -618,7 +619,7 @@ public class FindElementMapWidget extends DeprecatedMouseWidget implements IWidg
   protected void showFound( ) throws ExecutionException
   {
     GM_Point centroid = null;
-    if( m_feature == null && m_boolFound || m_posX != null && m_posY != null && !"".equals( m_posX.getText() ) && !"".equals( m_posY.getText() ) )
+    if( m_feature == null && m_boolFound || (m_posX != null && m_posY != null && !"".equals( m_posX.getText() ) && !"".equals( m_posY.getText() )) )
     {
       centroid = GeometryFactory.createGM_Point( NumberUtils.parseQuietDouble( m_posX.getText() ), NumberUtils.parseQuietDouble( m_posY.getText() ), m_defaultCrs );
     }
@@ -665,7 +666,7 @@ public class FindElementMapWidget extends DeprecatedMouseWidget implements IWidg
 
         double scaledFactor = getMapPanel().getCurrentScale();
 
-        if( envelope.getMaxX() == envelope.getMinX() && envelope.getMaxY() == envelope.getMinY() )
+        if( ( envelope.getMaxX() == envelope.getMinX() && envelope.getMaxY() == envelope.getMinY() ) )
         {
           scaledFactor *= 0.00093;
         }
@@ -930,28 +931,22 @@ public class FindElementMapWidget extends DeprecatedMouseWidget implements IWidg
       m_boolFound = findFeature( featureList );
     }
   }
-
+  
   /**
-   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#canBeActivated(org.eclipse.jface.viewers.ISelection,
-   *      org.kalypso.ogc.gml.map.IMapPanel)
+   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#canBeActivated(org.eclipse.jface.viewers.ISelection, org.kalypso.ogc.gml.map.IMapPanel)
    */
   @Override
-  public boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
+  public boolean canBeActivated( ISelection selection, IMapPanel mapPanel )
   {
     MapWidgetView widgetView = null;
-    try
-    {
-      if( m_activePage == null )
-      {
+    try{
+      if( m_activePage == null ){
         findOutlineView();
       }
       widgetView = (MapWidgetView) m_activePage.findView( MapWidgetView.ID );
+    }catch (Exception e) {
     }
-    catch( final Exception e )
-    {
-    }
-    if( widgetView != null )
-    {
+    if( widgetView != null ){
       return false;
     }
     return super.canBeActivated( selection, mapPanel );

@@ -46,7 +46,7 @@ public class LinkedFeatureElement
     m_feature = feature;
   }
 
-  public Feature getDecoratedFeature( )
+  public Feature getDecoratedFeature()
   {
     return m_feature;
   }

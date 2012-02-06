@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- *
+ * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always.
- *
- * If you intend to use this software in other ways than in kalypso
+ * interface-compatibility to deegree is wanted but not retained always. 
+ * 
+ * If you intend to use this software in other ways than in kalypso 
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree,
+ * all modifications are licensed as deegree, 
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -36,17 +36,16 @@
 package org.kalypsodeegree_impl.model.feature;
 
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IWorkspaceProvider;
+import org.kalypsodeegree.model.feature.IFeatureProvider;
 
 /**
  * @author Gernot Belger
  */
-// FIXME: wrong name
 public interface IFeatureProviderFactory
 {
   /**
    * @param urn
-   *          Urn to the workspace this feature provider gets features from.
+   *            Urn to the workspace this feature provider gets features from.
    */
-  IWorkspaceProvider createFeatureProvider( final GMLWorkspace context, final String urn );
+  IFeatureProvider createFeatureProvider( final GMLWorkspace context, final String urn );
 }

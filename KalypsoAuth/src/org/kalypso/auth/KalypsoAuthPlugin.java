@@ -1,10 +1,7 @@
 package org.kalypso.auth;
 
-import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-import java.util.Set;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.auth.user.IKalypsoUser;
@@ -17,21 +14,18 @@ import org.osgi.framework.BundleContext;
  */
 public class KalypsoAuthPlugin extends AbstractUIPlugin
 {
-
   // The shared instance.
-  private static KalypsoAuthPlugin PLUGIN;
+  private static KalypsoAuthPlugin plugin;
 
   // Resource bundle.
-  private ResourceBundle m_bundle;
-
-  private final Set<IKalypsoAuthListener> m_listeners = Collections.synchronizedSet( new LinkedHashSet<IKalypsoAuthListener>() );
+  private ResourceBundle resourceBundle;
 
   /**
    * the one and only one kalypso user. By default it is set to a default one in order to allow developers to start
    * kalypso bypassing the login procedure. Once the login procedure is started, the user is set to null unless
    * authentication succeeded.
    */
-  private IKalypsoUser m_user = new KalypsoUser( "default", UserRights.NO_RIGHTS ); //$NON-NLS-1$ 
+  private IKalypsoUser m_user = new KalypsoUser( "default", UserRights.NO_RIGHTS ); //$NON-NLS-1$ //$NON-NLS-2$
 
   /**
    * The constructor.
@@ -39,16 +33,14 @@ public class KalypsoAuthPlugin extends AbstractUIPlugin
   public KalypsoAuthPlugin( )
   {
     super();
-
-    PLUGIN = this;
-
+    plugin = this;
     try
     {
-      m_bundle = ResourceBundle.getBundle( "org.kalypso.auth.KalypsoAuthPluginResources" ); //$NON-NLS-1$
+      resourceBundle = ResourceBundle.getBundle( "org.kalypso.auth.KalypsoAuthPluginResources" ); //$NON-NLS-1$
     }
     catch( final MissingResourceException x )
     {
-      m_bundle = null;
+      resourceBundle = null;
     }
   }
 
@@ -75,17 +67,7 @@ public class KalypsoAuthPlugin extends AbstractUIPlugin
    */
   public static KalypsoAuthPlugin getDefault( )
   {
-    return PLUGIN;
-  }
-
-  public void addListener( final IKalypsoAuthListener listener )
-  {
-    m_listeners.add( listener );
-  }
-
-  public void removeListener( final IKalypsoAuthListener listener )
-  {
-    m_listeners.remove( listener );
+    return plugin;
   }
 
   /**
@@ -96,7 +78,7 @@ public class KalypsoAuthPlugin extends AbstractUIPlugin
     final ResourceBundle bundle = KalypsoAuthPlugin.getDefault().getResourceBundle();
     try
     {
-      return bundle != null ? bundle.getString( key ) : key;
+      return (bundle != null) ? bundle.getString( key ) : key;
     }
     catch( final MissingResourceException e )
     {
@@ -109,7 +91,7 @@ public class KalypsoAuthPlugin extends AbstractUIPlugin
    */
   public ResourceBundle getResourceBundle( )
   {
-    return m_bundle;
+    return resourceBundle;
   }
 
   /**
@@ -128,16 +110,5 @@ public class KalypsoAuthPlugin extends AbstractUIPlugin
   public void setCurrentUser( final IKalypsoUser user )
   {
     m_user = user;
-
-    fireCurrentUserChanged();
-  }
-
-  private void fireCurrentUserChanged( )
-  {
-    final IKalypsoAuthListener[] listeners = m_listeners.toArray( new IKalypsoAuthListener[] {} );
-    for( final IKalypsoAuthListener listener : listeners )
-    {
-      listener.eventCurrentUserChanged( m_user );
-    }
   }
 }

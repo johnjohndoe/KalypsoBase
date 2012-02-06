@@ -69,7 +69,7 @@ public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage
 
   public ShiftDateAdjustmentPage( final IAdjustmentPageProvider provider )
   {
-    super( provider, ShiftDateAdjustmentPage.class.getName() );
+    super( provider );
   }
 
   /**

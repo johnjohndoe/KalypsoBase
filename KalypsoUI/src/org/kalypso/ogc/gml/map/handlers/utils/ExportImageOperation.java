@@ -58,7 +58,7 @@ public class ExportImageOperation implements ICoreRunnableWithProgress
   /**
    * The map panel.
    */
-  private final IMapPanel m_mapPanel;
+  private IMapPanel m_mapPanel;
 
   /**
    * The image data.
@@ -71,7 +71,7 @@ public class ExportImageOperation implements ICoreRunnableWithProgress
    * @param mapPanel
    *          The map panel.
    */
-  public ExportImageOperation( final IMapPanel mapPanel )
+  public ExportImageOperation( IMapPanel mapPanel )
   {
     m_mapPanel = mapPanel;
     m_imageData = null;
@@ -94,16 +94,16 @@ public class ExportImageOperation implements ICoreRunnableWithProgress
       monitor.subTask( "Exportiere Kartenausschnitt als Bild..." );
 
       /* Create the image exporter. */
-      final ImageExporter exporter = new ImageExporter( m_mapPanel );
+      ImageExporter exporter = new ImageExporter( m_mapPanel );
 
       /* Export the to a SWT image data. */
-      final IStatus status = exporter.doExport( new SubProgressMonitor( monitor, 1000 ) );
+      IStatus status = exporter.doExport( new SubProgressMonitor( monitor, 1000 ) );
       if( status.isOK() )
         m_imageData = exporter.getImageData();
 
       return status;
     }
-    catch( final Exception ex )
+    catch( Exception ex )
     {
       return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), ex.getLocalizedMessage(), ex );
     }

@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.databinding.validation;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -57,8 +57,6 @@ public class StringEmptyValidator extends TypedValidator<String>
   public String DEFAULT_ERROR_MESSAGE = "Field must not be empty";
 
   /**
-   * The constructor.
-   * 
    * @param severity
    *          Severity of IStatus, will be used to create validation failures.
    * @param message

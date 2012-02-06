@@ -64,15 +64,9 @@ public final class PathUtils
    * by as many '../' as needed in order to make it relative.<br>
    * Example: makeRelativ( "/Kollau-Erg/Basis/models", "/Kollau-Erg/Basis/grids/6040.asc9946.bin" ) returns
    * "../grids/6040.asc9946.bin".
-   * 
-   * @deprecated Use {@link IPath#makeRelativeTo(IPath)} instead.
    */
-  @Deprecated
   public static IPath makeRelativ( final IPath context, final IPath child )
   {
-    if( context.isRoot() )
-      return child;
-
     if( context.isPrefixOf( child ) )
       return child.removeFirstSegments( context.segmentCount() );
 

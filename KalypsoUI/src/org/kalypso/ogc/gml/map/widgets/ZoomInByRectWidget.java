@@ -42,9 +42,7 @@ package org.kalypso.ogc.gml.map.widgets;
 
 import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.event.MouseEvent;
 
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
@@ -52,7 +50,7 @@ import org.kalypso.ogc.gml.widgets.AbstractWidget;
 /**
  * This class performs a zoomin event. It will be performed by setting the map boundaries to the rectangle selected by
  * the client or centering the map onto the point the user had mouse-clicked to.
- * 
+ *
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @author doemming
  */
@@ -76,43 +74,30 @@ public class ZoomInByRectWidget extends AbstractWidget
   private static final double MIN_PIXEL_ZOOM_BOX = 20;
 
   @Override
-  public void mouseDragged( final MouseEvent e )
+  public void dragged( final Point p )
   {
-    // e.getButton() won't work for mouseDragged()
-    if( Objects.isNull( m_startPoint ) )
-      return;
+    if( m_startPoint == null )
+      m_startPoint = p;
 
-    m_endPoint = e.getPoint();
+    m_endPoint = p;
 
     final IMapPanel panel = getMapPanel();
-    if( Objects.isNotNull( panel ) )
+    if( panel != null )
       panel.repaintMap();
-
-    e.consume();
   }
 
   @Override
-  public void mousePressed( final MouseEvent e )
+  public void leftPressed( final Point p )
   {
-    if( MouseEvent.BUTTON1 != e.getButton() )
-      return;
-
-    m_startPoint = e.getPoint();
+    m_startPoint = p;
     m_endPoint = null;
-
-    e.consume();
   }
 
   @Override
-  public void mouseReleased( final MouseEvent e )
+  public void leftReleased( final Point p )
   {
-    if( MouseEvent.BUTTON1 != e.getButton() )
-      return;
-
-    m_endPoint = e.getPoint();
+    m_endPoint = p;
     perform();
-
-    e.consume();
   }
 
   /**

@@ -51,6 +51,7 @@ import org.kalypso.commons.factory.FactoryException;
  * </p>
  * 
  * @author Schlienger
+ *  
  */
 public interface ILoaderFactory
 {

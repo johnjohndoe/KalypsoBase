@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.tools.refinement;
 
@@ -198,7 +198,7 @@ public final class RefinementUtils
       return null;
   }
 
-  public static GM_Surface<GM_SurfacePatch> getSurface( final GM_Position[] poses, final String crs ) throws GM_Exception
+  public static GM_Surface< ? extends GM_SurfacePatch> getSurface( final GM_Position[] poses, final String crs ) throws GM_Exception
   {
     final GM_Ring_Impl ring = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Ring( poses, crs );
 
@@ -275,7 +275,7 @@ public final class RefinementUtils
     for( final GM_Curve curve : curves )
     {
       final GM_Object object = curve.intersection( point );
-      if( object != null || curve.distance( point ) < CHOP_THICKNESS * 2 )
+      if( object != null || (curve.distance( point ) < CHOP_THICKNESS * 2) )
       {
         final GM_Point startPoint = curve.getAsLineString().getStartPoint();
         final GM_Point endPoint = curve.getAsLineString().getEndPoint();

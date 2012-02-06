@@ -45,6 +45,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -154,7 +156,7 @@ public final class ControlUtils
       }
     } );
   }
-
+  
   public static Event copyEvent( final Event event )
   {
     final Event cEvent = new Event();
@@ -217,5 +219,5 @@ public final class ControlUtils
 
     return event;
   }
-
+  
 }

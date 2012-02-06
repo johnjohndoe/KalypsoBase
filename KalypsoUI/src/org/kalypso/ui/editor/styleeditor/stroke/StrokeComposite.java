@@ -42,7 +42,7 @@ package org.kalypso.ui.editor.styleeditor.stroke;
 
 import java.awt.Color;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
@@ -67,16 +67,15 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.conversion.AwtToSwtColorConverter;
 import org.kalypso.commons.databinding.conversion.FloatArrayToStringConverter;
 import org.kalypso.commons.databinding.conversion.StringToFloatArrayConverter;
 import org.kalypso.commons.databinding.conversion.SwrToAwtColorConverter;
 import org.kalypso.commons.databinding.forms.DatabindingForm;
+import org.kalypso.commons.databinding.forms.IDataBindingForm;
 import org.kalypso.commons.databinding.validation.NumberNotNegativeValidator;
 import org.kalypso.contribs.eclipse.swt.ColorUtilities;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
@@ -92,7 +91,7 @@ import org.kalypsodeegree.graphics.sld.Stroke;
 /**
  * TODO: implement editing of GraphicFill<br/>
  * Composite, which gives the most important editing tools for a given stroke.
- *
+ * 
  * @author Thomas Jung
  */
 public class StrokeComposite extends Composite
@@ -115,7 +114,7 @@ public class StrokeComposite extends Composite
 
   private final IStyleInput<Stroke> m_input;
 
-  private final IDataBinding m_binding;
+  private final IDataBindingForm m_binding;
 
   private GraphicStrokeSection m_strokeSection;
 
@@ -141,7 +140,7 @@ public class StrokeComposite extends Composite
     createOpacityControl( toolkit, body );
     createWidthControl( toolkit, body );
 
-    m_lineDetailsSection = toolkit.createSection( body, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE );
+    m_lineDetailsSection = toolkit.createSection( body, Section.TITLE_BAR | Section.TWISTIE );
     m_lineDetailsSection.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false, 3, 1 ) );
 
     final Composite detailsPanel = toolkit.createComposite( m_lineDetailsSection );
@@ -253,7 +252,7 @@ public class StrokeComposite extends Composite
   private void createDashArrayControl( final FormToolkit toolkit, final Composite parent )
   {
     final String tooltip = "A list of values representing the dashing pattern.\n"
-        + "Alternate entries in the array represent the user space lengths of the opaque and transparent segments of the dashes.";
+      + "Alternate entries in the array represent the user space lengths of the opaque and transparent segments of the dashes.";
 
     final Label label = toolkit.createLabel( parent, Messages.getString( "org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.2" ) ); //$NON-NLS-1$
     label.setToolTipText( tooltip );
@@ -272,6 +271,9 @@ public class StrokeComposite extends Composite
     {
       menuManager.add( new Action( dash.toString() )
       {
+        /**
+         * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
+         */
         @Override
         public void runWithEvent( final Event event )
         {
@@ -281,7 +283,7 @@ public class StrokeComposite extends Composite
     }
 
     final Button menuButton = new Button( parent, SWT.ARROW | SWT.LEFT );
-    new MenuButton( menuButton, menuManager );
+    MenuButton.hookMenu( menuButton, menuManager, true );
   }
 
   private void createDashOffsetControl( final FormToolkit toolkit, final Composite parent )

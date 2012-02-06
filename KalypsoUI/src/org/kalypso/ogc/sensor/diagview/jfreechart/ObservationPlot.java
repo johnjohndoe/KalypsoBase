@@ -150,7 +150,7 @@ public class ObservationPlot extends XYPlot
    * Adds a diagram axis and configures it for the use in this plot.
    * 
    * @param axis
-   *          can be null, if present it is used to define a best suited formatter for the chart axis
+   *          can be null, if present it is used to define a best suited formater for the chart axis
    */
   private synchronized void addDiagramAxis( final DiagramAxis diagAxis, final IAxis axis ) throws SensorException
   {

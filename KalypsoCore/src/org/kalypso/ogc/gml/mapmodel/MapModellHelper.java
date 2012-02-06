@@ -69,7 +69,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Utility class for {@link IMapModell} associated functions.
- *
+ * 
  * @author Gernot Belger
  */
 public final class MapModellHelper
@@ -82,7 +82,7 @@ public final class MapModellHelper
   /**
    * Waits for a {@link MapPanel} to be completely loaded. A progress dialog opens if this operation takes long.<br>
    * If an error occurs, an error dialog will be shown.
-   *
+   * 
    * @param panelOrModell
    *          An {@link IMapPanel} or an {@link IMapModell}. Use a panel, if the modell is stil about to be loaded. Use
    *          a modell, if you do not have a panel (i.e. for image export or similar).
@@ -90,7 +90,6 @@ public final class MapModellHelper
    * @see ProgressUtilities#busyCursorWhile(ICoreRunnableWithProgress)
    * @see #createWaitForMapOperation(MapPanel)
    */
-  // FIXME: we need to use default texts here. The same text is i10n a 1000 times now... :-(
   public static boolean waitForAndErrorDialog( final Shell shell, final Object panelOrModell, final String windowTitle, final String message )
   {
     final ICoreRunnableWithProgress operation = createWaitForMapOperation( panelOrModell );
@@ -102,7 +101,7 @@ public final class MapModellHelper
   /**
    * Creates an {@link ICoreRunnableWithProgress} which waits for a {@link MapPanel} to be loaded.<br>
    * Uses the {@link IMapModell#isLoaded()} and {@link IKalypsoTheme#isLoaded()} methods.
-   *
+   * 
    * @param panelOrModell
    *          An {@link IMapPanel} or an {@link IMapModell}. Use a panel, if the modell is stil about to be loaded. Use
    *          a modell, if you do not have a panel (i.e. for image export or similar).
@@ -114,7 +113,7 @@ public final class MapModellHelper
 
   /**
    * This function creates an image of a map model and keeps aspect ratio of the displayed map and its extend.
-   *
+   * 
    * @param panel
    *          The map panel.
    * @param width
@@ -127,20 +126,20 @@ public final class MapModellHelper
    *          If >0 and <=25 a border will be drawn around the map.
    * @return The image showing the map.
    */
-  public static BufferedImage createWellFormedImageFromModel( final IMapPanel panel, final int width, final int height, final Insets insets, final int borderWidth )
+  public static BufferedImage createWellFormedImageFromModel( IMapPanel panel, int width, int height, Insets insets, int borderWidth )
   {
     /* Get the map model. */
-    final IMapModell mapModel = panel.getMapModell();
+    IMapModell mapModel = panel.getMapModell();
 
     /* Get the bounding box. */
-    final GM_Envelope boundingBox = panel.getBoundingBox();
+    GM_Envelope boundingBox = panel.getBoundingBox();
 
     return createWellFormedImageFromModel( mapModel, width, height, insets, borderWidth, boundingBox );
   }
 
   /**
    * This function creates an image of a map model and keeps aspect ratio of the displayed map and its extend.
-   *
+   * 
    * @param mapModel
    *          The map model.
    * @param width
@@ -155,7 +154,7 @@ public final class MapModellHelper
    *          The original bounding box.
    * @return The image showing the map.
    */
-  public static BufferedImage createWellFormedImageFromModel( final IMapModell mapModel, final int width, final int height, final Insets insets, final int borderWidth, final GM_Envelope boundingBox )
+  public static BufferedImage createWellFormedImageFromModel( IMapModell mapModel, int width, int height, Insets insets, int borderWidth, GM_Envelope boundingBox )
   {
     /* The remaining dimensions for the map considering the insets. */
     int mapWidth = width;
@@ -176,10 +175,10 @@ public final class MapModellHelper
     }
 
     /* Calculate the ratio of the width and height of the available to the map. */
-    final double ratio = (double) mapHeight / (double) mapWidth;
+    double ratio = (double) mapHeight / (double) mapWidth;
 
     /* Adjust the bounding box. */
-    final GM_Envelope adjustedBoundingBox = MapModellHelper.adjustBoundingBox( mapModel, boundingBox, ratio );
+    GM_Envelope adjustedBoundingBox = MapModellHelper.adjustBoundingBox( mapModel, boundingBox, ratio );
 
     return MapModellHelper.createImageFromModell( mapModel, width, height, insets, borderWidth, adjustedBoundingBox );
   }
@@ -188,7 +187,7 @@ public final class MapModellHelper
    * This function is used to create an image of a map model. It does not wait until all themes are loaded. It is used
    * from the map panel as well, where the drawing is done every refresh of the map. So it does not matter, when some
    * themes finish, if they finish at all.
-   *
+   * 
    * @param panel
    *          The map panel.
    * @param width
@@ -203,7 +202,7 @@ public final class MapModellHelper
    *          The envelope of the map, which should be exported.
    * @return The image showing the map.
    */
-  public static BufferedImage createImageFromModell( final IMapModell model, final int width, final int height, Insets insets, int borderWidth, final GM_Envelope boundingBox )
+  public static BufferedImage createImageFromModell( IMapModell model, int width, int height, Insets insets, int borderWidth, GM_Envelope boundingBox )
   {
     /* If there is no bounding box, we cannot draw the map. */
     if( boundingBox == null )
@@ -218,16 +217,16 @@ public final class MapModellHelper
       borderWidth = 0;
 
     /* Calculate the remaining dimensions for the map considering the insets and the border. */
-    final int mapWidth = width - insets.left - insets.right - borderWidth;
-    final int mapHeight = height - insets.top - insets.bottom - borderWidth;
+    int mapWidth = width - insets.left - insets.right - borderWidth;
+    int mapHeight = height - insets.top - insets.bottom - borderWidth;
 
     /* Create the image for the map WITH the insets AND the border. */
-    final BufferedImage image = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
-    final Graphics2D gr = (Graphics2D) image.getGraphics();
+    BufferedImage image = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
+    Graphics2D gr = (Graphics2D) image.getGraphics();
 
     /* Create the image for the map WITHOUT the insets AND the border. */
-    final BufferedImage mapImage = new BufferedImage( mapWidth, mapHeight, BufferedImage.TYPE_INT_ARGB );
-    final Graphics2D mapgr = (Graphics2D) mapImage.getGraphics();
+    BufferedImage mapImage = new BufferedImage( mapWidth, mapHeight, BufferedImage.TYPE_INT_ARGB );
+    Graphics2D mapgr = (Graphics2D) mapImage.getGraphics();
 
     try
     {
@@ -250,7 +249,7 @@ public final class MapModellHelper
       mapgr.setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
 
       /* Create the world to screen transform. */
-      final GeoTransform world2screen = new WorldToScreenTransform();
+      GeoTransform world2screen = new WorldToScreenTransform();
       world2screen.setSourceRect( boundingBox );
       world2screen.setDestRect( 0, 0, mapWidth, mapHeight, null );
 
@@ -262,7 +261,7 @@ public final class MapModellHelper
 
       /* Draw the border. */
       /* The insets and the space for the border are already considered on the image. */
-      final Polygon polygon = new Polygon();
+      Polygon polygon = new Polygon();
       polygon.addPoint( insets.left, insets.top );
       polygon.addPoint( insets.left + borderWidth + mapWidth + borderWidth, insets.top );
       polygon.addPoint( insets.left + borderWidth + mapWidth + borderWidth, insets.top + borderWidth + mapHeight + borderWidth );
@@ -275,7 +274,7 @@ public final class MapModellHelper
       polygon.addPoint( insets.left + borderWidth, insets.top + borderWidth );
       gr.fill( polygon );
     }
-    catch( final Exception ex )
+    catch( Exception ex )
     {
       /* Print the stack trace. */
       ex.printStackTrace();
@@ -303,7 +302,7 @@ public final class MapModellHelper
 
   /**
    * Calculates the common extent of all given themes.
-   *
+   * 
    * @param predicate
    *          If not <code>null</code>, only themes applying to the predicate are considered.
    * @return <code>null</code>, if the array of themes is empty or null.
@@ -316,7 +315,7 @@ public final class MapModellHelper
     GM_Envelope result = null;
     for( final IKalypsoTheme kalypsoTheme : themes )
     {
-      if( predicate == null || predicate.decide( kalypsoTheme ) )
+      if( (predicate == null) || predicate.decide( kalypsoTheme ) )
       {
         final GM_Envelope boundingBox = kalypsoTheme.getFullExtent();
         if( result == null )
@@ -381,7 +380,7 @@ public final class MapModellHelper
 
   /**
    * Finds all themes with the given theme property from the map model.
-   *
+   * 
    * @param depth
    *          One of the {@link IKalypsoThemeVisitor#DEPTH_} constants.
    * @param mapModel

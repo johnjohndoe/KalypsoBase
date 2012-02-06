@@ -51,8 +51,8 @@ import javax.persistence.IdClass;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.project.database.IProjectDataBaseServerConstant;
 import org.kalypso.project.database.common.utils.ProjectModelUrlResolver;
 
@@ -100,9 +100,6 @@ public class KalypsoProjectBean implements Comparable<KalypsoProjectBean>
 
   @Column(name = "project_changes")
   private String m_changes;
-
-  @Column(name = "module_identifier")
-  private String m_moduleIdentifier;
 
   /**
    * @return previous versions of this bean
@@ -359,15 +356,5 @@ public class KalypsoProjectBean implements Comparable<KalypsoProjectBean>
   public String getChanges( )
   {
     return m_changes;
-  }
-
-  public String getModuleIdentifier( )
-  {
-    return m_moduleIdentifier;
-  }
-
-  public void setModuleIdentifier( final String moduleIdentifier )
-  {
-    m_moduleIdentifier = moduleIdentifier;
   }
 }

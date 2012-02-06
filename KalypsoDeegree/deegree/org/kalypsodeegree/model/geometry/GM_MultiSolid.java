@@ -37,7 +37,9 @@
 package org.kalypsodeegree.model.geometry;
 
 /**
+ * 
  * Basic interface for handling aggregations of solid geometries.
+ * 
  * <p>
  * -----------------------------------------------------
  * </p>
@@ -48,5 +50,4 @@ package org.kalypsodeegree.model.geometry;
  */
 
 public interface GM_MultiSolid extends GM_Aggregate
-{
-}
+{}

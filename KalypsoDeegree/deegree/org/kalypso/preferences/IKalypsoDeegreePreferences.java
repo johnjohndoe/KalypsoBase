@@ -63,8 +63,7 @@ public interface IKalypsoDeegreePreferences
   String DEFAULT_CRS_SETTING = "org.kalypso.deegree.coordinate.systems.default"; //$NON-NLS-1$
 
   /**
-   * Defines the default value for the default coordinate system.<br/>
-   * Should not used outside of this plug-in! Instead, always get the current system from the plug-in.
+   * Defines the default value for the default coordinate system.
    */
   String DEFAULT_CRS_VALUE = "EPSG:31467"; //$NON-NLS-1$
 }

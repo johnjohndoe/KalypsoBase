@@ -35,6 +35,7 @@
  */
 package org.kalypsodeegree_impl.graphics.displayelements.strokearrow;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper.ARROW_ALIGNMENT;
 import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper.ARROW_TYPE;
 import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper.ARROW_WIDGET;
@@ -86,7 +87,7 @@ public abstract class AbstractStrokeArrowPaintDelegate implements IStrokeArrowPa
         return new StrokeArrowPaintDelegateSegment( arrowType, arrowWidget, arrowAlignment, arrowSize, strokeWidth );
 
       default:
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
   }
 

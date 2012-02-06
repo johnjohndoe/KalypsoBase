@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.update;
 
-import org.kalypso.zml.core.diagram.base.IZmlLayer;
+import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLayerVisitor;
@@ -61,13 +61,7 @@ public class RemoveClonedLayerVisitor extends AbstractChartLayerVisitor
     if( layer instanceof IZmlLayer )
     {
       if( layer.getIdentifier().contains( IClonedLayer.CLONED_LAYER_POSTFIX ) )
-      {
-        final IZmlLayer zml = (IZmlLayer) layer;
-
-        layer.getParent().getLayerManager().removeLayer( zml );
-        zml.dispose();
-      }
-
+        layer.getParent().getLayerManager().removeLayer( layer );
     }
   }
 }

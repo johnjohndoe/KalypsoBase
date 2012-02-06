@@ -63,7 +63,7 @@ public class StatusLabelProvider extends LabelProvider
    * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
    */
   @Override
-  public String getText( final Object element )
+  public String getText( Object element )
   {
     if( element instanceof IStatus )
       return ((IStatus) element).getMessage();
@@ -75,7 +75,7 @@ public class StatusLabelProvider extends LabelProvider
    * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
    */
   @Override
-  public Image getImage( final Object element )
+  public Image getImage( Object element )
   {
     if( element instanceof IStatus )
       return StatusComposite.getStatusImage( (IStatus) element );

@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.java.lang;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 
 /**
  * @author Dirk Kuch
@@ -54,27 +54,6 @@ public class Arrays
       return true;
 
     return Objects.allNull( objects );
-  }
-
-  public static boolean isNotEmpty( final Object[] objects )
-  {
-    if( ArrayUtils.isNotEmpty( objects ) )
-      return true;
-
-    if( ArrayUtils.getLength( objects ) == 0 )
-      return false;
-
-    return Objects.allNotNull( objects );
-  }
-
-  public static boolean isLastItem( final Object[] array, final Object item )
-  {
-    return array[array.length - 1] == item;
-  }
-
-  public static boolean isFirstItem( final Object[] array, final Object item )
-  {
-    return array[0] == item;
   }
 
 }

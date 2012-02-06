@@ -68,11 +68,10 @@ import org.kalypso.ogc.sensor.template.TemplateStorage;
 import org.kalypso.template.obsdiagview.Obsdiagview;
 import org.kalypso.template.obstableview.Obstableview;
 import org.kalypso.ui.editor.AbstractWorkbenchPart;
-import org.kalypso.ui.editor.abstractobseditor.commands.DropZmlCommand;
 
 /**
  * AbstractObsEditor
- *
+ * 
  * @author schlienger
  */
 public abstract class AbstractObservationEditor extends AbstractWorkbenchPart implements IEditorPart, IObsViewEventListener
@@ -91,7 +90,7 @@ public abstract class AbstractObservationEditor extends AbstractWorkbenchPart im
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
+   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#dispose()
    */
   @Override
   public void dispose( )
@@ -117,7 +116,7 @@ public abstract class AbstractObservationEditor extends AbstractWorkbenchPart im
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#tweakInput(org.eclipse.ui.IStorageEditorInput)
+   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#tweakInput(org.eclipse.ui.IStorageEditorInput)
    */
   @Override
   protected IStorageEditorInput tweakInput( final IStorageEditorInput input )
@@ -126,7 +125,7 @@ public abstract class AbstractObservationEditor extends AbstractWorkbenchPart im
     {
       final IFile file = ((IFileEditorInput) input).getFile();
       final String ext = file.getFileExtension();
-      if( "zml".equalsIgnoreCase( ext ) || "zmlz".equalsIgnoreCase( "zmlz" ) )//$NON-NLS-1$ //$NON-NLS-1$
+      if( "zml".equalsIgnoreCase( ext ) )//$NON-NLS-1$
       {
         final IPath projectRelativePath = file.getProjectRelativePath();
         final TemplateStorage storage = new TemplateStorage( file, ResourceUtilities.createQuietURL( file ), "project:/" + projectRelativePath );
@@ -161,6 +160,10 @@ public abstract class AbstractObservationEditor extends AbstractWorkbenchPart im
     return null;
   }
 
+  /**
+   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#loadInternal(org.eclipse.core.runtime.IProgressMonitor,
+   *      org.eclipse.ui.IFileEditorInput)
+   */
   @Override
   protected void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input )
   {
@@ -244,19 +247,12 @@ public abstract class AbstractObservationEditor extends AbstractWorkbenchPart im
       fireDirty();
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.template.IObsViewEventListener#onPrintObsView(org.kalypso.ogc.sensor.template.ObsViewEvent)
+   */
   @Override
   public void onPrintObsView( final ObsViewEvent evt )
   {
     // empty
-  }
-
-  boolean addFiles( final String[] files )
-  {
-    if( m_view == null )
-      return false;
-
-    postCommand( new DropZmlCommand( this, m_view, files ), null );
-
-    return true;
   }
 }

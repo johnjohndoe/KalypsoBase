@@ -46,7 +46,7 @@ import java.util.Iterator;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.contribs.java.util.DateUtilities;
 
 /**
@@ -86,10 +86,10 @@ public class WechmannSet
     m_mapW = new TreeMap<Double, WechmannParams>();
     m_mapQ = new TreeMap<Double, WechmannParams>();
 
-    for( final WechmannParams wp : wps )
+    for( int i = 0; i < wps.length; i++ )
     {
-      m_mapW.put( new Double( wp.getWGR() ), wp );
-      m_mapQ.put( new Double( wp.getQ4WGR() ), wp );
+      m_mapW.put( new Double( wps[i].getWGR() ), wps[i] );
+      m_mapQ.put( new Double( wps[i].getQ4WGR() ), wps[i] );
     }
   }
 
@@ -114,12 +114,12 @@ public class WechmannSet
 
   /**
    * @param W
-   * @return the WechmannParams that are relevant for the given water level.
+   * @return the WechmannParams that are relevant for the given Waterlevel.
    */
-  public WechmannParams getForW( final double w )
+  public WechmannParams getForW( final double W )
   {
     final Double[] ds = m_mapW.keySet().toArray( new Double[0] );
-    int i = Arrays.binarySearch( ArrayUtils.toPrimitive( ds ), w );
+    int i = Arrays.binarySearch( ArrayUtils.toPrimitive( ds ), W );
 
     if( i < 0 )
       i = -i - 1;
@@ -128,17 +128,17 @@ public class WechmannSet
       return m_mapW.get( ds[i] );
 
     // W was too big for current parameters, just use last branch of Wechmann-Set
-    return m_mapW.get( ds[ds.length - 1] );
+    return m_mapW.get( ds[ds.length-1]);
   }
 
   /**
    * @param Q
-   * @return the WechmannParams that are relevant for the given discharge.
+   * @return the WechmannParams that are relevant for the given Runoff.
    */
-  public WechmannParams getForQ( final double q )
+  public WechmannParams getForQ( final double Q )
   {
     final Double[] ds = m_mapQ.keySet().toArray( new Double[0] );
-    int i = Arrays.binarySearch( ArrayUtils.toPrimitive( ds ), q );
+    int i = Arrays.binarySearch( ArrayUtils.toPrimitive( ds ), Q );
 
     if( i < 0 )
       i = -i - 1;
@@ -147,19 +147,5 @@ public class WechmannSet
       i = ds.length - 1;
 
     return m_mapQ.get( ds[i] );
-  }
-
-  public WechmannParams getMin( )
-  {
-    return m_mapW.values().iterator().next();
-  }
-
-  public WechmannParams getMax( )
-  {
-    final WechmannParams[] values = m_mapW.values().toArray( new WechmannParams[] {} );
-    if( ArrayUtils.isEmpty( values ) )
-      return null;
-
-    return values[values.length - 1];
   }
 }

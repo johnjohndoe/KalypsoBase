@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema;
 
+
 /**
  * Helper class to retrieve debug options.
  * 

@@ -44,9 +44,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.ObjectUtils;
-import org.kalypso.commons.java.lang.Objects;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.observation.result.ITupleResultChangedListener.TYPE;
 import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
@@ -61,24 +60,30 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
   private final List<Object> m_values = new ArrayList<Object>();
 
   private List<IComponent> m_components = new ArrayList<IComponent>();
-
+  
   private TupleResult m_owner;
 
   Record( final TupleResult result, final IComponent[] components )
   {
     m_owner = result;
     m_components = Arrays.asList( components );
-
+    
     for( final IComponent component : components )
       m_values.add( component.getDefaultValue() );
   }
 
+  /**
+   * @see java.lang.Object#toString()
+   */
   @Override
   public String toString( )
   {
     return ArrayUtils.toString( m_values );
   }
 
+  /**
+   * @see org.kalypso.om.tuple.IRecord#getValue(org.kalypso.om.tuple.IComponent)
+   */
   @Override
   @Deprecated
   public Object getValue( final IComponent comp )
@@ -87,6 +92,9 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
     return getValue( index );
   }
 
+  /**
+   * @see org.kalypso.observation.result.IRecord#getValue(int)
+   */
   @Override
   public Object getValue( final int index ) throws IndexOutOfBoundsException
   {
@@ -102,6 +110,9 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
     return index;
   }
 
+  /**
+   * @see org.kalypso.om.tuple.IRecord#setValue(org.kalypso.om.tuple.IComponent, java.lang.Object)
+   */
   @Override
   @Deprecated
   public void setValue( final IComponent comp, final Object value )
@@ -110,12 +121,18 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
     setValue( index, value );
   }
 
+  /**
+   * @see org.kalypso.observation.result.IRecord#setValue(int, java.lang.Object)
+   */
   @Override
   public void setValue( final int index, final Object value ) throws IndexOutOfBoundsException
   {
     setValue( index, value, false );
   }
 
+  /**
+   * @see org.kalypso.observation.result.IRecord#setValue(int, java.lang.Object, boolean)
+   */
   @Override
   public void setValue( final int index, final Object value, final boolean fireNoEvent ) throws IndexOutOfBoundsException
   {
@@ -144,12 +161,18 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
     m_values.remove( index );
   }
 
+  /**
+   * @see org.kalypso.observation.result.IRecord#getOwner()
+   */
   @Override
   public TupleResult getOwner( )
   {
     return m_owner;
   }
 
+  /**
+   * @see org.kalypso.observation.result.IRecord#cloneRecord()
+   */
   @Override
   public IRecord cloneRecord( )
   {
@@ -158,7 +181,7 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
 
     final Record record = new Record( result, components );
     for( int i = 0; i < components.length; i++ )
-      record.setValue( i, getValue( i ), true );
+      record.setValue( i, getValue( i ),true );
 
     return record;
   }
@@ -179,14 +202,17 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
     }
   }
 
-  void setOwner( final TupleResult owner, final List<IComponent> components )
+  void setOwner( final TupleResult owner, List<IComponent> components )
   {
     m_owner = owner;
     m_components = components;
   }
-
+  
+  /**
+   * @see org.kalypso.observation.result.IRecord#indexOfComponent(java.lang.String)
+   */
   @Override
-  public int indexOfComponent( final String componentID )
+  public int indexOfComponent( String componentID )
   {
     for( int i = 0; i < m_components.size(); i++ )
     {
@@ -198,13 +224,4 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
     return -1;
   }
 
-  @Override
-  public int getIndex( )
-  {
-    final TupleResult owner = getOwner();
-    if( Objects.isNull( owner ) )
-      return -1;
-
-    return owner.indexOf( this );
-  }
 }

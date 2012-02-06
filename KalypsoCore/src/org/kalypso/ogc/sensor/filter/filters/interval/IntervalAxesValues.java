@@ -42,16 +42,11 @@ package org.kalypso.ogc.sensor.filter.filters.interval;
 
 import java.util.Arrays;
 import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.joda.time.Interval;
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.TupleModelDataSet;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
@@ -64,11 +59,19 @@ public class IntervalAxesValues
 {
   private final IAxis[] m_axes;
 
+  private final double[] m_defaultValues;
+
+  private final int[] m_defaultStatis;
+
   private final IAxis[] m_valueAxes;
+
+  private final IAxis[] m_statusAxes;
 
   private final double m_defaultValue;
 
   private final int m_defaultStatus;
+
+  private final IAxis m_sourceAxis;
 
   private final DataSourceHandler m_sourceHandler;
 
@@ -81,7 +84,15 @@ public class IntervalAxesValues
     m_defaultValue = defaultValue;
     m_defaultStatus = defaultStatus;
     m_valueAxes = AxisUtils.findValueAxes( axes );
+    m_statusAxes = AxisUtils.findStatusAxes( axes );
+    m_sourceAxis = AxisUtils.findDataSourceAxis( axes );
     m_dateAxis = AxisUtils.findDateAxis( axes );
+
+    m_defaultValues = new double[m_valueAxes.length];
+    Arrays.fill( m_defaultValues, defaultValue );
+
+    m_defaultStatis = new int[m_statusAxes.length];
+    Arrays.fill( m_defaultStatis, defaultStatus );
   }
 
   public IAxis getDateAxis( )
@@ -89,20 +100,32 @@ public class IntervalAxesValues
     return AxisUtils.findDateAxis( m_axes );
   }
 
-  public IAxis getDataSourcesAxes( final IAxis valueAxis )
+  public IAxis[] getDataSourcesAxes( )
   {
-    return AxisUtils.findDataSourceAxis( m_axes, valueAxis );
+    return AxisUtils.findDataSourceAxes( m_axes );
   }
 
-  public TupleModelDataSet[] getPlainValues( )
+  public int[] getPlainStatis( )
   {
-    final Set<TupleModelDataSet> dataSets = new LinkedHashSet<TupleModelDataSet>();
-    for( final IAxis valueAxis : m_valueAxes )
-    {
-      dataSets.add( new TupleModelDataSet( valueAxis, 0d, KalypsoStati.BIT_OK, IntervalSourceHandler.SOURCE_INITIAL_VALUE ) );
-    }
+    final int[] statis = new int[m_defaultStatis.length];
+    Arrays.fill( statis, KalypsoStati.BIT_OK );
+    return statis;
+  }
 
-    return dataSets.toArray( new TupleModelDataSet[] {} );
+  public double[] getPlainValues( )
+  {
+    final double[] values = new double[m_defaultValues.length];
+    Arrays.fill( values, 0d );
+
+    return values;
+  }
+
+  public String[] getPlainSources( )
+  {
+    final String[] sources = new String[m_defaultValues.length];
+    Arrays.fill( sources, IntervalSourceHandler.SOURCE_INITIAL_VALUE );
+
+    return sources;
   }
 
   public IAxis[] getValueAxes( )
@@ -110,9 +133,9 @@ public class IntervalAxesValues
     return m_valueAxes;
   }
 
-  public IAxis getStatusAxis( final IAxis valueAxis )
+  public IAxis[] getStatusAxes( )
   {
-    return AxisUtils.findStatusAxis( m_axes, valueAxis );
+    return m_statusAxes;
   }
 
   public double getDefaultValue( )
@@ -125,23 +148,14 @@ public class IntervalAxesValues
     return m_defaultStatus;
   }
 
-  public TupleModelDataSet[] getDefaultValues( )
+  public double[] getDefaultValues( )
   {
-    final Set<TupleModelDataSet> dataSets = new LinkedHashSet<TupleModelDataSet>();
-    for( final IAxis valueAxis : m_valueAxes )
-    {
-      dataSets.add( new TupleModelDataSet( valueAxis, m_defaultValue, m_defaultStatus, IntervalSourceHandler.SOURCE_INITIAL_VALUE ) );
-    }
-
-    return dataSets.toArray( new TupleModelDataSet[] {} );
+    return m_defaultValues;
   }
 
   public int[] getDefaultStatis( )
   {
-    final int[] defaultStati = new int[ArrayUtils.getLength( AxisUtils.findStatusAxes( m_axes ) )];
-    Arrays.fill( defaultStati, m_defaultStatus );
-
-    return defaultStati;
+    return m_defaultStatis;
   }
 
   public IAxis[] getAxes( )
@@ -151,42 +165,28 @@ public class IntervalAxesValues
 
   public IntervalData asIntervalData( final Interval interval, final ITupleModel model, final int index ) throws SensorException
   {
-    final Set<TupleModelDataSet> dataSets = new LinkedHashSet<TupleModelDataSet>();
+    final double[] values = new double[m_valueAxes.length];
+    for( int i = 0; i < values.length; i++ )
+      values[i] = ((Number) model.get( index, m_valueAxes[i] )).doubleValue();
 
-    for( final IAxis valueAxis : m_valueAxes )
-    {
-      final Number value = (Number) model.get( index, valueAxis );
-      final Number status = (Number) model.get( index, getStatusAxis( valueAxis ) );
-      final Number sourceIndex = (Number) model.get( index, getDataSourcesAxes( valueAxis ) );
-      final String source = m_sourceHandler.getDataSourceIdentifier( sourceIndex.intValue() );
+    final int[] stati = new int[m_statusAxes.length];
+    for( int i = 0; i < stati.length; i++ )
+      stati[i] = ((Number) model.get( index, m_statusAxes[i] )).intValue();
 
-      dataSets.add( new TupleModelDataSet( valueAxis, value.doubleValue(), status.intValue(), source ) );
-    }
+    final int sourceIndex = ((Number) model.get( index, m_sourceAxis )).intValue();
+    final String source = m_sourceHandler.getDataSourceIdentifier( sourceIndex );
 
-    return new IntervalData( interval, dataSets.toArray( new TupleModelDataSet[] {} ) );
+    return new IntervalData( interval, values, stati, source );
   }
 
   public IntervalData createDefaultData( final Interval interval )
   {
-    final Set<TupleModelDataSet> dataSets = new LinkedHashSet<TupleModelDataSet>();
-    for( final IAxis axis : m_valueAxes )
-    {
-      dataSets.add( new TupleModelDataSet( axis, m_defaultValue, m_defaultStatus, IDataSourceItem.SOURCE_UNKNOWN ) );
-    }
-
-    return new IntervalData( interval, dataSets.toArray( new TupleModelDataSet[] {} ) );
+    return new IntervalData( interval, getDefaultValues(), getDefaultStatis(), IDataSourceItem.SOURCE_UNKNOWN );
   }
 
   public IntervalData createPlainData( final Interval interval )
   {
-
-    final Set<TupleModelDataSet> dataSets = new LinkedHashSet<TupleModelDataSet>();
-    for( final IAxis axis : m_valueAxes )
-    {
-      dataSets.add( new TupleModelDataSet( axis, 0d, KalypsoStati.BIT_OK, IDataSourceItem.SOURCE_UNKNOWN ) );
-    }
-
-    return new IntervalData( interval, dataSets.toArray( new TupleModelDataSet[] {} ) );
+    return new IntervalData( interval, getPlainValues(), getPlainStatis(), IDataSourceItem.SOURCE_UNKNOWN );
   }
 
   public Object[] asValueTuple( final IntervalData data, final ITupleModel model ) throws SensorException
@@ -198,33 +198,24 @@ public class IntervalAxesValues
     final int datePos = model.getPosition( m_dateAxis );
     tuple[datePos] = key;
 
-    final TupleModelDataSet[] dataSets = data.getDataSets();
-    for( final TupleModelDataSet dataSet : dataSets )
+    final int sourcePos = model.getPosition( m_sourceAxis );
+    final String source = data.getSource();
+    tuple[sourcePos] = m_sourceHandler.addDataSource( source, source );
+
+    final double[] values = data.getValues();
+    for( int i = 0; i < values.length; i++ )
     {
-      final IAxis valueAxis = dataSet.getValueAxis();
-      final int valuePosition = model.getPosition( valueAxis );
-      tuple[valuePosition] = dataSet.getValue();
+      final int pos = model.getPosition( m_valueAxes[i] );
+      tuple[pos] = values[i];
+    }
 
-      final IAxis statusAxis = getStatusAxis( valueAxis );
-      setModelValue( statusAxis, model, tuple, dataSet.getStatus() );
-
-      final IAxis dataSourcesAxes = getDataSourcesAxes( valueAxis );
-      final int dataSourceIndex = m_sourceHandler.addDataSource( dataSet.getSource(), dataSet.getSource() );
-      setModelValue( dataSourcesAxes, model, tuple, dataSourceIndex );
+    final int[] stati = data.getStati();
+    for( int i = 0; i < stati.length; i++ )
+    {
+      final int pos = model.getPosition( m_statusAxes[i] );
+      tuple[pos] = stati[i];
     }
 
     return tuple;
-  }
-
-  private void setModelValue( final IAxis axis, final ITupleModel model, final Object[] tuple, final Object value ) throws SensorException
-  {
-    if( Objects.isNull( axis ) )
-      return;
-
-    final int position = model.getPosition( axis );
-    if( position < 0 )
-      return;
-
-    tuple[position] = value;
   }
 }

@@ -46,15 +46,18 @@ import org.kalypsodeegree.model.geometry.ByteUtils;
  * <p>
  * Uses class ByteUtils ShapeUtils modified from the original package com.bbn.openmap.layer.shape <br>
  * Copyright (C) 1998 BBN Corporation 10 Moulton St. Cambridge, MA 02138 <br>
+ * 
  * <P>
  * <B>Last changes <B>: <BR>
  * 07.01.2000 ap: all methods copied from ShapeFileHeader <BR>
  * 07.01.2000 ap: constructor renamed <BR>
  * 16.08.2000 ap: method writeHeader(..) added <BR>
+ * 
  * <!---------------------------------------------------------------------------->
  * 
  * @version 16.08.2000
  * @author Andreas Poth
+ *  
  */
 
 public class FileHeader
@@ -92,7 +95,7 @@ public class FileHeader
   /**
    * Construct a IndexFileHeader from a file name.
    */
-  public FileHeader( final RandomAccessFile rafShp_ ) throws IOException
+  public FileHeader( RandomAccessFile rafShp_ ) throws IOException
   {
     rafShp = rafShp_;
 
@@ -106,7 +109,7 @@ public class FileHeader
    * file. <BR>
    */
 
-  public SHPEnvelope getFileMBR( )
+  public SHPEnvelope getFileMBR()
   {
     return fileMBR;
   }
@@ -115,7 +118,7 @@ public class FileHeader
    * method: getFileLength() <BR>
    * returns the length of the shape file in bytes <BR>
    */
-  public long getFileLength( )
+  public long getFileLength()
   {
     return fileLength;
   }
@@ -124,7 +127,7 @@ public class FileHeader
    * method: getFileVersion() <BR>
    * returns the version of the shape file <BR>
    */
-  public int getFileVersion( )
+  public int getFileVersion()
   {
     return fileVersion;
   }
@@ -133,7 +136,7 @@ public class FileHeader
    * method: getFileShapeType() <BR>
    * returns the code for the shape type of the file <BR>
    */
-  public int getFileShapeType( )
+  public int getFileShapeType()
   {
     return fileShapeType;
   }
@@ -145,12 +148,12 @@ public class FileHeader
    * After this function runs, the file pointer is set to byte 100, <BR>
    * the first byte of the first record in the file. <BR>
    */
-  private void initHeader( ) throws IOException
+  private void initHeader() throws IOException
   {
-    final int result = rafShp.read();
+    int result = rafShp.read();
     if( result == -1 )
     {
-      // File is empty, write a new one (what else???)
+      //File is empty, write a new one (what else???)
       writeHeader();
     }
 
@@ -161,7 +164,7 @@ public class FileHeader
    * method: writeHeader() <BR>
    * Writes a blank header into the shape file. <BR>
    */
-  public void writeHeader( ) throws IOException
+  public void writeHeader() throws IOException
   {
     header = new byte[ShapeConst.SHAPE_FILE_HEADER_LENGTH];
 
@@ -184,7 +187,7 @@ public class FileHeader
    * method: writeHeader(int filelength, byte shptype,SHPEnvelope mbr) <BR>
    * Writes a header into the shape file. <BR>
    */
-  public void writeHeader( final int filelength, final int shptype, final SHPEnvelope mbr ) throws IOException
+  public void writeHeader( int filelength, int shptype, SHPEnvelope mbr ) throws IOException
   {
     header = new byte[ShapeConst.SHAPE_FILE_HEADER_LENGTH];
 
@@ -202,7 +205,7 @@ public class FileHeader
    * Reads and parses the header of the file. Values from the header <BR>
    * are stored in the fields of this class. <BR>
    */
-  private void readHeader( ) throws IOException
+  private void readHeader() throws IOException
   {
     header = new byte[ShapeConst.SHAPE_FILE_HEADER_LENGTH];
 
@@ -213,7 +216,7 @@ public class FileHeader
 
     rafShp.read( header, 0, ShapeConst.SHAPE_FILE_HEADER_LENGTH );
 
-    final int fileCode = ByteUtils.readBEInt( header, 0 );
+    int fileCode = ByteUtils.readBEInt( header, 0 );
 
     if( fileCode != ShapeConst.SHAPE_FILE_CODE )
       throw new IOException( "Invalid file code, " + "probably not a shape file" );

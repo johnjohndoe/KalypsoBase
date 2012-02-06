@@ -55,7 +55,7 @@ public class PrefixSuffixFilter implements FilenameFilter
 
   private final String m_suffix;
 
-  public PrefixSuffixFilter( final String prefix, final String suffix )
+  public PrefixSuffixFilter( String prefix, String suffix )
   {
     if( prefix == null || suffix == null )
       throw new IllegalArgumentException( "Parameters prefix/suffix must not be null" );
@@ -68,7 +68,7 @@ public class PrefixSuffixFilter implements FilenameFilter
    * @see java.io.FilenameFilter#accept(java.io.File, java.lang.String)
    */
   @Override
-  public boolean accept( final File dir, final String name )
+  public boolean accept( File dir, String name )
   {
     if( name.startsWith( m_prefix ) && name.endsWith( m_suffix ) )
       return true;

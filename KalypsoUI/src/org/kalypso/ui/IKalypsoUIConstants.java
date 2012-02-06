@@ -40,8 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui;
 
-import org.kalypso.ui.repository.view.RepositoryExplorerPart;
-
 /**
  * Constants for the Kalypso UI. Not intended to be implemented nor extended.
  * 
@@ -49,12 +47,18 @@ import org.kalypso.ui.repository.view.RepositoryExplorerPart;
  */
 public interface IKalypsoUIConstants
 {
+  /** Observation Diagram View identifier (value <code>org.kalypso.ogc.sensor.view.DiagramViewPart</code>) */
+  public final static String ID_OBSDIAGRAM_VIEW = "org.kalypso.ogc.sensor.view.DiagramViewPart"; //$NON-NLS-1$
 
-  public final static String ID_REPOSITORY_VIEW = RepositoryExplorerPart.ID;
+  /** Observation Table View identifier (value <code>org.kalypso.ogc.sensor.view.TableViewPart</code>) */
+  public final static String ID_OBSTABLE_VIEW = "org.kalypso.ogc.sensor.view.TableViewPart"; //$NON-NLS-1$
 
-// public static final String MODELER_PERSPECTIVE = ModelerPerspectiveFactory.ID;
+  /** Repository View identifier (value <code>org.kalypso.ui.repository.view.RepositoryExplorerPart</code>) */
+  public final static String ID_REPOSITORY_VIEW = "org.kalypso.ui.repository.view.RepositoryExplorerPart"; //$NON-NLS-1$
 
-// public static final String REPOSITORY_PERSPECTIVE = ObservationRepositoryPerspectiveFactory.ID;
+  public static final String MODELER_PERSPECTIVE = "org.kalypso.ui.perspectives.ModelerPerspectiveFactory"; //$NON-NLS-1$
+
+  public static final String REPOSITORY_PERSPECTIVE = "org.kalypso.ui.perspectives.ObservationRepositoryPerspectiveFactory"; //$NON-NLS-1$
 
   /**
    * Constant for system property intended to be defined in config.ini.
@@ -62,7 +66,7 @@ public interface IKalypsoUIConstants
    * if true, the pool asks to save released objects if they are dirty.
    * </p>
    */
-//  public static final String CONFIG_INI_DO_ASK_FOR_POOL_SAVE = "kalypso.ask_for_pool_save"; //$NON-NLS-1$
+  public static final String CONFIG_INI_DO_ASK_FOR_POOL_SAVE = "kalypso.ask_for_pool_save"; //$NON-NLS-1$
 
   /**
    * The property, which marks a theme as movie theme.

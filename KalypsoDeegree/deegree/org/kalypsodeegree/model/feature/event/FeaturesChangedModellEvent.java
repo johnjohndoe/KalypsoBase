@@ -54,6 +54,7 @@ public class FeaturesChangedModellEvent extends ModellEvent implements IGMLWorks
     super( workspace, FEATURE_CHANGE );
     m_workspace = workspace;
     m_features = features;
+    
 
 // // reset cached values for changed features
 // for ( final Feature lFeature: m_features ) {

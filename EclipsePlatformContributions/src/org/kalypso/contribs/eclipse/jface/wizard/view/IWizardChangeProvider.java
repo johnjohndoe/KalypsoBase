@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.wizard.view;
 
+
 /**
  * Add listener for wizard changements to a wizard container.
  * 

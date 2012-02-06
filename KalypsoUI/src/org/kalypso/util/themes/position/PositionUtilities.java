@@ -109,9 +109,9 @@ public class PositionUtilities
    * @return The horizontal position, if it is correct. Otherwise {@link PositionUtilities#RIGHT}. -1 if
    *         horizontalProperty could not be parsed to an integer.
    */
-  public static int checkHorizontalPosition( final String horizontalProperty )
+  public static int checkHorizontalPosition( String horizontalProperty )
   {
-    final Integer horizontal = NumberUtils.parseQuietInteger( horizontalProperty );
+    Integer horizontal = NumberUtils.parseQuietInteger( horizontalProperty );
     if( horizontal != null )
       return PositionUtilities.checkHorizontalPosition( horizontal.intValue() );
 
@@ -127,9 +127,9 @@ public class PositionUtilities
    * @return The vertical position, if it is correct. Otherwise {@link PositionUtilities#BOTTOM}. -1 if
    *         horizontalProperty could not be parsed to an integer.
    */
-  public static int checkVerticalPosition( final String verticalProperty )
+  public static int checkVerticalPosition( String verticalProperty )
   {
-    final Integer vertical = NumberUtils.parseQuietInteger( verticalProperty );
+    Integer vertical = NumberUtils.parseQuietInteger( verticalProperty );
     if( vertical != null )
       return PositionUtilities.checkVerticalPosition( vertical.intValue() );
 
@@ -144,7 +144,7 @@ public class PositionUtilities
    *          The horizontal position to be checked.
    * @return The horizontal position, if it is correct. Otherwise {@link PositionUtilities#RIGHT}.
    */
-  public static int checkHorizontalPosition( final int horizontal )
+  public static int checkHorizontalPosition( int horizontal )
   {
     if( (horizontal & PositionUtilities.LEFT) != 0 )
       return horizontal;
@@ -166,7 +166,7 @@ public class PositionUtilities
    *          The vertical position to be checked.
    * @return The vertical position, if it is correct. Otherwise {@link PositionUtilities#BOTTOM}.
    */
-  public static int checkVerticalPosition( final int vertical )
+  public static int checkVerticalPosition( int vertical )
   {
     if( (vertical & PositionUtilities.TOP) != 0 )
       return vertical;
@@ -193,15 +193,15 @@ public class PositionUtilities
    *          The vertical position.
    * @return The position of the image in the given graphics context.
    */
-  public static LegendCoordinate determinePosition( final Graphics g, final Image image, final int horizontal, final int vertical )
+  public static LegendCoordinate determinePosition( Graphics g, Image image, int horizontal, int vertical )
   {
     /* Get the dimensions of the drawable area. */
-    final int widthMax = g.getClipBounds().width;
-    final int heightMax = g.getClipBounds().height;
+    int widthMax = g.getClipBounds().width;
+    int heightMax = g.getClipBounds().height;
 
     /* Get the dimensions of the image. */
-    final int widthImage = image.getWidth( null );
-    final int heightImage = image.getHeight( null );
+    int widthImage = image.getWidth( null );
+    int heightImage = image.getHeight( null );
 
     /* There are cases, regarding the x coordinate. */
     int x = widthMax - widthImage;

@@ -59,7 +59,7 @@ import org.kalypso.gml.ui.i18n.Messages;
  */
 public class PathIsDirectoryValidator extends TypedValidator<IPath>
 {
-  private static final String DEFAULT_MESSAGE = Messages.getString( "PathIsDirectoryValidator_0" ); //$NON-NLS-1$
+  private static final String DEFAULT_MESSAGE = Messages.getString("PathIsDirectoryValidator_0"); //$NON-NLS-1$
 
   public PathIsDirectoryValidator( final int severity )
   {

@@ -42,24 +42,45 @@ package de.openali.odysseus.chart.framework.view;
 
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Canvas;
 
+import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 
 /**
  * @author kimwerner
  */
-public interface IChartComposite extends IChartView
+public interface IChartComposite
 {
-  IChartHandlerManager getPlotHandler( );
+  void addChartEventListener( IChartModelEventListener listener );
+
+  void removeChartEventListener( IChartModelEventListener listener );
+
+  IChartModel getChartModel( );
+
+  Canvas getPlot( );
 
   Rectangle getPlotRect( );
 
-  void invalidate( );
+  EditInfo getTooltipInfo( );
+
+  Point screen2plotPoint( Point screen );
+
+  Point plotPoint2screen( Point plotPoint );
 
   void setDragArea( Rectangle dragRect );
 
   void setEditInfo( final EditInfo editInfo );
 
   void setPanOffset( final IAxis[] axes, final Point start, final Point end );
+
+  void setTooltipInfo( EditInfo tooltipInfo );
+
+  void invalidate( );
+
+  IPlotHandler getPlotHandler( );
+
+  boolean isDisposed( );
 }

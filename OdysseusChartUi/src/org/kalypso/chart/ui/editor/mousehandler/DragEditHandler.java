@@ -3,7 +3,6 @@ package org.kalypso.chart.ui.editor.mousehandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
-import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
@@ -49,6 +48,10 @@ public class DragEditHandler extends AbstractChartDragHandler
     return false;
   }
 
+  /**
+   * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartHandler#doMouseMoveAction(org.eclipse.swt.graphics.Point,
+   *      org.eclipse.swt.graphics.Point, de.openali.odysseus.chart.framework.model.layer.EditInfo)
+   */
   @Override
   public void doMouseMoveAction( final Point start, final EditInfo editInfo )
   {
@@ -64,6 +67,10 @@ public class DragEditHandler extends AbstractChartDragHandler
     }
   }
 
+  /**
+   * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartHandler#doMouseUpAction(org.eclipse.swt.graphics.Point,
+   *      org.eclipse.swt.graphics.Point, de.openali.odysseus.chart.framework.model.layer.EditInfo)
+   */
   @Override
   public void doMouseUpAction( final Point start, final EditInfo editInfo )
   {
@@ -78,10 +85,13 @@ public class DragEditHandler extends AbstractChartDragHandler
     }
   }
 
+  /**
+   * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartDragHandler#mouseMove(org.eclipse.swt.events.MouseEvent)
+   */
   @Override
   public void mouseMove( final MouseEvent e )
   {
-    if( canSnap( ChartHandlerUtilities.screen2plotPoint( new Point( e.x, e.y ), getChart().getPlotRect() ) ) )
+    if( canSnap( getChart().screen2plotPoint( new Point( e.x, e.y ) ) ) )
       setCursor( SWT.CURSOR_HAND );
     else
       setCursor( SWT.CURSOR_ARROW );

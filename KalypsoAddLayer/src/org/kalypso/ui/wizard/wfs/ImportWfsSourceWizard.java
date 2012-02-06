@@ -54,14 +54,16 @@ import org.apache.commons.io.IOUtils;
 import org.deegree.datatypes.QualifiedName;
 import org.deegree.ogcwebservices.wfs.capabilities.WFSFeatureType;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.loader.WfsLoader;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoServiceConstants;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.i18n.Messages;
-import org.kalypso.ui.wizard.AbstractDataImportWizard;
+import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 import org.kalypsodeegree.filterencoding.ElseFilter;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.visitor.TransformSRSVisitor;
@@ -72,85 +74,87 @@ import org.kalypsodeegree_impl.filterencoding.FeatureFilter;
 /**
  * @author Kuepferle, doemming
  */
-public class ImportWfsSourceWizard extends AbstractDataImportWizard
+public class ImportWfsSourceWizard extends Wizard implements IKalypsoDataImportWizard
 {
   private ImportWfsWizardPage m_importWFSPage;
+
+  private ICommandTarget m_outlineviewer;
 
   private List<String> m_catalog;
 
   private ImportWfsFilterWizardPage m_filterWFSPage;
 
+  private IKalypsoLayerModell m_modell;
+
+  /**
+   * @see org.eclipse.jface.wizard.IWizard#performFinish()
+   */
   @Override
   public boolean performFinish( )
   {
-    final IKalypsoLayerModell mapModell = getMapModel();
-    if( mapModell == null )
-      return true;
-
-    try
+    final IKalypsoLayerModell mapModell = m_modell;
+    if( mapModell != null )
     {
-      final WFSFeatureType[] layers = m_importWFSPage.getChoosenFeatureLayer();
-      for( final WFSFeatureType featureType : layers )
+      try
       {
-        final Filter complexFilter = m_importWFSPage.getFilter( featureType );
-        final Filter simpleFilter = m_filterWFSPage.getFilter();
-        final Filter mergedFilter = FilterUtilites.mergeFilters( complexFilter, simpleFilter );
-
-        final String xml = buildXml( featureType, mergedFilter );
-
-        // TODO here the featurePath is set to featureMember because this is
-        // the top feature of the GMLWorkspace
-        // it must be implemented to only set the name of the feature
-        // (relative path of feature)
-
-        final StringBuffer source = new StringBuffer();
-        final QualifiedName qNameFT = featureType.getName();
-        source.append( "#" ).append( WfsLoader.KEY_URL ).append( "=" ).append( m_importWFSPage.getUri() ); //$NON-NLS-1$ //$NON-NLS-2$
-        source.append( "#" ).append( WfsLoader.KEY_FEATURETYPE ).append( "=" ).append( qNameFT.getLocalName() ); //$NON-NLS-1$ //$NON-NLS-2$
-        final String namespaceURI = qNameFT.getNamespace().toString();
-        if( namespaceURI != null && namespaceURI.length() > 0 )
-          source.append( "#" ).append( WfsLoader.KEY_FEATURETYPENAMESPACE ).append( "=" ).append( namespaceURI ); //$NON-NLS-1$ //$NON-NLS-2$
-
-        if( xml != null )
-          source.append( "#" ).append( WfsLoader.KEY_FILTER ).append( "=" ).append( xml ); //$NON-NLS-1$ //$NON-NLS-2$
-        if( m_filterWFSPage.doFilterMaxFeatures() )
+        final WFSFeatureType[] layers = m_importWFSPage.getChoosenFeatureLayer();
+        for( final WFSFeatureType featureType : layers )
         {
-          final int maxfeatures = m_filterWFSPage.getMaxFeatures();
-          source.append( "#" ).append( WfsLoader.KEY_MAXFEATURE ).append( "=" ).append( Integer.toString( maxfeatures ) ); //$NON-NLS-1$ //$NON-NLS-2$
-        }
+          final Filter complexFilter = m_importWFSPage.getFilter( featureType );
+          final Filter simpleFilter = m_filterWFSPage.getFilter();
+          final Filter mergedFilter = FilterUtilites.mergeFilters( complexFilter, simpleFilter );
 
-        final String featurePath = "featureMember[" + qNameFT.getLocalName() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
-        String title = featureType.getTitle();
-        if( title == null || title.isEmpty() )
-          title = qNameFT.getLocalName();
-        final AddThemeCommand command = new AddThemeCommand( mapModell, title, "wfs", featurePath, source.toString() ); //$NON-NLS-1$
-        postCommand( command, null );
+          final String xml;
+          if( mergedFilter instanceof ComplexFilter )
+            xml = transformToRemoteCRS( (ComplexFilter) mergedFilter, featureType.getDefaultSRS().toString() );
+          else if( mergedFilter instanceof FeatureFilter )
+            xml = ((FeatureFilter) mergedFilter).toXML().toString();
+          else if( mergedFilter instanceof ElseFilter )
+            xml = ((ElseFilter) mergedFilter).toXML().toString();
+          else
+            xml = null;
+          // TODO here the featurePath is set to featureMember because this is
+          // the top feature of the GMLWorkspace
+          // it must be implemented to only set the name of the feature
+          // (relative path of feature)
+
+          final StringBuffer source = new StringBuffer();
+          final QualifiedName qNameFT = featureType.getName();
+          source.append( "#" ).append( WfsLoader.KEY_URL ).append( "=" ).append( m_importWFSPage.getUri() ); //$NON-NLS-1$ //$NON-NLS-2$
+          source.append( "#" ).append( WfsLoader.KEY_FEATURETYPE ).append( "=" ).append( qNameFT.getLocalName() ); //$NON-NLS-1$ //$NON-NLS-2$
+          final String namespaceURI = qNameFT.getNamespace().toString();
+          if( namespaceURI != null && namespaceURI.length() > 0 )
+            source.append( "#" ).append( WfsLoader.KEY_FEATURETYPENAMESPACE ).append( "=" ).append( namespaceURI ); //$NON-NLS-1$ //$NON-NLS-2$
+
+          if( xml != null )
+            source.append( "#" ).append( WfsLoader.KEY_FILTER ).append( "=" ).append( xml ); //$NON-NLS-1$ //$NON-NLS-2$
+          if( m_filterWFSPage.doFilterMaxFeatures() )
+          {
+            final int maxfeatures = m_filterWFSPage.getMaxFeatures();
+            source.append( "#" ).append( WfsLoader.KEY_MAXFEATURE ).append( "=" ).append( Integer.toString( maxfeatures ) ); //$NON-NLS-1$ //$NON-NLS-2$
+          }
+          final String featurePath = "featureMember[" + qNameFT.getLocalName() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
+          String title = featureType.getTitle();
+          if( title == null || title.isEmpty() )
+            title = qNameFT.getLocalName();
+          final AddThemeCommand command = new AddThemeCommand( mapModell, title, "wfs", featurePath, source.toString() ); //$NON-NLS-1$
+          m_outlineviewer.postCommand( command, null );
+        }
+      }
+      catch( final OperationNotSupportedException e )
+      {
+        e.printStackTrace();
+        m_filterWFSPage.setErrorMessage( e.getMessage() );
+        return false;
       }
     }
-    catch( final OperationNotSupportedException e )
-    {
-      e.printStackTrace();
-      m_filterWFSPage.setErrorMessage( e.getMessage() );
-      return false;
-    }
-
     return true;
   }
 
-  private String buildXml( final WFSFeatureType featureType, final Filter mergedFilter )
-  {
-    if( mergedFilter instanceof ComplexFilter )
-      return transformToRemoteCRS( (ComplexFilter) mergedFilter, featureType.getDefaultSRS().toString() );
-
-    if( mergedFilter instanceof FeatureFilter )
-      return ((FeatureFilter) mergedFilter).toXML().toString();
-
-    if( mergedFilter instanceof ElseFilter )
-      return ((ElseFilter) mergedFilter).toXML().toString();
-
-    return null;
-  }
-
+  /**
+   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
+   *      org.eclipse.jface.viewers.IStructuredSelection)
+   */
   @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
@@ -176,7 +180,7 @@ public class ImportWfsSourceWizard extends AbstractDataImportWizard
   public void addPages( )
   {
     m_importWFSPage = new ImportWfsWizardPage( "WfsImportPage", Messages.getString( "org.kalypso.ui.wizard.wfs.ImportWfsSourceWizard.0" ), ImageProvider.IMAGE_UTIL_UPLOAD_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_filterWFSPage = new ImportWfsFilterWizardPage( "WfsImportFilterPage", Messages.getString( "org.kalypso.ui.wizard.wfs.ImportWfsSourceWizard.1" ), ImageProvider.IMAGE_UTIL_IMPORT_WIZARD, getMapModel() ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_filterWFSPage = new ImportWfsFilterWizardPage( "WfsImportFilterPage", Messages.getString( "org.kalypso.ui.wizard.wfs.ImportWfsSourceWizard.1" ), ImageProvider.IMAGE_UTIL_IMPORT_WIZARD, m_modell ); //$NON-NLS-1$ //$NON-NLS-2$
     addPage( m_importWFSPage );
     addPage( m_filterWFSPage );
   }
@@ -184,8 +188,17 @@ public class ImportWfsSourceWizard extends AbstractDataImportWizard
   @Override
   public boolean performCancel( )
   {
-    dispose();
+    this.dispose();
     return true;
+  }
+
+  /**
+   * @see org.kalypso.ui.wizard.data.IKalypsoDataImportWizard#setOutlineViewer(org.kalypso.ogc.gml.outline.GisMapOutlineViewer)
+   */
+  @Override
+  public void setCommandTarget( final ICommandTarget commandTarget )
+  {
+    m_outlineviewer = commandTarget;
   }
 
   public List<String> getCatalog( )
@@ -201,7 +214,7 @@ public class ImportWfsSourceWizard extends AbstractDataImportWizard
     do
     {
       if( line.startsWith( KalypsoServiceConstants.WFS_LINK_TYPE ) )
-        catalog.add( line.split( "=" )[1] ); //$NON-NLS-1$
+        catalog.add( (line.split( "=" ))[1] ); //$NON-NLS-1$
 
       line = br.readLine();
     }
@@ -217,6 +230,15 @@ public class ImportWfsSourceWizard extends AbstractDataImportWizard
     visitor.visit( filter.getOperation() );
     xml = filter.toXML().toString();
     return xml;
+  }
+
+  /**
+   * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setMapModel(org.kalypso.ogc.gml.IKalypsoLayerModell)
+   */
+  @Override
+  public void setMapModel( final IKalypsoLayerModell modell )
+  {
+    m_modell = modell;
   }
 
   public void setCatalog( final List<String> catalog )

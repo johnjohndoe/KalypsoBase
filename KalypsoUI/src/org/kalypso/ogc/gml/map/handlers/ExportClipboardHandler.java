@@ -73,7 +73,7 @@ public class ExportClipboardHandler extends AbstractHandler
    * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
+  public Object execute( ExecutionEvent event ) throws ExecutionException
   {
     /* The clipboard. */
     Clipboard clipboard = null;
@@ -81,19 +81,19 @@ public class ExportClipboardHandler extends AbstractHandler
     try
     {
       /* Get the evaluation context. */
-      final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+      IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
       /* Get the shell. */
-      final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+      Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
 
       /* Get the map panel. */
-      final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
+      IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
 
       /* Create the job. */
-      final ExportImageOperation job = new ExportImageOperation( mapPanel );
+      ExportImageOperation job = new ExportImageOperation( mapPanel );
 
       /* Execute the job. */
-      final IStatus status = ProgressUtilities.busyCursorWhile( job );
+      IStatus status = ProgressUtilities.busyCursorWhile( job );
 
       /* If the export has failed, show an error to the user. */
       if( !status.isOK() )
@@ -110,7 +110,7 @@ public class ExportClipboardHandler extends AbstractHandler
 
       return null;
     }
-    catch( final Exception ex )
+    catch( Exception ex )
     {
       throw new ExecutionException( ex.getMessage(), ex );
     }

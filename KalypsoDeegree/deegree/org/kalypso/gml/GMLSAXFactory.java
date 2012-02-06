@@ -63,7 +63,7 @@ import org.kalypso.gmlschema.types.ISimpleMarshallingTypeHandler;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IXLinkedFeature;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.ErrorHandler;
@@ -130,7 +130,7 @@ public class GMLSAXFactory
     }
 
     // generate used prefixes
-    final IGMLSchema gmlSchema = rootFeature.getFeatureType().getGMLSchema();
+    final IGMLSchema gmlSchema = workspace.getGMLSchema();
     final IFeatureType[] featureTypes = gmlSchema.getAllFeatureTypes();
     for( final IFeatureType element : featureTypes )
     {
@@ -226,7 +226,7 @@ public class GMLSAXFactory
         final List< ? > values = (List< ? >) value;
         if( values != null )
         {
-          /* FIXME: ConcurrentModificationExceptions happens sometimes here */
+          /* FIXME: ConcurrentModificationExceptions happens sometimes here  */
           for( final Object propertyValue : values )
             processProperty( pt, propertyValue );
         }
@@ -275,7 +275,7 @@ public class GMLSAXFactory
     {
       // Write the feature as content. If it is a reference (i.e. no feature), nothing is written, as the href was
       // already set as an attribute
-      if( propertyValue instanceof Feature && !(propertyValue instanceof IXLinkedFeature) )
+      if( propertyValue instanceof Feature && !(propertyValue instanceof XLinkedFeature_Impl) )
         processFeature( (Feature) propertyValue, new AttributesImpl() );
     }
     else if( pt instanceof IValuePropertyType )
@@ -296,8 +296,8 @@ public class GMLSAXFactory
       final String href;
       if( propertyValue instanceof String )
         href = "#" + (String) propertyValue;
-      else if( propertyValue instanceof IXLinkedFeature )
-        href = ((IXLinkedFeature) propertyValue).getHref();
+      else if( propertyValue instanceof XLinkedFeature_Impl )
+        href = ((XLinkedFeature_Impl) propertyValue).getHref();
       else
         href = null;
 
@@ -308,7 +308,7 @@ public class GMLSAXFactory
     return atts;
   }
 
-  private String printSimpleValue( final IValuePropertyType pt, final ISimpleMarshallingTypeHandler<Object> th, final Object propertyValue ) throws SAXException
+  private String  printSimpleValue( final IValuePropertyType pt, final ISimpleMarshallingTypeHandler<Object> th, final Object propertyValue ) throws SAXException
   {
     if( pt.isFixed() )
       return pt.getFixed();
@@ -332,7 +332,7 @@ public class GMLSAXFactory
   {
     final IMarshallingTypeHandler th = pt.getTypeHandler();
 
-    if( th instanceof ISimpleMarshallingTypeHandler< ? > )
+    if( th instanceof ISimpleMarshallingTypeHandler<?> )
     {
       final String xmlString = printSimpleValue( pt, (ISimpleMarshallingTypeHandler<Object>) th, propertyValue );
       if( xmlString != null )

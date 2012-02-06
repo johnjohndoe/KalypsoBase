@@ -68,7 +68,7 @@ public class DictionaryEntry extends Job implements IPoolListener
 
   public DictionaryEntry( final IPoolableObjectType key )
   {
-    super( Messages.getString( "org.kalypso.ogc.gml.dict.DictionaryEntry.waitingforresource" ) + key.getLocation() ); //$NON-NLS-1$
+    super( Messages.getString("org.kalypso.ogc.gml.dict.DictionaryEntry.waitingforresource") + key.getLocation() ); //$NON-NLS-1$
 
     m_key = key;
 

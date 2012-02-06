@@ -65,7 +65,7 @@ public class FeatureAssociationActionFilterAdapterFactory implements IAdapterFac
   {
     if( adapterType == IActionFilter.class )
       return m_featureActionFilter;
-
+    
     return null;
   }
 
@@ -75,6 +75,6 @@ public class FeatureAssociationActionFilterAdapterFactory implements IAdapterFac
   @Override
   public Class[] getAdapterList( )
   {
-    return new Class[] { IActionFilter.class };
+    return new Class[]{ IActionFilter.class };
   }
 }

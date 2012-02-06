@@ -42,7 +42,6 @@ package de.renew.workflow.base.impl;
 
 import java.util.ResourceBundle;
 
-import org.apache.commons.lang3.StringUtils;
 import org.kalypso.commons.i18n.ResourceBundleUtils;
 
 import de.renew.workflow.base.EActivityType;
@@ -124,10 +123,10 @@ public class Task_Impl implements ITask
       return null;
 
     final String value = m_help.getValue();
-    if( StringUtils.isBlank( value ) )
+    if( value == null || value.trim().isEmpty() )
       return null;
 
-    return ResourceBundleUtils.getI18NString( value, m_resourceBundle );
+    return value;
   }
 
   protected ResourceBundle getResourceBundle( )
@@ -135,6 +134,9 @@ public class Task_Impl implements ITask
     return m_resourceBundle;
   }
 
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
   @Override
   public boolean equals( final Object obj )
   {
@@ -148,12 +150,18 @@ public class Task_Impl implements ITask
     return super.equals( obj );
   }
 
+  /**
+   * @see java.lang.Object#hashCode()
+   */
   @Override
   public int hashCode( )
   {
     return getURI().hashCode();
   }
 
+  /**
+   * @see java.lang.Object#toString()
+   */
   @Override
   public String toString( )
   {

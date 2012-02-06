@@ -52,8 +52,8 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 
 /**
- * {@link org.kalypso.contribs.eclipse.jobs.BufferPaintJob.IPaintable} implementation that renders a map layer.
- * 
+ *{@link org.kalypso.contribs.eclipse.jobs.BufferPaintJob.IPaintable} implementation that renders a map layer.
+ *
  * @author Gernot Belger
  */
 public class ThemePaintable implements IPaintable

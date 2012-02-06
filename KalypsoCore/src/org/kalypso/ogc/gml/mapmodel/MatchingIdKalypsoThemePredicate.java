@@ -52,7 +52,7 @@ public class MatchingIdKalypsoThemePredicate implements IKalypsoThemePredicate
   /**
    * The id to search for.
    */
-  private final String m_id;
+  private String m_id;
 
   /**
    * The constructor.
@@ -60,7 +60,7 @@ public class MatchingIdKalypsoThemePredicate implements IKalypsoThemePredicate
    * @param id
    *          The id to search for.
    */
-  public MatchingIdKalypsoThemePredicate( final String id )
+  public MatchingIdKalypsoThemePredicate( String id )
   {
     m_id = id;
   }
@@ -69,7 +69,7 @@ public class MatchingIdKalypsoThemePredicate implements IKalypsoThemePredicate
    * @see org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate#decide(org.kalypso.ogc.gml.IKalypsoTheme)
    */
   @Override
-  public boolean decide( final IKalypsoTheme theme )
+  public boolean decide( IKalypsoTheme theme )
   {
     if( m_id.equals( theme.getId() ) )
       return true;

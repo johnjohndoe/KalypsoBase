@@ -67,7 +67,7 @@ public class UrlUtilities implements IUrlResolver
    * <p>
    * Resolves a (potential) relative URL to a base URL.
    * </p>
-   *
+   * 
    * @param baseURL
    *          URL, to which the relative url will be resolved
    * @param relativeURL
@@ -134,7 +134,7 @@ public class UrlUtilities implements IUrlResolver
 
   /**
    * Erzeugt den Reader anhand der URL und {@link URLConnection#getContentEncoding()}.
-   *
+   * 
    * @see org.kalypso.contribs.java.net.IUrlResolver#createReader(java.net.URL)
    */
   @Override
@@ -173,7 +173,7 @@ public class UrlUtilities implements IUrlResolver
   /**
    * Parses the query part of an {@link URL} into a hash map (param name mapping to param value).<br>
    * If the query part contains a parameter twice, the second parameter wins.
-   *
+   * 
    * @return Always returns a new {@link Map} object. The empty map, if the given {@link URL} has no query part.
    * @throws IllegalArgumentException
    *           If the query part of the URL is not strictly ?param1=value&param2=value2&...
@@ -226,7 +226,7 @@ public class UrlUtilities implements IUrlResolver
 
   /**
    * Reads the contents of a {@link URL} into a {@link String}. The stream is always closed.
-   *
+   * 
    * @param url
    *          the url to read, must not be <code>null</code>
    * @param encoding
@@ -276,30 +276,4 @@ public class UrlUtilities implements IUrlResolver
     }
   }
 
-  /**
-   * Create a new {@link URL} object via {@link URL#URL(String)}.<br/>
-   * Catches thrown exceptions and returns <code>null</code> instead.
-   */
-  public static URL createQuiet( final String spec )
-  {
-    try
-    {
-      return new URL( spec );
-    }
-    catch( final MalformedURLException e )
-    {
-      e.printStackTrace();
-      return null;
-    }
-  }
-
-  public static URL removeQuery( final URL location ) throws MalformedURLException
-  {
-    final String utostring = location.toString();
-    final int ix = utostring.indexOf( '?' );
-    if( ix != -1 )
-      return new URL( utostring.substring( 0, ix ) );
-
-    return location;
-  }
 }

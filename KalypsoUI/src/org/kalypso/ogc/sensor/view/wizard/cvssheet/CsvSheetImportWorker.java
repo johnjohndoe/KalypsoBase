@@ -50,6 +50,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -99,18 +100,18 @@ public class CsvSheetImportWorker implements ICoreRunnableWithProgress
     final DECIMAL_NUMBER_SEPERATORS dSep = (DECIMAL_NUMBER_SEPERATORS) m_model.getValue( TSM_KEY.eCsvDecimalNumberSeperator );
 
     /* axis date */
-    final IAxis defaultDate = TimeseriesUtils.createDefaultAxis( ITimeseriesConstants.TYPE_DATE, true );
+    final IAxis defaultDate = TimeseriesUtils.createDefaulAxis( ITimeseriesConstants.TYPE_DATE, true );
     final SimpleAxis simpleDateAxis = new SimpleAxis( defaultDate );
     simpleDateAxis.setName( "date" ); //$NON-NLS-1$
 
     /* axis values */
     final IAxis axisX;
     if( WQ_KIND.eW.equals( kind ) )
-      axisX = TimeseriesUtils.createDefaultAxis( ITimeseriesConstants.TYPE_WATERLEVEL, false );
+      axisX = TimeseriesUtils.createDefaulAxis( ITimeseriesConstants.TYPE_WATERLEVEL, false );
     else if( WQ_KIND.eQ.equals( kind ) )
-      axisX = TimeseriesUtils.createDefaultAxis( ITimeseriesConstants.TYPE_RUNOFF, false );
+      axisX = TimeseriesUtils.createDefaulAxis( ITimeseriesConstants.TYPE_RUNOFF, false );
     else
-      throw new UnsupportedOperationException();
+      throw new NotImplementedException();
 
     final SimpleAxis simpleDataAxis = new SimpleAxis( axisX );
 
@@ -197,7 +198,7 @@ public class CsvSheetImportWorker implements ICoreRunnableWithProgress
       return new WQTableSet( new WQTable[] { table }, ITimeseriesConstants.TYPE_WATERLEVEL, ITimeseriesConstants.TYPE_DISCHARGE ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
 
   }
 
@@ -231,7 +232,7 @@ public class CsvSheetImportWorker implements ICoreRunnableWithProgress
       final String xmlString = WQTableFactory.createXMLString( wqSet );
 
       if( xmlString != null )
-        mdl.setProperty( ITimeseriesConstants.MD_WQ_TABLE, xmlString ); //$NON-NLS-1$
+        mdl.setProperty( "WQ-Tabelle", xmlString ); //$NON-NLS-1$
     }
 
     /*******************************************************************************************************************

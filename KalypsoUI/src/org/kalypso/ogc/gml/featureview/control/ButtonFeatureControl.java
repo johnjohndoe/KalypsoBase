@@ -73,7 +73,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
 /**
  * This control behaves in two ways: if the type of the proeprty to edit is simple, it opens a fitting dialog to edit
  * the property. If the property is a feature, it just informs its listeners, that it whichs to open that feature.
- *
+ * 
  * @author Gernot Belger
  */
 public class ButtonFeatureControl extends AbstractFeatureControl implements ModellEventListener
@@ -110,7 +110,7 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
   {
     // TODO: should never happen remove if fixed
     if( feature == null )
-      return new NotImplementedFeatureDialog();
+      return new NotImplementedFeatureDialog(  );  
 
     final IFeatureDialogFactory factory = findDialogFactory( listener, pt );
     if( factory == null )
@@ -195,7 +195,7 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
 
   /**
    * Die ButtonControl ist immer valid
-   *
+   * 
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#isValid()
    */
   @Override

@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.featureview;
 
-import java.awt.Insets;
 import java.util.Map;
 
 import org.eclipse.jface.action.ToolBarManager;
@@ -70,7 +69,7 @@ import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
  */
 public class ChartTabItem extends Composite implements IChartPart
 {
-  private final ChartImageComposite m_chartComposite;
+  private final IChartComposite m_chartComposite;
 
   private final EmbeddedSourceToolbarManager m_sourceManager;
 
@@ -87,8 +86,8 @@ public class ChartTabItem extends Composite implements IChartPart
     // remember the feature from the feature control
     chartModel.setData( featureKeyName, feature );
 
-    m_chartComposite = new ChartImageComposite( this, SWT.BORDER, chartModel, new RGB( 255, 255, 255 ), new Insets( 10, 10, 10, 10 ) );
-    m_chartComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    m_chartComposite = new ChartImageComposite( this, SWT.BORDER, chartModel, new RGB( 255, 255, 255 ) );
+    m_chartComposite.getPlot().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     final IWorkbench sourceLocator = PlatformUI.getWorkbench();
     m_sourceManager = new EmbeddedSourceToolbarManager( sourceLocator, ChartSourceProvider.ACTIVE_CHART_NAME, ChartTabItem.this.getChartComposite() );
@@ -113,9 +112,9 @@ public class ChartTabItem extends Composite implements IChartPart
   {
     m_sourceManager.dispose();
 
-    if( m_chartComposite != null && !m_chartComposite.isDisposed() )
+    if( m_chartComposite != null && !m_chartComposite.getPlot().isDisposed() )
     {
-      m_chartComposite.dispose();
+      m_chartComposite.getPlot().dispose();
     }
   }
 }

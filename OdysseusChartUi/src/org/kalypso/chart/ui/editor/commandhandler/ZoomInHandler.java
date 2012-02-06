@@ -14,7 +14,7 @@ import org.kalypso.chart.ui.editor.ElementUpdateHelper;
 import org.kalypso.chart.ui.editor.mousehandler.DragZoomInHandler;
 
 import de.openali.odysseus.chart.framework.view.IChartComposite;
-import de.openali.odysseus.chart.framework.view.IChartHandlerManager;
+import de.openali.odysseus.chart.framework.view.IPlotHandler;
 
 public class ZoomInHandler extends AbstractHandler implements IElementUpdater
 {
@@ -25,7 +25,7 @@ public class ZoomInHandler extends AbstractHandler implements IElementUpdater
 
     final IChartComposite chart = ChartHandlerUtilities.getChartChecked( context );
 
-    final IChartHandlerManager plotHandler = chart.getPlotHandler();
+    final IPlotHandler plotHandler = chart.getPlotHandler();
     plotHandler.activatePlotHandler( new DragZoomInHandler( chart ) );
 
     final IChartPart part = ChartHandlerUtilities.findChartComposite( context );

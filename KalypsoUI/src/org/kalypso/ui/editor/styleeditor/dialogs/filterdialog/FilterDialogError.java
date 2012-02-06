@@ -46,29 +46,29 @@ public class FilterDialogError
 
   private String faultCode = null;
 
-  public FilterDialogError( final FilterDialogTreeNode m_node, final String m_faultCode )
+  public FilterDialogError( FilterDialogTreeNode m_node, String m_faultCode )
   {
-    node = m_node;
-    faultCode = m_faultCode;
+    this.node = m_node;
+    this.faultCode = m_faultCode;
   }
 
-  public String getFaultCode( )
+  public String getFaultCode()
   {
     return faultCode;
   }
 
-  public void setFaultCode( final String m_faultCode )
+  public void setFaultCode( String m_faultCode )
   {
-    faultCode = m_faultCode;
+    this.faultCode = m_faultCode;
   }
 
-  public FilterDialogTreeNode getNode( )
+  public FilterDialogTreeNode getNode()
   {
     return node;
   }
 
-  public void setNode( final FilterDialogTreeNode m_node )
+  public void setNode( FilterDialogTreeNode m_node )
   {
-    node = m_node;
+    this.node = m_node;
   }
 }

@@ -15,7 +15,7 @@ import org.kalypso.chart.ui.editor.mousehandler.ZoomPanMaximizeHandler;
 import org.kalypso.chart.ui.editor.mousehandler.ZoomPanMaximizeHandler.DIRECTION;
 
 import de.openali.odysseus.chart.framework.view.IChartComposite;
-import de.openali.odysseus.chart.framework.view.IChartHandlerManager;
+import de.openali.odysseus.chart.framework.view.IPlotHandler;
 
 public class ZoomPanMaximizeCommandHandler extends AbstractHandler implements IElementUpdater
 {
@@ -25,9 +25,11 @@ public class ZoomPanMaximizeCommandHandler extends AbstractHandler implements IE
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+
     final IChartComposite chart = ChartHandlerUtilities.getChartChecked( context );
 
-    final IChartHandlerManager plotHandler = chart.getPlotHandler();
+
+    final IPlotHandler plotHandler = chart.getPlotHandler();
     m_handler = new ZoomPanMaximizeHandler( chart, getDirection( event ) );
 
     plotHandler.activatePlotHandler( m_handler );

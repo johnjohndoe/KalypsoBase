@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.dialogs.reducepoints;
 
@@ -72,12 +72,11 @@ import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationRunnable;
 import org.kalypso.model.wspm.core.profil.util.DouglasPeuckerHelper;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.model.wspm.ui.i18n.Messages;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationRunnable;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Belger
@@ -151,6 +150,9 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
     setShellStyle( getShellStyle() | SWT.RESIZE );
   }
 
+  /**
+   * @see org.eclipse.jface.dialogs.Dialog#create()
+   */
   @Override
   public void create( )
   {
@@ -162,6 +164,9 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
     updateDialog();
   }
 
+  /**
+   * @see org.eclipse.jface.dialogs.Dialog#close()
+   */
   @Override
   public boolean close( )
   {
@@ -460,16 +465,16 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
   private IStatus performReduce( )
   {
     if( m_provider == null || Double.isNaN( m_distance ) )
-      return new Status( IStatus.WARNING, KalypsoModelWspmUIPlugin.ID, Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.11" ) ); //$NON-NLS-1$
+      return StatusUtilities.createWarningStatus( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.11" ) ); //$NON-NLS-1$
 
     /* Get important values. */
     final double allowedDistance = m_distance;
-    final IProfileRecord[] points = m_provider.getPoints();
+    final IRecord[] points = m_provider.getPoints();
 
     /* Get the profile changes. */
     final IProfilChange[] removeChanges = DouglasPeuckerHelper.reduce( allowedDistance, points, m_profile );
     if( removeChanges.length == 0 )
-      return new Status( IStatus.OK, KalypsoModelWspmUIPlugin.ID, Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.12" ) ); //$NON-NLS-1$
+      return StatusUtilities.createOkStatus( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.12" ) ); //$NON-NLS-1$
 
     /* Create the profile operation. */
     m_operation = new ProfilOperation( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.13" ), m_profile, removeChanges, false ); //$NON-NLS-1$
@@ -483,10 +488,9 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
       return operationStatus;
 
     /* Message for the user. */
+    final String message = org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.14" ) + removeChanges.length + org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.15" ) + points.length + org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.16" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-    final String message = String.format( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.14" ), removeChanges.length, points.length ); //$NON-NLS-3$
-
-    return new Status( IStatus.OK, KalypsoModelWspmUIPlugin.ID, message );
+    return StatusUtilities.createOkStatus( message );
   }
 
   private IStatus resetState( ) throws ExecutionException

@@ -1,7 +1,5 @@
 package de.openali.odysseus.chart.framework.view.impl;
 
-import java.awt.Insets;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -28,15 +26,18 @@ import de.openali.odysseus.chart.framework.OdysseusChartFramework;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
-import de.openali.odysseus.chart.framework.model.event.IMapperRegistryEventListener;
+import de.openali.odysseus.chart.framework.model.event.impl.AbstractMapperRegistryEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.ChartModelEventHandler;
+import de.openali.odysseus.chart.framework.model.figure.IPaintable;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.util.img.ChartPainter;
+import de.openali.odysseus.chart.framework.util.img.ChartTooltipPainter;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
-import de.openali.odysseus.chart.framework.view.IChartHandler;
-import de.openali.odysseus.chart.framework.view.IChartHandlerManager;
+import de.openali.odysseus.chart.framework.view.IPlotHandler;
 
 /**
  * @author kimwerner
@@ -45,13 +46,14 @@ public class ChartImageComposite extends Canvas implements IChartComposite
 {
   private final class InvalidateChartJob extends UIJob
   {
-    public InvalidateChartJob( )
+    public InvalidateChartJob( final String name )
     {
-      super( "Invalidating Chart" );
-      setSystem( true );
-      setUser( false );
+      super( name );
     }
 
+    /**
+     * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
+     */
     @Override
     public IStatus runInUIThread( final IProgressMonitor monitor )
     {
@@ -59,13 +61,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     }
   }
 
-  private final InvalidateChartJob m_invalidateChartJob = new InvalidateChartJob();
-
   private final ChartModelEventHandler m_chartModelEventHandler = new ChartModelEventHandler();
-
-  private final ILayerManagerEventListener m_layerEventListener = new ChartImageLayerManagerEventListener( this );
-
-  private final IMapperRegistryEventListener m_mapperListener = new ChartImageMapperRegistryEventListener( this );
 
   private IChartModel m_model;
 
@@ -79,16 +75,107 @@ public class ChartImageComposite extends Canvas implements IChartComposite
 
   private EditInfo m_editInfo = null;
 
-  private final Insets m_insets;
+  private EditInfo m_tooltipInfo = null;
+
+  private final ChartTooltipPainter m_tooltipPainter = new ChartTooltipPainter();
+
+  private final ILayerManagerEventListener m_layerEventListener = new ILayerManagerEventListener()
+  {
+    /**
+     * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onActivLayerChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+     */
+    @Override
+    public void onActivLayerChanged( final IChartLayer layer )
+    {
+      // do nothing
+    }
+
+    /**
+     * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onLayerAdded(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+     */
+    @Override
+    public void onLayerAdded( final IChartLayer layer )
+    {
+      invalidate();
+    }
+
+    /**
+     * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+     */
+    @Override
+    public void onLayerContentChanged( final IChartLayer layer )
+    {
+      invalidate();
+    }
+
+    /**
+     * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onLayerMoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+     */
+    @Override
+    public void onLayerMoved( final IChartLayer layer )
+    {
+      invalidate();
+    }
+
+    /**
+     * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onLayerRemoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+     */
+    @Override
+    public void onLayerRemoved( final IChartLayer layer )
+    {
+      invalidate();
+    }
+
+    /**
+     * @see de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+     */
+    @Override
+    public void onLayerVisibilityChanged( final IChartLayer layer )
+    {
+      invalidate();
+    }
+  };
+
+  private final AbstractMapperRegistryEventListener m_mapperListener = new AbstractMapperRegistryEventListener()
+  {
+    /**
+     * @see de.openali.odysseus.chart.framework.axis.IMapperRegistryEventListener#onMapperAdded(de.openali.odysseus.chart.framework.axis.IAxis)
+     *      adds an AxisComponent for any newly added axis and reports Axis and its AxisComponent to the AxisRegistry
+     */
+    @Override
+    public void onMapperAdded( final IMapper mapper )
+    {
+      invalidate();
+    }
+
+    /**
+     * @see de.openali.odysseus.chart.framework.impl.model.event.AbstractMapperRegistryEventListener#onMapperRangeChanged(de.openali.odysseus.chart.framework.model.mapper.IMapper)
+     */
+    @Override
+    public void onMapperChanged( final IMapper mapper )
+    {
+      invalidate();
+    }
+
+    /**
+     * @see de.openali.odysseus.chart.framework.axis.IMapperRegistryEventListener#onMapperRemoved(de.openali.odysseus.chart.framework.axis.IAxis)
+     *      TODO: not implemented yet (or is it? - right now there's no way to remove an axis, so this should be checked
+     *      in the future)
+     */
+    @Override
+    public void onMapperRemoved( final IMapper mapper )
+    {
+      invalidate();
+    }
+  };
+
+
+
+  private final InvalidateChartJob m_invalidateChartJob = new InvalidateChartJob( "" );
 
   private final ChartImagePlotHandler m_plotHandler = new ChartImagePlotHandler( this );
 
   public ChartImageComposite( final Composite parent, final int style, final IChartModel model, final RGB backgroundRGB )
-  {
-    this( parent, style, model, backgroundRGB, new Insets( 3, 3, 3, 3 ) );
-  }
-
-  public ChartImageComposite( final Composite parent, final int style, final IChartModel model, final RGB backgroundRGB, final Insets insets )
   {
     super( parent, style | SWT.DOUBLE_BUFFERED );
 
@@ -119,16 +206,21 @@ public class ChartImageComposite extends Canvas implements IChartComposite
       }
     } );
 
-    m_insets = insets;
-
     setBackground( OdysseusChartFramework.getDefault().getColorRegistry().getResource( parent.getDisplay(), backgroundRGB ) );
     setChartModel( model );
   }
 
+  /**
+   * @see org.eclipse.swt.widgets.Widget#dispose()
+   */
   @Override
   public void dispose( )
   {
     unregisterListener();
+
+//    if( m_tooltipHandler != null )
+//      m_tooltipHandler.dispose();
+
     if( m_image != null )
       m_image.dispose();
 
@@ -146,10 +238,25 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     return m_editInfo;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.view.IChartComposite#getPlot()
+   */
+  @Override
+  public Canvas getPlot( )
+  {
+    return this;
+  }
+
   @Override
   public final Rectangle getPlotRect( )
   {
     return m_plotRect;
+  }
+
+  @Override
+  public EditInfo getTooltipInfo( )
+  {
+    return m_tooltipInfo;
   }
 
   @Override
@@ -183,7 +290,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
       return Status.OK_STATUS;
 
     final Rectangle panel = getClientArea();
-    final ChartPainter chartPainter = new ChartPainter( model, panel, m_insets );// ,new Insets(25,25,25,25));
+    final ChartPainter chartPainter = new ChartPainter( model, panel );// ,new Insets(25,25,25,25));
     m_plotRect = RectangleUtils.inflateRect( panel, chartPainter.getPlotInsets() );
     m_image = chartPainter.createImage( m_panOffset );
 
@@ -208,14 +315,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
 
       paintDragArea( gc );
       paintEditInfo( gc );
-
-      final IChartHandlerManager manager = getPlotHandler();
-      final IChartHandler[] handlers = manager.getActiveHandlers();
-      for( final IChartHandler handler : handlers )
-      {
-        handler.paintControl( paintEvent );
-      }
-
+      paintTooltipInfo( gc );
     }
     finally
     {
@@ -257,6 +357,27 @@ public class ChartImageComposite extends Canvas implements IChartComposite
 
   }
 
+  protected final void paintTooltipInfo( final GC gc )
+  {
+    if( m_tooltipInfo == null )
+      return;
+
+    final IPaintable hoverFigure = m_tooltipInfo.getHoverFigure();
+    if( hoverFigure != null )
+      hoverFigure.paint( gc );
+
+    m_tooltipPainter.setTooltip( m_tooltipInfo.getText() );
+    m_tooltipPainter.paint( gc, m_tooltipInfo.getPosition() );
+  }
+
+  @Override
+  public final Point plotPoint2screen( final Point plotPoint )
+  {
+    if( m_plotRect == null )
+      return plotPoint;
+    return new Point( plotPoint.x + m_plotRect.x, plotPoint.y + m_plotRect.y );
+  }
+
   private void registerListener( )
   {
     if( m_model == null )
@@ -264,6 +385,15 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     m_model.getLayerManager().addListener( m_layerEventListener );
     m_model.getMapperRegistry().addListener( m_mapperListener );
 
+  }
+
+  @Override
+  public final Point screen2plotPoint( final Point screen )
+  {
+    if( m_plotRect == null )
+      return screen;
+
+    return new Point( screen.x - m_plotRect.x, screen.y - m_plotRect.y );
   }
 
   public void setChartModel( final IChartModel model )
@@ -313,6 +443,15 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     invalidate();
   }
 
+  @Override
+  public void setTooltipInfo( final EditInfo tooltipInfo )
+  {
+    if( m_tooltipInfo == null && tooltipInfo == null )
+      return;
+    m_tooltipInfo = tooltipInfo;
+    redraw();
+  }
+
   protected final void unregisterListener( )
   {
     if( m_model == null )
@@ -322,20 +461,23 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     m_model.getMapperRegistry().removeListener( m_mapperListener );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.view.IChartComposite#getPlotHandler()
+   */
   @Override
-  public IChartHandlerManager getPlotHandler( )
+  public IPlotHandler getPlotHandler( )
   {
     return m_plotHandler;
   }
 
   @Override
-  public void addListener( final IChartModelEventListener listener )
+  public void addChartEventListener( final IChartModelEventListener listener )
   {
     m_chartModelEventHandler.addListener( listener );
   }
 
   @Override
-  public void removeListener( final IChartModelEventListener listener )
+  public void removeChartEventListener( final IChartModelEventListener listener )
   {
     m_chartModelEventHandler.removeListener( listener );
   }

@@ -67,7 +67,7 @@ public class FeatureviewHelper implements IFeatureviewFactory
 {
   public static final int STANDARD_TEXT_FIELD_WIDTH_HINT = 200;
 
-  private final Map<FeatureviewTypeWithContext, ITranslator> m_translators = new HashMap<>();
+  private final Map<FeatureviewType, ITranslator> m_translators = new HashMap<FeatureviewType, ITranslator>();
 
   private boolean m_showTables = true;
 
@@ -76,6 +76,7 @@ public class FeatureviewHelper implements IFeatureviewFactory
   private boolean m_shouldShowButton = true;
 
   private ITranslator m_defaultTranslator = new NullTranslator();
+
 
   /** Generate new templates with or without tables. Cache is cleared. */
   public void setShowTables( final boolean showTable )
@@ -108,14 +109,12 @@ public class FeatureviewHelper implements IFeatureviewFactory
     return m_shouldShowButton;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.featureview.maker.IFeatureviewFactory#get(org.kalypso.gmlschema.feature.IFeatureType,
+   *      org.kalypsodeegree.model.feature.Feature)
+   */
   @Override
-  public FeatureviewTypeWithContext get( final IFeatureType featureType, final Feature feature )
-  {
-    final FeatureviewType featureview = createFeatureview( featureType, feature );
-    return new FeatureviewTypeWithContext( featureview, null );
-  }
-
-  private FeatureviewType createFeatureview( final IFeatureType featureType, final Feature feature )
+  public FeatureviewType get( final IFeatureType featureType, final Feature feature )
   {
     if( featureType != null && feature != null )
       return getWithContent( featureType, feature );
@@ -210,15 +209,15 @@ public class FeatureviewHelper implements IFeatureviewFactory
   }
 
   @Override
-  public ITranslator getTranslator( final FeatureviewTypeWithContext type, final URL context )
+  public ITranslator getTranslator( final FeatureviewType view, final URL context )
   {
-    if( !m_translators.containsKey( type ) )
+    if( !m_translators.containsKey( view ) )
     {
-      final ITranslator viewTranslator = createTranslator( type.getView(), context );
-      m_translators.put( type, viewTranslator );
+      final ITranslator viewTranslator = createTranslator( view, context );
+      m_translators.put( view, viewTranslator );
     }
 
-    return m_translators.get( type );
+    return m_translators.get( view );
   }
 
   private ITranslator createTranslator( final FeatureviewType view, final URL context )

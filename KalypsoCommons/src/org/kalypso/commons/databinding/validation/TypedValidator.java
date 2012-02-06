@@ -60,8 +60,6 @@ public abstract class TypedValidator<T> implements IValidator
   private final String m_message;
 
   /**
-   * The constructor.
-   * 
    * @param type
    *          Class of type T for type safe cast.
    * @param severity
@@ -113,6 +111,7 @@ public abstract class TypedValidator<T> implements IValidator
     final Status status = new Status( m_severity, KalypsoCommonsPlugin.getID(), message );
     throw new CoreException( status );
   }
+
 
   /**
    * Validate the given value.<br/>

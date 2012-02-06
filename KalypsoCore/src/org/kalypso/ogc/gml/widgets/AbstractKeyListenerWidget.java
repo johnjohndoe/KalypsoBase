@@ -65,7 +65,7 @@ import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
  * 
  * @author Dirk Kuch
  */
-public abstract class AbstractKeyListenerWidget extends DeprecatedMouseWidget
+public abstract class AbstractKeyListenerWidget extends AbstractWidget
 {
   private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
 
@@ -98,11 +98,13 @@ public abstract class AbstractKeyListenerWidget extends DeprecatedMouseWidget
     final IMapPanel mapPanel = getMapPanel();
 
     mapPanel.setCursor( java.awt.Cursor.getPredefinedCursor( Cursor.DEFAULT_CURSOR ) );
-    mapPanel.getWidgetManager().addWidget( null );
+    mapPanel.getWidgetManager().setActualWidget( null );
   }
 
   /**
    * Escape Key pressed? -> reset / deactivate widget
+   * 
+   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#keyReleased(java.awt.event.KeyEvent)
    */
   @Override
   public void keyReleased( final KeyEvent e )
@@ -120,6 +122,9 @@ public abstract class AbstractKeyListenerWidget extends DeprecatedMouseWidget
     super.keyPressed( e );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
+   */
   @Override
   public void moved( final Point p )
   {
@@ -133,6 +138,9 @@ public abstract class AbstractKeyListenerWidget extends DeprecatedMouseWidget
     }
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#dragged(java.awt.Point)
+   */
   @Override
   public void dragged( final java.awt.Point p )
   {

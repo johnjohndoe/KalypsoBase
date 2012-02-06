@@ -44,7 +44,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -80,15 +80,12 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
 
   private SteuerparameterWizardPage m_createControlPage;
 
-  private IFolder m_newFolderHandle;
+  protected IFolder m_newFolderHandle;
 
-  private final String m_controlPath;
-
-  public NewCalculationCaseWizard( final String controlPath )
-  {
-    m_controlPath = controlPath;
-  }
-
+  /**
+   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
+   *      org.eclipse.jface.viewers.IStructuredSelection)
+   */
   @Override
   public void init( final IWorkbench workbench, final IStructuredSelection currentSelection )
   {
@@ -105,13 +102,17 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
   {
     super.addPages();
     m_createFolderPage = new NewCalculationCaseCreateFolderPage( Messages.getString( "org.kalypso.simulation.ui.wizards.createCalcCase.NewCalculationCaseWizard.1" ), getSelection() ); //$NON-NLS-1$
-    m_createControlPage = new SteuerparameterWizardPage( m_createFolderPage, ImageProvider.IMAGE_KALYPSO_ICON_BIG, false, m_controlPath )
+    m_createControlPage = new SteuerparameterWizardPage( m_createFolderPage, ImageProvider.IMAGE_KALYPSO_ICON_BIG, false )
     {
+      /**
+       * @see org.kalypso.simulation.ui.wizards.createCalcCase.SteuerparameterWizardPage#createControl(org.eclipse.swt.widgets.Composite)
+       */
       @Override
       public void createControl( final Composite parent )
       {
-        final IFolder newFolderHandle = handleCreateControl();
-        setFolder( newFolderHandle );
+        m_newFolderHandle = createCalculationCase();
+
+        setFolder( m_newFolderHandle );
 
         super.createControl( parent );
       }
@@ -123,13 +124,9 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
     addPage( m_createControlPage );
   }
 
-  protected IFolder handleCreateControl( )
-  {
-    m_newFolderHandle = createCalculationCase();
-
-    return m_newFolderHandle;
-  }
-
+  /**
+   * @see org.eclipse.jface.wizard.IWizard#performFinish()
+   */
   @Override
   public boolean performFinish( )
   {
@@ -142,10 +139,22 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
       @Override
       public void execute( final IProgressMonitor monitor ) throws CoreException
       {
-        monitor.beginTask( Messages.getString( "NewCalculationCaseWizard.0" ), 1000 ); //$NON-NLS-1$
+        monitor.beginTask( Messages.getString("NewCalculationCaseWizard.0"), 1000 ); //$NON-NLS-1$
         monitor.subTask( StringUtils.EMPTY ); // Hack, else the begin task will not be set here
 
         controlPage.saveChanges( newFolderHandle, new SubProgressMonitor( monitor, 100 ) );
+
+        if( controlPage.isUpdate() )
+        {
+          final ModelNature nature = (ModelNature) newFolderHandle.getProject().getNature( ModelNature.ID );
+          final IStatus updateStatus = nature.updateCalcCase( newFolderHandle, new SubProgressMonitor( monitor, 900 ) );
+          if( !updateStatus.isOK() )
+            throw new CoreException( updateStatus );
+        }
+        else
+        {
+          monitor.worked( 1000 );
+        }
       }
     };
 
@@ -262,7 +271,7 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
 
   /**
    * Creates a folder resource given the folder handle.
-   *
+   * 
    * @param folderHandle
    *          the folder handle to create a folder resource for
    * @param monitor
@@ -281,7 +290,7 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
       if( !folderHandle.exists() )
       {
         final IContainer parent = folderHandle.getParent();
-        if( parent instanceof IFolder && !((IFolder) parent).exists() )
+        if( parent instanceof IFolder && (!((IFolder) parent).exists()) )
           createFolder( (IFolder) parent, monitor );
 
         folderHandle.create( false, true, monitor );
@@ -311,19 +320,12 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
     // wenn das Projekt festliegt
   }
 
+  /**
+   * @see org.eclipse.jface.wizard.IWizard#canFinish()
+   */
   @Override
   public boolean canFinish( )
   {
     return getContainer().getCurrentPage() == m_createControlPage;
-  }
-
-  public boolean isUpdate( )
-  {
-    return m_createControlPage.isUpdate();
-  }
-
-  public IFolder getNewFolder( )
-  {
-    return m_newFolderHandle;
   }
 }

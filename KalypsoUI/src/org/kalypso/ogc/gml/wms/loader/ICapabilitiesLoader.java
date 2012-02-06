@@ -58,7 +58,7 @@ public interface ICapabilitiesLoader
    * This function inits this loader. It must be called before calling getCapabilitiesStream().
    * 
    * @param baseURL
-   *          The service URL.
+   *            The service URL.
    */
   public void init( URL baseURL );
 

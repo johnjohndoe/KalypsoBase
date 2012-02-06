@@ -74,6 +74,7 @@ public class SobekFrictionDatCRFRParser
 
   private static final String ATTRIBUTE_FR = "fr"; //$NON-NLS-1$
 
+
   private final SobekLineParser m_headerLine;
 
   private final LineNumberReader m_reader;

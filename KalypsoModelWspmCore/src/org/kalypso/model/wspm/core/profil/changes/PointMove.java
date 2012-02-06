@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.core.profil.changes;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
@@ -74,19 +74,16 @@ public class PointMove implements IProfilChange
     m_direction = direction;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilChange#doChange()
+   */
   @Override
-  public void configureHint( final ProfilChangeHint hint )
+  public IProfilChange doChange( final ProfilChangeHint hint )
   {
     if( hint != null )
     {
       hint.setPointsChanged();
     }
-  }
-
-  @Override
-  public IProfilChange doChange( )
-  {
-
     if( m_direction == 0 )
       return new PointMove( m_profil, m_points, 0 );
     final IRecord[] points = m_profil.getPoints();
@@ -102,6 +99,9 @@ public class PointMove implements IProfilChange
     return new PointMove( m_profil, m_points, -m_direction );
   }
 
+  /**
+   * @see java.lang.Object#toString()
+   */
   @Override
   public String toString( )
   {

@@ -49,7 +49,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.observation.result.IRecord;
 
@@ -83,30 +82,46 @@ public class TableSelectionProfilePointFilter implements IProfilePointFilter
     return result;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#accept(org.kalypso.model.wspm.core.profil.IProfil,
+   *      org.kalypso.model.wspm.core.profil.IProfilPoint)
+   */
   @Override
-  public boolean accept( final IProfil profil, final IProfileRecord point )
+  public boolean accept( final IProfil profil, final IRecord point )
   {
     return m_points.contains( point );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#getDescription()
+   */
   @Override
   public String getDescription( )
   {
     return Messages.getString( "TableSelectionProfilePointFilter.0" ); //$NON-NLS-1$
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#getId()
+   */
   @Override
   public String getId( )
   {
     return getClass().getName();
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#getName()
+   */
   @Override
   public String getName( )
   {
     return Messages.getString( "TableSelectionProfilePointFilter.1" ); //$NON-NLS-1$
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#getUsageHint()
+   */
   @Override
   public String getUsageHint( )
   {

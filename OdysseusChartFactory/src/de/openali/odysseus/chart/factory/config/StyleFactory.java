@@ -46,12 +46,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jregex.Pattern;
+import jregex.RETokenizer;
+
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 import de.openali.odysseus.chart.factory.OdysseusChartFactory;
 import de.openali.odysseus.chart.factory.config.resolver.ChartTypeResolver;
@@ -182,22 +185,22 @@ public final class StyleFactory
       {
         try
         {
-//          if( reference.startsWith( "#" ) ) // local style reference //$NON-NLS-1$
-//          {
-//            final RETokenizer tokenizer = new RETokenizer( new Pattern( "#" ), reference ); //$NON-NLS-1$
-//            final String identifier = tokenizer.nextToken();
-//
-//            final AbstractStyleType styleType = StyleHelper.findStyle( baseTypes, identifier );
-//            final IStyle style = StyleFactory.createStyle( styleType, context );
-//            if( style == null )
-//              return null;
-//
-//            // save configuration type so it can be used for saving to chart file
-//            style.setData( AbstractChartFactory.CONFIGURATION_TYPE_KEY, style );
-//            styleSet.addStyle( styleType.getRole(), style );
-//          }
-//          else
-//          {
+          if( reference.startsWith( "#" ) ) // local style reference //$NON-NLS-1$
+          {
+            final RETokenizer tokenizer = new RETokenizer( new Pattern( "#" ), reference ); //$NON-NLS-1$
+            final String identifier = tokenizer.nextToken();
+
+            final AbstractStyleType styleType = StyleHelper.findStyle( baseTypes, identifier );
+            final IStyle style = StyleFactory.createStyle( styleType, context );
+            if( style == null )
+              return null;
+
+            // save configuration type so it can be used for saving to chart file
+            style.setData( AbstractChartFactory.CONFIGURATION_TYPE_KEY, style );
+            styleSet.addStyle( styleType.getRole(), style );
+          }
+          else
+          {
             final AbstractStyleType styleType = resolver.findStyleType( reference, context );
             if( styleType == null )
             {
@@ -210,12 +213,14 @@ public final class StyleFactory
             // save configuration type so it can be used for saving to chart file
             style.setData( AbstractChartFactory.CONFIGURATION_TYPE_KEY, style );
             styleSet.addStyle( styleType.getRole(), style );
-         // }
+          }
 
         }
         catch( final CoreException e )
         {
-          OdysseusChartFactory.getDefault().getLog().log( new Status( IStatus.ERROR, OdysseusChartFactory.PLUGIN_ID, e.getLocalizedMessage(), e ) );
+          OdysseusChartFactory.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+
+          e.printStackTrace();
         }
       }
     }
@@ -244,14 +249,14 @@ public final class StyleFactory
       return createTextStyle( (TextStyleType) styleType );
     }
 
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 
   public static IPointStyle createPointStyle( final PointStyleType pst, final URL context )
   {
     final IPointStyle style = StyleUtils.getDefaultPointStyle();
 
-    // style.setTitle( pst.getTitle() );
+   // style.setTitle( pst.getTitle() );
 
     // visible
     if( pst.isSetIsVisible() )
@@ -330,9 +335,9 @@ public final class StyleFactory
   {
     final ILineStyle style = StyleUtils.getDefaultLineStyle();
 
-    // final String title = lst.getTitle();
+   // final String title = lst.getTitle();
 
-    // style.setTitle( title );
+   // style.setTitle( title );
 
     // visible
     if( lst.isSetIsVisible() )
@@ -489,7 +494,7 @@ public final class StyleFactory
     if( tst == null )
       return null;
 
-    // style.setTitle( tst.getTitle() );
+   // style.setTitle( tst.getTitle() );
 
     // visible
     if( tst.isSetIsVisible() )

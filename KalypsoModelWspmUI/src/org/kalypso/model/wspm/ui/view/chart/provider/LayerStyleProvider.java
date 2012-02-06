@@ -41,18 +41,16 @@
 package org.kalypso.model.wspm.ui.view.chart.provider;
 
 import org.eclipse.swt.graphics.RGB;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.IWspmPhenomenonConstants;
-import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.ui.view.AbstractLayerStyleProvider;
 
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
 
 /**
- * @deprecated ?!?
  * @author kimwerner
  */
-@Deprecated
 public class LayerStyleProvider extends AbstractLayerStyleProvider
 {
   private static final String LINE = "_LINE"; //$NON-NLS-1$
@@ -72,7 +70,7 @@ public class LayerStyleProvider extends AbstractLayerStyleProvider
 
   private void createCrossSectionSytles( )
   {
-    final ILineStyle ls = getStyleFor( IWspmPointProperties.POINT_PROPERTY_HOEHE + LINE, LineStyle.class ); //$NON-NLS-1$
+    final ILineStyle ls = getStyleFor( IWspmConstants.POINT_PROPERTY_HOEHE + LINE, LineStyle.class ); //$NON-NLS-1$
     ls.setColor( new RGB( 255, 150, 0 ) );
   }
 }

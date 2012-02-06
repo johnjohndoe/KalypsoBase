@@ -42,12 +42,12 @@ package org.kalypso.ogc.gml.serialize;
 
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IWorkspaceProvider;
+import org.kalypsodeegree.model.feature.IFeatureProvider;
 
 /**
  * @author Gernot Belger
  */
-public abstract class AbstractXLinkFeatureProvider implements IWorkspaceProvider
+public abstract class AbstractXLinkFeatureProvider implements IFeatureProvider
 {
   private final GMLWorkspace m_context;
 
@@ -55,7 +55,7 @@ public abstract class AbstractXLinkFeatureProvider implements IWorkspaceProvider
 
   /**
    * @param context
-   *          The context is used to find the feature.
+   *            The context is used to find the feature.
    */
   public AbstractXLinkFeatureProvider( final GMLWorkspace context, final String uri )
   {

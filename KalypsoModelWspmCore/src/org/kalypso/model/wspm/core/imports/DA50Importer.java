@@ -45,6 +45,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -53,17 +54,19 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.DoubleComparator;
-import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
+import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -87,8 +90,10 @@ public final class DA50Importer
    * @param srsName
    *          The coordinate system code.
    */
-  public static void importDA50( final File da50File, final FeatureList profileFeatures, final boolean bRefFirst, final String srsName ) throws CoreException
+  public static FeatureChange[] importDA50( final File da50File, final FeatureList profileFeatures, final boolean bRefFirst, final String srsName ) throws CoreException
   {
+    final List<FeatureChange> changes = new ArrayList<FeatureChange>();
+
     LineNumberReader da50reader = null;
     try
     {
@@ -113,8 +118,12 @@ public final class DA50Importer
         {
           final IProfil profil = profile.getProfil();
           applyD50Entry( profil, d50Entry, bRefFirst );
+          final FeatureChange[] fcs = ProfileFeatureFactory.toFeatureAsChanges( profil, profile );
+          Collections.addAll( changes, fcs );
         }
       }
+
+      return changes.toArray( new FeatureChange[changes.size()] );
     }
     catch( final IOException e )
     {
@@ -144,50 +153,55 @@ public final class DA50Importer
     double vy = endPos.getY() - startPos.getY();
     final double vl = Math.sqrt( vx * vx + vy * vy );
     if( vl == 0.0 )
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), Messages.getString( "org.kalypso.model.wspm.core.imports.DA50Importer.1", entry.station ) ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.model.wspm.core.imports.DA50Importer.1", entry.station ) ) ); //$NON-NLS-1$
 
     // den Vektor normieren
     vx /= vl;
     vy /= vl;
 
     /* Only do reference the first and last point */
-    final IProfileRecord[] points = profil.getPoints();
+    final IRecord[] points = profil.getPoints();
     if( points.length < 2 )
       return;
 
-    final IComponent cRechtswert = profil.getPointPropertyFor( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT );
-    final IComponent cHochwert = profil.getPointPropertyFor( IWspmPointProperties.POINT_PROPERTY_HOCHWERT );
-
-    if( !profil.hasPointProperty( cRechtswert ) )
-      profil.addPointProperty( cRechtswert );
-
-    if( !profil.hasPointProperty( cHochwert ) )
-      profil.addPointProperty( cHochwert );
-
-    final IProfileRecord p0 = profil.getFirstPoint();
-    final IProfileRecord pn = profil.getLastPoint();
-
-    final Double b0 = p0.getBreite();
-    final Double bn = pn.getBreite();
+    final IRecord firstPP = points[0];
+    final IRecord lastPP = points[points.length - 1];
+    final Double firstBreite = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, firstPP );
+    final Double lastBreite = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, lastPP );
 
     double yOffset = 0;
     if( bRefFirst )
     {
-      yOffset = b0;
+      yOffset = firstBreite;
     }
 
-    final double y0 = b0 - yOffset;
-    final double rw0 = startPos.getX() + y0 * vx;
-    final double hw0 = startPos.getY() + y0 * vy;
+    final double yFirst = firstBreite - yOffset;
+    final double rwFirst = startPos.getX() + yFirst * vx;
+    final double hwFirst = startPos.getY() + yFirst * vy;
 
-    final double yn = bn - yOffset;
-    final double rwn = startPos.getX() + yn * vx;
-    final double hwn = startPos.getY() + yn * vy;
+    final double yLast = lastBreite - yOffset;
+    final double rwLast = startPos.getX() + yLast * vx;
+    final double hwLast = startPos.getY() + yLast * vy;
 
-    p0.setRechtswert( rw0 );
-    p0.setHochwert( hw0 );
-    pn.setRechtswert( rwn );
-    pn.setHochwert( hwn );
+    final IComponent cRechtswert = profil.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    final IComponent cHochwert = profil.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+
+    if( !profil.hasPointProperty( cRechtswert ) )
+    {
+      profil.addPointProperty( cRechtswert );
+    }
+    if( !profil.hasPointProperty( cHochwert ) )
+    {
+      profil.addPointProperty( cHochwert );
+    }
+
+    final int iHochwert = profil.indexOfProperty( cHochwert );
+    final int iRechtswert = profil.indexOfProperty( cRechtswert );
+
+    firstPP.setValue( iRechtswert, rwFirst );
+    firstPP.setValue( iHochwert, hwFirst );
+    lastPP.setValue( iRechtswert, rwLast );
+    lastPP.setValue( iHochwert, hwLast );
   }
 
   /**

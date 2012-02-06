@@ -57,7 +57,7 @@ import net.opengeospatial.wps.ProcessFailedType;
 import net.opengeospatial.wps.ProcessStartedType;
 import net.opengeospatial.wps.StatusType;
 
-import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs.FileObject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.io.VFSUtilities;
@@ -125,7 +125,7 @@ public class WPSSimulationHandler extends Thread
       boolean bEnd = false;
       while( bEnd == false )
       {
-        final STATE state = jobInfo.getState();
+        STATE state = jobInfo.getState();
 
         // get current results
         final List<IOValueType> ioValues = jobInfo.getCurrentResults();
@@ -193,13 +193,14 @@ public class WPSSimulationHandler extends Thread
     {
       /* Job has finished somehow. */
 
+      /* Delete all files of this job in the temp-directory. */
       try
       {
-        /* Delete all files of this job in the temp-directory. */
         m_service.disposeJob( m_jobID );
       }
       catch( final SimulationException e )
       {
+        // TODO Auto-generated catch block
         e.printStackTrace();
       }
     }
@@ -255,7 +256,7 @@ public class WPSSimulationHandler extends Thread
    * @param ioValues
    *          The ioValues for creating the process outputs, if any are here. Otherwise leave it null.
    */
-  private synchronized void createExecuteResponse( final StatusType status, final List<IOValueType> ioValues ) throws Exception
+  private synchronized void createExecuteResponse( StatusType status, List<IOValueType> ioValues ) throws Exception
   {
     /* Prepare the execute response. */
     final FileObject resultDir = m_service.getResultDir( m_jobID );

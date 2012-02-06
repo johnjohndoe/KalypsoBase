@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.java.io;
 
@@ -56,10 +56,7 @@ public class StreamUtilities
 
   /**
    * Kopiert den Inhalt eines Streams in einen anderen. Die Streams werden nach Ende der Operation geschlossen.
-   * 
-   * @dperecated Use apache commons IOUtils or FileUtils instead.
    */
-  @Deprecated
   public static final void streamCopy( final InputStream is, final OutputStream os ) throws IOException
   {
     final byte[] buffer = new byte[1024 * 16];
@@ -119,8 +116,8 @@ public class StreamUtilities
           return restA.length == 0 && restB.length == 0;
         if( a > -1 && b > -1 )
         {
-          final byte[] mergeA = org.kalypso.contribs.java.util.Arrays.append( restA, bufferA, a );
-          final byte[] mergeB = org.kalypso.contribs.java.util.Arrays.append( restB, bufferB, b );
+          byte[] mergeA = org.kalypso.contribs.java.util.Arrays.append( restA, bufferA, a );
+          byte[] mergeB = org.kalypso.contribs.java.util.Arrays.append( restB, bufferB, b );
           if( !org.kalypso.contribs.java.util.Arrays.equals( mergeA, mergeB, Math.min( mergeA.length, mergeB.length ) ) )
             return false;
           if( mergeB.length > mergeA.length )

@@ -42,8 +42,8 @@ package org.kalypso.model.wspm.core.strang;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author kimwerner
@@ -60,7 +60,7 @@ public final class ProfilPropertyOperation
     for( final IProfil profil : profiles )
     {
       final int index = profil.indexOfProperty( property );
-      for( final IProfileRecord point : profil.getPoints() )
+      for( final IRecord point : profil.getPoints() )
       {
         if( filter.accept( profil, point ) )
         {
@@ -75,7 +75,7 @@ public final class ProfilPropertyOperation
     for( final IProfil profil : profiles )
     {
       final int index = profil.indexOfProperty( property );
-      for( final IProfileRecord point : profil.getPoints() )
+      for( final IRecord point : profil.getPoints() )
       {
         if( filter.accept( profil, point ) )
         {
@@ -92,7 +92,7 @@ public final class ProfilPropertyOperation
     for( final IProfil profil : profiles )
     {
       final int index = profil.indexOfProperty( property );
-      for( final IProfileRecord point : profil.getPoints() )
+      for( final IRecord point : profil.getPoints() )
       {
         if( filter.accept( profil, point ) )
         {

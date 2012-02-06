@@ -126,7 +126,7 @@ public class FlattenToCategoryGrid extends AbstractGeoGrid implements IGeoGrid
 
               /* Transform query position into the crs of the current grid. */
               final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( grid.getSourceCRS() );
-              final GM_Position position = geoTransformer.transform( positionAt, getSourceCRS() );
+              final GM_Position position = geoTransformer.transform( positionAt, this.getSourceCRS() );
 
               final double gridValue = grid.getValue( JTSAdapter.export( position ) );
 

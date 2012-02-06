@@ -56,7 +56,7 @@ public abstract class AbstractAxisContentProvider implements IAxisContentProvide
    *      de.openali.odysseus.chart.framework.model.data.IDataRange)
    */
   @Override
-  public String getLabel( final Number[] ticks, final int i, final IDataRange<Number> range )
+  public String getLabel( Number[] ticks, int i, IDataRange<Number> range )
   {
     // TODO Auto-generated method stub
     return getLabel( ticks[i].intValue() );
@@ -67,7 +67,7 @@ public abstract class AbstractAxisContentProvider implements IAxisContentProvide
    *      de.openali.odysseus.chart.framework.model.data.IDataRange)
    */
   @Override
-  public String getLabel( final Number value, final IDataRange<Number> range )
+  public String getLabel( Number value, IDataRange<Number> range )
   {
     // TODO Auto-generated method stub
     return getLabel( value.intValue() );

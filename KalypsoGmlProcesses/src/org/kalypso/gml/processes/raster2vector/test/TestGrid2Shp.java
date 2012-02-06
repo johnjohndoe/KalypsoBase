@@ -1,3 +1,5 @@
+package org.kalypso.gml.processes.raster2vector.test;
+
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -38,7 +40,6 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml.processes.raster2vector.test;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,6 +47,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
+
+import junit.framework.TestCase;
+import ogc31.www.opengis.net.gml.FileType;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -56,11 +60,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.junit.Ignore;
-import org.junit.Test;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
 import org.kalypso.gml.processes.raster2vector.Raster2Lines;
 import org.kalypso.gml.processes.raster2vector.Raster2LinesWalkingStrategy;
 import org.kalypso.gml.processes.raster2vector.collector.CollectorDataProvider;
@@ -68,7 +71,6 @@ import org.kalypso.gml.processes.raster2vector.collector.LineStringCollector;
 import org.kalypso.gml.processes.raster2vector.collector.PolygonCollector;
 import org.kalypso.gml.processes.raster2vector.collector.SegmentCollector;
 import org.kalypso.gmlschema.GMLSchemaFactory;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -82,12 +84,11 @@ import org.kalypso.grid.IGeoGrid;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
-import org.kalypsodeegree.model.coverage.RangeSetFile;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.gml.binding.commons.CoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
@@ -102,16 +103,13 @@ import com.vividsolutions.jts.geom.GeometryFactory;
  * This test extracts demo input data (grid) from resources and converts them into shape files. <br>
  * <br>
  * Run this test as plug-in test.
- *
+ * 
  * @author Thomas Jung
  */
-public class TestGrid2Shp
+public class TestGrid2Shp extends TestCase
 {
   private static final GeometryFactory GF = new GeometryFactory();
 
-  @Test
-  // Ignore for normal testing, this takes much too long
-  @Ignore
   public void testRiskModel( ) throws Exception
   {
     // unzip test data into workspace
@@ -192,7 +190,7 @@ public class TestGrid2Shp
 
     final IMarshallingTypeHandler doubleTypeHandler = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_DOUBLE );
     final IMarshallingTypeHandler stringTypeHandler = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_STRING );
-    final IMarshallingTypeHandler polygonTypeHandler = typeRegistry.getTypeHandlerForTypeName( GM_Polygon.POLYGON_ELEMENT );
+    final IMarshallingTypeHandler polygonTypeHandler = typeRegistry.getTypeHandlerForTypeName( GMLConstants.QN_POLYGON );
 
     final QName shapeTypeQName = new QName( "anyNS", "shapeType" ); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -243,16 +241,17 @@ public class TestGrid2Shp
     final File dstRasterFile = dstRasterIFile.getRawLocation().toFile();
     final RectifiedGridDomain gridDomain = importAsBinaryRaster( file.getLocation().toFile(), dstRasterFile, "EPSG:28992", new NullProgressMonitor() ); //$NON-NLS-1$
 
-    final IFeatureType ft = GMLSchemaUtilities.getFeatureTypeQuiet( RectifiedGridCoverage.QNAME );
+    final IFeatureType ft = covCollWorkspace.getGMLSchema().getFeatureType( RectifiedGridCoverage.QNAME );
     final Feature rootFeature = covCollWorkspace.getRootFeature();
     final ICoverageCollection covColl = (ICoverageCollection) rootFeature.getAdapter( ICoverageCollection.class );
 
-    final IRelationType parentRelation = (IRelationType) covColl.getFeatureType().getProperty( ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER );
+    final IRelationType parentRelation = (IRelationType) covColl.getFeatureType().getProperty( CoverageCollection.QNAME_PROP_COVERAGE_MEMBER );
     final Feature coverageFeature = covCollWorkspace.createFeature( covColl, parentRelation, ft );
     final RectifiedGridCoverage coverage = (RectifiedGridCoverage) coverageFeature;
     covColl.getCoverages().add( coverage );
 
-    final RangeSetFile rangeSetFile = new RangeSetFile( binFileName );
+    final FileType rangeSetFile = KalypsoOGC31JAXBcontext.GML3_FAC.createFileType();
+    rangeSetFile.setFileName( binFileName );
     rangeSetFile.setMimeType( "image/bin" ); //$NON-NLS-1$
 
     covColl.getCoverages().add( coverage );
@@ -266,9 +265,10 @@ public class TestGrid2Shp
 
   private static RectifiedGridDomain importAsBinaryRaster( final File srcFile, final File dstFile, final String sourceCRS, final IProgressMonitor monitor ) throws IOException, CoreException
   {
-    final ConvertAscii2Binary ascii2Binary = new ConvertAscii2Binary( srcFile.toURI().toURL(), dstFile, 2, sourceCRS );
+    final ConvertAscii2Binary ascii2Binary = new ConvertAscii2Binary( srcFile.toURL(), dstFile, 2, sourceCRS );
     ascii2Binary.doConvert( monitor );
     final RectifiedGridDomain gridDomain = ascii2Binary.getGridDomain();
     return gridDomain;
   }
+
 }

@@ -30,13 +30,14 @@
 package org.kalypso.commons.math;
 
 /**
+ * 
  * factory to create math operations, do not instantiate
  * 
  * @author doemming
  */
 public class MathOperationFactory
 {
-  // TODO use IMathOperation also in (n)operationfilter
+	// TODO use IMathOperation also in (n)operationfilter
   /**
    * create a math operation interface from a operator string
    * 
@@ -52,7 +53,7 @@ public class MathOperationFactory
          * @see org.kalypso.commons.math.IMathOperation#calculate(double[])
          */
         @Override
-        public double calculate( final double... operands )
+        public double calculate( double... operands )
         {
           double result = operands[0];
           for( int i = 1; i < operands.length; i++ )
@@ -67,7 +68,7 @@ public class MathOperationFactory
          * @see org.kalypso.commons.math.IMathOperation#calculate(double[])
          */
         @Override
-        public double calculate( final double... operands )
+        public double calculate( double... operands )
         {
           double result = operands[0];
           for( int i = 1; i < operands.length; i++ )
@@ -82,11 +83,11 @@ public class MathOperationFactory
          * @see org.kalypso.commons.math.IMathOperation#calculate(double[])
          */
         @Override
-        public double calculate( final double... operands )
+        public double calculate( double... operands )
         {
           double result = 0;
-          for( final double operand : operands )
-            result += operand;
+          for( int i = 0; i < operands.length; i++ )
+            result += operands[i];
           return result;
         }
       };
@@ -97,7 +98,7 @@ public class MathOperationFactory
          * @see org.kalypso.commons.math.IMathOperation#calculate(double[])
          */
         @Override
-        public double calculate( final double... operands )
+        public double calculate( double... operands )
         {
           double result = operands[0];
           for( int i = 1; i < operands.length; i++ )

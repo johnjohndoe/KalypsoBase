@@ -39,9 +39,7 @@ import org.deegree.crs.transformations.TransformationFactory;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.kalypso.preferences.IKalypsoDeegreePreferences;
 import org.osgi.framework.BundleContext;
 
@@ -66,7 +64,7 @@ public class KalypsoDeegreePlugin extends Plugin
    * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
    */
   @Override
-  public void start( final BundleContext context ) throws Exception
+  public void start( BundleContext context ) throws Exception
   {
     super.start( context );
 
@@ -80,11 +78,11 @@ public class KalypsoDeegreePlugin extends Plugin
    * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
    */
   @Override
-  public void stop( final BundleContext context ) throws Exception
+  public void stop( BundleContext context ) throws Exception
   {
     /* Save the plug-in preferences. */
-    final InstanceScope instanceScope = new InstanceScope();
-    final IEclipsePreferences instanceNode = instanceScope.getNode( getBundle().getSymbolicName() );
+    InstanceScope instanceScope = new InstanceScope();
+    IEclipsePreferences instanceNode = instanceScope.getNode( getBundle().getSymbolicName() );
     instanceNode.flush();
 
     PLUGIN = null;
@@ -107,18 +105,7 @@ public class KalypsoDeegreePlugin extends Plugin
    */
   public String getCoordinateSystem( )
   {
-    final String defaultSrs = getDefaultCoordinateSystem();
-
-    final IPreferencesService preferencesService = Platform.getPreferencesService();
-    final String pluginID = getBundle().getSymbolicName();
-
-    return preferencesService.getString( pluginID, IKalypsoDeegreePreferences.DEFAULT_CRS_SETTING, defaultSrs, null );
-  }
-
-  @SuppressWarnings("restriction")
-  private String getDefaultCoordinateSystem( )
-  {
-    return FrameworkProperties.getProperty( "kalypso.defaultSRS", IKalypsoDeegreePreferences.DEFAULT_CRS_VALUE );
+    return Platform.getPreferencesService().getString( getBundle().getSymbolicName(), IKalypsoDeegreePreferences.DEFAULT_CRS_SETTING, IKalypsoDeegreePreferences.DEFAULT_CRS_VALUE, null );
   }
 
   /**

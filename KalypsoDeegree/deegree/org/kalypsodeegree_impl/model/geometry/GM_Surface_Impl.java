@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- *
+ * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always.
- *
- * If you intend to use this software in other ways than in kalypso
+ * interface-compatibility to deegree is wanted but not retained always. 
+ * 
+ * If you intend to use this software in other ways than in kalypso 
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree,
+ * all modifications are licensed as deegree, 
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -42,7 +42,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -76,7 +77,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * <p>
  * -----------------------------------------------------------------------
  * </p>
- *
+ * 
  * @version 05.04.2002
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  */
@@ -89,7 +90,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
 
   /**
    * initializes the surface with default orientation submitting one surface patch.
-   *
+   * 
    * @param surfacePatch
    *          patches of the surface.
    */
@@ -100,7 +101,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
 
   /**
    * initializes the surface submitting the orientation and one surface patch.
-   *
+   * 
    * @param surfacePatch
    *          patches of the surface.
    */
@@ -114,7 +115,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
 
   /**
    * initializes the surface with default orientation submitting the surfaces boundary
-   *
+   * 
    * @param boundary
    *          boundary of the surface
    */
@@ -125,7 +126,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
 
   /**
    * initializes the surface submitting the orientation and the surfaces boundary.
-   *
+   * 
    * @param boundary
    *          boundary of the surface
    */
@@ -133,6 +134,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
   {
     super( boundary.getCoordinateSystem(), orientation );
 
+// m_list = Collections.emptyList();
     m_patch = (T) GeometryFactory.createGM_SurfacePatch( boundary.getExteriorRing(), boundary.getInteriorRings(), boundary.getCoordinateSystem() );
   }
 
@@ -170,7 +172,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
 
   /**
    * Optimization: we do not need to instantiate a new envelope, just get the one from the patch
-   *
+   * 
    * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#getEnvelope()
    */
   @Override
@@ -186,7 +188,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
   protected GM_Envelope calculateEnvelope( )
   {
     // as we overwrite getEnvelope, this should never be called
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 
   /**
@@ -239,7 +241,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
 
   /**
    * checks if this surface is completly equal to the submitted geometry
-   *
+   * 
    * @param other
    *          object to compare to
    */
@@ -261,7 +263,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
     if( !ObjectUtils.equals( getEnvelope(), ((GM_Object) other).getEnvelope() ) )
       return false;
 
-    return ObjectUtils.equals( m_patch, m_patch );
+    return ObjectUtils.equals( m_patch, (m_patch) );
   }
 
   /**
@@ -338,7 +340,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
    * given <tt>GM_Object</t>.
    * Within a <tt>GM_Complex</tt>, the <tt>GM_Primitives</tt> do not intersect one another. In general, topologically
    * structured data uses shared geometric objects to capture intersection information.
-   *
+   * 
    * @param gmo
    *          the <tt>GM_Object</tt> to test for intersection
    * @return true if the <tt>GM_Object</tt> intersects with this
@@ -380,9 +382,9 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
   {
     String ret = getClass().getName() + ":\n";
 
-    ret += "envelope = " + getEnvelope() + "\n";
+    ret += ("envelope = " + getEnvelope() + "\n");
     ret += " CRS: " + getCoordinateSystem() + "\n";
-    ret += "patch = " + m_patch + "\n";
+    ret += ("patch = " + m_patch + "\n");
 
     return ret;
   }
@@ -396,14 +398,16 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
     super.invalidate();
   }
 
+  /**
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Primitive_Impl#getAdapter(java.lang.Class)
+   */
   @Override
   public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
-    if( adapter == GM_SurfacePatch.class )
-      return m_patch;
-
     if( adapter == GM_SurfacePatch[].class )
+    {
       return new GM_SurfacePatch[] { m_patch };
+    }
 
     if( adapter == GM_Curve.class )
     {

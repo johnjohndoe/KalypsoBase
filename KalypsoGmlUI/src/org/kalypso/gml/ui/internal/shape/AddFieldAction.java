@@ -52,6 +52,7 @@ import org.kalypso.shape.dbf.FieldType;
 
 /**
  * @author Gernot Belger
+ *
  */
 public class AddFieldAction extends Action
 {
@@ -59,12 +60,12 @@ public class AddFieldAction extends Action
 
   public AddFieldAction( final IObservableList fieldList )
   {
-    super( Messages.getString( "AddFieldAction_0" ) ); //$NON-NLS-1$
+    super( Messages.getString("AddFieldAction_0") ); //$NON-NLS-1$
 
     final ImageDescriptor image = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.SHAPE_FILE_NEW_ADD_FIELD );
     setImageDescriptor( image );
 
-    setToolTipText( Messages.getString( "AddFieldAction_1" ) ); //$NON-NLS-1$
+    setToolTipText( Messages.getString("AddFieldAction_1") ); //$NON-NLS-1$
 
     m_fieldList = fieldList;
   }
@@ -77,7 +78,7 @@ public class AddFieldAction extends Action
   {
     try
     {
-      m_fieldList.add( new DBFFieldBean( new DBFField( Messages.getString( "AddFieldAction_2" ) + m_fieldList.size(), FieldType.N, (short) 20, (short) 10 ) ) ); //$NON-NLS-1$
+      m_fieldList.add( new DBFFieldBean( new DBFField( Messages.getString("AddFieldAction_2") + m_fieldList.size(), FieldType.N, (short) 20, (short) 10 ) ) ); //$NON-NLS-1$
     }
     catch( final DBaseException e )
     {

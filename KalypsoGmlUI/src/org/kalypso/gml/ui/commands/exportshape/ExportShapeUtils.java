@@ -85,7 +85,7 @@ public final class ExportShapeUtils
       final FeatureAssociationTypeElement fate = AdapterUtils.getAdapter( selectedElement, FeatureAssociationTypeElement.class );
       if( fate != null )
       {
-        final Feature parentFeature = fate.getOwner();
+        final Feature parentFeature = fate.getParentFeature();
         if( parentFeature != null )
           return FeatureHelper.getAnnotationValue( parentFeature, IAnnotation.ANNO_LABEL );
       }

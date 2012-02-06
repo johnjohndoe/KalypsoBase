@@ -58,9 +58,9 @@ import java.util.TreeSet;
 
 import javax.jws.WebService;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemManager;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemManager;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -187,7 +187,7 @@ public class ProjectDatabase implements IProjectDatabase
         final KalypsoProjectBean head = myBeans.get( keys[keys.length - 1] );
 
         KalypsoProjectBean[] values = myBeans.values().toArray( new KalypsoProjectBean[] {} );
-        values = ArrayUtils.remove( values, values.length - 1 ); // remove last entry -> cycle!
+        values = (KalypsoProjectBean[]) ArrayUtils.remove( values, values.length - 1 ); // remove last entry -> cycle!
 
         // TODO check needed? - order by clauses
         Arrays.sort( values, new Comparator<KalypsoProjectBean>()

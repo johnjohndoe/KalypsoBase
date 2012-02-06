@@ -32,11 +32,6 @@
             name="%org.kalyso.gml.ui.command.editFeature.name">
       </command>
       <command
-            description="%org.kalyso.gml.ui.command.addFeature.description"
-            id="org.kalyso.gml.ui.command.addFeature"
-            name="%org.kalyso.gml.ui.command.addFeature.name">
-      </command>
-      <command
             description="%org.kalyso.gml.ui.command.deleteFeature.description"
             id="org.kalyso.gml.ui.command.deleteFeature"
             name="%org.kalyso.gml.ui.command.deleteFeature.name">
@@ -61,24 +56,16 @@
             id="org.kalyso.gml.ui.command.featuresSort"
             name="%org.kalyso.gml.ui.command.featuresSort.name">
       </command>
-     <command
-           id="org.kalypso.gml.ui.commands.OpenLegendCommand" categoryId="org.kalypso.ogc.gml.map.category"
-           name="Legende anzeigen" description="Zeigt die Legende an">
-           <commandParameter id="themeProperty" name="Theme Property" optional="true"/>
-     </command>
    </extension>
    <extension point="org.eclipse.ui.commandImages">
       <image commandId="org.kalypso.ogc.gml.map.CoverageManagementCommand" icon="icons/obj16/manageCoverages.gif" />
       <image commandId="org.kalypso.gml.ui.toolWizards" icon="icons/obj16/tools_16.png"/>
-      <!-- FIXME: fix names -->
       <image commandId="org.kalyso.gml.ui.command.editFeature" icon="icons/obj16/gis_feature_edit.gif"/>
-      <image commandId="org.kalyso.gml.ui.command.addFeature" icon="icons/obj16/gis_feature_new.gif"/>
       <image commandId="org.kalyso.gml.ui.command.deleteFeature" icon="icons/obj16/gis_feature_delete.gif"/>
       <image commandId="org.kalyso.gml.ui.command.duplicateFeature" icon="icons/obj16/gis_feature_duplicate.gif"/>
       <image commandId="org.kalyso.gml.ui.command.featureUp" icon="icons/obj16/gis_feature_up.gif"/>
       <image commandId="org.kalyso.gml.ui.command.featureDown" icon="icons/obj16/gis_feature_down.gif"/>
       <image commandId="org.kalyso.gml.ui.command.featuresSort" icon="icons/obj16/gis_features_sort.png"/>
-      <image commandId="org.kalypso.gml.ui.commands.OpenLegendCommand" icon="icons/elcl16/openLegend.gif"/>
    </extension>
    <extension point="org.eclipse.ui.handlers">
 		<handler commandId="org.kalypso.ogc.gml.map.CoverageManagementCommand">
@@ -112,15 +99,6 @@
                          <instanceof value="org.kalypsodeegree.model.feature.Feature"/>
                       </iterate>
                    </and>
-                </with>
-             </enabledWhen>
-          </handler>
-          <handler class="org.kalypso.gml.ui.internal.gmltable.AddFeatureHandler" commandId="org.kalyso.gml.ui.command.addFeature">
-             <enabledWhen>
-                <with variable="activeGmlTable">
-                    <!-- -refernece not null -->
-                    <!-- Fixme: introduce tests -->
-                    <instanceof value="java.lang.Object"/>
                 </with>
              </enabledWhen>
           </handler>
@@ -196,9 +174,6 @@
                 </with>
              </enabledWhen>
           </handler>
-         <handler commandId="org.kalypso.gml.ui.commands.OpenLegendCommand">
-            <class class="org.kalypso.gml.ui.map.legend.OpenLegendHandler"/>
-         </handler>
    </extension>
    <extension
          point="org.kalypso.core.themeInfo">
@@ -504,24 +479,4 @@
            </enablement>
         </wizardEnablement>
     </extension>
-    
-    <!-- View menu for GML-Table -->
-    <extension point="org.eclipse.ui.menus">
-        <menuContribution locationURI="toolbar:org.kalypso.ui.editor.gistableeditor.GttViewPart">
-           <command commandId="org.kalyso.gml.ui.command.addFeature" style="push"/>
-           <command commandId="org.kalyso.gml.ui.command.deleteFeature" style="push"/>
-           <command commandId="org.kalyso.gml.ui.command.duplicateFeature" style="push"/>
-           <command commandId="org.kalyso.gml.ui.command.featureUp" style="push"/>
-           <command commandId="org.kalyso.gml.ui.command.featureDown" style="push"/>
-           
-           <separator name="featureCommandsEnd" visible="true"/>
-           
-           <command commandId="org.kalypso.ui.command.import" style="push"/>
-           <command commandId="org.kalypso.ui.command.export" style="push"/>
-           <command commandId="org.kalypso.gml.ui.toolWizards" style="push"/>
-           
-           <separator name="additions" visible="true" />
-        </menuContribution>
-     </extension>
-    
 </plugin>

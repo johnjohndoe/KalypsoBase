@@ -49,7 +49,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -62,8 +62,6 @@ import oasis.names.tc.entity.xmlns.xml.catalog.Catalog;
 import oasis.names.tc.entity.xmlns.xml.catalog.ObjectFactory;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
-import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -79,19 +77,18 @@ import org.kalypso.core.i18n.Messages;
  * <p>
  * the default-catalog is dynamic, but changes will not be saved
  * </p>
- *
+ * 
  * @author doemming
  */
-@SuppressWarnings("restriction")
 public class CatalogManager
 {
-  public static final JAXBContext JAX_CONTEXT_CATALOG = JaxbUtilities.createQuiet( ObjectFactory.class );
+  public final static JAXBContext JAX_CONTEXT_CATALOG = JaxbUtilities.createQuiet( ObjectFactory.class );
 
-  public static final ObjectFactory OBJECT_FACTORY_CATALOG = new ObjectFactory();
+  public final static ObjectFactory OBJECT_FACTORY_CATALOG = new ObjectFactory();
 
-  public final Map<Class< ? >, IURNGenerator> m_urnGenerators = new HashMap<>();
+  public final Hashtable<Class< ? >, IURNGenerator> m_urnGenerators = new Hashtable<Class< ? >, IURNGenerator>();
 
-  private final Map<URI, ICatalog> m_openCatalogs = new HashMap<>();
+  private final Hashtable<URI, ICatalog> m_openCatalogs = new Hashtable<URI, ICatalog>();
 
   private final File m_baseDir;
 
@@ -114,7 +111,7 @@ public class CatalogManager
     m_urnGenerators.put( key, urnGenerator );
   }
 
-  private synchronized ICatalog getBaseCatalog( )
+  public synchronized ICatalog getBaseCatalog( )
   {
     if( m_baseCatalog != null )
       return m_baseCatalog;
@@ -128,6 +125,8 @@ public class CatalogManager
     {
       ensureExisting( baseURN );
 
+// final ICatalog catalog = getCatalog( new URI( URLEncoder.encode( catalogFile.toURL().toString(), "UTF-8" ) ) );
+// m_baseCatalog = new CachingCatalog( catalog );
       m_baseCatalog = getCatalog( new URI( URLEncoder.encode( catalogFile.toURI().toURL().toString(), "UTF-8" ) ) ); //$NON-NLS-1$
 
       return m_baseCatalog;
@@ -139,39 +138,42 @@ public class CatalogManager
     }
   }
 
-  synchronized ICatalog getCatalog( final URI catalogURI )
+  @SuppressWarnings("unchecked")
+  public synchronized ICatalog getCatalog( final URI catalogURI )
   {
-    if( !m_openCatalogs.containsKey( catalogURI ) )
+    InputStream is = null;
+    try
     {
-      final ICatalog newOpenCatalog = readCatalog( catalogURI );
-      if( newOpenCatalog != null )
+      if( !m_openCatalogs.containsKey( catalogURI ) )
+      {
+        // load existing
+        final URL catalogURL = catalogURI.toURL();
+        final Unmarshaller unmarshaller = JAX_CONTEXT_CATALOG.createUnmarshaller();
+
+        // REMARK: do not use 'unmarshaller.unmarshal( catalogURL )'
+        // It does leave the stream open
+        is = catalogURL.openStream();
+        final JAXBElement<Catalog> object = (JAXBElement<Catalog>) unmarshaller.unmarshal( is );
+        is.close();
+
+        final Catalog catalog = object.getValue();
+
+        // System.out.println( "Loaded: " + catalogURL );
+
+        final ICatalog newOpenCatalog = createCatalog( catalogURL, catalog );
         m_openCatalogs.put( catalogURI, newOpenCatalog );
-    }
-    return m_openCatalogs.get( catalogURI );
-  }
-
-  private ICatalog readCatalog( final URI catalogURI )
-  {
-    try (InputStream is = catalogURI.toURL().openStream())
-    {
-      final Unmarshaller unmarshaller = JAX_CONTEXT_CATALOG.createUnmarshaller();
-
-      // REMARK: do not use 'unmarshaller.unmarshal( catalogURL )'
-      // It does leave the stream open
-      @SuppressWarnings("unchecked")
-      final JAXBElement<Catalog> object = (JAXBElement<Catalog>) unmarshaller.unmarshal( is );
-      is.close();
-
-      final Catalog catalog = object.getValue();
-
-      final URL catalogURL = catalogURI.toURL();
-      return createCatalog( catalogURL, catalog );
+      }
+      return m_openCatalogs.get( catalogURI );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      System.err.println( String.format( "Failed to load catalog from: %s", catalogURI ) );
-      return null;
+      // TODO generate new type of exception CatalogException
+      throw new UnsupportedOperationException( e );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( is );
     }
   }
 
@@ -203,7 +205,7 @@ public class CatalogManager
       m_openCatalogs.remove( catalogURI );
   }
 
-  synchronized void ensureExisting( final String baseURN ) throws MalformedURLException, URISyntaxException
+  public synchronized void ensureExisting( final String baseURN ) throws MalformedURLException, URISyntaxException
   {
     if( !baseURN.endsWith( ":" ) ) //$NON-NLS-1$
       throw new UnsupportedOperationException( Messages.getString( "org.kalypso.core.catalog.CatalogManager.6" ) + baseURN ); //$NON-NLS-1$
@@ -260,27 +262,11 @@ public class CatalogManager
     return new DynamicCatalog( this, catalogURL, catalog );
   }
 
+  /**
+   * @see org.kalypso.core.catalog.IURNGenerator#generateURNFor(java.lang.Object)
+   */
   public synchronized IURNGenerator getURNGeneratorFor( final Class< ? > supportingClass )
   {
     return m_urnGenerators.get( supportingClass );
-  }
-
-  public synchronized String resolve( final String systemID, final String publicID )
-  {
-    /* First try, use wst to resolve uri */
-    final URIResolver uriResolver = URIResolverPlugin.createResolver();
-    final String resolvedUri = uriResolver.resolve( null, publicID, systemID );
-    if( resolvedUri != null && !resolvedUri.equals( systemID ) )
-      return resolvedUri;
-
-    /* FIXME: remove our old implementation */
-    final ICatalog baseCatalog = getBaseCatalog();
-    return baseCatalog.resolve( systemID, publicID );
-  }
-
-  public void addNextCatalog( final URL catalogURL )
-  {
-    final ICatalog baseCatalog = getBaseCatalog();
-    baseCatalog.addNextCatalog( catalogURL );
   }
 }

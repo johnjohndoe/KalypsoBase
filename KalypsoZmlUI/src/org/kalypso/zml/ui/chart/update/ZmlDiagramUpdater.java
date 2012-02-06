@@ -41,12 +41,12 @@
 package org.kalypso.zml.ui.chart.update;
 
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.ogc.sensor.provider.IObsProvider;
-import org.kalypso.zml.core.base.MultipleTsLink;
-import org.kalypso.zml.core.base.TSLinkWithName;
-import org.kalypso.zml.core.diagram.base.IZmlLayer;
+import org.kalypso.zml.core.diagram.base.provider.observation.AsynchronousObservationProvider;
+import org.kalypso.zml.core.diagram.base.zml.MultipleTsLink;
+import org.kalypso.zml.core.diagram.base.zml.TSLinkWithName;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
+import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
 import de.openali.odysseus.chart.framework.model.ILayerContainer;
@@ -75,6 +75,9 @@ public class ZmlDiagramUpdater implements Runnable
     m_ignoreTypes = ignoreTypes;
   }
 
+  /**
+   * @see java.lang.Runnable#run()
+   */
   @Override
   public void run( )
   {
@@ -90,27 +93,18 @@ public class ZmlDiagramUpdater implements Runnable
 
       final IZmlLayer[] layers = visitor.getLayers();
 
-      final TSLinkWithName[] links = multiple.getSources();
+      final TSLinkWithName[] links = multiple.getLinks();
       for( int index = 0; index < links.length; index++ )
       {
         final TSLinkWithName link = links[index];
+        final AsynchronousObservationProvider provider = new AsynchronousObservationProvider( link, multiple.getType() );
 
-        try
-        {
-          final IObsProvider provider = link.getObsProvider();
-          update( layers, provider, index, link.getName() );
-          provider.dispose();
-        }
-        catch( final Exception e )
-        {
-          e.printStackTrace();
-        }
-
+        update( layers, provider, index, link.getName() );
       }
     }
   }
 
-  private void update( final IZmlLayer[] layers, final IObsProvider provider, final int index, final String labelDescriptor )
+  private void update( final IZmlLayer[] layers, final AsynchronousObservationProvider provider, final int index, final String labelDescriptor )
   {
     for( final IZmlLayer baseLayer : layers )
     {

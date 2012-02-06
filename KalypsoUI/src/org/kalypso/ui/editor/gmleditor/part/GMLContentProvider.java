@@ -31,42 +31,36 @@ package org.kalypso.ui.editor.gmleditor.part;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.progress.UIJob;
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.catalog.FeatureTypePropertiesCatalog;
+import org.kalypso.core.catalog.IFeatureTypePropertiesConstants;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.catalogs.FeatureTypePropertiesCatalog;
-import org.kalypso.ui.catalogs.IFeatureTypePropertiesConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathSegment;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * @author Christoph Küpferle
@@ -195,28 +189,26 @@ public class GMLContentProvider implements ITreeContentProvider
           result.addAll( Arrays.asList( children ) );
         }
       }
-      // FIXME: showing the geometry does not make much sennse (because we have no actions on it) and
-      // is ugly as well, as we have no nice label provider for it. So this is suppressed for now.
-// else if( GeometryUtilities.isGeometry( property ) )
-// {
-// final Object value = parentFE.getProperty( property );
-// if( value != null )
-// result.add( value );
-// }
+      else if( GeometryUtilities.isGeometry( property ) )
+      {
+        final Object value = parentFE.getProperty( property );
+        if( value != null )
+          result.add( value );
+      }
     }
   }
 
   private void collectAssociationChildren( final FeatureAssociationTypeElement fate, final List<Object> result )
   {
-    final Feature parentFeature = fate.getOwner();
-    final IRelationType ftp = fate.getPropertyType();
+    final Feature parentFeature = (fate).getParentFeature();
+    final IRelationType ftp = (fate).getPropertyType();
     final Feature[] features = m_workspace.resolveLinks( parentFeature, ftp );
     for( int i = 0; i < features.length; i++ )
     {
       final Feature feature = features[i];
       if( feature != null )
       {
-        if( isLink( parentFeature, ftp, i ) )
+        if( m_workspace.isAggregatedLink( parentFeature, ftp, i ) || feature instanceof XLinkedFeature_Impl )
           result.add( new LinkedFeatureElement( fate, feature ) );
         else
           result.add( feature );
@@ -225,37 +217,8 @@ public class GMLContentProvider implements ITreeContentProvider
   }
 
   /**
-   * FIXME: this method does not use any members of this class and so does not depends on this specific implementation.
-   * Move it into a utility class.
+   * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
    */
-  private boolean isLink( final Feature parent, final IRelationType linkProp, final int pos )
-  {
-    final Object value = parent.getProperty( linkProp );
-
-    if( linkProp.isList() )
-    {
-      final List< ? > list = (List< ? >) value;
-      if( pos < 0 || pos >= list.size() )
-        return false;
-
-      final Object object = list.get( pos );
-      return isLinkObject( object );
-    }
-
-    return isLinkObject( value );
-  }
-
-  private boolean isLinkObject( final Object object )
-  {
-    if( object instanceof IXLinkedFeature )
-      return true;
-
-    if( object instanceof String )
-      return true;
-
-    return false;
-  }
-
   @Override
   public Object getParent( final Object element )
   {
@@ -265,7 +228,7 @@ public class GMLContentProvider implements ITreeContentProvider
     if( element instanceof FeatureAssociationTypeElement )
     {
       final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) element;
-      return fate.getOwner();
+      return fate.getParentFeature();
     }
 
     /* Is it one of the root elements? */
@@ -279,7 +242,7 @@ public class GMLContentProvider implements ITreeContentProvider
     if( element instanceof Feature )
     {
       final Feature feature = (Feature) element;
-      final Feature parent = feature.getOwner();
+      final Feature parent = feature.getParent();
 
       if( !m_showAssociations )
         return parent;
@@ -446,7 +409,7 @@ public class GMLContentProvider implements ITreeContentProvider
       else if( object instanceof FeatureAssociationTypeElement )
       {
         final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) object;
-        final Feature parentFeature = fate.getOwner();
+        final Feature parentFeature = fate.getParentFeature();
         final GMLXPath path = new GMLXPath( parentFeature );
         m_rootPath = new GMLXPath( path, fate.getPropertyType().getQName() );
       }
@@ -523,12 +486,6 @@ public class GMLContentProvider implements ITreeContentProvider
     }
   }
 
-  Set<Feature> m_featureChangeStack = new LinkedHashSet<>();
-
-  private UIJob m_featureChangeJob;
-
-  private UIJob m_featureStructureChangedJob;
-
   protected void handleModelChanged( final ModellEvent modellEvent )
   {
     if( !m_handleModelEvents )
@@ -542,66 +499,46 @@ public class GMLContentProvider implements ITreeContentProvider
 
     if( modellEvent instanceof FeatureStructureChangeModellEvent )
     {
-      if( m_featureStructureChangedJob != null )
-        m_featureStructureChangedJob.cancel();
+      final FeatureStructureChangeModellEvent structureEvent = (FeatureStructureChangeModellEvent) modellEvent;
+      final Feature[] parentFeature = structureEvent.getParentFeatures();
 
-      m_featureStructureChangedJob = new UIJob( "GMLContentProfvider feature structure update" )
+      if( !control.isDisposed() )
       {
-        @Override
-        public IStatus runInUIThread( final IProgressMonitor monitor )
+        // REMARK: must be sync, if not we get a racing condition with handleGlobalSelection
+        control.getDisplay().syncExec( new Runnable()
         {
-          if( monitor.isCanceled() )
-            return Status.CANCEL_STATUS;
-          if( Objects.isNull( control ) || control.isDisposed() )
-            return Status.CANCEL_STATUS;
+          @Override
+          public void run( )
+          {
+            // This does not work nicely. In order to refresh the tree in a nice way,
+            // the modell event should also provide which festures where added/removed
+            final Object[] expandedElements = treeViewer.getExpandedElements();
 
-          final Object[] expandedElements = treeViewer.getExpandedElements();
-          treeViewer.refresh();
+            if( parentFeature == null )
+              treeViewer.refresh();
+            else
+              treeViewer.refresh();
 
-          treeViewer.setExpandedElements( expandedElements );
-
-          return Status.OK_STATUS;
-        }
-      };
-
-      m_featureStructureChangedJob.setSystem( true );
-      m_featureStructureChangedJob.setUser( false );
-
-      m_featureStructureChangedJob.schedule( 50 );
-
+            treeViewer.setExpandedElements( expandedElements );
+          }
+        } );
+      }
     }
     else if( modellEvent instanceof FeaturesChangedModellEvent )
     {
       final FeaturesChangedModellEvent fcme = (FeaturesChangedModellEvent) modellEvent;
-      Collections.addAll( m_featureChangeStack, fcme.getFeatures() );
-
-      if( m_featureChangeJob != null )
-        m_featureChangeJob.cancel();
-
-      m_featureChangeJob = new UIJob( "GMLContentProfvider feature update" )
-      {
-        @Override
-        public IStatus runInUIThread( final IProgressMonitor monitor )
+      final Feature[] features = fcme.getFeatures();
+      if( control != null && !control.isDisposed() )
+        control.getDisplay().asyncExec( new Runnable()
         {
-          if( monitor.isCanceled() )
-            return Status.CANCEL_STATUS;
-
-          if( Objects.isNull( control ) || control.isDisposed() )
-            return Status.CANCEL_STATUS;
-
-          final Feature[] features = m_featureChangeStack.toArray( new Feature[] {} );
-          m_featureChangeStack.clear();
-          for( final Feature feature : features )
-            treeViewer.refresh( feature, true );
-
-          return Status.OK_STATUS;
-        }
-      };
-
-      m_featureChangeJob.setSystem( true );
-      m_featureChangeJob.setUser( false );
-
-      m_featureChangeJob.schedule( 50 );
+          @Override
+          public void run( )
+          {
+            if( !control.isDisposed() )
+              for( final Feature feature : features )
+                treeViewer.refresh( feature, true );
+          }
+        } );
     }
   }
 

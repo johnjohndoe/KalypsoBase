@@ -40,12 +40,15 @@ import org.kalypsodeegree.model.geometry.ByteUtils;
 
 /**
  * Class representing the header of a dBase III/IV file
+ * 
  * <P>
  * <B>Last changes <B>: <BR>
  * 28.04.00 ap: constructor declared and implemented <BR>
  * 28.04.00 ap: method setField(int index, FieldDescriptor fd) <BR>
  * 28.04.00 ap: method getHeader() declared and implemented <BR>
  * 03.05.00 ap: constructor modified <BR>
+ * 
+ * 
  * <p>
  * --------------------------------------------------------------------------
  * </p>
@@ -62,7 +65,7 @@ public class DBFHeader
   /**
    * constructor retrieves number of fields
    */
-  public DBFHeader( final FieldDescriptor[] fieldDesc )
+  public DBFHeader( FieldDescriptor[] fieldDesc )
   {
 
     // allocate memory for the header
@@ -76,7 +79,7 @@ public class DBFHeader
     header[2] = 1;
     header[3] = 1;
 
-    // number of records in the dBase file
+    //number of records in the dBase file
     ByteUtils.writeLEInt( header, 4, 0 );
 
     // write number of bytes in the header
@@ -105,22 +108,22 @@ public class DBFHeader
   /**
    * method: public void setField(int index, FieldDescriptor fd) puts a field on the header byte array
    */
-  private void setField( final int index, final FieldDescriptor fd )
+  private void setField( int index, FieldDescriptor fd )
   {
 
     // get field descriptor data
-    final byte[] fddata = fd.getFieldDescriptor();
+    byte[] fddata = fd.getFieldDescriptor();
 
     // put field descriptor data on header byte array
     for( int i = 0; i < 32; i++ )
-      header[32 + index * 32 + i] = fddata[i];
+      header[32 + ( index * 32 ) + i] = fddata[i];
 
   }
 
   /**
    * method: public byte[] getHeader() throws DBaseException returns the header as a byte array
    */
-  public byte[] getHeader( )
+  public byte[] getHeader()
   {
     return header;
   }

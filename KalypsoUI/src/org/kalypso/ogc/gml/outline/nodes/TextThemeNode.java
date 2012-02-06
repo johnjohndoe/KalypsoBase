@@ -58,7 +58,7 @@ public class TextThemeNode extends KalypsoThemeNode<KalypsoTextTheme>
    *          The kalypso text theme.
    */
 
-  TextThemeNode( final IThemeNode parent, final KalypsoTextTheme element )
+  TextThemeNode( IThemeNode parent, KalypsoTextTheme element )
   {
     super( parent, element );
   }

@@ -40,29 +40,34 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.viewers.BaseLabelProvider;
+import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
- * @author Gernot Belger
+ * @author Belger
  */
-public class LayerTableLabelProvider extends BaseLabelProvider implements ITableLabelProvider
+public class LayerTableLabelProvider extends BaseLabelProvider implements ITableLabelProvider, IColorProvider
 {
   private final LayerTableViewer m_viewer;
+
+  private final Color m_noSelectionColor;
 
   public LayerTableLabelProvider( final LayerTableViewer layerTable )
   {
     m_viewer = layerTable;
+    m_noSelectionColor = m_viewer.getControl().getBackground();
   }
 
+  /**
+   * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
+   */
   @Override
   public Image getColumnImage( final Object element, final int columnIndex )
   {
@@ -79,6 +84,9 @@ public class LayerTableLabelProvider extends BaseLabelProvider implements ITable
     return modifier.getImage( feature );
   }
 
+  /**
+   * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
+   */
   @Override
   public String getColumnText( final Object element, final int columnIndex )
   {
@@ -88,32 +96,53 @@ public class LayerTableLabelProvider extends BaseLabelProvider implements ITable
       if( element instanceof String )
         return (String) element;
 
-      return StringUtils.EMPTY;
+      return ""; //$NON-NLS-1$
     }
 
     final Feature feature = (Feature) element;
 
     final IFeatureModifier modifier = m_viewer.getModifier( columnIndex );
     if( modifier == null )
-      return StringUtils.EMPTY;
+      return ""; //$NON-NLS-1$
 
-    final GMLXPath propertyPath = modifier.getPropertyPath();
-
-    final IFeatureType featureType = feature.getFeatureType();
-    final IPropertyType realPT = LayerTableViewer.findPropertyType( featureType, propertyPath );
-    if( realPT == null )
-      return Messages.getString( "org.kalypso.ogc.gml.table.LayerTableLabelProvider.0" ); //$NON-NLS-1$
+    final IPropertyType pt = modifier.getFeatureTypeProperty();
+    final IPropertyType realPt = feature.getFeatureType().getProperty( pt.getQName() );
+    if( realPt == null )
+      return Messages.getString("org.kalypso.ogc.gml.table.LayerTableLabelProvider.0"); //$NON-NLS-1$
 
     final String label = modifier.getLabel( feature );
-    return label == null ? StringUtils.EMPTY : label;
+    return label == null ? "" : label; //$NON-NLS-1$
   }
 
   /**
-   * @Override public Color getForeground( final Object element, final int columnIndex ) { final Feature feature =
-   *           (Feature) element; final LayerTableStyle style = m_viewer.getStyle( columnIndex ); if( style == null )
-   *           return null; return style.getForeground( feature ); }
-   * @Override public Color getBackground( final Object element, final int columnIndex ) { final Feature feature =
-   *           (Feature) element; final LayerTableStyle style = m_viewer.getStyle( columnIndex ); if( style == null )
-   *           return null; return style.getBackground( feature ); }
+   * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
    */
+  @Override
+  public Color getForeground( final Object element )
+  {
+    return null;
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
+   */
+  @Override
+  public Color getBackground( final Object element )
+  {
+// if( element instanceof Feature )
+// {
+// final ISelection selection = m_viewer.getSelection();
+// if( selection instanceof IStructuredSelection )
+// {
+// final Iterator iterator = ( (IStructuredSelection)selection ).iterator();
+// while( iterator.hasNext() )
+// {
+// final Object object = iterator.next();
+// if( element == object )
+// return m_selectionColor;
+// }
+// }
+// }
+    return m_noSelectionColor;
+  }
 }

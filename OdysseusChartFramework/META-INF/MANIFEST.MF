@@ -5,7 +5,9 @@ Bundle-SymbolicName: de.openali.odysseus.chart.framework;singleton:=true
 Bundle-Version: 11.6.4.qualifier
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.swt;visibility:=reexport,
- org.kalypso.commons
+ org.kalypso.commons,
+ org.kalypso.metadoc,
+ org.kalypso.ui
 Export-Package: de.openali.odysseus.chart.framework,
  de.openali.odysseus.chart.framework.exception,
  de.openali.odysseus.chart.framework.logging,
@@ -20,7 +22,6 @@ Export-Package: de.openali.odysseus.chart.framework,
  de.openali.odysseus.chart.framework.model.figure.impl,
  de.openali.odysseus.chart.framework.model.impl,
  de.openali.odysseus.chart.framework.model.impl.settings,
- de.openali.odysseus.chart.framework.model.impl.utils,
  de.openali.odysseus.chart.framework.model.impl.visitors,
  de.openali.odysseus.chart.framework.model.layer,
  de.openali.odysseus.chart.framework.model.layer.impl,
@@ -47,4 +48,4 @@ Export-Package: de.openali.odysseus.chart.framework,
 Bundle-Activator: de.openali.odysseus.chart.framework.OdysseusChartFramework
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: kalypsobase.sourceforge.net
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

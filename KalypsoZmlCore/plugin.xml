@@ -2,30 +2,6 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="tableRule" name="tableRule" schema="schema/tableRule.exsd"/>
-   <extension-point id="metaDataBoundaryValue" name="metaDataBoundaryValue" schema="schema/metaDataBoundaryValue.exsd"/>
-   <extension-point id="requestStrategy" name="requestStrategy" schema="schema/requestStrategy.exsd"/>
- <extension
-       point="org.kalypso.contribs.java.urlCatalog">
-    <catalog
-          class="org.kalypso.zml.core.KalypsoZmlCoreCatalog"
-          id="org.kalypso.zml.core.KalypsoZmlCoreCatalog">
-    </catalog>
- </extension>
-   <extension
-         point="org.kalypso.deegree.featureBinding">
-      <feature
-            class="org.kalypso.zml.core.filter.binding.InterpolationZmlFilter"
-            qname="{org.kalypso.zml.core.filter}InterpolationZmlFilter">
-      </feature>
-      <feature
-            class="org.kalypso.zml.core.filter.binding.IntervalZmlFilter"
-            qname="{org.kalypso.zml.core.filter}IntervalZmlFilter">
-      </feature>
-      <feature
-            class="org.kalypso.zml.core.filter.binding.RoundZmlFilter"
-            qname="{org.kalypso.zml.core.filter}RoundZmlFilter">
-      </feature>
-   </extension>
   	<extension
        point="org.kalypso.zml.core.tableRule">
     <rule
@@ -68,24 +44,14 @@
           id="org.kalypso.zml.ui.core.rule.data.source"
           rule="org.kalypso.zml.core.table.rules.impl.ZmlRuleDataSource">
     </rule>
- </extension>
+ </extension> 
  <extension
          point="org.eclipse.wst.xml.core.catalogContributions">
       <catalogContribution>
          <nextCatalog
-               catalog="etc/schemas/catalog.xml">
+               catalog="etc/schemas/catalog.xmlcatalog">
          </nextCatalog>
       </catalogContribution>
  </extension>
- <extension
-       point="org.kalypso.zml.core.requestStrategy">
-    <strategy
-          id="request.strategy.prognose"
-          strategy="org.kalypso.zml.core.base.request.PrognoseRequestStrategy">
-    </strategy>
-    <strategy
-          id="request.strategy.observation.provider"
-          strategy="org.kalypso.zml.core.base.request.ObsProviderRequestStrategy">
-    </strategy>
- </extension>
+
 </plugin>

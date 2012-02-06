@@ -43,12 +43,10 @@ package org.kalypso.ui.editor.gmleditor.command;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -78,7 +76,7 @@ public class AddFeatureCommand implements ICommand
   private final GMLWorkspace m_workspace;
 
   /** A map with key=IPropertyType and value=Object to pass properties when the feature is newly created */
-  private final Map<IPropertyType, Object> m_properties = new HashMap<IPropertyType, Object>();
+  private final Map<Object, Object> m_properties = new HashMap<Object, Object>();
 
   private final IFeatureSelectionManager m_selectionManager;
 
@@ -94,33 +92,11 @@ public class AddFeatureCommand implements ICommand
 
   private final boolean m_doAddOnProcess;
 
-  /**
-   * @param If
-   *          dropSelection is true, the workspace must be a {@link CommandableWorkspace}.
-   */
-  public AddFeatureCommand( final GMLWorkspace workspace, final QName type, final Feature parentFeature, final IRelationType propertyName, final int pos, final Map<QName, Object> properties, final IFeatureSelectionManager selectionManager, final int depth )
+  public AddFeatureCommand( final GMLWorkspace workspace, final IFeatureType type, final Feature parentFeature, final IRelationType propertyName, final int pos, final int depth )
   {
-    this( workspace, GMLSchemaUtilities.getFeatureTypeQuiet( type ), parentFeature, propertyName, pos, convertProperties( GMLSchemaUtilities.getFeatureTypeQuiet( type ), properties ), selectionManager, depth );
+    this( workspace, type, parentFeature, propertyName, pos, new HashMap<IPropertyType, Object>(), null, depth );
   }
 
-  private static Map<IPropertyType, Object> convertProperties( final IFeatureType featureType, final Map<QName, Object> properties )
-  {
-    final Map<IPropertyType, Object> typedProperties = new HashMap<IPropertyType, Object>();
-
-    for( final Entry<QName, Object> entry : properties.entrySet() )
-    {
-      final IPropertyType propertyType = featureType.getProperty( entry.getKey() );
-      if( propertyType != null )
-        typedProperties.put( propertyType, entry.getValue() );
-    }
-
-    return typedProperties;
-  }
-
-  /**
-   * @param If
-   *          dropSelection is true, the workspace must be a {@link CommandableWorkspace}.
-   */
   public AddFeatureCommand( final GMLWorkspace workspace, final IFeatureType type, final Feature parentFeature, final IRelationType propertyName, final int pos, final Map<IPropertyType, Object> properties, final IFeatureSelectionManager selectionManager, final int depth )
   {
     m_workspace = workspace;
@@ -157,7 +133,7 @@ public class AddFeatureCommand implements ICommand
   /**
    * Alternative constructor: instead of specifying the properties and let the command create the feature a newly
    * created feature is provided from outside.
-   *
+   * 
    * @param doAddOnProcess
    *          If false, the new feature will NOT be added/set to the given relation (propertyName). This is necessary if
    *          the feature was already added before.
@@ -195,10 +171,17 @@ public class AddFeatureCommand implements ICommand
     {
       m_newFeature = m_workspace.createFeature( m_parentFeature, m_propName, m_type, m_depth );
 
-      if( m_properties != null )
+      for( final Map.Entry<Object, Object> entry : m_properties.entrySet() )
       {
-        for( final Map.Entry<IPropertyType, Object> entry : m_properties.entrySet() )
-          m_newFeature.setProperty( entry.getKey(), entry.getValue() );
+        final Object property = entry.getKey();
+        final Object value = entry.getValue();
+
+        if( property instanceof QName )
+          m_newFeature.setProperty( (QName) property, value );
+        else if( property instanceof IPropertyType )
+          m_newFeature.setProperty( (IPropertyType) property, value );
+        else
+          throw new IllegalStateException();
       }
     }
 
@@ -242,6 +225,9 @@ public class AddFeatureCommand implements ICommand
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature, m_newFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
 
+  /**
+   * @see org.kalypso.commons.command.ICommand#getDescription()
+   */
   @Override
   public String getDescription( )
   {
@@ -261,12 +247,18 @@ public class AddFeatureCommand implements ICommand
     m_dropSelection = dropSelection;
   }
 
-  public void addProperty( final QName property, final Object value )
+  /**
+   * Adds a property that will be set after the feature is created.
+   */
+  public void setProperty( final QName property, final Object value )
   {
-    m_properties.put( m_type.getProperty( property ), value );
+    m_properties.put( property, value );
   }
 
-  public void addProperty( final IPropertyType property, final Object value )
+  /**
+   * Adds a property that will be set after the feature is created.
+   */
+  public void setProperty( final IPropertyType property, final Object value )
   {
     m_properties.put( property, value );
   }

@@ -54,8 +54,8 @@ import org.kalypso.observation.phenomenon.IPhenomenon;
 import org.kalypso.observation.result.AbstractComponent;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * A component which was previously read from a feature.
@@ -83,6 +83,9 @@ public class FeatureComponent extends AbstractComponent
     this( itemDef, null );
   }
 
+  /**
+   * @see org.kalypso.observation.result.IComponent#getDefaultValue()
+   */
   @Override
   public Object getDefaultValue( )
   {
@@ -109,17 +112,23 @@ public class FeatureComponent extends AbstractComponent
     return NamedFeatureHelper.getDescription( m_itemDef );
   }
 
+  /**
+   * @see org.kalypso.observation.result.IComponent#getFrame()
+   */
   @Override
   public String getFrame( )
   {
     return getRepresentationType().getFrame();
   }
 
+  /**
+   * @see org.kalypso.observation.result.IComponent#getId()
+   */
   @Override
   public String getId( )
   {
-    if( m_itemDef instanceof IXLinkedFeature )
-      return ((IXLinkedFeature) m_itemDef).getHref();
+    if( m_itemDef instanceof XLinkedFeature_Impl )
+      return ((XLinkedFeature_Impl) m_itemDef).getHref();
 
     if( m_itemDef == null )
       return m_uri;
@@ -167,24 +176,36 @@ public class FeatureComponent extends AbstractComponent
     return (RepresentationType) m_itemDef.getProperty( ObservationFeatureFactory.SWE_REPRESENTATION );
   }
 
+  /**
+   * @see org.kalypso.observation.result.IComponent#getUnit()
+   */
   @Override
   public String getUnit( )
   {
     return getRepresentationType().getUnit();
   }
 
+  /**
+   * @see org.kalypso.observation.result.IComponent#getValueTypeName()
+   */
   @Override
   public QName getValueTypeName( )
   {
     return getRepresentationType().getValueTypeName();
   }
 
+  /**
+   * @see org.kalypso.observation.result.IComponent#getRestrictions()
+   */
   @Override
   public IRestriction[] getRestrictions( )
   {
     return getRepresentationType().getRestrictions();
   }
 
+  /**
+   * @see java.lang.Object#toString()
+   */
   @Override
   public String toString( )
   {

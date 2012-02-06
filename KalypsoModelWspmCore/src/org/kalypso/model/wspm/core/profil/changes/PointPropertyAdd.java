@@ -53,17 +53,29 @@ public final class PointPropertyAdd implements IProfilChange
 
   private final Object[] m_values;
 
+  private final IComponent m_cloneFrom;
+
   public PointPropertyAdd( final IProfil profil, final IComponent property, final Object[] values )
   {
     m_profil = profil;
     m_property = property;
     m_values = values;
+    m_cloneFrom = null;
+  }
+
+  public PointPropertyAdd( final IProfil profil, final IComponent property, final IComponent component )
+  {
+    m_profil = profil;
+    m_property = property;
+    m_values = null;
+    m_cloneFrom = component;
   }
 
   public PointPropertyAdd( final IProfil profil, final IComponent property )
   {
     m_profil = profil;
     m_property = property;
+    m_cloneFrom = null;
     m_values = null;
   }
 
@@ -71,19 +83,22 @@ public final class PointPropertyAdd implements IProfilChange
   {
     m_profil = profil;
     m_property = property;
+    m_cloneFrom = null;
     m_values = new Object[] { defaultValue };
   }
 
   @Override
-  public void configureHint( final ProfilChangeHint hint )
+  public IProfilChange doChange( final ProfilChangeHint hint )
   {
-    hint.setPointPropertiesChanged();
-  }
-
-  @Override
-  public IProfilChange doChange( )
-  {
-    if( m_values == null )
+    if( hint != null )
+    {
+      hint.setPointPropertiesChanged();
+    }
+    if( m_cloneFrom != null )
+    {
+      m_profil.getResult().addComponent( m_property, m_cloneFrom );
+    }
+    else if( m_values == null )
     {
       m_profil.addPointProperty( m_property );
     }
@@ -108,6 +123,9 @@ public final class PointPropertyAdd implements IProfilChange
     return new PointPropertyRemove( m_profil, m_property );
   }
 
+  /**
+   * @see java.lang.Object#toString()
+   */
   @Override
   public String toString( )
   {

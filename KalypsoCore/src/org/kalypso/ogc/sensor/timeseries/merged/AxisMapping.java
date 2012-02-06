@@ -45,7 +45,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 
@@ -132,9 +132,9 @@ public class AxisMapping
     return m_sourceMapping.get( destinationAxis );
   }
 
-  public IAxis getDataSourceAxis( final IAxis valueAxis )
+  public IAxis getDataSourceAxis( )
   {
-    return AxisUtils.findDataSourceAxis( m_destinationAxes, valueAxis );
+    return AxisUtils.findDataSourceAxis( m_destinationAxes );
   }
 
 }

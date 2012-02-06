@@ -49,18 +49,27 @@ import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 public abstract class AbstractMapperRegistryEventListener implements IMapperRegistryEventListener
 {
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistryEventListener#onMapperAdded(de.openali.odysseus.chart.framework.model.mapper.IMapper)
+   */
   @Override
   public void onMapperAdded( final IMapper mapper )
   {
     // not implemented - override in subclass if needed
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistryEventListener#onMapperRemoved(de.openali.odysseus.chart.framework.model.mapper.IMapper)
+   */
   @Override
   public void onMapperRemoved( final IMapper mapper )
   {
     // not implemented - override in subclass if needed
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistryEventListener#onMapperRangeChanged(de.openali.odysseus.chart.framework.model.mapper.IMapper)
+   */
   @Override
   public void onMapperChanged( final IMapper mapper )
   {

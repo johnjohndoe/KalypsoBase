@@ -40,6 +40,7 @@ import org.kalypsodeegree.xml.Marshallable;
 import org.kalypsodeegree_impl.tools.Debug;
 
 /**
+ * 
  * <p>
  * ----------------------------------------------------------------------
  * </p>
@@ -56,7 +57,7 @@ public class Extent_Impl implements Extent, Marshallable
   /**
    * constructor initializing the class with the <Extent>
    */
-  Extent_Impl( final String value, final String name )
+  Extent_Impl( String value, String name )
   {
     setName( name );
     setValue( value );
@@ -68,7 +69,7 @@ public class Extent_Impl implements Extent, Marshallable
    * @return the name of the extent
    */
   @Override
-  public String getName( )
+  public String getName()
   {
     return name;
   }
@@ -80,7 +81,7 @@ public class Extent_Impl implements Extent, Marshallable
    *          the name of the extent
    */
   @Override
-  public void setName( final String name )
+  public void setName( String name )
   {
     this.name = name;
   }
@@ -91,7 +92,7 @@ public class Extent_Impl implements Extent, Marshallable
    * @return the value of the extent
    */
   @Override
-  public String getValue( )
+  public String getValue()
   {
     return value;
   }
@@ -103,7 +104,7 @@ public class Extent_Impl implements Extent, Marshallable
    *          the value of the extent
    */
   @Override
-  public void setValue( final String value )
+  public void setValue( String value )
   {
     this.value = value;
   }
@@ -114,11 +115,11 @@ public class Extent_Impl implements Extent, Marshallable
    * @return xml representation of the FeatureTypeConstraint
    */
   @Override
-  public String exportAsXML( )
+  public String exportAsXML()
   {
     Debug.debugMethodBegin();
 
-    final StringBuffer sb = new StringBuffer( 1000 );
+    StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<Extent>" );
     sb.append( "<Name>" ).append( name ).append( "</Name>" );
     sb.append( "<Value>" ).append( name ).append( "</Value>" );

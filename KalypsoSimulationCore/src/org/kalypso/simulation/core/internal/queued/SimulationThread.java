@@ -47,7 +47,6 @@ import javax.activation.DataHandler;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.simulation.core.ISimulation;
@@ -144,18 +143,9 @@ public class SimulationThread extends Thread
         LOGGER.info( "JOB exited normally: " + jobID ); //$NON-NLS-1$
       }
     }
-    catch( final OperationCanceledException e )
-    {
-      LOGGER.warning( "Simulation cancelled" );
-      e.printStackTrace();
-
-      m_jobBean.setFinishInfo( IStatus.CANCEL, "Simulation cancelled" );
-      m_jobBean.setException( e );
-      m_jobBean.setState( ISimulationConstants.STATE.CANCELED );
-    }
     catch( final SimulationException se )
     {
-      LOGGER.warning( "Simulation aborted with exception: " + jobID );
+      LOGGER.warning( "Simulation aborted with exception: " + jobID ); //$NON-NLS-1$
       se.printStackTrace();
 
       m_jobBean.setFinishInfo( IStatus.ERROR, se.getLocalizedMessage() );

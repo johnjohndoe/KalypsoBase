@@ -74,7 +74,7 @@ public class WelcomePageComposite extends Composite
     layout.verticalSpacing = 25;
     layout.marginWidth = 75;
 
-    setLayout( layout );
+    this.setLayout( layout );
 
     update();
   }

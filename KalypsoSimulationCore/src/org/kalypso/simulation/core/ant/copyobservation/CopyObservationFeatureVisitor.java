@@ -94,6 +94,9 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
     m_logger = logger;
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
+   */
   @Override
   public final boolean visit( final Feature feature )
   {
@@ -103,8 +106,6 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
       setCurrentSubTask( targetHref );
 
       final ObservationSource[] sources = m_sources.getObservationSources( feature );
-      if( sources.length == 0 )
-        return true;
 
       final URL targetLocation = UrlResolverSingleton.getDefault().resolveURL( m_target.getContext(), targetHref );
       final File targetFile = getTargetFile( targetLocation );

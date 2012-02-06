@@ -61,8 +61,6 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.core.profil.MarkerIndex;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfileRecord;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
@@ -285,13 +283,13 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
    */
 
   @Deprecated
-  public final IComponent getDeviderTyp( final IProfileRecord point )
+  public final IComponent getDeviderTyp( final IRecord point )
   {
     final IProfilPointMarker[] markers = m_profile.getPointMarkerFor( point );
     if( markers == null )
       return null;
 
-    return markers.length > 0 ? markers[0].getComponent() : null;
+    return markers.length > 0 ? markers[0].getId() : null;
   }
 
   /**
@@ -300,14 +298,14 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
 
   public final String[] getMarkerTypes( final IRecord point )
   {
-    final IProfilPointMarker[] markers = m_profile.getPointMarkerFor( point instanceof IProfileRecord ? (IProfileRecord) point : new ProfileRecord( m_profile, point ) );
+    final IProfilPointMarker[] markers = m_profile.getPointMarkerFor( point );
     if( markers == null || markers.length == 0 )
       return null;
     final HashSet<String> types = new HashSet<String>();
     for( final IProfilPointMarker marker : markers )
     {
-      final IComponent type = marker.getComponent();
-      if( !types.contains( type.getId() ) )
+      final IComponent type = marker.getId();
+      if( !types.contains( type ) )
       {
         types.add( type.getId() );
       }

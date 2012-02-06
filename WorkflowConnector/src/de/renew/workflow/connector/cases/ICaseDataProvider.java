@@ -111,5 +111,5 @@ public interface ICaseDataProvider<T extends Object>
 
   public void reloadModel( );
 
-  public void setCurrent( final IScenario scenario );
+  public void setCurrent( final ICase scenario );
 }

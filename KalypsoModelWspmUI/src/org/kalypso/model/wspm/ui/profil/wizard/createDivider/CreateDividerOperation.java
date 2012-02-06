@@ -51,26 +51,24 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
@@ -126,6 +124,9 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
     m_commandTarget = commandTarget;
   }
 
+  /**
+   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
+   */
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
   {
@@ -164,7 +165,11 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
 
         // create marker for each point
         final Integer[] newMarkerPoints = findNewMarkerPoints( profile );
-        createNewDevider( profil, newMarkerPoints );
+
+        if( createNewDevider( profil, newMarkerPoints ) )
+        {
+          Collections.addAll( m_changes, ProfileFeatureFactory.toFeatureAsChanges( profil, profile ) );
+        }
       }
       catch( final GM_Exception e )
       {
@@ -214,11 +219,11 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
       case 1:
       {
         final Integer oneIndex = bestMarkers[0];
-        final IProfileRecord lowestPoint = ProfileVisitors.findLowestPoint( profil );
-        if( Objects.isNull( lowestPoint ) )
+        final int lowPointIndex = WspmProfileHelper.findLowestPointIndex( profil );
+        if( lowPointIndex == -1 )
           return new Integer[] { oneIndex };
 
-        if( oneIndex < lowestPoint.getIndex() )
+        if( oneIndex < lowPointIndex )
           return new Integer[] { oneIndex, last };
         else
           return new Integer[] { first, oneIndex };
@@ -300,17 +305,17 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
     final SortedSet<Integer> markerIndices = new TreeSet<Integer>( Arrays.asList( markerPoints ) );
 
     // depends on the side of the profile!
-    final IProfileRecord lowestPoint = ProfileVisitors.findLowestPoint( profil );
-    if( Objects.isNull( lowestPoint ) )
+    final int lowPointIndex = WspmProfileHelper.findLowestPointIndex( profil );
+    if( lowPointIndex == -1 )
       return new Integer[] { intersectionIndex };
 
     final Collection<Integer> result = new ArrayList<Integer>( 2 );
     result.add( intersectionIndex );
 
-    if( intersectionIndex > lowestPoint.getIndex() )
+    if( intersectionIndex > lowPointIndex )
     {
       // use leftmost of all left markers
-      final SortedSet<Integer> leftSet = markerIndices.headSet( lowestPoint.getIndex() );
+      final SortedSet<Integer> leftSet = markerIndices.headSet( lowPointIndex );
       if( !leftSet.isEmpty() )
       {
         result.add( leftSet.first() );
@@ -319,7 +324,7 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
     else
     {
       // use leftmost of all left markers
-      final SortedSet<Integer> rightSet = markerIndices.tailSet( lowestPoint.getIndex() );
+      final SortedSet<Integer> rightSet = markerIndices.tailSet( lowPointIndex );
       if( !rightSet.isEmpty() )
       {
         result.add( rightSet.last() );
@@ -335,8 +340,8 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
     final Integer[] asPoints = new Integer[existingMarkers.length];
     for( int i = 0; i < asPoints.length; i++ )
     {
-      final IProfileRecord markerPoint = existingMarkers[i].getPoint();
-      asPoints[i] = markerPoint.getIndex();
+      final IRecord markerPoint = existingMarkers[i].getPoint();
+      asPoints[i] = profil.indexOfPoint( markerPoint );
     }
 
     return asPoints;
@@ -428,7 +433,7 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
     {
       if( markerIndex != null )
       {
-        final IProfileRecord markerPoint = profil.getPoint( markerIndex );
+        final IRecord markerPoint = profil.getPoint( markerIndex );
         final IProfilPointMarker marker = profil.createPointMarker( id, markerPoint );
         final Object defaultValue = provider.getDefaultValue( id );
         marker.setValue( defaultValue );

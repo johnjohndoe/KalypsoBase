@@ -47,7 +47,7 @@ import java.util.logging.Logger;
 
 import net.opengeospatial.wps.InputDescriptionType;
 
-import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs.FileObject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -191,7 +191,7 @@ public class WPSSimulationThread extends Thread
       KalypsoServiceWPSDebug.DEBUG.printf( "Deleting tmp files in directory '" + m_tmpDir.getAbsolutePath() + "' ...\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       /* Delete the tmp-data. Actual execute responses should not be deleted by simulation thread */
-// FileUtilities.deleteRecursive( m_tmpDir );
+//      FileUtilities.deleteRecursive( m_tmpDir );
     }
 
     m_inputData.dispose();
@@ -214,7 +214,7 @@ public class WPSSimulationThread extends Thread
   @Override
   public void run( )
   {
-    //m_jobInfo.setState( ISimulationConstants.STATE.RUNNING );
+    m_jobInfo.setState( ISimulationConstants.STATE.RUNNING );
 
     final String jobID = m_jobInfo.getId();
     try

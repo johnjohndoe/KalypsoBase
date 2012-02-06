@@ -6,9 +6,9 @@ Bundle-Version: 11.6.4.qualifier
 Bundle-Activator: org.hibernate.internal.Activator
 Bundle-Vendor: http://www.hibernate.org
 Require-Bundle: org.eclipse.core.runtime,
- org.junit4;resolution:=optional,
+ org.junit4,
  com.vividsolutions.jts
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  lib/drivers/postgres/postgresql-9.0-801.jdbc4.jar,

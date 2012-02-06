@@ -53,7 +53,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -68,6 +67,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.SharedScrolledComposite;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.swt.SWTUtilities;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.PoolableObjectType;
@@ -161,7 +161,7 @@ public class FeatureTemplateviewer
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
+   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#dispose()
    */
   public void dispose( )
   {
@@ -186,26 +186,26 @@ public class FeatureTemplateviewer
     }
   }
 
-  public void setTemplate( final Featuretemplate template, final IPoolableObjectType dataKey, final String defaultFeaturePath, final URL templateContext )
+  public void setTemplate( final Featuretemplate template, final URL context, final String defaultFeaturePath, final String href, final String linkType )
   {
     m_template = template;
 
-    m_fvFactory.addViews( template, templateContext );
+    m_fvFactory.addViews( template, context );
 
     final Layer layer = template.getLayer();
+
+    final IPoolableObjectType key = getKey( layer, href, linkType, context );
     final String featurePath = layer == null ? defaultFeaturePath : layer.getFeaturePath();
 
     // only load, if href non null; in this case, the feature must be set via setFeature()
-    if( dataKey == null )
+    if( key == null )
       setFeaturesProvider( null );
     else
-      setFeaturesProvider( new PoolFeaturesProvider( dataKey, featurePath ) );
+      setFeaturesProvider( new PoolFeaturesProvider( key, featurePath ) );
   }
 
-  public static IPoolableObjectType createKey( final Featuretemplate template, final String defaultHref, final String defaultLinkType, final URL context )
+  private IPoolableObjectType getKey( final Layer layer, final String defaultHref, final String defaultLinkType, final URL context )
   {
-    final Layer layer = template.getLayer();
-
     final String source = layer == null ? defaultHref : layer.getHref();
     final String linktype = layer == null ? defaultLinkType : layer.getLinktype();
 
@@ -260,11 +260,7 @@ public class FeatureTemplateviewer
     m_featureComposite.setFormToolkit( m_toolkit );
 
     m_contentPanel = createTopLevelComposite( parent, formStyle );
-
-    final GridLayout gridLayout = new GridLayout();
-    gridLayout.marginHeight = 0;
-    gridLayout.marginWidth = 0;
-    m_contentPanel.setLayout( gridLayout );
+    m_contentPanel.setLayout( Layouts.createGridLayout() );
 
     try
     {

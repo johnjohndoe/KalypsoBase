@@ -48,17 +48,26 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 public class BooleanLabelCreator implements ILabelCreator
 {
 
+  /**
+   * @see de.openali.odysseus.chart.ext.base.axisrenderer.ILabelCreator#getLabel(java.lang.Number,
+   *      de.openali.odysseus.chart.framework.model.data.IDataRange)
+   */
   @Override
   public String getLabel( final Number value, final IDataRange<Number> range )
   {
+
     if( value.intValue() == 0 )
       return "zu";
     else if( value.intValue() == 1 )
       return "auf";
 
-    return String.format( "%d", value.intValue() ); //$NON-NLS-1$
+    return String.format( "%d", value.intValue() );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.ext.base.axisrenderer.ILabelCreator#getLabel(java.lang.Number[], int,
+   *      de.openali.odysseus.chart.framework.model.data.IDataRange)
+   */
   @Override
   public String getLabel( final Number[] ticks, final int i, final IDataRange<Number> range )
   {

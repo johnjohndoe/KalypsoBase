@@ -55,10 +55,8 @@ import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 
 /**
- * @deprecated no reference
  * @author Gernot Belger
  */
-@Deprecated
 public abstract class AbstractProfilesHandler extends AbstractHandler
 {
   /**

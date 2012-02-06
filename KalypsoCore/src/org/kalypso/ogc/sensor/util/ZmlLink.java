@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.util;
 
@@ -50,7 +50,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -62,19 +62,17 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 
 /**
  * @author Gernot Belger
@@ -83,9 +81,9 @@ public class ZmlLink
 {
   private final Feature m_feature;
 
-  private final URL m_context;
+  private final QName m_linkProperty;
 
-  private final GMLXPath m_linkPath;
+  private final URL m_context;
 
   /**
    * Constructor, using the features workspace-context to resolve timeseries links.
@@ -95,17 +93,12 @@ public class ZmlLink
     this( feature, linkProperty, feature.getWorkspace().getContext() );
   }
 
-  public ZmlLink( final Feature feature, final GMLXPath linkPath )
-  {
-    this( feature, linkPath, feature.getWorkspace().getContext() );
-  }
-
   /**
    * Constructs an new {@link ZmlLink} with a different context.
    */
   public ZmlLink( final ZmlLink link, final URL context )
   {
-    this( link.getFeature(), link.getPath(), context );
+    this( link.getFeature(), link.getProperty(), context );
   }
 
   /**
@@ -113,29 +106,21 @@ public class ZmlLink
    */
   public ZmlLink( final Feature feature, final QName linkProperty, final URL context )
   {
-    this( feature, new GMLXPath( linkProperty ), context );
-  }
-
-  /**
-   * Alternate constructor, using an external {@link URL} as context to resolve timeseries links.
-   */
-  public ZmlLink( final Feature feature, final GMLXPath linkPath, final URL context )
-  {
     m_context = context;
     Assert.isNotNull( feature );
 
     m_feature = feature;
-    m_linkPath = linkPath;
+    m_linkProperty = linkProperty;
   }
 
-  public GMLXPath getPath( )
+  private QName getProperty( )
   {
-    return m_linkPath;
+    return m_linkProperty;
   }
 
   public IObservation loadObservation( ) throws SensorException
   {
-    if( m_linkPath == null )
+    if( m_linkProperty == null )
       return null;
 
     final URL locationURL = getExistingLocation();
@@ -148,7 +133,7 @@ public class ZmlLink
   /**
    * Fetches the observation from the kalypso resource pool, using
    * {@link ResourcePool#getObject(org.kalypso.core.util.pool.IPoolableObjectType)}.
-   *
+   * 
    * @see ResourcePool#getObject(org.kalypso.core.util.pool.IPoolableObjectType.
    */
   public IObservation getObservationFromPool( )
@@ -209,44 +194,53 @@ public class ZmlLink
 
   public URL getLocation( )
   {
+    final TimeseriesLinkType link = getTimeseriesLink();
+    if( link == null )
+      return null;
+
+    final String href = link.getHref();
+
     try
     {
-      final TimeseriesLinkType link = getTimeseriesLink();
-      if( link == null )
-        return null;
-
-      final String href = link.getHref();
-      return UrlResolverSingleton.resolveUrl( m_context, href );
+      return new URL( m_context, href );
     }
     catch( final MalformedURLException ignored )
     {
-      return null;
     }
+
+    return null;
   }
 
   public URL getExistingLocation( )
   {
+    final TimeseriesLinkType link = getTimeseriesLink();
+    if( link == null )
+      return null;
+
+    final String href = link.getHref();
+
     // check if resource exists
     InputStream is = null;
-
     try
     {
-      final URL zmlUrl = getLocation();
-      if( zmlUrl == null )
-        return null;
-
+      final URL zmlUrl = new URL( m_context, href );
       is = zmlUrl.openStream();
-
       return zmlUrl;
     }
-    catch( final IOException ignored )
+    catch( final MalformedURLException e )
     {
-      return null;
+      // ignore
+    }
+    catch( final IOException e )
+    {
+      // ignore
     }
     finally
     {
       IOUtils.closeQuietly( is );
     }
+
+    return null;
   }
 
   /**
@@ -255,32 +249,20 @@ public class ZmlLink
    */
   public TimeseriesLinkType getTimeseriesLink( )
   {
-    try
-    {
-      // final IFeatureType featureType = m_feature.getFeatureType();
-      //
-      // final Object linkPT = GMLXPathUtilities.query( m_linkPath, featureType );
-      // if( !(linkPT instanceof IPropertyType) )
-      // return null;
-
-      if( m_linkPath == null )
-        return null;
-
-      final TimeseriesLinkType link = (TimeseriesLinkType) GMLXPathUtilities.query( m_linkPath, m_feature );
-      if( link == null )
-        return null;
-
-      final String href = link.getHref();
-      if( StringUtils.isBlank( href ) )
-        return null;
-
-      return link;
-    }
-    catch( final GMLXPathException e )
-    {
-      e.printStackTrace();
+    final IFeatureType featureType = m_feature.getFeatureType();
+    final IPropertyType linkPT = featureType.getProperty( m_linkProperty );
+    if( linkPT == null )
       return null;
-    }
+
+    final TimeseriesLinkType link = (TimeseriesLinkType) m_feature.getProperty( linkPT );
+    if( link == null )
+      return null;
+
+    final String href = link.getHref();
+    if( StringUtils.isBlank( href ) )
+      return null;
+
+    return link;
   }
 
   public void saveObservation( final IObservation obs ) throws CoreException, SensorException

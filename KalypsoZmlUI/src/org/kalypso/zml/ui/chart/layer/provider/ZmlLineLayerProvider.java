@@ -42,13 +42,16 @@ package org.kalypso.zml.ui.chart.layer.provider;
 
 import java.net.URL;
 
-import org.kalypso.zml.core.base.request.IRequestStrategy;
-import org.kalypso.zml.core.diagram.base.IZmlLayer;
-import org.kalypso.zml.core.diagram.base.IZmlLayerProvider;
-import org.kalypso.zml.core.diagram.base.ZmlLayerProviders;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.zml.core.diagram.base.provider.observation.DefaultRequestHandler;
+import org.kalypso.zml.core.diagram.data.IRequestHandler;
+import org.kalypso.zml.core.diagram.data.IZmlLayerProvider;
+import org.kalypso.zml.core.diagram.data.MetadataRequestHandler;
+import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlLineLayer;
 
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
+import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 
 /**
  * @author Dirk Kuch
@@ -57,6 +60,9 @@ public class ZmlLineLayerProvider extends AbstractLayerProvider implements IZmlL
 {
   public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider"; //$NON-NLS-1$
 
+  /**
+   * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
+   */
   @Override
   public IZmlLayer getLayer( final URL context )
   {
@@ -64,9 +70,13 @@ public class ZmlLineLayerProvider extends AbstractLayerProvider implements IZmlL
   }
 
   @Override
-  public IRequestStrategy getRequestHandler( final IZmlLayer layer )
+  public IRequestHandler getRequestHandler( )
   {
-    return ZmlLayerProviders.getRequestStrategy( layer, getParameterContainer() );
+    final IParameterContainer container = getParameterContainer();
+    if( Objects.isNull( container ) )
+      return new DefaultRequestHandler();
+
+    return new MetadataRequestHandler( getParameterContainer() );
   }
 
 }

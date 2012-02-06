@@ -49,8 +49,6 @@ import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
 import org.kalypso.zml.core.table.model.references.ZmlValues;
 
 /**
- * TODO multiple value axes!
- * 
  * @author Gernot Belger
  */
 public class ContainerAsValue
@@ -64,9 +62,7 @@ public class ContainerAsValue
 
   public Number getStatus( ) throws SensorException
   {
-    final IAxis valueAxis = AxisUtils.findValueAxis( m_container.getAxes() );
-
-    final IAxis axis = AxisUtils.findStatusAxis( m_container.getAxes(), valueAxis );
+    final IAxis axis = AxisUtils.findStatusAxis( m_container.getAxes() );
     if( Objects.isNull( axis ) )
       return null;
 
@@ -75,9 +71,7 @@ public class ContainerAsValue
 
   public String getDataSource( ) throws SensorException
   {
-    final IAxis valueAxis = AxisUtils.findValueAxis( m_container.getAxes() );
-
-    final IAxis axis = AxisUtils.findDataSourceAxis( m_container.getAxes(), valueAxis );
+    final IAxis axis = AxisUtils.findDataSourceAxis( m_container.getAxes() );
     if( Objects.isNull( axis ) )
       return null;
 

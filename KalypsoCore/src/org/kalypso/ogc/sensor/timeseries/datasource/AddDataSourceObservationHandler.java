@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.datasource;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
@@ -69,19 +68,36 @@ public class AddDataSourceObservationHandler
     m_observation = observation;
   }
 
+  /**
+   * @return cloned observation extended by data source axis if no data source axis exists
+   */
   public IObservation extend( )
   {
     if( hasDataSouceAxis() )
       return m_observation;
 
+    // FIXME: this must be changed! On each access to the observation, a big request is sent. This makes
+    // the time series browser not useable any more!
+
+    // proxy
     return new DataSourceProxyObservation( m_observation, m_itemIdentifier, m_repositoryId );
+
+// final AddDataSourceModelHandler handler = new AddDataSourceModelHandler( m_observation.getValues( null ) );
+// final ITupleModel model = handler.extend();
+//
+// final DataSourceHandler dataSourceHandler = new DataSourceHandler( m_observation.getMetadataList() );
+// dataSourceHandler.addDataSource( m_itemIdentifier, m_repositoryId );
+//
+// return new SimpleObservation( m_observation.getHref(), m_observation.getName(), m_observation.getMetadataList(),
+// model );
   }
 
   private boolean hasDataSouceAxis( )
   {
     final IAxis[] axes = m_observation.getAxes();
-    final IAxis[] dataSourceAxes = AxisUtils.findDataSourceAxes( axes );
+    final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( axes );
 
-    return ArrayUtils.isNotEmpty( dataSourceAxes );
+    return dataSourceAxis != null;
   }
+
 }

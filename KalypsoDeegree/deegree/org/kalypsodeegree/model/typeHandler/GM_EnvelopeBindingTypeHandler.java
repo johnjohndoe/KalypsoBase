@@ -230,6 +230,9 @@ public class GM_EnvelopeBindingTypeHandler implements IMarshallingTypeHandler
     return ((GM_Envelope) objectToClone).clone();
   }
 
+  /**
+   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#parseType(java.lang.String)
+   */
   @Override
   public Object parseType( final String text )
   {
@@ -242,4 +245,5 @@ public class GM_EnvelopeBindingTypeHandler implements IMarshallingTypeHandler
       return QNAME_TAG_GML3;
     return QNAME_TAG_GML2; // gml2
   }
+
 }

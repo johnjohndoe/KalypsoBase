@@ -55,7 +55,7 @@ public class EstimatedTimeProgressMonitor implements IProgressMonitor
   /**
    * This is the delegate monitor.
    */
-  private final IProgressMonitor m_monitor;
+  private IProgressMonitor m_monitor;
 
   /**
    * This object keeps track of the time.
@@ -68,7 +68,7 @@ public class EstimatedTimeProgressMonitor implements IProgressMonitor
    * @param monitor
    *          A progress monitor.
    */
-  public EstimatedTimeProgressMonitor( final IProgressMonitor monitor )
+  public EstimatedTimeProgressMonitor( IProgressMonitor monitor )
   {
     m_monitor = monitor;
     m_estimatedTime = null;
@@ -78,7 +78,7 @@ public class EstimatedTimeProgressMonitor implements IProgressMonitor
    * @see org.eclipse.core.runtime.IProgressMonitor#beginTask(java.lang.String, int)
    */
   @Override
-  public void beginTask( final String name, final int totalWork )
+  public void beginTask( String name, int totalWork )
   {
     m_monitor.beginTask( name, totalWork );
 
@@ -101,7 +101,7 @@ public class EstimatedTimeProgressMonitor implements IProgressMonitor
    * @see org.eclipse.core.runtime.IProgressMonitor#internalWorked(double)
    */
   @Override
-  public void internalWorked( final double work )
+  public void internalWorked( double work )
   {
     m_monitor.internalWorked( work );
   }
@@ -119,7 +119,7 @@ public class EstimatedTimeProgressMonitor implements IProgressMonitor
    * @see org.eclipse.core.runtime.IProgressMonitor#setCanceled(boolean)
    */
   @Override
-  public void setCanceled( final boolean value )
+  public void setCanceled( boolean value )
   {
     m_monitor.setCanceled( value );
   }
@@ -128,7 +128,7 @@ public class EstimatedTimeProgressMonitor implements IProgressMonitor
    * @see org.eclipse.core.runtime.IProgressMonitor#setTaskName(java.lang.String)
    */
   @Override
-  public void setTaskName( final String name )
+  public void setTaskName( String name )
   {
     m_monitor.setTaskName( name );
   }
@@ -137,7 +137,7 @@ public class EstimatedTimeProgressMonitor implements IProgressMonitor
    * @see org.eclipse.core.runtime.IProgressMonitor#subTask(java.lang.String)
    */
   @Override
-  public void subTask( final String name )
+  public void subTask( String name )
   {
     m_monitor.subTask( name );
   }
@@ -146,7 +146,7 @@ public class EstimatedTimeProgressMonitor implements IProgressMonitor
    * @see org.eclipse.core.runtime.IProgressMonitor#worked(int)
    */
   @Override
-  public void worked( final int work )
+  public void worked( int work )
   {
     m_monitor.worked( work );
 

@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.visitor;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IAxisVisitor;
@@ -59,6 +59,9 @@ public class UpdateAxisVisibilityVisitor implements IAxisVisitor
 
   // <Parameter name="hideOnMultiSelect" value="true" />
 
+  /**
+   * @see org.kalypso.zml.core.diagram.base.AbstractExternalChartModelVisitor#accept(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+   */
   @Override
   public void visit( final IAxis axis )
   {

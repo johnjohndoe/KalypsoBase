@@ -37,11 +37,6 @@
             categoryId="org.kalypso.chart.ui.commands.category"
             id="org.kalypso.chart.ui.commands.zoom_pan_maximize"
             name="%org.kalypso.chart.ui.commands.zoom_pan_maximize.name">
-         <commandParameter
-               id="direction"
-               name="direction"
-               optional="true">
-         </commandParameter>
       </command>
       <command categoryId="org.kalypso.chart.ui.commands.category" id="org.kalypso.chart.ui.commands.pan" name="%org.kalypso.chart.ui.commands.pan.name"/>
       <command
@@ -74,6 +69,16 @@
             categoryId="org.kalypso.chart.ui.commands.category"
             id="org.kalypso.chart.ui.commands.export"
             name="%org.kalypso.chart.ui.commands.export.name">
+      </command>
+      <command
+            categoryId="org.kalypso.chart.ui.commands.category"
+            id="org.kalypso.chart.ui.commands.zoom_pan_maximize"
+            name="Zoom / Pan / Maximize">
+         <commandParameter
+               id="direction"
+               name="direction"
+               optional="true">
+         </commandParameter>
       </command>
       <command
             categoryId="org.kalypso.chart.ui.commands.category"
@@ -132,10 +137,6 @@
             commandId="org.kalypso.chart.ui.command.axis.selection"
             icon="icons/commands/select.png">
       </image>
-      <image
-            commandId="org.kalypso.chart.ui.commands.maximizeView"
-            icon="icons/commands/chart_maximize.gif">
-      </image>
    </extension>
    <extension point="org.eclipse.ui.handlers">
       <handler class="org.kalypso.chart.ui.editor.commandhandler.ZoomInHandler"
@@ -152,6 +153,10 @@
             commandId="org.kalypso.chart.ui.commands.maximizeView">
       </handler>
       <handler
+            class="org.kalypso.chart.ui.editor.commandhandler.ZoomPanMaximizeCommandHandler"
+            commandId="org.kalypso.chart.ui.commands.zoom_pan_maximize">
+      </handler>
+      <handler
             class="org.kalypso.chart.ui.editor.commandhandler.EditHandler"
             commandId="org.kalypso.chart.ui.commands.edit">
       </handler>
@@ -166,10 +171,6 @@
       <handler
             class="org.kalypso.chart.ui.editor.commandhandler.ExportHandler"
             commandId="org.kalypso.chart.ui.commands.export">
-      </handler>
-      <handler
-            class="org.kalypso.chart.ui.editor.commandhandler.ZoomPanMaximizeCommandHandler"
-            commandId="org.kalypso.chart.ui.commands.zoom_pan_maximize">
       </handler>
       <handler
             class="org.kalypso.chart.ui.editor.commandhandler.ChangeVisibilityCommandHandler"
@@ -285,5 +286,12 @@
              content-type="org.eclipse.core.runtime.xml"
              file-extensions="kod">
        </file-association>
+    </extension>
+    <extension
+          point="de.openali.odysseus.chart.factory.LayerProvider">
+       <provider
+             class="org.kalypso.chart.ui.layer.selection.AxisSelectionLayerProvider"
+             id="org.kalypso.chart.ui.layer.provider.axis.selection">
+       </provider>
     </extension>
 </plugin>

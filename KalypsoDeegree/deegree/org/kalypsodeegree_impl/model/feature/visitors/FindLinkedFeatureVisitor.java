@@ -46,7 +46,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
-import org.kalypsodeegree.model.feature.IXLinkedFeature;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * This visitor collects all features which link to a given href (=feature-id).
@@ -57,7 +57,7 @@ public class FindLinkedFeatureVisitor implements FeatureVisitor
 {
   private final String[] m_hrefs;
 
-  private final Map<Feature, Set<IRelationType>> m_linkedFeatures = new HashMap<Feature, Set<IRelationType>>();
+  private Map<Feature, Set<IRelationType>> m_linkedFeatures = new HashMap<Feature, Set<IRelationType>>();
 
   public FindLinkedFeatureVisitor( final String[] hrefs )
   {
@@ -99,7 +99,7 @@ public class FindLinkedFeatureVisitor implements FeatureVisitor
     {
       if( link instanceof String && link.equals( href ) )
         addLink( f, rt );
-      else if( link instanceof IXLinkedFeature && href.equals( ((IXLinkedFeature) link).getHref() ) )
+      else if( link instanceof XLinkedFeature_Impl && href.equals( ((XLinkedFeature_Impl) link).getHref() ) )
         addLink( f, rt );
     }
   }

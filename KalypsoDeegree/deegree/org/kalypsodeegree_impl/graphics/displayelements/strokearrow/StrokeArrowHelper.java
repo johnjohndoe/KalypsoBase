@@ -61,7 +61,7 @@ public final class StrokeArrowHelper
       final ParameterValueType value = param.getValue();
       final Object[] components = value.getComponents();
       if( components.length != 1 )
-        throw new IllegalStateException( "StrokeArrowType consists only of one parameter." );
+        throw (new IllegalStateException( "StrokeArrowType consists only of one parameter." ));
 
       final String type = ((String) components[0]).toLowerCase();
       return ARROW_TYPE.valueOf( type );
@@ -96,7 +96,7 @@ public final class StrokeArrowHelper
       final ParameterValueType value = param.getValue();
       final Object[] components = value.getComponents();
       if( components.length != 1 )
-        throw new IllegalStateException( "StrokeArrowAligment can only consists about one parameter." );
+        throw (new IllegalStateException( "StrokeArrowAligment can only consists about one parameter." ));
 
       final String type = ((String) components[0]).toLowerCase();
 
@@ -147,7 +147,7 @@ public final class StrokeArrowHelper
     final ParameterValueType value = csType.getValue();
     final Object[] components = value.getComponents();
     if( components.length != 1 )
-      throw new IllegalStateException( "StrokeArrowAligment can only consists about one parameter." );
+      throw (new IllegalStateException( "StrokeArrowAligment can only consists about one parameter." ));
 
     return Double.valueOf( (String) components[0] );
   }
@@ -161,7 +161,7 @@ public final class StrokeArrowHelper
     final ParameterValueType value = csType.getValue();
     final Object[] components = value.getComponents();
     if( components.length != 1 )
-      throw new IllegalStateException( "StrokeWidth can only consists about one parameter." );
+      throw (new IllegalStateException( "StrokeWidth can only consists about one parameter." ));
 
     return Double.valueOf( (String) components[0] );
   }

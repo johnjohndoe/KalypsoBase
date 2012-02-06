@@ -42,7 +42,7 @@ package org.kalypso.model.wspm.core.i18n;
 
 import java.util.ResourceBundle;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.contribs.java.i18n.I18nUtils;
 
 /**

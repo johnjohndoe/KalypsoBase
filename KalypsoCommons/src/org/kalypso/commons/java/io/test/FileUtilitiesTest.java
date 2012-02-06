@@ -51,7 +51,7 @@ import org.kalypso.commons.java.io.FileUtilities;
  */
 public class FileUtilitiesTest extends TestCase
 {
-  public void testIsChildOf( )
+  public void testIsChildOf()
   {
     final File f = new File( "C:/temp" );
     final File c = new File( "C:/temp/grafik-kalypso/zml/Beispiel/beispiel.zml" );
@@ -66,8 +66,8 @@ public class FileUtilitiesTest extends TestCase
 
     assertTrue( FileUtilities.isChildOf( f, c3 ) );
   }
-
-  public void testValidateName( )
+  
+  public void testValidateName()
   {
     assertEquals( "foobar", FileUtilities.validateName( "\\foo*bar?", "" ) );
     assertEquals( "robertocarlos", FileUtilities.validateName( "/roberto/carlos", "" ) );

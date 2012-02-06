@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model.interpolation;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -75,6 +75,9 @@ public class ZmlInterpolationWorker implements ICoreRunnableWithProgress
     m_observation = observation;
   }
 
+  /**
+   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
+   */
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
@@ -89,7 +92,7 @@ public class ZmlInterpolationWorker implements ICoreRunnableWithProgress
       final Double defaultValue = ZmlInterpolation.getDefaultValue( m_observation.getMetadataList() );
 
       final FindStuetzstellenVisitor visitor = new FindStuetzstellenVisitor();
-      m_observation.accept( visitor, null, 1 );
+      m_observation.accept( visitor, null );
 
       final Integer[] stuetzstellen = visitor.getStuetzstellen();
       if( ArrayUtils.isEmpty( stuetzstellen ) )

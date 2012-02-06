@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.exception.CancelVisitorException;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
@@ -120,8 +120,8 @@ public class LayerManager implements ILayerManager
   {
     try
     {
-      final IChartLayer[] reverseLayers = getLayers();
-      ArrayUtils.reverse( reverseLayers );
+      final IChartLayer[] reverseLayers =  getLayers();
+      ArrayUtils.reverse(reverseLayers);
       for( final IChartLayer layer : reverseLayers )
       {
         try

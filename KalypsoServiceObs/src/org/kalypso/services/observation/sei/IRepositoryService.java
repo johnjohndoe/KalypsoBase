@@ -54,12 +54,6 @@ import org.kalypso.repository.RepositoryException;
  */
 public interface IRepositoryService
 {
-
-  /**
-   * @return status of remote repository service
-   */
-  StatusBean getStatus( String type );
-
   /**
    * @param parent
    * @return true if the given parent has children.
@@ -81,8 +75,6 @@ public interface IRepositoryService
    */
   ItemBean findItem( final String id ) throws RepositoryException;
 
-  ItemBean getParent( final String identifier ) throws RepositoryException;
-
   void makeItem( String identifier ) throws RepositoryException;
 
   void deleteItem( String identifier ) throws RepositoryException;
@@ -99,5 +91,4 @@ public interface IRepositoryService
   void reload( ) throws RepositoryException;
 
   boolean isMultipleSourceItem( String identifier ) throws RepositoryException;
-
 }

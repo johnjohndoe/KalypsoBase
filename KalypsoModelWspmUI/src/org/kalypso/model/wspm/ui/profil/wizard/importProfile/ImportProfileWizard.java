@@ -65,7 +65,7 @@ import org.kalypso.ui.editor.gmleditor.part.FeatureAssociationTypeElement;
  */
 public class ImportProfileWizard extends Wizard implements IWorkbenchWizard
 {
-  public static final String PROFIL_TYPE_PASCHE = "org.kalypso.model.wspm.tuhh.profiletype"; //$NON-NLS-1$
+  public static String PROFIL_TYPE_PASCHE = "org.kalypso.model.wspm.tuhh.profiletype"; //$NON-NLS-1$
 
   protected ImportProfilePage m_profilePage;
 
@@ -98,7 +98,7 @@ public class ImportProfileWizard extends Wizard implements IWorkbenchWizard
     if( firstElement instanceof FeatureAssociationTypeElement )
     {
       final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) firstElement;
-      return (WspmWaterBody) fate.getOwner();
+      return (WspmWaterBody) fate.getParentFeature();
     }
 
     if( firstElement instanceof WspmWaterBody )

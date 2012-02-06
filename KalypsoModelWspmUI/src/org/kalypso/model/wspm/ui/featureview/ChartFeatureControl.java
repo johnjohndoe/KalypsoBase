@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.ui.featureview;
 import java.net.URL;
 import java.util.Map;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
@@ -133,7 +133,7 @@ public class ChartFeatureControl extends AbstractFeatureControl
   public ChartFeatureControl( final String featureKeyName, final Feature feature, final IPropertyType ftp, final ChartConfigurationLoader ccl, final ChartType[] chartTypes, final URL context, final Map<String, Integer> commands, final String chartProviderID )
   {
     super( feature, ftp );
-    
+
     m_featureKeyName = featureKeyName;
     m_ccl = ccl;
     m_chartTypes = chartTypes;
@@ -144,9 +144,6 @@ public class ChartFeatureControl extends AbstractFeatureControl
     m_charts = null;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
-   */
   @Override
   public Control createControl( final Composite parent, final int style )
   {
@@ -321,14 +318,14 @@ public class ChartFeatureControl extends AbstractFeatureControl
     final IChartLayer[] layers = layerManager.getLayers();
     for( final IChartLayer layer : layers )
     {
-      final IDataRange< ? > domainRange = layer.getDomainRange();
-      final IDataRange< ? > targetRange = layer.getTargetRange( null );
+      final IDataRange<Number> domainRange = layer.getDomainRange();
+      final IDataRange<Number> targetRange = layer.getTargetRange( null );
       if( domainRange != null && targetRange != null )
       {
-        final Number domainMin = (Number) domainRange.getMin();
-        final Number domainMax = (Number) domainRange.getMax();
-        final Number targetMin = (Number) targetRange.getMin();
-        final Number targetMax = (Number) targetRange.getMax();
+        final Number domainMin = domainRange.getMin();
+        final Number domainMax = domainRange.getMax();
+        final Number targetMin = targetRange.getMin();
+        final Number targetMax = targetRange.getMax();
 
         if( domainMin.doubleValue() > Double.NEGATIVE_INFINITY )
           return true;

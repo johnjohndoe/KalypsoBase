@@ -50,14 +50,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.i18n.Messages;
@@ -65,14 +64,13 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
 /**
- * small refactoring - projects Lanu and nofdp uses this helper!
+ * small refactoring Lanu and nofdp uses this helper!
  * 
  * @author Dirk Kuch
  */
@@ -93,8 +91,8 @@ public final class ImportTrippleHelper
   {
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profileType );
 
-    final IComponent rechtswert = provider.getPointProperty( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT );
-    final IComponent hochwert = provider.getPointProperty( IWspmPointProperties.POINT_PROPERTY_HOCHWERT );
+    final IComponent rechtswert = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    final IComponent hochwert = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
 
     if( trippleFile == null )
       return new IProfil[0];
@@ -112,7 +110,7 @@ public final class ImportTrippleHelper
       /* File Header */
       fileReader.readLine();
 
-      IProfileRecord lastPoint = null;
+      IRecord lastPoint = null;
       while( fileReader.ready() )
       {
         final String line = fileReader.readLine();
@@ -165,7 +163,7 @@ public final class ImportTrippleHelper
             profiles.add( currentProfile );
           }
 
-          final IProfileRecord point = ImportTrippleHelper.createProfilePoint( currentProfile, tokens, lastPoint );
+          final IRecord point = ImportTrippleHelper.createProfilePoint( currentProfile, tokens, lastPoint );
           if( point != null )
           {
             currentProfile.addPoint( point );
@@ -207,15 +205,15 @@ public final class ImportTrippleHelper
    * @param tokenizer
    *          holds the point data (x, y, z)
    */
-  private static IProfileRecord createProfilePoint( final IProfil profile, final String[] tokens, final IProfileRecord lastPoint )
+  private static IRecord createProfilePoint( final IProfil profile, final String[] tokens, final IRecord lastPoint )
   {
-    final IProfileRecord point = profile.createProfilPoint();
+    final IRecord point = profile.createProfilPoint();
 
     /* observation of profile */
-    final int iRechtswert = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT );
-    final int iHochwert = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_HOCHWERT );
-    final int iBreite = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE );
-    final int iHoehe = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_HOEHE );
+    final int iRechtswert = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    final int iHochwert = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+    final int iBreite = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+    final int iHoehe = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
 
     final double x = NumberUtils.parseDouble( tokens[1] );
     point.setValue( iRechtswert, x );
@@ -245,11 +243,11 @@ public final class ImportTrippleHelper
       return 0.0;
 
     /* get the segment length of the already imported profile points */
-    final double previousWidth = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, previousPoint );
+    final double previousWidth = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, previousPoint );
 
     /* add the segment length of the segment defined by the last imported profile point and the new to add profile point */
-    final double xPrevious = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT, previousPoint );
-    final double yPrevious = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOCHWERT, previousPoint );
+    final double xPrevious = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, previousPoint );
+    final double yPrevious = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, previousPoint );
 
     final Coordinate posPrevious = new Coordinate( xPrevious, yPrevious );
     final Coordinate posPoint = new Coordinate( xPoint, yPoint );

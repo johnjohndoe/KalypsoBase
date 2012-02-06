@@ -40,14 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.table;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Gernot Belger
@@ -78,8 +78,8 @@ public class MarkerInfoAction extends Action
     if( pointPos < 0 )
       return;
 
-    final IProfileRecord record = m_profil.getPoint( pointPos );
-    m_profil.getSelection().setRange( record );
+    final IRecord record = m_profil.getPoint( pointPos );
+    m_profil.setActivePoint( record );
   }
 
   // TODO: move into helper

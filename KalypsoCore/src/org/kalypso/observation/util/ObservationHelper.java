@@ -138,9 +138,6 @@ public final class ObservationHelper
 
   public static IObservation clone( final IObservation observation, final IRequest request ) throws SensorException
   {
-    if( observation == null )
-      return null;
-
     final byte[] byteArray = ObservationHelper.flushToByteArray( observation, request );
     return ObservationHelper.parseFromByteArray( byteArray );
   }

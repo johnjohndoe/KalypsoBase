@@ -18,48 +18,49 @@ class Edge
 
   Edge( final int pIntStart, final int pIntTarget )
   {
-    s = pIntStart;
-    t = pIntTarget;
+    this.s = pIntStart;
+    this.t = pIntTarget;
   }
 
   public final int getS( )
   {
-    return s;
+    return this.s;
   }
 
   public final int getT( )
   {
-    return t;
+    return this.t;
   }
 
   public final int getL( )
   {
-    return l;
+    return this.l;
   }
 
   public final int getR( )
   {
-    return r;
+    return this.r;
   }
 
   public final void setS( final int pIntS )
   {
-    s = pIntS;
+    this.s = pIntS;
   }
 
   public final void setT( final int pIntT )
   {
-    t = pIntT;
+    this.t = pIntT;
   }
 
   public final void setL( final int pIntL )
   {
-    l = pIntL;
+    this.l = pIntL;
   }
 
   public final void setR( final int pIntR )
   {
-    r = pIntR;
+    this.r = pIntR;
   }
-
+  
+  
 }

@@ -10,8 +10,6 @@
     <extension-point id="movieImageProvider" name="movieImageProvider" schema="schema/movieImageProvider.exsd"/>
     <extension-point id="exportWizards" name="exportWizards" schema="schema/exportWizards.exsd"/>
     <extension-point id="importWizards" name="importWizards" schema="schema/importWizards.exsd"/>
-    <extension-point id="addLayerWizard" name="addLayerWizard" schema="schema/addLayerWizard.exsd"/>
-    <extension-point id="mapDropTarget" name="mapDropTarget" schema="schema/mapDropTarget.exsd"/>
 	
 	<extension id="preferences" name="preferences" point="org.eclipse.core.runtime.preferences">
 		<initializer class="org.kalypso.ui.preferences.KalypsoPreferenceInitializer"/>
@@ -35,20 +33,22 @@
 		<editor class="org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor" default="true" extensions="xsd" icon="icons/full/obj16/gml_schema_file.gif" id="org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor" name="%org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor" />
 		<editor class="org.kalypso.ui.editor.gmleditor.part.GmlEditor" contributorClass="org.kalypso.ui.editor.gmleditor.part.GmlEditorActionBarContributor" default="true" extensions="gmv,gml,shp,gmlz" icon="icons/kalypso_gtt.gif" id="org.kalypso.ui.editor.GmlEditor" name="%org.kalypso.ui.editor.gmleditor.part.GmlEditor">
 		</editor>
-		<editor class="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor" icon="icons/kalypso_odt.gif" default="true" contributorClass="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditorContributor" name="%org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor" id="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor" extensions="odt,zml,zmlz">
+		<editor class="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor" icon="icons/kalypso_odt.gif" default="true" contributorClass="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditorContributor" name="%org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor" id="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor" extensions="odt,zml">
 		</editor>
-		<editor class="org.kalypso.ui.editor.obstableeditor.ObservationTableEditor" icon="icons/kalypso_ott.gif" default="true" contributorClass="org.kalypso.ui.editor.obstableeditor.ObservationTableEditorContributor" name="%org.kalypso.ui.editor.obstableeditor.ObservationTableEditor" id="org.kalypso.ui.editor.obstableeditor.ObservationTableEditor" extensions="ott,zml,zmlz">
+		<editor class="org.kalypso.ui.editor.obstableeditor.ObservationTableEditor" icon="icons/kalypso_ott.gif" default="true" contributorClass="org.kalypso.ui.editor.obstableeditor.ObservationTableEditorContributor" name="%org.kalypso.ui.editor.obstableeditor.ObservationTableEditor" id="org.kalypso.ui.editor.obstableeditor.ObservationTableEditor" extensions="ott,zml">
 		</editor>
 		<editor launcher="org.kalypso.ui.editorLauncher.GisTemplateLauncher" icon="icons/full/obj16/gml_file.gif" default="false" name="%org.kalypso.ui.editorLauncher.GisTemplateLauncher" id="org.kalypso.ui.editor.GisEditor" extensions="gml,gmlz,shp">
 		</editor>
-		<editor launcher="org.kalypso.ui.editorLauncher.ObsTemplateLauncher" icon="icons/sample.gif" default="false" name="%org.kalypso.ui.editorLauncher.ObsTemplateLauncher" id="org.kalypso.ui.editor.ObsEditor" extensions="zml,zmlz">
+		<editor launcher="org.kalypso.ui.editorLauncher.ObsTemplateLauncher" icon="icons/sample.gif" default="false" name="%org.kalypso.ui.editorLauncher.ObsTemplateLauncher" id="org.kalypso.ui.editor.ObsEditor" extensions="zml">
 		</editor>
-		<editor launcher="org.kalypso.ui.editorLauncher.GrafikEditorLauncher" icon="icons/observation/grafik-icon.gif" default="false" name="%org.kalypso.ui.editorLauncher.GrafikEditorLauncher" id="org.kalypso.zml.grafik" extensions="zml,tpl,odt,zmlz" />
+		<editor launcher="org.kalypso.ui.editorLauncher.GrafikEditorLauncher" icon="icons/observation/grafik-icon.gif" default="false" name="%org.kalypso.ui.editorLauncher.GrafikEditorLauncher" id="org.kalypso.zml.grafik" extensions="zml,tpl,odt" />
         <editor launcher="org.kalypso.ui.editor.gmlconvert.GmlConvertLauncher" default="false" name="GML Converter" id="org.kalypso.debug.editor.gmlconvert" extensions="gmc"/>		
 	</extension>
 	<extension id="views" name="views" point="org.eclipse.ui.views">
 		<category name="%category.name.0" id="org.kalypso.ui.kalypso"></category>
 		<view name="%org.kalypso.ui.repository.view.RepositoryExplorerPart" icon="icons/repository/repository.gif" category="org.kalypso.ui.kalypso" class="org.kalypso.ui.repository.view.RepositoryExplorerPart" id="org.kalypso.ui.repository.view.RepositoryExplorerPart"/>
+		<view name="%org.kalypso.ogc.sensor.view.DiagramViewPart" icon="icons/kalypso_odt.gif" category="org.kalypso.ui.kalypso" class="org.kalypso.ogc.sensor.view.DiagramViewPart" id="org.kalypso.ogc.sensor.view.DiagramViewPart"/>
+		<view name="%org.kalypso.ogc.sensor.view.TableViewPart" icon="icons/kalypso_ott.gif" category="org.kalypso.ui.kalypso" class="org.kalypso.ogc.sensor.view.TableViewPart" id="org.kalypso.ogc.sensor.view.TableViewPart"/>
 		<view name="%org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart" icon="icons/sldeditor/styleEditor.gif" category="org.kalypso.ui.kalypso" class="org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart" id="org.kalypso.ui.editor.mapeditor.views.styleeditor"/>
 		<view allowMultiple="false" icon="icons/kalypso16.gif" class="org.kalypso.ui.editor.mapeditor.views.MapWidgetView" category="org.kalypso.ui.kalypso" name="%org.kalypso.ui.editor.mapeditor.views.ActionOptionsView" id="org.kalypso.ui.editor.mapeditor.views.ActionOptionsView" />
 		<view allowMultiple="false" category="org.kalypso.ui.kalypso" class="org.kalypso.ogc.gml.om.table.ObservationTableView" icon="icons/kalypso_ott.gif" id="org.kalypso.ogc.gml.om.table.ObservationTableView" name="%org.kalypso.ogc.gml.om.table.ObservationTableView" />
@@ -56,14 +56,6 @@
 		<view allowMultiple="false" category="org.kalypso.ui.kalypso" class="org.kalypso.ogc.gml.outline.ViewContentOutline" icon="icons/kalypso_gmt.gif" id="org.kalypso.ui.views.outline" name="%org.kalypso.ui.views.outline" />
 		<view allowMultiple="true" category="org.kalypso.ui.kalypso" class="org.kalypso.ui.editor.featureeditor.FeatureTemplateView" icon="icons/kalypso_gtt.gif" id="org.kalypso.ui.views.featuretemplateview" name="%view.name.1" reloadMapOnOpen="false" />
 		<view allowMultiple="false" category="org.kalypso.ui.kalypso" class="org.kalypso.ui.views.map.MapOverView" id="org.kalypso.ui.views.mapOverView" name="%view.name.2"/>
-  <view
-        category="org.kalypso.ui.kalypso"
-        class="org.kalypso.ui.editor.gistableeditor.GttViewPart"
-        icon="icons/kalypso_gtt.gif"
-        id="org.kalypso.ui.editor.gistableeditor.GttViewPart"
-        name="Gis Table"
-        restorable="true">
-  </view>
 	</extension>
 	<extension id="editorActions" name="editorActions" point="org.eclipse.ui.editorActions">
 		<editorContribution targetID="org.kalypso.ui.editor.gistableeditor.GisTableEditor" id="org.kalypso.ui.editor.gistableeditor.GisTableActionDelegate">
@@ -549,13 +541,6 @@
                <visibleWhen checkEnabled="true"/>
           </command>
         </menuContribution>
-        
-        <menuContribution
-              locationURI="popup:org.eclipse.ui.popup.any?after=additions">
-              <command commandId="org.kalypso.ui.map.outline.command.NodeProperties" style="push">
-               <visibleWhen checkEnabled="true"/>
-          </command>
-        </menuContribution>
 	</extension>
 	
 	<!-- Map-View-Outline: tool/menu-items for standard Map-View-Outline -->
@@ -568,13 +553,6 @@
 			<separator name="navigation" visible="true"/>
 			<command commandId="org.kalypso.ui.map.outline.command.ZoomToSelectedTheme" style="push"/>
 			<separator name="style" visible="true"/>
-			<!-- FIXME: this already works fine, but we needs some more control wat the user can edit. I.e. introduce 
-			             parameter (on theme?) and/or command to control the followingf things:
-			                 - featureTypeStyle properties should never we allowed to be edited
-			                 - resolve i18n strings
-			                 - only allow simple mode editing?
-			-->
-			<command commandId="org.kalypso.ui.map.outline.command.OpenStyleDialog" style="push"/>
 			<separator name="additions" visible="true"/>
 		</menuContribution>
 
@@ -781,8 +759,7 @@
 	</extension>
 	<extension point="org.eclipse.ui.contexts">
 		<context id="org.kalypso.ogc.gml.map.context" name="%context.name.0" parentId="org.eclipse.ui.contexts.window" />
-        <context id="org.kalypso.ogc.gml.tree.context" name="Gml Tree" parentId="org.eclipse.ui.contexts.window"/>
-        <context id="org.kalypso.ogc.gml.table.context" name="Gml Table" parentId="org.eclipse.ui.contexts.window"/>
+        <context id="org.kalypso.ogc.gml.gmltree.context" name="Gml Tree" parentId="org.eclipse.ui.contexts.window"/>
 	</extension>
 	<extension point="org.kalypso.ui.featureViewExtensionControl">
 		<extensionControl class="org.kalypso.ogc.gml.featureview.control.ChecklistOfLinksFeatureviewControlFactory" id="org.kalypso.ogc.gml.featureview.control.ChecklistOfLinksFeatureviewControlFactory">
@@ -1164,11 +1141,7 @@
 		</handler>
 		<handler commandId="org.kalypso.ogc.gml.map.PanToCommand">
 			<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
-				<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.ogc.gml.widgets.base.PanToWidget" />
-    <parameter
-          name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
-          value="org.kalypso.core">
-    </parameter>
+				<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.ogc.gml.widgets.PanToWidget" />
 			</class>
 		</handler>
 		<handler commandId="org.kalypso.ogc.gml.map.WMSGetFeatureInfoCommand">
@@ -1357,13 +1330,11 @@
 		<loader class="org.kalypso.ogc.gml.loader.WfsLoader" type="wfs" />
 	</extension>
 	<extension point="org.eclipse.core.expressions.propertyTesters">
-		<propertyTester class="org.kalypso.ogc.gml.map.properties.ThemeTester" id="org.kalypso.ogc.gml.map.ThemeTester" namespace="org.kalypso.ui.test.theme" properties="isNotNull,qname,hasExtent,isFeatureTheme,property,isCascading" type="org.kalypso.ogc.gml.IKalypsoTheme" />
-
-	    <!-- The next three tester are delegates to the ThemeTester; so every change to the properties of ThemeTester should also go into these two -->
-		<propertyTester class="org.kalypso.ogc.gml.map.properties.PropertyThemeTester" id="org.kalypso.ogc.gml.map.PropertyThemeTester" namespace="org.kalypso.ui.test.map.themeProperty" properties="hasProperty,isNotNull,hasExtent,isFeatureTheme,isCascading" type="org.kalypso.ogc.gml.map.IMapPanel" />
-		<propertyTester class="org.kalypso.ogc.gml.map.properties.ActiveThemeTester" id="org.kalypso.ogc.gml.map.ActiveThemeTester" namespace="org.kalypso.ui.test.map.activeTheme" properties="isNotNull,qname,hasExtent,isFeatureTheme,property,isCascading" type="org.kalypso.ogc.gml.map.IMapPanel" />
-        <propertyTester class="org.kalypso.ogc.gml.map.properties.HasThemeTester" id="org.kalypso.ogc.gml.map.HasThemeTester" namespace="org.kalypso.ui.test.map.hasTheme" properties="isNotNull,qname,hasExtent,isFeatureTheme,property,isCascading" type="org.kalypso.ogc.gml.map.IMapPanel" />
-        
+		<propertyTester class="org.kalypso.ogc.gml.map.properties.ThemeTester" id="org.kalypso.ogc.gml.map.ThemeTester" namespace="org.kalypso.ui.test.theme" properties="isNotNull,qname,hasExtent,isFeatureTheme,property" type="org.kalypso.ogc.gml.IKalypsoTheme" />
+	    <!-- The next two tester are delegates to the ThemeTester; so every change to the properties of ThemeTester should also go into these two -->
+		<propertyTester class="org.kalypso.ogc.gml.map.properties.ActiveThemeTester" id="org.kalypso.ogc.gml.map.ActiveThemeTester" namespace="org.kalypso.ui.test.map.activeTheme" properties="isNotNull,qname,hasExtent,isFeatureTheme,property" type="org.kalypso.ogc.gml.map.IMapPanel" />
+		<propertyTester class="org.kalypso.ogc.gml.map.properties.HasThemeTester" id="org.kalypso.ogc.gml.map.HasThemeTester" namespace="org.kalypso.ui.test.map.hasTheme" properties="isNotNull,qname,hasExtent,isFeatureTheme,property" type="org.kalypso.ogc.gml.map.IMapPanel" />
+		
 		<propertyTester class="org.kalypso.ogc.sensor.properties.RepositoryItemPropertyTester" id="org.kalypso.ogc.sensor.properties.RepositoryItemPropertyTester" namespace="org.kalypso.ui" properties="repositoryItemHasWQTable" type="org.kalypso.repository.IRepositoryItem" />
 		<propertyTester class="org.kalypso.ui.internal.utils.WorkbenchWindowPropertyTest" id="org.kalypso.ui.internal.utils.WorkbenchWindowPropertyTest" namespace="org.kalypso.ui.window" properties="isEditorAreaVisible,isViewVisible" type="org.eclipse.ui.IWorkbenchWindow" />
 	</extension>
@@ -1495,7 +1466,6 @@
      <image commandId="org.kalypso.ui.gmvtree.command.saveData" icon="icons/feature/save_GML.gif" disabledIcon="icons/map/save_edit_disabled.gif"/>
      <image commandId="org.kalypso.ui.gmvtree.command.reloadData" icon="icons/feature/reload_gmltree.png"/>
   </extension>
-  
   <extension point="org.eclipse.ui.handlers">
      <handler commandId="org.kalypso.ui.gmvtree.command.saveData" class="org.kalypso.ui.editor.gmleditor.command.SaveGmltreeHandler">
         <enabledWhen>
@@ -1613,24 +1583,4 @@
            id="imageExternalBrowser">
      </extensionControl>
   </extension>
-  
-    <extension point="org.eclipse.ui.commands">
-         <category
-               description="GIS Table Commands"
-               id="org.kalypso.ogc.gml.table.category"
-               name="GIS Table">
-         </category>
-    </extension>
-
-  <extension point="org.kalypso.core.layout">
-      <layoutPartFactory id="gisMap" class="org.kalypso.ui.internal.layoutwizard.map.MapLayoutPartFactory"/>
-      <layoutPartFactory id="gisTable" class="org.kalypso.ui.internal.layoutwizard.gistable.GisTableLayoutPartFactory"/>
-      <layoutPartFactory id="featureView" class="org.kalypso.ui.internal.layoutwizard.featureview.FeatureViewLayoutPartFactory"/>
-  </extension>
-  
-  <extension point="org.kalypso.ui.mapDropTarget">
-     <target extension="shp" wizardId="org.kalypso.ui.wizard.shape">
-     </target>
-  </extension>
-      
 </plugin>

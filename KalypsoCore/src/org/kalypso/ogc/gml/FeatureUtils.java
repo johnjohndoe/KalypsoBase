@@ -49,7 +49,7 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -59,13 +59,12 @@ import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * some basic feature utils
- *
+ * 
  * @author Dirk Kuch
  */
 public final class FeatureUtils
@@ -144,6 +143,14 @@ public final class FeatureUtils
       return Messages.getString( "org.kalypso.ogc.gml.FeatureUtils.9" ); //$NON-NLS-1$
 
     return (String) objString;
+  }
+
+  public static FeatureChange getLinkedFeatureChange( final Feature parentFeature, final QName propertyName, final String value )
+  {
+    final IPropertyType chgProp = parentFeature.getFeatureType().getProperty( propertyName );
+    final XLinkedFeature_Impl impl = new XLinkedFeature_Impl( parentFeature, (IRelationType) chgProp, parentFeature.getFeatureType(), value, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+
+    return new FeatureChange( parentFeature, chgProp, impl );
   }
 
   public static String getProperty( final Feature fa, final QName qname )
@@ -234,8 +241,11 @@ public final class FeatureUtils
   public static FeatureChange getExternalLinkedFeatureCommand( final Feature feature, final QName qname, final String value )
   {
     final IPropertyType chgProp = feature.getFeatureType().getProperty( qname );
-    final IXLinkedFeature impl = FeatureFactory.createXLink( feature, (IRelationType) chgProp, feature.getFeatureType(), value );
-    return new FeatureChange( feature, chgProp, impl );
+    final XLinkedFeature_Impl impl = new XLinkedFeature_Impl( feature, (IRelationType) chgProp, feature.getFeatureType(), value, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+
+    final FeatureChange change = new FeatureChange( feature, chgProp, impl );
+
+    return change;
   }
 
   @Deprecated
@@ -283,21 +293,7 @@ public final class FeatureUtils
     }
 
     return base;
+
   }
-
-  /**
-   * Checks, if one of the isUsed flags has changed. Checks only feature with the given owner.
-   */
-  public static boolean checkChange( final Feature owner, final FeatureChange[] changes, final QName property )
-  {
-    for( final FeatureChange change : changes )
-    {
-      if( change.getFeature().getOwner() == owner && change.getProperty().getQName().equals( property ) )
-        return true;
-    }
-
-    return false;
-  }
-
 
 }

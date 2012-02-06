@@ -50,16 +50,28 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.vfs.AllFileSelector;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemException;
+import org.apache.commons.vfs.FileSystemManager;
+import org.apache.commons.vfs.FileSystemManagerWrapper;
+import org.apache.commons.vfs.FileType;
+import org.apache.commons.vfs.NameScope;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
@@ -67,6 +79,8 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.KalypsoCommonsPlugin;
 import org.kalypso.commons.internal.i18n.Messages;
+import org.kalypso.commons.io.VFSUtilities;
+import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.io.FileVisitor;
 import org.kalypso.contribs.java.io.StreamUtilities;
@@ -247,7 +261,7 @@ public class FileUtilities
         return files[0];
     }
 
-    throw new FileNotFoundException( Messages.getString( "org.kalypso.commons.java.io.FileUtilities.0", prefix, suffix, path ) ); //$NON-NLS-1$
+    throw new FileNotFoundException( Messages.getString( "org.kalypso.commons.java.io.FileUtilities.0", prefix, suffix, path ) ); //$NON-NLS-1$ 
   }
 
   /**
@@ -435,39 +449,34 @@ public class FileUtilities
     return getRelativePathTo( baseAbs, absAbs );
   }
 
-  public static String getRelativePathTo( final String base, final String absolute )
+  public static String getRelativePathTo( String base, final String absolute )
   {
-    final String separator = "/"; //$NON-NLS-1$
-    String basePath = base.replaceAll( "\\\\", separator ); //$NON-NLS-1$
-    final String absolutePath = absolute.replaceAll( "\\\\", separator ); //$NON-NLS-1$
-    if( !absolutePath.startsWith( basePath ) )
+    if( !absolute.startsWith( base ) )
     {
-      if( basePath.lastIndexOf( separator ) > -1 )
-        basePath = basePath.substring( 0, basePath.lastIndexOf( separator ) + 1 );
+      if( base.lastIndexOf( "/" ) > -1 ) //$NON-NLS-1$
+        base = base.substring( 0, base.lastIndexOf( "/" ) ); //$NON-NLS-1$
 
-      final String difference = StringUtils.difference( basePath, absolutePath );
+      final String difference = StringUtils.difference( base, absolute );
       if( difference == null || "".equals( difference ) ) //$NON-NLS-1$
         return null;
 
-      final int index = absolutePath.indexOf( difference );
+      final int index = absolute.indexOf( difference );
       if( index < 5 )
         return null;
 
-      final String back = basePath.substring( index );
+      final String back = base.substring( index );
       // TODO change regExp to "everything except fileseparator"
-      final String x = back.replaceAll( "([a-zA-Z0-9_-]|\\.)+", ".." ); //$NON-NLS-1$ //$NON-NLS-2$
+      final String x = back.replaceAll( "([a-zA-Z0-9]|\\.|_)+", ".." ); //$NON-NLS-1$ //$NON-NLS-2$
       if( x.length() > 0 )
-        // return x + "/" + difference; //$NON-NLS-1$
-        return x + difference;
+        return x + "/" + difference; //$NON-NLS-1$
 
       return difference;
     }
-    if( absolutePath.equalsIgnoreCase( basePath ) )
+
+    if( absolute.length() == base.length() )
       return "";
-    if( basePath.endsWith( separator ) )
-      return absolutePath.substring( basePath.length() );
-    else
-      return absolutePath.substring( basePath.length() + 1 );
+
+    return absolute.substring( base.length() );
   }
 
   /**
@@ -559,7 +568,7 @@ public class FileUtilities
 
     for( final File file : files )
     {
-      if( file.isFile() || file.isDirectory() && recurse )
+      if( file.isFile() || (file.isDirectory() && recurse) )
         accept( file, visitor, recurse );
     }
   }
@@ -693,6 +702,36 @@ public class FileUtilities
   }
 
   /**
+   * Moves the complete content of one directory into another.
+   * 
+   * @throws IOException
+   *           If the move failed.
+   */
+  public static void moveContents( final File sourceDir, final File dest ) throws IOException
+  {
+    final FileSystemManager vfsManager = VFSUtilities.getManager();
+    final FileObject source = vfsManager.toFileObject( sourceDir );
+    final FileObject destDir = vfsManager.toFileObject( dest );
+
+    final FileObject[] findFiles = source.findFiles( new AllFileSelector() );
+    // Might happen, if source does not exists... shouldn't we check this?
+    if( findFiles == null )
+      return;
+
+    for( final FileObject fileObject : findFiles )
+    {
+      if( FileType.FILE.equals( fileObject.getType() ) )
+      {
+        final String relPath = source.getName().getRelativeName( fileObject.getName() );
+        final FileObject destFile = destDir.resolveFile( relPath, NameScope.DESCENDENT_OR_SELF );
+        final FileObject folder = destFile.getParent();
+        folder.createFolder();
+        fileObject.moveTo( destFile );
+      }
+    }
+  }
+
+  /**
    * Replaces all invalid characters from the given fileName so that it is valid against the OS-rules for naming files.
    * and looks if file already exists in baseFolder
    * 
@@ -747,7 +786,7 @@ public class FileUtilities
     }
 
     /* List for success or error messages. */
-    final MultiStatus stati = new MultiStatus( KalypsoCommonsPlugin.getID(), IStatus.OK, Messages.getString( "org.kalypso.commons.java.io.FileUtilities.1", String.valueOf( days ) ), null ); //$NON-NLS-1$
+    final MultiStatus stati = new MultiStatus( KalypsoCommonsPlugin.getID(), Status.OK, Messages.getString( "org.kalypso.commons.java.io.FileUtilities.1", String.valueOf( days ) ), null ); //$NON-NLS-1$ 
 
     /* Delete these files. */
     for( int i = 0; i < filesToDelete.size(); i++ )
@@ -764,7 +803,7 @@ public class FileUtilities
         FileUtilities.deleteRecursive( fileToDelete );
 
         /* Add the success message. */
-        stati.add( new Status( IStatus.OK, KalypsoCommonsPlugin.getID(), fileToDelete.getName() + ": OK" ) ); //$NON-NLS-1$
+        stati.add( new Status( Status.OK, KalypsoCommonsPlugin.getID(), fileToDelete.getName() + ": OK" ) ); //$NON-NLS-1$
       }
       catch( final Exception ex )
       {
@@ -808,7 +847,7 @@ public class FileUtilities
     return files;
   }
 
-  public static void deleteQuietly( final File file )
+  public static void deleteQuitly( final File file )
   {
     try
     {
@@ -821,6 +860,120 @@ public class FileUtilities
     {
       KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), e.getLocalizedMessage(), e ) );
     }
+  }
+
+  /**
+   * resolves the input stream from given {@link FileObject} based on the file extention, known types are gz and zip, in
+   * case of zip archiv the first file will be taken.
+   */
+  public static InputStream getInputStreamFromFileObject( final FileObject file )
+  {
+    InputStream inContentStream = null;
+
+    /* open stream */
+    try
+    {
+      if( "gz".equalsIgnoreCase( file.getName().getExtension() ) )//$NON-NLS-1$
+      {
+        inContentStream = new GZIPInputStream( new BufferedInputStream( file.getContent().getInputStream() ) );
+      }
+      else if( "zip".equalsIgnoreCase( file.getName().getExtension() ) )//$NON-NLS-1$
+      {
+        inContentStream = ZipUtilities.getInputStreamForFirstFile( file.getURL() );
+      }
+      else
+      {
+        inContentStream = new BufferedInputStream( file.getContent().getInputStream() );
+      }
+    }
+    catch( final FileSystemException e )
+    {
+      e.printStackTrace();
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+    }
+    return inContentStream;
+  }
+
+  /**
+   * Compress the given by sourceFileURL {@link URL} file into given by outputDirURL directory with compression
+   * specified by compressKind. Supported compression is "gz", with null or empty string provided as compressKind the
+   * file will be just copied.
+   */
+  public static FileObject compressFileContent( final URL sourceFileURL, final URL outputDirURL, final String compressKind )
+  {
+    return proceedFileCompressOperation( sourceFileURL, outputDirURL, compressKind, true );
+  }
+
+  /**
+   * uncompress(unzip ungzip) or/and compress using by @param compressKind given type of compression the source
+   * {@link URL} to the output {@link URL}
+   */
+  private static FileObject proceedFileCompressOperation( final URL sourceFileURL, final URL outputDirURL, final String compressKind, final boolean doCompress )
+  {
+    if( sourceFileURL == null || outputDirURL == null )
+      return null;
+
+    OutputStream outStream = null;
+    InputStream inStream = null;
+    String lComressKind = compressKind;
+    if( lComressKind == null || !doCompress )
+    {
+      lComressKind = "";
+    }
+    try
+    {
+      final FileSystemManagerWrapper vfsManager = VFSUtilities.getNewManager();
+      final FileObject fileObjectIn = vfsManager.resolveFile( sourceFileURL.toExternalForm() );
+      final FileObject fileObjectOut = vfsManager.resolveFile( outputDirURL.toExternalForm() );
+      inStream = getInputStreamFromFileObject( fileObjectIn );
+
+      final File sourceFile = new File( sourceFileURL.toURI() );
+      final String sourceFileName = sourceFile.getName();
+      final boolean sourceIsKnownArchiv = sourceFileName.toLowerCase().endsWith( ".gz" ) || sourceFileName.endsWith( ".zip" ); //$NON-NLS-1$  //$NON-NLS-2$  
+      final String sourceFileNameWithoutExt = sourceFileName.substring( 0, sourceIsKnownArchiv ? sourceFileName.lastIndexOf( "." ) : sourceFileName.length() ); //$NON-NLS-1$
+      final File outputFile = new File( outputDirURL.getPath(), sourceFileNameWithoutExt + ("".equals( lComressKind ) ? "" : ".") + lComressKind ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      if( doCompress && "gz".equalsIgnoreCase( lComressKind ) ) { //$NON-NLS-1$
+        outStream = new GZIPOutputStream( new FileOutputStream( outputFile ) );
+      }
+      else if( doCompress && "zip".equalsIgnoreCase( lComressKind ) ) { //$NON-NLS-1$
+        outStream = new ZipOutputStream( new FileOutputStream( outputFile ) );
+        final ZipEntry newEntry = new ZipEntry( sourceFileName );
+        ((ZipOutputStream) outStream).putNextEntry( newEntry );
+      }
+      else
+      {
+        outStream = new BufferedOutputStream( new FileOutputStream( outputFile ) );
+      }
+      IOUtils.copy( inStream, outStream );
+      return vfsManager.resolveFile( fileObjectOut, outputFile.getName() );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
+    finally
+    {
+      IOUtils.closeQuietly( inStream );
+      IOUtils.closeQuietly( outStream );
+    }
+    return null;
+
+  }
+
+  /**
+   * uncompress the given by sourceFileURL {@link URL} file into given by outputDirURL {@link URL} directory supported
+   * compression are: "gz". If the compressKind parametr is set, the content will be recompress according to this
+   * parameter after uncompressing.
+   */
+  public static FileObject uncompressFileContent( final URL sourceFileURL, final URL outputDirURL, final String compressKind )
+  {
+    if( compressKind == null || "".equals( compressKind ) )
+      return proceedFileCompressOperation( sourceFileURL, outputDirURL, compressKind, false );
+
+    return proceedFileCompressOperation( sourceFileURL, outputDirURL, compressKind, true );
   }
 
   /**
@@ -844,15 +997,4 @@ public class FileUtilities
 
     return -1;
   }
-
-  public static void cleanDirectory( final File dir, final IFileFilter filter )
-  {
-    final File[] files = dir.listFiles();
-    for( final File file : files )
-    {
-      if( filter.select( file ) )
-        FileUtilities.deleteQuietly( file );
-    }
-  }
-
 }

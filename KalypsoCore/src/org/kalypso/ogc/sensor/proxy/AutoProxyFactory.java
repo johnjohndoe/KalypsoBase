@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.proxy;
 
@@ -56,8 +56,10 @@ import org.xml.sax.InputSource;
  * 
  * @author schlienger
  */
-public final class AutoProxyFactory
+public final class AutoProxyFactory implements IProxyFactory
 {
+  private static AutoProxyFactory INSTANCE = null;
+
   private AutoProxyFactory( )
   {
     // do not instanciate
@@ -73,7 +75,8 @@ public final class AutoProxyFactory
    * @param obs
    * @return either a proxy observation or the original observation
    */
-  public static IObservation proxyObservation( final IObservation obs )
+  @Override
+  public IObservation proxyObservation( final IObservation obs )
   {
     // direct assignment, just to be able to use 'proxy' as name everywhere
     IObservation proxy = obs;
@@ -88,7 +91,7 @@ public final class AutoProxyFactory
   {
     final MetadataList mdl = obs.getMetadataList();
 
-    final String wq = mdl.getProperty( ITimeseriesConstants.MD_WQ_TABLE, "" ); //$NON-NLS-1$
+    final String wq = mdl.getProperty( ITimeseriesConstants.MD_WQTABLE, "" ); //$NON-NLS-1$
 
     if( wq.length() > 0 )
     {
@@ -106,11 +109,11 @@ public final class AutoProxyFactory
         boolean foundType2 = false;
 
         final IAxis[] axes = obs.getAxes();
-        for( final IAxis axe : axes )
+        for( int i = 0; i < axes.length; i++ )
         {
-          if( axe.getType().equals( type1 ) )
+          if( axes[i].getType().equals( type1 ) )
             foundType1 = true;
-          else if( axe.getType().equals( type2 ) )
+          else if( axes[i].getType().equals( type2 ) )
             foundType2 = true;
         }
 
@@ -144,18 +147,18 @@ public final class AutoProxyFactory
   {
     final MetadataList mdl = obs.getMetadataList();
 
-    final String wq = mdl.getProperty( ITimeseriesConstants.MD_WQ_WECHMANN, "" ); //$NON-NLS-1$
+    final String wq = mdl.getProperty( ITimeseriesConstants.MD_WQWECHMANN, "" ); //$NON-NLS-1$
 
     if( wq.length() > 0 )
     {
       boolean foundW = false;
       boolean foundQ = false;
       final IAxis[] axes = obs.getAxes();
-      for( final IAxis axe : axes )
+      for( int i = 0; i < axes.length; i++ )
       {
-        if( axe.getType().equals( ITimeseriesConstants.TYPE_RUNOFF ) )
+        if( axes[i].getType().equals( ITimeseriesConstants.TYPE_RUNOFF ) )
           foundQ = true;
-        else if( axe.getType().equals( ITimeseriesConstants.TYPE_WATERLEVEL ) )
+        else if( axes[i].getType().equals( ITimeseriesConstants.TYPE_WATERLEVEL ) )
           foundW = true;
       }
 
@@ -185,5 +188,16 @@ public final class AutoProxyFactory
     }
 
     return obs;
+  }
+
+  /**
+   * @return default instance of this factory class
+   */
+  public static AutoProxyFactory getInstance( )
+  {
+    if( INSTANCE == null )
+      INSTANCE = new AutoProxyFactory();
+
+    return INSTANCE;
   }
 }

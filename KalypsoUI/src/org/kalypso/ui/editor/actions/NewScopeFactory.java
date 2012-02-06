@@ -47,7 +47,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.editor.gmleditor.part.FeatureAssociationTypeElement;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureRelation;
+import org.kalypsodeegree.model.feature.IFeatureProperty;
 
 /**
  * @author Gernot Belger
@@ -67,10 +67,7 @@ public final class NewScopeFactory
     final Object elementInScope = selection.getFirstElement();
 
     if( elementInScope instanceof FeatureAssociationTypeElement )
-    {
-
       return new NewFeaturePropertyScope( (FeatureAssociationTypeElement) elementInScope, workspace, selectionManager );
-    }
 
     if( selection instanceof IFeatureSelection )
     {
@@ -84,7 +81,7 @@ public final class NewScopeFactory
     return null;
   }
 
-  public static INewScope createPropertyScope( final IFeatureRelation featureProperty, final CommandableWorkspace workspace, final IFeatureSelectionManager selectionManager )
+  public static INewScope createPropertyScope( final IFeatureProperty featureProperty, final CommandableWorkspace workspace, final IFeatureSelectionManager selectionManager )
   {
     return new NewFeaturePropertyScope( featureProperty, workspace, selectionManager );
   }

@@ -43,13 +43,13 @@ package org.kalypso.project.database.common.utils;
 import java.io.File;
 import java.net.URL;
 
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
-import org.apache.commons.vfs2.FileSystemManager;
-import org.apache.commons.vfs2.FileSystemOptions;
-import org.apache.commons.vfs2.impl.DefaultFileSystemManager;
-import org.apache.commons.vfs2.provider.ftp.FtpFileSystemConfigBuilder;
-import org.kalypso.commons.vfs.IFileSystemManagerResolveDelegate;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemException;
+import org.apache.commons.vfs.FileSystemManager;
+import org.apache.commons.vfs.FileSystemOptions;
+import org.apache.commons.vfs.IFileSystemManagerResolveDelegate;
+import org.apache.commons.vfs.impl.DefaultFileSystemManager;
+import org.apache.commons.vfs.provider.ftp.FtpFileSystemConfigBuilder;
 
 /**
  * @author Dirk Kuch
@@ -96,7 +96,7 @@ public class PlanerClientFileSystemManager implements IFileSystemManagerResolveD
   @Override
   public FileObject resolveFile( final FileSystemManager manager, final FileObject baseFile, final String uri ) throws FileSystemException
   {
-    if( isFtpProtocol( baseFile, uri ) )
+    if( isFtpProtocol( baseFile, uri ) ) 
     {
       if( manager instanceof DefaultFileSystemManager )
       {
@@ -105,6 +105,7 @@ public class PlanerClientFileSystemManager implements IFileSystemManagerResolveD
         return def.resolveFile( baseFile, uri, m_ftpOptions );
       }
     }
+     
 
     return manager.resolveFile( baseFile, uri );
   }
@@ -142,7 +143,7 @@ public class PlanerClientFileSystemManager implements IFileSystemManagerResolveD
   private boolean isFtpProtocol( final FileObject baseFile, final String uri ) throws FileSystemException
   {
     if( baseFile != null )
-    {
+    { 
       final URL url = baseFile.getURL();
       if( url.getProtocol().toLowerCase().startsWith( "ftp" ) ) //$NON-NLS-1$
         return true;

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
-   <extension-point id="owsoperation" name="owsoperation" schema="schema/OWSOperation.exsd"/>
    <extension
-         point="de.openali.odysseus.service.ods.owsoperation">
+         point="de.openali.odysseus.service.ows.owsoperation">
       <owsoperation
             class="de.openali.odysseus.service.ods.operation.GetCapabilities"
             id="GetCapabilities"
@@ -87,55 +86,6 @@
             id="GetSymbol"
             isPublic="true">
       </owsoperation>
-   </extension>
-   <extension
-         point="de.openali.odysseus.chart.factory.LayerProvider">
-      <provider
-            class="org.kalypso.chart.ext.test.layer.provider.EditableLineLayerProvider"
-            id="org.kalypso.chart.ext.test.layer.provider.EditableLineLayerProvider">
-      </provider>
-      <provider
-            class="de.openali.odysseus.chart.ext.base.layer.provider.GridLayerProvider"
-            id="de.openali.odysseus.chart.ext.base.layer.provider.GridLayerProvider">
-      </provider>
-   </extension>
-   <extension
-         point="de.openali.odysseus.chart.factory.AxisRendererProvider">
-      <provider
-            class="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider"
-            id="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
-      </provider>
-   </extension>
-   <extension
-         point="de.openali.odysseus.chart.factory.AxisProvider">
-      <provider
-            class="de.openali.odysseus.chart.ext.base.axis.provider.GenericLinearAxisProvider"
-            id="de.openali.odysseus.chart.ext.base.axis.provider.GenericLinearAxisProvider">
-      </provider>
-      <provider
-            class="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider"
-            id="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
-      </provider>
-   </extension>
-   <extension
-         point="org.kalypso.ogc.core.service">
-      <service
-            class="de.openali.odysseus.service.ods.service.ODSService"
-            name="ODS"
-            version="0.2.0">
-         <operation
-               class="de.openali.odysseus.service.ods.operation.GetCapabilities"
-               name="GetCapabilities">
-         </operation>
-         <operation
-               class="de.openali.odysseus.service.ods.operation.GetChart"
-               name="GetChart">
-         </operation>
-         <operation
-               class="de.openali.odysseus.service.ods.operation.GetSymbol"
-               name="GetSymbol">
-         </operation>
-      </service>
    </extension>
 
 </plugin>

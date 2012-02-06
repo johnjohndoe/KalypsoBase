@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil;
 
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 
@@ -57,7 +56,7 @@ public interface IProfilPointPropertyProvider
   /**
    * create a new IProfil object, takes given Observation as profile data
    */
-  IProfil createProfil( TupleResult observation, IProfileFeature source );
+  IProfil createProfil( TupleResult observation );
 
   /**
    * FIXME: not used any more: either remove or use

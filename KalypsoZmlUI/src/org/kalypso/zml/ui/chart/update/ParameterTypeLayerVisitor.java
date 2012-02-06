@@ -43,8 +43,7 @@ package org.kalypso.zml.ui.chart.update;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
-import org.kalypso.zml.core.diagram.base.IZmlLayer;
+import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
@@ -64,6 +63,9 @@ public class ParameterTypeLayerVisitor extends AbstractChartLayerVisitor
     m_parameterType = parameterType;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+   */
   @Override
   public void visit( final IChartLayer layer )
   {
@@ -104,9 +106,11 @@ public class ParameterTypeLayerVisitor extends AbstractChartLayerVisitor
 
   private boolean isTypeOf( final IChartLayer layer )
   {
-    final String identifier = layer.getIdentifier(); 
+    final String identifier = layer.getIdentifier();
+// final ICoordinateMapper mapper = layer.getCoordinateMapper();
+// final IAxis targetAxis = mapper.getTargetAxis();
 
-    return StringUtils.equalsIgnoreCase( m_parameterType, identifier );
+    return identifier.equals( m_parameterType );
   }
 
 }

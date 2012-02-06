@@ -104,7 +104,7 @@ import org.xml.sax.Attributes;
 
 /**
  * Utilities around GMLSchema-processing
- *
+ * 
  * @author doemming
  */
 public class GMLSchemaUtilities
@@ -213,7 +213,7 @@ public class GMLSchemaUtilities
 
   /**
    * Checks, if a feature type substitutes one of a given list of qnames.
-   *
+   * 
    * @param substitueeNames
    *          Names of the types which may or may not be substituted by type
    */
@@ -533,7 +533,7 @@ public class GMLSchemaUtilities
 
   /**
    * known types are all types that should be builded to something e.g. featuretype, propertytype or relationtype
-   *
+   * 
    * @param qName
    * @return true is qName is a known type
    */
@@ -578,6 +578,20 @@ public class GMLSchemaUtilities
         return result;
     }
     return null;
+  }
+
+  /**
+   * @param gmlSchema
+   * @param element
+   * @return complextype
+   */
+  public static ComplexTypeReference getComplexTypeReferenceFor( final IGMLSchema gmlSchema, final Element element ) throws GMLSchemaException
+  {
+    final QName type = element.getType();
+    if( type != null )
+      return gmlSchema.resolveComplexTypeReference( type );
+    final ComplexType complexType = element.getComplexType();
+    return new ComplexTypeReference( gmlSchema, complexType );
   }
 
   public static String[] createFeaturePathes( final IGMLSchema gmlSchma, final String pathToHere, final IFeatureType featureType )
@@ -1045,7 +1059,7 @@ public class GMLSchemaUtilities
 
       case 1:
         final XmlAnyTypeImpl anyType = (XmlAnyTypeImpl) xmlObjects[0];
-        return anyType.getStringValue();
+        return anyType.stringValue();
 
       default:
         throw new UnsupportedOperationException( "can not handle multi 'kapp:gmlVersion' fragments in schema: " + schemaDocument.getSchema().getTargetNamespace() ); //$NON-NLS-1$

@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema.property.relation;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
  * @author Gernot Belger
@@ -54,7 +54,7 @@ public class DocumentReference implements IDocumentReference
   {
     m_uri = uri;
   }
-
+  
   /**
    * @see org.kalypso.gmlschema.property.relation.IDocumentReference#getReference()
    */
@@ -63,7 +63,7 @@ public class DocumentReference implements IDocumentReference
   {
     return m_uri;
   }
-
+  
   /**
    * @see java.lang.Object#equals(java.lang.Object)
    */
@@ -72,7 +72,7 @@ public class DocumentReference implements IDocumentReference
   {
     return EqualsBuilder.reflectionEquals( this, other );
   }
-
+  
   /**
    * @see java.lang.Object#hashCode()
    */

@@ -48,11 +48,11 @@ import java.util.Set;
 
 import javax.xml.bind.JAXBElement;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.ogc.gml.CascadingLayerKalypsoTheme;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
-import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme;
@@ -75,7 +75,7 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
 
   private CascadingLayer m_layer;
 
-  private IKalypsoCascadingTheme m_theme;
+  private CascadingLayerKalypsoTheme m_theme;
 
   private final ADD_THEME_POSITION m_position;
 
@@ -85,7 +85,7 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
 
   /**
    * Add Cascading theme constructor
-   *
+   * 
    * @param mapModell
    *          the gmt file
    * @param name
@@ -125,16 +125,16 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
     m_properties = properties;
   }
 
-  public void addProperties( final Map<String, String> map )
+  public void addProperties( Map<String, String> map )
   {
-    final Set<Entry<String, String>> entries = map.entrySet();
-    for( final Entry<String, String> entry : entries )
+    Set<Entry<String, String>> entries = map.entrySet();
+    for( Entry<String, String> entry : entries )
     {
-      final Property property = new Property();
+      Property property = new Property();
       property.setName( entry.getKey() );
       property.setValue( entry.getValue() );
 
-      m_properties = ArrayUtils.add( m_properties, property );
+      m_properties = (Property[]) ArrayUtils.add( m_properties, property );
     }
   }
 
@@ -156,9 +156,8 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
   {
     final IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
 
-    final GisTemplateMapModell mapModell = new GisTemplateMapModell( m_mapModell.getContext(), m_mapModell.getCoordinatesSystem(), selectionManager );
+    final GisTemplateMapModell mapModell = new GisTemplateMapModell( m_mapModell.getContext(), m_mapModell.getCoordinatesSystem(), m_mapModell.getProject(), selectionManager );
     for( final ICommand command : layerCommands )
-    {
       if( command instanceof AddThemeCommand )
       {
         final AddThemeCommand myCmd = (AddThemeCommand) command;
@@ -186,7 +185,6 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
         final JAXBElement<StyledLayerType> layerElement = factory.createLayer( myLayer );
         layers.add( layerElement );
       }
-    }
   }
 
   public CascadingLayer init( final ObjectFactory factory )
@@ -244,11 +242,11 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
     if( ADD_THEME_POSITION.eFront.equals( m_position ) )
     {
       final IKalypsoTheme[] themes = m_mapModell.getAllThemes();
-      m_theme = (IKalypsoCascadingTheme) m_mapModell.insertLayer( m_layer, getPosition( themes ) );
+      m_theme = (CascadingLayerKalypsoTheme) m_mapModell.insertLayer( m_layer, getPosition( themes ) );
     }
     else if( ADD_THEME_POSITION.eBack.equals( m_position ) )
     {
-      m_theme = (IKalypsoCascadingTheme) m_mapModell.addLayer( m_layer );
+      m_theme = (CascadingLayerKalypsoTheme) m_mapModell.addLayer( m_layer );
     }
 
     m_mapModell.activateTheme( m_theme );
@@ -313,5 +311,6 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
 
     return layer;
   }
+
 
 }

@@ -51,6 +51,7 @@ import org.eclipse.swt.widgets.Shell;
  * This implementation of {@link org.eclipse.jface.wizard.IWizardContainer} is just a
  * {@link org.eclipse.swt.widgets.Composite}.
  * 
+ * 
  * @author belger
  */
 public class WizardComposite extends Composite implements IWizardContainer2
@@ -73,7 +74,7 @@ public class WizardComposite extends Composite implements IWizardContainer2
   @Override
   public void updateSize( )
   {
-    //
+    //  
   }
 
   /**
@@ -100,7 +101,7 @@ public class WizardComposite extends Composite implements IWizardContainer2
   @Override
   public void showPage( final IWizardPage page )
   {
-    //
+    //  
   }
 
   /**
@@ -109,7 +110,7 @@ public class WizardComposite extends Composite implements IWizardContainer2
   @Override
   public void updateButtons( )
   {
-    //
+    //  
   }
 
   /**
@@ -118,7 +119,7 @@ public class WizardComposite extends Composite implements IWizardContainer2
   @Override
   public void updateMessage( )
   {
-    //
+    //  
   }
 
   /**
@@ -127,7 +128,7 @@ public class WizardComposite extends Composite implements IWizardContainer2
   @Override
   public void updateTitleBar( )
   {
-    //
+    //  
   }
 
   /**
@@ -136,7 +137,7 @@ public class WizardComposite extends Composite implements IWizardContainer2
   @Override
   public void updateWindowTitle( )
   {
-    //
+    //  
   }
 
   /**
@@ -147,7 +148,7 @@ public class WizardComposite extends Composite implements IWizardContainer2
   public void run( final boolean fork, final boolean cancelable, final IRunnableWithProgress runnable )
   // throws InvocationTargetException, InterruptedException
   {
-    //
+    //  
   }
 
 }

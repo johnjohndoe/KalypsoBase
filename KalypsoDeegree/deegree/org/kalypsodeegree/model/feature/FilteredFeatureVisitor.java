@@ -58,6 +58,9 @@ public class FilteredFeatureVisitor implements FeatureVisitor
     m_filter = filter;
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
+   */
   @Override
   public boolean visit( final Feature f )
   {

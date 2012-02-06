@@ -41,11 +41,11 @@
 package org.kalypso.ogc.gml.mapmodel;
 
 import java.awt.Graphics;
-import java.net.URL;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Vector;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
@@ -83,6 +83,8 @@ public class MapModell implements IMapModell
   // at once...
   private IKalypsoTheme m_activeTheme = null;
 
+  private IProject m_project;
+
   private I10nString m_name;
 
   private final IKalypsoThemeListener m_themeListener = new KalypsoThemeAdapter()
@@ -112,12 +114,10 @@ public class MapModell implements IMapModell
     }
   };
 
-  private final URL m_context;
-
-  public MapModell( final String crs, final URL context )
+  public MapModell( final String crs, final IProject project )
   {
     m_coordinatesSystem = crs;
-    m_context = context;
+    m_project = project;
   }
 
   @Override
@@ -132,19 +132,15 @@ public class MapModell implements IMapModell
     {
       theme.dispose();
     }
-  }
 
-  @Override
-  public URL getContext( )
-  {
-    return m_context;
+    m_project = null;
   }
 
   /**
    * Activates the given theme and deactiveates the currently activated one.
    * <p>
    * This also applies to any sub-modells, only one theme can be activated in the whole theme tree.
-   *
+   * 
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#activateTheme(org.kalypso.ogc.gml.IKalypsoTheme)
    */
   @Override
@@ -180,7 +176,7 @@ public class MapModell implements IMapModell
 
   /**
    * Tries to activate the given theme within this modell.
-   *
+   * 
    * @return <code>true</code>, if the given theme is contained within this modell and was activated. <code>false</code>
    *         otherwise.
    */
@@ -247,7 +243,9 @@ public class MapModell implements IMapModell
     fireThemeAdded( theme );
 
     if( m_activeTheme == null )
-      activateTheme( theme );
+    {
+      // activateTheme( theme );
+    }
   }
 
   /**
@@ -288,7 +286,8 @@ public class MapModell implements IMapModell
         children[i - 1] = Status.OK_STATUS;
     }
 
-    return new MultiStatus( KalypsoCorePlugin.getID(), -1, children, "", null ); //$NON-NLS-1$
+    final MultiStatus multiStatus = new MultiStatus( KalypsoCorePlugin.getID(), -1, children, "", null ); //$NON-NLS-1$
+    return multiStatus;
   }
 
   @Override
@@ -342,6 +341,7 @@ public class MapModell implements IMapModell
     if( m_themes.contains( theme ) )
     {
       m_themes.remove( theme );
+      theme.dispose();
     }
     else
     {
@@ -382,6 +382,8 @@ public class MapModell implements IMapModell
       if( theme.equals( remove ) )
       {
         cascading.removeTheme( remove );
+        remove.dispose();
+
         return true;
       }
       else if( theme instanceof IKalypsoCascadingTheme )
@@ -414,6 +416,19 @@ public class MapModell implements IMapModell
     return MapModellHelper.calculateExtent( themes, new ThemeUsedForMaxExtentPredicate() );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getProject()
+   */
+  @Override
+  public IProject getProject( )
+  {
+    return m_project;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#accept(org.kalypso.kalypsomodel1d2d.ui.map.channeledit.KalypsoThemeVisitor,
+   *      int)
+   */
   @Override
   public void accept( final IKalypsoThemeVisitor ktv, final int depth )
   {
@@ -603,7 +618,7 @@ public class MapModell implements IMapModell
 
   /**
    * Returns always <code>true</code>.
-   *
+   * 
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#isLoaded()
    */
   @Override

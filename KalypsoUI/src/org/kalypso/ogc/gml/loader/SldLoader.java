@@ -47,7 +47,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.CharEncoding;
+import org.apache.commons.lang.CharEncoding;
 import org.apache.tools.ant.filters.StringInputStream;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -287,7 +287,7 @@ public class SldLoader extends AbstractLoader implements ISaveUrnLoader
 
       /* Really save to this location */
       final String sldXMLwithHeader = marshallObject( data, CharEncoding.UTF_8 );
-      FileUtils.writeStringToFile( userFile, sldXMLwithHeader, CharEncoding.UTF_8 );
+      FileUtils.writeStringToFile( userFile, sldXMLwithHeader );
 
       /* Just for formal reasons, should already be empty */
       setResources( null );

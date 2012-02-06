@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.command;
 
@@ -47,7 +47,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
@@ -65,7 +65,7 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 /**
  * @author Gernot Belger
- * @author Monika Thül
+ * @author Monika Thï¿½l
  */
 public class DeleteFeatureCommand implements ICommand
 {
@@ -138,7 +138,7 @@ public class DeleteFeatureCommand implements ICommand
 
       if( rt.isList() )
       {
-        final int index = m_listIndexMap.get( featureToAdd ).intValue();
+        final int index = (m_listIndexMap.get( featureToAdd )).intValue();
         workspace.addFeatureAsComposition( parentFeature, rt, index, featureToAdd );
       }
       else
@@ -271,7 +271,7 @@ public class DeleteFeatureCommand implements ICommand
     public ModellEvent[] getEvents( )
     {
       final ModellEvent[] modellEvents = m_structureEvents.values().toArray( new ModellEvent[0] );
-      return ArrayUtils.addAll( modellEvents, new ModellEvent[] { getChangedFeatures() } );
+      return (ModellEvent[]) ArrayUtils.addAll( modellEvents, new ModellEvent[] { getChangedFeatures() } );
     }
 
     private FeaturesChangedModellEvent getChangedFeatures( )
@@ -312,5 +312,78 @@ public class DeleteFeatureCommand implements ICommand
         }
       return true;
     }
+  }
+
+  private static class RemoveBrokenLinksCommand implements ICommand
+  {
+    private final GMLWorkspace m_workspace;
+
+    private final Feature m_parentFeature;
+
+    private final String m_childID;
+
+    private final IRelationType m_ftp;
+
+    private final int m_pos;
+
+    public RemoveBrokenLinksCommand( final GMLWorkspace workspace, final Feature parentFeature, final IRelationType ftp, final String childID, final int pos )
+    {
+      m_workspace = workspace;
+      m_parentFeature = parentFeature;
+      m_ftp = ftp;
+      m_childID = childID;
+      m_pos = pos;
+    }
+
+    /**
+     * @see org.kalypso.commons.command.ICommand#isUndoable()
+     */
+    @Override
+    public boolean isUndoable( )
+    {
+      return true;
+    }
+
+    /**
+     * @see org.kalypso.commons.command.ICommand#process()
+     */
+    @Override
+    public void process( ) throws Exception
+    {
+      m_workspace.removeLinkedAsAggregationFeature( m_parentFeature, m_ftp, m_childID );
+
+// m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, new Feature[] { m_parentFeature } ) );
+    }
+
+    /**
+     * @see org.kalypso.commons.command.ICommand#redo()
+     */
+    @Override
+    public void redo( ) throws Exception
+    {
+      process();
+    }
+
+    /**
+     * @see org.kalypso.commons.command.ICommand#undo()
+     */
+    @Override
+    public void undo( ) throws Exception
+    {
+      m_workspace.addFeatureAsAggregation( m_parentFeature, m_ftp, m_pos, m_childID );
+
+// m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, new Feature[] { m_parentFeature } ) );
+    }
+
+    /**
+     * @see org.kalypso.commons.command.ICommand#getDescription()
+     */
+    @Override
+    public String getDescription( )
+    {
+      // egal
+      return null;
+    }
+
   }
 }

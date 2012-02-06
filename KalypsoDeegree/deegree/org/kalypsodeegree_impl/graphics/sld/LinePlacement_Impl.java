@@ -50,8 +50,8 @@ import org.kalypsodeegree_impl.tools.Debug;
  * <li>PerpendicularOffset: may be used as defined by the OGC, but it can also be set to one of the special values
  * 'center', 'above', 'below', 'auto'
  * <li>Gap: defines the distance between two captions on the line string
- * <li>LineWidth: provides the thickness of the styled line (needed as information for the correct positioning of labels
- * above and below the line string)
+ * <li>LineWidth: provides the thickness of the styled line (needed as information for the correct positioning of
+ * labels above and below the line string)
  * </ul>
  * <p>
  * 
@@ -66,11 +66,12 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
 
   private ParameterValueType m_gap = null;
 
-  public LinePlacement_Impl( final ParameterValueType perpendicularOffset, final ParameterValueType lineWidth, final ParameterValueType gap )
+  public LinePlacement_Impl( final ParameterValueType perpendicularOffset, final ParameterValueType lineWidth,
+      final ParameterValueType gap )
   {
-    m_perpendicularOffset = perpendicularOffset;
-    m_lineWidth = lineWidth;
-    m_gap = gap;
+    this.m_perpendicularOffset = perpendicularOffset;
+    this.m_lineWidth = lineWidth;
+    this.m_gap = gap;
   }
 
   /**
@@ -103,7 +104,8 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
         }
         catch( final NumberFormatException e )
         {
-          throw new FilterEvaluationException( "Element 'PerpendicularOffset' " + "must be equal to 'center', 'above', 'below' or 'auto' or it " + "must denote a valid double value!" );
+          throw new FilterEvaluationException( "Element 'PerpendicularOffset' "
+              + "must be equal to 'center', 'above', 'below' or 'auto' or it " + "must denote a valid double value!" );
         }
 
       }
@@ -225,7 +227,7 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
    * @return xml representation of the Font
    */
   @Override
-  public String exportAsXML( )
+  public String exportAsXML()
   {
     Debug.debugMethodBegin();
 

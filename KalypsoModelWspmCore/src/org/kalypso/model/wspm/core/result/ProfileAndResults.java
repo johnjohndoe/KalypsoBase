@@ -40,33 +40,120 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.result;
 
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.IProfileFeatureProvider;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
+import org.kalypso.ogc.gml.selection.IFeatureSelection;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * Helper class that finds results for a profile feature.
+ * Helper class that receives a feature form a selection.
  * 
  * @author Gernot Belger
  */
-public final class ProfileAndResults
+public class ProfileAndResults
 {
-  private ProfileAndResults( )
+  private final IProfileFeature m_profile;
+
+  private final Object m_result;
+
+  private final CommandableWorkspace m_workspace;
+
+  public static ProfileAndResults search( final IFeatureSelection selection )
   {
-    throw new UnsupportedOperationException();
+    final EasyFeatureWrapper[] features = selection.getAllFeatures();
+
+    try
+    {
+      for( final EasyFeatureWrapper eft : features )
+      {
+        final Feature feature = eft.getFeature();
+
+        if( feature != null )
+        {
+          final IProfileFeature profileMember = findProfile( feature );
+          if( profileMember != null )
+          {
+            final Object result = findResultNode( feature );
+
+            // HACK: If type not set, force it to be the tuhh-profile. We need this, as tuhh-profile are created via
+            // the gml-tree which knows nothing about profiles... Everyone else should create profile programatically
+            // and directly set the prefered type.
+            if( profileMember.getProfileType() == null )
+            {
+              profileMember.setProfileType( "org.kalypso.model.wspm.tuhh.profiletype" ); //$NON-NLS-1$
+            }
+
+            final CommandableWorkspace workspace = eft.getWorkspace();
+
+            return new ProfileAndResults( profileMember, workspace, result );
+          }
+        }
+      }
+    }
+    catch( final Exception e )
+    {
+      final KalypsoModelWspmCorePlugin wspmPlugin = KalypsoModelWspmCorePlugin.getDefault();
+      wspmPlugin.getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
+
+    return null;
   }
 
-  public static Object findResultNode( final IProfileFeature profile )
+  /**
+   * Finds a {@link WspmProfile} from a given feature using the org.kalypso.model.wspm.core.profileFeatureProvider
+   * extension-point.
+   */
+  private static IProfileFeature findProfile( final Feature feature )
+  {
+    final IProfileFeatureProvider[] profileFeatureProvider = KalypsoModelWspmCoreExtensions.getProfileFeatureProvider();
+    for( final IProfileFeatureProvider provider : profileFeatureProvider )
+    {
+      final IProfileFeature profile = provider.getProfile( feature );
+      if( profile != null )
+        return profile;
+    }
+
+    return null;
+  }
+
+  public static Object findResultNode( final Feature feature )
   {
     final IProfileFeatureProvider[] profileFeatureProvider = KalypsoModelWspmCoreExtensions.getProfileFeatureProvider();
     for( final IProfileFeatureProvider provider : profileFeatureProvider )
     {
       // FIXME: do not return an simple object
-      final Object result = provider.getResult( profile );
+      final Object result = provider.getResult( feature );
       if( result != null )
         return result;
     }
 
     return null;
+  }
+
+  public ProfileAndResults( final IProfileFeature profile, final CommandableWorkspace workspace, final Object result )
+  {
+    m_profile = profile;
+    m_workspace = workspace;
+    m_result = result;
+  }
+
+  public IProfileFeature getProfile( )
+  {
+    return m_profile;
+  }
+
+  public CommandableWorkspace getWorkspace( )
+  {
+    return m_workspace;
+  }
+
+  public Object getResult( )
+  {
+    return m_result;
   }
 }

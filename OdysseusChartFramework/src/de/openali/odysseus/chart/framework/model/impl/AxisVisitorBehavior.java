@@ -50,7 +50,7 @@ public class AxisVisitorBehavior implements IAxisVisitorBehavior
     this( true, true, true );
   }
 
-  public AxisVisitorBehavior( final boolean zoomEnabled, final boolean panEnabled, final boolean autoscaleEnabled )
+  public AxisVisitorBehavior( boolean zoomEnabled, boolean panEnabled, boolean autoscaleEnabled )
   {
     super();
     m_zoomEnabled = zoomEnabled;
@@ -91,17 +91,17 @@ public class AxisVisitorBehavior implements IAxisVisitorBehavior
     return m_zoomEnabled;
   }
 
-  public void setAutoscaleEnabled( final boolean autoscaleEnabled )
+  public void setAutoscaleEnabled( boolean autoscaleEnabled )
   {
     m_autoscaleEnabled = autoscaleEnabled;
   }
 
-  public void setPanEnabled( final boolean panEnabled )
+  public void setPanEnabled( boolean panEnabled )
   {
     m_panEnabled = panEnabled;
   }
 
-  public void setZoomEnabled( final boolean zoomEnabled )
+  public void setZoomEnabled( boolean zoomEnabled )
   {
     m_zoomEnabled = zoomEnabled;
   }

@@ -41,13 +41,12 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusWithTime;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * @author Thomas Jung
  */
-public interface IGeoStatus extends IStatusWithTime, Feature
+public interface IGeoStatus extends IStatusWithTime, IFeatureWrapperCollection<IGeoStatus>
 {
   public static final QName QNAME = new QName( NS.COMMON, "Status" );
 
@@ -74,6 +73,4 @@ public interface IGeoStatus extends IStatusWithTime, Feature
   public void setException( Throwable t );
 
   public void setPlugin( String pluginId );
-
-  public IFeatureBindingCollection<IGeoStatus> getChildrenCollection( );
 }

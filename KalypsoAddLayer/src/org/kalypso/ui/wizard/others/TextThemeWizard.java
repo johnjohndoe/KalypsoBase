@@ -46,19 +46,23 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.action.AddThemeCommand;
+import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 
 /**
  * The wizard for a text theme.
- *
+ * 
  * @author Holger Albert
  */
-public class TextThemeWizard extends AbstractOtherThemeWizard
+public class TextThemeWizard extends AbstractOtherThemeWizard implements IKalypsoDataImportWizard
 {
   /**
    * The wizard page for entering properties for a text theme.
    */
   private TextThemeWizardPage m_textThemeWizardPage;
 
+  /**
+   * The constructor.
+   */
   public TextThemeWizard( )
   {
     super( new ThemeNameWizardPage( "themeNamePage", "Text", ImageProvider.IMAGE_KALYPSO_ICON_BIG, "Text" ) );
@@ -66,6 +70,9 @@ public class TextThemeWizard extends AbstractOtherThemeWizard
     m_textThemeWizardPage = null;
   }
 
+  /**
+   * @see org.kalypso.ui.wizard.others.AbstractOtherThemeWizard#addPages()
+   */
   @Override
   public void addPages( )
   {
@@ -77,14 +84,18 @@ public class TextThemeWizard extends AbstractOtherThemeWizard
     addPage( m_textThemeWizardPage );
   }
 
+  /**
+   * @see org.kalypso.ui.wizard.others.AbstractOtherThemeWizard#createCommand(org.kalypso.ogc.gml.IKalypsoLayerModell,
+   *      java.lang.String)
+   */
   @Override
-  protected ICommand createCommand( final IKalypsoLayerModell mapModell, final String themeName )
+  protected ICommand createCommand( IKalypsoLayerModell mapModell, String themeName )
   {
     /* Create the add theme command. */
-    final AddThemeCommand command = new AddThemeCommand( mapModell, themeName, "text", "", "" );
+    AddThemeCommand command = new AddThemeCommand( mapModell, themeName, "text", "", "" );
 
     /* Add the selected properties. */
-    final Map<String, String> properties = m_textThemeWizardPage.getProperties();
+    Map<String, String> properties = m_textThemeWizardPage.getProperties();
     if( properties != null && properties.size() > 0 )
       command.addProperties( properties );
 

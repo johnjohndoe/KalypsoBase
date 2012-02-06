@@ -37,10 +37,13 @@ package org.kalypsodeegree_impl.gml.binding.commons;
 
 import java.net.URL;
 
+import ogc31.www.opengis.net.gml.FileType;
+import ogc31.www.opengis.net.gml.FileValueModelType;
+
+import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypsodeegree.model.coverage.RangeSetFile;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
@@ -57,7 +60,7 @@ public class CoverageCollection extends Feature_Impl implements ICoverageCollect
 
   public static ICoverageCollection createCoverageCollection( final URL context, final IFeatureProviderFactory providerFactory ) throws GMLSchemaException
   {
-    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( ICoverageCollection.QNAME, context, providerFactory );
+    GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( ICoverageCollection.QNAME, context, providerFactory );
     return (ICoverageCollection) workspace.getRootFeature();
   }
 
@@ -75,12 +78,14 @@ public class CoverageCollection extends Feature_Impl implements ICoverageCollect
     return m_coverages;
   }
 
-  // file name relative to the gml
   public static ICoverage addCoverage( final ICoverageCollection coverages, final RectifiedGridDomain domain, final String externalResource, final String mimeType )
   {
-    final RangeSetFile rangeSetFile = new RangeSetFile( externalResource );
+    final FileType rangeSetFile = KalypsoOGC31JAXBcontext.GML3_FAC.createFileType();
 
+    // file name relative to the gml
+    rangeSetFile.setFileName( externalResource );
     rangeSetFile.setMimeType( mimeType );
+    rangeSetFile.setFileStructure( FileValueModelType.RECORD_INTERLEAVED );
 
     final RectifiedGridCoverage coverage = (RectifiedGridCoverage) coverages.getCoverages().addNew( RectifiedGridCoverage.QNAME );
 

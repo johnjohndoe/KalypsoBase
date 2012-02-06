@@ -43,7 +43,7 @@ package org.kalypso.ui.editor.obstableeditor;
 import java.awt.Frame;
 import java.io.OutputStreamWriter;
 
-import org.apache.commons.collections.ExtendedProperties;
+import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -56,7 +56,7 @@ import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.IExportableObjectFactory;
-import org.kalypso.metadoc.configuration.PublishingConfiguration;
+import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 import org.kalypso.ogc.sensor.tableview.TableView;
 import org.kalypso.ogc.sensor.tableview.TableViewUtils;
 import org.kalypso.ogc.sensor.tableview.swing.ExportableObservationTable;
@@ -66,7 +66,7 @@ import org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor;
 
 /**
  * The Observation TableEditor.
- *
+ * 
  * @author schlienger
  */
 public class ObservationTableEditor extends AbstractObservationEditor implements IExportableObjectFactory
@@ -173,15 +173,22 @@ public class ObservationTableEditor extends AbstractObservationEditor implements
       m_swingContainer.setFocus();
   }
 
+  /**
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
+   */
   @Override
-  public IExportableObject[] createExportableObjects( final ExtendedProperties configuration )
+  public IExportableObject[] createExportableObjects( final Configuration configuration )
   {
     final ExportableObservationTable exportable = new ExportableObservationTable( m_table, getTitle(), Messages.getString( "org.kalypso.ui.editor.obstableeditor.ObservationTableEditor.0" ), getTitle(), null ); //$NON-NLS-1$
     return new IExportableObject[] { exportable };
   }
 
+  /**
+   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration,
+   *      ImageDescriptor)
+   */
   @Override
-  public IWizardPage[] createWizardPages( final PublishingConfiguration configuration, final ImageDescriptor defaultImage )
+  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, final ImageDescriptor defaultImage )
   {
     return new IWizardPage[0];
   }

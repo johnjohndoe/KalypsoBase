@@ -45,8 +45,8 @@ import java.io.InputStream;
 import javax.xml.bind.JAXBException;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.vfs2.FileContent;
-import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs.FileContent;
+import org.apache.commons.vfs.FileObject;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.service.ogc.RequestBean;
 import org.kalypso.service.ogc.exception.OWSException;
@@ -108,7 +108,7 @@ public class ExecuteOperation implements IOperation
       final FileObject resultDir = manager.getResultDir( info.getId() );
       resultFile = resultDir.resolveFile( "executeResponse.xml" ); //$NON-NLS-1$
       int time = 0;
-      final int timeout = 10000;
+      int timeout = 10000;
       final int delay = 500;
       while( !resultFile.exists() && time < timeout )
       {

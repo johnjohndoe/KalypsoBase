@@ -76,6 +76,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.MapPanelSourceProvider;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -127,7 +128,7 @@ public class MapHandlerUtils
     return null;
   }
 
-  public static void postMapCommandChecked( final IMapPanel mapPanel, final ICommand command, final Runnable runnable ) throws ExecutionException
+  public static void postMapCommandChecked( final IMapPanel mapPanel, final ChangeExtentCommand command, final Runnable runnable ) throws ExecutionException
   {
     final ICommandTarget commandTarget = mapPanel.getWidgetManager().getCommandTarget();
     if( commandTarget == null )

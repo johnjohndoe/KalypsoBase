@@ -50,6 +50,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.themes.KalypsoTextTheme;
 import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
@@ -103,10 +104,7 @@ public class TextPropertyPage extends PropertyPage implements IWorkbenchProperty
   {
     /* The content. */
     final Composite content = new Composite( parent, SWT.NONE );
-    final GridLayout contentLayout = new GridLayout( 1, false );
-    contentLayout.marginHeight = 0;
-    contentLayout.marginWidth = 0;
-    content.setLayout( contentLayout );
+    content.setLayout( Layouts.createGridLayout() );
     content.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Initialize. */
@@ -162,8 +160,6 @@ public class TextPropertyPage extends PropertyPage implements IWorkbenchProperty
     final String verticalProperty = m_properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
     final String backgroundColorProperty = m_properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
     final String textProperty = m_properties.getProperty( TextUtilities.THEME_PROPERTY_TEXT );
-    final String fontSizeProperty = m_properties.getProperty( TextUtilities.THEME_PROPERTY_FONT_SIZE );
-    final String transparencyProperty = m_properties.getProperty( TextUtilities.THEME_PROPERTY_TRANSPARENCY );
 
     /* Set the properties. */
     if( horizontalProperty != null && horizontalProperty.length() > 0 )
@@ -174,10 +170,6 @@ public class TextPropertyPage extends PropertyPage implements IWorkbenchProperty
       m_theme.setProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR, backgroundColorProperty );
     if( textProperty != null && textProperty.length() > 0 )
       m_theme.setProperty( TextUtilities.THEME_PROPERTY_TEXT, textProperty );
-    if( fontSizeProperty != null && fontSizeProperty.length() > 0 )
-      m_theme.setProperty( TextUtilities.THEME_PROPERTY_FONT_SIZE, fontSizeProperty );
-    if( transparencyProperty != null && transparencyProperty.length() > 0 )
-      m_theme.setProperty( TextUtilities.THEME_PROPERTY_TRANSPARENCY, transparencyProperty );
 
     return super.performOk();
   }
@@ -195,10 +187,7 @@ public class TextPropertyPage extends PropertyPage implements IWorkbenchProperty
 
     /* Create the main composite. */
     m_main = new Composite( parent, SWT.NONE );
-    final GridLayout mainLayout = new GridLayout( 1, false );
-    mainLayout.marginHeight = 0;
-    mainLayout.marginWidth = 0;
-    m_main.setLayout( mainLayout );
+    m_main.setLayout( new GridLayout( 1, false ) );
     m_main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Create the text composite. */
@@ -208,10 +197,10 @@ public class TextPropertyPage extends PropertyPage implements IWorkbenchProperty
     {
       /**
        * @see org.kalypso.util.themes.text.listener.ITextChangedListener#textPropertyChanged(java.util.Properties, int,
-       *      int, org.eclipse.swt.graphics.Color, java.lang.String, int, boolean)
+       *      int, org.eclipse.swt.graphics.Color, java.lang.String)
        */
       @Override
-      public void textPropertyChanged( final Properties properties, final int horizontal, final int vertical, final org.eclipse.swt.graphics.Color backgroundColor, final String text, final int fontSize, final boolean transparency )
+      public void textPropertyChanged( final Properties properties, final int horizontal, final int vertical, final org.eclipse.swt.graphics.Color backgroundColor, final String text )
       {
         /* Update the properties object. */
         m_properties = properties;

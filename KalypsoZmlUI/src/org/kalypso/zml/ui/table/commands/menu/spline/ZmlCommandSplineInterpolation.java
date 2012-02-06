@@ -113,10 +113,7 @@ public class ZmlCommandSplineInterpolation extends AbstractHandler
       final mxSpline mxSpline = new mxSpline( mxPoints );
       splines.apply( mxSpline );
 
-      final ApplySplineValuesVisior applySplineVisitor = new ApplySplineValuesVisior( splines, s1, s2 );
-      model.accept( applySplineVisitor );
-
-      applySplineVisitor.getTransaction().execute();
+      model.accept( new ApplySplineValuesVisior( splines, s1, s2 ) );
     }
     catch( final SensorException e )
     {

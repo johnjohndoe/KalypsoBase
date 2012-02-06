@@ -47,6 +47,7 @@ import org.kalypso.shape.ShapeType;
 
 /**
  * @author Gernot Belger
+ *
  */
 public class ShapeTypeValue extends AbstractObservableValue
 {

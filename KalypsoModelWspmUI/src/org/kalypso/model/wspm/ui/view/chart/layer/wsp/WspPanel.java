@@ -44,6 +44,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
 import org.kalypso.model.wspm.ui.view.chart.layer.wsp.utils.WaterLevelResultTree;
@@ -53,6 +54,7 @@ import org.kalypso.model.wspm.ui.view.chart.layer.wsp.utils.WaterLevelResultTree
  */
 public class WspPanel extends AbstractProfilView
 {
+  protected Composite m_composite;
 
   private final WspLayer m_layer;
 
@@ -75,7 +77,7 @@ public class WspPanel extends AbstractProfilView
   }
 
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     // FIXME: needs to refresh tree?
   }

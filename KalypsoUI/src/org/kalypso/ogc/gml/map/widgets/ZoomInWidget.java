@@ -45,15 +45,15 @@ import java.awt.Point;
 
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * @author von Dömming
  */
-public class ZoomInWidget extends DeprecatedMouseWidget
+public class ZoomInWidget extends AbstractWidget
 {
-  public ZoomInWidget( final String name, final String toolTip )
+  public ZoomInWidget( String name, String toolTip )
   {
     super( name, toolTip );
 
@@ -71,9 +71,9 @@ public class ZoomInWidget extends DeprecatedMouseWidget
     {
       endPoint = p;
     }
-    // TODO: check if this repaint is really necessary
-    final IMapPanel panel = getMapPanel();
-    if( panel != null )
+    //TODO: check if this repaint is really necessary
+    IMapPanel panel = getMapPanel();
+    if (panel != null)
       panel.repaintMap();
 
   }
@@ -134,11 +134,11 @@ public class ZoomInWidget extends DeprecatedMouseWidget
       else
         dx = dy / ratio;
 
-      final GM_Envelope zoomBox = getDragbox( (int) startPoint.getX(), (int) startPoint.getY(), (int) dx );
+      GM_Envelope zoomBox = getDragbox( (int) startPoint.getX(), (int) startPoint.getY(), (int) dx );
 
       startPoint = null;
       endPoint = null;
-      final ChangeExtentCommand command = new ChangeExtentCommand( getMapPanel(), zoomBox );
+      ChangeExtentCommand command = new ChangeExtentCommand( getMapPanel(), zoomBox );
       postViewCommand( command, null );
     }
   }

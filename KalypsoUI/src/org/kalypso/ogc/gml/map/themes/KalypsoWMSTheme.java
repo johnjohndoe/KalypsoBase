@@ -77,7 +77,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipProvider
 {
   /**
-   * The source string. Do not remove this, because it is needed, when the template is saved. It should not be modified.
+   * The source string. Do not remove this, because it is needed, when the template is saved.
    */
   private final String m_source;
 
@@ -160,18 +160,12 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     final int width = (int) p.getDestWidth();
     final int height = (int) p.getDestHeight();
     final GM_Envelope extent = p.getSourceRect();
-
-    // FIXME: no job needed here, directly call image provider
     final KalypsoImageLoader loader = new KalypsoImageLoader( getLabel(), m_provider, width, height, extent );
     final IStatus status = loader.run( monitor );
     if( status.isOK() )
     {
-      /* HINT: The image loading can take a few seconds. */
-      /* HINT: If the theme was switched invisible during these seconds, it will still be drawn, until the next repaint. */
-      /* HINT: Hopefully this will avoid this. */
       final Image buffer = loader.getBuffer();
-      if( isVisible() )
-        g.drawImage( buffer, 0, 0, null );
+      g.drawImage( buffer, 0, 0, null );
     }
 
     setStatus( status );

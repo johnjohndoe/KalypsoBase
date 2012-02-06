@@ -57,10 +57,10 @@ public interface Filter
    * Calculates the <tt>Filter</tt>'s logical value based on the certain property values of the given feature.
    * 
    * @param feature
-   *          that determines the values of <tt>PropertyNames</tt> in the expression
+   *            that determines the values of <tt>PropertyNames</tt> in the expression
    * @return true, if the <tt>Filter</tt> evaluates to true, else false
    * @throws FilterEvaluationException
-   *           if the evaluation fails
+   *             if the evaluation fails
    */
   boolean evaluate( Feature feature ) throws FilterEvaluationException;
 

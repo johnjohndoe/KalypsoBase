@@ -7,47 +7,31 @@ import java.util.List;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.ScenarioHandlingProjectNature;
+import org.kalypso.afgui.scenarios.IScenario;
+import org.kalypso.afgui.scenarios.IScenarioList;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
-import de.renew.workflow.connector.cases.IScenarioManager;
+import de.renew.workflow.connector.cases.ICaseManager;
 import de.renew.workflow.connector.cases.ICaseManagerListener;
-import de.renew.workflow.connector.cases.IScenario;
-import de.renew.workflow.connector.cases.IScenarioList;
-import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 import de.renew.workflow.connector.context.IActiveScenarioChangeListener;
 
 /**
  * @author Stefan Kurzbach
  */
-public class ScenarioContentProvider extends WorkbenchContentProvider implements ICaseManagerListener, IActiveScenarioChangeListener
+public class ScenarioContentProvider extends WorkbenchContentProvider implements ICaseManagerListener<IScenario>, IActiveScenarioChangeListener<IScenario>
 {
-  private final IResourceChangeListener m_resourceListener = new IResourceChangeListener()
-  {
-    @Override
-    public void resourceChanged( final IResourceChangeEvent event )
-    {
-      final IResourceDelta delta = event.getDelta();
-      handleResourceChanged( delta );
-    }
-  };
-
   private Viewer m_viewer;
 
   private final boolean m_showResources;
-
 
   public ScenarioContentProvider( )
   {
@@ -58,10 +42,8 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
   {
     m_showResources = showResources;
 
-    final ActiveWorkContext activeWorkContext = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext();
+    final ActiveWorkContext<IScenario> activeWorkContext = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext();
     activeWorkContext.addActiveContextChangeListener( this );
-
-    ResourcesPlugin.getWorkspace().addResourceChangeListener( m_resourceListener, IResourceChangeEvent.POST_CHANGE );
   }
 
   /**
@@ -93,7 +75,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
             // is of correct nature
             final List<Object> resultList = new ArrayList<Object>( children.length + 3 );
             resultList.addAll( Arrays.asList( children ) );
-            final IScenarioManager caseManager = nature.getCaseManager();
+            final ICaseManager<IScenario> caseManager = nature.getCaseManager();
             if( caseManager != null )
             {
               caseManager.addCaseManagerListener( this );
@@ -117,10 +99,23 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
 
       return scenarios.toArray( new IScenario[] {} );
     }
+    // else if( parentElement instanceof Scenario )
+    // {
+    // final Scenario scenario = (Scenario) parentElement;
+    // final ScenarioList derivedScenarios = scenario.getDerivedScenarios();
+    // if( derivedScenarios != null )
+    // {
+    // final List<Scenario> list = derivedScenarios.getScenarios();
+    // return list.toArray();
+    // }
+    // }
 
     return children;
   }
 
+  /**
+   * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
+   */
   @Override
   public boolean hasChildren( final Object element )
   {
@@ -144,7 +139,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
           final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
           if( nature != null )
           {
-            final IScenarioManager caseManager = nature.getCaseManager();
+            final ICaseManager<IScenario> caseManager = nature.getCaseManager();
             if( caseManager != null )
             {
               final List<IScenario> rootScenarios = caseManager.getCases();
@@ -169,6 +164,10 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
     return false;
   }
 
+  /**
+   * @see org.eclipse.ui.model.WorkbenchContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+   *      java.lang.Object)
+   */
   @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
@@ -194,8 +193,12 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
     refreshViewer( caze );
   }
 
+  /**
+   * @see de.renew.workflow.connector.context.IActiveContextChangeListener#activeContextChanged(de.renew.workflow.connector.cases.CaseHandlingProjectNature,
+   *      de.renew.workflow.cases.Case)
+   */
   @Override
-  public void activeScenarioChanged( final CaseHandlingProjectNature newProject, final IScenario caze )
+  public void activeScenarioChanged( final CaseHandlingProjectNature<IScenario> newProject, final IScenario caze )
   {
     refreshViewer( null );
   }
@@ -244,11 +247,14 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
   @Override
   public void dispose( )
   {
-    final ActiveWorkContext activeWorkContext = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext();
+    final ActiveWorkContext<IScenario> activeWorkContext = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext();
     activeWorkContext.removeActiveContextChangeListener( this );
     super.dispose();
   }
 
+  /**
+   * @see org.eclipse.ui.model.BaseWorkbenchContentProvider#getElements(java.lang.Object)
+   */
   @Override
   public Object[] getElements( final Object element )
   {
@@ -276,24 +282,5 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
     }
 
     return scenarios.toArray();
-  }
-
-  protected void handleResourceChanged( final IResourceDelta delta )
-  {
-    final boolean shouldRefresh = checkResourceDelta( delta );
-    if( shouldRefresh )
-      refreshViewer( null );
-  }
-
-  private boolean checkResourceDelta( final IResourceDelta delta )
-  {
-    // REMARK: for the moment, we refresh on any resource change of a project
-    // We might refresh on any change that changes the sceanrio stuff as well (change of nature, etc.)
-
-    final IResource resource = delta.getResource();
-    if( resource instanceof IWorkspaceRoot )
-      return true;
-
-    return false;
   }
 }

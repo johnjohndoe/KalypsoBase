@@ -65,9 +65,9 @@ import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterFinder;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -77,7 +77,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * This item displays map coordinates in the status line.
- *
+ * 
  * @author Dirk Kuch
  */
 public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribution implements IAdapterEater<IMapPanel>, IMapPanelListener
@@ -260,8 +260,12 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
   {
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onMapModelChanged(org.kalypso.ogc.gml.map.MapPanel,
+   *      org.kalypso.ogc.gml.mapmodel.IMapModell, org.kalypso.ogc.gml.mapmodel.IMapModell)
+   */
   @Override
-  public void onMapModelChanged( final IMapPanel source, final IKalypsoLayerModell oldModel, final IKalypsoLayerModell newModel )
+  public void onMapModelChanged( final IMapPanel source, final IMapModell oldModel, final IMapModell newModel )
   {
   }
 

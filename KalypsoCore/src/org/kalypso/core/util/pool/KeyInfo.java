@@ -129,16 +129,12 @@ public final class KeyInfo extends Job
     final int state = getState();
     KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( "Current Pool-Job state: %d%n", state ); //$NON-NLS-1$ 
 
-    final Object o;
+    m_listeners.add( l );
+    m_addListenerTraces.put( l, new Exception() );
 
-    synchronized( this )
-    {
-      m_listeners.add( l );
-      m_addListenerTraces.put( l, new Exception() );
+    // TODO: shouldn't we synchronise here?
 
-      o = m_object;
-    }
-
+    final Object o = m_object;
     if( o != null )
     {
       l.objectLoaded( m_key, o, Status.OK_STATUS );

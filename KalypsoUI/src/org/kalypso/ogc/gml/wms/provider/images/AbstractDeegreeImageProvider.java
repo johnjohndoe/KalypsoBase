@@ -72,7 +72,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Font;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.core.variables.VariableUtils;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.outline.nodes.ILegendProvider;
 import org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities;
@@ -199,7 +198,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
    *      org.eclipse.swt.graphics.Font)
    */
   @Override
-  public org.eclipse.swt.graphics.Image getLegendGraphic( final String[] whiteList, final boolean onlyVisible, final Font font ) throws CoreException
+  public org.eclipse.swt.graphics.Image getLegendGraphic( final String[] whiteList,final boolean onlyVisible, final Font font ) throws CoreException
   {
     /* Initialize the remote WMS, if it is not already done. */
     initializeRemoteWMS();
@@ -263,8 +262,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
   {
     try
     {
-      String resolvedService = VariableUtils.resolveVariablesQuietly( service );
-      return new URL( resolvedService );
+      return new URL( service );
     }
     catch( final MalformedURLException e )
     {

@@ -49,7 +49,6 @@ import org.eclipse.swt.dnd.ImageTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 
@@ -75,18 +74,18 @@ public class ExportClipboardHandler extends AbstractHandler
     try
     {
       /* Get the evaluation context. */
-      final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+      IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
       /* Get the shell. */
-      final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+      Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
 
       /* Get the chart composite. */
-      final IChartComposite chartComposite = ChartHandlerUtilities.getChart( context );
+      IChartComposite chartComposite = ChartHandlerUtilities.getChart( context );
 
       /* Create the image. */
-      final Rectangle bounds = ((Composite)chartComposite).getBounds();
-      final ChartPainter chartPainter = new ChartPainter( chartComposite.getChartModel(), bounds );
-      final ImageData imageData = chartPainter.getImageData();
+      Rectangle bounds = chartComposite.getPlot().getBounds();
+      ChartPainter chartPainter = new ChartPainter( chartComposite.getChartModel(), bounds );
+      ImageData imageData = chartPainter.getImageData();
 
       /* Create a new clipboard. */
       clipboard = new Clipboard( shell.getDisplay() );
@@ -96,7 +95,7 @@ public class ExportClipboardHandler extends AbstractHandler
 
       return null;
     }
-    catch( final Exception ex )
+    catch( Exception ex )
     {
       throw new ExecutionException( ex.getMessage(), ex );
     }

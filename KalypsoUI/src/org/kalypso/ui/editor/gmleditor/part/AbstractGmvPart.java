@@ -34,9 +34,12 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -49,12 +52,23 @@ import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 
 /**
  * Common code for parts showing a .gmv file.
- *
+ * 
  * @author Gernot Belger
  */
 public class AbstractGmvPart extends AbstractWorkbenchPart implements IGmvPart
 {
   public static final String EXTENSIN_GMV = ".gmv"; //$NON-NLS-1$
+
+  private GmltreeSourceProvider m_sourceProvider;
+
+  private final PartAdapter2 m_partListener = new PartAdapter2()
+  {
+    @Override
+    public void partActivated( final IWorkbenchPartReference partRef )
+    {
+      handlePartActivated( partRef );
+    }
+  };
 
   private GmlTreeView m_viewer = null;
 
@@ -64,12 +78,31 @@ public class AbstractGmvPart extends AbstractWorkbenchPart implements IGmvPart
     if( m_viewer != null )
       m_viewer.dispose();
 
+    m_sourceProvider.dispose();
+    m_sourceProvider = null;
+
     // unregister site selection provider
     getSite().setSelectionProvider( null );
 
     super.dispose();
   }
 
+  @Override
+  protected void setSite( final IWorkbenchPartSite site )
+  {
+    final IWorkbenchPartSite currentSite = getSite();
+    if( currentSite != null )
+      currentSite.getPage().addPartListener( m_partListener );
+
+    super.setSite( site );
+
+    if( site != null )
+      site.getPage().addPartListener( m_partListener );
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#tweakInput(org.eclipse.ui.IStorageEditorInput)
+   */
   @Override
   protected IStorageEditorInput tweakInput( final IStorageEditorInput input )
   {
@@ -144,7 +177,7 @@ public class AbstractGmvPart extends AbstractWorkbenchPart implements IGmvPart
   }
 
   @Override
-  protected void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws CoreException
+  protected void loadInternal( final IProgressMonitor monitor, final IStorageEditorInput input ) throws Exception
   {
     monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.gmleditor.part.GmlEditor.1" ), 1000 ); //$NON-NLS-1$
     try
@@ -240,7 +273,7 @@ public class AbstractGmvPart extends AbstractWorkbenchPart implements IGmvPart
     final IWorkbenchPartSite site = getSite();
     site.setSelectionProvider( m_viewer );
 
-    setSourceProvider( new GmltreeSourceProvider( site, m_viewer ) );
+    m_sourceProvider = new GmltreeSourceProvider( site, m_viewer );
 
     createContextMenu();
   }
@@ -315,6 +348,9 @@ public class AbstractGmvPart extends AbstractWorkbenchPart implements IGmvPart
     return m_viewer;
   }
 
+  /**
+   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#setFocus()
+   */
   @Override
   public void setFocus( )
   {
@@ -325,5 +361,18 @@ public class AbstractGmvPart extends AbstractWorkbenchPart implements IGmvPart
   public boolean isDirty( )
   {
     return super.isDirty() || m_viewer.isDirty();
+  }
+
+  /**
+   * We need to fire a source change event, in order to tell the gmltree context which tree is the currently active one.
+   */
+  protected void handlePartActivated( final IWorkbenchPartReference partRef )
+  {
+    if( m_sourceProvider == null )
+      return;
+
+    final IWorkbenchPart part = partRef.getPart( false );
+    if( part == this )
+      m_sourceProvider.fireSourceChanged();
   }
 }

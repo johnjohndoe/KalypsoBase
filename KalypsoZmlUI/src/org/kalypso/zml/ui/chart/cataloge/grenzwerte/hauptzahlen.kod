@@ -21,7 +21,7 @@
       <Layer id="hauptzahlen" visible="true" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="org.kalypso.hwv.core.chart.layer.ZmlBoundaryLayerProvider">
           <Parameters>
-            <Parameter name="grenzwert" value="^Grenzwert_\w+: Kalypso_Grenzwert_\w+$" />
+            <Parameter name="grenzwert" value=".*Kalypso_Grenzwert_\w+$" />
             <Parameter name="label" value="%s" />
             <Parameter name="labelTokenizer" value="^.+_" />
             <Parameter name="content.hauptzahl" value="true" />

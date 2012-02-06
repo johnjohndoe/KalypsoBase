@@ -40,11 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.changes;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.result.IRecord;
 
 /**
@@ -54,27 +53,28 @@ public class PointAdd implements IProfilChange
 {
   private final IProfil m_profil;
 
-  private final IProfileRecord m_pointBefore;
+  private final IRecord m_pointBefore;
 
-  private final IProfileRecord m_point;
+  private final IRecord m_point;
 
-  public PointAdd( final IProfil profil, final IProfileRecord pointBefore, final IProfileRecord point )
+  public PointAdd( final IProfil profil, final IRecord pointBefore, final IRecord point )
   {
     m_profil = profil;
     m_pointBefore = pointBefore;
     m_point = point;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilChange#doChange()
+   */
   @Override
-  public void configureHint( final ProfilChangeHint hint )
+  public IProfilChange doChange( final ProfilChangeHint hint )
   {
-    hint.setPointsChanged();
-  }
-
-  @Override
-  public IProfilChange doChange( )
-  {
-    IProfileRecord pointToAdd = null;
+    if( hint != null )
+    {
+      hint.setPointsChanged();
+    }
+    IRecord pointToAdd = null;
     if( m_point != null )
     {
       pointToAdd = m_point;

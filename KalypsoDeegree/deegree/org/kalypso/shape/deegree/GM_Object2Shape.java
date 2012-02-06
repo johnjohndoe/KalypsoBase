@@ -2,48 +2,47 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.shape.deegree;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.shape.ShapeDataException;
 import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.geometry.ISHPGeometry;
@@ -109,23 +108,22 @@ public class GM_Object2Shape
       case POLYLINE:
       {
         final GM_Curve[] curves = (GM_Curve[]) transformedGeom.getAdapter( GM_Curve[].class );
-        if( ArrayUtils.isEmpty( curves ) )
-          return new SHPNullShape();
-
-        return toPolyline( curves );
+        if( curves == null )
+          return null;
+        else
+          return toPolyline( curves );
       }
 
       case POLYGON:
       {
         final GM_SurfacePatch[] surfacePatches = (GM_SurfacePatch[]) transformedGeom.getAdapter( GM_SurfacePatch[].class );
-        if( ArrayUtils.isEmpty( surfacePatches ) )
-          return new SHPNullShape();
-
-        final GM_Curve[] curves = orientCurves( surfacePatches );
-        if( ArrayUtils.isEmpty( curves ) )
-          return new SHPNullShape();
-
-        return new SHPPolygon( toPolyline( curves ) );
+        if( surfacePatches == null )
+          return null;
+        else
+        {
+          final GM_Curve[] curves = orientCurves( surfacePatches );
+          return new SHPPolygon( toPolyline( curves ) );
+        }
       }
 
       case POINTZ:
@@ -140,20 +138,22 @@ public class GM_Object2Shape
       case POLYLINEZ:
       {
         final GM_Curve[] curves = (GM_Curve[]) transformedGeom.getAdapter( GM_Curve[].class );
-        if( ArrayUtils.isEmpty( curves ) )
-          return new SHPNullShape();
-
-        return toPolylineZ( curves );
+        if( curves == null )
+          return null;
+        else
+          return toPolylineZ( curves );
       }
 
       case POLYGONZ:
       {
         final GM_SurfacePatch[] surfacePatches = (GM_SurfacePatch[]) transformedGeom.getAdapter( GM_SurfacePatch[].class );
-        if( ArrayUtils.isEmpty( surfacePatches ) )
-          return new SHPNullShape();
-
-        final GM_Curve[] curves = orientCurves( surfacePatches );
-        return new SHPPolygonz( toPolylineZ( curves ) );
+        if( surfacePatches == null )
+          return null;
+        else
+        {
+          final GM_Curve[] curves = orientCurves( surfacePatches );
+          return new SHPPolygonz( toPolylineZ( curves ) );
+        }
       }
 
       case MULTIPOINT:
@@ -308,8 +308,6 @@ public class GM_Object2Shape
 
     final GM_SurfacePatch[] patches = new GM_SurfacePatch[] { transformedPatch };
     final GM_Curve[] curves = orientCurves( patches );
-    if( curves == null )
-      return new SHPNullShape();
 
     switch( m_shapeType )
     {

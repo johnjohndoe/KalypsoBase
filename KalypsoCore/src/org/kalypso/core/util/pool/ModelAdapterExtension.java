@@ -54,12 +54,12 @@ import org.kalypso.core.KalypsoCorePlugin;
 
 /**
  * Helper class to read and cache
- * 
+ *
  * @author Stefan Kurzbach
  */
 public class ModelAdapterExtension
 {
-  private static final String MODEL_ADAPTER_EXTENSION_POINT = "org.kalypso.ui.modelAdapter"; //$NON-NLS-1$
+  private final static String MODEL_ADAPTER_EXTENSION_POINT = "org.kalypso.ui.modelAdapter"; //$NON-NLS-1$
 
   private static final String ATTRIBUTE_ADAPTER_CLASS = "adapterClass"; //$NON-NLS-1$
 

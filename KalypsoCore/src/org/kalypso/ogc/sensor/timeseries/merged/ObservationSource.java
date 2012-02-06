@@ -52,12 +52,12 @@ public final class ObservationSource extends Source
 
   public ObservationSource( final Source source, final IObservation observation )
   {
-    this( source.getLink(), source.getProperty(), source.getDateRange(), source.getFilter(), observation );
+    this( source.getProperty(), source.getDateRange(), source.getFilter(), observation );
   }
 
-  public ObservationSource( final String link, final String property, final DateRange dateRange, final String filter, final IObservation observation )
+  public ObservationSource( final String property, final DateRange dateRange, final String filter, final IObservation observation )
   {
-    super( link, property, dateRange, filter );
+    super( property, dateRange, filter );
 
     m_observation = observation;
   }

@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.observation.result;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -51,8 +49,7 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
 import org.kalypso.commons.xml.XmlTypes;
@@ -467,46 +464,4 @@ public class TupleResultUtilities
     return -1;
   }
 
-  public static void setNumberValue( final IRecord record, final IComponent component, final Number value )
-  {
-    final QName qname = component.getValueTypeName();
-    if( XmlTypes.XS_DECIMAL.equals( qname ) )
-      record.setValue( component, BigDecimal.valueOf( value.doubleValue() ) );
-    else if( XmlTypes.XS_DOUBLE.equals( qname ) )
-      record.setValue( component, Double.valueOf( value.doubleValue() ) );
-    else if( XmlTypes.XS_FLOAT.equals( qname ) )
-      record.setValue( component, Float.valueOf( value.floatValue() ) );
-    else if( XmlTypes.XS_INT.equals( qname ) )
-      record.setValue( component, Integer.valueOf( value.intValue() ) );
-    else if( XmlTypes.XS_INTEGER.equals( qname ) )
-      record.setValue( component, BigInteger.valueOf( value.longValue() ) );
-    else if( XmlTypes.XS_LONG.equals( qname ) )
-      record.setValue( component, Long.valueOf( value.longValue() ) );
-    else if( XmlTypes.XS_SHORT.equals( qname ) )
-      record.setValue( component, Short.valueOf( value.shortValue() ) );
-    else
-      throw new UnsupportedOperationException();
-
-  }
-
-  public static TupleResult clone( final TupleResult base )
-  {
-    final IComponent[] components = base.getComponents();
-    final TupleResult clone = new TupleResult( components );
-
-    for( int index = 0; index < base.size(); index++ )
-    {
-      final IRecord target = clone.createRecord();
-      final IRecord record = base.get( index );
-
-      for( int component = 0; component < ArrayUtils.getLength( components ); component++ )
-      {
-        target.setValue( component, record.getValue( component ) );
-      }
-
-      clone.add( target );
-    }
-
-    return clone;
-  }
 }

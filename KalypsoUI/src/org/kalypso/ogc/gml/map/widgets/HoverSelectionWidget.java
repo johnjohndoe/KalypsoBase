@@ -47,14 +47,14 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 
 /**
  * This class is a selection widget over all themes.
  * 
  * @author Holger Albert
  */
-public class HoverSelectionWidget extends DeprecatedMouseWidget
+public class HoverSelectionWidget extends AbstractWidget
 {
   private final IRectangleMapFunction m_function;
 
@@ -74,7 +74,7 @@ public class HoverSelectionWidget extends DeprecatedMouseWidget
     m_function.execute( getMapPanel(), new Rectangle( p.x, p.y, 0, 0 ) );
 
     // TODO: check if this repaint is necessary for the widget
-    final IMapPanel panel = getMapPanel();
+    IMapPanel panel = getMapPanel();
     if( panel != null )
       panel.repaintMap();
   }
@@ -94,10 +94,10 @@ public class HoverSelectionWidget extends DeprecatedMouseWidget
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#setSelection(org.eclipse.jface.viewers.ISelection)
    */
   @Override
-  public void setSelection( final ISelection selection )
+  public void setSelection( ISelection selection )
   {
     super.setSelection( selection );
 
-    getMapPanel().setMessage( Messages.getString( "org.kalypso.ogc.gml.map.widgets.HoverSelectionWidget.1" ) ); //$NON-NLS-1$
+    getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.HoverSelectionWidget.1") ); //$NON-NLS-1$
   }
 }

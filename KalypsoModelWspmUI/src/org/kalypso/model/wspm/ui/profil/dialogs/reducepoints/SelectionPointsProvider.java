@@ -46,7 +46,8 @@ import java.util.List;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * Delivers points from a selection.
@@ -59,7 +60,7 @@ public class SelectionPointsProvider implements IPointsProvider
 
   private String m_errorMessage;
 
-  private IProfileRecord[] m_points = new IProfileRecord[] {};
+  private IRecord[] m_points = new IRecord[] {};
 
   public SelectionPointsProvider( final IProfil profil, final ISelection selection )
   {
@@ -85,14 +86,14 @@ public class SelectionPointsProvider implements IPointsProvider
 
       final Object[] objects = structSel.toArray();
 
-      IProfileRecord lastPoint = null;
-      final List<IProfileRecord> points = new ArrayList<IProfileRecord>( objects.length );
+      IRecord lastPoint = null;
+      final List<IRecord> points = new ArrayList<IRecord>( objects.length );
       for( final Object object : objects )
       {
-        if( object instanceof IProfileRecord )
+        if( object instanceof IRecord )
         {
-          final IProfileRecord point = (IProfileRecord) object;
-          if( lastPoint != null && lastPoint != point.getPreviousPoint() )
+          final IRecord point = (IRecord) object;
+          if( lastPoint != null && lastPoint != ProfilUtil.getPointBefore( m_profil, point ) )
           {
             m_errorMessage = org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider.2" ); //$NON-NLS-1$
             return;
@@ -109,7 +110,7 @@ public class SelectionPointsProvider implements IPointsProvider
       }
 
       m_errorMessage = null;
-      m_points = points.toArray( new IProfileRecord[points.size()] );
+      m_points = points.toArray( new IRecord[points.size()] );
       return;
 // }
 // catch( final IllegalProfileOperationException e )
@@ -122,18 +123,27 @@ public class SelectionPointsProvider implements IPointsProvider
     m_errorMessage = org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider.4" ); //$NON-NLS-1$
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.profil.wizard.douglasPeucker.IPointsProvider#getPoints()
+   */
   @Override
-  public IProfileRecord[] getPoints( )
+  public IRecord[] getPoints( )
   {
     return m_points;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.profil.wizard.douglasPeucker.IPointsProvider#getErrorMessage()
+   */
   @Override
   public String getErrorMessage( )
   {
     return m_errorMessage;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.profil.wizard.douglasPeucker.IPointsProvider#getName()
+   */
   @Override
   public String getName( )
   {

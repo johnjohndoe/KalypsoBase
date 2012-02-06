@@ -73,8 +73,8 @@ public class FeaturePropertyHandlerFactory
    */
   public IFeaturePropertyHandler getHandler( final IFeatureType featureType )
   {
-    // very often called method - removed containsKey call, since
-    // get method returns null if the key is not present
+  // very often called method - removed containsKey call, since
+  // get method returns null if the key is not present
     IFeaturePropertyHandler lHandler = m_handlers.get( featureType );
     if( lHandler != null )
       return lHandler;

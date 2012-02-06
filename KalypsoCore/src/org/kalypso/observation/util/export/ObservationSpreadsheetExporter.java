@@ -62,7 +62,7 @@ import au.com.bytecode.opencsv.CSVWriter;
 
 /**
  * Exports an IObservation<TupleResult> to an CSV-Spreadsheet
- * 
+ *
  * @author Dirk Kuch
  */
 public class ObservationSpreadsheetExporter implements ICoreRunnableWithProgress
@@ -124,7 +124,7 @@ public class ObservationSpreadsheetExporter implements ICoreRunnableWithProgress
     {
       e.printStackTrace();
 
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.observation.util.export.ObservationSpreadsheetExporter.0" ) ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.observation.util.export.ObservationSpreadsheetExporter.0") ) ); //$NON-NLS-1$
     }
 
     return Status.OK_STATUS;

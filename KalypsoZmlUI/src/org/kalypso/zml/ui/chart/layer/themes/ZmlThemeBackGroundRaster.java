@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.themes;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.graphics.GC;
 
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
@@ -51,7 +51,6 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
-import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
 
 /**
  * @author kimwerner
@@ -64,18 +63,24 @@ public class ZmlThemeBackGroundRaster extends AbstractChartLayer
 
   public ZmlThemeBackGroundRaster( final ILayerProvider provider, final IChartModel model )
   {
-    super( provider, new StyleSet() );
+    super( provider );
 
     m_model = model;
     setIdentifier( ID );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#isLegend()
+   */
   @Override
   public boolean isLegend( )
   {
     return false;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractExpandableLayer#paint(org.eclipse.swt.graphics.GC)
+   */
   @Override
   public void paint( final GC gc )
   {

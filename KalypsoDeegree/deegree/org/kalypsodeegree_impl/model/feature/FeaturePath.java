@@ -55,7 +55,7 @@ import org.kalypsodeegree_impl.model.sort.FilteredFeatureList;
  * typename ::= Ein beliebiger Typname, sollte nur für abgeleitete Typen benutzt werden <br>
  * emptypath ::= Der leere Pfad, zeigt auf das Root-Feature bzw. dessen Typ segment ::= #fid# <id>| <property>|
  * <property>[ <typename>] featurePath ::= <emptypath>| <segment>/ <segment>]]>
- *
+ * 
  * @author belger
  */
 public class FeaturePath
@@ -120,7 +120,7 @@ public class FeaturePath
    * Ist der Typ-Name angegeben und wurde eine Liste gefunden, wird eine (neue) FeatureList zurückgegeben, deren
    * Elemente alle vom angegebenen Typ sind
    * </p>
-   *
+   * 
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#getFeatureFromPath(java.lang.String)
    */
   public Object getFeature( final GMLWorkspace workspace )
@@ -274,30 +274,27 @@ public class FeaturePath
         {
           final IFeatureType associationFeatureType = relationPT.getTargetFeatureType();
           final IGMLSchema contextSchema = workspace.getGMLSchema();
-
+          
           final String namespaceURI = m_typename.getNamespaceURI();
           if( namespaceURI != null && !namespaceURI.isEmpty() )
           {
-            final IFeatureType foundFT = GMLSchemaUtilities.getFeatureTypeQuiet( m_typename );
+            final IFeatureType foundFT = contextSchema.getFeatureType( m_typename );
             if( foundFT != null && foundFT.getQName().equals( m_typename ) )
               return foundFT;
           }
-          try
-          {
-            final IGMLSchema schema = workspace.getGMLSchema();
-            final IFeatureType foundFT = schema.getFeatureType( m_typename );
-            if( foundFT != null )
-            {
+          try{
+            final IFeatureType foundFT = contextSchema.getFeatureType( m_typename );
+            if( foundFT != null) {
               final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, contextSchema, true, true );
               for( final IFeatureType substType : associationFeatureTypes )
               {
                 if( foundFT.equals( substType ) )
                   return substType;
               }
+//              return foundFT;
             }
           }
-          catch( final Exception e )
-          {
+          catch (Exception e) {
           }
           final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, contextSchema, true, true );
           for( final IFeatureType substType : associationFeatureTypes )

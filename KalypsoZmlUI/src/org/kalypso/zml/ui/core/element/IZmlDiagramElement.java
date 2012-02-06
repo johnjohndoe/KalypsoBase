@@ -41,7 +41,7 @@
 package org.kalypso.zml.ui.core.element;
 
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.zml.core.base.IZmlSourceElement;
+import org.kalypso.ogc.sensor.provider.IObsProvider;
 
 import de.openali.odysseus.chart.framework.model.style.IStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
@@ -53,7 +53,7 @@ public interface IZmlDiagramElement
 {
   void dispose( );
 
-  IZmlSourceElement getSource( );
+  IObsProvider getObsProvider( );
 
   IAxis[] getValueAxes( );
 

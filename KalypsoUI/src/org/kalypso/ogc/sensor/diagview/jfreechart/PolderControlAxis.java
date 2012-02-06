@@ -51,8 +51,7 @@ import org.jfree.data.Range;
 
 /**
  * A 'boolean' axis. IN reality this is still a number axis, but renders 'true' for value bigger than 0.5 and 'false'
- * for values smaller than 0.5; works with the XYCurveSerie that returns 1 for <code>true</code> and 0 for
- * <code>false</code>.
+ * for values smaller than 0.5; works with the XYCurveSerie that returns 1 for <code>true</code> and 0 for <code>false</code>.
  * 
  * @author Gernot Belger
  */
@@ -67,17 +66,17 @@ public class PolderControlAxis extends NumberAxis
   }
 
   @Override
-  protected void autoAdjustRange( )
+  protected void autoAdjustRange()
   {
     setRange( new Range( 0.0, 3 ), true, true );
   }
-
+  
   /**
    * Returns a collection of tick units for boolean values (i.e. only 0 and 1).
    * 
    * @return a collection of tick units for integer values.
    */
-  public static TickUnitSource createBooleanTickUnits( )
+  public static TickUnitSource createBooleanTickUnits()
   {
     final TickUnits units = new TickUnits();
 
@@ -91,7 +90,7 @@ public class PolderControlAxis extends NumberAxis
       {
         if( value > 1.5 )
           return ""; //$NON-NLS-1$
-
+        
         if( value < 0.5 )
           return "zu"; //$NON-NLS-1$
 

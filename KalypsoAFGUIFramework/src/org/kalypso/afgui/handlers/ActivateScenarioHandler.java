@@ -13,8 +13,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.i18n.Messages;
+import org.kalypso.afgui.scenarios.IScenario;
 
-import de.renew.workflow.connector.cases.IScenario;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 import de.renew.workflow.connector.worklist.ITaskExecutor;
 
@@ -32,7 +32,7 @@ public class ActivateScenarioHandler extends AbstractHandler
       {
         final IScenario scenario = (IScenario) firstElement;
         final KalypsoAFGUIFrameworkPlugin plugin = KalypsoAFGUIFrameworkPlugin.getDefault();
-        final ActiveWorkContext activeWorkContext = plugin.getActiveWorkContext();
+        final ActiveWorkContext<IScenario> activeWorkContext = plugin.getActiveWorkContext();
         try
         {
           final ITaskExecutor taskExecutor = plugin.getTaskExecutor();

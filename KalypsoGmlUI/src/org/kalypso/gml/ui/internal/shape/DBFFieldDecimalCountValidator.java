@@ -62,7 +62,7 @@ public class DBFFieldDecimalCountValidator implements IValidator
   public IStatus validate( final Object value )
   {
     if( !(value instanceof Number) )
-      return ValidationStatus.error( Messages.getString( "DBFFieldDecimalCountValidator_0" ) ); //$NON-NLS-1$
+      return ValidationStatus.error( Messages.getString("DBFFieldDecimalCountValidator_0") ); //$NON-NLS-1$
 
     try
     {

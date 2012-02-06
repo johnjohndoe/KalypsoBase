@@ -161,7 +161,7 @@ public class ZmlEinzelwertDialog extends EnhancedTitleAreaDialog implements IZml
       try
       {
         final int index = findIndex( row, modelColumn );
-        modelColumn.doUpdate( index, row.getValue(), IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
+        modelColumn.update( index, row.getValue(), IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
       }
       catch( final Throwable t )
       {

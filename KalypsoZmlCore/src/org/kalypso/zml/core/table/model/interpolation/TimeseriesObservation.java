@@ -88,46 +88,67 @@ public class TimeseriesObservation implements ITimeseriesObservation
 
     final IAxis[] axes = delegate.getAxes();
     m_dateAxis = AxisUtils.findDateAxis( axes );
-    m_statusAxis = AxisUtils.findStatusAxis( axes, valueAxis );
-    m_sourceAxis = AxisUtils.findDataSourceAxis( axes, valueAxis );
+    m_statusAxis = AxisUtils.findStatusAxis( axes );
+    m_sourceAxis = AxisUtils.findDataSourceAxis( axes );
   }
 
+  /**
+   * @see org.kalypso.zml.core.table.model.interpolation.ITimeseriesObservation#getDateAxis()
+   */
   @Override
   public IAxis getDateAxis( )
   {
     return m_dateAxis;
   }
 
+  /**
+   * @see org.kalypso.zml.core.table.model.interpolation.ITimeseriesObservation#getValueAxis()
+   */
   @Override
   public IAxis getValueAxis( )
   {
     return m_valueAxis;
   }
 
+  /**
+   * @see org.kalypso.zml.core.table.model.interpolation.ITimeseriesObservation#getSourceAxis()
+   */
   @Override
   public IAxis getSourceAxis( )
   {
     return m_sourceAxis;
   }
 
+  /**
+   * @see org.kalypso.zml.core.table.model.interpolation.ITimeseriesObservation#getStatusAxis()
+   */
   @Override
   public IAxis getStatusAxis( )
   {
     return m_statusAxis;
   }
 
+  /**
+   * @see org.kalypso.zml.core.table.model.interpolation.ITimeseriesObservation#getDate(int)
+   */
   @Override
   public Date getDate( final int row ) throws SensorException
   {
     return (Date) getValues( null ).get( row, m_dateAxis );
   }
 
+  /**
+   * @see org.kalypso.zml.core.table.model.interpolation.ITimeseriesObservation#getValue(int)
+   */
   @Override
   public Number getValue( final int row ) throws SensorException
   {
     return (Number) getValues( null ).get( row, m_valueAxis );
   }
 
+  /**
+   * @see org.kalypso.zml.core.table.model.interpolation.ITimeseriesObservation#getStatus(int)
+   */
   @Override
   public int getStatus( final int row ) throws SensorException
   {
@@ -172,12 +193,19 @@ public class TimeseriesObservation implements ITimeseriesObservation
     fireChangedEvent( this );
   }
 
+  /**
+   * @see org.kalypso.zml.core.table.model.interpolation.ITimeseriesObservation#inTransaction()
+   */
   @Override
   public boolean inTransaction( )
   {
     return m_model != null;
   }
 
+  /**
+   * @see org.kalypso.zml.core.table.model.interpolation.ITimeseriesObservation#update(int, double, java.lang.String,
+   *      int)
+   */
   @Override
   public void update( final int index, final double value, final String dataSource, final int status ) throws SensorException
   {
@@ -191,67 +219,113 @@ public class TimeseriesObservation implements ITimeseriesObservation
 
     if( m_sourceAxis != null )
     {
-      final int sourceIndex = m_sourceHandler.addDataSource( dataSource, dataSource );
+      final int sourceIndex = m_sourceHandler.getDataSourceIndex( dataSource );
       m_model.set( index, m_sourceAxis, sourceIndex );
     }
   }
 
   // // DELEGATE METHODS TO OBSERVATION ////
 
+  /**
+   * @param listener
+   * @see org.kalypso.ogc.sensor.IObservationEventProvider#addListener(org.kalypso.ogc.sensor.IObservationListener)
+   */
   @Override
   public void addListener( final IObservationListener listener )
   {
     m_delegate.addListener( listener );
   }
 
+  /**
+   * @param listener
+   * @see org.kalypso.ogc.sensor.IObservationEventProvider#removeListener(org.kalypso.ogc.sensor.IObservationListener)
+   */
   @Override
   public void removeListener( final IObservationListener listener )
   {
     m_delegate.removeListener( listener );
   }
 
+  /**
+   * @param source
+   * @see org.kalypso.ogc.sensor.IObservationEventProvider#fireChangedEvent(java.lang.Object)
+   */
   @Override
   public void fireChangedEvent( final Object source )
   {
     m_delegate.fireChangedEvent( source );
   }
 
+  /**
+   * @param visitor
+   * @param request
+   * @throws SensorException
+   * @see org.kalypso.ogc.sensor.IObservation#accept(org.kalypso.ogc.sensor.visitor.IObservationVisitor,
+   *      org.kalypso.ogc.sensor.request.IRequest)
+   */
   @Override
-  public void accept( final IObservationVisitor visitor, final IRequest request, final int direction ) throws SensorException
+  public void accept( final IObservationVisitor visitor, final IRequest request ) throws SensorException
   {
-    m_delegate.accept( visitor, request, direction );
+    m_delegate.accept( visitor, request );
   }
 
+  /**
+   * @return
+   * @see org.kalypso.ogc.sensor.IObservation#getName()
+   */
   @Override
   public String getName( )
   {
     return m_delegate.getName();
   }
 
+  /**
+   * @return
+   * @see org.kalypso.ogc.sensor.IObservation#getMetadataList()
+   */
   @Override
   public MetadataList getMetadataList( )
   {
     return m_delegate.getMetadataList();
   }
 
+  /**
+   * @return
+   * @see org.kalypso.ogc.sensor.IObservation#getAxes()
+   */
   @Override
   public IAxis[] getAxes( )
   {
     return m_delegate.getAxes();
   }
 
+  /**
+   * @param args
+   * @return
+   * @throws SensorException
+   * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
+   */
   @Override
   public ITupleModel getValues( final IRequest args ) throws SensorException
   {
     return m_delegate.getValues( args );
   }
 
+  /**
+   * @param values
+   * @throws SensorException
+   * @see org.kalypso.ogc.sensor.IObservation#setValues(org.kalypso.ogc.sensor.ITupleModel)
+   */
   @Override
   public void setValues( final ITupleModel values ) throws SensorException
   {
     m_delegate.setValues( values );
   }
 
+  /**
+   * @return
+   * @see org.kalypso.ogc.sensor.IObservation#getHref()
+   */
   @Override
   public String getHref( )
   {

@@ -4,41 +4,41 @@ package org.kalypso.zml.core.table.binding;
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 
 import java.io.IOException;
@@ -59,6 +59,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.contribs.eclipse.swt.graphics.RGBUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.zml.core.table.schema.CellStyleType;
 import org.kalypso.zml.core.table.schema.StylePropertyName;
 import org.kalypso.zml.core.table.schema.StylePropertyType;
@@ -89,7 +90,7 @@ public class CellStyle implements Cloneable
   @Override
   public CellStyle clone( )
   {
-    return new CellStyle( TableTypes.cloneStyleType( m_style ) );
+    return new CellStyle( TableTypeHelper.cloneStyleType( m_style ) );
   }
 
   /**
@@ -97,7 +98,7 @@ public class CellStyle implements Cloneable
    */
   private CellStyleType init( final CellStyleType style )
   {
-    final CellStyleType base = TableTypes.resolveReference( style.getBaseStyle() );
+    final CellStyleType base = TableTypeHelper.resolveReference( style.getBaseStyle() );
     if( base == null )
       return style;
 
@@ -113,17 +114,17 @@ public class CellStyle implements Cloneable
       final List<StylePropertyType> properties = style.getProperty();
       for( final StylePropertyType property : properties )
       {
-        final StylePropertyType clone = TableTypes.cloneProperty( property );
+        final StylePropertyType clone = TableTypeHelper.cloneProperty( property );
         if( !hasProperty( base, property ) )
         {
           base.getProperty().add( clone );
         }
         else
         {
-          final String name = TableTypes.getPropertyName( property );
+          final String name = TableTypeHelper.getPropertyName( property );
           final StylePropertyName targetName = StylePropertyName.fromValue( name );
 
-          final StylePropertyType targetProperty = TableTypes.findPropertyType( base, targetName );
+          final StylePropertyType targetProperty = TableTypeHelper.findPropertyType( base, targetName );
           targetProperty.setValue( clone.getValue() );
         }
       }
@@ -150,40 +151,30 @@ public class CellStyle implements Cloneable
 
   public static boolean hasProperty( final CellStyleType style, final StylePropertyType type )
   {
-    final String name = TableTypes.getPropertyName( type );
+    final String name = TableTypeHelper.getPropertyName( type );
     final StylePropertyName property = StylePropertyName.fromValue( name );
 
-    final String value = TableTypes.findProperty( style, property );
+    final String value = TableTypeHelper.findProperty( style, property );
 
     return value != null;
   }
 
   public Color getBackgroundColor( )
   {
-    final String htmlColor = TableTypes.findProperty( m_style, StylePropertyName.BACKGROUND_COLOR );
+    final String htmlColor = TableTypeHelper.findProperty( m_style, StylePropertyName.BACKGROUND_COLOR );
     if( htmlColor == null )
       return null;
 
     final String id = "background" + m_style.getId();
-
-    try
-    {
-      final RGB rgb = RGBUtilities.decodeHtmlColor( htmlColor );
-      COLOR_REGISTRY.put( id, rgb );
-    }
-    catch( final RuntimeException ex )
-    {
-      System.out.println( String.format( "Illegal background cell style: %s", getIdentifier() ) );
-
-      ex.printStackTrace();
-    }
+    final RGB rgb = RGBUtilities.decodeHtmlColor( htmlColor );
+    COLOR_REGISTRY.put( id, rgb );
 
     return COLOR_REGISTRY.get( id );
   }
 
   public Color getForegroundColor( )
   {
-    final String htmlColor = TableTypes.findProperty( m_style, StylePropertyName.TEXT_COLOR );
+    final String htmlColor = TableTypeHelper.findProperty( m_style, StylePropertyName.TEXT_COLOR );
     if( htmlColor == null )
       return null;
 
@@ -196,9 +187,9 @@ public class CellStyle implements Cloneable
 
   public Font getFont( )
   {
-    final String fontFamily = TableTypes.findProperty( m_style, StylePropertyName.FONT_FAMILY );
-    final String fontSize = TableTypes.findProperty( m_style, StylePropertyName.FONT_SIZE );
-    final int fontWeight = TableTypes.toSWTFontWeight( TableTypes.findProperty( m_style, StylePropertyName.FONT_WEIGHT ) );
+    final String fontFamily = TableTypeHelper.findProperty( m_style, StylePropertyName.FONT_FAMILY );
+    final String fontSize = TableTypeHelper.findProperty( m_style, StylePropertyName.FONT_SIZE );
+    final int fontWeight = TableTypeHelper.toSWTFontWeight( TableTypeHelper.findProperty( m_style, StylePropertyName.FONT_WEIGHT ) );
 
     final FontData data = new FontData( fontFamily == null ? "Arial" : fontFamily, fontSize == null ? 10 : Integer.valueOf( fontSize ), fontWeight );
     FONT_REGISTRY.put( m_style.getId(), new FontData[] { data } );
@@ -208,7 +199,7 @@ public class CellStyle implements Cloneable
 
   public Image getImage( ) throws IOException
   {
-    final String urlString = TableTypes.findProperty( m_style, StylePropertyName.ICON );
+    final String urlString = TableTypeHelper.findProperty( m_style, StylePropertyName.ICON );
     if( urlString == null )
       return null;
 
@@ -216,7 +207,8 @@ public class CellStyle implements Cloneable
     if( cached != null )
       return cached;
 
-    final String uri = KalypsoCorePlugin.getDefault().getCatalogManager().resolve( urlString, urlString );
+    final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
+    final String uri = baseCatalog.resolve( urlString, urlString );
 
     final ImageDescriptor descriptor = ImageDescriptor.createFromURL( new URL( uri ) );
     final Image image = descriptor.createImage();
@@ -228,7 +220,7 @@ public class CellStyle implements Cloneable
 
   public String getTextFormat( )
   {
-    final String format = TableTypes.findProperty( m_style, StylePropertyName.TEXT_FORMAT );
+    final String format = TableTypeHelper.findProperty( m_style, StylePropertyName.TEXT_FORMAT );
 
     return format;
   }

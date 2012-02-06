@@ -10,7 +10,7 @@ Export-Package: org.kalypso.kml.export.constants,
 Bundle-Localization: plugin
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.kalypso.kml.export.KalypsoKMLPlugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-ClassPath: lib/jaxb/jaxb-api.jar,
  lib/jaxb/jaxb-impl.jar,

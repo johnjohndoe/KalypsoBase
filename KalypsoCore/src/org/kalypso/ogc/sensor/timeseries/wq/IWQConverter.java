@@ -1,7 +1,6 @@
 package org.kalypso.ogc.sensor.timeseries.wq;
 
-import org.kalypso.ogc.sensor.ITupleModel;
-import org.kalypso.ogc.sensor.SensorException;
+import java.util.Date;
 
 /**
  * IWQConversion
@@ -12,10 +11,10 @@ import org.kalypso.ogc.sensor.SensorException;
 public interface IWQConverter
 {
   /** Converts from 'from' to 'to' */
-  double computeW( final ITupleModel model, final Integer index, final double q ) throws WQException, SensorException;
+  double computeW( final Date date, final double Q ) throws WQException;
 
   /** Converts from 'to' to 'from' */
-  double computeQ( final ITupleModel model, final Integer index, final double w ) throws WQException, SensorException;
+  double computeQ( final Date date, final double W ) throws WQException;
 
   String getFromType( );
 

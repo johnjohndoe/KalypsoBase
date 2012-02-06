@@ -41,27 +41,26 @@
 
 package org.kalypso.metadoc;
 
-import org.apache.commons.collections.ExtendedProperties;
+import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizardPage;
-import org.kalypso.metadoc.configuration.PublishingConfiguration;
+import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 
 /**
  * Responsible for creating one or more documents and for creating the wizard pages required to configure the documents
  * that will be exported.
  * <p>
  * The configuration is shared between the wizard pages and the call to <b>createExportableObjects() </b>.
- *
+ * 
  * @author schlienger
  */
 public interface IExportableObjectFactory
 {
-  public IExportableObject[] createExportableObjects( final ExtendedProperties configuration ) throws CoreException;
+  public IExportableObject[] createExportableObjects( final Configuration configuration ) throws CoreException;
 
   /**
-   * @param defaultImage
-   *          This image should be used for each created wizard-page, if no own images are supplied.
+   * @param defaultImage This image should be used for each created wizard-page, if no own images are supplied.
    */
-  IWizardPage[] createWizardPages( final PublishingConfiguration configuration, final ImageDescriptor defaultImage ) throws CoreException;
+  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, final ImageDescriptor defaultImage ) throws CoreException;
 }

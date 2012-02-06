@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.processes.internal.gml;
 
@@ -44,8 +44,9 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.expressions.PropertyTester;
+import org.kalypso.core.catalog.FeatureTypePropertiesCatalog;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -53,16 +54,15 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.ui.catalogs.FeatureTypePropertiesCatalog;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureRelation;
+import org.kalypsodeegree.model.feature.IFeatureProperty;
 
 /**
  * Tests gml elements for their qname. Can be anything form map.themes to
  * {@link org.kalypsodeegree.model.feature.Feature}s and
  * {@link org.kalypso.ui.editor.gmleditor.part.FeatureAssociationTypeElement}s.
- *
+ * 
  * @author Gernot Belger
  */
 public class GmlPropertyTester extends PropertyTester
@@ -91,7 +91,7 @@ public class GmlPropertyTester extends PropertyTester
 
   /**
    * Test for a property that is registered in a catalog with the feature type.
-   *
+   * 
    * @see FeatureTypePropertiesCatalog.
    */
   private static final String PROPERTY_CATALOG_PROPERTY = "catalogProperty"; //$NON-NLS-1$
@@ -160,7 +160,7 @@ public class GmlPropertyTester extends PropertyTester
     {
       final Feature feature = (Feature) receiver;
       final IRelationType parentRelation = feature.getParentRelation();
-      final Feature parent = feature.getOwner();
+      final Feature parent = feature.getParent();
       if( parent != null && parentRelation != null && parentRelation.isList() )
         return (List< ? >) parent.getProperty( parentRelation );
     }
@@ -193,9 +193,9 @@ public class GmlPropertyTester extends PropertyTester
 
   private boolean testTargetQName( final QName expectedQName, final Object receiver )
   {
-    if( receiver instanceof IFeatureRelation )
+    if( receiver instanceof IFeatureProperty )
     {
-      final IRelationType type = ((IFeatureRelation) receiver).getPropertyType();
+      final IRelationType type = ((IFeatureProperty) receiver).getPropertyType();
       if( type == null )
         return false;
 
@@ -221,9 +221,9 @@ public class GmlPropertyTester extends PropertyTester
 
   private boolean testIsListProperty( final Object receiver )
   {
-    if( receiver instanceof IFeatureRelation )
+    if( receiver instanceof IFeatureProperty )
     {
-      final IRelationType type = ((IFeatureRelation) receiver).getPropertyType();
+      final IRelationType type = ((IFeatureProperty) receiver).getPropertyType();
       if( type == null )
         return false;
 
@@ -288,9 +288,9 @@ public class GmlPropertyTester extends PropertyTester
     if( receiver instanceof Feature )
       return ((Feature) receiver).getQualifiedName();
 
-    if( receiver instanceof IFeatureRelation )
+    if( receiver instanceof IFeatureProperty )
     {
-      final IFeatureRelation property = (IFeatureRelation) receiver;
+      final IFeatureProperty property = (IFeatureProperty) receiver;
       final IRelationType type = property.getPropertyType();
       if( type != null )
         return type.getQName();
@@ -307,9 +307,9 @@ public class GmlPropertyTester extends PropertyTester
       return feature.getWorkspace();
     }
 
-    if( receiver instanceof IFeatureRelation )
+    if( receiver instanceof IFeatureProperty )
     {
-      final Feature parentFeature = ((IFeatureRelation) receiver).getOwner();
+      final Feature parentFeature = ((IFeatureProperty) receiver).getParentFeature();
       return findWorkspace( parentFeature );
     }
 
@@ -327,7 +327,7 @@ public class GmlPropertyTester extends PropertyTester
     final Feature feature = (Feature) receiver;
 
     final String catalogProperty = ObjectUtils.toString( args[0] );
-    final Boolean expected = Boolean.valueOf( ObjectUtils.toString( expectedValue ) );
+    final Boolean expected = Boolean.valueOf( ObjectUtils.toString( expectedValue  ));
 
     final boolean isOn = FeatureTypePropertiesCatalog.isPropertyOn( feature, catalogProperty );
     return isOn == expected;

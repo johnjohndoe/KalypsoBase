@@ -420,7 +420,7 @@ public class WPS100ObjectFactoryUtilities
 
     final ComplexDataCombinationsType complexDataCombinations = WPS_1_0_0_OF.createComplexDataCombinationsType();
     final ComplexDataDescriptionType complexDataDescription = WPS_1_0_0_OF.createComplexDataDescriptionType();
-
+    
     /* Attributes. */
     if( encoding != null )
       complexDataDescription.setEncoding( encoding );
@@ -430,7 +430,7 @@ public class WPS100ObjectFactoryUtilities
 
     if( schema != null )
       complexDataDescription.setSchema( schema );
-
+    
     final SupportedComplexDataType complexOutput = WPS_1_0_0_OF.createSupportedComplexDataType();
     complexOutput.setSupported( complexDataCombinations );
     outputDefinition.setComplexOutput( complexOutput );
@@ -498,8 +498,9 @@ public class WPS100ObjectFactoryUtilities
 
     /* Attributes. */
     execute.setService( WPSUtilities.SERVICE );
-    execute.setVersion( WPSUtilities.WPS_VERSION.V100.toString() );
+    execute.setVersion( WPSUtilities.WPS_VERSION.V100.toString());
 
+    
     final ResponseDocumentType responseDocument = WPS_1_0_0_OF.createResponseDocumentType();
     if( store != null )
       responseDocument.setStoreExecuteResponse( store );
@@ -508,11 +509,11 @@ public class WPS100ObjectFactoryUtilities
 
     final List<DocumentOutputDefinitionType> output = responseDocument.getOutput();
     output.addAll( outputDefinitions );
-
+    
     /* Elements. */
     execute.setIdentifier( identifier );
     execute.setDataInputs( dataInputs );
-
+    
     final ResponseFormType responseForm = WPS_1_0_0_OF.createResponseFormType();
     responseForm.setResponseDocument( responseDocument );
     execute.setResponseForm( responseForm );
@@ -694,29 +695,28 @@ public class WPS100ObjectFactoryUtilities
    *          the referenced XML Schema. Note: If the input/output uses a profile of a larger schema, the server
    *          administrator should provide that schema profile for validation purposes.
    */
-// public static SupportedComplexDataType buildSupportedComplexDataType( List<ComplexDataType> supportedComplexDatas,
-// String defaultFormat, String defaultEncoding, String defaultSchema )
-// {
-// /* Create the instance via the factory. */
-// SupportedComplexDataType supportedComplexData = WPS_1_0_0_OF.createSupportedComplexDataType();
+//  public static SupportedComplexDataType buildSupportedComplexDataType( List<ComplexDataType> supportedComplexDatas, String defaultFormat, String defaultEncoding, String defaultSchema )
+//  {
+//    /* Create the instance via the factory. */
+//    SupportedComplexDataType supportedComplexData = WPS_1_0_0_OF.createSupportedComplexDataType();
 //
-// /* Elements. */
-// final ComplexDataCombinationsType supported = supportedComplexData.getSupported();
-// final List<ComplexDataDescriptionType> format = supported.getFormat();
-// supported.addAll( supportedComplexDatas );
+//    /* Elements. */
+//    final ComplexDataCombinationsType supported = supportedComplexData.getSupported();
+//    final List<ComplexDataDescriptionType> format = supported.getFormat();
+//    supported.addAll( supportedComplexDatas );
 //
-// /* Attributes. */
-// if( defaultFormat != null )
-// format.setDefaultFormat( defaultFormat );
+//    /* Attributes. */
+//    if( defaultFormat != null )
+//      format.setDefaultFormat( defaultFormat );
 //
-// if( defaultEncoding != null )
-// supportedComplexData.setDefaultEncoding( defaultEncoding );
+//    if( defaultEncoding != null )
+//      supportedComplexData.setDefaultEncoding( defaultEncoding );
 //
-// if( defaultSchema != null )
-// supportedComplexData.setDefaultSchema( defaultSchema );
+//    if( defaultSchema != null )
+//      supportedComplexData.setDefaultSchema( defaultSchema );
 //
-// return supportedComplexData;
-// }
+//    return supportedComplexData;
+//  }
 
   /**
    * Note: The documentation is taken from the specific owsDomainType.xsd for this type.<br>
@@ -759,19 +759,19 @@ public class WPS100ObjectFactoryUtilities
    *          [optional] Reference to the default UOM supported for this input or output, if any. The process shall
    *          expect input in or produce output in this UOM unless the Execute request specifies another supported UOM.
    */
-// public static SupportedUOMsType buildSupportedUOMsType( List<DomainMetadataType> UOMs, String defaultUOM )
-// {
-// /* Create the instance via the factory. */
-// SupportedUOMsType supportedUOMs = WPS_1_0_0_OF.createSupportedUOMsType();
+//  public static SupportedUOMsType buildSupportedUOMsType( List<DomainMetadataType> UOMs, String defaultUOM )
+//  {
+//    /* Create the instance via the factory. */
+//    SupportedUOMsType supportedUOMs = WPS_1_0_0_OF.createSupportedUOMsType();
 //
-// /* Attributes. */
-// if( defaultUOM != null )
-// supportedUOMs.setDefaultUOM( defaultUOM );
+//    /* Attributes. */
+//    if( defaultUOM != null )
+//      supportedUOMs.setDefaultUOM( defaultUOM );
 //
-// supportedUOMs.getUOM().addAll( UOMs );
+//    supportedUOMs.getUOM().addAll( UOMs );
 //
-// return supportedUOMs;
-// }
+//    return supportedUOMs;
+//  }
 
   /**
    * Note: The documentation is taken from the specific owsDomainType.xsd for this type.<br>
@@ -920,28 +920,27 @@ public class WPS100ObjectFactoryUtilities
    *          [optional] Optional default value for this quantity, which should be included when this quantity has a
    *          default value.
    */
-// public static LiteralInputType buildLiteralInputType( DomainMetadataType domainMetadata, SupportedUOMsType
-// supportedUOMs, Object literalValuesChoice, RangeType defaultValue )
-// {
-// /* Create the instance via the factory. */
-// LiteralInputType literalInput = WPS_1_0_0_OF.createLiteralInputType();
+//  public static LiteralInputType buildLiteralInputType( DomainMetadataType domainMetadata, SupportedUOMsType supportedUOMs, Object literalValuesChoice, RangeType defaultValue )
+//  {
+//    /* Create the instance via the factory. */
+//    LiteralInputType literalInput = WPS_1_0_0_OF.createLiteralInputType();
 //
-// /* Elements. */
-// literalInput.setDataType( domainMetadata );
-// literalInput.setSupportedUOMs( supportedUOMs );
+//    /* Elements. */
+//    literalInput.setDataType( domainMetadata );
+//    literalInput.setSupportedUOMs( supportedUOMs );
 //
-// if( literalValuesChoice instanceof AllowedValues )
-// literalInput.setAllowedValues( (AllowedValues) literalValuesChoice );
-// else if( literalValuesChoice instanceof AnyValue )
-// literalInput.setAnyValue( (AnyValue) literalValuesChoice );
-// else if( literalValuesChoice instanceof ValuesReference )
-// literalInput.setValuesReference( (ValuesReference) literalValuesChoice );
+//    if( literalValuesChoice instanceof AllowedValues )
+//      literalInput.setAllowedValues( (AllowedValues) literalValuesChoice );
+//    else if( literalValuesChoice instanceof AnyValue )
+//      literalInput.setAnyValue( (AnyValue) literalValuesChoice );
+//    else if( literalValuesChoice instanceof ValuesReference )
+//      literalInput.setValuesReference( (ValuesReference) literalValuesChoice );
 //
-// if( defaultValue != null )
-// literalInput.setDefaultValue( defaultValue );
+//    if( defaultValue != null )
+//      literalInput.setDefaultValue( defaultValue );
 //
-// return literalInput;
-// }
+//    return literalInput;
+//  }
 
   /**
    * Note: The documentation is taken from the specific wpsDescribeProcess.xsd for this type.<br>
@@ -955,17 +954,17 @@ public class WPS100ObjectFactoryUtilities
    *          Reference to the CRS that will be used unless the Execute operation request specifies another supported
    *          CRS.
    */
-// public static SupportedCRSsType buildSupportedCRSsType( List<String> CRSs, String defaultCRS )
-// {
-// /* Create the instance via the factory. */
-// SupportedCRSsType supportedCRSs = WPS_1_0_0_OF.createSupportedCRSsType();
+//  public static SupportedCRSsType buildSupportedCRSsType( List<String> CRSs, String defaultCRS )
+//  {
+//    /* Create the instance via the factory. */
+//    SupportedCRSsType supportedCRSs = WPS_1_0_0_OF.createSupportedCRSsType();
 //
-// /* Elements. */
-// supportedCRSs.getCRS().addAll( CRSs );
-// supportedCRSs.setDefaultCRS( defaultCRS );
+//    /* Elements. */
+//    supportedCRSs.getCRS().addAll( CRSs );
+//    supportedCRSs.setDefaultCRS( defaultCRS );
 //
-// return supportedCRSs;
-// }
+//    return supportedCRSs;
+//  }
 
   /**
    * Note: The documentation is taken from the specific wpsCommons.xsd, wpsDescribeProcess.xsd for this type.<br>
@@ -992,31 +991,30 @@ public class WPS100ObjectFactoryUtilities
    *          data input is optional. If MinimumOccurs is "1" or if this element is omitted, this process input is
    *          required.
    */
-// public static InputDescriptionType buildInputDescriptionType( CodeType identifier, String title, String abstrakt,
-// Object inputFormChoice, int minimumOccurs )
-// {
-// /* Create the instance via the factory. */
-// InputDescriptionType inputDescription = WPS_1_0_0_OF.createInputDescriptionType();
+//  public static InputDescriptionType buildInputDescriptionType( CodeType identifier, String title, String abstrakt, Object inputFormChoice, int minimumOccurs )
+//  {
+//    /* Create the instance via the factory. */
+//    InputDescriptionType inputDescription = WPS_1_0_0_OF.createInputDescriptionType();
 //
-// /* Elements. */
-// inputDescription.setIdentifier( identifier );
-// inputDescription.setTitle( title );
+//    /* Elements. */
+//    inputDescription.setIdentifier( identifier );
+//    inputDescription.setTitle( title );
 //
-// if( abstrakt != null )
-// inputDescription.setAbstract( abstrakt );
+//    if( abstrakt != null )
+//      inputDescription.setAbstract( abstrakt );
 //
-// if( inputFormChoice instanceof SupportedComplexDataType )
-// inputDescription.setComplexData( (SupportedComplexDataType) inputFormChoice );
-// else if( inputFormChoice instanceof LiteralInputType )
-// inputDescription.setLiteralData( (LiteralInputType) inputFormChoice );
-// else if( inputFormChoice instanceof SupportedCRSsType )
-// inputDescription.setBoundingBoxData( (SupportedCRSsType) inputFormChoice );
+//    if( inputFormChoice instanceof SupportedComplexDataType )
+//      inputDescription.setComplexData( (SupportedComplexDataType) inputFormChoice );
+//    else if( inputFormChoice instanceof LiteralInputType )
+//      inputDescription.setLiteralData( (LiteralInputType) inputFormChoice );
+//    else if( inputFormChoice instanceof SupportedCRSsType )
+//      inputDescription.setBoundingBoxData( (SupportedCRSsType) inputFormChoice );
 //
-// if( minimumOccurs == 0 || minimumOccurs == 1 )
-// inputDescription.setMinimumOccurs( BigInteger.valueOf( minimumOccurs ) );
+//    if( minimumOccurs == 0 || minimumOccurs == 1 )
+//      inputDescription.setMinimumOccurs( BigInteger.valueOf( minimumOccurs ) );
 //
-// return inputDescription;
-// }
+//    return inputDescription;
+//  }
 
   /**
    * Note: The documentation is taken from the specific wpsDescribeProcess.xsd for this type.<br>
@@ -1053,18 +1051,17 @@ public class WPS100ObjectFactoryUtilities
    *          literal has a unit of measure (e.g., "meters", without a more complete reference system). Not necessary
    *          for a count, which has no units.
    */
-// public static LiteralOutputType buildLiteralOutputType( DomainMetadataType domainMetadata, SupportedUOMsType
-// supportedUOMs )
-// {
-// /* Create the instance via the factory. */
-// LiteralOutputType literalOutput = WPS_1_0_0_OF.createLiteralOutputType();
+//  public static LiteralOutputType buildLiteralOutputType( DomainMetadataType domainMetadata, SupportedUOMsType supportedUOMs )
+//  {
+//    /* Create the instance via the factory. */
+//    LiteralOutputType literalOutput = WPS_1_0_0_OF.createLiteralOutputType();
 //
-// /* Elements. */
-// literalOutput.setDataType( domainMetadata );
-// literalOutput.setSupportedUOMs( supportedUOMs );
+//    /* Elements. */
+//    literalOutput.setDataType( domainMetadata );
+//    literalOutput.setSupportedUOMs( supportedUOMs );
 //
-// return literalOutput;
-// }
+//    return literalOutput;
+//  }
 
   /**
    * Note: The documentation is taken from the specific wpsCommons.xsd, wpsDescribeProcess.xsd for this type.<br>
@@ -1087,28 +1084,27 @@ public class WPS100ObjectFactoryUtilities
    *          <li>SupportedCRSsType</li>
    *          </ol>
    */
-// public static OutputDescriptionType buildOutputDescriptionType( CodeType identifier, String title, String abstrakt,
-// Object outputFormChoice )
-// {
-// /* Create the instance via the factory. */
-// OutputDescriptionType outputDescription = WPS_1_0_0_OF.createOutputDescriptionType();
+//  public static OutputDescriptionType buildOutputDescriptionType( CodeType identifier, String title, String abstrakt, Object outputFormChoice )
+//  {
+//    /* Create the instance via the factory. */
+//    OutputDescriptionType outputDescription = WPS_1_0_0_OF.createOutputDescriptionType();
 //
-// /* Elements. */
-// outputDescription.setIdentifier( identifier );
-// outputDescription.setTitle( title );
+//    /* Elements. */
+//    outputDescription.setIdentifier( identifier );
+//    outputDescription.setTitle( title );
 //
-// if( abstrakt != null )
-// outputDescription.setAbstract( abstrakt );
+//    if( abstrakt != null )
+//      outputDescription.setAbstract( abstrakt );
 //
-// if( outputFormChoice instanceof SupportedComplexDataType )
-// outputDescription.setComplexOutput( (SupportedComplexDataType) outputFormChoice );
-// else if( outputFormChoice instanceof LiteralOutputType )
-// outputDescription.setLiteralOutput( (LiteralOutputType) outputFormChoice );
-// else if( outputFormChoice instanceof SupportedCRSsType )
-// outputDescription.setBoundingBoxOutput( (SupportedCRSsType) outputFormChoice );
+//    if( outputFormChoice instanceof SupportedComplexDataType )
+//      outputDescription.setComplexOutput( (SupportedComplexDataType) outputFormChoice );
+//    else if( outputFormChoice instanceof LiteralOutputType )
+//      outputDescription.setLiteralOutput( (LiteralOutputType) outputFormChoice );
+//    else if( outputFormChoice instanceof SupportedCRSsType )
+//      outputDescription.setBoundingBoxOutput( (SupportedCRSsType) outputFormChoice );
 //
-// return outputDescription;
-// }
+//    return outputDescription;
+//  }
 
   /**
    * Note: The documentation is taken from the specific wpsDescribeProcess.xsd for this type.<br>
@@ -1172,38 +1168,36 @@ public class WPS100ObjectFactoryUtilities
    *          returned quickly with status information. By default, status information is not provided for this process,
    *          and the Execute operation response is not returned until process execution is complete.
    */
-// public static ProcessDescriptionType buildProcessDescriptionType( CodeType identifier, String title, String abstrakt,
-// List<MetadataType> metadata, String processVersion, DataInputs dataInputs, ProcessOutputs processOutputs, Boolean
-// storeSupported, Boolean statusSupported )
-// {
-// /* Create the instance via the factory. */
-// ProcessDescriptionType processDescription = WPS_1_0_0_OF.createProcessDescriptionType();
+//  public static ProcessDescriptionType buildProcessDescriptionType( CodeType identifier, String title, String abstrakt, List<MetadataType> metadata, String processVersion, DataInputs dataInputs, ProcessOutputs processOutputs, Boolean storeSupported, Boolean statusSupported )
+//  {
+//    /* Create the instance via the factory. */
+//    ProcessDescriptionType processDescription = WPS_1_0_0_OF.createProcessDescriptionType();
 //
-// /* Elements. */
-// processDescription.setIdentifier( identifier );
-// processDescription.setTitle( title );
+//    /* Elements. */
+//    processDescription.setIdentifier( identifier );
+//    processDescription.setTitle( title );
 //
-// if( abstrakt != null )
-// processDescription.setAbstract( abstrakt );
+//    if( abstrakt != null )
+//      processDescription.setAbstract( abstrakt );
 //
-// if( metadata != null )
-// processDescription.getMetadata().addAll( metadata );
+//    if( metadata != null )
+//      processDescription.getMetadata().addAll( metadata );
 //
-// processDescription.setDataInputs( dataInputs );
-// processDescription.setProcessOutputs( processOutputs );
+//    processDescription.setDataInputs( dataInputs );
+//    processDescription.setProcessOutputs( processOutputs );
 //
-// /* Attributes. */
-// if( processVersion != null )
-// processDescription.setProcessVersion( processVersion );
+//    /* Attributes. */
+//    if( processVersion != null )
+//      processDescription.setProcessVersion( processVersion );
 //
-// if( storeSupported != null )
-// processDescription.setStoreSupported( storeSupported );
+//    if( storeSupported != null )
+//      processDescription.setStoreSupported( storeSupported );
 //
-// if( statusSupported != null )
-// processDescription.setStatusSupported( statusSupported );
+//    if( statusSupported != null )
+//      processDescription.setStatusSupported( statusSupported );
 //
-// return processDescription;
-// }
+//    return processDescription;
+//  }
 
   /**
    * Note: The documentation is taken from the specific wpsDescribeProcess.xsd for this type.<br>
@@ -1312,21 +1306,21 @@ public class WPS100ObjectFactoryUtilities
    *          identifiers shall be as specified in IETF RFC 1766. When this attribute is omitted, the language used is
    *          not identified.
    */
-// public static ExceptionReport buildExceptionReport( List<ExceptionType> exceptions, String version, String language )
-// {
-// /* Create the instance via the factory. */
-// ExceptionReport exceptionReport = OWS_1_0_0_OF.createExceptionReport();
+//  public static ExceptionReport buildExceptionReport( List<ExceptionType> exceptions, String version, String language )
+//  {
+//    /* Create the instance via the factory. */
+//    ExceptionReport exceptionReport = OWS_1_0_0_OF.createExceptionReport();
 //
-// exceptionReport.getException().addAll( exceptions );
+//    exceptionReport.getException().addAll( exceptions );
 //
-// /* Attributes. */
-// exceptionReport.setVersion( version );
+//    /* Attributes. */
+//    exceptionReport.setVersion( version );
 //
-// if( language != null )
-// exceptionReport.setLanguage( language );
+//    if( language != null )
+//      exceptionReport.setLanguage( language );
 //
-// return exceptionReport;
-// }
+//    return exceptionReport;
+//  }
 
   /**
    * Note: The documentation is taken from the specific wpsExecute.xsd, owsExceptionReport.xsd for this type.<br>
@@ -1417,17 +1411,15 @@ public class WPS100ObjectFactoryUtilities
    *          Unordered list of values of all the outputs produced by this process. It is not necessary to include an
    *          output until the Status is ProcessSucceeded.
    */
-// public static net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs buildExecuteResponseTypeProcessOutputs(
-// List<IOValueType> ioValues )
-// {
-// /* Create the instance via the factory. */
-// net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs processOutputs =
-// WPS_1_0_0_OF.createExecuteResponseTypeProcessOutputs();
+//  public static net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs buildExecuteResponseTypeProcessOutputs( List<IOValueType> ioValues )
+//  {
+//    /* Create the instance via the factory. */
+//    net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs processOutputs = WPS_1_0_0_OF.createExecuteResponseTypeProcessOutputs();
 //
-// processOutputs.getOutput().addAll( ioValues );
+//    processOutputs.getOutput().addAll( ioValues );
 //
-// return processOutputs;
-// }
+//    return processOutputs;
+//  }
 
   /**
    * Note: The documentation is taken from the specific wpsExecute.xsd for this type.<br>
@@ -1470,34 +1462,32 @@ public class WPS100ObjectFactoryUtilities
    * @param version
    *          Version of the WPS interface specification implemented by the server.
    */
-// public static ExecuteResponseType buildExecuteResponseType( CodeType identifier, StatusType status, DataInputsType
-// dataInputs, OutputDefinitionsType outputDefinitions, net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs
-// processOutputs, String statusLocation, String version )
-// {
-// /* Create the instance via the factory. */
-// ExecuteResponseType executeResponse = WPS_1_0_0_OF.createExecuteResponseType();
+//  public static ExecuteResponseType buildExecuteResponseType( CodeType identifier, StatusType status, DataInputsType dataInputs, OutputDefinitionsType outputDefinitions, net.opengeospatial.wps.ExecuteResponseType.ProcessOutputs processOutputs, String statusLocation, String version )
+//  {
+//    /* Create the instance via the factory. */
+//    ExecuteResponseType executeResponse = WPS_1_0_0_OF.createExecuteResponseType();
 //
-// /* Elements. */
-// executeResponse.setIdentifier( identifier );
-// executeResponse.setStatus( status );
+//    /* Elements. */
+//    executeResponse.setIdentifier( identifier );
+//    executeResponse.setStatus( status );
 //
-// if( dataInputs != null )
-// executeResponse.setDataInputs( dataInputs );
+//    if( dataInputs != null )
+//      executeResponse.setDataInputs( dataInputs );
 //
-// if( outputDefinitions != null )
-// executeResponse.setOutputDefinitions( outputDefinitions );
+//    if( outputDefinitions != null )
+//      executeResponse.setOutputDefinitions( outputDefinitions );
 //
-// if( processOutputs != null )
-// executeResponse.setProcessOutputs( processOutputs );
+//    if( processOutputs != null )
+//      executeResponse.setProcessOutputs( processOutputs );
 //
-// /* Attributes. */
-// if( statusLocation != null )
-// executeResponse.setStatusLocation( statusLocation );
+//    /* Attributes. */
+//    if( statusLocation != null )
+//      executeResponse.setStatusLocation( statusLocation );
 //
-// executeResponse.setVersion( version );
+//    executeResponse.setVersion( version );
 //
-// return executeResponse;
-// }
+//    return executeResponse;
+//  }
 
   /**
    * Note: The documentation is taken from the specific wpsExecute.xsd for this type.<br>
@@ -1517,13 +1507,13 @@ public class WPS100ObjectFactoryUtilities
    * @param value
    *          Response to an Execute operation request.
    */
-// public static JAXBElement<ExecuteResponseType> buildExecuteResponse( ExecuteResponseType value )
-// {
-// /* Create the instance via the factory. */
-// JAXBElement<ExecuteResponseType> executeResponse = WPS_1_0_0_OF.createExecuteResponse( value );
+//  public static JAXBElement<ExecuteResponseType> buildExecuteResponse( ExecuteResponseType value )
+//  {
+//    /* Create the instance via the factory. */
+//    JAXBElement<ExecuteResponseType> executeResponse = WPS_1_0_0_OF.createExecuteResponse( value );
 //
-// return executeResponse;
-// }
+//    return executeResponse;
+//  }
 
   /**
    * Note: The documentation is taken from the specific ows19115subset.xsd for this type.<br>
@@ -1536,19 +1526,19 @@ public class WPS100ObjectFactoryUtilities
    * @param type
    *          [optional]
    */
-// public static KeywordsType buildKeywordsType( List<String> keyword, CodeType type )
-// {
-// /* Create the instance via the factory. */
-// KeywordsType keywords = OWS_1_0_0_OF.createKeywordsType();
+//  public static KeywordsType buildKeywordsType( List<String> keyword, CodeType type )
+//  {
+//    /* Create the instance via the factory. */
+//    KeywordsType keywords = OWS_1_0_0_OF.createKeywordsType();
 //
-// /* Elements. */
-// keywords.getKeyword().addAll( keyword );
+//    /* Elements. */
+//    keywords.getKeyword().addAll( keyword );
 //
-// if( type != null )
-// keywords.setType( type );
+//    if( type != null )
+//      keywords.setType( type );
 //
-// return keywords;
-// }
+//    return keywords;
+//  }
 
   /**
    * Note: The documentation is taken from the specific ows19115subset.xsd, owsDataIdentification.xsd,
@@ -1580,33 +1570,32 @@ public class WPS100ObjectFactoryUtilities
    *          server. The reserved value NONE (case insensitive) shall be used to mean no access constraints are
    *          imposed. If this element is omitted, no meaning is implied.
    */
-// public static ServiceIdentification buildServiceIdentification( String title, String abstrakt, List<KeywordsType>
-// keywords, CodeType serviceType, List<String> serviceTypeVersion, String fees, List<String> accessConstraints )
-// {
-// /* Create the instance via the factory. */
-// ServiceIdentification serviceIdentification = OWS_1_0_0_OF.createServiceIdentification();
+//  public static ServiceIdentification buildServiceIdentification( String title, String abstrakt, List<KeywordsType> keywords, CodeType serviceType, List<String> serviceTypeVersion, String fees, List<String> accessConstraints )
+//  {
+//    /* Create the instance via the factory. */
+//    ServiceIdentification serviceIdentification = OWS_1_0_0_OF.createServiceIdentification();
 //
-// /* Elements. */
-// if( title != null )
-// serviceIdentification.setTitle( title );
+//    /* Elements. */
+//    if( title != null )
+//      serviceIdentification.setTitle( title );
 //
-// if( abstrakt != null )
-// serviceIdentification.setAbstract( abstrakt );
+//    if( abstrakt != null )
+//      serviceIdentification.setAbstract( abstrakt );
 //
-// if( keywords != null )
-// serviceIdentification.getKeywords().addAll( keywords );
+//    if( keywords != null )
+//      serviceIdentification.getKeywords().addAll( keywords );
 //
-// serviceIdentification.setServiceType( serviceType );
-// serviceIdentification.getServiceTypeVersion().addAll( serviceTypeVersion );
+//    serviceIdentification.setServiceType( serviceType );
+//    serviceIdentification.getServiceTypeVersion().addAll( serviceTypeVersion );
 //
-// if( fees != null )
-// serviceIdentification.setFees( fees );
+//    if( fees != null )
+//      serviceIdentification.setFees( fees );
 //
-// if( accessConstraints != null )
-// serviceIdentification.getAccessConstraints().addAll( accessConstraints );
+//    if( accessConstraints != null )
+//      serviceIdentification.getAccessConstraints().addAll( accessConstraints );
 //
-// return serviceIdentification;
-// }
+//    return serviceIdentification;
+//  }
 
   /**
    * Note: The documentation is taken from the specific ows19115subset.xsd for this type.<br>
@@ -2206,27 +2195,26 @@ public class WPS100ObjectFactoryUtilities
    *          versions due to reasons such as modifications of process algorithms. Notice that this is the version
    *          identifier for the process, not the version of the WPS interface.
    */
-// public static ProcessBriefType buildProcessBriefType( CodeType identifier, String title, String abstrakt,
-// List<MetadataType> metadata, String processVersion )
-// {
-// /* Create the instance via the factory. */
-// ProcessBriefType processBrief = WPS_1_0_0_OF.createProcessBriefType();
+//  public static ProcessBriefType buildProcessBriefType( CodeType identifier, String title, String abstrakt, List<MetadataType> metadata, String processVersion )
+//  {
+//    /* Create the instance via the factory. */
+//    ProcessBriefType processBrief = WPS_1_0_0_OF.createProcessBriefType();
 //
-// /* Elements. */
-// processBrief.setIdentifier( identifier );
-// processBrief.setTitle( title );
+//    /* Elements. */
+//    processBrief.setIdentifier( identifier );
+//    processBrief.setTitle( title );
 //
-// if( abstrakt != null )
-// processBrief.setAbstract( abstrakt );
+//    if( abstrakt != null )
+//      processBrief.setAbstract( abstrakt );
 //
-// if( metadata != null )
-// processBrief.getMetadata().addAll( metadata );
+//    if( metadata != null )
+//      processBrief.getMetadata().addAll( metadata );
 //
-// if( processVersion != null )
-// processBrief.setProcessVersion( processVersion );
+//    if( processVersion != null )
+//      processBrief.setProcessVersion( processVersion );
 //
-// return processBrief;
-// }
+//    return processBrief;
+//  }
 
   /**
    * Note: The documentation is taken from the specific wpsGetCapabilities.xsd for this type.<br>
@@ -2272,30 +2260,29 @@ public class WPS100ObjectFactoryUtilities
    * @param processOfferings
    *          List of brief descriptions of the processes offered by this WPS server.
    */
-// public static Capabilities buildCapabilities( ServiceIdentification serviceIdentification, ServiceProvider
-// serviceProvider, OperationsMetadata operationsMetadata, String updateSequence, ProcessOfferings processOfferings )
-// {
-// /* Create the instance via the factory. */
-// Capabilities capabilities = WPS_1_0_0_OF.createCapabilities();
+//  public static Capabilities buildCapabilities( ServiceIdentification serviceIdentification, ServiceProvider serviceProvider, OperationsMetadata operationsMetadata, String updateSequence, ProcessOfferings processOfferings )
+//  {
+//    /* Create the instance via the factory. */
+//    Capabilities capabilities = WPS_1_0_0_OF.createCapabilities();
 //
-// /* Elements. */
-// if( serviceIdentification != null )
-// capabilities.setServiceIdentification( serviceIdentification );
+//    /* Elements. */
+//    if( serviceIdentification != null )
+//      capabilities.setServiceIdentification( serviceIdentification );
 //
-// if( serviceProvider != null )
-// capabilities.setServiceProvider( serviceProvider );
+//    if( serviceProvider != null )
+//      capabilities.setServiceProvider( serviceProvider );
 //
-// if( operationsMetadata != null )
-// capabilities.setOperationsMetadata( operationsMetadata );
+//    if( operationsMetadata != null )
+//      capabilities.setOperationsMetadata( operationsMetadata );
 //
-// capabilities.setProcessOfferings( processOfferings );
+//    capabilities.setProcessOfferings( processOfferings );
 //
-// /* Attributes. */
-// capabilities.setVersion( WPSUtilities.WPS_VERSION_0_4_0 );
+//    /* Attributes. */
+//    capabilities.setVersion( WPSUtilities.WPS_VERSION_0_4_0 );
 //
-// if( updateSequence != null )
-// capabilities.setVersion( updateSequence );
+//    if( updateSequence != null )
+//      capabilities.setVersion( updateSequence );
 //
-// return capabilities;
-// }
+//    return capabilities;
+//  }
 }

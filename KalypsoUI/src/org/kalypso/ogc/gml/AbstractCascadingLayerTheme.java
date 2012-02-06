@@ -43,6 +43,8 @@ package org.kalypso.ogc.gml;
 import java.awt.Graphics;
 import java.net.URL;
 
+import org.apache.commons.lang.NotImplementedException;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -62,18 +64,26 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 /**
  * @author Stefan Kurzbach extended by Dirk Kuch
  */
-abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme implements IKalypsoCascadingTheme, IKalypsoSaveableTheme, IKalypsoLayerModell
+public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme implements IKalypsoCascadingTheme, IKalypsoSaveableTheme, IKalypsoLayerModell
 {
   private GisTemplateMapModell m_innerMapModel;
 
   private final IMapModellListener m_modelListener = new MapModellAdapter()
   {
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeActivated(org.kalypso.ogc.gml.mapmodel.IMapModell,
+     *      org.kalypso.ogc.gml.IKalypsoTheme, org.kalypso.ogc.gml.IKalypsoTheme)
+     */
     @Override
     public void themeActivated( final IMapModell source, final IKalypsoTheme previouslyActive, final IKalypsoTheme nowActive )
     {
       handleThemeActivated( nowActive );
     }
 
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeAdded(org.kalypso.ogc.gml.mapmodel.IMapModell,
+     *      org.kalypso.ogc.gml.IKalypsoTheme)
+     */
     @Override
     public void themeAdded( final IMapModell source, final IKalypsoTheme theme )
     {
@@ -81,11 +91,7 @@ abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme implemen
       // else map loading with wms themes that are not accessible cannot be used at the moment...
 
       if( isVisible() )
-      {
-        // FIXME: we should fire a 'themeAdded' event for our listeners instead; explicitely
-        // fireing a repaint may cause trouble for headless mode
         doFireRepaintRequested( null/* theme.getFullExtent() */);
-      }
 
       handleThemeStatusChanged( AbstractCascadingLayerTheme.this );
     }
@@ -106,8 +112,6 @@ abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme implemen
     @Override
     public void themeOrderChanged( final IMapModell source )
     {
-      // FIXME: we should fire a 'themeOrder' event for our listeners instead; explicitely
-      // fireing a repaint may cause trouble for headless mode
       doFireRepaintRequested( getFullExtent() );
       handleThemeStatusChanged( AbstractCascadingLayerTheme.this );
     }
@@ -120,11 +124,7 @@ abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme implemen
     public void themeRemoved( final IMapModell source, final IKalypsoTheme theme, final boolean lastVisibility )
     {
       if( lastVisibility )
-      {
-        // FIXME: we should fire a 'themeRemoved' event for our listeners instead; explicitely
-        // fireing a repaint may cause trouble for headless mode
         doFireRepaintRequested( theme.getFullExtent() );
-      }
 
       handleThemeStatusChanged( AbstractCascadingLayerTheme.this );
     }
@@ -146,29 +146,13 @@ abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme implemen
     @Override
     public void themeVisibilityChanged( final IMapModell source, final IKalypsoTheme theme, final boolean visibility )
     {
-      fireVisibilityChanged( theme, theme.isVisible() );
-// doFireRepaintRequested( theme.getFullExtent() );
+      doFireRepaintRequested( theme.getFullExtent() );
     }
   };
 
   public AbstractCascadingLayerTheme( final I10nString name, final String linktype, final IMapModell mapModel )
   {
     super( name, linktype, mapModel );
-  }
-
-  protected void fireVisibilityChanged( final IKalypsoTheme theme, final boolean visible )
-  {
-    acceptListenersRunnable( new IListenerRunnable()
-    {
-      @Override
-      public void visit( final IKalypsoThemeListener l )
-      {
-        if( l == null )
-          return;
-
-        l.visibilityChanged( theme, visible );
-      }
-    } );
   }
 
   protected void doFireRepaintRequested( final GM_Envelope bbox )
@@ -238,30 +222,47 @@ abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme implemen
     return m_innerMapModel.insertLayer( layer, position );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoLayerModell#getContext()
+   */
   @Override
   public URL getContext( )
   {
     return m_innerMapModel.getContext();
   }
 
+  /**
+   * @return
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getActiveTheme()
+   */
   @Override
   public IKalypsoTheme getActiveTheme( )
   {
     return m_innerMapModel.getActiveTheme();
   }
 
+  /**
+   * @return
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getAllThemes()
+   */
   @Override
   public IKalypsoTheme[] getAllThemes( )
   {
     return m_innerMapModel.getAllThemes();
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getCoordinatesSystem()
+   */
   @Override
   public String getCoordinatesSystem( )
   {
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
+   */
   @Override
   public GM_Envelope getFullExtent( )
   {
@@ -281,21 +282,33 @@ abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme implemen
     return m_innerMapModel.getFullExtentBoundingBox();
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getDefaultIcon()
+   */
   @Override
   public ImageDescriptor getDefaultIcon( )
   {
     return KalypsoGisPlugin.getImageProvider().getImageDescriptor( ImageProvider.DESCRIPTORS.IMAGE_THEME_CASCADING );
   }
 
-  @Override
   public GisTemplateMapModell getInnerMapModel( )
   {
     return m_innerMapModel;
   }
 
   /**
+   * @return
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getProject()
+   */
+  @Override
+  public IProject getProject( )
+  {
+    return m_innerMapModel.getProject();
+  }
+
+  /**
    * Overwritten in order to have correct parent for tree strucutures.
-   *
+   * 
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getThemeParent(org.kalypso.ogc.gml.IKalypsoTheme)
    */
   @Override
@@ -430,35 +443,16 @@ abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme implemen
     m_innerMapModel.removeTheme( theme );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.ITemplateTheme#saveFeatures(org.eclipse.core.runtime.IProgressMonitor)
+   */
   @Override
   public void saveFeatures( final IProgressMonitor monitor ) throws CoreException
   {
-    if( getInnerMapModel() == null )
-      return;
-
-    for( final IKalypsoTheme theme : getInnerMapModel().getAllThemes() )
-    {
-      if( theme instanceof IKalypsoSaveableTheme )
-        ((IKalypsoSaveableTheme) theme).saveFeatures( monitor );
-    }
-  }
-
-  @Override
-  public boolean isDirty( )
-  {
-    if( getInnerMapModel() == null )
-      return false;
-
-    for( final IKalypsoTheme theme : getInnerMapModel().getAllThemes() )
-    {
-      if( theme instanceof IKalypsoSaveableTheme )
-      {
-        if( ((IKalypsoSaveableTheme) theme).isDirty() )
-          return true;
-      }
-    }
-
-    return false;
+    if( getInnerMapModel() != null )
+      for( final IKalypsoTheme theme : getInnerMapModel().getAllThemes() )
+        if( theme instanceof GisTemplateFeatureTheme )
+          ((IKalypsoSaveableTheme) theme).saveFeatures( monitor );
   }
 
   protected void setInnerMapModel( final GisTemplateMapModell model )
@@ -490,16 +484,5 @@ abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme implemen
   public String getLabel( )
   {
     return m_innerMapModel.getLabel();
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#setName(org.kalypso.contribs.java.lang.I10nString)
-   */
-  @Override
-  public void setName( final I10nString name )
-  {
-    m_innerMapModel.setName( name );
-
-    super.setName( name );
   }
 }

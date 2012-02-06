@@ -53,7 +53,7 @@ import org.kalypso.core.status.StatusDialog2;
 import org.kalypso.gml.ui.commands.exportshape.ExportShapeUtils;
 import org.kalypso.gml.ui.extensions.FeatureSelectionTester;
 import org.kalypso.gml.ui.i18n.Messages;
-import org.kalypso.gml.ui.internal.util.GenericFeatureSelection;
+import org.kalypso.gml.ui.util.GenericFeatureSelection;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
@@ -87,7 +87,7 @@ public class ExportHMOWizard extends Wizard implements IWorkbenchWizard
     final IFeatureType featureType = GenericShapeDataFactory.findLeastCommonType( features );
     final IValuePropertyType[] tinTypes = FeatureSelectionTester.findGeometryTypes( featureType, GM_TriangulatedSurface.class );
     if( tinTypes.length == 0 )
-      throw new IllegalStateException( String.format( Messages.getString( "ExportHMOWizard.0" ), featureType ) ); //$NON-NLS-1$
+      throw new IllegalStateException( String.format( Messages.getString("ExportHMOWizard.0"), featureType ) ); //$NON-NLS-1$
 
     final IDialogSettings settings = getDialogSettings();
     m_data.loadState( settings );

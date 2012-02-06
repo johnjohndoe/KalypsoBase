@@ -42,7 +42,7 @@ package org.kalypso.core.util.pool;
 
 import java.net.URL;
 
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -60,7 +60,7 @@ public class PoolableObjectType implements IPoolableObjectType
 
   /**
    * Constructor. Defaults ignoreExceptions to false.
-   *
+   * 
    * @param type
    *          type of object to load
    * @param source
@@ -75,7 +75,7 @@ public class PoolableObjectType implements IPoolableObjectType
 
   /**
    * Constructor.
-   *
+   * 
    * @param type
    *          type of object to load
    * @param source
@@ -140,14 +140,13 @@ public class PoolableObjectType implements IPoolableObjectType
     final IPoolableObjectType other = (IPoolableObjectType) obj;
     if( !getType().equals( other.getType() ) )
       return false;
-
     if( !getLocation().equals( other.getLocation() ) )
       return false;
 
     if( getContext() == null && other.getContext() == null )
       return true;
 
-    if( getContext() != null && !getContext().equals( other.getContext() ) )
+    if( (getContext() != null && !getContext().equals( other.getContext() )) )
       return false;
 
     return true;

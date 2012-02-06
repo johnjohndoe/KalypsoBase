@@ -53,7 +53,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.commons.command.DefaultCommandManager;
-import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 
@@ -74,7 +73,7 @@ public class FeatureTemplateView extends ViewPart
 
   public FeatureTemplateView( )
   {
-    this( SWT.V_SCROLL | SWT.H_SCROLL );
+    this( SWT.V_SCROLL | SWT.H_SCROLL);
   }
 
   public FeatureTemplateView( final int style )
@@ -125,6 +124,13 @@ public class FeatureTemplateView extends ViewPart
 
     m_templateviewer.createControls( parent, m_style );
 
+// // Stefan: Now we can restore the file if the view is configured to do so
+// final String reloadOnOpen = getConfigurationElement().getAttribute( RELOAD_MAP_ON_OPEN );
+// if( m_file != null && "true".equals( reloadOnOpen ) )
+// {
+// loadFromTemplate( m_file );
+// }
+
     final IActionBars actionBars = getViewSite().getActionBars();
     actionBars.setGlobalActionHandler( ActionFactory.UNDO.getId(), m_commandTarget.undoAction );
     actionBars.setGlobalActionHandler( ActionFactory.REDO.getId(), m_commandTarget.redoAction );
@@ -139,9 +145,7 @@ public class FeatureTemplateView extends ViewPart
    */
   public void setTemplate( final Featuretemplate template, final URL context, final String featurePath, final String href, final String linkType )
   {
-    // FIXME: change this method signature according to call to setTemplate, get templateContext from outside
-    final IPoolableObjectType key = FeatureTemplateviewer.createKey( template, href, linkType, context );
-    m_templateviewer.setTemplate( template, key, featurePath, context );
+    m_templateviewer.setTemplate( template, context, featurePath, href, linkType );
 
     final String title = template.getViewtitle();
     if( title.length() > 0 )

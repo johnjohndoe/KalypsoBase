@@ -1,6 +1,5 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Localization: plugin
 Bundle-Name: KalypsoZmlUI
 Bundle-SymbolicName: org.kalypso.zml.ui;singleton:=true
 Bundle-Version: 11.6.4.qualifier
@@ -10,9 +9,10 @@ Require-Bundle: org.kalypso.zml.core;visibility:=reexport,
  de.openali.odysseus.chart.ext.base,
  org.kalypso.ui,
  de.openali.odysseus.chart.framework,
- de.openali.odysseus.chart.ui;visibility:=reexport
+ de.openali.odysseus.chart.ui,
+ org.kalypso.core
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: kalypsobase.sourceforge.net
 Export-Package: org.kalypso.zml.ui,
  org.kalypso.zml.ui.chart.layer.boundaries,
@@ -20,13 +20,11 @@ Export-Package: org.kalypso.zml.ui,
  org.kalypso.zml.ui.chart.layer.themes,
  org.kalypso.zml.ui.chart.layer.visitor,
  org.kalypso.zml.ui.chart.update,
- org.kalypso.zml.ui.chart.view,
  org.kalypso.zml.ui.core.element,
  org.kalypso.zml.ui.core.kod,
  org.kalypso.zml.ui.core.provider.style,
  org.kalypso.zml.ui.core.registry,
  org.kalypso.zml.ui.core.zml,
- org.kalypso.zml.ui.imports,
  org.kalypso.zml.ui.table,
  org.kalypso.zml.ui.table.catalog,
  org.kalypso.zml.ui.table.commands,
@@ -35,9 +33,9 @@ Export-Package: org.kalypso.zml.ui,
  org.kalypso.zml.ui.table.context,
  org.kalypso.zml.ui.table.focus,
  org.kalypso.zml.ui.table.layout,
+ org.kalypso.zml.ui.table.memento,
  org.kalypso.zml.ui.table.model,
  org.kalypso.zml.ui.table.provider,
  org.kalypso.zml.ui.table.provider.strategy,
- org.kalypso.zml.ui.table.update,
- org.kalypso.zml.ui.table.view
+ org.kalypso.zml.ui.table.update
 Bundle-ClassPath: .

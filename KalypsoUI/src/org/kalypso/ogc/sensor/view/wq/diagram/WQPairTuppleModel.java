@@ -61,7 +61,7 @@ public class WQPairTuppleModel extends AbstractTupleModel
 
   public WQPairTuppleModel( final WQPair[] pairs )
   {
-    super( new IAxis[] { TimeseriesUtils.createDefaultAxis( ITimeseriesConstants.TYPE_WATERLEVEL, true ), TimeseriesUtils.createDefaultAxis( ITimeseriesConstants.TYPE_RUNOFF, false ) } );
+    super( new IAxis[] { TimeseriesUtils.createDefaulAxis( ITimeseriesConstants.TYPE_WATERLEVEL, true ), TimeseriesUtils.createDefaulAxis( ITimeseriesConstants.TYPE_RUNOFF, false ) } );
 
     m_pairs = pairs;
     m_W = new Double[pairs.length];
@@ -81,9 +81,9 @@ public class WQPairTuppleModel extends AbstractTupleModel
    * @see org.kalypso.ogc.sensor.ITuppleModel#getElement(int, org.kalypso.ogc.sensor.IAxis)
    */
   @Override
-  public Object get( final int index, final IAxis axis ) throws SensorException
+  public Object get( int index, IAxis axis ) throws SensorException
   {
-    final int pos = getPosition( axis );
+    int pos = getPosition( axis );
 
     switch( pos )
     {
@@ -106,16 +106,16 @@ public class WQPairTuppleModel extends AbstractTupleModel
    * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object, org.kalypso.ogc.sensor.IAxis)
    */
   @Override
-  public void set( final int index, final IAxis axis, final Object element ) throws SensorException
+  public void set( int index, IAxis axis, Object element ) throws SensorException
   {
-    throw new SensorException( Messages.getString( "org.kalypso.ogc.sensor.view.wq.diagram.WQPairTuppleModel.0" ) ); //$NON-NLS-1$
+    throw new SensorException( Messages.getString("org.kalypso.ogc.sensor.view.wq.diagram.WQPairTuppleModel.0") ); //$NON-NLS-1$
   }
 
   /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object, org.kalypso.ogc.sensor.IAxis)
    */
   @Override
-  public int indexOf( final Object element, final IAxis axis ) throws SensorException
+  public int indexOf( Object element, IAxis axis ) throws SensorException
   {
     if( getPosition( axis ) == 0 )
       return Arrays.binarySearch( m_W, element );

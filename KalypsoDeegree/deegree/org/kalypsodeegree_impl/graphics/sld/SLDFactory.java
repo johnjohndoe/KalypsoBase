@@ -489,11 +489,11 @@ public final class SLDFactory
         }
       }
 
-    if( pPlacement != null && lPlacement == null )
+    if( (pPlacement != null) && (lPlacement == null) )
     {
       labelPlacement = new LabelPlacement_Impl( pPlacement );
     }
-    else if( pPlacement == null && lPlacement != null )
+    else if( (pPlacement == null) && (lPlacement != null) )
     {
       labelPlacement = new LabelPlacement_Impl( lPlacement );
     }
@@ -532,7 +532,7 @@ public final class SLDFactory
       final Element apXElement = XMLTools.getChildByName( "AnchorPointX", CommonNamespaces.SLDNS.toString(), apElement );//$NON-NLS-1$
       final Element apYElement = XMLTools.getChildByName( "AnchorPointY", CommonNamespaces.SLDNS.toString(), apElement );//$NON-NLS-1$
 
-      if( apXElement == null || apYElement == null )
+      if( (apXElement == null) || (apYElement == null) )
         throw new XMLParsingException( "Element 'AnchorPoint' must contain exactly one " + "'AnchorPointX'- and one 'AnchorPointY'-element!" );
 
       anchorPoint[0] = SLDFactory.createParameterValueType( apXElement );
@@ -550,7 +550,7 @@ public final class SLDFactory
       final Element dXElement = XMLTools.getChildByName( "DisplacementX", CommonNamespaces.SLDNS.toString(), dElement );//$NON-NLS-1$
       final Element dYElement = XMLTools.getChildByName( "DisplacementY", CommonNamespaces.SLDNS.toString(), dElement );//$NON-NLS-1$
 
-      if( dXElement == null || dYElement == null )
+      if( (dXElement == null) || (dYElement == null) )
         throw new XMLParsingException( "Element 'Displacement' must contain exactly one " + "'DisplacementX'- and one 'DisplacementY'-element!" );
 
       displacement[0] = SLDFactory.createParameterValueType( dXElement );
@@ -1175,7 +1175,7 @@ public final class SLDFactory
         {
           elseRules.add( rule );
         }
-        else if( rule.getFilter() == null || rule.getFilter() instanceof ComplexFilter )
+        else if( (rule.getFilter() == null) || (rule.getFilter() instanceof ComplexFilter) )
         {
           filters.add( rule.getFilter() );
         }
@@ -1265,7 +1265,7 @@ public final class SLDFactory
       isAnElseFilter = true;
     }
 
-    if( filterElement != null && elseFilterElement != null )
+    if( (filterElement != null) && (elseFilterElement != null) )
       throw new XMLParsingException( "Element 'Rule' may contain a 'Filter'- or " + "an 'ElseFilter'-element, but not both!" );
 
     // optional: <MinScaleDenominator>
@@ -1972,7 +1972,7 @@ public final class SLDFactory
     final String name = XMLTools.getRequiredAttrValue( "name", element );
     final ParameterValueType pvt = SLDFactory.createParameterValueType( element );
 
-    return new CssParameter_Impl( name, pvt );
+    return (new CssParameter_Impl( name, pvt ));
   }
 
   private static RasterSymbolizer createRasterSymbolizer( final IUrlResolver2 urlResolver, final Element element, final UOM uom )
@@ -2063,4 +2063,5 @@ public final class SLDFactory
 
     return null;
   }
+
 }

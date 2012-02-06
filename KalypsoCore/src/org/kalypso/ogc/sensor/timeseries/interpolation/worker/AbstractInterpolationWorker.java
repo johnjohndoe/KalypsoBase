@@ -43,18 +43,19 @@ package org.kalypso.ogc.sensor.timeseries.interpolation.worker;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.commons.parser.IParser;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.TupleModelDataSet;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
+import org.kalypso.ogc.sensor.zml.ZmlFactory;
 
 /**
  * @author Dirk Kuch
@@ -82,11 +83,6 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
     m_dateRange = dateRange;
 
     m_interpolated = new SimpleTupleModel( getBaseModel().getAxes() );
-  }
-
-  protected IInterpolationFilter getFilter( )
-  {
-    return m_filter;
   }
 
   protected ITupleModel getBaseModel( )
@@ -145,55 +141,80 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
   }
 
   /**
-   * @return implementation changed - now only real value axes will be returned! a values axis have to deal with it owns
-   *         status and data source axis
+   * @return all axes type of Number.class and Boolean.class. Remember: DATA_SRC is type of Number.class!
    */
   protected IAxis[] getValueAxes( )
   {
     final IAxis[] axes = getBaseModel().getAxes();
-    final IAxis[] valueAxes = AxisUtils.findValueAxes( axes, false );
+    return ObservationUtilities.findAxesByClasses( axes, new Class[] { Number.class, Boolean.class } );
+  }
 
-    return ObservationUtilities.findAxesByClasses( valueAxes, new Class[] { Number.class, Boolean.class } );
+  protected IAxis getDataSourceAxis( )
+  {
+    final IAxis[] axes = getBaseModel().getAxes();
+
+    return AxisUtils.findDataSourceAxis( axes );
+  }
+
+  protected Object[] getDefaultValues( final IAxis[] valueAxes ) throws SensorException
+  {
+    final Object[] defaultValues = new Object[valueAxes.length];
+    for( int i = 0; i < defaultValues.length; i++ )
+      defaultValues[i] = getDefaultValue( valueAxes[i] );
+
+    return defaultValues;
+  }
+
+  protected Object getDefaultValue( final IAxis valueAxis ) throws SensorException
+  {
+    try
+    {
+      if( KalypsoStatusUtils.isStatusAxis( valueAxis ) )
+        return m_filter.getDefaultStatus();
+      else
+      {
+        final IParser parser = ZmlFactory.createParser( valueAxis );
+        return parser.parse( m_filter.getDefaultValue() );
+      }
+    }
+    catch( final Exception e )
+    {
+      throw new SensorException( e );
+    }
+  }
+
+  protected Integer getDataSourceIndex( )
+  {
+    final DataSourceHandler handler = new DataSourceHandler( m_filter.getMetaDataList() );
+
+    return handler.addDataSource( IInterpolationFilter.DATA_SOURCE, IInterpolationFilter.DATA_SOURCE );
   }
 
   /**
-   * Add one tuple with default values. The date is set to the given calendar which is stepped after the tuple was
+   * Add one tupple with default values. The date is set to the given calendar which is stepped after the tuple was
    * added.
    */
-  protected void addDefaultTupple( final IAxis dateAxis, final LocalCalculationStack stack, final Calendar calendar ) throws SensorException
+  protected void addDefaultTupple( final IAxis dateAxis, final IAxis[] valueAxes, final Object[] defaultValues, final Calendar calendar ) throws SensorException
   {
     final SimpleTupleModel interpolatedModel = getInterpolatedModel();
 
-    final LocalCalculationStackValue[] values = stack.getValues();
-
-    final Object[] tuple = new Object[interpolatedModel.getAxes().length];
+    final Object[] tuple = new Object[valueAxes.length + 1];
     tuple[interpolatedModel.getPosition( dateAxis )] = calendar.getTime();
 
-    final DataSourceHandler dataSourceHandler = new DataSourceHandler( m_filter.getMetaDataList() );
-
-    for( final LocalCalculationStackValue value : values )
+    for( int index = 0; index < valueAxes.length; index++ )
     {
-      final IAxis[] baseAxes = interpolatedModel.getAxes();
-      final IAxis valueAxis = value.getAxis();
-      final IAxis statusAxis = AxisUtils.findStatusAxis( baseAxes, valueAxis );
-      final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( baseAxes, valueAxis );
+      final IAxis axis = valueAxes[index];
+      final int axisPosition = interpolatedModel.getPosition( axis );
 
-      final int posValueAxis = interpolatedModel.getPosition( valueAxis );
-      final TupleModelDataSet defaultValue = value.getDefaultValue( m_filter );
-      tuple[posValueAxis] = defaultValue.getValue();
-
-      if( Objects.isNotNull( statusAxis ) )
+      // update data source reference to interpolation filter
+      if( AxisUtils.isDataSrcAxis( axis ) )
       {
-        final int posStatusAxis = interpolatedModel.getPosition( statusAxis );
-        tuple[posStatusAxis] = defaultValue.getStatus();
+        final Integer dataSourceValue = getDataSourceIndex();
+        tuple[axisPosition] = dataSourceValue;
       }
-
-      if( Objects.isNotNull( dataSourceAxis ) )
+      else
       {
-        final int posDataSourceAxis = interpolatedModel.getPosition( dataSourceAxis );
-        final int dataSourceIndex = dataSourceHandler.addDataSource( defaultValue.getSource(), defaultValue.getSource() );
-
-        tuple[posDataSourceAxis] = dataSourceIndex;
+        tuple[axisPosition] = defaultValues[index];
       }
     }
 
@@ -206,34 +227,4 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
     calendar.add( m_filter.getCalendarField(), m_filter.getCalendarAmnount() );
   }
 
-  protected TupleModelDataSet toDataSet( final ITupleModel baseModel, final int index, final LocalCalculationStackValue value ) throws SensorException
-  {
-    final IAxis[] baseAxes = baseModel.getAxes();
-    final IAxis valueAxis = value.getAxis();
-    final IAxis statusAxis = AxisUtils.findStatusAxis( baseAxes, valueAxis );
-    final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( baseAxes, valueAxis );
-
-    final Number number = (Number) getBaseModel().get( index, valueAxis );
-
-    Integer status = null;
-    if( Objects.isNotNull( statusAxis ) )
-    {
-      final Number statusValue = (Number) getBaseModel().get( index, statusAxis );
-      if( Objects.isNotNull( statusValue ) )
-        status = statusValue.intValue();
-    }
-
-    String dataSource = null;
-    if( Objects.isNotNull( dataSourceAxis ) )
-    {
-      final Number dataSrcIndex = (Number) getBaseModel().get( index, dataSourceAxis );
-      if( Objects.isNotNull( dataSourceAxis ) )
-      {
-        final DataSourceHandler handler = new DataSourceHandler( getFilter().getMetaDataList() );
-        dataSource = handler.getDataSourceIdentifier( dataSrcIndex.intValue() );
-      }
-    }
-
-    return new TupleModelDataSet( valueAxis, number, status, dataSource );
-  }
 }

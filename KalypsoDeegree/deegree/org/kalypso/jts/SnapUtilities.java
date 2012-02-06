@@ -118,18 +118,6 @@ public class SnapUtilities
    */
   public static Point snapToLine( final LineString geometryJTS, final Geometry pointBuffer, final SNAP_TYPE type )
   {
-    /**
-     * FIXME: use JTS implementation, like:
-     * 
-     * <pre>
-     * final LocationIndexedLine lineIndex = new LocationIndexedLine( lineString );
-     * final LinearLocation location = lineIndex.project( position.getCoordinate() );
-     * location.snapToVertex( lineString, MapUtilities.calculateWorldDistance( getMapPanel(), 10 ) );
-     * 
-     * return JTSConverter.toPoint( lineIndex.extractPoint( location ) );
-     * </pre>
-     */
-
     try
     {
       if( type.equals( SNAP_TYPE.SNAP_TO_POINT ) )
@@ -150,21 +138,17 @@ public class SnapUtilities
       }
       else if( type.equals( SNAP_TYPE.SNAP_TO_LINE ) )
       {
-
         final LineString[] lineStrings = toLineString( pointBuffer.intersection( geometryJTS ) );
         final Map<Double, Point> map = new TreeMap<Double, Point>();
 
         for( final LineString lineString : lineStrings )
         {
-          for( int percent = 2; percent < 100; percent += 2 )
-          {
-            final Point point = JTSUtilities.pointOnLinePercent( lineString, percent );
-            if( Objects.isNull( point ) )
-              continue;
+          final Point point = JTSUtilities.pointOnLinePercent( lineString, 50 );
+          if( Objects.isNull( point ) )
+            continue;
 
-            final double distance = pointBuffer.getCentroid().distance( point );
-            map.put( distance, point );
-          }
+          final double distance = pointBuffer.getCentroid().distance( point );
+          map.put( distance, point );
         }
 
         final Collection<Point> results = map.values();

@@ -144,7 +144,7 @@ public class MapForm extends Form
         // Same for tooltip support
 
         // If visibility of header changed, send resize event, else the map has not the right extent
-        if( source instanceof ComponentListener && (oldMessage == null && !ok || oldMessage != null && ok) )
+        if( source instanceof ComponentListener && ((oldMessage == null && !ok) || (oldMessage != null && ok)) )
           ((ComponentListener) source).componentResized( null );
 
         return Status.OK_STATUS;

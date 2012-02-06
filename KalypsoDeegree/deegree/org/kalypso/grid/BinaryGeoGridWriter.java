@@ -45,6 +45,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.deegree.model.spatialschema.ByteUtils;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 
@@ -52,6 +53,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 
 /**
+ * 
  * @author barbarins
  */
 public class BinaryGeoGridWriter implements IWriteableGeoGrid
@@ -112,7 +114,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
     m_lineLen = getSizeX() * 4;
 
     // block_size is set to "optimal" size of the buffer from start on
-    m_linesInBlock = BLOCK_SIZE / m_lineLen;
+    m_linesInBlock = (BLOCK_SIZE / m_lineLen);
 
     if( m_linesInBlock >= m_linesTotal )
       m_linesInBlock = m_linesTotal;
@@ -258,7 +260,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public double getValue( final int x, final int y )
   {
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 
   @Override
@@ -334,7 +336,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public GM_Surface< ? > getCell( final int x, final int y, final String targetCRS )
   {
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 
   /**
@@ -344,7 +346,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public Envelope getEnvelope( )
   {
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 
   /**
@@ -354,7 +356,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public Coordinate getOffsetX( )
   {
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 
   /**
@@ -364,7 +366,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public Coordinate getOffsetY( )
   {
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 
   /**
@@ -374,7 +376,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public Coordinate getOrigin( )
   {
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 
   /**
@@ -384,7 +386,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public String getSourceCRS( )
   {
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 
   /**
@@ -393,7 +395,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public GM_Surface< ? > getSurface( final String targetCRS )
   {
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 
   /**
@@ -403,7 +405,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public double getValueChecked( final int x, final int y )
   {
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 
   /**
@@ -413,6 +415,6 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public double getValue( final Coordinate crd )
   {
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 }

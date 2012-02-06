@@ -58,12 +58,14 @@ public class ObsViewEvent extends EventObject
   public final static int TYPE_ITEM_STATE_CHANGED = 16;
 
   public final static int TYPE_FEATURES_CHANGED = 32;
-
+  
   public final static int TYPE_VIEW_CHANGED = 64;
-
+  
   private final Object m_obj;
 
   private final int m_type;
+
+
 
   public ObsViewEvent( final Object eventObject, final int type )
   {
@@ -73,23 +75,23 @@ public class ObsViewEvent extends EventObject
   public ObsViewEvent( final Object eventSource, final Object eventObject, final int type )
   {
     super( eventSource != null ? eventSource : eventObject );
-
+    
     m_obj = eventObject;
     m_type = type;
   }
 
-  public Object getObject( )
+  public Object getObject()
   {
     return m_obj;
   }
 
-  public int getType( )
+  public int getType()
   {
     return m_type;
   }
 
-  public boolean isType( final int type )
+  public boolean isType( int type )
   {
-    return (m_type & type) == m_type;
+    return ( m_type & type ) == m_type;
   }
 }

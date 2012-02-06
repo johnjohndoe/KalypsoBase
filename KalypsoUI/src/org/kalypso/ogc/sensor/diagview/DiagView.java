@@ -198,6 +198,7 @@ public class DiagView extends ObsView
     // FIXME: should also work if the provider has a null-observation currently. This code should always be called
     // again, if the provider-observation changes
     final IObservation obs = provider.getObservation();
+
     if( obs == null )
       return;
 

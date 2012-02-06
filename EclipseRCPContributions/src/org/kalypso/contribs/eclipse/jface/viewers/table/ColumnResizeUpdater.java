@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.viewers.table;
 
@@ -85,7 +85,7 @@ class ColumnResizeUpdater
   private void calculateWidths( )
   {
     int remainingWidth = m_remainingWidth;
-    int autoResizeColumnCount = 0;
+    int numberOfcolumnsNotFixed = 0;
 
     /* Set minimum widths; remaining widhts is reduced by minimum widths */
     for( final ColumnWidthInfo info : m_infos )
@@ -94,22 +94,22 @@ class ColumnResizeUpdater
       remainingWidth -= width;
       info.setColumnWidth( width );
 
-      if( info.isAutoResize() )
-        autoResizeColumnCount++;
+      if( !info.hasFixedWidth() )
+        numberOfcolumnsNotFixed++;
     }
 
-    if( remainingWidth <= 0 || autoResizeColumnCount == 0 )
+    if( remainingWidth <= 0 || numberOfcolumnsNotFixed == 0 )
       return;
 
-    final int additionalWidth = remainingWidth / autoResizeColumnCount;
+    final int additionalWidth = remainingWidth / numberOfcolumnsNotFixed;
 
     /* Distribute remaining width */
     for( final ColumnWidthInfo info : m_infos )
     {
-      if( info.isAutoResize() )
+      if( !info.hasFixedWidth() )
       {
         final int width = info.getColumnWidth();
-        info.setColumnWidth( width + additionalWidth );
+        info.setColumnWidth( width  + additionalWidth);
       }
     }
   }

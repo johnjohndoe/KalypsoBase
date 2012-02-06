@@ -45,7 +45,7 @@ public class KalypsoCoreUrlCatalog extends AbstractUrlCatalog
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map)
    */
   @Override
-  protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> catalog, final Map<String, String> prefixes )
+  protected void fillCatalog( final Class<?> myClass, final Map<String, URL> catalog, final Map<String, String> prefixes )
   {
     catalog.put( "org.kalypso.shape", getClass().getResource( "resources/shape.xsd" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }

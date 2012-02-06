@@ -45,8 +45,8 @@ public class NewFeatureHandler extends AbstractHandler implements IHandler
 
     final IFeatureType featureType = featureTheme.getFeatureType();
     final FeatureList featureList = featureTheme.getFeatureList();
-    final Feature parentFeature = featureList.getOwner();
-    final IRelationType fatp = featureList.getPropertyType();
+    final Feature parentFeature = featureList.getParentFeature();
+    final IRelationType fatp = featureList.getParentFeatureTypeProperty();
     final CommandableWorkspace workspace = featureTheme.getWorkspace();
 
     if( fatp == null || parentFeature == null || workspace == null )
@@ -97,7 +97,7 @@ public class NewFeatureHandler extends AbstractHandler implements IHandler
           geomPropertiesQName.add( prop.getQName() );
         }
         final NewFeatureWidget newFeatureWidget = new NewFeatureWidget( ft.getQName(), geomPropertiesQName.toArray( new QName[geomPropertiesQName.size()] ) );
-        mapPanel.getWidgetManager().addWidget( newFeatureWidget );
+        mapPanel.getWidgetManager().setActualWidget( newFeatureWidget );
       }
     }
 

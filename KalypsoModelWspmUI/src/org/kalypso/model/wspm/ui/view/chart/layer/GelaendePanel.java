@@ -44,19 +44,22 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfilPropertyEdit;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.i18n.Messages;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
@@ -78,12 +81,46 @@ public class GelaendePanel extends AbstractProfilView
     m_layer = layer;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.AbstractProfilView#doCreateControl(org.eclipse.swt.widgets.Composite,
+   *      org.eclipse.ui.forms.widgets.FormToolkit)
+   */
   @Override
   protected Control doCreateControl( final Composite parent, final FormToolkit toolkit )
   {
     final Composite panel = toolkit.createComposite( parent );
     panel.setLayout( new GridLayout() );
 
+    final Group editgroup = new Group( panel, SWT.NONE );
+    editgroup.setText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.GelaendePanel.0" ) ); //$NON-NLS-1$
+    final GridData gridData = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    editgroup.setLayoutData( gridData );
+    editgroup.setLayout( new GridLayout() );
+
+    toolkit.adapt( editgroup );
+
+    final Button horzbutton = toolkit.createButton( editgroup, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.GelaendePanel.1" ), SWT.CHECK ); //$NON-NLS-1$
+    horzbutton.setSelection( allowHorizontal() );
+    final Button vertbutton = toolkit.createButton( editgroup, Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.GelaendePanel.2" ), SWT.CHECK ); //$NON-NLS-1$
+    vertbutton.setSelection( allowVertical() );
+
+    horzbutton.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( final org.eclipse.swt.events.SelectionEvent e )
+      {
+        setLayerData( horzbutton.getSelection(), vertbutton.getSelection() );
+      }
+    } );
+
+    vertbutton.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( final org.eclipse.swt.events.SelectionEvent e )
+      {
+        setLayerData( horzbutton.getSelection(), vertbutton.getSelection() );
+      }
+    } );
     final Group cg = new Group( panel, SWT.None );
     cg.setText( Messages.getString( "org.kalypso.model.wspm.tuhh.ui.panel.GelaendePanel.3" ) ); //$NON-NLS-1$
     final GridData cgData = new GridData( SWT.FILL, SWT.FILL, true, true );
@@ -100,24 +137,27 @@ public class GelaendePanel extends AbstractProfilView
 
   private void createComment( final Group cg, final FormToolkit toolkit )
   {
-    final HyperlinkStyledText hyperlinkStyledText = new HyperlinkStyledText( getProfile().getComment() );
+    final HyperlinkStyledText hyperlinkStyledText = new HyperlinkStyledText( getProfil().getComment() );
     m_comment = hyperlinkStyledText.createControl( cg, SWT.MULTI | SWT.BORDER | SWT.H_SCROLL );
     m_comment.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     toolkit.adapt( m_comment, true, true );
 
     m_comment.addFocusListener( new FocusAdapter()
     {
+      /**
+       * @see org.eclipse.swt.events.FocusAdapter#focusLost(org.eclipse.swt.events.FocusEvent)
+       */
       @Override
       public void focusLost( final FocusEvent e )
       {
         final String comment = m_comment.getText();
-        if( comment != null && !comment.equals( getProfile().getComment() ) )
+        if( comment != null && !comment.equals( getProfil().getComment() ) )
         {
           /*
            * we need both methods to stay synchronized with featureView
            */
-          getProfile().setComment( m_comment.getText() );
-          final ProfilOperation operation = new ProfilOperation( "", getProfile(), new ProfilPropertyEdit( getProfile(), IWspmConstants.PROFIL_PROPERTY_COMMENT, m_comment.getText() ), true ); //$NON-NLS-1$
+          getProfil().setComment( m_comment.getText() );
+          final ProfilOperation operation = new ProfilOperation( "", getProfil(), new ProfilPropertyEdit( getProfil(), IWspmConstants.PROFIL_PROPERTY_COMMENT, m_comment.getText() ), true ); //$NON-NLS-1$
           new ProfilOperationJob( operation ).schedule();
         }
       }
@@ -153,8 +193,42 @@ public class GelaendePanel extends AbstractProfilView
     }
   }
 
+  private boolean allowVertical( )
+  {
+
+    final Object o = m_layer.getData( IProfilChartLayer.VIEW_DATA_KEY );
+    if( o == null )
+      return true;
+    try
+    {
+      final int i = Integer.valueOf( o.toString() );
+      return (i & 2) == 2;
+    }
+    catch( final NumberFormatException e )
+    {
+      return true;
+    }
+  }
+
+  private boolean allowHorizontal( )
+  {
+    final Object o = m_layer.getData( IProfilChartLayer.VIEW_DATA_KEY );
+    if( o == null )
+      return false;
+
+    try
+    {
+      final int i = Integer.valueOf( o.toString() );
+      return (i & 1) == 1;
+    }
+    catch( final NumberFormatException e )
+    {
+      return false;
+    }
+  }
+
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     if( hint.isProfilPropertyChanged() )
     {
@@ -166,7 +240,7 @@ public class GelaendePanel extends AbstractProfilView
           @Override
           public void run( )
           {
-            m_comment.setText( getProfile().getComment() );
+            m_comment.setText( getProfil().getComment() );
           }
         } );
       }

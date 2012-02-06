@@ -42,8 +42,8 @@ package org.kalypso.observation.phenomenon;
 
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * @author Dirk Kuch
@@ -68,9 +68,9 @@ public class PhenomenonUtilities
     {
       final DictionaryPhenomenon dictPhen = (DictionaryPhenomenon) phenomenon;
 
-      final Feature f = FeatureFactory.createXLink( parentFeature, parentRelation, parentRelation.getTargetFeatureType(), dictPhen.getID() );
-      f.setDescription( dictPhen.getDescription() );
-      f.setName( dictPhen.getName() );
+      final Feature f = new XLinkedFeature_Impl( parentFeature, parentRelation, parentRelation.getTargetFeatureType(), dictPhen.getID(), null, null, null, null, null );
+      FeatureHelper.addProperty( f, Feature.QN_NAME, dictPhen.getName() );
+      f.setProperty( Feature.QN_DESCRIPTION, dictPhen.getDescription() );
       return f;
     }
 
