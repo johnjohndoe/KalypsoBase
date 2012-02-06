@@ -71,10 +71,6 @@ public class LegendViewPart extends AbstractChartModelViewPart
 
   private Form m_form;
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.AbstractChartModelViewPart#doCreateControl(org.eclipse.swt.widgets.Composite,
-   *      org.eclipse.ui.forms.widgets.FormToolkit)
-   */
   @Override
   protected Control doCreateControl( final Composite parent, final FormToolkit toolkit )
   {
