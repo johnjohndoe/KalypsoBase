@@ -52,7 +52,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
 /**
- * @author Felipe Maximino
+ * @author Gernot Belger
  */
 public class FileContentHandlerTest extends AssertGeometry
 {

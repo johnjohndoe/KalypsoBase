@@ -35,20 +35,13 @@
  */
 package org.kalypsodeegree.model;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.datatype.DatatypeFactory;
-import javax.xml.namespace.QName;
 
-import org.kalypso.commons.xml.NS;
-import org.kalypso.contribs.ogc2x.KalypsoOGC2xJAXBcontext;
-import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
 import org.kalypso.gmlschema.swe.RepresentationTypeHandler;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.JAXBContextProvider;
 import org.kalypso.gmlschema.types.TypeRegistryException;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.typeHandler.GM_EnvelopeBindingTypeHandler;
+import org.kalypsodeegree.model.typeHandler.BoundingShapeTypeHandler;
 import org.kalypsodeegree.model.typeHandler.GeometryHandler;
 import org.kalypsodeegree.model.typeHandler.LineStringHandler;
 import org.kalypsodeegree.model.typeHandler.MultiCurveHandler;
@@ -231,35 +224,8 @@ public final class TypeHandlerUtilities
    */
   public static synchronized void registerTypeHandlers( final ITypeRegistry<IMarshallingTypeHandler> registry ) throws TypeRegistryException
   {
-    final JAXBContextProvider jaxbContextProvider = new JAXBContextProvider()
-    {
-      @Override
-      public synchronized JAXBContext getJaxBContextForGMLVersion( final String gmlVersion )
-      {
-        try
-        {
-          if( gmlVersion == null || gmlVersion.startsWith( "2" ) )
-          {
-            return KalypsoOGC2xJAXBcontext.getContext();
-          }
-          else if( gmlVersion.startsWith( "3" ) )
-          {
-            return KalypsoOGC31JAXBcontext.getContext();
-          }
-        }
-        catch( final NullPointerException e )
-        {
-          e.printStackTrace();
-        }
-
-        throw new UnsupportedOperationException( "GMLVersion " + gmlVersion + " is not supported" );
-      }
-    };
-
     // Basic GML 3 types
-    // TODO: implements as sax handlers
-    // TODO: is this ever used?
-    registry.registerTypeHandler( new GM_EnvelopeBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "BoundingShapeType" ), GM_Envelope.class, false ) );
+    registry.registerTypeHandler( new BoundingShapeTypeHandler() );
 
     registry.registerTypeHandler( new GeometryHandler() );
 

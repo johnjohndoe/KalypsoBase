@@ -57,7 +57,6 @@ public class EnvelopeMarshaller extends AbstractMarshaller<GM_Envelope>
     super( reader, GM_Envelope.ENVELOPE_ELEMENT.getLocalPart() );
   }
 
-
   @Override
   protected Attributes createAttributesForStartElement( final GM_Envelope element )
   {
