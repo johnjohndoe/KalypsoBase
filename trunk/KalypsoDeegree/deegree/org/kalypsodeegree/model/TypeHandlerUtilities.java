@@ -245,7 +245,7 @@ public final class TypeHandlerUtilities
     registry.registerTypeHandler( new PolyhedralSurfaceHandler() );
 
     // Coverages
-    // TODO: implement sax parsers
+    // TODO: implement as sax parsers
     registry.registerTypeHandler( new RectifiedGridDomainTypeHandlerGml3() );
     registry.registerTypeHandler( new RangeSetTypeHandler() );
 
