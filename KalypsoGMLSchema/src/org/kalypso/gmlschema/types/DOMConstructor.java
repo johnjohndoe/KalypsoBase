@@ -60,7 +60,6 @@ import org.xml.sax.ext.LexicalHandler;
  * 
  * @author doemming
  */
-
 public class DOMConstructor implements ContentHandler, LexicalHandler
 {
   public static final String XMLNS_NSURI = "http://www.w3.org/2000/xmlns/"; //$NON-NLS-1$

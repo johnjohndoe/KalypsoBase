@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -56,7 +56,7 @@ import com.vividsolutions.jts.geom.Geometry;
 /**
  * Encapsulates the information of a spatial_ops entity (as defined in the Filter DTD).
  * <p>
- * 
+ *
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @author <a href="mailto:luigimarinucci@yahoo.com">Luigi Marinucci <a>
  * @version $Id$
@@ -75,7 +75,7 @@ public class SpatialOperation extends AbstractOperation
 
   /**
    * Constructs a new SpatialOperation.
-   * 
+   *
    * @see OperationDefines
    */
   public SpatialOperation( final int operatorId, final PropertyName propertyName, final GM_Object gmlGeometry )
@@ -87,7 +87,7 @@ public class SpatialOperation extends AbstractOperation
 
   /**
    * Constructs a new SpatialOperation.
-   * 
+   *
    * @see OperationDefines Calvin added on 10/21/2003
    */
   public SpatialOperation( final int operatorId, final PropertyName propertyName, final GM_Object gmlGeometry, final double d )
@@ -100,7 +100,7 @@ public class SpatialOperation extends AbstractOperation
 
   /**
    * returns the distance for geo spatial comparsions such as DWithin or Beyond
-   * 
+   *
    * @return the distance for geo spatial comparsions such as DWithin or Beyond
    */
   public double getDistance( )
@@ -111,13 +111,12 @@ public class SpatialOperation extends AbstractOperation
   /**
    * Given a DOM-fragment, a corresponding Operation-object is built. This method recursively calls other buildFromDOM
    * () - methods to validate the structure of the DOM-fragment.
-   * 
+   *
    * @throws FilterConstructionException
    *           if the structure of the DOM-fragment is invalid
    */
   public static Operation buildFromDOM( final Element element ) throws FilterConstructionException
   {
-
     // check if root element's name is a spatial operator
     final String name = element.getLocalName();
     final int operatorId = OperationDefines.getIdByName( name );
@@ -140,8 +139,7 @@ public class SpatialOperation extends AbstractOperation
     }
 
     final PropertyName propertyName = (PropertyName) PropertyName.buildFromDOM( child1 );
-    final String gmlVersion = "2.1.2";
-    final AdapterBindingToValue bindingToGM_ObjectAdapter = AdapterGmlIO.getGMLBindingToGM_ObjectAdapter( gmlVersion );
+    final AdapterBindingToValue bindingToGM_ObjectAdapter = AdapterGmlIO.getGMLBindingToGM_ObjectAdapter();
 
     final Object geometry;
     try
@@ -227,7 +225,7 @@ public class SpatialOperation extends AbstractOperation
   /**
    * Returns the geometry property used in the operation and one concrete feature.
    * <p>
-   * 
+   *
    * @param feature
    * @return the property as a <tt>GM_Object</tt> -object.
    * @throws FilterEvaluationException
@@ -248,7 +246,7 @@ public class SpatialOperation extends AbstractOperation
   /**
    * Returns the geometry literal used in the operation.
    * <p>
-   * 
+   *
    * @return the literal as a <tt>GM_Object</tt> -object.
    * @throws FilterEvaluationException
    *           if the Literal can not be converted to a GM_Object
@@ -265,7 +263,7 @@ public class SpatialOperation extends AbstractOperation
 
   /**
    * Returns the geometry literal used in the operation.
-   * 
+   *
    * @return the literal as a <tt>GMLGeometry</tt> -object.
    */
   public GM_Object getGeometry( )
@@ -275,7 +273,7 @@ public class SpatialOperation extends AbstractOperation
 
   /**
    * Returns the (bounding) box of a BBOX operation.
-   * 
+   *
    * @deprecated replaced by {@link #getGeometry()}
    */
   @Deprecated
@@ -301,20 +299,17 @@ public class SpatialOperation extends AbstractOperation
     sb.append( "<ogc:" ).append( getOperatorName() );
     sb.append( " xmlns:gml='http://www.opengis.net/gml' " ).append( ">" );
     sb.append( m_propertyName.toXML() );
-    // TODO support gml verisons in filter !!
-    final String gmlVersion = "2.1";
 
-    final AdapterValueToGMLBinding objectToGMLBindingAdapter = AdapterGmlIO.getGM_ObjectToGMLBindingAdapter( gmlVersion );
+    final AdapterValueToGMLBinding objectToGMLBindingAdapter = AdapterGmlIO.getGM_ObjectToGMLBindingAdapter();
     final Element element;
     try
     {
       element = objectToGMLBindingAdapter.wrapToElement( m_geometry );
     }
-    catch( final GM_Exception e )
+    catch( final Exception e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
-      throw new UnsupportedOperationException();
+      throw new UnsupportedOperationException( e );
     }
     // final Element element = AdapterBindingToValue_GML31.createElement( gmlVersion, m_geometry );
     XMLTools.appendNode( element, "", sb );
@@ -329,7 +324,7 @@ public class SpatialOperation extends AbstractOperation
    * <p>
    * TODO: Implement operations: CROSSES, BEYOND, OVERLAPS AND TOUCHES.
    * <p>
-   * 
+   *
    * @param feature
    *          that determines the property values
    * @return true, if the <tt>SpatialOperation</tt> evaluates to true, else false

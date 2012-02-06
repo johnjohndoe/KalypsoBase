@@ -29,7 +29,6 @@ Bundle-ClassPath: lib/batik/lib/batik-anim.jar,
  .
 Bundle-Vendor: kalypsobase.sourceforge.net
 Require-Bundle: org.junit4;resolution:=optional,
- org.kalypso.contribs.ogc2x,
  org.kalypso.contribs.ogc31,
  org.kalypso.deegree2;visibility:=reexport,
  org.kalypso.geotools;visibility:=reexport,
