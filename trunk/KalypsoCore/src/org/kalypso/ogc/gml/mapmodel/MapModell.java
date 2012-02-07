@@ -93,18 +93,12 @@ public class MapModell implements IMapModell
       fireContextChanged( source );
     }
 
-    /**
-     * @see org.kalypso.ogc.gml.KalypsoThemeAdapter#visibilityChanged(org.kalypso.ogc.gml.IKalypsoTheme, boolean)
-     */
     @Override
     public void visibilityChanged( final IKalypsoTheme source, final boolean newVisibility )
     {
       fireThemeVisibilityChanged( source, newVisibility );
     }
 
-    /**
-     * @see org.kalypso.ogc.gml.KalypsoThemeAdapter#statusChanged(org.kalypso.ogc.gml.IKalypsoTheme)
-     */
     @Override
     public void statusChanged( final IKalypsoTheme source )
     {
@@ -144,8 +138,6 @@ public class MapModell implements IMapModell
    * Activates the given theme and deactiveates the currently activated one.
    * <p>
    * This also applies to any sub-modells, only one theme can be activated in the whole theme tree.
-   *
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#activateTheme(org.kalypso.ogc.gml.IKalypsoTheme)
    */
   @Override
   public void activateTheme( final IKalypsoTheme theme )
@@ -180,7 +172,7 @@ public class MapModell implements IMapModell
 
   /**
    * Tries to activate the given theme within this modell.
-   *
+   * 
    * @return <code>true</code>, if the given theme is contained within this modell and was activated. <code>false</code>
    *         otherwise.
    */
@@ -250,9 +242,6 @@ public class MapModell implements IMapModell
       activateTheme( theme );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getAllThemes()
-   */
   @Override
   public IKalypsoTheme[] getAllThemes( )
   {
@@ -265,10 +254,6 @@ public class MapModell implements IMapModell
     return m_coordinatesSystem;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus paint( final Graphics g, final GeoTransform p, final IProgressMonitor monitor )
   {
@@ -437,18 +422,12 @@ public class MapModell implements IMapModell
       }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getName()
-   */
   @Override
   public I10nString getName( )
   {
     return m_name;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#setName(org.kalypso.contribs.java.lang.I10nString)
-   */
   @Override
   public void setName( final I10nString name )
   {
@@ -461,31 +440,25 @@ public class MapModell implements IMapModell
     return getName().getValue();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#addMapModelListener(org.kalypso.ogc.gml.mapmodel.IMapModellListener)
-   */
   @Override
   public void addMapModelListener( final IMapModellListener l )
   {
     m_listeners.add( l );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#removeMapModelListener(org.kalypso.ogc.gml.mapmodel.IMapModellListener)
-   */
   @Override
   public void removeMapModelListener( final IMapModellListener l )
   {
     m_listeners.remove( l );
   }
 
-  private static interface IListenerRunnable
+  private interface IListenerRunnable
   {
     void visit( final IMapModellListener l );
   }
 
   /**
-   * Runns the given runnable on every listener in a safe way.
+   * Runs the given runnable on every listener in a safe way.
    */
   private void acceptListenersRunnable( final IListenerRunnable r )
   {
@@ -591,9 +564,6 @@ public class MapModell implements IMapModell
     } );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getThemeParent(org.kalypso.ogc.gml.IKalypsoTheme)
-   */
   @Override
   public Object getThemeParent( final IKalypsoTheme abstractKalypsoTheme )
   {
@@ -603,8 +573,6 @@ public class MapModell implements IMapModell
 
   /**
    * Returns always <code>true</code>.
-   *
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#isLoaded()
    */
   @Override
   public boolean isLoaded( )

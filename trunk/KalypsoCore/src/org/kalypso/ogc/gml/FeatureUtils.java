@@ -58,52 +58,18 @@ import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * some basic feature utils
- *
+ * 
  * @author Dirk Kuch
  */
 public final class FeatureUtils
 {
   private FeatureUtils( )
   {
-  }
-
-  public static String chopGeoDataSetName( final String name )
-  {
-    final String[] chomp = new String[] { ".sld", ".gml", ".asc", ".shp", ".tif" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-
-    boolean bChomp = false;
-    for( final String ch : chomp )
-      if( name.contains( ch ) )
-      {
-        bChomp = true;
-        break;
-      }
-
-    String geoDataSetName = ""; //$NON-NLS-1$
-
-    if( bChomp )
-    {
-      final String[] parts = name.split( "\\." ); //$NON-NLS-1$
-
-      for( int i = 0; i < parts.length - 1; i++ )
-      {
-        geoDataSetName += parts[i];
-      }
-
-    }
-    else
-    {
-      geoDataSetName = name;
-    }
-
-    return geoDataSetName;
   }
 
   public static void deleteFeature( final CommandableWorkspace workspace, final Feature feature ) throws Exception
@@ -144,24 +110,6 @@ public final class FeatureUtils
       return Messages.getString( "org.kalypso.ogc.gml.FeatureUtils.9" ); //$NON-NLS-1$
 
     return (String) objString;
-  }
-
-  public static String getProperty( final Feature fa, final QName qname )
-  {
-    final Object object = fa.getProperty( qname );
-    if( object != null )
-      return object.toString();
-
-    return null;
-  }
-
-  public static Object getPropertyObject( final Feature fa, final QName qname )
-  {
-    final Object object = fa.getProperty( qname );
-    if( object != null )
-      return object;
-
-    return null;
   }
 
   public static void updateProperties( final CommandableWorkspace workspace, final Feature feature, final Map<QName, Object> map ) throws Exception
@@ -238,53 +186,6 @@ public final class FeatureUtils
     return new FeatureChange( feature, chgProp, impl );
   }
 
-  @Deprecated
-  /*
-   * ATTENTION: each time a new commandable workspace is returned, so you can't see that an workspace is dirty!
-   */
-  public static CommandableWorkspace getCommandableWorkspace( final Feature feature )
-  {
-    final GMLWorkspace workspace = feature.getWorkspace();
-
-    if( workspace instanceof CommandableWorkspace )
-      return (CommandableWorkspace) workspace;
-    else
-      return new CommandableWorkspace( workspace );
-  }
-
-  public static String getFeatureName( final Feature feature )
-  {
-    final IPropertyType[] properties = feature.getFeatureType().getProperties();
-    for( final IPropertyType propertyType : properties )
-    {
-      final QName name = propertyType.getQName();
-      if( "name".equals( name.getLocalPart() ) ) //$NON-NLS-1$
-        return getFeatureName( name.getNamespaceURI(), feature );
-    }
-
-    return ""; //$NON-NLS-1$
-  }
-
-  public static GM_Envelope getMaxExtend( final Feature[] features )
-  {
-    GM_Envelope base = null;
-    for( final Feature feature : features )
-    {
-      final GM_Envelope envelope = feature.getEnvelope();
-
-      if( base == null )
-      {
-        base = envelope;
-      }
-      else
-      {
-        base = base.getMerged( envelope );
-      }
-    }
-
-    return base;
-  }
-
   /**
    * Checks, if one of the isUsed flags has changed. Checks only feature with the given owner.
    */
@@ -298,6 +199,5 @@ public final class FeatureUtils
 
     return false;
   }
-
 
 }
