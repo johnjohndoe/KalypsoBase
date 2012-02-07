@@ -67,9 +67,6 @@ public class ZmlRuleInterpolatedValue extends AbstractZmlTableRule
     return ID;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.core.rules.IZmlTableRule#apply(org.kalypso.zml.ui.table.provider.ZmlValueReference)
-   */
   @Override
   protected boolean doApply( final ZmlRule rule, final IZmlValueReference reference )
   {
