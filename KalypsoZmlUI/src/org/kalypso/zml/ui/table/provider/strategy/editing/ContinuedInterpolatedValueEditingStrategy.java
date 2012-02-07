@@ -115,22 +115,28 @@ public class ContinuedInterpolatedValueEditingStrategy extends AbstractEditingSt
 
       final ZmlModelTransaction transaction = new ZmlModelTransaction();
 
-      final ZmlTableColumn column = getColumn();
-      final IZmlTableCell current = column.findCell( row );
-
-      transaction.add( reference, targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
-
-      IZmlTableCell next = current.findNextCell();
-      while( Objects.isNotNull( next ) )
+      try
       {
-        if( ZmlValues.isStuetzstelle( next.getValueReference() ) )
-          break;
+        final ZmlTableColumn column = getColumn();
+        final IZmlTableCell current = column.findCell( row );
 
-        transaction.add( next.getValueReference(), targetValue, IDataSourceItem.SOURCE_INTERPOLATED_WECHMANN_VALUE, KalypsoStati.BIT_OK );
-        next = next.findNextCell();
+        transaction.add( reference, targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
+
+        IZmlTableCell next = current.findNextCell();
+        while( Objects.isNotNull( next ) )
+        {
+          if( ZmlValues.isStuetzstelle( next.getValueReference() ) )
+            break;
+
+          transaction.add( next.getValueReference(), targetValue, IDataSourceItem.SOURCE_INTERPOLATED_WECHMANN_VALUE, KalypsoStati.BIT_OK );
+          next = next.findNextCell();
+        }
+      }
+      finally
+      {
+        transaction.execute();
       }
 
-      transaction.execute();
     }
     catch( final SensorException e )
     {

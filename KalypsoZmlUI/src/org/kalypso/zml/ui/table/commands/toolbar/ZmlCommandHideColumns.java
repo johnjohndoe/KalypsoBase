@@ -103,7 +103,9 @@ public class ZmlCommandHideColumns extends AbstractHandler implements IElementUp
               return;
 
             final IZmlModelColumn modelColumn = column.getModelColumn();
-            // FIXME: once got a NPE here...
+            if( Objects.isNull( modelColumn ) )
+              return;
+
             final DataColumn dataColumn = modelColumn.getDataColumn();
 
             final DataColumnType dataColumnType = dataColumn.getType();
