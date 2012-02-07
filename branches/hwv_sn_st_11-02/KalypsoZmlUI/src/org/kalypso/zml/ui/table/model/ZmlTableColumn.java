@@ -64,6 +64,7 @@ import org.kalypso.zml.ui.table.focus.ZmlTableEditingSupport;
 import org.kalypso.zml.ui.table.provider.AppliedRule;
 import org.kalypso.zml.ui.table.provider.RuleMapper;
 import org.kalypso.zml.ui.table.provider.strategy.ZmlCollectRulesVisitor;
+import org.kalypso.zml.ui.table.provider.strategy.editing.ContinuedInterpolatedValueEditingStrategy;
 import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
 import org.kalypso.zml.ui.table.provider.strategy.editing.InterpolatedValueEditingStrategy;
 import org.kalypso.zml.ui.table.provider.strategy.editing.SumValueEditingStrategy;
@@ -113,6 +114,8 @@ public class ZmlTableColumn extends AbstractZmlTableColumn
       final DataColumnType dataColumnType = (DataColumnType) type;
       if( ITimeseriesConstants.TYPE_RAINFALL.equals( dataColumnType.getValueAxis() ) )
         m_editing = new SumValueEditingStrategy( this );
+      else if( ITimeseriesConstants.TYPE_WECHMANN_E.equals( dataColumnType.getValueAxis() ) )
+        m_editing = new ContinuedInterpolatedValueEditingStrategy( this );
       else
         m_editing = new InterpolatedValueEditingStrategy( this );
     }
