@@ -54,7 +54,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 /**
  * @author Dirk Kuch
  */
-public class ShapeWorkspace implements IShapeWorkspce
+public class ShapeWorkspace implements IShapeWorkspace
 {
   private GMLWorkspace m_workspace;
 
