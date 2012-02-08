@@ -60,19 +60,19 @@ import com.vividsolutions.jts.geom.LineString;
  */
 public interface IProfileFeature extends Feature, IProfileProvider
 {
-  QName QN_PROFILE = new QName( IWspmConstants.NS_WSPMPROF, "Profile" ); //$NON-NLS-1$
+  QName FEATURE_PROFILE = new QName( IWspmConstants.NS_WSPMPROF, "Profile" ); //$NON-NLS-1$
 
-  QName QN_PROPERTY_STATION = new QName( IWspmConstants.NS_WSPMPROF, "station" ); //$NON-NLS-1$
+  QName PROPERTY_STATION = new QName( IWspmConstants.NS_WSPMPROF, "station" ); //$NON-NLS-1$
 
-  QName QN_PROPERTY_TYPE = new QName( IWspmConstants.NS_WSPMPROF, "type" ); //$NON-NLS-1$
+  QName PROPERTY_TYPE = new QName( IWspmConstants.NS_WSPMPROF, "type" ); //$NON-NLS-1$
 
-  QName QN_PROPERTY_LINE = new QName( IWspmConstants.NS_WSPMPROF, "profileLocation" ); //$NON-NLS-1$
+  QName PROPERTY_LINE = new QName( IWspmConstants.NS_WSPMPROF, "profileLocation" ); //$NON-NLS-1$
 
-  QName QN_PROPERTY_SRS = new QName( IWspmConstants.NS_WSPMPROF, "srsName" ); //$NON-NLS-1$
+  QName PROPERTY_SRS = new QName( IWspmConstants.NS_WSPMPROF, "srsName" ); //$NON-NLS-1$
 
-  QName QN_PROPERTY_OBS_MEMBERS = new QName( IWspmConstants.NS_WSPMPROF, "member" ); //$NON-NLS-1$
+  QName MEMBER_OBSERVATION = new QName( IWspmConstants.NS_WSPMPROF, "member" ); //$NON-NLS-1$
 
-  QName QN_PROPERTY_IMAGE_MEMBER = new QName( IWspmConstants.NS_WSPMPROF, "imageMember" ); //$NON-NLS-1$
+  QName MEMBER_IMAGE = new QName( IWspmConstants.NS_WSPMPROF, "imageMember" ); //$NON-NLS-1$
 
   /**
    * The scale (i.e. fraction digits) for station values.

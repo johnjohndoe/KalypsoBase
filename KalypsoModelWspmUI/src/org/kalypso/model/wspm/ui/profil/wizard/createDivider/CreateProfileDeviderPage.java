@@ -357,7 +357,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
       final IFeatureType featureType = featureTheme.getFeatureType();
       if( featureType != null )
       {
-        if( GMLSchemaUtilities.substitutes( featureType, IProfileFeature.QN_PROFILE ) )
+        if( GMLSchemaUtilities.substitutes( featureType, IProfileFeature.FEATURE_PROFILE ) )
           return false;
 
         final IPropertyType[] polygoneProperties = PropertyUtils.filterProperties( featureType, m_geoPd.filter );
