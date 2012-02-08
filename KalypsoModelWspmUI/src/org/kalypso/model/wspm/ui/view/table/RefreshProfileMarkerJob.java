@@ -61,7 +61,7 @@ public class RefreshProfileMarkerJob extends UIJob
 
   public RefreshProfileMarkerJob( final TableView tableView )
   {
-    super( Messages.getString( "org.kalypso.model.wspm.ui.view.table.TableView.0" ) );
+    super( Messages.getString( "org.kalypso.model.wspm.ui.view.table.TableView.0" ) ); //$NON-NLS-1$
     m_tableView = tableView;
 
     setUser( false );

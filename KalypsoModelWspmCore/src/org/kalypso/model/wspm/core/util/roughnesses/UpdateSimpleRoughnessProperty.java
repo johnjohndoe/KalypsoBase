@@ -57,6 +57,7 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
+import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
@@ -93,7 +94,7 @@ public class UpdateSimpleRoughnessProperty implements ICoreRunnableWithProgress
 
     final IWspmClassification clazzes = WspmClassifications.getClassification( m_profile );
     if( Objects.isNull( clazzes ) )
-      throw new CoreException( new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( "Missing profile feature for profile %.3f km.", m_profile.getStation() ) ) );
+      throw new CoreException( new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( Messages.getString("UpdateSimpleRoughnessProperty_0"), m_profile.getStation() ) ) ); //$NON-NLS-1$
 
     final List<IStatus> statis = new ArrayList<IStatus>();
 
@@ -105,7 +106,7 @@ public class UpdateSimpleRoughnessProperty implements ICoreRunnableWithProgress
 
       if( Objects.isNull( roughness ) )
       {
-        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( "Missing roughness class - point: %.3f", point.getBreite() ) );
+        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( Messages.getString("UpdateSimpleRoughnessProperty_1"), point.getBreite() ) ); //$NON-NLS-1$
         statis.add( status );
 
         continue;
@@ -115,7 +116,7 @@ public class UpdateSimpleRoughnessProperty implements ICoreRunnableWithProgress
         m_changes.add( new PointPropertyEdit( point, property, roughness.getValue( m_property ).doubleValue() ) );
     }
 
-    return StatusUtilities.createStatus( statis, String.format( "Updating of roughness from roughness classes for profile %.3f", m_profile.getStation() ) );
+    return StatusUtilities.createStatus( statis, String.format( Messages.getString("UpdateSimpleRoughnessProperty_2"), m_profile.getStation() ) ); //$NON-NLS-1$
   }
 
   public IProfilChange[] getChanges( )

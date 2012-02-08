@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekFrictionDat;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekFrictionDat.FrictionType;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekFrictionDatCRFRSection;
@@ -174,7 +175,7 @@ public class SobekFrictionDatCRFRParser
 
     final FrictionType[] frictionTypes = FrictionType.values();
     if( index < 0 || index > frictionTypes.length - 1 )
-      throw line.throwError( "Illegal friction type '%d'", index );
+      throw line.throwError( Messages.getString("SobekFrictionDatCRFRParser_0"), index ); //$NON-NLS-1$
 
     return frictionTypes[index];
   }

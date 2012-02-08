@@ -51,6 +51,7 @@ import org.apache.commons.lang3.text.StrMatcher;
 import org.apache.commons.lang3.text.StrTokenizer;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.model.wspm.core.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -65,7 +66,7 @@ public class SobekLineParser
   {
     final String line = reader.readLine();
     if( line == null )
-      throw SobekParsing.throwError( format( "unexpected end of file" ) );
+      throw SobekParsing.throwError( format( Messages.getString("SobekLineParser_0") ) ); //$NON-NLS-1$
 
     m_tokenizer = new StrTokenizer( line, StrMatcher.spaceMatcher(), StrMatcher.singleQuoteMatcher() );
     m_lineNumber = reader.getLineNumber();
@@ -85,7 +86,7 @@ public class SobekLineParser
 
   private String format( final String format, final Object... args )
   {
-    final String formatString = "Line %d: " + format;
+    final String formatString = Messages.getString("SobekLineParser_1") + format; //$NON-NLS-1$
     final Object[] argsAndLine = ArrayUtils.addAll( new Object[] { m_lineNumber }, args );
     return String.format( formatString, argsAndLine );
   }
@@ -94,14 +95,14 @@ public class SobekLineParser
   {
     final String actualToken = nextOrNull();
     if( !expectedToken.equals( actualToken ) )
-      throw throwError( "expected token '%s', was '%s'", expectedToken, actualToken );
+      throw throwError( Messages.getString("SobekLineParser_2"), expectedToken, actualToken ); //$NON-NLS-1$
   }
 
   public void expectAttribute( final String expectedAttribute ) throws CoreException
   {
     final String actualAttribute = nextOrNull();
     if( !expectedAttribute.equals( actualAttribute ) )
-      throw throwError( "expected parameter '%s', was '%s'", expectedAttribute, actualAttribute );
+      throw throwError( Messages.getString("SobekLineParser_3"), expectedAttribute, actualAttribute ); //$NON-NLS-1$
   }
 
   public String nextStringToken( final String expectedAttribute ) throws CoreException
@@ -130,7 +131,7 @@ public class SobekLineParser
   {
     final int value = nextIntToken( attributeName );
     if( value != expectedValue )
-      throw throwError( "Invalid value for parameter '%s'", attributeName );
+      throw throwError( Messages.getString("SobekLineParser_4"), attributeName ); //$NON-NLS-1$
   }
 
   public BigDecimal nextDecimalToken( final String attributeName ) throws CoreException
@@ -152,7 +153,7 @@ public class SobekLineParser
   {
     final String value = nextOrNull();
     if( value == null )
-      throw throwError( "Missing value for parameter '%s'", attributeName );
+      throw throwError( Messages.getString("SobekLineParser_5"), attributeName ); //$NON-NLS-1$
 
     return value;
   }
@@ -167,7 +168,7 @@ public class SobekLineParser
     final String value = expectValue( attributeName );
     final Integer integer = NumberUtils.parseQuietInteger( value );
     if( integer == null )
-      throw throwError( "Value for parameter '%s' must be an integer." );
+      throw throwError( Messages.getString("SobekLineParser_6") ); //$NON-NLS-1$
 
     return integer;
   }
@@ -196,9 +197,9 @@ public class SobekLineParser
   {
     final BigDecimal[] decimals = readDecimalsUntilComment();
     if( decimals.length < count )
-      throw throwError( format( "Too few decimal values" ) );
+      throw throwError( format( Messages.getString("SobekLineParser_7") ) ); //$NON-NLS-1$
     if( decimals.length > count )
-      throw throwError( format( "Too many decimal values" ) );
+      throw throwError( format( Messages.getString("SobekLineParser_8") ) ); //$NON-NLS-1$
 
     return decimals;
   }
@@ -209,12 +210,12 @@ public class SobekLineParser
     while( m_tokenizer.hasNext() )
     {
       final String next = m_tokenizer.nextToken();
-      if( "<".equals( next ) )
+      if( "<".equals( next ) ) //$NON-NLS-1$
         break;
 
       final BigDecimal value = NumberUtils.parseQuietDecimal( next );
       if( value == null )
-        throw throwError( format( "Expected a decimal but got '%s'", next ) );
+        throw throwError( format( Messages.getString("SobekLineParser_10"), next ) ); //$NON-NLS-1$
       decimals.add( value );
     }
 
@@ -225,7 +226,7 @@ public class SobekLineParser
   {
     final BigDecimal decimal = NumberUtils.parseQuietDecimal( token );
     if( decimal == null )
-      throw throwError( "Value for parameter '%s' must be a decimal." );
+      throw throwError( Messages.getString("SobekLineParser_11") ); //$NON-NLS-1$
 
     return decimal;
   }

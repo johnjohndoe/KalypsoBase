@@ -230,7 +230,7 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
     if( chartComposite == null )
       return;
 
-    final UIJob job = new UIJob( "Updating profile chart" )
+    final UIJob job = new UIJob( "Updating profile chart" ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )

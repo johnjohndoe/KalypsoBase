@@ -94,7 +94,7 @@ public class ProfilOperationRunnable implements ICoreRunnableWithProgress, IAdap
     if( stati.size() == 1 )
       return stati.iterator().next();
 
-    return StatusUtilities.createStatus( stati, "Propfile Operation(s) Status" );
+    return StatusUtilities.createStatus( stati, Messages.getString("ProfilOperationRunnable.0") ); //$NON-NLS-1$
   }
 
   @Override

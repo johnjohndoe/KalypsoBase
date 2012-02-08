@@ -52,6 +52,7 @@ import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.gml.ui.util.SelectionFeatureExtractor;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ui.editor.gmleditor.part.GMLLabelProvider;
@@ -82,9 +83,9 @@ public class DeriveCenterlineWizard extends Wizard implements IWorkbenchWizard
 
     m_data.setWorkspace( findWorkspace( selection, selectedWaterBodies ) );
 
-    m_selectionPage = new ArrayChooserPage( availableWaterBodies, new Object[] {}, selectedWaterBodies, 1, "wbselection", "Select Water Bodies", null ); //$NON-NLS-1$
+    m_selectionPage = new ArrayChooserPage( availableWaterBodies, new Object[] {}, selectedWaterBodies, 1, "wbselection", Messages.getString("DeriveCenterlineWizard_0"), null ); //$NON-NLS-1$ //$NON-NLS-2$
     m_selectionPage.setLabelProvider( new GMLLabelProvider() );
-    m_selectionPage.setDescription( "Please select for which water bodies a centerline should be created" );
+    m_selectionPage.setDescription( Messages.getString("DeriveCenterlineWizard_1") ); //$NON-NLS-1$
   }
 
   @Override

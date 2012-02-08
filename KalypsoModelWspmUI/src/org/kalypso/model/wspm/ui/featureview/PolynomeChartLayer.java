@@ -98,10 +98,10 @@ public class PolynomeChartLayer extends AbstractLineLayer
     final double max = (Double) domainRange.getMax();
 
     final PolylineFigure plf = new PolylineFigure();
-    final ILineStyle pls = (ILineStyle) getStyleSet().getStyle( "line_style" );
+    final ILineStyle pls = (ILineStyle) getStyleSet().getStyle( "line_style" ); //$NON-NLS-1$
     plf.setStyle( pls );
     final PointFigure pf = new PointFigure();
-    final IPointStyle ps = (IPointStyle) getStyleSet().getStyle( "point_style" );
+    final IPointStyle ps = (IPointStyle) getStyleSet().getStyle( "point_style" ); //$NON-NLS-1$
     pf.setStyle( ps );
 
     final ArrayList<Point> path = new ArrayList<Point>();

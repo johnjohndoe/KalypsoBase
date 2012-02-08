@@ -58,6 +58,7 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.debug.KalypsoModelWspmCoreDebug;
+import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
@@ -88,7 +89,7 @@ public class ValidationProfilListener implements IProfilListener
     final String profiletype = profile.getType();
     final ValidatorRuleSet rules = KalypsoModelWspmCorePlugin.getValidatorSet( profiletype );
 
-    m_validateJob = new WorkspaceJob( "Querprofil wird validiert" )
+    m_validateJob = new WorkspaceJob( Messages.getString("ValidationProfilListener_0") ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInWorkspace( final IProgressMonitor monitor )
@@ -107,7 +108,7 @@ public class ValidationProfilListener implements IProfilListener
           // TODO: only reset markers of this profile
           collector.reset( featureID );
 
-          KalypsoModelWspmCoreDebug.DEBUG_VALIDATION_MARKER.printf( " (validation_performance_check)    startValidation : %s\n", DateFormat.getTimeInstance().format( Calendar.getInstance().getTime() ) );
+          KalypsoModelWspmCoreDebug.DEBUG_VALIDATION_MARKER.printf( " (validation_performance_check)    startValidation : %s\n", DateFormat.getTimeInstance().format( Calendar.getInstance().getTime() ) ); //$NON-NLS-1$
 
           // TODO: use monitor and check for cancel
           final IStatus status = rules.validateProfile( profile, collector, validate, excludes.split( ";" ), monitor ); //$NON-NLS-1$
@@ -115,7 +116,7 @@ public class ValidationProfilListener implements IProfilListener
           final IMarker[] markers = collector.getMarkers();
           profile.setProblemMarker( markers );
 
-          KalypsoModelWspmCoreDebug.DEBUG_VALIDATION_MARKER.printf( " (validation_performance_check)    endValidation : %s\n", DateFormat.getTimeInstance().format( Calendar.getInstance().getTime() ) );
+          KalypsoModelWspmCoreDebug.DEBUG_VALIDATION_MARKER.printf( " (validation_performance_check)    endValidation : %s\n", DateFormat.getTimeInstance().format( Calendar.getInstance().getTime() ) ); //$NON-NLS-1$
 
           return status;
         }
@@ -156,7 +157,7 @@ public class ValidationProfilListener implements IProfilListener
 
   protected void revalidate( )
   {
-    KalypsoModelWspmCoreDebug.DEBUG_VALIDATION_MARKER.printf( "(validation_performance_check)Revalidate : %s\n", DateFormat.getTimeInstance().format( Calendar.getInstance().getTime() ) );
+    KalypsoModelWspmCoreDebug.DEBUG_VALIDATION_MARKER.printf( "(validation_performance_check)Revalidate : %s\n", DateFormat.getTimeInstance().format( Calendar.getInstance().getTime() ) ); //$NON-NLS-1$
 
     if( Objects.isNotNull( m_validateJob ) )
       m_validateJob.cancel(); // Just in case, to avoid too much validations

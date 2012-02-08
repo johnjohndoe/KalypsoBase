@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.ui.commands;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
@@ -68,7 +69,7 @@ public class MousePositionChartHandler extends AbstractProfilePointHandler
     final ICoordinateMapper mapper = theme.getCoordinateMapper();
     final Number hoehe = mapper.getTargetAxis().screenToNumeric( position.y );
 
-    final String msg = String.format( "Position: Breite %6.2f m, Höhe %6.2f m", getBreite(), hoehe );
+    final String msg = String.format( Messages.getString("MousePositionChartHandler_0"), getBreite(), hoehe ); //$NON-NLS-1$
     final Point p = calculatePosition( getChart(), msg );
 
     final EditInfo info = new EditInfo( theme, null, null, getBreite(), msg, p );

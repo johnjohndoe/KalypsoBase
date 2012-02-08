@@ -58,6 +58,7 @@ import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.core.profil.visitors.FindClosestPointVisitor;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.observation.result.IInterpolationHandler;
 import org.kalypso.observation.result.TupleResult;
@@ -109,7 +110,7 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
       final double hoehe = Profiles.getHoehe( getProfile(), getBreite() );
       position.y = mapper.getTargetAxis().numericToScreen( hoehe );
 
-      final String msg = String.format( "Neuer Punkt:\nx=%.2f m, y=%.2f m", getBreite(), hoehe );
+      final String msg = String.format( Messages.getString("InsertProfilePointChartHandler_0"), getBreite(), hoehe ); //$NON-NLS-1$
 
       final EditInfo info = new EditInfo( theme, null, null, getBreite(), msg, new Point( position.x + 5, position.y + 45 ) );
       setToolInfo( info );
@@ -168,7 +169,7 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
     if( interpolation.doInterpolation( result, record, index, distance ) )
       result.add( index + 1, record.getRecord() );
 
-    final Job job = new Job( "Active point changed" )
+    final Job job = new Job( "Active point changed" ) //$NON-NLS-1$
     {
       @Override
       protected IStatus run( final IProgressMonitor monitor )

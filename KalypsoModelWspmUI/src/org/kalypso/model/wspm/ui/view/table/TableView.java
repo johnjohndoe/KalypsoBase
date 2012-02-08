@@ -410,7 +410,7 @@ public class TableView extends ViewPart implements ITupleResultViewerProvider, I
       if( m_updateControl != null )
         m_updateControl.cancel();
 
-      m_updateControl = new UIJob( "updating table view" )
+      m_updateControl = new UIJob( "updating table view" ) //$NON-NLS-1$
       {
 
         @Override

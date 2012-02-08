@@ -106,11 +106,11 @@ public class ApplyLanduseShapePage extends WizardPage
       {
         if( StringUtils.equals( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS, (String) element ) )
         {
-          return "Bewuchsklassen";
+          return Messages.getString("ApplyLanduseShapePage.0"); //$NON-NLS-1$
         }
         else if( StringUtils.equals( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS, (String) element ) )
         {
-          return "Rauheitsklassen";
+          return Messages.getString("ApplyLanduseShapePage.1"); //$NON-NLS-1$
         }
         return super.getText( element );
       }

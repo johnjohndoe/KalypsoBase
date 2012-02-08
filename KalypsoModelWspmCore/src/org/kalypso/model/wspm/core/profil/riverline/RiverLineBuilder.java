@@ -187,7 +187,7 @@ public class RiverLineBuilder
   private Vector2D findDirection( final IProfil profil, final JTSTransformer transformer ) throws Exception
   {
     // IProfileRecord[] pointsForDirection = profil.getPoints();
-    final IProfilPointMarker[] markerPoints = profil.getPointMarkerFor( "urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#TRENNFLAECHE" );
+    final IProfilPointMarker[] markerPoints = profil.getPointMarkerFor( "urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#TRENNFLAECHE" ); //$NON-NLS-1$
     final IProfileRecord[] pointsForDirection = new IProfileRecord[markerPoints.length];
     for( int i = 0; i < pointsForDirection.length; i++ )
       pointsForDirection[i] = markerPoints[i].getPoint();

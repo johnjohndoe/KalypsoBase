@@ -133,13 +133,13 @@ public class WaterlevelRenderSegment
     final double width = getWidth();
     final double area = getArea();
 
-    final String heightLabel = Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLayer.2" );
-    final String widthLabel = Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLayer.3" );
-    final String areaLabel = Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLayer.4" );
+    final String heightLabel = Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLayer.2" ); //$NON-NLS-1$
+    final String widthLabel = Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLayer.3" ); //$NON-NLS-1$
+    final String areaLabel = Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLayer.4" ); //$NON-NLS-1$
 
-    final String heightText = String.format( "%.2f", value );
-    final String widthText = String.format( "%.2f", width );
-    final String areaText = String.format( "%.2f", area );
+    final String heightText = String.format( "%.2f", value ); //$NON-NLS-1$
+    final String widthText = String.format( "%.2f", width ); //$NON-NLS-1$
+    final String areaText = String.format( "%.2f", area ); //$NON-NLS-1$
 
     tooltipFormatter.addLine( StringUtils.EMPTY, StringUtils.EMPTY );
     tooltipFormatter.addLine( heightLabel, heightText );

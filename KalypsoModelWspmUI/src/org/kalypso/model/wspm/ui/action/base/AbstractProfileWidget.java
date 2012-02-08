@@ -241,7 +241,7 @@ public class AbstractProfileWidget extends AbstractWidget implements IProfilePro
   @Override
   public void onProfilProviderChanged( final IProfileProvider provider )
   {
-    final Job job = new Job( "Forcing repaint event" )
+    final Job job = new Job( "Forcing repaint event" ) //$NON-NLS-1$
     {
       @SuppressWarnings("synthetic-access")
       @Override

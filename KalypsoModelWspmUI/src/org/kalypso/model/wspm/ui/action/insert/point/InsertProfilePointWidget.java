@@ -57,6 +57,7 @@ import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.action.base.AbstractProfileWidget;
 import org.kalypso.model.wspm.ui.action.base.ProfilePainter;
 import org.kalypso.model.wspm.ui.action.base.ProfileWidgetMapPanelListener;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.observation.result.IInterpolationHandler;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -140,7 +141,7 @@ public class InsertProfilePointWidget extends AbstractProfileWidget
       if( interpolation.doInterpolation( result, record, index, distance ) )
         result.add( index + 1, record.getRecord() );
 
-      final Job job = new Job( "Active point changed" )
+      final Job job = new Job( "Active point changed" ) //$NON-NLS-1$
       {
         @Override
         protected IStatus run( final IProgressMonitor monitor )
@@ -192,7 +193,7 @@ public class InsertProfilePointWidget extends AbstractProfileWidget
     if( Objects.isNull( cursor ) )
       return null;
 
-    return String.format( "Profilpunkt Breite: %.2f m", cursor );
+    return String.format( Messages.getString("InsertProfilePointWidget_1"), cursor ); //$NON-NLS-1$
   }
 
   @Override

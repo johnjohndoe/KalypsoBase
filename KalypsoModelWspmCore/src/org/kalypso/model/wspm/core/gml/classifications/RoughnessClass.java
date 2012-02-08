@@ -45,6 +45,7 @@ import java.math.BigDecimal;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypso.model.wspm.core.i18n.Messages;
 
 /**
  * @author Dirk Kuch
@@ -59,7 +60,7 @@ public class RoughnessClass extends AbstractClassificationClass implements IRoug
   @Override
   public String toString( )
   {
-    return String.format( "Rauheit: %s\nks: %.3f, kst: %.3f", getName(), getKsValue(), getKstValue() );
+    return String.format( Messages.getString("RoughnessClass_0"), getName(), getKsValue(), getKstValue() ); //$NON-NLS-1$
   }
 
   @Override

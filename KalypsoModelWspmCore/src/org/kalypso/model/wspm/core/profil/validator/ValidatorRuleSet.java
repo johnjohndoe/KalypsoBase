@@ -80,7 +80,7 @@ public class ValidatorRuleSet
     final List<IStatus> stati = new ArrayList<IStatus>();
     final List<String> excludeRules = java.util.Arrays.asList( excludeIDs );
 
-    monitor.beginTask( "Validating profile", ArrayUtils.getLength( rules ) );
+    monitor.beginTask( "Validating profile", ArrayUtils.getLength( rules ) ); //$NON-NLS-1$
 
     for( final IValidatorRule rule : rules )
     {
@@ -91,11 +91,11 @@ public class ValidatorRuleSet
       {
         try
         {
-          KalypsoModelWspmCoreDebug.DEBUG_VALIDATION_MARKER.printf( " (validation_performance_check)    rule: %s, %s\n", rule.getID(), DateFormat.getTimeInstance().format( Calendar.getInstance().getTime() ) );
+          KalypsoModelWspmCoreDebug.DEBUG_VALIDATION_MARKER.printf( " (validation_performance_check)    rule: %s, %s\n", rule.getID(), DateFormat.getTimeInstance().format( Calendar.getInstance().getTime() ) ); //$NON-NLS-1$
 
           rule.validate( profil, collector );
 
-          KalypsoModelWspmCoreDebug.DEBUG_VALIDATION_MARKER.printf( " end: %s, %s\n", rule.getID(), DateFormat.getTimeInstance().format( Calendar.getInstance().getTime() ) );
+          KalypsoModelWspmCoreDebug.DEBUG_VALIDATION_MARKER.printf( " end: %s, %s\n", rule.getID(), DateFormat.getTimeInstance().format( Calendar.getInstance().getTime() ) ); //$NON-NLS-1$
         }
         catch( final CoreException e )
         {
