@@ -58,6 +58,7 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
+import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
@@ -97,7 +98,7 @@ public class GuessRoughessClassesRunnable implements ICoreRunnableWithProgress
 
     final IWspmClassification clazzes = WspmClassifications.getClassification( m_profile );
     if( Objects.isNull( clazzes ) )
-      throw new CoreException( new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( "Missing profile feature for profile %.3f km.", m_profile.getStation() ) ) );
+      throw new CoreException( new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( Messages.getString("GuessRoughessClassesRunnable_0"), m_profile.getStation() ) ) ); //$NON-NLS-1$
 
     final List<IStatus> statis = new ArrayList<IStatus>();
 
@@ -111,7 +112,7 @@ public class GuessRoughessClassesRunnable implements ICoreRunnableWithProgress
       if( Objects.isNull( value ) )
       {
         final Double width = (Double) point.getValue( m_profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE ) );
-        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( "Missing ks value - point: %.3f", width ) );
+        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( Messages.getString("GuessRoughessClassesRunnable_1"), width ) ); //$NON-NLS-1$
         statis.add( status );
 
         continue;
@@ -120,7 +121,7 @@ public class GuessRoughessClassesRunnable implements ICoreRunnableWithProgress
       final IRoughnessClass clazz = findMatchingClass( clazzes, value );
       if( Objects.isNull( clazz ) )
       {
-        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( "Didn't found matching roughness class for %s value %.3f on point: %.3f", m_property, value, point.getBreite() ) );
+        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( Messages.getString("GuessRoughessClassesRunnable_2"), m_property, value, point.getBreite() ) ); //$NON-NLS-1$
         statis.add( status );
 
         continue;
@@ -129,7 +130,7 @@ public class GuessRoughessClassesRunnable implements ICoreRunnableWithProgress
       m_changes.add( new PointPropertyEdit( point, propertyClazz, clazz.getName() ) );
     }
 
-    return StatusUtilities.createStatus( statis, String.format( "Updated roughness classes from roughness values on profile %.3f", m_profile.getStation() ) );
+    return StatusUtilities.createStatus( statis, String.format( Messages.getString("GuessRoughessClassesRunnable_3"), m_profile.getStation() ) ); //$NON-NLS-1$
   }
 
   private IRoughnessClass findMatchingClass( final IWspmClassification clazzes, final Double value )

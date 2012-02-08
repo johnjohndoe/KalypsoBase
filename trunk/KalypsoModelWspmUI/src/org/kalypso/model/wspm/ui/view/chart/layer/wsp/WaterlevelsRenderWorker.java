@@ -89,7 +89,7 @@ public class WaterlevelsRenderWorker
     catch( final Exception e )
     {
       /* Log the error message. */
-      final Status status = new Status( IStatus.ERROR, AbstractUIPluginExt.ID, "Failed to render water levels", e );
+      final Status status = new Status( IStatus.ERROR, AbstractUIPluginExt.ID, "Failed to render water levels", e ); //$NON-NLS-1$
       KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
       return status;
     }
@@ -132,7 +132,7 @@ public class WaterlevelsRenderWorker
         m_data.add( renderData );
       }
     }
-    return stati.asMultiStatusOrOK( "Failed to render water levels" );
+    return stati.asMultiStatusOrOK( "Failed to render water levels" ); //$NON-NLS-1$
   }
 
   private double getValue( final Object element, final BigDecimal station )

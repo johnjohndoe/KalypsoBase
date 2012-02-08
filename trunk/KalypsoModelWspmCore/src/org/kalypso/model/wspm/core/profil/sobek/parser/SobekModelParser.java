@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.sobek.ISobekConstants;
 import org.kalypso.model.wspm.core.profil.sobek.SobekModel;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekFrictionDat;
@@ -76,7 +77,7 @@ public class SobekModelParser
 
   public SobekModel read( final IProgressMonitor monitor ) throws CoreException, IOException
   {
-    monitor.beginTask( "Reading SOBEK project", 100 );
+    monitor.beginTask( Messages.getString("SobekModelParser_0"), 100 ); //$NON-NLS-1$
 
     final SobekProfileDef[] profileDefs = readProfileDef( new SubProgressMonitor( monitor, 25 ) );
     final SobekProfileDat[] profileDats = readProfileDat( new SubProgressMonitor( monitor, 25 ) );

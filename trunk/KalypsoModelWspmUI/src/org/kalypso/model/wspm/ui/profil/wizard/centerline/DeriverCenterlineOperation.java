@@ -57,6 +57,7 @@ import org.kalypso.model.wspm.core.gml.WspmProfileComparator;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.riverline.RiverLineBuilder;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -115,7 +116,7 @@ public class DeriverCenterlineOperation implements ICoreRunnableWithProgress
       return new Status( IStatus.ERROR, KalypsoModelWspmUIPlugin.ID, "Failed to change workspace", e ); //$NON-NLS-1$
     }
 
-    return log.asMultiStatus( "Derive center line from cross sections" );
+    return log.asMultiStatus( Messages.getString("DeriverCenterlineOperation_0") ); //$NON-NLS-1$
   }
 
   private GM_Curve createCenterLine( final WspmWaterBody waterBody ) throws CoreException
@@ -136,7 +137,7 @@ public class DeriverCenterlineOperation implements ICoreRunnableWithProgress
     catch( final GM_Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), "Failed to build centerline", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), Messages.getString("DeriverCenterlineOperation_1"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }

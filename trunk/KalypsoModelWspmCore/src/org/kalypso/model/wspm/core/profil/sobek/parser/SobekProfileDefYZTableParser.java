@@ -84,7 +84,7 @@ public class SobekProfileDefYZTableParser
   {
     final int st = m_lineParser.nextIntToken( ATTRIBUTE_ST );
     if( st != 0 && st != 1 )
-      throw m_lineParser.throwError( "Invalid argument for st: %d", st );
+      throw m_lineParser.throwError( "Invalid argument for st: %d", st ); //$NON-NLS-1$
 
     m_lineParser.expectAttribute( ATTRIBUTE_LT );
 

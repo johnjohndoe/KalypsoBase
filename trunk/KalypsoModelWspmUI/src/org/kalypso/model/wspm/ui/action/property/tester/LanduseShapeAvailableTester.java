@@ -84,7 +84,7 @@ public class LanduseShapeAvailableTester extends PropertyTester
 
   private boolean testHasReachSelection( final IProject project )
   {
-    final IFolder folder = project.getFolder( "data/landuse" );
+    final IFolder folder = project.getFolder( "data/landuse" ); //$NON-NLS-1$
     if( !folder.exists() )
       return false;
 

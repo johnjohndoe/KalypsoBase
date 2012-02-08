@@ -59,6 +59,7 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
+import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
@@ -95,7 +96,7 @@ public class GuessVegetationClassesRunnable implements ICoreRunnableWithProgress
 
     final IWspmClassification clazzes = WspmClassifications.getClassification( m_profile );
     if( Objects.isNull( clazzes ) )
-      throw new CoreException( new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( "Missing profile feature for profile %.3f km.", m_profile.getStation() ) ) );
+      throw new CoreException( new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( Messages.getString("GuessVegetationClassesRunnable_0"), m_profile.getStation() ) ) ); //$NON-NLS-1$
 
     final List<IStatus> statis = new ArrayList<IStatus>();
 
@@ -111,7 +112,7 @@ public class GuessVegetationClassesRunnable implements ICoreRunnableWithProgress
 
       if( Objects.isNull( ax, ay, dp ) )
       {
-        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( "Missing ks value - point: %.3f", point.getBreite() ) );
+        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( Messages.getString("GuessVegetationClassesRunnable_1"), point.getBreite() ) ); //$NON-NLS-1$
         statis.add( status );
 
         continue;
@@ -120,7 +121,7 @@ public class GuessVegetationClassesRunnable implements ICoreRunnableWithProgress
       final IVegetationClass clazz = findMatchingClass( clazzes, ax, ax, dp );
       if( Objects.isNull( clazz ) )
       {
-        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( "Didn't found matching vegation class on point: %.3f", point.getBreite() ) );
+        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( Messages.getString("GuessVegetationClassesRunnable_2"), point.getBreite() ) ); //$NON-NLS-1$
         statis.add( status );
 
         continue;
@@ -129,7 +130,7 @@ public class GuessVegetationClassesRunnable implements ICoreRunnableWithProgress
       m_changes.add( new PointPropertyEdit( point, propertyClazz, clazz.getName() ) );
     }
 
-    return StatusUtilities.createStatus( statis, String.format( "Updated roughness classes from roughness values on profile %.3f", m_profile.getStation() ) );
+    return StatusUtilities.createStatus( statis, String.format( Messages.getString("GuessVegetationClassesRunnable_3"), m_profile.getStation() ) ); //$NON-NLS-1$
   }
 
   private IVegetationClass findMatchingClass( final IWspmClassification clazzes, final Double ax, final Double ay, final Double dp )

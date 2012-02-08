@@ -64,6 +64,7 @@ import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -150,7 +151,7 @@ public class ApplyLanduseWorker implements IRunnableWithProgress
         {
           t.printStackTrace();
 
-          stati.add( new Status( IStatus.ERROR, AbstractUIPluginExt.ID, "Applying landuse failed", t ) );
+          stati.add( new Status( IStatus.ERROR, AbstractUIPluginExt.ID, Messages.getString("ApplyLanduseWorker_0"), t ) ); //$NON-NLS-1$
         }
 
         count++;

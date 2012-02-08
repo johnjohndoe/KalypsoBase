@@ -107,17 +107,17 @@ public class FillMissingProfileGeometriesPage extends WizardPage
     final Group grAlgorithms = new Group( body, SWT.NONE );
     grAlgorithms.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     grAlgorithms.setLayout( new GridLayout() );
-    grAlgorithms.setText( Messages.getString( "FillMissingProfilesGeometriesPage_2" ) );
+    grAlgorithms.setText( Messages.getString( "FillMissingProfilesGeometriesPage_2" ) ); //$NON-NLS-1$
 
     final Button buttonInterpolate = new Button( grAlgorithms, SWT.CHECK );
     buttonInterpolate.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    buttonInterpolate.setText( Messages.getString( "FillMissingProfilesGeometriesPage_3" ) );
+    buttonInterpolate.setText( Messages.getString( "FillMissingProfilesGeometriesPage_3" ) ); //$NON-NLS-1$
     buttonInterpolate.setEnabled( false );
     buttonInterpolate.setSelection( true );
 
     final Button buttonExtrapolate = new Button( grAlgorithms, SWT.CHECK );
     buttonExtrapolate.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    buttonExtrapolate.setText( Messages.getString( "FillMissingProfilesGeometriesPage_4" ) );
+    buttonExtrapolate.setText( Messages.getString( "FillMissingProfilesGeometriesPage_4" ) ); //$NON-NLS-1$
 
     buttonExtrapolate.addSelectionListener( new SelectionAdapter()
     {

@@ -65,7 +65,7 @@ public final class ProfileManipulationOperation implements ICoreRunnableWithProg
         final String subTask = String.format( Messages.getString( "ProfileManipulationOperation_1" ), profileFeature.getName(), profileFeature.getBigStation() ); //$NON-NLS-1$
         monitor.subTask( subTask );
 
-        final ProfilOperation operation = new ProfilOperation( "Performing profile operation", profile, true );
+        final ProfilOperation operation = new ProfilOperation( "Performing profile operation", profile, true ); //$NON-NLS-1$
         final IProfilChange[] changes = m_manipulator.performProfileManipulation( profile, new SubProgressMonitor( monitor, 1 ) );
         operation.addChange( changes );
 

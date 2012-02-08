@@ -143,7 +143,7 @@ public class SobekNetworkD12Parser
       return;
     }
 
-    throw startLine.throwError( "unexpected token '%s'", token );
+    throw startLine.throwError( "Unexpected token '%s'", token ); //$NON-NLS-1$
   }
 
   private void readPT12( final SobekLineParser line ) throws CoreException

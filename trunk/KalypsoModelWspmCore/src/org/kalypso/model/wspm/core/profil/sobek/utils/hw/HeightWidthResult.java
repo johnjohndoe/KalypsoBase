@@ -232,8 +232,8 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
       maxWidth = Math.max( maxWidth, mWidth );
     }
 
-    final String id = m_id + "_" + getName();
-    final String name = m_name + "_" + getName();
+    final String id = m_id + "_" + getName(); //$NON-NLS-1$
+    final String name = m_name + "_" + getName(); //$NON-NLS-1$
 
     formatter.format( "CRDS id '%s' nm '%s' ty 0 wm %f w1 0 w2 0 sw 0 gl 0 gu 0 lt lw%n", id, name, maxWidth ); //$NON-NLS-1$
     formatter.format( "TBLE%n" ); //$NON-NLS-1$

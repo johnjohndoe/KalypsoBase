@@ -57,6 +57,7 @@ import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.model.wspm.ui.action.base.AbstractProfileWidget;
 import org.kalypso.model.wspm.ui.action.base.ProfilePainter;
 import org.kalypso.model.wspm.ui.action.base.ProfileWidgetMapPanelListener;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.advanced.utils.SLDPainter;
@@ -198,7 +199,7 @@ public abstract class AbstractProfilePointSelectionWidget extends AbstractProfil
 
     final double hoehe = Profiles.getHoehe( profile, cursor );
 
-    return String.format( "Position: Breite %6.2f m, Höhe %6.2f m", cursor, hoehe );
+    return String.format( Messages.getString("AbstractProfilePointSelectionWidget_0"), cursor, hoehe ); //$NON-NLS-1$
   }
 
   private void doPaintSelection( final Graphics g, final SLDPainter painter )

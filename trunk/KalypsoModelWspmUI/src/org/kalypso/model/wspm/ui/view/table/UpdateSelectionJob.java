@@ -69,7 +69,7 @@ public class UpdateSelectionJob extends UIJob
 
   public UpdateSelectionJob( final TableView tableView )
   {
-    super( Messages.getString( "org.kalypso.model.wspm.ui.view.table.TableView.1" ) );
+    super( Messages.getString( "org.kalypso.model.wspm.ui.view.table.TableView.1" ) ); //$NON-NLS-1$
     m_tableView = tableView;
 
     setUser( false );

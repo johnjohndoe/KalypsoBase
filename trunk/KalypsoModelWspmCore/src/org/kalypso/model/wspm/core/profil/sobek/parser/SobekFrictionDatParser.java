@@ -50,6 +50,7 @@ import java.util.Collection;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekFrictionDat;
 
 /**
@@ -109,7 +110,7 @@ public class SobekFrictionDatParser
     if( TOKEN_D2FR.equals( token ) )
       return readD2FR( startLine, reader );
 
-    throw startLine.throwError( "unexpected token '%s'", token );
+    throw startLine.throwError( Messages.getString("SobekFrictionDatParser_0"), token ); //$NON-NLS-1$
   }
 
   private SobekFrictionDat readGLFR( final SobekLineParser startLine, final LineNumberReader reader ) throws IOException, CoreException

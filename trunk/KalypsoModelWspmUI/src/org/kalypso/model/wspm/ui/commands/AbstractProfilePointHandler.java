@@ -98,7 +98,7 @@ public abstract class AbstractProfilePointHandler extends AbstractChartHandler
 
   private void doInit( final IChartComposite chart )
   {
-    final Job job = new Job( "Initializing Profile Point Handler" )
+    final Job job = new Job( "Initializing Profile Point Handler" ) //$NON-NLS-1$
     {
       @Override
       protected IStatus run( final IProgressMonitor monitor )

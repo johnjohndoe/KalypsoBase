@@ -45,6 +45,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
+import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.base.ExtrapolateMissingCoordinatesVisitor;
 import org.kalypso.model.wspm.core.profil.base.InterpolateMissingCoordinatesVisitor;
@@ -69,7 +70,7 @@ public class FillMissingProfileGeocoordinatesRunnable implements ICoreRunnableWi
     m_profile.accept( new InterpolateMissingCoordinatesVisitor(), 1 );
     m_profile.accept( new ExtrapolateMissingCoordinatesVisitor(), 1 );
 
-    return new Status( IStatus.OK, KalypsoModelWspmCorePlugin.getID(), "Adding of missing profile geo coordinates" );
+    return new Status( IStatus.OK, KalypsoModelWspmCorePlugin.getID(), Messages.getString("FillMissingProfileGeocoordinatesRunnable_0") ); //$NON-NLS-1$
   }
 
 }

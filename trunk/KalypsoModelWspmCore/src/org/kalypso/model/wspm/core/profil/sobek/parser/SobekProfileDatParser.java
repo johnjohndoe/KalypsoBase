@@ -60,17 +60,17 @@ public class SobekProfileDatParser
 {
   private static final String TOKEN_CRSN = "CRSN"; //$NON-NLS-1$
 
-  private static final String ATTRIBUTE_ID = "id";
+  private static final String ATTRIBUTE_ID = "id"; //$NON-NLS-1$
 
-  private static final String ATTRIBUTE_DI = "di";
+  private static final String ATTRIBUTE_DI = "di"; //$NON-NLS-1$
 
-  private static final String ATTRIBUTE_RL = "rl";
+  private static final String ATTRIBUTE_RL = "rl"; //$NON-NLS-1$
 
-  private static final String ATTRIBUTE_LL = "ll";
+  private static final String ATTRIBUTE_LL = "ll"; //$NON-NLS-1$
 
-  private static final String ATTRIBUTE_RS = "rs";
+  private static final String ATTRIBUTE_RS = "rs"; //$NON-NLS-1$
 
-  private static final String ATTRIBUTE_LS = "ls";
+  private static final String ATTRIBUTE_LS = "ls"; //$NON-NLS-1$
 
   private final Collection<SobekProfileDat> m_profiles = new ArrayList<SobekProfileDat>();
 

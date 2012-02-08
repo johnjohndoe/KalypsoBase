@@ -118,16 +118,16 @@ public class SobekProfileDefParser
       case 4: // closed circle
       case 6: // egg shaped (width)
       case 11: // asymmetrical trapeziodal
-        throw lineParser.throwError( "Sorry, parsing type '%d' is not yet supported.", type );
+        throw lineParser.throwError( "Sorry, parsing type '%d' is not yet supported.", type ); //$NON-NLS-1$
 
       case 5: //
       case 9: //
       case 7: // egg shaped 2 (radius) not implemented
       case 8: // closed rectangular not implemented
-        throw lineParser.throwError( "Type '%d' not implemented by SOBEK, parsing not possible.", type );
+        throw lineParser.throwError( "Type '%d' not implemented by SOBEK, parsing not possible.", type ); //$NON-NLS-1$
 
       default:
-        throw lineParser.throwError( "Unknown type '%d'", type );
+        throw lineParser.throwError( "Unknown type '%d'", type ); //$NON-NLS-1$
     }
   }
 }

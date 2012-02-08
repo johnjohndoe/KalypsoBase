@@ -49,6 +49,7 @@ import org.kalypso.jts.JTSConverter;
 import org.kalypso.jts.JtsVectorUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
+import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.observation.result.IRecord;
 
@@ -106,7 +107,7 @@ public class MoveProfileRunnable implements ICoreRunnableWithProgress
 
     }
 
-    return new Status( IStatus.OK, KalypsoModelWspmCorePlugin.getID(), "Verschieben des Profils erfolgreich" );
+    return new Status( IStatus.OK, KalypsoModelWspmCorePlugin.getID(), Messages.getString("MoveProfileRunnable_0") ); //$NON-NLS-1$
   }
 
   private Coordinate move( final Coordinate coordinate )
