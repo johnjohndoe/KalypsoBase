@@ -66,12 +66,6 @@ public class PointAdd implements IProfilChange
   }
 
   @Override
-  public void configureHint( final ProfilChangeHint hint )
-  {
-    hint.setPointsChanged();
-  }
-
-  @Override
   public IProfilChange doChange( )
   {
     IProfileRecord pointToAdd = null;

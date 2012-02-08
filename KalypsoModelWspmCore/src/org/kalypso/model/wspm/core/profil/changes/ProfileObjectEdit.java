@@ -63,12 +63,6 @@ public class ProfileObjectEdit implements IProfilChange
   }
 
   @Override
-  public void configureHint( final ProfilChangeHint hint )
-  {
-    hint.setObjectDataChanged();
-  }
-
-  @Override
   public IProfilChange doChange( )
   {
     // FIXME at the moment we can only one value of the profile object tuple result

@@ -40,12 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil;
 
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-
 public interface IProfilChange
 {
-  void configureHint( final ProfilChangeHint hint );
-
   /**
    * @param the
    *          Themes , affected by this ProfilChange should be set true

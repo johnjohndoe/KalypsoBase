@@ -58,16 +58,8 @@ public class ProfileObjectAdd implements IProfilChange
   }
 
   @Override
-  public void configureHint( final ProfilChangeHint hint )
-  {
-    hint.setObjectChanged();
-    hint.setPointPropertiesChanged();
-  }
-
-  @Override
   public IProfilChange doChange( )
   {
-
     m_profil.addProfileObjects( m_objectsToAdd );
 
     final IProfileObject[] objectsToRemove = m_objectsToAdd;

@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.core.profil.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.changes.PointMarkerSetPoint;
@@ -59,17 +58,17 @@ import org.kalypso.observation.result.ITupleResultChangedListener;
 
 /**
  * Listens on the tuple result and translates its changes into profile change events.
- * 
+ *
  * @author Gernot Belger
  * @author kimwerner
  */
 public class ProfilTupleResultChangeListener implements ITupleResultChangedListener
 {
-  private final IProfil m_profil;
+  private final AbstractProfil m_profil;
 
   private IProfilChange m_onMarkerMovedDelete = null;
 
-  public ProfilTupleResultChangeListener( final IProfil profil )
+  public ProfilTupleResultChangeListener( final AbstractProfil profil )
   {
     m_profil = profil;
   }
@@ -99,14 +98,10 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
   @Override
   public void recordsChanged( final IRecord[] records, final TYPE type )
   {
-// if( type == TYPE.ADDED )
-// {
     /*
      * we only need a refresh here, so fire a "null-change"
      */
     m_profil.fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.PROFILE_PROPERTY_CHANGED ) );
-// }
-
   }
 
   @Override
