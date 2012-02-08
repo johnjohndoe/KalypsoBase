@@ -61,12 +61,6 @@ public class ActiveObjectEdit implements IProfilChange
   }
 
   @Override
-  public void configureHint( final ProfilChangeHint hint )
-  {
-    hint.setSelectionChanged();
-  }
-
-  @Override
   public IProfilChange doChange( )
   {
     final Range<Double> oldRange = m_profil.getSelection().getRange();

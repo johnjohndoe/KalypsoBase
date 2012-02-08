@@ -75,15 +75,6 @@ public class PointMove implements IProfilChange
   }
 
   @Override
-  public void configureHint( final ProfilChangeHint hint )
-  {
-    if( hint != null )
-    {
-      hint.setPointsChanged();
-    }
-  }
-
-  @Override
   public IProfilChange doChange( )
   {
 

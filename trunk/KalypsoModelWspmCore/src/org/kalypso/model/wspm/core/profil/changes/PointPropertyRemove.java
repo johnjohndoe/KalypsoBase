@@ -58,12 +58,6 @@ public final class PointPropertyRemove implements IProfilChange
   }
 
   @Override
-  public void configureHint( final ProfilChangeHint hint )
-  {
-    hint.setPointPropertiesChanged();
-  }
-
-  @Override
   public IProfilChange doChange( )
   {
     final Object[] oldValue = ProfilUtil.getValuesFor( m_profil, m_property );

@@ -56,12 +56,6 @@ public class PointMarkerEdit implements IProfilChange
   }
 
   @Override
-  public void configureHint( final ProfilChangeHint hint )
-  {
-    hint.setMarkerDataChanged();
-  }
-
-  @Override
   public IProfilChange doChange( )
   {
     final Object oldValue = m_pointMarker.getIntepretedValue();

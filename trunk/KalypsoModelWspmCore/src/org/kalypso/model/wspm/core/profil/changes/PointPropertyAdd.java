@@ -75,12 +75,6 @@ public final class PointPropertyAdd implements IProfilChange
   }
 
   @Override
-  public void configureHint( final ProfilChangeHint hint )
-  {
-    hint.setPointPropertiesChanged();
-  }
-
-  @Override
   public IProfilChange doChange( )
   {
     if( m_values == null )

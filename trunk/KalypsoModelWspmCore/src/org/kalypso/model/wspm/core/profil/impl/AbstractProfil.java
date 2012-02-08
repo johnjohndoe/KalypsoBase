@@ -72,7 +72,6 @@ import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.core.profil.MarkerIndex;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.impl.marker.PointMarker;
-import org.kalypso.model.wspm.core.profil.selection.RangeSelection;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecordVisitor;
@@ -85,9 +84,7 @@ import org.kalypso.observation.result.ITupleResultChangedListener;
 import org.kalypso.observation.result.TupleResult;
 
 /**
- * FIXME: event handling for all setters! Basisprofil with Events
- * 
- * @author kimwerner
+ * @author Kim Werner
  * @author Dirk Kuch
  */
 public abstract class AbstractProfil implements IProfil
@@ -112,6 +109,8 @@ public abstract class AbstractProfil implements IProfil
 
   private final ITupleResultChangedListener m_tupleResultListener = new ProfilTupleResultChangeListener( this );
 
+  private final ITupleResultChangedListener m_objectTupleListener = new ProfilObjectListener( this );
+
   private MarkerIndex m_markerIndex;
 
   private final IProfileFeature m_source;
@@ -120,7 +119,8 @@ public abstract class AbstractProfil implements IProfil
 
   private Object m_transactionLock;
 
-  private int m_transactionChangeEvent;
+  private int m_transactionHint;
+
 
   public AbstractProfil( final String type, final TupleResult result, final IProfileFeature source )
   {
@@ -197,7 +197,12 @@ public abstract class AbstractProfil implements IProfil
   @Override
   public IProfileObject[] addProfileObjects( final IProfileObject... profileObjects )
   {
-    Collections.addAll( m_profileObjects, profileObjects );
+    for( final IProfileObject object : profileObjects )
+    {
+      // TODO: what if objects have additional state ?
+      object.getObservation().getResult().addChangeListener( m_objectTupleListener );
+      m_profileObjects.add( object );
+    }
 
     fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.OBJECT_CHANGED ) );
 
@@ -242,13 +247,12 @@ public abstract class AbstractProfil implements IProfil
     }
   }
 
-  @Override
-  public void fireProfilChanged( final ProfilChangeHint hint )
+  void fireProfilChanged( final ProfilChangeHint hint )
   {
     // TODO: instead of ProfileOperation, we could combine the hints ourselfs during transaction mode
     if( m_transactionLock != null )
     {
-      m_transactionChangeEvent |= hint.getEvent();
+      m_transactionHint |= hint.getEvent();
       return;
     }
 
@@ -400,7 +404,7 @@ public abstract class AbstractProfil implements IProfil
 
   /**
    * CREATES A NEW POINT PROPERTY.
-   * 
+   *
    * @return a pointProperty from PointPropertyProvider, see
    *         {@code IProfilPointPropertyProvider#getPointProperty(String)}
    *         <p>
@@ -519,6 +523,8 @@ public abstract class AbstractProfil implements IProfil
     final Object defaultValue = id.getDefaultValue();
     marker.setValue( defaultValue );
 
+    fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.MARKER_MOVED ) );
+
     return oldValue;
   }
 
@@ -534,7 +540,13 @@ public abstract class AbstractProfil implements IProfil
   @Override
   public boolean removeProfileObject( final IProfileObject profileObject )
   {
-    return m_profileObjects.remove( profileObject );
+    profileObject.getObservation().getResult().removeChangeListener( m_objectTupleListener );
+
+    final boolean removed = m_profileObjects.remove( profileObject );
+
+    fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.OBJECT_CHANGED ) );
+
+    return removed;
   }
 
   @Override
@@ -548,6 +560,9 @@ public abstract class AbstractProfil implements IProfil
   {
     final Object old = m_additionalProfileSettings.get( key );
     m_additionalProfileSettings.remove( key );
+
+    fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.PROFILE_PROPERTY_CHANGED ) );
+
     return old;
   }
 
@@ -555,24 +570,32 @@ public abstract class AbstractProfil implements IProfil
   public void setComment( final String comment )
   {
     setDescription( comment );
+
+    fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.PROFILE_PROPERTY_CHANGED ) );
   }
 
   @Override
   public void setDescription( final String desc )
   {
     m_description = desc;
+
+    fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.PROFILE_PROPERTY_CHANGED ) );
   }
 
   @Override
   public void setName( final String name )
   {
     m_name = name;
+
+    fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.PROFILE_PROPERTY_CHANGED ) );
   }
 
   @Override
   public void setPhenomenon( final IPhenomenon phenomenon )
   {
     m_phenomenon = phenomenon;
+
+    fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.PROFILE_PROPERTY_CHANGED ) );
   }
 
   @Override
@@ -592,11 +615,10 @@ public abstract class AbstractProfil implements IProfil
   {
     m_additionalProfileSettings.put( key, value );
 
-// // TODO implement some meaningful change event
-// final ProfilChangeHint hint = new ProfilChangeHint();
-// hint.setObjectChanged();
-//
-// fireProfilChanged( hint, new IProfilChange[] { new EmptyChange() } );
+    final ProfilChangeHint hint = new ProfilChangeHint();
+    hint.setObjectChanged();
+
+    fireProfilChanged( hint );
   }
 
   @Override
@@ -620,8 +642,9 @@ public abstract class AbstractProfil implements IProfil
   @Override
   public void setStation( final double station )
   {
-    // FIXME: event handling
     m_station = station;
+
+    fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.PROFILE_PROPERTY_CHANGED ) );
   }
 
   @Override
@@ -727,7 +750,6 @@ public abstract class AbstractProfil implements IProfil
 
   private void doAccept( final IProfileRecordVisitor visitor, final IProfileRecord[] points, final int direction )
   {
-
     if( visitor.isWriter() )
       startTransaction( visitor );
 
@@ -756,7 +778,7 @@ public abstract class AbstractProfil implements IProfil
     finally
     {
       if( visitor.isWriter() )
-        stopTransaction( visitor, new ProfilChangeHint( m_transactionChangeEvent ) );
+        stopTransaction( visitor );
     }
   }
 
@@ -793,19 +815,21 @@ public abstract class AbstractProfil implements IProfil
       throw new IllegalStateException();
 
     m_transactionLock = lock;
-    m_transactionChangeEvent = 0;
+    m_transactionHint = 0;
   }
 
   @Override
-  public synchronized void stopTransaction( final Object lock, final ProfilChangeHint hint )
+  public synchronized void stopTransaction( final Object lock )
   {
     if( m_transactionLock == null )
       throw new IllegalStateException();
 
-    m_transactionLock = null;
-    m_transactionChangeEvent = 0;
+    final int hint = m_transactionHint;
 
-    fireProfilChanged( hint );
+    m_transactionLock = null;
+    m_transactionHint = 0;
+
+    fireProfilChanged( new ProfilChangeHint( hint ) );
   }
 
   @Override
@@ -821,8 +845,11 @@ public abstract class AbstractProfil implements IProfil
   @Override
   public void setSrsName( final String srsName )
   {
+    // FIXME: check: there is also a profile object SRSNAME
     final IProfileFeature source = getSource();
     if( Objects.isNotNull( source ) )
       source.setSrsName( srsName );
+
+    fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.PROFILE_PROPERTY_CHANGED ) );
   }
 }
