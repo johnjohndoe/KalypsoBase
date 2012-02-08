@@ -62,7 +62,6 @@ import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.base.IProfileManipulator;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
@@ -192,10 +191,6 @@ public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
   {
     final Object[] choosenProperties = m_propertyChooserPage.getChoosen();
     m_operationChooserPage.changeProfile( m_profile, choosenProperties );
-
-    final ProfilChangeHint hint = new ProfilChangeHint();
-    hint.setPointValuesChanged();
-    m_profile.fireProfilChanged( hint );
 
     return true;
   }
