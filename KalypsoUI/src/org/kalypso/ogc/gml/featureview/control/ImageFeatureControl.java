@@ -94,9 +94,6 @@ public class ImageFeatureControl extends AbstractImageFeatureControl
     super( feature, ftp );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
-   */
   @Override
   public Control createControl( final Composite parent, final int style )
   {
@@ -216,6 +213,16 @@ public class ImageFeatureControl extends AbstractImageFeatureControl
 
   private void startImageJob( final URL url )
   {
+// try
+// {
+// FileUtils.copyURLToFile( url, new File( "C:\\work\\temp\\test1.bin" ) );
+// }
+// catch( final IOException e1 )
+// {
+// // TODO Auto-generated catch block
+// e1.printStackTrace();
+// }
+
     final Job loadImageJob = new Job( "Load Image" )
     {
       @Override

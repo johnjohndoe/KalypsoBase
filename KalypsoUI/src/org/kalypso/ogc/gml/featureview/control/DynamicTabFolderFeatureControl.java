@@ -387,8 +387,6 @@ public class DynamicTabFolderFeatureControl extends AbstractFeatureControl
   {
     m_currentSelection = m_tabFolder.indexOf( item );
 
-    System.out.println( "current selection: " + m_currentSelection );
-
     return true;
   }
 }
