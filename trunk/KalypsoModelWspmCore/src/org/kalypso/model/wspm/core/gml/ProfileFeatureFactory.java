@@ -117,7 +117,7 @@ public final class ProfileFeatureFactory implements IWspmConstants
       final String name = profile.getName();
       final String description = profile.getComment();
       final String srs = ObjectUtils.toString( profile.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS ) );
-      changes.add( new FeatureChange( targetFeature, featureType.getProperty( IProfileFeature.QN_PROPERTY_SRS ), srs ) );
+      changes.add( new FeatureChange( targetFeature, featureType.getProperty( IProfileFeature.PROPERTY_SRS ), srs ) );
 
       final List<String> namelist = new ArrayList<String>();
       namelist.add( name );
