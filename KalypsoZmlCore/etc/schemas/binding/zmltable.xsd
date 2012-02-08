@@ -22,7 +22,11 @@
 
   <!-- rules -->
   <element name="RuleSet" type="zmltable:RuleSetType" />
+  <element name="AbstractRule" type="zmltable:AbstractRuleType" />
+
+  <element name="ColumnRule" type="zmltable:ColumnRuleType" />
   <element name="Rule" type="zmltable:RuleType" />
+
 
   <element name="RuleInstructions" type="zmltable:RuleInstructionsType" />
   <element name="AbstractRuleInstruction" type="zmltable:AbstractRuleInstructionType" />
@@ -164,6 +168,7 @@
   <complexType name="RuleSetType">
     <sequence>
       <choice minOccurs="1" maxOccurs="unbounded">
+        <element ref="zmltable:ColumnRule" />
         <element ref="zmltable:Rule" />
         <element name="rule" type="zmltable:RuleRefernceType" />
       </choice>
@@ -171,19 +176,35 @@
     <attribute name="id" type="ID" use="required" />
   </complexType>
 
-  <complexType name="RuleType">
+  <complexType name="AbstractRuleType" abstract="true">
     <sequence>
-      <element name="styleReference" type="zmltable:StyleReferenceType" minOccurs="0" maxOccurs="1" />
-      <element ref="zmltable:RuleInstructions" minOccurs="0" maxOccurs="1" />
       <element name="label" type="string" minOccurs="1" />
+      <element name="styleReference" type="zmltable:StyleReferenceType" minOccurs="0" maxOccurs="1" />
     </sequence>
-
     <attribute name="id" type="ID" use="required" />
     <attribute name="ruleReference" type="string" use="required" />
     <attribute name="enabled" type="boolean" use="optional" default="true" />
-    <attribute name="setHeaderIcon" type="boolean" use="optional" default="false" />
   </complexType>
 
+  <complexType name="RuleType">
+    <complexContent>
+      <extension base="zmltable:AbstractRuleType">
+        <sequence>
+          <element ref="zmltable:RuleInstructions" minOccurs="0" maxOccurs="1" />
+        </sequence>
+        <attribute name="setHeaderIcon" type="boolean" use="optional" default="false" />
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <complexType name="ColumnRuleType">
+    <complexContent>
+      <extension base="zmltable:AbstractRuleType">
+        <sequence>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
 
 
   <!-- rule instruction types -->

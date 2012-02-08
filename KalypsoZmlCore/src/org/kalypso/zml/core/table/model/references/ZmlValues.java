@@ -76,7 +76,7 @@ public final class ZmlValues
     if( isStuetzstelle( status, source ) )
       return false;
 
-    if( value == null )
+    if( Objects.isNull( value ) )
       return false;
 
     return value.doubleValue() == 0.0;

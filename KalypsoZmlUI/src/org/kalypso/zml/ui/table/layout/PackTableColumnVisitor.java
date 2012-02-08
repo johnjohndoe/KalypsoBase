@@ -144,7 +144,6 @@ public class PackTableColumnVisitor extends AbstractTableColumnPackVisitor
 
   private void fill( final ZmlTableImageMerger provider, final IZmlTableColumn column, final ColumnHeader[] columnHeaders )
   {
-
     for( final ColumnHeader header : columnHeaders )
     {
       try

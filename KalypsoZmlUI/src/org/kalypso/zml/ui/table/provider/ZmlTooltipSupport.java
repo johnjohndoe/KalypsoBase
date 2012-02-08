@@ -48,7 +48,7 @@ import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.ZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
@@ -121,16 +121,15 @@ public class ZmlTooltipSupport
 
   private String getRuleTooltip( final IZmlModelRow row, final IZmlValueReference reference )
   {
-    final ZmlRule[] activeRules = m_column.findActiveRules( row );
+    final ZmlCellRule[] activeRules = m_column.findActiveRules( row );
     if( ArrayUtils.isEmpty( activeRules ) )
       return null;
 
     final StringBuffer buffer = new StringBuffer();
     buffer.append( "Anmerkung(en):\n" );
 
-    for( final ZmlRule rule : activeRules )
+    for( final ZmlCellRule rule : activeRules )
     {
-
       buffer.append( String.format( "    - %s\n", rule.getLabel( reference ) ) );//$NON-NLS-1$
     }
 

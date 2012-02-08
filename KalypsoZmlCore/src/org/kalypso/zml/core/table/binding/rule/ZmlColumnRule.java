@@ -1,5 +1,3 @@
-package org.kalypso.zml.core.table.rules.impl;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -40,51 +38,32 @@ package org.kalypso.zml.core.table.rules.impl;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.zml.core.table.binding.rule;
 
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.filter.filters.interval.IntervalFilter;
-import org.kalypso.repository.IDataSourceItem;
-import org.kalypso.zml.core.KalypsoZmlCore;
-import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.core.table.rules.AbstractZmlCellRuleImplementation;
+import org.kalypso.zml.core.KalypsoZmlCoreExtensions;
+import org.kalypso.zml.core.table.rules.IZmlColumnRuleImplementation;
+import org.kalypso.zml.core.table.schema.AbstractRuleType;
+import org.kalypso.zml.core.table.schema.ColumnRuleType;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlRuleIntervalValue extends AbstractZmlCellRuleImplementation
+public class ZmlColumnRule extends AbstractZmlRule
 {
-  public static final String ID = "org.kalypso.zml.ui.core.rule.value.interval"; //$NON-NLS-1$
-
-  @Override
-  public String getIdentifier( )
+  public ZmlColumnRule( final AbstractRuleType rule )
   {
-    return ID;
+    super( rule );
   }
 
   @Override
-  protected boolean doApply( final ZmlCellRule rule, final IZmlValueReference reference )
+  public ColumnRuleType getRuleType( )
   {
-    try
-    {
-      final IZmlModelColumn column = reference.getColumn();
-      if( column == null )
-        return false;
-
-      final String dataSource = reference.getDataSource();
-      if( dataSource == null )
-        return false;
-
-      if( dataSource.startsWith( IDataSourceItem.FILTER_SOURCE ) )
-        return dataSource.contains( IntervalFilter.FILTER_ID );
-    }
-    catch( final SensorException e )
-    {
-      KalypsoZmlCore.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-    }
-
-    return false;
+    return (ColumnRuleType) super.getRuleType();
   }
+
+  public IZmlColumnRuleImplementation getImplementation( )
+  {
+    return KalypsoZmlCoreExtensions.getInstance().findColumnRule( getRuleType().getRuleReference() );
+  }
+
 }

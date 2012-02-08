@@ -46,7 +46,7 @@ import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.ZmlStyleResolver;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.kalypso.zml.core.table.binding.rule.AbstractZmlRule;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.schema.AbstractRuleInstructionType;
 import org.kalypso.zml.core.table.schema.StyleReferenceType;
@@ -82,7 +82,7 @@ public abstract class AbstractZmlRuleInstructionType
     return m_style;
   }
 
-  public String getLabel( final ZmlRule rule )
+  public String getLabel( final AbstractZmlRule rule )
   {
     final String format = m_type.getTooltip();
     if( Strings.isEmpty( format ) )

@@ -44,12 +44,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.core.table.rules.IZmlRuleImplementation;
+import org.kalypso.zml.core.table.rules.IZmlCellRuleImplementation;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
@@ -66,9 +66,6 @@ public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy impl
     super( column );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.provider.strategy.IZmlLabelStrategy#getText(org.kalypso.zml.ui.table.model.IZmlModelRow)
-   */
   @Override
   public String getText( final IZmlModelRow row ) throws SensorException, CoreException
   {
@@ -119,12 +116,12 @@ public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy impl
 
     String text = format( row, value );
 
-    final ZmlRule[] rules = column.findActiveRules( row );
-    for( final ZmlRule rule : rules )
+    final ZmlCellRule[] rules = column.findActiveRules( row );
+    for( final ZmlCellRule rule : rules )
     {
       try
       {
-        final IZmlRuleImplementation impl = rule.getImplementation();
+        final IZmlCellRuleImplementation impl = rule.getImplementation();
         text = impl.update( rule, currentReference, text );
       }
       catch( final SensorException e )
@@ -144,12 +141,12 @@ public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy impl
 
     String text = format( row, reference.getValue() );
 
-    final ZmlRule[] rules = getColumn().findActiveRules( row );
-    for( final ZmlRule rule : rules )
+    final ZmlCellRule[] rules = getColumn().findActiveRules( row );
+    for( final ZmlCellRule rule : rules )
     {
       try
       {
-        final IZmlRuleImplementation impl = rule.getImplementation();
+        final IZmlCellRuleImplementation impl = rule.getImplementation();
         text = impl.update( rule, reference, text );
       }
       catch( final SensorException e )

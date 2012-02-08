@@ -42,31 +42,25 @@ package org.kalypso.zml.core.table.rules.impl;
  *  ---------------------------------------------------------------------------*/
 
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.core.table.rules.AbstractZmlTableRule;
+import org.kalypso.zml.core.table.rules.AbstractZmlCellRuleImplementation;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlDerivedValue extends AbstractZmlTableRule
+public class ZmlDerivedValue extends AbstractZmlCellRuleImplementation
 {
-  public static final String ID = "org.kalypso.zml.ui.core.rule.derived.value";
+  public static final String ID = "org.kalypso.zml.ui.core.rule.derived.value"; //$NON-NLS-1$
 
-  /**
-   * @see org.kalypso.zml.ui.core.rules.IZmlTableRule#getIdentifier()
-   */
   @Override
   public String getIdentifier( )
   {
     return ID;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.core.rules.IZmlTableRule#apply(org.kalypso.zml.ui.table.provider.ZmlValueReference)
-   */
   @Override
-  protected boolean doApply( final ZmlRule rule, final IZmlValueReference reference )
+  protected boolean doApply( final ZmlCellRule rule, final IZmlValueReference reference )
   {
     final IAxis axis = reference.getColumn().getValueAxis();
     if( axis == null )

@@ -43,7 +43,9 @@ package org.kalypso.zml.core.table.binding;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.bind.JAXBElement;
 
@@ -51,9 +53,12 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.zml.core.KalypsoZmlCore;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.kalypso.zml.core.table.binding.rule.AbstractZmlRule;
+import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
+import org.kalypso.zml.core.table.binding.rule.ZmlColumnRule;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.AlignmentType;
 import org.kalypso.zml.core.table.schema.ColumnPropertyName;
@@ -71,7 +76,7 @@ public class BaseColumn
 {
   private final AbstractColumnType m_type;
 
-  private ZmlRule[] m_rules;
+  private AbstractZmlRule[] m_rules;
 
   private CellStyle m_cellStyle;
 
@@ -80,6 +85,10 @@ public class BaseColumn
   private ColumnHeader[] m_headers;
 
   private String m_headerImage;
+
+  private ZmlCellRule[] m_cellRules;
+
+  private ZmlColumnRule[] m_columnRules;
 
   public BaseColumn( final AbstractColumnType type )
   {
@@ -128,9 +137,6 @@ public class BaseColumn
     return m_headers;
   }
 
-  /**
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode( )
   {
@@ -151,23 +157,61 @@ public class BaseColumn
     return m_type.getId();
   }
 
-  public ZmlRule[] getRules( )
+  public ZmlCellRule[] getCellRules( )
+  {
+    if( ArrayUtils.isNotEmpty( m_cellRules ) )
+      return m_cellRules;
+
+    final Set<ZmlCellRule> collection = new LinkedHashSet<ZmlCellRule>();
+
+    final AbstractZmlRule[] rules = doGetRules();
+    for( final AbstractZmlRule rule : rules )
+    {
+      if( rule instanceof ZmlCellRule )
+        collection.add( (ZmlCellRule) rule );
+    }
+
+    m_cellRules = collection.toArray( new ZmlCellRule[] {} );
+
+    return m_cellRules;
+  }
+
+  public ZmlColumnRule[] getColumnRules( )
+  {
+    if( ArrayUtils.isNotEmpty( m_columnRules ) )
+      return m_columnRules;
+
+    final Set<ZmlColumnRule> collection = new LinkedHashSet<ZmlColumnRule>();
+
+    final AbstractZmlRule[] rules = doGetRules();
+    for( final AbstractZmlRule rule : rules )
+    {
+      if( rule instanceof ZmlColumnRule )
+        collection.add( (ZmlColumnRule) rule );
+    }
+
+    m_columnRules = collection.toArray( new ZmlColumnRule[] {} );
+
+    return m_columnRules;
+  }
+
+  private AbstractZmlRule[] doGetRules( )
   {
     if( ArrayUtils.isNotEmpty( m_rules ) )
       return m_rules;
 
-    final List<ZmlRule> rules = new ArrayList<ZmlRule>();
+    final List<AbstractZmlRule> rules = new ArrayList<AbstractZmlRule>();
     Collections.addAll( rules, resolveFromRuleSetReference() );
     Collections.addAll( rules, resolveRules() );
 
-    m_rules = rules.toArray( new ZmlRule[] {} );
+    m_rules = rules.toArray( new AbstractZmlRule[] {} );
 
     return m_rules;
   }
 
-  private ZmlRule[] resolveFromRuleSetReference( )
+  private AbstractZmlRule[] resolveFromRuleSetReference( )
   {
-    final List<ZmlRule> rules = new ArrayList<ZmlRule>();
+    final List<AbstractZmlRule> rules = new ArrayList<AbstractZmlRule>();
 
     final List<JAXBElement<Object>> references = m_type.getRuleSetReference();
     for( final JAXBElement<Object> reference : references )
@@ -180,17 +224,16 @@ public class BaseColumn
       Collections.addAll( rules, ruleSet.getRules() );
     }
 
-    return rules.toArray( new ZmlRule[] {} );
+    return rules.toArray( new AbstractZmlRule[] {} );
   }
 
-  private ZmlRule[] resolveRules( )
+  private AbstractZmlRule[] resolveRules( )
   {
-
     final List<RuleRefernceType> ruleReferenceTypes = m_type.getRule();
-    if( ruleReferenceTypes == null )
-      return new ZmlRule[] {};
+    if( Objects.isNull( ruleReferenceTypes ) )
+      return new AbstractZmlRule[] {};
 
-    final List<ZmlRule> rules = new ArrayList<ZmlRule>();
+    final List<AbstractZmlRule> rules = new ArrayList<AbstractZmlRule>();
     final ZmlRuleResolver resolver = ZmlRuleResolver.getInstance();
 
     for( final RuleRefernceType referenceType : ruleReferenceTypes )
@@ -201,8 +244,8 @@ public class BaseColumn
         // referenceType was defined) as context
         // in order to support relative url's.
         final URL context = null;
-        final ZmlRule rule = resolver.findRule( context, referenceType );
-        if( rule != null )
+        final AbstractZmlRule rule = resolver.findRule( context, referenceType );
+        if( Objects.isNotNull( rule ) )
           rules.add( rule );
       }
       catch( final CoreException e )
@@ -211,7 +254,7 @@ public class BaseColumn
       }
     }
 
-    return rules.toArray( new ZmlRule[] {} );
+    return rules.toArray( new AbstractZmlRule[] {} );
   }
 
   public AlignmentType getAlignment( )
@@ -262,7 +305,7 @@ public class BaseColumn
 
   public CellStyle getDefaultStyle( ) throws CoreException
   {
-    if( m_cellStyle != null )
+    if( Objects.isNotNull( m_cellStyle ) )
       return m_cellStyle;
 
     final ZmlStyleResolver resolver = ZmlStyleResolver.getInstance();
@@ -275,7 +318,7 @@ public class BaseColumn
 
   public CellStyle getDefaultEditingStyle( ) throws CoreException
   {
-    if( m_editingCellStyle != null )
+    if( Objects.isNotNull( m_editingCellStyle ) )
       return m_editingCellStyle;
 
     final ZmlStyleResolver resolver = ZmlStyleResolver.getInstance();

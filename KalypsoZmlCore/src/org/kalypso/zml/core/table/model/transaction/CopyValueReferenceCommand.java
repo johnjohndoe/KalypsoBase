@@ -1,5 +1,3 @@
-package org.kalypso.zml.core.table.rules.impl;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -7,7 +5,7 @@ package org.kalypso.zml.core.table.rules.impl;
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestra�e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -40,51 +38,48 @@ package org.kalypso.zml.core.table.rules.impl;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.zml.core.table.model.transaction;
 
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.filter.filters.interval.IntervalFilter;
-import org.kalypso.repository.IDataSourceItem;
-import org.kalypso.zml.core.KalypsoZmlCore;
-import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.core.table.rules.AbstractZmlCellRuleImplementation;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlRuleIntervalValue extends AbstractZmlCellRuleImplementation
+public class CopyValueReferenceCommand implements IZmlModelUpdateCommand
 {
-  public static final String ID = "org.kalypso.zml.ui.core.rule.value.interval"; //$NON-NLS-1$
+  private final IZmlValueReference m_source;
 
-  @Override
-  public String getIdentifier( )
+  private final IZmlValueReference m_target;
+
+  public CopyValueReferenceCommand( final IZmlValueReference source, final IZmlValueReference target )
   {
-    return ID;
+    m_source = source;
+    m_target = target;
   }
 
   @Override
-  protected boolean doApply( final ZmlCellRule rule, final IZmlValueReference reference )
+  public IZmlValueReference getTarget( )
   {
-    try
-    {
-      final IZmlModelColumn column = reference.getColumn();
-      if( column == null )
-        return false;
-
-      final String dataSource = reference.getDataSource();
-      if( dataSource == null )
-        return false;
-
-      if( dataSource.startsWith( IDataSourceItem.FILTER_SOURCE ) )
-        return dataSource.contains( IntervalFilter.FILTER_ID );
-    }
-    catch( final SensorException e )
-    {
-      KalypsoZmlCore.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-    }
-
-    return false;
+    return m_target;
   }
+
+  @Override
+  public Number getValue( ) throws SensorException
+  {
+    return m_source.getValue();
+  }
+
+  @Override
+  public String getDataSource( ) throws SensorException
+  {
+    return m_source.getDataSource();
+  }
+
+  @Override
+  public Integer getStatus( ) throws SensorException
+  {
+    return m_source.getStatus();
+  }
+
 }

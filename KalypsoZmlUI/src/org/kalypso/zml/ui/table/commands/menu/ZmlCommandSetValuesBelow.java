@@ -52,7 +52,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.repository.IDataSourceItem;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.interpolation.ZmlInterpolationWorker;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
@@ -85,7 +85,7 @@ public class ZmlCommandSetValuesBelow extends AbstractHandler
       final IZmlEditingStrategy strategy = column.getEditingStrategy();
       if( strategy.isAggregated() )
       {
-        final ZmlLabelProvider provider = new ZmlLabelProvider( active.getRow().getModelRow(), column, new ZmlRule[] {} );
+        final ZmlLabelProvider provider = new ZmlLabelProvider( active.getRow().getModelRow(), column, new ZmlCellRule[] {} );
         final String targetValue = provider.getText();
 
         IZmlTableCell ptr = active.findNextCell();
@@ -123,7 +123,7 @@ public class ZmlCommandSetValuesBelow extends AbstractHandler
       try
       {
         /**
-         * reinterpolate complete observation because of table view filter (like 12h view, stueztstellen ansicht, etc)
+         * re-interpolate complete observation because of table view filter (like 12h view, stueztstellen view, etc)
          */
         final IObservation observation = column.getModelColumn().getObservation();
         final ZmlInterpolationWorker interpolationWorker = new ZmlInterpolationWorker( observation );

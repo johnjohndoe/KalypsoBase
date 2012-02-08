@@ -47,7 +47,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 
@@ -69,13 +69,14 @@ public class DebugZmlModelContentProvider extends ArrayTreeContentProvider
       children.add( column.getDataColumn().getType() );
       children.add( column.getIndexAxis() );
       children.add( column.getValueAxis() );
-      CollectionUtils.addAll( children, column.getDataColumn().getRules() );
+      CollectionUtils.addAll( children, column.getDataColumn().getColumnRules() );
+      CollectionUtils.addAll( children, column.getDataColumn().getCellRules() );
 
       return children.toArray();
     }
-    else if( parentElement instanceof ZmlRule )
+    else if( parentElement instanceof ZmlCellRule )
     {
-      final ZmlRule rule = (ZmlRule) parentElement;
+      final ZmlCellRule rule = (ZmlCellRule) parentElement;
       return rule.getInstructions();
     }
     else if( parentElement instanceof IZmlTableColumn )
@@ -98,9 +99,9 @@ public class DebugZmlModelContentProvider extends ArrayTreeContentProvider
   {
     if( element instanceof IZmlModelColumn )
       return true;
-    else if( element instanceof ZmlRule )
+    else if( element instanceof ZmlCellRule )
     {
-      final ZmlRule rule = (ZmlRule) element;
+      final ZmlCellRule rule = (ZmlCellRule) element;
 
       return ArrayUtils.isNotEmpty( rule.getInstructions() );
     }

@@ -1,3 +1,5 @@
+package org.kalypso.zml.core.table.binding.rule;
+
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -5,7 +7,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraﬂe 22
+ *  Denickestra√üe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -38,48 +40,76 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider;
 
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.binding.CellStyle;
+import org.kalypso.zml.core.table.binding.ZmlStyleResolver;
+import org.kalypso.zml.core.table.schema.AbstractRuleType;
+import org.kalypso.zml.core.table.schema.StyleReferenceType;
 
 /**
+ * ZmlRuleType binding class
+ * 
  * @author Dirk Kuch
  */
-public class AppliedRule
+public abstract class AbstractZmlRule
 {
-  private final CellStyle m_style;
+  private final AbstractRuleType m_rule;
 
-  private final String m_label;
+  private CellStyle m_baseStyle;
 
-  private final Double m_severity;
+  private boolean m_enabled;
 
-  private final boolean m_headerIcon;
-
-  public AppliedRule( final CellStyle style, final String label, final Double severity, final boolean headerIcon )
+  public AbstractZmlRule( final AbstractRuleType rule )
   {
-    m_style = style;
-    m_label = label;
-    m_severity = severity;
-    m_headerIcon = headerIcon;
+    m_rule = rule;
+    setEnabled( rule.isEnabled() );
   }
 
-  public Double getSeverity( )
+  public CellStyle getBaseStyle( ) throws CoreException
   {
-    return m_severity;
+    if( Objects.isNull( m_baseStyle ) )
+    {
+      final ZmlStyleResolver resolver = ZmlStyleResolver.getInstance();
+      final StyleReferenceType styleReference = m_rule.getStyleReference();
+      m_baseStyle = resolver.findStyle( styleReference );
+    }
+
+    return m_baseStyle;
   }
 
-  public CellStyle getCellStyle( )
+  @Override
+  public String toString( )
   {
-    return m_style;
+    return m_rule.getRuleReference();
   }
 
-  public String getLabel( )
+  public boolean isEnabled( )
   {
-    return m_label;
+    return m_enabled;
   }
 
-  public boolean hasHeaderIcon( )
+  public void setEnabled( final boolean enabled )
   {
-    return m_headerIcon;
+    m_enabled = enabled;
   }
+
+  public CellStyle getPlainStyle( ) throws CoreException
+  {
+    final ZmlStyleResolver resolver = ZmlStyleResolver.getInstance();
+
+    return resolver.findStyle( m_rule.getStyleReference() );
+  }
+
+  public String getIdentifier( )
+  {
+    return m_rule.getId();
+  }
+
+  public AbstractRuleType getRuleType( )
+  {
+    return m_rule;
+  }
+
 }

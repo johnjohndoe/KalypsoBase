@@ -46,14 +46,14 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.KalypsoZmlCore;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.core.table.rules.AbstractZmlTableRule;
+import org.kalypso.zml.core.table.rules.AbstractZmlCellRuleImplementation;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlRuleUserModified extends AbstractZmlTableRule
+public class ZmlRuleUserModified extends AbstractZmlCellRuleImplementation
 {
   public static final String ID = "org.kalypso.zml.ui.core.rule.user.modified"; //$NON-NLS-1$
 
@@ -63,9 +63,8 @@ public class ZmlRuleUserModified extends AbstractZmlTableRule
     return ID;
   }
 
-  @SuppressWarnings("deprecation")
   @Override
-  protected boolean doApply( final ZmlRule rule, final IZmlValueReference reference )
+  protected boolean doApply( final ZmlCellRule rule, final IZmlValueReference reference )
   {
     try
     {
