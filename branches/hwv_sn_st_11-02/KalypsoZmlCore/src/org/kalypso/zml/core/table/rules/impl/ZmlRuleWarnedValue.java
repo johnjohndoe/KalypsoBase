@@ -46,15 +46,15 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.zml.core.KalypsoZmlCore;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.core.table.rules.AbstractZmlTableRule;
+import org.kalypso.zml.core.table.rules.AbstractZmlCellRuleImplementation;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlRuleWarnedValue extends AbstractZmlTableRule
+public class ZmlRuleWarnedValue extends AbstractZmlCellRuleImplementation
 {
   public static final String ID = "org.kalypso.zml.ui.core.rule.warned.value"; //$NON-NLS-1$
 
@@ -65,7 +65,7 @@ public class ZmlRuleWarnedValue extends AbstractZmlTableRule
   }
 
   @Override
-  protected boolean doApply( final ZmlRule rule, final IZmlValueReference reference )
+  protected boolean doApply( final ZmlCellRule rule, final IZmlValueReference reference )
   {
     try
     {

@@ -48,7 +48,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.lang.Arrays;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
@@ -93,7 +93,7 @@ public class ZmlCommandCopyValue extends AbstractHandler
           if( !column.isVisible() )
             continue;
 
-          final ZmlLabelProvider provider = new ZmlLabelProvider( row.getModelRow(), column, new ZmlRule[] {} );
+          final ZmlLabelProvider provider = new ZmlLabelProvider( row.getModelRow(), column, new ZmlCellRule[] {} );
           buffer.append( provider.getText() );
 
 // if( column.isIndexColumn() )

@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Event;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.zml.core.table.binding.CellStyle;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.schema.AlignmentType;
@@ -79,7 +79,7 @@ public class ZmlTableCellPainter
 
   private Font m_font;
 
-  private final ZmlRule[] m_activeRules;
+  private final ZmlCellRule[] m_activeRules;
 
   private Point m_ptr;
 
@@ -163,7 +163,7 @@ public class ZmlTableCellPainter
       return m_images;
 
     final List<Image> images = new ArrayList<Image>();
-    for( final ZmlRule rule : m_activeRules )
+    for( final ZmlCellRule rule : m_activeRules )
     {
       try
       {

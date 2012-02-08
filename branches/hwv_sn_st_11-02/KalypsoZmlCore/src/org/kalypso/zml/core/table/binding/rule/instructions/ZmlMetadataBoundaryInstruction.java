@@ -51,7 +51,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataBoundary;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
-import org.kalypso.zml.core.KalypsoZmlCore;
+import org.kalypso.zml.core.KalypsoZmlCoreExtensions;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.rules.impl.grenzwert.IZmlGrenzwertValue;
@@ -131,7 +131,7 @@ public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionTy
       return boundary;
     }
 
-    final IZmlGrenzwertValue delegate = KalypsoZmlCore.getDefault().findGrenzwertDelegate( propertyExtensionPoint );
+    final IZmlGrenzwertValue delegate = KalypsoZmlCoreExtensions.getInstance().findGrenzwertDelegate( propertyExtensionPoint );
     if( Objects.isNull( delegate ) )
       return null;
 

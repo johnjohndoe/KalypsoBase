@@ -46,21 +46,18 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilter;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.KalypsoZmlCore;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.core.table.rules.AbstractZmlTableRule;
+import org.kalypso.zml.core.table.rules.AbstractZmlCellRuleImplementation;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlRuleInterpolatedValue extends AbstractZmlTableRule
+public class ZmlRuleInterpolatedValue extends AbstractZmlCellRuleImplementation
 {
   public static final String ID = "org.kalypso.zml.ui.core.rule.value.interpolated"; //$NON-NLS-1$
 
-  /**
-   * @see org.kalypso.zml.ui.core.rules.IZmlTableRule#getIdentifier()
-   */
   @Override
   public String getIdentifier( )
   {
@@ -68,7 +65,7 @@ public class ZmlRuleInterpolatedValue extends AbstractZmlTableRule
   }
 
   @Override
-  protected boolean doApply( final ZmlRule rule, final IZmlValueReference reference )
+  protected boolean doApply( final ZmlCellRule rule, final IZmlValueReference reference )
   {
     try
     {

@@ -50,7 +50,7 @@ import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.DataColumn;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
@@ -152,11 +152,11 @@ public class ZmlTableColumn extends AbstractZmlTableColumn
     if( m_lastRow == row )
       return m_lastCellStyle;
 
-    final ZmlRule[] rules = findActiveRules( row );
+    final ZmlCellRule[] rules = findActiveRules( row );
     if( ArrayUtils.isNotEmpty( rules ) )
     {
       CellStyleType baseType = getColumnType().getDefaultStyle().getType();
-      for( final ZmlRule rule : rules )
+      for( final ZmlCellRule rule : rules )
       {
         final CellStyle style = rule.getStyle( row, getColumnType() );
         baseType = CellStyle.merge( baseType, style.getType() );
@@ -174,7 +174,7 @@ public class ZmlTableColumn extends AbstractZmlTableColumn
     return m_lastCellStyle;
   }
 
-  public ZmlRule[] findActiveRules( final IZmlModelRow row )
+  public ZmlCellRule[] findActiveRules( final IZmlModelRow row )
   {
     final int resolution = getTable().getResolution();
 
@@ -194,16 +194,16 @@ public class ZmlTableColumn extends AbstractZmlTableColumn
 
   }
 
-  private ZmlRule[] findSimpleActiveRules( final IZmlModelRow row )
+  private ZmlCellRule[] findSimpleActiveRules( final IZmlModelRow row )
   {
     final IZmlValueReference reference = row.get( getColumnType().getType() );
     if( Objects.isNull( reference ) )
-      return new ZmlRule[] {};
+      return new ZmlCellRule[] {};
 
     return m_mapper.findActiveRules( reference );
   }
 
-  private ZmlRule[] findAggregatedActiveRules( final IZmlModelRow row )
+  private ZmlCellRule[] findAggregatedActiveRules( final IZmlModelRow row )
   {
     final IZmlTableCell current = findCell( row );
     final IZmlTableCell previous = current.findPreviousCell();
@@ -225,7 +225,7 @@ public class ZmlTableColumn extends AbstractZmlTableColumn
 
     final IZmlValueReference currentReference = current.getValueReference();
     if( Objects.isNull( previousReference, currentReference ) )
-      return new ZmlRule[] {};
+      return new ZmlCellRule[] {};
 
     try
     {
@@ -240,7 +240,7 @@ public class ZmlTableColumn extends AbstractZmlTableColumn
       e.printStackTrace();
     }
 
-    return new ZmlRule[] {};
+    return new ZmlCellRule[] {};
   }
 
   @Override

@@ -1,5 +1,3 @@
-package org.kalypso.zml.core.table.rules;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -40,62 +38,30 @@ package org.kalypso.zml.core.table.rules;
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.zml.core.table.rules;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.binding.CellStyle;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 
 /**
  * @author Dirk Kuch
  */
-public abstract class AbstractZmlTableRule implements IZmlRuleImplementation
+public interface IZmlCellRuleImplementation
 {
-  @SuppressWarnings("unused")
-  @Override
-  public String update( final ZmlRule rule, final IZmlValueReference reference, final String text ) throws SensorException
-  {
-    return text;
-  }
+  String EXTENSION_POINT_ID = "org.kalypso.zml.core.tableCellRule"; //$NON-NLS-1$
 
-  @Override
-  public final boolean apply( final ZmlRule rule, final IZmlValueReference reference )
-  {
-    try
-    {
-      if( reference == null )
-        return false;
+  boolean apply( ZmlCellRule rule, IZmlValueReference reference );
 
-      if( !rule.isEnabled() )
-        return false;
+  String getIdentifier( );
 
-      return doApply( rule, reference );
-    }
-    catch( final Throwable t )
-    {
-      t.printStackTrace();
-      return false;
-    }
-  }
+  String update( ZmlCellRule rule, final IZmlValueReference reference, String text ) throws SensorException;
 
-  protected abstract boolean doApply( ZmlRule rule, IZmlValueReference reference );
+  CellStyle getCellStyle( ZmlCellRule rule, IZmlValueReference reference ) throws CoreException;
 
-  @Override
-  public CellStyle getCellStyle( final ZmlRule rule, final IZmlValueReference reference ) throws CoreException
-  {
-    return rule.getPlainStyle();
-  }
+  String getLabel( ZmlCellRule rule, IZmlValueReference reference );
 
-  @Override
-  public String getLabel( final ZmlRule rule, final IZmlValueReference reference )
-  {
-    return rule.getRuleType().getLabel();
-  }
-
-  @Override
-  public Double getSeverity( final ZmlRule rule, final IZmlValueReference reference )
-  {
-    return 1.0;
-  }
+  Double getSeverity( ZmlCellRule rule, IZmlValueReference reference );
 }

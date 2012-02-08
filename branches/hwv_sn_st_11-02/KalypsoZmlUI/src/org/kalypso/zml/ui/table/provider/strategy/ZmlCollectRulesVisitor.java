@@ -44,7 +44,7 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 import org.kalypso.zml.ui.table.provider.RuleMapper;
@@ -54,7 +54,7 @@ import org.kalypso.zml.ui.table.provider.RuleMapper;
  */
 public class ZmlCollectRulesVisitor implements IZmlModelColumnVisitor
 {
-  private final Set<ZmlRule> m_rules = new LinkedHashSet<ZmlRule>();
+  private final Set<ZmlCellRule> m_rules = new LinkedHashSet<ZmlCellRule>();
 
   private final RuleMapper m_mapper;
 
@@ -69,9 +69,9 @@ public class ZmlCollectRulesVisitor implements IZmlModelColumnVisitor
     Collections.addAll( m_rules, m_mapper.findActiveRules( reference ) );
   }
 
-  public ZmlRule[] getRules( )
+  public ZmlCellRule[] getRules( )
   {
-    return m_rules.toArray( new ZmlRule[] {} );
+    return m_rules.toArray( new ZmlCellRule[] {} );
   }
 
 }

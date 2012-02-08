@@ -59,7 +59,9 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.zml.core.table.ZmlTableConfigurationLoader;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.kalypso.zml.core.table.binding.rule.AbstractZmlRule;
+import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
+import org.kalypso.zml.core.table.schema.ColumnRuleType;
 import org.kalypso.zml.core.table.schema.RuleRefernceType;
 import org.kalypso.zml.core.table.schema.RuleSetType;
 import org.kalypso.zml.core.table.schema.RuleType;
@@ -74,7 +76,7 @@ public final class ZmlRuleResolver
 {
   private final Map<String, List<ZmlRuleSet>> m_ruleSetCache;
 
-  private final Map<String, ZmlRule> m_ruleCache;
+  private final Map<String, AbstractZmlRule> m_ruleCache;
 
   private static ZmlRuleResolver INSTANCE;
 
@@ -93,25 +95,27 @@ public final class ZmlRuleResolver
     return INSTANCE;
   }
 
-  public ZmlRule findRule( final URL context, final RuleRefernceType reference ) throws CoreException
+  public AbstractZmlRule findRule( final URL context, final RuleRefernceType reference ) throws CoreException
   {
     try
     {
       final Object ref = reference.getReference();
       if( ref instanceof RuleType )
-        return new ZmlRule( (RuleType) ref );
+        return new ZmlCellRule( (RuleType) ref );
+      else if( ref instanceof ColumnRuleType )
+        throw new UnsupportedOperationException();
 
       final String url = reference.getUrl();
       if( url != null )
       {
-        final ZmlRule cached = getCachedRule( url );
+        final AbstractZmlRule cached = getCachedRule( url );
         if( cached != null )
           return cached;
 
         final String plainUrl = getUrl( url );
         final String identifier = getAnchor( url );
 
-        ZmlRule rule;
+        AbstractZmlRule rule;
         if( plainUrl.startsWith( "urn:" ) )
           rule = findUrnRule( context, plainUrl, identifier );
         else
@@ -131,14 +135,14 @@ public final class ZmlRuleResolver
     throw new IllegalStateException();
   }
 
-  private ZmlRule getCachedRule( final String url )
+  private AbstractZmlRule getCachedRule( final String url )
   {
     // FIXME: we should consider a timeout based on the modification timestamp of the underlying resource here
     // Else, the referenced resource will never be loaded again, even if it has changed meanwhile
     return m_ruleCache.get( url );
   }
 
-  private ZmlRule findUrlRule( final URL context, final String uri, final String identifier ) throws MalformedURLException, JAXBException
+  private AbstractZmlRule findUrlRule( final URL context, final String uri, final String identifier ) throws MalformedURLException, JAXBException
   {
     final URL absoluteUri = new URL( context, uri );
 
@@ -160,7 +164,7 @@ public final class ZmlRuleResolver
 
     for( final ZmlRuleSet ruleSet : ruleSets )
     {
-      final ZmlRule rule = ruleSet.find( identifier );
+      final AbstractZmlRule rule = ruleSet.find( identifier );
       if( rule != null )
         return rule;
     }
@@ -168,7 +172,7 @@ public final class ZmlRuleResolver
     return null;
   }
 
-  private ZmlRule findUrnRule( final URL context, final String urn, final String identifier ) throws MalformedURLException, JAXBException
+  private AbstractZmlRule findUrnRule( final URL context, final String urn, final String identifier ) throws MalformedURLException, JAXBException
   {
     final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
     final String uri = baseCatalog.resolve( urn, urn );

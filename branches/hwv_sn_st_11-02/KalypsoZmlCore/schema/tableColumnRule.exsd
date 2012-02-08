@@ -3,7 +3,7 @@
 <schema targetNamespace="org.kalypso.zml.core" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="org.kalypso.zml.core" id="tableRule" name="tableRule"/>
+         <meta.schema plugin="org.kalypso.zml.core" id="tableColumnRule" name="tableColumnRule"/>
       </appinfo>
       <documentation>
          [Enter description of this extension point.]
@@ -65,7 +65,7 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.kalypso.zml.ui.table.rules.IZmlTableRule"/>
+                  <meta.attribute kind="java" basedOn=":org.kalypso.zml.core.table.rules.IZmlColumnRuleImplementation"/>
                </appinfo>
             </annotation>
          </attribute>

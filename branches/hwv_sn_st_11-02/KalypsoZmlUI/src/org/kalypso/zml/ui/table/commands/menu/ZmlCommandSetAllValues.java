@@ -49,7 +49,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.repository.IDataSourceItem;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.interpolation.ZmlInterpolationWorker;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
@@ -82,7 +82,7 @@ public class ZmlCommandSetAllValues extends AbstractHandler
       final IZmlEditingStrategy strategy = column.getEditingStrategy();
       if( strategy.isAggregated() )
       {
-        final ZmlLabelProvider provider = new ZmlLabelProvider( base.getRow(), column, new ZmlRule[] {} );
+        final ZmlLabelProvider provider = new ZmlLabelProvider( base.getRow(), column, new ZmlCellRule[] {} );
         final String targetValue = provider.getText();
 
         final IZmlTableCell[] visibleCells = column.getCells();

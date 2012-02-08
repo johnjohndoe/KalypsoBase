@@ -48,7 +48,7 @@ import org.kalypso.ogc.sensor.filter.filters.interval.IntervalSourceHandler;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.binding.CellStyle;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
@@ -74,7 +74,7 @@ public class SumValueEditingStrategy extends AbstractEditingStrategy
   {
     try
     {
-      final ZmlLabelProvider provider = new ZmlLabelProvider( row, getColumn(), new ZmlRule[] {} );
+      final ZmlLabelProvider provider = new ZmlLabelProvider( row, getColumn(), new ZmlCellRule[] {} );
       final Object plain = provider.getPlainValue();
       if( Objects.isNull( plain ) )
         return null;

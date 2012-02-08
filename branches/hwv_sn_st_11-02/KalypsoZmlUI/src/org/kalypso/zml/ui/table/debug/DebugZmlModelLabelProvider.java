@@ -46,7 +46,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.TableColumn;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.zml.core.table.binding.BaseColumn;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.kalypso.zml.core.table.binding.rule.AbstractZmlRule;
 import org.kalypso.zml.core.table.binding.rule.instructions.AbstractZmlRuleInstructionType;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
@@ -76,7 +76,7 @@ public class DebugZmlModelLabelProvider extends LabelProvider implements IBaseLa
       return IMG_MODEL_COLUMN;
     else if( element instanceof IAxis )
       return IMG_AXIS;
-    else if( element instanceof ZmlRule )
+    else if( element instanceof AbstractZmlRule )
       return IMG_RULE;
     else if( element instanceof AppliedRule )
       return IMG_RULE;
@@ -111,9 +111,9 @@ public class DebugZmlModelLabelProvider extends LabelProvider implements IBaseLa
 
       return String.format( "Achse: id=%s, label=%s, type=%s", axis.getType(), axis.getName(), axis.getUnit() );
     }
-    else if( element instanceof ZmlRule )
+    else if( element instanceof AbstractZmlRule )
     {
-      final ZmlRule rule = (ZmlRule) element;
+      final AbstractZmlRule rule = (AbstractZmlRule) element;
 
       return String.format( "Regel: %s", rule.getIdentifier() );
     }
