@@ -161,7 +161,7 @@ public class Feature_Impl extends PlatformObject implements Feature
    * Recalculates the bounding box of this feature.<br/>
    * By default the bounding box is calculated by merging all bounding boxes of all contained geometries within this
    * feature.<br/>
-   * Overwrite the change this behaviour.
+   * Overwrite the change this behavior.
    */
   protected GM_Envelope calculateEnv( )
   {
