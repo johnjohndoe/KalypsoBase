@@ -50,7 +50,6 @@ import org.kalypso.observation.phenomenon.IPhenomenon;
  */
 public interface IObservation<T>
 {
-
   QName QNAME_OBSERVATION = new QName( NS.OM, "Observation" );
 
   String getName( );
@@ -73,6 +72,10 @@ public interface IObservation<T>
 
   T getResult( );
 
+  /**
+   * @deprecated Do not use, only for internal useage!
+   */
+  @Deprecated
   void setResult( T values );
 
   void accept( IObservationVisitor visitor );
