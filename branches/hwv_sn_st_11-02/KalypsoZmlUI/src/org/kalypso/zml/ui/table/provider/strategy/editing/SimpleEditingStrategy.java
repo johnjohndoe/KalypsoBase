@@ -49,14 +49,14 @@ import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.model.columns.ZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.ZmlTableValueColumn;
 
 /**
  * @author Dirk Kuch
  */
 public class SimpleEditingStrategy extends AbstractEditingStrategy
 {
-  public SimpleEditingStrategy( final ZmlTableColumn column )
+  public SimpleEditingStrategy( final ZmlTableValueColumn column )
   {
     super( column );
   }

@@ -47,14 +47,14 @@ import java.util.TreeMap;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.zml.core.base.IZmlSourceElement;
-import org.kalypso.zml.core.base.MultipleTsLink;
 import org.kalypso.zml.core.base.IndexedTsLink;
+import org.kalypso.zml.core.base.MultipleTsLink;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.TableTypes;
 import org.kalypso.zml.core.table.model.ZmlModel;
 import org.kalypso.zml.core.table.model.utils.IClonedColumn;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
-import org.kalypso.zml.ui.table.base.helper.ZmlTables;
+import org.kalypso.zml.ui.table.model.columns.ZmlTableColumns;
 
 /**
  * @author Dirk Kuch
@@ -105,7 +105,7 @@ public class ZmlTableUpdater implements Runnable
       final BaseColumn column = (BaseColumn) values[1];
 
       doLoadModelColumn( link );
-      ZmlTables.addTableColumn( m_part.getTable(), column );
+      ZmlTableColumns.addTableColumn( m_part.getTable(), column );
     }
   }
 

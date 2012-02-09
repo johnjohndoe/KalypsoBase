@@ -42,6 +42,7 @@ package org.kalypso.zml.ui.table.model.cells;
 
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableIndexColumn;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
 
@@ -66,6 +67,12 @@ public class ZmlTableIndexCell extends AbstractZmlTableCell implements IZmlTable
   public IZmlModelCell getValueReference( )
   {
     return getRow().getModelCell( getColumn() );
+  }
+
+  @Override
+  public IZmlTableIndexColumn getColumn( )
+  {
+    return (IZmlTableIndexColumn) super.getColumn();
   }
 
 }

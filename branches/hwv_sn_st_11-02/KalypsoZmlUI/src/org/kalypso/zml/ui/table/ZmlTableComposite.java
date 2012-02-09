@@ -68,13 +68,11 @@ import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 import org.kalypso.zml.ui.debug.KalypsoZmlUiDebug;
-import org.kalypso.zml.ui.table.base.helper.ZmlTables;
 import org.kalypso.zml.ui.table.focus.IZmlTableFocusHandler;
 import org.kalypso.zml.ui.table.focus.ZmlTableFocusCellHandler;
 import org.kalypso.zml.ui.table.layout.ZmlTableLayoutHandler;
 import org.kalypso.zml.ui.table.layout.ZmlTablePager;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
-import org.kalypso.zml.ui.table.model.columns.ZmlTableColumn;
 import org.kalypso.zml.ui.table.model.columns.ZmlTableColumns;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
@@ -88,7 +86,7 @@ public class ZmlTableComposite extends Composite implements IZmlTable
 {
   private static final MutexRule MUTEX_TABLE_UPDATE = new MutexRule( "Aktualisiere Tabelle" ); // $NON-NLS-1$
 
-  protected final Set<ZmlTableColumn> m_columns = new LinkedHashSet<ZmlTableColumn>();
+  protected final Set<IZmlTableColumn> m_columns = new LinkedHashSet<IZmlTableColumn>();
 
   private UIJob m_updateJob;
 
@@ -259,10 +257,10 @@ public class ZmlTableComposite extends Composite implements IZmlTable
   {
     synchronized( this )
     {
-      final IZmlModelColumn[] missing = ZmlTables.findMissingColumns( this, m_model.getColumns() );
+      final IZmlModelColumn[] missing = ZmlTableColumns.findMissingColumns( this, m_model.getColumns() );
       for( final IZmlModelColumn column : missing )
       {
-        ZmlTables.addTableColumn( this, column.getDataColumn() );
+        ZmlTableColumns.addTableColumn( this, column.getDataColumn() );
       }
     }
   }
@@ -278,15 +276,15 @@ public class ZmlTableComposite extends Composite implements IZmlTable
   }
 
   @Override
-  public ZmlTableColumn[] getColumns( )
+  public IZmlTableColumn[] getColumns( )
   {
-    return m_columns.toArray( new ZmlTableColumn[] {} );
+    return m_columns.toArray( new IZmlTableColumn[] {} );
   }
 
   @Override
   public void accept( final IZmlTableColumnVisitor visitor )
   {
-    for( final ZmlTableColumn column : getColumns() )
+    for( final IZmlTableColumn column : getColumns() )
     {
       visitor.visit( column );
     }
@@ -361,8 +359,9 @@ public class ZmlTableComposite extends Composite implements IZmlTable
   @Override
   public IZmlTableColumn findColumn( final int columnIndex )
   {
-    for( final ZmlTableColumn column : m_columns )
+    for( final IZmlTableColumn column : m_columns )
     {
+
       if( column.getTableColumnIndex() == columnIndex )
         return column;
     }
@@ -371,7 +370,7 @@ public class ZmlTableComposite extends Composite implements IZmlTable
   }
 
   @Override
-  public void add( final ZmlTableColumn column )
+  public void add( final IZmlTableColumn column )
   {
     m_columns.add( column );
   }

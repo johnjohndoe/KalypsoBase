@@ -51,6 +51,8 @@ import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.rules.IZmlCellRuleImplementation;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableIndexColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableValueColumn;
 import org.kalypso.zml.ui.table.provider.strategy.labeling.IZmlLabelStrategy;
 
 /**
@@ -160,11 +162,26 @@ public class ZmlLabelProvider
 
   public String getText( ) throws SensorException, CoreException
   {
-    final IZmlLabelStrategy strategy = m_column.getLabelingStrategy();
-    if( strategy == null )
-      return ""; //$NON-NLS-1$
+    if( m_column instanceof IZmlTableValueColumn )
+    {
+      final IZmlTableValueColumn column = (IZmlTableValueColumn) m_column;
+      final IZmlLabelStrategy strategy = column.getLabelingStrategy();
+      if( Objects.isNull( strategy ) )
+        return "";
 
-    return strategy.getText( m_row );
+      return strategy.getText( m_row );
+    }
+    else if( m_column instanceof IZmlTableIndexColumn )
+    {
+      final IZmlTableIndexColumn column = (IZmlTableIndexColumn) m_column;
+      final IZmlLabelStrategy strategy = column.getLabelingStrategy();
+      if( Objects.isNull( strategy ) )
+        return "";
+
+      return strategy.getText( m_row );
+    }
+
+    throw new UnsupportedOperationException();
   }
 
   public Object getPlainValue( ) throws SensorException

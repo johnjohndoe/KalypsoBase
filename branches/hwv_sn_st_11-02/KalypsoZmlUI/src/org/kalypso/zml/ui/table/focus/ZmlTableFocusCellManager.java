@@ -6,9 +6,9 @@ import org.eclipse.jface.viewers.TableViewerFocusCellManager;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.base.helper.ZmlTables;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.ZmlTableColumns;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
 
 /**
@@ -30,7 +30,7 @@ public final class ZmlTableFocusCellManager extends TableViewerFocusCellManager
     if( Objects.isNull( cell ) )
       return null;
 
-    final IZmlTableValueRow row = ZmlTables.toTableRow( m_table, cell );
+    final IZmlTableValueRow row = ZmlTableColumns.toTableRow( cell );
     final IZmlTableColumn column = m_table.findColumn( cell.getColumnIndex() );
     if( Objects.isNull( row, column ) )
       return null;

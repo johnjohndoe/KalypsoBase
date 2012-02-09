@@ -57,6 +57,7 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableIndexColumn;
 import org.kalypso.zml.ui.table.provider.AppliedRule;
 import org.kalypso.zml.ui.table.provider.ZmlTableImage;
 import org.kalypso.zml.ui.table.provider.ZmlTableImageMerger;
@@ -70,10 +71,8 @@ public class PackTableColumnVisitor extends AbstractTableColumnPackVisitor
   @Override
   public void visit( final IZmlTableColumn column )
   {
-    if( column.isIndexColumn() )
-    {
+    if( column instanceof IZmlTableIndexColumn )
       return;
-    }
 
     final BaseColumn columnType = column.getColumnType();
     final TableViewerColumn tableViewerColumn = column.getTableViewerColumn();

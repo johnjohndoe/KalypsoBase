@@ -49,6 +49,7 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableValueColumn;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableHeaderRow;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
@@ -89,6 +90,12 @@ public class ZmlTableValueCell extends AbstractZmlTableCell implements IZmlTable
   public IZmlModelValueCell getValueReference( )
   {
     return (IZmlModelValueCell) getRow().getModelCell( getColumn() );
+  }
+
+  @Override
+  public IZmlTableValueColumn getColumn( )
+  {
+    return (IZmlTableValueColumn) super.getColumn();
   }
 
   @Override

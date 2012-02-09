@@ -1,0 +1,169 @@
+/*----------------    FILE HEADER KALYPSO ------------------------------------------
+ *
+ *  This file is part of kalypso.
+ *  Copyright (C) 2004 by:
+ *
+ *  Technical University Hamburg-Harburg (TUHH)
+ *  Institute of River and coastal engineering
+ *  Denickestraße 22
+ *  21073 Hamburg, Germany
+ *  http://www.tuhh.de/wb
+ *
+ *  and
+ *
+ *  Bjoernsen Consulting Engineers (BCE)
+ *  Maria Trost 3
+ *  56070 Koblenz, Germany
+ *  http://www.bjoernsen.de
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  Contact:
+ *
+ *  E-Mail:
+ *  belger@bjoernsen.de
+ *  schlienger@bjoernsen.de
+ *  v.doemming@tuhh.de
+ *
+ *  ---------------------------------------------------------------------------*/
+package org.kalypso.zml.ui.table.model.columns;
+
+import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.viewers.TableViewerColumn;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.zml.core.table.binding.BaseColumn;
+import org.kalypso.zml.core.table.binding.CellStyle;
+import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
+import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.core.table.schema.CellStyleType;
+import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableIndexCell;
+import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
+import org.kalypso.zml.ui.table.model.visitors.FindTableRowVisitor;
+import org.kalypso.zml.ui.table.provider.AppliedRule;
+import org.kalypso.zml.ui.table.provider.RuleMapper;
+import org.kalypso.zml.ui.table.provider.strategy.labeling.IZmlLabelStrategy;
+import org.kalypso.zml.ui.table.provider.strategy.labeling.IndexValueLabelingStrategy;
+
+/**
+ * @author Dirk Kuch
+ */
+public class ZmlTableIndexColumn extends AbstractZmlTableColumn implements IZmlTableIndexColumn
+{
+  private final RuleMapper m_mapper;
+
+  private CellStyle m_lastCellStyle;
+
+  private IZmlModelRow m_lastRow;
+
+  private final IZmlLabelStrategy m_labeling = new IndexValueLabelingStrategy( this );
+
+  public ZmlTableIndexColumn( final IZmlTable table, final TableViewerColumn column, final BaseColumn type, final int tableColumnIndex )
+  {
+    super( table, column, type, tableColumnIndex );
+
+    m_mapper = new RuleMapper( table, type );
+  }
+
+  @Override
+  public IZmlTableIndexCell findCell( final IZmlModelRow row )
+  {
+    final FindTableRowVisitor visitor = new FindTableRowVisitor( row );
+    getTable().accept( visitor );
+
+    final IZmlTableRow tableRow = visitor.getRow();
+    if( Objects.isNull( tableRow ) )
+      return null;
+
+    return (IZmlTableIndexCell) tableRow.getCell( this );
+  }
+
+  @Override
+  public CellStyle findStyle( final IZmlModelRow row ) throws CoreException
+  {
+    if( m_lastRow == row )
+      return m_lastCellStyle;
+
+    final ZmlCellRule[] rules = findActiveRules( row );
+    if( ArrayUtils.isNotEmpty( rules ) )
+    {
+      CellStyleType baseType = getColumnType().getDefaultStyle().getType();
+      for( final ZmlCellRule rule : rules )
+      {
+        final CellStyle style = rule.getStyle( row, getColumnType() );
+        baseType = CellStyle.merge( baseType, style.getType() );
+      }
+
+      m_lastCellStyle = new CellStyle( baseType );
+    }
+    else
+    {
+      m_lastCellStyle = getColumnType().getDefaultStyle();
+    }
+
+    m_lastRow = row;
+
+    return m_lastCellStyle;
+  }
+
+  @Override
+  public boolean isVisible( )
+  {
+    return true;
+  }
+
+  @Override
+  public ZmlCellRule[] findActiveRules( final IZmlModelRow row )
+  {
+    return findSimpleActiveRules( row );
+  }
+
+  private ZmlCellRule[] findSimpleActiveRules( final IZmlModelRow row )
+  {
+    final IZmlModelCell reference = row.get( getColumnType().getType() );
+    if( Objects.isNull( reference ) )
+      return new ZmlCellRule[] {};
+
+    return m_mapper.findActiveRules( reference );
+  }
+
+  @Override
+  public void reset( )
+  {
+    super.reset();
+
+    m_mapper.reset();
+  }
+
+  @Override
+  public AppliedRule[] getAppliedRules( )
+  {
+    return m_mapper.getAppliedRules();
+  }
+
+  @Override
+  public String toString( )
+  {
+    return String.format( "id: %s, label: %s", getColumnType().getIdentifier(), getTableViewerColumn().getColumn().getText() );
+  }
+
+  @Override
+  public IZmlLabelStrategy getLabelingStrategy( )
+  {
+    return m_labeling;
+  }
+}

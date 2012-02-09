@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table;
+package org.kalypso.zml.ui.table.model.columns;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -51,22 +51,21 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.TableTypes;
-import org.kalypso.zml.core.table.schema.DataColumnType;
+import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.focus.ZmlTableEditingSupport;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.columns.ZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.ZmlTooltipProvider;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableColumnBuilder implements ICoreRunnableWithProgress
+public class ZmlTableValueColumnBuilder implements ICoreRunnableWithProgress
 {
   protected final IZmlTable m_table;
 
   private final BaseColumn m_column;
 
-  public ZmlTableColumnBuilder( final IZmlTable table, final BaseColumn column )
+  public ZmlTableValueColumnBuilder( final IZmlTable table, final BaseColumn column )
   {
     m_table = table;
     m_column = column;
@@ -79,14 +78,14 @@ public class ZmlTableColumnBuilder implements ICoreRunnableWithProgress
     final int index = viewer.getTable().getColumnCount();
     final TableViewerColumn viewerColumn = new TableViewerColumn( viewer, TableTypes.toSWT( m_column.getAlignment() ) );
 
-    final ZmlTableColumn column = new ZmlTableColumn( m_table, viewerColumn, m_column, index );
+    final ZmlTableValueColumn column = new ZmlTableValueColumn( m_table, viewerColumn, m_column, index );
     m_table.add( column );
 
     viewerColumn.setLabelProvider( new ZmlTooltipProvider( column ) );
     viewerColumn.getColumn().setText( m_column.getLabel() );
 
     /** edit support */
-    if( m_column.getType() instanceof DataColumnType && m_column.isEditable() )
+    if( m_column.isEditable() )
     {
       final ZmlTableEditingSupport editingSupport = new ZmlTableEditingSupport( column, m_table.getFocusHandler() );
       column.setEditingSupport( editingSupport );

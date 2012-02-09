@@ -62,6 +62,7 @@ import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableColumnVisitor;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableValueColumn;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
@@ -99,7 +100,7 @@ public class ZmlCommandHideColumns extends AbstractHandler implements IElementUp
           @Override
           public void visit( final IZmlTableColumn column )
           {
-            if( column.isIndexColumn() )
+            if( !(column instanceof IZmlTableValueColumn) )
               return;
 
             final IZmlModelColumn modelColumn = column.getModelColumn();
@@ -113,7 +114,7 @@ public class ZmlCommandHideColumns extends AbstractHandler implements IElementUp
 
             if( ArrayUtils.contains( columnTypes, columnTypeId ) )
             {
-              column.setVisible( !hide );
+              ((IZmlTableValueColumn) column).setVisible( !hide );
             }
           }
         } );

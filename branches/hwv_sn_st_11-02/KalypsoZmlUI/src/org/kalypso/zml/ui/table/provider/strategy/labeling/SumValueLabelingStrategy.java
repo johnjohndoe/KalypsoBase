@@ -53,7 +53,8 @@ import org.kalypso.zml.core.table.rules.IZmlCellRuleImplementation;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
-import org.kalypso.zml.ui.table.model.columns.ZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableValueColumn;
+import org.kalypso.zml.ui.table.model.columns.ZmlTableValueColumn;
 
 /**
  * @author Dirk Kuch
@@ -61,7 +62,7 @@ import org.kalypso.zml.ui.table.model.columns.ZmlTableColumn;
 public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy implements IZmlLabelStrategy
 {
 
-  public SumValueLabelingStrategy( final ZmlTableColumn column )
+  public SumValueLabelingStrategy( final ZmlTableValueColumn column )
   {
     super( column );
   }
@@ -79,12 +80,18 @@ public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy impl
     return getAsAggregatedValue( row );
   }
 
+  @Override
+  protected IZmlTableValueColumn getColumn( )
+  {
+    return (IZmlTableValueColumn) super.getColumn();
+  }
+
   private String getAsAggregatedValue( final IZmlModelRow row ) throws CoreException, SensorException
   {
-    final ZmlTableColumn column = getColumn();
+    final IZmlTableValueColumn column = getColumn();
 
     final IZmlTableValueCell current = (IZmlTableValueCell) column.findCell( row );
-    final IZmlTableValueCell previous = (IZmlTableValueCell) current.findPreviousCell();
+    final IZmlTableValueCell previous = current.findPreviousCell();
 
     final IZmlModelValueCell previousReference;
     if( previous == null )
