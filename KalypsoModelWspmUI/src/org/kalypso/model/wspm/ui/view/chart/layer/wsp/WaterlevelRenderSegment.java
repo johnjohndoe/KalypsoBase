@@ -62,6 +62,7 @@ import de.openali.odysseus.chart.framework.model.style.IFill;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
+import de.openali.odysseus.chart.framework.util.FigureUtilities;
 
 /**
  * @author Gernot Belger
@@ -90,8 +91,7 @@ public class WaterlevelRenderSegment
   Point[] getScreenLine( final ICoordinateMapper coordinateMapper )
   {
     final Coordinate[] lineCoords = new Coordinate[] { m_line.getCoordinate( 0 ), m_line.getCoordinate( 1 ) };
-    final Point[] line = numericToScreen( coordinateMapper, lineCoords );
-    return line;
+    return FigureUtilities.numericToScreen( coordinateMapper, lineCoords );
   }
 
   public PolygonFigure getAreaFigure( final ICoordinateMapper coordinateMapper )
@@ -100,24 +100,11 @@ public class WaterlevelRenderSegment
 
     if( m_area != null )
     {
-      final Point[] area = numericToScreen( coordinateMapper, m_area.getCoordinates() );
+      final Point[] area = FigureUtilities.numericToScreen( coordinateMapper, m_area.getCoordinates() );
       areaFigure.setPoints( area );
     }
 
     return areaFigure;
-  }
-
-  private Point[] numericToScreen( final ICoordinateMapper coordinateMapper, final Coordinate[] coords )
-  {
-    final Point[] points = new Point[coords.length];
-
-    for( int i = 0; i < points.length; i++ )
-    {
-      final Coordinate crd = coords[i];
-      points[i] = coordinateMapper.numericToScreen( crd.x, crd.y );
-    }
-
-    return points;
   }
 
   public LineSegment getLine( )
