@@ -67,7 +67,7 @@ import org.kalypso.zml.ui.table.commands.menu.adjust.pages.MultiplyValueAdjustme
 import org.kalypso.zml.ui.table.commands.menu.adjust.pages.ShiftDateAdjustmentPage;
 import org.kalypso.zml.ui.table.commands.menu.adjust.pages.ShiftValueAdjustmentPage;
 import org.kalypso.zml.ui.table.dialogs.input.IZmlEinzelwertCompositeListener;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch

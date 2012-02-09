@@ -33,7 +33,7 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.zml.ui.table.focus.ZmlTableFocusCellManager;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
 
 /**
  * @since 3.3

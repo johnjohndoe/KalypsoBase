@@ -62,6 +62,7 @@ import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.model.visitors.FindClosestDateVisitor;
 
 /**
  * @author Dirk Kuch
@@ -147,7 +148,7 @@ public class ZmlTablePager
       return null;
 
     final IZmlModelRow row = (IZmlModelRow) element;
-    final Date date = row.getIndexValue();
+    final Date date = row.getIndex();
     final Calendar calendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
     calendar.setTime( date );
     calendar.add( Calendar.HOUR_OF_DAY, +1 );
@@ -176,7 +177,7 @@ public class ZmlTablePager
     if( Objects.isNull( m_index ) )
       return;
 
-    final ClosestDateVisitor visitor = new ClosestDateVisitor( m_index );
+    final FindClosestDateVisitor visitor = new FindClosestDateVisitor( m_index );
     m_table.accept( visitor );
 
     final IZmlModelRow row = visitor.getModelRow();
@@ -199,7 +200,7 @@ public class ZmlTablePager
     job.setSystem( true );
     job.setUser( false );
 
-    job.schedule(0);
+    job.schedule( 0 );
   }
 
   private Date findForecastDate( )

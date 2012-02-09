@@ -56,7 +56,7 @@ import org.kalypso.zml.ui.table.focus.cursor.ITableCursor;
 import org.kalypso.zml.ui.table.focus.cursor.ZmlCellNavigationStrategy;
 import org.kalypso.zml.ui.table.focus.cursor.ZmlCursorCellHighlighter;
 import org.kalypso.zml.ui.table.focus.cursor.ZmlTableCursor;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
 
 /**
  * @author Dirk Kuch

@@ -46,7 +46,8 @@ import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.binding.rule.instructions.AbstractZmlRuleInstructionType;
 import org.kalypso.zml.core.table.binding.rule.instructions.ZmlMetadataDaterangeInstruction;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.rules.AbstractZmlCellRuleImplementation;
 
 /**
@@ -65,8 +66,11 @@ public class ZmlRuleForecast extends AbstractZmlCellRuleImplementation
   }
 
   @Override
-  protected boolean doApply( final ZmlCellRule rule, final IZmlValueReference reference )
+  protected boolean doApply( final ZmlCellRule rule, final IZmlModelCell reference )
   {
+    if( !(reference instanceof IZmlModelValueCell) )
+      return false;
+
     final AbstractZmlRuleInstructionType[] instructions = rule.getInstructions();
     for( final AbstractZmlRuleInstructionType instruction : instructions )
     {
@@ -76,7 +80,7 @@ public class ZmlRuleForecast extends AbstractZmlCellRuleImplementation
       try
       {
         final ZmlMetadataDaterangeInstruction impl = (ZmlMetadataDaterangeInstruction) instruction;
-        if( impl.matches( reference ) )
+        if( impl.matches( (IZmlModelValueCell) reference ) )
           return true;
       }
       catch( final SensorException e )

@@ -55,14 +55,14 @@ import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.interpolation.ZmlInterpolationWorker;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
 import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
 
@@ -79,7 +79,7 @@ public class ZmlCommandSetValuesBelow extends AbstractHandler
     {
       final IZmlTable table = ZmlHandlerUtil.getTable( event );
       final IZmlTableSelectionHandler selection = table.getSelectionHandler();
-      final IZmlTableCell active = selection.findActiveCellByPosition();
+      final IZmlTableValueCell active = (IZmlTableValueCell) selection.findActiveCellByPosition();
 
       final IZmlTableColumn column = active.getColumn();
       final IZmlEditingStrategy strategy = column.getEditingStrategy();
@@ -88,7 +88,7 @@ public class ZmlCommandSetValuesBelow extends AbstractHandler
         final ZmlLabelProvider provider = new ZmlLabelProvider( active.getRow().getModelRow(), column, new ZmlCellRule[] {} );
         final String targetValue = provider.getText();
 
-        IZmlTableCell ptr = active.findNextCell();
+        IZmlTableValueCell ptr = active.findNextCell();
         while( ptr != null )
         {
           strategy.setValue( ptr.getRow().getModelRow(), targetValue );
@@ -97,7 +97,7 @@ public class ZmlCommandSetValuesBelow extends AbstractHandler
       }
       else
       {
-        final IZmlValueReference reference = active.getValueReference();
+        final IZmlModelValueCell reference = active.getValueReference();
         final Number targetValue = reference.getValue();
         final Date base = reference.getIndexValue();
 
@@ -107,7 +107,7 @@ public class ZmlCommandSetValuesBelow extends AbstractHandler
         modelColumn.accept( new IZmlModelColumnVisitor()
         {
           @Override
-          public void visit( final IZmlValueReference ref ) throws SensorException
+          public void visit( final IZmlModelValueCell ref ) throws SensorException
           {
             final Date current = ref.getIndexValue();
             if( current.before( base ) || current.equals( base ) )

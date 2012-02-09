@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,32 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.model;
+package org.kalypso.zml.ui.table.model.rows;
 
-import org.eclipse.jface.viewers.ViewerCell;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTableCell extends IZmlTableObject
+public interface IZmlTableHeaderRow extends IZmlTableRow
 {
-  IZmlTableColumn getColumn( );
 
-  IZmlTableRow getRow( );
-
-  IZmlValueReference getValueReference( );
-
-  /**
-   * @return row index
-   */
-  int getIndex( );
-
-  IZmlTableCell findPreviousCell( );
-
-  IZmlTableCell findNextCell( );
-
-  int findIndex( );
-
-  ViewerCell getViewerCell( );
 }

@@ -64,8 +64,6 @@ import org.eclipse.swt.widgets.TableItem;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.viewers.table.Tables;
 import org.kalypso.zml.core.table.binding.BaseColumn;
-import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.ZmlModelRow;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
@@ -73,11 +71,11 @@ import org.kalypso.zml.ui.table.ZmlTableComposite;
 import org.kalypso.zml.ui.table.base.helper.ZmlTables;
 import org.kalypso.zml.ui.table.menu.ZmlTableContextMenuProvider;
 import org.kalypso.zml.ui.table.menu.ZmlTableHeaderContextMenuProvider;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
-import org.kalypso.zml.ui.table.model.IZmlTableRow;
-import org.kalypso.zml.ui.table.model.ZmlTableCell;
-import org.kalypso.zml.ui.table.model.ZmlTableRow;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
+import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
 
 /**
  * handles mouse move and menu detect events (active selection of table cells, columns and rows and updating of the
@@ -178,7 +176,7 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
       try
       {
         // empty cell?
-        final IZmlTableCell focus = m_table.getFocusHandler().getFocusTableCell();
+        final IZmlTableValueCell focus = (IZmlTableValueCell) m_table.getFocusHandler().getFocusTableCell();
         focus.getValueReference().getValue();
       }
       catch( final Throwable t )
@@ -250,11 +248,11 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
   {
     final IZmlTableColumn column = findActiveColumnByPosition();
 
-    final IZmlTableRow row = findActiveRowByPosition();
+    final IZmlTableValueRow row = findActiveRowByPosition();
     if( Objects.isNull( column, row ) )
       return null;
 
-    return new ZmlTableCell( row, column );
+    return row.getCell( column );
   }
 
   private ViewerCell findActiveViewerCell( )
@@ -270,7 +268,7 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
   }
 
   @Override
-  public IZmlTableRow findActiveRowByPosition( )
+  public IZmlTableValueRow findActiveRowByPosition( )
   {
     final ViewerCell cell = findActiveViewerCell();
     if( Objects.isNull( cell ) )
@@ -280,23 +278,23 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
   }
 
   @Override
-  public IZmlTableRow[] getSelectedRows( )
+  public IZmlTableValueRow[] getSelectedRows( )
   {
     final TableViewer viewer = m_table.getViewer();
     final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 
-    final List<IZmlTableRow> rows = new ArrayList<IZmlTableRow>();
+    final List<IZmlTableValueRow> rows = new ArrayList<IZmlTableValueRow>();
 
     final Object[] elements = selection.toArray();
     for( final Object element : elements )
     {
-      if( element instanceof IZmlModelRow )
+      if( element instanceof IZmlTableValueRow )
       {
-        rows.add( new ZmlTableRow( m_table, (IZmlModelRow) element ) );
+        rows.add( (IZmlTableValueRow) element );
       }
     }
 
-    return rows.toArray( new IZmlTableRow[] {} );
+    return rows.toArray( new IZmlTableValueRow[] {} );
   }
 
   private ViewerCell findCell( final IZmlTableColumn column, final int y )
@@ -339,9 +337,9 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
     final TableItem[] items = table.getItems();
     for( final TableItem item : items )
     {
-      final ZmlModelRow row = (ZmlModelRow) item.getData();
+      final IZmlTableRow row = (IZmlTableRow) item.getData();
 
-      if( row.equals( cell.getRow().getModelRow() ) )
+      if( Objects.equal( row, cell.getRow() ) )
       {
         final Rectangle bounds = item.getBounds();
 

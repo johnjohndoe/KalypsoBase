@@ -55,7 +55,8 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.rules.AbstractZmlCellRuleImplementation;
 import org.kalypso.zml.core.table.schema.CellStyleType;
 
@@ -77,11 +78,15 @@ public class ZmlRuleDataSource extends AbstractZmlCellRuleImplementation
   }
 
   @Override
-  protected boolean doApply( final ZmlCellRule rule, final IZmlValueReference reference )
+  protected boolean doApply( final ZmlCellRule rule, final IZmlModelCell reference )
   {
     try
     {
-      final String source = reference.getDataSource();
+      if( !(reference instanceof IZmlModelValueCell) )
+        return false;
+
+      final IZmlModelValueCell cell = (IZmlModelValueCell) reference;
+      final String source = cell.getDataSource();
 
       return StringUtils.isNotEmpty( source );
     }
@@ -94,8 +99,10 @@ public class ZmlRuleDataSource extends AbstractZmlCellRuleImplementation
   }
 
   @Override
-  public CellStyle getCellStyle( final ZmlCellRule rule, final IZmlValueReference reference )
+  public CellStyle getCellStyle( final ZmlCellRule rule, final IZmlModelCell reference )
   {
+    if( !(reference instanceof IZmlModelValueCell) )
+      return null;
 
     return new CellStyle( new CellStyleType() )
     {
@@ -104,7 +111,7 @@ public class ZmlRuleDataSource extends AbstractZmlCellRuleImplementation
       {
         try
         {
-          return getBackground( reference );
+          return getBackground( (IZmlModelValueCell) reference );
         }
         catch( final SensorException e )
         {
@@ -117,7 +124,7 @@ public class ZmlRuleDataSource extends AbstractZmlCellRuleImplementation
 
   }
 
-  protected Color getBackground( final IZmlValueReference reference ) throws SensorException
+  protected Color getBackground( final IZmlModelValueCell reference ) throws SensorException
   {
     final String source = reference.getDataSource();
     if( StringUtils.isEmpty( source ) )

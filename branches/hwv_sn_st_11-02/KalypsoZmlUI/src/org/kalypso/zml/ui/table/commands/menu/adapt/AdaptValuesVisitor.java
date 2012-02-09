@@ -52,7 +52,7 @@ import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
 import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 import org.kalypso.repository.IDataSourceItem;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 
@@ -95,23 +95,15 @@ public class AdaptValuesVisitor implements IObservationVisitor, IZmlModelColumnV
   }
 
   @Override
-  public void visit( final IZmlValueReference reference )
+  public void visit( final IZmlModelValueCell reference )
   {
-    try
-    {
-      final Date index = reference.getIndexValue();
-      final Number value = m_values.get( index );
-      if( Objects.isNull( value ) )
-        return;
+    final Date index = reference.getIndexValue();
+    final Number value = m_values.get( index );
+    if( Objects.isNull( value ) )
+      return;
 
-      // FIXME: use target axes instead!
-
-      m_transaction.add( reference, value, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
-    }
-    catch( final SensorException e )
-    {
-      e.printStackTrace();
-    }
+    // FIXME: use target axes instead!
+    m_transaction.add( reference, value, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
   }
 
   public void doFinish( )

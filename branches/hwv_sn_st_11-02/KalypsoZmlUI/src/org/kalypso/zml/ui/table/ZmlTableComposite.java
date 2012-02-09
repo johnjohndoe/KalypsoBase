@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -61,20 +60,17 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
-import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.ZmlModel;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 import org.kalypso.zml.ui.debug.KalypsoZmlUiDebug;
 import org.kalypso.zml.ui.table.base.helper.ZmlTables;
@@ -83,13 +79,14 @@ import org.kalypso.zml.ui.table.focus.IZmlTableFocusHandler;
 import org.kalypso.zml.ui.table.focus.ZmlTableFocusCellHandler;
 import org.kalypso.zml.ui.table.layout.ZmlTableLayoutHandler;
 import org.kalypso.zml.ui.table.layout.ZmlTablePager;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
-import org.kalypso.zml.ui.table.model.IZmlTableRow;
-import org.kalypso.zml.ui.table.model.ZmlTableColumn;
-import org.kalypso.zml.ui.table.model.ZmlTableColumns;
-import org.kalypso.zml.ui.table.model.ZmlTableRow;
-import org.kalypso.zml.ui.table.provider.ZmlTableCellPaintListener;
-import org.kalypso.zml.ui.table.provider.cache.ZmlTableCellCache;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.ZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.ZmlTableColumns;
+import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
+import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
+import org.kalypso.zml.ui.table.provider.ZmlTableContentProvider;
+import org.kalypso.zml.ui.table.provider.rendering.cell.ZmlTableCellCache;
+import org.kalypso.zml.ui.table.provider.rendering.cell.ZmlTableCellPaintListener;
 import org.kalypso.zml.ui.table.selection.ZmlTableSelectionHandler;
 
 /**
@@ -120,6 +117,8 @@ public class ZmlTableComposite extends Composite implements IZmlTable
   private final FormToolkit m_toolkit;
 
   private IZmlModel m_model;
+
+  private final ZmlTableContentProvider m_contentProvider = new ZmlTableContentProvider( this );
 
   public ZmlTableComposite( final Composite parent, final FormToolkit toolkit )
   {
@@ -157,19 +156,7 @@ public class ZmlTableComposite extends Composite implements IZmlTable
 
       ColumnViewerToolTipSupport.enableFor( m_tableViewer, ToolTip.NO_RECREATE );
 
-      m_tableViewer.setContentProvider( new ArrayTreeContentProvider()
-      {
-        @Override
-        public Object[] getElements( final Object inputElement )
-        {
-          if( inputElement instanceof ZmlModel )
-          {
-            return ((ZmlModel) inputElement).getRows();
-          }
-
-          return new Object[] {};
-        }
-      } );
+      m_tableViewer.setContentProvider( m_contentProvider );
 
       addEmptyColumn();
 
@@ -357,7 +344,15 @@ public class ZmlTableComposite extends Composite implements IZmlTable
   {
     for( final IZmlTableRow row : getRows() )
     {
-      visitor.visit( row );
+      try
+      {
+        if( row instanceof IZmlTableValueRow )
+          visitor.visit( (IZmlTableValueRow) row );
+      }
+      catch( final CancelVisitorException e )
+      {
+        return;
+      }
     }
   }
 
@@ -394,20 +389,7 @@ public class ZmlTableComposite extends Composite implements IZmlTable
   @Override
   public IZmlTableRow[] getRows( )
   {
-    final List<IZmlTableRow> rows = new ArrayList<IZmlTableRow>();
-
-    synchronized( this )
-    {
-      final Table table = m_tableViewer.getTable();
-      final TableItem[] items = table.getItems();
-      for( final TableItem item : items )
-      {
-        final IZmlModelRow row = (IZmlModelRow) item.getData();
-        rows.add( new ZmlTableRow( this, row ) );
-      }
-    }
-
-    return rows.toArray( new IZmlTableRow[] {} );
+    return m_contentProvider.getElements();
   }
 
   @Override

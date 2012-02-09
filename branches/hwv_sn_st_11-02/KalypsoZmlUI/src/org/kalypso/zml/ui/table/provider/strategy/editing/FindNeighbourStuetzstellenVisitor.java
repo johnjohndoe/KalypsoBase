@@ -41,10 +41,10 @@
 package org.kalypso.zml.ui.table.provider.strategy.editing;
 
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.references.ZmlValues;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
 
 /**
  * @author Dirk Kuch
@@ -53,21 +53,18 @@ public class FindNeighbourStuetzstellenVisitor implements IZmlModelColumnVisitor
 {
   private final Integer m_modelIndex;
 
-  private IZmlValueReference m_after;
+  private IZmlModelValueCell m_after;
 
-  private IZmlValueReference m_before;
+  private IZmlModelValueCell m_before;
 
-  public FindNeighbourStuetzstellenVisitor( final IZmlTableCell base )
+  public FindNeighbourStuetzstellenVisitor( final IZmlTableValueCell base )
   {
-    final IZmlValueReference reference = base.getValueReference();
+    final IZmlModelValueCell reference = base.getValueReference();
     m_modelIndex = reference.getModelIndex();
   }
 
-  /**
-   * @see org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor#visit(org.kalypso.zml.core.table.model.visitor.IZmlModelColumnValue)
-   */
   @Override
-  public void visit( final IZmlValueReference reference ) throws SensorException
+  public void visit( final IZmlModelValueCell reference ) throws SensorException
   {
     if( !ZmlValues.isStuetzstelle( reference ) )
       return;
@@ -78,12 +75,12 @@ public class FindNeighbourStuetzstellenVisitor implements IZmlModelColumnVisitor
       m_after = reference;
   }
 
-  public IZmlValueReference getBefore( )
+  public IZmlModelValueCell getBefore( )
   {
     return m_before;
   }
 
-  public IZmlValueReference getAfter( )
+  public IZmlModelValueCell getAfter( )
   {
     return m_after;
   }

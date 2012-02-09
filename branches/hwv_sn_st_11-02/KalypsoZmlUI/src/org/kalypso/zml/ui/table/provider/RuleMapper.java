@@ -56,7 +56,7 @@ import org.kalypso.zml.core.table.binding.rule.AbstractZmlRule;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.binding.rule.ZmlColumnRule;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.rules.IZmlCellRuleImplementation;
 import org.kalypso.zml.core.table.rules.IZmlColumnRuleImplementation;
 import org.kalypso.zml.ui.table.IZmlTable;
@@ -73,7 +73,7 @@ public class RuleMapper
 
   private final BaseColumn m_column;
 
-  private IZmlValueReference m_lastReference;
+  private IZmlModelCell m_lastReference;
 
   private final IZmlTable m_table;
 
@@ -83,7 +83,7 @@ public class RuleMapper
     m_column = column;
   }
 
-  public ZmlCellRule[] findActiveRules( final IZmlValueReference reference )
+  public ZmlCellRule[] findActiveRules( final IZmlModelCell reference )
   {
     if( m_lastReference == reference )
       return m_rules;
@@ -109,7 +109,7 @@ public class RuleMapper
     return m_rules;
   }
 
-  private void addRule( final ZmlCellRule rule, final IZmlCellRuleImplementation implementation, final IZmlValueReference reference )
+  private void addRule( final ZmlCellRule rule, final IZmlCellRuleImplementation implementation, final IZmlModelCell reference )
   {
     try
     {

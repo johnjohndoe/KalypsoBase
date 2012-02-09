@@ -47,12 +47,13 @@ import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.references.ZmlValues;
 import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.ZmlTableColumn;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
+import org.kalypso.zml.ui.table.model.columns.ZmlTableColumn;
 
 /**
  * updated value will be a new stützstelle. update all values between s_new and s_next. set updated values to s_new
@@ -77,19 +78,19 @@ public class ContinuedInterpolatedValueEditingStrategy extends AbstractEditingSt
     super( column );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy#getValue(java.lang.Object)
-   */
   @Override
   public String getValue( final IZmlModelRow row )
   {
     try
     {
-      final IZmlValueReference reference = row.get( getColumn().getColumnType().getType() );
+      final IZmlModelCell reference = row.get( getColumn().getColumnType().getType() );
       if( Objects.isNull( reference ) )
         return ""; //$NON-NLS-1$
+      else if( !(reference instanceof IZmlModelValueCell) )
+        return "";
 
-      final Object value = reference.getValue();
+      final IZmlModelValueCell cell = (IZmlModelValueCell) reference;
+      final Object value = cell.getValue();
 
       final CellStyle style = getStyle();
       return String.format( style.getTextFormat() == null ? "%s" : style.getTextFormat(), value ); //$NON-NLS-1$
@@ -109,7 +110,11 @@ public class ContinuedInterpolatedValueEditingStrategy extends AbstractEditingSt
     {
       /** update current cell */
       final IZmlModelRow row = element;
-      final IZmlValueReference reference = row.get( getColumn().getColumnType().getType() );
+      final IZmlModelCell reference = row.get( getColumn().getColumnType().getType() );
+      if( !(reference instanceof IZmlModelValueCell) )
+        return;
+
+      final IZmlModelValueCell cell = (IZmlModelValueCell) reference;
 
       final Number targetValue = getTargetValue( value );
 
@@ -118,17 +123,18 @@ public class ContinuedInterpolatedValueEditingStrategy extends AbstractEditingSt
       try
       {
         final ZmlTableColumn column = getColumn();
-        final IZmlTableCell current = column.findCell( row );
+        final IZmlTableValueCell current = (IZmlTableValueCell) column.findCell( row );
 
-        transaction.add( reference, targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
+        transaction.add( cell, targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
 
-        IZmlTableCell next = current.findNextCell();
+        IZmlTableValueCell next = current.findNextCell();
         while( Objects.isNotNull( next ) )
         {
-          if( ZmlValues.isStuetzstelle( next.getValueReference() ) )
+          final IZmlModelValueCell ref = (next).getValueReference();
+          if( ZmlValues.isStuetzstelle( ref ) )
             break;
 
-          transaction.add( next.getValueReference(), targetValue, IDataSourceItem.SOURCE_INTERPOLATED_WECHMANN_VALUE, KalypsoStati.BIT_OK );
+          transaction.add( ref, targetValue, IDataSourceItem.SOURCE_INTERPOLATED_WECHMANN_VALUE, KalypsoStati.BIT_OK );
           next = next.findNextCell();
         }
       }

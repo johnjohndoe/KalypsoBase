@@ -45,7 +45,7 @@ import java.util.Set;
 
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.references.ZmlValues;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 
@@ -54,11 +54,11 @@ import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
  */
 public class ZmlStuetstellenVisitor implements IZmlModelColumnVisitor
 {
-  Set<IZmlValueReference> m_references = new LinkedHashSet<IZmlValueReference>();
+  Set<IZmlModelValueCell> m_references = new LinkedHashSet<IZmlModelValueCell>();
 
   private final DateRange m_dateRange;
 
-  public ZmlStuetstellenVisitor( final IZmlValueReference s1, final IZmlValueReference s2 ) throws SensorException
+  public ZmlStuetstellenVisitor( final IZmlModelValueCell s1, final IZmlModelValueCell s2 ) throws SensorException
   {
     m_dateRange = new DateRange( s1.getIndexValue(), s2.getIndexValue() );
   }
@@ -67,7 +67,7 @@ public class ZmlStuetstellenVisitor implements IZmlModelColumnVisitor
    * @see org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor#visit(org.kalypso.zml.core.table.model.references.IZmlValueReference)
    */
   @Override
-  public void visit( final IZmlValueReference reference ) throws SensorException
+  public void visit( final IZmlModelValueCell reference ) throws SensorException
   {
     if( !m_dateRange.containsLazyInclusive( reference.getIndexValue() ) )
       return;
@@ -76,8 +76,8 @@ public class ZmlStuetstellenVisitor implements IZmlModelColumnVisitor
       m_references.add( reference );
   }
 
-  public IZmlValueReference[] getStuetzstellen( )
+  public IZmlModelValueCell[] getStuetzstellen( )
   {
-    return m_references.toArray( new IZmlValueReference[] {} );
+    return m_references.toArray( new IZmlModelValueCell[] {} );
   }
 }

@@ -44,7 +44,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 
 /**
  * @author Dirk Kuch
@@ -53,15 +53,15 @@ public interface IZmlCellRuleImplementation
 {
   String EXTENSION_POINT_ID = "org.kalypso.zml.core.tableCellRule"; //$NON-NLS-1$
 
-  boolean apply( ZmlCellRule rule, IZmlValueReference reference );
+  boolean apply( ZmlCellRule rule, IZmlModelCell reference );
 
   String getIdentifier( );
 
-  String update( ZmlCellRule rule, final IZmlValueReference reference, String text ) throws SensorException;
+  String update( ZmlCellRule rule, final IZmlModelCell reference, String text ) throws SensorException;
 
-  CellStyle getCellStyle( ZmlCellRule rule, IZmlValueReference reference ) throws CoreException;
+  CellStyle getCellStyle( ZmlCellRule rule, IZmlModelCell reference ) throws CoreException;
 
-  String getLabel( ZmlCellRule rule, IZmlValueReference reference );
+  String getLabel( ZmlCellRule rule, IZmlModelCell reference );
 
-  Double getSeverity( ZmlCellRule rule, IZmlValueReference reference );
+  Double getSeverity( ZmlCellRule rule, IZmlModelCell reference );
 }

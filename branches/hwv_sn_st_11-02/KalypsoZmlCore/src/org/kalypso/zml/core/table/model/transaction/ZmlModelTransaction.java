@@ -44,7 +44,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 
 /**
  * @author Dirk Kuch
@@ -66,7 +66,7 @@ public class ZmlModelTransaction
     {
       try
       {
-        final IZmlValueReference target = command.getTarget();
+        final IZmlModelValueCell target = command.getTarget();
         final IZmlModelColumn targetColumn = target.getColumn();
         updated.add( targetColumn );
 
@@ -84,7 +84,7 @@ public class ZmlModelTransaction
     }
   }
 
-  public void add( final IZmlValueReference target, final Number value, final String source, final int status )
+  public void add( final IZmlModelValueCell target, final Number value, final String source, final int status )
   {
     add( new UpdateReferenceCommand( target, value, source, status ) );
 

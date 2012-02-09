@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider;
+package org.kalypso.zml.ui.table.provider.rendering.cell;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -48,10 +48,10 @@ import org.eclipse.swt.widgets.Listener;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
 
 /**
  * @author Dirk Kuch
@@ -88,7 +88,7 @@ public class ZmlTableCellPaintListener implements Listener
    */
   private void doMeasureItem( final Event event )
   {
-    final ZmlTableCellPainter renderer = findCellPainter( event );
+    final IZmlTableCellPainter renderer = findCellPainter( event );
     if( Objects.isNull( renderer ) )
       return;
 
@@ -127,7 +127,7 @@ public class ZmlTableCellPaintListener implements Listener
     if( (event.detail & SWT.SELECTED) != 0 )
       return; /* item selected */
 
-    final ZmlTableCellPainter renderer = findCellPainter( event );
+    final IZmlTableCellPainter renderer = findCellPainter( event );
     if( Objects.isNull( renderer ) )
       return;
 
@@ -147,7 +147,7 @@ public class ZmlTableCellPaintListener implements Listener
 
   public void doPaintItem( final Event event )
   {
-    final ZmlTableCellPainter renderer = findCellPainter( event );
+    final IZmlTableCellPainter renderer = findCellPainter( event );
     if( Objects.isNull( renderer ) )
       return;
 
@@ -173,14 +173,14 @@ public class ZmlTableCellPaintListener implements Listener
     bounds.height = Math.max( bounds.height, extend.y );
   }
 
-  private int getTableColumnWidth( final ZmlTableCellPainter renderer )
+  private int getTableColumnWidth( final IZmlTableCellPainter renderer )
   {
     return renderer.getCell().getColumn().getTableViewerColumn().getColumn().getWidth();
   }
 
-  private ZmlTableCellPainter findCellPainter( final Event event )
+  private IZmlTableCellPainter findCellPainter( final Event event )
   {
-    final IZmlModelRow row = (IZmlModelRow) event.item.getData();
+    final IZmlTableRow row = (IZmlTableRow) event.item.getData();
     final IZmlTableColumn[] columns = m_table.getColumns();
     final int index = event.index - 1; // table rendering offset ("windows layout bug")
     if( index < 0 )

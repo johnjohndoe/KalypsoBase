@@ -38,23 +38,22 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.model;
+package org.kalypso.zml.ui.table.model.rows;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableItem;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.ZmlIndexValueReference;
 import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.model.cells.AbstractZmlTableCell;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableRow extends ZmlTableElement implements IZmlTableRow
+public class ZmlTableRow extends AbstractZmlTableRow implements IZmlTableValueRow
 {
   private final IZmlModelRow m_row;
 
@@ -66,7 +65,7 @@ public class ZmlTableRow extends ZmlTableElement implements IZmlTableRow
   }
 
   @Override
-  public IZmlValueReference getValueReference( final IZmlTableColumn column )
+  public IZmlModelCell getModelCell( final IZmlTableColumn column )
   {
     if( column.isIndexColumn() )
       return new ZmlIndexValueReference( m_row );
@@ -80,17 +79,15 @@ public class ZmlTableRow extends ZmlTableElement implements IZmlTableRow
     return m_row;
   }
 
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals( final Object obj )
   {
-    if( obj instanceof IZmlTableRow )
-    {
-      final IZmlTableRow other = (IZmlTableRow) obj;
 
-      if( getIndex() != other.getIndex() )
+    if( obj instanceof IZmlTableValueRow )
+    {
+      final IZmlTableValueRow other = (IZmlTableValueRow) obj;
+
+      if( getModelRow().getIndex() != other.getModelRow().getIndex() )
         return false;
 
       final IZmlTableColumn[] columns = getColumns();
@@ -118,7 +115,7 @@ public class ZmlTableRow extends ZmlTableElement implements IZmlTableRow
   public int hashCode( )
   {
     final HashCodeBuilder builder = new HashCodeBuilder();
-    builder.append( getIndex() );
+    builder.append( getModelRow().getIndex() );
 
     final IZmlTableColumn[] columns = getColumns();
     for( final IZmlTableColumn column : columns )
@@ -132,35 +129,7 @@ public class ZmlTableRow extends ZmlTableElement implements IZmlTableRow
   @Override
   public IZmlTableCell getCell( final IZmlTableColumn column )
   {
-    return new ZmlTableCell( this, column );
+    return AbstractZmlTableCell.create( this, column );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.viewmodel.IZmlTableRow#getColumns()
-   */
-  @Override
-  public IZmlTableColumn[] getColumns( )
-  {
-    return getTable().getColumns();
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.viewmodel.IZmlTableRow#getIndex()
-   */
-  @Override
-  public int getIndex( )
-  {
-    final TableViewer viewer = getTable().getViewer();
-    final Table table = viewer.getTable();
-    final TableItem[] items = table.getItems();
-    for( final TableItem item : items )
-    {
-      final IZmlModelRow row = (IZmlModelRow) item.getData();
-
-      if( row == m_row )
-        return ArrayUtils.indexOf( items, item );
-    }
-
-    return -1;
-  }
 }

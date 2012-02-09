@@ -42,7 +42,7 @@ package org.kalypso.zml.ui.table.provider.strategy.labeling;
 
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 
 /**
@@ -53,7 +53,7 @@ public class SumValuesVisitor implements IZmlModelColumnVisitor
   private double m_sum = 0;
 
   @Override
-  public void visit( final IZmlValueReference reference ) throws SensorException
+  public void visit( final IZmlModelValueCell reference ) throws SensorException
   {
     final Number value = reference.getValue();
     if( Objects.isNotNull( value ) )

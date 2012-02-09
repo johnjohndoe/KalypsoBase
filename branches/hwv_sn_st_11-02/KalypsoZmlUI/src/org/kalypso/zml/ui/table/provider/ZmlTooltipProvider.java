@@ -47,9 +47,9 @@ import org.eclipse.swt.graphics.Point;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.ZmlModelRow;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.ZmlTableColumn;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
+import org.kalypso.zml.ui.table.model.columns.ZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -91,10 +91,10 @@ public class ZmlTooltipProvider extends ColumnLabelProvider
       return null;
     else if( object instanceof IZmlModelRow )
     {
-      final IZmlTableCell cell = m_column.findCell( (IZmlModelRow) object );
+      final IZmlTableValueCell cell = (IZmlTableValueCell) m_column.findCell( (IZmlModelRow) object );
       if( Objects.isNotNull( cell ) )
       {
-        final IZmlValueReference reference = cell.getValueReference();
+        final IZmlModelValueCell reference = cell.getValueReference();
         if( Objects.isNotNull( reference ) )
           return m_tooltip.getToolTipImage();
       }

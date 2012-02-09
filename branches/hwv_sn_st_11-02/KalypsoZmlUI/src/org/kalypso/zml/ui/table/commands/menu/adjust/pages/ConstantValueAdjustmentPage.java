@@ -49,8 +49,8 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedTextBox;
 import org.kalypso.zml.ui.table.base.widgets.IEnhancedTextBoxListener;
 import org.kalypso.zml.ui.table.base.widgets.rules.DoubeValueWidgetRule;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -105,7 +105,7 @@ public class ConstantValueAdjustmentPage extends AbstractAdjustmentPage implemen
       return m_constantValue;
 
     final IZmlTableColumn column = getColumn();
-    final IZmlTableCell[] cells = column.getSelectedCells();
+    final IZmlTableValueCell[] cells = (IZmlTableValueCell[]) column.getSelectedCells();
     final Number value = cells[0].getValueReference().getValue();
 
     m_constantValue = value.doubleValue();
@@ -137,7 +137,7 @@ public class ConstantValueAdjustmentPage extends AbstractAdjustmentPage implemen
   @Override
   public ICoreRunnableWithProgress getRunnable( )
   {
-    return new ConstantValueRunnable( getColumn().getSelectedCells(), m_constantValue );
+    return new ConstantValueRunnable( (IZmlTableValueCell[]) getColumn().getSelectedCells(), m_constantValue );
   }
 
   /**

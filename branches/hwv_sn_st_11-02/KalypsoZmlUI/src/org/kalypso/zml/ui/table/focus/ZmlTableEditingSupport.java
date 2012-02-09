@@ -58,9 +58,10 @@ import org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.ZmlTableColumn;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
+import org.kalypso.zml.ui.table.model.columns.ZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
 
 import com.google.common.base.Objects;
@@ -147,7 +148,7 @@ public class ZmlTableEditingSupport extends EditingSupport
 
   protected void moveNext( )
   {
-    final IZmlTableCell cell = m_handler.getFocusTableCell();
+    final IZmlTableValueCell cell = (IZmlTableValueCell) m_handler.getFocusTableCell();
     if( org.kalypso.commons.java.lang.Objects.isNull( cell ) )
       return;
 
@@ -157,7 +158,7 @@ public class ZmlTableEditingSupport extends EditingSupport
 
   protected void movePrevious( )
   {
-    final IZmlTableCell cell = m_handler.getFocusTableCell();
+    final IZmlTableValueCell cell = (IZmlTableValueCell) m_handler.getFocusTableCell();
     if( org.kalypso.commons.java.lang.Objects.isNull( cell ) )
       return;
 
@@ -223,7 +224,7 @@ public class ZmlTableEditingSupport extends EditingSupport
     if( element instanceof IZmlModelRow )
     {
       final IZmlModelRow row = (IZmlModelRow) element;
-      final IZmlValueReference reference = row.get( m_column.getModelColumn() );
+      final IZmlModelValueCell reference = row.get( m_column.getModelColumn() );
 
       return reference != null;
     }

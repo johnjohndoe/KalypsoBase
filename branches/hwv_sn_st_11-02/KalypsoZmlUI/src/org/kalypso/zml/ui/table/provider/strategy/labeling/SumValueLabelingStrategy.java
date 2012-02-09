@@ -48,12 +48,12 @@ import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.rules.IZmlCellRuleImplementation;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.ZmlTableColumn;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
+import org.kalypso.zml.ui.table.model.columns.ZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -83,10 +83,10 @@ public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy impl
   {
     final ZmlTableColumn column = getColumn();
 
-    final IZmlTableCell current = column.findCell( row );
-    final IZmlTableCell previous = current.findPreviousCell();
+    final IZmlTableValueCell current = (IZmlTableValueCell) column.findCell( row );
+    final IZmlTableValueCell previous = (IZmlTableValueCell) current.findPreviousCell();
 
-    final IZmlValueReference previousReference;
+    final IZmlModelValueCell previousReference;
     if( previous == null )
     {
       /* get first invisible value (first value will is not part of the table!) */
@@ -102,7 +102,7 @@ public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy impl
       previousReference = baseRow.get( column.getModelColumn() );
     }
 
-    final IZmlValueReference currentReference = current.getValueReference();
+    final IZmlModelValueCell currentReference = current.getValueReference();
     if( previousReference == null || currentReference == null )
       return null;
 
@@ -135,7 +135,7 @@ public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy impl
 
   private String getAsOriginValue( final IZmlModelRow row ) throws CoreException, SensorException
   {
-    final IZmlValueReference reference = getReference( row );
+    final IZmlModelValueCell reference = getReference( row );
     if( reference == null )
       return "";
 

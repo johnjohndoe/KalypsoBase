@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,43 +38,38 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.model;
+package org.kalypso.zml.ui.table.model.cells;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
-
-import com.google.common.base.Objects;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.rows.IZmlTableHeaderRow;
+import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
+import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableCell extends ZmlTableElement implements IZmlTableCell
+public class ZmlTableValueCell extends AbstractZmlTableCell implements IZmlTableValueCell
 {
-  private final IZmlTableColumn m_column;
 
-  private final IZmlTableRow m_row;
-
-  public ZmlTableCell( final IZmlTableRow row, final IZmlTableColumn column )
+  protected ZmlTableValueCell( final IZmlTableRow row, final IZmlTableColumn column )
   {
-    super( column.getTable() );
-
-    m_column = column;
-    m_row = row;
+    super( row, column );
   }
 
   @Override
   public boolean equals( final Object obj )
   {
-    if( obj instanceof ZmlTableCell )
+    if( obj instanceof IZmlTableValueCell )
     {
-      final ZmlTableCell other = (ZmlTableCell) obj;
+      final IZmlTableValueCell other = (IZmlTableValueCell) obj;
       return getValueReference() == other.getValueReference();
     }
 
@@ -91,31 +86,19 @@ public class ZmlTableCell extends ZmlTableElement implements IZmlTableCell
   }
 
   @Override
-  public IZmlTableColumn getColumn( )
+  public IZmlModelValueCell getValueReference( )
   {
-    return m_column;
+    return (IZmlModelValueCell) getRow().getModelCell( getColumn() );
   }
 
   @Override
-  public IZmlTableRow getRow( )
+  public IZmlTableValueRow getRow( )
   {
-    return m_row;
+    return (IZmlTableValueRow) super.getRow();
   }
 
   @Override
-  public IZmlValueReference getValueReference( )
-  {
-    return m_row.getValueReference( m_column );
-  }
-
-  @Override
-  public int getIndex( )
-  {
-    return m_row.getIndex();
-  }
-
-  @Override
-  public IZmlTableCell findPreviousCell( )
+  public IZmlTableValueCell findPreviousCell( )
   {
     final int index = getIndex();
     if( index <= 0 )
@@ -123,24 +106,30 @@ public class ZmlTableCell extends ZmlTableElement implements IZmlTableCell
 
     final IZmlTable table = getTable();
     final IZmlTableRow previousRow = table.getRow( index - 1 );
+    if( previousRow instanceof IZmlTableHeaderRow )
+      return null;
 
-    return new ZmlTableCell( previousRow, m_column );
+    return (IZmlTableValueCell) previousRow.getCell( getColumn() );
   }
 
   @Override
-  public IZmlTableCell findNextCell( )
+  public IZmlTableValueCell findNextCell( )
   {
     final IZmlTable table = getTable();
 
     final int index = getIndex();
-    if( table.getRows().length <= index )
+    final IZmlTableRow[] rows = table.getRows();
+
+    if( rows.length <= index )
       return null;
 
     final IZmlTableRow nextRow = table.getRow( index + 1 );
     if( nextRow == null )
       return null;
+    else if( nextRow instanceof IZmlTableHeaderRow )
+      return null;
 
-    return new ZmlTableCell( nextRow, m_column );
+    return (IZmlTableValueCell) nextRow.getCell( getColumn() );
   }
 
   @Override
@@ -160,14 +149,5 @@ public class ZmlTableCell extends ZmlTableElement implements IZmlTableCell
     }
 
     return 2;
-  }
-
-  @Override
-  public ViewerCell getViewerCell( )
-  {
-    final IZmlTable table = m_column.getTable();
-    final IZmlTableSelectionHandler handler = table.getSelectionHandler();
-
-    return handler.toViewerCell( this );
   }
 }

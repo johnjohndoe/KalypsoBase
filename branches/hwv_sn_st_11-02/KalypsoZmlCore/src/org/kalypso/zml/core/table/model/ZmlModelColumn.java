@@ -61,7 +61,7 @@ import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.binding.DataColumn;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataListener;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.transaction.IZmlModelUpdateCommand;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 import org.kalypso.zml.core.table.schema.DataColumnType;
@@ -200,7 +200,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   @Override
   public void doExecute( final IZmlModelUpdateCommand command ) throws SensorException
   {
-    final IZmlValueReference target = command.getTarget();
+    final IZmlModelValueCell target = command.getTarget();
     update( target.getModelIndex(), command.getValue(), command.getDataSource(), command.getStatus() );
   }
 
@@ -350,7 +350,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
     final IZmlModelRow[] rows = model.getRows();
     for( final IZmlModelRow row : rows )
     {
-      final IZmlValueReference reference = row.get( this );
+      final IZmlModelValueCell reference = row.get( this );
       if( Objects.isNotNull( reference ) )
       {
         try
@@ -378,7 +378,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
     final IZmlModelRow[] rows = model.getRows();
     for( final IZmlModelRow row : rows )
     {
-      final IZmlValueReference reference = row.get( this );
+      final IZmlModelValueCell reference = row.get( this );
 
       if( Objects.isNotNull( reference ) )
       {

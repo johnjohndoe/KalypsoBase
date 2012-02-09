@@ -50,7 +50,7 @@ import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.interpolation.worker.IInterpolationFilter;
 import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 
 /**
  * @author Dirk Kuch
@@ -61,7 +61,7 @@ public final class ZmlInterpolation
   {
   }
 
-  public static void interpolate( final IZmlModelColumn column, final IZmlValueReference before, final IZmlValueReference current ) throws SensorException
+  public static void interpolate( final IZmlModelColumn column, final IZmlModelValueCell before, final IZmlModelValueCell current ) throws SensorException
   {
     final ITimeseriesObservation timeseriesObservation = new TimeseriesObservation( column.getObservation(), column.getValueAxis() );
     timeseriesObservation.startTransaction();

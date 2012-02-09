@@ -47,7 +47,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
 
 /**
  * @author Dirk Kuch
@@ -58,9 +58,9 @@ public class ShiftDateRunnable implements ICoreRunnableWithProgress
 
   private final IZmlModelColumn m_column;
 
-  private final IZmlTableCell[] m_cells;
+  private final IZmlTableValueCell[] m_cells;
 
-  public ShiftDateRunnable( final IZmlModelColumn column, final IZmlTableCell[] cells, final Integer offset )
+  public ShiftDateRunnable( final IZmlModelColumn column, final IZmlTableValueCell[] cells, final Integer offset )
   {
     m_column = column;
     m_cells = cells;

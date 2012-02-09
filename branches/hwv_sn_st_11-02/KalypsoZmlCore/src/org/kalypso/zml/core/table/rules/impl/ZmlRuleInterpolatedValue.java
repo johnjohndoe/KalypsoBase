@@ -48,7 +48,8 @@ import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.rules.AbstractZmlCellRuleImplementation;
 
 /**
@@ -65,15 +66,19 @@ public class ZmlRuleInterpolatedValue extends AbstractZmlCellRuleImplementation
   }
 
   @Override
-  protected boolean doApply( final ZmlCellRule rule, final IZmlValueReference reference )
+  protected boolean doApply( final ZmlCellRule rule, final IZmlModelCell reference )
   {
     try
     {
-      final IZmlModelColumn column = reference.getColumn();
+      if( !(reference instanceof IZmlModelValueCell) )
+        return false;
+
+      final IZmlModelValueCell cell = (IZmlModelValueCell) reference;
+      final IZmlModelColumn column = cell.getColumn();
       if( Objects.isNull( column ) )
         return false;
 
-      final String dataSource = reference.getDataSource();
+      final String dataSource = cell.getDataSource();
       if( Objects.isNull( dataSource ) )
         return false;
 

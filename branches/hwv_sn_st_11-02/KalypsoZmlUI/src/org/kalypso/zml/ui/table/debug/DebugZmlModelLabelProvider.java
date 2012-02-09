@@ -51,7 +51,7 @@ import org.kalypso.zml.core.table.binding.rule.instructions.AbstractZmlRuleInstr
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.RuleRefernceType;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.AppliedRule;
 
 /**

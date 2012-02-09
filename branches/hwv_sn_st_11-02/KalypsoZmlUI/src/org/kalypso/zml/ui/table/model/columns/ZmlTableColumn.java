@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.model;
+package org.kalypso.zml.ui.table.model.columns;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
@@ -53,7 +53,8 @@ import org.kalypso.zml.core.table.binding.DataColumn;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.references.ZmlDataValueReference;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.CellStyleType;
@@ -61,6 +62,7 @@ import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.core.table.schema.IndexColumnType;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.focus.ZmlTableEditingSupport;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
 import org.kalypso.zml.ui.table.provider.AppliedRule;
 import org.kalypso.zml.ui.table.provider.RuleMapper;
 import org.kalypso.zml.ui.table.provider.strategy.ZmlCollectRulesVisitor;
@@ -196,7 +198,7 @@ public class ZmlTableColumn extends AbstractZmlTableColumn
 
   private ZmlCellRule[] findSimpleActiveRules( final IZmlModelRow row )
   {
-    final IZmlValueReference reference = row.get( getColumnType().getType() );
+    final IZmlModelCell reference = row.get( getColumnType().getType() );
     if( Objects.isNull( reference ) )
       return new ZmlCellRule[] {};
 
@@ -205,25 +207,25 @@ public class ZmlTableColumn extends AbstractZmlTableColumn
 
   private ZmlCellRule[] findAggregatedActiveRules( final IZmlModelRow row )
   {
-    final IZmlTableCell current = findCell( row );
-    final IZmlTableCell previous = current.findPreviousCell();
+    final IZmlTableValueCell current = (IZmlTableValueCell) findCell( row );
+    final IZmlTableValueCell previous = current.findPreviousCell();
 
     final IZmlModelColumn modelColumn = current.getColumn().getModelColumn();
 
-    IZmlValueReference previousReference = null;
+    IZmlModelValueCell previousReference = null;
     if( previous == null )
     {
       previousReference = new ZmlDataValueReference( row, modelColumn, 0 );
     }
     else
     {
-      final IZmlValueReference reference = previous.getValueReference();
+      final IZmlModelValueCell reference = previous.getValueReference();
       final Integer index = reference.getModelIndex();
 
       previousReference = new ZmlDataValueReference( row, modelColumn, index + 1 );
     }
 
-    final IZmlValueReference currentReference = current.getValueReference();
+    final IZmlModelValueCell currentReference = current.getValueReference();
     if( Objects.isNull( previousReference, currentReference ) )
       return new ZmlCellRule[] {};
 

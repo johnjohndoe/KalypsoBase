@@ -48,9 +48,9 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.rules.IZmlCellRuleImplementation;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.strategy.labeling.IZmlLabelStrategy;
 
 /**
@@ -138,7 +138,7 @@ public class ZmlLabelProvider
     return null;
   }
 
-  CellStyle resolveRuleStyle( final ZmlCellRule rule, final IZmlValueReference reference )
+  public CellStyle resolveRuleStyle( final ZmlCellRule rule, final IZmlModelValueCell reference )
   {
     if( Objects.isNull( reference ) )
       return null;
@@ -169,7 +169,7 @@ public class ZmlLabelProvider
 
   public Object getPlainValue( ) throws SensorException
   {
-    final IZmlValueReference reference = m_row.get( m_column.getModelColumn() );
+    final IZmlModelValueCell reference = m_row.get( m_column.getModelColumn() );
 
     return reference.getValue();
   }

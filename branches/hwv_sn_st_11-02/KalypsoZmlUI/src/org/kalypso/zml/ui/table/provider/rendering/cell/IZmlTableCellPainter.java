@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,28 +38,32 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.model;
+package org.kalypso.zml.ui.table.provider.rendering.cell;
 
-import org.kalypso.zml.ui.table.IZmlTable;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Event;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableElement implements IZmlTableObject
+public interface IZmlTableCellPainter
 {
-  private final IZmlTable m_table;
+  void initGc( Event event );
 
-  public ZmlTableElement( final IZmlTable table )
-  {
-    m_table = table;
-  }
+  void drawBackground( Event event );
 
-  /**
-   * @see org.kalypso.zml.ui.table.viewmodel.IZmlTableObject#getTable()
-   */
-  @Override
-  public IZmlTable getTable( )
-  {
-    return m_table;
-  }
+  void resetGc( Event event );
+
+  IZmlTableCell getCell( );
+
+  Point drawImage( GC gc, Rectangle bounds );
+
+  Point drawText( GC gc, Rectangle bounds );
+
+  boolean isVisble( );
+
+  Point getExtend( Event event );
 }

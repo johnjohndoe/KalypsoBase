@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.model;
+package org.kalypso.zml.ui.table.model.columns;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,11 +58,16 @@ import org.kalypso.zml.core.table.schema.IndexColumnType;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableListener;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
+import org.kalypso.zml.ui.table.model.AbstractZmlTableElement;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
+import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
+import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
+import org.kalypso.zml.ui.table.model.visitors.FindTableRowVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public abstract class AbstractZmlTableColumn extends ZmlTableElement implements IZmlTableColumn
+public abstract class AbstractZmlTableColumn extends AbstractZmlTableElement implements IZmlTableColumn
 {
   private final TableViewerColumn m_column;
 
@@ -162,12 +167,10 @@ public abstract class AbstractZmlTableColumn extends ZmlTableElement implements 
     for( final TableItem item : items )
     {
       final Object data = item.getData();
-      if( data instanceof IZmlModelRow )
+      if( data instanceof IZmlTableRow )
       {
-        final IZmlModelRow row = (IZmlModelRow) data;
-        final ZmlTableRow zmlRow = new ZmlTableRow( getTable(), row );
-
-        cells.add( new ZmlTableCell( zmlRow, this ) );
+        final IZmlTableRow row = (IZmlTableRow) data;
+        cells.add( row.getCell( this ) );
       }
     }
 
@@ -180,8 +183,8 @@ public abstract class AbstractZmlTableColumn extends ZmlTableElement implements 
     final List<IZmlTableCell> selected = new ArrayList<IZmlTableCell>();
 
     final IZmlTableSelectionHandler selection = getTable().getSelectionHandler();
-    final IZmlTableRow[] rows = selection.getSelectedRows();
-    for( final IZmlTableRow row : rows )
+    final IZmlTableValueRow[] rows = selection.getSelectedRows();
+    for( final IZmlTableValueRow row : rows )
     {
       selected.add( row.getCell( this ) );
     }
@@ -192,7 +195,14 @@ public abstract class AbstractZmlTableColumn extends ZmlTableElement implements 
   @Override
   public IZmlTableCell findCell( final IZmlModelRow row )
   {
-    return new ZmlTableCell( new ZmlTableRow( getTable(), row ), this );
+    final FindTableRowVisitor visitor = new FindTableRowVisitor( row );
+    getTable().accept( visitor );
+
+    final IZmlTableRow tableRow = visitor.getRow();
+    if( Objects.isNull( tableRow ) )
+      return null;
+
+    return tableRow.getCell( this );
   }
 
   @Override
