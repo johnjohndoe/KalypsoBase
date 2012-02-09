@@ -73,10 +73,6 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
  */
 public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiTypeHandler
 {
-  /**
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureDialog(org.kalypsodeegree.model.feature.GMLWorkspace,
-   *      org.kalypsodeegree.model.feature.Feature, org.kalypsodeegree.model.feature.IPropertyType)
-   */
   @Override
   public IFeatureDialog createFeatureDialog( final Feature feature, final IPropertyType ftp )
   {
@@ -89,18 +85,12 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
     return TimeseriesLinkType.class;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getTypeName()
-   */
   @Override
   public QName getTypeName( )
   {
-    return ObservationLinkHandler.TYPE_NAME;
+    return ObservationLinkHandler.PROPERTY_NAME;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
-   */
   @Override
   public String getText( final Object element )
   {
@@ -111,10 +101,6 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
     return href == null ? "" : href; //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureviewControl(javax.xml.namespace.QName,
-   *      org.kalypso.template.featureview.ObjectFactory)
-   */
   @Override
   public JAXBElement< ? extends ControlType> createFeatureviewControl( final IPropertyType property, final ObjectFactory factory )
   {
@@ -165,9 +151,6 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
     return true;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#fromText(java.lang.String)
-   */
   @Override
   public Object parseText( final String text, final String formatHint ) throws ParseException
   {
