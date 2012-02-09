@@ -93,12 +93,6 @@ public class RangeSetTypeHandler implements IMarshallingTypeHandler2
   }
 
   @Override
-  public String getShortname( )
-  {
-    return getTypeName().getLocalPart();
-  }
-
-  @Override
   public Object cloneObject( final Object objectToClone, final String gmlVersion ) throws CloneNotSupportedException
   {
     if( !(objectToClone instanceof RangeSetFile) )

@@ -72,12 +72,6 @@ public class MultiGeometryHandler implements IMarshallingTypeHandler2
   }
 
   @Override
-  public String getShortname( )
-  {
-    return GM_MultiGeometry.MULTI_GEOMETRY_ELEMENT.getLocalPart();
-  }
-
-  @Override
   public void marshal( final Object value, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
   {
     new MultiGeometryMarshaller( reader ).marshall( (GM_MultiGeometry) value );

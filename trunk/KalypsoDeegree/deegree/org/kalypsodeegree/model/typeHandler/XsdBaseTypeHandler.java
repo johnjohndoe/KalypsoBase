@@ -71,10 +71,6 @@ public abstract class XsdBaseTypeHandler<T> implements ISimpleMarshallingTypeHan
     m_typeQName = qname;
   }
 
-  /**
-   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(java.lang.Object, org.xml.sax.XMLReader,
-   *      java.net.URL, java.lang.String)
-   */
   @Override
   public final void marshal( final Object value, final XMLReader reader, final URL context, final String gmlVersion )
   {
@@ -87,28 +83,12 @@ public abstract class XsdBaseTypeHandler<T> implements ISimpleMarshallingTypeHan
   @Override
   public abstract T convertToJavaValue( final String xmlString );
 
-  /**
-   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#unmarshal(org.xml.sax.XMLReader,
-   *      org.kalypso.contribs.java.net.IUrlResolver, org.kalypso.gmlschema.types.MarshalResultEater)
-   */
   @Override
   public void unmarshal( final XMLReader reader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion )
   {
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#getShortname()
-   */
-  @Override
-  public String getShortname( )
-  {
-    return m_typeQName.getLocalPart();
-  }
-
-  /**
-   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#cloneObject(java.lang.Object)
-   */
   @Override
   public Object cloneObject( final Object objectToClone, final String gmlVersion ) throws CloneNotSupportedException
   {
