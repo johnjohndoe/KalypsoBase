@@ -68,6 +68,7 @@ public abstract class AbstractZmlTableCellPainter implements IZmlTableCellPainte
     m_cell = cell;
   }
 
+  @Override
   public IZmlTableCell getCell( )
   {
     return m_cell;
@@ -83,6 +84,7 @@ public abstract class AbstractZmlTableCellPainter implements IZmlTableCellPainte
     return m_images;
   }
 
+  @Override
   public void initGc( final Event event )
   {
     m_background = event.gc.getBackground();
@@ -108,6 +110,7 @@ public abstract class AbstractZmlTableCellPainter implements IZmlTableCellPainte
 
   protected abstract Color getForeground( );
 
+  @Override
   public void resetGc( final Event event )
   {
     event.gc.setBackground( m_background );

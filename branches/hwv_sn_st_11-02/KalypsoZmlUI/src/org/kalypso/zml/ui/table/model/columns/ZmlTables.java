@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.model.columns;
 
-
 /**
  * @author Dirk Kuch
  */
