@@ -43,7 +43,8 @@ package org.kalypso.zml.core.table.rules.impl;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.rules.AbstractZmlCellRuleImplementation;
 
 /**
@@ -59,9 +60,14 @@ public class ZmlRuleInfo extends AbstractZmlCellRuleImplementation
   }
 
   @Override
-  protected boolean doApply( final ZmlCellRule rule, final IZmlValueReference reference )
+  protected boolean doApply( final ZmlCellRule rule, final IZmlModelCell reference )
   {
-    final IZmlModelColumn column = reference.getColumn();
+    if( !(reference instanceof IZmlModelValueCell) )
+      return false;
+
+    final IZmlModelValueCell cell = (IZmlModelValueCell) reference;
+
+    final IZmlModelColumn column = cell.getColumn();
     final IObservation observation = column.getObservation();
 
     final String href = observation.getHref();

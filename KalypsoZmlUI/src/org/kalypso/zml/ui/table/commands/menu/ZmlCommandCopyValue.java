@@ -52,8 +52,8 @@ import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
-import org.kalypso.zml.ui.table.model.IZmlTableRow;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
 import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
 
 /**
@@ -85,8 +85,8 @@ public class ZmlCommandCopyValue extends AbstractHandler
       }
       buffer.append( "\n" );
 
-      final IZmlTableRow[] rows = selection.getSelectedRows();
-      for( final IZmlTableRow row : rows )
+      final IZmlTableValueRow[] rows = selection.getSelectedRows();
+      for( final IZmlTableValueRow row : rows )
       {
         for( final IZmlTableColumn column : columns )
         {

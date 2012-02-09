@@ -41,25 +41,25 @@
 package org.kalypso.zml.core.table.model.transaction;
 
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 
 /**
  * @author Dirk Kuch
  */
 public class CopyValueReferenceCommand implements IZmlModelUpdateCommand
 {
-  private final IZmlValueReference m_source;
+  private final IZmlModelValueCell m_source;
 
-  private final IZmlValueReference m_target;
+  private final IZmlModelValueCell m_target;
 
-  public CopyValueReferenceCommand( final IZmlValueReference source, final IZmlValueReference target )
+  public CopyValueReferenceCommand( final IZmlModelValueCell source, final IZmlModelValueCell target )
   {
     m_source = source;
     m_target = target;
   }
 
   @Override
-  public IZmlValueReference getTarget( )
+  public IZmlModelValueCell getTarget( )
   {
     return m_target;
   }

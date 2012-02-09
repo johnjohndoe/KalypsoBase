@@ -45,7 +45,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.zml.core.table.binding.CellStyle;
-import org.kalypso.zml.ui.table.model.ZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.ZmlTableColumn;
 
 /**
  * @author Dirk Kuch

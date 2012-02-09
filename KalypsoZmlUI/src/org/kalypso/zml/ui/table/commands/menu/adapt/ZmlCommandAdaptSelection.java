@@ -55,12 +55,13 @@ import org.kalypso.ogc.sensor.filter.TranProLinFilterUtilities;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.timeseries.wq.WQTimeserieProxy;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -87,17 +88,17 @@ public class ZmlCommandAdaptSelection extends AbstractHandler
       final IZmlTable table = ZmlHandlerUtil.getTable( event );
       final IZmlTableSelectionHandler selection = table.getSelectionHandler();
       final IZmlTableColumn column = selection.findActiveColumnByPosition();
-      final IZmlTableCell[] selected = column.getSelectedCells();
+      final IZmlTableValueCell[] selected = (IZmlTableValueCell[]) column.getSelectedCells();
       if( selected.length < 2 )
         throw new ExecutionException( "Anschmiegen fehlgeschlagen - selektieren Sie eine zweite Zelle!" );
 
       final IZmlTableCell base = selected[0];
 
-      final Date begin = toDate( base );
+      final Date begin = toDate( (IZmlTableValueCell) base );
       final Date end = toDate( selected[selected.length - 1] );
       final DateRange range = new DateRange( begin, end );
 
-      final IZmlValueReference reference = selected[0].getValueReference();
+      final IZmlModelValueCell reference = selected[0].getValueReference();
       final IZmlModelColumn tableColumn = reference.getColumn();
       final IAxis axis = findTransformAxisType( tableColumn );
 
@@ -124,7 +125,7 @@ public class ZmlCommandAdaptSelection extends AbstractHandler
   {
     final IObservation observation = column.getModelColumn().getObservation();
 
-    final double difference = getDifference( selected, axis );
+    final double difference = getDifference( (IZmlTableValueCell[]) selected, axis );
 
     return TranProLinFilterUtilities.transform( observation, range, difference, 0.0, "+", axis.getType() ); //$NON-NLS-1$
   }
@@ -152,19 +153,19 @@ public class ZmlCommandAdaptSelection extends AbstractHandler
     return null;
   }
 
-  private Date toDate( final IZmlTableCell cell ) throws SensorException
+  private Date toDate( final IZmlTableValueCell cell ) throws SensorException
   {
-    final IZmlValueReference reference = cell.getValueReference();
+    final IZmlModelValueCell reference = cell.getValueReference();
     return reference.getIndexValue();
   }
 
-  private double getDifference( final IZmlTableCell[] cells, final IAxis axis ) throws SensorException
+  private double getDifference( final IZmlTableValueCell[] cells, final IAxis axis ) throws SensorException
   {
-    final IZmlTableCell base = cells[0];
-    final IZmlTableCell prev = base.findPreviousCell();
+    final IZmlTableValueCell base = cells[0];
+    final IZmlTableValueCell prev = (IZmlTableValueCell) base.findPreviousCell();
 
-    final IZmlValueReference reference1 = base.getValueReference();
-    final IZmlValueReference reference2 = prev.getValueReference();
+    final IZmlModelValueCell reference1 = base.getValueReference();
+    final IZmlModelValueCell reference2 = prev.getValueReference();
 
     final ITupleModel tupleModel1 = reference1.getColumn().getTupleModel();
     final ITupleModel tupleModel2 = reference2.getColumn().getTupleModel();

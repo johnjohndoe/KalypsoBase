@@ -52,11 +52,12 @@ import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.references.ZmlDataValueReference;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.ZmlTableColumn;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
+import org.kalypso.zml.ui.table.model.columns.ZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
 
 /**
@@ -98,7 +99,7 @@ public class SumValueEditingStrategy extends AbstractEditingStrategy
     try
     {
       final ZmlTableColumn column = getColumn();
-      final IZmlTableCell cell = column.findCell( row );
+      final IZmlTableValueCell cell = (IZmlTableValueCell) column.findCell( row );
 
       final Number targetValue = getTargetValue( value );
 
@@ -113,13 +114,13 @@ public class SumValueEditingStrategy extends AbstractEditingStrategy
         /* get first invisible value (first value will is not part of the table!) */
         final IZmlModel model = row.getModel();
         final IZmlModelRow baseRow = model.getRowAt( 0 );
-        final IZmlValueReference previousReference = baseRow.get( column.getModelColumn() );
+        final IZmlModelValueCell previousReference = baseRow.get( column.getModelColumn() );
 
         updateAggregatedValue( previousReference, cell.getValueReference(), targetValue );
       }
       else
       {
-        updateAggregatedValue( getStartReference( previousCell ), cell.getValueReference(), targetValue );
+        updateAggregatedValue( getStartReference( (IZmlTableValueCell) previousCell ), cell.getValueReference(), targetValue );
       }
     }
     catch( final SensorException e )
@@ -128,14 +129,14 @@ public class SumValueEditingStrategy extends AbstractEditingStrategy
     }
   }
 
-  private IZmlValueReference getStartReference( final IZmlTableCell previousCell )
+  private IZmlModelValueCell getStartReference( final IZmlTableValueCell previousCell )
   {
     final ZmlDataValueReference reference = (ZmlDataValueReference) previousCell.getValueReference();
 
     return new ZmlDataValueReference( reference.getRow(), reference.getColumn(), reference.getModelIndex() + 1 );
   }
 
-  private void updateAggregatedValue( final IZmlValueReference start, final IZmlValueReference end, final Number targetValue ) throws SensorException
+  private void updateAggregatedValue( final IZmlModelValueCell start, final IZmlModelValueCell end, final Number targetValue ) throws SensorException
   {
     final Integer startIndex = start.getModelIndex();
     final Integer endIndex = end.getModelIndex();
@@ -151,7 +152,7 @@ public class SumValueEditingStrategy extends AbstractEditingStrategy
     }
   }
 
-  private void updateOriginValue( final IZmlValueReference reference, final Number targetValue ) throws SensorException
+  private void updateOriginValue( final IZmlModelValueCell reference, final Number targetValue ) throws SensorException
   {
     reference.doUpdate( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
   }

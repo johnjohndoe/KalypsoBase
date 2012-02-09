@@ -46,7 +46,7 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 
 /**
  * @author Dirk Kuch
@@ -55,13 +55,13 @@ public abstract class AbstractZmlCellRuleImplementation implements IZmlCellRuleI
 {
   @SuppressWarnings("unused")
   @Override
-  public String update( final ZmlCellRule rule, final IZmlValueReference reference, final String text ) throws SensorException
+  public String update( final ZmlCellRule rule, final IZmlModelCell reference, final String text ) throws SensorException
   {
     return text;
   }
 
   @Override
-  public final boolean apply( final ZmlCellRule rule, final IZmlValueReference reference )
+  public final boolean apply( final ZmlCellRule rule, final IZmlModelCell reference )
   {
     try
     {
@@ -79,22 +79,22 @@ public abstract class AbstractZmlCellRuleImplementation implements IZmlCellRuleI
     }
   }
 
-  protected abstract boolean doApply( ZmlCellRule rule, IZmlValueReference reference );
+  protected abstract boolean doApply( ZmlCellRule rule, IZmlModelCell reference );
 
   @Override
-  public CellStyle getCellStyle( final ZmlCellRule rule, final IZmlValueReference reference ) throws CoreException
+  public CellStyle getCellStyle( final ZmlCellRule rule, final IZmlModelCell reference ) throws CoreException
   {
     return rule.getPlainStyle();
   }
 
   @Override
-  public String getLabel( final ZmlCellRule rule, final IZmlValueReference reference )
+  public String getLabel( final ZmlCellRule rule, final IZmlModelCell reference )
   {
     return rule.getRuleType().getLabel();
   }
 
   @Override
-  public Double getSeverity( final ZmlCellRule rule, final IZmlValueReference reference )
+  public Double getSeverity( final ZmlCellRule rule, final IZmlModelCell reference )
   {
     return 1.0;
   }

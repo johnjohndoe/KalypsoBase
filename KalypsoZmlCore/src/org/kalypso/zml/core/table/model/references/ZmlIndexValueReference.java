@@ -45,13 +45,12 @@ import java.util.Date;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.zml.core.table.model.IZmlModel;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlIndexValueReference implements IZmlValueReference
+public class ZmlIndexValueReference implements IZmlModelIndexCell
 {
   private final IZmlModelRow m_row;
 
@@ -60,94 +59,28 @@ public class ZmlIndexValueReference implements IZmlValueReference
     m_row = row;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.model.references.IZmlValueReference#getColumn()
-   */
-  @Override
-  public IZmlModelColumn getColumn( )
-  {
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.model.references.IZmlValueReference#getRow()
-   */
   @Override
   public IZmlModelRow getRow( )
   {
     return m_row;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.model.references.IZmlValueReference#getModel()
-   */
   @Override
   public IZmlModel getModel( )
   {
     return m_row.getModel();
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.model.references.IZmlModelCell#getValue()
-   */
-  @Override
-  public Number getValue( )
-  {
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.model.references.IZmlModelCell#getDataSource()
-   */
-  @Override
-  public String getDataSource( )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.model.references.IZmlModelCell#getHref()
-   */
-  @Override
-  public String getHref( )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.model.references.IZmlModelCell#getStatus()
-   */
-  @Override
-  public Integer getStatus( )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.model.references.IZmlModelCell#getTupleModelIndex()
-   */
   @Override
   public Integer getModelIndex( )
   {
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.model.references.IZmlModelCell#update(java.lang.Object)
-   */
-  @Override
-  public void doUpdate( final Number targetValue, final String source, final Integer status )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  /**
-   * @see org.kalypso.zml.core.table.model.references.IZmlValueReference#getIndexValue()
-   */
   @Override
   public Date getIndexValue( )
   {
-    return getRow().getIndexValue();
+    return getRow().getIndex();
   }
 
   @Override

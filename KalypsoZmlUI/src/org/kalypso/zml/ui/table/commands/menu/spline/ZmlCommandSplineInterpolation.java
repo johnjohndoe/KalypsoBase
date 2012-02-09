@@ -52,12 +52,12 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 
 import com.mxgraph.util.mxPoint;
 import com.mxgraph.util.mxSpline;
@@ -87,20 +87,20 @@ public class ZmlCommandSplineInterpolation extends AbstractHandler
       final IZmlTable table = ZmlHandlerUtil.getTable( event );
       final IZmlTableSelectionHandler selection = table.getSelectionHandler();
       final IZmlTableColumn column = selection.findActiveColumnByPosition();
-      final IZmlTableCell[] selected = column.getSelectedCells();
+      final IZmlTableValueCell[] selected = (IZmlTableValueCell[]) column.getSelectedCells();
       if( selected.length < 2 )
         throw new ExecutionException( "Spline-Interpolation fehlgeschlagen - selektieren Sie eine zweite Zelle!" );
 
       final IZmlModelColumn model = column.getModelColumn();
 
-      final IZmlValueReference[] intervall = findIntervall( selected );
-      final IZmlValueReference s1 = intervall[0];
-      final IZmlValueReference s2 = intervall[1];
+      final IZmlModelValueCell[] intervall = findIntervall( selected );
+      final IZmlModelValueCell s1 = intervall[0];
+      final IZmlModelValueCell s2 = intervall[1];
 
       final ZmlStuetstellenVisitor visitor = new ZmlStuetstellenVisitor( s1, s2 );
       model.accept( visitor );
 
-      final IZmlValueReference[] stuetzstellen = visitor.getStuetzstellen();
+      final IZmlModelValueCell[] stuetzstellen = visitor.getStuetzstellen();
 
       final List<mxPoint> mxPoints = new ArrayList<mxPoint>();
 
@@ -127,11 +127,11 @@ public class ZmlCommandSplineInterpolation extends AbstractHandler
 
   }
 
-  private mxPoint[] getPoints( final Splines splines, final IZmlValueReference... references ) throws SensorException
+  private mxPoint[] getPoints( final Splines splines, final IZmlModelValueCell... references ) throws SensorException
   {
     final List<mxPoint> points = new ArrayList<mxPoint>();
 
-    for( final IZmlValueReference reference : references )
+    for( final IZmlModelValueCell reference : references )
     {
       final Date date = reference.getIndexValue();
       final Number value = reference.getValue();
@@ -142,12 +142,12 @@ public class ZmlCommandSplineInterpolation extends AbstractHandler
     return points.toArray( new mxPoint[] {} );
   }
 
-  private IZmlValueReference[] findIntervall( final IZmlTableCell[] cells )
+  private IZmlModelValueCell[] findIntervall( final IZmlTableValueCell[] cells )
   {
-    IZmlTableCell start = cells[0];
-    IZmlTableCell end = cells[0];
+    IZmlTableValueCell start = cells[0];
+    IZmlTableValueCell end = cells[0];
 
-    for( final IZmlTableCell cell : cells )
+    for( final IZmlTableValueCell cell : cells )
     {
       if( cell.getIndex() < start.getIndex() )
         start = cell;
@@ -156,7 +156,7 @@ public class ZmlCommandSplineInterpolation extends AbstractHandler
         end = cell;
     }
 
-    return new IZmlValueReference[] { start.getValueReference(), end.getValueReference() };
+    return new IZmlModelValueCell[] { start.getValueReference(), end.getValueReference() };
 
   }
 }

@@ -45,7 +45,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 
 /**
@@ -66,7 +66,7 @@ public class IndexVisitor implements IZmlModelColumnVisitor
    * @see org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor#visit(org.kalypso.zml.core.table.model.references.IZmlValueReference)
    */
   @Override
-  public void visit( final IZmlValueReference reference ) throws SensorException
+  public void visit( final IZmlModelValueCell reference ) throws SensorException
   {
     final Date date = reference.getIndexValue();
 

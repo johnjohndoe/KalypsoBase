@@ -38,14 +38,9 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+package org.kalypso.zml.ui.table.provider.rendering.cell;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
@@ -55,50 +50,35 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Event;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.lang.Strings;
-import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
-import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.schema.AlignmentType;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
-import org.kalypso.zml.ui.table.model.ZmlTableColumn;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableIndexCell;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableCellPainter
+public class ZmlTableIndexCellPainter extends AbstractZmlTableCellPainter
 {
-  private final IZmlTableCell m_cell;
-
   private final ZmlLabelProvider m_provider;
-
-  private Color m_background;
-
-  private Color m_foreground;
-
-  private Font m_font;
 
   private final ZmlCellRule[] m_activeRules;
 
   private Point m_ptr;
 
-  private Image[] m_images;
-
-  public ZmlTableCellPainter( final IZmlTableCell cell )
+  public ZmlTableIndexCellPainter( final IZmlTableIndexCell cell )
   {
-    m_cell = cell;
+    super( cell );
 
-    final ZmlTableColumn column = getColumn();
-
-    final IZmlModelRow modelRow = cell.getRow().getModelRow();
-    m_activeRules = column.findActiveRules( modelRow );
-    m_provider = new ZmlLabelProvider( modelRow, column, m_activeRules );
+    m_activeRules = CellPainters.getActiveRules( cell );
+    m_provider = CellPainters.getLabelProivder( cell, m_activeRules );
   }
 
-  public IZmlTableCell getCell( )
+  @Override
+  public IZmlTableIndexCell getCell( )
   {
-    return m_cell;
+    return (IZmlTableIndexCell) super.getCell();
   }
 
   public Point getExtend( final Event event )
@@ -136,13 +116,12 @@ public class ZmlTableCellPainter
   public Point drawImage( final GC gc, final Rectangle bounds )
   {
     final Point ptr = new Point( 0, 0 );
+    if( getImages() == null ) // not initialized?
+      setImages( CellPainters.findImages( getCell(), m_provider, m_activeRules ) );
 
-    final IZmlModelRow row = m_cell.getRow().getModelRow();
-    final IZmlValueReference reference = row.get( getColumn().getModelColumn() );
-    if( Objects.isNull( reference ) )
+    final Image[] images = getImages();
+    if( ArrayUtils.isEmpty( images ) )
       return ptr;
-
-    final Image[] images = findImages( reference );
 
     for( final Image image : images )
     {
@@ -157,37 +136,6 @@ public class ZmlTableCellPainter
     return ptr;
   }
 
-  private Image[] findImages( final IZmlValueReference reference )
-  {
-    if( ArrayUtils.isNotEmpty( m_images ) )
-      return m_images;
-
-    final List<Image> images = new ArrayList<Image>();
-    for( final ZmlCellRule rule : m_activeRules )
-    {
-      try
-      {
-        final CellStyle style = m_provider.resolveRuleStyle( rule, reference );
-        if( Objects.isNull( style ) )
-          continue;
-
-        final Image image = style.getImage();
-        if( Objects.isNull( image ) )
-          continue;
-
-        images.add( image );
-      }
-      catch( final IOException e )
-      {
-        e.printStackTrace();
-      }
-    }
-
-    m_images = images.toArray( new Image[] {} );
-
-    return m_images;
-  }
-
   public Point drawText( final GC gc, final Rectangle bounds )
   {
     try
@@ -198,7 +146,7 @@ public class ZmlTableCellPainter
 
       final Point extend = gc.textExtent( label );
 
-      final AlignmentType alignment = m_cell.getColumn().getColumnType().getAlignment();
+      final AlignmentType alignment = getCell().getColumn().getColumnType().getAlignment();
       if( AlignmentType.LEFT.equals( alignment ) )
         return drawLeftText( gc, label, bounds, extend );
       else if( AlignmentType.CENTER.equals( alignment ) )
@@ -207,7 +155,6 @@ public class ZmlTableCellPainter
         return drawRightText( gc, label, bounds, extend );
 
       return new Point( 0, 0 );
-
     }
     catch( final Exception e )
     {
@@ -260,51 +207,32 @@ public class ZmlTableCellPainter
 
   public boolean isVisble( )
   {
-    final IZmlTableColumn column = m_cell.getColumn();
+    final IZmlTableColumn column = getCell().getColumn();
 
     return column.isVisible();
-  }
-
-  private ZmlTableColumn getColumn( )
-  {
-    final IZmlTableColumn column = m_cell.getColumn();
-    if( column instanceof ZmlTableColumn )
-    {
-      return (ZmlTableColumn) column;
-    }
-
-    throw new UnsupportedOperationException();
-  }
-
-  public void initGc( final Event event )
-  {
-    m_background = event.gc.getBackground();
-    m_foreground = event.gc.getForeground();
-    m_font = event.gc.getFont();
-
-    final Color background = m_provider.getBackground();
-    if( Objects.isNotNull( background ) && (event.detail & SWT.SELECTED) == 0 )
-      event.gc.setBackground( background );
-
-    final Color foreground = m_provider.getForeground();
-    if( Objects.isNotNull( foreground ) )
-      event.gc.setForeground( foreground );
-
-    final Font font = m_provider.getFont();
-    if( Objects.isNotNull( font ) )
-      event.gc.setFont( font );
-  }
-
-  public void resetGc( final Event event )
-  {
-    event.gc.setBackground( m_background );
-    event.gc.setForeground( m_foreground );
-    event.gc.setFont( m_font );
   }
 
   public void drawBackground( final Event event )
   {
     event.gc.fillRectangle( new Rectangle( event.x, event.y, event.width, event.height ) );
+  }
+
+  @Override
+  protected Font getFont( )
+  {
+    return m_provider.getFont();
+  }
+
+  @Override
+  protected Color getBackground( )
+  {
+    return m_provider.getBackground();
+  }
+
+  @Override
+  protected Color getForeground( )
+  {
+    return m_provider.getForeground();
   }
 
 }

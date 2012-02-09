@@ -45,10 +45,10 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.rules.IZmlCellRuleImplementation;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.model.ZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.ZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -64,7 +64,7 @@ public class InstantaneousValueLabelingStrategy extends AbstractValueLabelingStr
   @Override
   public String getText( final IZmlModelRow row ) throws SensorException, CoreException
   {
-    final IZmlValueReference reference = getReference( row );
+    final IZmlModelValueCell reference = getReference( row );
     if( reference == null )
       return "";
 

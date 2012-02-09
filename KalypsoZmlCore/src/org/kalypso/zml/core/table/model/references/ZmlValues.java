@@ -54,7 +54,7 @@ public final class ZmlValues
   {
   }
 
-  public static boolean isStuetzstelle( final IZmlValueReference reference ) throws SensorException
+  public static boolean isStuetzstelle( final IZmlModelValueCell reference ) throws SensorException
   {
     return isStuetzstelle( reference.getStatus(), reference.getDataSource() );
   }

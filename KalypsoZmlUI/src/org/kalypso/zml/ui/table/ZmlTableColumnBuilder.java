@@ -53,8 +53,8 @@ import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.TableTypes;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.focus.ZmlTableEditingSupport;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.ZmlTableColumn;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
+import org.kalypso.zml.ui.table.model.columns.ZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.ZmlTooltipProvider;
 
 /**

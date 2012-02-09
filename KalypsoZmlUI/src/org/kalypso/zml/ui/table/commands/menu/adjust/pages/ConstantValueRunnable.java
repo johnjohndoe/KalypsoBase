@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands.menu.adjust.pages;
 
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
 
 /**
  * @author Dirk Kuch
@@ -49,7 +49,7 @@ public class ConstantValueRunnable extends AbstractValueRunnable
 {
   private final Double m_constantValue;
 
-  public ConstantValueRunnable( final IZmlTableCell[] cells, final Double constantValue )
+  public ConstantValueRunnable( final IZmlTableValueCell[] cells, final Double constantValue )
   {
     super( cells );
     m_constantValue = constantValue;

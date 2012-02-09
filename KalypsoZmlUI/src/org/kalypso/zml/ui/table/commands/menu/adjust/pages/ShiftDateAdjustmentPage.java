@@ -49,8 +49,8 @@ import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedSpinner;
 import org.kalypso.zml.ui.table.base.widgets.IEnhancedTextBoxListener;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -191,7 +191,7 @@ public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage
       return m_offset;
 
     final IZmlTableColumn column = getColumn();
-    final IZmlTableCell[] cells = column.getCells();
+    final IZmlTableValueCell[] cells = (IZmlTableValueCell[]) column.getCells();
 
     final long t1 = cells[0].getValueReference().getIndexValue().getTime();
     final long t2 = cells[1].getValueReference().getIndexValue().getTime();
@@ -217,7 +217,7 @@ public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage
   @Override
   public ICoreRunnableWithProgress getRunnable( )
   {
-    return new ShiftDateRunnable( getColumn().getModelColumn(), getColumn().getSelectedCells(), getMinutes() );
+    return new ShiftDateRunnable( getColumn().getModelColumn(), (IZmlTableValueCell[]) getColumn().getSelectedCells(), getMinutes() );
   }
 
   /**

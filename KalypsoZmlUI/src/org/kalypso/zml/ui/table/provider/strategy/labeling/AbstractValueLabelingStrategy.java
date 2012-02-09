@@ -47,9 +47,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.model.ZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.ZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -79,7 +79,7 @@ public abstract class AbstractValueLabelingStrategy implements IZmlLabelStrategy
     return String.format( format == null ? "%s" : format, value );
   }
 
-  protected IZmlValueReference getReference( final IZmlModelRow row )
+  protected IZmlModelValueCell getReference( final IZmlModelRow row )
   {
     if( row == null )
       return null;

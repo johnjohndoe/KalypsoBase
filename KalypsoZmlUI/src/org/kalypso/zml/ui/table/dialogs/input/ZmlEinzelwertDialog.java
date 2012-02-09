@@ -63,7 +63,7 @@ import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.ui.dialog.EnhancedTitleAreaDialog;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch

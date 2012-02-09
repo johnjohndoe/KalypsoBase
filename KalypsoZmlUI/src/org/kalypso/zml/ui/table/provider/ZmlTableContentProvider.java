@@ -38,70 +38,61 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.layout;
+package org.kalypso.zml.ui.table.provider;
 
-import java.util.Date;
+import java.util.Collections;
 import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.ui.table.IZmlTableRowVisitor;
-import org.kalypso.zml.ui.table.model.IZmlTableRow;
+import org.kalypso.zml.core.table.model.ZmlModel;
+import org.kalypso.zml.ui.table.ZmlTableComposite;
+import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
+import org.kalypso.zml.ui.table.model.rows.ZmlTableHeaderRow;
+import org.kalypso.zml.ui.table.model.rows.ZmlTableRow;
 
 /**
  * @author Dirk Kuch
  */
-public class DateRangeVisitor implements IZmlTableRowVisitor
+public class ZmlTableContentProvider extends ArrayTreeContentProvider
 {
-  Map<Date, IZmlTableRow> m_rows = new TreeMap<Date, IZmlTableRow>();
+  private final ZmlTableComposite m_table;
 
-  private final DateRange m_dateRange;
+  private IZmlTableRow[] m_rows = new IZmlTableRow[] {};
 
-  public DateRangeVisitor( final DateRange dateRange )
+  public ZmlTableContentProvider( final ZmlTableComposite table )
   {
-    m_dateRange = dateRange;
+    m_table = table;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.IZmlTableRowVisitor#accept(org.kalypso.zml.ui.table.model.IZmlTableRow)
-   */
   @Override
-  public void visit( final IZmlTableRow row )
+  public synchronized Object[] getElements( final Object inputElement )
   {
-    final IZmlModelRow modelRow = row.getModelRow();
-    final Date index = modelRow.getIndexValue();
+    m_rows = new IZmlTableRow[] {};
 
-    if( m_dateRange.containsLazyInclusive( index ) )
-      m_rows.put( index, row );
-  }
-
-  public IZmlTableRow[] getRows( )
-  {
-    return m_rows.values().toArray( new IZmlTableRow[] {} );
-  }
-
-  public IZmlModelRow[] getModelRows( )
-  {
-    final Set<IZmlModelRow> rows = new LinkedHashSet<IZmlModelRow>();
-    final IZmlTableRow[] tableRows = getRows();
-    for( final IZmlTableRow tableRow : tableRows )
+    if( inputElement instanceof ZmlModel )
     {
-      rows.add( tableRow.getModelRow() );
+      final Set<IZmlTableRow> elements = new LinkedHashSet<IZmlTableRow>();
+
+      final ZmlModel model = (ZmlModel) inputElement;
+      Collections.addAll( elements, new ZmlTableHeaderRow( m_table ) );
+
+      final IZmlModelRow[] rows = model.getRows();
+      for( final IZmlModelRow row : rows )
+      {
+        elements.add( new ZmlTableRow( m_table, row ) );
+      }
+
+      m_rows = elements.toArray( new IZmlTableRow[] {} );
     }
 
-    return rows.toArray( new IZmlModelRow[] {} );
+    return m_rows;
   }
 
-  public DateRange getDateRange( )
+  public IZmlTableRow[] getElements( )
   {
-    final Date[] dates = m_rows.keySet().toArray( new Date[] {} );
-    if( ArrayUtils.isEmpty( dates ) )
-      return null;
-
-    return new DateRange( dates[0], dates[dates.length - 1] );
+    return m_rows;
   }
+
 }

@@ -49,9 +49,9 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.repository.IDataSourceItem;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
 
 /**
  * @author Dirk Kuch
@@ -59,9 +59,9 @@ import org.kalypso.zml.ui.table.model.IZmlTableCell;
 public abstract class AbstractValueRunnable implements ICoreRunnableWithProgress
 {
 
-  private final IZmlTableCell[] m_cells;
+  private final IZmlTableValueCell[] m_cells;
 
-  public AbstractValueRunnable( final IZmlTableCell[] cells )
+  public AbstractValueRunnable( final IZmlTableValueCell[] cells )
   {
     m_cells = cells;
   }
@@ -73,11 +73,11 @@ public abstract class AbstractValueRunnable implements ICoreRunnableWithProgress
 
     final ZmlModelTransaction transaction = new ZmlModelTransaction();
 
-    for( final IZmlTableCell cell : m_cells )
+    for( final IZmlTableValueCell cell : m_cells )
     {
       try
       {
-        final IZmlValueReference reference = cell.getValueReference();
+        final IZmlModelValueCell reference = cell.getValueReference();
         final Number value = getValue( reference.getValue() );
 
         transaction.add( reference, value, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.layout;
+package org.kalypso.zml.ui.table.model.visitors;
 
 import java.util.Date;
 
@@ -46,36 +46,33 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.IZmlModelRowVisitor;
 import org.kalypso.zml.ui.table.IZmlTableRowVisitor;
-import org.kalypso.zml.ui.table.model.IZmlTableRow;
+import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
 
 /**
  * @author Dirk Kuch
  */
-public class ClosestDateVisitor implements IZmlTableRowVisitor, IZmlModelRowVisitor
+public class FindClosestDateVisitor implements IZmlTableRowVisitor, IZmlModelRowVisitor
 {
   private final long m_base;
 
   private long m_diff = Long.MAX_VALUE;
 
-  private IZmlTableRow m_tableRow;
+  private IZmlTableValueRow m_tableRow;
 
   private IZmlModelRow m_modelRow;
 
   private Date m_date;
 
-  public ClosestDateVisitor( final Date date )
+  public FindClosestDateVisitor( final Date date )
   {
     m_base = date.getTime();
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.IZmlTableColumnVisitor#accept(org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn)
-   */
   @Override
-  public void visit( final IZmlTableRow row )
+  public void visit( final IZmlTableValueRow row )
   {
     final IZmlModelRow modelRow = row.getModelRow();
-    final Date date = modelRow.getIndexValue();
+    final Date date = modelRow.getIndex();
     if( Objects.isNull( date ) )
       return;
 
@@ -91,13 +88,10 @@ public class ClosestDateVisitor implements IZmlTableRowVisitor, IZmlModelRowVisi
     }
   }
 
-  /**
-   * @see org.kalypso.zml.core.table.model.IZmlModelRowVisitor#visit(org.kalypso.zml.core.table.model.IZmlModelRow)
-   */
   @Override
   public void visit( final IZmlModelRow row )
   {
-    final Date date = row.getIndexValue();
+    final Date date = row.getIndex();
     final long time = date.getTime();
 
     final long diff = Math.abs( m_base - time );
@@ -109,7 +103,7 @@ public class ClosestDateVisitor implements IZmlTableRowVisitor, IZmlModelRowVisi
     }
   }
 
-  public IZmlTableRow getTableRow( )
+  public IZmlTableValueRow getTableRow( )
   {
     return m_tableRow;
   }

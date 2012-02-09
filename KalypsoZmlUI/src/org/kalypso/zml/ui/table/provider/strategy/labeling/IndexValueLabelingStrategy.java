@@ -42,7 +42,7 @@ package org.kalypso.zml.ui.table.provider.strategy.labeling;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.ui.table.model.ZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.ZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -61,7 +61,7 @@ public class IndexValueLabelingStrategy extends AbstractValueLabelingStrategy im
   @Override
   public String getText( final IZmlModelRow row ) throws CoreException
   {
-    return format( row, row.getIndexValue() );
+    return format( row, row.getIndex() );
   }
 
 }

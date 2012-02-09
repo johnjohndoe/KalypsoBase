@@ -50,14 +50,12 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.ZmlTableColumnBuilder;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
-import org.kalypso.zml.ui.table.model.IZmlTableRow;
-import org.kalypso.zml.ui.table.model.ZmlTableRow;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
 
 /**
  * @author Dirk Kuch
@@ -68,12 +66,12 @@ public final class ZmlTables
   {
   }
 
-  public static IZmlTableRow toTableRow( final IZmlTable table, final ViewerCell cell )
+  public static IZmlTableValueRow toTableRow( final IZmlTable table, final ViewerCell cell )
   {
     final Object element = cell.getElement();
-    if( element instanceof IZmlModelRow )
+    if( element instanceof IZmlTableValueRow )
     {
-      return new ZmlTableRow( table, (IZmlModelRow) element );
+      return (IZmlTableValueRow) element;
     }
 
     return null;

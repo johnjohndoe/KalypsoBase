@@ -56,7 +56,7 @@ import org.kalypso.zml.core.table.binding.ColumnHeader;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.AppliedRule;
 import org.kalypso.zml.ui.table.provider.ZmlTableImage;
 import org.kalypso.zml.ui.table.provider.ZmlTableImageMerger;

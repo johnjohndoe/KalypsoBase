@@ -50,13 +50,14 @@ import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -75,13 +76,13 @@ public class ZmlCommandInterpolateValues extends AbstractHandler
       final IZmlTableSelectionHandler selection = table.getSelectionHandler();
       final IZmlTableCell active = selection.findActiveCellByPosition();
       final IZmlTableColumn column = active.getColumn();
-      final IZmlTableCell[] selected = column.getSelectedCells();
+      final IZmlTableValueCell[] selected = (IZmlTableValueCell[]) column.getSelectedCells();
       if( selected.length < 2 )
         throw new ExecutionException( "Interpolation fehlgeschlagen - selektieren Sie eine zweite Zelle!" );
 
-      final IZmlTableCell[] intervall = ZmlCommandUtils.findIntervall( selected );
-      final IZmlValueReference intervallStart = intervall[0].getValueReference();
-      final IZmlValueReference intervallEnd = intervall[1].getValueReference();
+      final IZmlTableValueCell[] intervall = ZmlCommandUtils.findIntervall( selected );
+      final IZmlModelValueCell intervallStart = intervall[0].getValueReference();
+      final IZmlModelValueCell intervallEnd = intervall[1].getValueReference();
 
       final int indexDifference = Math.abs( intervallEnd.getModelIndex() - intervallStart.getModelIndex() );
       final double valueDifference = getValueDifference( intervallStart, intervallEnd );
@@ -100,7 +101,7 @@ public class ZmlCommandInterpolateValues extends AbstractHandler
       for( int index = intervallStart.getModelIndex() + 1; index < intervallEnd.getModelIndex(); index++ )
       {
         final IZmlModelRow row = model.getRowAt( index );
-        final IZmlValueReference cell = row.get( modelColumn );
+        final IZmlModelValueCell cell = row.get( modelColumn );
 
         final int step = cell.getModelIndex() - baseIndex;
         final double value = baseValue + step * stepValue;
@@ -118,7 +119,7 @@ public class ZmlCommandInterpolateValues extends AbstractHandler
     }
   }
 
-  private double getValueDifference( final IZmlValueReference intervallStart, final IZmlValueReference intervallEnd ) throws SensorException
+  private double getValueDifference( final IZmlModelValueCell intervallStart, final IZmlModelValueCell intervallEnd ) throws SensorException
   {
     final Number valueStart = intervallStart.getValue();
     final Number valueEnd = intervallEnd.getValue();

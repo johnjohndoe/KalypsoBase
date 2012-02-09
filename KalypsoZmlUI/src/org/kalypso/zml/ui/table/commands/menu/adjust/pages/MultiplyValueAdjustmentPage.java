@@ -48,6 +48,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedTextBox;
 import org.kalypso.zml.ui.table.base.widgets.IEnhancedTextBoxListener;
 import org.kalypso.zml.ui.table.base.widgets.rules.DoubeValueWidgetRule;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
 
 /**
  * @author Dirk Kuch
@@ -63,19 +64,12 @@ public class MultiplyValueAdjustmentPage extends AbstractAdjustmentPage implemen
     super( provider );
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.pager.IElementPage#getLabel()
-   */
   @Override
   public String getLabel( )
   {
     return "Werte multiplizieren (*)";
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.pager.IElementPage#render(org.eclipse.swt.widgets.Composite,
-   *      org.eclipse.ui.forms.widgets.FormToolkit)
-   */
   @Override
   public void render( final Composite body, final FormToolkit toolkit )
   {
@@ -97,37 +91,23 @@ public class MultiplyValueAdjustmentPage extends AbstractAdjustmentPage implemen
     return m_multiplier;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.pager.IElementPage#dispose()
-   */
   @Override
   public void dispose( )
   {
-    // TODO Auto-generated method stub
-
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.base.widgets.IEnhancedTextBoxListener#valueChanged(java.lang.Object)
-   */
   @Override
   public void valueChanged( final Double value )
   {
     m_multiplier = value;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.commands.menu.adjust.pages.AbstractAdjustmentPage#getRunnable()
-   */
   @Override
   public ICoreRunnableWithProgress getRunnable( )
   {
-    return new MultiplyValueRunnable( getColumn().getSelectedCells(), m_multiplier );
+    return new MultiplyValueRunnable( (IZmlTableValueCell[]) getColumn().getSelectedCells(), m_multiplier );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.commands.menu.adjust.pages.AbstractAdjustmentPage#isValid()
-   */
   @Override
   public boolean isValid( )
   {

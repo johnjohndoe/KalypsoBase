@@ -11,8 +11,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -41,7 +41,7 @@ final class ZmlTableEditorActivationStrategy extends ColumnViewerEditorActivatio
 
         if( org.kalypso.commons.java.lang.Objects.isNotNull( character ) && pattern.matches( String.valueOf( character ) ) )
         {
-          final IZmlTableCell cell = m_cellManager.getFocusTableCell();
+          final IZmlTableValueCell cell = (IZmlTableValueCell) m_cellManager.getFocusTableCell();
           if( org.kalypso.commons.java.lang.Objects.isNull( cell ) )
             return;
 
@@ -49,7 +49,7 @@ final class ZmlTableEditorActivationStrategy extends ColumnViewerEditorActivatio
         }
       }
 
-      private void startEditing( final IZmlTableCell cell, final char character )
+      private void startEditing( final IZmlTableValueCell cell, final char character )
       {
         viewer.editElement( cell.getRow().getModelRow(), cell.findIndex() );
 

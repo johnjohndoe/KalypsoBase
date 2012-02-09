@@ -53,15 +53,15 @@ import org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilter;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.interpolation.ZmlInterpolationWorker;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.references.ZmlValues;
 import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -86,12 +86,12 @@ public class ZmlCommandDeleteStuetzstellen extends AbstractHandler
 
       final ZmlModelTransaction transaction = new ZmlModelTransaction();
 
-      final IZmlTableCell[] cells = column.getSelectedCells();
-      for( final IZmlTableCell cell : cells )
+      final IZmlTableValueCell[] cells = (IZmlTableValueCell[]) column.getSelectedCells();
+      for( final IZmlTableValueCell cell : cells )
       {
         try
         {
-          final IZmlValueReference reference = cell.getValueReference();
+          final IZmlModelValueCell reference = cell.getValueReference();
           if( ZmlValues.isStuetzstelle( reference ) )
           {
             transaction.add( reference, reference.getValue(), src, KalypsoStati.BIT_OK );

@@ -49,11 +49,14 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.references.ZmlValues;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.IZmlTableListener;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
+import org.kalypso.zml.ui.table.model.rows.IZmlTableHeaderRow;
+import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
 
 /**
  * @author Dirk Kuch
@@ -87,7 +90,7 @@ public class ZmlViewResolutionFilter extends ViewerFilter
         return;
 
       final IZmlModelRow base = rows[0];
-      final Date index = base.getIndexValue();
+      final Date index = base.getIndex();
 
       final Calendar calendar = Calendar.getInstance();
       calendar.setTime( index );
@@ -116,29 +119,29 @@ public class ZmlViewResolutionFilter extends ViewerFilter
     return (int) (time / 1000 / 60 / 60);
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
-   */
   @Override
   public boolean select( final Viewer viewer, final Object parentElement, final Object element )
   {
-    if( parentElement instanceof IZmlModel && element instanceof IZmlModelRow )
+    if( element instanceof IZmlTableHeaderRow )
+      return true;
+    else if( parentElement instanceof IZmlModel && element instanceof IZmlTableValueRow )
     {
       final IZmlModel model = (IZmlModel) parentElement;
-      final IZmlModelRow row = (IZmlModelRow) element;
+      final IZmlTableValueRow row = (IZmlTableValueRow) element;
+      final IZmlModelRow modelRow = row.getModelRow();
 
       if( m_resolution == 0 )
       {
         if( m_stuetzstellenMode )
         {
-          return hasStuetzstelle( row );
+
+          return hasStuetzstelle( modelRow );
         }
 
         return true;
       }
 
-      final Date index = row.getIndexValue();
+      final Date index = modelRow.getIndex();
       final int ticks = ticksInHours( index );
 
       final int base = m_base.getBaseIndex( model );
@@ -148,7 +151,7 @@ public class ZmlViewResolutionFilter extends ViewerFilter
 
       if( m_stuetzstellenMode )
       {
-        if( hasStuetzstelle( row ) && mod == 0 )
+        if( hasStuetzstelle( modelRow ) && mod == 0 )
           return true;
       }
 
@@ -160,12 +163,15 @@ public class ZmlViewResolutionFilter extends ViewerFilter
 
   private boolean hasStuetzstelle( final IZmlModelRow row )
   {
-    final IZmlValueReference[] references = row.getReferences();
-    for( final IZmlValueReference reference : references )
+    final IZmlModelCell[] references = row.getCells();
+    for( final IZmlModelCell reference : references )
     {
+      if( !(reference instanceof IZmlModelValueCell) )
+        continue;
+
       try
       {
-        if( ZmlValues.isStuetzstelle( reference ) )
+        if( ZmlValues.isStuetzstelle( (IZmlModelValueCell) reference ) )
           return true;
       }
       catch( final Throwable t )
