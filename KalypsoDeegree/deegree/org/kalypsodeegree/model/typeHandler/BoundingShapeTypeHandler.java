@@ -74,12 +74,6 @@ public class BoundingShapeTypeHandler implements IMarshallingTypeHandler2
   }
 
   @Override
-  public String getShortname( )
-  {
-    return getTypeName().getLocalPart();
-  }
-
-  @Override
   public Object cloneObject( final Object objectToClone, final String gmlVersion )
   {
     final GM_Envelope envelope = (GM_Envelope) objectToClone;

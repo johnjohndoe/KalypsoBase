@@ -74,12 +74,6 @@ public class PolygonHandler implements IMarshallingTypeHandler2
   }
 
   @Override
-  public String getShortname( )
-  {
-    return GM_Polygon.POLYGON_ELEMENT.getLocalPart();
-  }
-
-  @Override
   public void marshal( final Object value, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
   {
     new PolygonMarshaller( reader ).marshall( (GM_Surface<GM_Polygon>) value );

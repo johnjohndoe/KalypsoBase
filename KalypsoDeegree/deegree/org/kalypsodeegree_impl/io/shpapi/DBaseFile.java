@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -80,7 +80,7 @@ import org.kalypsodeegree_impl.tools.TimeTools;
  * memo "M" String <br>
  * date "D" Date <br>
  * binary "B" ByteArrayOutputStream<br>
- * 
+ *
  * @version 12.12.2000
  * @author Andreas Poth
  * @author Markus Müller, email: mm@giub.uni-bonn.de
@@ -408,7 +408,7 @@ public class DBaseFile
     final IMarshallingTypeHandler geoTH = registry.getTypeHandlerForClassName( geoClass );
     ftp[ftp.length - 1] = GMLSchemaFactory.createValuePropertyType( new QName( m_customNamespaceURI, "GEOM" ), geoTH, 1, 1, false );
 
-    final String geometryPropertyTypeString = "gml:" + geoTH.getShortname();
+    final String geometryPropertyTypeString = "gml:" + geoTH.getTypeName().getLocalPart();
 
     try
     {
@@ -673,7 +673,7 @@ public class DBaseFile
 
   /**
    * returns a row of the dBase-file as Feature containing a place holder (field name = "GEOM") for a geometry.
-   * 
+   *
    * @param allowNull
    *          if true, everything wich cannot read or parsed gets 'null' instead of ""
    */
@@ -883,7 +883,7 @@ class tsColumn
 
   /**
    * Constructs a tsColumn object.
-   * 
+   *
    * @param s
    *          the column name
    */
@@ -904,7 +904,7 @@ class dbfCol extends tsColumn
 
   /**
    * Creates a new dbfCol object.
-   * 
+   *
    * @param c
    */
   public dbfCol( final String c )

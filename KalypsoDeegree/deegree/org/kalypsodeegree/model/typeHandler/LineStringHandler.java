@@ -75,12 +75,6 @@ public class LineStringHandler implements IMarshallingTypeHandler2
   }
 
   @Override
-  public String getShortname( )
-  {
-    return QNAME_TYPE.getLocalPart();
-  }
-
-  @Override
   public void marshal( final Object value, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
   {
     new LineStringMarshaller( reader ).marshall( (GM_Curve) value );

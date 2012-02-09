@@ -72,12 +72,6 @@ public class MultiCurveHandler implements IMarshallingTypeHandler2
   }
 
   @Override
-  public String getShortname( )
-  {
-    return GM_MultiCurve.MULTI_CURVE_ELEMENT.getLocalPart();
-  }
-
-  @Override
   public void marshal( final Object value, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
   {
     new MultiCurveMarshaller( reader ).marshall( (GM_MultiCurve) value );
