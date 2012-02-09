@@ -41,7 +41,7 @@
 package org.kalypso.zml.ui.table.context;
 
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.IZmlTableComposite;
 
 /**
  * @author Dirk Kuch
@@ -57,9 +57,9 @@ public final class TableSourceUtility
    * 
    * @return <code>null</code>, if no {@link IMapPanel} was found in the context.
    */
-  public static IZmlTable getTable( final IEvaluationContext context )
+  public static IZmlTableComposite getTable( final IEvaluationContext context )
   {
-    return (IZmlTable) context.getVariable( TableSourceProvider.ACTIVE_TABLE_NAME );
+    return (IZmlTableComposite) context.getVariable( TableSourceProvider.ACTIVE_TABLE_NAME );
   }
 
 }

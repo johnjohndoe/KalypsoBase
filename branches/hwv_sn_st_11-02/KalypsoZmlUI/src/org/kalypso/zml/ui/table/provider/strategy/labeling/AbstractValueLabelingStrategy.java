@@ -48,7 +48,7 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
-import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.IZmlTableComposite;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 
 /**
@@ -87,7 +87,7 @@ public abstract class AbstractValueLabelingStrategy implements IZmlLabelStrategy
     return row.get( m_column.getModelColumn() );
   }
 
-  protected IZmlTable getTable( )
+  protected IZmlTableComposite getTable( )
   {
     return m_column.getTable();
   }

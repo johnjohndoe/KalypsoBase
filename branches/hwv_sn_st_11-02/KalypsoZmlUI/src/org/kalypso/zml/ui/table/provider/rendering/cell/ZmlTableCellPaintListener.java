@@ -50,6 +50,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler;
 import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableValueColumn;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
@@ -176,7 +177,8 @@ public class ZmlTableCellPaintListener implements Listener
 
   private int getTableColumnWidth( final IZmlTableCellPainter renderer )
   {
-    return renderer.getCell().getColumn().getTableViewerColumn().getColumn().getWidth();
+    final IZmlTableCell cell = renderer.getCell();
+    return cell.getColumn().getTableViewerColumn( cell.getTable() ).getColumn().getWidth();
   }
 
   private IZmlTableCellPainter findCellPainter( final Event event )

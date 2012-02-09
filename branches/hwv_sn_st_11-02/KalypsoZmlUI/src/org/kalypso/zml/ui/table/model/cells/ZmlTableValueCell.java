@@ -142,7 +142,7 @@ public class ZmlTableValueCell extends AbstractZmlTableCell implements IZmlTable
   @Override
   public int findIndex( )
   {
-    final TableColumn base = getColumn().getTableViewerColumn().getColumn();
+    final TableColumn base = getColumn().getTableViewerColumn( getTable() ).getColumn();
 
     final TableViewer tableViewer = getTable().getViewer();
     final Table table = tableViewer.getTable();

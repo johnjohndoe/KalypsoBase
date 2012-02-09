@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.layout;
 
+import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 
 /**
@@ -47,12 +48,18 @@ import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
  */
 public class HideInactiveColumnsVisitor extends AbstractTableColumnPackVisitor
 {
+  private final IZmlTable m_table;
+
+  HideInactiveColumnsVisitor( final IZmlTable table )
+  {
+    m_table = table;
+  }
 
   @Override
   public void visit( final IZmlTableColumn column )
   {
     if( !column.isVisible() )
-      hide( column.getTableViewerColumn().getColumn() );
+      hide( column.getTableViewerColumn( m_table ).getColumn() );
   }
 
 }

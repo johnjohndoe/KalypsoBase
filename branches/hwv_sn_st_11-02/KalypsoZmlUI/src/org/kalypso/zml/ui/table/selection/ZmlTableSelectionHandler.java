@@ -66,8 +66,9 @@ import org.kalypso.contribs.eclipse.jface.viewers.table.Tables;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.IZmlTableComposite;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
-import org.kalypso.zml.ui.table.ZmlTableComposite;
+import org.kalypso.zml.ui.table.ZmlMainTable;
 import org.kalypso.zml.ui.table.menu.ZmlTableContextMenuProvider;
 import org.kalypso.zml.ui.table.menu.ZmlTableHeaderContextMenuProvider;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
@@ -89,11 +90,11 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
 
   private final MenuManager m_contextMenuManager = new MenuManager();
 
-  private final ZmlTableComposite m_table;
+  private final ZmlMainTable m_table;
 
   private IZmlTableColumn m_lastColumn;
 
-  public ZmlTableSelectionHandler( final ZmlTableComposite table )
+  public ZmlTableSelectionHandler( final ZmlMainTable table )
   {
     m_table = table;
 
@@ -299,24 +300,24 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
 
   private ViewerCell findCell( final IZmlTableColumn column, final int y )
   {
-    final IZmlTable table = column.getTable();
-    final TableViewer viewer = table.getViewer();
+    final IZmlTableComposite table = column.getTable();
+    final TableViewer viewer = m_table.getViewer();
 
     /** focus on the same row and column of the old table cell */
-    final int ptrX = Tables.getX( viewer.getTable(), column.getTableViewerColumn().getColumn() );
+    final int ptrX = Tables.getX( viewer.getTable(), column.getTableViewerColumn( m_table ).getColumn() );
     final ViewerCell cell = viewer.getCell( new Point( ptrX, y ) );
     if( Objects.isNotNull( cell ) )
       return cell;
 
     /** if not, focus on the same row */
-    final IZmlTableColumn[] columns = table.getColumns();
+    final IZmlTableColumn[] columns = m_table.getColumns();
     for( final IZmlTableColumn col : columns )
     {
       final BaseColumn type = col.getColumnType();
       if( !(type.getType() instanceof DataColumnType) )
         continue;
 
-      final int x = Tables.getX( viewer.getTable(), col.getTableViewerColumn().getColumn() );
+      final int x = Tables.getX( viewer.getTable(), col.getTableViewerColumn( m_table ).getColumn() );
       final ViewerCell c = viewer.getCell( new Point( x, y ) );
       if( Objects.isNotNull( c ) )
         return c;

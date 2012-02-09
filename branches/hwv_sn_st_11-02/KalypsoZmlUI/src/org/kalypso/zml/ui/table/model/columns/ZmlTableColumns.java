@@ -57,6 +57,7 @@ import org.kalypso.zml.core.table.model.utils.ZmlModelColumns;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.IZmlTableComposite;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
 
 /**
@@ -132,7 +133,7 @@ public final class ZmlTableColumns
    * @param identifier
    *          column identifier
    */
-  public static boolean hasColumn( final IZmlTable table, final String identifier )
+  public static boolean hasColumn( final IZmlTableComposite table, final String identifier )
   {
     final IZmlTableColumn[] columns = table.getColumns();
     for( final IZmlTableColumn column : columns )
@@ -144,7 +145,7 @@ public final class ZmlTableColumns
     return false;
   }
 
-  public static IZmlModelColumn[] findMissingColumns( final IZmlTable table, final IZmlModelColumn[] modelColumns )
+  public static IZmlModelColumn[] findMissingColumns( final IZmlTableComposite table, final IZmlModelColumn[] modelColumns )
   {
     final Set<IZmlModelColumn> missing = new LinkedHashSet<IZmlModelColumn>();
     for( final IZmlModelColumn modelColumn : modelColumns )
@@ -159,7 +160,7 @@ public final class ZmlTableColumns
     return missing.toArray( new IZmlModelColumn[] {} );
   }
 
-  private static IZmlTableColumn findTableColumn( final IZmlTable table, final IZmlModelColumn modelColumn )
+  private static IZmlTableColumn findTableColumn( final IZmlTableComposite table, final IZmlModelColumn modelColumn )
   {
     final IZmlTableColumn[] columns = table.getColumns();
     for( final IZmlTableColumn column : columns )
@@ -174,7 +175,7 @@ public final class ZmlTableColumns
     return null;
   }
 
-  public static void addTableColumn( final IZmlTable table, final BaseColumn column )
+  public static void addTableColumn( final IZmlTableComposite table, final BaseColumn column )
   {
     final IZmlModel model = table.getModel();
 

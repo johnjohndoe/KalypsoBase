@@ -45,7 +45,6 @@ import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.core.table.schema.IndexColumnType;
-import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.model.AbstractZmlTableElement;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
@@ -63,7 +62,7 @@ public abstract class AbstractZmlTableCell extends AbstractZmlTableElement imple
 
   protected AbstractZmlTableCell( final IZmlTableRow row, final IZmlTableColumn column )
   {
-    super( column.getTable() );
+    super( row.getTable() );
 
     m_column = column;
     m_row = row;
@@ -90,8 +89,7 @@ public abstract class AbstractZmlTableCell extends AbstractZmlTableElement imple
   @Override
   public ViewerCell getViewerCell( )
   {
-    final IZmlTable table = m_column.getTable();
-    final IZmlTableSelectionHandler handler = table.getSelectionHandler();
+    final IZmlTableSelectionHandler handler = getTable().getSelectionHandler();
 
     return handler.toViewerCell( this );
   }

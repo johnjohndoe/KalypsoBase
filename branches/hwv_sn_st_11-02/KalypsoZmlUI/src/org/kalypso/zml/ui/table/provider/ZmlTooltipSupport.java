@@ -55,6 +55,7 @@ import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.toolbar.view.AbstractHourViewCommand;
 import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
@@ -73,8 +74,11 @@ public class ZmlTooltipSupport
 
   private static boolean SHOW_TOOLTIPS = true;
 
-  public ZmlTooltipSupport( final IZmlTableColumn column )
+  private final IZmlTable m_table;
+
+  public ZmlTooltipSupport( final IZmlTable table, final IZmlTableColumn column )
   {
+    m_table = table;
     m_column = column;
   }
 
@@ -113,7 +117,7 @@ public class ZmlTooltipSupport
 
   private boolean isAggregated( )
   {
-    final ZmlViewResolutionFilter filter = AbstractHourViewCommand.resolveFilter( m_column.getTable() );
+    final ZmlViewResolutionFilter filter = AbstractHourViewCommand.resolveFilter( m_table );
     if( Objects.isNull( filter ) )
       return false;
 

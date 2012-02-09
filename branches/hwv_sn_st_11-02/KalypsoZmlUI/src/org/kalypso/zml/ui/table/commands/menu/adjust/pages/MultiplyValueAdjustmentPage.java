@@ -105,7 +105,7 @@ public class MultiplyValueAdjustmentPage extends AbstractAdjustmentPage implemen
   @Override
   public ICoreRunnableWithProgress getRunnable( )
   {
-    return new MultiplyValueRunnable( (IZmlTableValueCell[]) getColumn().getSelectedCells(), m_multiplier );
+    return new MultiplyValueRunnable( (IZmlTableValueCell[]) getColumn().getSelectedCells( null ), m_multiplier );
   }
 
   @Override

@@ -80,7 +80,7 @@ public class ZmlCommandSetSelectedValues extends AbstractHandler
       final IZmlTableValueCell active = (IZmlTableValueCell) selection.findActiveCellByPosition();
       final IZmlTableValueColumn column = active.getColumn();
 
-      final IZmlTableValueCell[] cells = (IZmlTableValueCell[]) column.getSelectedCells();
+      final IZmlTableValueCell[] cells = (IZmlTableValueCell[]) column.getSelectedCells( table );
 
       final IZmlEditingStrategy strategy = column.getEditingStrategy();
       if( strategy.isAggregated() )

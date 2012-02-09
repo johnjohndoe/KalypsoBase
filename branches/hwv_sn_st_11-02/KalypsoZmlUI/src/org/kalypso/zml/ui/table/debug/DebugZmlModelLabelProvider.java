@@ -43,7 +43,6 @@ package org.kalypso.zml.ui.table.debug;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.TableColumn;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.rule.AbstractZmlRule;
@@ -127,9 +126,10 @@ public class DebugZmlModelLabelProvider extends LabelProvider implements IBaseLa
     {
       final IZmlTableColumn column = (IZmlTableColumn) element;
       final BaseColumn baseColumn = column.getColumnType();
-      final TableColumn tableColumn = column.getTableViewerColumn().getColumn();
 
-      return String.format( "IZmlTableColumn: id=%s, name: %s", baseColumn.getIdentifier(), tableColumn.getText() );
+// final TableColumn tableColumn = column.getTableViewerColumn().getColumn();
+
+      return String.format( "IZmlTableColumn: id=%s, name: %s", baseColumn.getIdentifier() );
     }
     else if( element instanceof AppliedRule )
     {

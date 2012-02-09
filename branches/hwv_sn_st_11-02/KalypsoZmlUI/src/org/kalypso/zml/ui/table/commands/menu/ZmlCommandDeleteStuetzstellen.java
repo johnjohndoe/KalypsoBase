@@ -86,7 +86,7 @@ public class ZmlCommandDeleteStuetzstellen extends AbstractHandler
 
       final ZmlModelTransaction transaction = new ZmlModelTransaction();
 
-      final IZmlTableValueCell[] cells = (IZmlTableValueCell[]) column.getSelectedCells();
+      final IZmlTableValueCell[] cells = (IZmlTableValueCell[]) column.getSelectedCells( table );
       for( final IZmlTableValueCell cell : cells )
       {
         try
