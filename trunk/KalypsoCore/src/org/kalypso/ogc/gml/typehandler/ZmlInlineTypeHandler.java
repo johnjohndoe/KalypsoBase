@@ -90,15 +90,6 @@ public class ZmlInlineTypeHandler extends XsdBaseTypeHandler<IObservation>
   }
 
   /**
-   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getShortname()
-   */
-  @Override
-  public String getShortname( )
-  {
-    return "ZmlInline"; //$NON-NLS-1$
-  }
-
-  /**
    * Creates the axes for this kind of observation.<br/>
    * The first axis MUST be the key axis.
    */
@@ -107,18 +98,12 @@ public class ZmlInlineTypeHandler extends XsdBaseTypeHandler<IObservation>
     return TimeseriesUtils.createDefaultAxes( m_axisTypes, true );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#parseType(java.lang.String)
-   */
   @Override
   public Object parseType( final String text )
   {
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-   */
   @Override
   public int compare( final IObservation o1, final IObservation o2 )
   {
