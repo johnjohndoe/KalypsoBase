@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider;
 
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -49,7 +48,6 @@ import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.ZmlModel;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
-import org.kalypso.zml.ui.table.model.rows.ZmlTableHeaderRow;
 import org.kalypso.zml.ui.table.model.rows.ZmlTableRow;
 
 /**
@@ -76,7 +74,6 @@ public class ZmlTableContentProvider extends ArrayTreeContentProvider
       final Set<IZmlTableRow> elements = new LinkedHashSet<IZmlTableRow>();
 
       final ZmlModel model = (ZmlModel) inputElement;
-      Collections.addAll( elements, new ZmlTableHeaderRow( m_table ) );
 
       final IZmlModelRow[] rows = model.getRows();
       for( final IZmlModelRow row : rows )
@@ -90,7 +87,7 @@ public class ZmlTableContentProvider extends ArrayTreeContentProvider
     return m_rows;
   }
 
-  public IZmlTableRow[] getElements( )
+  public IZmlTableRow[] getRows( )
   {
     return m_rows;
   }

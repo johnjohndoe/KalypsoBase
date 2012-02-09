@@ -50,16 +50,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -74,7 +69,6 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 import org.kalypso.zml.ui.debug.KalypsoZmlUiDebug;
 import org.kalypso.zml.ui.table.base.helper.ZmlTables;
-import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
 import org.kalypso.zml.ui.table.focus.IZmlTableFocusHandler;
 import org.kalypso.zml.ui.table.focus.ZmlTableFocusCellHandler;
 import org.kalypso.zml.ui.table.layout.ZmlTableLayoutHandler;
@@ -84,9 +78,7 @@ import org.kalypso.zml.ui.table.model.columns.ZmlTableColumn;
 import org.kalypso.zml.ui.table.model.columns.ZmlTableColumns;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
-import org.kalypso.zml.ui.table.provider.ZmlTableContentProvider;
 import org.kalypso.zml.ui.table.provider.rendering.cell.ZmlTableCellCache;
-import org.kalypso.zml.ui.table.provider.rendering.cell.ZmlTableCellPaintListener;
 import org.kalypso.zml.ui.table.selection.ZmlTableSelectionHandler;
 
 /**
@@ -96,15 +88,11 @@ public class ZmlTableComposite extends Composite implements IZmlTable
 {
   private static final MutexRule MUTEX_TABLE_UPDATE = new MutexRule( "Aktualisiere Tabelle" ); // $NON-NLS-1$
 
-  protected TableViewer m_tableViewer;
-
   protected final Set<ZmlTableColumn> m_columns = new LinkedHashSet<ZmlTableColumn>();
 
   private UIJob m_updateJob;
 
   private final Set<IZmlTableListener> m_listeners = new LinkedHashSet<IZmlTableListener>();
-
-  private final ZmlViewResolutionFilter m_filter = new ZmlViewResolutionFilter( this );
 
   private ZmlTableFocusCellHandler m_focus;
 
@@ -118,7 +106,7 @@ public class ZmlTableComposite extends Composite implements IZmlTable
 
   private IZmlModel m_model;
 
-  private final ZmlTableContentProvider m_contentProvider = new ZmlTableContentProvider( this );
+  protected ZmlMainTable m_main;
 
   public ZmlTableComposite( final Composite parent, final FormToolkit toolkit )
   {
@@ -148,35 +136,15 @@ public class ZmlTableComposite extends Composite implements IZmlTable
         toolbar.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
       }
 
-      m_tableViewer = new TableViewer( this, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION );
-      m_tableViewer.getTable().setLinesVisible( true );
-      m_tableViewer.setUseHashlookup( true );
+      m_main = new ZmlMainTable( this, m_toolkit );
+      m_main.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
       m_selection = new ZmlTableSelectionHandler( this );
-
-      ColumnViewerToolTipSupport.enableFor( m_tableViewer, ToolTip.NO_RECREATE );
-
-      m_tableViewer.setContentProvider( m_contentProvider );
-
-      addEmptyColumn();
 
       m_focus = new ZmlTableFocusCellHandler( this );
       addListener( m_focus );
       addListener( new ZmlTableLayoutHandler( this ) );
 
-      m_tableViewer.setInput( m_model );
-
-      addBasicFilters();
-
-      final Table table = m_tableViewer.getTable();
-      final ZmlTableCellPaintListener paintListener = new ZmlTableCellPaintListener( this );
-      table.addListener( SWT.EraseItem, paintListener );
-      table.addListener( SWT.MeasureItem, paintListener );
-      table.addListener( SWT.PaintItem, paintListener );
-
-      /** layout stuff */
-      table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-      table.setHeaderVisible( true );
       if( hasToolbar( tableType ) )
         initToolbar( tableType, toolbar, m_toolkit );
     }
@@ -199,11 +167,6 @@ public class ZmlTableComposite extends Composite implements IZmlTable
       return false;
 
     return !toolbar.isEmpty();
-  }
-
-  private void addBasicFilters( )
-  {
-    m_tableViewer.addFilter( m_filter );
   }
 
   private void initToolbar( final ZmlTableType tableType, final Composite composite, final FormToolkit toolkit )
@@ -240,16 +203,6 @@ public class ZmlTableComposite extends Composite implements IZmlTable
     return references.toArray( new String[] {} );
   }
 
-  /** windows layout bug -> always add a first invisble table column */
-  private void addEmptyColumn( )
-  {
-    final TableViewerColumn column = new TableViewerColumn( m_tableViewer, SWT.NULL );
-    column.setLabelProvider( new ColumnLabelProvider() );
-    column.getColumn().setWidth( 0 );
-    column.getColumn().setResizable( false );
-    column.getColumn().setMoveable( false );
-  }
-
   final Set<IZmlModelColumn> m_stackColumns = Collections.synchronizedSet( new LinkedHashSet<IZmlModelColumn>() );
 
   @Override
@@ -267,7 +220,7 @@ public class ZmlTableComposite extends Composite implements IZmlTable
         @Override
         public IStatus runInUIThread( final IProgressMonitor monitor )
         {
-          if( m_tableViewer.getTable().isDisposed() )
+          if( m_main.isDisposed() )
             return Status.OK_STATUS;
 
           synchronized( this )
@@ -285,7 +238,7 @@ public class ZmlTableComposite extends Composite implements IZmlTable
               column.reset();
             }
 
-            m_tableViewer.refresh( true, true );
+            m_main.refresh();
             m_pager.reveal();
 
             fireTableChanged( IZmlTableListener.TYPE_REFRESH, stack );
@@ -359,7 +312,7 @@ public class ZmlTableComposite extends Composite implements IZmlTable
   @Override
   public TableViewer getViewer( )
   {
-    return m_tableViewer;
+    return m_main.getTableViewer();
   }
 
   @Override
@@ -383,13 +336,13 @@ public class ZmlTableComposite extends Composite implements IZmlTable
   @Override
   public int getResolution( )
   {
-    return m_filter.getResolution();
+    return m_main.getResolution();
   }
 
   @Override
   public IZmlTableRow[] getRows( )
   {
-    return m_contentProvider.getElements();
+    return m_main.getRows();
   }
 
   @Override
