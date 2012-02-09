@@ -73,8 +73,4 @@ public interface IProfilLayerProvider
   IComponentUiHandlerProvider getComponentUiHandlerProvider( final IProfil profile );
 
   IAxis[] registerAxis( IMapperRegistry mapperRegistry );
-
-  LayerDescriptor getLayer( final String pointPropertyID );
-
-  // public IAxisRenderer[] registerAxisRenderer( IMapperRegistry mapperRegistry );
 }
