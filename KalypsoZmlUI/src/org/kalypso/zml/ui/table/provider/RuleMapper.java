@@ -59,8 +59,8 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.rules.IZmlCellRuleImplementation;
 import org.kalypso.zml.core.table.rules.IZmlColumnRuleImplementation;
-import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.IZmlTableListener;
+import org.kalypso.zml.ui.table.IZmlTableComposite;
+import org.kalypso.zml.ui.table.IZmlTableCompositeListener;
 
 /**
  * @author Dirk Kuch
@@ -75,9 +75,9 @@ public class RuleMapper
 
   private IZmlModelCell m_lastReference;
 
-  private final IZmlTable m_table;
+  private final IZmlTableComposite m_table;
 
-  public RuleMapper( final IZmlTable table, final BaseColumn column )
+  public RuleMapper( final IZmlTableComposite table, final BaseColumn column )
   {
     m_table = table;
     m_column = column;
@@ -123,7 +123,7 @@ public class RuleMapper
 
         m_applied.put( rule, new AppliedRule( style, label, severity, rule.hasHeaderIcon() ) );
 
-        m_table.fireTableChanged( IZmlTableListener.TYPE_ACTIVE_RULE_CHANGED, getModelColumn() );
+        m_table.fireTableChanged( IZmlTableCompositeListener.TYPE_ACTIVE_RULE_CHANGED, getModelColumn() );
       }
       else
       {
@@ -135,7 +135,7 @@ public class RuleMapper
 
         m_applied.put( rule, new AppliedRule( style, label, severity, rule.hasHeaderIcon() ) );
 
-        m_table.fireTableChanged( IZmlTableListener.TYPE_ACTIVE_RULE_CHANGED, getModelColumn() );
+        m_table.fireTableChanged( IZmlTableCompositeListener.TYPE_ACTIVE_RULE_CHANGED, getModelColumn() );
       }
     }
     catch( final Throwable t )

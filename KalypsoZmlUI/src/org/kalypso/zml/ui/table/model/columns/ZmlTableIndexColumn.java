@@ -42,7 +42,6 @@ package org.kalypso.zml.ui.table.model.columns;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.viewers.TableViewerColumn;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.CellStyle;
@@ -50,12 +49,11 @@ import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.schema.CellStyleType;
-import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.IZmlTableComposite;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableIndexCell;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
 import org.kalypso.zml.ui.table.model.visitors.FindTableRowVisitor;
 import org.kalypso.zml.ui.table.provider.AppliedRule;
-import org.kalypso.zml.ui.table.provider.RuleMapper;
 import org.kalypso.zml.ui.table.provider.strategy.labeling.IZmlLabelStrategy;
 import org.kalypso.zml.ui.table.provider.strategy.labeling.IndexValueLabelingStrategy;
 
@@ -64,7 +62,6 @@ import org.kalypso.zml.ui.table.provider.strategy.labeling.IndexValueLabelingStr
  */
 public class ZmlTableIndexColumn extends AbstractZmlTableColumn implements IZmlTableIndexColumn
 {
-  private final RuleMapper m_mapper;
 
   private CellStyle m_lastCellStyle;
 
@@ -72,11 +69,10 @@ public class ZmlTableIndexColumn extends AbstractZmlTableColumn implements IZmlT
 
   private final IZmlLabelStrategy m_labeling = new IndexValueLabelingStrategy( this );
 
-  public ZmlTableIndexColumn( final IZmlTable table, final TableViewerColumn column, final BaseColumn type, final int tableColumnIndex )
+  public ZmlTableIndexColumn( final IZmlTableComposite table, final BaseColumn type )
   {
-    super( table, column, type, tableColumnIndex );
+    super( table, type );
 
-    m_mapper = new RuleMapper( table, type );
   }
 
   @Override
@@ -138,27 +134,19 @@ public class ZmlTableIndexColumn extends AbstractZmlTableColumn implements IZmlT
     if( Objects.isNull( reference ) )
       return new ZmlCellRule[] {};
 
-    return m_mapper.findActiveRules( reference );
-  }
-
-  @Override
-  public void reset( )
-  {
-    super.reset();
-
-    m_mapper.reset();
+    return getMapper().findActiveRules( reference );
   }
 
   @Override
   public AppliedRule[] getAppliedRules( )
   {
-    return m_mapper.getAppliedRules();
+    return getMapper().getAppliedRules();
   }
 
   @Override
   public String toString( )
   {
-    return String.format( "id: %s, label: %s", getColumnType().getIdentifier(), getTableViewerColumn().getColumn().getText() );
+    return String.format( "id: %s, label: %s", getColumnType().getIdentifier() );
   }
 
   @Override

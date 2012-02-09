@@ -52,6 +52,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.TableTypes;
 import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.IZmlTableComposite;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
 import org.kalypso.zml.ui.table.provider.ZmlTooltipProvider;
 
@@ -60,11 +61,11 @@ import org.kalypso.zml.ui.table.provider.ZmlTooltipProvider;
  */
 public class ZmlTableIndexColumnBuilder implements ICoreRunnableWithProgress
 {
-  protected final IZmlTable m_table;
+  protected final IZmlTableComposite m_table;
 
   private final BaseColumn m_column;
 
-  public ZmlTableIndexColumnBuilder( final IZmlTable table, final BaseColumn column )
+  public ZmlTableIndexColumnBuilder( final IZmlTableComposite table, final BaseColumn column )
   {
     m_table = table;
     m_column = column;
@@ -73,40 +74,48 @@ public class ZmlTableIndexColumnBuilder implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
-    final TableViewer viewer = m_table.getViewer();
-    final int index = viewer.getTable().getColumnCount();
-    final TableViewerColumn viewerColumn = new TableViewerColumn( viewer, TableTypes.toSWT( m_column.getAlignment() ) );
+    final IZmlTable[] tables = m_table.getTables();
+    final ZmlTableIndexColumn column = new ZmlTableIndexColumn( m_table, m_column );
 
-    final ZmlTableIndexColumn column = new ZmlTableIndexColumn( m_table, viewerColumn, m_column, index );
-    m_table.add( column );
-
-    viewerColumn.setLabelProvider( new ZmlTooltipProvider( column ) );
-    viewerColumn.getColumn().setText( m_column.getLabel() );
-
-    viewerColumn.getColumn().addControlListener( new ControlListener()
+    for( final IZmlTable table : tables )
     {
-      @Override
-      public void controlResized( final ControlEvent e )
-      {
-        doRedraw();
-      }
+      final TableViewer viewer = table.getViewer();
+      final int index = viewer.getTable().getColumnCount();
 
-      @Override
-      public void controlMoved( final ControlEvent e )
-      {
-        doRedraw();
-      }
+      final TableViewerColumn viewerColumn = new TableViewerColumn( viewer, TableTypes.toSWT( m_column.getAlignment() ) );
+      column.addColumn( table, viewerColumn );
 
-      private void doRedraw( )
-      {
-        final IZmlTableCell cell = m_table.getFocusHandler().getFocusTableCell();
-        if( Objects.isNull( cell ) )
-          return;
+      viewerColumn.setLabelProvider( new ZmlTooltipProvider( table, column ) );
+      viewerColumn.getColumn().setText( m_column.getLabel() );
 
-        if( Objects.equal( cell.getColumn(), column ) )
-          m_table.getFocusHandler().getCursor().redraw();
-      }
-    } );
+      viewerColumn.getColumn().addControlListener( new ControlListener()
+      {
+        @Override
+        public void controlResized( final ControlEvent e )
+        {
+          doRedraw();
+        }
+
+        @Override
+        public void controlMoved( final ControlEvent e )
+        {
+          doRedraw();
+        }
+
+        private void doRedraw( )
+        {
+          final IZmlTableCell cell = table.getFocusHandler().getFocusTableCell();
+          if( Objects.isNull( cell ) )
+            return;
+
+          if( Objects.equal( cell.getColumn(), column ) )
+            table.getFocusHandler().getCursor().redraw();
+        }
+      } );
+
+    }
+
+    m_table.add( column );
 
     return Status.OK_STATUS;
   }

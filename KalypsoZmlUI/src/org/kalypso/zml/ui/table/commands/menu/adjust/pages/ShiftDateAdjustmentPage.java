@@ -185,13 +185,13 @@ public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage
     return spinner;
   }
 
-  private Integer getOffset( ) throws SensorException
+  private Integer getOffset( )
   {
     if( Objects.isNotNull( m_offset ) )
       return m_offset;
 
     final IZmlTableColumn column = getColumn();
-    final IZmlTableValueCell[] cells = (IZmlTableValueCell[]) column.getCells();
+    final IZmlTableValueCell[] cells = (IZmlTableValueCell[]) column.getCells( null );
 
     final long t1 = cells[0].getValueReference().getIndexValue().getTime();
     final long t2 = cells[1].getValueReference().getIndexValue().getTime();
@@ -217,7 +217,7 @@ public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage
   @Override
   public ICoreRunnableWithProgress getRunnable( )
   {
-    return new ShiftDateRunnable( getColumn().getModelColumn(), (IZmlTableValueCell[]) getColumn().getSelectedCells(), getMinutes() );
+    return new ShiftDateRunnable( getColumn().getModelColumn(), (IZmlTableValueCell[]) getColumn().getSelectedCells( null ), getMinutes() );
   }
 
   /**

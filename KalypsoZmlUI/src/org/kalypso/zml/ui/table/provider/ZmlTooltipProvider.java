@@ -48,6 +48,7 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.ZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableIndexCell;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
@@ -63,16 +64,19 @@ public class ZmlTooltipProvider extends ColumnLabelProvider
 
   private final IZmlTableColumn m_column;
 
+  private final IZmlTable m_table;
+
   @Override
   public String getText( final Object element )
   {
     return null;
   }
 
-  public ZmlTooltipProvider( final IZmlTableColumn column )
+  public ZmlTooltipProvider( final IZmlTable table, final IZmlTableColumn column )
   {
+    m_table = table;
     m_column = column;
-    m_tooltip = new ZmlTooltipSupport( column );
+    m_tooltip = new ZmlTooltipSupport( table, column );
   }
 
   @Override

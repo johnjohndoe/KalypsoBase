@@ -81,7 +81,7 @@ public class ZmlTableHeaderCellPainter extends AbstractZmlTableCellPainter
     try
     {
 
-      final String text = getCell().getColumn().getTableViewerColumn().getColumn().getText();
+      final String text = getCell().getColumn().getTableViewerColumn( getCell().getTable() ).getColumn().getText();
       initGc( event );
 
       final Point ptr = drawImage( event.gc, new Rectangle( 0, 0, 1, 1 ) );
@@ -137,7 +137,7 @@ public class ZmlTableHeaderCellPainter extends AbstractZmlTableCellPainter
   {
     try
     {
-      final String label = getCell().getColumn().getTableViewerColumn().getColumn().getText();
+      final String label = getCell().getColumn().getTableViewerColumn( getCell().getTable() ).getColumn().getText();
       if( Strings.isEmpty( label ) )
         return new Point( 0, 0 );
 

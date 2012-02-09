@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.model.rows;
 
-import org.kalypso.zml.ui.table.ZmlTableComposite;
+import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.model.cells.AbstractZmlTableCell;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
@@ -50,7 +50,7 @@ import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
  */
 public class ZmlTableHeaderRow extends AbstractZmlTableRow implements IZmlTableHeaderRow
 {
-  public ZmlTableHeaderRow( final ZmlTableComposite table )
+  public ZmlTableHeaderRow( final IZmlTable table )
   {
     super( table );
   }

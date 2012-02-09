@@ -46,7 +46,7 @@ import java.util.Set;
 import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.ZmlModel;
-import org.kalypso.zml.ui.table.ZmlTableComposite;
+import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
 import org.kalypso.zml.ui.table.model.rows.ZmlTableRow;
 
@@ -55,11 +55,11 @@ import org.kalypso.zml.ui.table.model.rows.ZmlTableRow;
  */
 public class ZmlTableContentProvider extends ArrayTreeContentProvider
 {
-  private final ZmlTableComposite m_table;
+  private final IZmlTable m_table;
 
   private IZmlTableRow[] m_rows = new IZmlTableRow[] {};
 
-  public ZmlTableContentProvider( final ZmlTableComposite table )
+  public ZmlTableContentProvider( final IZmlTable table )
   {
     m_table = table;
   }

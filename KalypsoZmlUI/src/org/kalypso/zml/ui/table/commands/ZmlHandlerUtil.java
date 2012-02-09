@@ -44,7 +44,9 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.ui.services.IEvaluationService;
 import org.eclipse.ui.services.IServiceLocator;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.IZmlTableComposite;
 import org.kalypso.zml.ui.table.context.TableSourceProvider;
 
 /**
@@ -58,10 +60,18 @@ public final class ZmlHandlerUtil
 
   public static IZmlTable getTable( final ExecutionEvent event )
   {
+    final IZmlTableComposite composite = getTableComposite( event );
+    if( Objects.isNull( composite ) )
+      return null;
+
+    return composite.getMainTable();
+  }
+
+  public static IZmlTableComposite getTableComposite( final ExecutionEvent event )
+  {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
     return getTable( context );
-
   }
 
   public static IZmlTable getTable( final IServiceLocator locator )
@@ -69,12 +79,14 @@ public final class ZmlHandlerUtil
     final IEvaluationService service = (IEvaluationService) locator.getService( IEvaluationService.class );
     final IEvaluationContext context = service.getCurrentState();
 
-    return getTable( context );
+    final IZmlTableComposite table = getTable( context );
+
+    return table.getMainTable();
   }
 
-  public static IZmlTable getTable( final IEvaluationContext context )
+  public static IZmlTableComposite getTable( final IEvaluationContext context )
   {
-    return (IZmlTable) context.getVariable( TableSourceProvider.ACTIVE_TABLE_NAME );
+    return (IZmlTableComposite) context.getVariable( TableSourceProvider.ACTIVE_TABLE_NAME );
   }
 
 }

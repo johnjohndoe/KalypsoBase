@@ -88,7 +88,7 @@ public class ZmlCommandAdaptSelection extends AbstractHandler
       final IZmlTable table = ZmlHandlerUtil.getTable( event );
       final IZmlTableSelectionHandler selection = table.getSelectionHandler();
       final IZmlTableColumn column = selection.findActiveColumnByPosition();
-      final IZmlTableValueCell[] selected = (IZmlTableValueCell[]) column.getSelectedCells();
+      final IZmlTableValueCell[] selected = (IZmlTableValueCell[]) column.getSelectedCells( null );
       if( selected.length < 2 )
         throw new ExecutionException( "Anschmiegen fehlgeschlagen - selektieren Sie eine zweite Zelle!" );
 

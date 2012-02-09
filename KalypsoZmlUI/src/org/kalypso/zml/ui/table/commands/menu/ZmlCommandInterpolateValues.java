@@ -64,9 +64,6 @@ import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
  */
 public class ZmlCommandInterpolateValues extends AbstractHandler
 {
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
@@ -76,7 +73,7 @@ public class ZmlCommandInterpolateValues extends AbstractHandler
       final IZmlTableSelectionHandler selection = table.getSelectionHandler();
       final IZmlTableCell active = selection.findActiveCellByPosition();
       final IZmlTableColumn column = active.getColumn();
-      final IZmlTableValueCell[] selected = (IZmlTableValueCell[]) column.getSelectedCells();
+      final IZmlTableValueCell[] selected = (IZmlTableValueCell[]) column.getSelectedCells( table );
       if( selected.length < 2 )
         throw new ExecutionException( "Interpolation fehlgeschlagen - selektieren Sie eine zweite Zelle!" );
 

@@ -54,9 +54,6 @@ public abstract class AbstractZmlTableElement implements IZmlTableObject
     m_table = table;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.viewmodel.IZmlTableObject#getTable()
-   */
   @Override
   public IZmlTable getTable( )
   {

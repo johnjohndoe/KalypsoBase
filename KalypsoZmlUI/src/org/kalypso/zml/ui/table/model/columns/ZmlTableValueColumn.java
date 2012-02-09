@@ -42,7 +42,6 @@ package org.kalypso.zml.ui.table.model.columns;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.viewers.TableViewerColumn;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.SensorException;
@@ -61,13 +60,13 @@ import org.kalypso.zml.core.table.schema.CellStyleType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.core.table.schema.IndexColumnType;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.IZmlTableListener;
+import org.kalypso.zml.ui.table.IZmlTableComposite;
+import org.kalypso.zml.ui.table.IZmlTableCompositeListener;
 import org.kalypso.zml.ui.table.focus.ZmlTableEditingSupport;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
 import org.kalypso.zml.ui.table.model.visitors.FindTableRowVisitor;
 import org.kalypso.zml.ui.table.provider.AppliedRule;
-import org.kalypso.zml.ui.table.provider.RuleMapper;
 import org.kalypso.zml.ui.table.provider.strategy.ZmlCollectRulesVisitor;
 import org.kalypso.zml.ui.table.provider.strategy.editing.ContinuedInterpolatedValueEditingStrategy;
 import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
@@ -85,8 +84,6 @@ public class ZmlTableValueColumn extends AbstractZmlTableColumn implements IZmlT
   /** visibility flag is used by hide columns command */
   private boolean m_visible = true;
 
-  private final RuleMapper m_mapper;
-
   private CellStyle m_lastCellStyle;
 
   private IZmlModelRow m_lastRow;
@@ -97,11 +94,9 @@ public class ZmlTableValueColumn extends AbstractZmlTableColumn implements IZmlT
 
   private ZmlTableEditingSupport m_editingSupport;
 
-  public ZmlTableValueColumn( final IZmlTable table, final TableViewerColumn column, final BaseColumn type, final int tableColumnIndex )
+  public ZmlTableValueColumn( final IZmlTableComposite table, final BaseColumn type )
   {
-    super( table, column, type, tableColumnIndex );
-
-    m_mapper = new RuleMapper( table, type );
+    super( table, type );
   }
 
   @Override
@@ -220,7 +215,7 @@ public class ZmlTableValueColumn extends AbstractZmlTableColumn implements IZmlT
     if( Objects.isNull( reference ) )
       return new ZmlCellRule[] {};
 
-    return m_mapper.findActiveRules( reference );
+    return getMapper().findActiveRules( reference );
   }
 
   private ZmlCellRule[] findAggregatedActiveRules( final IZmlModelRow row )
@@ -250,7 +245,7 @@ public class ZmlTableValueColumn extends AbstractZmlTableColumn implements IZmlT
     try
     {
       final DateRange daterange = new DateRange( previousReference.getIndexValue(), currentReference.getIndexValue() );
-      final ZmlCollectRulesVisitor visitor = new ZmlCollectRulesVisitor( m_mapper );
+      final ZmlCollectRulesVisitor visitor = new ZmlCollectRulesVisitor( getMapper() );
       getModelColumn().accept( visitor, daterange );
 
       return visitor.getRules();
@@ -264,29 +259,22 @@ public class ZmlTableValueColumn extends AbstractZmlTableColumn implements IZmlT
   }
 
   @Override
-  public void reset( )
-  {
-    super.reset();
-
-    m_mapper.reset();
-  }
-
-  @Override
   public AppliedRule[] getAppliedRules( )
   {
-    return m_mapper.getAppliedRules();
+    return getMapper().getAppliedRules();
   }
 
   @Override
   public String toString( )
   {
-    return String.format( "id: %s, label: %s", getColumnType().getIdentifier(), getTableViewerColumn().getColumn().getText() );
+    return String.format( "id: %s, label: %s", getColumnType().getIdentifier() );
   }
 
-  public void setEditingSupport( final ZmlTableEditingSupport editingSupport )
+  public void setEditingSupport( final IZmlTable table, final ZmlTableEditingSupport editingSupport )
   {
     m_editingSupport = editingSupport;
-    getTableViewerColumn().setEditingSupport( editingSupport );
+
+    getTableViewerColumn( table ).setEditingSupport( editingSupport );
   }
 
   @Override
@@ -302,7 +290,8 @@ public class ZmlTableValueColumn extends AbstractZmlTableColumn implements IZmlT
     {
       m_visible = visibility;
 
-      getTable().fireTableChanged( IZmlTableListener.TYPE_ACTIVE_RULE_CHANGED, getModelColumn() );
+      getTable().fireTableChanged( IZmlTableCompositeListener.TYPE_ACTIVE_RULE_CHANGED, getModelColumn() );
     }
   }
+
 }

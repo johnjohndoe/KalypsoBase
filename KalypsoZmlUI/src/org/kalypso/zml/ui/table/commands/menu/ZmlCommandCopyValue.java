@@ -77,7 +77,7 @@ public class ZmlCommandCopyValue extends AbstractHandler
         if( !column.isVisible() )
           continue;
 
-        final String text = column.getTableViewerColumn().getColumn().getText();
+        final String text = column.getTableViewerColumn( table ).getColumn().getText();
         buffer.append( text );
 
         if( !Arrays.isLastItem( columns, column ) )

@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraﬂe 22
+ *  Denickestra√üe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -40,49 +40,52 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table;
 
-import org.eclipse.jface.viewers.TableViewer;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
-import org.kalypso.zml.ui.table.focus.IZmlTableFocusHandler;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
-import org.kalypso.zml.ui.table.provider.rendering.cell.ZmlTableCellCache;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTable
+public interface IZmlTableComposite
 {
-  TableViewer getViewer( );
-
-  ZmlTableCellCache getCache( );
-
-  IZmlTableColumn[] getColumns( );
-
-  // FIXME remove from interface!
-  void dispose( );
-
-  IZmlTableColumn findColumn( int columnIndex );
-
   void accept( IZmlTableColumnVisitor visitor );
 
   void accept( IZmlTableRowVisitor visitor );
 
-  IZmlTableFocusHandler getFocusHandler( );
+  void addListener( IZmlTableCompositeListener listener );
+
+  void add( IZmlTableColumn column );
+
+  IZmlTableColumn findColumn( int columnIndex );
+
+  IZmlTableColumn[] getColumns( );
 
   IZmlModel getModel( );
 
+  /**
+   * @return time resolution of displayed time series (one hour spacing or six hour spacing, aso)
+   */
   int getResolution( );
-
-  IZmlTableRow[] getRows( );
 
   IZmlTableRow getRow( int index );
 
-  void refresh( IZmlModelColumn... columns );
+  IZmlTableRow[] getRows( );
+
+  IZmlTable[] getTables( );
+
+  /**
+   * columns = null means 'refresh all columns'
+   */
+  void refresh( final IZmlModelColumn... columns );
+
+  void removeListener( IZmlTableCompositeListener mListener );
+
+  void fireTableChanged( String type, IZmlModelColumn... columns );
 
   ZmlViewResolutionFilter getResulutionFilter( );
 
-  IZmlTableSelectionHandler getSelectionHandler( );
-
+  IZmlTable getMainTable( );
 }

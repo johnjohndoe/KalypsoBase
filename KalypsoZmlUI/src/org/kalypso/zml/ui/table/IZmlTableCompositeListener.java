@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraﬂe 22
+ *  Denickestra√üe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -40,49 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table;
 
-import org.eclipse.jface.viewers.TableViewer;
-import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
-import org.kalypso.zml.ui.table.focus.IZmlTableFocusHandler;
-import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
-import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
-import org.kalypso.zml.ui.table.provider.rendering.cell.ZmlTableCellCache;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTable
+public interface IZmlTableCompositeListener
 {
-  TableViewer getViewer( );
+  String TYPE_REFRESH = "refresh";
 
-  ZmlTableCellCache getCache( );
+  String TYPE_ACTIVE_RULE_CHANGED = "rule";
 
-  IZmlTableColumn[] getColumns( );
-
-  // FIXME remove from interface!
-  void dispose( );
-
-  IZmlTableColumn findColumn( int columnIndex );
-
-  void accept( IZmlTableColumnVisitor visitor );
-
-  void accept( IZmlTableRowVisitor visitor );
-
-  IZmlTableFocusHandler getFocusHandler( );
-
-  IZmlModel getModel( );
-
-  int getResolution( );
-
-  IZmlTableRow[] getRows( );
-
-  IZmlTableRow getRow( int index );
-
-  void refresh( IZmlModelColumn... columns );
-
-  ZmlViewResolutionFilter getResulutionFilter( );
-
-  IZmlTableSelectionHandler getSelectionHandler( );
+  void eventTableChanged( String type, IZmlModelColumn... columns );
 
 }

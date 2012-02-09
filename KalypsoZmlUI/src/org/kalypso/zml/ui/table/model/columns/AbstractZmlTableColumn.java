@@ -41,7 +41,9 @@
 package org.kalypso.zml.ui.table.model.columns;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -49,40 +51,53 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.IZmlTableComposite;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
-import org.kalypso.zml.ui.table.model.AbstractZmlTableElement;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
+import org.kalypso.zml.ui.table.provider.RuleMapper;
 
 /**
  * @author Dirk Kuch
  */
-public abstract class AbstractZmlTableColumn extends AbstractZmlTableElement implements IZmlTableColumn
+public abstract class AbstractZmlTableColumn implements IZmlTableColumn
 {
-  private final TableViewerColumn m_column;
-
   private final BaseColumn m_type;
 
-  private final int m_tableColumnIndex;
+  private final Map<IZmlTable, TableViewerColumn> m_columns = new HashMap<IZmlTable, TableViewerColumn>();
 
-  public AbstractZmlTableColumn( final IZmlTable table, final TableViewerColumn column, final BaseColumn type, final int tableColumnIndex )
+  private final IZmlTableComposite m_table;
+
+  private final RuleMapper m_mapper;
+
+  public AbstractZmlTableColumn( final IZmlTableComposite table, final BaseColumn type )
   {
-    super( table );
-
-    m_column = column;
+    m_table = table;
     m_type = type;
-    m_tableColumnIndex = tableColumnIndex;
+
+    m_mapper = new RuleMapper( table, type );
+  }
+
+  protected RuleMapper getMapper( )
+  {
+    return m_mapper;
   }
 
   @Override
-  public int getTableColumnIndex( )
+  public IZmlTableComposite getTable( )
   {
-    return m_tableColumnIndex;
+    return m_table;
+  }
+
+  public void addColumn( final IZmlTable table, final TableViewerColumn column )
+  {
+    m_columns.put( table, column );
   }
 
   @Override
@@ -118,14 +133,18 @@ public abstract class AbstractZmlTableColumn extends AbstractZmlTableElement imp
   }
 
   @Override
-  public TableViewerColumn getTableViewerColumn( )
+  public TableViewerColumn getTableViewerColumn( final IZmlTable table )
   {
-    return m_column;
+    return m_columns.get( table );
   }
 
-  public TableColumn getTableColumn( )
+  public TableColumn getTableColumn( final IZmlTable table )
   {
-    return m_column.getColumn();
+    final TableViewerColumn column = getTableViewerColumn( table );
+    if( Objects.isNotNull( column ) )
+      return column.getColumn();
+
+    return null;
   }
 
   @Override
@@ -137,9 +156,9 @@ public abstract class AbstractZmlTableColumn extends AbstractZmlTableElement imp
   }
 
   @Override
-  public IZmlTableCell[] getCells( )
+  public IZmlTableCell[] getCells( final IZmlTable table )
   {
-    final TableViewer viewer = (TableViewer) m_column.getViewer();
+    final TableViewer viewer = table.getViewer();
     final List<IZmlTableCell> cells = new ArrayList<IZmlTableCell>();
 
     final TableItem[] items = viewer.getTable().getItems();
@@ -157,11 +176,11 @@ public abstract class AbstractZmlTableColumn extends AbstractZmlTableElement imp
   }
 
   @Override
-  public IZmlTableCell[] getSelectedCells( )
+  public IZmlTableCell[] getSelectedCells( final IZmlTable table )
   {
     final List<IZmlTableCell> selected = new ArrayList<IZmlTableCell>();
 
-    final IZmlTableSelectionHandler selection = getTable().getSelectionHandler();
+    final IZmlTableSelectionHandler selection = table.getSelectionHandler();
     final IZmlTableValueRow[] rows = selection.getSelectedRows();
     for( final IZmlTableValueRow row : rows )
     {
@@ -174,6 +193,7 @@ public abstract class AbstractZmlTableColumn extends AbstractZmlTableElement imp
   @Override
   public void reset( )
   {
+    getMapper().reset();
     m_type.reset();
   }
 }

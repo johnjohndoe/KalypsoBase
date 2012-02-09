@@ -105,7 +105,7 @@ public class ConstantValueAdjustmentPage extends AbstractAdjustmentPage implemen
       return m_constantValue;
 
     final IZmlTableColumn column = getColumn();
-    final IZmlTableValueCell[] cells = (IZmlTableValueCell[]) column.getSelectedCells();
+    final IZmlTableValueCell[] cells = (IZmlTableValueCell[]) column.getSelectedCells( null );
     final Number value = cells[0].getValueReference().getValue();
 
     m_constantValue = value.doubleValue();
@@ -137,7 +137,7 @@ public class ConstantValueAdjustmentPage extends AbstractAdjustmentPage implemen
   @Override
   public ICoreRunnableWithProgress getRunnable( )
   {
-    return new ConstantValueRunnable( (IZmlTableValueCell[]) getColumn().getSelectedCells(), m_constantValue );
+    return new ConstantValueRunnable( (IZmlTableValueCell[]) getColumn().getSelectedCells( null ), m_constantValue );
   }
 
   /**

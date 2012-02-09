@@ -59,6 +59,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
 import org.kalypso.zml.ui.table.model.columns.ZmlTableValueColumn;
@@ -96,14 +97,15 @@ public class ZmlTableEditingSupport extends EditingSupport
 
   private final ZmlTableValueColumn m_column;
 
-  private final IZmlTableFocusHandler m_handler;
+  private final IZmlTable m_table;
 
-  public ZmlTableEditingSupport( final ZmlTableValueColumn column, final IZmlTableFocusHandler handler )
+  public ZmlTableEditingSupport( final ZmlTableValueColumn column, final IZmlTable table )
   {
-    super( column.getTable().getViewer() );
+    super( table.getViewer() );
     m_column = column;
-    m_handler = handler;
-    final TableViewer viewer = column.getTable().getViewer();
+    m_table = table;
+
+    final TableViewer viewer = table.getViewer();
 
     m_cellEditor = new ZmlTextCellEditor( (Composite) viewer.getControl(), SWT.NONE );
 
@@ -148,7 +150,7 @@ public class ZmlTableEditingSupport extends EditingSupport
 
   protected void moveNext( )
   {
-    final IZmlTableValueCell cell = (IZmlTableValueCell) m_handler.getFocusTableCell();
+    final IZmlTableValueCell cell = (IZmlTableValueCell) m_table.getFocusHandler().getFocusTableCell();
     if( org.kalypso.commons.java.lang.Objects.isNull( cell ) )
       return;
 
@@ -158,7 +160,7 @@ public class ZmlTableEditingSupport extends EditingSupport
 
   protected void movePrevious( )
   {
-    final IZmlTableValueCell cell = (IZmlTableValueCell) m_handler.getFocusTableCell();
+    final IZmlTableValueCell cell = (IZmlTableValueCell) m_table.getFocusHandler().getFocusTableCell();
     if( org.kalypso.commons.java.lang.Objects.isNull( cell ) )
       return;
 
