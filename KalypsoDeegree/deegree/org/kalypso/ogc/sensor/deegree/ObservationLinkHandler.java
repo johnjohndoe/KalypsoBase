@@ -42,115 +42,60 @@ package org.kalypso.ogc.sensor.deegree;
 
 import java.net.URL;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
 
-import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
-import org.kalypso.contribs.java.net.IUrlResolver;
-import org.kalypso.gmlschema.types.AbstractOldFormatMarshallingTypeHandlerAdapter;
-import org.kalypso.gmlschema.types.TypeRegistryException;
+import org.kalypso.gmlschema.types.IGmlContentHandler;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler2;
+import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypso.zml.obslink.ObjectFactory;
 import org.kalypso.zml.obslink.TimeseriesLinkFeatureProperty;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
+import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 
 /**
  * @author belger
  */
-public class ObservationLinkHandler extends AbstractOldFormatMarshallingTypeHandlerAdapter
+public class ObservationLinkHandler implements IMarshallingTypeHandler2
 {
-  public static final Class< ? > CLASS_NAME = TimeseriesLinkType.class;
+  public static final QName TYPE_NAME = new QName( DeegreeUrlCatalog.NAMESPACE_ZML_OBSLINK, "TimeseriesLink" ); //$NON-NLS-1$
 
-  public static final String NAMESPACE = "obslink.zml.kalypso.org";
-
-  public static final QName TYPE_NAME = new QName( NAMESPACE, ClassUtilities.getOnlyClassName( TimeseriesLinkFeatureProperty.class ) );
+  public static final QName PROPERTY_NAME = new QName( DeegreeUrlCatalog.NAMESPACE_ZML_OBSLINK, ClassUtilities.getOnlyClassName( TimeseriesLinkFeatureProperty.class ) );
 
   private final static ObjectFactory m_factory = new ObjectFactory();
 
-  private final static JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
-
-  /**
-   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getClassName()
-   */
   @Override
   public Class< ? > getValueClass( )
   {
-    return CLASS_NAME;
+    return TimeseriesLinkType.class;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getTypeName()
-   */
   @Override
   public QName getTypeName( )
   {
-    return TYPE_NAME;
+    return PROPERTY_NAME;
   }
 
-  /**
-   * @see org.kalypso.gmlschema.types.AbstractOldFormatMarshallingTypeHandlerAdapter#marshall(java.lang.Object,
-   *      org.w3c.dom.Document, java.net.URL)
-   */
-  @Deprecated
   @Override
-  public Element marshall( final Object object, final Document document, final URL context ) throws TypeRegistryException
+  public IGmlContentHandler createContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final UnmarshallResultEater resultEater )
   {
-    try
-    {
-      final Marshaller marshaller = JaxbUtilities.createMarshaller( JC );
-      marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-      final JAXBElement<TimeseriesLinkType> value = m_factory.createTimeseriesLink( (TimeseriesLinkType) object );
-      marshaller.marshal( value, document );
-      return document.getDocumentElement();
-    }
-    catch( final JAXBException e )
-    {
-      throw new TypeRegistryException( e );
-    }
+    return new ObslinkContentHandler( reader, parentContentHandler, resultEater );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL,
-   *      org.kalypso.contribs.java.net.IUrlResolver)
-   */
-  @Deprecated
   @Override
-  public Object unmarshall( final Node node, final URL context, final IUrlResolver urlResolver ) throws TypeRegistryException
+  public void marshal( final Object value, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
   {
-    try
-    {
-      // child namespace may be null
-      if( NAMESPACE.equals( node.getNamespaceURI() ) && "TimeseriesLink".equals( node.getLocalName() ) )
-      {
-        final JAXBElement< ? > valueElement = (JAXBElement< ? >) JC.createUnmarshaller().unmarshal( node );
-        return valueElement.getValue();
-      }
-      return null;
-    }
-    catch( final JAXBException e )
-    {
-      throw new TypeRegistryException( e );
-    }
+    new ObservationLinkMarshaller( reader ).marshall( (TimeseriesLinkType) value );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getShortname()
-   */
   @Override
-  public String getShortname( )
+  public void unmarshal( final XMLReader reader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion )
   {
-    return "Zeitreihen Verknüpfung";
+    throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#cloneObject(java.lang.Object)
-   */
   @Override
   public Object cloneObject( final Object objectToClone, final String gmlVersion )
   {
@@ -169,9 +114,6 @@ public class ObservationLinkHandler extends AbstractOldFormatMarshallingTypeHand
     return clone;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#parseType(java.lang.String)
-   */
   @Override
   public Object parseType( final String text )
   {
@@ -181,13 +123,9 @@ public class ObservationLinkHandler extends AbstractOldFormatMarshallingTypeHand
     return link;
   }
 
-  /**
-   * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
-   */
   @Override
   public boolean isGeometry( )
   {
     return false;
   }
-
 }

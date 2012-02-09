@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.shape.deegree;
 
@@ -68,7 +68,7 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
  * FIXME: move to KalypsoCore
- * 
+ *
  * @author albert
  */
 public final class Shape2GML
@@ -80,17 +80,17 @@ public final class Shape2GML
     throw new UnsupportedOperationException();
   }
 
-  public static IFeatureType createFeatureType( String key, ShapeType shapeType, IDBFField[] fields )
+  public static IFeatureType createFeatureType( final String key, final ShapeType shapeType, final IDBFField[] fields )
   {
-    String customNamespaceURI = "org.kalypso.shape.custom_" + key;
+    final String customNamespaceURI = "org.kalypso.shape.custom_" + key;
 
-    StringBuilder elementsString = new StringBuilder();
+    final StringBuilder elementsString = new StringBuilder();
 
     final IValuePropertyType[] fieldTypes = new IValuePropertyType[fields.length];
 
     for( int i = 0; i < fields.length; i++ )
     {
-      IDBFField field = fields[i];
+      final IDBFField field = fields[i];
 
       final IMarshallingTypeHandler th = findTypeHandler( field );
 
@@ -107,7 +107,7 @@ public final class Shape2GML
     return createTemporaryFeatureType( key, customNamespaceURI, geomType, fieldTypes, schemaFragment );
   }
 
-  private static IMarshallingTypeHandler findTypeHandler( IDBFField field )
+  private static IMarshallingTypeHandler findTypeHandler( final IDBFField field )
   {
     final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
     final FieldType type = field.getType();
@@ -121,8 +121,8 @@ public final class Shape2GML
 
       case F:
       case N:
-        short decimal = field.getDecimalCount();
-        short size = field.getLength();
+        final short decimal = field.getDecimalCount();
+        final short size = field.getLength();
         if( decimal == 0 )
         {
           if( size < 10 )
@@ -151,7 +151,7 @@ public final class Shape2GML
     }
   }
 
-  private static IValuePropertyType createGeometryPropertyType( ShapeType shapeType, String customNamespaceURI )
+  private static IValuePropertyType createGeometryPropertyType( final ShapeType shapeType, final String customNamespaceURI )
   {
     final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 
@@ -161,11 +161,11 @@ public final class Shape2GML
     return GMLSchemaFactory.createValuePropertyType( new QName( customNamespaceURI, "GEOM" ), geoTH, 1, 1, false );
   }
 
-  private static IFeatureType createTemporaryFeatureType( String key, String customNamespaceURI, IValuePropertyType geomType, IValuePropertyType[] fieldTypes, String elementsString )
+  private static IFeatureType createTemporaryFeatureType( final String key, final String customNamespaceURI, final IValuePropertyType geomType, final IValuePropertyType[] fieldTypes, final String elementsString )
   {
     try
     {
-      final String geomTag = geomType.getTypeHandler().getShortname();
+      final String geomTag = geomType.getTypeHandler().getTypeName().getLocalPart();
       final String geometryPropertyTypeString = "gml:" + geomTag;
 
       // TODO: comment! Why is this all needed etc.?
@@ -194,7 +194,7 @@ public final class Shape2GML
 
       return GMLSchemaFactory.createFeatureType( memberQName, propertyTypes, schema, new QName( SHP_NAMESPACE_URI, "_Shape" ) );
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       // This should never happen, as we always are allowed to access plugin state.
       // Encapsulate into runtime exception, so we do not need to catch it everywhere.
