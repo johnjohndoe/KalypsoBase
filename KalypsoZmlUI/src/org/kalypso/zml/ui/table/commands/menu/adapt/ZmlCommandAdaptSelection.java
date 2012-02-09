@@ -162,7 +162,7 @@ public class ZmlCommandAdaptSelection extends AbstractHandler
   private double getDifference( final IZmlTableValueCell[] cells, final IAxis axis ) throws SensorException
   {
     final IZmlTableValueCell base = cells[0];
-    final IZmlTableValueCell prev = (IZmlTableValueCell) base.findPreviousCell();
+    final IZmlTableValueCell prev = base.findPreviousCell();
 
     final IZmlModelValueCell reference1 = base.getValueReference();
     final IZmlModelValueCell reference2 = prev.getValueReference();

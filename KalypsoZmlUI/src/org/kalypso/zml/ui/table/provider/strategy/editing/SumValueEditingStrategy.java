@@ -99,7 +99,7 @@ public class SumValueEditingStrategy extends AbstractEditingStrategy
     try
     {
       final ZmlTableValueColumn column = getColumn();
-      final IZmlTableValueCell cell = (IZmlTableValueCell) column.findCell( row );
+      final IZmlTableValueCell cell = column.findCell( row );
 
       final Number targetValue = getTargetValue( value );
 

@@ -123,7 +123,7 @@ public class ContinuedInterpolatedValueEditingStrategy extends AbstractEditingSt
       try
       {
         final ZmlTableValueColumn column = getColumn();
-        final IZmlTableValueCell current = (IZmlTableValueCell) column.findCell( row );
+        final IZmlTableValueCell current = column.findCell( row );
 
         transaction.add( cell, targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
 

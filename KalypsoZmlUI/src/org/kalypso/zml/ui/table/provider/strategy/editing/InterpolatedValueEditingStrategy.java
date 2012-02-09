@@ -119,7 +119,7 @@ public class InterpolatedValueEditingStrategy extends AbstractEditingStrategy
       cell.doUpdate( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
 
       final ZmlTableValueColumn column = getColumn();
-      final IZmlTableValueCell tableCell = (IZmlTableValueCell) column.findCell( row );
+      final IZmlTableValueCell tableCell = column.findCell( row );
 
       /** update interpolated values before and after */
       final IZmlModelColumn modelColumn = column.getModelColumn();

@@ -90,7 +90,7 @@ public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy impl
   {
     final IZmlTableValueColumn column = getColumn();
 
-    final IZmlTableValueCell current = (IZmlTableValueCell) column.findCell( row );
+    final IZmlTableValueCell current = column.findCell( row );
     final IZmlTableValueCell previous = current.findPreviousCell();
 
     final IZmlModelValueCell previousReference;
