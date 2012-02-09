@@ -49,20 +49,15 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.schema.IndexColumnType;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.IZmlTableListener;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.model.AbstractZmlTableElement;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
-import org.kalypso.zml.ui.table.model.visitors.FindTableRowVisitor;
 
 /**
  * @author Dirk Kuch
@@ -73,21 +68,21 @@ public abstract class AbstractZmlTableColumn extends AbstractZmlTableElement imp
 
   private final BaseColumn m_type;
 
-  /** visibility flag is used by hide columns command */
-  private boolean m_visible = true;
+  private final int m_tableColumnIndex;
 
-  public AbstractZmlTableColumn( final IZmlTable table, final TableViewerColumn column, final BaseColumn type )
+  public AbstractZmlTableColumn( final IZmlTable table, final TableViewerColumn column, final BaseColumn type, final int tableColumnIndex )
   {
     super( table );
 
     m_column = column;
     m_type = type;
+    m_tableColumnIndex = tableColumnIndex;
   }
 
   @Override
-  public boolean isIndexColumn( )
+  public int getTableColumnIndex( )
   {
-    return m_type.getType() instanceof IndexColumnType;
+    return m_tableColumnIndex;
   }
 
   @Override
@@ -142,22 +137,6 @@ public abstract class AbstractZmlTableColumn extends AbstractZmlTableElement imp
   }
 
   @Override
-  public boolean isVisible( )
-  {
-    if( isIndexColumn() )
-      return true;
-
-    final IZmlModelColumn column = getModelColumn();
-    if( Objects.isNull( column ) )
-      return false;
-
-    if( !m_visible )
-      return false;
-
-    return column.isActive();
-  }
-
-  @Override
   public IZmlTableCell[] getCells( )
   {
     final TableViewer viewer = (TableViewer) m_column.getViewer();
@@ -193,32 +172,8 @@ public abstract class AbstractZmlTableColumn extends AbstractZmlTableElement imp
   }
 
   @Override
-  public IZmlTableCell findCell( final IZmlModelRow row )
-  {
-    final FindTableRowVisitor visitor = new FindTableRowVisitor( row );
-    getTable().accept( visitor );
-
-    final IZmlTableRow tableRow = visitor.getRow();
-    if( Objects.isNull( tableRow ) )
-      return null;
-
-    return tableRow.getCell( this );
-  }
-
-  @Override
   public void reset( )
   {
     m_type.reset();
-  }
-
-  @Override
-  public void setVisible( final boolean visibility )
-  {
-    if( Objects.notEqual( m_visible, visibility ) )
-    {
-      m_visible = visibility;
-
-      getTable().fireTableChanged( IZmlTableListener.TYPE_ACTIVE_RULE_CHANGED, getModelColumn() );
-    }
   }
 }

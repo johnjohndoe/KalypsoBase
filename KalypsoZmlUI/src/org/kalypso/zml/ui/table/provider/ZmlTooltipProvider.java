@@ -47,9 +47,12 @@ import org.eclipse.swt.graphics.Point;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.ZmlModelRow;
-import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableIndexCell;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
-import org.kalypso.zml.ui.table.model.columns.ZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableIndexColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableValueColumn;
 
 /**
  * @author Dirk Kuch
@@ -58,7 +61,7 @@ public class ZmlTooltipProvider extends ColumnLabelProvider
 {
   private final ZmlTooltipSupport m_tooltip;
 
-  private final ZmlTableColumn m_column;
+  private final IZmlTableColumn m_column;
 
   @Override
   public String getText( final Object element )
@@ -66,7 +69,7 @@ public class ZmlTooltipProvider extends ColumnLabelProvider
     return null;
   }
 
-  public ZmlTooltipProvider( final ZmlTableColumn column )
+  public ZmlTooltipProvider( final IZmlTableColumn column )
   {
     m_column = column;
     m_tooltip = new ZmlTooltipSupport( column );
@@ -91,14 +94,28 @@ public class ZmlTooltipProvider extends ColumnLabelProvider
       return null;
     else if( object instanceof IZmlModelRow )
     {
-      final IZmlTableValueCell cell = (IZmlTableValueCell) m_column.findCell( (IZmlModelRow) object );
-      if( Objects.isNotNull( cell ) )
+      if( m_column instanceof IZmlTableIndexColumn )
       {
-        final IZmlModelValueCell reference = cell.getValueReference();
-        if( Objects.isNotNull( reference ) )
-          return m_tooltip.getToolTipImage();
+        final IZmlTableIndexColumn indexColumn = (IZmlTableIndexColumn) m_column;
+        final IZmlTableIndexCell cell = indexColumn.findCell( (IZmlModelRow) object );
+        if( Objects.isNotNull( cell ) )
+        {
+          final IZmlModelCell reference = cell.getValueReference();
+          if( Objects.isNotNull( reference ) )
+            return m_tooltip.getToolTipImage();
+        }
       }
-
+      else if( m_column instanceof IZmlTableValueColumn )
+      {
+        final IZmlTableValueColumn valueCell = (IZmlTableValueColumn) m_column;
+        final IZmlTableValueCell cell = valueCell.findCell( (IZmlModelRow) object );
+        if( Objects.isNotNull( cell ) )
+        {
+          final IZmlModelCell reference = cell.getValueReference();
+          if( Objects.isNotNull( reference ) )
+            return m_tooltip.getToolTipImage();
+        }
+      }
     }
 
     return super.getToolTipImage( object );

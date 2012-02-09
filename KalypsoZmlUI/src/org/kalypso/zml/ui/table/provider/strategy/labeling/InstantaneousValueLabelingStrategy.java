@@ -48,7 +48,8 @@ import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.rules.IZmlCellRuleImplementation;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.model.columns.ZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableValueColumn;
+import org.kalypso.zml.ui.table.model.columns.ZmlTableValueColumn;
 
 /**
  * @author Dirk Kuch
@@ -56,9 +57,15 @@ import org.kalypso.zml.ui.table.model.columns.ZmlTableColumn;
 public class InstantaneousValueLabelingStrategy extends AbstractValueLabelingStrategy
 {
 
-  public InstantaneousValueLabelingStrategy( final ZmlTableColumn column )
+  public InstantaneousValueLabelingStrategy( final ZmlTableValueColumn column )
   {
     super( column );
+  }
+
+  @Override
+  protected IZmlTableValueColumn getColumn( )
+  {
+    return (IZmlTableValueColumn) super.getColumn();
   }
 
   @Override

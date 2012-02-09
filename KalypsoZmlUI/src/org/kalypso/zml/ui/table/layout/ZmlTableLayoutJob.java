@@ -52,6 +52,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableIndexColumn;
 
 /**
  * @author Dirk Kuch
@@ -84,7 +85,7 @@ public class ZmlTableLayoutJob extends UIJob
       final IZmlTableColumn[] stack = m_stack.toArray( new IZmlTableColumn[] {} );
       m_stack.clear();
 
-      doVisitIndex( stack );
+      doVisitIndex();
 
       /** iterate over all columns because of multiple selection support (cloned columns will not be removed from table) */
       doVisitHide( m_table.getColumns() );
@@ -104,13 +105,14 @@ public class ZmlTableLayoutJob extends UIJob
     return Status.OK_STATUS;
   }
 
-  private void doVisitIndex( final IZmlTableColumn[] columns )
+  private void doVisitIndex( )
   {
     final PackIndexColumnsVisitor visitor = new PackIndexColumnsVisitor( !ArrayUtils.isEmpty( m_table.getRows() ) );
 
+    final IZmlTableColumn[] columns = m_table.getColumns();
     for( final IZmlTableColumn column : columns )
     {
-      if( column.isIndexColumn() )
+      if( column instanceof IZmlTableIndexColumn )
         visitor.visit( column );
     }
   }
@@ -133,7 +135,7 @@ public class ZmlTableLayoutJob extends UIJob
 
     for( final IZmlTableColumn column : columns )
     {
-      if( column.isIndexColumn() )
+      if( column instanceof IZmlTableIndexColumn )
         continue;
       else if( !column.isVisible() )
         continue;

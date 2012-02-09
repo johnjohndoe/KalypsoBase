@@ -52,7 +52,8 @@ import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableIndexCell;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
-import org.kalypso.zml.ui.table.model.columns.ZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableIndexColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableValueColumn;
 import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
 
 /**
@@ -66,7 +67,7 @@ public final class CellPainters
 
   public static ZmlCellRule[] getActiveRules( final IZmlTableValueCell cell )
   {
-    final ZmlTableColumn column = (ZmlTableColumn) cell.getColumn();
+    final IZmlTableValueColumn column = cell.getColumn();
     final IZmlModelRow modelRow = cell.getRow().getModelRow();
 
     return column.findActiveRules( modelRow );
@@ -74,7 +75,7 @@ public final class CellPainters
 
   public static ZmlCellRule[] getActiveRules( final IZmlTableIndexCell cell )
   {
-    final ZmlTableColumn column = (ZmlTableColumn) cell.getColumn();
+    final IZmlTableIndexColumn column = cell.getColumn();
     final IZmlModelRow modelRow = cell.getRow().getModelRow();
 
     return column.findActiveRules( modelRow );

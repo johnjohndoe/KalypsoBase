@@ -49,6 +49,7 @@ import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.model.cells.AbstractZmlTableCell;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableIndexColumn;
 
 /**
  * @author Dirk Kuch
@@ -67,7 +68,7 @@ public class ZmlTableRow extends AbstractZmlTableRow implements IZmlTableValueRo
   @Override
   public IZmlModelCell getModelCell( final IZmlTableColumn column )
   {
-    if( column.isIndexColumn() )
+    if( column instanceof IZmlTableIndexColumn )
       return new ZmlIndexValueReference( m_row );
 
     return m_row.get( column.getModelColumn() );

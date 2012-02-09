@@ -62,7 +62,7 @@ import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
-import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableValueColumn;
 import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
 import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
 
@@ -81,7 +81,7 @@ public class ZmlCommandSetValuesBelow extends AbstractHandler
       final IZmlTableSelectionHandler selection = table.getSelectionHandler();
       final IZmlTableValueCell active = (IZmlTableValueCell) selection.findActiveCellByPosition();
 
-      final IZmlTableColumn column = active.getColumn();
+      final IZmlTableValueColumn column = active.getColumn();
       final IZmlEditingStrategy strategy = column.getEditingStrategy();
       if( strategy.isAggregated() )
       {

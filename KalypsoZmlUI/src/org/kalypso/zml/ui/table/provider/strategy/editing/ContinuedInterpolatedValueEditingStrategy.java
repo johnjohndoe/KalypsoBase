@@ -53,7 +53,7 @@ import org.kalypso.zml.core.table.model.references.ZmlValues;
 import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
-import org.kalypso.zml.ui.table.model.columns.ZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.ZmlTableValueColumn;
 
 /**
  * updated value will be a new stützstelle. update all values between s_new and s_next. set updated values to s_new
@@ -73,7 +73,7 @@ import org.kalypso.zml.ui.table.model.columns.ZmlTableColumn;
 public class ContinuedInterpolatedValueEditingStrategy extends AbstractEditingStrategy
 {
 
-  public ContinuedInterpolatedValueEditingStrategy( final ZmlTableColumn column )
+  public ContinuedInterpolatedValueEditingStrategy( final ZmlTableValueColumn column )
   {
     super( column );
   }
@@ -122,7 +122,7 @@ public class ContinuedInterpolatedValueEditingStrategy extends AbstractEditingSt
 
       try
       {
-        final ZmlTableColumn column = getColumn();
+        final ZmlTableValueColumn column = getColumn();
         final IZmlTableValueCell current = (IZmlTableValueCell) column.findCell( row );
 
         transaction.add( cell, targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );

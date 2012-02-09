@@ -51,6 +51,7 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableValueColumn;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
 
 /**
@@ -193,7 +194,7 @@ public class ZmlTableCellPaintListener implements Listener
     if( !column.isVisible() )
       return null;
 
-    if( !column.isIndexColumn() )
+    if( column instanceof IZmlTableValueColumn )
     {
       final IZmlModelColumn modelColumn = column.getModelColumn();
       final IZmlModelColumnDataHandler dataHandler = modelColumn.getDataHandler();

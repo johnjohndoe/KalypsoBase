@@ -47,11 +47,8 @@ import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.focus.ZmlTableEditingSupport;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
 import org.kalypso.zml.ui.table.provider.AppliedRule;
-import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
-import org.kalypso.zml.ui.table.provider.strategy.labeling.IZmlLabelStrategy;
 
 /**
  * @author Dirk Kuch
@@ -71,13 +68,7 @@ public interface IZmlTableColumn
 
   TableViewerColumn getTableViewerColumn( );
 
-  IZmlTableCell findCell( IZmlModelRow row );
-
-  boolean isIndexColumn( );
-
   boolean isVisible( );
-
-  ZmlTableEditingSupport getEditingSupport( );
 
   AppliedRule[] getAppliedRules( );
 
@@ -87,9 +78,6 @@ public interface IZmlTableColumn
 
   CellStyle findStyle( IZmlModelRow row ) throws CoreException;
 
-  IZmlLabelStrategy getLabelingStrategy( );
+  int getTableColumnIndex( );
 
-  IZmlEditingStrategy getEditingStrategy( );
-
-  void setVisible( boolean visibility );
 }

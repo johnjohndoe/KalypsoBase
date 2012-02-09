@@ -61,8 +61,11 @@ import org.kalypso.zml.core.table.schema.CellStyleType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.core.table.schema.IndexColumnType;
 import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.IZmlTableListener;
 import org.kalypso.zml.ui.table.focus.ZmlTableEditingSupport;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
+import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
+import org.kalypso.zml.ui.table.model.visitors.FindTableRowVisitor;
 import org.kalypso.zml.ui.table.provider.AppliedRule;
 import org.kalypso.zml.ui.table.provider.RuleMapper;
 import org.kalypso.zml.ui.table.provider.strategy.ZmlCollectRulesVisitor;
@@ -71,15 +74,17 @@ import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
 import org.kalypso.zml.ui.table.provider.strategy.editing.InterpolatedValueEditingStrategy;
 import org.kalypso.zml.ui.table.provider.strategy.editing.SumValueEditingStrategy;
 import org.kalypso.zml.ui.table.provider.strategy.labeling.IZmlLabelStrategy;
-import org.kalypso.zml.ui.table.provider.strategy.labeling.IndexValueLabelingStrategy;
 import org.kalypso.zml.ui.table.provider.strategy.labeling.InstantaneousValueLabelingStrategy;
 import org.kalypso.zml.ui.table.provider.strategy.labeling.SumValueLabelingStrategy;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableColumn extends AbstractZmlTableColumn
+public class ZmlTableValueColumn extends AbstractZmlTableColumn implements IZmlTableValueColumn
 {
+  /** visibility flag is used by hide columns command */
+  private boolean m_visible = true;
+
   private final RuleMapper m_mapper;
 
   private CellStyle m_lastCellStyle;
@@ -90,16 +95,39 @@ public class ZmlTableColumn extends AbstractZmlTableColumn
 
   private IZmlEditingStrategy m_editing;
 
-  private final int m_tableColumnIndex;
-
   private ZmlTableEditingSupport m_editingSupport;
 
-  public ZmlTableColumn( final IZmlTable table, final TableViewerColumn column, final BaseColumn type, final int tableColumnIndex )
+  public ZmlTableValueColumn( final IZmlTable table, final TableViewerColumn column, final BaseColumn type, final int tableColumnIndex )
   {
-    super( table, column, type );
-    m_tableColumnIndex = tableColumnIndex;
+    super( table, column, type, tableColumnIndex );
 
     m_mapper = new RuleMapper( table, type );
+  }
+
+  @Override
+  public boolean isVisible( )
+  {
+    final IZmlModelColumn column = getModelColumn();
+    if( Objects.isNull( column ) )
+      return false;
+
+    if( !m_visible )
+      return false;
+
+    return column.isActive();
+  }
+
+  @Override
+  public IZmlTableValueCell findCell( final IZmlModelRow row )
+  {
+    final FindTableRowVisitor visitor = new FindTableRowVisitor( row );
+    getTable().accept( visitor );
+
+    final IZmlTableRow tableRow = visitor.getRow();
+    if( Objects.isNull( tableRow ) )
+      return null;
+
+    return (IZmlTableValueCell) tableRow.getCell( this );
   }
 
   @Override
@@ -131,19 +159,11 @@ public class ZmlTableColumn extends AbstractZmlTableColumn
     if( m_labeling != null )
       return m_labeling;
 
-    // index column type?
-    final AbstractColumnType type = getColumnType().getType();
-    if( type instanceof IndexColumnType )
-      m_labeling = new IndexValueLabelingStrategy( this );
+    final DataColumnType dataColumnType = (DataColumnType) getColumnType().getType();
+    if( ITimeseriesConstants.TYPE_RAINFALL.equals( dataColumnType.getValueAxis() ) )
+      m_labeling = new SumValueLabelingStrategy( this );
     else
-    {
-      final DataColumnType dataColumnType = (DataColumnType) type;
-
-      if( ITimeseriesConstants.TYPE_RAINFALL.equals( dataColumnType.getValueAxis() ) )
-        m_labeling = new SumValueLabelingStrategy( this );
-      else
-        m_labeling = new InstantaneousValueLabelingStrategy( this );
-    }
+      m_labeling = new InstantaneousValueLabelingStrategy( this );
 
     return m_labeling;
   }
@@ -176,12 +196,10 @@ public class ZmlTableColumn extends AbstractZmlTableColumn
     return m_lastCellStyle;
   }
 
+  @Override
   public ZmlCellRule[] findActiveRules( final IZmlModelRow row )
   {
     final int resolution = getTable().getResolution();
-
-    if( isIndexColumn() )
-      return findSimpleActiveRules( row );
 
     if( resolution == 0 )
       return findSimpleActiveRules( row );
@@ -207,7 +225,7 @@ public class ZmlTableColumn extends AbstractZmlTableColumn
 
   private ZmlCellRule[] findAggregatedActiveRules( final IZmlModelRow row )
   {
-    final IZmlTableValueCell current = (IZmlTableValueCell) findCell( row );
+    final IZmlTableValueCell current = findCell( row );
     final IZmlTableValueCell previous = current.findPreviousCell();
 
     final IZmlModelColumn modelColumn = current.getColumn().getModelColumn();
@@ -259,11 +277,6 @@ public class ZmlTableColumn extends AbstractZmlTableColumn
     return m_mapper.getAppliedRules();
   }
 
-  public int getTableColumnIndex( )
-  {
-    return m_tableColumnIndex;
-  }
-
   @Override
   public String toString( )
   {
@@ -280,5 +293,16 @@ public class ZmlTableColumn extends AbstractZmlTableColumn
   public ZmlTableEditingSupport getEditingSupport( )
   {
     return m_editingSupport;
+  }
+
+  @Override
+  public void setVisible( final boolean visibility )
+  {
+    if( Objects.notEqual( m_visible, visibility ) )
+    {
+      m_visible = visibility;
+
+      getTable().fireTableChanged( IZmlTableListener.TYPE_ACTIVE_RULE_CHANGED, getModelColumn() );
+    }
   }
 }

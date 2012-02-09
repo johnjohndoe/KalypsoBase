@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.model.cells;
 
+import org.kalypso.zml.ui.table.model.columns.IZmlTableIndexColumn;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
 
 /**
@@ -47,6 +48,9 @@ import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
  */
 public interface IZmlTableIndexCell extends IZmlTableCell
 {
+  @Override
+  IZmlTableIndexColumn getColumn( );
+
   @Override
   IZmlTableValueRow getRow( );
 }

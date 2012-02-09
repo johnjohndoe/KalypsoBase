@@ -57,7 +57,8 @@ import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
-import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableIndexColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableValueColumn;
 import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
 
 import au.com.bytecode.opencsv.CSVReader;
@@ -75,12 +76,12 @@ public class ZmlCommandPasteValue extends AbstractHandler
       final IZmlTable table = ZmlHandlerUtil.getTable( event );
       final IZmlTableSelectionHandler selection = table.getSelectionHandler();
       final IZmlTableValueCell cell = (IZmlTableValueCell) selection.findActiveCellByPosition();
-      if( cell.getColumn().isIndexColumn() )
+      if( cell.getColumn() instanceof IZmlTableIndexColumn )
         throw new ExecutionException( "Aktualisierung von Index-Spalten nicht möglich!" );
 
       IZmlTableValueCell ptr = cell;
 
-      final IZmlTableColumn column = cell.getColumn();
+      final IZmlTableValueColumn column = cell.getColumn();
       final IZmlEditingStrategy strategy = column.getEditingStrategy();
 
       final String[] data = getData();

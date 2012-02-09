@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider.rendering.cell;
 
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
-import org.kalypso.zml.core.table.model.references.ZmlIndexValueReference;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableHeaderCell;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableIndexCell;
@@ -81,24 +78,6 @@ public class ZmlTableCellCache
 
       throw new UnsupportedOperationException();
     }
-  }
-
-  private Object toValue( final IZmlTableCell cell ) throws SensorException
-  {
-    if( cell instanceof IZmlTableValueCell )
-    {
-      final IZmlModelValueCell reference = ((IZmlTableValueCell) cell).getValueReference();
-      if( reference == null )
-        return null;
-
-      if( reference instanceof ZmlIndexValueReference )
-        return reference.getIndexValue();
-
-      return reference.getValue();
-    }
-    else
-      throw new UnsupportedOperationException();
-
   }
 
   public synchronized void clear( )

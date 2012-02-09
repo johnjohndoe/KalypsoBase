@@ -57,7 +57,8 @@ import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.commands.toolbar.view.AbstractHourViewCommand;
 import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
-import org.kalypso.zml.ui.table.model.columns.ZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableValueColumn;
 
 import com.google.common.base.Strings;
 
@@ -68,11 +69,11 @@ public class ZmlTooltipSupport
 {
   private static final Image IMG = new Image( null, ZmlTooltipProvider.class.getResourceAsStream( "icons/help_hint_48.png" ) ); //$NON-NLS-1$
 
-  private final ZmlTableColumn m_column;
+  private final IZmlTableColumn m_column;
 
   private static boolean SHOW_TOOLTIPS = true;
 
-  public ZmlTooltipSupport( final ZmlTableColumn column )
+  public ZmlTooltipSupport( final IZmlTableColumn column )
   {
     m_column = column;
   }
@@ -121,7 +122,7 @@ public class ZmlTooltipSupport
 
   private String getRuleTooltip( final IZmlModelRow row, final IZmlModelValueCell reference )
   {
-    final ZmlCellRule[] activeRules = m_column.findActiveRules( row );
+    final ZmlCellRule[] activeRules = ((IZmlTableValueColumn) m_column).findActiveRules( row );
     if( ArrayUtils.isEmpty( activeRules ) )
       return null;
 
