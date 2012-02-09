@@ -67,15 +67,12 @@ import org.xml.sax.XMLReader;
  */
 public abstract class SimpleDOMTypeHandler implements IMarshallingTypeHandler
 {
-  private final String m_shortName;
-
   private final QName m_qname;
 
   private final boolean m_isGeometry;
 
-  public SimpleDOMTypeHandler( final String shortName, final QName qName, final boolean isGeometry )
+  public SimpleDOMTypeHandler( final QName qName, final boolean isGeometry )
   {
-    m_shortName = shortName;
     m_qname = qName;
     m_isGeometry = isGeometry;
   }
@@ -173,27 +170,12 @@ public abstract class SimpleDOMTypeHandler implements IMarshallingTypeHandler
     return node;
   }
 
-  /**
-   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#getShortname()
-   */
-  @Override
-  public String getShortname( )
-  {
-    return m_shortName;
-  }
-
-  /**
-   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#cloneObject(java.lang.Object)
-   */
   @Override
   public Object cloneObject( final Object objectToClone, final String gmlVersion ) throws CloneNotSupportedException
   {
     throw new CloneNotSupportedException();
   }
 
-  /**
-   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#parseType(java.lang.String)
-   */
   @Override
   @SuppressWarnings("unused")
   public Object parseType( final String text ) throws ParseException
@@ -201,24 +183,15 @@ public abstract class SimpleDOMTypeHandler implements IMarshallingTypeHandler
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see org.kalypso.gmlschema.types.ITypeHandler#getValueClass()
-   */
   @Override
   public abstract Class< ? > getValueClass( );
 
-  /**
-   * @see org.kalypso.gmlschema.types.ITypeHandler#getTypeName()
-   */
   @Override
   public QName getTypeName( )
   {
     return m_qname;
   }
 
-  /**
-   * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
-   */
   @Override
   public boolean isGeometry( )
   {

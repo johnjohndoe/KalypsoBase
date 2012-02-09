@@ -129,19 +129,6 @@ public class ListSimpleTypeHandler implements ISimpleMarshallingTypeHandler<List
     return clonedList;
   }
 
-  /**
-   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#getShortname()
-   */
-  @Override
-  public String getShortname( )
-  {
-    return m_baseTypeHandler.getShortname();
-  }
-
-  /**
-   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(java.lang.Object, org.xml.sax.XMLReader,
-   *      java.net.URL, java.lang.String)
-   */
   @Override
   public void marshal( final Object value, final XMLReader reader, final URL context, final String gmlVersion )
   {

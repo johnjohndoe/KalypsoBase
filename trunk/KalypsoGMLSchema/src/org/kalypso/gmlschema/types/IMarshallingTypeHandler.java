@@ -33,9 +33,6 @@ public interface IMarshallingTypeHandler extends ITypeHandler
    */
   public void unmarshal( final XMLReader reader, final URL context, UnmarshallResultEater marshalResultEater, final String gmlVersion ) throws TypeRegistryException;
 
-  /** Ein Kurzname des behandelten Typ, wird z.B: für Beschriftungen benutzt */
-  public String getShortname( );
-
   public Object cloneObject( final Object objectToClone, final String gmlVersion ) throws CloneNotSupportedException;
 
   /**
