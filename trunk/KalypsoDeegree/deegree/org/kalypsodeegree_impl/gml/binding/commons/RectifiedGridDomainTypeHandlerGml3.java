@@ -215,12 +215,6 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
   }
 
   @Override
-  public String getShortname( )
-  {
-    return "rectifiedGridDomain";
-  }
-
-  @Override
   public Object cloneObject( final Object objectToClone, final String gmlVersion ) throws CloneNotSupportedException
   {
     throw new CloneNotSupportedException( "Clone is not supported!" );
