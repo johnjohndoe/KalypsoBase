@@ -95,7 +95,7 @@ public class ZmlCommandHideColumns extends AbstractHandler implements IElementUp
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        table.accept( new IZmlTableColumnVisitor()
+        table.getModel().accept( new IZmlTableColumnVisitor()
         {
           @Override
           public void visit( final IZmlTableColumn column )

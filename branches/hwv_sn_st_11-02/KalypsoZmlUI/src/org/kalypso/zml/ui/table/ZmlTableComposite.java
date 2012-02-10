@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -55,7 +54,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
@@ -63,26 +61,21 @@ import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 import org.kalypso.zml.ui.debug.KalypsoZmlUiDebug;
-import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
-import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.columns.ZmlTableColumns;
-import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
-import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlTableComposite extends Composite implements IZmlTableComposite
 {
-  protected final List<IZmlTableColumn> m_columns = new ArrayList<IZmlTableColumn>();
 
   private final Set<IZmlTableCompositeListener> m_listeners = new LinkedHashSet<IZmlTableCompositeListener>();
 
   private final FormToolkit m_toolkit;
 
-  private IZmlModel m_model;
-
   protected ZmlMainTable m_main;
+
+  private IZmlModel m_model;
 
   public ZmlTableComposite( final Composite parent, final FormToolkit toolkit )
   {
@@ -102,7 +95,7 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
 
     synchronized( this )
     {
-      final ZmlTableType tableType = m_model.getTableType();
+      final ZmlTableType tableType = model.getTableType();
 
       Composite toolbar = null;
       if( hasToolbar( tableType ) )
@@ -112,7 +105,7 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
         toolbar.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
       }
 
-      m_main = new ZmlMainTable( this, m_toolkit );
+      m_main = new ZmlMainTable( this, m_model, m_toolkit );
       m_main.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
       if( hasToolbar( tableType ) )
@@ -191,12 +184,18 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
   {
     synchronized( this )
     {
+      final IZmlTable[] tables = getTables();
+      for( final IZmlTable table : tables )
+      {
+        // FIXME move to getModel().refresh()?
+        table.getModel().reset();
+      }
+
       // FIXME stack columns in table model
       Collections.addAll( m_stackColumns, cols );
 
       addMissingColumns();
 
-      final IZmlTable[] tables = getTables();
       for( final IZmlTable table : tables )
       {
         // FIXME don't refresh all columns!!!!
@@ -210,7 +209,7 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
   {
     synchronized( this )
     {
-      final IZmlModelColumn[] missing = ZmlTableColumns.findMissingColumns( this, m_model.getColumns() );
+      final IZmlModelColumn[] missing = ZmlTableColumns.findMissingColumns( getMainTable(), m_model.getColumns() );
       for( final IZmlModelColumn column : missing )
       {
         ZmlTableColumns.addTableColumn( this, column.getDataColumn() );
@@ -229,44 +228,6 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
   }
 
   @Override
-  public IZmlTableColumn[] getColumns( )
-  {
-    return m_columns.toArray( new IZmlTableColumn[] {} );
-  }
-
-  @Override
-  public void accept( final IZmlTableColumnVisitor visitor )
-  {
-    for( final IZmlTableColumn column : getColumns() )
-    {
-      visitor.visit( column );
-    }
-  }
-
-  @Override
-  public void accept( final IZmlTableRowVisitor visitor )
-  {
-    for( final IZmlTableRow row : getRows() )
-    {
-      try
-      {
-        if( row instanceof IZmlTableValueRow )
-          visitor.visit( (IZmlTableValueRow) row );
-      }
-      catch( final CancelVisitorException e )
-      {
-        return;
-      }
-    }
-  }
-
-  @Override
-  public IZmlModel getModel( )
-  {
-    return m_model;
-  }
-
-  @Override
   public void addListener( final IZmlTableCompositeListener listener )
   {
     m_listeners.add( listener );
@@ -279,57 +240,15 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
   }
 
   @Override
-  public int getResolution( )
-  {
-    return m_main.getResolution();
-  }
-
-  @Override
-  public IZmlTableRow[] getRows( )
-  {
-    return m_main.getRows();
-  }
-
-  @Override
-  public IZmlTableRow getRow( final int index )
-  {
-    if( index < 0 )
-      return null;
-
-    final IZmlTableRow[] rows = getRows();
-    if( index < rows.length )
-      return rows[index];
-
-    return null;
-  }
-
-  @Override
-  public IZmlTableColumn findColumn( final int columnIndex )
-  {
-    throw new UnsupportedOperationException();
-// return m_columns.get( columnIndex ); TODO correct?!?
-  }
-
-  @Override
-  public void add( final IZmlTableColumn column )
-  {
-    m_columns.add( column );
-  }
-
-  public boolean isEmpty( )
-  {
-    return ArrayUtils.isEmpty( getRows() );
-  }
-
-  @Override
-  public ZmlViewResolutionFilter getResulutionFilter( )
-  {
-    return m_main.getResolutionFilter();
-  }
-
-  @Override
   public IZmlTable getMainTable( )
   {
     return m_main;
   }
+
+  @Override
+  public IZmlModel getModel( )
+  {
+    return m_model;
+  }
+
 }

@@ -41,6 +41,7 @@
 package org.kalypso.zml.ui.table.model.cells;
 
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableIndexColumn;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
@@ -52,9 +53,9 @@ import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
 public class ZmlTableIndexCell extends AbstractZmlTableCell implements IZmlTableIndexCell
 {
 
-  protected ZmlTableIndexCell( final IZmlTableRow row, final IZmlTableColumn column )
+  protected ZmlTableIndexCell( final IZmlTable table, final IZmlTableRow row, final IZmlTableColumn column )
   {
-    super( row, column );
+    super( table, row, column );
   }
 
   @Override

@@ -41,9 +41,7 @@
 package org.kalypso.zml.ui.table.model.columns;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -53,11 +51,10 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.binding.BaseColumn;
-import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.IZmlTableComposite;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
+import org.kalypso.zml.ui.table.model.AbstractZmlTableElement;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
@@ -66,20 +63,26 @@ import org.kalypso.zml.ui.table.provider.RuleMapper;
 /**
  * @author Dirk Kuch
  */
-public abstract class AbstractZmlTableColumn implements IZmlTableColumn
+public abstract class AbstractZmlTableColumn extends AbstractZmlTableElement implements IZmlTableColumn
 {
   private final BaseColumn m_type;
 
-  private final Map<IZmlTable, TableViewerColumn> m_columns = new HashMap<IZmlTable, TableViewerColumn>();
-
-  private final IZmlTableComposite m_table;
-
   private final RuleMapper m_mapper;
 
-  public AbstractZmlTableColumn( final IZmlTableComposite table, final BaseColumn type )
+  private final IZmlTable m_table;
+
+  private final TableViewerColumn m_viewerColumn;
+
+  private final int m_index;
+
+  public AbstractZmlTableColumn( final IZmlTable table, final BaseColumn type, final TableViewerColumn viewerColumn, final int index )
   {
+    super( table );
     m_table = table;
+
     m_type = type;
+    m_viewerColumn = viewerColumn;
+    m_index = index;
 
     m_mapper = new RuleMapper( table, type );
   }
@@ -87,17 +90,6 @@ public abstract class AbstractZmlTableColumn implements IZmlTableColumn
   protected RuleMapper getMapper( )
   {
     return m_mapper;
-  }
-
-  @Override
-  public IZmlTableComposite getTable( )
-  {
-    return m_table;
-  }
-
-  public void addColumn( final IZmlTable table, final TableViewerColumn column )
-  {
-    m_columns.put( table, column );
   }
 
   @Override
@@ -133,14 +125,14 @@ public abstract class AbstractZmlTableColumn implements IZmlTableColumn
   }
 
   @Override
-  public TableViewerColumn getTableViewerColumn( final IZmlTable table )
+  public TableViewerColumn getTableViewerColumn( )
   {
-    return m_columns.get( table );
+    return m_viewerColumn;
   }
 
   public TableColumn getTableColumn( final IZmlTable table )
   {
-    final TableViewerColumn column = getTableViewerColumn( table );
+    final TableViewerColumn column = getTableViewerColumn();
     if( Objects.isNotNull( column ) )
       return column.getColumn();
 
@@ -150,14 +142,13 @@ public abstract class AbstractZmlTableColumn implements IZmlTableColumn
   @Override
   public IZmlModelColumn getModelColumn( )
   {
-    final IZmlModel model = getTable().getModel();
-
-    return model.getColumn( m_type.getIdentifier() );
+    return getModel().getModel().getColumn( m_type.getIdentifier() );
   }
 
   @Override
-  public IZmlTableCell[] getCells( final IZmlTable table )
+  public IZmlTableCell[] getCells( )
   {
+    final IZmlTable table = getTable();
     final TableViewer viewer = table.getViewer();
     final List<IZmlTableCell> cells = new ArrayList<IZmlTableCell>();
 
@@ -176,11 +167,11 @@ public abstract class AbstractZmlTableColumn implements IZmlTableColumn
   }
 
   @Override
-  public IZmlTableCell[] getSelectedCells( final IZmlTable table )
+  public IZmlTableCell[] getSelectedCells( )
   {
     final List<IZmlTableCell> selected = new ArrayList<IZmlTableCell>();
 
-    final IZmlTableSelectionHandler selection = table.getSelectionHandler();
+    final IZmlTableSelectionHandler selection = getTable().getSelectionHandler();
     final IZmlTableValueRow[] rows = selection.getSelectedRows();
     for( final IZmlTableValueRow row : rows )
     {

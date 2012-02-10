@@ -45,6 +45,7 @@ import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.core.table.schema.IndexColumnType;
+import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.model.AbstractZmlTableElement;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
@@ -60,9 +61,9 @@ public abstract class AbstractZmlTableCell extends AbstractZmlTableElement imple
 
   private final IZmlTableRow m_row;
 
-  protected AbstractZmlTableCell( final IZmlTableRow row, final IZmlTableColumn column )
+  protected AbstractZmlTableCell( final IZmlTable table, final IZmlTableRow row, final IZmlTableColumn column )
   {
-    super( row.getTable() );
+    super( table );
 
     m_column = column;
     m_row = row;
@@ -94,18 +95,18 @@ public abstract class AbstractZmlTableCell extends AbstractZmlTableElement imple
     return handler.toViewerCell( this );
   }
 
-  public static IZmlTableCell create( final IZmlTableRow row, final IZmlTableColumn column )
+  public static IZmlTableCell create( final IZmlTable table, final IZmlTableRow row, final IZmlTableColumn column )
   {
     if( row instanceof IZmlTableHeaderRow )
-      return new ZmlTableHeaderCell( row, column );
+      return new ZmlTableHeaderCell( table, row, column );
 
     final BaseColumn type = column.getColumnType();
     final AbstractColumnType baseType = type.getType();
 
     if( baseType instanceof IndexColumnType )
-      return new ZmlTableIndexCell( row, column );
+      return new ZmlTableIndexCell( table, row, column );
     else if( baseType instanceof DataColumnType )
-      return new ZmlTableValueCell( row, column );
+      return new ZmlTableValueCell( table, row, column );
 
     throw new UnsupportedOperationException();
   }

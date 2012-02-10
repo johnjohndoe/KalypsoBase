@@ -42,6 +42,7 @@ package org.kalypso.zml.ui.table.model.columns;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.SensorException;
@@ -60,7 +61,6 @@ import org.kalypso.zml.core.table.schema.CellStyleType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.core.table.schema.IndexColumnType;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.IZmlTableComposite;
 import org.kalypso.zml.ui.table.IZmlTableCompositeListener;
 import org.kalypso.zml.ui.table.focus.ZmlTableEditingSupport;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
@@ -94,9 +94,9 @@ public class ZmlTableValueColumn extends AbstractZmlTableColumn implements IZmlT
 
   private ZmlTableEditingSupport m_editingSupport;
 
-  public ZmlTableValueColumn( final IZmlTableComposite table, final BaseColumn type )
+  public ZmlTableValueColumn( final IZmlTable table, final BaseColumn type, final TableViewerColumn viewerColumn, final int index )
   {
-    super( table, type );
+    super( table, type, viewerColumn, index );
   }
 
   @Override
@@ -116,7 +116,7 @@ public class ZmlTableValueColumn extends AbstractZmlTableColumn implements IZmlT
   public IZmlTableValueCell findCell( final IZmlModelRow row )
   {
     final FindTableRowVisitor visitor = new FindTableRowVisitor( row );
-    getTable().accept( visitor );
+    getTable().getModel().accept( visitor );
 
     final IZmlTableRow tableRow = visitor.getRow();
     if( Objects.isNull( tableRow ) )
@@ -270,11 +270,10 @@ public class ZmlTableValueColumn extends AbstractZmlTableColumn implements IZmlT
     return String.format( "id: %s, label: %s", getColumnType().getIdentifier() );
   }
 
-  public void setEditingSupport( final IZmlTable table, final ZmlTableEditingSupport editingSupport )
+  public void setEditingSupport( final ZmlTableEditingSupport editingSupport )
   {
     m_editingSupport = editingSupport;
-
-    getTableViewerColumn( table ).setEditingSupport( editingSupport );
+    getTableViewerColumn().setEditingSupport( editingSupport );
   }
 
   @Override

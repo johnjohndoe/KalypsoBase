@@ -59,14 +59,14 @@ public abstract class AbstractZmlTableRow extends AbstractZmlTableElement implem
   @Override
   public final int getIndex( )
   {
-    final IZmlTableRow[] rows = getTable().getRows();
+    final IZmlTableRow[] rows = getModel().getRows();
     return ArrayUtils.indexOf( rows, this );
   }
 
   @Override
   public final IZmlTableColumn[] getColumns( )
   {
-    return getTable().getColumns();
+    return getModel().getColumns();
   }
 
 }

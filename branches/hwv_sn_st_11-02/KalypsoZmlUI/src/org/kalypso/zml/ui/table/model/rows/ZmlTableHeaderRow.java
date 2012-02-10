@@ -58,7 +58,7 @@ public class ZmlTableHeaderRow extends AbstractZmlTableRow implements IZmlTableH
   @Override
   public IZmlTableCell getCell( final IZmlTableColumn column )
   {
-    return AbstractZmlTableCell.create( this, column );
+    return AbstractZmlTableCell.create( getTable(), this, column );
   }
 
 }

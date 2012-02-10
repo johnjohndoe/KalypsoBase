@@ -47,7 +47,6 @@ import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.IZmlTableComposite;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
 import org.kalypso.zml.ui.table.provider.AppliedRule;
 
@@ -56,27 +55,27 @@ import org.kalypso.zml.ui.table.provider.AppliedRule;
  */
 public interface IZmlTableColumn
 {
-  BaseColumn getColumnType( );
+  CellStyle findStyle( IZmlModelRow row ) throws CoreException;
 
-  IZmlModelColumn getModelColumn( );
+  AppliedRule[] getAppliedRules( );
 
   /**
    * @return visible table cells
    */
-  IZmlTableCell[] getCells( IZmlTable table );
+  IZmlTableCell[] getCells( );
 
-  IZmlTableCell[] getSelectedCells( IZmlTable table );
+  BaseColumn getColumnType( );
 
-  TableViewerColumn getTableViewerColumn( IZmlTable table );
+  IZmlModelColumn getModelColumn( );
+
+  IZmlTableCell[] getSelectedCells( );
+
+  IZmlTable getTable( );
+
+  TableViewerColumn getTableViewerColumn( );
 
   boolean isVisible( );
 
-  AppliedRule[] getAppliedRules( );
-
   void reset( );
-
-  IZmlTableComposite getTable( );
-
-  CellStyle findStyle( IZmlModelRow row ) throws CoreException;
 
 }

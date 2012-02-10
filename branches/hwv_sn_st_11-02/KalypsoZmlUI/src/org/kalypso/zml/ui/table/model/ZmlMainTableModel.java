@@ -38,14 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider;
+package org.kalypso.zml.ui.table.model;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
+import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.ZmlModel;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
 import org.kalypso.zml.ui.table.model.rows.ZmlTableRow;
@@ -53,43 +53,35 @@ import org.kalypso.zml.ui.table.model.rows.ZmlTableRow;
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableContentProvider extends ArrayTreeContentProvider
+public class ZmlMainTableModel extends AbstractZmlTableModel
 {
-  private final IZmlTable m_table;
 
-  private IZmlTableRow[] m_rows = new IZmlTableRow[] {};
-
-  public ZmlTableContentProvider( final IZmlTable table )
+  public ZmlMainTableModel( final IZmlTable table, final IZmlModel model )
   {
-    m_table = table;
+    super( table, model );
   }
 
   @Override
-  public synchronized Object[] getElements( final Object inputElement )
+  public IZmlTableRow[] getRows( )
   {
-    m_rows = new IZmlTableRow[] {};
 
-    if( inputElement instanceof ZmlModel )
+    synchronized( this )
     {
-      final Set<IZmlTableRow> elements = new LinkedHashSet<IZmlTableRow>();
-
-      final ZmlModel model = (ZmlModel) inputElement;
-
-      final IZmlModelRow[] rows = model.getRows();
-      for( final IZmlModelRow row : rows )
+      if( ArrayUtils.isEmpty( m_rows ) )
       {
-        elements.add( new ZmlTableRow( m_table, row ) );
+        final Set<IZmlTableRow> collection = new LinkedHashSet<IZmlTableRow>();
+
+        final IZmlModelRow[] rows = getModel().getRows();
+        for( final IZmlModelRow row : rows )
+        {
+          collection.add( new ZmlTableRow( getTable(), row ) );
+        }
+
+        m_rows = collection.toArray( new IZmlTableRow[] {} );
       }
 
-      m_rows = elements.toArray( new IZmlTableRow[] {} );
     }
 
     return m_rows;
   }
-
-  public IZmlTableRow[] getRows( )
-  {
-    return m_rows;
-  }
-
 }

@@ -43,7 +43,6 @@ package org.kalypso.zml.ui.table.layout;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.widgets.TableColumn;
 import org.kalypso.zml.core.table.binding.BaseColumn;
-import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableIndexColumn;
 
@@ -54,11 +53,8 @@ public class PackIndexColumnsVisitor extends AbstractTableColumnPackVisitor
 {
   private final boolean m_visible;
 
-  private final IZmlTable m_table;
-
-  public PackIndexColumnsVisitor( final IZmlTable table, final boolean visible )
+  public PackIndexColumnsVisitor( final boolean visible )
   {
-    m_table = table;
     m_visible = visible;
   }
 
@@ -69,7 +65,7 @@ public class PackIndexColumnsVisitor extends AbstractTableColumnPackVisitor
       return;
 
     final BaseColumn columnType = column.getColumnType();
-    final TableViewerColumn tableViewerColumn = column.getTableViewerColumn( m_table );
+    final TableViewerColumn tableViewerColumn = column.getTableViewerColumn();
     final TableColumn tableColumn = tableViewerColumn.getColumn();
 
     final String label = columnType.getLabel();

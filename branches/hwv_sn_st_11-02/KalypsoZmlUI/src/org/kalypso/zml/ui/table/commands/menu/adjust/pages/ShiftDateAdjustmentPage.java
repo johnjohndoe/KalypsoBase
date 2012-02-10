@@ -191,7 +191,7 @@ public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage
       return m_offset;
 
     final IZmlTableColumn column = getColumn();
-    final IZmlTableValueCell[] cells = (IZmlTableValueCell[]) column.getCells( null );
+    final IZmlTableValueCell[] cells = (IZmlTableValueCell[]) column.getCells();
 
     final long t1 = cells[0].getValueReference().getIndexValue().getTime();
     final long t2 = cells[1].getValueReference().getIndexValue().getTime();
@@ -203,26 +203,17 @@ public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage
     return m_offset;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.pager.IElementPage#dispose()
-   */
   @Override
   public void dispose( )
   {
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.commands.menu.adjust.pages.AbstractAdjustmentPage#getRunnable()
-   */
   @Override
   public ICoreRunnableWithProgress getRunnable( )
   {
-    return new ShiftDateRunnable( getColumn().getModelColumn(), (IZmlTableValueCell[]) getColumn().getSelectedCells( null ), getMinutes() );
+    return new ShiftDateRunnable( getColumn().getModelColumn(), (IZmlTableValueCell[]) getColumn().getSelectedCells(), getMinutes() );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.commands.menu.adjust.pages.AbstractAdjustmentPage#isValid()
-   */
   @Override
   public boolean isValid( )
   {
