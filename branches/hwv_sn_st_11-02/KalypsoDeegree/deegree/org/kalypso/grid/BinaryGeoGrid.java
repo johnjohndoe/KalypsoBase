@@ -233,8 +233,8 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
 
       /* Read statistical data */
       saveStatistically();
-// writeBigDecimal( m_min );
-// writeBigDecimal( m_max );
+      // writeBigDecimal( m_min );
+      // writeBigDecimal( m_max );
     }
     catch( final IOException e )
     {
@@ -485,7 +485,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
   public void saveStatistically( ) throws GeoGridException
   {
     if( m_min != null && m_max != null )
-      setStatistically( getMin(), getMax() );
+      setStatistically( m_min, m_max );
   }
 
   public RandomAccessFile getFile( )

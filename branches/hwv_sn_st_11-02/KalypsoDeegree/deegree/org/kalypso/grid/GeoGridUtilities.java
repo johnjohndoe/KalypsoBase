@@ -458,6 +458,8 @@ public final class GeoGridUtilities
     // HACK: internal binary grid
     if( mimeType.endsWith( "/bin" ) )
       return BinaryGeoGrid.createGrid( file, sizeX, sizeY, scale, origin, offsetX, offsetY, sourceCRS, fillGrid );
+    else if( mimeType.endsWith( "/tiff" ) )
+      return new TiffGeoGrid( origin, offsetX, offsetY, sourceCRS, file, sizeX, sizeY );
 
     throw new UnsupportedOperationException( "Mime-Type not supported for writing: " + mimeType );
   }
@@ -521,8 +523,8 @@ public final class GeoGridUtilities
     IWriteableGeoGrid outputGrid = null;
     try
     {
-// outputGrid = createWriteableGrid( mimeType, file, grid.getSizeX(), grid.getSizeY(), scale, grid.getOrigin(),
-// grid.getOffsetX(), grid.getOffsetY(), grid.getSourceCRS(), false );
+      // outputGrid = createWriteableGrid( mimeType, file, grid.getSizeX(), grid.getSizeY(), scale, grid.getOrigin(),
+      // grid.getOffsetX(), grid.getOffsetY(), grid.getSourceCRS(), false );
 
       // FIXME: please comment! Why are we using this specialized implementation here and not the other one?
       outputGrid = new BinaryGeoGridWriter( file.getAbsolutePath(), grid.getSizeX(), grid.getSizeY(), scale );
@@ -564,8 +566,8 @@ public final class GeoGridUtilities
     final ParallelBinaryGridProcessor manager = new ParallelBinaryGridProcessor( grid, outputGridWriter );
     manager.calculate();
     outputGridWriter.close();
-// IGeoGrid outputGrid = BinaryGeoGrid.openGrid( outputCoverageFile.toURI().toURL(), grid.getOrigin(),
-// grid.getOffsetX(), grid.getOffsetY(), grid.getSourceCRS(), false );
+    // IGeoGrid outputGrid = BinaryGeoGrid.openGrid( outputCoverageFile.toURI().toURL(), grid.getOrigin(),
+    // grid.getOffsetX(), grid.getOffsetY(), grid.getSourceCRS(), false );
 
     try
     {
@@ -593,7 +595,7 @@ public final class GeoGridUtilities
    * @param file
    *          The new coverage will be serialized to this file.
    * @param filePath
-   *          the (maybe relative) url to the file. This path will be put into the gml as address of the underlying
+   *          The (maybe relative) url to the file. This path will be put into the gml as address of the underlying
    *          file.
    * @param mimeType
    *          The mime type of the created underlying file.
@@ -621,7 +623,7 @@ public final class GeoGridUtilities
    * @param file
    *          The new coverage will be serialized to this file.
    * @param filePath
-   *          the (maybe relative) url to the file. This path will be put into the gml as address of the underlying
+   *          The (maybe relative) url to the file. This path will be put into the gml as address of the underlying
    *          file.
    * @param mimeType
    *          The mime type of the created underlying file.
@@ -755,7 +757,20 @@ public final class GeoGridUtilities
     }
   }
 
-  private static void setCoverage( final RectifiedGridCoverage coverage, final RectifiedGridDomain domain, final String externalResource, final String mimeType )
+  /**
+   * This function sets the coverage. It does not copy.
+   * 
+   * @param coverage
+   *          The coverage that refers the grid
+   * @param domain
+   *          The rectified grid domain.
+   * @param externalResource
+   *          The (maybe relative) url to the file. This path will be put into the gml as address of the underlying
+   *          file.
+   * @param mimeType
+   *          The mime type of the created underlying file.
+   */
+  public static void setCoverage( final RectifiedGridCoverage coverage, final RectifiedGridDomain domain, final String externalResource, final String mimeType )
   {
     final FileType rangeSetFile = KalypsoOGC31JAXBcontext.GML3_FAC.createFileType();
 
