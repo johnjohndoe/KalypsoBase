@@ -52,6 +52,7 @@ import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
 /**
  * @author Dirk Kuch
  */
+@Deprecated
 public interface IZmlTableModel
 {
   void accept( IZmlTableColumnVisitor visitor );

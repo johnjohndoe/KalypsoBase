@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,30 +38,63 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.model.cells;
+package org.kalypso.zml.ui.table.nat.base;
 
-import org.eclipse.jface.viewers.ViewerCell;
+import net.sourceforge.nattable.data.IColumnAccessor;
+
+import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
-import org.kalypso.zml.ui.table.model.IZmlTableObject;
-import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
-import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
+import org.kalypso.zml.core.table.model.references.IZmlModelIndexCell;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 
 /**
  * @author Dirk Kuch
  */
-@Deprecated
-public interface IZmlTableCell extends IZmlTableObject
+public class ZmlModelRowAccesor implements IColumnAccessor<IZmlModelRow>
 {
-  IZmlModelCell getValueReference( );
 
-  IZmlTableColumn getColumn( );
+  @Override
+  public Object getDataValue( final IZmlModelRow row, final int columnIndex )
+  {
+    final IZmlModelCell[] cells = row.getCells();
+    if( columnIndex < ArrayUtils.getLength( cells ) )
+    {
+      final IZmlModelCell cell = cells[columnIndex];
 
-  IZmlTableRow getRow( );
+      if( cell instanceof IZmlModelIndexCell )
+      {
+        return cell.getIndexValue();
+      }
+      else if( cell instanceof IZmlModelValueCell )
+      {
+        try
+        {
+          final IZmlModelValueCell valueCell = (IZmlModelValueCell) cell;
 
-  /**
-   * @return row index
-   */
-  int getIndex( );
+          return valueCell.getValue();
+        }
+        catch( final SensorException e )
+        {
+          e.printStackTrace();
+        }
+      }
+    }
 
-  ViewerCell getViewerCell( );
+    return "n / a";
+  }
+
+  @Override
+  public void setDataValue( final IZmlModelRow row, final int columnIndex, final Object newValue )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public int getColumnCount( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
 }

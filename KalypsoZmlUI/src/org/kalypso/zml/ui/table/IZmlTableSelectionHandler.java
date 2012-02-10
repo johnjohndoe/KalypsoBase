@@ -48,6 +48,7 @@ import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
 /**
  * @author Dirk Kuch
  */
+@Deprecated
 public interface IZmlTableSelectionHandler
 {
   IZmlTableValueRow[] getSelectedRows( );

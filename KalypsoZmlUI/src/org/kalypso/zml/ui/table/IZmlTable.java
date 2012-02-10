@@ -52,23 +52,30 @@ import org.kalypso.zml.ui.table.provider.rendering.cell.ZmlTableCellCache;
  */
 public interface IZmlTable
 {
+  @Deprecated
   TableViewer getViewer( );
 
+  @Deprecated
   ZmlTableCellCache getCache( );
 
   // FIXME remove from interface!
   void dispose( );
 
+  @Deprecated
   IZmlTableModel getModel( );
 
+  @Deprecated
   IZmlTableFocusHandler getFocusHandler( );
 
+  @Deprecated
   int getResolution( );
 
   void refresh( IZmlModelColumn... columns );
 
+  @Deprecated
   ZmlViewResolutionFilter getResulutionFilter( );
 
+  @Deprecated
   IZmlTableSelectionHandler getSelectionHandler( );
 
   void fireTableChanged( String type, IZmlModelColumn... columns );

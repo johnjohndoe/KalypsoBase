@@ -49,10 +49,10 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.zml.ui.table.ZmlMainTable;
 import org.kalypso.zml.ui.table.model.IZmlTableModel;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableIndexColumn;
+import org.kalypso.zml.ui.table.nat.ZmlTable;
 
 /**
  * @author Dirk Kuch
@@ -63,11 +63,11 @@ public class ZmlTableLayoutJob extends UIJob
 
   protected static final Color COLOR_TABLE_ENABLED = new Color( null, new RGB( 0xff, 0xff, 0xff ) );
 
-  private final ZmlMainTable m_table;
+  private final ZmlTable m_table;
 
   private final Set<IZmlTableColumn> m_stack;
 
-  public ZmlTableLayoutJob( final ZmlMainTable table, final Set<IZmlTableColumn> stack )
+  public ZmlTableLayoutJob( final ZmlTable table, final Set<IZmlTableColumn> stack )
   {
     super( "Tabellen-Layout wird aktualisiert" );
     m_table = table;

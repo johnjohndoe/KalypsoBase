@@ -46,9 +46,8 @@ import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
 /**
  * @author Dirk Kuch
  */
+@Deprecated
 public interface IZmlTableRowVisitor
 {
-
   void visit( IZmlTableValueRow row ) throws CancelVisitorException;
-
 }

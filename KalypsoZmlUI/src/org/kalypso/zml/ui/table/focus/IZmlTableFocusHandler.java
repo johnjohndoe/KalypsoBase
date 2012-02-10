@@ -47,6 +47,7 @@ import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
 /**
  * @author Dirk Kuch
  */
+@Deprecated
 public interface IZmlTableFocusHandler
 {
   IZmlTableCell getFocusTableCell( );
