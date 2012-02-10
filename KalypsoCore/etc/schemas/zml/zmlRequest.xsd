@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="request.zml.kalypso.org" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:req="request.zml.kalypso.org" xmlns="http://www.w3.org/2001/XMLSchema">
+  <element name="request">
+    <annotation>
+      <documentation><![CDATA[
+				A Zml-Request is used to specify what is expected by a client
+				from the server-side observation.
+				
+				For instance, one might want to have a date-axis and a W-axis
+				when requesting the values for a specific observation id. Using
+				a request, this information can be encapsulated into the
+				URL when asking the server.
+				]]>
+      </documentation>
+    </annotation>
+    <complexType>
+      <sequence>
+        <element name="name" type="string" minOccurs="0" maxOccurs="1">
+          <annotation>
+            <documentation>The name of the default observation
+              that might be created when no underlying
+              observation is found.</documentation>
+          </annotation>
+        </element>
+        <element name="axes" type="string" minOccurs="0" maxOccurs="1">
+          <annotation>
+            <documentation>A comma separated list of axes types
+              which are requested. Example:
+              date,W</documentation>
+          </annotation>
+        </element>
+        <element name="statusAxes" type="string" minOccurs="0" maxOccurs="1">
+          <annotation>
+            <documentation>A comma separated list of axes types
+              for which a status-axis should be generated. Only
+              the axes types found in the 'axes'-Element are
+              elligible to have a status-axis.</documentation>
+          </annotation>
+        </element>
+        <element name="dateFrom" type="dateTime" minOccurs="0" maxOccurs="1">
+          <annotation>
+            <documentation>The from-part of the date-range for which
+              to retrieve the observation values.</documentation>
+          </annotation>
+        </element>
+        <element name="dateTo" type="dateTime" minOccurs="0" maxOccurs="1">
+          <annotation>
+            <documentation>The to-part of the date-range for which
+              to retrieve the observation values.</documentation>
+          </annotation>
+        </element>
+        <element name="timestep" minOccurs="0" maxOccurs="1">
+          <annotation>
+            <documentation>The timestep this observation gets set into the metadata.</documentation>
+          </annotation>
+          <complexType>
+            <attribute name="amount" type="int" use="required" />
+            <attribute name="field" type="req:calandarField" use="required" />
+          </complexType>
+        </element>
+      </sequence>
+    </complexType>
+  </element>
+
+  <simpleType name="calandarField">
+    <restriction base="string">
+      <enumeration value="DATE" />
+      <enumeration value="DAY_OF_MONTH" />
+      <enumeration value="DAY_OF_WEEK" />
+      <enumeration value="DAY_OF_WEEK_IN_MONTH" />
+      <enumeration value="DAY_OF_YEAR" />
+      <enumeration value="ERA" />
+      <enumeration value="HOUR" />
+      <enumeration value="HOUR_OF_DAY" />
+      <enumeration value="MILLISECOND" />
+      <enumeration value="MINUTE" />
+      <enumeration value="MONTH" />
+      <enumeration value="SECOND" />
+      <enumeration value="WEEK_OF_MONTH" />
+      <enumeration value="WEEK_OF_YEAR" />
+      <enumeration value="YEAR" />
+    </restriction>
+  </simpleType>
+</schema>
