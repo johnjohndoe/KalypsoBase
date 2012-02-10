@@ -53,6 +53,7 @@ import org.kalypso.zml.ui.table.provider.AppliedRule;
 /**
  * @author Dirk Kuch
  */
+@Deprecated
 public interface IZmlTableColumn
 {
   CellStyle findStyle( IZmlModelRow row ) throws CoreException;

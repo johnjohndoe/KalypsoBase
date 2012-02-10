@@ -51,9 +51,9 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableCompositeListener;
 import org.kalypso.zml.ui.table.IZmlTableListener;
-import org.kalypso.zml.ui.table.ZmlMainTable;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.columns.ZmlTableColumns;
+import org.kalypso.zml.ui.table.nat.ZmlTable;
 
 /**
  * @author Dirk Kuch
@@ -95,7 +95,7 @@ public class ZmlTableLayoutHandler implements IZmlTableListener
       if( Objects.isNotNull( m_job ) )
         m_job.cancel();
 
-      m_job = new ZmlTableLayoutJob( (ZmlMainTable) m_table, m_stack );
+      m_job = new ZmlTableLayoutJob( (ZmlTable) m_table, m_stack );
 
       m_job.setRule( m_rule );
       m_job.schedule( 100 );

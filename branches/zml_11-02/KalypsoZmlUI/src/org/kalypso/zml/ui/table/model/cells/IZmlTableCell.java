@@ -49,6 +49,7 @@ import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
 /**
  * @author Dirk Kuch
  */
+@Deprecated
 public interface IZmlTableCell extends IZmlTableObject
 {
   IZmlModelCell getValueReference( );

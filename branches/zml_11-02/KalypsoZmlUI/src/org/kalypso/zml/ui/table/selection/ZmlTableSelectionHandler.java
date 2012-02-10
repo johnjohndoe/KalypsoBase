@@ -66,7 +66,6 @@ import org.kalypso.contribs.eclipse.jface.viewers.table.Tables;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
-import org.kalypso.zml.ui.table.ZmlMainTable;
 import org.kalypso.zml.ui.table.menu.ZmlTableContextMenuProvider;
 import org.kalypso.zml.ui.table.menu.ZmlTableHeaderContextMenuProvider;
 import org.kalypso.zml.ui.table.model.IZmlTableModel;
@@ -76,6 +75,7 @@ import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.columns.ZmlTableColumns;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
+import org.kalypso.zml.ui.table.nat.ZmlTable;
 
 /**
  * handles mouse move and menu detect events (active selection of table cells, columns and rows and updating of the
@@ -89,11 +89,11 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
 
   private final MenuManager m_contextMenuManager = new MenuManager();
 
-  private final ZmlMainTable m_table;
+  private final ZmlTable m_table;
 
   private IZmlTableColumn m_lastColumn;
 
-  public ZmlTableSelectionHandler( final ZmlMainTable table )
+  public ZmlTableSelectionHandler( final ZmlTable table )
   {
     m_table = table;
 

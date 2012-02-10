@@ -61,6 +61,7 @@ import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 import org.kalypso.zml.ui.debug.KalypsoZmlUiDebug;
+import org.kalypso.zml.ui.table.nat.ZmlTable;
 
 /**
  * @author Dirk Kuch
@@ -72,7 +73,7 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
 
   private final FormToolkit m_toolkit;
 
-  protected ZmlMainTable m_main;
+  protected ZmlTable m_main;
 
   private IZmlModel m_model;
 
@@ -104,7 +105,7 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
         toolbar.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
       }
 
-      m_main = new ZmlMainTable( this, m_model, m_toolkit );
+      m_main = new ZmlTable( this, m_model, m_toolkit );
       m_main.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
       if( hasToolbar( tableType ) )

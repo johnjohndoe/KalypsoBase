@@ -47,6 +47,7 @@ import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 /**
  * @author Dirk Kuch
  */
+@Deprecated
 public interface IZmlTableValueRow extends IZmlTableRow
 {
   IZmlModelCell getModelCell( IZmlTableColumn column );

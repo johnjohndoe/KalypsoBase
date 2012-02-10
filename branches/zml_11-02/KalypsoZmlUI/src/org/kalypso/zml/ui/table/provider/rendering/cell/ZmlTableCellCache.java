@@ -52,7 +52,7 @@ import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
  */
 public class ZmlTableCellCache
 {
-
+  @Deprecated
   public ZmlTableCellCache( )
   {
   }

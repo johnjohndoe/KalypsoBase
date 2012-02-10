@@ -54,14 +54,15 @@ import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.references.ZmlValues;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.IZmlTableCompositeListener;
-import org.kalypso.zml.ui.table.ZmlMainTable;
 import org.kalypso.zml.ui.table.model.IZmlTableModel;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableHeaderRow;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
+import org.kalypso.zml.ui.table.nat.ZmlTable;
 
 /**
  * @author Dirk Kuch
  */
+@Deprecated
 public class ZmlViewResolutionFilter extends ViewerFilter
 {
   private int m_resolution = 0;
@@ -106,9 +107,9 @@ public class ZmlViewResolutionFilter extends ViewerFilter
 
   private boolean m_stuetzstellenMode;
 
-  private final ZmlMainTable m_table;
+  private final ZmlTable m_table;
 
-  public ZmlViewResolutionFilter( final ZmlMainTable table )
+  public ZmlViewResolutionFilter( final ZmlTable table )
   {
     m_table = table;
   }
