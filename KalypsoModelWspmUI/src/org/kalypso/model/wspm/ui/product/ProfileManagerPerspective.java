@@ -21,11 +21,11 @@ import org.kalypso.ui.wizard.NewGMLFileWizard;
  */
 public class ProfileManagerPerspective implements IPerspectiveFactory
 {
-  public static final String ID = "org.kalypso.model.wspm.ui.product.ProfileManagerPerspective"; //$NON-NLS-1$
+  public final static String ID = "org.kalypso.model.wspm.ui.product.ProfileManagerPerspective"; //$NON-NLS-1$
 
-  public static final String OUTLINE_FOLDER_ID = ProfileManagerPerspective.class.getName() + ".outlineFolder"; //$NON-NLS-1$
+  public final static String OUTLINE_FOLDER_ID = ProfileManagerPerspective.class.getName() + ".outlineFolder"; //$NON-NLS-1$
 
-  public static final String TABLE_FOLDER_ID = ProfileManagerPerspective.class.getName() + ".tableFolder"; //$NON-NLS-1$
+  public final static String TABLE_FOLDER_ID = ProfileManagerPerspective.class.getName() + ".tableFolder"; //$NON-NLS-1$
 
   /**
    * @see org.eclipse.ui.IPerspectiveFactory#createInitialLayout(org.eclipse.ui.IPageLayout)

@@ -79,7 +79,7 @@ public class MoviePlayer
    * @param imageProvider
    *          The movie image provider.
    */
-  public MoviePlayer( final IMovieImageProvider imageProvider )
+  public MoviePlayer( IMovieImageProvider imageProvider )
   {
     m_imageProvider = imageProvider;
     m_parent = null;
@@ -93,7 +93,7 @@ public class MoviePlayer
    * @param parent
    *          The parent movie composite.
    */
-  public void initialize( final MovieComposite parent )
+  public void initialize( MovieComposite parent )
   {
     m_parent = parent;
   }
@@ -121,7 +121,7 @@ public class MoviePlayer
        * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
        */
       @Override
-      public void done( final IJobChangeEvent event )
+      public void done( IJobChangeEvent event )
       {
         handleJobStopped();
       }
@@ -153,14 +153,14 @@ public class MoviePlayer
     return m_imageProvider.getCurrentFrame();
   }
 
-  public void stepTo( final int step )
+  public void stepTo( int step )
   {
     m_imageProvider.stepTo( step );
   }
 
   public void stepAndWait( final int step )
   {
-    final MovieResolution resolution = m_parent.getResolution();
+    MovieResolution resolution = m_parent.getResolution();
     m_imageProvider.stepAndWait( step, resolution.getWidth(), resolution.getHeight() );
   }
 
@@ -188,7 +188,7 @@ public class MoviePlayer
     m_frameDelay = 250;
   }
 
-  public void updateFrameDelay( final int frameDelay )
+  public void updateFrameDelay( int frameDelay )
   {
     m_frameDelay = frameDelay;
   }

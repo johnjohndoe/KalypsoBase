@@ -40,12 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.jts;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.TreeMap;
-
-import org.kalypso.commons.java.lang.Objects;
-
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
@@ -116,20 +110,8 @@ public class SnapUtilities
    *          The snap type.
    * @return A point snapped to the line.
    */
-  public static Point snapToLine( final LineString geometryJTS, final Geometry pointBuffer, final SNAP_TYPE type )
+  public static Point snapLine( final LineString geometryJTS, final Geometry pointBuffer, final SNAP_TYPE type )
   {
-    /**
-     * FIXME: use JTS implementation, like:
-     * 
-     * <pre>
-     * final LocationIndexedLine lineIndex = new LocationIndexedLine( lineString );
-     * final LinearLocation location = lineIndex.project( position.getCoordinate() );
-     * location.snapToVertex( lineString, MapUtilities.calculateWorldDistance( getMapPanel(), 10 ) );
-     * 
-     * return JTSConverter.toPoint( lineIndex.extractPoint( location ) );
-     * </pre>
-     */
-
     try
     {
       if( type.equals( SNAP_TYPE.SNAP_TO_POINT ) )
@@ -142,36 +124,23 @@ public class SnapUtilities
       }
       else if( type.equals( SNAP_TYPE.SNAP_AUTO ) )
       {
-        final Point point = snapToLine( geometryJTS, pointBuffer, SNAP_TYPE.SNAP_TO_POINT );
+        final Point point = snapLine( geometryJTS, pointBuffer, SNAP_TYPE.SNAP_TO_POINT );
         if( point != null )
           return point;
 
-        return snapToLine( geometryJTS, pointBuffer, SNAP_TYPE.SNAP_TO_LINE );
+        return snapLine( geometryJTS, pointBuffer, SNAP_TYPE.SNAP_TO_LINE );
       }
       else if( type.equals( SNAP_TYPE.SNAP_TO_LINE ) )
       {
-
-        final LineString[] lineStrings = toLineString( pointBuffer.intersection( geometryJTS ) );
-        final Map<Double, Point> map = new TreeMap<Double, Point>();
-
-        for( final LineString lineString : lineStrings )
-        {
-          for( int percent = 2; percent < 100; percent += 2 )
-          {
-            final Point point = JTSUtilities.pointOnLinePercent( lineString, percent );
-            if( Objects.isNull( point ) )
-              continue;
-
-            final double distance = pointBuffer.getCentroid().distance( point );
-            map.put( distance, point );
-          }
-        }
-
-        final Collection<Point> results = map.values();
-        if( results.isEmpty() )
+        final Geometry geometryIntersection = pointBuffer.intersection( geometryJTS );
+        if( !(geometryIntersection instanceof LineString) )
           return null;
 
-        return results.iterator().next();
+        final Point point = JTSUtilities.pointOnLinePercent( (LineString) geometryIntersection, 50 );
+        if( point == null )
+          return null;
+
+        return point;
       }
     }
     catch( final TopologyException ex )
@@ -180,16 +149,6 @@ public class SnapUtilities
     }
 
     return null;
-  }
-
-  private static LineString[] toLineString( final Geometry geometry )
-  {
-    if( geometry instanceof LineString )
-      return new LineString[] { (LineString) geometry };
-    else if( geometry instanceof MultiLineString )
-      return JTSConverter.toLineString( (MultiLineString) geometry );
-
-    return new LineString[] {};
   }
 
   /**
@@ -253,17 +212,17 @@ public class SnapUtilities
   public static Point snapMultiLine( final MultiLineString geometryJTS, final Geometry pointBuffer, final SNAP_TYPE type )
   {
     /* Get the number of geoemtries. */
-    final int numGeometries = geometryJTS.getNumGeometries();
+    int numGeometries = geometryJTS.getNumGeometries();
     for( int i = 0; i < numGeometries; i++ )
     {
       /* Get the geometry. */
-      final Geometry geometry = geometryJTS.getGeometryN( i );
+      Geometry geometry = geometryJTS.getGeometryN( i );
 
       /* Only handle lines. */
       if( geometry instanceof LineString )
       {
         /* Return the first snap point. */
-        final Point snapPoint = snapToLine( (LineString) geometry, pointBuffer, type );
+        Point snapPoint = snapLine( (LineString) geometry, pointBuffer, type );
         if( snapPoint != null )
           return snapPoint;
       }
@@ -286,17 +245,17 @@ public class SnapUtilities
   public static Point snapMultiPolygon( final MultiPolygon geometryJTS, final Geometry pointBuffer, final SNAP_TYPE type )
   {
     /* Get the number of geoemtries. */
-    final int numGeometries = geometryJTS.getNumGeometries();
+    int numGeometries = geometryJTS.getNumGeometries();
     for( int i = 0; i < numGeometries; i++ )
     {
       /* Get the geometry. */
-      final Geometry geometry = geometryJTS.getGeometryN( i );
+      Geometry geometry = geometryJTS.getGeometryN( i );
 
       /* Only handle polygons. */
       if( geometry instanceof Polygon )
       {
         /* Return the first snap point. */
-        final Point snapPoint = snapPolygon( (Polygon) geometry, pointBuffer, type );
+        Point snapPoint = snapPolygon( (Polygon) geometry, pointBuffer, type );
         if( snapPoint != null )
           return snapPoint;
       }

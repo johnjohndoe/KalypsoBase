@@ -50,6 +50,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -197,7 +198,7 @@ public class CsvSheetImportWorker implements ICoreRunnableWithProgress
       return new WQTableSet( new WQTable[] { table }, ITimeseriesConstants.TYPE_WATERLEVEL, ITimeseriesConstants.TYPE_DISCHARGE ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
 
   }
 

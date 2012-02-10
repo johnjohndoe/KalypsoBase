@@ -56,6 +56,7 @@ import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 import de.renew.workflow.base.ITask;
+import de.renew.workflow.connector.WorkflowConnectorPlugin;
 import de.renew.workflow.connector.cases.ICaseDataProvider;
 import de.renew.workflow.connector.worklist.ITaskExecutionAuthority;
 
@@ -81,7 +82,7 @@ public class TaskExecutionAuthority implements ITaskExecutionAuthority
 
     final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
     final MessageDialog confirmDialog = new MessageDialog( activeShell, Messages.getString( "org.kalypso.afgui.scenarios.TaskExecutionAuthority.0" ), null, Messages.getString( "org.kalypso.afgui.scenarios.TaskExecutionAuthority.1" ), MessageDialog.QUESTION, new String[] { //$NON-NLS-1$ //$NON-NLS-2$
-        Messages.getString( "org.kalypso.afgui.scenarios.TaskExecutionAuthority.2" ), Messages.getString( "org.kalypso.afgui.scenarios.TaskExecutionAuthority.3" ), Messages.getString( "org.kalypso.afgui.scenarios.TaskExecutionAuthority.4" ) }, 1 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    Messages.getString( "org.kalypso.afgui.scenarios.TaskExecutionAuthority.2" ), Messages.getString( "org.kalypso.afgui.scenarios.TaskExecutionAuthority.3" ), Messages.getString( "org.kalypso.afgui.scenarios.TaskExecutionAuthority.4" ) }, 1 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     final boolean result;
     final int decision = confirmDialog.open();
     if( decision == 0 )
@@ -109,7 +110,7 @@ public class TaskExecutionAuthority implements ITaskExecutionAuthority
       {
         final IStatus status = StatusUtilities.statusFromThrowable( e );
         ErrorDialog.openError( activeShell, Messages.getString( "org.kalypso.afgui.scenarios.TaskExecutionAuthority.5" ), Messages.getString( "org.kalypso.afgui.scenarios.TaskExecutionAuthority.6" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
-        KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
+        WorkflowConnectorPlugin.getDefault().getLog().log( status );
       }
       catch( final InterruptedException e )
       {

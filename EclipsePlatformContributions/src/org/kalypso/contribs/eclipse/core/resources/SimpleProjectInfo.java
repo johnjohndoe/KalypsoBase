@@ -51,7 +51,7 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsPlugin;
+import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
 import org.kalypso.contribs.java.xml.XMLHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -69,7 +69,7 @@ public class SimpleProjectInfo
   /**
    * The project file.
    */
-  private final File m_projectFile;
+  private File m_projectFile;
 
   /**
    * The name of the project.
@@ -87,7 +87,7 @@ public class SimpleProjectInfo
    * @param projectFile
    *          The project file.
    */
-  public SimpleProjectInfo( final File projectFile )
+  public SimpleProjectInfo( File projectFile )
   {
     m_projectFile = projectFile;
     m_name = "Unknown";
@@ -111,16 +111,16 @@ public class SimpleProjectInfo
       is = new BufferedInputStream( new FileInputStream( m_projectFile ) );
 
       /* Get as DOM. */
-      final Document document = XMLHelper.getAsDOM( is, true );
+      Document document = XMLHelper.getAsDOM( is, true );
 
       /* Get the element. */
-      final Element element = document.getDocumentElement();
+      Element element = document.getDocumentElement();
 
       /* Get the child nodes. */
-      final NodeList childNodes = element.getChildNodes();
+      NodeList childNodes = element.getChildNodes();
       for( int i = 0; i < childNodes.getLength(); i++ )
       {
-        final Node childNode = childNodes.item( i );
+        Node childNode = childNodes.item( i );
         if( childNode.getNodeType() != Node.ELEMENT_NODE )
           continue;
 
@@ -132,11 +132,11 @@ public class SimpleProjectInfo
 
         if( childNode.getNodeName().equals( "natures" ) )
         {
-          final List<String> natures = new ArrayList<String>();
-          final NodeList natureNodes = childNode.getChildNodes();
+          List<String> natures = new ArrayList<String>();
+          NodeList natureNodes = childNode.getChildNodes();
           for( int j = 0; j < natureNodes.getLength(); j++ )
           {
-            final Node natureNode = natureNodes.item( i );
+            Node natureNode = natureNodes.item( i );
             if( natureNode.getNodeType() != Node.ELEMENT_NODE )
               continue;
 
@@ -148,7 +148,7 @@ public class SimpleProjectInfo
         }
       }
     }
-    catch( final Exception ex )
+    catch( Exception ex )
     {
       throw new CoreException( new Status( IStatus.ERROR, EclipseRCPContributionsPlugin.ID, ex.getLocalizedMessage(), ex ) );
     }
@@ -161,7 +161,7 @@ public class SimpleProjectInfo
         {
           is.close();
         }
-        catch( final IOException ex )
+        catch( IOException ex )
         {
           /* Ignore. */
           ex.printStackTrace();

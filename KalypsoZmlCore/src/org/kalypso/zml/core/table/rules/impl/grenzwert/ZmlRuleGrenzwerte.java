@@ -45,30 +45,34 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.table.binding.CellStyle;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.binding.rule.instructions.AbstractZmlRuleInstructionType;
 import org.kalypso.zml.core.table.binding.rule.instructions.ZmlMetadataBoundaryInstruction;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.core.table.rules.AbstractZmlTableRule;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import org.kalypso.zml.core.table.rules.AbstractZmlCellRuleImplementation;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlRuleGrenzwerte extends AbstractZmlTableRule
+public class ZmlRuleGrenzwerte extends AbstractZmlCellRuleImplementation
 {
   public static final String ID = "org.kalypso.zml.ui.core.rule.grenzwerte"; //$NON-NLS-1$
 
   @Override
-  protected boolean doApply( final ZmlRule rule, final IZmlValueReference reference )
+  protected boolean doApply( final ZmlCellRule rule, final IZmlModelCell reference )
   {
-//    System.out.println( rule.getIdentifier() );
+    if( !(reference instanceof IZmlModelValueCell) )
+      return false;
+
+// System.out.println( rule.getIdentifier() );
 
     final AbstractZmlRuleInstructionType[] instructions = rule.getInstructions();
     for( final AbstractZmlRuleInstructionType instruction : instructions )
     {
       try
       {
-        if( instruction.matches( reference ) )
+        if( instruction.matches( (IZmlModelValueCell) reference ) )
           return true;
       }
       catch( final SensorException e )
@@ -81,15 +85,18 @@ public class ZmlRuleGrenzwerte extends AbstractZmlTableRule
   }
 
   @Override
-  public CellStyle getCellStyle( final ZmlRule rule, final IZmlValueReference reference ) throws CoreException
+  public CellStyle getCellStyle( final ZmlCellRule rule, final IZmlModelCell reference ) throws CoreException
   {
+    if( !(reference instanceof IZmlModelValueCell) )
+      return rule.getPlainStyle();
+
     final AbstractZmlRuleInstructionType[] instructions = rule.getInstructions();
     for( final AbstractZmlRuleInstructionType instruction : instructions )
     {
       try
       {
-        if( instruction.matches( reference ) )
-          return instruction.getStyle( reference );
+        if( instruction.matches( (IZmlModelValueCell) reference ) )
+          return instruction.getStyle( (IZmlModelValueCell) reference );
       }
       catch( final SensorException e )
       {
@@ -101,14 +108,17 @@ public class ZmlRuleGrenzwerte extends AbstractZmlTableRule
   }
 
   @Override
-  public String getLabel( final ZmlRule rule, final IZmlValueReference reference )
+  public String getLabel( final ZmlCellRule rule, final IZmlModelCell reference )
   {
+    if( !(reference instanceof IZmlModelValueCell) )
+      return rule.getRuleType().getLabel();
+
     final AbstractZmlRuleInstructionType[] instructions = rule.getInstructions();
     for( final AbstractZmlRuleInstructionType instruction : instructions )
     {
       try
       {
-        if( instruction.matches( reference ) )
+        if( instruction.matches( (IZmlModelValueCell) reference ) )
 
           return instruction.getLabel( rule );
 
@@ -122,29 +132,25 @@ public class ZmlRuleGrenzwerte extends AbstractZmlTableRule
     return rule.getRuleType().getLabel();
   }
 
-  /**
-   * @see org.kalypso.zml.ui.core.rules.IZmlTableRule#getIdentifier()
-   */
   @Override
   public String getIdentifier( )
   {
     return ID;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.core.rules.impl.AbstractZmlTableRule#update(org.kalypso.zml.ui.table.model.IZmlModelRow,
-   *      org.kalypso.zml.ui.table.binding.BaseColumn, java.lang.String)
-   */
   @Override
-  public String update( final ZmlRule rule, final IZmlValueReference reference, final String text ) throws SensorException
+  public String update( final ZmlCellRule rule, final IZmlModelCell reference, final String text ) throws SensorException
   {
+    if( !(reference instanceof IZmlModelValueCell) )
+      return text;
+
     final AbstractZmlRuleInstructionType[] instructions = rule.getInstructions();
     for( final AbstractZmlRuleInstructionType instruction : instructions )
     {
       if( instruction instanceof ZmlMetadataBoundaryInstruction )
       {
         final ZmlMetadataBoundaryInstruction impl = (ZmlMetadataBoundaryInstruction) instruction;
-        if( instruction.matches( reference ) )
+        if( instruction.matches( (IZmlModelValueCell) reference ) )
           return impl.update( text );
       }
     }
@@ -152,19 +158,18 @@ public class ZmlRuleGrenzwerte extends AbstractZmlTableRule
     return text;
   }
 
-  /**
-   * @see org.kalypso.zml.core.table.rules.impl.AbstractZmlTableRule#getSeverity(org.kalypso.zml.core.table.binding.rule.ZmlRule,
-   *      org.kalypso.zml.core.table.model.references.IZmlValueReference)
-   */
   @Override
-  public Double getSeverity( final ZmlRule rule, final IZmlValueReference reference )
+  public Double getSeverity( final ZmlCellRule rule, final IZmlModelCell reference )
   {
+    if( !(reference instanceof IZmlModelValueCell) )
+      return 1.0;
+
     final AbstractZmlRuleInstructionType[] instructions = rule.getInstructions();
     for( final AbstractZmlRuleInstructionType instruction : instructions )
     {
       try
       {
-        if( instruction.matches( reference ) )
+        if( instruction.matches( (IZmlModelValueCell) reference ) )
 
           return instruction.getSeverity();
 

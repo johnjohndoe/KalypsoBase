@@ -45,12 +45,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
+import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedSpinner;
 import org.kalypso.zml.ui.table.base.widgets.IEnhancedTextBoxListener;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -69,7 +69,7 @@ public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage
 
   public ShiftDateAdjustmentPage( final IAdjustmentPageProvider provider )
   {
-    super( provider, ShiftDateAdjustmentPage.class.getName() );
+    super( provider );
   }
 
   /**
@@ -96,7 +96,7 @@ public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage
       toolkit.createLabel( body, "Verschieben, um:" ).setFont( HEADING );
 
       final Composite control = toolkit.createComposite( body );
-      control.setLayout( Layouts.createGridLayout( 3 ) );
+      control.setLayout( LayoutHelper.createGridLayout( 3 ) );
       control.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
       if( offset < 60 )
@@ -185,13 +185,13 @@ public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage
     return spinner;
   }
 
-  private Integer getOffset( ) throws SensorException
+  private Integer getOffset( )
   {
     if( Objects.isNotNull( m_offset ) )
       return m_offset;
 
     final IZmlTableColumn column = getColumn();
-    final IZmlTableCell[] cells = column.getCells();
+    final IZmlTableValueCell[] cells = (IZmlTableValueCell[]) column.getCells();
 
     final long t1 = cells[0].getValueReference().getIndexValue().getTime();
     final long t2 = cells[1].getValueReference().getIndexValue().getTime();
@@ -203,26 +203,17 @@ public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage
     return m_offset;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.pager.IElementPage#dispose()
-   */
   @Override
   public void dispose( )
   {
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.commands.menu.adjust.pages.AbstractAdjustmentPage#getRunnable()
-   */
   @Override
   public ICoreRunnableWithProgress getRunnable( )
   {
-    return new ShiftDateRunnable( getColumn().getModelColumn(), getColumn().getSelectedCells(), getMinutes() );
+    return new ShiftDateRunnable( getColumn().getModelColumn(), (IZmlTableValueCell[]) getColumn().getSelectedCells(), getMinutes() );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.commands.menu.adjust.pages.AbstractAdjustmentPage#isValid()
-   */
   @Override
   public boolean isValid( )
   {

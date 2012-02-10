@@ -46,7 +46,7 @@ import org.eclipse.jface.viewers.Viewer;
 
 /**
  * Content provider for the exportable tree items.
- * 
+ *
  * @author Gernot Belger
  */
 public class ExportableContentProvider implements ITreeContentProvider
@@ -55,9 +55,9 @@ public class ExportableContentProvider implements ITreeContentProvider
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
   @Override
-  public Object[] getChildren( final Object parentElement )
+  public Object[] getChildren( Object parentElement )
   {
-    final ExportableTreeItem parentItem = (ExportableTreeItem) parentElement;
+    final ExportableTreeItem parentItem = (ExportableTreeItem)parentElement;
     return parentItem.getChildren();
   }
 
@@ -65,9 +65,9 @@ public class ExportableContentProvider implements ITreeContentProvider
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
    */
   @Override
-  public Object getParent( final Object element )
+  public Object getParent( Object element )
   {
-    final ExportableTreeItem item = (ExportableTreeItem) element;
+    final ExportableTreeItem item = (ExportableTreeItem)element;
     return item.getParent();
   }
 
@@ -75,9 +75,9 @@ public class ExportableContentProvider implements ITreeContentProvider
    * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
    */
   @Override
-  public boolean hasChildren( final Object element )
+  public boolean hasChildren( Object element )
   {
-    final ExportableTreeItem parentItem = (ExportableTreeItem) element;
+    final ExportableTreeItem parentItem = (ExportableTreeItem)element;
     return parentItem.getChildren().length > 0;
   }
 
@@ -85,25 +85,24 @@ public class ExportableContentProvider implements ITreeContentProvider
    * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
   @Override
-  public Object[] getElements( final Object inputElement )
+  public Object[] getElements( Object inputElement )
   {
-    return (ExportableTreeItem[]) inputElement;
+    return (ExportableTreeItem[])inputElement;
   }
 
   /**
    * @see org.eclipse.jface.viewers.IContentProvider#dispose()
    */
   @Override
-  public void dispose( )
+  public void dispose()
   {
   }
 
   /**
-   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
+   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
    */
   @Override
-  public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
+  public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
   {
   }
 

@@ -98,10 +98,10 @@ public class FindLastWechmannValues implements IObservationVisitor
     if( Objects.isNotNull( statusAxis ) )
     {
       final Number number = (Number) container.get( statusAxis );
-      status = number.intValue();
+      status = number.intValue(); 
     }
 
-    String source = org.apache.commons.lang3.StringUtils.EMPTY;
+    String source = org.apache.commons.lang.StringUtils.EMPTY;
     if( Objects.isNotNull( dataSourceAxis ) )
     {
       final Number index = (Number) container.get( dataSourceAxis );

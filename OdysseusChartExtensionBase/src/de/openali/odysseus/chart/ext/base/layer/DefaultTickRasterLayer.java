@@ -46,13 +46,11 @@ import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
-import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
-import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
 
@@ -66,9 +64,9 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
    */
   private static final String ID = "de.openali.odysseus.chart.ext.base.layer.DefaultTickRasterLayer"; //$NON-NLS-1$
 
-  public DefaultTickRasterLayer( final ILayerProvider provider, final IStyleSet styleSet )
+  public DefaultTickRasterLayer( final ILayerProvider provider, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
-    super( provider, styleSet );
+    super( provider, lineStyle, pointStyle );
     setIdentifier( ID );
   }
 
@@ -76,7 +74,7 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Number> getDomainRange( )
   {
     // don't calculate
     return null;
@@ -86,7 +84,7 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     // don't calculate
     return null;
@@ -111,29 +109,26 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
 
     final int width = gc.getClipping().width;
     final int heigth = gc.getClipping().height;
-
-    final PolylineFigure pf = new PolylineFigure();
-    final ILineStyle lineStyle = getStyle(ILineStyle.class );
-    pf.setStyle( lineStyle );
-
+// final int width = domainAxis.getScreenHeight();
+// final int heigth = targetAxis.getScreenHeight();
     for( final Number domTick : domTicks )
     {
       final Point p1 = new Point( domainAxis.numericToScreen( domTick ), 0 );
       final Point p2 = new Point( domainAxis.numericToScreen( domTick ), heigth );
-      pf.setPoints( new Point[] { p1, p2 } );
-      pf.paint( gc );
+
+      drawLine( gc, p1, p2 );
     }
 
     for( final Number valTick : valTicks )
     {
       final Point p1 = new Point( 0, targetAxis.numericToScreen( valTick ) );
       final Point p2 = new Point( width, targetAxis.numericToScreen( valTick ) );
-      pf.setPoints( new Point[] { p1, p2 } );
-      pf.paint( gc );
+
+      drawLine( gc, p1, p2 );
     }
-    //TODO:Use Area Style in StyleSet
+
     final FullRectangleFigure figureRect = new FullRectangleFigure();
-    final IPointStyle pointStyle = getStyle( IPointStyle.class );
+    final IPointStyle pointStyle = getPointFigure().getStyle();
     if( pointStyle.isVisible() )
     {
       figureRect.setStyle( new AreaStyle( new ColorFill( pointStyle.getInlineColor() ), pointStyle.getAlpha(), pointStyle.getStroke(), pointStyle.isFillVisible() ) );

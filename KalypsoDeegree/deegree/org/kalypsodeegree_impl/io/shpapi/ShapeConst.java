@@ -74,6 +74,7 @@ public class ShapeConst
    */
   public static final int PARTS_START = 44;
 
+  
   /**
    * The indicator for a null shape type. (0)
    */

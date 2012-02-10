@@ -90,9 +90,12 @@ public class ObsProviderZmlColumnDataHandler extends AbstractZmlColumnDataHandle
     if( Objects.isNull( observation ) )
       return null;
 
-    return observation.getValues( m_provider.getArguments() );
+    return observation.getValues( null );
   }
 
+  /**
+   * @see org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler#getObservation()
+   */
   @Override
   public IObservation getObservation( )
   {

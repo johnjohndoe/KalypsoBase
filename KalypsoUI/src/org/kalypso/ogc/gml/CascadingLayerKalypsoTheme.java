@@ -68,8 +68,11 @@ public class CascadingLayerKalypsoTheme extends AbstractCascadingLayerTheme
 
     GisTemplateLayerHelper.updateProperties( layerType, this );
 
-    final GisTemplateMapModell innerMapModell = new GisTemplateMapModell( context, mapModel.getCoordinatesSystem(), selectionManager )
+    final GisTemplateMapModell innerMapModell = new GisTemplateMapModell( context, mapModel.getCoordinatesSystem(), mapModel.getProject(), selectionManager )
     {
+      /**
+       * @see org.kalypso.ogc.gml.GisTemplateMapModell#getThemeParent(org.kalypso.ogc.gml.IKalypsoTheme)
+       */
       @Override
       public Object getThemeParent( final IKalypsoTheme theme )
       {

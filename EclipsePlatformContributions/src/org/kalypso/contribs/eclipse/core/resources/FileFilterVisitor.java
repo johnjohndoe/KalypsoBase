@@ -66,7 +66,7 @@ public class FileFilterVisitor implements IResourceVisitor
     m_filter = filter;
   }
 
-  public IFile[] getFiles( )
+  public IFile[] getFiles()
   {
     return m_foundFiles.toArray( new IFile[m_foundFiles.size()] );
   }
@@ -79,7 +79,7 @@ public class FileFilterVisitor implements IResourceVisitor
   {
     if( resource instanceof IFile )
     {
-      final IFile file = (IFile) resource;
+      final IFile file = (IFile)resource;
       final IPath location = file.getLocation();
       final File fileFile = location.toFile();
       if( m_filter.accept( fileFile ) )

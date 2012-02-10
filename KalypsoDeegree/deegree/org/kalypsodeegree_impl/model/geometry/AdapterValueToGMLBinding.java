@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- *
+ * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always.
- *
- * If you intend to use this software in other ways than in kalypso
+ * interface-compatibility to deegree is wanted but not retained always. 
+ * 
+ * If you intend to use this software in other ways than in kalypso 
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree,
+ * all modifications are licensed as deegree, 
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -35,17 +35,35 @@
  */
 package org.kalypsodeegree_impl.model.geometry;
 
-import javax.xml.transform.TransformerException;
+import javax.xml.bind.JAXBElement;
 
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
 /**
  * @author doemming
  */
 public interface AdapterValueToGMLBinding
 {
-  Element wrapToElement( GM_Object geometry ) throws GM_Exception, TransformerException, SAXException;
+  /**
+   * wrap {@link GM_Object } to BindingType
+   * 
+   * @param geometry
+   *            the geometry to wrap
+   * @param gmlVersion
+   *            requested compatibility or <code>null</code>for unspecified GML compatibility
+   * @return binding type elements
+   */
+  public Object wrapToBinding( final GM_Object geometry ) throws GM_Exception;
+
+  /**
+   * @return binding type elements
+   */
+  public Object wrapToBinding( final GM_Envelope geometry ) throws GM_Exception;
+
+  public Element wrapToElement( GM_Object geometry ) throws GM_Exception;
+
+  public JAXBElement< ? extends Object> createJAXBGeometryElement( Object geometry );
 }

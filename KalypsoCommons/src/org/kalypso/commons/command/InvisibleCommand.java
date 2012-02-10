@@ -48,6 +48,7 @@ package org.kalypso.commons.command;
  * Es wird zwar ausgeführt, aber nicht in die Commandqueue aufgenommen
  * </p>
  * 
+ * 
  * @author Belger
  */
 public class InvisibleCommand implements ICommand
@@ -56,7 +57,7 @@ public class InvisibleCommand implements ICommand
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
   @Override
-  public boolean isUndoable( )
+  public boolean isUndoable()
   {
     return false;
   }
@@ -65,16 +66,16 @@ public class InvisibleCommand implements ICommand
    * @see org.kalypso.commons.command.ICommand#process()
    */
   @Override
-  public void process( ) throws Exception
+  public void process() throws Exception
   {
-    // nichts tun
+  // nichts tun
   }
 
   /**
    * @see org.kalypso.commons.command.ICommand#redo()
    */
   @Override
-  public void redo( ) throws Exception
+  public void redo() throws Exception
   {
     process();
   }
@@ -83,16 +84,16 @@ public class InvisibleCommand implements ICommand
    * @see org.kalypso.commons.command.ICommand#undo()
    */
   @Override
-  public void undo( ) throws Exception
+  public void undo() throws Exception
   {
-    // nichts tun
+  // nichts tun
   }
 
   /**
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
   @Override
-  public String getDescription( )
+  public String getDescription()
   {
     return null;
   }

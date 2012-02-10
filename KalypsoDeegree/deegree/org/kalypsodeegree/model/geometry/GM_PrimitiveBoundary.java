@@ -37,7 +37,9 @@
 package org.kalypsodeegree.model.geometry;
 
 /**
+ * 
  * A GM_PrimitiveBoundary is the basic boundary for all none complex geometries.
+ * 
  * <p>
  * -----------------------------------------------------
  * <p>
@@ -47,5 +49,4 @@ package org.kalypsodeegree.model.geometry;
  *          <p>
  */
 public interface GM_PrimitiveBoundary extends GM_Boundary
-{
-}
+{}

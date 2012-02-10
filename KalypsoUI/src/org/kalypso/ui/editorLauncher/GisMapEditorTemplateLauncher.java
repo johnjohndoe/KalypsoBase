@@ -110,10 +110,10 @@ public class GisMapEditorTemplateLauncher implements IDefaultTemplateLauncher
     try
     {
       if( "gml".equalsIgnoreCase( file.getProjectRelativePath().getFileExtension() ) ) //$NON-NLS-1$
-        throw new CoreException( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.ui.editorLauncher.GisMapEditorTemplateLauncher.3" ) ) ); //$NON-NLS-1$
+        throw new CoreException( StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.ui.editorLauncher.GisMapEditorTemplateLauncher.3") ) ); //$NON-NLS-1$
 
       final StyledLayerType layer = new ObjectFactory().createStyledLayerType();
-      LayerTypeUtilities.initLayerType( layer, file, null );
+      LayerTypeUtilities.initLayerType( layer, file );
       layer.setVisible( true );
       layer.setName( file.getName() );
       layer.setFeaturePath( "featureMember" ); //$NON-NLS-1$

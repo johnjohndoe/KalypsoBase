@@ -45,6 +45,7 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.kalypso.contribs.eclipse.jface.viewers.IFCVDelegate;
@@ -111,7 +112,7 @@ public class FCVFeatureDelegate implements IFCVDelegate
       final String[] labels = r.getLabels();
 
       if( enumeration.length != labels.length )
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
 
       for( int i = 0; i < enumeration.length; i++ )
         m_mapping.put( enumeration[i], labels[i] );

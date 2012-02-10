@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- *
+ * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- *
+ * 
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -50,7 +50,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain.OffsetVector;
 import org.kalypsodeegree_impl.model.cv.GridRange_Impl;
 import org.kalypsodeegree_impl.model.geometry.AdapterBindingToValue;
-import org.kalypsodeegree_impl.model.geometry.AdapterBindingToValueImpl;
+import org.kalypsodeegree_impl.model.geometry.AdapterBindingToValue_GML31;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -63,25 +63,39 @@ import org.w3c.dom.NodeList;
  * binding classes do not support getting/setting of the grid-domain.
  * </p>
  * TypeHandler for GridDomain of RectifiedGridCoverage
- *
+ * 
  * @author Dejan Antanaskovic
  */
 public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshallingTypeHandlerAdapter
 {
   public static final QName TYPENAME = new QName( NS.GML3, "RectifiedGridDomainType" );
 
+  public RectifiedGridDomainTypeHandlerGml3( )
+  {
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getClassName()
+   */
   @Override
   public Class< ? > getValueClass( )
   {
     return RectifiedGridDomain.class;
   }
 
+  /**
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getTypeName()
+   */
   @Override
   public QName getTypeName( )
   {
     return TYPENAME;
   }
 
+  /**
+   * @see org.kalypso.gmlschema.types.AbstractOldFormatMarshallingTypeHandlerAdapter#marshall(java.lang.Object,
+   *      org.w3c.dom.Document, java.net.URL)
+   */
   @Deprecated
   @Override
   public Element marshall( final Object object, final Document document, final URL context ) throws TypeRegistryException
@@ -95,9 +109,9 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
     final Element e_gridEnvelope = document.createElementNS( NS.GML3, "gml:GridEnvelope" );
     final GridRange gridRange = gridDomain.getGridRange();
     final double[] lows = gridRange.getLow();
-    final String stringLows = new String( new Double( lows[0] ).intValue() + " " + new Double( lows[1] ).intValue() );
+    final String stringLows = new String( (new Double( lows[0] )).intValue() + " " + (new Double( lows[1] )).intValue() );
     final double[] highs = gridRange.getHigh();
-    final String stringHighs = new String( new Double( highs[0] ).intValue() + " " + new Double( highs[1] ).intValue() );
+    final String stringHighs = new String( (new Double( highs[0] )).intValue() + " " + (new Double( highs[1] )).intValue() );
     final Element e_low = document.createElementNS( NS.GML3, "gml:low" );
     e_low.appendChild( document.createTextNode( stringLows ) );
     final Element e_high = document.createElementNS( NS.GML3, "gml:high" );
@@ -154,6 +168,10 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
     return e_rectifiedGrid;
   }
 
+  /**
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#unmarshall(org.w3c.dom.Node, java.net.URL,
+   *      org.kalypso.contribs.java.net.IUrlResolver)
+   */
   @Deprecated
   @Override
   public Object unmarshall( final Node node, final URL context, final IUrlResolver urlResolver )
@@ -178,9 +196,7 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
     final Node n_point = ((Element) n_origin).getElementsByTagNameNS( NS.GML3, "Point" ).item( 0 );
     try
     {
-      final AdapterBindingToValue adapter = new AdapterBindingToValueImpl();
-
-      // FIXME: use sax parser instead!
+      final AdapterBindingToValue adapter = new AdapterBindingToValue_GML31();
       final GM_Point origin = (GM_Point) adapter.wrapFromNode( n_point );
 
       final NodeList nl_offSetVector = ((Element) node).getElementsByTagNameNS( NS.GML3, "offsetVector" );
@@ -214,21 +230,41 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
     }
   }
 
+  /**
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getShortname()
+   */
+  @Override
+  public String getShortname( )
+  {
+    return "rectifiedGridDomain";
+  }
+
+  /**
+   * @throws CloneNotSupportedException
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#cloneObject(java.lang.Object)
+   */
   @Override
   public Object cloneObject( final Object objectToClone, final String gmlVersion ) throws CloneNotSupportedException
   {
     throw new CloneNotSupportedException( "Clone is not supported!" );
   }
 
+  /**
+   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#parseType(java.lang.String)
+   */
   @Override
   public Object parseType( final String text )
   {
     throw new UnsupportedOperationException();
   }
 
+  /**
+   * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
+   */
   @Override
   public boolean isGeometry( )
   {
     return false;
   }
+
 }

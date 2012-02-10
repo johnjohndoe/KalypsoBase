@@ -44,6 +44,7 @@ import org.eclipse.core.databinding.conversion.IConverter;
 
 /**
  * @author Gernot Belger
+ *
  */
 public interface ITypedConverter<FROM, TO> extends IConverter
 {

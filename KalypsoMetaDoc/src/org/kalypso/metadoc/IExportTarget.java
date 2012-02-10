@@ -43,50 +43,52 @@ package org.kalypso.metadoc;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.apache.commons.collections.ExtendedProperties;
+import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizardPage;
-import org.kalypso.metadoc.configuration.PublishingConfiguration;
+import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 
 /**
  * The target into which the documents will go.
- *
+ * 
  * @author schlienger
  */
 public interface IExportTarget extends IExecutableExtension
 {
-  String getName( );
+  public String getName();
 
-  String getDescription( );
+  public String getDescription();
+  
+  public boolean isModeSupported( final String mode );
 
-  boolean isModeSupported( final String mode );
-
-  ImageDescriptor getImage( );
+  public ImageDescriptor getImage();
 
   /**
    * Set the given property. Special properties might be used by some targets when exporting the documents.
    */
-  void setProperty( final String key, final String value );
+  public void setProperty( final String key, final String value );
 
   /**
    * Provides a list of wizard pages required for this target
    */
-  IWizardPage[] createWizardPages( final PublishingConfiguration configuration ) throws CoreException;
+  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration ) throws CoreException;
 
   /**
    * Commits the document to some destination which is target-dependent.
+   * 
    * <p>
    * The status returned should follow this pattern in the case of errors:
    * <ul>
    * <li>it should have a severity of WARNING for errors which are not dramatic, means the export can still be done,
    * some elements mights be missing due to this error, but it is not a big problem
-   * <li>it should have a severity of ERROR for unrecoverable errors, means the export doesn't make sense or is even not
-   * possible
+   * <li>it should have a severity of ERROR for unrecoverable errors, means the export doesn't make sense or is even
+   * not possible
    * </ul>
    */
-  IStatus commitDocument( IExportableObject document, ExtendedProperties targetConf, IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException;
+  public IStatus commitDocument( final IExportableObject document, final Configuration targetConf,
+      final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException;
 }

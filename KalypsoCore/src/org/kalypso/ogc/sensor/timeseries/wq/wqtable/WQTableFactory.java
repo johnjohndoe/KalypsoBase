@@ -15,12 +15,12 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.binding.ratingtable.ObjectFactory;
 import org.kalypso.binding.ratingtable.RatingTable;
 import org.kalypso.binding.ratingtable.RatingTableList;
 import org.kalypso.commons.bind.JaxbUtilities;
+import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.commons.serializer.ISerializer;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.timeseries.wq.WQException;
@@ -140,8 +140,8 @@ public final class WQTableFactory implements ISerializer<WQTableSet>
         final double[] w = new double[pairs.length];
         final double[] q = new double[pairs.length];
         WQPair.convert2doubles( pairs, w, q );
-        xmlTable.setX( ArrayUtils.toString( w ).replaceAll( "\\{", StringUtils.EMPTY ).replaceAll( "\\}", StringUtils.EMPTY ) ); //$NON-NLS-1$ //$NON-NLS-2$ 
-        xmlTable.setY( ArrayUtils.toString( q ).replaceAll( "\\{", StringUtils.EMPTY ).replaceAll( "\\}", StringUtils.EMPTY ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        xmlTable.setX( ArrayUtils.toString( w ).replaceAll( "\\{", Strings.EMPTY ).replaceAll( "\\}", Strings.EMPTY ) ); //$NON-NLS-1$ //$NON-NLS-2$ 
+        xmlTable.setY( ArrayUtils.toString( q ).replaceAll( "\\{", Strings.EMPTY ).replaceAll( "\\}", Strings.EMPTY ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
         xmlTables.getTable().add( xmlTable );
       }

@@ -75,7 +75,7 @@ public class KalypsoCommonsPlugin extends AbstractUIPlugin
     final ResourceBundle bundle = KalypsoCommonsPlugin.getDefault().getResourceBundle();
     try
     {
-      return bundle != null ? bundle.getString( key ) : key;
+      return (bundle != null) ? bundle.getString( key ) : key;
     }
     catch( final MissingResourceException e )
     {

@@ -10,8 +10,14 @@ import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 public abstract class AbstractLayerProvider extends AbstractChartComponentProvider implements ILayerProvider
 {
+
   private ILayerProviderSource m_source;
 
+  /**
+   * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#init(de.openali.odysseus.chart.framework.model.IChartModel,
+   *      java.lang.String, de.openali.odysseus.chart.factory.config.parameters.IParameterContainer, java.net.URL,
+   *      java.lang.String, java.lang.String, java.util.Map, de.openali.odysseus.chart.framework.model.style.IStyleSet)
+   */
   @Override
   public void init( final ILayerProviderSource source )
   {

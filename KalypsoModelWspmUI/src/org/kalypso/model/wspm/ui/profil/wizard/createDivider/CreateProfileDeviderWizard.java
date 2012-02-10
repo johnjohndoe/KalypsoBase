@@ -42,11 +42,8 @@ package org.kalypso.model.wspm.ui.profil.wizard.createDivider;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWizard;
-import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -54,9 +51,7 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.profil.wizard.ProfileHandlerUtils;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
-import org.kalypso.model.wspm.ui.profil.wizard.utils.FeatureThemeWizardUtilitites;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -66,29 +61,21 @@ import org.kalypsodeegree.model.feature.FeatureList;
  * 
  * @author Gernot Belger
  */
-public class CreateProfileDeviderWizard extends Wizard implements IWorkbenchWizard
+public class CreateProfileDeviderWizard extends Wizard
 {
-  private ArrayChooserPage m_profileChooserPage;
+  private final ArrayChooserPage m_profileChooserPage;
 
-  private CreateProfileDeviderPage m_deviderPage;
+  private final CreateProfileDeviderPage m_deviderPage;
 
-  private IKalypsoFeatureTheme m_theme;
+  private final IKalypsoFeatureTheme m_theme;
 
-  public CreateProfileDeviderWizard( )
+  public CreateProfileDeviderWizard( final IKalypsoFeatureTheme theme, final ProfileSelection profileSelection )
   {
+    m_theme = theme;
+
     setWindowTitle( Messages.getString( "org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderWizard.0" ) ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
-    setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
-  }
-
-  @Override
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
-  {
-    /* retrieve selected profiles, abort if none */
-    final IKalypsoFeatureTheme theme = FeatureThemeWizardUtilitites.findTheme( selection );
-    final ProfileSelection profileSelection = ProfileHandlerUtils.getSelectionChecked( selection );
-
-    m_theme = theme;
+    setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
 
     final String msg = Messages.getString( "org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderWizard.3" ); //$NON-NLS-1$
     m_profileChooserPage = new ProfilesChooserPage( msg, profileSelection, false );
@@ -102,6 +89,9 @@ public class CreateProfileDeviderWizard extends Wizard implements IWorkbenchWiza
     addPage( m_deviderPage );
   }
 
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#dispose()
+   */
   @Override
   public void dispose( )
   {

@@ -49,7 +49,7 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeInfo;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
@@ -61,7 +61,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
  * 
  * @author Gernot Belger
  */
-public abstract class AbstractThemeInfoWidget extends DeprecatedMouseWidget
+public abstract class AbstractThemeInfoWidget extends AbstractWidget
 {
   private final ToolTipRenderer m_tooltipRenderer = new ToolTipRenderer();
 

@@ -44,7 +44,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -187,7 +187,7 @@ public final class TimeserieFeatureProperty
     if( fname == null )
       return name;
 
-    return name.replaceAll( "%featureprop%", fname );
+    return name.replaceAll( "%featureprop%", fname ); //$NON-NLS-1$
   }
 
   private String getNameProperty( final Feature feature )

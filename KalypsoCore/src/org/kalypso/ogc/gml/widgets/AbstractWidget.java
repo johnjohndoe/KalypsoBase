@@ -44,8 +44,6 @@ import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
 import java.util.Map;
 
 import org.eclipse.jface.viewers.ISelection;
@@ -85,13 +83,10 @@ public abstract class AbstractWidget implements IWidget
     m_parameter = null;
   }
 
-  @Override
-  public WIDGET_TYPE getType( )
-  {
-    // radio is default activation type
-    return WIDGET_TYPE.eRadio;
-  }
-
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#activate(org.kalypso.commons.command.ICommandTarget,
+   *      org.kalypso.ogc.gml.map.MapPanel)
+   */
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
@@ -99,6 +94,9 @@ public abstract class AbstractWidget implements IWidget
     m_mapPanel = mapPanel;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilderExtensionProvider#setCursor(java.awt.Cursor)
+   */
   public void setCursor( final Cursor cursor )
   {
     final IMapPanel mapPanel = getMapPanel();
@@ -106,6 +104,9 @@ public abstract class AbstractWidget implements IWidget
       mapPanel.setCursor( cursor );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#setSelection(org.kalypso.ogc.gml.selection.IFeatureSelection)
+   */
   @Override
   public void setSelection( final ISelection selection )
   {
@@ -119,7 +120,7 @@ public abstract class AbstractWidget implements IWidget
    * @see org.kalypso.ogc.gml.widgets.IWidget#isActive()
    */
   @Override
-  public synchronized boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
+  public boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
   {
     return true;
   }
@@ -192,9 +193,101 @@ public abstract class AbstractWidget implements IWidget
     return m_parameter.get( key );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#clickPopup(java.awt.Point)
+   */
+  @Override
+  @SuppressWarnings("deprecation")
+  @Deprecated
+  public void clickPopup( final Point p )
+  {
+    // not implemented by default
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#dragged(java.awt.Point)
+   */
+  @Override
+  public void dragged( final Point p )
+  {
+    // not implemented by default
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#finish()
+   */
   @Override
   public void finish( )
   {
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#leftClicked(java.awt.Point)
+   */
+  @Override
+  public void leftClicked( final Point p )
+  {
+    // not implemented by default
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#leftPressed(java.awt.Point)
+   */
+  @Override
+  public void leftPressed( final Point p )
+  {
+    // not implemented by default
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#leftReleased(java.awt.Point)
+   */
+  @Override
+  public void leftReleased( final Point p )
+  {
+    // not implemented by default
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#moved(java.awt.Point)
+   */
+  @Override
+  public void moved( final Point p )
+  {
+    // not implemented by default
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#rightClicked(java.awt.Point)
+   */
+  @Override
+  @SuppressWarnings("deprecation")
+  @Deprecated
+  public void rightClicked( final Point p )
+  {
+    // not implemented by default
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#rightPressed(java.awt.Point)
+   */
+  @Override
+  @SuppressWarnings("deprecation")
+  @Deprecated
+  public void rightPressed( final Point p )
+  {
+    // not implemented by default
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#rightReleased(java.awt.Point)
+   */
+  @Override
+  @SuppressWarnings("deprecation")
+  @Deprecated
+  public void rightReleased( final Point p )
+  {
+    // not implemented by default
   }
 
   /**
@@ -261,75 +354,59 @@ public abstract class AbstractWidget implements IWidget
     //
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#doubleClickedLeft(java.awt.Point)
+   */
+  @Override
+  public void doubleClickedLeft( final Point p )
+  {
+    // not implemented by default
+
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#doubleClickedRight(java.awt.Point)
+   */
+  @Override
+  public void doubleClickedRight( final Point p )
+  {
+    // not implemented by default
+
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#keyPressed(java.awt.event.KeyEvent)
+   */
   @Override
   public void keyPressed( final KeyEvent e )
   {
     // not implemented by default
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#keyReleased(java.awt.event.KeyEvent)
+   */
   @Override
   public void keyReleased( final KeyEvent e )
   {
     // not implemented by default
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#keyTyped(java.awt.event.KeyEvent)
+   */
   @Override
   public void keyTyped( final KeyEvent e )
   {
     // not implemented by default
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.widgets.IWidget#setParameter(java.util.Map)
+   */
   @Override
   public void setParameter( final Map<String, String> parameter )
   {
     m_parameter = parameter;
-  }
-
-  @Override
-  public void mouseClicked( final MouseEvent e )
-  {
-    // not implemented by default
-  }
-
-  @Override
-  public void mouseDragged( final MouseEvent e )
-  {
-    // not implemented by default
-  }
-
-  @Override
-  public void mouseEntered( final MouseEvent e )
-  {
-    // not implemented by default
-  }
-
-  @Override
-  public void mouseExited( final MouseEvent e )
-  {
-    // not implemented by default
-  }
-
-  @Override
-  public void mouseMoved( final MouseEvent e )
-  {
-    // not implemented by default
-  }
-
-  @Override
-  public void mousePressed( final MouseEvent e )
-  {
-    // not implemented by default
-  }
-
-  @Override
-  public void mouseReleased( final MouseEvent e )
-  {
-    // not implemented by default
-  }
-
-  @Override
-  public void mouseWheelMoved( final MouseWheelEvent e )
-  {
-    // not implemented by default
   }
 }

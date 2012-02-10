@@ -42,6 +42,7 @@ package org.kalypso.ogc.sensor.zml;
 
 import java.io.File;
 import java.io.OutputStream;
+import java.io.Writer;
 import java.net.URL;
 
 import javax.xml.bind.JAXBContext;
@@ -237,6 +238,12 @@ public final class ZmlFactory
   {
     final ObservationMarshaller marshaller = new ObservationMarshaller( obs, request );
     marshaller.marshall( os );
+  }
+
+  public static void writeToWriter( final IObservation obs, final Writer writer, final IRequest request ) throws SensorException
+  {
+    final ObservationMarshaller marshaller = new ObservationMarshaller( obs, request );
+    marshaller.marshall( writer );
   }
 
   public static String writeToString( final IObservation value, final IRequest request )

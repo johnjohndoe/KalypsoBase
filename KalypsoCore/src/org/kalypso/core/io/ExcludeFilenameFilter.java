@@ -57,7 +57,7 @@ public class ExcludeFilenameFilter implements FilenameFilter
   /**
    * The list of filenames to exclude.
    */
-  private final List<String> m_blacklist;
+  private List<String> m_blacklist;
 
   /**
    * The constructor.
@@ -65,7 +65,7 @@ public class ExcludeFilenameFilter implements FilenameFilter
    * @param blacklist
    *          The list of filenames to exclude.
    */
-  public ExcludeFilenameFilter( final String[] blacklist )
+  public ExcludeFilenameFilter( String[] blacklist )
   {
     m_blacklist = Arrays.asList( blacklist );
   }
@@ -74,10 +74,10 @@ public class ExcludeFilenameFilter implements FilenameFilter
    * @see java.io.FilenameFilter#accept(java.io.File, java.lang.String)
    */
   @Override
-  public boolean accept( final File dir, final String name )
+  public boolean accept( File dir, String name )
   {
     /* Get the name of the file. */
-    final String filename = FilenameUtils.getName( name );
+    String filename = FilenameUtils.getName( name );
 
     /* If it is on the list of filenames to exclude, return false. */
     if( m_blacklist.contains( filename ) )

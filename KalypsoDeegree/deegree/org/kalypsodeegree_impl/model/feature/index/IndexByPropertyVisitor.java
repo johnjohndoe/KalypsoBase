@@ -57,7 +57,7 @@ public class IndexByPropertyVisitor implements FeatureVisitor
   /**
    * The qname of the property, which is to index.
    */
-  private final QName m_property;
+  private QName m_property;
 
   /**
    * Stores the value of a property as key and the feature, containing the property with this value as value.
@@ -74,7 +74,7 @@ public class IndexByPropertyVisitor implements FeatureVisitor
    * @param comparator
    *          If not null and a TreeMap should be returned, this comparator will be given to the TreeMap.
    */
-  public IndexByPropertyVisitor( final QName property, final boolean asTreeMap, final Comparator<Object> comparator )
+  public IndexByPropertyVisitor( QName property, boolean asTreeMap, Comparator<Object> comparator )
   {
     m_property = property;
 
@@ -93,12 +93,12 @@ public class IndexByPropertyVisitor implements FeatureVisitor
    * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
    */
   @Override
-  public boolean visit( final Feature f )
+  public boolean visit( Feature f )
   {
     if( m_property == null )
       return false;
 
-    final Object property = f.getProperty( m_property );
+    Object property = f.getProperty( m_property );
     m_index.put( property, f );
 
     return true;

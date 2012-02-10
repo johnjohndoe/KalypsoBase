@@ -45,7 +45,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -108,7 +108,7 @@ public class LegendComposite extends Composite
   /**
    * The map model.
    */
-  private final IMapModell m_mapModel;
+  private IMapModell m_mapModel;
 
   /**
    * The horizontal position.
@@ -152,7 +152,7 @@ public class LegendComposite extends Composite
    * @param properties
    *          The properties, containing the default values.
    */
-  public LegendComposite( final Composite parent, final int style, final IMapModell mapModel, final Properties properties )
+  public LegendComposite( Composite parent, int style, IMapModell mapModel, Properties properties )
   {
     super( parent, style );
 
@@ -171,7 +171,7 @@ public class LegendComposite extends Composite
    * @see org.eclipse.swt.widgets.Composite#setLayout(org.eclipse.swt.widgets.Layout)
    */
   @Override
-  public void setLayout( final Layout layout )
+  public void setLayout( Layout layout )
   {
     /* Ignore user set layouts, only layout datas are permitted. */
   }
@@ -206,7 +206,7 @@ public class LegendComposite extends Composite
    * @param properties
    *          The properties, containing the values.
    */
-  private void checkProperties( final Properties properties )
+  private void checkProperties( Properties properties )
   {
     /* Default values. */
     m_horizontal = PositionUtilities.RIGHT;
@@ -232,43 +232,43 @@ public class LegendComposite extends Composite
    * @param properties
    *          The properties, containing the values.
    */
-  private void updateProperties( final Properties properties )
+  private void updateProperties( Properties properties )
   {
     /* Get the properties. */
-    final String horizontalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
-    final String verticalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
-    final String backgroundColorProperty = properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
-    final String insetsProperty = properties.getProperty( LegendUtilities.THEME_PROPERTY_INSETS );
-    final String themeIdsProperty = properties.getProperty( LegendUtilities.THEME_PROPERTY_THEME_IDS );
-    final String fontSizeProperty = properties.getProperty( LegendUtilities.THEME_PROPERTY_FONT_SIZE );
+    String horizontalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
+    String verticalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
+    String backgroundColorProperty = properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
+    String insetsProperty = properties.getProperty( LegendUtilities.THEME_PROPERTY_INSETS );
+    String themeIdsProperty = properties.getProperty( LegendUtilities.THEME_PROPERTY_THEME_IDS );
+    String fontSizeProperty = properties.getProperty( LegendUtilities.THEME_PROPERTY_FONT_SIZE );
 
     /* Check the horizontal position. */
-    final int horizontal = PositionUtilities.checkHorizontalPosition( horizontalProperty );
+    int horizontal = PositionUtilities.checkHorizontalPosition( horizontalProperty );
     if( horizontal != -1 )
       m_horizontal = horizontal;
 
     /* Check the vertical position. */
-    final int vertical = PositionUtilities.checkVerticalPosition( verticalProperty );
+    int vertical = PositionUtilities.checkVerticalPosition( verticalProperty );
     if( vertical != -1 )
       m_vertical = vertical;
 
     /* Check the background color. */
-    final Color backgroundColor = ThemeUtilities.checkBackgroundColor( getDisplay(), backgroundColorProperty );
+    Color backgroundColor = ThemeUtilities.checkBackgroundColor( getDisplay(), backgroundColorProperty );
     if( backgroundColor != null )
       m_backgroundColor = backgroundColor;
 
     /* Check the insets. */
-    final int insets = LegendUtilities.checkInsets( insetsProperty );
+    int insets = LegendUtilities.checkInsets( insetsProperty );
     if( insets >= 1 && insets <= 25 )
       m_insets = insets;
 
     /* Check the theme ids. */
-    final List<String> themeIds = LegendUtilities.verifyThemeIds( m_mapModel, themeIdsProperty );
+    List<String> themeIds = LegendUtilities.verifyThemeIds( m_mapModel, themeIdsProperty );
     if( themeIds != null && themeIds.size() > 0 )
       m_themeIds = themeIds;
 
     /* Check the font size. */
-    final int fontSize = LegendUtilities.checkFontSize( fontSizeProperty );
+    int fontSize = LegendUtilities.checkFontSize( fontSizeProperty );
     if( fontSize >= 1 && fontSize <= 25 )
       m_fontSize = fontSize;
   }
@@ -279,14 +279,14 @@ public class LegendComposite extends Composite
   private void createControls( )
   {
     /* Create the layout. */
-    final GridLayout layout = new GridLayout( 1, false );
+    GridLayout layout = new GridLayout( 1, false );
     layout.marginHeight = 0;
     layout.marginWidth = 0;
     super.setLayout( layout );
 
     /* The content. */
-    final Composite content = new Composite( this, SWT.NONE );
-    final GridLayout contentLayout = new GridLayout( 1, false );
+    Composite content = new Composite( this, SWT.NONE );
+    GridLayout contentLayout = new GridLayout( 1, false );
     contentLayout.marginHeight = 0;
     contentLayout.marginWidth = 0;
     content.setLayout( contentLayout );
@@ -297,10 +297,10 @@ public class LegendComposite extends Composite
     m_main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Get the body of the form. */
-    final Composite body = m_main.getBody();
+    Composite body = m_main.getBody();
 
     /* Set the properties for the body of the form. */
-    final GridLayout bodyLayout = new GridLayout( 1, false );
+    GridLayout bodyLayout = new GridLayout( 1, false );
     bodyLayout.marginHeight = 0;
     bodyLayout.marginWidth = 0;
     body.setLayout( bodyLayout );
@@ -320,17 +320,17 @@ public class LegendComposite extends Composite
    *          The parent composite.
    * @return The content composite.
    */
-  private Composite createContentComposite( final Composite parent )
+  private Composite createContentComposite( Composite parent )
   {
     /* Create a composite. */
-    final Composite contentComposite = new Composite( parent, SWT.NONE );
-    final GridLayout contentLayout = new GridLayout( 1, false );
+    Composite contentComposite = new Composite( parent, SWT.NONE );
+    GridLayout contentLayout = new GridLayout( 1, false );
     contentLayout.marginHeight = 0;
     contentLayout.marginWidth = 0;
     contentComposite.setLayout( contentLayout );
 
     /* Create the content internal composite. */
-    final Composite contentInternalComposite = createContentInternalComposite( contentComposite );
+    Composite contentInternalComposite = createContentInternalComposite( contentComposite );
     contentInternalComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     return contentComposite;
@@ -343,18 +343,18 @@ public class LegendComposite extends Composite
    *          The parent composite.
    * @return The content internal composite.
    */
-  private Composite createContentInternalComposite( final Composite parent )
+  private Composite createContentInternalComposite( Composite parent )
   {
     /* Create a composite. */
-    final Composite contentInternalComposite = new Composite( parent, SWT.NONE );
+    Composite contentInternalComposite = new Composite( parent, SWT.NONE );
     contentInternalComposite.setLayout( new GridLayout( 1, false ) );
 
     /* Create the position composite. */
-    final Composite positionComposite = createPositionComposite( contentInternalComposite );
+    Composite positionComposite = createPositionComposite( contentInternalComposite );
     positionComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
     /* Create the legend group. */
-    final Group legendGroup = createLegendGroup( contentInternalComposite );
+    Group legendGroup = createLegendGroup( contentInternalComposite );
     legendGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     return contentInternalComposite;
@@ -367,17 +367,17 @@ public class LegendComposite extends Composite
    *          The parent composite.
    * @return The position composite.
    */
-  private Composite createPositionComposite( final Composite parent )
+  private Composite createPositionComposite( Composite parent )
   {
     /* Create a composite. */
-    final PositionComposite positionComposite = new PositionComposite( parent, SWT.NONE, m_horizontal, m_vertical );
+    PositionComposite positionComposite = new PositionComposite( parent, SWT.NONE, m_horizontal, m_vertical );
     positionComposite.addPositionChangedListener( new IPositionChangedListener()
     {
       /**
        * @see org.kalypso.util.themes.position.listener.IPositionChangedListener#positionChanged(int, int)
        */
       @Override
-      public void positionChanged( final int horizontal, final int vertical )
+      public void positionChanged( int horizontal, int vertical )
       {
         m_horizontal = horizontal;
         m_vertical = vertical;
@@ -397,15 +397,15 @@ public class LegendComposite extends Composite
    *          The parent composite.
    * @return The legend group.
    */
-  private Group createLegendGroup( final Composite parent )
+  private Group createLegendGroup( Composite parent )
   {
     /* Create a group. */
-    final Group legendGroup = new Group( parent, SWT.NONE );
+    Group legendGroup = new Group( parent, SWT.NONE );
     legendGroup.setLayout( new GridLayout( 3, false ) );
     legendGroup.setText( "Optionen" );
 
     /* Create a label. */
-    final Label backgroundColorLabel = new Label( legendGroup, SWT.NONE );
+    Label backgroundColorLabel = new Label( legendGroup, SWT.NONE );
     backgroundColorLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
     backgroundColorLabel.setText( "Hintergrundfarbe" );
     backgroundColorLabel.setAlignment( SWT.LEFT );
@@ -417,7 +417,7 @@ public class LegendComposite extends Composite
     backgroundLabel.setBackground( m_backgroundColor );
 
     /* Create a button. */
-    final Button backgroundColorButton = new Button( legendGroup, SWT.PUSH );
+    Button backgroundColorButton = new Button( legendGroup, SWT.PUSH );
     backgroundColorButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
     backgroundColorButton.setText( "..." );
     backgroundColorButton.addSelectionListener( new SelectionAdapter()
@@ -426,13 +426,13 @@ public class LegendComposite extends Composite
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( final SelectionEvent e )
+      public void widgetSelected( SelectionEvent e )
       {
-        final Shell shell = LegendComposite.this.getShell();
+        Shell shell = LegendComposite.this.getShell();
 
-        final ColorDialog dialog = new ColorDialog( shell );
+        ColorDialog dialog = new ColorDialog( shell );
         dialog.setRGB( m_backgroundColor.getRGB() );
-        final RGB rgb = dialog.open();
+        RGB rgb = dialog.open();
         if( rgb == null )
           return;
 
@@ -445,7 +445,7 @@ public class LegendComposite extends Composite
     } );
 
     /* Create a label. */
-    final Label fontSizeLabel = new Label( legendGroup, SWT.NONE );
+    Label fontSizeLabel = new Label( legendGroup, SWT.NONE );
     fontSizeLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
     fontSizeLabel.setText( "Schriftgrad" );
     fontSizeLabel.setAlignment( SWT.LEFT );
@@ -460,7 +460,7 @@ public class LegendComposite extends Composite
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( final SelectionEvent e )
+      public void widgetSelected( SelectionEvent e )
       {
         m_fontSize = fontSizeSpinner.getSelection();
         fireLegendPropertyChanged( getProperties(), m_horizontal, m_vertical, m_backgroundColor, m_insets, m_themeIds.toArray( new String[] {} ), m_fontSize );
@@ -468,7 +468,7 @@ public class LegendComposite extends Composite
     } );
 
     /* Create a label. */
-    final Label insetsLabel = new Label( legendGroup, SWT.NONE );
+    Label insetsLabel = new Label( legendGroup, SWT.NONE );
     insetsLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
     insetsLabel.setText( "Zwischenraum" );
     insetsLabel.setAlignment( SWT.LEFT );
@@ -483,7 +483,7 @@ public class LegendComposite extends Composite
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( final SelectionEvent e )
+      public void widgetSelected( SelectionEvent e )
       {
         m_insets = insetsSpinner.getSelection();
         fireLegendPropertyChanged( getProperties(), m_horizontal, m_vertical, m_backgroundColor, m_insets, m_themeIds.toArray( new String[] {} ), m_fontSize );
@@ -491,14 +491,14 @@ public class LegendComposite extends Composite
     } );
 
     /* Create a label. */
-    final Label availableThemesLabel = new Label( legendGroup, SWT.NONE );
+    Label availableThemesLabel = new Label( legendGroup, SWT.NONE );
     availableThemesLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 3, 1 ) );
     availableThemesLabel.setText( "Verfügbare Themen" );
     availableThemesLabel.setAlignment( SWT.LEFT );
 
     /* Create a table viewer. */
-    final CheckboxTreeViewer availableThemesViewer = new CheckboxTreeViewer( legendGroup, SWT.MULTI | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.VIRTUAL );
-    final GridData availableThemeData = new GridData( SWT.FILL, SWT.FILL, true, true, 3, 1 );
+    CheckboxTreeViewer availableThemesViewer = new CheckboxTreeViewer( legendGroup, SWT.MULTI | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.VIRTUAL );
+    GridData availableThemeData = new GridData( SWT.FILL, SWT.FILL, true, true, 3, 1 );
     availableThemeData.heightHint = 250;
     availableThemesViewer.getTree().setLayoutData( availableThemeData );
     availableThemesViewer.getTree().setLayout( new TableLayout() );
@@ -506,13 +506,13 @@ public class LegendComposite extends Composite
     availableThemesViewer.getTree().setHeaderVisible( true );
 
     /* Create a column. */
-    final TreeViewerColumn nameColumn = new TreeViewerColumn( availableThemesViewer, SWT.LEFT );
+    TreeViewerColumn nameColumn = new TreeViewerColumn( availableThemesViewer, SWT.LEFT );
     nameColumn.setLabelProvider( new ThemeNameLabelProvider() );
     nameColumn.getColumn().setText( "Name" );
     nameColumn.getColumn().setWidth( 250 );
 
     /* Create a column. */
-    final TreeViewerColumn typeColumn = new TreeViewerColumn( availableThemesViewer, SWT.LEFT );
+    TreeViewerColumn typeColumn = new TreeViewerColumn( availableThemesViewer, SWT.LEFT );
     typeColumn.setLabelProvider( new ThemeTypeLabelProvider() );
     typeColumn.getColumn().setText( "Art" );
     typeColumn.getColumn().setWidth( 200 );
@@ -533,11 +533,11 @@ public class LegendComposite extends Composite
        * @see org.eclipse.jface.viewers.ICheckStateListener#checkStateChanged(org.eclipse.jface.viewers.CheckStateChangedEvent)
        */
       @Override
-      public void checkStateChanged( final CheckStateChangedEvent event )
+      public void checkStateChanged( CheckStateChangedEvent event )
       {
-        final IKalypsoTheme element = (IKalypsoTheme) event.getElement();
+        IKalypsoTheme element = (IKalypsoTheme) event.getElement();
 
-        final String id = element.getId();
+        String id = element.getId();
         if( event.getChecked() && !m_themeIds.contains( id ) )
           m_themeIds.add( id );
         else
@@ -556,7 +556,7 @@ public class LegendComposite extends Composite
    * @param status
    *          A status, containing a message, which should be displayed in the upper area of the view. May be null.
    */
-  protected void update( final IStatus status )
+  protected void update( IStatus status )
   {
     /* Update nothing, when no form or no content is defined. */
     /* In this case the composite was never correct initialized. */
@@ -599,9 +599,9 @@ public class LegendComposite extends Composite
    * @param fontSize
    *          The font size.
    */
-  protected void fireLegendPropertyChanged( final Properties properties, final int horizontal, final int vertical, final Color backgroundColor, final int insets, final String[] themeIds, final int fontSize )
+  protected void fireLegendPropertyChanged( Properties properties, int horizontal, int vertical, Color backgroundColor, int insets, String[] themeIds, int fontSize )
   {
-    for( final ILegendChangedListener listener : m_listener )
+    for( ILegendChangedListener listener : m_listener )
       listener.legendPropertyChanged( properties, horizontal, vertical, backgroundColor, insets, themeIds, fontSize );
   }
 
@@ -611,7 +611,7 @@ public class LegendComposite extends Composite
    * @param listener
    *          The legend changed listener to add.
    */
-  public void addLegendChangedListener( final ILegendChangedListener listener )
+  public void addLegendChangedListener( ILegendChangedListener listener )
   {
     if( !m_listener.contains( listener ) )
       m_listener.add( listener );
@@ -623,7 +623,7 @@ public class LegendComposite extends Composite
    * @param listener
    *          The legend changed listener to remove.
    */
-  public void removeLegendChangedListener( final ILegendChangedListener listener )
+  public void removeLegendChangedListener( ILegendChangedListener listener )
   {
     if( m_listener.contains( listener ) )
       m_listener.remove( listener );
@@ -637,21 +637,21 @@ public class LegendComposite extends Composite
   public Properties getProperties( )
   {
     /* Create the properties object. */
-    final Properties properties = new Properties();
+    Properties properties = new Properties();
 
     /* Serialize the properties. */
-    final String horizontalProperty = String.format( Locale.PRC, "%d", m_horizontal );
-    final String verticalProperty = String.format( Locale.PRC, "%d", m_vertical );
-    final String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", m_backgroundColor.getRed(), m_backgroundColor.getGreen(), m_backgroundColor.getBlue() );
-    final String insetsProperty = String.format( Locale.PRC, "%d", m_insets );
-    final List<String> themeIds = new ArrayList<String>();
+    String horizontalProperty = String.format( Locale.PRC, "%d", m_horizontal );
+    String verticalProperty = String.format( Locale.PRC, "%d", m_vertical );
+    String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", m_backgroundColor.getRed(), m_backgroundColor.getGreen(), m_backgroundColor.getBlue() );
+    String insetsProperty = String.format( Locale.PRC, "%d", m_insets );
+    List<String> themeIds = new ArrayList<String>();
     for( int i = 0; i < m_themeIds.size(); i++ )
     {
-      final String id = m_themeIds.get( i );
+      String id = m_themeIds.get( i );
       themeIds.add( id );
     }
-    final String themeIdsProperty = StringUtils.join( themeIds, ";" );
-    final String fontSizeProperty = String.format( Locale.PRC, "%d", m_fontSize );
+    String themeIdsProperty = StringUtils.join( themeIds, ";" );
+    String fontSizeProperty = String.format( Locale.PRC, "%d", m_fontSize );
 
     /* Add the properties. */
     properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );

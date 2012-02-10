@@ -57,7 +57,7 @@ public class NumberAxisQ extends NumberAxis
     setAutoRangeIncludesZero( false );
 
     setAutoRangeMinimumSize( 0.5 );
-
+    
     setUpperMargin( 0.25 );
     setLowerMargin( 0.10 );
   }

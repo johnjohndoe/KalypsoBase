@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.gazetter.view;
 
@@ -59,15 +59,13 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.wfs.WFService;
-import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.i18n.Messages;
 import org.kalypso.view.gazetter.GazetterLocationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author doemming
@@ -147,7 +145,7 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
     }
     else
       return; // never happens
-    final Job job = new Job( Messages.getString( "org.kalypso.ui.gazetter.view.GazetteerControl.0" ) + featureTypeToLoad.getLocalPart() ) //$NON-NLS-1$
+    final Job job = new Job( Messages.getString("org.kalypso.ui.gazetter.view.GazetteerControl.0") + featureTypeToLoad.getLocalPart() ) //$NON-NLS-1$
     {
       @Override
       protected IStatus run( final IProgressMonitor monitor )
@@ -164,7 +162,7 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
           e.printStackTrace();
           setContent( null );
           setEnable( false );
-          return new Status( IStatus.ERROR, KalypsoAddLayerPlugin.getId(), Messages.getString( "org.kalypso.ui.gazetter.view.GazetteerControl.1" ) ); //$NON-NLS-1$
+          return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ui.gazetter.view.GazetteerControl.1") ); //$NON-NLS-1$
         }
         return Status.OK_STATUS;
       }
@@ -273,8 +271,8 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
     {
       final GMLWorkspace workspace = (GMLWorkspace) inputElement;
       final QName featureType = m_gazetteerLocation.getFeatureType();
-      final IFeatureType ft = GMLSchemaUtilities.getFeatureTypeQuiet( featureType );
-      final Feature[] features = FeatureHelper.getFeaturesWithType( workspace, ft );
+      final IFeatureType ft = workspace.getGMLSchema().getFeatureType( featureType );
+      final Feature[] features = workspace.getFeatures( ft );
       final Object result[] = new Object[features.length + 1];
       result[0] = GazetteerConstants.NO_SELECTION_IN_COMBO;
       for( int i = 1; i < result.length; i++ )
@@ -282,7 +280,7 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
       return result;
     }
     else
-      return new String[] { Messages.getString( "org.kalypso.ui.gazetter.view.GazetteerControl.2" ) }; //$NON-NLS-1$
+      return new String[] { Messages.getString("org.kalypso.ui.gazetter.view.GazetteerControl.2") }; //$NON-NLS-1$
   }
 
   /**

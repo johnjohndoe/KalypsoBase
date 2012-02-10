@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
-import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
@@ -23,7 +20,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
@@ -35,13 +31,11 @@ import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.swt.SWTUtilities;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.KeyInfo;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.toolbar.AddFeatureHandler;
@@ -70,8 +64,6 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
  */
 public class TableFeatureControl extends AbstractToolbarFeatureControl implements ModellEventListener
 {
-  private static final QName[] DEFAULT_INVISIBLE_PROPERTIES = new QName[] { Feature.QN_BOUNDED_BY, Feature.QN_LOCATION };
-
   private final IFeatureModifierFactory m_factory;
 
   private LayerTableViewer m_viewer;
@@ -124,22 +116,25 @@ public class TableFeatureControl extends AbstractToolbarFeatureControl implement
     m_toolbar = toolbar;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
+   */
   @Override
-  public Control createControl( final FormToolkit toolkit, final Composite parent, final int style )
+  public Control createControl( final Composite parent, final int style )
   {
     /* Create a new Composite for the toolbar. */
     final Composite client = new Composite( parent, SWT.NONE );
-    final GridLayout gridLayout = Layouts.createGridLayout();
+    final GridLayout gridLayout = new GridLayout( 1, false );
+    gridLayout.marginWidth = 0;
+    gridLayout.marginHeight = 0;
     if( ToolbarHelper.hasActions( m_toolbar ) || m_showToolbar )
       gridLayout.numColumns++;
     client.setLayout( gridLayout );
 
     /* Create the layer table viewer. */
     m_viewer = new LayerTableViewer( client, style, m_templateTarget, m_factory, m_selectionManager, m_fcl );
-    final Table table = m_viewer.getTable();
-    applyToolkit( toolkit, client );
 
-    table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+    m_viewer.getTable().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     /* Set the feature. */
     final Feature feature = getFeature();
@@ -210,15 +205,17 @@ public class TableFeatureControl extends AbstractToolbarFeatureControl implement
         addToolbarItems( contribution.getUri() );
     }
 
-    if( getToolbarManager() != null )
-    {
-      final ToolBar toolbar = getToolbarManager().createControl( client );
-      toolbar.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, true ) );
+    if( getToolbarManager() == null )
+      return client;
 
-      applyToolkit( toolkit, toolbar );
+    final ToolBar toolbar = getToolbarManager().createControl( client );
+    toolbar.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, true ) );
 
-      hookExecutionListener( m_viewer, getToolbarManager() );
-    }
+    final FormToolkit toolkit = new FormToolkit( toolbar.getDisplay() );
+    toolkit.adapt( client );
+    toolkit.adapt( toolbar );
+
+    hookExecutionListener( m_viewer, getToolbarManager() );
 
     return client;
   }
@@ -259,7 +256,7 @@ public class TableFeatureControl extends AbstractToolbarFeatureControl implement
     final GMLWorkspace workspace = feature == null ? null : feature.getWorkspace();
     if( m_viewer != null && workspace != null && feature != null )
     {
-      final FeaturePath parentFeaturePath = new FeaturePath( feature );
+      final FeaturePath parentFeaturePath = workspace.getFeaturepathForFeature( feature );
       final String ftpName = getFeatureTypeProperty().getQName().getLocalPart();
       final FeaturePath featurePath = new FeaturePath( parentFeaturePath, ftpName );
 
@@ -284,42 +281,16 @@ public class TableFeatureControl extends AbstractToolbarFeatureControl implement
       }
       else
       {
-        m_viewer.addColumn( null, null, null, false, 0, "SWT.CENTER", null, null, false, new LayerTableStyle( null ) ); //$NON-NLS-1$
-
         final IFeatureType featureType = m_viewer.getInput().getFeatureType();
-        addDefaultColumns( featureType );
+        final IPropertyType[] properties = featureType == null ? new IPropertyType[0] : featureType.getProperties();
+        for( int i = 0; i < properties.length; i++ )
+        {
+          final IPropertyType ftp = properties[i];
+          final GMLXPath columnPath = new GMLXPath( ftp.getQName() );
+          m_viewer.addColumn( columnPath, null, null, true, 100, "SWT.CENTER", null, null, i == properties.length - 1, new LayerTableStyle( null ) ); //$NON-NLS-1$
+        }
       }
     }
-  }
-
-  private void addDefaultColumns( final IFeatureType featureType )
-  {
-    final IPropertyType[] properties = featureType == null ? new IPropertyType[0] : featureType.getProperties();
-    for( int i = 0; i < properties.length; i++ )
-    {
-      final IPropertyType ftp = properties[i];
-      final QName qName = ftp.getQName();
-      if( !ArrayUtils.contains( DEFAULT_INVISIBLE_PROPERTIES, qName ) )
-      {
-        final String columnAlignment = findDefaultColumnAlignment( ftp );
-
-        final GMLXPath columnPath = new GMLXPath( ftp.getQName() );
-        m_viewer.addColumn( columnPath, null, null, true, 100, columnAlignment, null, null, i == properties.length - 1, new LayerTableStyle( null ) ); //$NON-NLS-1$
-      }
-    }
-  }
-
-  private String findDefaultColumnAlignment( final IPropertyType ftp )
-  {
-    if( ftp instanceof IValuePropertyType )
-    {
-      final IValuePropertyType vpt = (IValuePropertyType) ftp;
-      final Class< ? > valueClass = vpt.getValueClass();
-      if( Number.class.isAssignableFrom( valueClass ) )
-        return "SWT.RIGHT"; //$NON-NLS-1$
-    }
-
-    return "SWT.LEFT"; //$NON-NLS-1$
   }
 
   /**
@@ -360,7 +331,7 @@ public class TableFeatureControl extends AbstractToolbarFeatureControl implement
 
   /**
    * createFeatureControl
-   *
+   * 
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#isValid()
    */
   @Override

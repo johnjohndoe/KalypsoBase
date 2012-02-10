@@ -48,6 +48,7 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IStatus;
@@ -83,13 +84,13 @@ public abstract class ObjectCatalog<O> extends Storage
       if( urlFeatureStyle == null )
         return null;
 
-      final CatalogManager manager = m_manager;
+      final ICatalog baseCatalog = m_manager.getBaseCatalog();
       final IUrlResolver2 catalogResolver = new IUrlResolver2()
       {
         @Override
         public URL resolveURL( final String href ) throws MalformedURLException
         {
-          final String ref = manager.resolve( href, href );
+          final String ref = baseCatalog.resolve( href, href );
           return UrlResolverSingleton.resolveUrl( urlFeatureStyle, ref );
         }
       };
@@ -113,8 +114,8 @@ public abstract class ObjectCatalog<O> extends Storage
 
   public URL getURL( final IUrlResolver2 resolver, final String systemID, final String publicID ) throws MalformedURLException
   {
-    final String uri = m_manager.resolve( systemID, publicID );
-
+    final ICatalog baseCatalog = m_manager.getBaseCatalog();
+    final String uri = baseCatalog.resolve( systemID, publicID );
     // BUGFIX: if uri now start with 'urn', the id was not resolved, so we just return
     // Maybe there is a better way to handle that?
     if( uri.startsWith( "urn" ) ) //$NON-NLS-1$
@@ -129,6 +130,44 @@ public abstract class ObjectCatalog<O> extends Storage
     if( generator == null )
       throw new UnsupportedOperationException();
     return getStoreURI();
+  }
+
+  public void addRelative( final O object, final URI storeLocation ) throws Exception
+  {
+    add( object, storeLocation, true );
+  }
+
+  /**
+   * caller may store object first
+   */
+  public void add( final O object, final URI storeLocation ) throws Exception
+  {
+    add( object, storeLocation, false );
+  }
+
+  private void add( final O object, final URI storeLocation, final boolean relative ) throws Exception
+  {
+    final IURNGenerator generator = m_manager.getURNGeneratorFor( m_supportingClass );
+    if( generator == null )
+      throw new UnsupportedOperationException();
+
+    store( object, storeLocation );
+    final String objectURN = generator.generateURNFor( object );
+    final String uriAsString = storeLocation.toString();
+    final String systemID = objectURN;
+    final String publicID = null;
+    if( relative )
+      m_manager.getBaseCatalog().addEntryRelative( uriAsString, systemID, publicID );
+    else
+      m_manager.getBaseCatalog().addEntry( uriAsString, systemID, publicID );
+
+  }
+
+  public List<String> getEntryURNs( final Object parent ) throws Exception
+  {
+    final IURNGenerator generator = m_manager.getURNGeneratorFor( m_supportingClass );
+    final String patternURN = generator.generateURNPatternForRelated( parent );
+    return m_manager.getBaseCatalog().getEntryURNS( patternURN );
   }
 
   public O getDefault( final IUrlResolver2 resolver, final Object parent )

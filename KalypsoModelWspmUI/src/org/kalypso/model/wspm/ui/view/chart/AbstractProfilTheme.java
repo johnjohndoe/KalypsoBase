@@ -40,10 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
@@ -62,13 +62,46 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 /**
  * @author kimwerner
  */
-public abstract class AbstractProfilTheme extends AbstractProfilLayer// implements IChartLayer
+public abstract class AbstractProfilTheme extends AbstractProfilLayer implements IChartLayer
 {
+// private final ILayerManagerEventListener m_eventListener = new AbstractLayerManagerEventListener()
+// {
+// /**
+// * @see
+// de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+// */
+// @Override
+// public void onLayerContentChanged( final IChartLayer layer )
+// {
+// fireLayerContentChanged();
+// }
+//
+// /**
+// * @see
+// de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerMoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+// */
+// @Override
+// public void onLayerMoved( final IChartLayer layer )
+// {
+// fireLayerContentChanged();
+// }
+//
+// /**
+// * @see
+// de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+// */
+// @Override
+// public void onLayerVisibilityChanged( final IChartLayer layer )
+// {
+// fireLayerContentChanged();
+// }
+// };
+
   private final String m_id;
 
-  private String m_title;
+// private final ILayerManager m_layerManager = new LayerManager();
 
-  private ILegendEntry[] m_combinedEntry;
+  private final String m_title;
 
   public AbstractProfilTheme( final IProfil profil, final String id, final String title, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
@@ -79,42 +112,39 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
   {
     super( id, profil, "", styleProvider ); //$NON-NLS-1$
 
-    /* *grml* AbstractProfileLayer overwrites getTitle() implementation */
-    setTitle( title );
     m_title = title;
-
     m_id = id;
 
     setCoordinateMapper( cm );
+// m_layerManager.addListener( m_eventListener );
 
     if( chartLayers != null )
     {
       for( final IChartLayer layer : chartLayers )
+      {
         layer.setCoordinateMapper( cm );
-
+      }
       getLayerManager().addLayer( chartLayers );
     }
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#commitDrag(org.eclipse.swt.graphics.Point,
+   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
+   */
   @Override
   public EditInfo commitDrag( final Point point, final EditInfo dragStartData )
   {
     if( getTargetComponent() != null )
-    {
-      getProfil().getSelection().setActivePointProperty( getTargetComponent() );
-    }
+      getProfil().setActivePointProperty( getTargetComponent() );
     final IProfilChartLayer layer = getActiveLayer();
     if( layer == null )
       return null;
 
     if( dragStartData.getPosition() == point )
-    {
       layer.executeClick( dragStartData );
-    }
     else
-    {
       layer.executeDrop( point, dragStartData );
-    }
 
     return null;
   }
@@ -124,18 +154,11 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
     return getLayerManager().getLayers();
   }
 
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getLegendEntries()
+   */
   @Override
-  public synchronized ILegendEntry[] getLegendEntries( )
-  {
-    if( ArrayUtils.isEmpty( m_combinedEntry ) )
-    {
-      final ILegendEntry[] entries = createLegendEntries();
-      m_combinedEntry = entries;
-    }
-    return m_combinedEntry;
-  }
-
-  private ILegendEntry[] createLegendEntries( )
+  public ILegendEntry[] createLegendEntries( )
   {
     // TODO: implement combined legend entry and reuse
     final LegendEntry le = new LegendEntry( this, toString() )
@@ -147,9 +170,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
         {
           final ILegendEntry[] les = layer.getLegendEntries();
           if( les == null || les.length == 0 )
-          {
             continue;
-          }
           for( final ILegendEntry l : les )
           {
             ((LegendEntry) l).paintSymbol( gc, size );
@@ -161,25 +182,9 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
   }
 
   /**
-   * *grml* AbstractProfileLayer overwrites getTitle() implementation
+   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#drag(org.eclipse.swt.graphics.Point,
+   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
-  @Override
-  public String getTitle( )
-  {
-    return m_title;
-  }
-
-  /**
-   * *grml* AbstractProfileLayer overwrites getTitle() implementation
-   */
-  @Override
-  public void setTitle( final String title )
-  {
-    super.setTitle( title );
-
-    m_title = title;
-  }
-
   @Override
   public EditInfo drag( final Point newPos, final EditInfo dragStartData )
   {
@@ -189,24 +194,29 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
     return layer.drag( newPos, dragStartData );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#executeClick(de.openali.odysseus.chart.framework.model.layer.EditInfo)
+   */
+
   @Override
   public void executeClick( final EditInfo clickInfo )
   {
     final IProfilChartLayer layer = getActiveLayer();
     if( layer != null )
-    {
       layer.executeClick( clickInfo );
-    }
   }
+
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.chart.AbstractProfilLayer#executeDrop(org.eclipse.swt.graphics.Point,
+   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
+   */
 
   @Override
   public void executeDrop( final Point point, final EditInfo dragStartData )
   {
     final IProfilChartLayer layer = getActiveLayer();
     if( layer != null )
-    {
       layer.executeDrop( point, dragStartData );
-    }
   }
 
   protected final void fireLayerContentChanged( )
@@ -214,7 +224,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
     getEventHandler().fireLayerContentChanged( this );
   }
 
-  private IProfilChartLayer getActiveLayer( )
+  private final IProfilChartLayer getActiveLayer( )
   {
     for( final IChartLayer l : getLayerManager().getLayers() )
     {
@@ -224,6 +234,10 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
     return null;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getDomainComponent()
+   */
+
   @Override
   public IComponent getDomainComponent( )
   {
@@ -231,18 +245,21 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
     return layer == null ? null : layer.getDomainComponent();
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getDomainRange()
+   */
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Number> getDomainRange( )
   {
     Double min = null;
     Double max = null;
     for( final IChartLayer layer : getLayerManager().getLayers() )
     {
-      final IDataRange< ? > dr = layer.getDomainRange();
+      final IDataRange<Number> dr = layer.getDomainRange();
       if( dr != null )
       {
-        final double drMax = ((Number) dr.getMax()).doubleValue();
-        final double drMin = ((Number) dr.getMin()).doubleValue();
+        final double drMax = dr.getMax().doubleValue();
+        final double drMin = dr.getMin().doubleValue();
 
         max = max == null ? drMax : Math.max( max, drMax );
         min = min == null ? drMin : Math.min( min, drMin );
@@ -252,6 +269,10 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
       return null;
     return new DataRange<Number>( min, max );
   }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getHover(org.eclipse.swt.graphics.Point)
+   */
 
   @Override
   public EditInfo getHover( final Point pos )
@@ -266,9 +287,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
         if( info != null )
         {
           if( !pLayer.isActive() )
-          {
             pLayer.setActive( true );
-          }
           return info;
         }
       }
@@ -277,6 +296,9 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
 
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getId()
+   */
   @Override
   public String getIdentifier( )
   {
@@ -289,6 +311,10 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
 // return m_layerManager;
 // }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetComponent()
+   */
+
   @Override
   public IComponent getTargetComponent( )
   {
@@ -296,41 +322,48 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
     return layer == null ? null : layer.getTargetComponent();
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetRange()
+   */
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     Double min = null;
     Double max = null;
     for( final IChartLayer layer : getLayerManager().getLayers() )
     {
-      final IDataRange< ? > dr = layer.getTargetRange( null );
+      final IDataRange<Number> dr = layer.getTargetRange( null );
       if( dr != null )
       {
         if( max == null )
-        {
-          max = ((Number) dr.getMax()).doubleValue();
-        }
+          max = dr.getMax().doubleValue();
         else
-        {
-          max = Math.max( max, ((Number) dr.getMax()).doubleValue() );
-        }
+          max = Math.max( max, dr.getMax().doubleValue() );
         if( min == null )
-        {
-          min = ((Number) dr.getMin()).doubleValue();
-        }
+          min = dr.getMin().doubleValue();
         else
-        {
-          min = Math.min( min, ((Number) dr.getMin()).doubleValue() );
-        }
+          min = Math.min( min, dr.getMin().doubleValue() );
       }
     }
     if( min == null || max == null )
       return null;
-// if( min == max )
-// min = 0.9 * max;
+    if( min == max )
+      min = 0.9 * max;
     return new DataRange<Number>( min, max );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTitle()
+   */
+  @Override
+  public String getTitle( )
+  {
+    return m_title;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#lockLayer(boolean)
+   */
   @Override
   public void lockLayer( final boolean locked )
   {
@@ -348,41 +381,48 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
     super.lockLayer( locked );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
+   *      org.kalypso.model.wspm.core.profil.IProfilChange[])
+   */
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    if( hint.isSelectionChanged() )
+    if( hint.isActivePointChanged() )
     {
       fireLayerContentChanged();
     }
     else
-    {
       for( final IChartLayer layer : getLayerManager().getLayers() )
       {
         if( layer instanceof IProfilChartLayer )
-        {
-          ((IProfilChartLayer) layer).onProfilChanged( hint );
-        }
+          ((IProfilChartLayer) layer).onProfilChanged( hint, changes );
       }
-    }
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
+   */
   @Override
   public void paint( final GC gc )
   {
     for( final IChartLayer layer : getLayerManager().getLayers() )
       if( layer.isVisible() )
-      {
         layer.paint( gc );
-      }
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#removeYourself()
+   */
   @Override
   public void removeYourself( )
   {
     throw new UnsupportedOperationException( Messages.getString( "org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme.0" ) ); //$NON-NLS-1$
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#setProfil(org.kalypso.model.wspm.core.profil.IProfil)
+   */
   @Override
   public void setProfil( final IProfil profil )
   {
@@ -390,9 +430,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
     for( final IChartLayer layer : getLayerManager().getLayers() )
     {
       if( layer instanceof IProfilChartLayer )
-      {
         ((IProfilChartLayer) layer).setProfil( profil );
-      }
     }
   }
 }

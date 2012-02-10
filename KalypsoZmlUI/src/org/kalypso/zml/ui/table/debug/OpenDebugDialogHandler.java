@@ -53,7 +53,11 @@ import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
  */
 public class OpenDebugDialogHandler extends AbstractHandler
 {
+  public static final String ID = "org.kalypso.chart.ui.command.axis.selection"; //$NON-NLS-1$
 
+  /**
+   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+   */
   @Override
   public Object execute( final ExecutionEvent event )
   {

@@ -49,7 +49,7 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -58,8 +58,9 @@ import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IXLinkedFeature;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * some basic feature utils
@@ -70,6 +71,38 @@ public final class FeatureUtils
 {
   private FeatureUtils( )
   {
+  }
+
+  public static String chopGeoDataSetName( final String name )
+  {
+    final String[] chomp = new String[] { ".sld", ".gml", ".asc", ".shp", ".tif" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+
+    boolean bChomp = false;
+    for( final String ch : chomp )
+      if( name.contains( ch ) )
+      {
+        bChomp = true;
+        break;
+      }
+
+    String geoDataSetName = ""; //$NON-NLS-1$
+
+    if( bChomp )
+    {
+      final String[] parts = name.split( "\\." ); //$NON-NLS-1$
+
+      for( int i = 0; i < parts.length - 1; i++ )
+      {
+        geoDataSetName += parts[i];
+      }
+
+    }
+    else
+    {
+      geoDataSetName = name;
+    }
+
+    return geoDataSetName;
   }
 
   public static void deleteFeature( final CommandableWorkspace workspace, final Feature feature ) throws Exception
@@ -110,6 +143,32 @@ public final class FeatureUtils
       return Messages.getString( "org.kalypso.ogc.gml.FeatureUtils.9" ); //$NON-NLS-1$
 
     return (String) objString;
+  }
+
+  public static FeatureChange getLinkedFeatureChange( final Feature parentFeature, final QName propertyName, final String value )
+  {
+    final IPropertyType chgProp = parentFeature.getFeatureType().getProperty( propertyName );
+    final XLinkedFeature_Impl impl = new XLinkedFeature_Impl( parentFeature, (IRelationType) chgProp, parentFeature.getFeatureType(), value, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+
+    return new FeatureChange( parentFeature, chgProp, impl );
+  }
+
+  public static String getProperty( final Feature fa, final QName qname )
+  {
+    final Object object = fa.getProperty( qname );
+    if( object != null )
+      return object.toString();
+
+    return null;
+  }
+
+  public static Object getPropertyObject( final Feature fa, final QName qname )
+  {
+    final Object object = fa.getProperty( qname );
+    if( object != null )
+      return object;
+
+    return null;
   }
 
   public static void updateProperties( final CommandableWorkspace workspace, final Feature feature, final Map<QName, Object> map ) throws Exception
@@ -182,22 +241,59 @@ public final class FeatureUtils
   public static FeatureChange getExternalLinkedFeatureCommand( final Feature feature, final QName qname, final String value )
   {
     final IPropertyType chgProp = feature.getFeatureType().getProperty( qname );
-    final IXLinkedFeature impl = FeatureFactory.createXLink( feature, (IRelationType) chgProp, feature.getFeatureType(), value );
-    return new FeatureChange( feature, chgProp, impl );
+    final XLinkedFeature_Impl impl = new XLinkedFeature_Impl( feature, (IRelationType) chgProp, feature.getFeatureType(), value, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+
+    final FeatureChange change = new FeatureChange( feature, chgProp, impl );
+
+    return change;
   }
 
-  /**
-   * Checks, if one of the isUsed flags has changed. Checks only feature with the given owner.
+  @Deprecated
+  /*
+   * ATTENTION: each time a new commandable workspace is returned, so you can't see that an workspace is dirty!
    */
-  public static boolean checkChange( final Feature owner, final FeatureChange[] changes, final QName property )
+  public static CommandableWorkspace getCommandableWorkspace( final Feature feature )
   {
-    for( final FeatureChange change : changes )
+    final GMLWorkspace workspace = feature.getWorkspace();
+
+    if( workspace instanceof CommandableWorkspace )
+      return (CommandableWorkspace) workspace;
+    else
+      return new CommandableWorkspace( workspace );
+  }
+
+  public static String getFeatureName( final Feature feature )
+  {
+    final IPropertyType[] properties = feature.getFeatureType().getProperties();
+    for( final IPropertyType propertyType : properties )
     {
-      if( change.getFeature().getOwner() == owner && change.getProperty().getQName().equals( property ) )
-        return true;
+      final QName name = propertyType.getQName();
+      if( "name".equals( name.getLocalPart() ) ) //$NON-NLS-1$
+        return getFeatureName( name.getNamespaceURI(), feature );
     }
 
-    return false;
+    return ""; //$NON-NLS-1$
+  }
+
+  public static GM_Envelope getMaxExtend( final Feature[] features )
+  {
+    GM_Envelope base = null;
+    for( final Feature feature : features )
+    {
+      final GM_Envelope envelope = feature.getEnvelope();
+
+      if( base == null )
+      {
+        base = envelope;
+      }
+      else
+      {
+        base = base.getMerged( envelope );
+      }
+    }
+
+    return base;
+
   }
 
 }

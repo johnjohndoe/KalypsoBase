@@ -45,9 +45,9 @@ import java.awt.Color;
 import java.awt.Stroke;
 import java.net.URL;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypso.contribs.java.lang.NumberUtils;
@@ -92,7 +92,6 @@ public class TSLinkWithName implements IZmlSourceElement
   /**
    * it's possible to update identifiers - this feature is needed for multiple selection
    */
-  @Override
   public void setIdentifier( final String identifier )
   {
     m_identifier = identifier;
@@ -290,11 +289,5 @@ public class TSLinkWithName implements IZmlSourceElement
     if( Objects.isNotNull( m_provider ) )
       m_provider.dispose();
 
-  }
-
-  @Override
-  public int getIndex( )
-  {
-    return 0;
   }
 }

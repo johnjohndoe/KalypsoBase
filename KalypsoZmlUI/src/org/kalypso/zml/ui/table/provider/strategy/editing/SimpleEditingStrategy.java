@@ -46,16 +46,17 @@ import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.model.ZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.ZmlTableValueColumn;
 
 /**
  * @author Dirk Kuch
  */
 public class SimpleEditingStrategy extends AbstractEditingStrategy
 {
-  public SimpleEditingStrategy( final ZmlTableColumn column )
+  public SimpleEditingStrategy( final ZmlTableValueColumn column )
   {
     super( column );
   }
@@ -68,11 +69,14 @@ public class SimpleEditingStrategy extends AbstractEditingStrategy
   {
     try
     {
-      final IZmlValueReference reference = row.get( getColumn().getColumnType().getType() );
+      final IZmlModelCell reference = row.get( getColumn().getColumnType().getType() );
       if( reference == null )
         return "";
+      else if( !(reference instanceof IZmlModelValueCell) )
+        return "";
 
-      final Object value = reference.getValue();
+      final IZmlModelValueCell cell = (IZmlModelValueCell) reference;
+      final Object value = cell.getValue();
 
       final CellStyle style = getStyle();
       return String.format( style.getTextFormat() == null ? "%s" : style.getTextFormat(), value );
@@ -91,10 +95,13 @@ public class SimpleEditingStrategy extends AbstractEditingStrategy
     try
     {
       final IZmlModelRow row = element;
-      final IZmlValueReference reference = row.get( getColumn().getColumnType().getType() );
+      final IZmlModelCell reference = row.get( getColumn().getColumnType().getType() );
+      if( !(reference instanceof IZmlModelValueCell) )
+        return;
+      final IZmlModelValueCell cell = (IZmlModelValueCell) reference;
 
       final Number targetValue = getTargetValue( value );
-      reference.doUpdate( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
+      cell.doUpdate( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
     }
     catch( final SensorException e )
     {

@@ -53,7 +53,7 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-import org.kalypso.contribs.eclipse.ui.IContentOutlineProvider;
+import org.kalypso.ogc.gml.outline.IContentOutlineProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
 import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
@@ -94,7 +94,7 @@ public class MapView extends AbstractMapPart implements IViewPart, IContentOutli
         final IPath path = Path.fromPortableString( fullPath );
         final IFile mementoFile = ResourcesPlugin.getWorkspace().getRoot().getFile( path );
         final String reloadOnOpen = getConfigurationElement().getAttribute( MapView.RELOAD_MAP_ON_OPEN );
-        if( mementoFile != null && "true".equalsIgnoreCase( reloadOnOpen ) ) //$NON-NLS-1$
+        if( (mementoFile != null) && "true".equalsIgnoreCase( reloadOnOpen ) ) //$NON-NLS-1$
           setInput( new FileEditorInput( mementoFile ) );
       }
     }
@@ -125,7 +125,7 @@ public class MapView extends AbstractMapPart implements IViewPart, IContentOutli
   @Override
   public void dispose( )
   {
-    getMapPanel().getWidgetManager().addWidget( null );
+    getMapPanel().getWidgetManager().setActualWidget( null );
 
     // FIXME: saving the map here causes dead-locks!
     final String saveOnCloseString = getConfigurationElement().getAttribute( MapView.SAVE_MAP_ON_CLOSE );

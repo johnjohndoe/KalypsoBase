@@ -50,7 +50,6 @@ import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterFinder;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
-import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -60,7 +59,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * This view displays the last active map-part in an overview window.
- *
+ * 
  * @author Gernot Belger
  */
 public class MapOverView extends AbstractMapPart implements IAdapterEater<IMapPanel>, IMapPanelListener, IViewPart
@@ -167,8 +166,12 @@ public class MapOverView extends AbstractMapPart implements IAdapterEater<IMapPa
     // TODO: update extent layer
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.map.IMapPanelListener#onMapModelChanged(org.kalypso.ogc.gml.map.MapPanel,
+   *      org.kalypso.ogc.gml.mapmodel.IMapModell, org.kalypso.ogc.gml.mapmodel.IMapModell)
+   */
   @Override
-  public void onMapModelChanged( final IMapPanel source, final IKalypsoLayerModell oldModel, final IKalypsoLayerModell newModel )
+  public void onMapModelChanged( final IMapPanel source, final IMapModell oldModel, final IMapModell newModel )
   {
     setModell( newModel );
   }

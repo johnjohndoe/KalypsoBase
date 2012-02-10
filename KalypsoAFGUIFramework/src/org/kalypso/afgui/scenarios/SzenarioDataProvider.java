@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -23,6 +23,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.Job;
@@ -32,6 +33,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.afgui.ScenarioHandlingProjectNature;
 import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.afgui.model.ICommandPoster;
 import org.kalypso.afgui.model.IModel;
@@ -49,9 +51,8 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
+import de.renew.workflow.connector.cases.ICase;
 import de.renew.workflow.connector.cases.ICaseDataProvider;
-import de.renew.workflow.connector.cases.IScenario;
-import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 
 /**
  * Objects of this class are responsible for loading the gml-workspaces for the current selected simulation model and
@@ -60,7 +61,7 @@ import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
  * This is preliminary, because at the moment we assume that there is only one simulation model per project which is
  * always at the same place.
  * </p>
- *
+ * 
  * @author Gernot Belger
  */
 public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommandPoster
@@ -198,7 +199,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
    * @see de.renew.workflow.connector.cases.ICaseDataProvider#setCurrent(org.eclipse.core.resources.IContainer)
    */
   @Override
-  public void setCurrent( final IScenario scenario )
+  public void setCurrent( final ICase scenario )
   {
     /* Nothing to do if scenario folder stays the same */
     if( ObjectUtils.equals( m_scenario, scenario ) )
@@ -221,7 +222,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
           m_dataSetScope = afguiNode.get( "dataSetScope", null ); //$NON-NLS-1$
       }
 
-      m_scenario = scenario;
+      m_scenario = (IScenario) scenario;
     }
 
     fireCazeChanged( m_scenario );
@@ -243,6 +244,17 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
       @Override
       protected IStatus run( final IProgressMonitor monitor )
       {
+        try
+        {
+          // TODO: do not do this! If something is out of sync, thats a bug!
+          final IFolder cazeFolder = scenario.getFolder();
+          cazeFolder.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
+        }
+        catch( final Throwable th )
+        {
+          th.printStackTrace();
+        }
+
         final List<IStatus> statusList = new ArrayList<IStatus>();
         final Map<String, IScenarioDatum> locationMap = ScenarioDataExtension.getScenarioDataMap( dataSetScope );
         if( locationMap != null )
@@ -354,7 +366,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
 
   /**
    * Reloads all models.
-   *
+   * 
    * @see de.renew.workflow.connector.cases.ICaseDataProvider#reloadModel()
    */
   @Override
@@ -378,7 +390,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
 
   /**
    * Resets the pool-key for the given folder.
-   *
+   * 
    * @param szenarioFolder
    *          If <code>null</code>, just releases the existing key.
    */
@@ -435,6 +447,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
    *      </p>
    */
   @Override
+  @SuppressWarnings("deprecation")
   @Deprecated
   public <T extends IModel> T getModel( final Class<T> modelClass ) throws CoreException
   {
@@ -463,6 +476,18 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
       return (T) rootFeature;
 
     return (T) rootFeature.getAdapter( modelClass );
+  }
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.ICommandPoster#postCommand(java.lang.Class,
+   *      org.kalypso.commons.command.ICommand)
+   */
+  @Override
+  @SuppressWarnings("deprecation")
+  @Deprecated
+  public void postCommand( final Class< ? extends IModel> wrapperClass, final ICommand command ) throws InvocationTargetException
+  {
+    postCommand( wrapperClass.getName(), command );
   }
 
   /**
@@ -504,6 +529,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
    * @see de.renew.workflow.connector.cases.ICaseDataProvider#isDirty(java.lang.Class)
    */
   @Override
+  @SuppressWarnings("deprecation")
   @Deprecated
   public boolean isDirty( final Class< ? extends IModel> modelClass )
   {
@@ -529,7 +555,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
     final KeyInfo infoForKey = pool.getInfoForKey( key );
     if( infoForKey == null )
-      // .
+      // TODO throw (core/other) exception?
       return false;
 
     return infoForKey.isDirty();
@@ -540,6 +566,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
+  @SuppressWarnings("deprecation")
   @Deprecated
   public synchronized void saveModel( final Class< ? extends IModel> modelClass, final IProgressMonitor monitor ) throws CoreException
   {
@@ -604,6 +631,19 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     }
   }
 
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.ICommandPoster#getCommandableWorkSpace(java.lang.Class)
+   */
+  @Override
+  @Deprecated
+  public CommandableWorkspace getCommandableWorkSpace( final Class< ? extends IModel> wrapperClass ) throws IllegalArgumentException, CoreException
+  {
+    return getCommandableWorkSpace( wrapperClass.getName() );
+  }
+
+  /**
+   * @see org.kalypso.kalypsosimulationmodel.core.ICommandPoster#getCommandableWorkSpace(java.lang.Class)
+   */
   @Override
   public CommandableWorkspace getCommandableWorkSpace( final String id ) throws IllegalArgumentException, CoreException
   {
@@ -678,10 +718,12 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
    */
   public boolean waitForModelToLoad( final String id, final int maxWaitTimeInMillis ) throws InterruptedException
   {
+    final SzenarioDataProvider dataProvider = ScenarioHelper.getScenarioDataProvider();
+
     int waitTime = 0;
     while( true )
     {
-      if( isLoaded( id ) )
+      if( dataProvider.isLoaded( id ) )
         return true;
 
       Thread.sleep( WAIT_TIME );
@@ -693,8 +735,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
   }
 
   @Override
-  public String toString( )
-  {
+  public String toString(){
     return "Active data set scope: [ " + m_dataSetScope + " ]";
   }
 }

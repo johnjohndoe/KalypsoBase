@@ -67,7 +67,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -84,7 +84,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * 
  * @author Gernot Belger
  */
-public class SelectSingleFeatureWidget extends DeprecatedMouseWidget implements MouseListener
+public class SelectSingleFeatureWidget extends AbstractWidget implements MouseListener
 {
   private static final String THEME_PROPERTY_SHOW_INFO = "singleSelectShowInfo";
 
@@ -173,29 +173,15 @@ public class SelectSingleFeatureWidget extends DeprecatedMouseWidget implements 
     m_hoverFeature = null;
     m_hoverTheme = null;
 
-    repaintMap();
-
-    m_themes = initializeThemes();
-  }
-
-  /**
-   * Initialized the themes, from which features can be selected.<br/>
-   * The default implementation return the active theme.
-   */
-  protected IKalypsoFeatureTheme[] initializeThemes( )
-  {
     final IMapPanel mapPanel = getMapPanel();
     final IMapModell mapModell = mapPanel.getMapModell();
-
+    mapPanel.repaintMap();
     final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
     if( activeTheme instanceof IKalypsoFeatureTheme )
     {
-      final IKalypsoFeatureTheme[] themes = new IKalypsoFeatureTheme[1];
-      themes[0] = (IKalypsoFeatureTheme) activeTheme;
-      return themes;
+      m_themes = new IKalypsoFeatureTheme[1];
+      m_themes[0] = (IKalypsoFeatureTheme) activeTheme;
     }
-
-    return null;
   }
 
   /**

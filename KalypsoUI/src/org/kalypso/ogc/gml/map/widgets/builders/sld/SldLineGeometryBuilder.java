@@ -42,7 +42,7 @@ package org.kalypso.ogc.gml.map.widgets.builders.sld;
 
 import java.net.URL;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -86,7 +86,7 @@ public class SldLineGeometryBuilder extends AbstractSldGeometryBuilder implement
     final GeometryFactory factory = JTSAdapter.jtsFactory;
 
     Coordinate[] coordinates = getCoordinates();
-    coordinates = ArrayUtils.addAll( coordinates, additional );
+    coordinates = (Coordinate[]) ArrayUtils.addAll( coordinates, additional );
 
     if( coordinates.length < 2 )
       return null;

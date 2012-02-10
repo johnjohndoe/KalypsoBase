@@ -59,6 +59,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.contribs.eclipse.swt.graphics.RGBUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.zml.core.table.schema.CellStyleType;
 import org.kalypso.zml.core.table.schema.StylePropertyName;
 import org.kalypso.zml.core.table.schema.StylePropertyType;
@@ -93,7 +94,7 @@ public class CellStyle implements Cloneable
   }
 
   /**
-   * initialize style (cascading style set!)
+   * Initialize style (cascading style set!)
    */
   private CellStyleType init( final CellStyleType style )
   {
@@ -138,14 +139,14 @@ public class CellStyle implements Cloneable
   {
     if( id1 == null )
       return id2;
-    else if( id2.startsWith( "urn" ) )
+    else if( id2.startsWith( "urn" ) ) //$NON-NLS-1$
     {
-      final RETokenizer tokenizer = new RETokenizer( new Pattern( ".*#" ), id2 );
+      final RETokenizer tokenizer = new RETokenizer( new Pattern( ".*#" ), id2 ); //$NON-NLS-1$
       final String anchor = tokenizer.nextToken();
-      return String.format( "%s#%s", id1, anchor );
+      return String.format( "%s#%s", id1, anchor ); //$NON-NLS-1$
     }
 
-    return String.format( "%s#%s", id1, id2 );
+    return String.format( "%s#%s", id1, id2 ); //$NON-NLS-1$
   }
 
   public static boolean hasProperty( final CellStyleType style, final StylePropertyType type )
@@ -164,7 +165,7 @@ public class CellStyle implements Cloneable
     if( htmlColor == null )
       return null;
 
-    final String id = "background" + m_style.getId();
+    final String id = "background" + m_style.getId(); //$NON-NLS-1$
 
     try
     {
@@ -173,7 +174,7 @@ public class CellStyle implements Cloneable
     }
     catch( final RuntimeException ex )
     {
-      System.out.println( String.format( "Illegal background cell style: %s", getIdentifier() ) );
+      System.out.println( String.format( "Illegal background cell style: %s", getIdentifier() ) ); //$NON-NLS-1$
 
       ex.printStackTrace();
     }
@@ -216,7 +217,8 @@ public class CellStyle implements Cloneable
     if( cached != null )
       return cached;
 
-    final String uri = KalypsoCorePlugin.getDefault().getCatalogManager().resolve( urlString, urlString );
+    final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
+    final String uri = baseCatalog.resolve( urlString, urlString );
 
     final ImageDescriptor descriptor = ImageDescriptor.createFromURL( new URL( uri ) );
     final Image image = descriptor.createImage();

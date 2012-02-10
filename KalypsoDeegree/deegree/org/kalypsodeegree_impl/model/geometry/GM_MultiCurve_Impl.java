@@ -51,7 +51,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * @version 12.6.2001
  * @author Andreas Poth
  */
-public final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_MultiCurve, Serializable
+final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_MultiCurve, Serializable
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 2730942874409216686L;
@@ -259,6 +259,9 @@ public final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements 
     return sp.getPositionAt( 0 ).getCoordinateDimension();
   }
 
+  /**
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#clone()
+   */
   @Override
   public GM_Object clone( ) throws CloneNotSupportedException
   {
@@ -270,6 +273,9 @@ public final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements 
     return new GM_MultiCurve_Impl( clonedCurves, getCoordinateSystem() );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(java.lang.String)
+   */
   @Override
   public GM_Object transform( final String targetCRS ) throws Exception
   {

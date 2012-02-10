@@ -52,10 +52,8 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
- * @deprecated not used anymore ?!?
  * @author doemming
  */
-@Deprecated
 public class PointOfinterest implements IMapPanelPaintListener
 {
   private final String m_title;

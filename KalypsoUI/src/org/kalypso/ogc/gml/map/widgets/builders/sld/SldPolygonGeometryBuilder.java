@@ -42,9 +42,7 @@ package org.kalypso.ogc.gml.map.widgets.builders.sld;
 
 import java.net.URL;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.kalypso.commons.java.lang.Arrays;
-import org.kalypso.commons.java.lang.Objects;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -74,8 +72,6 @@ public class SldPolygonGeometryBuilder extends AbstractSldGeometryBuilder implem
   public GM_Object finish( ) throws Exception
   {
     final Geometry polygon = finishJts();
-    if( Objects.isNull( polygon ) )
-      return null;
 
     return JTSAdapter.wrap( polygon, getCrs() );
   }
@@ -83,11 +79,9 @@ public class SldPolygonGeometryBuilder extends AbstractSldGeometryBuilder implem
   @Override
   public Geometry finishJts( )
   {
-    final Coordinate[] coordinates = getCoordinates();
-    if( Arrays.isEmpty( coordinates ) )
-      return null;
+    final Geometry polygon = getGeometry( getCoordinates()[0] );
 
-    return getGeometry( coordinates[0] );
+    return polygon;
   }
 
   protected Geometry getGeometry( final Coordinate... additional )
@@ -95,7 +89,7 @@ public class SldPolygonGeometryBuilder extends AbstractSldGeometryBuilder implem
     final GeometryFactory factory = JTSAdapter.jtsFactory;
 
     Coordinate[] coordinates = getCoordinates();
-    coordinates = ArrayUtils.addAll( coordinates, additional );
+    coordinates = (Coordinate[]) ArrayUtils.addAll( coordinates, additional );
 
     if( coordinates.length < 2 )
       return null;
@@ -107,7 +101,7 @@ public class SldPolygonGeometryBuilder extends AbstractSldGeometryBuilder implem
     }
     else
     {
-      coordinates = ArrayUtils.add( coordinates, coordinates[0] );
+      coordinates = (Coordinate[]) ArrayUtils.add( coordinates, coordinates[0] );
 
       final LinearRing linearRing = factory.createLinearRing( coordinates );
       final Polygon polygon = factory.createPolygon( linearRing, new LinearRing[] {} );

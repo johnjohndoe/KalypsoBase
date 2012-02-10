@@ -65,18 +65,17 @@ import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.dnd.TransferData;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.ui.part.Page;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.editor.dnd.ChartLayerTransfer;
 
-import com.google.common.base.Objects;
-
 import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.ILayerContainer;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -86,11 +85,8 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
  * @author alibu
  * @author kimwerner
  */
-public class ChartEditorTreeOutlinePage extends Page implements IContentOutlinePage
+public class ChartEditorTreeOutlinePage implements IContentOutlinePage
 {
-  /** Constant for empty layer selection */
-  private static final String SELECTION_NONE = "<none>"; //$NON-NLS-1$
-
   protected ICheckStateListener m_checkStateListener = null;
 
   protected ITreeContentProvider m_contentProvider;
@@ -114,10 +110,13 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
       super( name );
     }
 
+    /**
+     * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
+     */
     @Override
     public IStatus runInUIThread( final IProgressMonitor monitor )
     {
-      if( !isDisposed() )
+      if( notDisposed() )
         m_treeViewer.refresh();
       return Status.OK_STATUS;
     }
@@ -136,30 +135,49 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
     m_labelProvider = labelProvider;
     m_eventListener = new AbstractLayerManagerEventListener()
     {
+      /**
+       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+       */
       @Override
       public void onLayerVisibilityChanged( final IChartLayer layer )
       {
+
         refreshTreeViewer();
       }
 
+      /**
+       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerAdded(de.openali.
+       *      odysseus.chart.framework.model.layer.IChartLayer)
+       */
       @Override
       public void onLayerAdded( final IChartLayer layer )
       {
         refreshTreeViewer();
       }
 
+      /**
+       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerContentChanged(de
+       *      .openali.odysseus.chart.framework.model.layer.IChartLayer)
+       */
       @Override
       public void onLayerContentChanged( final IChartLayer layer )
       {
         refreshTreeViewer();
       }
 
+      /**
+       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerMoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+       */
       @Override
       public void onLayerMoved( final IChartLayer layer )
       {
         refreshTreeViewer();
       }
 
+      /**
+       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerRemoved(de.openali
+       *      .odysseus.chart.framework.model.layer.IChartLayer)
+       */
       @Override
       public void onLayerRemoved( final IChartLayer layer )
       {
@@ -206,9 +224,11 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
       @Override
       public boolean isGrayed( final Object element )
       {
+        // TODO Auto-generated method stub
         return false;
       }
     };
+
   }
 
   protected final void refreshTreeViewer( )
@@ -231,66 +251,15 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
     return m_model;
   }
 
-  protected boolean isDisposed( )
+  protected boolean notDisposed( )
   {
-    if( m_treeViewer == null )
-      return true;
-
-    final Control control = m_treeViewer.getControl();
-    if( control == null )
-      return true;
-
-    return control.isDisposed();
+    return m_treeViewer != null && m_treeViewer.getControl() != null && !m_treeViewer.getControl().isDisposed();
   }
 
   private void setInput( final IChartModel model )
   {
-    if( isDisposed() )
-      return;
-
-    {
-      /* Remember type of selected layer */
-      final IChartModel oldModel = (IChartModel) m_treeViewer.getInput();
-      final String currentSelection = findSelectedLayerId( oldModel );
-
+    if( notDisposed() )
       m_treeViewer.setInput( model );
-
-      final IChartLayer selectedLayer = findSelectedLayer( model, currentSelection );
-      if( selectedLayer != null )
-        m_treeViewer.setSelection( new StructuredSelection( selectedLayer ) );
-    }
-  }
-
-  private IChartLayer findSelectedLayer( final IChartModel model, final String layerId )
-  {
-    if( model == null )
-      return null;
-
-    final IChartLayer[] layers = model.getLayerManager().getLayers();
-    for( final IChartLayer layer : layers )
-    {
-      final String identifier = layer.getIdentifier();
-      if( Objects.equal( layerId, identifier ) )
-        return layer;
-    }
-
-    if( layers.length > 0 )
-      return layers[0];
-
-    return null;
-  }
-
-  private String findSelectedLayerId( final IChartModel model )
-  {
-    if( model == null )
-      return SELECTION_NONE;
-
-    final IStructuredSelection selection = (IStructuredSelection) m_treeViewer.getSelection();
-    final Object firstElement = selection.getFirstElement();
-    if( firstElement instanceof IChartLayer )
-      return ((ILayerContainer) firstElement).getIdentifier();
-
-    return SELECTION_NONE;
   }
 
   public void setModel( final IChartModel model )
@@ -411,14 +380,20 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
       m_treeViewer.removeSelectionChangedListener( m_selectionChangeListener );
       m_selectionChangeListener = null;
     }
-
     m_treeViewer.addSelectionChangedListener( listener );
   }
 
+  /**
+   * @see org.eclipse.ui.part.IPage#createControl(org.eclipse.swt.widgets.Composite)
+   */
   @Override
   public void createControl( final Composite parent )
   {
-    final Tree tree = new Tree( parent, SWT.CHECK | SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.FULL_SELECTION );
+    final Tree tree = new Tree( parent, SWT.CHECK | SWT.V_SCROLL | SWT.H_SCROLL );
+
+    // BAD: we do not know the layout, so this may cause trouble!
+    if( parent.getLayout() instanceof GridLayout )
+      tree.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     m_treeViewer = new CheckboxTreeViewer( tree );
     m_treeViewer.setContentProvider( m_contentProvider );
@@ -430,11 +405,6 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
     addDropSupport();
 
     updateControl();
-  }
-
-  public CheckboxTreeViewer getViewer( )
-  {
-    return m_treeViewer;
   }
 
   private final void addListener( )
@@ -461,8 +431,6 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
       m_contentProvider.dispose();
 
     removeListener();
-
-    super.dispose();
   }
 
   /**
@@ -497,6 +465,14 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
     m_treeViewer.removeSelectionChangedListener( listener );
   }
 
+  /**
+   * @see org.eclipse.ui.part.IPage#setActionBars(org.eclipse.ui.IActionBars)
+   */
+  @Override
+  public void setActionBars( final IActionBars actionBars )
+  {
+  }
+
   public void setCheckStateListener( final ICheckStateListener checkStateListener )
   {
     if( m_checkStateListener != null )
@@ -526,19 +502,20 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
     m_treeViewer.getControl().setFocus();
   }
 
+  /**
+   * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
+   */
   @Override
   public void setSelection( final ISelection selection )
   {
-    if( isDisposed() )
-      return;
-
-    m_treeViewer.setSelection( selection );
+    if( notDisposed() )
+      m_treeViewer.setSelection( selection );
   }
 
   public void updateControl( )
   {
     if( m_treeViewer.getInput() == null )
-      setInput( m_model );
+      m_treeViewer.setInput( m_model );
     else
       m_treeViewer.refresh();
   }

@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.ui.map.legend;
 
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
@@ -90,7 +88,7 @@ public class OpenLegendHandler extends AbstractHandler
       final IMapModell mapModel = mapPanel.getMapModell();
 
       /* Find the themes. */
-      final String themeProperty = ObjectUtils.toString( context.getVariable( "themeProperty" ) ); //$NON-NLS-1$
+      final String themeProperty = (String) context.getVariable( "themeProperty" ); //$NON-NLS-1$
       final IKalypsoTheme[] themes = findThemesForLegend( mapModel, themeProperty );
       if( themes == null )
         throw new Exception( "Diese Karte enthält keine Themen..." );
@@ -126,7 +124,7 @@ public class OpenLegendHandler extends AbstractHandler
 
   private IKalypsoTheme[] findThemesForLegend( final IMapModell mapModel, final String property )
   {
-    if( StringUtils.isBlank( property ) )
+    if( property == null || property.length() == 0 )
       return mapModel.getAllThemes();
 
     final IKalypsoCascadingTheme cascadingTheme = findCascadingTheme( mapModel, property );

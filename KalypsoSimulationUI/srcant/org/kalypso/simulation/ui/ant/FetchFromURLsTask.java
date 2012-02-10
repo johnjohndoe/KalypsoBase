@@ -47,7 +47,6 @@ import java.io.InputStream;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.kalypso.contribs.java.net.UrlResolver;
@@ -118,11 +117,8 @@ public class FetchFromURLsTask extends Task
     return m_listSeparator;
   }
 
-  /**
-   * @see org.apache.tools.ant.Task#execute()
-   */
   @Override
-  public void execute( ) throws BuildException
+  public void execute( )
   {
     // set Listseparator
     final String listSeparator;

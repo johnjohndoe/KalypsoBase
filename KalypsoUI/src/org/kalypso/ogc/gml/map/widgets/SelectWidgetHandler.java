@@ -2,7 +2,6 @@ package org.kalypso.ogc.gml.map.widgets;
 
 import java.util.Map;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -69,10 +68,16 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
    */
   private Map< ? , ? > m_parameter;
 
+  /**
+   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+   */
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext applicationContext = (IEvaluationContext) event.getApplicationContext();
+    if( HandlerUtils.isDeselected( event ) )
+      return null;
+
     applicationContext.getVariable( ISources.ACTIVE_EDITOR_ID_NAME );
 
     final String widgetFromEvent = event.getParameter( PARAM_WIDGET_CLASS );
@@ -101,18 +106,10 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     /* Set the map of all parameter, in case there are additional parameter. */
     widget.setParameter( (Map<String, String>) m_parameter );
 
+    final Shell shell = HandlerUtil.getActiveShellChecked( event );
     final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( applicationContext );
     if( mapPanel == null )
       return StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler.7" ), new IllegalStateException() ); //$NON-NLS-1$
-
-    if( HandlerUtils.isDeselected( event ) )
-    {
-      mapPanel.getWidgetManager().removeWidget( widget );
-
-      return null;
-    }
-
-    final Shell shell = HandlerUtil.getActiveShellChecked( event );
 
     /* Always make sure that the map was fully loaded */
     // REMARK: we first test directly, without ui-operation, in order to enhance performance if the map already is open.
@@ -142,6 +139,9 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     return null;
   }
 
+  /**
+   * @see org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.menus.UIElement, java.util.Map)
+   */
   @Override
   public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
   {
@@ -161,24 +161,25 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
     if( mapPanel != null )
     {
-      final IWidget[] widgets = mapPanel.getWidgetManager().getWidgets();
-      if( ArrayUtils.isEmpty( widgets ) )
-        element.setChecked( false );
-      else
+      final IWidget actualWidget = mapPanel.getWidgetManager().getActualWidget();
+      if( actualWidget != null )
       {
-        element.setChecked( false );
-
-        for( final IWidget widget : widgets )
-        {
-          // SelectWidgetHandler ist mehrfach vorhanden, daher muss explizit auf die Klasse des Widgets geprüft werden.
-          final String actualWidgetClass = widget.getClass().getName();
-          if( actualWidgetClass.equals( m_widgetClassFromExtension ) )
-            element.setChecked( true );
-        }
+        // SelectWidgetHandler ist mehrfach vorhanden, daher muss explizit auf die Klasse des Widgets geprüft werden.
+        final String actualWidgetClass = actualWidget.getClass().getName();
+        if( actualWidgetClass.equals( m_widgetClassFromExtension ) )
+          element.setChecked( true );
+        else
+          element.setChecked( false );
       }
+      else
+        element.setChecked( false );
     }
   }
 
+  /**
+   * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
+   *      java.lang.String, java.lang.Object)
+   */
   @Override
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
@@ -245,7 +246,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     try
     {
       final Bundle bundle = Platform.getBundle( pluginId );
-      final Class<IWidget> widgetClass = (Class<IWidget>) bundle.loadClass( widgetName );
+      final Class<IWidget> widgetClass = bundle.loadClass( widgetName );
       return widgetClass.newInstance();
     }
     catch( final Exception e )

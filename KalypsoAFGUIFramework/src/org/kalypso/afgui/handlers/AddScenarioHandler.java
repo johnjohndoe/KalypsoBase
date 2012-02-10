@@ -13,8 +13,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
-
-import de.renew.workflow.connector.cases.IScenario;
+import org.kalypso.afgui.scenarios.IScenario;
 
 /**
  * @author Patrice Congo, Stefan Kurzbach
@@ -32,7 +31,7 @@ public class AddScenarioHandler extends AbstractHandler
     final ISelection selection = (ISelection) context.getVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME );
     if( selection instanceof IStructuredSelection )
     {
-      final IStructuredSelection structSel = (IStructuredSelection) selection;
+      final IStructuredSelection structSel = ((IStructuredSelection) selection);
 
       if( !structSel.isEmpty() )
       {

@@ -8,22 +8,24 @@ import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
 
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 public class LineLayerProvider extends AbstractLayerProvider
 {
   @Override
   public IChartLayer getLayer( final URL context )
   {
-    return new TupleResultLineLayer( this, getDataContainer(), getStyleSet());
+    return new TupleResultLineLayer( this, getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
   }
 
   protected TupleResultDomainValueData<Calendar, Double> getDataContainer( )
   {
     final String href = getParameterContainer().getParameterValue( "href", null ); // $NON-NLS-1$
 
-    final String observationId = getParameterContainer().getParameterValue( "observationId", null ); // $NON-NLS-1$
-    final String domainComponentName = getParameterContainer().getParameterValue( "domainComponent", null ); // $NON-NLS-1$
-    final String targetComponentName = getParameterContainer().getParameterValue( "targetComponent", null ); // $NON-NLS-1$
+    final String observationId = getParameterContainer().getParameterValue( "observationId", null );
+    final String domainComponentName = getParameterContainer().getParameterValue( "domainComponent", null );
+    final String targetComponentName = getParameterContainer().getParameterValue( "targetComponent", null );
 
     TupleResultDomainValueData<Calendar, Double> data = null;
     if( href != null && observationId != null && domainComponentName != null && targetComponentName != null )

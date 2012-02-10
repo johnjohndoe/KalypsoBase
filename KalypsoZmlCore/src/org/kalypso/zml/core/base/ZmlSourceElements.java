@@ -43,7 +43,7 @@ package org.kalypso.zml.core.base;
 import jregex.Pattern;
 import jregex.RETokenizer;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 
 /**

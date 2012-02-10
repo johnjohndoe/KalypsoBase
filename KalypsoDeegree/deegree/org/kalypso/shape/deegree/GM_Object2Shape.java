@@ -2,48 +2,47 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.shape.deegree;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.shape.ShapeDataException;
 import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.geometry.ISHPGeometry;
@@ -64,11 +63,9 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree_impl.model.geometry.GM_PositionOrientation;
+import org.kalypsodeegree_impl.model.geometry.GM_PositionOrientation.TYPE;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-
-import com.vividsolutions.jts.algorithm.CGAlgorithms;
-import com.vividsolutions.jts.geom.LinearRing;
 
 /**
  * @author Gernot Belger
@@ -109,23 +106,22 @@ public class GM_Object2Shape
       case POLYLINE:
       {
         final GM_Curve[] curves = (GM_Curve[]) transformedGeom.getAdapter( GM_Curve[].class );
-        if( ArrayUtils.isEmpty( curves ) )
-          return new SHPNullShape();
-
-        return toPolyline( curves );
+        if( curves == null )
+          return null;
+        else
+          return toPolyline( curves );
       }
 
       case POLYGON:
       {
         final GM_SurfacePatch[] surfacePatches = (GM_SurfacePatch[]) transformedGeom.getAdapter( GM_SurfacePatch[].class );
-        if( ArrayUtils.isEmpty( surfacePatches ) )
-          return new SHPNullShape();
-
-        final GM_Curve[] curves = orientCurves( surfacePatches );
-        if( ArrayUtils.isEmpty( curves ) )
-          return new SHPNullShape();
-
-        return new SHPPolygon( toPolyline( curves ) );
+        if( surfacePatches == null )
+          return null;
+        else
+        {
+          final GM_Curve[] curves = orientCurves( surfacePatches );
+          return new SHPPolygon( toPolyline( curves ) );
+        }
       }
 
       case POINTZ:
@@ -140,20 +136,22 @@ public class GM_Object2Shape
       case POLYLINEZ:
       {
         final GM_Curve[] curves = (GM_Curve[]) transformedGeom.getAdapter( GM_Curve[].class );
-        if( ArrayUtils.isEmpty( curves ) )
-          return new SHPNullShape();
-
-        return toPolylineZ( curves );
+        if( curves == null )
+          return null;
+        else
+          return toPolylineZ( curves );
       }
 
       case POLYGONZ:
       {
         final GM_SurfacePatch[] surfacePatches = (GM_SurfacePatch[]) transformedGeom.getAdapter( GM_SurfacePatch[].class );
-        if( ArrayUtils.isEmpty( surfacePatches ) )
-          return new SHPNullShape();
-
-        final GM_Curve[] curves = orientCurves( surfacePatches );
-        return new SHPPolygonz( toPolylineZ( curves ) );
+        if( surfacePatches == null )
+          return null;
+        else
+        {
+          final GM_Curve[] curves = orientCurves( surfacePatches );
+          return new SHPPolygonz( toPolylineZ( curves ) );
+        }
       }
 
       case MULTIPOINT:
@@ -258,21 +256,18 @@ public class GM_Object2Shape
     }
   }
 
-  private static GM_Curve[] orientCurves( final GM_SurfacePatch[] surfacePatch ) throws ShapeDataException
+  private static GM_Curve[] orientCurves( final GM_SurfacePatch[] surfacePatch )
   {
     final List<GM_Curve> curveList = new LinkedList<GM_Curve>();
     for( final GM_SurfacePatch element : surfacePatch )
     {
       try
       {
+        final GM_Position[] exteriorRing = element.getExteriorRing();
         // TODO: really necessary? why not also force positive orientation for interior rings below?
-        final LinearRing exteriorRing = JTSAdapter.exportAsRing( element.getExteriorRing() );
-        if( !CGAlgorithms.isCCW( exteriorRing.getCoordinates() ) )
-          exteriorRing.reverse();
+        final GM_Position[] positions = GM_PositionOrientation.orient( exteriorRing, TYPE.NEGATIV );
 
-        final GM_Position[] poses = JTSAdapter.wrap( exteriorRing.getCoordinates() );
-
-        final GM_CurveSegment cs = GeometryFactory.createGM_CurveSegment( poses, element.getCoordinateSystem() );
+        final GM_CurveSegment cs = GeometryFactory.createGM_CurveSegment( positions, element.getCoordinateSystem() );
         curveList.add( GeometryFactory.createGM_Curve( cs ) );
 
         final GM_Position[][] interiorRings = element.getInteriorRings();
@@ -286,9 +281,9 @@ public class GM_Object2Shape
           }
         }
       }
-      catch( final GM_Exception e )
+      catch( final Exception e )
       {
-        throw new ShapeDataException( e );
+        System.out.println( "SHPPolygon::" + e );
       }
     }
     return curveList.toArray( new GM_Curve[curveList.size()] );
@@ -308,8 +303,6 @@ public class GM_Object2Shape
 
     final GM_SurfacePatch[] patches = new GM_SurfacePatch[] { transformedPatch };
     final GM_Curve[] curves = orientCurves( patches );
-    if( curves == null )
-      return new SHPNullShape();
 
     switch( m_shapeType )
     {

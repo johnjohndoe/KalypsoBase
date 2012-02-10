@@ -40,54 +40,40 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWizard;
-import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.base.IProfileManipulator;
-import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.model.wspm.ui.profil.wizard.ProfileManipulationOperation.IProfileManipulator;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
  * @author Gernot Belger
  */
-public abstract class ManipulateProfileWizard extends Wizard implements IWorkbenchWizard
+public abstract class ManipulateProfileWizard extends Wizard
 {
-  private ProfilesChooserPage m_profileChooserPage;
+  final private ProfilesChooserPage m_profileChooserPage;
 
-  @Override
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
+  final private CommandableWorkspace m_workspace;
+
+  public ManipulateProfileWizard( final ProfileSelection profileSelection, final String profilePageMessage )
   {
+    m_workspace = profileSelection.getWorkspace();
     setNeedsProgressMonitor( true );
-    setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
 
-    final ProfileSelection profileSelection = ProfileHandlerUtils.getSelectionChecked( selection );
-    m_profileChooserPage = new ProfilesChooserPage( getProfilePageMessage(), profileSelection, false );
+    m_profileChooserPage = new ProfilesChooserPage( profilePageMessage, profileSelection, false );
 
     addPage( m_profileChooserPage );
   }
 
-  protected abstract String getProfilePageMessage( );
-
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#performFinish()
+   */
   @Override
   public boolean performFinish( )
   {
-    final Set<IProfileFeature> profiles = new LinkedHashSet<>();
-
-    final Object[] choosen = m_profileChooserPage.getChoosen();
-    for( final Object object : choosen )
-    {
-      if( object instanceof IProfileFeature )
-        profiles.add( (IProfileFeature) object );
-    }
+    final Object[] profileFeatures = m_profileChooserPage.getChoosen();
 
     final IProfileManipulator manipulator = getProfileManipulator();
-    final ProfileManipulationOperation operation = new ProfileManipulationOperation( getContainer(), getWindowTitle(), profiles.toArray( new IProfileFeature[] {} ), manipulator );
+    final ProfileManipulationOperation operation = new ProfileManipulationOperation( getContainer(), getWindowTitle(), profileFeatures, m_workspace, manipulator );
     return operation.perform();
   }
 

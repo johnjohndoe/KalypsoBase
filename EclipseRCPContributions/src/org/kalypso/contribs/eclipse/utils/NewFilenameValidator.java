@@ -56,13 +56,13 @@ public class NewFilenameValidator implements IInputValidator
   /**
    * The original file.
    */
-  private final File m_file;
+  private File m_file;
 
   /**
    * If true, the file extension will be preserved. The entered input will be handled as basename of the new file. This
    * means, the file extension will always be added to the new text for validation purposes.
    */
-  private final boolean m_preserveExtension;
+  private boolean m_preserveExtension;
 
   /**
    * The constructor.
@@ -73,7 +73,7 @@ public class NewFilenameValidator implements IInputValidator
    *          If true, the file extension will be preserved. The entered input will be handled as basename of the new
    *          file. This means, the file extension will always be added to the new text for validation purposes.
    */
-  public NewFilenameValidator( final IFile file, final boolean preserveExtension )
+  public NewFilenameValidator( IFile file, boolean preserveExtension )
   {
     m_preserveExtension = preserveExtension;
     m_file = file.getLocation().toFile();
@@ -88,7 +88,7 @@ public class NewFilenameValidator implements IInputValidator
    *          If true, the file extension will be preserved. The entered input will be handled as basename of the new
    *          file. This means, the file extension will always be added to the new text for validation purposes.
    */
-  public NewFilenameValidator( final File file, final boolean preserveExtension )
+  public NewFilenameValidator( File file, boolean preserveExtension )
   {
     m_file = file;
     m_preserveExtension = preserveExtension;
@@ -98,14 +98,14 @@ public class NewFilenameValidator implements IInputValidator
    * @see org.eclipse.jface.dialogs.IInputValidator#isValid(java.lang.String)
    */
   @Override
-  public String isValid( final String newText )
+  public String isValid( String newText )
   {
     if( newText == null || newText.length() == 0 )
       return "Geben Sie einen neuen Dateinamen an.";
 
     File newFile = null;
-    final String extension = getFileExtension( m_file.getName() );
-    if( !m_preserveExtension || extension == null || extension.length() == 0 )
+    String extension = getFileExtension( m_file.getName() );
+    if( !m_preserveExtension || (extension == null || extension.length() == 0) )
       newFile = new File( m_file.getParentFile(), newText );
     else
       newFile = new File( m_file.getParentFile(), String.format( "%s%s", newText, extension ) );
@@ -124,10 +124,10 @@ public class NewFilenameValidator implements IInputValidator
    *          The filename, which file extension will be returned.
    * @return The file extension or null.
    */
-  private String getFileExtension( final String complete )
+  private String getFileExtension( String complete )
   {
     /* Search the position of the extensions dot. */
-    final int lastIndexOf = complete.lastIndexOf( "." );
+    int lastIndexOf = complete.lastIndexOf( "." );
     if( lastIndexOf != -1 )
       return complete.substring( lastIndexOf, complete.length() );
 

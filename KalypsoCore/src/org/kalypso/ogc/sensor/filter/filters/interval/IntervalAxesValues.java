@@ -45,13 +45,13 @@ import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.joda.time.Interval;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
-import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.TupleModelDataSet;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;

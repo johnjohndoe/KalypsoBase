@@ -44,12 +44,10 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.afgui.model.IModel;
-import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-
-import de.renew.workflow.connector.cases.IScenario;
 
 /**
  * Helper class for handling gml workspace of diffenerent IScenarios
@@ -89,8 +87,7 @@ public class ScenarioWorkspaceHandler
 
   public void dispose( )
   {
-    if( Objects.isNotNull( m_workspace ) )
-      m_workspace.dispose();
+    m_workspace.dispose();
   }
 
 }

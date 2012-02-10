@@ -70,7 +70,7 @@ public class WQRelationDialog extends ResizableDialog
 
     final String fromType = wqs.getFromType();
     final String toType = wqs.getToType();
-    final String title = Messages.getString( "org.kalypso.ogc.sensor.view.wq.WQRelationDialog.1", fromType, toType, obsName ); //$NON-NLS-1$
+    final String title = Messages.getString("org.kalypso.ogc.sensor.view.wq.WQRelationDialog.1", fromType ,toType ,  obsName);  //$NON-NLS-1$
 
     m_title = title;
     m_wqs = wqs;
@@ -97,7 +97,7 @@ public class WQRelationDialog extends ResizableDialog
     {
       e.printStackTrace();
 
-      MessageDialog.openError( getShell(), Messages.getString( "org.kalypso.ogc.sensor.view.wq.WQRelationDialog.0" ), e.getLocalizedMessage() ); //$NON-NLS-1$
+      MessageDialog.openError( getShell(), Messages.getString("org.kalypso.ogc.sensor.view.wq.WQRelationDialog.0"), e.getLocalizedMessage() ); //$NON-NLS-1$
     }
 
     getShell().setText( m_title );

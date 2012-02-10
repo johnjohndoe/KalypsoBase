@@ -41,13 +41,14 @@
 package org.kalypso.ogc.gml.filterdialog.dialog;
 
 /**
+ *
  * TODO: insert type comment here
- * 
+ *
  * @author kuepfer
  */
 public interface IChangeListener
 {
-  public void contentChanged( );
+  public void contentChanged();
 
-  public void structureChanged( );
+  public void structureChanged();
 }

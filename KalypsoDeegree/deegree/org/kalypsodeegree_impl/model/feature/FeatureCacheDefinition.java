@@ -47,7 +47,7 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 
 /**
  * @author Gernot Belger
@@ -71,14 +71,11 @@ public class FeatureCacheDefinition
   private void addToDirtyMap( final QName dependsOnName, final QName cachedProperty )
   {
     if( !m_dirtyMap.containsKey( dependsOnName ) )
-      m_dirtyMap.put( dependsOnName, new QName[] {} );
+      m_dirtyMap.put( dependsOnName, new QName[] { cachedProperty } );
 
     final QName[] dependencies = m_dirtyMap.get( dependsOnName );
-    if( !ArrayUtils.contains( dependencies, cachedProperty ) )
-    {
-      final QName[] newDependencies = ArrayUtils.add( dependencies, cachedProperty );
-      m_dirtyMap.put( dependsOnName, newDependencies );
-    }
+    final QName[] newDependencies = (QName[]) ArrayUtils.add( dependencies, cachedProperty );
+    m_dirtyMap.put( dependsOnName, newDependencies );
   }
 
   public QName[] getDirtyProperties( final QName changedProperty )

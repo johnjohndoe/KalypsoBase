@@ -116,7 +116,7 @@ public class Function extends Expression_Impl
    */
   public void setName( final String name )
   {
-    m_name = name;
+    this.m_name = name;
   }
 
   /**

@@ -190,7 +190,7 @@ public class OrdinalAxisRenderer_obsolete implements IAxisRenderer
   private void drawTicks( final GC gc, final IAxis axis, final int startX, final int startY, final Number[] ticks, final int offset )
   {
 
-    if( gc == null || axis == null || ticks == null )
+    if( (gc == null) || (axis == null) || (ticks == null) )
       return;
 
     final int tickLength = m_config.tickLength;
@@ -281,7 +281,7 @@ public class OrdinalAxisRenderer_obsolete implements IAxisRenderer
 
     final IChartLabelRenderer tickRenderer = getTickLabelRenderer( axis );
     tickRenderer.getTitleTypeBean().setLabel( m_contentProvider.getLabel( 0 ) );
-    int maxWidth = 0;// getTickLabelRenderer( axis ).getSize().y;
+    int maxWidth = 0;//getTickLabelRenderer( axis ).getSize().y;
 
     for( int i = range.getMin().intValue(); i <= range.getMax().intValue(); i++ )
     {
@@ -377,14 +377,14 @@ public class OrdinalAxisRenderer_obsolete implements IAxisRenderer
   @Override
   public void paint( final GC gc, final IAxis axis, final Rectangle screenArea )
   {
-    if( screenArea.width > 0 && screenArea.height > 0 && axis.isVisible() )
+    if( (screenArea.width > 0) && (screenArea.height > 0) && axis.isVisible() )
     {
 
       gc.setBackground( gc.getDevice().getSystemColor( SWT.COLOR_GRAY ) );
 
       // draw axis line
       final int[] coords = createAxisSegment( axis, screenArea );
-      assert coords != null && coords.length == 4;
+      assert (coords != null) && (coords.length == 4);
       final int tmpWidth = gc.getLineWidth();
       gc.setLineWidth( m_config.tickLineStyle.getWidth() );
       gc.drawLine( coords[0], coords[1], coords[2], coords[3] );

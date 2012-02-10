@@ -112,7 +112,7 @@ public class SortedProperties extends TreeMap<String, String>
    * @param defaults
    *          the defaults.
    */
-  public SortedProperties( final SortedProperties defaults )
+  public SortedProperties( SortedProperties defaults )
   {
     this.defaults = defaults;
   }
@@ -130,7 +130,7 @@ public class SortedProperties extends TreeMap<String, String>
    * @see #getProperty
    * @since 1.2
    */
-  public synchronized Object setProperty( final String key, final String value )
+  public synchronized Object setProperty( String key, String value )
   {
     return put( key, value );
   }
@@ -150,8 +150,8 @@ public class SortedProperties extends TreeMap<String, String>
    * A natural line that contains only white space characters is considered blank and is ignored. A comment line has an
    * ASCII <code>'#'</code> or <code>'!'</code> as its first non-white space character; comment lines are also ignored
    * and do not encode key-element information. In addition to line terminators, this format considers the characters
-   * space (<code>' '</code>, <code>'&#92;u0020'</code>), tab (<code>'\t'</code>, <code>'&#92;u0009'</code>), and form
-   * feed (<code>'\f'</code>, <code>'&#92;u000C'</code>) to be white space.
+   * space (<code>' '</code>, <code>'&#92;u0020'</code>), tab (<code>'\t'</code>, <code>'&#92;u0009'</code>), and form feed (<code>'\f'</code>, <code>'&#92;u000C'</code>) to be
+   * white space.
    * <p>
    * If a logical line is spread across several natural lines, the backslash escaping the line terminator sequence, the
    * line terminator sequence, and any white space at the start of the following line have no affect on the key or
@@ -228,9 +228,9 @@ public class SortedProperties extends TreeMap<String, String>
    * <li>Octal escapes are not recognized.
    * <li>The character sequence <code>\b</code> does <i>not</i> represent a backspace character.
    * <li>The method does not treat a backslash character, <code>\</code>, before a non-valid escape character as an
-   * error; the backslash is silently dropped. For example, in a Java string the sequence <code>"\z"</code> would cause
-   * a compile time error. In contrast, this method silently drops the backslash. Therefore, this method treats the two
-   * character sequence <code>"\b"</code> as equivalent to the single character <code>'b'</code>.
+   * error; the backslash is silently dropped. For example, in a Java string the sequence <code>"\z"</code> would cause a compile
+   * time error. In contrast, this method silently drops the backslash. Therefore, this method treats the two character
+   * sequence <code>"\b"</code> as equivalent to the single character <code>'b'</code>.
    * <li>Escapes are not necessary for single and double quotes; however, by the rule above, single and double quote
    * characters preceded by a backslash still yield single and double quote characters, respectively.
    * <li>Only a single 'u' character is allowed in a Uniocde escape sequence.
@@ -246,7 +246,7 @@ public class SortedProperties extends TreeMap<String, String>
    *           if a malformed Unicode escape appears in the input.
    * @since 1.6
    */
-  public synchronized void load( final Reader reader ) throws IOException
+  public synchronized void load( Reader reader ) throws IOException
   {
     load0( new LineReader( reader ) );
   }
@@ -268,14 +268,14 @@ public class SortedProperties extends TreeMap<String, String>
    *           if the input stream contains a malformed Unicode escape sequence.
    * @since 1.2
    */
-  public synchronized void load( final InputStream inStream ) throws IOException
+  public synchronized void load( InputStream inStream ) throws IOException
   {
     load0( new LineReader( inStream ) );
   }
 
-  private void load0( final LineReader lr ) throws IOException
+  private void load0( LineReader lr ) throws IOException
   {
-    final char[] convtBuf = new char[1024];
+    char[] convtBuf = new char[1024];
     int limit;
     int keyLen;
     int valueStart;
@@ -333,8 +333,8 @@ public class SortedProperties extends TreeMap<String, String>
         }
         valueStart++;
       }
-      final String key = loadConvert( lr.lineBuf, 0, keyLen, convtBuf );
-      final String value = loadConvert( lr.lineBuf, valueStart, limit - valueStart, convtBuf );
+      String key = loadConvert( lr.lineBuf, 0, keyLen, convtBuf );
+      String value = loadConvert( lr.lineBuf, valueStart, limit - valueStart, convtBuf );
       put( key, value );
     }
   }
@@ -346,13 +346,13 @@ public class SortedProperties extends TreeMap<String, String>
    */
   class LineReader
   {
-    public LineReader( final InputStream inStream )
+    public LineReader( InputStream inStream )
     {
       this.inStream = inStream;
       inByteBuf = new byte[8192];
     }
 
-    public LineReader( final Reader reader )
+    public LineReader( Reader reader )
     {
       this.reader = reader;
       inCharBuf = new char[8192];
@@ -388,7 +388,7 @@ public class SortedProperties extends TreeMap<String, String>
       {
         if( inOff >= inLimit )
         {
-          inLimit = inStream == null ? reader.read( inCharBuf ) : inStream.read( inByteBuf );
+          inLimit = (inStream == null) ? reader.read( inCharBuf ) : inStream.read( inByteBuf );
           inOff = 0;
           if( inLimit <= 0 )
           {
@@ -450,7 +450,7 @@ public class SortedProperties extends TreeMap<String, String>
             {
               newLength = Integer.MAX_VALUE;
             }
-            final char[] buf = new char[newLength];
+            char[] buf = new char[newLength];
             System.arraycopy( lineBuf, 0, buf, 0, lineBuf.length );
             lineBuf = buf;
           }
@@ -477,7 +477,7 @@ public class SortedProperties extends TreeMap<String, String>
           }
           if( inOff >= inLimit )
           {
-            inLimit = inStream == null ? reader.read( inCharBuf ) : inStream.read( inByteBuf );
+            inLimit = (inStream == null) ? reader.read( inCharBuf ) : inStream.read( inByteBuf );
             inOff = 0;
             if( inLimit <= 0 )
             {
@@ -508,7 +508,7 @@ public class SortedProperties extends TreeMap<String, String>
   /*
    * Converts encoded &#92;uxxxx to unicode chars and changes special saved chars to their original forms
    */
-  private String loadConvert( final char[] in, int off, final int len, char[] convtBuf )
+  private String loadConvert( char[] in, int off, int len, char[] convtBuf )
   {
     if( convtBuf.length < len )
     {
@@ -520,9 +520,9 @@ public class SortedProperties extends TreeMap<String, String>
       convtBuf = new char[newLen];
     }
     char aChar;
-    final char[] out = convtBuf;
+    char[] out = convtBuf;
     int outLen = 0;
-    final int end = off + len;
+    int end = off + len;
 
     while( off < end )
     {
@@ -597,22 +597,22 @@ public class SortedProperties extends TreeMap<String, String>
   /*
    * Converts unicodes to encoded &#92;uxxxx and escapes special characters with a preceding slash
    */
-  private String saveConvert( final String theString, final boolean escapeSpace, final boolean escapeUnicode )
+  private String saveConvert( String theString, boolean escapeSpace, boolean escapeUnicode )
   {
-    final int len = theString.length();
+    int len = theString.length();
     int bufLen = len * 2;
     if( bufLen < 0 )
     {
       bufLen = Integer.MAX_VALUE;
     }
-    final StringBuffer outBuffer = new StringBuffer( bufLen );
+    StringBuffer outBuffer = new StringBuffer( bufLen );
 
     for( int x = 0; x < len; x++ )
     {
-      final char aChar = theString.charAt( x );
+      char aChar = theString.charAt( x );
       // Handle common case first, selecting largest block that
       // avoids the specials below
-      if( aChar > 61 && aChar < 127 )
+      if( (aChar > 61) && (aChar < 127) )
       {
         if( aChar == '\\' )
         {
@@ -654,13 +654,13 @@ public class SortedProperties extends TreeMap<String, String>
           outBuffer.append( aChar );
           break;
         default:
-          if( (aChar < 0x0020 || aChar > 0x007e) & escapeUnicode )
+          if( ((aChar < 0x0020) || (aChar > 0x007e)) & escapeUnicode )
           {
             outBuffer.append( '\\' );
             outBuffer.append( 'u' );
-            outBuffer.append( toHex( aChar >> 12 & 0xF ) );
-            outBuffer.append( toHex( aChar >> 8 & 0xF ) );
-            outBuffer.append( toHex( aChar >> 4 & 0xF ) );
+            outBuffer.append( toHex( (aChar >> 12) & 0xF ) );
+            outBuffer.append( toHex( (aChar >> 8) & 0xF ) );
+            outBuffer.append( toHex( (aChar >> 4) & 0xF ) );
             outBuffer.append( toHex( aChar & 0xF ) );
           }
           else
@@ -672,27 +672,27 @@ public class SortedProperties extends TreeMap<String, String>
     return outBuffer.toString();
   }
 
-  private static void writeComments( final BufferedWriter bw, final String comments ) throws IOException
+  private static void writeComments( BufferedWriter bw, String comments ) throws IOException
   {
     bw.write( "#" ); //$NON-NLS-1$
-    final int len = comments.length();
+    int len = comments.length();
     int current = 0;
     int last = 0;
-    final char[] uu = new char[6];
+    char[] uu = new char[6];
     uu[0] = '\\';
     uu[1] = 'u';
     while( current < len )
     {
-      final char c = comments.charAt( current );
+      char c = comments.charAt( current );
       if( c > '\u00ff' || c == '\n' || c == '\r' )
       {
         if( last != current )
           bw.write( comments.substring( last, current ) );
         if( c > '\u00ff' )
         {
-          uu[2] = toHex( c >> 12 & 0xf );
-          uu[3] = toHex( c >> 8 & 0xf );
-          uu[4] = toHex( c >> 4 & 0xf );
+          uu[2] = toHex( (c >> 12) & 0xf );
+          uu[3] = toHex( (c >> 8) & 0xf );
+          uu[4] = toHex( (c >> 4) & 0xf );
           uu[5] = toHex( c & 0xf );
           bw.write( new String( uu ) );
         }
@@ -703,7 +703,7 @@ public class SortedProperties extends TreeMap<String, String>
           {
             current++;
           }
-          if( current == len - 1 || comments.charAt( current + 1 ) != '#' && comments.charAt( current + 1 ) != '!' )
+          if( current == len - 1 || (comments.charAt( current + 1 ) != '#' && comments.charAt( current + 1 ) != '!') )
             bw.write( "#" ); //$NON-NLS-1$
         }
         last = current + 1;
@@ -730,13 +730,13 @@ public class SortedProperties extends TreeMap<String, String>
    *              if this <code>Properties</code> object contains any keys or values that are not <code>Strings</code>.
    */
   @Deprecated
-  public synchronized void save( final OutputStream out, final String comments )
+  public synchronized void save( OutputStream out, String comments )
   {
     try
     {
       store( out, comments );
     }
-    catch( final IOException e )
+    catch( IOException e )
     {
     }
   }
@@ -782,9 +782,9 @@ public class SortedProperties extends TreeMap<String, String>
    *              if <code>writer</code> is null.
    * @since 1.6
    */
-  public void store( final Writer writer, final String comments ) throws IOException
+  public void store( Writer writer, String comments ) throws IOException
   {
-    store0( writer instanceof BufferedWriter ? (BufferedWriter) writer : new BufferedWriter( writer ), comments, false );
+    store0( (writer instanceof BufferedWriter) ? (BufferedWriter) writer : new BufferedWriter( writer ), comments, false );
   }
 
   /**
@@ -821,12 +821,12 @@ public class SortedProperties extends TreeMap<String, String>
    *              if <code>out</code> is null.
    * @since 1.2
    */
-  public void store( final OutputStream out, final String comments ) throws IOException
+  public void store( OutputStream out, String comments ) throws IOException
   {
     store0( new BufferedWriter( new OutputStreamWriter( out, "8859_1" ) ), comments, true ); //$NON-NLS-1$
   }
 
-  private void store0( final BufferedWriter bw, final String comments, final boolean escUnicode ) throws IOException
+  private void store0( BufferedWriter bw, String comments, boolean escUnicode ) throws IOException
   {
     if( comments != null )
     {
@@ -863,11 +863,11 @@ public class SortedProperties extends TreeMap<String, String>
    * @see #setProperty
    * @see #defaults
    */
-  public String getProperty( final String key )
+  public String getProperty( String key )
   {
-    final Object oval = super.get( key );
-    final String sval = oval instanceof String ? (String) oval : null;
-    return sval == null && defaults != null ? defaults.getProperty( key ) : sval;
+    Object oval = super.get( key );
+    String sval = (oval instanceof String) ? (String) oval : null;
+    return ((sval == null) && (defaults != null)) ? defaults.getProperty( key ) : sval;
   }
 
   /**
@@ -883,10 +883,10 @@ public class SortedProperties extends TreeMap<String, String>
    * @see #setProperty
    * @see #defaults
    */
-  public String getProperty( final String key, final String defaultValue )
+  public String getProperty( String key, String defaultValue )
   {
-    final String val = getProperty( key );
-    return val == null ? defaultValue : val;
+    String val = getProperty( key );
+    return (val == null) ? defaultValue : val;
   }
 
   /**
@@ -902,7 +902,7 @@ public class SortedProperties extends TreeMap<String, String>
    */
   public Enumeration< ? > propertyNames( )
   {
-    final Hashtable h = new Hashtable();
+    Hashtable h = new Hashtable();
     enumerate( h );
     return h.keys();
   }
@@ -922,7 +922,7 @@ public class SortedProperties extends TreeMap<String, String>
    */
   public Set<String> stringPropertyNames( )
   {
-    final Hashtable<String, String> h = new Hashtable<String, String>();
+    Hashtable<String, String> h = new Hashtable<String, String>();
     enumerateStringProperties( h );
     return h.keySet();
   }
@@ -935,14 +935,14 @@ public class SortedProperties extends TreeMap<String, String>
    * @throws ClassCastException
    *           if any key in this property list is not a string.
    */
-  public void list( final PrintStream out )
+  public void list( PrintStream out )
   {
     out.println( "-- listing properties --" ); //$NON-NLS-1$
-    final Hashtable h = new Hashtable();
+    Hashtable h = new Hashtable();
     enumerate( h );
-    for( final Enumeration e = h.keys(); e.hasMoreElements(); )
+    for( Enumeration e = h.keys(); e.hasMoreElements(); )
     {
-      final String key = (String) e.nextElement();
+      String key = (String) e.nextElement();
       String val = (String) h.get( key );
       if( val.length() > 40 )
       {
@@ -965,14 +965,14 @@ public class SortedProperties extends TreeMap<String, String>
    * Rather than use an anonymous inner class to share common code, this method is duplicated in order to ensure that a
    * non-1.1 compiler can compile this file.
    */
-  public void list( final PrintWriter out )
+  public void list( PrintWriter out )
   {
     out.println( "-- listing properties --" ); //$NON-NLS-1$
-    final Hashtable h = new Hashtable();
+    Hashtable h = new Hashtable();
     enumerate( h );
-    for( final Enumeration e = h.keys(); e.hasMoreElements(); )
+    for( Enumeration e = h.keys(); e.hasMoreElements(); )
     {
-      final String key = (String) e.nextElement();
+      String key = (String) e.nextElement();
       String val = (String) h.get( key );
       if( val.length() > 40 )
       {
@@ -990,13 +990,13 @@ public class SortedProperties extends TreeMap<String, String>
    * @throws ClassCastException
    *           if any of the property keys is not of String type.
    */
-  private synchronized void enumerate( final Hashtable h )
+  private synchronized void enumerate( Hashtable h )
   {
     if( defaults != null )
     {
       defaults.enumerate( h );
     }
-    for( final String key : keySet() )
+    for( String key : keySet() )
     {
       h.put( key, get( key ) );
     }
@@ -1009,16 +1009,16 @@ public class SortedProperties extends TreeMap<String, String>
    * @param h
    *          the hashtable
    */
-  private synchronized void enumerateStringProperties( final Hashtable<String, String> h )
+  private synchronized void enumerateStringProperties( Hashtable<String, String> h )
   {
     if( defaults != null )
     {
       defaults.enumerateStringProperties( h );
     }
-    for( final String k : keySet() )
+    for( String k : keySet() )
     {
 
-      final Object v = get( k );
+      Object v = get( k );
       if( v instanceof String )
       {
         h.put( k, (String) v );
@@ -1032,9 +1032,9 @@ public class SortedProperties extends TreeMap<String, String>
    * @param nibble
    *          the nibble to convert.
    */
-  private static char toHex( final int nibble )
+  private static char toHex( int nibble )
   {
-    return hexDigit[nibble & 0xF];
+    return hexDigit[(nibble & 0xF)];
   }
 
   /** A table of hex digits */

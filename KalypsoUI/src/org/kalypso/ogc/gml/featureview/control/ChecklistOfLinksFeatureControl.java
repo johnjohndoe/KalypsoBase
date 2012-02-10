@@ -54,6 +54,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.FontMetrics;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -61,14 +62,13 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.command.AddRelationCommand;
 import org.kalypso.ogc.gml.command.CompositeCommand;
-import org.kalypso.ogc.gml.command.RemoveRelationCommand;
-import org.kalypso.ui.editor.gmleditor.part.GMLLabelProvider;
+import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
+import org.kalypso.ui.editor.gmleditor.util.command.AddRelationCommand;
+import org.kalypso.ui.editor.gmleditor.util.command.RemoveRelationCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -80,10 +80,10 @@ import org.kalypsodeegree_impl.model.feature.search.IReferenceCollectorStrategy;
  * <ul>
  * <li>showSelectButtons : boolean - if true, 'selectAll' and 'deselecAll' buttons are shown
  * </ul>
- *
+ * 
  * @author Gernot Belger
  */
-public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl
+public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl implements IFeatureControl
 {
   public static final String PARAM_SELECT_BUTTONS = "showSelectButtons"; //$NON-NLS-1$
 
@@ -140,13 +140,16 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl
   @Override
   public Control createControl( final Composite parent, final int style )
   {
-// final GC gc = new GC( parent );
-// gc.setFont( JFaceResources.getDialogFont() );
-// final FontMetrics fontMetrics = gc.getFontMetrics();
-// gc.dispose();
+    final GC gc = new GC( parent );
+    gc.setFont( JFaceResources.getDialogFont() );
+    final FontMetrics fontMetrics = gc.getFontMetrics();
+    gc.dispose();
 
     final Composite panel = new Composite( parent, style );
-    panel.setLayout( Layouts.createGridLayout() );
+    final GridLayout panelLayout = new GridLayout( 1, false );
+    panelLayout.marginWidth = 0;
+    panelLayout.marginHeight = 0;
+    panel.setLayout( panelLayout );
 
     m_linkChecklist = CheckboxTableViewer.newCheckList( panel, SWT.BORDER );
     m_linkChecklist.getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
@@ -251,7 +254,7 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl
    * button will be accesible from <code>getOKButton()</code>. Note that the parent's layout is assumed to be a
    * <code>GridLayout</code> and the number of columns in this layout is incremented. Subclasses may override.
    * </p>
-   *
+   * 
    * @param parent
    *          the parent composite
    * @param id

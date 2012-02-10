@@ -75,7 +75,7 @@ public class ModelspecData
       m_inputHash = createHash( m_modelspec.getInput() );
       m_outputHash = createHash( m_modelspec.getOutput() );
     }
-    catch( final CoreException e )
+    catch( CoreException e )
     {
       throw new SimulationException( Messages.getString( "org.kalypso.simulation.core.internal.queued.ModelspecData.0" ), e ); //$NON-NLS-1$
     }

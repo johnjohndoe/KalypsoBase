@@ -45,14 +45,13 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.j3d.geom.TriangulationUtils;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -78,8 +77,9 @@ import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
+import com.vividsolutions.jts.simplify.DouglasPeuckerLineSimplifier;
 
 /**
  * @author doemming
@@ -103,7 +103,7 @@ public final class GeometryUtilities
       return (GM_Position) basePoint.clone();
     final double[] p2 = directionPoint.getAsArray();
     final double factor = distanceFromBasePoint / distance;
-    final double[] newPos = new double[p1.length];
+    final double newPos[] = new double[p1.length];
     // for( int i = 0; i < newPos.length; i++ )
     for( int i = 0; i < 2; i++ )
       newPos[i] = p1[i] + (p2[i] - p1[i]) * factor;
@@ -164,7 +164,7 @@ public final class GeometryUtilities
 
   /**
    * guess point that is on the surface
-   *
+   * 
    * @param surface
    *          surface that should contain the result point
    * @param pointGuess
@@ -514,7 +514,7 @@ public final class GeometryUtilities
 
   /**
    * Classifies the property as a geometry.
-   *
+   * 
    * @return <code>null</code>, if the property is not a geometry property.
    */
   public static GeometryType classifyGeometry( final IPropertyType pt )
@@ -558,49 +558,49 @@ public final class GeometryUtilities
   }
 
   public static Class< ? extends GM_Object> getPointClass( )
-  {
+      {
     return GM_Point.class;
-  }
+      }
 
   public static Class< ? extends GM_Object> getMultiPointClass( )
-  {
+      {
     return GM_MultiPoint.class;
-  }
+      }
 
   public static Class< ? extends GM_Object> getLineStringClass( )
-  {
+      {
     return GM_Curve.class;
-  }
+      }
 
   public static Class< ? extends GM_Object> getCurveClass( )
-  {
+      {
     return GM_Curve.class;
-  }
+      }
 
   public static Class< ? extends GM_Object> getMultiLineStringClass( )
-  {
+      {
     return GM_MultiCurve.class;
-  }
+      }
 
   public static Class< ? extends GM_Object> getSurfaceClass( )
-  {
+      {
     return GM_Surface.class;
-  }
+      }
 
   public static Class< ? extends GM_Object> getPolygonClass( )
-  {
+      {
     return GM_Surface.class;
-  }
+      }
 
   public static Class< ? extends GM_Object> getMultiPolygonClass( )
-  {
+      {
     return GM_MultiSurface.class;
-  }
+      }
 
   public static Class< ? extends GM_Object> getUndefinedGeometryClass( )
-  {
+      {
     return GM_Object.class;
-  }
+      }
 
   public static boolean isGeometry( final Object o )
   {
@@ -625,7 +625,7 @@ public final class GeometryUtilities
   /**
    * This method ensure to return a multi polygon (GM_MultiSurface ). the geomToCheck is a polygon ( GM_Surface) the
    * polygon is wrapped to a multi polygon.
-   *
+   * 
    * @param geomToCheck
    *          geometry object to check
    * @return multi polygon, if geomToCheck is null, null is returned, if the geomToCheck is a multi polygon it returns
@@ -662,17 +662,17 @@ public final class GeometryUtilities
       final GM_Position b = positions[i];
       final GM_Position c = positions[i + 1];
       area += (b.getY() - a.getY()) * (a.getX() - c.getX()) // bounding rectangle
-          - ((a.getX() - b.getX()) * (b.getY() - a.getY())//
-              + (b.getX() - c.getX()) * (b.getY() - c.getY())//
+      - ((a.getX() - b.getX()) * (b.getY() - a.getY())//
+          + (b.getX() - c.getX()) * (b.getY() - c.getY())//
           + (a.getX() - c.getX()) * (c.getY() - a.getY())//
-          ) / 2d;
+      ) / 2d;
     }
     return area;
   }
 
   /**
    * Finds the first geometry property of the given feature type.
-   *
+   * 
    * @param aPreferedGeometryClass
    *          If non null, the first property of this type is returned.
    */
@@ -696,7 +696,7 @@ public final class GeometryUtilities
 
   /**
    * clones a GM_Linestring as GM_Curve and sets its z-value to a given value.
-   *
+   * 
    * @param newLine
    *          the input linestring
    * @param value
@@ -717,7 +717,7 @@ public final class GeometryUtilities
 
   /**
    * creates a new curve by simplifying a given curve by using Douglas-Peucker Algorithm.
-   *
+   * 
    * @param curve
    *          input curve to be simplified
    * @param epsThinning
@@ -726,13 +726,15 @@ public final class GeometryUtilities
   public static GM_Curve getThinnedCurve( final GM_Curve curve, final Double epsThinning ) throws GM_Exception
   {
     final LineString line = (LineString) JTSAdapter.export( curve );
-    final LineString simplifiedLine = (LineString) DouglasPeuckerSimplifier.simplify( line, epsThinning );
-    final GM_Curve thinnedCurve = (GM_Curve) JTSAdapter.wrap( simplifiedLine );
+    final Coordinate[] coordinates = line.getCoordinates();
 
+    final Coordinate[] simplifiedCrds = DouglasPeuckerLineSimplifier.simplify( coordinates, epsThinning );
+    final LineString simplifiedLine = line.getFactory().createLineString( simplifiedCrds );
+    final GM_Curve thinnedCurve = (GM_Curve) JTSAdapter.wrap( simplifiedLine );
     return thinnedCurve;
   }
 
-  public static GM_Envelope grabEnvelopeFromDistance( final GM_Point position, final double grabDistance )
+  public static final GM_Envelope grabEnvelopeFromDistance( final GM_Point position, final double grabDistance )
   {
     final double posX = position.getX();
     final double posY = position.getY();
@@ -773,7 +775,7 @@ public final class GeometryUtilities
   /**
    * Same as {@link #findNearestFeature(GM_Point, double, FeatureList, QName)}, but only regards features of certain
    * qnames.
-   *
+   * 
    * @param allowedQNames
    *          Only features that substitute one of these qnames are considered.
    */
@@ -788,7 +790,7 @@ public final class GeometryUtilities
     double min = Double.MAX_VALUE;
     Feature nearest = null;
 
-    final Feature parentFeature = modelList.getOwner();
+    final Feature parentFeature = modelList.getParentFeature();
     final GMLWorkspace workspace = parentFeature == null ? null : parentFeature.getWorkspace();
     for( final Object object : foundElements )
     {
@@ -823,31 +825,6 @@ public final class GeometryUtilities
   }
 
   /**
-   * Returns either the given qnames or all geometry qname's of the given feature.
-   */
-  public static QName[] getGeometryQNames( final Feature feature, final QName[] geomQNames )
-  {
-    if( feature == null )
-      return geomQNames;
-
-    if( geomQNames == null )
-    {
-      final IValuePropertyType[] properties = feature.getFeatureType().getAllGeomteryProperties();
-      return toQNames( properties );
-    }
-
-    return geomQNames;
-  }
-
-  private static QName[] toQNames( final IValuePropertyType[] properties )
-  {
-    final QName[] result = new QName[properties.length];
-    for( int i = 0; i < properties.length; i++ )
-      result[i] = properties[i].getQName();
-    return result;
-  }
-
-/**
    * Same as
    * {@link #findNearestFeature(GM_Point, double, FeatureList, QName, QName[]), but with an array of Featurelists.
    *
@@ -892,7 +869,7 @@ public final class GeometryUtilities
 
   /**
    * Calculates the direction (in degrees) from one position to another.
-   *
+   * 
    * @return The angle in degree or {@link Double#NaN} if the points coincide.
    */
   public static double directionFromPositions( final GM_Position from, final GM_Position to )
@@ -909,7 +886,7 @@ public final class GeometryUtilities
    * <p>
    * Orientation is anti.clockwise (i.e. positive).
    * </p>
-   *
+   * 
    * @return The angle in degree or {@link Double#NaN} if the given vector has length 0.
    */
   public static double directionFromVector( final double vx, final double vy )
@@ -948,7 +925,7 @@ public final class GeometryUtilities
 
   /**
    * checks, if a position lies inside or outside of an polygon defined by a position array
-   *
+   * 
    * @param pos
    *          position array of the polygon object
    * @param position
@@ -1001,7 +978,7 @@ public final class GeometryUtilities
   /**
    * Convert the given bounding box into a {@link GM_Curve}
    */
-  public static GM_Curve toGM_Curve( final GM_Envelope bBox, final String crs )
+  public static final GM_Curve toGM_Curve( final GM_Envelope bBox, final String crs )
   {
     try
     {
@@ -1048,7 +1025,7 @@ public final class GeometryUtilities
     /* - add second curve's positions to positions list */
     final GM_Position[] positions2 = curves[0].getAsLineString().getPositions();
 
-    if( !selfIntersected )
+    if( selfIntersected != true )
     {
       // not twisted: curves are oriented in the same direction, so we add the second curve's positions in the
       // opposite direction in order to get a non-self-intersected polygon.
@@ -1078,7 +1055,7 @@ public final class GeometryUtilities
    * The ring is simply produced by adding all positions of the first curve and the positions of the second curve in
    * inverse order.<br>
    * Produces a closed ring.
-   *
+   * 
    * @param curves
    *          the curves as {@link GM_Curve}
    */
@@ -1104,7 +1081,7 @@ public final class GeometryUtilities
 
   /**
    * converts two given curves into a position array of a non-self-intersecting, ccw oriented, closed polygon
-   *
+   * 
    * @param curves
    *          the curves as {@link GM_Curve}
    */
@@ -1124,7 +1101,7 @@ public final class GeometryUtilities
 
   /**
    * Orientates a ring counter clock wise.
-   *
+   * 
    * @return The inverted list of position, or the original list, if the ring was already oriented in the right way.
    */
   public static GM_Position[] orientateRing( final GM_Position[] polygonPositions )
@@ -1140,7 +1117,7 @@ public final class GeometryUtilities
    * Triangulates a closed ring (must be oriented counter-clock-wise). <br>
    * <b>It uses floats, so there can occur rounding problems!</b><br>
    * To avoid this, we substract all values with its minimum value. And add it later.
-   *
+   * 
    * @return An array of triangles: GM_Position[numberOfTriangles][3]
    */
   public static GM_Position[][] triangulateRing( final GM_Position[] ring )
@@ -1281,10 +1258,10 @@ public final class GeometryUtilities
       final double y1 = ring[i].getY() - transY;
       final double x2 = ring[j].getX() - transX;
       final double y2 = ring[j].getY() - transY;
-      ai = x1 * y2 - x2 * y1;
+      ai = (x1 * y2) - (x2 * y1);
       atmp += ai;
-      xtmp += (x2 + x1) * ai;
-      ytmp += (y2 + y1) * ai;
+      xtmp += ((x2 + x1) * ai);
+      ytmp += ((y2 + y1) * ai);
     }
 
     if( atmp != 0 )
@@ -1335,7 +1312,7 @@ public final class GeometryUtilities
 
   @SuppressWarnings("unchecked")
   /**
-   * Adapts a given object to one or more GM_Objects of a given type.
+   * Adapts a given object to one or more GM_Objects of a given type. 
    */
   public static <T extends GM_Object> T[] findGeometries( final Object geomOrList, final Class<T> type )
   {
@@ -1378,17 +1355,4 @@ public final class GeometryUtilities
     return result.toArray( store );
   }
 
-  @SuppressWarnings("unchecked")
-  public static <G extends GM_Object> G[] transform( final G[] input, final IGeoTransformer transformer ) throws Exception
-  {
-    final G[] result = (G[]) Array.newInstance( input.getClass().getComponentType(), input.length );
-
-    for( int i = 0; i < result.length; i++ )
-    {
-      if( input[i] != null )
-        result[i] = (G) transformer.transform( input[i] );
-    }
-
-    return result;
-  }
 }

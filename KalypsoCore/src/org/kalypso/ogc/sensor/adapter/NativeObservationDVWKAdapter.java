@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.adapter;
 
@@ -53,22 +53,25 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
+import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.IMetadataConstants;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
-public class NativeObservationDVWKAdapter extends AbstractObservationImporter
+public class NativeObservationDVWKAdapter implements INativeObservationAdapter
 {
   public static final Pattern PATTERN_LINE = Pattern.compile( "[A-Za-z0-9]{4}\\s([0-9\\s]{10})\\s*([0-9]{1,2})\\s*([0-9]{1,2})([A-Za-z\\s]{1})(.*)" ); //$NON-NLS-1$
 
@@ -76,23 +79,42 @@ public class NativeObservationDVWKAdapter extends AbstractObservationImporter
 
   private static final int MAX_NO_OF_ERRORS = 30;
 
+  private String m_title;
+
+  private String m_axisTypeValue;
+
   private final String m_sname = "titel"; //$NON-NLS-1$
 
   private TimeZone m_timeZone;
 
+  /**
+   * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
+   *      java.lang.String, java.lang.Object)
+   */
   @Override
-  public IObservation importTimeseries( final File source, final TimeZone timeZone, final String valueType, final boolean continueWithErrors ) throws Exception
+  public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
+  {
+    m_title = config.getAttribute( "label" ); //$NON-NLS-1$
+    m_axisTypeValue = config.getAttribute( "axisType" ); //$NON-NLS-1$
+  }
+
+  @Override
+  public IObservation createObservationFromSource( final File source, final TimeZone timeZone, final boolean continueWithErrors ) throws Exception
   {
     final MetadataList metaDataList = new MetadataList();
     metaDataList.put( IMetadataConstants.MD_ORIGIN, source.getAbsolutePath() );
 
-    m_timeZone = timeZone;
+    /* this is due to backwards compatibility */
+    if( timeZone == null )
+      m_timeZone = TimeZone.getTimeZone( "GMT+1" ); //$NON-NLS-1$
+    else
+      m_timeZone = timeZone;
 
-    final IAxis[] axis = createAxis( valueType );
+    // create axis
+    final IAxis[] axis = createAxis();
     final ITupleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
     if( tuppelModel == null )
       return null;
-
     return new SimpleObservation( "href", m_sname, metaDataList, tuppelModel ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
@@ -217,5 +239,32 @@ public class NativeObservationDVWKAdapter extends AbstractObservationImporter
       tuppleData[i][1] = valueCollector.get( i );
     }
     return new SimpleTupleModel( axis, tuppleData );
+  }
+
+  @Override
+  public String toString( )
+  {
+    return m_title;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.adapter.INativeObservationAdapter#createAxis()
+   */
+  @Override
+  public IAxis[] createAxis( )
+  {
+    final IAxis dateAxis = new DefaultAxis( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationDVWKAdapter.18" ), ITimeseriesConstants.TYPE_DATE, "", Date.class, true ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IAxis valueAxis = new DefaultAxis( TimeseriesUtils.getName( m_axisTypeValue ), m_axisTypeValue, TimeseriesUtils.getUnit( m_axisTypeValue ), Double.class, false );
+    final IAxis[] axis = new IAxis[] { dateAxis, valueAxis };
+    return axis;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.adapter.INativeObservationAdapter#getAxisTypeValue()
+   */
+  @Override
+  public String getAxisTypeValue( )
+  {
+    return m_axisTypeValue;
   }
 }

@@ -74,19 +74,19 @@ public class GisMapPerfTest extends TestCase
 {
   public static String[][] RESOURCES = { //
 // { "wms2.zip", "wms.gmt" }, //
-  { "dgm2m.zip", "dgm2m.gmt" }, // //$NON-NLS-1$ //$NON-NLS-2$
-      { "points.zip", "points.gmt" }, // //$NON-NLS-1$ //$NON-NLS-2$
-      { "tin.zip", "tin.gmt" }, // //$NON-NLS-1$ //$NON-NLS-2$
-      { "tin_isolines.zip", "tin.gmt" }, // //$NON-NLS-1$ //$NON-NLS-2$
-      { "polyWithHoles.zip", "poly.gmt" } // //$NON-NLS-1$ //$NON-NLS-2$
+  { "dgm2m.zip", "dgm2m.gmt" }, //
+      { "points.zip", "points.gmt" }, //
+      { "tin.zip", "tin.gmt" }, //
+      { "tin_isolines.zip", "tin.gmt" }, //
+      { "polyWithHoles.zip", "poly.gmt" } //
   };
 
   public void testZips( ) throws Exception
   {
     for( final String[] resource : RESOURCES )
     {
-      final URL zipResource = getClass().getResource( "resources/" + resource[0] ); //$NON-NLS-1$
-      final URL gmtResource = new URL( "jar:" + zipResource.toExternalForm() + "!/" + resource[1] ); //$NON-NLS-1$ //$NON-NLS-2$
+      final URL zipResource = getClass().getResource( "resources/" + resource[0] );
+      final URL gmtResource = new URL( "jar:" + zipResource.toExternalForm() + "!/" + resource[1] );
 
       mapLoadingAndVisualization( gmtResource );
     }
@@ -94,31 +94,31 @@ public class GisMapPerfTest extends TestCase
 
   private void mapLoadingAndVisualization( final URL gmtResource ) throws Exception
   {
-    final TimeLogger logger = new TimeLogger( "Starting test: " + gmtResource.getPath() ); //$NON-NLS-1$
+    final TimeLogger logger = new TimeLogger( "Starting test: " + gmtResource.getPath() );
 
-    final String crs = "EPSG:31467"; //$NON-NLS-1$
+    final String crs = "EPSG:31467";
 
     logger.takeInterimTime();
-    logger.printCurrentInterim( "Loading map: " ); //$NON-NLS-1$
+    logger.printCurrentInterim( "Loading map: " );
 
     final URLConnection connection = gmtResource.openConnection();
     connection.setUseCaches( false );
     final InputStream inputStream = connection.getInputStream();
     final InputSource source = new InputSource( inputStream );
-    source.setEncoding( "Cp1252" ); //$NON-NLS-1$
+    source.setEncoding( "Cp1252" );
     final Gismapview gismapview = GisTemplateHelper.loadGisMapView( source );
     inputStream.close();
 
     logger.takeInterimTime();
-    logger.printCurrentInterim( "Map was loaded. Creating map modell on map: " ); //$NON-NLS-1$
+    logger.printCurrentInterim( "Map was loaded. Creating map modell on map: " );
 
     final FeatureSelectionManager2 featureSelectionManager2 = new FeatureSelectionManager2();
     final GisTemplateMapModell modell = loadMap( gismapview, gmtResource, crs, logger, featureSelectionManager2 );
     if( modell == null )
-      fail( "Map was not loaded" ); //$NON-NLS-1$
+      fail( "Map was not loaded" );
 
     logger.takeInterimTime();
-    logger.printCurrentInterim( "Map data was loaded: " ); //$NON-NLS-1$
+    logger.printCurrentInterim( "Map data was loaded: " );
 
     final int width = 1024;
     final int heigth = 512;
@@ -136,13 +136,13 @@ public class GisMapPerfTest extends TestCase
       paintModel( image, modell, worldToScreen );
 
       logger.takeInterimTime();
-      logger.printCurrentInterim( "Rendered map #" + i + ": " ); //$NON-NLS-1$ //$NON-NLS-2$
+      logger.printCurrentInterim( "Rendered map #" + i + ": " );
 
       if( i == 0 )
-        ImageIO.write( image, "png", new File( "C:/tmp/image.png" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        ImageIO.write( image, "png", new File( "C:/tmp/image.png" ) );
     }
 
-    logger.printCurrentTotal( "Total: " ); //$NON-NLS-1$
+    logger.printCurrentTotal( "Total: " );
 
     modell.dispose();
   }
@@ -167,7 +167,7 @@ public class GisMapPerfTest extends TestCase
     logger.takeInterimTime();
     logger.printCurrentInterim( "Loading map modell..." );
 
-    final GisTemplateMapModell mapModell = new GisTemplateMapModell( resource, crs, selectionManager );
+    final GisTemplateMapModell mapModell = new GisTemplateMapModell( resource, crs, null, selectionManager );
     mapModell.createFromTemplate( gismapview );
 
     return mapModell;

@@ -94,13 +94,13 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
   private String m_targetTo;
 
   /**
-   * Wir benutzt, um den entsprechenden Metadata-Eintrag in den Zeitreiehen zu generieren Default mit -1 damit getestet
+   * Wird benutzt, um den entsprechenden Metadata-Eintrag in den Zeitreihen zu generieren Default mit -1 damit getestet
    * werden kann ob die Eigenschaft gesetzt wurde.
    */
   private String m_forecastFrom = null;
 
   /**
-   * Wird benutzt, um den entsprechenden Metadata-Eintrag in den Zeitreiehen zu generieren Default mit -1 damit getestet
+   * Wird benutzt, um den entsprechenden Metadata-Eintrag in den Zeitreihen zu generieren Default mit -1 damit getestet
    * werden kann ob die Eigenschaft gesetzt wurde.
    */
   private String m_forecastTo = null;
@@ -143,8 +143,9 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
 
     final Source[] srcs = m_sources.toArray( new Source[m_sources.size()] );
 
+    // TODO: where from?
     final NamespaceContext namespaceContext = null;
-    final GMLXPath targetPath =  m_targetobservation == null ? null : new GMLXPath( m_targetobservation, namespaceContext );
+    final GMLXPath targetPath = new GMLXPath( m_targetobservation, namespaceContext );
 
     final ICopyObservationTarget obsTarget = CopyObservationTargetFactory.getLink( context, targetPath, m_targetObservationDir, targetRange, forecastRange );
     final ICopyObservationSource obsSource = new FeatureCopyObservationSource( context, srcs, m_tokens );
@@ -259,10 +260,6 @@ public class CopyObservationTask extends AbstractFeatureVisitorTask
     }
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.IErrorHandler#handleError(org.eclipse.swt.widgets.Shell,
-   *      org.eclipse.core.runtime.IStatus)
-   */
   @Override
   public final void handleError( final Shell shell, final IStatus status )
   {

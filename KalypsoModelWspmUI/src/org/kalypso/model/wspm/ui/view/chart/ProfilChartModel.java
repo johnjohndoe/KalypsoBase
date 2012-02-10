@@ -40,10 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
-import org.kalypso.model.wspm.core.profil.ProfilListenerAdapter;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 
@@ -53,32 +53,42 @@ import de.openali.odysseus.chart.framework.model.impl.visitors.AutoScaleVisitor;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
+import de.openali.odysseus.chart.framework.util.img.ChartTitleTester;
+import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
+import de.openali.odysseus.chartconfig.x020.TitleType;
 
 /**
  * @author kimwerner
  */
 public class ProfilChartModel extends ChartModel
 {
-  private final IProfilListener m_profilListener = new ProfilListenerAdapter()
+  private final IProfilListener m_profilListener = new IProfilListener()
   {
-
+    /**
+     * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProblemMarkerChanged(org.kalypso.model.wspm.core.profil.IProfil)
+     */
     @Override
-    public void onProfilChanged( final ProfilChangeHint hint )
+    public void onProblemMarkerChanged( final IProfil source )
+    {
+      // TODO: what?
+    }
+
+    /**
+     * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
+     *      org.kalypso.model.wspm.core.profil.IProfilChange[])
+     */
+    @Override
+    public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
     {
       if( hint.isObjectChanged() )
-      {
         updateLayers();
-      }
       else if( hint.isPointPropertiesChanged() )
-      {
-        handlePropertyOrBuildingChanged();
-      }
+        handlePropertyOrBuildingChanged( changes );
       else
       {
         for( final IChartLayer layer : getLayerManager().getLayers() )
-        {
-          ((IProfilChartLayer) layer).onProfilChanged( hint );
-        }
+          ((IProfilChartLayer) layer).onProfilChanged( hint, changes );
       }
     }
   };
@@ -112,7 +122,7 @@ public class ProfilChartModel extends ChartModel
     {
       m_profil.addProfilListener( m_profilListener );
       m_layerProvider.registerAxis( getMapperRegistry() );
-      // getSettings().addTitles( ChartTitleTester.getTitleTypes() );
+     // getSettings().addTitles( ChartTitleTester.getTitleTypes() );
       updateLayers();
     }
   }
@@ -123,9 +133,9 @@ public class ProfilChartModel extends ChartModel
   @Override
   public void autoscale( final IAxis... axes )
   {
-    final AutoScaleVisitor visitor = new AutoScaleVisitor( this );
+    final AutoScaleVisitor visitor = new AutoScaleVisitor( this, false );
 
-    // TODO ?!? auto scaled axes will be updated when?!? strange behavior
+    // TODO ?!? auto scaled axes will be updated when?!? strange behaviour
     final IAxis[] autoscaledAxes = ArrayUtils.isEmpty( axes ) ? getMapperRegistry().getAxes() : axes;
     for( final IAxis axis : autoscaledAxes )
     {
@@ -137,9 +147,7 @@ public class ProfilChartModel extends ChartModel
   public void dispose( )
   {
     if( m_profil != null )
-    {
       m_profil.removeProfilListener( m_profilListener );
-    }
   }
 
   public final IProfilChartLayer getLayer( final String layerID )
@@ -156,7 +164,7 @@ public class ProfilChartModel extends ChartModel
     return m_profil;
   }
 
-  protected void handlePropertyOrBuildingChanged( )
+  protected void handlePropertyOrBuildingChanged( @SuppressWarnings("unused") final IProfilChange[] changes )
   {
     updateLayers();
   }

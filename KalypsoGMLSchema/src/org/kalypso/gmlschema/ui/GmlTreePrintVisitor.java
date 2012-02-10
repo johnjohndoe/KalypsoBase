@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema.ui;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.ILabelProvider;
 
 /**
@@ -54,22 +54,22 @@ implements ITreeContentProviderVisitor
 
   public final StringBuffer m_buffer;
 
-  public GmlTreePrintVisitor( final ILabelProvider labelProvider, final StringBuffer buffer )
+  public GmlTreePrintVisitor( final ILabelProvider labelProvider, StringBuffer buffer )
   {
     m_labelProvider = labelProvider;
     m_buffer = buffer;
   }
 
   @Override
-  public boolean visit( final Object element, final int indent )
+  public boolean visit( Object element, int indent )
   {
     final String space = StringUtils.repeat( ".  ", indent ); //$NON-NLS-1$
     final String text = m_labelProvider.getText( element );
     final String[] lines = text.split( "\n" ); //$NON-NLS-1$
-    for( final String line : lines )
+    for( int i = 0; i < lines.length; i++ )
     {
       m_buffer.append( space );
-      m_buffer.append( line );
+      m_buffer.append( lines[i] );
       m_buffer.append( "\n" ); //$NON-NLS-1$
     }
     return true;

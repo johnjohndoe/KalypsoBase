@@ -67,6 +67,9 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
 
   private final Set<IFeatureSelectionListener> m_listener = new LinkedHashSet<IFeatureSelectionListener>( 5 );
 
+  /**
+   * @see org.kalypso.ogc.gml.selection.IFeatureSelectionManager#setSelection(org.kalypso.ogc.gml.selection.EasyFeatureWrapper[])
+   */
   @Override
   public void setSelection( final EasyFeatureWrapper[] selectedFeatures )
   {
@@ -121,18 +124,27 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
     }
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.selection.IFeatureSelectionManager#addSelectionListener(org.kalypso.ogc.gml.selection.IFeatureSelectionListener)
+   */
   @Override
   public void addSelectionListener( final IFeatureSelectionListener l )
   {
     m_listener.add( l );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.selection.IFeatureSelectionManager#removeSelectionListener(org.kalypso.ogc.gml.selection.IFeatureSelectionListener)
+   */
   @Override
   public void removeSelectionListener( final IFeatureSelectionListener l )
   {
     m_listener.remove( l );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getWorkspace(org.kalypsodeegree.model.feature.Feature)
+   */
   @Override
   public CommandableWorkspace getWorkspace( final Feature feature )
   {
@@ -148,6 +160,9 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
     return m_map.get( feature );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getParentFeature(org.kalypsodeegree.model.feature.Feature)
+   */
   public Feature getParentFeature( final Feature feature )
   {
     final EasyFeatureWrapper wrapper = getWrapper( feature );
@@ -157,6 +172,9 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
     return wrapper.getParentFeature();
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getParentFeatureProperty(org.kalypsodeegree.model.feature.Feature)
+   */
   public IRelationType getParentFeatureProperty( final Feature feature )
   {
     final EasyFeatureWrapper wrapper = getWrapper( feature );
@@ -166,6 +184,9 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
     return wrapper.getParentFeatureProperty();
   }
 
+  /**
+   * @see org.eclipse.jface.viewers.IStructuredSelection#getFirstElement()
+   */
   @Override
   public Object getFirstElement( )
   {
@@ -176,48 +197,72 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
 
   }
 
+  /**
+   * @see org.eclipse.jface.viewers.IStructuredSelection#iterator()
+   */
   @Override
   public Iterator<Feature> iterator( )
   {
     return m_map.keySet().iterator();
   }
 
+  /**
+   * @see org.eclipse.jface.viewers.IStructuredSelection#size()
+   */
   @Override
   public int size( )
   {
     return m_map.size();
   }
 
+  /**
+   * @see org.eclipse.jface.viewers.IStructuredSelection#toArray()
+   */
   @Override
   public Object[] toArray( )
   {
     return m_map.keySet().toArray();
   }
 
+  /**
+   * @see org.eclipse.jface.viewers.IStructuredSelection#toList()
+   */
   @Override
   public List<Feature> toList( )
   {
     return new ArrayList<Feature>( m_map.keySet() );
   }
 
+  /**
+   * @see org.eclipse.jface.viewers.ISelection#isEmpty()
+   */
   @Override
   public boolean isEmpty( )
   {
     return m_map.isEmpty();
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getAllFeatures()
+   */
   @Override
   public EasyFeatureWrapper[] getAllFeatures( )
   {
     return m_map.values().toArray( new EasyFeatureWrapper[m_map.size()] );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getSelectionManager()
+   */
   @Override
   public IFeatureSelectionManager getSelectionManager( )
   {
     return this;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getFocusedFeature()
+   */
   @Override
   public Feature getFocusedFeature( )
   {
@@ -225,6 +270,9 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
     return null;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.selection.IFeatureSelection#getFocusedProperty()
+   */
   @Override
   public IPropertyType getFocusedProperty( )
   {
@@ -232,12 +280,18 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
     return null;
   }
 
+  /**
+   * @see java.lang.Object#toString()
+   */
   @Override
   public String toString( )
   {
     return m_map.toString();
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.selection.IFeatureSelectionManager#isSelected(org.kalypsodeegree.model.feature.Feature)
+   */
   @Override
   public boolean isSelected( final Feature feature )
   {

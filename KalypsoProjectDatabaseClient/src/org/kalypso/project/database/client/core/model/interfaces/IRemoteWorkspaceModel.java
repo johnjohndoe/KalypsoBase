@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.core.model.interfaces;
 
-import org.kalypso.project.database.client.core.model.projects.IRemoteProject;
-import org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener;
+import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
+import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
@@ -59,12 +59,12 @@ public interface IRemoteWorkspaceModel
    */
   IRemoteProject[] getProjects( String type );
 
-// /**
-// * @param filter
-// * add remote project to result set? yes / no
-// * @return list of all remote projects accepted by filter
-// */
-// IRemoteProject[] getProjects( IProjectDatabaseFilter filter );
+  /**
+   * @param filter
+   *          add remote project to result set? yes / no
+   * @return list of all remote projects accepted by filter
+   */
+  IRemoteProject[] getProjects( IProjectDatabaseFilter filter );
 
   /**
    * deletes an remote project bean and sets the remote workspace dirty
@@ -76,10 +76,4 @@ public interface IRemoteWorkspaceModel
   IRemoteProject getProject( String uniqueProjectName );
 
   boolean isDatabaseOnline( );
-
-  void setDirty( );
-
-  void addListener( IRemoteProjectsListener listener );
-
-  void removeListener( IRemoteProjectsListener listener );
 }

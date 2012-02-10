@@ -44,11 +44,12 @@ import java.util.EventObject;
 
 /**
  * @author F.Lindemann
+ *  
  */
 public class FilterDialogEvent extends EventObject
 {
 
-  public FilterDialogEvent( final Object arg0 )
+  public FilterDialogEvent( Object arg0 )
   {
     super( arg0 );
   }

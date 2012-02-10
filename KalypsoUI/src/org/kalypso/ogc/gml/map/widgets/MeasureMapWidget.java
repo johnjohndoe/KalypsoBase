@@ -45,7 +45,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
@@ -53,7 +53,7 @@ import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder;
 import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
 import org.kalypso.ogc.gml.map.widgets.builders.PolygonGeometryBuilder;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_GenericCurve;
@@ -63,17 +63,17 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * This tool measures distances or areas on the map.
- * 
+ *
  * @author Gernot Belger
  */
-public class MeasureMapWidget extends DeprecatedMouseWidget
+public class MeasureMapWidget extends AbstractWidget
 {
   private final String m_defaultCrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
   private final MeasureDelegate[] m_delegates = new MeasureDelegate[] { //
-      new MeasureDelegate( new LineGeometryBuilder( 2, m_defaultCrs ), Messages.getString( "org.kalypso.ogc.gml.map.widgets.MeasureMapWidget.0" ), Messages.getString( "org.kalypso.ogc.gml.map.widgets.MeasureMapWidget.1" ) ), // //$NON-NLS-1$ //$NON-NLS-2$
-      new MeasureDelegate( new LineGeometryBuilder( 0, m_defaultCrs ), Messages.getString( "org.kalypso.ogc.gml.map.widgets.MeasureMapWidget.2" ), Messages.getString( "org.kalypso.ogc.gml.map.widgets.MeasureMapWidget.3" ) ), // //$NON-NLS-1$ //$NON-NLS-2$
-      new MeasureDelegate( new PolygonGeometryBuilder( 0, m_defaultCrs ), Messages.getString( "org.kalypso.ogc.gml.map.widgets.MeasureMapWidget.4" ), Messages.getString( "org.kalypso.ogc.gml.map.widgets.MeasureMapWidget.5" ) ) // //$NON-NLS-1$ //$NON-NLS-2$
+      new MeasureDelegate( new LineGeometryBuilder( 2, m_defaultCrs ), Messages.getString("org.kalypso.ogc.gml.map.widgets.MeasureMapWidget.0"), Messages.getString("org.kalypso.ogc.gml.map.widgets.MeasureMapWidget.1") ), // //$NON-NLS-1$ //$NON-NLS-2$
+      new MeasureDelegate( new LineGeometryBuilder( 0, m_defaultCrs ), Messages.getString("org.kalypso.ogc.gml.map.widgets.MeasureMapWidget.2"), Messages.getString("org.kalypso.ogc.gml.map.widgets.MeasureMapWidget.3") ), // //$NON-NLS-1$ //$NON-NLS-2$
+      new MeasureDelegate( new PolygonGeometryBuilder( 0, m_defaultCrs ), Messages.getString("org.kalypso.ogc.gml.map.widgets.MeasureMapWidget.4"), Messages.getString("org.kalypso.ogc.gml.map.widgets.MeasureMapWidget.5") ) // //$NON-NLS-1$ //$NON-NLS-2$
   };
 
   private final static class MeasureDelegate
@@ -100,7 +100,7 @@ public class MeasureMapWidget extends DeprecatedMouseWidget
 
   public MeasureMapWidget( )
   {
-    this( Messages.getString( "org.kalypso.ogc.gml.map.widgets.MeasureMapWidget.6" ), Messages.getString( "org.kalypso.ogc.gml.map.widgets.MeasureMapWidget.7" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    this( Messages.getString("org.kalypso.ogc.gml.map.widgets.MeasureMapWidget.6"), Messages.getString("org.kalypso.ogc.gml.map.widgets.MeasureMapWidget.7") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public MeasureMapWidget( final String name, final String toolTip )
@@ -216,9 +216,9 @@ public class MeasureMapWidget extends DeprecatedMouseWidget
 
       /* update tooltip */
       if( Double.isNaN( size ) )
-        m_tooltip.setTooltip( String.format( "x = %.2f, y = %.2f", currentPoint.getX(), currentPoint.getY() ) ); //$NON-NLS-1$
+        m_tooltip.setTooltip(  String.format("x = %.2f, y = %.2f", currentPoint.getX(), currentPoint.getY() ) ); //$NON-NLS-1$
       else
-        m_tooltip.setTooltip( String.format( "%s:\t\t%.2f", m_delegate.sizeLabel, size ) ); //$NON-NLS-1$
+        m_tooltip.setTooltip( String.format("%s:\t\t%.2f", m_delegate.sizeLabel, size ) ); //$NON-NLS-1$
     }
   }
 
@@ -277,6 +277,6 @@ public class MeasureMapWidget extends DeprecatedMouseWidget
   private void reset( )
   {
     m_delegate.builder.reset();
-    m_tooltip.setTooltip( m_delegate.label + Messages.getString( "org.kalypso.ogc.gml.map.widgets.MeasureMapWidget.10" ) ); //$NON-NLS-1$
+    m_tooltip.setTooltip( m_delegate.label + Messages.getString("org.kalypso.ogc.gml.map.widgets.MeasureMapWidget.10") ); //$NON-NLS-1$
   }
 }

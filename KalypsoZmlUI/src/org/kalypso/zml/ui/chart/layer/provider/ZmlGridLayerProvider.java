@@ -46,7 +46,10 @@ import de.openali.odysseus.chart.ext.base.layer.DefaultTickRasterLayer;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
 
 /**
  * @author Dirk Kuch
@@ -61,12 +64,12 @@ public class ZmlGridLayerProvider extends AbstractLayerProvider
     try
     {
       final IStyleSet styleSet = getStyleSet();
-//      final StyleSetVisitor visitor = new StyleSetVisitor( false );
-//
-//      final ILineStyle lineStyle = visitor.visit( styleSet, ILineStyle.class, 0 );
-//      final IPointStyle pointStyle = visitor.visit( styleSet, IPointStyle.class, 0 );
+      final StyleSetVisitor visitor = new StyleSetVisitor( false );
 
-      return new DefaultTickRasterLayer( this,styleSet);// lineStyle, pointStyle );
+      final ILineStyle lineStyle = visitor.visit( styleSet, ILineStyle.class, 0 );
+      final IPointStyle pointStyle = visitor.visit( styleSet, IPointStyle.class, 0 );
+
+      return new DefaultTickRasterLayer( this, lineStyle, pointStyle );
     }
     catch( final Throwable t )
     {

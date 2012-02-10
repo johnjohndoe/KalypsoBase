@@ -34,7 +34,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.xml.namespace.QName;
 
@@ -44,6 +43,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.Element;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.KalypsoGmlSchemaExtensions;
 import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
@@ -61,7 +61,7 @@ import org.kalypso.gmlschema.xml.QualifiedElement;
 
 /**
  * representation of a feature definition from xml schema
- *
+ * 
  * @author Andreas von Dömming
  */
 @SuppressWarnings("deprecation")
@@ -102,12 +102,9 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
       m_annotation = annotation;
   }
 
-  @Override
-  public GMLSchema getGMLSchema( )
-  {
-    return (GMLSchema) super.getGMLSchema();
-  }
-
+  /**
+   * @see org.kalypso.gmlschema.basics.IInitialize#init(int)
+   */
   @Override
   public void init( final int initializeRun ) throws GMLSchemaException
   {
@@ -134,9 +131,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
 
   private void initFirst( ) throws GMLSchemaException
   {
-    final GMLSchema gmlSchema = getGMLSchema();
-
-    final ComplexTypeReference complexTypeReference = gmlSchema.getComplexTypeReferenceFor( getElement() );
+    final ComplexTypeReference complexTypeReference = GMLSchemaUtilities.getComplexTypeReferenceFor( getGMLSchema(), getElement() );
     final ComplexType complexType = complexTypeReference.getComplexType();
     final GMLSchema schema = (GMLSchema) complexTypeReference.getGMLSchema();
     m_featureContentType = (IFeatureContentType) schema.getBuildedObjectFor( complexType );
@@ -145,7 +140,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
     final QName substitutionGroup = getElement().getSubstitutionGroup();
     if( substitutionGroup != null )
     {
-      final ElementReference substitutesReference = gmlSchema.resolveElementReference( substitutionGroup );
+      final ElementReference substitutesReference = ((GMLSchema) getGMLSchema()).resolveElementReference( substitutionGroup );
       if( substitutesReference == null )
         throw new GMLSchemaException( "Could not find substitution reference: " + substitutionGroup ); //$NON-NLS-1$
 
@@ -312,29 +307,13 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
 
   /**
    * Returns -1 if the property does not exist.
-   *
+   * 
    * @see org.kalypso.gmlschema.feature.IFeatureType#getPropertyPosition(org.kalypso.gmlschema.property.IPropertyType)
    */
   @Override
   public int getPropertyPosition( final IPropertyType propertyType )
   {
-
     final Integer pos = m_positionMap.get( propertyType );
-    if( pos != null )
-      return pos.intValue();
-
-    // HOTFIX (FIXME): for some conditions, the real property type is not the same as the one in our hash-map -> we do
-    // brute force search for now, in order not to break any other code. FIXME: instead, we should hash by qname.
-    if( propertyType instanceof VirtualFunctionWrapperRelationType || propertyType instanceof VirtualFunctionValueWrapperPropertyType )
-    {
-      for( final Entry<IPropertyType, Integer> entry : m_positionMap.entrySet() )
-      {
-        final IPropertyType key = entry.getKey();
-        if( key.getQName().equals( propertyType.getQName() ) )
-          return entry.getValue().intValue();
-      }
-    }
-
     return pos == null ? -1 : pos.intValue();
   }
 
@@ -434,4 +413,17 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
   {
     return m_annotation;
   }
+
+// @Override
+// public long getFullID()
+// {
+// return m_fullID;
+// }
+//  
+// @Override
+// public long getLocalID()
+// {
+// return m_localID;
+// }
+
 }

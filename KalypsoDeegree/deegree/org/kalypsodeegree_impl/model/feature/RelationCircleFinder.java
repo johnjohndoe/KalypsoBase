@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- *
+ * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always.
- *
- * If you intend to use this software in other ways than in kalypso
+ * interface-compatibility to deegree is wanted but not retained always. 
+ * 
+ * If you intend to use this software in other ways than in kalypso 
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree,
+ * all modifications are licensed as deegree, 
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -46,7 +46,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * TODO: insert type comment here
- *
+ * 
  * @author doemming
  */
 public class RelationCircleFinder
@@ -57,9 +57,9 @@ public class RelationCircleFinder
   private final Feature m_testFeature;
 
   /**
-   *
+   *  
    */
-  public RelationCircleFinder( final GMLWorkspace workspace, final Feature testFeature )
+  public RelationCircleFinder( GMLWorkspace workspace, Feature testFeature )
   {
     m_workspace = workspace;
     m_testFeature = testFeature;
@@ -75,9 +75,10 @@ public class RelationCircleFinder
     final List<List<Feature>> result = new ArrayList<List<Feature>>();
     list.add( feature );
     final Feature[] linkedFeatures = getLinkedFeatures( feature );
-    for( final Feature linkFeature : linkedFeatures )
+    for( int i = 0; i < linkedFeatures.length; i++ )
     {
       final List<Feature> newList = new ArrayList<Feature>( list );
+      final Feature linkFeature = linkedFeatures[i];
       if( linkFeature == m_testFeature )
         result.add( newList );
       else if( list.contains( linkFeature ) )
@@ -89,19 +90,20 @@ public class RelationCircleFinder
       {
         final List<Feature>[] lists = findCircle( linkFeature, newList );
         result.addAll( java.util.Arrays.asList( lists ) ); // TODO modified from kalypso.contribs.java.util.Arrays to
-                                                           // java.util.Arrays: check if this is ok
+                                                            // java.util.Arrays: check if this is ok
       }
     }
     return result.toArray( new List[result.size()] );
   }
 
-  private Feature[] getLinkedFeatures( final Feature feature )
+  private Feature[] getLinkedFeatures( Feature feature )
   {
     final List result = new ArrayList();
-    final IFeatureType featureType = feature.getFeatureType();
-    final IPropertyType[] properties = featureType.getProperties();
-    for( final IPropertyType property : properties )
+    IFeatureType featureType = feature.getFeatureType();
+    IPropertyType[] properties = featureType.getProperties();
+    for( int i = 0; i < properties.length; i++ )
     {
+      IPropertyType property = properties[i];
       if( property instanceof IRelationType )
       {
         final IRelationType linkPT = (IRelationType) property;
@@ -115,7 +117,7 @@ public class RelationCircleFinder
         }
         else
         {
-          final Feature link = feature.getMember( linkPT );
+          final Feature link = m_workspace.resolveLink( feature, linkPT );
           if( link != null )
             result.add( link );
         }

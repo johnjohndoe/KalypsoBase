@@ -40,8 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.symbolizer;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewerProperties;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -53,15 +53,14 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.SectionPart;
-import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
-import org.kalypso.commons.databinding.IDataBinding;
-import org.kalypso.commons.databinding.forms.DatabindingForm;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ui.editor.styleeditor.IStyleEditorConfig;
+import org.kalypso.ui.editor.styleeditor.binding.DatabindingForm;
+import org.kalypso.ui.editor.styleeditor.binding.IDataBinding;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypso.ui.editor.styleeditor.preview.SymbolizerPreview;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
@@ -148,7 +147,7 @@ public abstract class AbstractSymbolizerComposite<S extends Symbolizer> extends 
 
   private Control createGeometryControl( final FormToolkit toolkit, final Composite parent )
   {
-    final SectionPart sectionPart = new SectionPart( parent, toolkit, ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED | Section.DESCRIPTION );
+    final SectionPart sectionPart = new SectionPart( parent, toolkit, Section.TITLE_BAR | Section.EXPANDED | Section.DESCRIPTION );
     final Section section = sectionPart.getSection();
     section.setText( "Geometry" );
     section.setDescription( "Choose the geometry for the symbolizer" );
@@ -169,19 +168,15 @@ public abstract class AbstractSymbolizerComposite<S extends Symbolizer> extends 
 
   private Control createPreviewControl( final FormToolkit toolkit, final Composite parent )
   {
-    final SectionPart sectionPart = new SectionPart( parent, toolkit, ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED | ExpandableComposite.SHORT_TITLE_BAR );
+    final SectionPart sectionPart = new SectionPart( parent, toolkit, Section.TITLE_BAR | Section.EXPANDED | Section.SHORT_TITLE_BAR );
     final Section section = sectionPart.getSection();
     section.setText( "Preview" );
 
     final Point size = new Point( SWT.DEFAULT, 32 );
     m_preview = createPreview( section, size, m_input );
+    toolkit.adapt( m_preview );
 
-    if( m_preview != null )
-    {
-      toolkit.adapt( m_preview );
-      section.setClient( m_preview );
-    }
-
+    section.setClient( m_preview );
     return section;
   }
 
@@ -194,8 +189,7 @@ public abstract class AbstractSymbolizerComposite<S extends Symbolizer> extends 
 
     doUpdateControl();
 
-    if( m_preview != null )
-      m_preview.updateControl();
+    m_preview.updateControl();
   }
 
   protected abstract void doUpdateControl( );

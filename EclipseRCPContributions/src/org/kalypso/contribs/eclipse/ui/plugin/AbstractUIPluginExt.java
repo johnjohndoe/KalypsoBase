@@ -59,7 +59,7 @@ public class AbstractUIPluginExt extends AbstractUIPlugin
    * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
    */
   @Override
-  public void start( final BundleContext context ) throws Exception
+  public void start( BundleContext context ) throws Exception
   {
     super.start( context );
 

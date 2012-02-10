@@ -138,10 +138,17 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   @Override
   public GM_Envelope getFullExtent( )
   {
-    // should not block! If capabilities are not yet loaded, return null
+    if( m_maxEnvLocalSRS == null )
+      m_maxEnvLocalSRS = m_provider.getFullExtent();
+
     return m_maxEnvLocalSRS;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
+   *      org.eclipse.core.runtime.IProgressMonitor)
+   */
   @Override
   public IStatus paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
   {
@@ -150,12 +157,6 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
       return Status.OK_STATUS;
 
     setStatus( AbstractKalypsoTheme.PAINT_STATUS );
-
-    // HACK: initialize the max-extend on first paint, because paint is the only method that is allowed to block
-    // FIXME: we should refaktor4 the whole image provider: it should immediately start loading the capas in a sepearate
-    // thread and should inform the theme when it has finished.
-    if( m_maxEnvLocalSRS == null )
-      m_maxEnvLocalSRS = m_provider.getFullExtent();
 
     final int width = (int) p.getDestWidth();
     final int height = (int) p.getDestHeight();

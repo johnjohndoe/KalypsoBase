@@ -43,8 +43,8 @@ package org.kalypso.model.wspm.core.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.apache.commons.lang.StringUtils;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.observation.result.IRecord;
@@ -61,13 +61,8 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 /**
  * @author Gernot Belger
  */
-public final class WspmGeometryUtilities
+public class WspmGeometryUtilities
 {
-  private WspmGeometryUtilities( )
-  {
-
-  }
-
   // TODO: this is a general transformer to the Kalypso default crs; should be moved to a central place
   public static IGeoTransformer GEO_TRANSFORMER;
 
@@ -84,15 +79,6 @@ public final class WspmGeometryUtilities
     }
   }
 
-  public static GM_Curve createProfileSegment( final IProfil profil )
-  {
-    return createProfileSegment( profil, profil.getSrsName() );
-  }
-
-  /**
-   * @deprecated use {@link #createProfileSegment(IProfil)}
-   */
-  @Deprecated
   public static GM_Curve createProfileSegment( final IProfil profil, final String srsName )
   {
     return createProfileSegment( profil, srsName, null );
@@ -105,10 +91,10 @@ public final class WspmGeometryUtilities
       final IRecord[] points = profil.getPoints();
       final List<GM_Position> positions = new ArrayList<GM_Position>( points.length );
 
-      final int compRechtswert = TupleResultUtilities.indexOfComponent( profil, IWspmPointProperties.POINT_PROPERTY_RECHTSWERT );
-      final int compHochwert = TupleResultUtilities.indexOfComponent( profil, IWspmPointProperties.POINT_PROPERTY_HOCHWERT );
-      final int compBreite = TupleResultUtilities.indexOfComponent( profil, IWspmPointProperties.POINT_PROPERTY_BREITE );
-      final int compHoehe = TupleResultUtilities.indexOfComponent( profil, IWspmPointProperties.POINT_PROPERTY_HOEHE );
+      final int compRechtswert = TupleResultUtilities.indexOfComponent( profil, IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+      final int compHochwert = TupleResultUtilities.indexOfComponent( profil, IWspmConstants.POINT_PROPERTY_HOCHWERT );
+      final int compBreite = TupleResultUtilities.indexOfComponent( profil, IWspmConstants.POINT_PROPERTY_BREITE );
+      final int compHoehe = TupleResultUtilities.indexOfComponent( profil, IWspmConstants.POINT_PROPERTY_HOEHE );
 
       int left = 0;
       int right = points.length;
@@ -120,8 +106,8 @@ public final class WspmGeometryUtilities
         if( durchstroemte.length < 2 )
           return null;
 
-        left = durchstroemte[0].getPoint().getIndex();
-        right = durchstroemte[1].getPoint().getIndex();
+        left = profil.indexOfPoint( durchstroemte[0].getPoint() );
+        right = profil.indexOfPoint( durchstroemte[1].getPoint() );
       }
 
       // for( final IRecord point : points )
@@ -139,9 +125,7 @@ public final class WspmGeometryUtilities
 
           /* We assume here that we have a GAUSS-KRUEGER crs in a profile. */
           if( StringUtils.isBlank( srsName ) && rw != null )
-          {
             srsName = TimeseriesUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
-          }
         }
         else
         {
@@ -153,16 +137,21 @@ public final class WspmGeometryUtilities
 
           /* We assume here that we have a GAUSS-KRUEGER crs in a profile. */
           if( srsName == null )
-          {
             srsName = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-          }
         }
+
+        if( rw == null || hw == null || rw.isNaN() || hw.isNaN() )
+          continue;
 
         final Double h = compHoehe == -1 ? null : (Double) point.getValue( compHoehe );
 
-        final GM_Position position = createPosition( rw, hw, h );
-        if( position != null )
-          positions.add( position );
+        final GM_Position position;
+        if( h == null )
+          position = GeometryFactory.createGM_Position( rw, hw );
+        else
+          position = GeometryFactory.createGM_Position( rw, hw, h );
+
+        positions.add( position );
       }
 
       if( positions.size() < 2 )
@@ -181,33 +170,14 @@ public final class WspmGeometryUtilities
     return null;
   }
 
-  private static GM_Position createPosition( final Double rw, final Double hw, final Double h )
-  {
-    if( rw == null || hw == null )
-      return null;
-
-    if( rw.isNaN() || hw.isNaN() )
-      return null;
-
-    if( h == null )
-      return GeometryFactory.createGM_Position( rw, hw );
-
-    return GeometryFactory.createGM_Position( rw, hw, h );
-  }
-
-  public static GM_Point createLocation( final IProfil profil, final IRecord point, final String srsName )
-  {
-    return createLocation( profil, point, srsName, IWspmPointProperties.POINT_PROPERTY_HOEHE );
-  }
-
-  public static GM_Point createLocation( final IProfil profil, final IRecord point, String srsName, final String heightComponentID )
+  public static GM_Point createLocation( final IProfil profil, final IRecord point, String srsName )
   {
     try
     {
-      final int compRechtswert = TupleResultUtilities.indexOfComponent( profil, IWspmPointProperties.POINT_PROPERTY_RECHTSWERT );
-      final int compHochwert = TupleResultUtilities.indexOfComponent( profil, IWspmPointProperties.POINT_PROPERTY_HOCHWERT );
-      final int compBreite = TupleResultUtilities.indexOfComponent( profil, IWspmPointProperties.POINT_PROPERTY_BREITE );
-      final int compHoehe = TupleResultUtilities.indexOfComponent( profil, heightComponentID );
+      final int compRechtswert = TupleResultUtilities.indexOfComponent( profil, IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+      final int compHochwert = TupleResultUtilities.indexOfComponent( profil, IWspmConstants.POINT_PROPERTY_HOCHWERT );
+      final int compBreite = TupleResultUtilities.indexOfComponent( profil, IWspmConstants.POINT_PROPERTY_BREITE );
+      final int compHoehe = TupleResultUtilities.indexOfComponent( profil, IWspmConstants.POINT_PROPERTY_HOEHE );
 
       /* If there are no rw/hw create pseudo geometries from breite and station */
       final Double rw;
@@ -220,9 +190,7 @@ public final class WspmGeometryUtilities
 
         /* We assume here that we have a GAUSS-KRUEGER crs in a profile. */
         if( StringUtils.isBlank( srsName ) && rw != null )
-        {
           srsName = TimeseriesUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
-        }
       }
       else
       {
@@ -234,16 +202,19 @@ public final class WspmGeometryUtilities
 
         /* We assume here that we have a GAUSS-KRUEGER crs in a profile. */
         if( srsName == null )
-        {
           srsName = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-        }
       }
+
+      if( rw == null || hw == null || rw.isNaN() || hw.isNaN() )
+        return null;
 
       final Double h = compHoehe == -1 ? null : (Double) point.getValue( compHoehe );
 
-      final GM_Position position = createPosition( rw, hw, h );
-      if( position == null )
-        return null;
+      final GM_Position position;
+      if( h == null )
+        position = GeometryFactory.createGM_Position( rw, hw );
+      else
+        position = GeometryFactory.createGM_Position( rw, hw, h );
 
       return GeometryFactory.createGM_Point( position, srsName );
     }
@@ -275,9 +246,7 @@ public final class WspmGeometryUtilities
 
     /* If CRS is not known, we assume here that we have a GAUSS-KRUEGER crs in a profile. */
     if( StringUtils.isBlank( crsName ) )
-    {
       crsName = TimeseriesUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
-    }
 
     final GM_Point point = GeometryFactory.createGM_Point( position, crsName );
     if( transformer != null )

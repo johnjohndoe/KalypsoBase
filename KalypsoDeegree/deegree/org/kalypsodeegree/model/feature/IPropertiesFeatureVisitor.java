@@ -42,7 +42,7 @@ import org.eclipse.core.runtime.CoreException;
 
 /**
  * A feature-visitor which can be initialized by a list of properties.
- * 
+ *
  * @author belger
  */
 public interface IPropertiesFeatureVisitor extends FeatureVisitor

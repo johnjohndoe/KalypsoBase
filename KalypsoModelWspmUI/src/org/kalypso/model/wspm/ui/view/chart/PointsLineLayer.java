@@ -41,17 +41,16 @@
 package org.kalypso.model.wspm.ui.view.chart;
 
 import java.awt.geom.Point2D;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IRecord;
@@ -76,6 +75,10 @@ public class PointsLineLayer extends AbstractProfilLayer
     setData( IProfilChartLayer.VIEW_DATA_KEY, IProfilChartLayer.ALLOW_VERTICAL_EDITING );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#drag(org.eclipse.swt.graphics.Point,
+   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
+   */
   @Override
   public EditInfo drag( final Point newPos, final EditInfo dragStartData )
   {
@@ -84,17 +87,17 @@ public class PointsLineLayer extends AbstractProfilLayer
 
     final Point newPoint = verifyPos( dragStartData.getPosition(), newPos );
     final Integer index = (Integer) dragStartData.getData();
-
-    final Point next = toScreen( getNextNonNull( index ) );
-    final Point previous = toScreen( getPreviousNonNull( index ) );
+    final IRecord[] profilPoints = getProfil().getPoints();
+    final Point next = index == profilPoints.length - 1 ? newPoint : toScreen( profilPoints[index + 1] );
+    final Point previous = index == 0 ? newPoint : toScreen( profilPoints[index - 1] );
 
     final PolylineFigure lineFigure = new PolylineFigure();
     lineFigure.setPoints( new Point[] { previous, newPoint, next } );
-    lineFigure.setStyle( getLineStyleHover() );
+    lineFigure.setStyle( getLineStyle_hover() );
 
     final PointFigure pointFigure = new PointFigure();
 
-    pointFigure.setStyle( getPointStyleHover() );
+    pointFigure.setStyle( getPointStyle_hover() );
     pointFigure.setPoints( new Point[] { newPoint } );
 
     final IPaintable dragFigure = new IPaintable()
@@ -114,6 +117,11 @@ public class PointsLineLayer extends AbstractProfilLayer
         point.getY(), ComponentUtilities.getComponentUnitLabel( getTargetComponent() ) } ), dragStartData.getPosition() );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.chart.AbstractProfilLayer#executeDrop(org.eclipse.swt.graphics.Point,
+   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
+   */
+
   @Override
   public void executeDrop( final Point point, final EditInfo dragStartData )
   {
@@ -121,28 +129,26 @@ public class PointsLineLayer extends AbstractProfilLayer
       return;
 
     final Point newPoint = verifyPos( dragStartData.getPosition(), point );
-    final Integer pos = dragStartData.getData() instanceof Integer ? (Integer) dragStartData.getData() : -1;
+    final Integer pos = dragStartData.getData() instanceof Integer ? (Integer) (dragStartData.getData()) : -1;
     if( pos > -1 )
     {
       final IProfil profil = getProfil();
-      final IProfileRecord profilPoint = profil.getPoint( pos );
+      final IRecord profilPoint = profil.getPoint( pos );
       final Integer hoehe = profil.indexOfProperty( getTargetComponent() );
-// final Integer breite = profil.indexOfProperty( getDomainComponent() );
+      final Integer breite = profil.indexOfProperty( getDomainComponent() );
       final ICoordinateMapper cm = getCoordinateMapper();
-
-      // Object editMode = getData( IProfilChartLayer.VIEW_DATA_KEY );
-      // if( editMode == IProfilChartLayer.ALLOW_VERTICAL_EDITING )
-
-      // final Double x = cm.getDomainAxis().screenToNumeric( newPoint.x ).doubleValue();
-      // profilPoint.setValue( breite, x );
-
+      final Double x = cm.getDomainAxis().screenToNumeric( newPoint.x ).doubleValue();
       final Double y = cm.getTargetAxis().screenToNumeric( newPoint.y ).doubleValue();
+      profilPoint.setValue( breite, x );
       profilPoint.setValue( hoehe, y );
-
-      profil.getSelection().setRange( profilPoint );
+      profil.setActivePoint( profilPoint );
       getEventHandler().fireLayerContentChanged( this );
     }
   }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getHoverRect(org.kalypso.observation.result.IRecord)
+   */
 
   @Override
   public Rectangle getHoverRect( final IRecord profilPoint )
@@ -151,6 +157,9 @@ public class PointsLineLayer extends AbstractProfilLayer
     return cm == null ? null : RectangleUtils.buffer( toScreen( profilPoint ) );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getLegendEntries()
+   */
   @Override
   public synchronized ILegendEntry[] getLegendEntries( )
   {
@@ -179,78 +188,80 @@ public class PointsLineLayer extends AbstractProfilLayer
 
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
+   *      org.kalypso.model.wspm.core.profil.IProfilChange[])
+   */
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     if( hint.isPointsChanged() || hint.isPointValuesChanged() )
-    {
       getEventHandler().fireLayerContentChanged( this );
-    }
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
+   */
   @Override
   public void paint( final GC gc )
   {
     final IProfil profil = getProfil();
+
     if( profil == null )
       return;
+    final IRecord[] profilPoints = profil.getPoints();
+    final int len = profilPoints.length;
 
-    /** differ between selected and plain (not selected) points */
-    final Set<Point> plain = new LinkedHashSet<>();
-    final Set<Point> selectedPoints = new LinkedHashSet<>();
-    final Set<Point> selectedLinePoints = new LinkedHashSet<>();
+    Point activePoint = null;
+    Point activePoint2 = null;
 
-    final IProfileRecord[] points = profil.getPoints();
-    for( final IProfileRecord point : points )
+    final List<Point> points = new ArrayList<Point>();
+    final int active = profil.indexOfPoint( profil.getActivePoint() );
+    for( int i = 0; i < len; i++ )
     {
-      final Point screen = toScreen( point );
-      if( Objects.isNull( screen ) )
-        continue;
-
-      if( point.isSelected() )
+      final Point p = toScreen( profilPoints[i] );
+      if( p == null )
       {
-        selectedPoints.add( screen );
-        selectedLinePoints.add( screen );
-
-        /** draw profile segment as activated, too */
-        final IProfileRecord next = point.getNextPoint();
-        if( Objects.isNotNull( next ) && !next.isSelected() )
-        {
-          final Point nextScreen = toScreen( next );
-          selectedLinePoints.add( nextScreen );
-        }
-
+        // TODO: user message
       }
+      else
+      {
+        points.add( p );
 
-      plain.add( screen );
+        if( i == active )
+          activePoint = p;
+        else if( i > active && activePoint2 == null )
+          activePoint2 = p;
+      }
+    }
+    final Point[] pointsArray = points.toArray( new Point[points.size()] );
+
+    final PolylineFigure pf = new PolylineFigure();
+    pf.setStyle( getLineStyle() );
+    pf.setPoints( pointsArray );
+    pf.paint( gc );
+
+    if( activePoint != null && activePoint2 != null )
+    {
+      pf.setStyle( getLineStyle_active() );
+      pf.setPoints( new Point[] { activePoint, activePoint2 } );
+      pf.paint( gc );
     }
 
-    final PolylineFigure lineFigure = new PolylineFigure();
-    lineFigure.setStyle( getLineStyle() );
-    lineFigure.setPoints( plain.toArray( new Point[] {} ) );
-    lineFigure.paint( gc );
+    final PointFigure pf2 = new PointFigure();
 
-    if( !selectedLinePoints.isEmpty() )
+    pf2.setStyle( getPointStyle() );
+    pf2.setPoints( pointsArray );
+    pf2.paint( gc );
+    if( activePoint != null )
     {
-      lineFigure.setStyle( getLineStyleActive() );
-      lineFigure.setPoints( selectedLinePoints.toArray( new Point[] {} ) );
-      lineFigure.paint( gc );
-    }
-
-    final PointFigure pointFigure = new PointFigure();
-    pointFigure.setStyle( getPointStyle() );
-    pointFigure.setPoints( plain.toArray( new Point[] {} ) );
-    pointFigure.paint( gc );
-
-    if( !selectedPoints.isEmpty() )
-    {
-      pointFigure.setStyle( getPointStyleActive() );
-      pointFigure.setPoints( selectedPoints.toArray( new Point[] {} ) );
-      pointFigure.paint( gc );
+      pf2.setStyle( getPointStyle_active() );
+      pf2.setPoints( new Point[] { activePoint } );
+      pf2.paint( gc );
     }
   }
 
-  private Point verifyPos( final Point oldPos, final Point newPos )
+  private final Point verifyPos( final Point oldPos, final Point newPos )
   {
     final Object o = getData( IProfilChartLayer.VIEW_DATA_KEY );
     if( o != null )

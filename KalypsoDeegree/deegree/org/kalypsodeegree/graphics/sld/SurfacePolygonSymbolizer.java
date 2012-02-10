@@ -59,7 +59,7 @@ public interface SurfacePolygonSymbolizer extends Symbolizer
    * Sets the PolygonColorMap
    * 
    * @param colorMap
-   *          the color map for "iso-areas"
+   *            the color map for "iso-areas"
    */
   void setColorMap( PolygonColorMap colorMap );
 

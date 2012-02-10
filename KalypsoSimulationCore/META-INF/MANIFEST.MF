@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoSimulationCore Plug-in
 Bundle-SymbolicName: org.kalypso.simulation.core; singleton:=true
-Bundle-Version: 11.6.4.qualifier
+Bundle-Version: 11.6.2.qualifier
 Bundle-Activator: org.kalypso.simulation.core.KalypsoSimulationCorePlugin
 Bundle-Vendor: kalypsobase.sourceforge.net
-Require-Bundle: org.kalypso.core;visibility:=reexport,
+Require-Bundle: org.kalypso.core;bundle-version="1.0.0";visibility:=reexport,
  org.eclipse.wst.xml.core;resolution:=optional
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.simulation.core,
@@ -22,4 +22,4 @@ Export-Package: org.kalypso.simulation.core,
  org.kalypso.simulation.core.simspec,
  org.kalypso.simulation.core.util,
  org.kalypso.simulation.modellist
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

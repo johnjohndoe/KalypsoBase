@@ -61,6 +61,9 @@ public class FindLayerVisitor extends AbstractChartLayerVisitor
     m_identifier = identifier;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+   */
   @Override
   public void visit( final IChartLayer layer ) throws CancelVisitorException
   {

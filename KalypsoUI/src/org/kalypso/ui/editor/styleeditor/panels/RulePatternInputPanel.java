@@ -61,6 +61,7 @@ import org.kalypso.ui.editor.styleeditor.dialogs.StyleEditorErrorDialog;
 
 /**
  * @author F.Lindemann
+ *  
  */
 public class RulePatternInputPanel
 {
@@ -79,19 +80,19 @@ public class RulePatternInputPanel
 
   private double step;
 
-  private final EventListenerList listenerList = new EventListenerList();
+  private EventListenerList listenerList = new EventListenerList();
 
   private String label = null;
 
-  public RulePatternInputPanel( final Composite parent, final String m_label, final double m_min, final double m_max, final double m_step )
+  public RulePatternInputPanel( Composite parent, String m_label, double m_min, double m_max, double m_step )
   {
     setLabel( m_label );
     setMin( m_min );
     setMax( m_max );
     setStep( m_step );
     composite = new Composite( parent, SWT.NULL );
-    final GridLayout compositeLayout = new GridLayout( 4, false );
-    final GridData compositeData = new GridData();
+    GridLayout compositeLayout = new GridLayout( 4, false );
+    GridData compositeData = new GridData();
     compositeData.widthHint = 225;
     composite.setLayoutData( compositeData );
     composite.setLayout( compositeLayout );
@@ -101,24 +102,24 @@ public class RulePatternInputPanel
     init();
   }
 
-  public void addPanelListener( final PanelListener pl )
+  public void addPanelListener( PanelListener pl )
   {
     listenerList.add( PanelListener.class, pl );
   }
 
-  private void init( )
+  private void init()
   {
-    final Label urlLabel = new Label( composite, SWT.NULL );
-    final GridData urlLabelData = new GridData( 62, 15 );
+    Label urlLabel = new Label( composite, SWT.NULL );
+    GridData urlLabelData = new GridData( 62, 15 );
     urlLabel.setLayoutData( urlLabelData );
     urlLabel.setText( label );
 
-    final Label minLabel = new Label( composite, SWT.NULL );
+    Label minLabel = new Label( composite, SWT.NULL );
     minLabel.setText( MessageBundle.STYLE_EDITOR_MIN );
 
     minText = new Text( composite, SWT.BORDER );
     minText.setBackground( new org.eclipse.swt.graphics.Color( null, new RGB( 255, 255, 255 ) ) );
-    final GridData minTextData = new GridData( 25, 10 );
+    GridData minTextData = new GridData( 25, 10 );
     minText.setLayoutData( minTextData );
     minText.setText( "" + min ); //$NON-NLS-1$
 
@@ -128,12 +129,12 @@ public class RulePatternInputPanel
     // null placeholder
     new Label( composite, SWT.NULL ).setLayoutData( new GridData( 50, 15 ) );
 
-    final Label maxLabel = new Label( composite, SWT.NULL );
+    Label maxLabel = new Label( composite, SWT.NULL );
     maxLabel.setText( MessageBundle.STYLE_EDITOR_MAX );
 
     maxText = new Text( composite, SWT.BORDER );
     maxText.setBackground( new org.eclipse.swt.graphics.Color( null, new RGB( 255, 255, 255 ) ) );
-    final GridData maxTextData = new GridData( 25, 10 );
+    GridData maxTextData = new GridData( 25, 10 );
     maxText.setLayoutData( maxTextData );
     maxText.setText( "" + max ); //$NON-NLS-1$
 
@@ -143,53 +144,57 @@ public class RulePatternInputPanel
     // null placeholder
     new Label( composite, SWT.NULL ).setLayoutData( new GridData( 50, 15 ) );
 
-    final Label stepLabel = new Label( composite, SWT.NULL );
+    Label stepLabel = new Label( composite, SWT.NULL );
     stepLabel.setText( MessageBundle.STYLE_EDITOR_STEP );
 
     stepText = new Text( composite, SWT.BORDER );
     stepText.setBackground( new org.eclipse.swt.graphics.Color( null, new RGB( 255, 255, 255 ) ) );
-    final GridData stepTextData = new GridData( 25, 10 );
+    GridData stepTextData = new GridData( 25, 10 );
     stepText.setLayoutData( stepTextData );
     stepText.setText( "" + step ); //$NON-NLS-1$
 
-    final Label okButton = new Label( composite, SWT.PUSH );
+    Label okButton = new Label( composite, SWT.PUSH );
     okButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_OK.createImage() );
-    final GridData okButtonData = new GridData( 22, 15 );
+    GridData okButtonData = new GridData( 22, 15 );
     okButton.setLayoutData( okButtonData );
     okButton.setToolTipText( MessageBundle.STYLE_EDITOR_OK );
     okButton.addMouseListener( new MouseListener()
     {
       @Override
-      public void mouseDoubleClick( final MouseEvent e )
+      public void mouseDoubleClick( MouseEvent e )
       {
         try
         {
-          final double t_min = Double.parseDouble( getMinText().getText() );
-          final double t_max = Double.parseDouble( getMaxText().getText() );
-          final double t_step = Double.parseDouble( getStepText().getText() );
+          double t_min = Double.parseDouble( getMinText().getText() );
+          double t_max = Double.parseDouble( getMaxText().getText() );
+          double t_step = Double.parseDouble( getStepText().getText() );
           // check input
           // 1. min < max !!!
           if( t_min > t_max )
           {
-            final StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite().getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_MIN_MAX );
+            StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite().getShell(),
+                MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_MIN_MAX );
             errorDialog.showError();
           }
           // step>(max-min)
-          else if( t_step > t_max - t_min )
+          else if( t_step > ( t_max - t_min ) )
           {
-            final StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite().getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_STEP_TOO_LARGE );
+            StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite().getShell(),
+                MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_STEP_TOO_LARGE );
             errorDialog.showError();
           }
           // step needs to be positive
           else if( t_step <= 0 )
           {
-            final StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite().getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_STEP_NOT_POSITIVE );
+            StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite().getShell(),
+                MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_STEP_NOT_POSITIVE );
             errorDialog.showError();
           }
           // restrict editor to 35 steps
-          else if( (int) Math.ceil( (t_max - t_min) / t_step ) > 35 )
+          else if( ( (int)Math.ceil( ( t_max - t_min ) / t_step ) ) > 35 )
           {
-            new StyleEditorErrorDialog( getComposite().getShell(), MessageBundle.STYLE_EDITOR_REMARK, MessageBundle.STYLE_EDITOR_PATTERN_LIMIT ).showError();
+            new StyleEditorErrorDialog( getComposite().getShell(), MessageBundle.STYLE_EDITOR_REMARK,
+                MessageBundle.STYLE_EDITOR_PATTERN_LIMIT ).showError();
           }
           else
           {
@@ -199,125 +204,126 @@ public class RulePatternInputPanel
             fire();
           }
         }
-        catch( final NumberFormatException nfe )
+        catch( NumberFormatException nfe )
         {
-          final StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite().getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_NUMBER );
+          StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( getComposite().getShell(),
+              MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_NUMBER );
           errorDialog.showError();
           getMinText().setText( "" + getMin() ); //$NON-NLS-1$
           getMaxText().setText( "" + getMax() ); //$NON-NLS-1$
           getStepText().setText( "" + getStep() ); //$NON-NLS-1$
         }
-        catch( final Exception ex )
+        catch( Exception ex )
         {
           ex.printStackTrace();
         }
       }
 
       @Override
-      public void mouseDown( final MouseEvent e )
+      public void mouseDown( MouseEvent e )
       {
         mouseDoubleClick( e );
       }
 
       @Override
-      public void mouseUp( final MouseEvent e )
+      public void mouseUp( MouseEvent e )
       {
-        // nothing
+      // nothing
       }
 
     } );
   }
 
-  public double getMax( )
+  public double getMax()
   {
     return max;
   }
 
-  public double getMin( )
+  public double getMin()
   {
     return min;
   }
 
-  public double getStep( )
+  public double getStep()
   {
     return step;
   }
 
-  protected void fire( )
+  protected void fire()
   {
-    final Object[] listeners = listenerList.getListenerList();
+    Object[] listeners = listenerList.getListenerList();
     for( int i = listeners.length - 2; i >= 0; i -= 2 )
     {
       if( listeners[i] == PanelListener.class )
       {
-        final PanelEvent event = new PanelEvent( this );
-        ((PanelListener) listeners[i + 1]).valueChanged( event );
+        PanelEvent event = new PanelEvent( this );
+        ( (PanelListener)listeners[i + 1] ).valueChanged( event );
       }
     }
   }
 
-  public Composite getComposite( )
+  public Composite getComposite()
   {
     return composite;
   }
 
-  public void setComposite( final Composite m_composite )
+  public void setComposite( Composite m_composite )
   {
-    composite = m_composite;
+    this.composite = m_composite;
   }
 
-  public Text getMaxText( )
+  public Text getMaxText()
   {
     return maxText;
   }
 
-  public void setMaxText( final Text m_maxText )
+  public void setMaxText( Text m_maxText )
   {
-    maxText = m_maxText;
+    this.maxText = m_maxText;
   }
 
-  public Text getMinText( )
+  public Text getMinText()
   {
     return minText;
   }
 
-  public void setMinText( final Text m_minText )
+  public void setMinText( Text m_minText )
   {
-    minText = m_minText;
+    this.minText = m_minText;
   }
 
-  public Text getStepText( )
+  public Text getStepText()
   {
     return stepText;
   }
 
-  public void setStepText( final Text m_stepText )
+  public void setStepText( Text m_stepText )
   {
-    stepText = m_stepText;
+    this.stepText = m_stepText;
   }
 
-  public String getLabel( )
+  public String getLabel()
   {
     return label;
   }
 
-  public void setLabel( final String m_label )
+  public void setLabel( String m_label )
   {
-    label = m_label;
+    this.label = m_label;
   }
 
-  public void setMax( final double m_max )
+  public void setMax( double m_max )
   {
-    max = m_max;
+    this.max = m_max;
   }
 
-  public void setMin( final double m_min )
+  public void setMin( double m_min )
   {
-    min = m_min;
+    this.min = m_min;
   }
 
-  public void setStep( final double m_step )
+  public void setStep( double m_step )
   {
-    step = m_step;
+    this.step = m_step;
   }
 }

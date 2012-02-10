@@ -42,20 +42,20 @@ package org.kalypso.ogc.gml.map.properties;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.expressions.PropertyTester;
-import org.kalypso.contribs.eclipse.core.runtime.AdapterUtils;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
+import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.IKalypsoThemeProvider;
 import org.kalypso.ui.KalypsoUIDebug;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * This property tester tests a {@link IKalypsoTheme}'s.
- *
+ * 
  * @author Gernot Belger
  */
 public class ThemeTester extends PropertyTester
@@ -91,7 +91,7 @@ public class ThemeTester extends PropertyTester
   @Override
   public boolean test( final Object receiver, final String property, final Object[] args, final Object expectedValue )
   {
-    final IKalypsoTheme theme = AdapterUtils.getAdapter( receiver, IKalypsoTheme.class );
+    final IKalypsoTheme theme = findTheme( receiver );
     if( theme == null )
       return false;
 
@@ -100,6 +100,17 @@ public class ThemeTester extends PropertyTester
     KalypsoUIDebug.PROPERTY_TESTER.printf( "Testing property '%s' for expectedValue '%s' on theme '%s': %s%n", property, expectedValue, theme, result ); //$NON-NLS-1$
 
     return result;
+  }
+
+  private IKalypsoTheme findTheme( final Object receiver )
+  {
+    if( receiver instanceof IKalypsoThemeProvider )
+      return ((IKalypsoThemeProvider) receiver).getTheme();
+
+    if( receiver instanceof IKalypsoTheme )
+      return (IKalypsoTheme) receiver;
+
+    return null;
   }
 
   private boolean test( final IKalypsoTheme theme, final String property, final Object[] args, final Object expectedValue )
@@ -173,9 +184,9 @@ public class ThemeTester extends PropertyTester
     return ObjectUtils.equals( value, expectedString );
   }
 
-  private boolean testIsCascading( final IKalypsoTheme theme )
+  private boolean testIsCascading( IKalypsoTheme theme )
   {
-    if( theme instanceof IKalypsoCascadingTheme )
+    if( theme instanceof AbstractCascadingLayerTheme )
       return true;
 
     return false;

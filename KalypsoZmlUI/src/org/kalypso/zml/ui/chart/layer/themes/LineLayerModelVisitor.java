@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.DateRange;
@@ -100,7 +100,7 @@ public class LineLayerModelVisitor implements IObservationVisitor
     if( m_dateAxis == null )
     {
       final IZmlLayerDataHandler handler = m_layer.getDataHandler();
-      final IObservation observation = (IObservation) handler.getAdapter( IObservation.class );
+      final IObservation observation = handler.getObservation();
       if( Objects.isNull( observation ) )
         return null;
 

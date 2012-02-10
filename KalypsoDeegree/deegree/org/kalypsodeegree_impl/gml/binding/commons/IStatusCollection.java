@@ -41,7 +41,7 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.xml.NS;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
@@ -49,7 +49,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  * 
  * @author Gernot Belger
  */
-public interface IStatusCollection extends Feature
+public interface IStatusCollection extends IFeatureWrapperCollection<IGeoStatus>
 {
   public static final QName QNAME = new QName( NS.COMMON, "StatusCollection" );
 
@@ -107,10 +107,4 @@ public interface IStatusCollection extends Feature
    * @return The new geo status.
    */
   public IGeoStatus createGeoStatus( int severity, String pluginId, int code, String message, Throwable exception, GM_Object location, Date time );
-
-  public boolean contains( IStatus simulationStatus );
-
-  public boolean isEmpty( );
-
-  IStatus toStatus( );
 }

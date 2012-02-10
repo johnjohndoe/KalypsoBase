@@ -39,7 +39,7 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
+import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -70,8 +70,8 @@ public class CreateGeometeryWidget2 extends AbstractFeatureGeometeryWidget
     final IFeatureType featureType = theme.getFeatureType();
 
     final FeatureList featureList = theme.getFeatureList();
-    final Feature parentFeature = featureList.getOwner();
-    final IRelationType linkrelationType = featureList.getPropertyType();
+    final Feature parentFeature = featureList.getParentFeature();
+    final IRelationType linkrelationType = featureList.getParentFeatureTypeProperty();
 
     final IValuePropertyType geometryProperty = GeometryUtilities.findGeometryProperty( featureType, m_apreferedGeometryClass );
 

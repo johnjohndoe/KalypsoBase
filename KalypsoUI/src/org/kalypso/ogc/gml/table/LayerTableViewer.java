@@ -48,8 +48,8 @@ import java.util.List;
 
 import javax.xml.namespace.NamespaceContext;
 
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -317,20 +317,15 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
 
   public void setInput( final Layer layer, final URL context )
   {
-    if( layer == null )
-      setInput( null );
-    else
-    {
-      final String href = layer.getHref();
-      final String type = layer.getLinktype();
-      final String featurePath = layer.getFeaturePath();
+    final String href = layer.getHref();
+    final String type = layer.getLinktype();
+    final String featurePath = layer.getFeaturePath();
 
-      final IPoolableObjectType poolKey = new PoolableObjectType( type, href, context );
+    final IPoolableObjectType poolKey = new PoolableObjectType( type, href, context );
 
-      final ILayerTableInput input = new PoolLayerTableInput( poolKey, featurePath );
+    final ILayerTableInput input = new PoolLayerTableInput( poolKey, featurePath );
 
-      setInput( input );
-    }
+    setInput( input );
   }
 
   public void setInput( final CommandableWorkspace workspace, final String featurePath, final ICommandTarget commandTarget )
@@ -350,14 +345,11 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     {
       clearColumns();
 
-      setFilters( new ViewerFilter[0] );
-
-      if( layer == null )
-        return;
-
       final StyleType styleRef = layer.getStyle();
 
       final LayerTableStyle globalStyle = LayerTableStyleUtils.parseStyle( styleRef, new LayerTableStyle( null ), context );
+
+      setFilters( new ViewerFilter[0] );
 
       final Sort sort = layer.getSort();
       final List<Column> columnList = layer.getColumn();
@@ -469,8 +461,6 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
   protected void setColumnText( final TableColumn tc )
   {
     final GMLXPath propertyPath = (GMLXPath) tc.getData( COLUMN_PROP_PATH );
-    if( propertyPath == null )
-      return;
 
     final String label = (String) tc.getData( COLUMN_PROP_LABEL );
     final String tooltip = (String) tc.getData( COLUMN_PROP_TOOLTIP );
@@ -551,14 +541,11 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
       if( column != null )
       {
         final GMLXPath propPath = (GMLXPath) column.getData( COLUMN_PROP_PATH );
-        if( propPath != null )
+        final IPropertyType propertyType = findPropertyType( featureType, propPath );
+        if( propertyType == null )
         {
-          final IPropertyType propertyType = findPropertyType( featureType, propPath );
-          if( propertyType == null )
-          {
-            column.dispose();
-            changed = true;
-          }
+          column.dispose();
+          changed = true;
         }
       }
     }
@@ -654,18 +641,15 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     for( int i = 0; i < editors.length; i++ )
     {
       final GMLXPath propPath = (GMLXPath) columns[i].getData( COLUMN_PROP_PATH );
-      if( propPath != null )
-      {
-        final String format = (String) columns[i].getData( COLUMN_PROP_FORMAT );
-        final IPropertyType ftp = findPropertyType( featureType, propPath );
-        final String modifierId = (String) columns[i].getData( COLUMN_PROP_MODIFIER );
+      final String format = (String) columns[i].getData( COLUMN_PROP_FORMAT );
+      final IPropertyType ftp = findPropertyType( featureType, propPath );
+      final String modifierId = (String) columns[i].getData( COLUMN_PROP_MODIFIER );
 
-        m_modifier[i] = createModifier( format, ftp, modifierId, propPath );
-        if( m_modifier[i] != null )
-        {
-          editors[i] = m_modifier[i].createCellEditor( table );
-          editors[i].setValidator( m_modifier[i] );
-        }
+      m_modifier[i] = createModifier( format, ftp, modifierId, propPath );
+      if( m_modifier[i] != null )
+      {
+        editors[i] = m_modifier[i].createCellEditor( table );
+        editors[i].setValidator( m_modifier[i] );
       }
     }
     setCellEditors( editors );
@@ -1068,7 +1052,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     if( row != null && row.getData() instanceof Feature )
     {
       final Feature focusedFeature = row == null ? null : (Feature) row.getData();
-      final IFeatureModifier modifier = column < 0 || m_modifier == null || column > m_modifier.length - 1 ? null : m_modifier[column];
+      final IFeatureModifier modifier = (column < 0 || m_modifier == null || column > m_modifier.length - 1) ? null : m_modifier[column];
 
       final IPropertyType focusedProperty = modifier == null ? null : modifier.getPropertyType();
 

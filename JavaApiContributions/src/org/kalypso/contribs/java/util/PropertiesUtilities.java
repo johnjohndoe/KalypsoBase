@@ -89,8 +89,7 @@ public class PropertiesUtilities
    * 
    * @deprecated Use ResourceBundleUtils#loadResourceBundle() instead
    */
-  // TODO: Gernot, use ResourceBundle#getBundle(String baseName, Locale locale, ClassLoader loader) with a specific
-// class loader instead, in order
+  // TODO: Gernot, use ResourceBundle#getBundle(String baseName, Locale locale, ClassLoader loader) with a specific class loader instead, in order
   // to completely simulate the java-ResourceBundle behaviour (i.e. fallback to more generel property)
   @Deprecated
   public static void loadI18nProperties( final Properties properties, final URL baseUrl, final String path )

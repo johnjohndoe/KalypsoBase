@@ -52,7 +52,7 @@ public class NoneLeafNode extends Node
    * @param file
    *          PageFile des Knotens
    */
-  public NoneLeafNode( final int pageNumber, final PageFile file )
+  public NoneLeafNode( int pageNumber, PageFile file )
   {
     super( pageNumber, file );
     childNodes = new int[file.getCapacity()];
@@ -69,7 +69,7 @@ public class NoneLeafNode extends Node
    * @return Object KindKnoten
    */
   @Override
-  public Object getData( final int index )
+  public Object getData( int index )
   {
     Object obj = null;
 
@@ -77,7 +77,7 @@ public class NoneLeafNode extends Node
     {
       obj = file.readNode( childNodes[index] );
     }
-    catch( final PageFileException e )
+    catch( PageFileException e )
     {
       System.out.println( "PageFileException NoneLeafNode.getData \n" + e.getMessage() );
     }
@@ -94,22 +94,23 @@ public class NoneLeafNode extends Node
    *          des Kindknoten
    */
   @Override
-  public void insertData( final Object node, final HyperBoundingBox box )
+  public void insertData( Object node, HyperBoundingBox box )
   {
-    childNodes[counter] = ((Node) node).getPageNumber();
+    childNodes[counter] = ( (Node)node ).getPageNumber();
     hyperBBs[counter] = box;
     unionMinBB = unionMinBB.unionBoundingBox( box );
-    ((Node) node).parentNode = pageNumber;
-    ((Node) node).place = counter;
+    ( (Node)node ).parentNode = this.pageNumber;
+    ( (Node)node ).place = this.counter;
     counter++;
 
     try
     {
-      file.writeNode( (Node) node );
+      file.writeNode( (Node)node );
     }
-    catch( final PageFileException e )
+    catch( PageFileException e )
     {
-      System.out.println( "PageFileException NoneLeafNode.insertData - bei writeNode(AbstractNode) \n" + e.getMessage() );
+      System.out
+          .println( "PageFileException NoneLeafNode.insertData - bei writeNode(AbstractNode) \n" + e.getMessage() );
     }
   }
 
@@ -120,9 +121,9 @@ public class NoneLeafNode extends Node
    *          des Eintrages.
    */
   @Override
-  public void deleteData( final int index )
+  public void deleteData( int index )
   {
-    if( getUsedSpace() == 1 )
+    if( this.getUsedSpace() == 1 )
     {
       // only one element is a special case.
       hyperBBs[0] = HyperBoundingBox.getNullHyperBoundingBox( file.getDimension() );
@@ -139,16 +140,17 @@ public class NoneLeafNode extends Node
 
       for( int i = 0; i < counter; i++ )
       {
-        final Node help = (Node) getData( i );
+        Node help = (Node)this.getData( i );
         help.place = i;
 
         try
         {
           file.writeNode( help );
         }
-        catch( final PageFileException e )
+        catch( PageFileException e )
         {
-          System.out.println( "PageFileException NoneLeafNode.deleteData - bei writeNode(AbstractNode) \n" + e.getMessage() );
+          System.out.println( "PageFileException NoneLeafNode.deleteData - bei writeNode(AbstractNode) \n"
+              + e.getMessage() );
         }
       }
     }
@@ -164,12 +166,12 @@ public class NoneLeafNode extends Node
    *          für die der Index bestimmt werden soll.
    * @return int Index des Eintrages
    */
-  public int getLeastEnlargement( final HyperBoundingBox box )
+  public int getLeastEnlargement( HyperBoundingBox box )
   {
-    final double[] area = new double[counter];
+    double[] area = new double[counter];
 
     for( int i = 0; i < counter; i++ )
-      area[i] = hyperBBs[i].unionBoundingBox( box ).getArea() - hyperBBs[i].getArea();
+      area[i] = ( hyperBBs[i].unionBoundingBox( box ) ).getArea() - hyperBBs[i].getArea();
 
     double min = area[0];
     int minnr = 0;
@@ -192,16 +194,16 @@ public class NoneLeafNode extends Node
    * @return Object NoneLeafNode-Kopie
    */
   @Override
-  public Object clone( )
+  public Object clone()
   {
-    final NoneLeafNode clone = new NoneLeafNode( pageNumber, file );
-    clone.counter = counter;
-    clone.place = place;
-    clone.unionMinBB = (HyperBoundingBox) unionMinBB.clone();
-    clone.parentNode = parentNode;
+    NoneLeafNode clone = new NoneLeafNode( this.pageNumber, this.file );
+    clone.counter = this.counter;
+    clone.place = this.place;
+    clone.unionMinBB = (HyperBoundingBox)this.unionMinBB.clone();
+    clone.parentNode = this.parentNode;
 
     for( int i = 0; i < file.getCapacity(); i++ )
-      clone.hyperBBs[i] = (HyperBoundingBox) hyperBBs[i].clone();
+      clone.hyperBBs[i] = (HyperBoundingBox)this.hyperBBs[i].clone();
 
     return clone;
   }

@@ -55,7 +55,6 @@ import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLaye
  */
 public class ResetZmlLayerVisitor extends AbstractChartLayerVisitor
 {
-
   @Override
   public void visit( final IChartLayer layer )
   {
@@ -90,5 +89,4 @@ public class ResetZmlLayerVisitor extends AbstractChartLayerVisitor
       obsHandler.setObsProvider( null );
     }
   }
-
 }

@@ -43,12 +43,11 @@ package org.kalypso.model.wspm.core.profil.changes;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.observation.result.IRecord;
-
 /**
  * @author kimwerner
  */
@@ -74,10 +73,14 @@ public class PointMove implements IProfilChange
     m_direction = direction;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilChange#doChange()
+   */
   @Override
-  public IProfilChange doChange( )
+  public IProfilChange doChange( final ProfilChangeHint hint )
   {
-
+    if( hint != null )
+      hint.setPointsChanged();
     if( m_direction == 0 )
       return new PointMove( m_profil, m_points, 0 );
     final IRecord[] points = m_profil.getPoints();
@@ -93,9 +96,12 @@ public class PointMove implements IProfilChange
     return new PointMove( m_profil, m_points, -m_direction );
   }
 
+  /**
+   * @see java.lang.Object#toString()
+   */
   @Override
   public String toString( )
   {
-    return Messages.getString( "org.kalypso.model.wspm.core.profil.changes.PointMove.0" ); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.model.wspm.core.profil.changes.PointMove.0"); //$NON-NLS-1$
   }
 }

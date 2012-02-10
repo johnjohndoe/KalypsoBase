@@ -49,10 +49,11 @@ import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.interpolation.ZmlInterpolation;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.ZmlTableColumn;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
+import org.kalypso.zml.ui.table.model.columns.ZmlTableValueColumn;
 
 /**
  * updated value will be a new stützstelle. update all values between
@@ -71,24 +72,24 @@ import org.kalypso.zml.ui.table.model.ZmlTableColumn;
 public class InterpolatedValueEditingStrategy extends AbstractEditingStrategy
 {
 
-  public InterpolatedValueEditingStrategy( final ZmlTableColumn column )
+  public InterpolatedValueEditingStrategy( final ZmlTableValueColumn column )
   {
     super( column );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy#getValue(java.lang.Object)
-   */
   @Override
   public String getValue( final IZmlModelRow row )
   {
     try
     {
-      final IZmlValueReference reference = row.get( getColumn().getColumnType().getType() );
+      final IZmlModelCell reference = row.get( getColumn().getColumnType().getType() );
       if( Objects.isNull( reference ) )
         return ""; //$NON-NLS-1$
+      else if( !(reference instanceof IZmlModelValueCell) )
+        return "";
 
-      final Object value = reference.getValue();
+      final IZmlModelValueCell cell = (IZmlModelValueCell) reference;
+      final Object value = cell.getValue();
 
       final CellStyle style = getStyle();
       return String.format( style.getTextFormat() == null ? "%s" : style.getTextFormat(), value ); //$NON-NLS-1$
@@ -108,22 +109,26 @@ public class InterpolatedValueEditingStrategy extends AbstractEditingStrategy
     {
       /** update current cell */
       final IZmlModelRow row = element;
-      final IZmlValueReference reference = row.get( getColumn().getColumnType().getType() );
+      final IZmlModelCell reference = row.get( getColumn().getColumnType().getType() );
+
+      if( !(reference instanceof IZmlModelValueCell) )
+        return;
+      final IZmlModelValueCell cell = (IZmlModelValueCell) reference;
 
       final Number targetValue = getTargetValue( value );
-      reference.doUpdate( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
+      cell.doUpdate( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
 
-      final ZmlTableColumn column = getColumn();
-      final IZmlTableCell cell = column.findCell( row );
+      final ZmlTableValueColumn column = getColumn();
+      final IZmlTableValueCell tableCell = column.findCell( row );
 
       /** update interpolated values before and after */
       final IZmlModelColumn modelColumn = column.getModelColumn();
 
-      final FindNeighbourStuetzstellenVisitor visitor = new FindNeighbourStuetzstellenVisitor( cell );
+      final FindNeighbourStuetzstellenVisitor visitor = new FindNeighbourStuetzstellenVisitor( tableCell );
       modelColumn.accept( visitor );
 
-      interpolate( visitor.getBefore(), cell.getValueReference(), -1 );
-      interpolate( cell.getValueReference(), visitor.getAfter(), 1 );
+      interpolate( visitor.getBefore(), tableCell.getValueReference(), -1 );
+      interpolate( tableCell.getValueReference(), visitor.getAfter(), 1 );
 
     }
     catch( final SensorException e )
@@ -132,7 +137,7 @@ public class InterpolatedValueEditingStrategy extends AbstractEditingStrategy
     }
   }
 
-  private void interpolate( final IZmlValueReference before, final IZmlValueReference current, final int direction ) throws SensorException
+  private void interpolate( final IZmlModelValueCell before, final IZmlModelValueCell current, final int direction ) throws SensorException
   {
     final IZmlModelColumn column = getColumn().getModelColumn();
     final Double defaultValue = ZmlInterpolation.getDefaultValue( column.getMetadata() );

@@ -2,7 +2,7 @@ package org.kalypso.ogc.sensor.zml;
 
 import java.util.Comparator;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.ogc.sensor.IAxis;
 
 /**

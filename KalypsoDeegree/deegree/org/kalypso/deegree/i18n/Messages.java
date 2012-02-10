@@ -40,35 +40,53 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.deegree.i18n;
 
+import java.util.IllegalFormatException;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.kalypso.contribs.java.i18n.I18nUtils;
 
 /**
  * @author Nico Schrage
  */
 public final class Messages
 {
-  private static final String BUNDLE_NAME = "org.kalypso.deegree.i18n.messages"; //$NON-NLS-1$
+  private static final String BUNDLE_NAME = Messages.class.getPackage().getName() + ".messages"; //$NON-NLS-1$
 
   private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
+
+  private static final Object[] NO_ARGS = new Object[0];
 
   private Messages( )
   {
     throw new UnsupportedOperationException();
   }
 
-  /*
-   * java reflections needs this method-signatur
-   */
+/*
+ * java reflections needs this method-signatur
+ */
   public static String getString( final String key )
   {
-    return getString( key, ArrayUtils.EMPTY_OBJECT_ARRAY );
+    return getString( key, NO_ARGS );
   }
 
   public static String getString( final String key, final Object... args )
   {
-    return I18nUtils.formatMessage( RESOURCE_BUNDLE, key, args );
+    String formatStr = ""; //$NON-NLS-1$
+    try
+    {
+      formatStr = RESOURCE_BUNDLE.getString( key );
+      if( args.length == 0 )
+        return formatStr;
+
+      return String.format( formatStr, args );
+    }
+    catch( final MissingResourceException e )
+    {
+      return '!' + key + '!';
+    }
+    catch( final IllegalFormatException e )
+    {
+      e.printStackTrace();
+      return '!' + formatStr + '!';
+    }
   }
 }

@@ -84,9 +84,8 @@ public class NewFeatureManagedMenu extends AbstractManagedMenu
     // HACK: we know this works, as this must be the TreeFeatureSelection here
     final CommandableWorkspace workspace = fs.getWorkspace( null );
 
-    final INewScope scope = NewScopeFactory.createFromTreeSelection( workspace, fs, selectionManager );
-    if( scope != null )
-      scope.addMenuItems( menuManager );
+    final NewFeatureScope scope = NewFeatureScope.createFromTreeSelection( workspace, fs, selectionManager );
+    scope.addMenuItems( menuManager );
 
     // add additions separator: if not, eclipse whines
     menuManager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );

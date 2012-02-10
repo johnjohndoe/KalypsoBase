@@ -45,8 +45,8 @@ import java.net.URL;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
@@ -60,8 +60,8 @@ import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.metadata.IMetadataBoundary;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.core.diagram.base.IZmlLayer;
-import org.kalypso.zml.core.diagram.base.IZmlLayerProvider;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
+import org.kalypso.zml.core.diagram.data.IZmlLayerProvider;
 import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.chart.layer.boundaries.IMetadataLayerBoundary;
@@ -156,13 +156,13 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
   }
 
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Number> getDomainRange( )
   {
     return null;
   }
 
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     if( !m_calculateRange || ArrayUtils.isEmpty( m_descriptors ) )
     {
@@ -224,7 +224,7 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
     if( Objects.isNull( m_handler ) )
       return;
 
-    final IObservation observation = (IObservation) m_handler.getAdapter( IObservation.class );
+    final IObservation observation = m_handler.getObservation();
     if( Objects.isNull( observation ) )
     {
       m_descriptors = null;
@@ -312,7 +312,7 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
     if( m_labelDescriptor == null )
       return super.getTitle();
 
-    final IObservation observation = (IObservation) getDataHandler().getAdapter( IObservation.class );
+    final IObservation observation = getDataHandler().getObservation();
     if( observation == null )
       return m_labelDescriptor;
 

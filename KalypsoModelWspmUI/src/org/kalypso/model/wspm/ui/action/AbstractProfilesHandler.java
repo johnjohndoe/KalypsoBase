@@ -49,16 +49,14 @@ import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 
 /**
- * @deprecated no reference
  * @author Gernot Belger
  */
-@Deprecated
 public abstract class AbstractProfilesHandler extends AbstractHandler
 {
   /**
@@ -71,6 +69,7 @@ public abstract class AbstractProfilesHandler extends AbstractHandler
     final ISelection selection = HandlerUtil.getCurrentSelectionChecked( event );
 
     final ProfileSelection profileSelection = new ProfileSelection( selection );
+
     if( !profileSelection.hasProfiles() )
     {
       final String title = getTitle();
@@ -84,7 +83,7 @@ public abstract class AbstractProfilesHandler extends AbstractHandler
     {
       final Wizard wizard2 = (Wizard) wizard;
       wizard2.setWindowTitle( getTitle() );
-      wizard2.setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), wizard.getClass().getName() ) );
+      wizard2.setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), wizard.getClass().getName() ) );
     }
 
     /* show wizard */

@@ -55,15 +55,15 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.jface.dialog.EnhancedTitleAreaDialog;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.repository.IDataSourceItem;
+import org.kalypso.ui.dialog.EnhancedTitleAreaDialog;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch

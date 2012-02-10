@@ -125,7 +125,7 @@ public class GenericLayerRenderer
 
       // String tooltiptext = m_editInfo.m_text;
       final Point mousePos = m_tooltipInfo.getPosition();
-      if( m_tooltipInfo.getText() != null && mousePos != null )
+      if( (m_tooltipInfo.getText() != null) && (mousePos != null) )
       {
         // tooltiptext = tooltiptext.replace( '\r', ' ' );
         m_tooltipPainter.setTooltip( m_tooltipInfo.getText().replace( '\r', ' ' ) );
@@ -136,8 +136,8 @@ public class GenericLayerRenderer
 // final Font oldFont = gcw.getFont();
 // final Font bannerFont = JFaceResources.getTextFont();
 // gcw.setFont( bannerFont );
-// gcw.setBackground( ChartUtilities.getDisplay().getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
-// gcw.setForeground( ChartUtilities.getDisplay().getSystemColor( SWT.COLOR_INFO_FOREGROUND ) );
+// gcw.setBackground( PlatformUI.getWorkbench().getDisplay().getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
+// gcw.setForeground( PlatformUI.getWorkbench().getDisplay().getSystemColor( SWT.COLOR_INFO_FOREGROUND ) );
 // final Point toolsize = gcw.textExtent( tooltiptext );
 //
 // /*

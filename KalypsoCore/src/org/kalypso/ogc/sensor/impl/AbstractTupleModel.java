@@ -40,7 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.impl;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.kalypso.commons.exception.CancelVisitorException;
@@ -66,10 +66,8 @@ import org.kalypso.ogc.sensor.visitor.ITupleModelVisitor;
  */
 public abstract class AbstractTupleModel implements ITupleModel
 {
-  /**
-   * maps an axis to its position in this tuple model.
-   */
-  private final Map<IAxis, Integer> m_axes2pos = new LinkedHashMap<IAxis, Integer>();
+  /** maps an axis to its position in this tuple model */
+  private final Map<IAxis, Integer> m_axes2pos = new HashMap<IAxis, Integer>();
 
   private final IAxis[] m_axes;
 

@@ -162,7 +162,7 @@ public abstract class Preview<DATA> extends Canvas
 
     /* Center text */
     final int x = (int) Math.ceil( width / 2.0 - extent.x / 2.0 );
-    final int y = (int) Math.ceil( height / 2.0 - extent.y / 2.0 );
+    final int y = (int) Math.ceil( (height / 2.0 - extent.y / 2.0) );
     gc.drawString( title, x, y );
 
     gc.setFont( oldFont );

@@ -50,7 +50,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -62,7 +62,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
@@ -148,7 +147,7 @@ public class ZmlLink
   /**
    * Fetches the observation from the kalypso resource pool, using
    * {@link ResourcePool#getObject(org.kalypso.core.util.pool.IPoolableObjectType)}.
-   *
+   * 
    * @see ResourcePool#getObject(org.kalypso.core.util.pool.IPoolableObjectType.
    */
   public IObservation getObservationFromPool( )
@@ -209,44 +208,53 @@ public class ZmlLink
 
   public URL getLocation( )
   {
+    final TimeseriesLinkType link = getTimeseriesLink();
+    if( link == null )
+      return null;
+
+    final String href = link.getHref();
+
     try
     {
-      final TimeseriesLinkType link = getTimeseriesLink();
-      if( link == null )
-        return null;
-
-      final String href = link.getHref();
-      return UrlResolverSingleton.resolveUrl( m_context, href );
+      return new URL( m_context, href );
     }
     catch( final MalformedURLException ignored )
     {
-      return null;
     }
+
+    return null;
   }
 
   public URL getExistingLocation( )
   {
+    final TimeseriesLinkType link = getTimeseriesLink();
+    if( link == null )
+      return null;
+
+    final String href = link.getHref();
+
     // check if resource exists
     InputStream is = null;
-
     try
     {
-      final URL zmlUrl = getLocation();
-      if( zmlUrl == null )
-        return null;
-
+      final URL zmlUrl = new URL( m_context, href );
       is = zmlUrl.openStream();
-
       return zmlUrl;
     }
-    catch( final IOException ignored )
+    catch( final MalformedURLException e )
     {
-      return null;
+      // ignore
+    }
+    catch( final IOException e )
+    {
+      // ignore
     }
     finally
     {
       IOUtils.closeQuietly( is );
     }
+
+    return null;
   }
 
   /**
@@ -257,11 +265,11 @@ public class ZmlLink
   {
     try
     {
-      // final IFeatureType featureType = m_feature.getFeatureType();
-      //
-      // final Object linkPT = GMLXPathUtilities.query( m_linkPath, featureType );
-      // if( !(linkPT instanceof IPropertyType) )
-      // return null;
+// final IFeatureType featureType = m_feature.getFeatureType();
+//
+// final Object linkPT = GMLXPathUtilities.query( m_linkPath, featureType );
+// if( !(linkPT instanceof IPropertyType) )
+// return null;
 
       if( m_linkPath == null )
         return null;

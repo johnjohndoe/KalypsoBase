@@ -41,14 +41,14 @@
 package org.kalypso.zml.core.table.model.transaction;
 
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 
 /**
  * @author Dirk Kuch
  */
 public interface IZmlModelUpdateCommand
 {
-  IZmlValueReference getTarget( );
+  IZmlModelValueCell getTarget( );
 
   Number getValue( ) throws SensorException;
 

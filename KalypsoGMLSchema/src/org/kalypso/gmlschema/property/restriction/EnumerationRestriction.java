@@ -60,7 +60,7 @@ public class EnumerationRestriction implements IRestriction
 
   public EnumerationRestriction( final Map<Object, IAnnotation> map )
   {
-    this( map, null );
+    this( map, null);
   }
 
   public EnumerationRestriction( final Map<Object, IAnnotation> map, final QName simpleTypeQName )
@@ -68,6 +68,7 @@ public class EnumerationRestriction implements IRestriction
     m_map = map;
     m_simpleType = simpleTypeQName;
   }
+
 
   public Object[] getEnumeration( )
   {

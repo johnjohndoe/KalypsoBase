@@ -49,7 +49,7 @@ public class DoubleComparator implements Comparator<Number>
 {
   private double m_delta = 0.0;
 
-  public DoubleComparator( final double delta )
+  public DoubleComparator( double delta )
   {
     m_delta = delta;
   }
@@ -58,15 +58,15 @@ public class DoubleComparator implements Comparator<Number>
    * @see java.util.Comparator#compare(Object, Object)
    */
   @Override
-  public int compare( final Number o1, final Number o2 )
+  public int compare( Number o1, Number o2 )
   {
-    final double d1 = o1.doubleValue();
-    final double d2 = o2.doubleValue();
+    double d1 = o1.doubleValue();
+    double d2 = o2.doubleValue();
 
     return compare( d1, d2 );
   }
 
-  public int compare( final double d1, final double d2 )
+  public int compare( double d1, double d2 )
   {
     if( d1 < d2 - m_delta )
       return -1;

@@ -42,41 +42,31 @@ package org.kalypso.model.wspm.core.profil.impl;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.Range;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.commons.exception.CancelVisitorException;
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.core.profil.MarkerIndex;
+import org.kalypso.model.wspm.core.profil.changes.ActiveObjectEdit;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.changes.ProfileObjectAdd;
 import org.kalypso.model.wspm.core.profil.impl.marker.PointMarker;
-import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecordVisitor;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfileRecord;
-import org.kalypso.observation.IObservationVisitor;
 import org.kalypso.observation.phenomenon.IPhenomenon;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -84,8 +74,9 @@ import org.kalypso.observation.result.ITupleResultChangedListener;
 import org.kalypso.observation.result.TupleResult;
 
 /**
- * @author Kim Werner
- * @author Dirk Kuch
+ * FIXME: event handling for all setters! Basisprofil with Events
+ * 
+ * @author kimwerner
  */
 public abstract class AbstractProfil implements IProfil
 {
@@ -97,64 +88,45 @@ public abstract class AbstractProfil implements IProfil
 
   private IPhenomenon m_phenomenon;
 
+  private IRecord m_activePoint;
+
+  private IComponent m_activePointProperty;
+
   private TupleResult m_result;
 
   private String m_name;
 
   private String m_description;
 
-  private final Set<IProfilListener> m_listeners = new LinkedHashSet<IProfilListener>( 10 );
+  private final List<IProfilListener> m_listeners = new ArrayList<IProfilListener>( 10 );
 
   private final Map<Object, Object> m_additionalProfileSettings = new HashMap<Object, Object>();
 
   private final ITupleResultChangedListener m_tupleResultListener = new ProfilTupleResultChangeListener( this );
 
-  private final ITupleResultChangedListener m_objectTupleListener = new ProfilObjectListener( this );
-
   private MarkerIndex m_markerIndex;
 
-  private final IProfileFeature m_source;
-
-  private final RangeSelection m_selection;
-
-  private Object m_transactionLock;
-
-  private int m_transactionHint;
-
-
-  public AbstractProfil( final String type, final TupleResult result, final IProfileFeature source )
+  public AbstractProfil( final String type, final TupleResult result )
   {
     m_type = type;
-    m_source = source;
     setResult( result );
-
-    m_selection = new RangeSelection( this );
   }
 
   @Override
-  public final IRangeSelection getSelection( )
+  public void addPoint( final int index, final IRecord point )
   {
-    return m_selection;
+    getResult().add( index, point );
   }
 
   @Override
-  public IProfileFeature getSource( )
+  public boolean addPoint( final IRecord point )
   {
-    return m_source;
+    return getResult().add( point );
   }
 
-  @Override
-  public void addPoint( final int index, final IProfileRecord point )
-  {
-    getResult().add( index, point.getRecord() );
-  }
-
-  @Override
-  public boolean addPoint( final IProfileRecord point )
-  {
-    return getResult().add( point.getRecord() );
-  }
-
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#addPointProperty(org.kalypso.model.wspm.core.profil.POINT_PROPERTY)
+   */
   @Override
   public void addPointProperty( final IComponent pointProperty )
   {
@@ -194,17 +166,17 @@ public abstract class AbstractProfil implements IProfil
     getResult().addComponent( pointProperty, initialValues );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#setProfileObject(org.kalypso.model.wspm.core.profil.IProfileObject[])
+   */
   @Override
   public IProfileObject[] addProfileObjects( final IProfileObject... profileObjects )
   {
-    for( final IProfileObject object : profileObjects )
-    {
-      // TODO: what if objects have additional state ?
-      object.getObservation().getResult().addChangeListener( m_objectTupleListener );
-      m_profileObjects.add( object );
-    }
 
-    fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.OBJECT_CHANGED ) );
+    Collections.addAll( m_profileObjects, profileObjects );
+    final ProfilChangeHint hint = new ProfilChangeHint();
+    hint.setObjectChanged();
+    fireProfilChanged( hint, new IProfilChange[] { new ProfileObjectAdd( this, profileObjects ) } );
 
     return m_profileObjects.toArray( new IProfileObject[] {} );
   }
@@ -212,32 +184,26 @@ public abstract class AbstractProfil implements IProfil
   @Override
   public void addProfilListener( final IProfilListener pl )
   {
-    if( Objects.isNull( pl ) )
-      return;
-
     m_listeners.add( pl );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#createProfilPoint()
+   */
   @Override
-  public IProfileRecord createProfilPoint( )
+  public IRecord createProfilPoint( )
   {
-    final IRecord record = m_result.createRecord();
-
-    return new ProfileRecord( this, record );
+    return m_result.createRecord();
   }
 
   private void fireProblemMarkerChanged( )
   {
-    if( m_transactionLock != null )
-      return;
-    // FIXME: check: fireProblemMarkerChanged after transaction?
-
     final IProfilListener[] listeners = m_listeners.toArray( new IProfilListener[m_listeners.size()] );
-    for( final IProfilListener listener : listeners )
+    for( final IProfilListener l : listeners )
     {
       try
       {
-        listener.onProblemMarkerChanged( this );
+        l.onProblemMarkerChanged( this );
       }
       catch( final Throwable e )
       {
@@ -247,21 +213,18 @@ public abstract class AbstractProfil implements IProfil
     }
   }
 
-  void fireProfilChanged( final ProfilChangeHint hint )
+  @Override
+  public void fireProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    // TODO: instead of ProfileOperation, we could combine the hints ourselfs during transaction mode
-    if( m_transactionLock != null )
-    {
-      m_transactionHint |= hint.getEvent();
+    if( ArrayUtils.isEmpty( changes ) )
       return;
-    }
 
     final IProfilListener[] listeners = m_listeners.toArray( new IProfilListener[m_listeners.size()] );
-    for( final IProfilListener listener : listeners )
+    for( final IProfilListener l : listeners )
     {
       try
       {
-        listener.onProfilChanged( hint );
+        l.onProfilChanged( hint, changes );
       }
       catch( final Throwable e )
       {
@@ -269,39 +232,59 @@ public abstract class AbstractProfil implements IProfil
         KalypsoModelWspmCorePlugin.getDefault().getLog().log( status );
       }
     }
+  }
+
+  /**
+   * @return Returns the activePoint.
+   */
+  @Override
+  public IRecord getActivePoint( )
+  {
+    if( m_result.isEmpty() )
+      return null;
+    else if( m_activePoint == null )
+      return m_result.get( 0 );
+    else
+      return m_activePoint;
+  }
+
+  @Override
+  public IComponent getActiveProperty( )
+  {
+    return m_activePointProperty;
   }
 
   @Override
   public String getComment( )
   {
     final String description = getDescription();
-    if( Strings.isEmpty( description ) )
+    if( description == null )
       return ""; //$NON-NLS-1$
 
     return description;
   }
 
+  /**
+   * @see org.kalypso.observation.IObservation#getDescription()
+   */
   @Override
   public String getDescription( )
   {
     return m_description;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#getMarkedPoints()
+   */
   @Override
-  public IProfileRecord[] getMarkedPoints( )
+  public IRecord[] getMarkedPoints( )
   {
-    final ArrayList<IProfileRecord> records = new ArrayList<IProfileRecord>();
+    final ArrayList<IRecord> records = new ArrayList<IRecord>();
 
-    final IProfileRecord[] points = getPoints();
-    for( final IProfileRecord point : points )
-    {
-      if( getPointMarkerFor( point ).length > 0 )
-      {
-        records.add( point );
-      }
-    }
-
-    return records.toArray( new IProfileRecord[] {} );
+    for( final IRecord record : getResult() )
+      if( getPointMarkerFor( record ).length > 0 )
+        records.add( record );
+    return records.toArray( new IRecord[] {} );
   }
 
   @Override
@@ -310,44 +293,53 @@ public abstract class AbstractProfil implements IProfil
     return m_name;
   }
 
+  /**
+   * @see org.kalypso.observation.IObservation#getPhenomenon()
+   */
   @Override
   public IPhenomenon getPhenomenon( )
   {
     return m_phenomenon;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#getPoint(int)
+   */
   @Override
-  public IProfileRecord getPoint( final int index )
+  public IRecord getPoint( final int index )
   {
-    return getPoints()[index];
+
+    return getResult().get( index );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#getPointMarkerFor(org.kalypso.observation.result.IComponent)
+   */
   @Override
   public IProfilPointMarker[] getPointMarkerFor( final IComponent markerColumn )
   {
-    if( Objects.isNull( markerColumn ) )
-      return new IProfilPointMarker[] {};
 
+    if( markerColumn == null )
+      return new IProfilPointMarker[] {};
     final int index = getResult().indexOfComponent( markerColumn );
     if( index < 0 )
       return new IProfilPointMarker[] {};
 
     final List<IProfilPointMarker> markers = new ArrayList<IProfilPointMarker>();
-
-    final IProfileRecord[] points = getPoints();
-    for( final IProfileRecord point : points )
+    for( final IRecord record : getResult() )
     {
-      final Object value = point.getValue( index );
-      if( Objects.isNotNull( value ) )
-      {
-        markers.add( new PointMarker( markerColumn, point ) );
-      }
+      final Object value = record.getValue( index );
+      if( value != null )
+        markers.add( new PointMarker( markerColumn, record ) );
     }
     return markers.toArray( new IProfilPointMarker[] {} );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#getPointMarkerFor(org.kalypso.observation.result.IRecord)
+   */
   @Override
-  public IProfilPointMarker[] getPointMarkerFor( final IProfileRecord record )
+  public IProfilPointMarker[] getPointMarkerFor( final IRecord record )
   {
     final ArrayList<IProfilPointMarker> pointMarkers = new ArrayList<IProfilPointMarker>();
     final IComponent[] markers = getPointMarkerTypes();
@@ -355,13 +347,14 @@ public abstract class AbstractProfil implements IProfil
     {
       final int index = getResult().indexOfComponent( marker );
       if( record.getValue( index ) != null )
-      {
         pointMarkers.add( new PointMarker( marker, record ) );
-      }
     }
     return pointMarkers.toArray( new PointMarker[] {} );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#getPointMarkerFor(java.lang.String)
+   */
   @Override
   public IProfilPointMarker[] getPointMarkerFor( final String pointMarkerID )
   {
@@ -371,20 +364,19 @@ public abstract class AbstractProfil implements IProfil
     return getPointMarkerFor( cmp );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#getPointMarkerTypes()
+   */
   @Override
   public IComponent[] getPointMarkerTypes( )
   {
-    final List<IComponent> marker = new ArrayList<IComponent>();
-
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( getType() );
+    final List<IComponent> marker = new ArrayList<IComponent>();
     final IComponent[] properties = getPointProperties();
 
     for( final IComponent component : properties )
-    {
       if( provider.isMarker( component.getId() ) )
         marker.add( component );
-    }
-
     return marker.toArray( new IComponent[] {} );
   }
 
@@ -404,7 +396,7 @@ public abstract class AbstractProfil implements IProfil
 
   /**
    * CREATES A NEW POINT PROPERTY.
-   *
+   * 
    * @return a pointProperty from PointPropertyProvider, see
    *         {@code IProfilPointPropertyProvider#getPointProperty(String)}
    *         <p>
@@ -418,49 +410,60 @@ public abstract class AbstractProfil implements IProfil
     return provider == null ? null : provider.getPointProperty( propertyID );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#getRecordPoints()
+   */
   @Override
-  public IProfileRecord[] getPoints( )
+  public IRecord[] getPoints( )
   {
-    final Set<IProfileRecord> collection = new LinkedHashSet<>();
-    final IRecord[] records = getResult().toArray( new IRecord[] {} );
-    for( final IRecord record : records )
+    return getResult().toArray( new IRecord[] {} );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#getPoints(int, int)
+   */
+  @Override
+  public IRecord[] getPoints( final int startPoint, final int endPoint )
+  {
+    final int size = endPoint - startPoint + 1;
+    final IRecord[] subList = new IRecord[size];
+    for( int i = 0; i < size; i++ )
     {
-      collection.add( new ProfileRecord( this, record ) );
+      subList[i] = getResult().get( startPoint + i );
     }
-
-    return collection.toArray( new IProfileRecord[] {} );
+    return subList;
   }
 
-  @Override
-  public IProfileRecord[] getPoints( final int startPoint, final int endPoint )
-  {
-    return ProfileVisitors.findPointsBetween( this, startPoint, endPoint );
-  }
-
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#getProblemMarker()
+   */
   @Override
   public MarkerIndex getProblemMarker( )
   {
     return m_markerIndex;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#getProfileObject()
+   */
   @Override
   public IProfileObject[] getProfileObjects( )
   {
     return m_profileObjects.toArray( new IProfileObject[] {} );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#getProfileObject()
+   */
   @SuppressWarnings("unchecked")
   @Override
   public <T extends IProfileObject> T[] getProfileObjects( final Class<T> clazz )
   {
-    // TODO visitor
     final List<T> objects = new ArrayList<T>();
     for( final IProfileObject object : m_profileObjects )
     {
       if( clazz.isInstance( object ) )
-      {
         objects.add( (T) object );
-      }
     }
 
     return objects.toArray( (T[]) Array.newInstance( clazz, objects.size() ) );
@@ -477,6 +480,9 @@ public abstract class AbstractProfil implements IProfil
     return m_additionalProfileSettings.get( key );
   }
 
+  /**
+   * @see org.kalypso.observation.IObservation#getResult()
+   */
   @Override
   public TupleResult getResult( )
   {
@@ -489,45 +495,102 @@ public abstract class AbstractProfil implements IProfil
     return m_station;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#getType()
+   */
   @Override
   public String getType( )
   {
     return m_type;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#hasPointProperty(org.kalypso.model.wspm.core.profil.IComponent)
+   */
   @Override
-  public boolean removePoint( final IProfileRecord point )
+  public boolean hasPointProperty( final IComponent property )
   {
-    return getResult().remove( point.getRecord() );
+    return property == null ? false : getResult().hasComponent( property );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#hasPointProperty(org.kalypso.model.wspm.core.profil.IComponent)
+   */
   @Override
-  public boolean removePoints( final IProfileRecord[] points )
+  public IComponent hasPointProperty( final String propertyId )
   {
-    boolean state = true;
-    for( final IProfileRecord point : points )
-    {
-      if( !getResult().remove( point.getRecord() ) )
-        state = false;
-    }
-
-    return state;
+    for( final IComponent component : getResult().getComponents() )
+      if( component.getId().equals( propertyId ) )
+        return component;
+    return null;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#indexOfPoint(org.kalypso.observation.result.IRecord)
+   */
+  @Override
+  public int indexOfPoint( final IRecord point )
+  {
+    return getResult().indexOf( point );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#indexOfProperty(org.kalypso.observation.result.IComponent)
+   */
+  @Override
+  public int indexOfProperty( final IComponent pointProperty )
+  {
+    return getResult().indexOfComponent( pointProperty );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#indexOfProperty(java.lang.String)
+   */
+  @Override
+  public int indexOfProperty( final String id )
+  {
+    final IComponent comp = hasPointProperty( id );
+    if( comp != null )
+      return getResult().indexOfComponent( comp );
+    return -1;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profilinterface.IProfil#removePoint(org.kalypso.model.wspm.core.profilinterface.IPoint)
+   */
+  @Override
+  public boolean removePoint( final IRecord point )
+  {
+    return getResult().remove( point );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#removePoints(org.kalypso.observation.result.IRecord[])
+   */
+  @Override
+  public boolean removePoints( final IRecord[] points )
+  {
+    return getResult().removeAll( Arrays.asList( points ) );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#removePointMarker(org.kalypso.model.wspm.core.profil.IProfilPointMarker)
+   */
   @Override
   public Object removePointMarker( final IProfilPointMarker marker )
   {
     final Object oldValue = marker.getValue();
 
-    final IComponent id = marker.getComponent();
+    final IComponent id = marker.getId();
     final Object defaultValue = id.getDefaultValue();
     marker.setValue( defaultValue );
-
-    fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.MARKER_MOVED ) );
 
     return oldValue;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#removePointProperty(org.kalypso.model.wspm.core.profil.POINT_PROPERTY)
+   */
   @Override
   public boolean removePointProperty( final IComponent pointProperty )
   {
@@ -537,16 +600,13 @@ public abstract class AbstractProfil implements IProfil
     return getResult().removeComponent( index );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#removeProfileObject(org.kalypso.model.wspm.core.profil.IProfileObject)
+   */
   @Override
   public boolean removeProfileObject( final IProfileObject profileObject )
   {
-    profileObject.getObservation().getResult().removeChangeListener( m_objectTupleListener );
-
-    final boolean removed = m_profileObjects.remove( profileObject );
-
-    fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.OBJECT_CHANGED ) );
-
-    return removed;
+    return m_profileObjects.remove( profileObject );
   }
 
   @Override
@@ -555,49 +615,72 @@ public abstract class AbstractProfil implements IProfil
     m_listeners.remove( pl );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#removeProperty(java.lang.Object)
+   */
   @Override
   public Object removeProperty( final Object key )
   {
     final Object old = m_additionalProfileSettings.get( key );
     m_additionalProfileSettings.remove( key );
-
-    fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.PROFILE_PROPERTY_CHANGED ) );
-
     return old;
+  }
+
+  @Override
+  public void setActivePoint( final IRecord point )
+  {
+    m_activePoint = point;
+
+    final ProfilChangeHint hint = new ProfilChangeHint();
+    hint.setActivePointChanged();
+    fireProfilChanged( hint, new IProfilChange[] { new ActiveObjectEdit( this, point, m_activePointProperty ) } );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#setActiveproperty(org.kalypso.model.wspm.core.profil.IComponent)
+   */
+  @Override
+  public void setActivePointProperty( final IComponent pointProperty )
+  {
+    m_activePointProperty = pointProperty;
+    final ProfilChangeHint hint = new ProfilChangeHint();
+    hint.setActivePropertyChanged( true );
+    fireProfilChanged( hint, new IProfilChange[] { new ActiveObjectEdit( this, m_activePoint, m_activePointProperty ) } );
   }
 
   @Override
   public void setComment( final String comment )
   {
     setDescription( comment );
-
-    fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.PROFILE_PROPERTY_CHANGED ) );
   }
 
+  /**
+   * @see org.kalypso.observation.IObservation#setDescription(java.lang.String)
+   */
   @Override
   public void setDescription( final String desc )
   {
     m_description = desc;
-
-    fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.PROFILE_PROPERTY_CHANGED ) );
   }
 
   @Override
   public void setName( final String name )
   {
     m_name = name;
-
-    fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.PROFILE_PROPERTY_CHANGED ) );
   }
 
+  /**
+   * @see org.kalypso.observation.IObservation#setPhenomenon(org.kalypso.observation.phenomenon.IPhenomenon)
+   */
   @Override
   public void setPhenomenon( final IPhenomenon phenomenon )
   {
     m_phenomenon = phenomenon;
-
-    fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.PROFILE_PROPERTY_CHANGED ) );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#setProblemMarker(org.eclipse.core.resources.IMarker[])
+   */
   @Override
   public void setProblemMarker( final IMarker[] markers )
   {
@@ -608,6 +691,7 @@ public abstract class AbstractProfil implements IProfil
 
   /**
    * @deprecated caution: additional properties will not be serialized to profile features
+   * @see org.kalypso.model.wspm.core.profil.IProfil#setProperty(java.lang.Object, java.lang.Object)
    */
   @Deprecated
   @Override
@@ -615,21 +699,23 @@ public abstract class AbstractProfil implements IProfil
   {
     m_additionalProfileSettings.put( key, value );
 
-    final ProfilChangeHint hint = new ProfilChangeHint();
-    hint.setObjectChanged();
-
-    fireProfilChanged( hint );
+// // TODO implement some meaningful change event
+// final ProfilChangeHint hint = new ProfilChangeHint();
+// hint.setObjectChanged();
+//
+// fireProfilChanged( hint, new IProfilChange[] { new EmptyChange() } );
   }
 
+  /**
+   * @see org.kalypso.observation.IObservation#setResult(java.lang.Object)
+   */
   @Override
   public void setResult( final TupleResult result )
   {
     Assert.isNotNull( result );
 
     if( m_result != null )
-    {
       m_result.removeChangeListener( m_tupleResultListener );
-    }
 
     m_result = result;
 
@@ -639,14 +725,20 @@ public abstract class AbstractProfil implements IProfil
     m_result.addChangeListener( m_tupleResultListener );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfil#setStation(double)
+   */
   @Override
   public void setStation( final double station )
   {
-    m_station = station;
+    // FIXME: event handling
 
-    fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.PROFILE_PROPERTY_CHANGED ) );
+    m_station = station;
   }
 
+  /**
+   * @see java.lang.Object#toString()
+   */
   @Override
   public String toString( )
   {
@@ -655,201 +747,5 @@ public abstract class AbstractProfil implements IProfil
       return String.format( Messages.getString( "AbstractProfil_0" ), station ); //$NON-NLS-1$
 
     return super.toString();
-  }
-
-  @Override
-  public void accept( final IObservationVisitor visitor )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public int indexOfProperty( final IComponent pointProperty )
-  {
-    return getResult().indexOfComponent( pointProperty );
-  }
-
-  @Override
-  public int indexOfProperty( final String id )
-  {
-    final IComponent component = hasPointProperty( id );
-    if( Objects.isNull( component ) )
-      return -1;
-
-    return getResult().indexOfComponent( component );
-  }
-
-  @Override
-  public int indexOf( final IProfileRecord record )
-  {
-    final int index = record.getIndex();
-    if( index == -1 ) // fall back - this should never happen
-      return getResult().indexOf( record.getRecord() );
-
-    return index;
-  }
-
-  @Override
-  public boolean hasPointProperty( final IComponent component )
-  {
-    if( Objects.isNull( component ) )
-      return false;
-
-    return getResult().hasComponent( component );
-  }
-
-  @Override
-  public IComponent hasPointProperty( final String identifier )
-  {
-    final IComponent[] components = getResult().getComponents();
-    for( final IComponent component : components )
-    {
-      if( StringUtils.equals( component.getId(), identifier ) )
-        return component;
-    }
-
-    return null;
-  }
-
-  @Override
-  public IProfileRecord getFirstPoint( )
-  {
-    if( getResult().isEmpty() )
-      return null;
-
-    return new ProfileRecord( this, getResult().get( 0 ) );
-  }
-
-  @Override
-  public IProfileRecord getLastPoint( )
-  {
-    final TupleResult result = getResult();
-    if( result.isEmpty() )
-      return null;
-
-    return new ProfileRecord( this, result.get( result.size() - 1 ) );
-  }
-
-  @Override
-  public void accept( final IProfileRecordVisitor visitor, final int direction )
-  {
-    doAccept( visitor, getPoints(), direction );
-  }
-
-  @Override
-  public void accept( final IProfileRecordVisitor visitor, final Double p1, final Double pn, final boolean includeVertexPoints, final int direction )
-  {
-    accept( visitor, Range.between( p1, pn ), includeVertexPoints, direction );
-  }
-
-  @Override
-  public void accept( final IProfileRecordVisitor visitor, final Range<Double> range, final boolean includeVertexPoints, final int direction )
-  {
-    doAccept( visitor, ProfileVisitors.findPointsBetween( this, range, includeVertexPoints ), direction );
-  }
-
-  private void doAccept( final IProfileRecordVisitor visitor, final IProfileRecord[] points, final int direction )
-  {
-    if( visitor.isWriter() )
-      startTransaction( visitor );
-
-    try
-    {
-      if( direction >= 0 )
-      {
-        for( final IProfileRecord point : points )
-        {
-          visitor.visit( point, 1 );
-        }
-      }
-      else
-      {
-        for( int index = ArrayUtils.getLength( points ) - 1; index > 0; index-- )
-        {
-          final IProfileRecord point = points[index];
-          visitor.visit( point, direction );
-        }
-      }
-    }
-    catch( final CancelVisitorException ex )
-    {
-      return;
-    }
-    finally
-    {
-      if( visitor.isWriter() )
-        stopTransaction( visitor );
-    }
-  }
-
-  @Override
-  public IProfileRecord findNextPoint( final double breite )
-  {
-    return ProfileVisitors.findNextPoint( this, breite );
-  }
-
-  @Override
-  public IProfileRecord findPreviousPoint( final double breite )
-  {
-    return ProfileVisitors.findPreviousPoint( this, breite );
-  }
-
-  @Override
-  public IProfilPointMarker[] getPointMarkers( )
-  {
-    final Set<IProfilPointMarker> markers = new LinkedHashSet<>();
-
-    final IComponent[] types = getPointMarkerTypes();
-    for( final IComponent type : types )
-    {
-      Collections.addAll( markers, getPointMarkerFor( type ) );
-    }
-
-    return markers.toArray( new IProfilPointMarker[] {} );
-  }
-
-  @Override
-  public synchronized void startTransaction( final Object lock )
-  {
-    if( m_transactionLock != null )
-      throw new IllegalStateException();
-
-    m_transactionLock = lock;
-    m_transactionHint = 0;
-  }
-
-  @Override
-  public synchronized void stopTransaction( final Object lock )
-  {
-    if( m_transactionLock == null )
-      throw new IllegalStateException();
-
-    final int hint = m_transactionHint;
-
-    m_transactionLock = null;
-    m_transactionHint = 0;
-
-    fireProfilChanged( new ProfilChangeHint( hint ) );
-  }
-
-  @Override
-  public String getSrsName( )
-  {
-    final IProfileFeature source = getSource();
-    if( Objects.isNotNull( source ) )
-      return source.getSrsName();
-
-    return null;
-  }
-
-  @Override
-  public void setSrsName( final String srsName )
-  {
-    // FIXME: check: there is also a profile object SRSNAME
-    final IProfileFeature source = getSource();
-    if( Objects.isNotNull( source ) )
-      source.setSrsName( srsName );
-
-    fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.PROFILE_PROPERTY_CHANGED ) );
   }
 }

@@ -55,6 +55,8 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 /**
  * Layer provider which provides a {@link TupleResultLineChartLayer} on a feature based observation.
@@ -78,44 +80,33 @@ public class TupleResultLineLayerProvider extends AbstractLayerProvider
   @Override
   public IChartLayer getLayer( final URL context )
   {
-    final TupleResultLineLayer icl = new TupleResultLineLayer( this, getDataContainer(), getStyleSet());
+    final TupleResultLineLayer icl = new TupleResultLineLayer( this, getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$ //$NON-NLS-2$
     return icl;
   }
 
-  private TupleResultDomainValueData< ? , ? > getDataContainer( )
-  {
-    final IObservation<TupleResult> observation = getObservation();
-    if( observation == null )
-      return null;
-
-    final IParameterContainer pc1 = getParameterContainer();
-    // final TupleResult result = obs.getResult();
-    final String domainComponentId = pc1.getParameterValue( "domainComponentId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
-    final String valueComponentId = pc1.getParameterValue( "valueComponentId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
-    final TupleResultDomainValueData< ? , ? > data = new TupleResultDomainValueData<Object, Object>( observation, domainComponentId, valueComponentId );
-    return data;
-  }
-
-  protected IObservation<TupleResult> getObservation( )
+  @SuppressWarnings({ "unchecked" })
+  private TupleResultDomainValueData getDataContainer( )
   {
     final IParameterContainer pc = getParameterContainer();
     final String featureKey = pc.getParameterValue( "featureKey", null ); //$NON-NLS-1$
     final String propertyNameStr = pc.getParameterValue( "propertyName", null ); //$NON-NLS-1$
     final QName propertyName = propertyNameStr == null ? null : QName.valueOf( propertyNameStr );
 
-    final Feature baseFeature = (Feature) getModel().getData( featureKey );
+    final Feature baseFeature = ChartDataProvider.FEATURE_MAP.get( featureKey );
     final Feature feature;
     if( propertyName == null )
-    {
       feature = baseFeature;
-    }
     else
-    {
       feature = FeatureHelper.getFeature( baseFeature.getWorkspace(), baseFeature.getProperty( propertyName ) );
-    }
-    if( feature != null )
-      return ObservationFeatureFactory.toObservation( feature );
-    else
+
+    if( feature == null )
       return null;
+
+    final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( feature );
+    // final TupleResult result = obs.getResult();
+    final String domainComponentId = pc.getParameterValue( "domainComponentId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String valueComponentId = pc.getParameterValue( "valueComponentId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final TupleResultDomainValueData data = new TupleResultDomainValueData( obs, domainComponentId, valueComponentId );
+    return data;
   }
 }

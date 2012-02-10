@@ -36,6 +36,8 @@
 package org.kalypsodeegree_impl.io.shpapi;
 
 /**
+ * 
+ * 
  * @version $Revision$
  */
 public class InvalidKeyTypeException extends DBaseIndexException
@@ -46,7 +48,7 @@ public class InvalidKeyTypeException extends DBaseIndexException
    * @param key
    * @param index
    */
-  public InvalidKeyTypeException( final Comparable key, final DBaseIndex index )
+  public InvalidKeyTypeException( Comparable key, DBaseIndex index )
   {
     super( "Key type " + key.getClass().getName() + " is invalid for index " + index, key, index );
   }

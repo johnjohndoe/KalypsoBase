@@ -3,11 +3,14 @@
  */
 package org.kalypso.kml.export.wizard;
 
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
@@ -24,7 +27,8 @@ import org.kalypso.kml.export.KalypsoKMLPlugin;
 import org.kalypso.kml.export.constants.IKMLExportSettings;
 import org.kalypso.kml.export.interfaces.IKMLAdapter;
 import org.kalypso.kml.export.utils.ThemeGoogleEarthExportable;
-import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
+import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
+import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -41,7 +45,7 @@ import de.micromata.opengis.kml.v_2_2_0.Kml;
 
 /**
  * basic runnable to export a map view into a kml file.
- *
+ * 
  * @author Dirk Kuch
  */
 public class KMLExporter implements ICoreRunnableWithProgress
@@ -80,6 +84,28 @@ public class KMLExporter implements ICoreRunnableWithProgress
     }
 
     m_provider = provider.toArray( new IKMLAdapter[] {} );
+  }
+
+  /**
+   * @return
+   * @throws IOException
+   */
+  private File createTmpDir( ) throws IOException
+  {
+    final URL urlTmpDir = new File( System.getProperty( "java.io.tmpdir" ) ).toURI().toURL(); //$NON-NLS-1$
+
+    Assert.isNotNull( urlTmpDir );
+
+    /* delete old test dir */
+    final URL urlBaseDir = new URL( urlTmpDir + "kalypsoGoogleEarthExport/" ); //$NON-NLS-1$
+
+    final File fBaseDir = new File( urlBaseDir.getFile() );
+    if( !fBaseDir.exists() )
+      FileUtils.forceMkdir( fBaseDir );
+
+    FileUtils.cleanDirectory( fBaseDir );
+
+    return fBaseDir;
   }
 
   /*
@@ -123,8 +149,9 @@ public class KMLExporter implements ICoreRunnableWithProgress
         processTheme( folder, theme );
       }
 
-// final StyleTypeFactory styleFactory = StyleTypeFactory.getStyleFactory();
-// styleFactory.addStylesToDocument( document );
+      // FIXME
+// final StyleTypeFactory styleFactory = StyleTypeFactory.getStyleFactory( document );
+// styleFactory.addStylesToDocument( documentType );
 
       // TODO;
 // GoogleEarthExportUtils.removeEmtpyFolders( folderType );
@@ -139,16 +166,7 @@ public class KMLExporter implements ICoreRunnableWithProgress
 // styleFactory.dispose();
 
       /* marshalling */
-      final BufferedOutputStream outputStream = new BufferedOutputStream( new FileOutputStream( m_settings.getExportFile() ) );
-      try
-      {
-        kml.marshal( outputStream );
-      }
-      finally
-      {
-        outputStream.close();
-      }
-
+      kml.marshal( m_settings.getExportFile() );
     }
     catch( final Exception e )
     {
@@ -160,17 +178,14 @@ public class KMLExporter implements ICoreRunnableWithProgress
 
   private void processTheme( final Folder parentFolder, final IKalypsoTheme theme )
   {
-    if( !theme.isVisible() )
-      return;
-
     /* get inner themes */
-    if( theme instanceof IKalypsoCascadingTheme )
+    if( theme instanceof AbstractCascadingLayerTheme )
     {
       final Folder folder = parentFolder.createAndAddFolder();
       folder.setName( theme.getName().getValue() );
 
-      final IKalypsoCascadingTheme cascading = (IKalypsoCascadingTheme) theme;
-      final IMapModell inner = cascading.getInnerMapModel();
+      final AbstractCascadingLayerTheme cascading = (AbstractCascadingLayerTheme) theme;
+      final GisTemplateMapModell inner = cascading.getInnerMapModel();
 
       final IKalypsoTheme[] themes = inner.getAllThemes();
       for( final IKalypsoTheme t : themes )

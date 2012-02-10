@@ -198,7 +198,7 @@ public class FeatureThemeNode extends KalypsoThemeNode<IKalypsoFeatureTheme> imp
       }
       else if( object instanceof FeatureTypeStyleNode )
       {
-        final FeatureTypeStyleNode fts = (FeatureTypeStyleNode) object;
+        final FeatureTypeStyleNode fts = ((FeatureTypeStyleNode) object);
         final String ftsName = fts.getStyle().getName();
         if( ftsName != null && ftsName.equals( styleName ) )
           return fts;
@@ -266,7 +266,7 @@ public class FeatureThemeNode extends KalypsoThemeNode<IKalypsoFeatureTheme> imp
       /* Draw the text. */
       final String legendText = legendElement.getText();
       if( legendText != null )
-        gc.drawString( legendText, BORDER + ICON_SIZE + GAP + legendElement.getLevel() * (ICON_SIZE + GAP), heightSoFar, true );
+        gc.drawString( legendText, BORDER + (ICON_SIZE + GAP) + legendElement.getLevel() * (ICON_SIZE + GAP), heightSoFar, true );
 
       // TODO:
       // Images should be disposed here.

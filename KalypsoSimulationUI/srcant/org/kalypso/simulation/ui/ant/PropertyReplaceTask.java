@@ -40,7 +40,6 @@
  --------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.ant;
 
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
 /**
@@ -81,11 +80,8 @@ public class PropertyReplaceTask extends Task
     m_replacement = replacement;
   }
 
-  /**
-   * @see org.apache.tools.ant.Task#execute()
-   */
   @Override
-  public void execute( ) throws BuildException
+  public void execute( )
   {
     final String newValue = m_value.replaceAll( m_regex, m_replacement );
     m_propertyAdder.addProperty( m_name, newValue, null );

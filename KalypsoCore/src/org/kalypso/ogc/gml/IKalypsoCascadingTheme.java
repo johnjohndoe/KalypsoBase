@@ -40,12 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
-
 /**
  * @author Dirk Kuch
  */
 public interface IKalypsoCascadingTheme extends IKalypsoLayerModell, IKalypsoTheme
 {
-  IMapModell getInnerMapModel( );
 }

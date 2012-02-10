@@ -61,13 +61,7 @@ public class RemoveClonedLayerVisitor extends AbstractChartLayerVisitor
     if( layer instanceof IZmlLayer )
     {
       if( layer.getIdentifier().contains( IClonedLayer.CLONED_LAYER_POSTFIX ) )
-      {
-        final IZmlLayer zml = (IZmlLayer) layer;
-
-        layer.getParent().getLayerManager().removeLayer( zml );
-        zml.dispose();
-      }
-
+        layer.getParent().getLayerManager().removeLayer( layer );
     }
   }
 }

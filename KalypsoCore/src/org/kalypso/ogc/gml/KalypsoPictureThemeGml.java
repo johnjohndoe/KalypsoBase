@@ -43,6 +43,9 @@ package org.kalypso.ogc.gml;
 import java.awt.Graphics;
 import java.net.URL;
 
+import ogc31.www.opengis.net.gml.FileType;
+
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -54,7 +57,6 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree.model.coverage.RangeSetFile;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
@@ -86,7 +88,7 @@ public class KalypsoPictureThemeGml extends KalypsoPictureTheme
       m_coverages = (ICoverageCollection) fRoot.getAdapter( ICoverageCollection.class );
       final IFeatureBindingCollection<ICoverage> coverages = m_coverages.getCoverages();
       if( coverages.size() != 1 )
-        throw new UnsupportedOperationException( Messages.getString( "org.kalypso.ogc.gml.KalypsoPictureThemeGml.0" ) ); //$NON-NLS-1$
+        throw new NotImplementedException( Messages.getString( "org.kalypso.ogc.gml.KalypsoPictureThemeGml.0" ) ); //$NON-NLS-1$
 
       for( final ICoverage coverage : coverages )
       {
@@ -125,9 +127,9 @@ public class KalypsoPictureThemeGml extends KalypsoPictureTheme
 
         /* imgFile */
         final Object rangeSet = coverage2.getRangeSet();
-        if( rangeSet instanceof RangeSetFile )
+        if( rangeSet instanceof FileType )
         {
-          final RangeSetFile type = (RangeSetFile) rangeSet;
+          final FileType type = (FileType) rangeSet;
           final String filePath = type.getFileName();
           final URL imageURL = loadImage( filePath );
           if( imageURL == null )

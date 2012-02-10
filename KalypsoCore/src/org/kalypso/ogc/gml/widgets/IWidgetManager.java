@@ -52,14 +52,12 @@ public interface IWidgetManager
 
   ICommandTarget getCommandTarget( );
 
-  IWidget[] getWidgets( );
+  IWidget getActualWidget( );
 
-  void addWidget( final IWidget newWidget );
+  void setActualWidget( final IWidget newWidget );
 
   void addWidgetChangeListener( final IWidgetChangeListener listener );
 
   void removeWidgetChangeListener( final IWidgetChangeListener listener );
-
-  void removeWidget( IWidget widget );
 
 }

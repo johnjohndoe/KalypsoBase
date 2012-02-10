@@ -53,7 +53,7 @@ public class FilterDialogTreeContentProvider implements ITreeContentProvider
   @Override
   public Object[] getChildren( final Object parentElement )
   {
-    return ((FilterDialogTreeNode) parentElement).getChildren();
+    return ( (FilterDialogTreeNode)parentElement ).getChildren();
   }
 
   /**
@@ -71,8 +71,8 @@ public class FilterDialogTreeContentProvider implements ITreeContentProvider
   @Override
   public boolean hasChildren( final Object element )
   {
-    final Object[] children = getChildren( element );
-    return children != null;
+    Object[] children = getChildren( element );
+    return ( children != null );
   }
 
   /**
@@ -88,9 +88,9 @@ public class FilterDialogTreeContentProvider implements ITreeContentProvider
    * @see org.eclipse.jface.viewers.IContentProvider#dispose()
    */
   @Override
-  public void dispose( )
+  public void dispose()
   {
-    // nothing
+  // nothing
   }
 
   /**
@@ -100,7 +100,7 @@ public class FilterDialogTreeContentProvider implements ITreeContentProvider
   @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
-    // nothing
+  // nothing
   }
 
 }

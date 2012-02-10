@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.repository;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.repository.utils.RepositoryVisitors;
 
 /**
@@ -55,17 +55,17 @@ public class SimpleRepositoryItem implements IRepositoryItem
   /**
    * The name.
    */
-  private final String m_name;
+  private String m_name;
 
   /**
    * The link.
    */
-  private final String m_link;
+  private String m_link;
 
   /**
    * The parent.
    */
-  private final IRepositoryItem m_parent;
+  private IRepositoryItem m_parent;
 
   /**
    * The constructor.
@@ -77,7 +77,7 @@ public class SimpleRepositoryItem implements IRepositoryItem
    * @param parent
    *          The parent.
    */
-  public SimpleRepositoryItem( final String name, final String link, final IRepositoryItem parent )
+  public SimpleRepositoryItem( String name, String link, IRepositoryItem parent )
   {
     m_name = name;
     m_link = link;
@@ -88,7 +88,7 @@ public class SimpleRepositoryItem implements IRepositoryItem
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
   @Override
-  public Object getAdapter( final Class adapter )
+  public Object getAdapter( Class adapter )
   {
     return null;
   }
@@ -97,7 +97,7 @@ public class SimpleRepositoryItem implements IRepositoryItem
    * @see org.kalypso.repository.IRepositoryItem#accept(org.kalypso.repository.IRepositoryItemVisitor)
    */
   @Override
-  public void accept( final IRepositoryItemVisitor visitor ) throws RepositoryException
+  public void accept( IRepositoryItemVisitor visitor ) throws RepositoryException
   {
     RepositoryVisitors.accept( this, visitor );
   }
@@ -160,7 +160,7 @@ public class SimpleRepositoryItem implements IRepositoryItem
    * @see org.kalypso.repository.IRepositoryItem#hasAdapter(java.lang.Class)
    */
   @Override
-  public boolean hasAdapter( final Class< ? > adapter )
+  public boolean hasAdapter( Class< ? > adapter )
   {
     return false;
   }
@@ -187,13 +187,13 @@ public class SimpleRepositoryItem implements IRepositoryItem
    * @see java.lang.Object#equals(java.lang.Object)
    */
   @Override
-  public boolean equals( final Object obj )
+  public boolean equals( Object obj )
   {
     if( !(obj instanceof SimpleRepositoryItem) )
       return false;
 
-    final EqualsBuilder builder = new EqualsBuilder();
-    final SimpleRepositoryItem other = (SimpleRepositoryItem) obj;
+    EqualsBuilder builder = new EqualsBuilder();
+    SimpleRepositoryItem other = (SimpleRepositoryItem) obj;
     builder.append( m_name, other.m_name );
     builder.append( m_link, other.m_link );
     builder.append( m_parent, other.m_parent );
@@ -207,7 +207,7 @@ public class SimpleRepositoryItem implements IRepositoryItem
   @Override
   public int hashCode( )
   {
-    final HashCodeBuilder builder = new HashCodeBuilder();
+    HashCodeBuilder builder = new HashCodeBuilder();
     builder.append( m_name );
     builder.append( m_link );
     builder.append( m_parent );

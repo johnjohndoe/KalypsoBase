@@ -49,7 +49,7 @@ import java.util.List;
 import javax.xml.bind.DatatypeConverter;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.apache.commons.lang3.time.DateUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -103,7 +103,7 @@ public class GmlPropertyTask extends Task
    * @see org.apache.tools.ant.Task#execute()
    */
   @Override
-  public void execute( ) throws BuildException
+  public void execute( )
   {
     // validieren
     final URL gmlURL = getGmlURL();
@@ -173,7 +173,7 @@ public class GmlPropertyTask extends Task
       final Date date = DateUtilities.toDate( value );
       Calendar cal = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
       cal.setTime( date );
-      
+
 //      Calendar cal = ((XMLGregorianCalendar) value).toGregorianCalendar();
 //      cal.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
       final Integer dateoffset = property.getDateoffset();
@@ -206,7 +206,7 @@ public class GmlPropertyTask extends Task
     }
   }
 
-  public final static class Property
+  public static final class Property
   {
     /** The name, the property gets */
     private String m_name;
@@ -236,82 +236,82 @@ public class GmlPropertyTask extends Task
      */
     private String m_dateTruncField;
 
-    public final Integer getDateoffset( )
+    public Integer getDateoffset( )
     {
       return m_dateoffset;
     }
 
-    public final void setDateoffset( final Integer dateoffset )
+    public void setDateoffset( final Integer dateoffset )
     {
       m_dateoffset = dateoffset;
     }
 
-    public final String getDateoffsetfield( )
+    public String getDateoffsetfield( )
     {
       return m_dateoffsetfield;
     }
 
-    public final void setDateoffsetfield( final String dateoffsetfield )
+    public void setDateoffsetfield( final String dateoffsetfield )
     {
       m_dateoffsetfield = dateoffsetfield;
     }
 
-    public final String getDateTruncField( )
+    public String getDateTruncField( )
     {
       return m_dateTruncField;
     }
 
-    public final void setDateTruncField( final String dateTruncfield )
+    public void setDateTruncField( final String dateTruncfield )
     {
       m_dateTruncField = dateTruncfield;
     }
 
-    public final String getFeatureID( )
+    public String getFeatureID( )
     {
       return m_featureID;
     }
 
-    public final void setFeatureID( final String featureID )
+    public void setFeatureID( final String featureID )
     {
       m_featureID = featureID;
     }
 
-    public final String getFeaturePath( )
+    public String getFeaturePath( )
     {
       return m_featurePath;
     }
 
-    public final void setFeaturePath( final String featurePath )
+    public void setFeaturePath( final String featurePath )
     {
       m_featurePath = featurePath;
     }
 
-    public final String getFeatureProperty( )
+    public String getFeatureProperty( )
     {
       return m_featureProperty;
     }
 
-    public final void setFeatureProperty( final String featureProperty )
+    public void setFeatureProperty( final String featureProperty )
     {
       m_featureProperty = featureProperty;
     }
 
-    public final String getName( )
+    public String getName( )
     {
       return m_name;
     }
 
-    public final void setName( final String name )
+    public void setName( final String name )
     {
       m_name = name;
     }
 
-    public final void setDefaultValue( final String defaultValue )
+    public void setDefaultValue( final String defaultValue )
     {
       m_defaultValue = defaultValue;
     }
 
-    public final String getDefaultValue( )
+    public String getDefaultValue( )
     {
       return m_defaultValue;
     }

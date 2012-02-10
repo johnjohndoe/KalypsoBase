@@ -177,9 +177,9 @@ public class ColorUtilities
     if( color.length() > 8 )
     {
       final Long l = Long.decode( color );
-      final int r = (int) (l >> 24 & 0xFF);
-      final int g = (int) (l >> 16 & 0xFF);
-      final int b = (int) (l >> 8 & 0xFF);
+      final int r = (int) ((l >> 24) & 0xFF);
+      final int g = (int) ((l >> 16) & 0xFF);
+      final int b = (int) ((l >> 8) & 0xFF);
       final int a = (int) (l & 0xFF);
 
       return new Color( r, g, b, a );

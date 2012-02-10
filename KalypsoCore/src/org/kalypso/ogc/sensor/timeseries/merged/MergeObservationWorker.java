@@ -46,8 +46,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.lang.Strings;

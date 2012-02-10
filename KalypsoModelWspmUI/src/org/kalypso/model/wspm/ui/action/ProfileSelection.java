@@ -53,10 +53,9 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.IProfileSelectionProvider;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
-import org.kalypso.ui.editor.gmleditor.part.FeatureAssociationTypeElement;
+import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.IFeatureRelation;
 
 /**
  * Helper class that extracts profiles from a selection.
@@ -90,55 +89,32 @@ public class ProfileSelection
 
     final List< ? > items = ((IStructuredSelection) m_selection).toList();
     for( final Object item : items )
-    {
       addItem( item );
-    }
-
-    addSisters();
-
-  }
-
-  /**
-   * Add all elements of the 'containingList' as (non-selected) sister elements to the found features.
-   */
-  private void addSisters( )
-  {
-    if( m_containingList != null )
-    {
-      for( final Object sister : m_containingList )
-      {
-        final IProfileFeature sisterProfile = AdapterUtils.getAdapter( sister, IProfileFeature.class );
-        if( sisterProfile != null )
-          addProfile( sisterProfile );
-      }
-    }
   }
 
   private void addItem( final Object item )
   {
     if( m_workspace == null )
-    {
       m_workspace = AdapterUtils.getAdapter( item, CommandableWorkspace.class );
-    }
 
     final FeatureList featureList = AdapterUtils.getAdapter( item, FeatureList.class );
     if( featureList != null )
     {
-      addFeatureProperty( featureList );
+      addFeatureList( featureList );
       return;
     }
 
     final FeatureAssociationTypeElement fate = AdapterUtils.getAdapter( item, FeatureAssociationTypeElement.class );
     if( fate != null )
     {
-      addFeatureProperty( (FeatureAssociationTypeElement) item );
+      addFeatureAssociation( (FeatureAssociationTypeElement) item );
       return;
     }
 
     final IProfileFeature profileFeature = AdapterUtils.getAdapter( item, IProfileFeature.class );
     if( profileFeature != null )
     {
-      addProfileFeature( item, profileFeature );
+      addProfileFeature( profileFeature );
       return;
     }
 
@@ -151,30 +127,25 @@ public class ProfileSelection
     }
   }
 
-  private void addProfileFeature( final Object item, final IProfileFeature profile )
+  private void addProfileFeature( final IProfileFeature profile )
   {
     m_selectedProfiles.add( profile );
 
-    if( item instanceof Feature )
-    {
-      final Feature itemParent = ((Feature) item).getOwner();
-      final IRelationType parentRelation = ((Feature) item).getParentRelation();
-      setAsContainer( itemParent, parentRelation );
-    }
-    else
-    {
-      final IRelationType rt = profile.getParentRelation();
-      final Feature container = profile.getOwner();
-      setAsContainer( container, rt );
-    }
-  }
-
-  private void setAsContainer( final Feature container, final IRelationType parentRelation )
-  {
+    final IRelationType rt = profile.getParentRelation();
+    final Feature container = profile.getOwner();
     m_container = container;
+    if( rt.isList() )
+    {
+      final FeatureList sisters = (FeatureList) container.getProperty( rt );
 
-    if( parentRelation.isList() )
-      m_containingList = (FeatureList) container.getProperty( parentRelation );
+      m_containingList = sisters;
+
+      for( final Object sister : sisters )
+      {
+        if( sister instanceof IProfileFeature )
+          addProfile( (IProfileFeature) sister );
+      }
+    }
   }
 
   private void addProfile( final IProfileFeature... profiles )
@@ -188,9 +159,7 @@ public class ProfileSelection
         return;
 
       if( m_selection instanceof IFeatureSelection )
-      {
         m_workspace = ((IFeatureSelection) m_selection).getWorkspace( profile );
-      }
     }
 
   }
@@ -203,10 +172,17 @@ public class ProfileSelection
     m_selectedProfiles.addAll( asList );
   }
 
-  private void addFeatureProperty( final IFeatureRelation featureList )
+  private void addFeatureList( final FeatureList featureList )
   {
-    final IRelationType rt = featureList.getPropertyType();
-    final Feature parentFeature = featureList.getOwner();
+    final IRelationType rt = featureList.getParentFeatureTypeProperty();
+    final Feature parentFeature = featureList.getParentFeature();
+    addParentFeature( parentFeature, rt );
+  }
+
+  private void addFeatureAssociation( final FeatureAssociationTypeElement fate )
+  {
+    final IRelationType rt = fate.getAssociationTypeProperty();
+    final Feature parentFeature = fate.getParentFeature();
     addParentFeature( parentFeature, rt );
   }
 
@@ -242,5 +218,10 @@ public class ProfileSelection
   public Feature getContainer( )
   {
     return m_container;
+  }
+
+  public FeatureList getContainingList( )
+  {
+    return m_containingList;
   }
 }

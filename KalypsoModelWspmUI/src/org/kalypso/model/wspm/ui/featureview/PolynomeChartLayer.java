@@ -55,7 +55,6 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
-import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
  * A chart layer which displays Polynomial1D's.
@@ -78,9 +77,9 @@ public class PolynomeChartLayer extends AbstractLineLayer
    *          : Determines the resolution how the polynomes are rendered. 1 means: for every pixel in x-diretion, a
    *          polynome value is calculated and rendered.
    */
-  public PolynomeChartLayer( final ILayerProvider provider, final PolynomDataContainer dataContainer, final int pixelsPerTick, final IStyleSet styleSet, final boolean showPoints )
+  public PolynomeChartLayer( final ILayerProvider provider, final PolynomDataContainer dataContainer, final int pixelsPerTick, final ILineStyle lineStyle, final IPointStyle pointStyle, final boolean showPoints )
   {
-    super( provider, styleSet );
+    super( provider, lineStyle, pointStyle );
     m_pixelsPerTick = pixelsPerTick;
     m_showPoints = showPoints;
     m_data = dataContainer;
@@ -97,12 +96,8 @@ public class PolynomeChartLayer extends AbstractLineLayer
     final double min = (Double) domainRange.getMin();
     final double max = (Double) domainRange.getMax();
 
-    final PolylineFigure plf = new PolylineFigure();
-    final ILineStyle pls = (ILineStyle) getStyleSet().getStyle( "line_style" ); //$NON-NLS-1$
-    plf.setStyle( pls );
-    final PointFigure pf = new PointFigure();
-    final IPointStyle ps = (IPointStyle) getStyleSet().getStyle( "point_style" ); //$NON-NLS-1$
-    pf.setStyle( ps );
+    final PolylineFigure plf = getPolylineFigure();
+    final PointFigure pf = getPointFigure();
 
     final ArrayList<Point> path = new ArrayList<Point>();
 
@@ -119,9 +114,7 @@ public class PolynomeChartLayer extends AbstractLineLayer
     {
       final IPolynomial1D poly = PolynomialUtilities.getPoly( m_data.getPolyArray(), pos );
       if( poly == null )
-      {
         continue;
-      }
 
       final double value = poly.computeResult( pos );
 
@@ -145,7 +138,7 @@ public class PolynomeChartLayer extends AbstractLineLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Number> getDomainRange( )
   {
     return m_data.getDomainRange();
   }
@@ -154,7 +147,7 @@ public class PolynomeChartLayer extends AbstractLineLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     return m_data.getTargetRange();
   }

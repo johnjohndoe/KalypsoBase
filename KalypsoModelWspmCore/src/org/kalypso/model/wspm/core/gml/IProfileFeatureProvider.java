@@ -40,10 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml;
 
+import org.kalypsodeegree.model.feature.Feature;
+
 /**
  * @author Gernot Belger
  */
 public interface IProfileFeatureProvider
 {
-  Object getResult( IProfileFeature feature );
+  public IProfileFeature getProfile( final Feature feature );
+
+  public Object getResult( Feature feature );
 }

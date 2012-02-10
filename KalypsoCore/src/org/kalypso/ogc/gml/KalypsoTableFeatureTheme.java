@@ -66,13 +66,12 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.model.feature.FeaturePath;
 
 /**
  * GMLWorkspace container used by the LayerTableViewer. Implements {@link IKalypsoTheme} as this was used as a hack when
  * first implementing the LayerTableViewer. Should be refaktored as soon as we refaktor the LayerTableViewer.<br>
  * Copy/Pasted from the old {@link IKalypsoFeatureTheme}, in order to more easily refaktor that one.
- *
+ * 
  * @author Gernot Belger
  */
 public class KalypsoTableFeatureTheme extends AbstractKalypsoTheme implements IKalypsoFeatureTheme, ModellEventListener, IKalypsoStyleListener
@@ -102,7 +101,7 @@ public class KalypsoTableFeatureTheme extends AbstractKalypsoTheme implements IK
     if( featureFromPath instanceof FeatureList )
     {
       m_featureList = (FeatureList) featureFromPath;
-      m_featureType = new FeaturePath( m_featurePath ).getFeatureType( m_workspace );
+      m_featureType = m_workspace.getFeatureTypeFromPath( m_featurePath );
     }
     else if( featureFromPath instanceof Feature )
     {
@@ -201,12 +200,12 @@ public class KalypsoTableFeatureTheme extends AbstractKalypsoTheme implements IK
     {
       // my workspace ?
       final GMLWorkspace changedWorkspace = ((IGMLWorkspaceModellEvent) modellEvent).getGMLWorkspace();
-      if( m_workspace != null && changedWorkspace != m_workspace && changedWorkspace != m_workspace.getWorkspace() )
+      if( ((m_workspace != null) && (changedWorkspace != m_workspace) && (changedWorkspace != m_workspace.getWorkspace())) )
         return; // not my workspace
 
       if( modellEvent instanceof FeaturesChangedModellEvent )
       {
-        final FeaturesChangedModellEvent featuresChangedModellEvent = (FeaturesChangedModellEvent) modellEvent;
+        final FeaturesChangedModellEvent featuresChangedModellEvent = ((FeaturesChangedModellEvent) modellEvent);
         final Feature[] features = featuresChangedModellEvent.getFeatures();
 
         // TODO: BOTH ways (if and else) are mayor performance bugs.
@@ -227,7 +226,7 @@ public class KalypsoTableFeatureTheme extends AbstractKalypsoTheme implements IK
         final Feature[] parents = fscme.getParentFeatures();
         for( final Feature parent : parents )
         {
-          if( m_featureList.getOwner() == parent )
+          if( m_featureList.getParentFeature() == parent )
           {
             switch( fscme.getChangeType() )
             {
@@ -257,6 +256,9 @@ public class KalypsoTableFeatureTheme extends AbstractKalypsoTheme implements IK
 
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
+   */
   @Override
   public GM_Envelope getFullExtent( )
   {
@@ -269,6 +271,9 @@ public class KalypsoTableFeatureTheme extends AbstractKalypsoTheme implements IK
     return m_featureList;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeatureListVisible(org.kalypsodeegree.model.geometry.GM_Envelope)
+   */
   @Override
   public FeatureList getFeatureListVisible( final GM_Envelope searchEnvelope )
   {
@@ -295,24 +300,36 @@ public class KalypsoTableFeatureTheme extends AbstractKalypsoTheme implements IK
       runnable.run();
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getSchedulingRule()
+   */
   @Override
   public ISchedulingRule getSchedulingRule( )
   {
     return null;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getSelectionManager()
+   */
   @Override
   public IFeatureSelectionManager getSelectionManager( )
   {
     return m_selectionManager;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getDefaultIcon()
+   */
   @Override
   public ImageDescriptor getDefaultIcon( )
   {
     throw new UnsupportedOperationException();
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoStyleListener#styleChanged()
+   */
   @Override
   public void styleChanged( )
   {

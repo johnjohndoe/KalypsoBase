@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- *
+ * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- *
+ * 
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -47,7 +47,7 @@ import org.xml.sax.XMLReader;
 
 /**
  * A content handler which parses a gml:LinearRing element.<br>
- *
+ * 
  * @author Gernot Belger
  */
 public class TriangleContentHandler extends GMLElementContentHandler implements IRingHandler
@@ -68,12 +68,12 @@ public class TriangleContentHandler extends GMLElementContentHandler implements 
   @Override
   public void doStartElement( final String uri, final String localName, final String name, final Attributes attributes )
   {
-    new ExteriorContentHandler( getXMLReader(), this, this, getDefaultSrs() ).activate();
+    new ExteriorContentHandler( getXMLReader(), this, this, m_defaultSrs ).activate();
   }
 
   @Override
   public void doEndElement( final String uri, final String localName, final String name ) throws SAXException
-  {
+  { 
     if( m_ring == null )
       throwSAXParseException( "Triangle contains no valid exterior." );
 

@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters.interval;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.joda.time.Interval;
 import org.kalypso.ogc.sensor.TupleModelDataSet;
 

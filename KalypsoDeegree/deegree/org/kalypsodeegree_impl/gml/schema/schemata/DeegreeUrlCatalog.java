@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- *
+ * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always.
- *
- * If you intend to use this software in other ways than in kalypso
+ * interface-compatibility to deegree is wanted but not retained always. 
+ * 
+ * If you intend to use this software in other ways than in kalypso 
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree,
+ * all modifications are licensed as deegree, 
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -45,23 +45,24 @@ import org.kalypso.contribs.java.net.AbstractUrlCatalog;
  * auch fürs Binding benutzt und sind dadurch endlich wirklich nur noch einmal vorhanden.<br>
  * This catalog resolves some schemas that are related to Kalypso, but not to OGC.<br>
  * TODO rename in URLCatalogKalypso
- *
- * @author Gernot Belger
+ * 
+ * @author gernot
  */
 public class DeegreeUrlCatalog extends AbstractUrlCatalog
 {
-  public static final String PREFIX_OBSLINK = "obslink"; //$NON-NLS-1$
-
-  public static final String NAMESPACE_ZML_OBSLINK = "obslink.zml.kalypso.org"; //$NON-NLS-1$
+  private static final String NAMESPACE_ZML_OBSLINK = "obslink.zml.kalypso.org"; //$NON-NLS-1$
 
   private static final String NAMESPACE_ZML_INLINE = "inline.zml.kalypso.org"; //$NON-NLS-1$
 
+  /**
+   * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map, java.util.Map)
+   */
   @Override
   protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> catalog, final Map<String, String> prefixes )
   {
     // schemas related close to ogc have been moved to URLCatalogOGC
     catalog.put( NAMESPACE_ZML_OBSLINK, getClass().getResource( "obslink/obslink.xsd" ) ); //$NON-NLS-1$
-    prefixes.put( NAMESPACE_ZML_OBSLINK, PREFIX_OBSLINK ); //$NON-NLS-1$
+    prefixes.put( NAMESPACE_ZML_OBSLINK, "obslink" ); //$NON-NLS-1$
 
     catalog.put( NAMESPACE_ZML_INLINE, getClass().getResource( "obslink/zmlinline.xsd" ) ); //$NON-NLS-1$
     prefixes.put( NAMESPACE_ZML_INLINE, "inlinezml" ); //$NON-NLS-1$

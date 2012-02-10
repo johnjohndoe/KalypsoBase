@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-
-
     <extension
        point="de.openali.odysseus.chart.factory.LayerProvider">
     <provider
@@ -339,7 +337,7 @@
           id="zml.table.shift.command.tester"
           namespace="zml.table.command.shift"
           properties="isActive"
-          type="org.kalypso.zml.ui.table.IZmlTable">
+          type="org.kalypso.zml.ui.table.IZmlTableComposite">
     </propertyTester>
  </extension>
  <extension
@@ -412,11 +410,6 @@
              optional="false">
        </commandParameter>
     </command>
-    <command
-          categoryId="org.kalypso.chart.ui.commands.category"
-          id="org.kalypso.zml.ui.chart.layer.commands.debug.dialog"
-          name="Debug-Dialog">
-    </command>
  </extension>
  <extension
        point="org.eclipse.ui.handlers">
@@ -428,17 +421,6 @@
           class="org.kalypso.zml.ui.chart.layer.commands.SetZmlFilterCommandHandler"
           commandId="org.kalypso.zml.ui.chart.layer.commands.set.filter">
     </handler>
-    <handler
-          class="org.kalypso.zml.ui.chart.view.debug.OpenDiagramDebugDialogHandler"
-          commandId="org.kalypso.zml.ui.chart.layer.commands.debug.dialog">
-    </handler>
- </extension>
- <extension
-       point="org.eclipse.ui.commandImages">
-    <image
-          commandId="org.kalypso.zml.ui.chart.layer.commands.debug.dialog"
-          icon="icons/table/debug.png">
-    </image>
  </extension>
  
  <extension
@@ -457,16 +439,6 @@
      </filter>
  </extension>
  
- <extension
-         point="org.eclipse.ui.importWizards">
-      <wizard
-            category="org.kalypso.ui.importwizards.kalypso"
-            class="org.kalypso.zml.ui.imports.ImportObservationWizard"
-            icon="icons/imports/importWizard.gif"
-            id="KalypsoNA_UI.wizard1"
-            name="%KalypsoNA_UI.wizard1.name"/>
-   </extension>
- 
   <extension
        point="org.eclipse.ui.menus">
     <menuContribution
@@ -474,82 +446,6 @@
           locationURI="toolbar:org.kalypso.zml.ui.table.commands.debug">
        <command
              commandId="org.kalypso.zml.ui.table.commands.debug.dialog"
-             style="push">
-       </command>
-    </menuContribution>
- </extension>
-
-	<extension id="views" name="views" point="org.eclipse.ui.views">
-		<view
-        allowMultiple="false"
-        category="org.kalypso.ui.kalypso"
-        class="org.kalypso.zml.ui.chart.view.DiagramViewPart"
-        icon="icons/view/diagram.gif"
-        id="org.kalypso.zml.ui.chart.view.DiagramViewPart"
-        name="Diagramm"
-        restorable="true"/>
-  <view
-        allowMultiple="false"
-        category="org.kalypso.ui.kalypso"
-        class="org.kalypso.zml.ui.table.view.TableViewPart"
-        icon="icons/view/table.gif"
-        id="org.kalypso.zml.ui.table.view.TableViewPart"
-        name="Tabelle"
-        restorable="true">
-  </view>
-	</extension>
- <extension
-       point="org.eclipse.ui.perspectiveExtensions">
-    <perspectiveExtension
-          targetID="org.kalypso.kalypso1d2d.pjt.perspective.Perspective">
-       <view
-             id="org.kalypso.zml.ui.chart.view.DiagramViewPart"
-             minimized="false"
-             relationship="stack"
-             relative="org.kalypso.ui.views.mapView"
-             visible="false">
-       </view>
-    </perspectiveExtension>
- </extension>
- <extension
-       point="org.eclipse.ui.menus">
-    <menuContribution
-          allPopups="false"
-          locationURI="toolbar:org.kalypso.zml.ui.chart.view.debug">
-       <command
-             commandId="org.kalypso.zml.ui.chart.layer.commands.debug.dialog"
-             style="push">
-       </command>
-    </menuContribution>
-    <menuContribution
-          locationURI="toolbar:org.kalypso.zml.ui.chart.view.DiagramViewPart">
-       <command
-             commandId="org.kalypso.chart.ui.commands.maximizeView"
-             style="push">
-       </command>
-       <command
-             commandId="org.kalypso.chart.ui.commands.export"
-             style="push">
-       </command>
-       <command
-             commandId="org.kalypso.chart.ui.commands.ExportClipboardCommand"
-             style="push">
-       </command>
-       <separator
-             name="diagram.repository.browser.seperator1"
-             visible="true">
-       </separator>
-       <command
-             commandId="org.kalypso.zml.ui.chart.layer.commands.debug.dialog"
-             label="Debug"
-             style="push">
-       </command>
-    </menuContribution>
-    <menuContribution
-          locationURI="toolbar:org.kalypso.zml.ui.table.view.TableViewPart">
-       <command
-             commandId="org.kalypso.zml.ui.table.commands.debug.dialog"
-             label="Debug"
              style="push">
        </command>
     </menuContribution>

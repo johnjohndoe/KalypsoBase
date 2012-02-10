@@ -59,7 +59,7 @@ import org.kalypsodeegree.xml.Marshallable;
  * <p>
  * ----------------------------------------------------------------------
  * </p>
- * 
+ *
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @version $Revision$ $Date$
  */
@@ -211,14 +211,14 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
     final org.eclipse.swt.graphics.Color colorStart = new org.eclipse.swt.graphics.Color( gc.getDevice(), colorAwtStart.getRed(), colorAwtStart.getGreen(), colorAwtStart.getBlue() );
     gc.setBackground( colorStart );
     final double alphaStart = colorAwtStart.getAlpha() / 255.0;
-    gc.setAlpha( (int) (alphaStart * opacityValue * 255.0) );
+    gc.setAlpha( (int) ((alphaStart * opacityValue) * 255.0) );
     gc.fillRectangle( clipping.x, clipping.y, clipping.width - 1, clipping.height / 2 );
 
     final Color colorAwtEnd = entries[entries.length - 1].getColorAndOpacity();
     final org.eclipse.swt.graphics.Color colorEnd = new org.eclipse.swt.graphics.Color( gc.getDevice(), colorAwtEnd.getRed(), colorAwtEnd.getGreen(), colorAwtEnd.getBlue() );
     gc.setBackground( colorEnd );
     final double alphaEnd = colorAwtEnd.getAlpha() / 255.0;
-    gc.setAlpha( (int) (alphaEnd * opacityValue * 255.0) );
+    gc.setAlpha( (int) ((alphaEnd * opacityValue) * 255.0) );
     gc.fillRectangle( clipping.x, clipping.height / 2, clipping.width - 1, clipping.height - 1 );
 
     // the black border

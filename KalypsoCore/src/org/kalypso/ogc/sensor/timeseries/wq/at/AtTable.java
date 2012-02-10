@@ -66,7 +66,7 @@ import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQPair;
 public class AtTable
 {
   private static final Pattern PATTERN_SECOND_LINE = Pattern.compile( "(\\d+).*\\((\\w),(\\w)\\)", //$NON-NLS-1$
-      Pattern.CASE_INSENSITIVE );
+  Pattern.CASE_INSENSITIVE );
 
   private final String m_name;
 

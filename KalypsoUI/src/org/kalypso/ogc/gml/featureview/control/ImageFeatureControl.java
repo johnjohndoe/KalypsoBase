@@ -43,11 +43,10 @@ package org.kalypso.ogc.gml.featureview.control;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.activation.MimeType;
+import javax.xml.XMLConstants;
+import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.deegree.framework.util.MimeTypeMapper;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -57,6 +56,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -65,22 +65,26 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.swt.widgets.ImageCanvas;
 import org.kalypso.core.status.StatusComposite;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author Gernot Belger
  */
-public class ImageFeatureControl extends AbstractImageFeatureControl
+public class ImageFeatureControl extends AbstractFeatureControl
 {
   private final ISchedulingRule m_mutex = new MutexRule();
 
   private ImageCanvas m_imgCanvas;
 
   private URL m_imageUrl;
+
+  private static final QName QNAME_STRING = new QName( XMLConstants.W3C_XPATH_DATATYPE_NS_URI, "string" ); //$NON-NLS-1$
 
   private static final String DATA_DISPOSE_IMAGE = "doDisposeImage"; //$NON-NLS-1$
 
@@ -94,6 +98,9 @@ public class ImageFeatureControl extends AbstractImageFeatureControl
     super( feature, ftp );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
+   */
   @Override
   public Control createControl( final Composite parent, final int style )
   {
@@ -129,6 +136,9 @@ public class ImageFeatureControl extends AbstractImageFeatureControl
     updateControl();
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#isValid()
+   */
   @Override
   public boolean isValid( )
   {
@@ -136,6 +146,27 @@ public class ImageFeatureControl extends AbstractImageFeatureControl
     return true;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#addModifyListener(org.eclipse.swt.events.ModifyListener)
+   */
+  @Override
+  public void addModifyListener( final ModifyListener l )
+  {
+    // this control does not modify, so listeners are ignored
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#removeModifyListener(org.eclipse.swt.events.ModifyListener)
+   */
+  @Override
+  public void removeModifyListener( final ModifyListener l )
+  {
+    // this control does not modify, so listeners are ignored
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#updateControl()
+   */
   @Override
   public void updateControl( )
   {
@@ -171,24 +202,13 @@ public class ImageFeatureControl extends AbstractImageFeatureControl
       return Messages.getString( "org.kalypso.ogc.gml.featureview.control.ImageFeatureControl.2" ) + getFeatureTypeProperty(); //$NON-NLS-1$
 
     if( imgPath.length() == 0 )
-      return StringUtils.EMPTY;
+      return ""; //$NON-NLS-1$
 
     try
     {
-      final Feature feature = getFeature();
-
-      if( feature instanceof org.kalypsodeegree_impl.gml.binding.commons.Image )
-      {
-        final MimeType mimeType = ((org.kalypsodeegree_impl.gml.binding.commons.Image) feature).getMimeType();
-        if( mimeType != null )
-        {
-          final String baseType = mimeType.getBaseType();
-          if( !MimeTypeMapper.isImageType( baseType ) )
-            return "This is not an image.";
-        }
-      }
-
-      final URL url = resolveImagePath( imgPath );
+      final GMLWorkspace workspace = getFeature().getWorkspace();
+      final URL context = workspace.getContext();
+      final URL url = new URL( context, imgPath );
       updateImageUrl( url );
       return null;
     }
@@ -202,7 +222,7 @@ public class ImageFeatureControl extends AbstractImageFeatureControl
 
   private void updateImageUrl( final URL url )
   {
-// System.out.println( "Update image: " + url );
+//    System.out.println( "Update image: " + url );
 
     if( ObjectUtils.equals( m_imageUrl, url ) )
       return;
@@ -213,43 +233,25 @@ public class ImageFeatureControl extends AbstractImageFeatureControl
 
   private void startImageJob( final URL url )
   {
-// try
-// {
-// FileUtils.copyURLToFile( url, new File( "C:\\work\\temp\\test1.bin" ) );
-// }
-// catch( final IOException e1 )
-// {
-// // TODO Auto-generated catch block
-// e1.printStackTrace();
-// }
-
     final Job loadImageJob = new Job( "Load Image" )
     {
       @Override
       protected IStatus run( final IProgressMonitor monitor )
       {
-        try
-        {
-          final Image waitingImage = KalypsoGisPlugin.getImageProvider().getImage( ImageProvider.DESCRIPTORS.WAIT_LOADING_OBJ );
-          setImageInUIJob( waitingImage, "Loading...", false );
+        final Image waitingImage = KalypsoGisPlugin.getImageProvider().getImage( ImageProvider.DESCRIPTORS.WAIT_LOADING_OBJ );
+        setImageInUIJob( waitingImage, "Loading...", false );
 
-          final ImageDescriptor imgDesc = ImageDescriptor.createFromURL( url );
-          final Image image = imgDesc.createImage( false );
-          if( image == null )
-          {
-            final String msg = Messages.getString( "org.kalypso.ogc.gml.featureview.control.ImageFeatureControl.4" ) + url.toExternalForm(); //$NON-NLS-1$
-            setImageInUIJob( null, msg, false );
-            return Status.OK_STATUS;
-          }
-
-          final String tooltip = url.toExternalForm();
-          setImageInUIJob( image, tooltip, true );
-        }
-        catch( final Exception e )
+        final ImageDescriptor imgDesc = ImageDescriptor.createFromURL( url );
+        final Image image = imgDesc.createImage( false );
+        if( image == null )
         {
-          setImageInUIJob( null, e.getLocalizedMessage(), true );
+          final String msg = Messages.getString( "org.kalypso.ogc.gml.featureview.control.ImageFeatureControl.4" ) + url.toExternalForm(); //$NON-NLS-1$
+          setImageInUIJob( null, msg, false );
+          return Status.OK_STATUS;
         }
 
+        final String tooltip = url.toExternalForm();
+        setImageInUIJob( image, tooltip, true );
         return Status.OK_STATUS;
       }
     };
@@ -278,6 +280,21 @@ public class ImageFeatureControl extends AbstractImageFeatureControl
     uiJob.setRule( m_mutex );
     uiJob.setSystem( true );
     uiJob.schedule();
+  }
+
+  private String getImagePath( )
+  {
+    final Feature feature = getFeature();
+    final IPropertyType pt = getFeatureTypeProperty();
+
+    if( feature == null || pt == null || GMLSchemaUtilities.substitutes( feature.getFeatureType(), QNAME_STRING ) )
+      return null;
+
+    final String uriString = (String) feature.getProperty( pt );
+    if( uriString == null )
+      return "";
+
+    return uriString;
   }
 
   public static void layoutScrolledParent( final Control control )

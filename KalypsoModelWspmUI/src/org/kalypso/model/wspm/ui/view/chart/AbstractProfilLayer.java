@@ -47,13 +47,11 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
-import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-import org.kalypso.model.wspm.core.profil.visitors.FindMinMaxVisitor;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.observation.result.ComponentUtilities;
@@ -64,11 +62,11 @@ import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
+import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINECAP;
-import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
@@ -82,15 +80,15 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   private ILineStyle m_lineStyle = null;
 
-  private ILineStyle m_lineStyleActive = null;
+  private ILineStyle m_lineStyle_active = null;
 
-  private ILineStyle m_lineStyleHover = null;
+  private ILineStyle m_lineStyle_hover = null;
 
   private IPointStyle m_pointStyle = null;
 
-  private IPointStyle m_pointStyleActive = null;
+  private IPointStyle m_pointStyle_active = null;
 
-  private IPointStyle m_pointStyleHover = null;
+  private IPointStyle m_pointStyle_hover = null;
 
   private IProfil m_profil;
 
@@ -100,41 +98,13 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   public AbstractProfilLayer( final String id, final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
   {
-    super( null, new StyleSet() );
+    super( null );
 
     m_profil = profil;
     m_targetRangeProperty = targetRangeProperty;
-    m_domainComponent = IWspmPointProperties.POINT_PROPERTY_BREITE;
+    m_domainComponent = IWspmConstants.POINT_PROPERTY_BREITE;
     setIdentifier( id );
     createStyles( styleProvider, id );
-  }
-
-  @Override
-  public EditInfo commitDrag( final Point point, final EditInfo dragStartData )
-  {
-    final IComponent targetComponent = getTargetComponent();
-    if( targetComponent != null )
-    {
-      getProfil().getSelection().setActivePointProperty( targetComponent );
-    }
-
-    if( point == null || dragStartData.getPosition() == point )
-    {
-      executeClick( dragStartData );
-    }
-    else
-    {
-      executeDrop( point, dragStartData );
-    }
-
-    return null;
-  }
-
-  @Override
-  public IProfilView createLayerPanel( )
-  {
-    // override this method
-    return null;
   }
 
   private void createStyles( final ILayerStyleProvider styleProvider, final String id )
@@ -149,20 +119,68 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     m_lineStyle = styleProvider.getStyleFor( id + "_LINE", null ); //$NON-NLS-1$
     m_pointStyle = styleProvider.getStyleFor( id + "_POINT", null ); //$NON-NLS-1$
 
-    m_lineStyleActive = styleProvider.getStyleFor( id + "_LINE_ACTIVE", null ); //$NON-NLS-1$
-    m_pointStyleActive = styleProvider.getStyleFor( id + "_POINT_ACTIVE", null ); //$NON-NLS-1$
+    m_lineStyle_active = styleProvider.getStyleFor( id + "_LINE_ACTIVE", null ); //$NON-NLS-1$
+    m_pointStyle_active = styleProvider.getStyleFor( id + "_POINT_ACTIVE", null ); //$NON-NLS-1$
 
-    m_lineStyleHover = styleProvider.getStyleFor( id + "_LINE_HOVER", null ); //$NON-NLS-1$
-    m_pointStyleHover = styleProvider.getStyleFor( id + "_POINT_HOVER", null ); //$NON-NLS-1$
+    m_lineStyle_hover = styleProvider.getStyleFor( id + "_LINE_HOVER", null ); //$NON-NLS-1$
+    m_pointStyle_hover = styleProvider.getStyleFor( id + "_POINT_HOVER", null ); //$NON-NLS-1$
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#commitDrag(org.eclipse.swt.graphics.Point,
+   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
+   */
+  @Override
+  public EditInfo commitDrag( final Point point, final EditInfo dragStartData )
+  {
+    final IComponent targetComponent = getTargetComponent();
+    if( targetComponent != null )
+      getProfil().setActivePointProperty( targetComponent );
+
+    if( dragStartData.getPosition() == point )
+      executeClick( dragStartData );
+    else
+      executeDrop( point, dragStartData );
+
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#createLayerPanel()
+   */
+  @Override
+  public IProfilView createLayerPanel( )
+  {
+    // override this method
+    return null;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#createLegendEntries()
+   */
+  @Override
+  protected ILegendEntry[] createLegendEntries( )
+  {
+    // override this method
+    return null;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#dispose()
+   */
   @Override
   public void dispose( )
   {
     /**
      * don't dispose Styles, StyleProvider will do
      */
+
   }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#drag(org.eclipse.swt.graphics.Point,
+   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
+   */
 
   @Override
   public EditInfo drag( final Point newPos, final EditInfo dragStartData )
@@ -171,6 +189,9 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     return dragStartData;// return new EditInfo( this, null, null, dragStartData.m_data, "", newPos );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.tuhh.ui.chart.AbstractProfilLayer#executeClick(de.openali.odysseus.chart.framework.model.layer.EditInfo)
+   */
   @Override
   public void executeClick( final EditInfo clickInfo )
   {
@@ -180,13 +201,16 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     if( !Objects.isNull( cmp, pos ) )
     {
       final IProfil profil = getProfil();
-      profil.getSelection().setRange( profil.getPoint( pos ) );
-      profil.getSelection().setActivePointProperty( cmp );
+      profil.setActivePoint( profil.getPoint( pos ) );
+      profil.setActivePointProperty( cmp );
     }
   }
 
   /**
    * To be implemented by subclasses - if needed
+   * 
+   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#executeDrop(org.eclipse.swt.graphics.Point,
+   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
   @Override
   public void executeDrop( final Point point, final EditInfo dragStartData )
@@ -199,27 +223,25 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     return getProfil() == null ? null : getProfil().hasPointProperty( m_domainComponent );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
+   */
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Number> getDomainRange( )
   {
     if( getCoordinateMapper() == null )
       return null;
-
-    final IComponent domain = getDomainComponent();
-    if( Objects.isNull( domain ) )
-      return null;
-
-    final FindMinMaxVisitor visitor = new FindMinMaxVisitor( domain.getId() );
-    m_profil.accept( visitor, 1 );
-
-    final IProfileRecord min = visitor.getMinimum();
-    final IProfileRecord max = visitor.getMaximum();
+    final Double max = ProfilUtil.getMaxValueFor( getProfil(), getDomainComponent() );
+    final Double min = ProfilUtil.getMinValueFor( getProfil(), getDomainComponent() );
     if( Objects.isNull( min, max ) )
       return null;
 
-    return new DataRange<Number>( (Number) min.getValue( domain ), (Number) max.getValue( domain ) );
+    return new DataRange<Number>( min, max );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#getHover(org.eclipse.swt.graphics.Point)
+   */
   @Override
   public EditInfo getHover( final Point pos )
   {
@@ -232,9 +254,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
       final Rectangle hover = getHoverRect( profilPoints[i] );
       if( hover == null )
-      {
         continue;
-      }
 
       if( hover.contains( pos ) )
       {
@@ -257,43 +277,28 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   {
     if( m_lineStyle == null )
       m_lineStyle = StyleUtils.getDefaultLineStyle();
-
     return m_lineStyle;
   }
 
-  protected ILineStyle getLineStyleActive( )
+  protected ILineStyle getLineStyle_active( )
   {
-    if( m_lineStyleActive == null )
+    if( m_lineStyle_active == null )
     {
-      m_lineStyleActive = getLineStyle().clone();
-      m_lineStyleActive.setColor( COLOR_ACTIVE );
+      m_lineStyle_active = getLineStyle().clone();
+      m_lineStyle_active.setColor( COLOR_ACTIVE );
     }
-    return m_lineStyleActive;
+    return m_lineStyle_active;
   }
 
-  protected ILineStyle getLineStyleHover( )
+  protected ILineStyle getLineStyle_hover( )
   {
-    if( m_lineStyleHover == null )
+    if( m_lineStyle_hover == null )
     {
-      m_lineStyleHover = getLineStyle().clone();
-      m_lineStyleHover.setDash( 0f, HOVER_DASH );
-      m_lineStyleHover.setLineCap( LINECAP.FLAT );
+      m_lineStyle_hover = getLineStyle().clone();
+      m_lineStyle_hover.setDash( 0f, HOVER_DASH );
+      m_lineStyle_hover.setLineCap( LINECAP.FLAT );
     }
-    return m_lineStyleHover;
-  }
-
-  public IRecord getNextNonNull( final int index )
-  {
-    final IRecord[] points = getProfil().getPoints();
-    final int prop = getProfil().indexOfProperty( m_targetRangeProperty );
-    for( int i = index + 1; i < points.length; i++ )
-    {
-
-      if( points[i] != null && points[i].getValue( prop ) != null )
-        return points[i];
-    }
-    return points[index];
-
+    return m_lineStyle_hover;
   }
 
   public Point2D getPoint2D( final IRecord point )
@@ -301,6 +306,17 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     final Double x = ProfilUtil.getDoubleValueFor( m_domainComponent, point );
     final Double y = ProfilUtil.getDoubleValueFor( getTargetPropertyIndex(), point );
     return new Point2D.Double( x, y );
+  }
+
+  protected final int getTargetPropertyIndex( )
+  {
+    if( m_targetPropIndex < 0 )
+    {
+      if( m_profil == null )
+        return -1;
+      m_targetPropIndex = m_profil.getResult().indexOfComponent( m_targetRangeProperty );
+    }
+    return m_targetPropIndex;
   }
 
   protected IPointStyle getPointStyle( )
@@ -316,41 +332,31 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     return m_pointStyle;
   }
 
-  protected IPointStyle getPointStyleActive( )
+  protected IPointStyle getPointStyle_active( )
   {
-    if( m_pointStyleActive == null )
+    if( m_pointStyle_active == null )
     {
-      m_pointStyleActive = getPointStyle().clone();
-      m_pointStyleActive.setStroke( getLineStyleActive().clone() );
-      m_pointStyleActive.setInlineColor( getLineStyleActive().getColor() );
+      m_pointStyle_active = getPointStyle().clone();
+      m_pointStyle_active.setStroke( getLineStyle_active().clone() );
+      m_pointStyle_active.setInlineColor( getLineStyle_active().getColor() );
     }
-    return m_pointStyleActive;
+    return m_pointStyle_active;
   }
 
-  protected IPointStyle getPointStyleHover( )
+  protected IPointStyle getPointStyle_hover( )
   {
-    if( m_pointStyleHover == null )
+    if( m_pointStyle_hover == null )
     {
-      m_pointStyleHover = getPointStyle().clone();
-      m_pointStyleHover.setStroke( getLineStyleHover().clone() );
-      m_pointStyleHover.setFillVisible( false );
+      m_pointStyle_hover = getPointStyle().clone();
+      m_pointStyle_hover.setStroke( getLineStyle_hover().clone() );
+      m_pointStyle_hover.setFillVisible( false );
     }
-    return m_pointStyleHover;
+    return m_pointStyle_hover;
   }
 
-  public IRecord getPreviousNonNull( final int index )
-  {
-    final IRecord[] points = getProfil().getPoints();
-    final int prop = getProfil().indexOfProperty( m_targetRangeProperty );
-    for( int i = index - 1; i > -1; i-- )
-    {
-      if( points[i] != null && points[i].getValue( prop ) != null )
-        return points[i];
-    }
-    return points[index];
-
-  }
-
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#getProfil()
+   */
   @Override
   public IProfil getProfil( )
   {
@@ -369,42 +375,30 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     return m_profil.getResult().getComponent( indexOfProperty );
   }
 
-  protected final int getTargetPropertyIndex( )
-  {
-    if( m_targetPropIndex < 0 )
-    {
-      if( m_profil == null )
-        return -1;
-      m_targetPropIndex = m_profil.getResult().indexOfComponent( m_targetRangeProperty );
-    }
-    return m_targetPropIndex;
-  }
-
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
+   */
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     final int targetPropertyIndex = getTargetPropertyIndex();
     if( getCoordinateMapper() == null || targetPropertyIndex == -1 )
       return null;
 
-    final IComponent target = getTargetComponent();
-    final FindMinMaxVisitor visitor = new FindMinMaxVisitor( target.getId() );
-    m_profil.accept( visitor, 1 );
-
-    final IProfileRecord min = visitor.getMinimum();
-    final IProfileRecord max = visitor.getMaximum();
+    final Double max = ProfilUtil.getMaxValueFor( getProfil(), targetPropertyIndex );
+    final Double min = ProfilUtil.getMinValueFor( getProfil(), targetPropertyIndex );
     if( Objects.isNull( min, max ) )
       return null;
 
-    final Number minValue = (Number) min.getValue( target );
-    final Number maxValue = (Number) max.getValue( target );
+    if( Math.abs( min - max ) < 0.001 )
+      return new DataRange<Number>( min - 1, min + 1 );
 
-    if( Math.abs( minValue.doubleValue() - maxValue.doubleValue() ) < 0.001 )
-      return new DataRange<Number>( minValue.doubleValue() - 1, minValue.doubleValue() + 1 );
-
-    return new DataRange<Number>( minValue, maxValue );
+    return new DataRange<Number>( min, max );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getTitle()
+   */
   @Override
   public String getTitle( )
   {
@@ -433,41 +427,57 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#isLocked()
+   */
   @Override
   public boolean isLocked( )
   {
     return m_isLocked;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#lockLayer(boolean)
+   */
   @Override
   public void lockLayer( final boolean isLocked )
   {
     m_isLocked = isLocked;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
+   *      org.kalypso.model.wspm.core.profil.IProfilChange[])
+   */
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     final IProfil profil = getProfil();
     if( profil == null )
       return;
-
-    if( hint.isSelectionChanged() )
+    if( hint.isActivePointChanged() )
     {
       getEventHandler().fireLayerContentChanged( this );
     }
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
+   */
   @Override
   public void paint( final GC gc )
   {
     // override this method
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#removeYourself()
+   */
   @Override
   public void removeYourself( )
   {
-    throw new UnsupportedOperationException( Messages.getString( "org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme.0" ) ); //$NON-NLS-1$
+    // override this method
+    throw new UnsupportedOperationException();
   }
 
   public void setLineStyle( final ILineStyle lineStyle )
@@ -475,14 +485,14 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     m_lineStyle = lineStyle;
   }
 
-  public void setLineStyleActive( final ILineStyle lineStyleActive )
+  public void setLineStyle_active( final ILineStyle lineStyle_active )
   {
-    m_lineStyleActive = lineStyleActive;
+    m_lineStyle_active = lineStyle_active;
   }
 
-  public void setLineStyleHover( final ILineStyle lineStyleHover )
+  public void setLineStyle_hover( final ILineStyle lineStyle_hover )
   {
-    m_lineStyleHover = lineStyleHover;
+    m_lineStyle_hover = lineStyle_hover;
   }
 
   public void setPointStyle( final IPointStyle pointStyle )
@@ -490,16 +500,19 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     m_pointStyle = pointStyle;
   }
 
-  public void setPointStyleActive( final IPointStyle pointStyleActive )
+  public void setPointStyle_active( final IPointStyle pointStyle_active )
   {
-    m_pointStyleActive = pointStyleActive;
+    m_pointStyle_active = pointStyle_active;
   }
 
-  public void setPointStyleHover( final IPointStyle pointStyleHover )
+  public void setPointStyle_hover( final IPointStyle pointStyle_hover )
   {
-    m_pointStyleHover = pointStyleHover;
+    m_pointStyle_hover = pointStyle_hover;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#setProfil(org.kalypso.model.wspm.core.profil.IProfil)
+   */
   @Override
   public void setProfil( final IProfil profil )
   {
@@ -519,17 +532,11 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   public Point toScreen( final IRecord point )
   {
     final ICoordinateMapper cm = getCoordinateMapper();
-    if( Objects.isNull( cm ) )
-      return null;
-
     final Double x = ProfilUtil.getDoubleValueFor( m_domainComponent, point );
     final Double y = ProfilUtil.getDoubleValueFor( getTargetPropertyIndex(), point );
-    if( Objects.isNull( x, y ) )
-      return null;
-    else if( x.isNaN() || y.isNaN() )
-      return null;
-
-    return cm.numericToScreen( x, y );
-
+    if( cm != null && x != null && y != null && !x.isNaN() && !y.isNaN() )
+      return cm == null ? null : cm.numericToScreen( x, y );
+    return null;
   }
+
 }

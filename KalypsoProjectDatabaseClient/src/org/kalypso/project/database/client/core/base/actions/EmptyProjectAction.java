@@ -40,15 +40,23 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.core.base.actions;
 
-import org.eclipse.jface.action.Action;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
  * @author Dirk Kuch
  */
-public class EmptyProjectAction extends Action
+public class EmptyProjectAction implements IProjectAction
 {
-  public EmptyProjectAction( )
+
+  /**
+   * @see org.kalypso.project.database.client.extension.database.refactoring.handlers.actions.IProjectAction#render(org.eclipse.swt.widgets.Composite,
+   *      org.eclipse.ui.forms.widgets.FormToolkit)
+   */
+  @Override
+  public void render( final Composite body, final FormToolkit toolkit )
   {
-    setEnabled( false );
+    toolkit.createLabel( body, "" ).setVisible( false ); // spacer //$NON-NLS-1$
   }
+
 }

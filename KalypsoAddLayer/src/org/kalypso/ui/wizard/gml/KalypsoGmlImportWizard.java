@@ -44,14 +44,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
@@ -61,109 +60,75 @@ import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.action.AddThemeCommand;
-import org.kalypso.ui.addlayer.dnd.MapDropData;
-import org.kalypso.ui.addlayer.internal.util.AddLayerUtils;
 import org.kalypso.ui.editor.actions.FeatureActionUtilities;
-import org.kalypso.ui.editor.gmleditor.part.FeatureAssociationTypeElement;
+import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 import org.kalypso.ui.i18n.Messages;
-import org.kalypso.ui.wizard.AbstractDataImportWizard;
+import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
 
 /**
  * @author Kuepferle
  */
-public class KalypsoGmlImportWizard extends AbstractDataImportWizard
+public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImportWizard
 {
+  private ICommandTarget m_outlineviewer;
+
+  private IKalypsoLayerModell m_mapModel;
+
   private GmlFileImportPage m_page;
-
-  private final GmlFileImportData m_data = new GmlFileImportData();
-
-  public KalypsoGmlImportWizard( )
-  {
-    setWindowTitle( Messages.getString( "org.kalypso.ui.wizard.gml.KalypsoGmlImportWizard.2" ) ); //$NON-NLS-1$
-  }
-
-  @Override
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
-  {
-    super.init( workbench, selection );
-
-    m_data.init( getDialogSettings() );
-  }
 
   @Override
   public void addPages( )
   {
-    final IProject project = ResourceUtilities.findProjectFromURL( getMapModel().getContext() );
-    m_data.setProjectSelection( project );
-
-    m_page = new GmlFileImportPage( "GML:importPage", Messages.getString( "org.kalypso.ui.wizard.gml.KalypsoGmlImportWizard.0" ), m_data ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_page.setImageDescriptor( ImageProvider.IMAGE_UTIL_UPLOAD_WIZ );
-
+    m_page = new GmlFileImportPage( "GML:importPage", Messages.getString("org.kalypso.ui.wizard.gml.KalypsoGmlImportWizard.0"), ImageProvider.IMAGE_UTIL_UPLOAD_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_page.setProjectSelection( m_mapModel.getProject() );
 
     addPage( m_page );
   }
 
-  @Override
-  public void initFromDrop( final MapDropData data )
-  {
-    // data./
-
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public boolean performCancel( )
-  {
-    m_data.storeSettings( getDialogSettings() );
-
-    return super.performCancel();
-  }
-
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#performFinish()
+   */
   @Override
   public boolean performFinish( )
   {
-    m_data.storeSettings( getDialogSettings() );
-
     try
     {
-      final ICommand[] commands = getCommands();
+      final ICommand[] commands = getCommands( m_mapModel );
 
       for( final ICommand command : commands )
       {
-        postCommand( command, null );
+        m_outlineviewer.postCommand( command, null );
       }
     }
     catch( final Throwable e )
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
       KalypsoAddLayerPlugin.getDefault().getLog().log( status );
-      ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.ui.wizard.gml.KalypsoGmlImportWizard.1" ), status ); //$NON-NLS-1$
+      ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.ui.wizard.gml.KalypsoGmlImportWizard.1"), status ); //$NON-NLS-1$
       return false;
     }
 
     return true;
   }
 
-  private ICommand[] getCommands( )
+  private ICommand[] getCommands( final IKalypsoLayerModell model )
   {
-    final IKalypsoLayerModell model = getMapModel();
+    final String source = m_page.getSource();
+    final IStructuredSelection selection = m_page.getSelection();
+    final GMLWorkspace workspace = m_page.getWorkspace();
 
-    final IKalypsoLayerModell mapModell = getMapModel();
-    final IPath mapPath = AddLayerUtils.getPathForMap( mapModell );
-    final String sourcePath = m_data.getSourcePath( mapPath );
-
-    final Object selectedElement = m_data.getSelectedElement();
-
+    final Object firstElement = selection.getFirstElement();
     final List<String> pathList = new ArrayList<String>();
     final List<String> titleList = new ArrayList<String>();
-    if( selectedElement instanceof Feature )
+    if( firstElement instanceof Feature )
     {
       // create featurepath for element
-      final Feature feature = (Feature) selectedElement;
-      final FeaturePath featurepath = new FeaturePath( feature );
+      final Feature feature = (Feature) firstElement;
+      final FeaturePath featurepath = workspace.getFeaturepathForFeature( feature );
       final IFeatureType ft = feature.getFeatureType();
       // find title
       String title = NamedFeatureHelper.getName( feature );
@@ -172,13 +137,13 @@ public class KalypsoGmlImportWizard extends AbstractDataImportWizard
       pathList.add( featurepath.toString() );
       titleList.add( title );
     }
-    else if( selectedElement instanceof FeatureAssociationTypeElement )
+    else if( firstElement instanceof FeatureAssociationTypeElement )
     {
       // create featurepath for association
-      final FeatureAssociationTypeElement link = (FeatureAssociationTypeElement) selectedElement;
-      final Feature parent = link.getOwner();
-      final FeaturePath parentFeaturePath = new FeaturePath( parent );
-      final IRelationType ftp = link.getPropertyType();
+      final FeatureAssociationTypeElement link = (FeatureAssociationTypeElement) firstElement;
+      final Feature parent = link.getParentFeature();
+      final FeaturePath parentFeaturePath = workspace.getFeaturepathForFeature( parent );
+      final IRelationType ftp = link.getAssociationTypeProperty();
 
       final IFeatureType associationFeatureType = ftp.getTargetFeatureType();
       final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, null, false, true );
@@ -214,8 +179,37 @@ public class KalypsoGmlImportWizard extends AbstractDataImportWizard
     {
       final String title = titleIterator.next();
       final String featurePath = pathIterator.next();
-      result[pos] = new AddThemeCommand( model, title, "gml", featurePath, sourcePath ); //$NON-NLS-1$
+      result[pos] = new AddThemeCommand( model, title, "gml", featurePath, source ); //$NON-NLS-1$
     }
     return result;
   }
+
+  /**
+   * @see org.kalypso.ui.wizard.data.IKalypsoDataImportWizard#setOutlineViewer(org.kalypso.ogc.gml.outline.GisMapOutlineViewer)
+   */
+  @Override
+  public void setCommandTarget( final ICommandTarget commandTarget )
+  {
+    m_outlineviewer = commandTarget;
+  }
+
+  /**
+   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
+   *      org.eclipse.jface.viewers.IStructuredSelection)
+   */
+  @Override
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
+  {
+    setWindowTitle( Messages.getString("org.kalypso.ui.wizard.gml.KalypsoGmlImportWizard.2") ); //$NON-NLS-1$
+  }
+
+  /**
+   * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setMapModel(org.kalypso.ogc.gml.IKalypsoLayerModell)
+   */
+  @Override
+  public void setMapModel( final IKalypsoLayerModell modell )
+  {
+    m_mapModel = modell;
+  }
+
 }

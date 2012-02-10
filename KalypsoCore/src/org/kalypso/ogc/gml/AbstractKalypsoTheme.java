@@ -47,7 +47,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
@@ -73,7 +73,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  */
 public abstract class AbstractKalypsoTheme extends PlatformObject implements IKalypsoTheme
 {
-  protected interface IListenerRunnable
+  protected static interface IListenerRunnable
   {
     void visit( final IKalypsoThemeListener l );
   }
@@ -125,8 +125,6 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    * The id of this theme.
    */
   private String m_id;
-
-  private GM_Envelope m_activeEnvelope;
 
   /**
    * The constructor.
@@ -564,15 +562,5 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   public String getId( )
   {
     return m_id;
-  }
-
-  /**
-   * TODO bad idea - handling an envelope from the outside of a theme. must be part of the implementing theme
-   * (encapsulation of classes!)
-   */
-  @Override
-  public void setActiveEnvelope( final GM_Envelope boundingBox )
-  {
-    m_activeEnvelope = boundingBox;
   }
 }

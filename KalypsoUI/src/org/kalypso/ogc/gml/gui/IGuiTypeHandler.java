@@ -49,18 +49,22 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
+import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.ObjectFactory;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * Provides editors and visualisation for {@link org.kalypsodeegree.model.feature.Feature}s.
- *
+ * 
  * @author Gernot Belger
  */
-public interface IGuiTypeHandler extends ILabelProvider, ITypeHandler, IFeatureDialogFactory
+public interface IGuiTypeHandler extends ILabelProvider, ITypeHandler
 {
+  IFeatureDialog createFeatureDialog( Feature feature, IPropertyType ftp );
+
   JAXBElement< ? extends ControlType> createFeatureviewControl( IPropertyType property, ObjectFactory factory );
 
   IFeatureModifier createFeatureModifier( GMLXPath propertyPath, IPropertyType ftp, IFeatureSelectionManager selectionManager, IFeatureChangeListener fcl, String format );
@@ -70,12 +74,13 @@ public interface IGuiTypeHandler extends ILabelProvider, ITypeHandler, IFeatureD
    * this handler is registered for.
    * <p>
    * Parses a (human edited) text into an object of the type this handler is responsible for.
-   *
+   * 
    * @param text
-   *          The text which gets parsed.
+   *            The text which gets parsed.
    * @param formatHint
-   *          Potentially a hint how to parse the text. It depends on the type handler what format hints are supported.
-   *          For example for the date-handler, DateFormat format string can be used. May be <code>null</code>.
+   *            Potentially a hint how to parse the text. It depends on the type handler what format hints are
+   *            supported. For example for the date-handler, DateFormat format string can be used. May be
+   *            <code>null</code>.
    */
   Object parseText( String text, String formatHint ) throws ParseException;
 }

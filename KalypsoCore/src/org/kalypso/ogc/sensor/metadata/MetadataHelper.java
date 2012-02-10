@@ -48,14 +48,13 @@ import java.util.Date;
 import java.util.Set;
 import java.util.TimeZone;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.Period;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.commons.time.PeriodUtils;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.contribs.java.util.CalendarUtilities;
-import org.kalypso.contribs.java.util.CalendarUtilities.FIELD;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.DateRange;

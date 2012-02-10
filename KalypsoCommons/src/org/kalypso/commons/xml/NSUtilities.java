@@ -40,14 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.xml;
 
+
 /**
  * @author doemming
  */
 public class NSUtilities
 {
   /**
-   * The NSPrefixProvider is a singelton to ensures that namespaces are allways prefixed the same way. This is not
-   * neccesary, but very nice.
+   * The NSPrefixProvider is a singleton to ensures that namespaces are always prefixed the same way. This is not
+   * necessary, but very nice.
    * 
    * @return NSPrefixProvider
    */

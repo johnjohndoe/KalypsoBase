@@ -42,7 +42,6 @@
 package org.kalypso.core;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +49,6 @@ import java.util.Properties;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
@@ -68,13 +66,12 @@ import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeInfo;
 import org.kalypso.ogc.gml.om.IComponentHandler;
-import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.IPropertiesFeatureVisitor;
 
 /**
  * Helper class to read extension-points of this plugin.
- *
+ * 
  * @author belger
  */
 public final class KalypsoCoreExtensions
@@ -96,8 +93,6 @@ public final class KalypsoCoreExtensions
   private static final String THEME_INFO_EXTENSION_POINT = "org.kalypso.core.themeInfo"; //$NON-NLS-1$
 
   private static Map<String, IConfigurationElement> THE_THEME_INFO_MAP = null;
-
-  private static Map<String, INativeObservationAdapter> OBSERVATION_IMPORTERS = null;
 
   /* GmlSourceProvider Extension-Point */
   private static final String GML_SOURCE_PROVIDER_EXTENSION_POINT = "org.kalypso.core.gmlSourceProvider"; //$NON-NLS-1$
@@ -331,93 +326,5 @@ public final class KalypsoCoreExtensions
     final String msg = String.format( "No registered comparator with id '%s'", id ); //$NON-NLS-1$
     final IStatus missingStatus = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), msg );
     throw new CoreException( missingStatus );
-  }
-
-  public static INativeObservationAdapter[] getObservationImporters( )
-  {
-    if( OBSERVATION_IMPORTERS == null )
-      OBSERVATION_IMPORTERS = readImporters();
-
-    return OBSERVATION_IMPORTERS.values().toArray( new INativeObservationAdapter[OBSERVATION_IMPORTERS.size()] );
-  }
-
-  private static Map<String, INativeObservationAdapter> readImporters( )
-  {
-    final Map<String, INativeObservationAdapter> importers = new HashMap<>();
-
-    final IExtensionRegistry registry = Platform.getExtensionRegistry();
-
-    final IExtensionPoint extensionPoint = registry.getExtensionPoint( "org.kalypso.core.observationImporter" ); //$NON-NLS-1$
-    if( extensionPoint == null )
-      return Collections.unmodifiableMap( importers );
-
-    final IExtension[] extensions = extensionPoint.getExtensions();
-    for( final IExtension extension : extensions )
-    {
-      final IConfigurationElement[] elements = extension.getConfigurationElements();
-
-      for( final IConfigurationElement element : elements )
-      {
-        try
-        {
-          final INativeObservationAdapter adapter = (INativeObservationAdapter) element.createExecutableExtension( "class" ); //$NON-NLS-1$
-          importers.put( adapter.getId(), adapter );
-        }
-        catch( final CoreException e )
-        {
-          e.printStackTrace();
-        }
-      }
-    }
-
-    return Collections.unmodifiableMap( importers );
-  }
-
-  /**
-   * Use {@link #createObservationImporters()} instead and let user choose value type for import.
-   */
-  @Deprecated
-  public static INativeObservationAdapter[] createNativeAdapters( )
-  {
-    final List<INativeObservationAdapter> adapters = new ArrayList<INativeObservationAdapter>();
-
-    final IExtensionRegistry registry = Platform.getExtensionRegistry();
-
-    final IExtensionPoint extensionPoint = registry.getExtensionPoint( "org.kalypso.core.nativeObsAdapter" ); //$NON-NLS-1$
-    if( extensionPoint == null )
-      return new INativeObservationAdapter[] {};
-
-    final IExtension[] extensions = extensionPoint.getExtensions();
-    for( final IExtension extension : extensions )
-    {
-      final IConfigurationElement[] elements = extension.getConfigurationElements();
-
-      for( final IConfigurationElement element : elements )
-      {
-        try
-        {
-          final INativeObservationAdapter adapter = (INativeObservationAdapter) element.createExecutableExtension( "class" ); //$NON-NLS-1$
-          adapters.add( adapter );
-        }
-        catch( final CoreException e )
-        {
-          e.printStackTrace();
-        }
-      }
-    }
-
-    return adapters.toArray( new INativeObservationAdapter[adapters.size()] );
-  }
-
-  public static INativeObservationAdapter getObservationImporter( final String id )
-  {
-    final INativeObservationAdapter[] allImporters = getObservationImporters();
-    for( final INativeObservationAdapter importer : allImporters )
-    {
-      if( importer.getId().equals( id ) )
-        return importer;
-    }
-
-    return null;
   }
 }

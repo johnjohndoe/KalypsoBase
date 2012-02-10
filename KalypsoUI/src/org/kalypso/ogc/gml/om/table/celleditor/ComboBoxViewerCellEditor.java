@@ -155,7 +155,7 @@ public class ComboBoxViewerCellEditor extends CellEditor
       @Override
       public void keyTraversed( final TraverseEvent e )
       {
-        if( e.detail == SWT.TRAVERSE_ESCAPE || e.detail == SWT.TRAVERSE_RETURN )
+        if( (e.detail == SWT.TRAVERSE_ESCAPE) || (e.detail == SWT.TRAVERSE_RETURN) )
           e.doit = false;
       }
     } );
@@ -183,6 +183,9 @@ public class ComboBoxViewerCellEditor extends CellEditor
     return m_viewer.getControl();
   }
 
+  /**
+   * @see org.eclipse.jface.viewers.CellEditor#getLayoutData()
+   */
   @Override
   public LayoutData getLayoutData( )
   {
@@ -193,6 +196,9 @@ public class ComboBoxViewerCellEditor extends CellEditor
     return result;
   }
 
+  /**
+   * @see org.eclipse.jface.viewers.CellEditor#doGetValue()
+   */
   @Override
   protected Object doGetValue( )
   {
@@ -213,12 +219,19 @@ public class ComboBoxViewerCellEditor extends CellEditor
   @Override
   public void activate( final ColumnViewerEditorActivationEvent activationEvent )
   {
+    System.out.println( "activate" );
+    // TODO Auto-generated method stub
     super.activate( activationEvent );
   }
 
+  /**
+   * @see org.eclipse.jface.viewers.CellEditor#doSetFocus()
+   */
   @Override
   protected void doSetFocus( )
   {
+    System.out.println( "doSetFocus" );
+
     final Combo combo = m_viewer.getCombo();
     combo.setListVisible( true );
     combo.setFocus();
@@ -241,15 +254,15 @@ public class ComboBoxViewerCellEditor extends CellEditor
       m_viewer.setSelection( StructuredSelection.EMPTY );
   }
 
-// /**
-// * @see org.eclipse.jface.viewers.CellEditor#focusLost()
-// */
-// @Override
-// protected void focusLost( )
-// {
-// if( isActivated() )
-// {
-// applyEditorValueAndDeactivate();
-// }
-// }
+//  /**
+//   * @see org.eclipse.jface.viewers.CellEditor#focusLost()
+//   */
+//  @Override
+//  protected void focusLost( )
+//  {
+//    if( isActivated() )
+//    {
+//      applyEditorValueAndDeactivate();
+//    }
+//  }
 }

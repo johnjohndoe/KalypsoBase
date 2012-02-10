@@ -42,6 +42,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.shape.FileMode;
 import org.kalypso.shape.ShapeHeader;
@@ -142,8 +143,8 @@ public class SHPFile
     /*
      * only for PolyLines, Polygons and MultiPoints minimum bounding rectangles are defined
      */
-    if( shpType == ShapeType.POLYLINE || shpType == ShapeType.POLYGON || shpType == ShapeType.MULTIPOINT || shpType == ShapeType.POLYLINEZ || shpType == ShapeType.POLYGONZ
-        || shpType == ShapeType.MULTIPOINTZ )
+    if( (shpType == ShapeType.POLYLINE) || (shpType == ShapeType.POLYGON) || (shpType == ShapeType.MULTIPOINT) || (shpType == ShapeType.POLYLINEZ) || (shpType == ShapeType.POLYGONZ)
+        || (shpType == ShapeType.MULTIPOINTZ) )
       return new SHPEnvelope( m_raf );
 
     return null;
@@ -186,7 +187,7 @@ public class SHPFile
       case MULTIPOINTZ:
         return new SHPMultiPointz( recBuf );
       default:
-        throw new UnsupportedOperationException( "Unknown shape type: " + shpType );
+        throw new NotImplementedException( "Unknown shape type: " + shpType );
     }
   }
 

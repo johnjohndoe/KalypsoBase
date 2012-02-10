@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
@@ -20,6 +20,7 @@ import org.kalypso.model.wspm.core.profil.IProfileObjectProvider;
 import org.kalypso.model.wspm.core.profil.ProfileType;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution;
+import org.kalypso.model.wspm.core.profil.serializer.IProfilSink;
 import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
 
 /** Helper class to read extension points of this plugin. */
@@ -103,28 +104,28 @@ public final class KalypsoModelWspmCoreExtensions
     return null;
   }
 
-// public static Map<String, String> getProfilSinks( )
-// {
-//    final Map<String, IConfigurationElement> sinks = getSinksOrSources( "sink" ); //$NON-NLS-1$
-// final Map<String, String> sinkMap = new HashMap<String, String>( sinks.size() );
-// for( final String key : sinks.keySet() )
-// {
-// final IConfigurationElement sink = sinks.get( key );
-//      sinkMap.put( key, sink.getAttribute( "name" ) ); //$NON-NLS-1$
-// }
-// return sinkMap;
-// }
-//
-// public static IProfilSink createProfilSink( final String fileExtension ) throws CoreException
-// {
-//    final Map<String, IConfigurationElement> sinkMap = getSinksOrSources( "sink" ); //$NON-NLS-1$
-//
-// final IConfigurationElement element = sinkMap.get( fileExtension );
-// if( element == null )
-// return null;
-//
-//    return (IProfilSink) element.createExecutableExtension( "class" ); //$NON-NLS-1$
-// }
+  public static Map<String, String> getProfilSinks( )
+  {
+    final Map<String, IConfigurationElement> sinks = getSinksOrSources( "sink" ); //$NON-NLS-1$
+    final Map<String, String> sinkMap = new HashMap<String, String>( sinks.size() );
+    for( final String key : sinks.keySet() )
+    {
+      final IConfigurationElement sink = sinks.get( key );
+      sinkMap.put( key, sink.getAttribute( "name" ) ); //$NON-NLS-1$
+    }
+    return sinkMap;
+  }
+
+  public static IProfilSink createProfilSink( final String fileExtension ) throws CoreException
+  {
+    final Map<String, IConfigurationElement> sinkMap = getSinksOrSources( "sink" ); //$NON-NLS-1$
+
+    final IConfigurationElement element = sinkMap.get( fileExtension );
+    if( element == null )
+      return null;
+
+    return (IProfilSink) element.createExecutableExtension( "class" ); //$NON-NLS-1$
+  }
 
   /**
    * @param fileExtension
@@ -188,9 +189,7 @@ public final class KalypsoModelWspmCoreExtensions
   public static synchronized IProfilePointFilter[] getProfilePointFilters( final String usageHint )
   {
     if( PROFILE_POINT_FILTERS == null )
-    {
       PROFILE_POINT_FILTERS = readProfileFilters();
-    }
 
     return restrictFilterByUsage( PROFILE_POINT_FILTERS, usageHint );
   }
@@ -205,9 +204,7 @@ public final class KalypsoModelWspmCoreExtensions
 
       /* Blank usage: filter should be used everywhere */
       if( StringUtils.isBlank( filterUsage ) )
-      {
         restrictedFilters.add( filter );
-      }
       else
       {
         /*
@@ -216,9 +213,7 @@ public final class KalypsoModelWspmCoreExtensions
          */
         final String[] usages = filterUsage.split( "," ); //$NON-NLS-1$
         if( ArrayUtils.contains( usages, usageHint ) )
-        {
           restrictedFilters.add( filter );
-        }
       }
     }
 
@@ -259,17 +254,15 @@ public final class KalypsoModelWspmCoreExtensions
     return list.get( 0 );
   }
 
-// public static IProfilPointMarkerProvider[] getAllMarkerProviders( )
-// {
-// final Map<String, List<IProfilPointMarkerProvider>> map = getMarkerProviders();
-// final List<IProfilPointMarkerProvider> list = new ArrayList<IProfilPointMarkerProvider>();
-// for( final List<IProfilPointMarkerProvider> ppmp : map.values() )
-// {
-// list.addAll( ppmp );
-// }
-//
-// return list.toArray( new IProfilPointMarkerProvider[list.size()] );
-// }
+  public static IProfilPointMarkerProvider[] getAllMarkerProviders( )
+  {
+    final Map<String, List<IProfilPointMarkerProvider>> map = getMarkerProviders();
+    final List<IProfilPointMarkerProvider> list = new ArrayList<IProfilPointMarkerProvider>();
+    for( final List<IProfilPointMarkerProvider> ppmp : map.values() )
+      list.addAll( ppmp );
+
+    return list.toArray( new IProfilPointMarkerProvider[list.size()] );
+  }
 
   private static synchronized Map<String, List<IProfilPointMarkerProvider>> getMarkerProviders( )
   {
@@ -289,9 +282,7 @@ public final class KalypsoModelWspmCoreExtensions
         final IProfilPointMarkerProvider provider = (IProfilPointMarkerProvider) protoProvider;
 
         if( !THE_MARKER_PROVIDER_MAP.containsKey( profilType ) )
-        {
           THE_MARKER_PROVIDER_MAP.put( profilType, new ArrayList<IProfilPointMarkerProvider>() );
-        }
 
         THE_MARKER_PROVIDER_MAP.get( profilType ).add( provider );
       }
@@ -352,7 +343,7 @@ public final class KalypsoModelWspmCoreExtensions
     if( profileType == null )
       return null;
 
-    return profileType.m_pointProvider;
+    return profileType.pointProvider;
   }
 
   private static synchronized Map<String, ProfileType> getProfileTypes( )
@@ -394,9 +385,7 @@ public final class KalypsoModelWspmCoreExtensions
     final Map<String, IProfileObjectProvider> map = getProfileObjectProviders();
     final IProfileObjectProvider provider = map.get( providerId );
     if( provider == null )
-    {
       System.out.println( "ProfileObjectProvider not registered: " + providerId ); //$NON-NLS-1$
-    }
     return provider;
   }
 

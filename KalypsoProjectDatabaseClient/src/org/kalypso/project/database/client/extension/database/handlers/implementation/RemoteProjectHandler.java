@@ -40,104 +40,74 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.extension.database.handlers.implementation;
 
-import org.apache.commons.lang3.StringUtils;
-import org.eclipse.jface.action.IAction;
-import org.kalypso.commons.java.lang.Strings;
-import org.kalypso.module.IKalypsoModule;
-import org.kalypso.module.ModuleExtensions;
-import org.kalypso.module.project.local.AbstractProjectHandle;
-import org.kalypso.project.database.client.core.base.actions.EmptyProjectAction;
-import org.kalypso.project.database.client.core.base.actions.ProjectDownloadAction;
-import org.kalypso.project.database.client.core.base.actions.RemoteInfoAction;
-import org.kalypso.project.database.client.core.model.projects.IRemoteProject;
+import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
  * @author Dirk Kuch
  */
-public class RemoteProjectHandler extends AbstractProjectHandle implements IRemoteProject
+public class RemoteProjectHandler extends AbstractProjectHandler implements IRemoteProject
 {
-  private final KalypsoProjectBean m_bean;
 
-  private final IKalypsoModule m_module;
+  private final KalypsoProjectBean m_bean;
 
   public RemoteProjectHandler( final KalypsoProjectBean bean )
   {
     m_bean = bean;
-    m_module = findModule( bean );
   }
 
-  private IKalypsoModule findModule( final KalypsoProjectBean bean )
-  {
-    String identifier = bean.getModuleIdentifier();
-    if( Strings.isEmpty( identifier ) ) // reverse combability to existing planer client project databases
-      identifier = bean.getProjectType();
-
-    final IKalypsoModule[] modules = ModuleExtensions.getKalypsoModules();
-    for( final IKalypsoModule module : modules )
-    {
-
-      if( identifier.equals( module.getId() ) )
-        return module;
-
-      // @backward compatibility for old plc projects
-      if( StringUtils.equalsIgnoreCase( identifier, "PlanerClientProject" ) ) //$NON-NLS-1$
-      {
-        if( StringUtils.equalsIgnoreCase( identifier, "PlanerClientProject" ) ) //$NON-NLS-1$
-          return module;
-      }
-    }
-
-    return null;
-  }
-
+  /**
+   * @see org.kalypso.project.database.client.extension.database.refactoring.handlers.IProjectHandler#getName()
+   */
   @Override
   public String getName( )
   {
     return m_bean.getName();
   }
 
+  /**
+   * @see org.kalypso.project.database.client.extension.database.refactoring.handlers.IProjectHandler#getUniqueName()
+   */
   @Override
   public String getUniqueName( )
   {
     return m_bean.getUnixName();
   }
 
+  /**
+   * @see org.kalypso.project.database.client.extension.database.refactoring.handlers.IProjectHandler#isLocal()
+   */
+  @Override
+  public boolean isLocal( )
+  {
+    return false;
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.extension.database.refactoring.handlers.IProjectHandler#isRemote()
+   */
+  @Override
+  public boolean isRemote( )
+  {
+    return true;
+  }
+
+  /**
+   * @see org.kalypso.project.database.client.extension.database.refactoring.handlers.IRemoteProjectHandler#getBean()
+   */
   @Override
   public KalypsoProjectBean getBean( )
   {
     return m_bean;
   }
 
+  /**
+   * @see org.kalypso.project.database.client.extension.database.handlers.IProjectHandler#getDescription()
+   */
   @Override
   public String getDescription( )
   {
     return m_bean.getDescription();
-  }
-
-  @Override
-  public IAction[] getProjectActions( )
-  {
-    final IAction[] actions = new IAction[5];
-    actions[0] = new RemoteInfoAction( this );
-    actions[1] = new EmptyProjectAction(); // no delete
-    actions[2] = new EmptyProjectAction(); // no export
-    actions[3] = new EmptyProjectAction(); // no edit
-    actions[4] = new ProjectDownloadAction( m_module, this );
-    return actions;
-  }
-
-  /**
-   * @see org.kalypso.core.projecthandle.LocalProjectHandle#getAdapter(java.lang.Class)
-   */
-  @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
-  {
-    // FIXME
-// if( adapter == IProjectOpenAction.class )
-// return new ListRemoteProjectAction( this );
-
-    return super.getAdapter( adapter );
   }
 
   /**
@@ -149,31 +119,4 @@ public class RemoteProjectHandler extends AbstractProjectHandle implements IRemo
     return String.format( "Remote Project: %s", getName() );
   }
 
-  /**
-   * @see org.kalypso.core.projecthandle.IProjectHandle#getModuleIdentifier()
-   */
-  @Override
-  public String getModuleIdentifier( )
-  {
-    final String id = m_bean.getModuleIdentifier();
-    if( Strings.isNotEmpty( id ) )
-      return id;
-
-    /** bad hack for backward compability of kalypso planer client! */
-    final String projectType = m_bean.getProjectType();
-    if( "PlanerClientProject".equals( projectType ) )
-      return "PlanerClientModule";
-    else if( "PlanerClientManagerProject".equals( projectType ) || "PlanerClientProjectTemplate".equals( projectType ) )
-      return "PlanerClientManagerModule";
-    else if( "KalypsRrmModel".equals( projectType ) )
-      return "KalypsRrmModel";
-    else if( "KalypsoWspmModel".equals( projectType ) )
-      return "KalypsoWspmModel";
-    else if( "KalypsoFloodModelType".equals( projectType ) )
-      return "KalypsoFloodModelType";
-    else if( "KalypsoRiskModel".equals( projectType ) )
-      return "KalypsoRiskModel";
-
-    throw new UnsupportedOperationException();
-  }
 }

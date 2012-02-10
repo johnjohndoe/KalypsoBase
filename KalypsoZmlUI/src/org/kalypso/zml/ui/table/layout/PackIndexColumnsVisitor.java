@@ -43,7 +43,8 @@ package org.kalypso.zml.ui.table.layout;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.widgets.TableColumn;
 import org.kalypso.zml.core.table.binding.BaseColumn;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableIndexColumn;
 
 /**
  * @author Dirk Kuch
@@ -60,7 +61,7 @@ public class PackIndexColumnsVisitor extends AbstractTableColumnPackVisitor
   @Override
   public void visit( final IZmlTableColumn column )
   {
-    if( !column.isIndexColumn() )
+    if( !(column instanceof IZmlTableIndexColumn) )
       return;
 
     final BaseColumn columnType = column.getColumnType();

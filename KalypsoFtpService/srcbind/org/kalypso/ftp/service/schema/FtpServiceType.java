@@ -5,6 +5,7 @@
 // Generated on: 2010.04.06 at 10:56:49 AM MESZ 
 //
 
+
 package org.kalypso.ftp.service.schema;
 
 import java.math.BigInteger;
@@ -14,11 +15,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
+
 /**
- * <p>
- * Java class for FtpServiceType complex type.
- * <p>
- * The following schema fragment specifies the expected content contained within this class.
+ * <p>Java class for FtpServiceType complex type.
+ * 
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="FtpServiceType">
@@ -32,58 +33,67 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
+ * 
+ * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "FtpServiceType", propOrder = { "port", "userFile" })
-public class FtpServiceType
-{
+@XmlType(name = "FtpServiceType", propOrder = {
+    "port",
+    "userFile"
+})
+public class FtpServiceType {
 
-  @XmlElement(required = true, defaultValue = "21")
-  protected BigInteger port;
+    @XmlElement(required = true, defaultValue = "21")
+    protected BigInteger port;
+    @XmlElement(required = true)
+    protected String userFile;
 
-  @XmlElement(required = true)
-  protected String userFile;
+    /**
+     * Gets the value of the port property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link BigInteger }
+     *     
+     */
+    public BigInteger getPort() {
+        return port;
+    }
 
-  /**
-   * Gets the value of the port property.
-   * 
-   * @return possible object is {@link BigInteger }
-   */
-  public BigInteger getPort( )
-  {
-    return port;
-  }
+    /**
+     * Sets the value of the port property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link BigInteger }
+     *     
+     */
+    public void setPort(BigInteger value) {
+        this.port = value;
+    }
 
-  /**
-   * Sets the value of the port property.
-   * 
-   * @param value
-   *          allowed object is {@link BigInteger }
-   */
-  public void setPort( final BigInteger value )
-  {
-    port = value;
-  }
+    /**
+     * Gets the value of the userFile property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getUserFile() {
+        return userFile;
+    }
 
-  /**
-   * Gets the value of the userFile property.
-   * 
-   * @return possible object is {@link String }
-   */
-  public String getUserFile( )
-  {
-    return userFile;
-  }
-
-  /**
-   * Sets the value of the userFile property.
-   * 
-   * @param value
-   *          allowed object is {@link String }
-   */
-  public void setUserFile( final String value )
-  {
-    userFile = value;
-  }
+    /**
+     * Sets the value of the userFile property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setUserFile(String value) {
+        this.userFile = value;
+    }
 
 }

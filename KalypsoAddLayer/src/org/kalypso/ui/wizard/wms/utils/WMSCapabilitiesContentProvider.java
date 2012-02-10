@@ -66,7 +66,7 @@ public class WMSCapabilitiesContentProvider implements ITreeContentProvider
    *      java.lang.Object)
    */
   @Override
-  public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
+  public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
   {
   }
 
@@ -89,7 +89,7 @@ public class WMSCapabilitiesContentProvider implements ITreeContentProvider
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
    */
   @Override
-  public Object getParent( final Object element )
+  public Object getParent( Object element )
   {
     return null; // dont known
   }
@@ -98,7 +98,7 @@ public class WMSCapabilitiesContentProvider implements ITreeContentProvider
    * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
    */
   @Override
-  public boolean hasChildren( final Object element )
+  public boolean hasChildren( Object element )
   {
     if( element instanceof WMSCapabilities )
       return ((WMSCapabilities) element).getLayer() != null;

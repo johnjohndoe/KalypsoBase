@@ -63,7 +63,7 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
   /**
    * Constructs a new <tt>Fill_Impl</tt>.
    */
-  protected Fill_Impl( )
+  protected Fill_Impl()
   {
     super( new HashMap<String, CssParameter>(), null );
   }
@@ -89,28 +89,35 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
   @Override
   public Color getFill( final Feature feature ) throws FilterEvaluationException
   {
+    Color awtColor = FILL_DEFAULT;
+
     final CssParameter cssParam = getParameter( CSS_FILL );
 
-    if( cssParam == null )
-      return FILL_DEFAULT;
-
-    String s = cssParam.getValue( feature );
-    if( s.length() < 2 )
-      return FILL_DEFAULT;
-
-    try
+    if( cssParam != null )
     {
-      if( s.charAt( 0 ) == '#' && s.charAt( 1 ) == '#' )
-        s = s.substring( 1 );
+      String s = cssParam.getValue( feature );
 
-      return Color.decode( s );
+      // EXTREMELY SLOW! used only for checking if string begins with ## 
+      //cssParam.getValue( feature ).replaceAll("##", "#");
+      try
+      {
+        if (s.charAt( 0 ) == '#' && s.charAt( 1 ) == '#') 
+          s = s.substring( 1 );
+        awtColor =  Color.decode( s );
+      }
+      catch( final Exception e )
+      {
+        KalypsoCommonsPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e, "Given value ('" + s + "') for CSS-Parameter 'fill' "
+            + "does not denote a valid color!" ) );
+        return awtColor;
+//        throw new FilterEvaluationException( "Given value ('" + s + "') for CSS-Parameter 'fill' "
+//            + "does not denote a valid color!" );
+      }
     }
-    catch( final Exception e )
-    {
-      KalypsoCommonsPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e, "Given value ('" + s + "') for CSS-Parameter 'fill' " + "does not denote a valid color!" ) );
-      return FILL_DEFAULT;
-    }
+
+    return awtColor;
   }
+
 
   /**
    * sets the value of the fill's CssParameter 'fill' as a simple color
@@ -155,12 +162,14 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
       }
       catch( final NumberFormatException e )
       {
-        throw new FilterEvaluationException( "Given value for parameter 'fill-opacity' ('" + value + "') has invalid format!" );
+        throw new FilterEvaluationException( "Given value for parameter 'fill-opacity' ('" + value
+            + "') has invalid format!" );
       }
 
-      if( opacity < 0.0 || opacity > 1.0 )
+      if( ( opacity < 0.0 ) || ( opacity > 1.0 ) )
       {
-        throw new FilterEvaluationException( "Value for parameter 'fill-opacity' (given: '" + value + "') must be between 0.0 and 1.0!" );
+        throw new FilterEvaluationException( "Value for parameter 'fill-opacity' (given: '" + value
+            + "') must be between 0.0 and 1.0!" );
       }
     }
 
@@ -196,7 +205,7 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
    * @return xml representation of the CssParameter
    */
   @Override
-  public String exportAsXML( )
+  public String exportAsXML()
   {
     final StringBuffer sb = new StringBuffer( "<Fill>" );
 

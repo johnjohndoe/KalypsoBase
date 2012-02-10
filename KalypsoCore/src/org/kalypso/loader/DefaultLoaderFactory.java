@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.loader;
 
@@ -52,9 +52,22 @@ import org.kalypso.commons.factory.FactoryException;
  */
 public class DefaultLoaderFactory implements ILoaderFactory
 {
+  /**
+   * The constructor.
+   */
+  public DefaultLoaderFactory( )
+  {
+  }
+
+  /**
+   * @see org.kalypso.loader.ILoaderFactory#getLoaderInstance(java.lang.String)
+   */
   @Override
   public ILoader getLoaderInstance( final String type ) throws FactoryException
   {
+    /* Memory for the loader. */
+    ILoader loader = null;
+
     try
     {
       final IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -63,11 +76,14 @@ public class DefaultLoaderFactory implements ILoaderFactory
       {
         final String elementType = element.getAttribute( "type" ); //$NON-NLS-1$
         if( type.equals( elementType ) )
-          return (ILoader) element.createExecutableExtension( "class" ); //$NON-NLS-1$
+          loader = (ILoader) element.createExecutableExtension( "class" ); //$NON-NLS-1$
       }
 
       /* If there is no loader, this is an error. */
-      throw new FactoryException( "Unknown loader type: " + type ); //$NON-NLS-1$
+      if( loader == null )
+        throw new Exception( "Unknown type: " + type ); //$NON-NLS-1$
+
+      return loader;
     }
     catch( final Exception ex )
     {

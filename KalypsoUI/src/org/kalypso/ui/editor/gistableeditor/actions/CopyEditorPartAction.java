@@ -60,7 +60,7 @@ public class CopyEditorPartAction extends AbstractEditorPartAction
     final GisTableEditor editor = (GisTableEditor) getEditorPart();
     if( editor == null )
       return;
-
+    
     final LayerTableViewer layerTable = editor.getLayerTable();
 
     final ExcelClipboardAdapter adapter = new ExcelClipboardAdapter( layerTable );

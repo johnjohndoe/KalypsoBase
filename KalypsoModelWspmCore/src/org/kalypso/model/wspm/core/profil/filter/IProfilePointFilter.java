@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.core.profil.filter;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Gernot Belger
@@ -54,7 +54,7 @@ public interface IProfilePointFilter
 
   String getDescription( );
 
-  boolean accept( final IProfil profil, final IProfileRecord point );
+  boolean accept( final IProfil profil, final IRecord point );
 
   String getUsageHint( );
 }

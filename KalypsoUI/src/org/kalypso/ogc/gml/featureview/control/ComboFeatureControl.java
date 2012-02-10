@@ -60,11 +60,11 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.PropertyUtils;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
-import org.kalypso.ui.editor.gmleditor.part.GMLLabelProvider;
+import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IXLinkedFeature;
-import org.kalypsodeegree_impl.model.feature.DefaultReferenceCollectorStrategy;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
+import org.kalypsodeegree_impl.model.feature.search.DefaultReferenceCollectorStrategy;
 import org.kalypsodeegree_impl.model.feature.search.IReferenceCollectorStrategy;
 
 /**
@@ -72,7 +72,7 @@ import org.kalypsodeegree_impl.model.feature.search.IReferenceCollectorStrategy;
  * <p>
  * Today only properties with String type are supported.
  * </p>
- *
+ * 
  * @author Gernot Belger
  */
 public class ComboFeatureControl extends AbstractFeatureControl
@@ -139,7 +139,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
       if( !rt.isInlineAble() && rt.isLinkAble() )
       {
         /* Null entry to delete link if this is allowed */
-        if( rt.isNillable() || rt.getMinOccurs() == 0 )
+        if( rt.isNillable() )
           m_entries.put( NULL_LINK, "<kein Link>" ); //$NON-NLS-1$
 
         /* Find all substituting features. */
@@ -155,7 +155,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
         for( final Feature foundFeature : features )
         {
           final String featureLabel = labelProvider.getText( foundFeature );
-          if( foundFeature instanceof IXLinkedFeature )
+          if( foundFeature instanceof XLinkedFeature_Impl )
             m_entries.put( foundFeature, featureLabel );
           else
             m_entries.put( foundFeature.getId(), featureLabel );
@@ -233,7 +233,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
     if( newValue == oldValue )
       return;
 
-    if( newValue == null && oldValue != null || !newValue.equals( oldValue ) )
+    if( (newValue == null && oldValue != null) || !newValue.equals( oldValue ) )
     {
       m_ignoreNextUpdate = true;
       fireFeatureChange( new ChangeFeatureCommand( feature, pt, newValue ) );

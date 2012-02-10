@@ -55,12 +55,18 @@ public abstract class AbstractPointPropertyProvider implements IProfilPointPrope
 
   protected final Set<String> m_markers = new LinkedHashSet<String>();
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#createProfil()
+   */
   @Override
   public IProfil createProfil( )
   {
-    return createProfil( new TupleResult(), null );
+    return createProfil( new TupleResult() );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider#getDefaultValue(java.lang.String)
+   */
   @Override
   public Object getDefaultValue( final String propertyID )
   {

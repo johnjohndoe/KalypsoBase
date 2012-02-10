@@ -44,8 +44,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.EqualsBuilder;
 import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IAxis;
@@ -258,17 +258,6 @@ public final class AxisUtils implements ITimeseriesConstants
     return Objects.isNotNull( findAxis( axes, type ) );
   }
 
-  public static IAxis findAxisByName( final IAxis[] axes, final String name )
-  {
-    for( final IAxis axis : axes )
-    {
-      if( axis.getName().equals( name ) )
-        return axis;
-    }
-
-    return null;
-  }
-
   public static boolean isEqual( final IAxis a1, final IAxis a2 )
   {
     if( Objects.isNull( a1, a2 ) )
@@ -284,6 +273,7 @@ public final class AxisUtils implements ITimeseriesConstants
 
     return builder.isEquals();
   }
+
   /**
    * @param converter
    *          Needed to guess the right persistent axis for a non-persistent one.

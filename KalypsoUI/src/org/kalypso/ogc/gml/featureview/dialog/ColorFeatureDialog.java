@@ -74,7 +74,7 @@ public class ColorFeatureDialog implements IFeatureDialog
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#collectChanges(java.util.Collection)
    */
   @Override
-  public void collectChanges( final Collection<FeatureChange> c )
+  public void collectChanges( Collection<FeatureChange> c )
   {
     if( c != null && m_change != null )
       c.add( m_change );
@@ -93,15 +93,15 @@ public class ColorFeatureDialog implements IFeatureDialog
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#open(org.eclipse.swt.widgets.Shell)
    */
   @Override
-  public int open( final Shell shell )
+  public int open( Shell shell )
   {
-    final ColorDialog dialog = new ColorDialog( shell );
-
-    final RGB rgb = (RGB) m_feature.getProperty( m_ftp );
+    ColorDialog dialog = new ColorDialog( shell );
+        
+    RGB rgb = (RGB) m_feature.getProperty( m_ftp );
 
     dialog.setRGB( rgb );
 
-    final RGB newRGB = dialog.open();
+    RGB newRGB = dialog.open();
 
     if( newRGB != null )
     {

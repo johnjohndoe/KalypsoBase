@@ -43,7 +43,7 @@ package org.kalypso.ogc.gml.actionfilters;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.ui.IActionFilter;
 import org.kalypso.contribs.eclipse.ui.actionfilters.ActionFilterRegistry;
-import org.kalypso.ui.editor.gmleditor.part.FeatureAssociationTypeElement;
+import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 
 /**
  * @author schlienger
@@ -65,7 +65,7 @@ public class FeatureAssociationActionFilterAdapterFactory implements IAdapterFac
   {
     if( adapterType == IActionFilter.class )
       return m_featureActionFilter;
-
+    
     return null;
   }
 
@@ -75,6 +75,6 @@ public class FeatureAssociationActionFilterAdapterFactory implements IAdapterFac
   @Override
   public Class[] getAdapterList( )
   {
-    return new Class[] { IActionFilter.class };
+    return new Class[]{ IActionFilter.class };
   }
 }

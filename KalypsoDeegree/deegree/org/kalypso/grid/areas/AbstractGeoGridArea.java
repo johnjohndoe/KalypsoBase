@@ -67,12 +67,12 @@ public abstract class AbstractGeoGridArea implements IGeoGridArea
   /**
    * The grid.
    */
-  private final IGeoGrid m_grid;
+  private IGeoGrid m_grid;
 
   /**
    * The area geometry.
    */
-  private final Geometry m_geometry;
+  private Geometry m_geometry;
 
   /**
    * The start x coordinate.
@@ -107,7 +107,7 @@ public abstract class AbstractGeoGridArea implements IGeoGridArea
    * @param geometry
    *          The area geometry.
    */
-  public AbstractGeoGridArea( final IGeoGrid grid, final Geometry geometry )
+  public AbstractGeoGridArea( IGeoGrid grid, Geometry geometry )
   {
     m_grid = grid;
     m_geometry = geometry;
@@ -128,11 +128,11 @@ public abstract class AbstractGeoGridArea implements IGeoGridArea
       return;
 
     /* Get the envelope of the geometry. */
-    final Envelope envelope = m_geometry.getEnvelopeInternal();
+    Envelope envelope = m_geometry.getEnvelopeInternal();
 
     /* Determine the cells at the edges of the envelope. */
-    final GeoGridCell minMinCell = GeoGridUtilities.cellFromPosition( m_grid, new Coordinate( envelope.getMinX(), envelope.getMinY() ) );
-    final GeoGridCell maxMaxCell = GeoGridUtilities.cellFromPosition( m_grid, new Coordinate( envelope.getMaxX(), envelope.getMaxY() ) );
+    GeoGridCell minMinCell = GeoGridUtilities.cellFromPosition( m_grid, new Coordinate( envelope.getMinX(), envelope.getMinY() ) );
+    GeoGridCell maxMaxCell = GeoGridUtilities.cellFromPosition( m_grid, new Coordinate( envelope.getMaxX(), envelope.getMaxY() ) );
 
     /* Calculate the start and end x coordinates. */
     m_xStart = Math.max( 0, Math.min( minMinCell.x, maxMaxCell.x ) );
@@ -152,7 +152,7 @@ public abstract class AbstractGeoGridArea implements IGeoGridArea
    * @see org.kalypso.grid.areas.IGeoGridArea#contains(int, int, com.vividsolutions.jts.geom.Coordinate)
    */
   @Override
-  public boolean contains( final int x, final int y, final Coordinate coordinate ) throws GeoGridException
+  public boolean contains( int x, int y, Coordinate coordinate ) throws GeoGridException
   {
     /* Initialize. */
     init();
@@ -170,7 +170,7 @@ public abstract class AbstractGeoGridArea implements IGeoGridArea
    * @see org.kalypso.grid.areas.IGeoGridArea#overlaps(int, int, com.vividsolutions.jts.geom.Coordinate)
    */
   @Override
-  public final double overlaps( final int x, final int y, final Coordinate coordinate ) throws GeoGridException
+  public final double overlaps( int x, int y, Coordinate coordinate ) throws GeoGridException
   {
     /* Initialize. */
     init();
@@ -182,7 +182,7 @@ public abstract class AbstractGeoGridArea implements IGeoGridArea
       return 0.0;
 
     /* Create the cells polygon. */
-    final Polygon cell = GeoGridUtilities.createCellPolygon( m_grid, x, y );
+    Polygon cell = GeoGridUtilities.createCellPolygon( m_grid, x, y );
 
     /* The fraction of the area of the cell within the area of the geometry. */
     return JTSUtilities.getAreaFraction( m_geometry, cell );

@@ -47,6 +47,7 @@ import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
 
 /**
  * @author Gernot Belger
+ *
  */
 public class StatusToMessageConverter extends TypedConverter<IStatus, IMessage[]>
 {

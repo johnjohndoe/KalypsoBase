@@ -58,7 +58,7 @@ public class RemoveLayerHandler extends AbstractHandler
    * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  public Object execute( final ExecutionEvent event )
+  public Object execute( ExecutionEvent event )
   {
     final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
     final IViewPart view = activePage == null ? null : activePage.findView( "org.kalypso.model.wspm.ui.view.legend.LegendViewPart" ); //$NON-NLS-1$
@@ -70,7 +70,9 @@ public class RemoveLayerHandler extends AbstractHandler
 
     final ISelection selection = legendView.getSelection();
     if( selection == null || selection.isEmpty() )
+    {
       return null;
+    }
     if( selection instanceof IStructuredSelection )
     {
       final IProfilChartLayer layer = (IProfilChartLayer) ((IStructuredSelection) selection).getFirstElement();

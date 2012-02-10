@@ -52,6 +52,8 @@ import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
 
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 /**
  * Layer provider for the {@link PolynomeChartLayer}.
@@ -80,7 +82,7 @@ public class PolynomeLayerProvider extends AbstractLayerProvider
     final IParameterContainer pc = getParameterContainer();
     final boolean showPoints = Boolean.parseBoolean( pc.getParameterValue( "showPoints", "false" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     final int pixelsPerTick = Integer.parseInt( pc.getParameterValue( "pixelsPerTick", "5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    return new PolynomeChartLayer( this, getDataContainer(), pixelsPerTick, getStyleSet(), showPoints ); //$NON-NLS-1$ //$NON-NLS-2$
+    return new PolynomeChartLayer( this, getDataContainer(), pixelsPerTick, getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ), showPoints ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -93,7 +95,7 @@ public class PolynomeLayerProvider extends AbstractLayerProvider
     final String featureKey = pc.getParameterValue( "featureKey", null ); //$NON-NLS-1$
     final String propertyNameStr = pc.getParameterValue( "propertyName", null ); //$NON-NLS-1$
     final QName propertyName = propertyNameStr == null ? null : QName.valueOf( propertyNameStr );
-    final Feature feature = (Feature) getModel().getData( featureKey );
+    final Feature feature = ChartDataProvider.FEATURE_MAP.get( featureKey );
 
     final FeatureList polygones = (FeatureList) feature.getProperty( propertyName );
 
@@ -104,9 +106,7 @@ public class PolynomeLayerProvider extends AbstractLayerProvider
       final Feature polyFeature = (Feature) object;
       final IPolynomial1D poly1d = (IPolynomial1D) polyFeature.getAdapter( IPolynomial1D.class );
       if( domainId == null || domainId.equals( poly1d.getDomainPhenomenon() ) )
-      {
         polys.add( poly1d );
-      }
     }
     final IPolynomial1D[] polyArray = polys.toArray( new IPolynomial1D[polys.size()] );
     return new PolynomDataContainer( polyArray );

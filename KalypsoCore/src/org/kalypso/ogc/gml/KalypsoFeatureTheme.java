@@ -89,7 +89,6 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.graphics.displayelements.ILabelPlacementStrategy;
 import org.kalypsodeegree_impl.graphics.displayelements.SimpleLabelPlacementStrategy;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.model.feature.FeaturePath;
 
 import com.vividsolutions.jts.geom.Envelope;
 
@@ -134,7 +133,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     if( featureFromPath instanceof FeatureList )
     {
       m_featureList = (FeatureList) featureFromPath;
-      m_featureType = new FeaturePath( m_featurePath ).getFeatureType( m_workspace );
+      m_featureType = m_workspace.getFeatureTypeFromPath( m_featurePath );
     }
     else if( featureFromPath instanceof Feature )
     {
@@ -204,6 +203,11 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     return m_featurePath;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
+   *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
+   *      org.eclipse.core.runtime.IProgressMonitor)
+   */
   @Override
   public IStatus paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
   {
@@ -271,7 +275,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   public void addStyle( final IKalypsoStyle style )
   {
     m_styles.add( style );
-
+    
     styleAdded( style );
   }
 
@@ -296,9 +300,13 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   @Override
   public IKalypsoStyle[] getStyles( )
   {
-    return m_styles.toArray( new IKalypsoStyle[m_styles.size()] );
+    // Use empty array here to be thread save
+    return m_styles.toArray( new IKalypsoStyle[0] );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
+   */
   @Override
   public void onModellChange( final ModellEvent modellEvent )
   {
@@ -309,12 +317,12 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     {
       // my workspace ?
       final GMLWorkspace changedWorkspace = ((IGMLWorkspaceModellEvent) modellEvent).getGMLWorkspace();
-      if( m_workspace != null && changedWorkspace != m_workspace && changedWorkspace != m_workspace.getWorkspace() )
+      if( ((m_workspace != null) && (changedWorkspace != m_workspace) && (changedWorkspace != m_workspace.getWorkspace())) )
         return; // not my workspace
 
       if( modellEvent instanceof FeaturesChangedModellEvent )
       {
-        final FeaturesChangedModellEvent featuresChangedModellEvent = (FeaturesChangedModellEvent) modellEvent;
+        final FeaturesChangedModellEvent featuresChangedModellEvent = ((FeaturesChangedModellEvent) modellEvent);
         final Feature[] features = featuresChangedModellEvent.getFeatures();
 
         // HACK: for single-feature lists (see flag), we must invalidate the list ourselves.
@@ -359,7 +367,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
         final Feature[] parents = fscme.getParentFeatures();
         for( final Feature parent : parents )
         {
-          if( m_featureList.getOwner() == parent )
+          if( m_featureList.getParentFeature() == parent )
           {
             switch( fscme.getChangeType() )
             {
@@ -401,6 +409,10 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     return m_featureList;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeatureListVisible(org.kalypsodeegree.model.geometry.GM_Envelope)
+   */
+  @SuppressWarnings("unchecked")
   @Override
   public FeatureList getFeatureListVisible( final GM_Envelope searchEnvelope )
   {
@@ -425,14 +437,18 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       KalypsoCorePlugin.getDefault().getLog().log( e.getStatus() );
     }
 
-    final Feature parentFeature = m_featureList.getOwner();
-    final IRelationType parentFTP = m_featureList.getPropertyType();
+    final Feature parentFeature = m_featureList.getParentFeature();
+    final IRelationType parentFTP = m_featureList.getParentFeatureTypeProperty();
     final FeatureList resultList = FeatureFactory.createFeatureList( parentFeature, parentFTP );
     final Collection<Feature> visibleFeatures = paintDelegate.getVisibleFeatures();
     resultList.addAll( visibleFeatures );
     return resultList;
   }
 
+  /**
+   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand,
+   *      java.lang.Runnable)
+   */
   @Override
   public void postCommand( final ICommand command, final Runnable runnable )
   {
@@ -450,18 +466,27 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     }
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getSchedulingRule()
+   */
   @Override
   public ISchedulingRule getSchedulingRule( )
   {
     return null;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getSelectionManager()
+   */
   @Override
   public IFeatureSelectionManager getSelectionManager( )
   {
     return m_selectionManager;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getDefaultIcon()
+   */
   @Override
   public ImageDescriptor getDefaultIcon( )
   {
@@ -471,6 +496,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     return ImageDescriptor.createFromImage( m_featureThemeIcon );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoStyleListener#styleChanged()
+   */
   @Override
   public void styleChanged( )
   {
@@ -530,7 +558,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     if( infoId == null )
       return null;
 
-    if( infoId.startsWith( "%" ) ) //$NON-NLS-1$
+    if( infoId.startsWith( "%" ) )
     {
       final I10nString themeName = getName();
       if( themeName != null )

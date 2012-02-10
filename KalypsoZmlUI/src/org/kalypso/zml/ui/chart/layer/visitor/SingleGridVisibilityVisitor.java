@@ -41,12 +41,11 @@
 package org.kalypso.zml.ui.chart.layer.visitor;
 
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.zml.core.diagram.base.IZmlLayer;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 
 import de.openali.odysseus.chart.ext.base.layer.DefaultTickRasterLayer;
-import de.openali.odysseus.chart.factory.util.Layers;
+import de.openali.odysseus.chart.factory.layer.Layers;
 import de.openali.odysseus.chart.framework.model.ILayerContainer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLayerVisitor;
@@ -97,7 +96,7 @@ public class SingleGridVisibilityVisitor extends AbstractChartLayerVisitor
     if( Objects.isNull( handler ) )
       return false;
 
-    if( Objects.isNull( handler.getAdapter( IObservation.class ) ) )
+    if( Objects.isNull( handler.getObservation() ) )
       return false;
 
     return true;

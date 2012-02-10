@@ -42,8 +42,8 @@ package org.kalypso.zml.core.table.model.references;
 
 import java.util.Date;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -61,7 +61,7 @@ import org.kalypso.zml.core.table.model.IZmlModelRow;
 /**
  * @author Dirk Kuch
  */
-public class ZmlDataValueReference implements IZmlValueReference
+public class ZmlDataValueReference implements IZmlModelValueCell
 {
   private final IZmlModelColumn m_column;
 
@@ -77,13 +77,22 @@ public class ZmlDataValueReference implements IZmlValueReference
   }
 
   @Override
-  public Date getIndexValue( ) throws SensorException
+  public Date getIndexValue( )
   {
-    final DataColumn type = m_column.getDataColumn();
-    final IAxis[] axes = m_column.getAxes();
-    final IAxis axis = AxisUtils.findAxis( axes, type.getIndexAxis() );
+    try
+    {
+      final DataColumn type = m_column.getDataColumn();
+      final IAxis[] axes = m_column.getAxes();
+      final IAxis axis = AxisUtils.findAxis( axes, type.getIndexAxis() );
 
-    return (Date) m_column.get( m_tupleModelIndex, axis );
+      return (Date) m_column.get( m_tupleModelIndex, axis );
+    }
+    catch( final SensorException e )
+    {
+      e.printStackTrace();
+    }
+
+    return getRow().getIndex();
   }
 
   @Override

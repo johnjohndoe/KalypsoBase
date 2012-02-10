@@ -56,9 +56,9 @@ public interface IDefaultTemplateLauncher
    * 
    * @return filename
    */
-  public String getFilename( );
+  public String getFilename();
 
-  public IEditorDescriptor getEditor( );
+  public IEditorDescriptor getEditor();
 
   public IEditorInput createInput( final IFile file ) throws CoreException;
 }

@@ -86,10 +86,10 @@ public class LiteralsJob implements ISimulation
    *      org.kalypso.simulation.core.ISimulationResultEater, org.kalypso.simulation.core.ISimulationMonitor)
    */
   @Override
-  public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
+  public void run( File tmpdir, ISimulationDataProvider inputProvider, ISimulationResultEater resultEater, ISimulationMonitor monitor ) throws SimulationException
   {
     /* Get the literal. */
-    final Double doubleLiteral = (Double) inputProvider.getInputForID( INPUT_LITERAL );
+    Double doubleLiteral = (Double) inputProvider.getInputForID( INPUT_LITERAL );
 
     /* Multiply it with two, to give the client the chance, to check, if the job has run. */
     resultEater.addResult( OUTPUT_LITERAL, doubleLiteral * 2 );

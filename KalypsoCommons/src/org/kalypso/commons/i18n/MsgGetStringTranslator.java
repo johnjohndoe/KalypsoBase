@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.osgi.util.NLS;
 import org.kalypso.commons.internal.i18n.Messages;
 import org.kalypso.contribs.java.JavaApiContributionsPlugin;
 import org.osgi.framework.Bundle;
@@ -66,7 +67,7 @@ import org.w3c.dom.Element;
  */
 public class MsgGetStringTranslator implements ITranslator, IExecutableExtension
 {
-  private Class< ? > m_nls;
+  private Class< ? extends NLS> m_nls;
 
   private String m_id;
 
@@ -96,7 +97,7 @@ public class MsgGetStringTranslator implements ITranslator, IExecutableExtension
    */
   @SuppressWarnings("unchecked")
   @Override
-  public void configure( final ITranslatorContext context, final List<Element> configuration )
+  public void configure( ITranslatorContext context, List<Element> configuration )
   {
     m_configuration = configuration;
 
@@ -144,7 +145,7 @@ public class MsgGetStringTranslator implements ITranslator, IExecutableExtension
 
     try
     {
-      final Method method = m_nls.getMethod( "getString", new Class< ? >[] { String.class } ); //$NON-NLS-1$
+      Method method = m_nls.getMethod( "getString", new Class< ? >[] { String.class } ); //$NON-NLS-1$
       return (String) method.invoke( m_nls, new Object[] { key } );
     }
     catch( final SecurityException e )
@@ -152,7 +153,7 @@ public class MsgGetStringTranslator implements ITranslator, IExecutableExtension
       e.printStackTrace();
       return Messages.getString( "org.kalypso.commons.i18n.MsgGetStringTranslator.6", key, e.toString() ); //$NON-NLS-1$ 
     }
-    catch( final NoSuchMethodException e )
+    catch( NoSuchMethodException e )
     {
       e.printStackTrace();
       return Messages.getString( "org.kalypso.commons.i18n.MsgGetStringTranslator.6", key, e.toString() ); //$NON-NLS-1$ 
@@ -167,7 +168,7 @@ public class MsgGetStringTranslator implements ITranslator, IExecutableExtension
       e.printStackTrace();
       return Messages.getString( "org.kalypso.commons.i18n.MsgGetStringTranslator.6", key, e.toString() ); //$NON-NLS-1$ 
     }
-    catch( final InvocationTargetException e )
+    catch( InvocationTargetException e )
     {
       e.printStackTrace();
       return Messages.getString( "org.kalypso.commons.i18n.MsgGetStringTranslator.6", key, e.toString() ); //$NON-NLS-1$ 

@@ -161,7 +161,6 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
   {
     return GeometryUtilities.envelopeFromRing( m_exteriorRing, getCoordinateSystem() );
   }
-
   /**
    * returns a reference to the exterior ring of the surface
    */
@@ -215,7 +214,7 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
   @Override
   public boolean equals( final Object other )
   {
-    if( other == null || !(other instanceof GM_SurfacePatch_Impl) )
+    if( (other == null) || !(other instanceof GM_SurfacePatch_Impl) )
     {
       return false;
     }
@@ -315,8 +314,8 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
       {
         final double dum = -1 * calculateArea( element );
         final GM_Position temp = GeometryUtilities.centroidFromRing( element );
-        x += temp.getX() * dum;
-        y += temp.getY() * dum;
+        x += (temp.getX() * dum);
+        y += (temp.getY() * dum);
         varea += dum;
       }
     }
@@ -347,7 +346,7 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
       final double yi = point[i].getY() - point[0].getY();
       final double xj = point[j].getX() - point[0].getX();
       final double yj = point[j].getY() - point[0].getY();
-      ai = xi * yj - xj * yi;
+      ai = (xi * yj) - (xj * yi);
       atmp += ai;
     }
 
@@ -362,10 +361,10 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
     ret += "exteriorRing = \n";
 
     for( final GM_Position element : m_exteriorRing )
-      ret += element + "\n";
+      ret += (element + "\n");
 
-    ret += "interiorRings = " + m_interiorRings + "\n";
-    ret += "envelope = " + m_envelope + "\n";
+    ret += ("interiorRings = " + m_interiorRings + "\n");
+    ret += ("envelope = " + m_envelope + "\n");
     return ret;
   }
 

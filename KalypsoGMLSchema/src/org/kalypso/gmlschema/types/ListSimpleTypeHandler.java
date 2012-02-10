@@ -52,7 +52,7 @@ import org.xml.sax.XMLReader;
 
 /**
  * Type handler for list-simple types.
- * 
+ *
  * @author Gernot Belger
  */
 public class ListSimpleTypeHandler implements ISimpleMarshallingTypeHandler<List< ? >>
@@ -79,12 +79,12 @@ public class ListSimpleTypeHandler implements ISimpleMarshallingTypeHandler<List
 
     final List<Object> list = new ArrayList<Object>();
 
-    final StringTokenizer st = new StringTokenizer( xmlString );
-    while( st.hasMoreTokens() )
+    final StringTokenizer st = new StringTokenizer( xmlString );    
+    while ( st.hasMoreTokens() )
     {
       final String token = st.nextToken();
       final Object object = m_baseTypeHandler.convertToJavaValue( token );
-      list.add( object );
+      list.add( object );  
     }
 
     return list;
@@ -129,6 +129,19 @@ public class ListSimpleTypeHandler implements ISimpleMarshallingTypeHandler<List
     return clonedList;
   }
 
+  /**
+   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#getShortname()
+   */
+  @Override
+  public String getShortname( )
+  {
+    return m_baseTypeHandler.getShortname();
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(java.lang.Object, org.xml.sax.XMLReader,
+   *      java.net.URL, java.lang.String)
+   */
   @Override
   public void marshal( final Object value, final XMLReader reader, final URL context, final String gmlVersion )
   {

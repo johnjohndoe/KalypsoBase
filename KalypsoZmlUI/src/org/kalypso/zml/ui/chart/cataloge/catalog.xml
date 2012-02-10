@@ -7,11 +7,7 @@
   <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:hauptzahlen" uri="grenzwerte/hauptzahlen.kod" />
   <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:wqboundaries" uri="grenzwerte/wqboundaries.kod" />
 
-  <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:discharge" uri="common/discharge.kod" />
-  <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:evaporation" uri="common/evaporation.kod" />
-  <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:rainfall" uri="common/rainfall.kod" />
-  <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:temperature" uri="common/temperature.kod" />
-  <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:volume" uri="common/volume.kod" />
-  <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:waterlevel" uri="common/waterlevel.kod" />
-
+  <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:info" uri="info.kod" />
+  <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:stuetzstellen" uri="stuetzstellen.kod" />
 </catalog:catalog>
+

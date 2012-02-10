@@ -31,15 +31,25 @@ import java.io.PrintStream;
  */
 public class StreamGobbler extends Thread
 {
-  private final InputStream m_is;
+  /**
+   * The input stream to handle.
+   */
+  private InputStream m_is;
 
-  private final String m_type;
+  /**
+   * The type of the stream.
+   */
+  private String m_type;
 
-  private final boolean m_debug;
+  /**
+   * True, if the stream should be written to the console.
+   */
+  private boolean m_debug;
 
+  /**
+   * If not null, the stream will be written to this print stream.
+   */
   private PrintStream m_output;
-
-  private MyPrintStream m_output2;
 
   /**
    * The constructor.
@@ -51,35 +61,29 @@ public class StreamGobbler extends Thread
    * @param debug
    *          True, if the stream should be written to the console.
    */
-  public StreamGobbler( final InputStream is, final String type, final boolean debug )
+  public StreamGobbler( InputStream is, String type, boolean debug )
   {
-    m_is = is;
-    m_type = type;
-    m_debug = debug;
+    this( is, type, debug, null );
   }
 
   /**
+   * The constructor.
+   * 
+   * @param is
+   *          The input stream to handle.
+   * @param type
+   *          The type of the stream.
+   * @param debug
+   *          True, if the stream should be written to the console.
    * @param output
-   *          flush input stream to output stream...
+   *          If not null, the stream will be written to this print stream.
    */
-  public StreamGobbler( final InputStream is, final String type, final boolean debug, final PrintStream output )
+  public StreamGobbler( InputStream is, String type, boolean debug, PrintStream output )
   {
     m_is = is;
     m_type = type;
     m_debug = debug;
     m_output = output;
-  }
-
-  /**
-   * @param output
-   *          flush input stream to output stream...
-   */
-  public StreamGobbler( final InputStream is, final String type, final boolean debug, final MyPrintStream output )
-  {
-    m_is = is;
-    m_type = type;
-    m_debug = debug;
-    m_output2 = output;
   }
 
   /**
@@ -90,24 +94,19 @@ public class StreamGobbler extends Thread
   {
     try
     {
-      final InputStreamReader isr = new InputStreamReader( m_is );
-      final BufferedReader br = new BufferedReader( isr );
+      InputStreamReader isr = new InputStreamReader( m_is );
+      BufferedReader br = new BufferedReader( isr );
       String line = null;
       while( (line = br.readLine()) != null )
       {
         if( m_debug )
-        {
           System.out.println( m_type + ": " + line );
-        }
 
         if( m_output != null )
           m_output.println( line );
-        if( m_output2 != null )
-          m_output2.println( line );
       }
-
     }
-    catch( final IOException ioe )
+    catch( IOException ioe )
     {
       ioe.printStackTrace();
     }

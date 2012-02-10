@@ -41,10 +41,8 @@
 package org.kalypso.ogc.gml.widgets;
 
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelListener;
 import java.util.Map;
 
 import org.eclipse.jface.viewers.ISelection;
@@ -54,17 +52,8 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 /**
  * @author bce
  */
-public interface IWidget extends MouseListener, MouseMotionListener, MouseWheelListener
+public interface IWidget
 {
-  public enum WIDGET_TYPE
-  {
-    eBackground,
-    eRadio,
-    eToggle;
-  }
-
-  WIDGET_TYPE getType( );
-
   String getName( );
 
   String getToolTip( );
@@ -75,6 +64,46 @@ public interface IWidget extends MouseListener, MouseMotionListener, MouseWheelL
   void keyReleased( KeyEvent e );
 
   void keyTyped( KeyEvent e );
+
+  // MouseClicks
+  void leftClicked( Point p );
+
+  void leftPressed( Point p );
+
+  void leftReleased( Point p );
+
+  void doubleClickedLeft( Point p );
+
+  void doubleClickedRight( Point p );
+
+  /**
+   * @deprecated Do not use: widget must use only left button
+   */
+  @Deprecated
+  void rightClicked( Point p );
+
+  /**
+   * @deprecated Do not use: widget must use only left button
+   */
+  @Deprecated
+  void rightPressed( Point p );
+
+  /**
+   * @deprecated Do not use: widget must use only left button
+   */
+  @Deprecated
+  void rightReleased( final Point p );
+
+  /**
+   * @deprecated Do not use: widget must use only left button
+   */
+  @Deprecated
+  void clickPopup( final Point p );
+
+  // MouseMotions
+  void moved( Point p );
+
+  void dragged( Point p );
 
   // Graphics
   void paint( Graphics g );
@@ -104,5 +133,5 @@ public interface IWidget extends MouseListener, MouseMotionListener, MouseWheelL
    * @param parameter
    *          The map of all parameter. May be null.
    */
-  void setParameter( Map<String, String> parameter );
+  public void setParameter( Map<String, String> parameter );
 }

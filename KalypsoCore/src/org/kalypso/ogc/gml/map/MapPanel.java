@@ -56,12 +56,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SafeRunner;
@@ -88,7 +87,6 @@ import org.kalypso.core.KalypsoCoreDebug;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.layer.BufferedRescaleMapLayer;
 import org.kalypso.ogc.gml.map.layer.CacscadingMapLayer;
@@ -156,7 +154,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     }
   };
 
-  private IKalypsoLayerModell m_model = null;
+  private IMapModell m_model = null;
 
   private final WidgetManager m_widgetManager;
 
@@ -164,11 +162,11 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   private GM_Envelope m_wishBBox;
 
-  private final Collection<IMapPanelListener> m_mapPanelListeners = Collections.synchronizedSet( new LinkedHashSet<IMapPanelListener>() );
+  private final Collection<IMapPanelListener> m_mapPanelListeners = new HashSet<IMapPanelListener>();
 
-  private final Collection<IMapPanelPaintListener> m_paintListeners = Collections.synchronizedSet( new LinkedHashSet<IMapPanelPaintListener>() );
+  private final Collection<IMapPanelPaintListener> m_paintListeners = new HashSet<IMapPanelPaintListener>();
 
-  private final Map<IKalypsoTheme, IMapLayer> m_layers = Collections.synchronizedMap( new HashMap<IKalypsoTheme, IMapLayer>() );
+  private final Map<IKalypsoTheme, IMapLayer> m_layers = new HashMap<IKalypsoTheme, IMapLayer>();
 
   private final ExtentHistory m_extentHistory = new ExtentHistory( 200 );
 
@@ -179,6 +177,10 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   private final IMapModellListener m_modellListener = new MapModellAdapter()
   {
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeAdded(org.kalypso.ogc.gml.mapmodel.IMapModell,
+     *      org.kalypso.ogc.gml.IKalypsoTheme)
+     */
     @Override
     public void themeAdded( final IMapModell source, final IKalypsoTheme theme )
     {
@@ -188,24 +190,39 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
       updateStatus();
     }
 
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeOrderChanged(org.kalypso.ogc.gml.mapmodel.IMapModell)
+     */
     @Override
     public void themeOrderChanged( final IMapModell source )
     {
       invalidateMap();
     }
 
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeRemoved(org.kalypso.ogc.gml.mapmodel.IMapModell,
+     *      org.kalypso.ogc.gml.IKalypsoTheme)
+     */
     @Override
     public void themeRemoved( final IMapModell source, final IKalypsoTheme theme, final boolean lastVisibility )
     {
       handleThemeRemoved( theme, lastVisibility );
     }
 
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeVisibilityChanged(org.kalypso.ogc.gml.mapmodel.IMapModell,
+     *      org.kalypso.ogc.gml.IKalypsoTheme, boolean)
+     */
     @Override
     public void themeVisibilityChanged( final IMapModell source, final IKalypsoTheme theme, final boolean visibility )
     {
       invalidateMap();
     }
 
+    /**
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeStatusChanged(org.kalypso.ogc.gml.mapmodel.IMapModell,
+     *      org.kalypso.ogc.gml.IKalypsoTheme)
+     */
     @Override
     public void themeStatusChanged( final IMapModell source, final IKalypsoTheme theme )
     {
@@ -233,8 +250,6 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   private Dimension m_size;
 
-  private boolean m_useFullSelection = false;
-
   public MapPanel( final ICommandTarget viewCommandTarget, final IFeatureSelectionManager manager )
   {
     m_selectionManager = manager;
@@ -251,16 +266,6 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   protected final GM_Envelope getWishBox( )
   {
     return m_wishBBox;
-  }
-
-  // REMARK: most probably we should always return the complete selection; filtering by themes does not make so much
-// sense
-  // However, we use this flag for the moment to keep this backwards compatible and avoid side effekt.
-  // TODO: try this out when we are fare from deploying
-  @Override
-  public void setUseFullSelection( final boolean useFullSelection )
-  {
-    m_useFullSelection = useFullSelection;
   }
 
   /**
@@ -404,7 +409,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     } );
   }
 
-  protected void fireMapModelChanged( final IKalypsoLayerModell oldModel, final IKalypsoLayerModell newModel )
+  protected void fireMapModelChanged( final IMapModell oldModel, final IMapModell newModel )
   {
     acceptListenersRunnable( new IListenerRunnable()
     {
@@ -521,7 +526,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
    * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#getMapModell()
    */
   @Override
-  public IKalypsoLayerModell getMapModell( )
+  public IMapModell getMapModell( )
   {
     return m_model;
   }
@@ -535,10 +540,6 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   @Override
   public ISelection getSelection( )
   {
-    // See setUseFullSelection
-    if( m_useFullSelection )
-      return m_selectionManager;
-
     final IMapModell mapModell = getMapModell();
     if( mapModell == null )
       return StructuredSelection.EMPTY;
@@ -550,6 +551,10 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 // final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
 // if( activeTheme instanceof IKalypsoFeatureTheme )
 // return (ISelection) activeTheme.getAdapter( IFeatureSelection.class );
+//
+// if( activeTheme instanceof IKalypsoCascadingTheme )
+// return new KalypsoCascadingThemeSelection( m_selectionManager.toList(), (IKalypsoCascadingTheme) activeTheme,
+// m_selectionManager, null, null );
 //
 // return StructuredSelection.EMPTY;
   }
@@ -868,10 +873,13 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     return boundingBox;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#setMapModell(org.kalypso.ogc.gml.mapmodel.IMapModell)
+   */
   @Override
-  public void setMapModell( final IKalypsoLayerModell modell )
+  public void setMapModell( final IMapModell modell )
   {
-    final IKalypsoLayerModell oldModel;
+    final IMapModell oldModel;
     synchronized( this )
     {
       oldModel = m_model;
@@ -1039,11 +1047,6 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
           final IMapLayer layer = getLayer( theme );
           result.add( layer );
 
-          /**
-           * set here visible envelope for each visible theme to prevent the calculation of this envelope on each
-           * refresh/repaint/invalidate in the theme.
-           */
-          theme.setActiveEnvelope( m_boundingBox );
           if( theme instanceof IKalypsoFeatureTheme )
             visibleFestureThemes.add( (IKalypsoFeatureTheme) theme );
 

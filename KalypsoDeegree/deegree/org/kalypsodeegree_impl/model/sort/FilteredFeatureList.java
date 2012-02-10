@@ -46,70 +46,83 @@ import java.util.ListIterator;
 import javax.xml.namespace.QName;
 
 import org.kalypso.contribs.javax.xml.namespace.QNameUnique;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
-import org.kalypsodeegree.model.feature.FilteredFeatureVisitor;
-import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.feature.FeatureTypeFilter;
 import org.kalypsodeegree_impl.model.feature.visitors.CollectorVisitor;
+import org.kalypsodeegree_impl.model.feature.visitors.FeatureTypeVisitor;
 
 /**
  * Eine gefilterte FeatureListe. Die Liste zeigt nach aussen nur die Features, die einem bestimmten IFeatureType
  * entsprechen. Andererseits ist die Liste aber durch die originale Liste gebackupd, d.h. alle Änderungen dieser Liste
  * ändern auch die Originalliste.
- *
+ * 
  * @author belger
  */
 public class FilteredFeatureList implements FeatureList
 {
   private final FeatureList m_original;
 
-  private final FeatureTypeFilter m_predicate;
+  private final FeatureTypeVisitor m_filterVisitor;
+
+  private final CollectorVisitor m_collector = new CollectorVisitor();
 
   public FilteredFeatureList( final FeatureList original, final QName filterQName, final boolean acceptIfSubstituting )
   {
     m_original = original;
-
     final QNameUnique uniqueFilterQName = QNameUnique.create( filterQName );
-
-    m_predicate = new FeatureTypeFilter( uniqueFilterQName, uniqueFilterQName.asLocal(), acceptIfSubstituting );
+    m_filterVisitor = new FeatureTypeVisitor( null, uniqueFilterQName, uniqueFilterQName.asLocal(), acceptIfSubstituting );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#toFeatures()
+   */
   @Override
   public Feature[] toFeatures( )
   {
-    final CollectorVisitor collector = new CollectorVisitor( m_predicate );
-    m_original.accept( collector, FeatureVisitor.DEPTH_INFINITE_LINKS );
-    return collector.getResults( true );
+    m_filterVisitor.setVisitor( m_collector );
+    m_original.accept( m_filterVisitor, FeatureVisitor.DEPTH_INFINITE_LINKS );
+    return m_collector.getResults( true );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#accept(org.kalypsodeegree.model.feature.FeatureVisitor)
+   */
   @Override
   public void accept( final FeatureVisitor visitor )
   {
     accept( visitor, FeatureVisitor.DEPTH_INFINITE );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#accept(org.kalypsodeegree.model.feature.FeatureVisitor, int)
+   */
   @Override
   public void accept( final FeatureVisitor visitor, final int depth )
   {
-    final FilteredFeatureVisitor filterVisitor = new FilteredFeatureVisitor( visitor, m_predicate );
-    m_original.accept( filterVisitor );
+    m_filterVisitor.setVisitor( visitor );
+    m_original.accept( m_filterVisitor );
+    m_filterVisitor.setVisitor( null );
   }
 
+  /**
+   * @see java.util.Collection#size()
+   */
   @Override
   public int size( )
   {
     return toFeatures().length;
   }
 
+  /**
+   * @see java.util.Collection#clear()
+   */
   @Override
   public void clear( )
   {
@@ -120,18 +133,27 @@ public class FilteredFeatureList implements FeatureList
     }
   }
 
+  /**
+   * @see java.util.Collection#isEmpty()
+   */
   @Override
   public boolean isEmpty( )
   {
     return toFeatures().length == 0;
   }
 
+  /**
+   * @see java.util.Collection#toArray()
+   */
   @Override
   public Object[] toArray( )
   {
     return toFeatures();
   }
 
+  /**
+   * @see java.util.List#get(int)
+   */
   @Override
   public Object get( final int index )
   {
@@ -192,36 +214,51 @@ public class FilteredFeatureList implements FeatureList
     return -1;
   }
 
+  /**
+   * @see java.util.Collection#add(java.lang.Object)
+   */
   @Override
   public boolean add( final Object o )
   {
-    if( !m_predicate.matchesType( (Feature) o ) )
+    if( !m_filterVisitor.matchesType( (Feature) o ) )
       throw new IllegalArgumentException();
 
     return m_original.add( o );
   }
 
+  /**
+   * @see java.util.Collection#contains(java.lang.Object)
+   */
   @Override
   public boolean contains( final Object o )
   {
     return m_original.contains( o );
   }
 
+  /**
+   * @see java.util.Collection#remove(java.lang.Object)
+   */
   @Override
   public boolean remove( final Object o )
   {
-    if( m_predicate.matchesType( (Feature) o ) )
+    if( m_filterVisitor.matchesType( (Feature) o ) )
       return m_original.remove( o );
 
     return false;
   }
 
+  /**
+   * @see java.util.List#addAll(int, java.util.Collection)
+   */
   @Override
   public boolean addAll( final int index, final Collection c )
   {
     throw new UnsupportedOperationException();
   }
 
+  /**
+   * @see java.util.Collection#addAll(java.util.Collection)
+   */
   @Override
   public boolean addAll( final Collection c )
   {
@@ -233,6 +270,9 @@ public class FilteredFeatureList implements FeatureList
     return !c.isEmpty();
   }
 
+  /**
+   * @see java.util.Collection#containsAll(java.util.Collection)
+   */
   @Override
   public boolean containsAll( final Collection c )
   {
@@ -333,49 +373,59 @@ public class FilteredFeatureList implements FeatureList
     return a;
   }
 
+  /**
+   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#query(org.kalypsodeegree.model.geometry.GM_Envelope,
+   *      java.util.List)
+   */
   @Override
   public List query( final GM_Envelope env, final List result )
   {
     return filterList( m_original.query( env, result ), result );
   }
 
-  private List< ? > filterList( final List< ? > originalList, final List< ? > result )
+  private List<?> filterList( final List<?> originalList, final List<?> result )
   {
     final int oldlength = result == null ? 0 : result.size();
 
     // only remove new elements, which do not match type
     final List< ? > sublist = originalList.subList( oldlength, originalList.size() );
-    final List<Object> lListActualResult = new ArrayList<Object>();
+    final List< Object > lListActualResult = new ArrayList< Object >();
     lListActualResult.addAll( originalList.subList( 0, oldlength ) );
     for( final Object lObjNext : sublist )
     {
-      final Feature f = FeatureHelper.resolveLinkedFeature( m_original.getOwner().getWorkspace(), lObjNext );
-      if( m_predicate.matchesType( f ) )
+      final Feature f = FeatureHelper.resolveLinkedFeature( m_original.getParentFeature().getWorkspace(), lObjNext );
+      if( m_filterVisitor.matchesType( f ) )
       {
         lListActualResult.add( lObjNext );
         // removing elements from ArrayList is SLOW!
-        // instead of removing elements from an existing list one by one,
-        // it's better to create a new ArrayList on the fly, then
+        // instead of removing elements from an existing list one by one, 
+        // it's better to create a new ArrayList on the fly, then 
         // sIt.remove();
       }
     }
 
+//    return originalList;
     return lListActualResult;
   }
 
-  private List<Feature> filterList( final List< ? > originalList )
+  private List<Feature> filterList( final List<?> originalList )
   {
     final List<Feature> filteredList = new LinkedList<Feature>();
     for( final Object object : originalList )
     {
-      final Feature f = FeatureHelper.resolveLinkedFeature( m_original.getOwner().getWorkspace(), object );
-      if( m_predicate.matchesType( f ) )
+      final Feature f = FeatureHelper.resolveLinkedFeature( m_original.getParentFeature().getWorkspace(), object );
+      if( m_filterVisitor.matchesType( f ) )
         filteredList.add( f );
     }
 
     return filteredList;
   }
 
+  
+  /**
+   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#query(org.kalypsodeegree.model.geometry.GM_Position,
+   *      java.util.List)
+   */
   @Override
   public List query( final GM_Position env, final List result )
   {
@@ -403,20 +453,26 @@ public class FilteredFeatureList implements FeatureList
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.IFeatureProperty#getOwner()
+   * @see org.kalypsodeegree.model.feature.FeatureList#getParentFeature()
    */
   @Override
-  public Feature getOwner( )
+  public Feature getParentFeature( )
   {
-    return m_original.getOwner();
+    return m_original.getParentFeature();
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#getParentFeatureTypeProperty()
+   */
   @Override
-  public IRelationType getPropertyType( )
+  public IRelationType getParentFeatureTypeProperty( )
   {
-    return m_original.getPropertyType();
+    return m_original.getParentFeatureTypeProperty();
   }
 
+  /**
+   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#invalidate()
+   */
   @Override
   public void invalidate( )
   {
@@ -444,76 +500,126 @@ public class FilteredFeatureList implements FeatureList
     return features[0];
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#searchFeatures(org.kalypsodeegree.model.geometry.GM_Object)
+   */
   @Override
   public List<Feature> searchFeatures( final GM_Object geometry )
   {
     return filterList( m_original.searchFeatures( geometry ) );
   }
-
+  
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#addNew(javax.xml.namespace.QName)
+   */
   @Override
-  public QName getName( )
+  public Feature addNew( final QName newChildType )
   {
-    return getPropertyType().getQName();
+    // TODO Auto-generated method stub
+    return null;
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#addNew(javax.xml.namespace.QName, java.lang.String)
+   */
   @Override
-  public Object getValue( )
+  public Feature addNew( final QName newChildType, final String newFeatureId )
   {
-    return this;
+    // TODO Auto-generated method stub
+    return null;
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#addNew(javax.xml.namespace.QName, java.lang.Class)
+   */
   @Override
-  public void setValue( final Object value )
+  public <T extends Feature> T addNew( final QName newChildType, final Class<T> classToAdapt )
   {
-    throw new UnsupportedOperationException();
+    // TODO Auto-generated method stub
+    return null;
   }
 
-  // TODO (for all addLink, insertLink implementations): should we only allow elements that may go into this list?
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#addNew(javax.xml.namespace.QName, java.lang.String,
+   *      java.lang.Class)
+   */
   @Override
-  public <T extends Feature> IXLinkedFeature addLink( final T toAdd ) throws IllegalArgumentException
+  public <T extends Feature> T addNew( final QName newChildType, final String newFeatureId, final Class<T> classToAdapt )
   {
-    return m_original.addLink( toAdd );
+    // TODO Auto-generated method stub
+    return null;
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#addRef(org.kalypsodeegree.model.feature.Feature)
+   */
   @Override
-  public IXLinkedFeature addLink( final String href ) throws IllegalArgumentException
+  public <T extends Feature> boolean addRef( final T toAdd ) throws IllegalArgumentException
   {
-    return m_original.addLink( href );
+    // TODO Auto-generated method stub
+    return false;
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#insertNew(int, javax.xml.namespace.QName)
+   */
   @Override
-  public IXLinkedFeature addLink( final String href, final QName featureTypeName ) throws IllegalArgumentException
+  public Feature insertNew( final int index, final QName newChildType )
   {
-    return m_original.addLink( href, featureTypeName );
+    // TODO Auto-generated method stub
+    return null;
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#insertNew(int, javax.xml.namespace.QName, java.lang.String)
+   */
   @Override
-  public IXLinkedFeature addLink( final String href, final IFeatureType featureType ) throws IllegalArgumentException
+  public Feature insertNew( final int index, final QName newChildType, final String newFeatureId )
   {
-    return m_original.addLink( href, featureType );
+    // TODO Auto-generated method stub
+    return null;
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#insertNew(int, javax.xml.namespace.QName, java.lang.Class)
+   */
   @Override
-  public <T extends Feature> IXLinkedFeature insertLink( final int index, final T toLink ) throws IllegalArgumentException
+  public <T extends Feature> T insertNew( final int index, final QName newChildType, final Class<T> classToAdapt )
   {
-    return m_original.insertLink( index, toLink );
+    // TODO Auto-generated method stub
+    return null;
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#insertNew(int, javax.xml.namespace.QName, java.lang.String,
+   *      java.lang.Class)
+   */
   @Override
-  public IXLinkedFeature insertLink( final int index, final String href ) throws IllegalArgumentException
+  public <T extends Feature> T insertNew( final int index, final QName newChildType, final String newFeatureId, final Class<T> classToAdapt )
   {
-    return m_original.insertLink( index, href );
+    // TODO Auto-generated method stub
+    return null;
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#insertNew(int, javax.xml.namespace.QName, java.lang.String,
+   *      java.lang.Class, java.lang.Object[])
+   */
   @Override
-  public IXLinkedFeature insertLink( final int index, final String href, final QName featureTypeName ) throws IllegalArgumentException
+  public <T extends Feature> T insertNew( final int index, final QName newChildType, final String newFeatureId, final Class<T> classToAdapt, final Object[] properties )
   {
-    return m_original.insertLink( index, href, featureTypeName );
+    // TODO Auto-generated method stub
+    return null;
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.FeatureList#insertRef(int, org.kalypsodeegree.model.feature.Feature)
+   */
   @Override
-  public IXLinkedFeature insertLink( final int index, final String href, final IFeatureType featureType ) throws IllegalArgumentException
+  public <T extends Feature> boolean insertRef( final int index, final T toAdd ) throws IllegalArgumentException
   {
-    return m_original.insertLink( index, href, featureType );
+    // TODO Auto-generated method stub
+    return false;
   }
+
 }

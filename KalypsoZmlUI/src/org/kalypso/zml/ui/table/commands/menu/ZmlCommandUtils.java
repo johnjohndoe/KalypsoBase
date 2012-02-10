@@ -44,7 +44,7 @@ import java.util.Date;
 
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.DateRange;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
 
 /**
  * @author Dirk Kuch
@@ -55,12 +55,12 @@ public final class ZmlCommandUtils
   {
   }
 
-  public static IZmlTableCell[] findIntervall( final IZmlTableCell[] cells )
+  public static IZmlTableValueCell[] findIntervall( final IZmlTableValueCell[] cells )
   {
-    IZmlTableCell start = cells[0];
-    IZmlTableCell end = cells[0];
+    IZmlTableValueCell start = cells[0];
+    IZmlTableValueCell end = cells[0];
 
-    for( final IZmlTableCell cell : cells )
+    for( final IZmlTableValueCell cell : cells )
     {
       if( cell.getIndex() < start.getIndex() )
         start = cell;
@@ -69,18 +69,18 @@ public final class ZmlCommandUtils
         end = cell;
     }
 
-    return new IZmlTableCell[] { start, end };
+    return new IZmlTableValueCell[] { start, end };
 
   }
 
-  public static DateRange findDateRange( final IZmlTableCell[] cells )
+  public static DateRange findDateRange( final IZmlTableValueCell[] cells )
   {
     Date min = null;
     Date max = null;
 
-    for( final IZmlTableCell cell : cells )
+    for( final IZmlTableValueCell cell : cells )
     {
-      final Date date = cell.getRow().getModelRow().getIndexValue();
+      final Date date = cell.getRow().getModelRow().getIndex();
       if( Objects.isNull( min ) )
         min = date;
       else if( date.before( min ) )

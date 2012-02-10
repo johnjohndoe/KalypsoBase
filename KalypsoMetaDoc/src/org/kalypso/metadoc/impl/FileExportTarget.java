@@ -46,7 +46,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.lang.reflect.InvocationTargetException;
 
-import org.apache.commons.collections.ExtendedProperties;
+import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -55,12 +55,12 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.KalypsoMetaDocPlugin;
-import org.kalypso.metadoc.configuration.PublishingConfiguration;
+import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 import org.kalypso.metadoc.ui.FileSelectionWizardPage;
 
 /**
  * The file-target simply writes the document into a local file.
- *
+ * 
  * @author schlienger
  */
 public class FileExportTarget extends AbstractExportTarget
@@ -71,8 +71,12 @@ public class FileExportTarget extends AbstractExportTarget
   /** Extension of the file (must be in the form: .ext ) */
   public final static String CONF_FILEEXPORT_EXTENSION = FileExportTarget.class.getName() + ".extension";
 
+  /**
+   * @see org.kalypso.metadoc.IExportTarget#commitDocument(org.kalypso.metadoc.IExportableObject,
+   *      org.apache.commons.configuration.Configuration, org.eclipse.core.runtime.IProgressMonitor)
+   */
   @Override
-  public IStatus commitDocument( final IExportableObject document, final ExtendedProperties conf, final IProgressMonitor monitor ) throws InvocationTargetException
+  public IStatus commitDocument( final IExportableObject document, final Configuration conf, final IProgressMonitor monitor ) throws InvocationTargetException
   {
     monitor.beginTask( "Export von " + document.getPreferredDocumentName(), IProgressMonitor.UNKNOWN );
 
@@ -101,8 +105,11 @@ public class FileExportTarget extends AbstractExportTarget
     }
   }
 
+  /**
+   * @see org.kalypso.metadoc.IExportTarget#createWizardPages(IPublishingConfiguration)
+   */
   @Override
-  public IWizardPage[] createWizardPages( final PublishingConfiguration configuration )
+  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration )
   {
     final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoMetaDocPlugin.getId(), "icons/newfile_wiz.gif" );
     final FileSelectionWizardPage page = new FileSelectionWizardPage( configuration, "file.export.target.page", "Dateiauswahl", imgDesc, "Datei" );

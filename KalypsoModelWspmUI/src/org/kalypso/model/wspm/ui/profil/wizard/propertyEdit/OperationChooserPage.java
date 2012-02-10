@@ -70,13 +70,11 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.core.profil.filter.ProfilePointFilterComposite;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.pointpropertycalculator.IPointPropertyCalculator;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
@@ -89,7 +87,7 @@ import org.kalypso.observation.result.IRecord;
  */
 public class OperationChooserPage extends WizardPage
 {
-  private static class PropertyCalculator
+  private class PropertyCalculator
   {
     public final String m_id;
 
@@ -154,9 +152,7 @@ public class OperationChooserPage extends WizardPage
         m_value = Double.valueOf( doubleValue );
       }
       else
-      {
         m_value = Double.NaN;
-      }
     }
 
     createFilterGroup( panel );
@@ -168,7 +164,10 @@ public class OperationChooserPage extends WizardPage
   {
     final Group group = new Group( composite, SWT.NONE );
     group.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
-    group.setLayout( Layouts.createGridLayout() );
+    final GridLayout layout = new GridLayout();
+    layout.marginHeight = 0;
+    layout.marginWidth = 0;
+    group.setLayout( layout );
     group.setText( ProfilePointFilterComposite.STR_GROUP_TEXT );
 
     final Control filterControl = m_filterChooser.createControl( group, SWT.BORDER );
@@ -206,9 +205,7 @@ public class OperationChooserPage extends WizardPage
     final Text bldText = new Text( group, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
     bldText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     if( value != null )
-    {
       bldText.setText( value );
-    }
 
     // TODO: move this code into a separate class
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -304,12 +301,10 @@ public class OperationChooserPage extends WizardPage
     }
 
     final Set<IRecord> selectedPoints = new HashSet<IRecord>();
-    for( final IProfileRecord point : profil.getPoints() )
+    for( final IRecord point : profil.getResult() )
     {
       if( m_filterChooser.accept( profil, point ) )
-      {
         selectedPoints.add( point );
-      }
     }
 
     calculator.calculate( m_value, propertyIds, selectedPoints );
@@ -320,9 +315,7 @@ public class OperationChooserPage extends WizardPage
     final IDialogSettings dialogSettings = getDialogSettings();
     m_value = NumberUtils.parseQuietDouble( text );
     if( dialogSettings != null )
-    {
       dialogSettings.put( SETTINGS_CALCULATOR_VALUE, m_value.isNaN() ? "" : m_value.toString() ); //$NON-NLS-1$
-    }
 
     updateMessage();
   }
@@ -346,10 +339,10 @@ public class OperationChooserPage extends WizardPage
   {
     final Object[] checkedElements = m_filterChooser.getCheckedElements();
     if( checkedElements.length == 0 )
-      return new MessageProvider( Messages.getString( "OperationChooserPage.0" ), IMessageProvider.WARNING ); //$NON-NLS-1$
+      return new MessageProvider( Messages.getString("OperationChooserPage.0"), IMessageProvider.WARNING ); //$NON-NLS-1$
 
     if( m_value.isNaN() )
-      return new MessageProvider( Messages.getString( "OperationChooserPage.1" ), IMessageProvider.WARNING ); //$NON-NLS-1$
+      return new MessageProvider( Messages.getString("OperationChooserPage.1"), IMessageProvider.WARNING ); //$NON-NLS-1$
 
     return null;
   }

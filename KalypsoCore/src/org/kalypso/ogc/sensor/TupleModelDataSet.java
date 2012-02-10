@@ -43,7 +43,7 @@ package org.kalypso.ogc.sensor;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 

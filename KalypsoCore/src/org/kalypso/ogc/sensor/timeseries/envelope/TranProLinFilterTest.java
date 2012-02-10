@@ -42,18 +42,15 @@
 package org.kalypso.ogc.sensor.timeseries.envelope;
 
 import java.io.StringWriter;
-import java.util.Date;
 
 import junit.framework.TestCase;
 
 import org.kalypso.ogc.sensor.DateRange;
-import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
-import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 
 /**
@@ -65,15 +62,14 @@ public class TranProLinFilterTest extends TestCase
   {
     final IObservation obs = TimeseriesUtils.createTestTimeserie( new String[] { ITimeseriesConstants.TYPE_WATERLEVEL }, 10, false ); //$NON-NLS-1$
 
-    final ITupleModel values = obs.getValues( null );
+    ITupleModel values = obs.getValues( null );
+
     assertEquals( 10, values.size() );
 
     System.out.println( ObservationUtilities.dump( values, "   " ) ); //$NON-NLS-1$
 
-    final IAxis dateAxis = AxisUtils.findDateAxis( obs.getAxes() );
-
-    final DateRange range = new DateRange( (Date) values.get( 0, dateAxis ), (Date) values.get( values.size() - 1, dateAxis ) );
-
+    // FIXME: test does not work because range is null ... use range of source observation
+    DateRange range = null;
     final TranProLinFilter filter = new TranProLinFilter( range, "*", 1, 1.15, ITimeseriesConstants.TYPE_WATERLEVEL ); //$NON-NLS-1$
     filter.initFilter( null, obs, null );
 

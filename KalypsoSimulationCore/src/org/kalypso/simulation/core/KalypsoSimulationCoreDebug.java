@@ -45,7 +45,7 @@ import org.kalypso.contribs.eclipse.core.runtime.Debug;
 /**
  * Holds debug-constants in order to produce trace output.<br>
  * Debug constants correspond to entries in <code>.options</code> file.<br>
- * 
+ *
  * @author Gernot Belger
  */
 public class KalypsoSimulationCoreDebug

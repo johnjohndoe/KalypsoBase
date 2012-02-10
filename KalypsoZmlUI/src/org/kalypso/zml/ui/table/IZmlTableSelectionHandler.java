@@ -41,22 +41,22 @@
 package org.kalypso.zml.ui.table;
 
 import org.eclipse.jface.viewers.ViewerCell;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
-import org.kalypso.zml.ui.table.model.IZmlTableRow;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
 
 /**
  * @author Dirk Kuch
  */
 public interface IZmlTableSelectionHandler
 {
-  IZmlTableRow[] getSelectedRows( );
+  IZmlTableValueRow[] getSelectedRows( );
 
   IZmlTableColumn findActiveColumnByPosition( );
 
   IZmlTableCell findActiveCellByPosition( );
 
-  IZmlTableRow findActiveRowByPosition( );
+  IZmlTableValueRow findActiveRowByPosition( );
 
   ViewerCell toViewerCell( IZmlTableCell cell );
 }

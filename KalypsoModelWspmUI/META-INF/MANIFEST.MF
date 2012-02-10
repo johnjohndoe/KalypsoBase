@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.kalypso.model.wspm.ui;singleton:=true
-Bundle-Version: 11.6.4.qualifier
+Bundle-Version: 11.6.2.qualifier
 Bundle-Activator: org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin
 Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-Localization: plugin
@@ -15,16 +15,18 @@ Require-Bundle: org.kalypso.ui,
  org.eclipse.core.expressions,
  org.eclipse.ui.views,
  de.openali.odysseus.chart.ext.observation;visibility:=reexport,
- org.kalypso.ui.addlayer,
- org.kalypso.gml.ui
+ org.kalypso.ui.addlayer;bundle-version="2.3.0"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.model.wspm.ui,
  org.kalypso.model.wspm.ui.action,
+ org.kalypso.model.wspm.ui.adapter,
  org.kalypso.model.wspm.ui.dialog.compare,
  org.kalypso.model.wspm.ui.featureview,
  org.kalypso.model.wspm.ui.preferences,
  org.kalypso.model.wspm.ui.product,
-  org.kalypso.model.wspm.ui.profil.dialogs.reducepoints,
+ org.kalypso.model.wspm.ui.profil,
+ org.kalypso.model.wspm.ui.profil.dialogs.reducepoints,
+ org.kalypso.model.wspm.ui.profil.operation,
  org.kalypso.model.wspm.ui.profil.validation,
  org.kalypso.model.wspm.ui.profil.widget,
  org.kalypso.model.wspm.ui.profil.wizard,
@@ -36,14 +38,9 @@ Export-Package: org.kalypso.model.wspm.ui,
  org.kalypso.model.wspm.ui.view,
  org.kalypso.model.wspm.ui.view.chart,
  org.kalypso.model.wspm.ui.view.chart.color,
- org.kalypso.model.wspm.ui.view.chart.handler,
  org.kalypso.model.wspm.ui.view.chart.layer,
- org.kalypso.model.wspm.ui.view.chart.layer.wsp,
- org.kalypso.model.wspm.ui.view.chart.layer.wsp.utils,
- org.kalypso.model.wspm.ui.view.chart.layer.wspfixation,
  org.kalypso.model.wspm.ui.view.chart.provider,
  org.kalypso.model.wspm.ui.view.legend,
  org.kalypso.model.wspm.ui.view.map,
- org.kalypso.model.wspm.ui.view.table,
- org.kalypso.model.wspm.ui.view.table.handler
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+ org.kalypso.model.wspm.ui.view.table
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

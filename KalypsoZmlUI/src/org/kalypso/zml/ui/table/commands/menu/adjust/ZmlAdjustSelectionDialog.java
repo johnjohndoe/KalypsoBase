@@ -55,11 +55,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.contribs.eclipse.jface.dialog.EnhancedTitleAreaDialog;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.pager.ElementsComposite;
 import org.kalypso.contribs.eclipse.ui.pager.IElementPage;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.ui.dialog.EnhancedTitleAreaDialog;
 import org.kalypso.zml.ui.table.commands.menu.adjust.pages.AbstractAdjustmentPage;
 import org.kalypso.zml.ui.table.commands.menu.adjust.pages.ConstantValueAdjustmentPage;
 import org.kalypso.zml.ui.table.commands.menu.adjust.pages.IAdjustmentPageProvider;
@@ -67,7 +67,7 @@ import org.kalypso.zml.ui.table.commands.menu.adjust.pages.MultiplyValueAdjustme
 import org.kalypso.zml.ui.table.commands.menu.adjust.pages.ShiftDateAdjustmentPage;
 import org.kalypso.zml.ui.table.commands.menu.adjust.pages.ShiftValueAdjustmentPage;
 import org.kalypso.zml.ui.table.dialogs.input.IZmlEinzelwertCompositeListener;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch

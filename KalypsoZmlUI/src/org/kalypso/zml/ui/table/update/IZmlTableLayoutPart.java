@@ -41,7 +41,7 @@
 package org.kalypso.zml.ui.table.update;
 
 import org.kalypso.zml.core.table.model.ZmlModel;
-import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.IZmlTableComposite;
 
 /**
  * @author Dirk Kuch
@@ -52,5 +52,5 @@ public interface IZmlTableLayoutPart
 
   ZmlModel getModel( );
 
-  IZmlTable getTable( );
+  IZmlTableComposite getTable( );
 }

@@ -85,6 +85,7 @@ public class ForecastFilter extends AbstractObservationFilter
    *          if <code>args!=null</code>, then the args of the inner observations will be overwritten, usually a
    *          forecastfilter should expect <code>null</code> here.
    */
+  @SuppressWarnings("deprecation")
   @Override
   public ITupleModel getValues( final IRequest args ) throws SensorException
   {

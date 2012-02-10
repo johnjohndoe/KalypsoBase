@@ -1,7 +1,6 @@
 package de.openali.odysseus.chart.framework.model.impl;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Properties;
 
 import org.kalypso.commons.java.lang.Arrays;
 
@@ -30,7 +29,7 @@ public class ChartModel implements IChartModel
 
   protected final BasicChartSettings m_settings = new BasicChartSettings();
 
-  private final Map<String, Object> m_dataMap = new HashMap<String, Object>();
+  private final Properties m_properties = new Properties();
 
   public ChartModel( )
   {
@@ -39,15 +38,14 @@ public class ChartModel implements IChartModel
 
   /**
    * automatically scales all given axes; scaling means here: show all available values
-   *
+   * 
    * @param axes
    *          axes == null -> update all chart model axes
    */
   @Override
   public void autoscale( final IAxis... axes )
   {
-    final AutoScaleVisitor visitor = new AutoScaleVisitor( this );
-    // axes==null means all Axes
+    final AutoScaleVisitor visitor = new AutoScaleVisitor( this, true );
     for( final IAxis axis : Arrays.isEmpty( axes ) ? getMapperRegistry().getAxes() : axes )
     {
       visitor.visit( axis );
@@ -57,17 +55,13 @@ public class ChartModel implements IChartModel
   @Override
   public void clear( )
   {
-    m_settings.clearTitles();
-
     getLayerManager().clear();
-    getMapperRegistry().clear();
   }
 
   @Override
   public void dispose( )
   {
     getLayerManager().accept( new DisposeLayersVisitor() );
-    m_dataMap.clear();
   }
 
   @Override
@@ -101,6 +95,15 @@ public class ChartModel implements IChartModel
     return null;
   }
 
+// /**
+// * @see de.openali.odysseus.chart.framework.model.IChartModel#getState()
+// */
+// @Override
+// public IChartModelState getState( )
+// {
+// return new ChartModelState( getLayerManager() );
+// }
+
   @Override
   public IBasicChartSettings getSettings( )
   {
@@ -128,14 +131,9 @@ public class ChartModel implements IChartModel
   }
 
   @Override
-  public Object getData( final String key )
+  public Properties getProperties( )
   {
-    return m_dataMap.get( key );
+    return m_properties;
   }
 
-  @Override
-  public Object setData( final String key, final Object value )
-  {
-    return m_dataMap.put( key, value );
-  }
 }

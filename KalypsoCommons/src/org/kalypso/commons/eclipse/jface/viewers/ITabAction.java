@@ -44,6 +44,7 @@ import org.eclipse.swt.custom.CTabFolder;
 
 /**
  * @author Gernot Belger
+ *
  */
 public interface ITabAction
 {

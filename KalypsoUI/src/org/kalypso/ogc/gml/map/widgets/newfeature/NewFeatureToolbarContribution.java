@@ -125,8 +125,8 @@ public class NewFeatureToolbarContribution extends DropDownToolbarItem
       return new CommandContributionItem[0];
 
     final FeatureList featureList = featureTheme.getFeatureList();
-    final Feature parentFeature = featureList.getOwner();
-    final IRelationType fatp = featureList.getPropertyType();
+    final Feature parentFeature = featureList.getParentFeature();
+    final IRelationType fatp = featureList.getParentFeatureTypeProperty();
     if( fatp == null )
     {
       // The theme shows a single feature, and hence we cannot add something here

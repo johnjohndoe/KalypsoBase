@@ -43,17 +43,21 @@ package org.kalypso.zml.ui.table.commands.toolbar.view;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.references.ZmlValues;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.IZmlTableListener;
-import org.kalypso.zml.ui.table.ZmlTableComposite;
+import org.kalypso.zml.ui.table.IZmlTableCompositeListener;
+import org.kalypso.zml.ui.table.ZmlMainTable;
+import org.kalypso.zml.ui.table.model.IZmlTableModel;
+import org.kalypso.zml.ui.table.model.rows.IZmlTableHeaderRow;
+import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
 
 /**
  * @author Dirk Kuch
@@ -87,7 +91,7 @@ public class ZmlViewResolutionFilter extends ViewerFilter
         return;
 
       final IZmlModelRow base = rows[0];
-      final Date index = base.getIndexValue();
+      final Date index = base.getIndex();
 
       final Calendar calendar = Calendar.getInstance();
       calendar.setTime( index );
@@ -102,9 +106,9 @@ public class ZmlViewResolutionFilter extends ViewerFilter
 
   private boolean m_stuetzstellenMode;
 
-  private final ZmlTableComposite m_table;
+  private final ZmlMainTable m_table;
 
-  public ZmlViewResolutionFilter( final ZmlTableComposite table )
+  public ZmlViewResolutionFilter( final ZmlMainTable table )
   {
     m_table = table;
   }
@@ -116,39 +120,39 @@ public class ZmlViewResolutionFilter extends ViewerFilter
     return (int) (time / 1000 / 60 / 60);
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
-   */
   @Override
   public boolean select( final Viewer viewer, final Object parentElement, final Object element )
   {
-    if( parentElement instanceof IZmlModel && element instanceof IZmlModelRow )
+    if( element instanceof IZmlTableHeaderRow )
+      return true;
+    else if( parentElement instanceof IZmlTableModel && element instanceof IZmlTableValueRow )
     {
-      final IZmlModel model = (IZmlModel) parentElement;
-      final IZmlModelRow row = (IZmlModelRow) element;
+      final IZmlTableModel model = (IZmlTableModel) parentElement;
+      final IZmlTableValueRow row = (IZmlTableValueRow) element;
+      final IZmlModelRow modelRow = row.getModelRow();
 
       if( m_resolution == 0 )
       {
         if( m_stuetzstellenMode )
         {
-          return hasStuetzstelle( row );
+
+          return hasStuetzstelle( modelRow );
         }
 
         return true;
       }
 
-      final Date index = row.getIndexValue();
+      final Date index = modelRow.getIndex();
       final int ticks = ticksInHours( index );
 
-      final int base = m_base.getBaseIndex( model );
+      final int base = m_base.getBaseIndex( model.getModel() );
       final int diff = Math.abs( base + m_offset - ticks );
 
       final int mod = diff % m_resolution;
 
       if( m_stuetzstellenMode )
       {
-        if( hasStuetzstelle( row ) && mod == 0 )
+        if( hasStuetzstelle( modelRow ) && mod == 0 )
           return true;
       }
 
@@ -160,12 +164,15 @@ public class ZmlViewResolutionFilter extends ViewerFilter
 
   private boolean hasStuetzstelle( final IZmlModelRow row )
   {
-    final IZmlValueReference[] references = row.getReferences();
-    for( final IZmlValueReference reference : references )
+    final IZmlModelCell[] references = row.getCells();
+    for( final IZmlModelCell reference : references )
     {
+      if( !(reference instanceof IZmlModelValueCell) )
+        continue;
+
       try
       {
-        if( ZmlValues.isStuetzstelle( reference ) )
+        if( ZmlValues.isStuetzstelle( (IZmlModelValueCell) reference ) )
           return true;
       }
       catch( final Throwable t )
@@ -193,7 +200,7 @@ public class ZmlViewResolutionFilter extends ViewerFilter
     m_resolution = resolution;
     m_stuetzstellenMode = mode;
 
-    m_table.fireTableChanged( IZmlTableListener.TYPE_REFRESH );
+    m_table.fireTableChanged( IZmlTableCompositeListener.TYPE_REFRESH );
   }
 
   public int getResolution( )

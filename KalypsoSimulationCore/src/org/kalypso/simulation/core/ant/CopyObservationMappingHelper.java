@@ -1,41 +1,42 @@
 /*
  * --------------- Kalypso-Header --------------------------------------------------------------------
- *
+ * 
  * This file is part of kalypso. Copyright (C) 2004, 2005 by:
- *
+ * 
  * Technical University Hamburg-Harburg (TUHH) Institute of River and coastal engineering Denickestr. 22 21073 Hamburg,
  * Germany http://www.tuhh.de/wb
- *
+ * 
  * and
- *
+ * 
  * Bjoernsen Consulting Engineers (BCE) Maria Trost 3 56070 Koblenz, Germany http://www.bjoernsen.de
- *
+ * 
  * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
  * Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
- *
+ * 
  * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- *
+ * 
  * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- *
+ * 
  * Contact:
- *
+ * 
  * E-Mail: belger@bjoernsen.de schlienger@bjoernsen.de v.doemming@tuhh.de
- *
+ * 
  * ---------------------------------------------------------------------------------------------------
  */
 package org.kalypso.simulation.core.ant;
 
 import java.net.URL;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -61,20 +62,29 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
  * features. Each map feature has a input-TimeseriesLink and output-TimeseriesLink. The resulting gml can be used as
  * input for the CopyObservationTask. TODO also add a geometry property to the map feature, so that this gml can be also
  * used with a mapview (e.g. in a wizard), where the user can select the time series from the map.
- *
+ * 
  * @author doemming
  */
 public class CopyObservationMappingHelper
 {
   /**
    * fragment part of the url denoting a Zml-Url with a context, not a Zml-Id
-   *
+   * 
    * @deprecated Does not work any more, code was removed. Only used by GmlWeightingTask and KrigingTask, which are both
    *             obsolete.
    */
   @Deprecated
   private static final String FRAGMENT_USEASCONTEXT = "useascontext"; //$NON-NLS-1$
 
+  private static final QName QNAME_MAPPING_COLLECTION = new QName( UrlCatalogUpdateObservationMapping.NS, "MappingCollection" );
+
+  private static final QName QNAME_MAPPING_OBSERVATION = new QName( UrlCatalogUpdateObservationMapping.NS, "MappingObservation" );
+
+  public static final QName RESULT_LIST_PROP = new QName( UrlCatalogUpdateObservationMapping.NS, "mappingMember" );
+
+  public static final QName RESULT_TS_IN_PROP = new QName( UrlCatalogUpdateObservationMapping.NS, "inObservationLink" );
+
+  public static final QName RESULT_TS_OUT_PROP = new QName( UrlCatalogUpdateObservationMapping.NS, "outObservationLink" );
 
   /**
    * @param context
@@ -92,9 +102,9 @@ public class CopyObservationMappingHelper
       return null;
     }
 
-    final IFeatureType mapColFT = schema.getFeatureType( UrlCatalogUpdateObservationMapping.QNAME_MAPPING_COLLECTION );
+    final IFeatureType mapColFT = schema.getFeatureType( QNAME_MAPPING_COLLECTION );
     final Feature rootFE = FeatureFactory.createFeature( null, null, "1", mapColFT, true );
-    return new GMLWorkspace_Impl( schema, rootFE, context, null, null, null );
+    return new GMLWorkspace_Impl( schema, schema.getAllFeatureTypes(), rootFE, context, null, null, null );
   }
 
   /**
@@ -111,22 +121,22 @@ public class CopyObservationMappingHelper
   {
     final org.kalypso.zml.obslink.ObjectFactory obsLinkFac = new org.kalypso.zml.obslink.ObjectFactory();
 
-    final IFeatureType mapFT = GMLSchemaUtilities.getFeatureTypeQuiet( UrlCatalogUpdateObservationMapping.QNAME_MAPPING_OBSERVATION );
+    final IFeatureType mapFT = workspace.getGMLSchema().getFeatureType( QNAME_MAPPING_OBSERVATION );
     final Feature rootFeature = workspace.getRootFeature();
 
     // in
-    final IRelationType pt3 = (IRelationType) rootFeature.getFeatureType().getProperty( UrlCatalogUpdateObservationMapping.RESULT_LIST_PROP );
+    final IRelationType pt3 = (IRelationType) rootFeature.getFeatureType().getProperty( RESULT_LIST_PROP );
     final Feature mapFE = workspace.createFeature( rootFeature, pt3, mapFT );
     final TimeseriesLinkType inLink = obsLinkFac.createTimeseriesLinkType();
     final String finalHref = "#" + FRAGMENT_USEASCONTEXT + "?" + filterInline;
     inLink.setHref( finalHref );
-    final IPropertyType inLinkPT = mapFT.getProperty( UrlCatalogUpdateObservationMapping.RESULT_TS_IN_PROP );
+    final IPropertyType inLinkPT = mapFT.getProperty( CopyObservationMappingHelper.RESULT_TS_IN_PROP );
     mapFE.setProperty( inLinkPT, inLink );
 
     // out
     final TimeseriesLinkType outLink = obsLinkFac.createTimeseriesLinkType();
     outLink.setHref( outHref );
-    final IPropertyType pt2 = mapFT.getProperty( UrlCatalogUpdateObservationMapping.RESULT_TS_OUT_PROP );
+    final IPropertyType pt2 = mapFT.getProperty( RESULT_TS_OUT_PROP );
     mapFE.setProperty( pt2, outLink );
     workspace.addFeatureAsComposition( rootFeature, pt3, 0, mapFE );
   }
@@ -144,13 +154,12 @@ public class CopyObservationMappingHelper
        * Note: the order is important for the ForecastFilter! so we put the target-observation in the first place since
        * it is the first element that will be backed by the forecast-filter forecast and measured
        */
-      sources = new Source[] { new Source( null, UrlCatalogUpdateObservationMapping.RESULT_TS_OUT_PROP.getLocalPart(), doNotOverwriteRange, null ),
-          new Source( null, UrlCatalogUpdateObservationMapping.RESULT_TS_IN_PROP.getLocalPart(), measuredRange, null ) };
+      sources = new Source[] { new Source( null, RESULT_TS_OUT_PROP.getLocalPart(), doNotOverwriteRange, null ), new Source( null, RESULT_TS_IN_PROP.getLocalPart(), measuredRange, null ) };
     }
     else
     {
       // measured
-      sources = new Source[] { new Source( null, UrlCatalogUpdateObservationMapping.RESULT_TS_IN_PROP.getLocalPart(), measuredRange, null ), };
+      sources = new Source[] { new Source( null, RESULT_TS_IN_PROP.getLocalPart(), measuredRange, null ), };
     }
 
     /*
@@ -160,11 +169,11 @@ public class CopyObservationMappingHelper
      */
     final DateRange completeRange = new DateRange( measuredRange.getFrom(), doNotOverwriteRange.getTo() );
 
-    final GMLXPath targetPath = new GMLXPath( UrlCatalogUpdateObservationMapping.RESULT_TS_OUT_PROP );
+    final GMLXPath targetPath = new GMLXPath( RESULT_TS_OUT_PROP );
     final ICopyObservationTarget timeSeriesLink = CopyObservationTargetFactory.getLink( srcContext, targetPath, null, completeRange, forecastRange );
     final ICopyObservationSource source = new FeatureCopyObservationSource( srcContext, sources, null );
 
     final CopyObservationFeatureVisitor visitor = new CopyObservationFeatureVisitor( source, timeSeriesLink, new MetadataList(), logger );
-    workspace.accept( visitor, UrlCatalogUpdateObservationMapping.RESULT_LIST_PROP.getLocalPart(), 1 );
+    workspace.accept( visitor, RESULT_LIST_PROP.getLocalPart(), 1 );
   }
 }

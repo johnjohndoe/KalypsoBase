@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.jts;
 
@@ -58,7 +58,7 @@ public final class JtsVectorUtilities
 
   /**
    * This function returns a vector of the line between this two points as point.
-   *
+   * 
    * @param start
    *          The start point of the line.
    * @param end
@@ -81,7 +81,7 @@ public final class JtsVectorUtilities
 
   /**
    * This function calculates a normalized vector.
-   *
+   * 
    * @param vector
    *          The vector to be normalized.
    * @return The normalized vector.
@@ -106,11 +106,11 @@ public final class JtsVectorUtilities
   {
     final Coordinate v = getVector( vector.getStartPoint().getCoordinate(), vector.getEndPoint().getCoordinate() );
 
-    return movePoint( point, v, distance, direction );
+    return movePoint( point, v, direction, distance );
 
   }
 
-  public static Point movePoint( final Point point, final Coordinate vector, final double distance, final int direction )
+  public static Point movePoint( final Point point, final Coordinate vector, final int direction, final double distance )
   {
 
     final Coordinate normalized = getNormalizedVector( vector );
@@ -133,7 +133,7 @@ public final class JtsVectorUtilities
     return JTSAdapter.jtsFactory.createPoint( new Coordinate( mx, my, mz ) );
   }
 
-  public static Coordinate getOrthogonalPoint( final LineSegment segment, final Coordinate location, final double distance )
+  public static Coordinate getOrthogonalVector( final LineSegment segment, final Point point )
   {
     /* Calculate the vector of the direction. */
     final Coordinate c0 = segment.p0;
@@ -146,22 +146,19 @@ public final class JtsVectorUtilities
     /* Normalize it. */
     final Point dVectorNormalized = getNormalizedVector( JTSAdapter.jtsFactory.createPoint( dVectorVertical ) );
 
-    /* Increase its length (the normalized vector is showing into the left direction). */
-    final Coordinate dVectorLeft = new Coordinate( dVectorNormalized.getX() * distance, dVectorNormalized.getY() * distance );
-    return new Coordinate( location.x + dVectorLeft.x, location.y + dVectorLeft.y );
-  }
+    /* Now, the new points are calculated. */
+    final double vectorExtend = 10.0;
 
-  public static Coordinate getOrthogonalVector( final LineSegment segment, final Point point )
-  {
-    // FIXME: why 10.0??
-    final Coordinate movedPoint = getOrthogonalPoint( segment, point.getCoordinate(), 10.0 );
-    // FIXME: this is the same as dVectorNormalized * 10.0
+    /* Increase its length (the normalized vector is showing into the left direction). */
+    final Coordinate dVectorLeft = new Coordinate( dVectorNormalized.getX() * vectorExtend, dVectorNormalized.getY() * vectorExtend );
+    final Coordinate movedPoint = new Coordinate( point.getX() + dVectorLeft.x, point.getY() + dVectorLeft.y );
+
     return getVector( point.getCoordinate(), movedPoint );
   }
 
   /**
    * Implementation taken from the nofdp idss ProfileBuilder class
-   *
+   * 
    * @return orthogonal line string to the corresponding curve line segment
    */
   public static Coordinate getOrthogonalVector( final LineString curve, final Point point )

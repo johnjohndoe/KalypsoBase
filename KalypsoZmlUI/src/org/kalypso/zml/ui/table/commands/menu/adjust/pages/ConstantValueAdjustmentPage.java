@@ -49,8 +49,8 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedTextBox;
 import org.kalypso.zml.ui.table.base.widgets.IEnhancedTextBoxListener;
 import org.kalypso.zml.ui.table.base.widgets.rules.DoubeValueWidgetRule;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -63,22 +63,15 @@ public class ConstantValueAdjustmentPage extends AbstractAdjustmentPage implemen
 
   public ConstantValueAdjustmentPage( final IAdjustmentPageProvider provider )
   {
-    super( provider, ConstantValueAdjustmentPage.class.getName() );
+    super( provider );
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.pager.IElementPage#getLabel()
-   */
   @Override
   public String getLabel( )
   {
     return "Konstanten Wert setzen (=)";
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.pager.IElementPage#render(org.eclipse.swt.widgets.Composite,
-   *      org.eclipse.ui.forms.widgets.FormToolkit)
-   */
   @Override
   public void render( final Composite body, final FormToolkit toolkit )
   {
@@ -105,16 +98,13 @@ public class ConstantValueAdjustmentPage extends AbstractAdjustmentPage implemen
       return m_constantValue;
 
     final IZmlTableColumn column = getColumn();
-    final IZmlTableCell[] cells = column.getSelectedCells();
+    final IZmlTableValueCell[] cells = (IZmlTableValueCell[]) column.getSelectedCells();
     final Number value = cells[0].getValueReference().getValue();
 
     m_constantValue = value.doubleValue();
     return m_constantValue;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.pager.IElementPage#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -122,27 +112,18 @@ public class ConstantValueAdjustmentPage extends AbstractAdjustmentPage implemen
 
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.base.widgets.IEnhancedTextBoxListener#valueChanged(java.lang.Object)
-   */
   @Override
   public void valueChanged( final Double value )
   {
     m_constantValue = value;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.commands.menu.adjust.pages.AbstractAdjustmentPage#getRunnable()
-   */
   @Override
   public ICoreRunnableWithProgress getRunnable( )
   {
-    return new ConstantValueRunnable( getColumn().getSelectedCells(), m_constantValue );
+    return new ConstantValueRunnable( (IZmlTableValueCell[]) getColumn().getSelectedCells(), m_constantValue );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.commands.menu.adjust.pages.AbstractAdjustmentPage#isValid()
-   */
   @Override
   public boolean isValid( )
   {

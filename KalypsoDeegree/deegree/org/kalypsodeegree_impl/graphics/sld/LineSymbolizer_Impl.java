@@ -101,12 +101,12 @@ public class LineSymbolizer_Impl extends Symbolizer_Impl implements LineSymboliz
    * sets the <Stroke>
    * 
    * @param stroke
-   *          the Stroke
+   *            the Stroke
    */
   @Override
   public void setStroke( final Stroke stroke )
   {
-    m_stroke = stroke;
+    this.m_stroke = stroke;
   }
 
   /**

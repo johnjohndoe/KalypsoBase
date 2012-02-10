@@ -1,18 +1,27 @@
 package de.openali.odysseus.chart.ext.base.axisrenderer;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.ext.base.data.IAxisContentProvider;
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 
 public class OrdinalAxisTickCalculator implements ITickCalculator
 {
   private final IAxisContentProvider m_axisContentProvider;
 
-  private final int m_fixedMinWidth;
+  private int m_fixedMinWidth;
 
-  private final int m_fixedMaxWidth;
+  private int m_fixedMaxWidth;
 
   public OrdinalAxisTickCalculator( final IAxisContentProvider contentProvider, final int minLabelWidth, final int maxLabelWidth )
   {
@@ -41,6 +50,7 @@ public class OrdinalAxisTickCalculator implements ITickCalculator
       tickPos[i] = start + i;
     }
     return tickPos;
+
 
   }
 

@@ -61,6 +61,7 @@ import javax.activation.FileDataSource;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.eclipse.ui.services.IDisposable;
@@ -697,7 +698,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
             modifyable.setData( (Serializable) serializable );
           }
           else
-            throw new UnsupportedOperationException();
+            throw new NotImplementedException();
 
         }
       }

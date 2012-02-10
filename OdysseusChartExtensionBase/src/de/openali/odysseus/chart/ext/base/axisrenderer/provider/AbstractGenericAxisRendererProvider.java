@@ -44,6 +44,7 @@ import java.awt.Insets;
 
 import de.openali.odysseus.chart.ext.base.axisrenderer.AxisRendererConfig;
 import de.openali.odysseus.chart.ext.base.axisrenderer.ExtendedAxisRenderer;
+import de.openali.odysseus.chart.ext.base.axisrenderer.GenericAxisRenderer;
 import de.openali.odysseus.chart.ext.base.axisrenderer.ILabelCreator;
 import de.openali.odysseus.chart.ext.base.axisrenderer.ITickCalculator;
 import de.openali.odysseus.chart.factory.config.parameters.impl.BooleanParser;
@@ -64,7 +65,7 @@ public abstract class AbstractGenericAxisRendererProvider extends AbstractAxisRe
 {
   private static final String ROLE_AXIS_LINE_STYLE = "axisLine"; //$NON-NLS-1$
 
-  private static final String ROLE_AXIS_TICK_LINE_STYLE = "tickLine"; //$NON-NLS-1$ 
+  private static final String ROLE_AXIS_TICK_LINE_STYLE = "tickLine"; //$NON-NLS-1$
 
   private static final String ROLE_AXIS_LABEL_STYLE = "axisLabel"; //$NON-NLS-1$
 

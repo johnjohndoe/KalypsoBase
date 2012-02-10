@@ -43,7 +43,7 @@ public class OWSServlet extends HttpServlet// implements Servlet
     if( opService == null )
     {
       // Fehler ausgeben: Kein Service spezifiziert
-      final String str = new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Parameter 'SERVICE' is mandatory", locator ).toXMLString();
+      final String str = (new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Parameter 'SERVICE' is mandatory", locator )).toXMLString();
       final OutputStreamWriter osw = new OutputStreamWriter( out );
       osw.write( str );
       osw.close();
@@ -52,7 +52,7 @@ public class OWSServlet extends HttpServlet// implements Servlet
     if( opRequest == null )
     {
       // Fehler ausgeben: Keine Operation spezifiziert
-      final String str = new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Parameter 'REQUEST is mandatory", locator ).toXMLString();
+      final String str = (new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Parameter 'REQUEST is mandatory", locator )).toXMLString();
       final OutputStreamWriter osw = new OutputStreamWriter( out );
       osw.write( str );
       osw.close();
@@ -61,7 +61,7 @@ public class OWSServlet extends HttpServlet// implements Servlet
     if( opVersion == null )
     {
       // Fehler ausgeben: Keine Version spezifiziert
-      final String str = new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Parameter 'VERSION' is mandatory", locator ).toXMLString();
+      final String str = (new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Parameter 'VERSION' is mandatory", locator )).toXMLString();
       final OutputStreamWriter osw = new OutputStreamWriter( out );
       osw.write( str );
       osw.close();
@@ -70,7 +70,7 @@ public class OWSServlet extends HttpServlet// implements Servlet
     if( !opVersion.trim().equals( OdysseusServiceOWSPlugin.SERVICE_VERSION ) )
     {
       // Fehler ausgeben: Keine Version spezifiziert
-      final String str = new OWSException( OWSException.ExceptionCode.VERSION_NEGOTIOATON_FAILED, "VERSION unknown; only '" + OdysseusServiceOWSPlugin.SERVICE_VERSION + "' is supported.", locator ).toXMLString();
+      final String str = (new OWSException( OWSException.ExceptionCode.VERSION_NEGOTIOATON_FAILED, "VERSION unknown; only '" + OdysseusServiceOWSPlugin.SERVICE_VERSION + "' is supported.", locator )).toXMLString();
       final OutputStreamWriter osw = new OutputStreamWriter( out );
       osw.write( str );
       osw.close();
@@ -110,7 +110,7 @@ public class OWSServlet extends HttpServlet// implements Servlet
     else
     {
       // Operation could not be created -> return error message
-      final String str = new OWSException( OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "Operation '" + opRequest + "' not found", locator ).toXMLString();
+      final String str = (new OWSException( OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "Operation '" + opRequest + "' not found", locator )).toXMLString();
       final OutputStreamWriter osw = new OutputStreamWriter( out );
       osw.write( str );
       osw.close();

@@ -38,6 +38,7 @@ package org.kalypsodeegree_impl.model.geometry;
 import java.io.Serializable;
 import java.util.Arrays;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypsodeegree.model.geometry.GM_CurveSegment;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_LineString;
@@ -165,12 +166,12 @@ class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
   @Override
   public boolean equals( final Object other )
   {
-    if( other == null || !(other instanceof GM_CurveSegment_Impl) )
+    if( (other == null) || !(other instanceof GM_CurveSegment_Impl) )
     {
       return false;
     }
 
-    if( m_crs == null && ((GM_CurveSegment_Impl) other).getCoordinateSystem() != null )
+    if( (m_crs == null) && (((GM_CurveSegment_Impl) other).getCoordinateSystem() != null) )
     {
       return false;
     }
@@ -217,7 +218,7 @@ class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
   {
     String ret = null;
     ret = "points = ";
-    ret += "crs = " + m_crs + "\n";
+    ret += ("crs = " + m_crs + "\n");
     return ret;
   }
 
@@ -249,7 +250,7 @@ class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
   @Override
   public boolean intersects( final GM_Object gmo )
   {
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 
   /**
@@ -258,7 +259,7 @@ class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
   @Override
   public GM_LineString getAsLineString( )
   {
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 
   /**

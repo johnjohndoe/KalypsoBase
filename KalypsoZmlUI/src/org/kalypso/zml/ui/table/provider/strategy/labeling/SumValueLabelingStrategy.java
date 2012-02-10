@@ -44,16 +44,17 @@ import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.core.table.rules.IZmlRuleImplementation;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import org.kalypso.zml.core.table.rules.IZmlCellRuleImplementation;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.ZmlTableColumn;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableValueColumn;
+import org.kalypso.zml.ui.table.model.columns.ZmlTableValueColumn;
 
 /**
  * @author Dirk Kuch
@@ -61,14 +62,11 @@ import org.kalypso.zml.ui.table.model.ZmlTableColumn;
 public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy implements IZmlLabelStrategy
 {
 
-  public SumValueLabelingStrategy( final ZmlTableColumn column )
+  public SumValueLabelingStrategy( final ZmlTableValueColumn column )
   {
     super( column );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.provider.strategy.IZmlLabelStrategy#getText(org.kalypso.zml.ui.table.model.IZmlModelRow)
-   */
   @Override
   public String getText( final IZmlModelRow row ) throws SensorException, CoreException
   {
@@ -82,14 +80,20 @@ public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy impl
     return getAsAggregatedValue( row );
   }
 
+  @Override
+  protected IZmlTableValueColumn getColumn( )
+  {
+    return (IZmlTableValueColumn) super.getColumn();
+  }
+
   private String getAsAggregatedValue( final IZmlModelRow row ) throws CoreException, SensorException
   {
-    final ZmlTableColumn column = getColumn();
+    final IZmlTableValueColumn column = getColumn();
 
-    final IZmlTableCell current = column.findCell( row );
-    final IZmlTableCell previous = current.findPreviousCell();
+    final IZmlTableValueCell current = column.findCell( row );
+    final IZmlTableValueCell previous = current.findPreviousCell();
 
-    final IZmlValueReference previousReference;
+    final IZmlModelValueCell previousReference;
     if( previous == null )
     {
       /* get first invisible value (first value will is not part of the table!) */
@@ -105,7 +109,7 @@ public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy impl
       previousReference = baseRow.get( column.getModelColumn() );
     }
 
-    final IZmlValueReference currentReference = current.getValueReference();
+    final IZmlModelValueCell currentReference = current.getValueReference();
     if( previousReference == null || currentReference == null )
       return null;
 
@@ -119,12 +123,12 @@ public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy impl
 
     String text = format( row, value );
 
-    final ZmlRule[] rules = column.findActiveRules( row );
-    for( final ZmlRule rule : rules )
+    final ZmlCellRule[] rules = column.findActiveRules( row );
+    for( final ZmlCellRule rule : rules )
     {
       try
       {
-        final IZmlRuleImplementation impl = rule.getImplementation();
+        final IZmlCellRuleImplementation impl = rule.getImplementation();
         text = impl.update( rule, currentReference, text );
       }
       catch( final SensorException e )
@@ -138,18 +142,18 @@ public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy impl
 
   private String getAsOriginValue( final IZmlModelRow row ) throws CoreException, SensorException
   {
-    final IZmlValueReference reference = getReference( row );
+    final IZmlModelValueCell reference = getReference( row );
     if( reference == null )
       return "";
 
     String text = format( row, reference.getValue() );
 
-    final ZmlRule[] rules = getColumn().findActiveRules( row );
-    for( final ZmlRule rule : rules )
+    final ZmlCellRule[] rules = getColumn().findActiveRules( row );
+    for( final ZmlCellRule rule : rules )
     {
       try
       {
-        final IZmlRuleImplementation impl = rule.getImplementation();
+        final IZmlCellRuleImplementation impl = rule.getImplementation();
         text = impl.update( rule, reference, text );
       }
       catch( final SensorException e )

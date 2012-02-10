@@ -55,16 +55,17 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.provider.PooledObsProvider;
 import org.kalypso.zml.core.base.IZmlSourceElement;
+import org.kalypso.zml.core.table.IZmlTableElement;
 import org.kalypso.zml.core.table.model.memento.IZmlMemento;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlDataSourceElement implements IZmlSourceElement
+public class ZmlDataSourceElement implements IZmlTableElement, IZmlSourceElement
 {
   private PooledObsProvider m_provider;
 
-  private String m_identifier;
+  private final String m_identifier;
 
   private final String m_href;
 
@@ -97,6 +98,12 @@ public class ZmlDataSourceElement implements IZmlSourceElement
     return m_identifier;
   }
 
+  @Override
+  public IZmlSourceElement getSource( )
+  {
+    return this;
+  }
+
   private String[] findProperties( final String labeling )
   {
     final Set<String> properties = new LinkedHashSet<String>();
@@ -127,6 +134,7 @@ public class ZmlDataSourceElement implements IZmlSourceElement
       if( Objects.isNotNull( m_provider ) )
         return m_provider;
 
+// KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "Creating new pooled obs provider - %s\n", type );
       m_provider = new PooledObsProvider( type );
     }
 
@@ -180,20 +188,5 @@ public class ZmlDataSourceElement implements IZmlSourceElement
     }
 
     return m_label;
-  }
-
-  @Override
-  public void setIdentifier( final String identifier )
-  {
-    m_identifier = identifier;
-  }
-
-  /**
-   * @see org.kalypso.zml.core.base.IZmlSourceElement#getIndex()
-   */
-  @Override
-  public int getIndex( )
-  {
-    return 0;
   }
 }

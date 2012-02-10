@@ -2,8 +2,6 @@ package org.kalypso.ogc.gml.map.widgets;
 
 import java.awt.Component;
 
-import javax.swing.SwingUtilities;
-
 import org.eclipse.core.commands.common.CommandException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -37,7 +35,7 @@ public final class ActivateWidgetJob extends UIJob
   public ActivateWidgetJob( final String name, final IWidget widget, final IMapPanel mapPanel, final IWorkbenchPage activePage )
   {
     super( name );
-
+    
     m_widget = widget;
     m_mapPanel = mapPanel;
     m_activePage = activePage;
@@ -50,31 +48,18 @@ public final class ActivateWidgetJob extends UIJob
     {
       if( m_widget instanceof IWidgetWithOptions && m_activePage != null )
       {
-        if( !m_widget.canBeActivated( null, m_mapPanel ) )
-        {
-          return Status.CANCEL_STATUS;
-        }
         final MapWidgetView widgetView = (MapWidgetView) m_activePage.showView( MapWidgetView.ID, null, IWorkbenchPage.VIEW_VISIBLE );
         widgetView.setWidgetForPanel( m_mapPanel, (IWidgetWithOptions) m_widget );
       }
       else
-        m_mapPanel.getWidgetManager().addWidget( m_widget );
+        m_mapPanel.getWidgetManager().setActualWidget( m_widget );
 
       CommandUtilities.refreshElementsForWindow( PlatformUI.getWorkbench().getActiveWorkbenchWindow(), AbstractMapPart.MAP_COMMAND_CATEGORY );
 
+      // BUGFIX: force the focus on the map panel, in order to let it get key events
       if( m_mapPanel instanceof Component )
-      {
-        SwingUtilities.invokeLater( new Runnable()
-        {
-          @SuppressWarnings("synthetic-access")
-          @Override
-          public void run( )
-          {
-            ((Component) m_mapPanel).requestFocusInWindow();
-          }
-        } );
-      }
-
+        ((Component)m_mapPanel).requestFocusInWindow();
+      
       return Status.OK_STATUS;
     }
     catch( final PartInitException e )

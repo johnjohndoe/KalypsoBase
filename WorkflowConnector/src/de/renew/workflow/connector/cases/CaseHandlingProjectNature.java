@@ -52,27 +52,32 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
-import de.renew.workflow.connector.internal.WorkflowConnectorPlugin;
+import de.renew.workflow.connector.WorkflowConnectorPlugin;
 
 /**
  * This project nature add the possibility to handle cases inside the project and keep information about the current
  * workflow state of cases
- *
+ * 
  * @author Stefan Kurzbach
  */
-public abstract class CaseHandlingProjectNature implements IProjectNature, ICaseManagerListener
+public abstract class CaseHandlingProjectNature<T extends ICase> implements IProjectNature, ICaseManagerListener<T>
 {
-  private IScenarioManager m_caseManager;
+  private ICaseManager<T> m_caseManager;
 
   private IProject m_project;
 
   /**
    * Creates a specific case manager for this project
    */
-  protected abstract IScenarioManager createCaseManager( final IProject project );
+  protected abstract ICaseManager<T> createCaseManager( final IProject project ) throws CoreException;
 
-  public IScenarioManager getCaseManager( )
+  public ICaseManager<T> getCaseManager( ) throws CoreException
   {
+    if( m_caseManager == null )
+    {
+      m_caseManager = createCaseManager( m_project );
+      m_caseManager.addCaseManagerListener( this );
+    }
     return m_caseManager;
   }
 
@@ -110,31 +115,22 @@ public abstract class CaseHandlingProjectNature implements IProjectNature, ICase
   @Override
   public void setProject( final IProject project )
   {
-    if( m_caseManager != null )
-    {
-      m_caseManager.dispose();
-      m_caseManager = null;
-    }
-
-    m_project = project;
-
-    if( m_project != null )
-    {
-      m_caseManager = createCaseManager( m_project );
-      m_caseManager.addCaseManagerListener( this );
-    }
+    this.m_project = project;
   }
 
   /**
    * Constructs a path for the case relative to the project location.
    */
-  public IPath getRelativeProjectPath( @SuppressWarnings("unused") final IScenario caze )
+  public IPath getRelativeProjectPath( @SuppressWarnings("unused") final ICase caze )
   {
     return Path.EMPTY;// caze.getName() );
   }
 
+  /**
+   * @see de.renew.workflow.connector.context.ICaseManagerListener#caseAdded(de.renew.workflow.cases.Case)
+   */
   @Override
-  public void caseAdded( final IScenario caze )
+  public void caseAdded( final ICase caze )
   {
     final IFolder newFolder = m_project.getFolder( getRelativeProjectPath( caze ) );
 
@@ -155,7 +151,7 @@ public abstract class CaseHandlingProjectNature implements IProjectNature, ICase
   }
 
   @Override
-  public void caseRemoved( final IScenario caze )
+  public void caseRemoved( final ICase caze )
   {
     final IFolder folder = m_project.getFolder( getRelativeProjectPath( caze ) );
     try

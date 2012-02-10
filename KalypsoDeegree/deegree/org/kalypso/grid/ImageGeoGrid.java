@@ -188,14 +188,14 @@ public class ImageGeoGrid extends AbstractGeoGrid implements IGeoGrid
   {
     try
     {
-      final IGeoWalkingStrategy walkingStrategy = getWalkingStrategy();
-      final MinMaxRasterWalker walker = new MinMaxRasterWalker();
+      IGeoWalkingStrategy walkingStrategy = getWalkingStrategy();
+      MinMaxRasterWalker walker = new MinMaxRasterWalker();
       walkingStrategy.walk( this, walker, null, new NullProgressMonitor() );
 
       m_min = BigDecimal.valueOf( walker.getMin() );
       m_max = BigDecimal.valueOf( walker.getMax() );
     }
-    catch( final Exception ex )
+    catch( Exception ex )
     {
       ex.printStackTrace();
     }

@@ -36,7 +36,7 @@
 package org.kalypsodeegree.model.typeHandler;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 
 /**
  * @author Dirk Kuch

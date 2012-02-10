@@ -52,7 +52,7 @@ import org.kalypso.ogc.gml.command.JMSelector;
 import org.kalypso.ogc.gml.command.ModifyFeatureGeometryCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -69,7 +69,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * 
  * @author doemming
  */
-public class EditGeometryWidget extends DeprecatedMouseWidget
+public class EditGeometryWidget extends AbstractWidget
 {
   double m_boxRadiusVisibleHandles = 50;
 
@@ -128,7 +128,7 @@ public class EditGeometryWidget extends DeprecatedMouseWidget
 
     // final FeatureList featureListVisible = ((IKalypsoFeatureTheme) activeTheme).getFeatureListVisible( null );
     final FeatureList featureListVisible = ((IKalypsoFeatureTheme) activeTheme).getFeatureList();
-    final List<Object> features = JMSelector.select( envelope, featureListVisible, false );
+    final List<Object> features = selector.select( envelope, featureListVisible, false );
     m_handles = HandlesFactory.createHandles( features, null, envelope );
 
     final IMapPanel panel = getMapPanel();
@@ -269,7 +269,7 @@ public class EditGeometryWidget extends DeprecatedMouseWidget
     final double gisX = transform.getSourceX( pointOfInterest.getX() );
     final double gisY = transform.getSourceY( pointOfInterest.getY() );
     final GM_Position positionOfInterest = GeometryFactory.createGM_Position( gisX, gisY );
-
+    
     // todo checkForTopology is not used, check it
     final List<Handle> checkForTopology = new ArrayList<Handle>();
     // 1. select nearest handle

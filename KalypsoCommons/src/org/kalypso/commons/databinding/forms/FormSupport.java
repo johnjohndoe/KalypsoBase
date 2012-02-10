@@ -34,14 +34,14 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 /**
  * Connects the validation result from the given data binding context to the given
  * {@link org.eclipse.ui.forms.widgets.Form}, updating the form's error message accordingly.
- *
+ * 
  * @noextend This class is not intended to be subclassed by clients.
  */
 public class FormSupport
 {
   /**
    * Connect the validation result from the given data binding context to the given {@link Form}.
-   *
+   * 
    * @return an instance of {@link FormSupport}
    */
   public static FormSupport create( final ScrolledForm scrolledForm, final DataBindingContext dbc )
@@ -51,7 +51,7 @@ public class FormSupport
 
   /**
    * Connect the validation result from the given data binding context to the given {@link Form}.
-   *
+   * 
    * @return an instance of {@link FormSupport}
    */
   public static FormSupport create( final Form form, final DataBindingContext dbc )
@@ -102,8 +102,6 @@ public class FormSupport
 
   private Form m_form;
 
-  private boolean m_isActive = true;
-
   private FormSupport( final ScrolledForm scrolledForm, final Form form, final DataBindingContext dbc )
   {
     m_scrolledForm = scrolledForm;
@@ -116,7 +114,7 @@ public class FormSupport
   /**
    * Sets the {@link IValidationMessageProvider} to use for providing the message text and message type to display on
    * the title area dialog.
-   *
+   * 
    * @param messageProvider
    *          The {@link IValidationMessageProvider} to use for providing the message text and message type to display
    *          on the title area dialog.
@@ -210,7 +208,7 @@ public class FormSupport
   {
     // FIXME: instead use message manager of form
 
-    if( m_form == null || m_form.isDisposed() || !m_isActive )
+    if( m_form == null || m_form.isDisposed() )
       return;
 
     m_form.getMessageManager().addMessage( m_aggregateStatusProvider, null, m_validationStatusProviderTargetsListener, 0 );
@@ -304,7 +302,7 @@ public class FormSupport
         final ValidationStatusProvider validationStatusProvider = (ValidationStatusProvider) it.next();
         final IObservableList targets = validationStatusProvider.getTargets();
         targets.removeListChangeListener( m_validationStatusProviderTargetsListener );
-        for( final Iterator< ? > iter = targets.iterator(); iter.hasNext(); )
+        for( final Iterator<?> iter = targets.iterator(); iter.hasNext(); )
         {
           ((IObservable) iter.next()).removeChangeListener( m_uiChangeListener );
         }
@@ -360,10 +358,5 @@ public class FormSupport
         }
       }
     }
-  }
-
-  void setActive( final boolean active )
-  {
-    m_isActive = active;
   }
 }

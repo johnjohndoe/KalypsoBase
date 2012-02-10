@@ -62,9 +62,16 @@ public class ProfileObjectEdit implements IProfilChange
     m_newValue = newValue;
   }
 
+  /**
+   * @throws IllegalProfileOperationException
+   * @see org.kalypso.model.wspm.core.profil.changes.AbstractChange#doChange(PlainProfil)
+   */
   @Override
-  public IProfilChange doChange( )
+  public IProfilChange doChange( final ProfilChangeHint hint )
   {
+    if( hint != null )
+      hint.setObjectDataChanged();
+
     // FIXME at the moment we can only one value of the profile object tuple result
     final IObservation<TupleResult> observation = m_object.getObservation();
     final TupleResult result = observation.getResult();

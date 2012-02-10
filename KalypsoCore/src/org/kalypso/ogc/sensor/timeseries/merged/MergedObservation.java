@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -150,30 +150,16 @@ public class MergedObservation extends AbstractObservationDecorator implements I
 
     // *grmml* first model defines axes of result model?
     final IObservation observation = source.getObservation();
-    final Collection<IAxis> valuesAxes = new ArrayList<IAxis>();
+    final Collection<IAxis> resultAxes = new ArrayList<IAxis>();
 
     final IAxis[] axes = observation.getAxes();
     for( final IAxis axis : axes )
     {
       if( axis.isPersistable() )
-        valuesAxes.add( axis );
+        resultAxes.add( axis );
     }
 
-    final Collection<IAxis> valueAxesAndSourceAxes = new ArrayList<>( valuesAxes );
-
-    for( final IAxis axis : valuesAxes )
-    {
-      if( !AxisUtils.isValueAxis( axis ) )
-        continue;
-
-      if( AxisUtils.findDataSourceAxis( axes, axis ) == null )
-      {
-        final IAxis dataSourceAxis = DataSourceHelper.createSourceAxis( axis );
-        valueAxesAndSourceAxes.add( dataSourceAxis );
-      }
-    }
-
-    return valueAxesAndSourceAxes.toArray( new IAxis[valueAxesAndSourceAxes.size()] );
+    return resultAxes.toArray( new IAxis[resultAxes.size()] );
   }
 
   private static ObservationSource findAxesSource( final ObservationSource[] sources, final String forceAxisType )

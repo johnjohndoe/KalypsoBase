@@ -41,35 +41,58 @@
 
 package org.kalypso.ui.wizard.gml;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.net.URL;
 
-import org.eclipse.core.databinding.beans.BeansObservables;
-import org.eclipse.core.databinding.observable.value.IObservableValue;
+import javax.xml.namespace.QName;
+
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
-import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
-import org.kalypso.commons.databinding.swt.FileAndHistoryData;
-import org.kalypso.commons.databinding.swt.WorkspaceFileBinding;
+import org.eclipse.swt.widgets.Text;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogPageUtilitites;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.core.status.StatusDialog;
-import org.kalypso.ui.editor.gmleditor.part.GMLContentProvider;
-import org.kalypso.ui.editor.gmleditor.part.GMLLabelProvider;
+import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
+import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
+import org.kalypso.ui.editor.gmleditor.ui.GMLContentProvider;
+import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypso.ui.i18n.Messages;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
@@ -77,36 +100,67 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
  */
 public class GmlFileImportPage extends WizardPage
 {
-  private final PropertyChangeListener m_gmlFileListener = new PropertyChangeListener()
+  private final static int DEFAULT_EXPANSION_LEVEL = 3;
+
+  private IProject m_selectedProject;
+
+  private Text m_sourceFileText;
+
+  private TreeViewer m_treeViewer;
+
+  private GMLWorkspace m_workspace;
+
+  private String m_source;
+
+  private QName[] m_validQnames = new QName[0];
+
+  private IStructuredSelection m_currentSelection;
+
+  private boolean m_validAllowFeature = true;
+
+  private boolean m_validAllowFeatureAssociation = true;
+
+  protected ViewerFilter m_filter;
+
+  private GMLXPath m_rootPath;
+
+  public GmlFileImportPage( final String pageName, final String title, final ImageDescriptor titleImage )
   {
-    @Override
-    public void propertyChange( final PropertyChangeEvent evt )
-    {
-      handleGmlFileChanged();
-    }
-  };
-
-  // FIXME: tree should expand when input is changed
-  // private final static int DEFAULT_EXPANSION_LEVEL = 3;
-
-  private final GmlFileImportData m_data;
-
-  private DatabindingWizardPage m_binding;
-
-  public GmlFileImportPage( final String pageName, final String title, final GmlFileImportData data )
-  {
-    super( pageName );
-
-    setTitle( title );
-
-    m_data = data;
+    super( pageName, title, titleImage );
   }
 
+  public void setRootPath( final GMLXPath rootPath )
+  {
+    m_rootPath = rootPath;
+  }
+
+  /** If set to non-<code>null</code>, only files from within this project may be selected. */
+  public void setProjectSelection( final IProject project )
+  {
+    m_selectedProject = project;
+  }
+
+  public String getSource( )
+  {
+    return m_source;
+  }
+
+  public IStructuredSelection getSelection( )
+  {
+    return m_currentSelection;
+  }
+
+  public GMLWorkspace getWorkspace( )
+  {
+    return m_workspace;
+  }
+
+  /**
+   * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
+   */
   @Override
   public void createControl( final Composite parent )
   {
-    m_binding = new DatabindingWizardPage( this, null );
-
     final Composite topComposite = new Composite( parent, SWT.NULL );
     topComposite.setLayout( new GridLayout() );
     topComposite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
@@ -119,82 +173,223 @@ public class GmlFileImportPage extends WizardPage
 
     setControl( topComposite );
     setPageComplete( false );
-
-    m_data.getGmlFile().addPropertyChangeListener( FileAndHistoryData.PROPERTY_PATH, m_gmlFileListener );
   }
 
   private Control createTreeView( final Composite composite )
   {
-    final TreeViewer treeViewer = new TreeViewer( composite, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
+    m_treeViewer = new TreeViewer( composite );
+    m_treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+      /**
+       * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+       */
+      @Override
+      public void selectionChanged( final SelectionChangedEvent event )
+      {
+        handleTreeSelection( (IStructuredSelection) event.getSelection() );
+      }
+    } );
 
     final GMLContentProvider contentProvider = new GMLContentProvider( true );
+    if( m_rootPath != null )
+      contentProvider.setRootPath( m_rootPath );
 
-    final GMLXPath rootPath = m_data.getRootPath();
-    if( rootPath != null )
-      contentProvider.setRootPath( rootPath );
+    m_treeViewer.setContentProvider( contentProvider );
+    m_treeViewer.setLabelProvider( new GMLLabelProvider() );
+    m_treeViewer.setUseHashlookup( true );
 
-    treeViewer.setContentProvider( contentProvider );
-    treeViewer.setLabelProvider( new GMLLabelProvider() );
-    treeViewer.setUseHashlookup( true );
-
-    /* binding */
-    final IObservableValue targetInput = ViewersObservables.observeInput( treeViewer );
-    final IObservableValue modelInput = BeansObservables.observeValue( m_data, GmlFileImportData.PROPERTY_WORKSPACE );
-    m_binding.bindValue( targetInput, modelInput );
-
-    final IViewerObservableValue targetSelection = ViewersObservables.observeSinglePostSelection( treeViewer );
-    final IObservableValue modelSelection = BeansObservables.observeValue( m_data, GmlFileImportData.PROPERTY_SELECTION );
-    m_binding.bindValue( targetSelection, modelSelection, new GmlFileSelectionValidator( m_data ) );
-
-    return treeViewer.getControl();
+    return m_treeViewer.getControl();
   }
 
   private Control createFileGroup( final Composite parent )
   {
     final Group group = new Group( parent, SWT.NULL );
-    GridLayoutFactory.swtDefaults().numColumns( 3 ).equalWidth( false ).applyTo( group );
+    final GridLayout topGroupLayout = new GridLayout( 3, false );
+    group.setLayout( topGroupLayout );
 
-    group.setText( Messages.getString( "org.kalypso.ui.wizard.gmlGmlFileImportPage.0" ) ); //$NON-NLS-1$
-
+    group.setText( Messages.getString("org.kalypso.ui.wizard.gmlGmlFileImportPage.0") ); //$NON-NLS-1$
     final Label fileLabel = new Label( group, SWT.NONE );
     fileLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
-    fileLabel.setText( Messages.getString( "org.kalypso.ui.wizard.gmlGmlFileImportPage.1" ) ); //$NON-NLS-1$
+    fileLabel.setText( Messages.getString("org.kalypso.ui.wizard.gmlGmlFileImportPage.1") ); //$NON-NLS-1$
 
-    final FileAndHistoryData gmlFileData = m_data.getGmlFile();
+    m_sourceFileText = new Text( group, SWT.BORDER );
+    m_sourceFileText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    m_sourceFileText.setEditable( false );
 
-    final IObservableValue fileTarget = BeansObservables.observeValue( gmlFileData, FileAndHistoryData.PROPERTY_PATH );
-    final IObservableValue historyTarget = BeansObservables.observeValue( gmlFileData, FileAndHistoryData.PROPERTY_HISTORY );
-
-    final String dialogMessage = Messages.getString( "org.kalypso.ui.wizard.gmlGmlFileImportPage.3" ); //$NON-NLS-1$
-    final WorkspaceFileBinding fileBinding = new WorkspaceFileBinding( m_binding, fileTarget, dialogMessage, new String[] { "gml" } ); //$NON-NLS-1$
-
-    final IProject selectedProject = m_data.getSelectedProject();
-    if( selectedProject != null )
-      fileBinding.setInputContainer( selectedProject );
-
-    final ViewerFilter filter = m_data.getFilter();
-    if( filter != null )
-      fileBinding.setFilter( filter );
-
-    final Control fileControl = fileBinding.createFileFieldWithHistory( group, historyTarget );
-    fileControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-
-    fileBinding.createFileSearchButton( group );
+    final Button browseButton = new Button( group, SWT.PUSH );
+    browseButton.setText( Messages.getString("org.kalypso.ui.wizard.gmlGmlFileImportPage.2") ); //$NON-NLS-1$
+    browseButton.setLayoutData( new GridData( SWT.END, SWT.CENTER, false, false ) );
+    browseButton.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        handleBrowseButtonSelected();
+      }
+    } );
 
     return group;
   }
 
-  void handleGmlFileChanged( )
+  protected void handleBrowseButtonSelected( )
   {
-    final ICoreRunnableWithProgress operation = new GmlFileImportLoadOperation( m_data );
+    final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 
-    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, operation );
-    if( !status.isOK() )
-      StatusDialog.open( getShell(), status, getWizard().getWindowTitle() );
+    final IContainer container = m_selectedProject == null ? root : m_selectedProject;
+
+    final KalypsoResourceSelectionDialog dialog = new KalypsoResourceSelectionDialog( getShell(), null, Messages.getString("org.kalypso.ui.wizard.gmlGmlFileImportPage.3"), new String[] { "gml" }, container, new ResourceSelectionValidator() ); //$NON-NLS-1$ //$NON-NLS-2$
+    if( m_filter != null )
+      dialog.setViewerFilter( m_filter );
+
+    if( dialog.open() != Window.OK )
+      return;
+
+    // get first element, only one element possible
+    final IPath selection = (IPath) dialog.getResult()[0];
+    final IFile resource = root.getFile( selection );
+
+    // create project path (Kalypso project-protocol)
+    final String source;
+    if( m_selectedProject == null )
+      source = ResourceUtilities.createURLSpec( selection );
+    else
+      source = "project:/" + selection.removeFirstSegments( 1 ).toString(); //$NON-NLS-1$
+    m_sourceFileText.setText( selection.toString() );
+
+    final ICoreRunnableWithProgress progress = new ICoreRunnableWithProgress()
+    {
+      @Override
+      public IStatus execute( final IProgressMonitor monitor )
+      {
+        try
+        {
+          monitor.beginTask( Messages.getString("org.kalypso.ui.wizard.gmlGmlFileImportPage.4"), 1 ); //$NON-NLS-1$
+          final URL gmlURL = ResourceUtilities.createURL( resource );
+          final CommandableWorkspace workspace = new CommandableWorkspace( GmlSerializer.createGMLWorkspace( gmlURL, null ) );
+          setWorkspace( workspace, source );
+          return Status.OK_STATUS;
+        }
+        catch( final Exception e1 )
+        {
+          final IStatus status = StatusUtilities.statusFromThrowable( e1 );
+          return status;
+        }
+      }
+    };
+
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, progress );
+    ErrorDialog.openError( getShell(), getWizard().getWindowTitle(), Messages.getString("org.kalypso.ui.wizard.gmlGmlFileImportPage.5"), status ); //$NON-NLS-1$
+
+    m_treeViewer.getTree().setVisible( true );
+    m_treeViewer.setInput( m_workspace );
+    // need to expand in order to load all elements into the treeviewers
+    // cache
+    m_treeViewer.expandToLevel( DEFAULT_EXPANSION_LEVEL );
+    m_treeViewer.getTree().setFocus();
+    if( m_workspace != null )
+    {
+      m_treeViewer.setSelection( new StructuredSelection( m_workspace.getRootFeature() ) );
+    }
+    else
+    {
+      m_treeViewer.setSelection( StructuredSelection.EMPTY );
+    }
+  }
+
+  protected void setWorkspace( final CommandableWorkspace workspace, final String source )
+  {
+    m_workspace = workspace;
+    m_source = source;
+
+    m_currentSelection = null;
+  }
+
+  protected void handleTreeSelection( final IStructuredSelection selection )
+  {
+    m_currentSelection = selection;
+
+    final IStatus status = validateCurrentSelection();
+    if( status.isOK() )
+      setMessage( getDescription() );
+    else
+      setMessage( status.getMessage(), DialogPageUtilitites.severityToMessagecode( status ) );
+
+    setPageComplete( status.isOK() );
+  }
+
+  private IStatus validateCurrentSelection( )
+  {
+    if( m_currentSelection == null || m_currentSelection.isEmpty() )
+      return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.ui.wizard.gmlGmlFileImportPage.6") ); //$NON-NLS-1$
+
+    final Object[] objects = m_currentSelection.toArray();
+    for( final Object object : objects )
+    {
+      if( m_validAllowFeature && object instanceof Feature )
+      {
+        final Feature f = (Feature) object;
+        final IFeatureType featureType = f.getFeatureType();
+
+        if( !checkFeatureTypeValid( featureType ) )
+          return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.ui.wizard.gmlGmlFileImportPage.7") ); //$NON-NLS-1$
+
+        return Status.OK_STATUS;
+      }
+      else if( m_validAllowFeatureAssociation && object instanceof FeatureAssociationTypeElement )
+      {
+        final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) object;
+        final IRelationType associationRt = fate.getAssociationTypeProperty();
+        final IFeatureType targetFeatureType = associationRt.getTargetFeatureType();
+        if( !checkFeatureTypeValid( targetFeatureType ) )
+          return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.ui.wizard.gmlGmlFileImportPage.8") ); //$NON-NLS-1$
+
+        return Status.OK_STATUS;
+      }
+
+      return StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.ui.wizard.gmlGmlFileImportPage.9") ); //$NON-NLS-1$
+    }
+
+    return Status.OK_STATUS;
+  }
+
+  /**
+   * Check if given feature type substitutes at least one of our valid qnames.
+   * <p>
+   * Returns always true if {@link #m_validQnames} is not set or empty.
+   */
+  private boolean checkFeatureTypeValid( final IFeatureType featureType )
+  {
+    if( m_validQnames == null || m_validQnames.length == 0 )
+      return true;
+
+    for( final QName qname : m_validQnames )
+    {
+      if( GMLSchemaUtilities.substitutes( featureType, qname ) )
+        return true;
+    }
+
+    return false;
+  }
+
+  /** If set, all selected elements must substitute one of the given qnames. */
+  public void setValidQNames( final QName[] validQnames )
+  {
+    m_validQnames = validQnames;
+  }
+
+  /** Determines what kind of objects may be selected */
+  public void setValidKind( final boolean allowFeature, final boolean allowFeatureAssociation )
+  {
+    m_validAllowFeature = allowFeature;
+    m_validAllowFeatureAssociation = allowFeatureAssociation;
   }
 
   public void setViewerFilter( final ViewerFilter filter )
   {
-    m_data.setViewerFilter( filter );
+    m_filter = filter;
+
   }
 }

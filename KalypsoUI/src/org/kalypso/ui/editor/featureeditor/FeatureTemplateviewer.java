@@ -87,6 +87,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.featureview.Featuretemplate.Layer;
+import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -154,6 +155,7 @@ public class FeatureTemplateviewer
 
   private IFeaturesProvider m_featuresProvider;
 
+
   public FeatureTemplateviewer( final JobExclusiveCommandTarget commandtarget )
   {
     m_commandtarget = commandtarget;
@@ -190,7 +192,9 @@ public class FeatureTemplateviewer
   {
     m_template = template;
 
-    m_fvFactory.addViews( template, templateContext );
+    final List<FeatureviewType> view = template.getView();
+    for( final FeatureviewType featureviewType : view )
+      m_fvFactory.addView( featureviewType, templateContext );
 
     final Layer layer = template.getLayer();
     final String featurePath = layer == null ? defaultFeaturePath : layer.getFeaturePath();
@@ -348,7 +352,7 @@ public class FeatureTemplateviewer
         throw new IllegalArgumentException();
 
       // REMARK: we allow for the null-feature!
-      final Feature feature = features == null || features.size() == 0 ? null : features.get( 0 );
+      final Feature feature = (features == null || features.size() == 0) ? null : features.get( 0 );
 
       /* Try to obtain the feature to display. */
       /* The result may be null, if the feature path is null, too. */

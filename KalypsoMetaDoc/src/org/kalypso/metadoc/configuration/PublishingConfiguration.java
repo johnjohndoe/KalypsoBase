@@ -41,22 +41,29 @@
 
 package org.kalypso.metadoc.configuration;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
-import org.apache.commons.collections.ExtendedProperties;
+import org.apache.commons.configuration.Configuration;
 
 /**
  * Default implementation of the IPublishingConfiguration interface
- *
+ * 
  * @author schlienger
  */
-public class PublishingConfiguration extends ExtendedProperties
+public class PublishingConfiguration implements IPublishingConfiguration
 {
+  private final Configuration m_conf;
+
   private final List<IConfigurationListener> m_listeners;
 
-  public PublishingConfiguration( )
+  public PublishingConfiguration( final Configuration conf )
   {
+    m_conf = conf;
     m_listeners = new ArrayList<IConfigurationListener>( 10 );
   }
 
@@ -76,41 +83,293 @@ public class PublishingConfiguration extends ExtendedProperties
     }
   }
 
+  /**
+   * @see org.kalypso.metadoc.configuration.IPublishingConfiguration#addListener(org.kalypso.metadoc.configuration.IConfigurationListener)
+   */
+  @Override
   public void addListener( final IConfigurationListener listener )
   {
     m_listeners.add( listener );
   }
 
+  /**
+   * @see org.kalypso.metadoc.configuration.IPublishingConfiguration#removeListener(org.kalypso.metadoc.configuration.IConfigurationListener)
+   */
+  @Override
   public void removeListener( final IConfigurationListener listener )
   {
     m_listeners.remove( listener );
   }
 
   @Override
-  public synchronized void clear( )
+  public void addProperty( final String key, final Object arg1 )
   {
-    super.clear();
+    m_conf.addProperty( key, arg1 );
+
+    fireConfigurationChanged( key );
+  }
+
+  @Override
+  public void clear( )
+  {
+    m_conf.clear();
 
     fireConfigurationChanged( null );
   }
 
   @Override
-  public synchronized Object put( final Object key, final Object value )
+  public void clearProperty( final String key )
   {
-    final Object put = super.put( key, value );
+    m_conf.clearProperty( key );
 
-    fireConfigurationChanged( (String) key );
-
-    return put;
+    fireConfigurationChanged( key );
   }
 
   @Override
-  public synchronized Object remove( final Object key )
+  public boolean containsKey( final String arg0 )
   {
-    final Object remove = super.remove( key );
+    return m_conf.containsKey( arg0 );
+  }
 
-    fireConfigurationChanged( (String) key );
+  @Override
+  public boolean equals( final Object obj )
+  {
+    return m_conf.equals( obj );
+  }
 
-    return remove;
+  @Override
+  public BigDecimal getBigDecimal( final String arg0 )
+  {
+    return m_conf.getBigDecimal( arg0 );
+  }
+
+  @Override
+  public BigDecimal getBigDecimal( final String arg0, final BigDecimal arg1 )
+  {
+    return m_conf.getBigDecimal( arg0, arg1 );
+  }
+
+  @Override
+  public BigInteger getBigInteger( final String arg0 )
+  {
+    return m_conf.getBigInteger( arg0 );
+  }
+
+  @Override
+  public BigInteger getBigInteger( final String arg0, final BigInteger arg1 )
+  {
+    return m_conf.getBigInteger( arg0, arg1 );
+  }
+
+  @Override
+  public boolean getBoolean( final String arg0 )
+  {
+    return m_conf.getBoolean( arg0 );
+  }
+
+  @Override
+  public boolean getBoolean( final String arg0, final boolean arg1 )
+  {
+    return m_conf.getBoolean( arg0, arg1 );
+  }
+
+  @Override
+  public Boolean getBoolean( final String arg0, final Boolean arg1 ) throws NoClassDefFoundError
+  {
+    return m_conf.getBoolean( arg0, arg1 );
+  }
+
+  @Override
+  public byte getByte( final String arg0 )
+  {
+    return m_conf.getByte( arg0 );
+  }
+
+  @Override
+  public byte getByte( final String arg0, final byte arg1 )
+  {
+    return m_conf.getByte( arg0, arg1 );
+  }
+
+  @Override
+  public Byte getByte( final String arg0, final Byte arg1 )
+  {
+    return m_conf.getByte( arg0, arg1 );
+  }
+
+  @Override
+  public double getDouble( final String arg0 )
+  {
+    return m_conf.getDouble( arg0 );
+  }
+
+  @Override
+  public double getDouble( final String arg0, final double arg1 )
+  {
+    return m_conf.getDouble( arg0, arg1 );
+  }
+
+  @Override
+  public Double getDouble( final String arg0, final Double arg1 )
+  {
+    return m_conf.getDouble( arg0, arg1 );
+  }
+
+  @Override
+  public float getFloat( final String arg0 )
+  {
+    return m_conf.getFloat( arg0 );
+  }
+
+  @Override
+  public float getFloat( final String arg0, final float arg1 )
+  {
+    return m_conf.getFloat( arg0, arg1 );
+  }
+
+  @Override
+  public Float getFloat( final String arg0, final Float arg1 )
+  {
+    return m_conf.getFloat( arg0, arg1 );
+  }
+
+  @Override
+  public int getInt( final String arg0 )
+  {
+    return m_conf.getInt( arg0 );
+  }
+
+  @Override
+  public int getInt( final String arg0, final int arg1 )
+  {
+    return m_conf.getInt( arg0, arg1 );
+  }
+
+  @Override
+  public Integer getInteger( final String arg0, final Integer arg1 )
+  {
+    return m_conf.getInteger( arg0, arg1 );
+  }
+
+  @Override
+  public Iterator< ? > getKeys( )
+  {
+    return m_conf.getKeys();
+  }
+
+  @Override
+  public Iterator< ? > getKeys( final String arg0 )
+  {
+    return m_conf.getKeys( arg0 );
+  }
+
+  @Override
+  public List< ? > getList( final String arg0 )
+  {
+    return m_conf.getList( arg0 );
+  }
+
+  @Override
+  public List< ? > getList( final String arg0, @SuppressWarnings("rawtypes") final List arg1 )
+  {
+    return m_conf.getList( arg0, arg1 );
+  }
+
+  @Override
+  public long getLong( final String arg0 )
+  {
+    return m_conf.getLong( arg0 );
+  }
+
+  @Override
+  public Long getLong( final String arg0, final Long arg1 )
+  {
+    return m_conf.getLong( arg0, arg1 );
+  }
+
+  @Override
+  public long getLong( final String arg0, final long arg1 )
+  {
+    return m_conf.getLong( arg0, arg1 );
+  }
+
+  @Override
+  public Properties getProperties( final String arg0 )
+  {
+    return m_conf.getProperties( arg0 );
+  }
+
+  @Override
+  public Object getProperty( final String arg0 )
+  {
+    return m_conf.getProperty( arg0 );
+  }
+
+  @Override
+  public short getShort( final String arg0 )
+  {
+    return m_conf.getShort( arg0 );
+  }
+
+  @Override
+  public Short getShort( final String arg0, final Short arg1 )
+  {
+    return m_conf.getShort( arg0, arg1 );
+  }
+
+  @Override
+  public short getShort( final String arg0, final short arg1 )
+  {
+    return m_conf.getShort( arg0, arg1 );
+  }
+
+  @Override
+  public String getString( final String arg0 )
+  {
+    return m_conf.getString( arg0 );
+  }
+
+  @Override
+  public String getString( final String arg0, final String arg1 )
+  {
+    return m_conf.getString( arg0, arg1 );
+  }
+
+  @Override
+  public String[] getStringArray( final String arg0 )
+  {
+    return m_conf.getStringArray( arg0 );
+  }
+
+  @Override
+  public int hashCode( )
+  {
+    return m_conf.hashCode();
+  }
+
+  @Override
+  public boolean isEmpty( )
+  {
+    return m_conf.isEmpty();
+  }
+
+  @Override
+  public void setProperty( final String key, final Object arg1 )
+  {
+    m_conf.setProperty( key, arg1 );
+
+    fireConfigurationChanged( key );
+  }
+
+  @Override
+  public Configuration subset( final String prefix )
+  {
+    return m_conf.subset( prefix );
+  }
+
+  @Override
+  public String toString( )
+  {
+    return m_conf.toString();
   }
 }

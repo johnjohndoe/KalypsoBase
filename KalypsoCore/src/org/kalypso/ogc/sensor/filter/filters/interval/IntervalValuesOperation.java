@@ -59,8 +59,6 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.TupleModelDataSet;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
-import org.kalypso.ogc.sensor.metadata.MetadataHelper;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 
@@ -73,24 +71,29 @@ public class IntervalValuesOperation
 
   private final IntervalDefinition m_definition;
 
-  private final MetadataList m_metadata;
-
   private final IntervalAxesValues m_axes;
 
   private final ITupleModel m_sourceModel;
 
-  public IntervalValuesOperation( final ITupleModel sourceModel, final MetadataList metadata, final IntervalDefinition definition )
+  private final Period m_sourceTimestep;
+
+  /**
+   * @param sourceTimestep
+   *          Timestep of the source values.
+   * @param targetSourcesHandler
+   *          Data handler for source axis for target metadata.
+   */
+  public IntervalValuesOperation( final ITupleModel sourceModel, final Period sourceTimestep, final DataSourceHandler targetSourcesHandler, final IntervalDefinition definition )
   {
     m_sourceModel = sourceModel;
+    m_sourceTimestep = sourceTimestep;
     m_definition = definition;
-    m_metadata = metadata;
 
     final IAxis[] axes = sourceModel.getAxes();
 
     m_model = new SimpleTupleModel( axes );
 
-    final DataSourceHandler sourceHandler = new DataSourceHandler( m_metadata );
-    m_axes = new IntervalAxesValues( sourceHandler, axes, definition.getDefaultValue(), definition.getDefaultStatus() );
+    m_axes = new IntervalAxesValues( targetSourcesHandler, axes, definition.getDefaultValue(), definition.getDefaultStatus() );
   }
 
   public ITupleModel getModel( )
@@ -131,9 +134,8 @@ public class IntervalValuesOperation
 
   private Period findStep( ) throws SensorException
   {
-    final Period step = MetadataHelper.getTimestep( m_metadata );
-    if( step != null )
-      return step;
+    if( m_sourceTimestep != null )
+      return m_sourceTimestep;
 
     /* Return null for empty model (probably created by a request) -> does not matter anyways */
     if( m_sourceModel.size() == 0 )

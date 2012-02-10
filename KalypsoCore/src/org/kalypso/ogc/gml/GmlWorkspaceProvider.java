@@ -44,10 +44,8 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
- * @deprecated not used anymore?!?
  * @author Gernot Belger
  */
-@Deprecated
 public class GmlWorkspaceProvider extends AbstractGmlWorkspaceProvider
 {
   private final CommandableWorkspace m_workspace2;

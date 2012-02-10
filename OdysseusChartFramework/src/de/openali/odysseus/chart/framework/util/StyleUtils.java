@@ -9,6 +9,7 @@ import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINECAP;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
@@ -65,6 +66,7 @@ public final class StyleUtils
       return null;
   }
 
+   
   public static ILineStyle getDefaultLineStyle( )
   {
     return new LineStyle( IDefaultStyles.DEFAULT_STROKE_WIDTH, IDefaultStyles.DEFAULT_RGB_FOREGROUND, IDefaultStyles.DEFAULT_ALPHA, IDefaultStyles.DEFAULT_DASHOFFSET, IDefaultStyles.DEFAULT_DASHARRAY, IDefaultStyles.DEFAULT_LINEJOIN, IDefaultStyles.DEFAULT_LINECAP, IDefaultStyles.DEFAULT_MITERLIMIT, IDefaultStyles.DEFAULT_VISIBILITY );
@@ -84,5 +86,5 @@ public final class StyleUtils
   {
     return new TextStyle( IDefaultStyles.DEFAULT_FONT_HEIGHT, IDefaultStyles.DEFAULT_FONT_FAMILY, IDefaultStyles.DEFAULT_RGB_TEXT, IDefaultStyles.DEFAULT_RGB_TEXT_BACKGROUND, IDefaultStyles.DEFAULT_FONT_STYLE, IDefaultStyles.DEFAULT_FONT_WEIGHT, IDefaultStyles.DEFAULT_TEXT_ALIGNMENT, IDefaultStyles.DEFAULT_ALPHA, IDefaultStyles.DEFAULT_VISIBILITY );
   }
-  
+
 }

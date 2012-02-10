@@ -89,6 +89,10 @@ public class GmlLoader extends WorkspaceLoader
 {
   private final IUrlResolver m_urlResolver = new UrlResolver();
 
+  /**
+   * @see org.kalypso.ogc.gml.loader.WorkspaceLoader#loadIntern(java.lang.String, java.net.URL,
+   *      org.eclipse.core.runtime.IProgressMonitor)
+   */
   @Override
   protected CommandableWorkspace loadIntern( final IPoolableObjectType key, final IProgressMonitor monitor ) throws LoaderException
   {

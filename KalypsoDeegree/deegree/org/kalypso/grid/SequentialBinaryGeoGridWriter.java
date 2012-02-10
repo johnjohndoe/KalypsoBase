@@ -52,15 +52,15 @@ import org.deegree.model.spatialschema.ByteUtils;
  */
 public class SequentialBinaryGeoGridWriter
 {
-  private final BufferedOutputStream m_gridStream;
+  private BufferedOutputStream m_gridStream;
 
   private BigDecimal m_max;
 
   private BigDecimal m_min;
 
-  private final int m_scale;
+  private int m_scale;
 
-  public SequentialBinaryGeoGridWriter( final String outputCoverageFileName, final int sizeX, final int sizeY, final int scale ) throws IOException
+  public SequentialBinaryGeoGridWriter( String outputCoverageFileName, final int sizeX, final int sizeY, final int scale ) throws IOException
   {
     // init values
     m_min = BigDecimal.valueOf( Double.MAX_VALUE );
@@ -78,25 +78,25 @@ public class SequentialBinaryGeoGridWriter
     writeInt( scale );
   }
 
-  public void setMax( final BigDecimal max )
+  public void setMax( BigDecimal max )
   {
     m_max = m_max.max( max );
   }
 
-  public void setMin( final BigDecimal min )
+  public void setMin( BigDecimal min )
   {
     m_min = m_min.min( min );
   }
 
-  public final void writeInt( final int v ) throws IOException
+  public final void writeInt( int v ) throws IOException
   {
-    final byte[] lBuff = new byte[4];
+    byte[] lBuff = new byte[4];
 
     ByteUtils.writeBEInt( lBuff, 0, v );
     m_gridStream.write( lBuff, 0, 4 ); // Version number
   }
 
-  public void write( final byte[] blockData, final int items ) throws IOException
+  public void write( byte[] blockData, int items ) throws IOException
   {
     m_gridStream.write( blockData, 0, items * 4 );
   }

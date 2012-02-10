@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,17 +36,16 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.wq.wechmann;
 
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.contribs.java.util.DateUtilities;
 
 /**
@@ -94,14 +93,12 @@ public class WechmannSet
   }
 
   /**
-   * Returns an iterator over the WechmannParamList backed by this WechmannSet. The list ist sorted according to the
-   * WechmannParams' WGR attribute.
-   * 
-   * @return iterator over WechmannParams objects
+   * Returns the set parameters of this WechmannSet. The result is sorted according to the WechmannParams' WGR
+   * attribute.
    */
-  public Iterator<WechmannParams> iterator( )
+  public WechmannParams[] getParameters( )
   {
-    return m_mapW.values().iterator();
+    return m_mapW.values().toArray( new WechmannParams[m_mapW.size()] );
   }
 
   /**

@@ -43,8 +43,6 @@ package org.kalypso.afgui.scenarios;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.afgui.model.IModel;
 
-import de.renew.workflow.connector.cases.IScenario;
-
 /**
  * @author Stefan Kurzbach
  * 

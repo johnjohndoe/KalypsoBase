@@ -54,6 +54,7 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -64,16 +65,15 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.menus.WorkbenchWindowControlContribution;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterFinder;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
@@ -93,7 +93,7 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
       super( name );
     }
 
-    public void setMapScale( final double mapScale )
+    public void setMapScale(final double mapScale  )
     {
       m_mapScale = mapScale;
     }
@@ -152,7 +152,7 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
    * The constructor.
    *
    * @param The
-   *          id of this contribution.
+   *            id of this contribution.
    */
   public MapScaleStatusLineItem( final String id )
   {
@@ -173,7 +173,7 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
 
     m_text = null;
 
-    m_updateScaleJob = new UpdateScaleJob( "Updating scale box ..." ); //$NON-NLS-1$
+    m_updateScaleJob = new UpdateScaleJob("Updating scale box ..."); //$NON-NLS-1$
     m_updateScaleJob.setSystem( true );
   }
 
@@ -185,14 +185,17 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
   {
     /* The main composite */
     m_composite = new Composite( parent, SWT.NONE );
-    m_composite.setLayout( Layouts.createGridLayout( 2 ) );
+    final GridLayout gridLayout = new GridLayout( 2, false );
+    gridLayout.marginBottom = 0;
+    gridLayout.marginHeight = 0;
+    m_composite.setLayout( gridLayout );
 
     /* Create the components. */
 
     /* Create the label. */
     final Label label = new Label( m_composite, SWT.NONE );
     label.setLayoutData( new GridData( SWT.END, SWT.CENTER, false, true ) );
-    label.setText( Messages.getString( "org.kalypso.ui.views.map.MapScaleStatusLineItem.1" ) ); //$NON-NLS-1$
+    label.setText( Messages.getString("org.kalypso.ui.views.map.MapScaleStatusLineItem.1") ); //$NON-NLS-1$
 
     /* Create the text. */
     m_text = new Text( m_composite, SWT.BORDER );
@@ -226,7 +229,7 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
         catch( final NumberFormatException ex )
         {
           /* Tell the user. */
-          ErrorDialog.openError( source.getShell(), Messages.getString( "org.kalypso.ui.views.map.MapScaleStatusLineItem.5" ), Messages.getString( "org.kalypso.ui.views.map.MapScaleStatusLineItem.6" ), StatusUtilities.statusFromThrowable( ex ) ); //$NON-NLS-1$ //$NON-NLS-2$
+          ErrorDialog.openError( source.getShell(), Messages.getString("org.kalypso.ui.views.map.MapScaleStatusLineItem.5"), Messages.getString("org.kalypso.ui.views.map.MapScaleStatusLineItem.6"), StatusUtilities.statusFromThrowable( ex ) ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
     } );
@@ -301,8 +304,12 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
     }
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onMapModelChanged(org.kalypso.ogc.gml.map.MapPanel,
+   *      org.kalypso.ogc.gml.mapmodel.IMapModell, org.kalypso.ogc.gml.mapmodel.IMapModell)
+   */
   @Override
-  public void onMapModelChanged( final IMapPanel source, final IKalypsoLayerModell oldModel, final IKalypsoLayerModell newModel )
+  public void onMapModelChanged( final IMapPanel source, final IMapModell oldModel, final IMapModell newModel )
   {
   }
 

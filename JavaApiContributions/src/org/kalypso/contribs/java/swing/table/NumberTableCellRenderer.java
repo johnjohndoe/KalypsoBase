@@ -57,9 +57,10 @@ public class NumberTableCellRenderer extends DefaultTableCellRenderer
   }
 
   @Override
-  public Component getTableCellRendererComponent( final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row, final int column )
+  public Component getTableCellRendererComponent( final JTable table, final Object value, final boolean isSelected, final boolean hasFocus,
+      final int row, final int column )
   {
-    final JLabel label = (JLabel) super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column );
+    final JLabel label = (JLabel)super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column );
 
     label.setHorizontalAlignment( SwingConstants.RIGHT );
 

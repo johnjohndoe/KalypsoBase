@@ -40,5 +40,5 @@ package org.kalypsodeegree.model.feature.event;
  */
 public interface ModellEventListener
 {
-  void onModellChange( final ModellEvent modellEvent );
+  public void onModellChange( final ModellEvent modellEvent );
 }

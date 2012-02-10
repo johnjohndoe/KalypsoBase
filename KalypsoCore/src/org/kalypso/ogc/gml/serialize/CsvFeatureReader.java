@@ -72,11 +72,12 @@ public final class CsvFeatureReader extends AbstractTabularFeatureReader
     }
   }
 
+
   private void loadCSV( final InputStreamReader isr, final String comment, final String delemiter, final int lineskip ) throws CsvException, IOException, FilterEvaluationException
   {
     final FeatureList featureList = getFeatureList();
-    final Feature parentFeature = featureList.getOwner();
-    final IRelationType parentRelation = featureList.getPropertyType();
+    final Feature parentFeature = featureList.getParentFeature();
+    final IRelationType parentRelation = featureList.getParentFeatureTypeProperty();
     final IFeatureType featureType = parentRelation.getTargetFeatureType();
 
     final LineNumberReader lnr = new LineNumberReader( isr );

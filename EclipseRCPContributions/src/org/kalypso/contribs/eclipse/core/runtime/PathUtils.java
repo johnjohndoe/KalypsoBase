@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.core.runtime;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
@@ -50,7 +48,7 @@ import org.eclipse.core.runtime.Path;
  *
  * @author Gernot Belger
  */
-public final class PathUtils
+public class PathUtils
 {
   private PathUtils( )
   {
@@ -64,15 +62,9 @@ public final class PathUtils
    * by as many '../' as needed in order to make it relative.<br>
    * Example: makeRelativ( "/Kollau-Erg/Basis/models", "/Kollau-Erg/Basis/grids/6040.asc9946.bin" ) returns
    * "../grids/6040.asc9946.bin".
-   * 
-   * @deprecated Use {@link IPath#makeRelativeTo(IPath)} instead.
    */
-  @Deprecated
   public static IPath makeRelativ( final IPath context, final IPath child )
   {
-    if( context.isRoot() )
-      return child;
-
     if( context.isPrefixOf( child ) )
       return child.removeFirstSegments( context.segmentCount() );
 
@@ -81,16 +73,6 @@ public final class PathUtils
       return new Path( ".." ).append( relativUp );
 
     return null;
-  }
-
-  /**
-   * Converts an absolute path to a file.
-   */
-  public static IFile toFile( final IPath absolutePath )
-  {
-    if( absolutePath == null )
-      return null;
-    return ResourcesPlugin.getWorkspace().getRoot().getFile( absolutePath );
   }
 
 }

@@ -69,7 +69,7 @@ public class OGCServlet extends HttpServlet implements Servlet
       intercept( request );
 
       /* Get all registered services. */
-      final Map<String, IOGCService> services = OGCServiceExtensions.createServices();
+      Map<String, IOGCService> services = OGCServiceExtensions.createServices();
 
       /* Ask everyone, if he could handle the request. The first which says yes, is taken. */
       final RequestBean requestBean = new RequestBean( requestType, request );
@@ -97,7 +97,7 @@ public class OGCServlet extends HttpServlet implements Servlet
       /* Check, if all required parameters are there. */
       /* But only, if the request was send via the get method. */
       /* Or, if the request was send via the post method without body. */
-      if( !requestBean.isPost() || requestBean.isPost() && (requestBean.getBody() == null || requestBean.getBody().isEmpty()) )
+      if( !requestBean.isPost() || (requestBean.isPost() && (requestBean.getBody() == null || requestBean.getBody().isEmpty())) )
         checkMandadoryParameter( requestBean, foundKey );
 
       /* Execute the operation. */

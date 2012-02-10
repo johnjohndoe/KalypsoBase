@@ -47,6 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -152,7 +153,7 @@ public class KalypsoUIExtensions
     if( collection.size() == 0 )
       return null;
     else if( collection.size() > 1 )
-      throw new UnsupportedOperationException(); // at the moment we only support one popup menu
+      throw new NotImplementedException(); // at the moment we only support one popup menu
 
     final IConfigurationElement element = collection.iterator().next();
 

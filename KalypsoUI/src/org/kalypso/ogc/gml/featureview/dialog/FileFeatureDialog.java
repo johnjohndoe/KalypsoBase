@@ -74,7 +74,7 @@ public class FileFeatureDialog implements IFeatureDialog
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#collectChanges(java.util.Collection)
    */
   @Override
-  public void collectChanges( final Collection<FeatureChange> c )
+  public void collectChanges( Collection<FeatureChange> c )
   {
     if( c != null && m_change != null )
       c.add( m_change );
@@ -93,12 +93,12 @@ public class FileFeatureDialog implements IFeatureDialog
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#open(org.eclipse.swt.widgets.Shell)
    */
   @Override
-  public int open( final Shell shell )
+  public int open( Shell shell )
   {
-    final FileDialog dialog = new FileDialog( shell );
+    FileDialog dialog = new FileDialog( shell );
     dialog.setText( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.FilePropertyDialog.text" ) ); //$NON-NLS-1$
 
-    final File file = (File) m_feature.getProperty( m_ftp );
+    File file = (File) m_feature.getProperty( m_ftp );
 
     if( file != null && file.exists() )
     {
@@ -108,11 +108,11 @@ public class FileFeatureDialog implements IFeatureDialog
         dialog.setFilterPath( file.getParent() );
     }
 
-    final String result = dialog.open();
+    String result = dialog.open();
 
     if( result != null )
     {
-      final File newFile = new File( result );
+      File newFile = new File( result );
       m_change = new FeatureChange( m_feature, m_ftp, newFile );
       return Window.OK;
     }

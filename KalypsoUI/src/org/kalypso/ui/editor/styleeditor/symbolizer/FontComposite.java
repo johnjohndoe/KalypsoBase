@@ -44,7 +44,7 @@
  */
 package org.kalypso.ui.editor.styleeditor.symbolizer;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -120,7 +120,7 @@ public class FontComposite extends Composite
 
   protected void handleFontButtonPressed( )
   {
-    final FontDialog dialog = new FontDialog( getShell() );
+    final FontDialog dialog = new FontDialog( this.getShell() );
     if( m_swtFont != null )
       dialog.setFontList( m_swtFont.getFontData() );
     if( m_swtColor != null )
@@ -162,8 +162,7 @@ public class FontComposite extends Composite
       return null;
 
     final FontData fontData = new FontData();
-    final String family = font.getFamily( null );
-    fontData.setName( family == null ? "Dialog" : family ); //$NON-NLS-1$
+    fontData.setName( font.getFamily( null ) );
     fontData.setHeight( font.getSize( null ) );
 
     final int style = font.getStyle( null );
@@ -187,7 +186,7 @@ public class FontComposite extends Composite
     updateControl();
   }
 
-  public void updateControl( )
+  public void updateControl()
   {
     m_previewLabel.setFont( null );
     m_previewLabel.setForeground( null );

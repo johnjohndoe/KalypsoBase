@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.databinding.validation;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -75,7 +75,7 @@ public class IntegerValidator extends TypedValidator<String>
     if( StringUtils.isBlank( value ) )
       fail();
 
-    final Integer integer = NumberUtils.parseQuietInteger( value );
+    Integer integer = NumberUtils.parseQuietInteger( value );
     if( integer == null )
       fail();
 

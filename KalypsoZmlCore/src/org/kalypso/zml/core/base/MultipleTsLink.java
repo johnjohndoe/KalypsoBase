@@ -44,16 +44,16 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.runtime.Assert;
 
 /**
  * @author Dirk Kuch
  */
-public class MultipleTsLink implements IMultipleZmlSourceElement
+public class MultipleTsLink
 {
   Set<IndexedTsLink> m_links = new LinkedHashSet<IndexedTsLink>();
 
@@ -66,7 +66,6 @@ public class MultipleTsLink implements IMultipleZmlSourceElement
     m_identifier = identifier;
   }
 
-  @Override
   public String getIdentifier( )
   {
     return m_identifier;
@@ -82,8 +81,8 @@ public class MultipleTsLink implements IMultipleZmlSourceElement
       final EqualsBuilder builder = new EqualsBuilder();
       builder.append( getIdentifier(), other.getIdentifier() );
 
-      final TSLinkWithName[] links = getSources();
-      final TSLinkWithName[] otherLinks = other.getSources();
+      final TSLinkWithName[] links = getLinks();
+      final TSLinkWithName[] otherLinks = other.getLinks();
       if( links.length != otherLinks.length )
         return false;
 
@@ -119,7 +118,7 @@ public class MultipleTsLink implements IMultipleZmlSourceElement
     builder.append( MultipleTsLink.class.getName() );
     builder.append( getIdentifier() );
 
-    final TSLinkWithName[] links = getSources();
+    final TSLinkWithName[] links = getLinks();
     for( final TSLinkWithName link : links )
     {
       builder.append( link.getHref() );
@@ -128,14 +127,12 @@ public class MultipleTsLink implements IMultipleZmlSourceElement
     return builder.toHashCode();
   }
 
-  @Override
-  public void add( final IZmlSourceElement link )
+  public void add( final IndexedTsLink link )
   {
-    m_links.add( (IndexedTsLink) link );
+    m_links.add( link );
   }
 
-  @Override
-  public IndexedTsLink[] getSources( )
+  public IndexedTsLink[] getLinks( )
   {
     return m_links.toArray( new IndexedTsLink[] {} );
   }
@@ -154,7 +151,6 @@ public class MultipleTsLink implements IMultipleZmlSourceElement
     return ArrayUtils.contains( currentIgnoreTypes, type );
   }
 
-  @Override
   public String getType( )
   {
     return ZmlSourceElements.getType( this );

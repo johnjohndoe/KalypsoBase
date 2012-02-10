@@ -50,18 +50,18 @@ public class CascadingThemeHelper
 {
   /**
    * Finds Cascading theme with the given name from the map model. Searches only for instances of CascadingKalypsoTheme
-   *
+   * 
    * @param mapModell
    * @param themeName
    * @return CascadingKalypsoTheme, or null if no theme with that name is found
    */
-  public static final IKalypsoCascadingTheme getNamedCascadingTheme( final IMapModell mapModell, final String themeName )
+  public static final CascadingKalypsoTheme getNamedCascadingTheme( final IMapModell mapModell, final String themeName )
   {
     final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
     for( final IKalypsoTheme kalypsoTheme : allThemes )
     {
-      if( kalypsoTheme instanceof IKalypsoCascadingTheme && kalypsoTheme.getName().getKey().equals( themeName ) )
-        return (IKalypsoCascadingTheme) kalypsoTheme;
+      if( kalypsoTheme instanceof CascadingKalypsoTheme && kalypsoTheme.getName().getKey().equals( themeName ) )
+        return (CascadingKalypsoTheme) kalypsoTheme;
     }
 
     return null;
@@ -70,24 +70,24 @@ public class CascadingThemeHelper
   /**
    * Finds Cascading theme with the given name or given theme property from the map model. Searches only for instances
    * of CascadingKalypsoTheme. This code is for old projects, in which the maps didn't have the property set.
-   *
+   * 
    * @param mapModell
    * @param themeName
    * @param themeProperty
    * @return CascadingKalypsoTheme, or null if no theme with that name is found
    */
-  public static final IKalypsoCascadingTheme getNamedCascadingTheme( final IMapModell mapModell, final String themeName, final String themeProperty )
+  public static final CascadingKalypsoTheme getNamedCascadingTheme( final IMapModell mapModell, final String themeName, final String themeProperty )
   {
     final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
     for( final IKalypsoTheme kalypsoTheme : allThemes )
     {
       final String themeProp = kalypsoTheme.getProperty( "themeId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-      if( kalypsoTheme instanceof IKalypsoCascadingTheme && kalypsoTheme.getName().getKey().equals( themeName ) )
-        return (IKalypsoCascadingTheme) kalypsoTheme;
+      if( kalypsoTheme instanceof CascadingKalypsoTheme && kalypsoTheme.getName().getKey().equals( themeName ) )
+        return (CascadingKalypsoTheme) kalypsoTheme;
 
-      else if( kalypsoTheme instanceof IKalypsoCascadingTheme && themeProp.equals( themeProperty ) )
-        return (IKalypsoCascadingTheme) kalypsoTheme;
+      else if( kalypsoTheme instanceof CascadingKalypsoTheme && themeProp.equals( themeProperty ) )
+        return (CascadingKalypsoTheme) kalypsoTheme;
     }
 
     return null;
@@ -96,20 +96,20 @@ public class CascadingThemeHelper
   /**
    * Finds Cascading theme where the property 'themeId' is set to the given value. Searches only for instances of
    * CascadingKalypsoTheme
-   *
+   * 
    * @param mapModell
    * @param themeProperty
    * @return CascadingKalypsoTheme, or null if no theme with that name is found
    */
-  public static final IKalypsoCascadingTheme getCascadingThemeByProperty( final IMapModell mapModell, final String themeID )
+  public static final CascadingKalypsoTheme getCascadingThemeByProperty( final IMapModell mapModell, final String themeID )
   {
     final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
     for( final IKalypsoTheme kalypsoTheme : allThemes )
     {
       final String themeProp = kalypsoTheme.getProperty( "themeId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-      if( kalypsoTheme instanceof IKalypsoCascadingTheme && themeProp.equals( themeID ) )
-        return (IKalypsoCascadingTheme) kalypsoTheme;
+      if( kalypsoTheme instanceof CascadingKalypsoTheme && themeProp.equals( themeID ) )
+        return (CascadingKalypsoTheme) kalypsoTheme;
     }
 
     return null;
@@ -117,7 +117,7 @@ public class CascadingThemeHelper
 
   /**
    * Search for a theme by its feature-path.
-   *
+   * 
    * @return The child-theme which is a {@link IKalypsoFeatureTheme} and whose feature-path corresponds to the given
    *         one.
    */

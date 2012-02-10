@@ -43,7 +43,7 @@ package org.kalypso.services.observation.client.repository;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;

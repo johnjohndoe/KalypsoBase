@@ -64,20 +64,18 @@ import org.eclipse.swt.widgets.TableItem;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.viewers.table.Tables;
 import org.kalypso.zml.core.table.binding.BaseColumn;
-import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.ZmlModelRow;
 import org.kalypso.zml.core.table.schema.DataColumnType;
-import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
-import org.kalypso.zml.ui.table.ZmlTableComposite;
-import org.kalypso.zml.ui.table.base.helper.ZmlTables;
+import org.kalypso.zml.ui.table.ZmlMainTable;
 import org.kalypso.zml.ui.table.menu.ZmlTableContextMenuProvider;
 import org.kalypso.zml.ui.table.menu.ZmlTableHeaderContextMenuProvider;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
-import org.kalypso.zml.ui.table.model.IZmlTableRow;
-import org.kalypso.zml.ui.table.model.ZmlTableCell;
-import org.kalypso.zml.ui.table.model.ZmlTableRow;
+import org.kalypso.zml.ui.table.model.IZmlTableModel;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.ZmlTableColumns;
+import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
+import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
 
 /**
  * handles mouse move and menu detect events (active selection of table cells, columns and rows and updating of the
@@ -91,11 +89,11 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
 
   private final MenuManager m_contextMenuManager = new MenuManager();
 
-  private final ZmlTableComposite m_table;
+  private final ZmlMainTable m_table;
 
   private IZmlTableColumn m_lastColumn;
 
-  public ZmlTableSelectionHandler( final ZmlTableComposite table )
+  public ZmlTableSelectionHandler( final ZmlMainTable table )
   {
     m_table = table;
 
@@ -178,7 +176,7 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
       try
       {
         // empty cell?
-        final IZmlTableCell focus = m_table.getFocusHandler().getFocusTableCell();
+        final IZmlTableValueCell focus = (IZmlTableValueCell) m_table.getFocusHandler().getFocusTableCell();
         focus.getValueReference().getValue();
       }
       catch( final Throwable t )
@@ -201,7 +199,9 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
     if( columnIndex == -1 )
       return null;
 
-    return m_table.findColumn( columnIndex );
+    final IZmlTableModel model = m_table.getModel();
+
+    return model.findColumn( columnIndex );
   }
 
   private int findColumnIndex( final int x )
@@ -250,11 +250,11 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
   {
     final IZmlTableColumn column = findActiveColumnByPosition();
 
-    final IZmlTableRow row = findActiveRowByPosition();
+    final IZmlTableValueRow row = findActiveRowByPosition();
     if( Objects.isNull( column, row ) )
       return null;
 
-    return new ZmlTableCell( row, column );
+    return row.getCell( column );
   }
 
   private ViewerCell findActiveViewerCell( )
@@ -270,39 +270,38 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
   }
 
   @Override
-  public IZmlTableRow findActiveRowByPosition( )
+  public IZmlTableValueRow findActiveRowByPosition( )
   {
     final ViewerCell cell = findActiveViewerCell();
     if( Objects.isNull( cell ) )
       return null;
 
-    return ZmlTables.toTableRow( m_table, cell );
+    return ZmlTableColumns.toTableRow( cell );
   }
 
   @Override
-  public IZmlTableRow[] getSelectedRows( )
+  public IZmlTableValueRow[] getSelectedRows( )
   {
     final TableViewer viewer = m_table.getViewer();
     final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 
-    final List<IZmlTableRow> rows = new ArrayList<IZmlTableRow>();
+    final List<IZmlTableValueRow> rows = new ArrayList<IZmlTableValueRow>();
 
     final Object[] elements = selection.toArray();
     for( final Object element : elements )
     {
-      if( element instanceof IZmlModelRow )
+      if( element instanceof IZmlTableValueRow )
       {
-        rows.add( new ZmlTableRow( m_table, (IZmlModelRow) element ) );
+        rows.add( (IZmlTableValueRow) element );
       }
     }
 
-    return rows.toArray( new IZmlTableRow[] {} );
+    return rows.toArray( new IZmlTableValueRow[] {} );
   }
 
   private ViewerCell findCell( final IZmlTableColumn column, final int y )
   {
-    final IZmlTable table = column.getTable();
-    final TableViewer viewer = table.getViewer();
+    final TableViewer viewer = m_table.getViewer();
 
     /** focus on the same row and column of the old table cell */
     final int ptrX = Tables.getX( viewer.getTable(), column.getTableViewerColumn().getColumn() );
@@ -311,7 +310,8 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
       return cell;
 
     /** if not, focus on the same row */
-    final IZmlTableColumn[] columns = table.getColumns();
+    final IZmlTableModel model = m_table.getModel();
+    final IZmlTableColumn[] columns = model.getColumns();
     for( final IZmlTableColumn col : columns )
     {
       final BaseColumn type = col.getColumnType();
@@ -328,20 +328,16 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
     return viewer.getCell( new Point( 1, y ) );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.provider.IZmlTableSelectionHandler#findViewerCell(org.kalypso.zml.ui.table.model.IZmlTableCell)
-   */
   @Override
   public ViewerCell toViewerCell( final IZmlTableCell cell )
   {
-    final IZmlTable zml = cell.getTable();
-    final Table table = zml.getViewer().getTable();
+    final Table table = m_table.getViewer().getTable();
     final TableItem[] items = table.getItems();
     for( final TableItem item : items )
     {
-      final ZmlModelRow row = (ZmlModelRow) item.getData();
+      final IZmlTableRow row = (IZmlTableRow) item.getData();
 
-      if( row.equals( cell.getRow().getModelRow() ) )
+      if( Objects.equal( row, cell.getRow() ) )
       {
         final Rectangle bounds = item.getBounds();
 

@@ -57,6 +57,7 @@ import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.core.KalypsoCoreExtensions;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
@@ -77,13 +78,13 @@ import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerString;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerXMLGregorianCalendar;
 import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * @author schlienger
@@ -139,7 +140,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final IPhenomenon phenomenon;
     if( phenFeature != null )
     {
-      final String phenId = phenFeature instanceof IXLinkedFeature ? ((IXLinkedFeature) phenFeature).getHref() : phenFeature.getId();
+      final String phenId = phenFeature instanceof XLinkedFeature_Impl ? ((XLinkedFeature_Impl) phenFeature).getHref() : phenFeature.getId();
       final String phenName = NamedFeatureHelper.getName( phenFeature );
       final String phenDesc = NamedFeatureHelper.getDescription( phenFeature );
       phenomenon = new Phenomenon( phenId, phenName, phenDesc );
@@ -194,48 +195,46 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
       if( handler == null )
         continue;
+      try
+      {
+        Object value = null;
+        if( "null".equals( token ) ) //$NON-NLS-1$
+          value = null;
+        else // TODO fabrication method needed!
+        if( handler instanceof XsdBaseTypeHandlerString )
+        {
+          final XsdBaseTypeHandlerString myHandler = (XsdBaseTypeHandlerString) handler;
+          value = myHandler.convertToJavaValue( URLDecoder.decode( token, "UTF-8" ) ); //$NON-NLS-1$
+        }
+        else if( handler instanceof XsdBaseTypeHandlerXMLGregorianCalendar )
+        {
+          final XsdBaseTypeHandlerXMLGregorianCalendar myHandler = (XsdBaseTypeHandlerXMLGregorianCalendar) handler;
+          value = myHandler.convertToJavaValue( URLDecoder.decode( token, "UTF-8" ) ); //$NON-NLS-1$
+        }
+        else
+        {
 
-      final Object value = convertToJavaValue( token, handler );
-      record.setValue( nb, value );
+          value = handler.convertToJavaValue( token );
+        }
+
+        record.setValue( nb, value );
+      }
+      catch( final NumberFormatException e )
+      {
+        e.printStackTrace();
+        // TODO: set null here: Problem: the other components can't handle null now, they should
+        record.setValue( nb, null );
+      }
+      catch( final UnsupportedEncodingException e )
+      {
+        e.printStackTrace();
+        record.setValue( nb, null );
+      }
       nb++;
       nb = nb % components.length;
     }
 
     return tupleResult;
-  }
-
-  private static Object convertToJavaValue( final String token, final XsdBaseTypeHandler< ? > handler )
-  {
-    try
-    {
-      if( "null".equals( token ) ) //$NON-NLS-1$
-        return null;
-
-      if( handler instanceof XsdBaseTypeHandlerString )
-      {
-        final XsdBaseTypeHandlerString myHandler = (XsdBaseTypeHandlerString) handler;
-        return myHandler.convertToJavaValue( URLDecoder.decode( token, "UTF-8" ) ); //$NON-NLS-1$
-      }
-
-      if( handler instanceof XsdBaseTypeHandlerXMLGregorianCalendar )
-      {
-        final XsdBaseTypeHandlerXMLGregorianCalendar myHandler = (XsdBaseTypeHandlerXMLGregorianCalendar) handler;
-        return myHandler.convertToJavaValue( URLDecoder.decode( token, "UTF-8" ) ); //$NON-NLS-1$
-      }
-
-      return handler.convertToJavaValue( token );
-    }
-    catch( final NumberFormatException e )
-    {
-      e.printStackTrace();
-      // TODO: set null here: Problem: the other components can't handle null now, they should
-      return null;
-    }
-    catch( final UnsupportedEncodingException e )
-    {
-      e.printStackTrace();
-      return null;
-    }
   }
 
   /**
@@ -371,10 +370,16 @@ public class ObservationFeatureFactory implements IAdapterFactory
     changes.add( new FeatureChange( targetObsFeature, featureType.getProperty( Feature.QN_NAME ), Collections.singletonList( source.getName() ) ) );
     changes.add( new FeatureChange( targetObsFeature, featureType.getProperty( Feature.QN_DESCRIPTION ), source.getDescription() ) );
 
+    // TODO: at the moment, only referenced phenomenons are supported
     final IRelationType phenPt = (IRelationType) featureType.getProperty( ObservationFeatureFactory.OM_OBSERVED_PROP );
     final IPhenomenon phenomenon = source.getPhenomenon();
-    final Object phenonemonFeature = toFeaturePhenonemon( phenomenon, targetObsFeature, phenPt );
-    changes.add( new FeatureChange( targetObsFeature, phenPt, phenonemonFeature ) );
+    final Object phenomenonRef;
+    if( phenomenon == null )
+      phenomenonRef = null;
+    else
+      phenomenonRef = FeatureHelper.createLinkToID( phenomenon.getID(), targetObsFeature, phenPt, phenPt.getTargetFeatureType() );
+
+    changes.add( new FeatureChange( targetObsFeature, phenPt, phenomenonRef ) );
 
     final TupleResult result = source.getResult();
 
@@ -392,38 +397,9 @@ public class ObservationFeatureFactory implements IAdapterFactory
     return changes.toArray( new FeatureChange[changes.size()] );
   }
 
-  private static Object toFeaturePhenonemon( final IPhenomenon phenomenon, final Feature targetObsFeature, final IRelationType phenPt )
-  {
-    if( phenomenon == null )
-      return null;
-
-    final String id = phenomenon.getID();
-
-    final Object phenomenonRef = FeatureHelper.createLinkToID( id, targetObsFeature, phenPt, phenPt.getTargetFeatureType() );
-    if( phenomenonRef == null || phenomenonRef instanceof String )
-      return phenomenonRef;
-
-    if( phenomenonRef instanceof IXLinkedFeature )
-    {
-      // check if link exists, if not, we create an inline phenonemon
-      if( ((IXLinkedFeature) phenomenonRef).getFeatureId() != null )
-      {
-        return phenomenonRef;
-      }
-
-      final org.kalypso.deegree.binding.swe.Phenomenon phenonemonFeature = (org.kalypso.deegree.binding.swe.Phenomenon) FeatureFactory.createFeature( targetObsFeature, phenPt, id, phenPt.getTargetFeatureType(), true );
-      phenonemonFeature.setName( phenomenon.getName() );
-      phenonemonFeature.setDescription( phenomenon.getDescription() );
-
-      return phenonemonFeature;
-    }
-
-    return null;
-  }
-
   /**
    * Helper: builds the record definition according to the components of the tuple result.
-   *
+   * 
    * @param map
    *          ATTENTION: the recordset is written in the same order as this map
    */
@@ -478,7 +454,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final String id = comp.getId();
     // try to find a dictionary entry for this component, if it exists, create xlinked-feature to it
     final IFeatureType itemDefType = GMLSchemaUtilities.getFeatureTypeQuiet( ObservationFeatureFactory.SWE_ITEMDEFINITION );
-    final IXLinkedFeature xlink = FeatureFactory.createXLink( recordDefinition, itemDefinitionRelation, itemDefType, id );
+    final XLinkedFeature_Impl xlink = new XLinkedFeature_Impl( recordDefinition, itemDefinitionRelation, itemDefType, id, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
     if( xlink.getFeature() != null )
       return xlink;
 
@@ -623,7 +599,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
    * <p>
    * TODO do not create an observation twice for the same feature, pooling?
    * </p>
-   *
+   * 
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
    */
   @Override
@@ -648,11 +624,15 @@ public class ObservationFeatureFactory implements IAdapterFactory
   {
     final Feature recordDefinition = ObservationFeatureFactory.getOrCreateRecordDefinition( obsFeature );
 
-    final IFeatureType featureType = GMLSchemaUtilities.getFeatureTypeQuiet( ObservationFeatureFactory.SWE_ITEMDEFINITION );
+    final IGMLSchema schema = obsFeature.getWorkspace().getGMLSchema();
+    final IFeatureType featureType = schema.getFeatureType( ObservationFeatureFactory.SWE_ITEMDEFINITION );
 
-    final FeatureList componentList = (FeatureList) recordDefinition.getProperty( ObservationFeatureFactory.SWE_COMPONENT );
+    final IRelationType componentRelation = (IRelationType) recordDefinition.getFeatureType().getProperty( ObservationFeatureFactory.SWE_COMPONENT );
 
-    final IXLinkedFeature itemDef = componentList.addLink( dictUrn, featureType );
+    final Feature itemDef = new XLinkedFeature_Impl( recordDefinition, componentRelation, featureType, dictUrn, null, null, null, null, null );
+
+    final List<Feature> componentList = (List<Feature>) recordDefinition.getProperty( componentRelation );
+    componentList.add( itemDef );
 
     return new FeatureComponent( itemDef );
   }

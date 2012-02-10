@@ -79,6 +79,7 @@ public class RegisterObsProviderListenerJob extends Job
       }
       catch( final InterruptedException e )
       {
+        // nothing to do
       }
     }
 

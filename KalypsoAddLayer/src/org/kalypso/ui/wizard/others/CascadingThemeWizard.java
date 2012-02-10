@@ -45,12 +45,13 @@ import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.action.AddCascadingThemeCommand;
 import org.kalypso.ui.i18n.Messages;
+import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 
-public class CascadingThemeWizard extends AbstractOtherThemeWizard
+public class CascadingThemeWizard extends AbstractOtherThemeWizard implements IKalypsoDataImportWizard
 {
   public CascadingThemeWizard( )
   {
-    super( new ThemeNameWizardPage( "themeNamePage", Messages.getString( "org.kalypso.ui.wizard.others.CascadingThemeWizard.1" ), ImageProvider.IMAGE_KALYPSO_ICON_BIG, "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    super( new ThemeNameWizardPage( "themeNamePage", Messages.getString("org.kalypso.ui.wizard.others.CascadingThemeWizard.1"), ImageProvider.IMAGE_KALYPSO_ICON_BIG, "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   @Override

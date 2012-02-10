@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.core.profil.sobek.utils.hw;
 
 import java.io.File;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -87,9 +86,6 @@ public class BridgeResult extends HeightWidthResult
     final Coordinate[] upperCrdArray = m_upperCrds.toArray( new Coordinate[m_upperCrds.size()] );
     final CoordinateSequence upperSeq = CoordinateArraySequenceFactory.instance().create( upperCrdArray );
 
-    if( lowerSeq.size() == 0 )
-      return Collections.emptyList();
-
     /* Build ring from lower/upper coordinates */
     cropLower( bridgeCrdList, upperSeq );
 
@@ -108,13 +104,9 @@ public class BridgeResult extends HeightWidthResult
     {
       final Coordinate coordinate = iterator.next();
       if( coordinate.equals( lastCrd ) )
-      {
         iterator.remove();
-      }
       else
-      {
         lastCrd = coordinate;
-      }
     }
 
     return bridgeCrdList;
@@ -144,9 +136,7 @@ public class BridgeResult extends HeightWidthResult
       upperLeftX = Double.NEGATIVE_INFINITY; // prohibits crop by x value
       // remove all before that point
       for( int i = 0; i < leftIndex + 1; i++ )
-      {
         bridgeCrdList.remove( 0 );
-      }
     }
 
     final int rightIndex = crdIndexOfWithEps( bridgeCrdList, upperRight );
@@ -161,18 +151,14 @@ public class BridgeResult extends HeightWidthResult
       upperRightX = Double.POSITIVE_INFINITY; // prohibits crop by x value
       // remove all before that point
       while( bridgeCrdList.size() > rightIndex )
-      {
         bridgeCrdList.remove( rightIndex );
-      }
     }
 
     for( final Iterator<Coordinate> iterator = bridgeCrdList.iterator(); iterator.hasNext(); )
     {
       final Coordinate coordinate = iterator.next();
       if( coordinate.x < upperLeftX || coordinate.x > upperRightX )
-      {
         iterator.remove();
-      }
     }
   }
 
@@ -214,9 +200,7 @@ public class BridgeResult extends HeightWidthResult
       if( diff > -POLY_EPS )
       {
         if( diff > 0.2 )
-        {
           addStatus( IStatus.ERROR, String.format( "Upper coordinate way below lower coorindate: %.2f [m]", Math.abs( diff + POLY_EPS ) ), null ); //$NON-NLS-1$
-        }
         else if( diff > POLY_EPS )
         {
           addStatus( IStatus.WARNING, String.format( "Small adaption of upper coordinate by %.3f [m]", Math.abs( diff + POLY_EPS ) ), null ); //$NON-NLS-1$

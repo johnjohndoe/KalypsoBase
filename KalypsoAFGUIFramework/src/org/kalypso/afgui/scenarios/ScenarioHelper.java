@@ -50,7 +50,7 @@ import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.ui.IWorkbench;
@@ -64,7 +64,6 @@ import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.connector.WorkflowProjectNature;
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
-import de.renew.workflow.connector.cases.IScenario;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
@@ -109,7 +108,7 @@ public class ScenarioHelper
     return findRootScenario( parentScenario );
   }
 
-  public static IWorkflow findWorkflow( final IScenario scenario, final CaseHandlingProjectNature newProject )
+  public static IWorkflow findWorkflow( final IScenario scenario, final CaseHandlingProjectNature<IScenario> newProject )
   {
     try
     {
@@ -134,8 +133,7 @@ public class ScenarioHelper
     return null;
   }
 
-  // FIXME: probably (hopefully) not needed any more...; remove?
-  public static boolean ensureBackwardsCompatibility( final IScenario caze, final CaseHandlingProjectNature nature )
+  public static boolean ensureBackwardsCompatibility( final IScenario caze, final CaseHandlingProjectNature<IScenario> nature )
   {
     // FIXME: this is dirty fix only for this release 2.3
     // should be implemented in other way, we just do not have any time now
@@ -143,7 +141,7 @@ public class ScenarioHelper
     {
       if( nature != null && nature.getProject().hasNature( "org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature" ) )
       {
-        final ProjectTemplate[] lTemplate = EclipsePlatformContributionsExtensions.getProjectTemplates( "org.kalypso.kalypso1d2d.pjt.projectTemplate" );
+        ProjectTemplate[] lTemplate = EclipsePlatformContributionsExtensions.getProjectTemplates( "org.kalypso.kalypso1d2d.pjt.projectTemplate" );
         try
         {
           /* Unpack project from template */
@@ -169,13 +167,13 @@ public class ScenarioHelper
             {
               return false;
             }
-            final IOFileFilter lFileFilter = new WildcardFileFilter( new String[] { "wind.gml" } );
-            final IOFileFilter lDirFilter = TrueFileFilter.INSTANCE;
+            IOFileFilter lFileFilter = new WildcardFileFilter( new String[] { "wind.gml" } );
+            IOFileFilter lDirFilter = TrueFileFilter.INSTANCE;
             final Collection< ? > windFiles = FileUtils.listFiles( destinationDir, lFileFilter, lDirFilter );
-
-            if( dataDir.isDirectory() && (windFiles == null || windFiles.size() == 0) )
+            
+            if( dataDir.isDirectory() && (windFiles == null || windFiles.size() == 0 ) )
             {
-              final WildcardFileFilter lCopyFilter = new WildcardFileFilter( new String[] { "*asis", "models", "wind.gml" } );
+              WildcardFileFilter lCopyFilter = new WildcardFileFilter( new String[] { "*asis", "models", "wind.gml" } );
               FileUtils.copyDirectory( dataDir, destinationDir, lCopyFilter );
             }
             else
@@ -189,10 +187,10 @@ public class ScenarioHelper
           t.printStackTrace();
           return false;
         }
-        nature.getProject().refreshLocal( IResource.DEPTH_INFINITE, null );
+        nature.getProject().refreshLocal( IProject.DEPTH_INFINITE, null );
       }
     }
-    catch( final CoreException e )
+    catch( CoreException e )
     {
       KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( e.getStatus() );
       e.printStackTrace();

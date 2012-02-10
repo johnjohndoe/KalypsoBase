@@ -40,7 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table;
 
-import org.kalypso.zml.ui.table.model.IZmlTableRow;
+import org.kalypso.commons.exception.CancelVisitorException;
+import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
 
 /**
  * @author Dirk Kuch
@@ -48,6 +49,6 @@ import org.kalypso.zml.ui.table.model.IZmlTableRow;
 public interface IZmlTableRowVisitor
 {
 
-  void visit( IZmlTableRow row );
+  void visit( IZmlTableValueRow row ) throws CancelVisitorException;
 
 }

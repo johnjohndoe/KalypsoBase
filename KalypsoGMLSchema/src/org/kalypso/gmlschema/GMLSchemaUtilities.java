@@ -81,7 +81,6 @@ import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.contribs.javax.xml.namespace.ListQName;
 import org.kalypso.contribs.javax.xml.namespace.MixedQName;
 import org.kalypso.contribs.javax.xml.namespace.QNameUnique;
-import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.i18n.Messages;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -104,7 +103,7 @@ import org.xml.sax.Attributes;
 
 /**
  * Utilities around GMLSchema-processing
- *
+ * 
  * @author doemming
  */
 public class GMLSchemaUtilities
@@ -143,9 +142,11 @@ public class GMLSchemaUtilities
 
   private static final Map<QNameUnique, Map<QNameUnique, Boolean>> m_substitutesIDCache = new HashMap<QNameUnique, Map<QNameUnique, Boolean>>();
 
-  private final static QName XSD_SCHEMALOCATION = new QName( NS.XSD, "schemaLocation" ); //$NON-NLS-1$
+  private final static QName XSD_SCHEMALOCATION = new QName( NS.XSD, "schemaLocation" );
 
   /**
+   * FIXME: check who calls this one....
+   * 
    * @param substitueeName
    *          Name of the type which may or may not be substituted by type
    */
@@ -154,26 +155,62 @@ public class GMLSchemaUtilities
     final QNameUnique substQName = QNameUnique.create( substitueeName );
     final QNameUnique substLocalQName = QNameUnique.create( XMLConstants.NULL_NS_URI, substitueeName.getLocalPart() );
     return substitutes( type, substQName, substLocalQName );
+
+// // everyone is substituting himself
+// if( type.getQName().equals( substitueeName ) )
+// return true;
+//
+// if( substitueeName.getNamespaceURI().isEmpty() && QNameUtilities.equalsLocal( type.getQName(), substitueeName ) )
+// return true;
+//
+// final IFeatureType substitutionGroupFT = type.getSubstitutionGroupFT();
+// final boolean substitutesResult;
+// if( substitutionGroupFT == null )
+// substitutesResult = false;
+// else
+// {
+// final QName keyQName = substitutionGroupFT.getQName();
+// Map<QName, Boolean> substitutesList = m_substitutesCache.get( keyQName );
+// if( substitutesList == null )
+// {
+// substitutesList = new HashMap<QName, Boolean>();
+// m_substitutesCache.put( keyQName, substitutesList );
+// }
+//
+// final Boolean cachedResult = substitutesList.get( substitueeName );
+// if( cachedResult != null )
+// {
+// substitutesResult = cachedResult;
+// }
+// else
+// {
+// substitutesResult = substitutes( substitutionGroupFT, substitueeName );
+// substitutesList.put( substitueeName, substitutesResult );
+// }
+// }
+//
+// return substitutesResult;
   }
 
   /**
    * @param substitueeName
    *          Name of the type which may or may not be substituted by type
    */
-  public static synchronized boolean substitutes( final IFeatureType featureType, final QNameUnique substitueeName, final QNameUnique localQName )
+  public static synchronized boolean substitutes( final IFeatureType featureType, final QNameUnique pQName, final QNameUnique localQName )
   {
-    // everyone is substituting himself
-    if( featureType.getQName() == substitueeName )
+    if( featureType.getQName() == pQName )
       return true;
 
-    // HACK/BUGFIX: FilteredFeatureLists with non-qualified namespaces need this. Fixes
-    // the bug, that bridges/weirs are not visible in 1D2D.
-    if( substitueeName.getNamespaceURI().isEmpty() && QNameUtilities.equalsLocal( featureType.getQName(), substitueeName ) )
+    // everyone is substituting himself
+    if( featureType.getLocalQName() == localQName )
       return true;
 
     // this comparison comes up as one of the very often used operations
     // using static comparison might be slightly faster then using isEmpty()
     // if check for string being null has to be done use StringUtils.isEmpty( pQName.getNamespaceURI() )
+
+// if( "".equals( pQName.getNamespaceURI() ) && type1.getLocalID() == mLocalID )
+// return true;
 
     final IFeatureType substitutionGroupFT = featureType.getSubstitutionGroupFT();
     final boolean substitutesResult;
@@ -184,15 +221,15 @@ public class GMLSchemaUtilities
       final QNameUnique substQName = substitutionGroupFT.getQName();
       final Map<QNameUnique, Boolean> substitutesMap = getSubsitutesMap( substQName );
 
-      final Boolean cachedResult = substitutesMap.get( substitueeName );
+      final Boolean cachedResult = substitutesMap.get( pQName );
       if( cachedResult != null )
       {
         substitutesResult = cachedResult;
       }
       else
       {
-        substitutesResult = substitutes( substitutionGroupFT, substitueeName, localQName );
-        substitutesMap.put( substitueeName, substitutesResult );
+        substitutesResult = substitutes( substitutionGroupFT, pQName, localQName );
+        substitutesMap.put( pQName, substitutesResult );
       }
     }
 
@@ -213,7 +250,7 @@ public class GMLSchemaUtilities
 
   /**
    * Checks, if a feature type substitutes one of a given list of qnames.
-   *
+   * 
    * @param substitueeNames
    *          Names of the types which may or may not be substituted by type
    */
@@ -533,7 +570,7 @@ public class GMLSchemaUtilities
 
   /**
    * known types are all types that should be builded to something e.g. featuretype, propertytype or relationtype
-   *
+   * 
    * @param qName
    * @return true is qName is a known type
    */
@@ -578,6 +615,20 @@ public class GMLSchemaUtilities
         return result;
     }
     return null;
+  }
+
+  /**
+   * @param gmlSchema
+   * @param element
+   * @return complextype
+   */
+  public static ComplexTypeReference getComplexTypeReferenceFor( final IGMLSchema gmlSchema, final Element element ) throws GMLSchemaException
+  {
+    final QName type = element.getType();
+    if( type != null )
+      return gmlSchema.resolveComplexTypeReference( type );
+    final ComplexType complexType = element.getComplexType();
+    return new ComplexTypeReference( gmlSchema, complexType );
   }
 
   public static String[] createFeaturePathes( final IGMLSchema gmlSchma, final String pathToHere, final IFeatureType featureType )
@@ -1045,7 +1096,7 @@ public class GMLSchemaUtilities
 
       case 1:
         final XmlAnyTypeImpl anyType = (XmlAnyTypeImpl) xmlObjects[0];
-        return anyType.getStringValue();
+        return anyType.stringValue();
 
       default:
         throw new UnsupportedOperationException( "can not handle multi 'kapp:gmlVersion' fragments in schema: " + schemaDocument.getSchema().getTargetNamespace() ); //$NON-NLS-1$

@@ -50,9 +50,9 @@ import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 
 public class ColorMapEntryList
 {
-  private final Set<IColorMapEntryViewer> m_listeners;
+  private Set<IColorMapEntryViewer> m_listeners;
 
-  private final List<ColorMapEntry> m_entries;
+  private List<ColorMapEntry> m_entries;
 
   public ColorMapEntryList( )
   {
@@ -72,7 +72,7 @@ public class ColorMapEntryList
 
   public void colorMapEntryChanged( final ColorMapEntry entry )
   {
-    final Iterator<IColorMapEntryViewer> iterator = m_listeners.iterator();
+    Iterator<IColorMapEntryViewer> iterator = m_listeners.iterator();
     while( iterator.hasNext() )
       iterator.next().updateColorMapEntry( entry );
   }
@@ -80,8 +80,8 @@ public class ColorMapEntryList
   public void addColorMapEntry( final ColorMapEntry entry )
   {
     m_entries.add( m_entries.size(), entry );
-
-    final Iterator<IColorMapEntryViewer> iterator = m_listeners.iterator();
+  
+    Iterator<IColorMapEntryViewer> iterator = m_listeners.iterator();
     while( iterator.hasNext() )
       iterator.next().addColorMapEntry( entry );
   }
@@ -89,8 +89,8 @@ public class ColorMapEntryList
   public void removeColorMapEntry( final ColorMapEntry entry )
   {
     m_entries.remove( entry );
-
-    final Iterator<IColorMapEntryViewer> iterator = m_listeners.iterator();
+  
+    Iterator<IColorMapEntryViewer> iterator = m_listeners.iterator();
     while( iterator.hasNext() )
       iterator.next().removeColorMapEntry( entry );
   }

@@ -5,7 +5,7 @@ import java.io.FileInputStream;
 import java.math.BigDecimal;
 import java.net.URL;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -81,8 +81,8 @@ public final class ExcelFeatureReader extends AbstractTabularFeatureReader
   private void loadSheet( final HSSFSheet sheet ) throws CsvException, FilterEvaluationException
   {
     final FeatureList featureList = getFeatureList();
-    final Feature parentFeature = featureList.getOwner();
-    final IRelationType parentRelation = featureList.getPropertyType();
+    final Feature parentFeature = featureList.getParentFeature();
+    final IRelationType parentRelation = featureList.getParentFeatureTypeProperty();
     final IFeatureType featureType = parentRelation.getTargetFeatureType();
 
     final int firstRowNum = sheet.getFirstRowNum();

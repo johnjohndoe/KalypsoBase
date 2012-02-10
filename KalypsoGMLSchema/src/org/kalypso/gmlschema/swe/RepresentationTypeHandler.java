@@ -73,16 +73,20 @@ import org.w3c.dom.NodeList;
 /**
  * TODO: using the class RepresantationType is not nice. We should rather create 4 different type handlers for the 4
  * choices and return the read object respectively.
- *
+ * 
  * @author Marc Schlienger
  */
 public class RepresentationTypeHandler extends SimpleDOMTypeHandler
 {
   public RepresentationTypeHandler( )
   {
-    super( new QName( NS.SWE, "RepresentationType" ), false ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( "representation", new QName( NS.SWE, "RepresentationType" ), false ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
+  /**
+   * @see org.kalypso.gmlschema.types.SimpleDOMTypeHandler#internalUnmarshall(org.w3c.dom.Node, java.lang.Object,
+   *      org.kalypso.contribs.java.net.IUrlResolver)
+   */
   @Override
   protected Object internalUnmarshall( final Node node ) throws TypeRegistryException
   {
@@ -300,6 +304,9 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
     return new RepresentationType( RepresentationType.KIND.valueOf( localName ), new QName( NS.XSD_SCHEMA, base ), unit, frame, myRestrictions.toArray( new IRestriction[] {} ), classification );
   }
 
+  /**
+   * @see org.kalypso.gmlschema.types.SimpleDOMTypeHandler#internalMarshall(java.lang.Object, org.w3c.dom.Document, java.net.URL)
+   */
   @Override
   protected Node internalMarshall( final Object value, final Document document, final URL context )
   {
@@ -379,7 +386,7 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
   private static void handleFrame( final RepresentationType type, final Document doc, final Element elt )
   {
     final String frame = type.getFrame();
-    if( frame != null && frame.length() > 0 )
+    if( (frame != null) && (frame.length() > 0) )
     {
       final Element eltFrame = doc.createElementNS( NS.SWE, "frame" ); //$NON-NLS-1$
       eltFrame.setAttribute( "frame", frame ); //$NON-NLS-1$

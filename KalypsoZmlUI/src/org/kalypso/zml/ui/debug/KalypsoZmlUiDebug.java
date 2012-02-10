@@ -48,8 +48,6 @@ import org.kalypso.zml.ui.KalypsoZmlUI;
  */
 public final class KalypsoZmlUiDebug
 {
-  public static final Debug DEBUG_DIAGRAM = new Debug( KalypsoZmlUI.getDefault(), "/debug/diagram" ); //$NON-NLS-1$
-
   public static final Debug DEBUG_TABLE_RENDERING = new Debug( KalypsoZmlUI.getDefault(), "/debug/table/rendering" ); //$NON-NLS-1$
 
   public static final Debug DEBUG_TABLE_DIALOG = new Debug( KalypsoZmlUI.getDefault(), "/debug/table/debug" ); //$NON-NLS-1$

@@ -42,7 +42,7 @@ package org.kalypso.ogc.gml.map.layer;
 
 import java.awt.Graphics;
 import java.lang.ref.Reference;
-import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -60,7 +60,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * Renders theme in background, but always keeps the last rendered tile.<br>
  * As long as painting is in progress, the last tile will be drawn (resized to fit its position).<br>
  * The map is only redrawn (via invalidateMap) after rendering has completely finished, so the theme appears suddenly.
- *
+ * 
  * @author Gernot Belger
  */
 public class BufferedRescaleMapLayer extends AbstractMapLayer
@@ -217,9 +217,6 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
   {
     stopPainting();
 
-    if( world2screen == null )
-      return;
-
     final ThemePaintable paintable = new ThemePaintable( getTheme(), world2screen );
     final BufferedTile runningTile = new BufferedTile( paintable, world2screen, m_imageCache );
 
@@ -260,11 +257,7 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
 
     // FIXME: introduce option, if this tile should always be preserved
     // Alternative: persist tile to disk?
-
-    // TODO: using SoftReferences now, because map repainted too often
-    // TODO: maybe the layer should decide what is best, depending on the content
-    m_tileRef = new SoftReference<BufferedTile>( runningTile );
-    // m_tileRef = new WeakReference<BufferedTile>( runningTile );
+    m_tileRef = new WeakReference<BufferedTile>( runningTile );
 
     m_runningTile = null;
 

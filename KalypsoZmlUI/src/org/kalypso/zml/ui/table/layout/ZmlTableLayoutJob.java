@@ -42,7 +42,7 @@ package org.kalypso.zml.ui.table.layout;
 
 import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -50,8 +50,10 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.zml.ui.table.ZmlTableComposite;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.ZmlMainTable;
+import org.kalypso.zml.ui.table.model.IZmlTableModel;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableIndexColumn;
 
 /**
  * @author Dirk Kuch
@@ -62,11 +64,11 @@ public class ZmlTableLayoutJob extends UIJob
 
   protected static final Color COLOR_TABLE_ENABLED = new Color( null, new RGB( 0xff, 0xff, 0xff ) );
 
-  private final ZmlTableComposite m_table;
+  private final ZmlMainTable m_table;
 
   private final Set<IZmlTableColumn> m_stack;
 
-  public ZmlTableLayoutJob( final ZmlTableComposite table, final Set<IZmlTableColumn> stack )
+  public ZmlTableLayoutJob( final ZmlMainTable table, final Set<IZmlTableColumn> stack )
   {
     super( "Tabellen-Layout wird aktualisiert" );
     m_table = table;
@@ -84,14 +86,15 @@ public class ZmlTableLayoutJob extends UIJob
       final IZmlTableColumn[] stack = m_stack.toArray( new IZmlTableColumn[] {} );
       m_stack.clear();
 
-      doVisitIndex( stack );
+      doVisitIndex();
 
       /** iterate over all columns because of multiple selection support (cloned columns will not be removed from table) */
-      doVisitHide( m_table.getColumns() );
+      final IZmlTableModel model = m_table.getModel();
+      doVisitHide( model.getColumns() );
       doVisitPack( stack );
 
       final TableViewer viewer = m_table.getViewer();
-      if( m_table.isEmpty() )
+      if( model.isEmpty() )
       {
         viewer.getControl().setBackground( COLOR_TABLE_DISABLED );
       }
@@ -104,13 +107,16 @@ public class ZmlTableLayoutJob extends UIJob
     return Status.OK_STATUS;
   }
 
-  private void doVisitIndex( final IZmlTableColumn[] columns )
+  private void doVisitIndex( )
   {
-    final PackIndexColumnsVisitor visitor = new PackIndexColumnsVisitor( !ArrayUtils.isEmpty( m_table.getRows() ) );
+    final IZmlTableModel model = m_table.getModel();
 
+    final PackIndexColumnsVisitor visitor = new PackIndexColumnsVisitor( !ArrayUtils.isEmpty( model.getRows() ) );
+
+    final IZmlTableColumn[] columns = model.getColumns();
     for( final IZmlTableColumn column : columns )
     {
-      if( column.isIndexColumn() )
+      if( column instanceof IZmlTableIndexColumn )
         visitor.visit( column );
     }
   }
@@ -130,10 +136,9 @@ public class ZmlTableLayoutJob extends UIJob
   private void doVisitPack( final IZmlTableColumn[] columns )
   {
     final PackTableColumnVisitor visitor = new PackTableColumnVisitor();
-
     for( final IZmlTableColumn column : columns )
     {
-      if( column.isIndexColumn() )
+      if( column instanceof IZmlTableIndexColumn )
         continue;
       else if( !column.isVisible() )
         continue;

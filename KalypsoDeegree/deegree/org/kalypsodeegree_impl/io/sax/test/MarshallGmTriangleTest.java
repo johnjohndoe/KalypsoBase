@@ -84,8 +84,8 @@ public class MarshallGmTriangleTest
       final GM_Triangle triangle = GeometryFactory.createGM_Triangle( pos1, pos2, pos3, null );
       final GM_TriangulatedSurface surface = GeometryFactory.createGM_TriangulatedSurface( new GM_Triangle[] { triangle }, null );
 
-      final TriangulatedSurfaceMarshaller marshaller = new TriangulatedSurfaceMarshaller( reader, surface.getCoordinateSystem() );
-      SaxParserTestUtils.marshallDocument( reader, marshaller, surface );
+      final TriangulatedSurfaceMarshaller marshaller = new TriangulatedSurfaceMarshaller( reader, surface );
+      SaxParserTestUtils.marshallDocument( reader, marshaller );
       os.close();
 
       final URL url = getClass().getResource( "resources/triangulatedSurface_marshall.gml" );

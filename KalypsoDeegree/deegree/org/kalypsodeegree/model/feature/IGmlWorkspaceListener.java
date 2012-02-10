@@ -51,9 +51,7 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
  */
 public interface IGmlWorkspaceListener
 {
-  /**
-   * Init the workspace for this validator. For example revalidate the whole workspace or make the workspace consistent.
-   */
+  /** Init the workspace for this validator. For example revalidate the whole workspace or make the workspace consistent. */
   public void init( final GMLWorkspace workspace );
 
   /**

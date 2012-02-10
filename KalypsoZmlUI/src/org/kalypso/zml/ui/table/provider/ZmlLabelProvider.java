@@ -46,11 +46,13 @@ import org.eclipse.swt.graphics.Font;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.binding.CellStyle;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.core.table.rules.IZmlRuleImplementation;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import org.kalypso.zml.core.table.rules.IZmlCellRuleImplementation;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableIndexColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableValueColumn;
 import org.kalypso.zml.ui.table.provider.strategy.labeling.IZmlLabelStrategy;
 
 /**
@@ -62,9 +64,9 @@ public class ZmlLabelProvider
 
   private final IZmlModelRow m_row;
 
-  private final ZmlRule[] m_activeRules;
+  private final ZmlCellRule[] m_activeRules;
 
-  public ZmlLabelProvider( final IZmlModelRow row, final IZmlTableColumn column, final ZmlRule[] activeRules )
+  public ZmlLabelProvider( final IZmlModelRow row, final IZmlTableColumn column, final ZmlCellRule[] activeRules )
   {
     m_row = row;
     m_column = column;
@@ -92,7 +94,7 @@ public class ZmlLabelProvider
 
   private Color getRuleBackground( )
   {
-    for( final ZmlRule rule : m_activeRules )
+    for( final ZmlCellRule rule : m_activeRules )
     {
       final CellStyle style = resolveRuleStyle( rule, m_row.get( m_column.getModelColumn() ) );
       if( Objects.isNotNull( style ) )
@@ -138,14 +140,14 @@ public class ZmlLabelProvider
     return null;
   }
 
-  CellStyle resolveRuleStyle( final ZmlRule rule, final IZmlValueReference reference )
+  public CellStyle resolveRuleStyle( final ZmlCellRule rule, final IZmlModelValueCell reference )
   {
     if( Objects.isNull( reference ) )
       return null;
 
     try
     {
-      final IZmlRuleImplementation implementation = rule.getImplementation();
+      final IZmlCellRuleImplementation implementation = rule.getImplementation();
       final CellStyle style = implementation.getCellStyle( rule, reference );
       if( Objects.isNotNull( style ) )
         return style;
@@ -160,16 +162,31 @@ public class ZmlLabelProvider
 
   public String getText( ) throws SensorException, CoreException
   {
-    final IZmlLabelStrategy strategy = m_column.getLabelingStrategy();
-    if( strategy == null )
-      return ""; //$NON-NLS-1$
+    if( m_column instanceof IZmlTableValueColumn )
+    {
+      final IZmlTableValueColumn column = (IZmlTableValueColumn) m_column;
+      final IZmlLabelStrategy strategy = column.getLabelingStrategy();
+      if( Objects.isNull( strategy ) )
+        return "";
 
-    return strategy.getText( m_row );
+      return strategy.getText( m_row );
+    }
+    else if( m_column instanceof IZmlTableIndexColumn )
+    {
+      final IZmlTableIndexColumn column = (IZmlTableIndexColumn) m_column;
+      final IZmlLabelStrategy strategy = column.getLabelingStrategy();
+      if( Objects.isNull( strategy ) )
+        return "";
+
+      return strategy.getText( m_row );
+    }
+
+    throw new UnsupportedOperationException();
   }
 
   public Object getPlainValue( ) throws SensorException
   {
-    final IZmlValueReference reference = m_row.get( m_column.getModelColumn() );
+    final IZmlModelValueCell reference = m_row.get( m_column.getModelColumn() );
 
     return reference.getValue();
   }

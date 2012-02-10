@@ -45,7 +45,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.commons.parser.IParser;
 import org.kalypso.commons.parser.ParserFactory;

@@ -44,7 +44,7 @@ import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.PlatformUI;
@@ -55,7 +55,7 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlSelectionLayer;
-import org.kalypso.zml.ui.table.model.IZmlTableRow;
+import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
@@ -89,7 +89,7 @@ public class UpdateChartSelectionListener implements ISelectionChangedListener
 
     final ILayerManager layerManager = chart.getChartModel().getLayerManager();
 
-    final IZmlTableRow[] selected = m_handler.getSelectedRows();
+    final IZmlTableValueRow[] selected = m_handler.getSelectedRows();
     final Date[] dates = convert( selected );
 
     if( ArrayUtils.isEmpty( dates ) )
@@ -170,14 +170,14 @@ public class UpdateChartSelectionListener implements ISelectionChangedListener
     } );
   }
 
-  private Date[] convert( final IZmlTableRow[] rows )
+  private Date[] convert( final IZmlTableValueRow[] rows )
   {
     final Set<Date> dates = new TreeSet<Date>();
 
-    for( final IZmlTableRow row : rows )
+    for( final IZmlTableValueRow row : rows )
     {
       final IZmlModelRow modelRow = row.getModelRow();
-      dates.add( modelRow.getIndexValue() );
+      dates.add( modelRow.getIndex() );
     }
 
     return dates.toArray( new Date[] {} );

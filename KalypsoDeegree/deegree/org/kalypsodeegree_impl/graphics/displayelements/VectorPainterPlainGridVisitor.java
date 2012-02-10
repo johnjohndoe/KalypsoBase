@@ -137,17 +137,17 @@ public class VectorPainterPlainGridVisitor<T extends GM_Curve> implements IPlain
 
     final StrokeArrowPainter lPainter = new StrokeArrowPainter( m_cssParams, m_projection, symb.getUom() );
 
-// java.awt.Stroke oldStroke = ( ( Graphics2D ) m_gc ).getStroke();
-// Color oldColor = ( ( Graphics2D ) m_gc ).getColor();
-    // prepare graphics
-    ((Graphics2D) m_gc).setColor( strokeColor );
-// ( ( Graphics2D ) m_gc ).setStroke( (java.awt.Stroke) stroke );
+//    java.awt.Stroke oldStroke = ( ( Graphics2D ) m_gc ).getStroke(); 
+//    Color oldColor = ( ( Graphics2D ) m_gc ).getColor();
+    //prepare graphics 
+    ( ( Graphics2D ) m_gc ).setColor( strokeColor );
+//    ( ( Graphics2D ) m_gc ).setStroke( (java.awt.Stroke) stroke );
 
     lPainter.paint( (Graphics2D) m_gc, pCurve, null );
 
-    // restore graphics
-// ( ( Graphics2D ) m_gc ).setColor( oldColor );
-// ( ( Graphics2D ) m_gc ).setStroke( oldStroke );
+    //restore graphics 
+//    ( ( Graphics2D ) m_gc ).setColor( oldColor );
+//    ( ( Graphics2D ) m_gc ).setStroke( oldStroke );
   }
 
   private void fillCssDefaultsMap( final GM_Curve pCurve )

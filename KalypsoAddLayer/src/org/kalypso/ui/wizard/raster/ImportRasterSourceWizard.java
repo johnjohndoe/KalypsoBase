@@ -50,12 +50,15 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -64,26 +67,40 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.i18n.Messages;
-import org.kalypso.ui.wizard.AbstractDataImportWizard;
+import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 
-public class ImportRasterSourceWizard extends AbstractDataImportWizard
+public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImportWizard
 {
+  private ICommandTarget m_commandTarget;
+
   private ImportRasterSourceWizardPage m_page;
 
   private IProject m_project;
+
+  private IKalypsoLayerModell m_mapModel;
 
   private WizardNewFileCreationPage m_gmlFilePage;
 
   private IFile m_mapFile;
 
+  /**
+   * @see org.kalypso.ui.wizard.IKalypsoDataImportWizard#setMapModel(org.kalypso.ogc.gml.IKalypsoLayerModell)
+   */
+  @Override
+  public void setMapModel( final IKalypsoLayerModell modell )
+  {
+    Assert.isTrue( modell != null );
+
+    m_mapModel = modell;
+    m_project = m_mapModel.getProject();
+
+    final URL context = m_mapModel.getContext();
+    m_mapFile = ResourceUtilities.findFileFromURL( context );
+  }
+
   @Override
   public void addPages( )
   {
-    m_project = ResourceUtilities.findProjectFromURL( getMapModel().getContext() );
-
-    final URL context = getMapModel().getContext();
-    m_mapFile = ResourceUtilities.findFileFromURL( context );
-
     final IContainer mapContainer = m_mapFile == null ? null : m_mapFile.getParent();
     final IStructuredSelection selection = mapContainer == null ? StructuredSelection.EMPTY : new StructuredSelection( mapContainer );
 
@@ -94,12 +111,15 @@ public class ImportRasterSourceWizard extends AbstractDataImportWizard
     m_gmlFilePage.setDescription( "Please choose where to store the data file containing the grid coverages. You may also enter an existing filename." );
     addPage( m_gmlFilePage );
 
-    m_page = new ImportRasterSourceWizardPage( "Add RasterDataModel" ); //$NON-NLS-1$
+    m_page = new ImportRasterSourceWizardPage( "Add RasterDataModel" ); //$NON-NLS-1$ 
     if( m_project != null )
       m_page.setProject( m_project );
     addPage( m_page );
   }
 
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#performFinish()
+   */
   @Override
   public boolean performFinish( )
   {
@@ -109,10 +129,8 @@ public class ImportRasterSourceWizard extends AbstractDataImportWizard
     final boolean generateDefaultStyle = m_page.checkDefaultStyle();
     final String styleName = generateDefaultStyle ? null : m_page.getStyleName();
 
-    final ICommandTarget commandTarget = getCommandTarget();
-    final IKalypsoLayerModell mapModel = getMapModel();
-
-    final ICoreRunnableWithProgress operation = new ImportRasterOperation( coverageFile, styleFile, styleName, commandTarget, mapModel );
+    final ICommandTarget outlineviewer = m_commandTarget;
+    final ICoreRunnableWithProgress operation = new ImportRasterOperation( coverageFile, styleFile, styleName, outlineviewer, m_mapModel );
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, operation );
     KalypsoAddLayerPlugin.getDefault().getLog().log( status );
@@ -153,5 +171,23 @@ public class ImportRasterSourceWizard extends AbstractDataImportWizard
 
     // TODO: error handling
     return null;
+  }
+
+  /**
+   * @see org.kalypso.ui.wizard.data.IKalypsoDataImportWizard#setOutlineViewer(org.kalypso.ogc.gml.outline.GisMapOutlineViewer)
+   */
+  @Override
+  public void setCommandTarget( final ICommandTarget commandTarget )
+  {
+    m_commandTarget = commandTarget;
+  }
+
+  /**
+   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
+   *      org.eclipse.jface.viewers.IStructuredSelection)
+   */
+  @Override
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
+  {
   }
 }

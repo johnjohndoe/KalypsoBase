@@ -45,8 +45,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -58,7 +58,7 @@ public class ZmlTableDebugComposite extends Composite
   {
     super( parent, SWT.NULL );
 
-    setLayout( Layouts.createGridLayout() );
+    setLayout( LayoutHelper.createGridLayout() );
     print( toolkit, columns );
 
     toolkit.adapt( this );

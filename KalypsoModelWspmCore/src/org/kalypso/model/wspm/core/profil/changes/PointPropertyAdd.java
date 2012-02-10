@@ -53,38 +53,49 @@ public final class PointPropertyAdd implements IProfilChange
 
   private final Object[] m_values;
 
+  private final IComponent m_cloneFrom;
+
   public PointPropertyAdd( final IProfil profil, final IComponent property, final Object[] values )
   {
     m_profil = profil;
     m_property = property;
     m_values = values;
+    m_cloneFrom = null;
   }
 
-  public PointPropertyAdd( final IProfil profil, final IComponent property )
+  public PointPropertyAdd( final IProfil profil, final IComponent property, final IComponent component )
   {
     m_profil = profil;
     m_property = property;
     m_values = null;
+    m_cloneFrom = component;
   }
-
+  public PointPropertyAdd( final IProfil profil, final IComponent property)
+  {
+    m_profil = profil;
+    m_property = property;
+    m_cloneFrom = null;
+    m_values = null;
+  }
   public PointPropertyAdd( final IProfil profil, final IComponent property, final Object defaultValue )
   {
     m_profil = profil;
     m_property = property;
-    m_values = new Object[] { defaultValue };
+    m_cloneFrom = null;
+    m_values =  new Object[]{defaultValue};
   }
 
   @Override
-  public IProfilChange doChange( )
+  public IProfilChange doChange( final ProfilChangeHint hint )
   {
-    if( m_values == null )
-    {
+    if( hint != null )
+      hint.setPointPropertiesChanged();
+    if( m_cloneFrom != null )
+      m_profil.getResult().addComponent( m_property,m_cloneFrom );
+    else if (m_values==null)
       m_profil.addPointProperty( m_property );
-    }
-    else if( m_values.length == 1 )
-    {
-      m_profil.addPointProperty( m_property, m_values[0] );
-    }
+    else if (m_values.length==1)
+      m_profil.addPointProperty( m_property ,m_values[0]);
     else
     {
       m_profil.addPointProperty( m_property );
@@ -94,14 +105,15 @@ public final class PointPropertyAdd implements IProfilChange
       {
         int i = 0;
         for( final IRecord point : points )
-        {
           point.setValue( index, m_values[i++] );
-        }
       }
     }
     return new PointPropertyRemove( m_profil, m_property );
   }
 
+  /**
+   * @see java.lang.Object#toString()
+   */
   @Override
   public String toString( )
   {

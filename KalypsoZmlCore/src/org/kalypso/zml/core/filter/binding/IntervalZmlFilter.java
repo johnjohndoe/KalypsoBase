@@ -55,11 +55,6 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 public class IntervalZmlFilter extends Feature_Impl implements IZmlFilter
 {
   /**
-   * The qname of the mode.
-   */
-  public static final QName PROPERTY_MODE = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "mode" );
-
-  /**
    * The qname of the calendar amount.
    */
   public static final QName PROPERTY_CALENDAR_AMOUNT = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "calendarAmount" );

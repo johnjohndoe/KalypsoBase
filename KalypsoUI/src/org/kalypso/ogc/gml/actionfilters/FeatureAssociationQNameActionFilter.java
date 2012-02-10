@@ -47,7 +47,7 @@ import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.ui.editor.gmleditor.part.FeatureAssociationTypeElement;
+import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 
 /**
  * Tests, if a feature association has a target feature type of a certain qname. Substitution is allowed.
@@ -82,7 +82,7 @@ public class FeatureAssociationQNameActionFilter implements IActionFilterEx
       return false;
 
     final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) target;
-    final IRelationType fateRT = fate.getPropertyType();
+    final IRelationType fateRT = fate.getAssociationTypeProperty();
     final IFeatureType featureType = fateRT.getTargetFeatureType();
 
     if( ATTR_QNAME.equals( name ) )

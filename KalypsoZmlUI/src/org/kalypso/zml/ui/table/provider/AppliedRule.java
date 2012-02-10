@@ -41,28 +41,26 @@
 package org.kalypso.zml.ui.table.provider;
 
 import org.kalypso.zml.core.table.binding.CellStyle;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 
 /**
  * @author Dirk Kuch
  */
 public class AppliedRule
 {
-
   private final CellStyle m_style;
 
   private final String m_label;
 
   private final Double m_severity;
 
-  private final ZmlRule m_rule;
+  private final boolean m_headerIcon;
 
-  public AppliedRule( final ZmlRule rule, final CellStyle style, final String label, final Double severity )
+  public AppliedRule( final CellStyle style, final String label, final Double severity, final boolean headerIcon )
   {
-    m_rule = rule;
     m_style = style;
     m_label = label;
     m_severity = severity;
+    m_headerIcon = headerIcon;
   }
 
   public Double getSeverity( )
@@ -82,6 +80,6 @@ public class AppliedRule
 
   public boolean hasHeaderIcon( )
   {
-    return m_rule.hasHeaderIcon();
+    return m_headerIcon;
   }
 }

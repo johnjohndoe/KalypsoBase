@@ -44,16 +44,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
-import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.core.runtime.jobs.IJobChangeListener;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -75,8 +74,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
-import org.kalypso.deegree.i18n.Messages;
+import org.kalypso.i18n.Messages;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypso.transformation.crs.ICoordinateSystem;
 import org.kalypso.transformation.ui.provider.CRSLabelProvider;
@@ -93,37 +91,28 @@ import org.kalypso.transformation.ui.provider.CRSLabelProvider;
  * 
  * @author Holger Albert
  */
-public class CRSSelectionPanel extends Composite
+public class CRSSelectionPanel extends Composite implements IJobChangeListener
 {
   /**
    * Style constant. If set, no group is shown in this composite.
    */
   public static final int NO_GROUP = SWT.SEARCH;
 
-  private final JobChangeAdapter m_jobListener = new JobChangeAdapter()
-  {
-    @Override
-    public void done( final IJobChangeEvent event )
-    {
-      handleCrsChanged( (CRSInitializeJob) event.getJob() );
-    }
-  };
-
   /**
    * The list of selection changed listener. This listeners will be added to the combo viewer, too. The list is only
    * maintained here for a special case. It should not be used otherwise.
    */
-  private final List<ISelectionChangedListener> m_listener;
+  protected List<ISelectionChangedListener> m_listener;
 
   /**
    * The combo viewer of the coordinate systems. Null, if no controls has been created.
    */
-  private ComboViewer m_viewer;
+  protected ComboViewer m_viewer;
 
   /**
    * A hash of the displayed coordinate systems.
    */
-  private Map<String, ICoordinateSystem> m_coordHash;
+  protected HashMap<String, ICoordinateSystem> m_coordHash;
 
   /**
    * List of all images.
@@ -139,7 +128,7 @@ public class CRSSelectionPanel extends Composite
    * This selection is memorized, if it was set, and no coordinate systems were available. It will be set, if coordinate
    * systems got available.
    */
-  private String m_lazySelection;
+  protected String m_lazySelection;
 
   /**
    * The constructor.
@@ -235,8 +224,10 @@ public class CRSSelectionPanel extends Composite
     if( (getStyle() & NO_GROUP) != 0 )
     {
       final Composite composite = new Composite( this, SWT.NONE );
-      composite.setLayout( Layouts.createGridLayout( 2 ) );
-
+      final GridLayout layout = new GridLayout( 2, false );
+      layout.marginHeight = 0;
+      layout.marginWidth = 0;
+      composite.setLayout( layout );
       return composite;
     }
 
@@ -412,13 +403,33 @@ public class CRSSelectionPanel extends Composite
     initCRSJob.setSystem( true );
 
     /* Add myself as a listener. */
-    initCRSJob.addJobChangeListener( m_jobListener );
+    initCRSJob.addJobChangeListener( this );
 
     /* Schedule. */
     initCRSJob.schedule();
   }
 
-  protected void handleCrsChanged( final CRSInitializeJob job )
+  /**
+   * @see org.eclipse.core.runtime.jobs.IJobChangeListener#aboutToRun(org.eclipse.core.runtime.jobs.IJobChangeEvent)
+   */
+  @Override
+  public void aboutToRun( final IJobChangeEvent event )
+  {
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.jobs.IJobChangeListener#awake(org.eclipse.core.runtime.jobs.IJobChangeEvent)
+   */
+  @Override
+  public void awake( final IJobChangeEvent event )
+  {
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.jobs.IJobChangeListener#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
+   */
+  @Override
+  public void done( final IJobChangeEvent event )
   {
     if( isDisposed() )
       return;
@@ -429,10 +440,124 @@ public class CRSSelectionPanel extends Composite
     /* Create a UI job. */
     final UIJob uiJob = new UIJob( display, "CRSSelectionPanelRefreshJob" ) //$NON-NLS-1$
     {
+      /**
+       * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
+       */
       @Override
-      public IStatus runInUIThread( final IProgressMonitor monitor )
+      public IStatus runInUIThread( IProgressMonitor monitor )
       {
-        return doRefresh( job, monitor );
+        try
+        {
+          /* If no monitor is given, create a null progress monitor. */
+          if( monitor == null )
+            monitor = new NullProgressMonitor();
+
+          /* Monitor. */
+          monitor.beginTask( Messages.getString( "org.kalypso.transformation.ui.CRSSelectionPanel.8" ), 100 ); //$NON-NLS-1$
+
+          /* Get the job. */
+          final Job job = event.getJob();
+          if( !(job instanceof CRSInitializeJob) )
+          {
+            /* Monitor. */
+            monitor.worked( 100 );
+
+            return Status.OK_STATUS;
+          }
+
+          /* Cast. */
+          final CRSInitializeJob initCRSJob = (CRSInitializeJob) job;
+
+          /* If the viewer is already disposed, do nothing any more. */
+          if( isDisposed() || m_viewer == null || m_viewer.getControl().isDisposed() )
+          {
+            /* Monitor. */
+            monitor.worked( 100 );
+
+            /* Remove myself as a listener. */
+            initCRSJob.removeJobChangeListener( CRSSelectionPanel.this );
+
+            return Status.OK_STATUS;
+          }
+
+          /* Get the hash of them. */
+          final HashMap<String, ICoordinateSystem> coordHash = initCRSJob.getCoordHash();
+          if( coordHash == null || coordHash.size() == 0 )
+          {
+            /* Clear the hash. */
+            m_coordHash.clear();
+
+            /* Set the input. */
+            m_viewer.setInput( null );
+
+            /* Remove myself as a listener. */
+            initCRSJob.removeJobChangeListener( CRSSelectionPanel.this );
+
+            /* Enable. */
+            setEnabled( true );
+
+            /* Monitor. */
+            monitor.worked( 100 );
+
+            return Status.OK_STATUS;
+          }
+
+          /* The code of the coordinate system, which was set before. */
+          final String selectedCRS = getSelectedCRS();
+
+          /* Store the hash. */
+          m_coordHash = coordHash;
+
+          /* Set the input (also resets the selection). */
+          m_viewer.setInput( coordHash.values().toArray( new ICoordinateSystem[] {} ) );
+
+          /* Get the codes. */
+          final List<String> codes = Arrays.asList( coordHash.keySet().toArray( new String[] {} ) );
+
+          /* If the name of the old coordinate system is also among the new ones, select it again. */
+          if( selectedCRS != null && codes.contains( selectedCRS ) )
+            setSelectedCRS( selectedCRS );
+
+          /* There was a coordinate system selected, but it does not exist any more. So the selection changes. */
+          if( selectedCRS != null && !codes.contains( selectedCRS ) )
+          {
+            for( int i = 0; i < m_listener.size(); i++ )
+            {
+              final ISelectionChangedListener listener = m_listener.get( i );
+              listener.selectionChanged( new SelectionChangedEvent( m_viewer, m_viewer.getSelection() ) );
+            }
+          }
+
+          /* If no coordinate system was selected, but someone wanted to select one, */
+          /* this can now be set, if it is contained in the new list coordinate systems. */
+          if( selectedCRS == null && m_lazySelection != null && codes.contains( m_lazySelection ) )
+            setSelectedCRS( m_lazySelection );
+
+          /* Delete the lazy selection. */
+          m_lazySelection = null;
+
+          /* Remove myself as a listener. */
+          initCRSJob.removeJobChangeListener( CRSSelectionPanel.this );
+
+          /* Enable. */
+          setEnabled( true );
+
+          /* Monitor. */
+          monitor.worked( 100 );
+
+          return Status.OK_STATUS;
+        }
+        catch( final Exception ex )
+        {
+          ex.printStackTrace();
+
+          return StatusUtilities.statusFromThrowable( ex );
+        }
+        finally
+        {
+          /* Monitor. */
+          monitor.done();
+        }
       }
     };
 
@@ -440,126 +565,27 @@ public class CRSSelectionPanel extends Composite
     uiJob.schedule();
   }
 
-  protected IStatus doRefresh( final CRSInitializeJob job, IProgressMonitor monitor )
+  /**
+   * @see org.eclipse.core.runtime.jobs.IJobChangeListener#running(org.eclipse.core.runtime.jobs.IJobChangeEvent)
+   */
+  @Override
+  public void running( final IJobChangeEvent event )
   {
-    try
-    {
-      /* If no monitor is given, create a null progress monitor. */
-      if( monitor == null )
-        monitor = new NullProgressMonitor();
-
-      /* Monitor. */
-      monitor.beginTask( Messages.getString( "org.kalypso.transformation.ui.CRSSelectionPanel.8" ), 100 ); //$NON-NLS-1$
-
-      /* Get the job. */
-      if( job == null )
-      {
-        /* Monitor. */
-        monitor.worked( 100 );
-
-        return Status.OK_STATUS;
-      }
-
-      /* Cast. */
-      final CRSInitializeJob initCRSJob = job;
-
-      /* If the viewer is already disposed, do nothing any more. */
-      if( isDisposed() || m_viewer == null || m_viewer.getControl().isDisposed() )
-      {
-        /* Monitor. */
-        monitor.worked( 100 );
-
-        /* Remove myself as a listener. */
-        initCRSJob.removeJobChangeListener( m_jobListener );
-
-        return Status.OK_STATUS;
-      }
-
-      /* Get the hash of them. */
-      final Map<String, ICoordinateSystem> coordHash = initCRSJob.getCoordHash();
-      if( coordHash == null || coordHash.size() == 0 )
-      {
-        /* Clear the hash. */
-        m_coordHash.clear();
-
-        /* Set the input. */
-        m_viewer.setInput( null );
-
-        /* Remove myself as a listener. */
-        initCRSJob.removeJobChangeListener( m_jobListener );
-
-        /* Enable. */
-        setEnabled( true );
-
-        /* Monitor. */
-        monitor.worked( 100 );
-
-        return Status.OK_STATUS;
-      }
-
-      /* The code of the coordinate system, which was set before. */
-      final String selectedCRS = getSelectedCRS();
-
-      /* Store the hash. */
-      m_coordHash = coordHash;
-
-      /* Set the input (also resets the selection). */
-      m_viewer.setInput( coordHash.values().toArray( new ICoordinateSystem[] {} ) );
-
-      /* Get the codes. */
-      final List<String> codes = Arrays.asList( coordHash.keySet().toArray( new String[] {} ) );
-
-      /* If the name of the old coordinate system is also among the new ones, select it again. */
-      if( selectedCRS != null && codes.contains( selectedCRS ) )
-        setSelectedCRS( selectedCRS );
-
-      /* There was a coordinate system selected, but it does not exist any more. So the selection changes. */
-      if( selectedCRS != null && !codes.contains( selectedCRS ) )
-      {
-        for( int i = 0; i < m_listener.size(); i++ )
-        {
-          final ISelectionChangedListener listener = m_listener.get( i );
-          listener.selectionChanged( new SelectionChangedEvent( m_viewer, m_viewer.getSelection() ) );
-        }
-      }
-
-      /* If no coordinate system was selected, but someone wanted to select one, */
-      /* this can now be set, if it is contained in the new list coordinate systems. */
-      if( selectedCRS == null && m_lazySelection != null && codes.contains( m_lazySelection ) )
-        setSelectedCRS( m_lazySelection );
-
-      /* Delete the lazy selection. */
-      m_lazySelection = null;
-
-      /* Remove myself as a listener. */
-      initCRSJob.removeJobChangeListener( m_jobListener );
-
-      /* Enable. */
-      setEnabled( true );
-
-      /* Monitor. */
-      monitor.worked( 100 );
-
-      return Status.OK_STATUS;
-    }
-    catch( final Exception ex )
-    {
-      ex.printStackTrace();
-
-      return StatusUtilities.statusFromThrowable( ex );
-    }
-    finally
-    {
-      /* Monitor. */
-      monitor.done();
-    }
   }
 
   /**
-   * Creates and {@link IObservableValue} that observes the selected srs.
+   * @see org.eclipse.core.runtime.jobs.IJobChangeListener#scheduled(org.eclipse.core.runtime.jobs.IJobChangeEvent)
    */
-  public IObservableValue observe( )
+  @Override
+  public void scheduled( final IJobChangeEvent event )
   {
-    return new CrsSelectionPanelValue( this );
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.jobs.IJobChangeListener#sleeping(org.eclipse.core.runtime.jobs.IJobChangeEvent)
+   */
+  @Override
+  public void sleeping( final IJobChangeEvent event )
+  {
   }
 }

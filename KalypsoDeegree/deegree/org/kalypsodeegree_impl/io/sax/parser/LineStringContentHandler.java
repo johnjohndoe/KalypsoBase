@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.parser;
 
@@ -58,7 +58,7 @@ import org.xml.sax.XMLReader;
 
 /**
  * A content handler which parses a gml:LineString element.<br>
- *
+ * 
  * @author Felipe Maximino
  */
 public class LineStringContentHandler extends GMLElementContentHandler implements ICoordinatesHandler, IPositionHandler
@@ -82,11 +82,6 @@ public class LineStringContentHandler extends GMLElementContentHandler implement
     this( reader, null, resultEater, parentContentHandler, null );
   }
 
-  public LineStringContentHandler( final XMLReader reader, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContentHandler, final String defaultSrs )
-  {
-    this( reader, null, resultEater, parentContentHandler, defaultSrs );
-  }
-
   public LineStringContentHandler( final XMLReader reader, final ICurveHandler lineStringHandler, final String defaultSrs )
   {
     this( reader, lineStringHandler, null, lineStringHandler, defaultSrs );
@@ -102,6 +97,10 @@ public class LineStringContentHandler extends GMLElementContentHandler implement
     m_lineString = null;
   }
 
+  /**
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doEndElement(java.lang.String,
+   *      java.lang.String, java.lang.String)
+   */
   @Override
   protected void doEndElement( final String uri, final String localName, final String name ) throws SAXException
   {
@@ -118,6 +117,10 @@ public class LineStringContentHandler extends GMLElementContentHandler implement
     }
   }
 
+  /**
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#handleUnexpectedEndElement(java.lang.String,
+   *      java.lang.String, java.lang.String)
+   */
   @Override
   public void handleUnexpectedEndElement( final String uri, final String localName, final String name ) throws SAXException
   {
@@ -133,10 +136,14 @@ public class LineStringContentHandler extends GMLElementContentHandler implement
     }
   }
 
+  /**
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doStartElement(java.lang.String,
+   *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
+   */
   @Override
   protected void doStartElement( final String uri, final String localName, final String name, final Attributes atts )
   {
-    m_activeSrs = ContentHandlerUtils.parseSrsFromAttributes( atts, getDefaultSrs() );
+    m_activeSrs = ContentHandlerUtils.parseSrsFromAttributes( atts, m_defaultSrs );
     m_srsDimension = ContentHandlerUtils.parseSrsDimensionFromAttributes( atts );
 
     final GMLPropertyChoiceContentHandler choiceContentHandler = new GMLPropertyChoiceContentHandler( getXMLReader(), this, this, m_activeSrs, new LineStringSpecification() );
@@ -149,8 +156,8 @@ public class LineStringContentHandler extends GMLElementContentHandler implement
     {
       final int size = m_positions.size();
 
-      if( size == 1 )
-        throwSAXParseException( "A gml:LineString must contain either 0 or at least two positions!" );
+      if( size < 2 )
+        throwSAXParseException( "A gml:LineString must contain at least two positions!" );
 
       return GeometryFactory.createGM_Curve( m_positions.toArray( new GM_Position[m_positions.size()] ), m_activeSrs );
     }

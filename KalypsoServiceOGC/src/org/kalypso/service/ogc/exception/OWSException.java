@@ -99,14 +99,14 @@ public class OWSException extends Exception
     {
       if( sw != null )
         try
-        {
+      {
           sw.close();
-        }
-        catch( final IOException e )
-        {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
+      }
+      catch( final IOException e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
     }
     return excString;
   }

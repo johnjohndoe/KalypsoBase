@@ -46,7 +46,7 @@ import org.eclipse.jface.wizard.IWizardPage;
 
 /**
  * A wizard page wich provides an additional html page for navigation.
- * 
+ *
  * @author belger
  */
 public interface IHtmlWizardPage extends IWizardPage

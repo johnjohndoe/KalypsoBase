@@ -53,8 +53,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.Job;
-import org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsDebug;
-import org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsPlugin;
+import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
+import org.kalypso.contribs.eclipse.utils.Debug;
 
 /**
  * This class provides functions for dealing with cron jobs.
@@ -122,7 +122,7 @@ public final class CronJobUtilities
       final IStatus status = CronJobUtilities.startCronJob( cronJob );
 
       /* Log the result. */
-      if( EclipseRCPContributionsDebug.CRON_JOB.isEnabled() )
+      if( Debug.CRON_JOB.isEnabled() )
         EclipseRCPContributionsPlugin.getDefault().getLog().log( status );
     }
   }
@@ -190,7 +190,7 @@ public final class CronJobUtilities
       return new Status( IStatus.WARNING, EclipseRCPContributionsPlugin.ID, String.format( "The cron job ('%s') should not be activated, due to a negative schedule delay...", name ) );
 
     /* Get the job manager. */
-    final IJobManager jobManager = Job.getJobManager();
+    final IJobManager jobManager = CronJob.getJobManager();
 
     /* Search all running (waiting, executing and sleeping) jobs with the cron job family. */
     final Job[] runningJobs = jobManager.find( CronJob.CRON_JOB_FAMILY );
@@ -226,7 +226,7 @@ public final class CronJobUtilities
   public static void cancelAllCronJobs( )
   {
     /* Get the job manager. */
-    final IJobManager jobManager = Job.getJobManager();
+    final IJobManager jobManager = CronJob.getJobManager();
 
     /* Search all running (waiting, executing and sleeping) jobs with the cron job family. */
     final Job[] runningJobs = jobManager.find( CronJob.CRON_JOB_FAMILY );

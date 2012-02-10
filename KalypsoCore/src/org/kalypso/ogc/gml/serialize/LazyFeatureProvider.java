@@ -43,18 +43,18 @@ package org.kalypso.ogc.gml.serialize;
 import java.net.URI;
 import java.net.URL;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IWorkspaceProvider;
+import org.kalypsodeegree.model.feature.IFeatureProvider;
 import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 
 /**
  * @author Gernot Belger
  */
-public class LazyFeatureProvider extends AbstractXLinkFeatureProvider implements IWorkspaceProvider
+public class LazyFeatureProvider extends AbstractXLinkFeatureProvider implements IFeatureProvider
 {
   private GMLWorkspace m_workspace;
 

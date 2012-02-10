@@ -42,7 +42,7 @@ package org.kalypso.ogc.sensor.filter.filters.interval;
 
 import java.util.Calendar;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
@@ -217,7 +217,7 @@ public class Interval
   {
     switch( matrix )
     {
-    // REMARK: not using getters for start/end as cloning the calendars is a performance hot spot of this class.
+      // REMARK: not using getters for start/end as cloning the calendars is a performance hot spot of this class.
 
       case STATUS_INTERSECTION_START:
         return new Interval( m_start, other.m_end );

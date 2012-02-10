@@ -45,7 +45,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 

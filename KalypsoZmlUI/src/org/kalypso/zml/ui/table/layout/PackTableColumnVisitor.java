@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.layout;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.TableColumn;
@@ -56,7 +56,8 @@ import org.kalypso.zml.core.table.binding.ColumnHeader;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableIndexColumn;
 import org.kalypso.zml.ui.table.provider.AppliedRule;
 import org.kalypso.zml.ui.table.provider.ZmlTableImage;
 import org.kalypso.zml.ui.table.provider.ZmlTableImageMerger;
@@ -70,10 +71,8 @@ public class PackTableColumnVisitor extends AbstractTableColumnPackVisitor
   @Override
   public void visit( final IZmlTableColumn column )
   {
-    if( column.isIndexColumn() )
-    {
+    if( column instanceof IZmlTableIndexColumn )
       return;
-    }
 
     final BaseColumn columnType = column.getColumnType();
     final TableViewerColumn tableViewerColumn = column.getTableViewerColumn();
@@ -144,7 +143,6 @@ public class PackTableColumnVisitor extends AbstractTableColumnPackVisitor
 
   private void fill( final ZmlTableImageMerger provider, final IZmlTableColumn column, final ColumnHeader[] columnHeaders )
   {
-
     for( final ColumnHeader header : columnHeaders )
     {
       try

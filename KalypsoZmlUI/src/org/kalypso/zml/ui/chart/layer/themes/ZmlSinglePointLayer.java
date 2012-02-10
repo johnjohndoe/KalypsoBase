@@ -43,24 +43,22 @@ package org.kalypso.zml.ui.chart.layer.themes;
 import java.net.URL;
 import java.util.Date;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.core.diagram.base.IZmlLayer;
-import org.kalypso.zml.core.diagram.base.IZmlLayerProvider;
-import org.kalypso.zml.core.diagram.base.ZmlLayerProviders;
+import org.kalypso.zml.core.diagram.base.LayerProviderUtils;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
+import org.kalypso.zml.core.diagram.data.IZmlLayerProvider;
 import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
-import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.TextFigure;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
@@ -123,7 +121,7 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
   }
 
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Number> getDomainRange( )
   {
     if( ArrayUtils.isEmpty( m_descriptors ) )
       return null;
@@ -143,7 +141,7 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
   }
 
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     if( ArrayUtils.isEmpty( m_descriptors ) )
       return null;
@@ -170,11 +168,10 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
     {
       final Point centerPoint = getCoordinateMapper().numericToScreen( descriptor.getValue().getDomain(), descriptor.getValue().getTarget() );
 
-      final PointFigure pf = new PointFigure();
-      pf.setStyle( descriptor.getPointStyle() );
-      pf.setPoints( new Point[] { centerPoint } );
+      getPointFigure().setStyle( descriptor.getPointStyle() );
+      getPointFigure().setPoints( new Point[] { centerPoint } );
 
-      pf.paint( gc );
+      getPointFigure().paint( gc );
 
       if( descriptor.isShowLabel() )
       {
@@ -202,17 +199,15 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
 
     try
     {
-      final IObservation observation = (IObservation) handler.getAdapter( IObservation.class );
-      if( observation == null )
+      if( handler.getObservation() == null )
         return;
 
       final IParameterContainer parameters = getProvider().getParameterContainer();
 
-      final MetadataList metadata = observation.getMetadataList();
-      final Date position = ZmlLayerProviders.getMetadataDate( parameters, "position", metadata );
+      final Date position = LayerProviderUtils.getMetadataDate( parameters, "position", handler.getObservation().getMetadataList() );
 
-      final Date start = ZmlLayerProviders.getMetadataDate( parameters, "start", metadata );
-      final Date end = ZmlLayerProviders.getMetadataDate( parameters, "end", metadata );
+      final Date start = LayerProviderUtils.getMetadataDate( parameters, "start", handler.getObservation().getMetadataList() );
+      final Date end = LayerProviderUtils.getMetadataDate( parameters, "end", handler.getObservation().getMetadataList() );
 
       final Double value = findValue( handler, position );
 
@@ -240,7 +235,7 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
 
   private Double findValue( final IZmlLayerDataHandler provider, final Date position ) throws SensorException
   {
-    final IObservation observation = (IObservation) provider.getAdapter( IObservation.class );
+    final IObservation observation = provider.getObservation();
 
     final ZmlSinglePointLayerVisitor visitor = new ZmlSinglePointLayerVisitor( position, getFilters() );
     observation.accept( visitor, provider.getRequest(), 1 );

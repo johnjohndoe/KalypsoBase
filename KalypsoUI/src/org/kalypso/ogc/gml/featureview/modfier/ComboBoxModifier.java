@@ -55,11 +55,11 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.control.ComboFeatureControl;
-import org.kalypso.ui.editor.gmleditor.part.GMLLabelProvider;
+import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.search.IReferenceCollectorStrategy;
 
@@ -124,7 +124,7 @@ public class ComboBoxModifier extends AbstractFeatureModifier
 
       for( final Feature foundFeature : features )
       {
-        if( foundFeature instanceof IXLinkedFeature )
+        if( foundFeature instanceof XLinkedFeature_Impl )
           input.add( foundFeature );
         else
           input.add( foundFeature.getId() );

@@ -40,6 +40,8 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.xml.sax.InputSource;
 
@@ -54,12 +56,6 @@ public class ZMLDiffComparator implements IDiffComparator
   {
   }
 
-  private final double m_tollerance = 0.01;
-
-  /**
-   * @see org.kalypso.commons.diff.IDiffComparator#diff(org.kalypso.commons.diff.IDiffLogger, java.lang.Object,
-   *      java.lang.Object)
-   */
   @Override
   public boolean diff( final IDiffLogger logger, final Object content, final Object content2 ) throws Exception
   {
@@ -80,84 +76,46 @@ public class ZMLDiffComparator implements IDiffComparator
     return result;
   }
 
-  /**
-   * @param logger
-   * @param obs1
-   * @param obs2
-   * @throws SensorException
-   */
   private boolean diffValues( final IDiffLogger logger, final IObservation obs1, final IObservation obs2 ) throws SensorException
   {
     boolean result = false;
-    double differenceAll = 0;
-    final IAxis[] axes1 = obs1.getAxes();
-    final IAxis[] axes2 = obs2.getAxes();
-    final IAxis dateAxis1 = ObservationUtilities.findAxisByClass( axes1, Date.class );
-    final IAxis dateAxis2 = ObservationUtilities.findAxisByClass( axes2, Date.class );
-    final IAxis valueAxis1 = ObservationUtilities.findAxisByClass( axes1, Double.class );
-    final IAxis valueAxis2 = ObservationUtilities.findAxisByClass( axes2, Double.class );
 
+    final double differenceAll = 0;
+
+    /* Check equals length of series */
     final ITupleModel values1 = obs1.getValues( null );
     final ITupleModel values2 = obs2.getValues( null );
-    final int max1 = values1.size();
-    final int max2 = values2.size();
-    if( max1 != max2 )
+
+    final int length1 = values1.size();
+    final int length2 = values2.size();
+    if( length1 != length2 )
     {
-      logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString( "org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator.3" ) + max1 + " : " + max2 ); //$NON-NLS-1$ //$NON-NLS-2$
+      logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString( "org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator.3" ) + length1 + " : " + length2 ); //$NON-NLS-1$ //$NON-NLS-2$
       return true;
     }
 
-    if( max1 == 0 )
+    if( length1 == 0 )
       return false;
 
-    final double v1 = ((Double) values1.get( 0, valueAxis1 )).doubleValue();
-    final double v2 = ((Double) values2.get( 0, valueAxis2 )).doubleValue();
-    double maxValue1 = v1;
-    double minValue1 = v1;
-    double maxValue2 = v2;
-    double minValue2 = v2;
-    double maxDelta = 0;
-    int diffCount = 0;
-    for( int i = 0; i < max1; i++ )
-    {
-      final Date date1 = (Date) values1.get( i, dateAxis1 );
-      final Date date2 = (Date) values2.get( i, dateAxis2 );
-      if( !date1.equals( date2 ) )
-      {
-        logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString( "org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator.5" ) + date1 + " : " + date2 ); //$NON-NLS-1$ //$NON-NLS-2$
-        return true;
-      }
-      final double value1 = ((Double) values1.get( i, valueAxis1 )).doubleValue();
-      final double value2 = ((Double) values2.get( i, valueAxis2 )).doubleValue();
-      if( value1 > maxValue1 )
-        maxValue1 = value1;
-      if( value2 > maxValue2 )
-        maxValue2 = value2;
-      if( value1 < minValue1 )
-        minValue1 = value1;
-      if( value2 < minValue2 )
-        minValue2 = value2;
-      final double delta = Math.abs( value1 - value2 );
-      if( delta > m_tollerance )
-      {
-        differenceAll += delta;
-        result = true;
-        if( delta > maxDelta )
-          maxDelta = delta;
-        diffCount++;
-      }
-    }
-    if( result )
-    {
-      logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString( "org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator.7" ) + diffCount ); //$NON-NLS-1$
-      logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString( "org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator.8" ) + maxDelta ); //$NON-NLS-1$
-      logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString( "org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator.9" ) + differenceAll + Messages.getString( "org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator.10" ) + m_tollerance //$NON-NLS-1$ //$NON-NLS-2$
-          + Messages.getString( "org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator.11" ) ); //$NON-NLS-1$
-    }
-    if( minValue1 != minValue2 )
-      logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString( "org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator.12" ) + minValue1 + Messages.getString( "org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator.13" ) + minValue2 ); //$NON-NLS-1$ //$NON-NLS-2$
-    if( maxValue1 != maxValue2 )
-      logger.log( IDiffComparator.DIFF_CONTENT, Messages.getString( "org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator.14" ) + maxValue1 + Messages.getString( "org.kalypso.ogc.sensor.zml.diff.ZMLDiffComparator.15" ) + maxValue2 ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IAxis[] axes1 = obs1.getAxes();
+    final IAxis[] axes2 = obs2.getAxes();
+
+    final IAxis dateAxis1 = ObservationUtilities.findAxisByClass( axes1, Date.class );
+    final IAxis dateAxis2 = ObservationUtilities.findAxisByClass( axes2, Date.class );
+
+    final IAxis valueAxis1 = findValueAxesNoWechmann( axes1 );
+    final IAxis valueAxis2 = findValueAxesNoWechmann( axes2 );
+
+    // TODO: alle Achsen
+    // Log-Ausgabe um Info zu betroffener Achse erweitern
+
+    final ZmlAxisComparator axisComparator = new ZmlAxisComparator( values1, dateAxis1, valueAxis1, values2, dateAxis2, valueAxis2, logger );
+    final boolean axisResult = axisComparator.compare();
+
+    result = axisResult;
+
+    axisComparator.logDifferences( logger );
+
     return result;
   }
 
@@ -204,4 +162,22 @@ public class ZMLDiffComparator implements IDiffComparator
   // }
   // return DiffUtils.diffIgnoreOrder( logger, list1, list2, "Metadaten" );
   // }
+
+  /**
+   * Finds ONE value axis, not Wechmann-E and not Wechmann-V.<br/>
+   * A bit hacky, what to do in the (theoretical) case of two real value axes?
+   */
+  private static IAxis findValueAxesNoWechmann( final IAxis[] axes )
+  {
+    final IAxis[] allValueAxes = AxisUtils.findValueAxes( axes );
+    for( final IAxis axis : allValueAxes )
+    {
+      final String type = axis.getType();
+      if( !ITimeseriesConstants.TYPE_WECHMANN_E.equals( type ) && !ITimeseriesConstants.TYPE_WECHMANN_SCHALTER_V.equals( type ) )
+        return axis;
+    }
+
+    return null;
+  }
+
 }

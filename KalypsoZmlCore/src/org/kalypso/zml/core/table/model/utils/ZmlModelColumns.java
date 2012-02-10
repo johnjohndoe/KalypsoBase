@@ -40,9 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model.utils;
 
-import jregex.RETokenizer;
-
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 
 /**
@@ -59,22 +57,5 @@ public final class ZmlModelColumns
     final String identifier = column.getIdentifier();
 
     return StringUtils.contains( identifier, IClonedColumn.CLONED_COLUMN_POSTFIX );
-  }
-
-  public static boolean isCloned( final String identifier )
-  {
-    return IClonedColumn.PATTERN_CLONED_COLUMN_IDENTIFIER.matches( identifier );
-  }
-
-  public static String getClonedColumnBase( final String identifier )
-  {
-    if( isCloned( identifier ) )
-    {
-      final RETokenizer tokenizer = new RETokenizer( IClonedColumn.PATTERN_CLONED_COLUMN_TOKENIZER, identifier );
-      return tokenizer.nextToken();
-
-    }
-
-    return identifier;
   }
 }

@@ -47,9 +47,6 @@ package org.kalypso.observation.result;
  */
 public interface IRecord
 {
-
-  int getIndex( );
-
   /**
    * @return the <code>TupleResult</code> that owns this record
    */

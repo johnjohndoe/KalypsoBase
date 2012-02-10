@@ -59,8 +59,4 @@ public interface IZmlSourceElement
   String getLabel( );
 
   String getIdentifier( );
-
-  void setIdentifier( String identifier );
-
-  int getIndex( );
 }

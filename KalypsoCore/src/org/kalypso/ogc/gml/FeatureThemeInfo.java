@@ -136,7 +136,7 @@ public class FeatureThemeInfo implements IKalypsoThemeInfo, IKalypsoFeatureTheme
       return;
     }
 
-    final GMLWorkspace workspace = featureList.getOwner().getWorkspace();
+    final GMLWorkspace workspace = featureList.getParentFeature().getWorkspace();
     // TODO: the query by position does not return the excepted result.... :-( does not works for point geometries
     final List< ? > foundFeatures = featureList.query( pos, null );
     final Feature feature = findFeature( workspace, foundFeatures, pos );

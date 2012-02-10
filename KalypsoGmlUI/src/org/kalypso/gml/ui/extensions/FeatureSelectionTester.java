@@ -5,7 +5,7 @@ import java.util.Collection;
 
 import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.jface.viewers.ISelection;
-import org.kalypso.gml.ui.internal.util.GenericFeatureSelection;
+import org.kalypso.gml.ui.util.GenericFeatureSelection;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;

@@ -42,7 +42,7 @@ package org.kalypso.ogc.sensor.filter.filters.interval;
 
 import java.util.Calendar;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;

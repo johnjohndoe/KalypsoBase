@@ -222,7 +222,7 @@ public class ColorGuiTypeHandler extends LabelProvider implements IGuiTypeHandle
     }
     else
     {
-      final PaletteData paletteData = new PaletteData( new RGB[] { new RGB( 64, 64, 64 ), (RGB) element } );
+      final PaletteData paletteData = new PaletteData( new RGB[] { new RGB( 64, 64, 64 ), ((RGB) element) } );
       final ImageData imageData = new ImageData( 24, 13, 1, paletteData );
       for( int x = 2; x < 23; x++ )
         for( int y = 1; y < 12; y++ )

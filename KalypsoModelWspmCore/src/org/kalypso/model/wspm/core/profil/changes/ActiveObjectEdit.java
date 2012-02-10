@@ -40,38 +40,47 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.changes;
 
-import org.apache.commons.lang3.Range;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 
 public class ActiveObjectEdit implements IProfilChange
 {
   private final IComponent m_property;
 
+  private final IRecord m_point;
+
   private final IProfil m_profil;
 
-  private final Range<Double> m_selection;
-
-  public ActiveObjectEdit( final IProfil profil, final Range<Double> selection, final IComponent property )
+  public ActiveObjectEdit( final IProfil profil, final IRecord point, final IComponent property )
   {
     m_profil = profil;
-    m_selection = selection;
     m_property = property;
+    m_point = point;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfilChange#doChange(ProfilChangeHint)
+   */
   @Override
-  public IProfilChange doChange( )
+  public IProfilChange doChange( final ProfilChangeHint hint )
   {
-    final Range<Double> oldRange = m_profil.getSelection().getRange();
-    final IComponent oldProperty = m_profil.getSelection().getActiveProperty();
+    if( hint != null )
+      hint.setActivePointChanged();
 
-    m_profil.getSelection().setRange( m_selection );
-    m_profil.getSelection().setActivePointProperty( m_property );
+    final IRecord oldPoint = m_profil.getActivePoint();
+    final IComponent oldProperty = m_profil.getActiveProperty();
 
-    return new ActiveObjectEdit( m_profil, oldRange, oldProperty == null ? null : oldProperty );
+    m_profil.setActivePoint( m_point );
+    m_profil.setActivePointProperty( m_property );
+
+    return new ActiveObjectEdit( m_profil, oldPoint, oldProperty == null ? null : oldProperty );
   }
 
+  /**
+   * @see java.lang.Object#toString()
+   */
   @Override
   public String toString( )
   {

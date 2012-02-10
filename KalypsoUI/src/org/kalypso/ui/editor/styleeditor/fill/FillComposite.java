@@ -42,7 +42,7 @@ package org.kalypso.ui.editor.styleeditor.fill;
 
 import java.awt.Color;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -62,13 +62,13 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
-import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.conversion.AwtToSwtColorConverter;
 import org.kalypso.commons.databinding.conversion.SwrToAwtColorConverter;
-import org.kalypso.commons.databinding.forms.DatabindingForm;
 import org.kalypso.contribs.eclipse.swt.ColorUtilities;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ui.editor.styleeditor.binding.DatabindingForm;
+import org.kalypso.ui.editor.styleeditor.binding.IDataBinding;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypso.ui.editor.styleeditor.preview.FillPreview;
 import org.kalypsodeegree.graphics.sld.Fill;

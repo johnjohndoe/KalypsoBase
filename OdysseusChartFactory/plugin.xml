@@ -16,7 +16,7 @@
    <extension
          point="de.openali.odysseus.chart.factory.LayerProvider">
       <provider
-            class="de.openali.odysseus.chart.factory.provider.PlainLayerProvider"
+            class="de.openali.odysseus.chart.factory.layer.PlainLayerProvider"
             id="de.openali.odysseus.chart.factory.layer.PlainLayerProvider">
       </provider>
    </extension>

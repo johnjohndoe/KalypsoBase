@@ -48,9 +48,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
-import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelPaintListener;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.widgets.IWidgetManager;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -74,7 +74,7 @@ public interface IMapPanel extends ISelectionProvider
 
   double getCurrentScale( );
 
-  IKalypsoLayerModell getMapModell( );
+  IMapModell getMapModell( );
 
   String getMessage( );
 
@@ -106,7 +106,7 @@ public interface IMapPanel extends ISelectionProvider
 
   /**
    * Set the bounding box of the panel.
-   *
+   * 
    * @param wishBBox
    *          The new extent, will be adapted so it fits into the current size of the panel. Call
    *          {@link #getBoundingBox()} to get the adjusted extent.
@@ -117,7 +117,7 @@ public interface IMapPanel extends ISelectionProvider
    */
   void setBoundingBox( final GM_Envelope wishBBox, final boolean useHistory, final boolean invalidateMap );
 
-  void setMapModell( final IKalypsoLayerModell modell );
+  void setMapModell( final IMapModell modell );
 
   void setMessage( final String message );
 
@@ -153,10 +153,4 @@ public interface IMapPanel extends ISelectionProvider
    * The current state of this map as an image. No selected items nor widget-stuff.
    */
   BufferedImage getMapImage( );
-
-  // REMARK: most probably we should always return the complete selection; filtering by themes does not make so much
-  // sense
-  // However, we use this flag for the moment to keep this backwards compatible and avoid side effekt.
-  // TODO: try this out when we are fare from deploying
-  void setUseFullSelection( boolean useFullSelection );
 }

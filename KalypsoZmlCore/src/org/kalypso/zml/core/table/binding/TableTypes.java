@@ -47,9 +47,12 @@ import java.util.Map;
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
+import jregex.RETokenizer;
+
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.swt.SWT;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.zml.core.table.model.utils.ZmlModelColumns;
+import org.kalypso.zml.core.table.model.utils.IClonedColumn;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.AlignmentType;
 import org.kalypso.zml.core.table.schema.CellStyleType;
@@ -184,9 +187,10 @@ public final class TableTypes
      * should add those columns, too
      */
     /** cloned, multiple column entry?!? like W_clone_1 or W_clone_3 */
-    if( ZmlModelColumns.isCloned( identifier ) )
+    if( IClonedColumn.PATTERN_CLONED_COLUMN_IDENTIFIER.matches( identifier ) )
     {
-      final String id = ZmlModelColumns.getClonedColumnBase( identifier );
+      final RETokenizer tokenizer = new RETokenizer( IClonedColumn.PATTERN_CLONED_COLUMN_TOKENIZER, identifier );
+      final String id = tokenizer.nextToken();
 
       return findColumnType( tableType, id );
     }
@@ -284,7 +288,7 @@ public final class TableTypes
 
     final String url = reference.getUrl();
     if( Objects.isNotNull( url ) )
-      throw new UnsupportedOperationException();
+      throw new NotImplementedException();
 
     return null;
   }

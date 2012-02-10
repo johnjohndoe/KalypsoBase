@@ -3,7 +3,7 @@ package org.kalypso.afgui;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -14,7 +14,6 @@ import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -24,6 +23,7 @@ import org.eclipse.ui.services.IEvaluationService;
 import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.afgui.model.IModel;
 import org.kalypso.afgui.perspective.Perspective;
+import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.PerspectiveWatcher;
 import org.kalypso.afgui.scenarios.ScenarioDataChangeListenerExtension;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
@@ -31,15 +31,12 @@ import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.afgui.scenarios.TaskExecutionAuthority;
 import org.kalypso.afgui.scenarios.TaskExecutor;
 import org.kalypso.afgui.views.WorkflowView;
-import org.kalypso.commons.java.lang.Objects;
 import org.osgi.framework.BundleContext;
 
 import de.renew.workflow.base.ITask;
 import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
-import de.renew.workflow.connector.cases.IScenario;
-import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 import de.renew.workflow.connector.context.IActiveScenarioChangeListener;
 import de.renew.workflow.connector.worklist.ITaskExecutor;
@@ -58,9 +55,9 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
   // The shared instance
   private static KalypsoAFGUIFrameworkPlugin plugin;
 
-  private ActiveWorkContext m_activeWorkContext;
+  private ActiveWorkContext<IScenario> m_activeWorkContext;
 
-  private CaseHandlingSourceProvider<IModel> m_szenarioSourceProvider;
+  private CaseHandlingSourceProvider<IScenario, IModel> m_szenarioSourceProvider;
 
   private SzenarioDataProvider m_szenarioDataProvider;
 
@@ -71,10 +68,10 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
   private TaskExecutionListener m_taskExecutionListener;
 
   // Executes the default task as soon as the scenario was activated
-  private final IActiveScenarioChangeListener m_activeContextChangeListener = new IActiveScenarioChangeListener()
+  private final IActiveScenarioChangeListener<IScenario> m_activeContextChangeListener = new IActiveScenarioChangeListener<IScenario>()
   {
     @Override
-    public void activeScenarioChanged( final CaseHandlingProjectNature newProject, final IScenario caze )
+    public void activeScenarioChanged( final CaseHandlingProjectNature<IScenario> newProject, final IScenario caze )
     {
       handleScenarioChanged( newProject, caze );
     }
@@ -127,14 +124,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
           if( !forced && m_taskExecutionAuthority.canStopTask( m_taskExecutor.getActiveTask() ) )
           {
             // IMPORTAN: only close views on workflow perspective
-            final IWorkbenchWindow window = workbench2.getActiveWorkbenchWindow();
-            if( Objects.isNull( window ) )
-              return true;
-
-            final IWorkbenchPage activePage = window.getActivePage();
-            if( Objects.isNull( activePage ) )
-              return true;
-
+            final IWorkbenchPage activePage = workbench2.getActiveWorkbenchWindow().getActivePage();
             final IPerspectiveDescriptor perspective = activePage.getPerspective();
             if( !ObjectUtils.equals( perspective.getId(), Perspective.ID ) )
               return true;
@@ -163,7 +153,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
   {
     if( m_activeWorkContext == null )
     {
-      m_activeWorkContext = new ActiveWorkContext( ScenarioHandlingProjectNature.ID );
+      m_activeWorkContext = new ActiveWorkContext<IScenario>( ScenarioHandlingProjectNature.ID );
       m_activeWorkContext.addActiveContextChangeListener( m_activeContextChangeListener );
     }
 
@@ -171,13 +161,12 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     {
       // This can only be called if the platform has already been started
       m_szenarioDataProvider = new SzenarioDataProvider();
-      m_szenarioSourceProvider = new CaseHandlingSourceProvider<IModel>( m_activeWorkContext, m_szenarioDataProvider );
+      m_szenarioSourceProvider = new CaseHandlingSourceProvider<IScenario, IModel>( m_activeWorkContext, m_szenarioDataProvider );
 
       if( PlatformUI.isWorkbenchRunning() )
       {
         final IWorkbench workbench = PlatformUI.getWorkbench();
         final IEvaluationService evalService = (IEvaluationService) workbench.getService( IEvaluationService.class );
-        // FIXME: must be called in ui thread
         evalService.addSourceProvider( m_szenarioSourceProvider );
 
         new WorkspaceJob( "" ) //$NON-NLS-1$
@@ -229,7 +218,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     super.stop( context );
   }
 
-  public ActiveWorkContext getActiveWorkContext( )
+  public ActiveWorkContext<IScenario> getActiveWorkContext( )
   {
     startActiveWorkContext();
     return m_activeWorkContext;
@@ -253,7 +242,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 
   /**
    * Returns the shared instance
-   *
+   * 
    * @return the shared instance
    */
   public static KalypsoAFGUIFrameworkPlugin getDefault( )
@@ -263,7 +252,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 
   /**
    * Returns an image descriptor for the image file at the given plug-in relative path
-   *
+   * 
    * @param path
    *          the path
    * @return the image descriptor
@@ -290,9 +279,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     m_activeWorkContext = null;
   }
 
-  // FIXME: move this into scenari oactivation code; should not be handled via listeners, probably only works because
-  // this listener is always the first one to be executed...
-  protected void handleScenarioChanged( final CaseHandlingProjectNature nature, final IScenario caze )
+  protected void handleScenarioChanged( final CaseHandlingProjectNature<IScenario> nature, final IScenario caze )
   {
     // First initialize the context (and loading of all the models); else the default task does not work
     // REMARK: normally, this should be done inside the scenario framework (for example at the activeWorkContext)
@@ -301,9 +288,9 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 
     // Then execute default task
     final IWorkflow workflow = ScenarioHelper.findWorkflow( caze, nature );
-    // lazy check and insurance for backwards compatibility
+    //lazy check and insurance for backwards compatibility 
     ScenarioHelper.ensureBackwardsCompatibility( caze, nature );
-
+    
     final ITask defaultTask = workflow == null ? null : workflow.getDefaultTask();
     if( defaultTask != null )
     {

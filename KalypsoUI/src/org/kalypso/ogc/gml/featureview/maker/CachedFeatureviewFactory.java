@@ -52,21 +52,19 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.commons.i18n.ITranslator;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.featureview.FeatureviewType;
-import org.kalypso.template.types.I18NTranslatorType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.catalogs.FeatureTypeFeatureviewCatalog;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Helper class to manage generated feature-view-templates.
- *
+ * 
  * @author Belger
  */
 public class CachedFeatureviewFactory implements IFeatureviewFactory
@@ -190,37 +188,5 @@ public class CachedFeatureviewFactory implements IFeatureviewFactory
   {
     final FeatureviewTypeWithContext view = new FeatureviewTypeWithContext( type, context );
     m_viewMap.put( type.getTypename(), view );
-  }
-
-  /**
-   * Adds all views of the given template to this factory and sets the default translator.
-   */
-  public void addViews( final Featuretemplate template, final URL context )
-  {
-    final List<FeatureviewType> view = template.getView();
-    for( final FeatureviewType element : view )
-      addView( element, context );
-
-    final I18NTranslatorType translatorElement = template.getTranslator();
-    final ITranslator translator = TemplateUtilities.createTranslator( translatorElement, context );
-    setDefaultTranslator( translator );
-  }
-
-  @Override
-  public ITranslator getDefaultTranslator( )
-  {
-    return m_delegateFactory.getDefaultTranslator();
-  }
-
-  @Override
-  public void setDefaultTranslator( final ITranslator translator )
-  {
-    m_delegateFactory.setDefaultTranslator( translator );
-  }
-
-  @Override
-  public ITranslator getTranslator( final FeatureviewTypeWithContext view, final URL context )
-  {
-    return m_delegateFactory.getTranslator( view, context );
   }
 }

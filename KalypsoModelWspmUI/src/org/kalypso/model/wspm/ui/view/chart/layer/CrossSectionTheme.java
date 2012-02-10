@@ -40,8 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart.layer;
 
-import org.kalypso.model.wspm.core.IWspmLayers;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.IProfilView;
@@ -59,19 +60,26 @@ public class CrossSectionTheme extends AbstractProfilTheme
 
   public CrossSectionTheme( final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
-    super( profil, IWspmLayers.LAYER_GELAENDE, TITLE, chartLayers, cm );
+    super( profil, IWspmConstants.LAYER_GELAENDE, TITLE, chartLayers, cm );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#createLayerPanel(org.kalypso.model.wspm.core.profil.IProfil)
+   */
   @Override
   public IProfilView createLayerPanel( )
   {
     return new GelaendePanel( getProfil(), this );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
+   *      org.kalypso.model.wspm.core.profil.IProfilChange[])
+   */
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
+  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
-    if( hint.isSelectionChanged() || hint.isPointValuesChanged() || hint.isPointsChanged() )
+    if( hint.isActivePointChanged() || hint.isPointValuesChanged() || hint.isPointsChanged() )
     {
       fireLayerContentChanged();
     }

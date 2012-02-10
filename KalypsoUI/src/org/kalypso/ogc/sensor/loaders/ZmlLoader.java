@@ -40,12 +40,14 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.loaders;
 
+import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -61,7 +63,7 @@ import org.kalypso.ogc.sensor.zml.ZmlFactory;
 
 /**
  * A specific loader for ZML-Files. Loads <code>ZmlObservation</code> objects.
- *
+ * 
  * @author schlienger
  */
 public class ZmlLoader extends AbstractLoader
@@ -132,7 +134,16 @@ public class ZmlLoader extends AbstractLoader
       if( file == null )
         throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.loaders.ZmlLoader.2" ) + url ); //$NON-NLS-1$
 
-      ZmlFactory.writeToFile( (IObservation) data, file );
+      // set contents of ZML-file
+      final SetContentHelper helper = new SetContentHelper()
+      {
+        @Override
+        protected void write( final OutputStreamWriter writer ) throws Throwable
+        {
+          ZmlFactory.writeToWriter( (IObservation) data, writer, null );
+        }
+      };
+      helper.setFileContents( file, false, true, monitor );
     }
     catch( final Throwable e ) // generic exception caught for simplicity
     {

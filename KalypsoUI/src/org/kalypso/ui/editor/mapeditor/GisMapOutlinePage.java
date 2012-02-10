@@ -45,11 +45,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.jface.action.IContributionItem;
-import org.eclipse.jface.action.IContributionManager;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -65,16 +66,17 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.part.IPageBookViewPage;
 import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.part.Page;
+import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.services.IServiceScopes;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
-import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.map.listeners.MapPanelAdapter;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ogc.gml.outline.handler.ToggleCompactOutlineHandler;
 import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
@@ -83,7 +85,7 @@ import org.kalypso.util.command.JobExclusiveCommandTarget;
 
 /**
  * OutlinePage für das MapView-Template
- *
+ * 
  * @author Gernot Belger
  */
 public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPageBookViewPage, ICommandTarget
@@ -94,8 +96,12 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
 
   private final IMapPanelListener m_mapPanelListener = new MapPanelAdapter()
   {
+    /**
+     * @see org.kalypso.ogc.gml.map.MapPanelAdapter#onMapModelChanged(org.kalypso.ogc.gml.map.MapPanel,
+     *      org.kalypso.ogc.gml.mapmodel.IMapModell, org.kalypso.ogc.gml.mapmodel.IMapModell)
+     */
     @Override
-    public void onMapModelChanged( final IMapPanel source, final IKalypsoLayerModell oldModel, final IKalypsoLayerModell newModel )
+    public void onMapModelChanged( final IMapPanel source, final IMapModell oldModel, final IMapModell newModel )
     {
       handleMapModelChanged( newModel );
     }
@@ -114,11 +120,8 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
    */
   private final Set<String> m_actionURIs = new HashSet<String>();
 
-  private final MenuManager m_pagePopup = new MenuManager( "#MapOutlineContextMenu" ); //$NON-NLS-1$
-
-  private final ToolBarManager m_pageToolbar = new ToolBarManager();
-
-  private final MenuManager m_pageMenu = new MenuManager();
+  /** Menu-Manager for context menu */
+  private MenuManager m_popupMgr;
 
   public GisMapOutlinePage( final JobExclusiveCommandTarget commandTarget )
   {
@@ -149,6 +152,9 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
     return m_outlineViewer;
   }
 
+  /**
+   * @see org.eclipse.ui.part.IPage#createControl(org.eclipse.swt.widgets.Composite)
+   */
   @Override
   public void createControl( final Composite parent )
   {
@@ -164,50 +170,63 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
     actionBars.setGlobalActionHandler( ActionFactory.UNDO.getId(), m_commandTarget.undoAction );
     actionBars.setGlobalActionHandler( ActionFactory.REDO.getId(), m_commandTarget.redoAction );
 
+    m_popupMgr = new MenuManager( "#MapOutlineContextMenu" ); //$NON-NLS-1$
+
     final Control outlineControl = m_outlineViewer.getControl();
-    final Menu menu = m_pagePopup.createContextMenu( outlineControl );
+    final Menu menu = m_popupMgr.createContextMenu( outlineControl );
     outlineControl.setMenu( menu );
 
-    populateActionBars( site );
-    setCompact( true );
+    // Refresh updateable element later, else they won't find this page
+    final UIJob job = new UIJob( "Update outline action bars" ) //$NON-NLS-1$
+    {
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        if( !outlineControl.isDisposed() )
+        {
+          populateActionBars();
+          setCompact( true );
+        }
+
+        return Status.OK_STATUS;
+      }
+    };
+
+    job.setSystem( true );
+    job.schedule();
   }
 
   /**
    * Populates this pages action bars with items from the given menu-contributions.
    */
-  protected void populateActionBars( final IPageSite site )
+  protected void populateActionBars( )
   {
     releaseActionBars();
 
-    // TRICKY/BUGFIX: we cannot directly fill the contributions into the site-action bars
-    // as they do not implement ContributionManager
-    // We hence fill everything into separate manager and copy everything to the right place.
+    final IPageSite site = getSite();
+    if( site == null )
+      return;
+
+    final IActionBars actionBars = site.getActionBars();
+    final IToolBarManager toolBarManager = actionBars.getToolBarManager();
+    final IMenuManager menuManager = actionBars.getMenuManager();
+
     for( final String uri : m_actionURIs )
     {
       if( uri.startsWith( "toolbar" ) ) //$NON-NLS-1$
-        ContributionUtils.populateContributionManager( site, m_pageToolbar, uri );
+        ContributionUtils.populateContributionManager( site, toolBarManager, uri );
       else if( uri.startsWith( "menu" ) ) //$NON-NLS-1$
-        ContributionUtils.populateContributionManager( site, m_pageMenu, uri );
+        ContributionUtils.populateContributionManager( site, menuManager, uri );
       else if( uri.startsWith( "popup" ) ) //$NON-NLS-1$
-        ContributionUtils.populateContributionManager( site, m_pagePopup, uri );
+      {
+        if( m_popupMgr != null )
+          ContributionUtils.populateContributionManager( site, m_popupMgr, uri );
+      }
       else
         System.out.println( String.format( "Unable to add uri '%s' to outline action bars. Unknown prefix.", uri ) ); //$NON-NLS-1$
     }
 
-    /* Now copy everything to the real action bars */
-    final IActionBars actionBars = site.getActionBars();
-    copyItems( m_pageToolbar, actionBars.getToolBarManager() );
-    copyItems( m_pageMenu, actionBars.getMenuManager() );
-
     actionBars.updateActionBars();
-  }
-
-  // TODO: check, if this always gives the correct result
-  private void copyItems( final IContributionManager from, final IContributionManager to )
-  {
-    final IContributionItem[] items = from.getItems();
-    for( final IContributionItem item : items )
-      to.add( item );
   }
 
   /**
@@ -220,19 +239,21 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
       return;
 
     final IActionBars actionBars = site.getActionBars();
+    final IToolBarManager toolBarManager = actionBars.getToolBarManager();
     final IMenuManager menuManager = actionBars.getMenuManager();
-    ContributionUtils.releaseContributions( site, m_pageToolbar );
+    ContributionUtils.releaseContributions( site, toolBarManager );
     ContributionUtils.releaseContributions( site, menuManager );
-    if( m_pagePopup != null )
-      ContributionUtils.releaseContributions( site, m_pagePopup );
+    if( m_popupMgr != null )
+      ContributionUtils.releaseContributions( site, m_popupMgr );
   }
 
+  /**
+   * @see org.eclipse.ui.part.IPage#dispose()
+   */
   @Override
   public void dispose( )
   {
     releaseActionBars();
-
-    m_pageToolbar.dispose();
 
     if( m_outlineViewer != null )
     {
@@ -270,7 +291,7 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
 
   protected void setStyleSelection( final ISelectionProvider selectionProvider )
   {
-    // bei jedem Focus, überprüfen, ob outline beim StyleEditor registriert ist.
+    // bei jedem Focus, überprüfe ob outline beim StyleEditor registriert ist.
     // TODO: remove, style editor must pull information instead
     final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
     final IWorkbenchPage activePage = window.getActivePage();
@@ -319,7 +340,7 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
     m_commandTarget.postCommand( command, runnable );
   }
 
-  protected void handleMapModelChanged( final IKalypsoLayerModell newModel )
+  protected void handleMapModelChanged( final IMapModell newModel )
   {
     if( m_outlineViewer != null )
       m_outlineViewer.setMapModel( newModel );
@@ -408,12 +429,12 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
 
   /**
    * This function searches the content of the viewer for a node, which contains the given theme.
-   *
+   * 
    * @param theme
    *          The theme.
    * @return The node or null.
    */
-  public IThemeNode findNode( final IKalypsoTheme theme )
+  public IThemeNode findNode( IKalypsoTheme theme )
   {
     if( m_outlineViewer == null || m_outlineViewer.getControl().isDisposed() )
       return null;

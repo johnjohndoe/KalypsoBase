@@ -51,6 +51,11 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class DynamicTabFolderFeatureControlFactory implements IFeatureControlFactory
 {
+  /**
+   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControlFactory#createFeatureControl(org.kalypso.ogc.gml.featureview.control.IFeatureComposite,
+   *      org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType,
+   *      org.kalypso.template.featureview.ControlType, org.kalypso.gmlschema.annotation.IAnnotation)
+   */
   @Override
   public IFeatureControl createFeatureControl( final IFeatureComposite parentComposite, final Feature feature, final IPropertyType pt, final ControlType controlType, final IAnnotation annotation )
   {
@@ -58,4 +63,5 @@ public class DynamicTabFolderFeatureControlFactory implements IFeatureControlFac
 
     return new DynamicTabFolderFeatureControl( parentComposite, feature, rt );
   }
+
 }

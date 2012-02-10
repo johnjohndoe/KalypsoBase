@@ -54,8 +54,8 @@ import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.zml.core.diagram.base.IZmlLayer;
-import org.kalypso.zml.core.diagram.base.IZmlLayerProvider;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
+import org.kalypso.zml.core.diagram.data.IZmlLayerProvider;
 import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
@@ -79,7 +79,7 @@ import de.openali.odysseus.chart.framework.util.resource.IPair;
  */
 public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
 {
-  private IZmlLayerDataHandler m_dataHandler;
+  private IZmlLayerDataHandler m_data;
 
   private String m_labelDescriptor;
 
@@ -125,10 +125,16 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   }
 
   @Override
+  public ILegendEntry[] createLegendEntries( )
+  {
+    return m_legend.createLegendEntries();
+  }
+
+  @Override
   public void dispose( )
   {
-    if( m_dataHandler != null )
-      m_dataHandler.dispose();
+    if( m_data != null )
+      m_data.dispose();
 
     super.dispose();
   }
@@ -136,7 +142,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   @Override
   public IZmlLayerDataHandler getDataHandler( )
   {
-    return m_dataHandler;
+    return m_data;
   }
 
   public ZmlLineLayerRangeHandler getRangeHandler( )
@@ -153,14 +159,13 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   @Override
   public synchronized ILegendEntry[] getLegendEntries( )
   {
-    return m_legend.createLegendEntries();
-
+    return createLegendEntries();
   }
 
   @Override
-  public IDataRange<Number> getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
-    return m_range.getTargetRange( (IDataRange<Number>) domainIntervall );
+    return m_range.getTargetRange( domainIntervall );
   }
 
   @Override
@@ -169,7 +174,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     if( m_labelDescriptor == null )
       return super.getTitle();
 
-    final IObservation observation = (IObservation) getDataHandler().getAdapter( IObservation.class );
+    final IObservation observation = getDataHandler().getObservation();
     if( observation == null )
       return m_labelDescriptor;
 
@@ -196,13 +201,12 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   @SuppressWarnings("unchecked")
   IPair<Number, Number>[] getFilteredPoints( final IDataRange<Number> domainIntervall ) throws SensorException
   {
-    final IObservation observation = (IObservation) m_dataHandler.getAdapter( IObservation.class );
+    final IObservation observation = m_data.getObservation();
     if( observation == null )
       return new IPair[0];
 
     final LineLayerModelVisitor visitor = new LineLayerModelVisitor( this, getFilters(), domainIntervall );
-    observation.accept( visitor, m_dataHandler.getRequest(), 1 );
-
+    observation.accept( visitor, null, 1 );
     return visitor.getPoints();
   }
 
@@ -219,7 +223,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
 
     final Point[] screenPoints = toScreen( point );
 
-    final PointFigure pf = new PointFigure();
+    final PointFigure pf = getPointFigure();
     pf.setStyle( pointStyle );
     pf.setPoints( screenPoints );
     pf.paint( gc );
@@ -238,10 +242,10 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
 
   private void paintFigures( final GC gc, final Point[] points )
   {
-    final ILineStyle lineStyle = getMyLineStyle();
+    final ILineStyle lineStyle = getLineStyle();
     if( lineStyle != null )
     {
-      final PolylineFigure lf = new PolylineFigure();
+      final PolylineFigure lf = getPolylineFigure();
       lf.setStyle( lineStyle );
       lf.setPoints( points );
       lf.paint( gc );
@@ -250,7 +254,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     final IPointStyle pointStyle = getMyPointStyle();
     if( pointStyle != null )
     {
-      final PointFigure pf = new PointFigure();
+      final PointFigure pf = getPointFigure();
       pf.setStyle( pointStyle );
       pf.setPoints( points );
       pf.paint( gc );
@@ -292,7 +296,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
 
   private DateRange getRange( )
   {
-    final IRequest request = m_dataHandler.getRequest();
+    final IRequest request = m_data.getRequest();
     if( request == null )
       return null;
 
@@ -302,10 +306,10 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   @Override
   public void setDataHandler( final IZmlLayerDataHandler handler )
   {
-    if( m_dataHandler != null )
-      m_dataHandler.dispose();
+    if( m_data != null )
+      m_data.dispose();
 
-    m_dataHandler = handler;
+    m_data = handler;
   }
 
   @Override
@@ -348,7 +352,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     } );
   }
 
-  protected final ILineStyle getMyLineStyle( )
+  ILineStyle getLineStyle( )
   {
     if( Objects.isNotNull( m_lineStyle ) )
       return m_lineStyle;

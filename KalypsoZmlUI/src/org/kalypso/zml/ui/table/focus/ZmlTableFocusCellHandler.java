@@ -50,26 +50,26 @@ import org.eclipse.jface.viewers.TableViewerEditor;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableListener;
-import org.kalypso.zml.ui.table.ZmlTableComposite;
 import org.kalypso.zml.ui.table.focus.cursor.ITableCursor;
 import org.kalypso.zml.ui.table.focus.cursor.ZmlCellNavigationStrategy;
 import org.kalypso.zml.ui.table.focus.cursor.ZmlCursorCellHighlighter;
 import org.kalypso.zml.ui.table.focus.cursor.ZmlTableCursor;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlTableFocusCellHandler implements IZmlTableListener, IZmlTableFocusHandler
 {
-  private final ZmlTableComposite m_table;
+  private final IZmlTable m_table;
 
   private ZmlTableFocusCellManager m_cellManager;
 
   protected ZmlTableCursor m_cursor;
 
-  public ZmlTableFocusCellHandler( final ZmlTableComposite table )
+  public ZmlTableFocusCellHandler( final IZmlTable table )
   {
     m_table = table;
 

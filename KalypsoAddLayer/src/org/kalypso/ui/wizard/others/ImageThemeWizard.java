@@ -46,13 +46,14 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.action.AddThemeCommand;
+import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 
 /**
  * The wizard for a image theme.
- *
+ * 
  * @author Holger Albert
  */
-public class ImageThemeWizard extends AbstractOtherThemeWizard
+public class ImageThemeWizard extends AbstractOtherThemeWizard implements IKalypsoDataImportWizard
 {
   /**
    * The wizard page for entering properties for a image theme.
@@ -88,13 +89,13 @@ public class ImageThemeWizard extends AbstractOtherThemeWizard
    *      java.lang.String)
    */
   @Override
-  protected ICommand createCommand( final IKalypsoLayerModell mapModell, final String themeName )
+  protected ICommand createCommand( IKalypsoLayerModell mapModell, String themeName )
   {
     /* Create the add theme command. */
-    final AddThemeCommand command = new AddThemeCommand( mapModell, themeName, "image", "", "" );
+    AddThemeCommand command = new AddThemeCommand( mapModell, themeName, "image", "", "" );
 
     /* Add the selected properties. */
-    final Map<String, String> properties = m_imageThemeWizardPage.getProperties();
+    Map<String, String> properties = m_imageThemeWizardPage.getProperties();
     if( properties != null && properties.size() > 0 )
       command.addProperties( properties );
 

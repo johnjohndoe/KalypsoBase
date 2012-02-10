@@ -173,7 +173,8 @@ public class LayerTableContentProvider implements IStructuredContentProvider
       return;
 
     final FeatureList featureList = featureProvider.getFeatureList();
-    if( featureList == null )
+    final List<Feature> featuresToRemove = featureProvider == null ? null : featureProvider.getFeatures();
+    if( featureList == null || featuresToRemove == null )
       return;
 
     // if viewer selection and tree selection are the same, do nothing
@@ -184,6 +185,7 @@ public class LayerTableContentProvider implements IStructuredContentProvider
     final Object[] managerFeatures = managerSelection.toArray();
     if( Arrays.equalsUnordered( managerFeatures, selection.toArray() ) )
       return;
+
 
     // add current selection
     final List<EasyFeatureWrapper> wrappers = new ArrayList<EasyFeatureWrapper>( selection.size() );
@@ -199,7 +201,8 @@ public class LayerTableContentProvider implements IStructuredContentProvider
     }
 
     final EasyFeatureWrapper[] izis = wrappers.toArray( new EasyFeatureWrapper[wrappers.size()] );
-    m_selectionManager.setSelection( izis );
+    final Feature[] featureArray = featuresToRemove.toArray( new Feature[featuresToRemove.size()] );
+    m_selectionManager.changeSelection( featureArray, izis );
   }
 
   protected void handleFeaturesChanged( final ModellEvent event )
@@ -233,7 +236,7 @@ public class LayerTableContentProvider implements IStructuredContentProvider
     {
       final IFeaturesProvider featuresProvider = m_viewer.getInput();
       final FeatureList featureList = featuresProvider == null ? null : featuresProvider.getFeatureList();
-      final Feature parentFeature = featureList == null ? null : featureList.getOwner();
+      final Feature parentFeature = featureList == null ? null : featureList.getParentFeature();
 
       final Feature[] features = ((FeatureStructureChangeModellEvent) event).getParentFeatures();
       for( final Feature feature : features )

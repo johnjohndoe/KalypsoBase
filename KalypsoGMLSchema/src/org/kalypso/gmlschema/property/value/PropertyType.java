@@ -59,7 +59,7 @@ import org.kalypso.gmlschema.xml.TypeReference;
 
 /**
  * Representation a property definition from xml schema.
- * 
+ *
  * @author doemming
  */
 public class PropertyType extends AbstractPropertyTypeFromElement implements IValuePropertyType
@@ -166,7 +166,7 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
             final Restriction restriction = contentSimpleType.getRestriction();
 
             if( restriction != null )
-              m_restrictions = ContentRestrictionFactory.createRestrictions( simpleQName, restriction, restrictionSchema, qnames );
+              m_restrictions = ContentRestrictionFactory.createRestrictions(simpleQName,restriction, restrictionSchema, qnames);
           }
         }
 
@@ -177,6 +177,9 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
   @Override
   public QName getValueQName( )
   {
+    if( m_propertyContentType == null )
+      return null;
+
     return m_propertyContentType.getValueQName();
   }
 

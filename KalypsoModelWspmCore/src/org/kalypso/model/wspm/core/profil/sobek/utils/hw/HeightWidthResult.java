@@ -49,7 +49,7 @@ import java.util.TreeSet;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.gmlschema.GMLSchemaFactory;
@@ -113,9 +113,7 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
     if( m_polygon != null )
       return;
 
-    final List<Coordinate> buildPolygon = buildPolygon();
-
-    final List<Coordinate> crds = new ArrayList<Coordinate>( buildPolygon );
+    final List<Coordinate> crds = new ArrayList<Coordinate>( buildPolygon() );
     if( crds.size() < 3 )
     {
       addStatus( IStatus.WARNING, "Invalid geometry (not enough points)", null ); //$NON-NLS-1$
@@ -123,9 +121,7 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
     }
 
     if( !crds.get( 0 ).equals( crds.get( crds.size() - 1 ) ) )
-    {
       crds.add( new Coordinate( crds.get( 0 ) ) );
-    }
     final Coordinate[] crdArray = crds.toArray( new Coordinate[crds.size()] );
     final LinearRing ring = GF.createLinearRing( crdArray );
 
@@ -138,7 +134,7 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
       final TopologyValidationError validationError = isValidOp.getValidationError();
       final String message = validationError.getMessage();
       final Coordinate coordinate = validationError.getCoordinate();
-      final String msg = String.format( "Invalid geometry: '%s' at %s", message, coordinate ); //$NON-NLS-1$
+      final String msg = String.format( "Invalid geometry: '%s' at ", message, coordinate ); //$NON-NLS-1$
       addStatus( IStatus.ERROR, msg, null );
       return;
     }
@@ -228,13 +224,10 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
 
     double maxWidth = -Double.MAX_VALUE;
     for( final double mWidth : m_widths )
-    {
       maxWidth = Math.max( maxWidth, mWidth );
-    }
 
-    final String id = m_id + "_" + getName(); //$NON-NLS-1$
-    final String name = m_name + "_" + getName(); //$NON-NLS-1$
-
+    final String id = m_id;
+    final String name = m_name;
     formatter.format( "CRDS id '%s' nm '%s' ty 0 wm %f w1 0 w2 0 sw 0 gl 0 gu 0 lt lw%n", id, name, maxWidth ); //$NON-NLS-1$
     formatter.format( "TBLE%n" ); //$NON-NLS-1$
     for( int i = 0; i < m_heights.length; i++ )
@@ -301,7 +294,7 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
 
       final File shapeFile = new File( m_tempDir, m_parentName + "_" + getName() ); //$NON-NLS-1$
 
-      ShapeSerializer.serialize( workspace, shapeFile.getAbsolutePath(), (String) null );
+      ShapeSerializer.serialize( workspace, shapeFile.getAbsolutePath(), null );
     }
     catch( final GM_Exception e )
     {
@@ -341,12 +334,6 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
   {
     final double width = (width1 + width2) / 2;
     return width * height;
-  }
-
-  @Override
-  public Polygon getPolygon( )
-  {
-    return m_polygon;
   }
 
   protected abstract List<Coordinate> buildPolygon( );

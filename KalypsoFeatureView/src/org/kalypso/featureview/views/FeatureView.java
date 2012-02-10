@@ -50,10 +50,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -70,16 +68,16 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartReference;
-import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.commons.command.ICommandManager;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
-import org.kalypso.contribs.eclipse.jface.viewers.SelectionProviderAdapter;
 import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
 import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -91,11 +89,9 @@ import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
 import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
-import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.template.featureview.FeatureviewType;
+import org.kalypso.ui.editor.actions.FeatureSelectionActionGroup;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -114,7 +110,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * </p>
  * <ul>
  * <li>Shows the current selected feature in either a view or an editor. The latter can only be recieved, if the editor
- * adapts {@link org.eclipse.jface.viewers.ISelectionProvider} or {@linked
+ * adapts {@link org.eclipse.jface.viewers.ISelectionProvider}or {@linked
  * org.eclipse.jface.viewers.IPostSelectionProvider}.</li>
  * <li>In preference, the view listens to post-selections, in order to change the shown feature not too often.</li>
  * <li>If the returned selection is a {@link org.kalypso.ogc.gml.selection.IFeatureSelection}, changes (i.e. made by the
@@ -173,7 +169,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
     {
       // just show this feature in the view, don't change the selection this doesn't work
       // don't change the command manager, changing the feature only work inside the same workspace
-      activateFeature( feature, false );
+      activateFeature( feature, false, null );
     }
   };
 
@@ -185,7 +181,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
   protected final JobExclusiveCommandTarget m_target = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
 
-  protected CommandableWorkspace m_commandManager = null;
+  protected ICommandManager m_commandManager = null;
 
   private Group m_mainGroup;
 
@@ -224,6 +220,8 @@ public class FeatureView extends ViewPart implements ModellEventListener
     }
   };
 
+  private final FeatureSelectionActionGroup m_featureSelectionActionGroup = new FeatureSelectionActionGroup();
+
   private IDialogSettings m_settings;
 
   private Action m_showTablesAction = null;
@@ -236,8 +234,6 @@ public class FeatureView extends ViewPart implements ModellEventListener
    * The part from which the last selection was retrieved.
    */
   private IWorkbenchPart m_selectionSourcePart;
-
-  final ISelectionProvider m_selectionProvider = new SelectionProviderAdapter();
 
   public FeatureView( )
   {
@@ -257,6 +253,9 @@ public class FeatureView extends ViewPart implements ModellEventListener
     m_cfvFactory.reset();
   }
 
+  /**
+   * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite)
+   */
   @Override
   public void init( final IViewSite site ) throws PartInitException
   {
@@ -266,22 +265,25 @@ public class FeatureView extends ViewPart implements ModellEventListener
     page.getWorkbenchWindow().getSelectionService().addPostSelectionListener( m_selectionListener );
     page.addPartListener( m_partListener );
 
-    site.setSelectionProvider( m_selectionProvider );
+    m_featureSelectionActionGroup.setPart( this );
+    m_featureSelectionActionGroup.setContext( new ActionContext( StructuredSelection.EMPTY ) );
+    m_featureSelectionActionGroup.fillActionBars( site.getActionBars() );
   }
 
+  /**
+   * @see org.eclipse.ui.IWorkbenchPart#dispose()
+   */
   @Override
   public void dispose( )
   {
-    activateFeature( null, false ); // unhook listeners
+    activateFeature( null, false, null ); // to unhook listeners
     m_featureComposite.dispose();
 
-    final IWorkbenchPartSite site = getSite();
-
-    site.setSelectionProvider( null );
-
-    final IWorkbenchPage page = site.getPage();
+    final IWorkbenchPage page = getSite().getPage();
     page.removePartListener( m_partListener );
     page.getWorkbenchWindow().getSelectionService().removePostSelectionListener( m_selectionListener );
+
+    m_featureSelectionActionGroup.dispose();
   }
 
   public void setShowTables( final boolean showTables )
@@ -293,7 +295,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
     m_settings.put( STORE_SHOW_TABLES, showTables );
 
-    activateFeature( currentFeature, true );
+    activateFeature( currentFeature, true, null );
   }
 
   public boolean isShowTables( )
@@ -310,7 +312,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
     m_settings.put( STORE_SHOW_VALIDATION_OK, showOk );
 
-    activateFeature( currentFeature, true );
+    activateFeature( currentFeature, true, null );
   }
 
   public boolean isShowOk( )
@@ -328,14 +330,36 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
       final Feature feature = featureFromSelection( featureSel );
       m_commandManager = featureSel.getWorkspace( feature );
-      activateFeature( feature, false );
+      activateFeature( feature, false, selection );
     }
     else
     {
       m_commandManager = null;
-      activateFeature( null, false );
+      activateFeature( null, false, null );
     }
+
+    // final FeatureSelectionActionGroup featureSelectionActionGroup = m_featureSelectionActionGroup;
+    //
+    // runAsync( new Runnable()
+    // {
+    // public void run( )
+    // {
+    // featureSelectionActionGroup.getContext().setSelection( selection );
+    // featureSelectionActionGroup.updateActionBars();
+    // }
+    // } );
   }
+
+  // private void runAsync( final Runnable runnable )
+  // {
+  // final Group mainGroup = m_mainGroup;
+  // final Control control = m_featureComposite.getControl();
+  // if( mainGroup != null && !mainGroup.isDisposed() && control != null && !control.isDisposed() )
+  // {
+  // if( !control.isDisposed() )
+  // control.getDisplay().asyncExec( runnable );
+  // }
+  // }
 
   protected void handlePartClosed( final IWorkbenchPart part )
   {
@@ -374,12 +398,12 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
     m_featureComposite.addChangeListener( m_fcl );
 
-    activateFeature( null, false );
+    activateFeature( null, false, null );
 
     // add showTables-Action to menu-bar
     // we do this here, because adding it via the org.eclipse.ui.viewActions extension-point
     // does not allow to set the checked state dynamically
-    m_showTablesAction = new Action( Messages.getString( "org.kalypso.featureview.views.FeatureView.2" ), IAction.AS_CHECK_BOX ) //$NON-NLS-1$
+    m_showTablesAction = new Action( Messages.getString( "org.kalypso.featureview.views.FeatureView.2" ), Action.AS_CHECK_BOX ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -392,7 +416,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
     };
     m_showTablesAction.setChecked( isShowTables() );
 
-    m_showValidationOkAction = new Action( Messages.getString( "org.kalypso.featureview.views.FeatureView.3" ), IAction.AS_CHECK_BOX ) //$NON-NLS-1$
+    m_showValidationOkAction = new Action( Messages.getString( "org.kalypso.featureview.views.FeatureView.3" ), Action.AS_CHECK_BOX ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -429,10 +453,11 @@ public class FeatureView extends ViewPart implements ModellEventListener
    * @param force
    *          if true, always reset this view, else, only if feature has really changed.
    */
-  protected void activateFeature( final Feature feature, final boolean force )
+  protected void activateFeature( final Feature feature, final boolean force, final ISelection selection )
   {
     final Group mainGroup = m_mainGroup;
     final ScrolledCompositeCreator creator = m_creator;
+    final FeatureSelectionActionGroup featureSelectionActionGroup = m_featureSelectionActionGroup;
 
     final Job job = new UIJob( getSite().getShell().getDisplay(), Messages.getString( "org.kalypso.featureview.views.FeatureView.4" ) ) //$NON-NLS-1$
     {
@@ -449,8 +474,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
         if( oldWorkspace != null )
         {
           oldWorkspace.removeModellListener( FeatureView.this );
-          // TODO: WHY?
-          // / getSite().setSelectionProvider( null );
+          getSite().setSelectionProvider( null );
         }
         try
         {
@@ -471,7 +495,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
         m_featureComposite.setFeature( feature );
 
         final String groupLabel;
-        if( workspace != null && feature != null && mainGroup != null && !mainGroup.isDisposed() )
+        if( workspace != null && feature != null && mainGroup != null && (!mainGroup.isDisposed()) )
         {
           workspace.addModellListener( FeatureView.this );
 
@@ -510,14 +534,8 @@ public class FeatureView extends ViewPart implements ModellEventListener
             mainGroup.setFocus();
         }
 
-        if( feature == null || m_commandManager == null )
-          m_selectionProvider.setSelection( StructuredSelection.EMPTY );
-        else
-        {
-          final FeatureSelectionManager2 featureSelection = new FeatureSelectionManager2();
-          featureSelection.setSelection( new EasyFeatureWrapper[] { new EasyFeatureWrapper( m_commandManager, feature ) } );
-          m_selectionProvider.setSelection( featureSelection );
-        }
+        featureSelectionActionGroup.getContext().setSelection( selection );
+        featureSelectionActionGroup.updateActionBars();
 
         return Status.OK_STATUS;
       }
@@ -606,10 +624,5 @@ public class FeatureView extends ViewPart implements ModellEventListener
   public void setToolkit( final FormToolkit toolkit )
   {
     m_toolkit = toolkit;
-  }
-
-  protected CachedFeatureviewFactory getCachedFeatureViewFactory( )
-  {
-    return m_cfvFactory;
   }
 }

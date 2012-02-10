@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.feature;
 
@@ -54,7 +54,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 
 /**
  * Feature with cache for properties.
- *
+ * 
  * @author Gernot Belger
  */
 public class AbstractCachedFeature2 extends Feature_Impl
@@ -66,8 +66,6 @@ public class AbstractCachedFeature2 extends Feature_Impl
 
   private final Map<QName, Object> m_cache = new HashMap<QName, Object>();
 
-  private boolean m_lock;
-
   protected AbstractCachedFeature2( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues, final FeatureCacheDefinition definition )
   {
     super( parent, parentRelation, ft, id, propValues );
@@ -75,6 +73,10 @@ public class AbstractCachedFeature2 extends Feature_Impl
     m_cacheDefinition = definition;
   }
 
+  /**
+   * @see org.kalypsodeegree_impl.model.feature.Feature_Impl#setProperty(org.kalypso.gmlschema.property.IPropertyType,
+   *      java.lang.Object)
+   */
   @Override
   public void setProperty( final IPropertyType pt, final Object value )
   {
@@ -85,50 +87,45 @@ public class AbstractCachedFeature2 extends Feature_Impl
 
   private void setDirty( final QName changedProperty )
   {
-    if( m_lock )
-      return;
-
-    final QName[] cachedProperties = m_cacheDefinition.getDirtyProperties( changedProperty );
-    for( final QName cachedProperty : cachedProperties )
-      setDirtyProperty( cachedProperty );
-
-    dirtyChanged( cachedProperties );
-
-  }
-
-  /**
-   * Set the given property dirty, it will be recalculated on next access.
-   */
-  protected void setDirtyProperty( final QName cachedProperty )
-  {
-    // TODO: firePropertyChange for dirty properties...
-
-    m_dirty.add( cachedProperty );
-
-    final IPropertyType property = getFeatureType().getProperty( cachedProperty );
-    if( property instanceof IValuePropertyType )
+    final QName[] dirtyQName = m_cacheDefinition.getDirtyProperties( changedProperty );
+    for( final QName dirtyName : dirtyQName )
     {
-      if( ((IValuePropertyType) property).isGeometry() )
-        setEnvelopesUpdated();
+      m_dirty.add( dirtyName );
+
+      final IPropertyType property = getFeatureType().getProperty( dirtyName );
+      if( property instanceof IValuePropertyType )
+      {
+        if( ((IValuePropertyType) property).isGeometry() )
+          setEnvelopesUpdated();
+      }
     }
   }
 
   /**
-   * Allows implementors to react to dirty changes to cached properties.<br/>
-   *
-   * @param cachedProperties
-   *          The properties that got dirty and need to be recalculated next time getProperty is called.
+   * @see org.kalypsodeegree_impl.model.feature.Feature_Impl#setProperty(javax.xml.namespace.QName, java.lang.Object)
    */
-  protected void dirtyChanged( @SuppressWarnings("unused") final QName[] cachedProperties )
-  {
-  }
-
   @Override
   public void setProperty( final QName propQName, final Object value )
   {
     setDirty( propQName );
 
     super.setProperty( propQName, value );
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.model.feature.Feature_Impl#setProperty(java.lang.String, java.lang.Object)
+   */
+  @Deprecated
+  @Override
+  public void setProperty( final String propLocalName, final Object value )
+  {
+    final IFeatureType featureType = getFeatureType();
+    final IPropertyType property = featureType.getProperty( propLocalName );
+    if( property != null )
+    {
+      setDirty( property.getQName() );
+      super.setProperty( property, value );
+    }
   }
 
   private boolean isDirty( final QName qname )
@@ -138,6 +135,8 @@ public class AbstractCachedFeature2 extends Feature_Impl
 
   /**
    * IMPORTANT: both getProperty implementations are overwritten.
+   * 
+   * @see org.kalypsodeegree_impl.model.feature.Feature_Impl#getProperty(javax.xml.namespace.QName)
    */
   @Override
   public Object getProperty( final QName property )
@@ -150,6 +149,8 @@ public class AbstractCachedFeature2 extends Feature_Impl
 
   /**
    * IMPORTANT: both getProperty implementations are overwritten.
+   * 
+   * @see org.kalypsodeegree_impl.model.feature.Feature_Impl#getProperty(org.kalypso.gmlschema.property.IPropertyType)
    */
   @Override
   public Object getProperty( final IPropertyType pt )
@@ -162,14 +163,12 @@ public class AbstractCachedFeature2 extends Feature_Impl
     return super.getProperty( pt );
   }
 
-  private synchronized Object getCachedProperty( final QName property )
+  private Object getCachedProperty( final QName property )
   {
-    final Object currentValue = m_cache.get( property );
-
     if( !isDirty( property ) )
-      return currentValue;
+      return m_cache.get( property );
 
-    final Object newValue = recalculateProperty( property, currentValue );
+    final Object newValue = recalculateProperty( property );
     m_cache.put( property, newValue );
     m_dirty.remove( property );
     return newValue;
@@ -181,7 +180,7 @@ public class AbstractCachedFeature2 extends Feature_Impl
    * Overwrite to recalculate the property in the implementing class. Alternatively, use feature functions (do not
    * overwrite in this case).
    */
-  protected Object recalculateProperty( final QName property, @SuppressWarnings("unused") final Object oldValue )
+  protected Object recalculateProperty( final QName property )
   {
     return super.getProperty( property );
   }
@@ -196,13 +195,4 @@ public class AbstractCachedFeature2 extends Feature_Impl
       m_dirty.add( cachedProp );
   }
 
-  protected synchronized void lockCache( )
-  {
-    m_lock = true;
-  }
-
-  protected synchronized void unlockCache( )
-  {
-    m_lock = false;
-  }
 }

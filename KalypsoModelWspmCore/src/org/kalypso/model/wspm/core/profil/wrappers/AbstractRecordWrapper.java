@@ -69,59 +69,75 @@ public class AbstractRecordWrapper implements IRecord
     return getRecord().indexOfComponent( id );
   }
 
+  /**
+   * @see org.kalypso.observation.result.IRecord#getOwner()
+   */
   @Override
   public TupleResult getOwner( )
   {
     return m_record.getOwner();
   }
 
-  @Deprecated
+  /**
+   * @see org.kalypso.observation.result.IRecord#getValue(org.kalypso.observation.result.IComponent)
+   */
   @Override
   public Object getValue( final IComponent comp ) throws IllegalArgumentException
   {
     return m_record.getValue( comp );
   }
 
+  /**
+   * @see org.kalypso.observation.result.IRecord#getValue(int)
+   */
   @Override
   public Object getValue( final int index ) throws IndexOutOfBoundsException
   {
     return m_record.getValue( index );
   }
 
-  @Deprecated
+  /**
+   * @see org.kalypso.observation.result.IRecord#setValue(org.kalypso.observation.result.IComponent, java.lang.Object)
+   */
   @Override
   public void setValue( final IComponent comp, final Object value )
   {
     m_record.setValue( comp, value );
   }
 
+  /**
+   * @see org.kalypso.observation.result.IRecord#setValue(int, java.lang.Object)
+   */
   @Override
   public void setValue( final int index, final Object value ) throws IndexOutOfBoundsException
   {
     m_record.setValue( index, value );
   }
 
+  /**
+   * @see org.kalypso.observation.result.IRecord#setValue(int, java.lang.Object, boolean)
+   */
   @Override
   public void setValue( final int index, final Object value, final boolean fireNoEvent ) throws IndexOutOfBoundsException
   {
     m_record.setValue( index, value, fireNoEvent );
   }
 
+  /**
+   * @see org.kalypso.observation.result.IRecord#cloneRecord()
+   */
   @Override
   public IRecord cloneRecord( )
   {
     return m_record.cloneRecord();
   }
 
+  /**
+   * @see org.kalypso.observation.result.IRecord#indexOfComponent(java.lang.String)
+   */
   @Override
-  public int indexOfComponent( final String componentID )
+  public int indexOfComponent( String componentID )
   {
     return m_record.indexOfComponent( componentID );
-  }
-
-  @Override
-  public int getIndex( )
-  {
-    return m_record.getIndex();
   }
 }

@@ -43,16 +43,11 @@ package org.kalypso.model.wspm.ui.preferences;
 /**
  * Constant definitions for plug-in preferences
  */
-public interface PreferenceConstants
+public class PreferenceConstants
 {
-  String P_ALLWAYSOPENTABLE = "allwaysOpenTablePreference"; //$NON-NLS-1$
+  public static final String P_ALLWAYSOPENTABLE = "allwaysOpenTablePreference"; //$NON-NLS-1$
 
-  /**
-   * If set to the id of a marker type, water levels are only painted in the profile view if they overlap the
-   * corresponding flow area.<br/>
-   * If the type is set to {@link org.kalypso.model.wspm.tuhh.core.IWspmTuhhConstants#MARKER_TYP_DURCHSTROEMTE}, only
-   * water levels within the model boundary are painted.<br/>
-   * Not set by default to maintain backwards compatibility.
-   */
-  String WATERLEVEL_RESTRICTION_MARKER = "waterlevelRestrictionMarker"; //$NON-NLS-1$
+  public static final String P_VALIDATE_PROFILE = "validateProfile"; //$NON-NLS-1$
+
+  public static final String P_VALIDATE_RULES_TO_EXCLUDE = "validateRulesToApply"; //$NON-NLS-1$
 }

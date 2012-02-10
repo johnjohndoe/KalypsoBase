@@ -42,13 +42,12 @@ package org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl;
 
 import java.util.List;
 
-import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.PointAdd;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.AbstractPointsTarget;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -68,13 +67,9 @@ public class ProfilEndTarget extends AbstractPointsTarget
   public void insertPoints( final IProfil profile, final List<IRecord> points )
   {
     if( points != null )
-    {
       insertPointsInternal( profile, points );
-    }
     else
-    {
       addPointInternal( profile );
-    }
   }
 
   private final void addPointInternal( final IProfil profile )
@@ -89,14 +84,10 @@ public class ProfilEndTarget extends AbstractPointsTarget
     for( final IComponent property : properties )
     {
       final int iProp = profile.indexOfProperty( property );
-      if( IWspmPointProperties.POINT_PROPERTY_BREITE.equals( property.getId() ) )
-      {
+      if( IWspmConstants.POINT_PROPERTY_BREITE.equals( property.getId() ) )
         point.setValue( iProp, (Double) endPoint.getValue( iProp ) + 20 );
-      }
       else if( !profile.isPointMarker( property.getId() ) )
-      {
         point.setValue( iProp, endPoint.getValue( iProp ) );
-      }
     }
     result.add( point );
   }
@@ -105,18 +96,18 @@ public class ProfilEndTarget extends AbstractPointsTarget
   {
     final int pointsCount = points.size();
 
-    final int iBreite = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE );
-    final int iHoehe = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_HOEHE );
+    final int iBreite = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+    final int iHoehe = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
 
     final TupleResult owner = points.get( 0 ).getOwner();
-    final int iPointsBreite = owner.indexOfComponent( IWspmPointProperties.POINT_PROPERTY_BREITE );
-    final int iPointsHoehe = owner.indexOfComponent( IWspmPointProperties.POINT_PROPERTY_HOEHE );
+    final int iPointsBreite = owner.indexOfComponent( IWspmConstants.POINT_PROPERTY_BREITE );
+    final int iPointsHoehe = owner.indexOfComponent( IWspmConstants.POINT_PROPERTY_HOEHE );
 
     final IProfilChange[] changes = new IProfilChange[pointsCount];
     try
     {
-      final IProfileRecord[] existingPoints = profile.getPoints();
-      final IProfileRecord targetPkt = existingPoints.length == 0 ? profile.createProfilPoint() : existingPoints[existingPoints.length - 1];
+      final IRecord[] existingPoints = profile.getPoints();
+      final IRecord targetPkt = existingPoints.length == 0 ? profile.createProfilPoint() : existingPoints[existingPoints.length - 1];
 
       final double deltaX = existingPoints.length == 0 ? 0.0 : (Double) points.get( 0 ).getValue( iPointsBreite ) - (Double) targetPkt.getValue( iBreite );
       final double deltaY = existingPoints.length == 0 ? 0.0 : (Double) points.get( 0 ).getValue( iPointsHoehe ) - (Double) targetPkt.getValue( iHoehe );
@@ -124,18 +115,16 @@ public class ProfilEndTarget extends AbstractPointsTarget
       int i = changes.length - 1;
       for( final IRecord point : points )
       {
-        final IProfileRecord newPoint = targetPkt.cloneRecord();
+        final IRecord newPoint = targetPkt.cloneRecord();
         newPoint.setValue( iBreite, (Double) point.getValue( iPointsBreite ) - deltaX );
         newPoint.setValue( iHoehe, (Double) point.getValue( iPointsHoehe ) - deltaY );
         for( final IComponent prop : owner.getComponents() )
-          if( !(IWspmPointProperties.POINT_PROPERTY_BREITE.equals( prop.getId() ) || IWspmPointProperties.POINT_PROPERTY_HOEHE.equals( prop.getId() )) )
+          if( !(IWspmConstants.POINT_PROPERTY_BREITE.equals( prop.getId() ) || IWspmConstants.POINT_PROPERTY_HOEHE.equals( prop.getId() )) )
           {
 
             final int index = profile.indexOfProperty( prop.getId() );
             if( index > -1 )
-            {
               newPoint.setValue( index, point.getValue( owner.indexOfComponent( prop ) ) );
-            }
           }
         changes[i--] = new PointAdd( profile, existingPoints.length == 0 ? null : targetPkt, newPoint );
       }
@@ -145,7 +134,7 @@ public class ProfilEndTarget extends AbstractPointsTarget
       // should never happen, stops operation and raise NullPointerException in ProfilOperation.doChange
       changes[0] = null;
     }
-    final ProfilOperation operation = new ProfilOperation( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl.ProfilEndTarget.0" ), profile, changes, false ); //$NON-NLS-1$
+    final ProfilOperation operation = new ProfilOperation( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl.ProfilEndTarget.0"), profile, changes, false ); //$NON-NLS-1$
     new ProfilOperationJob( operation ).schedule();
 
   }

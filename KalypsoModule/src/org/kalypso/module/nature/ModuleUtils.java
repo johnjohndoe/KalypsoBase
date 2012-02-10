@@ -49,7 +49,7 @@ public final class ModuleUtils
 {
   private ModuleUtils( )
   {
-    throw new UnsupportedOperationException( "Helper class, do not instantiate" ); //$NON-NLS-1$
+    throw new UnsupportedOperationException( "Helper class, do not instantiate" );
   }
 
   /** Parses the module version from its perferences. */

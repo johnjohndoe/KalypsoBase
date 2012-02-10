@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.controls.images;
 
@@ -47,13 +47,13 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.metadoc.configuration.PublishingConfiguration;
+import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 import org.kalypso.ui.controls.images.listener.IImagePropertyChangedListener;
 
 /**
  * A page for selecting export information for an image. If a publishing configuration is given it will store the
  * properties there, too.
- *
+ * 
  * @author Holger Albert
  */
 public class ImagePropertiesWizardPage extends WizardPage
@@ -91,7 +91,7 @@ public class ImagePropertiesWizardPage extends WizardPage
   /**
    * The publishing configuration. May be null.
    */
-  protected PublishingConfiguration m_configuration;
+  protected IPublishingConfiguration m_configuration;
 
   /**
    * The width of the image.
@@ -125,7 +125,7 @@ public class ImagePropertiesWizardPage extends WizardPage
 
   /**
    * The constructor.
-   *
+   * 
    * @param pageName
    *          The name of the page.
    * @param configuration
@@ -143,14 +143,14 @@ public class ImagePropertiesWizardPage extends WizardPage
    * @param defaultFormat
    *          The default image format.
    */
-  public ImagePropertiesWizardPage( final String pageName, final PublishingConfiguration configuration, final int defaultWidth, final int defaultHeight, final boolean defaultAspectRatio, final Insets defaultInsets, final boolean defaultBorder, final String defaultFormat )
+  public ImagePropertiesWizardPage( String pageName, IPublishingConfiguration configuration, int defaultWidth, int defaultHeight, boolean defaultAspectRatio, Insets defaultInsets, boolean defaultBorder, String defaultFormat )
   {
     this( pageName, "Bildeigenschaften", null, configuration, defaultWidth, defaultHeight, defaultAspectRatio, defaultInsets, defaultBorder, defaultFormat );
   }
 
   /**
    * The constructor.
-   *
+   * 
    * @param pageName
    *          The name of the page.
    * @param title
@@ -172,7 +172,7 @@ public class ImagePropertiesWizardPage extends WizardPage
    * @param defaultFormat
    *          The default image format.
    */
-  public ImagePropertiesWizardPage( final String pageName, final String title, final ImageDescriptor titleImage, final PublishingConfiguration configuration, final int defaultWidth, final int defaultHeight, final boolean defaultAspectRatio, final Insets defaultInsets, final boolean defaultBorder, final String defaultFormat )
+  public ImagePropertiesWizardPage( String pageName, String title, ImageDescriptor titleImage, IPublishingConfiguration configuration, int defaultWidth, int defaultHeight, boolean defaultAspectRatio, Insets defaultInsets, boolean defaultBorder, String defaultFormat )
   {
     super( pageName, title, titleImage );
 
@@ -193,14 +193,14 @@ public class ImagePropertiesWizardPage extends WizardPage
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  public void createControl( final Composite parent )
+  public void createControl( Composite parent )
   {
     /* Create the main composite. */
-    final Composite main = new Composite( parent, SWT.NONE );
+    Composite main = new Composite( parent, SWT.NONE );
     main.setLayout( new FillLayout() );
 
     /* Create the image properties composite. */
-    final ImagePropertiesComposite imageComposite = new ImagePropertiesComposite( main, SWT.NONE, m_width, m_height, false, m_insets, m_border, m_format );
+    ImagePropertiesComposite imageComposite = new ImagePropertiesComposite( main, SWT.NONE, m_width, m_height, false, m_insets, m_border, m_format );
 
     /* Add a listener. */
     imageComposite.addImagePropertyChangedListener( new IImagePropertyChangedListener()
@@ -210,7 +210,7 @@ public class ImagePropertiesWizardPage extends WizardPage
        *      java.awt.Insets, boolean, java.lang.String)
        */
       @Override
-      public void imagePropertyChanged( final int width, final int height, final boolean aspectRatio, final Insets insets, final boolean border, final String format )
+      public void imagePropertyChanged( int width, int height, boolean aspectRatio, Insets insets, boolean border, String format )
       {
         /* Store the image properties. */
         m_width = width;
@@ -277,7 +277,7 @@ public class ImagePropertiesWizardPage extends WizardPage
 
   /**
    * This function returns the width of the image.
-   *
+   * 
    * @return The width of the image or -1.
    */
   public int getWidth( )
@@ -287,7 +287,7 @@ public class ImagePropertiesWizardPage extends WizardPage
 
   /**
    * This function returns the height of the image.
-   *
+   * 
    * @return The height of the image or -1.
    */
 
@@ -298,7 +298,7 @@ public class ImagePropertiesWizardPage extends WizardPage
 
   /**
    * This function returns true, if the aspect ratio should be maintained on change of the width or height.
-   *
+   * 
    * @return True, if the aspect ratio should be maintained on change of the width or height.
    */
   public boolean keepAspectRatio( )
@@ -308,7 +308,7 @@ public class ImagePropertiesWizardPage extends WizardPage
 
   /**
    * This function returns the insets of the image.
-   *
+   * 
    * @return The insets of the image or null.
    */
   public Insets getInsets( )
@@ -318,7 +318,7 @@ public class ImagePropertiesWizardPage extends WizardPage
 
   /**
    * This function returns true, if the drawn border is enabled.
-   *
+   * 
    * @return True, if the drawn border is enabled.
    */
   public boolean hasBorder( )
@@ -328,7 +328,7 @@ public class ImagePropertiesWizardPage extends WizardPage
 
   /**
    * This function returns the format of the image.
-   *
+   * 
    * @return The format of the image or null.
    */
   public String getFormat( )

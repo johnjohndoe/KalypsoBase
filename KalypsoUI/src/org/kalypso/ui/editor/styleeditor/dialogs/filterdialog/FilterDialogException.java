@@ -44,18 +44,18 @@ public class FilterDialogException extends Exception
 {
   private FilterDialogError error = null;
 
-  public FilterDialogException( )
+  public FilterDialogException()
   {
-    // nothing
+  // nothing
   }
 
-  public FilterDialogException( final FilterDialogError m_error )
+  public FilterDialogException( FilterDialogError m_error )
   {
     super( m_error.getFaultCode() );
-    error = m_error;
+    this.error = m_error;
   }
 
-  public FilterDialogError getError( )
+  public FilterDialogError getError()
   {
     return error;
   }

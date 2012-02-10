@@ -40,23 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.ui.commands.exportshape;
 
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.kalypso.shape.ShapeDataException;
 import org.kalypso.shape.dbf.IDBFValue;
 
 /**
  * @author Gernot
  */
-public class FieldTypeLabelProvider extends FieldLabelProvider
+public class FieldTypeLabelProvider extends ColumnLabelProvider
 {
-  public FieldTypeLabelProvider( )
-  {
-  }
-
-  public FieldTypeLabelProvider( final IFieldProvider provider )
-  {
-    super( provider );
-  }
-
   /**
    * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
    */

@@ -40,9 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.tokenreplace;
 
-import java.util.Map;
+import java.util.Properties;
 
-import org.apache.commons.lang3.text.StrSubstitutor;
+import org.apache.commons.lang.text.StrSubstitutor;
 
 /**
  * @author Gernot Belger
@@ -51,11 +51,14 @@ public class PropertiesStringResolver implements IStringResolver
 {
   private final StrSubstitutor m_substitutor;
 
-  public PropertiesStringResolver( final Map<String, Object> properties, final String prefix, final String suffix )
+  public PropertiesStringResolver( final Properties properties, final String prefix, final String suffix )
   {
     m_substitutor = new StrSubstitutor( properties, prefix, suffix );
   }
 
+  /**
+   * @see org.kalypso.commons.tokenreplace.IStringResolver#resolve(java.lang.String)
+   */
   @Override
   public String resolve( final String input )
   {

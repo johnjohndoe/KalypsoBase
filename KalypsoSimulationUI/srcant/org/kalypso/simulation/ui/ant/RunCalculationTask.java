@@ -127,11 +127,8 @@ public class RunCalculationTask extends Task
     m_calcCaseFolder = (IContainer) member;
   }
 
-  /**
-   * @see org.apache.tools.ant.Task#execute()
-   */
   @Override
-  public void execute( ) throws BuildException
+  public void execute( )
   {
     // give implementing class a chance to validate its input
     validateInput();
@@ -177,6 +174,7 @@ public class RunCalculationTask extends Task
       public void run( )
       {
         final StatusDialog dlg = new StatusDialog( shell, status, "Modellrechnung" );
+        dlg.setShowTimeTime( false );
         dlg.open();
       }
     } );

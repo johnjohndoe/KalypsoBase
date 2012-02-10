@@ -57,6 +57,11 @@ import org.xml.sax.XMLReader;
  */
 public class LinearRingSpecification implements IGeometrySpecification
 {
+  /**
+   * @see org.kalypsodeegree_impl.io.sax.parser.geometrySpec.IGeometrySpecification#getHandler(javax.xml.namespace.QName,
+   *      org.xml.sax.XMLReader, org.kalypso.gmlschema.types.IGmlContentHandler,
+   *      org.kalypso.gmlschema.types.IGmlContentHandler, java.lang.String)
+   */
   @Override
   public IGmlContentHandler getHandler( final QName property, final XMLReader reader, final IGmlContentHandler parent, final IGmlContentHandler receiver, final String defaultSrs )
   {

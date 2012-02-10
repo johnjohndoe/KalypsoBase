@@ -54,8 +54,8 @@ import org.eclipse.ui.internal.dialogs.WorkbenchWizardNode;
 import org.eclipse.ui.model.AdaptableList;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ui.addlayer.IKalypsoDataImportWizard;
 import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
+import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 
 /**
  * @author Christoph Küpferle
@@ -70,7 +70,6 @@ public class KalypsoWizardSelectionPage extends WorkbenchWizardListSelectionPage
   public KalypsoWizardSelectionPage( final IWorkbench aWorkbench, final IStructuredSelection selection, final AdaptableList wizardElts, final String message, final GisMapOutlinePage outlineview )
   {
     super( aWorkbench, selection, wizardElts, message, null );
-
     m_outline = outlineview;
     m_selection = selection;
   }
@@ -83,6 +82,9 @@ public class KalypsoWizardSelectionPage extends WorkbenchWizardListSelectionPage
   {
     return new WorkbenchWizardNode( this, element )
     {
+      /**
+       * @see org.eclipse.ui.internal.dialogs.WorkbenchWizardNode#createWizard()
+       */
       @Override
       public IWorkbenchWizard createWizard( ) throws CoreException
       {
@@ -110,7 +112,7 @@ public class KalypsoWizardSelectionPage extends WorkbenchWizardListSelectionPage
         }
 
         /* Without valid selection, new themes go top-level */
-        return m_outline.getMapPanel().getMapModell();
+        return (IKalypsoLayerModell) m_outline.getMapPanel().getMapModell();
       }
     };
   }

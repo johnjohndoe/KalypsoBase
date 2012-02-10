@@ -83,9 +83,6 @@ import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeFilter;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_MultiCurve;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.tools.GMLConstants;
 
 /**
@@ -121,9 +118,9 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
     final Set<QName> validGeomProperties = new HashSet<QName>();
     validGeomProperties.add( GMLConstants.QN_LINE_STRING );
     validGeomProperties.add( GMLConstants.QN_MULTI_LINE_STRING );
-    validGeomProperties.add( GM_Curve.CURVE_ELEMENT );
-    validGeomProperties.add( GM_MultiCurve.MULTI_CURVE_ELEMENT );
-    validGeomProperties.add( GM_Polygon.POLYGON_ELEMENT );
+    validGeomProperties.add( GMLConstants.QN_CURVE );
+    validGeomProperties.add( GMLConstants.QN_MULTI_CURVE );
+    validGeomProperties.add( GMLConstants.QN_POLYGON );
     validGeomProperties.add( GMLConstants.QN_MULTI_POLYGON );
 
     final IPropertyTypeFilter geoFilter = new IPropertyTypeFilter()
@@ -209,9 +206,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
 
     final IDialogSettings dialogSettings = getDialogSettings();
     if( dialogSettings != null )
-    {
       dialogSettings.put( SETTINGS_USE_EXISTING, useExisting );
-    }
   }
 
   private Group createDeviderGroup( final Composite composite )
@@ -244,9 +239,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
     for( final String markerType : markerTypes )
     {
       if( provider.isMarker( markerType ) )
-      {
         markerComponents.add( provider.getPointProperty( markerType ) );
-      }
     }
     viewer.setInput( markerComponents );
 
@@ -256,7 +249,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-        final Object firstElement = selection.getFirstElement();
+        final Object firstElement = (selection).getFirstElement();
         handleDeviderChanged( (IComponent) firstElement );
       }
     } );
@@ -297,9 +290,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
 
     final IDialogSettings dialogSettings = getDialogSettings();
     if( dialogSettings != null )
-    {
       dialogSettings.put( SETTINGS_DEVIDER, type.getId() );
-    }
   }
 
   private IKalypsoFeatureTheme getTheme( )
@@ -335,9 +326,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
     setPageComplete( pageComplete );
 
     if( polygoneTheme == null )
-    {
       setErrorMessage( Messages.getString( "org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.11" ) ); //$NON-NLS-1$
-    }
     else
     {
       setErrorMessage( null );
@@ -357,7 +346,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
       final IFeatureType featureType = featureTheme.getFeatureType();
       if( featureType != null )
       {
-        if( GMLSchemaUtilities.substitutes( featureType, IProfileFeature.FEATURE_PROFILE ) )
+        if( GMLSchemaUtilities.substitutes( featureType, IProfileFeature.QN_PROFILE ) )
           return false;
 
         final IPropertyType[] polygoneProperties = PropertyUtils.filterProperties( featureType, m_geoPd.filter );

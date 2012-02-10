@@ -43,8 +43,8 @@ package org.kalypso.zml.ui.table.commands.toolbar;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -61,7 +61,8 @@ import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableColumnVisitor;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableValueColumn;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
@@ -94,16 +95,18 @@ public class ZmlCommandHideColumns extends AbstractHandler implements IElementUp
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        table.accept( new IZmlTableColumnVisitor()
+        table.getModel().accept( new IZmlTableColumnVisitor()
         {
           @Override
           public void visit( final IZmlTableColumn column )
           {
-            if( column.isIndexColumn() )
+            if( !(column instanceof IZmlTableValueColumn) )
               return;
 
             final IZmlModelColumn modelColumn = column.getModelColumn();
-            // FIXME: once got a NPE here...
+            if( Objects.isNull( modelColumn ) )
+              return;
+
             final DataColumn dataColumn = modelColumn.getDataColumn();
 
             final DataColumnType dataColumnType = dataColumn.getType();
@@ -111,7 +114,7 @@ public class ZmlCommandHideColumns extends AbstractHandler implements IElementUp
 
             if( ArrayUtils.contains( columnTypes, columnTypeId ) )
             {
-              column.setVisible( !hide );
+              ((IZmlTableValueColumn) column).setVisible( !hide );
             }
           }
         } );

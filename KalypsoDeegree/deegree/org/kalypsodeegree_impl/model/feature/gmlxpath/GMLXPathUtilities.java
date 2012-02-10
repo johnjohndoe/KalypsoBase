@@ -37,7 +37,6 @@ package org.kalypsodeegree_impl.model.feature.gmlxpath;
 
 import java.util.List;
 
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -99,9 +98,6 @@ public final class GMLXPathUtilities
 
   private static Object getResultForSegment( final GMLXPath xPath, final Object context, final int segmentIndex, final boolean isFeatureTypeLevel ) throws GMLXPathException
   {
-    if( Objects.isNull( xPath ) )
-      return context;
-
     if( segmentIndex >= xPath.getSegmentSize() )
       return context;
     final GMLXPathSegment segment = xPath.getSegment( segmentIndex );

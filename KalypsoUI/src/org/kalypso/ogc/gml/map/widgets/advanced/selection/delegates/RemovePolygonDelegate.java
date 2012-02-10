@@ -41,7 +41,12 @@
 package org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates;
 
 import java.awt.Cursor;
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.Toolkit;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -49,7 +54,6 @@ import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidg
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget.EDIT_MODE;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDataProvider;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetGeometryProvider;
-import org.kalypso.ogc.gml.map.widgets.advanced.utils.WidgetCursors;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -57,8 +61,9 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class RemovePolygonDelegate extends AbstractAdvancedSelectionWidgetDelegate
 {
-  private Cursor m_cursor = null;
-
+  private static Image IMG_CURSOR = null;
+  
+  
   public RemovePolygonDelegate( final IAdvancedSelectionWidget widget, final IAdvancedSelectionWidgetDataProvider provider, final IAdvancedSelectionWidgetGeometryProvider geometryProvider )
   {
     super( widget, provider, geometryProvider );
@@ -82,8 +87,10 @@ public class RemovePolygonDelegate extends AbstractAdvancedSelectionWidgetDelega
     {
       KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
+
   }
 
+  
   /**
    * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDelegate#getEditMode()
    */
@@ -93,17 +100,36 @@ public class RemovePolygonDelegate extends AbstractAdvancedSelectionWidgetDelega
     return EDIT_MODE.eRemove;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDelegate#getTooltip()
+   */
   @Override
   public String[] getTooltip( )
   {
+    // TODO Auto-generated method stub
     return null;
   }
-
+  
+  /**
+   * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDelegate#getCursor()
+   */
   @Override
   public Cursor getCursor( )
   {
-    if( m_cursor == null )
-      m_cursor = WidgetCursors.createRemoveCursor();
-    return m_cursor;
+    try
+    {
+      if( IMG_CURSOR == null )
+        IMG_CURSOR = ImageIO.read( RemovePolygonDelegate.class.getResourceAsStream( "images/cursor_remove.png" ) ); //$NON-NLS-1$
+
+      final Toolkit toolkit = Toolkit.getDefaultToolkit();
+      return toolkit.createCustomCursor( IMG_CURSOR, new Point( 2, 1 ), "selection cursor" ); //$NON-NLS-1$
+    }
+    catch( final IOException e )
+    {
+      KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
+
+    return null;
   }
+  
 }

@@ -4,7 +4,6 @@ import java.util.Map;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.commands.IElementUpdater;
@@ -14,18 +13,20 @@ import org.kalypso.chart.ui.editor.ElementUpdateHelper;
 import org.kalypso.chart.ui.editor.mousehandler.DragZoomInHandler;
 
 import de.openali.odysseus.chart.framework.view.IChartComposite;
-import de.openali.odysseus.chart.framework.view.IChartHandlerManager;
+import de.openali.odysseus.chart.framework.view.IPlotHandler;
 
 public class ZoomInHandler extends AbstractHandler implements IElementUpdater
 {
   @Override
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
+  public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
-    final IChartComposite chart = ChartHandlerUtilities.getChartChecked( context );
+    final IChartComposite chart = ChartHandlerUtilities.getChart( context );
+    if( chart == null )
+      return Status.CANCEL_STATUS;
 
-    final IChartHandlerManager plotHandler = chart.getPlotHandler();
+    final IPlotHandler plotHandler = chart.getPlotHandler();
     plotHandler.activatePlotHandler( new DragZoomInHandler( chart ) );
 
     final IChartPart part = ChartHandlerUtilities.findChartComposite( context );

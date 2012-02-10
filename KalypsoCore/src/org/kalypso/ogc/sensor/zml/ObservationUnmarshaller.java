@@ -50,7 +50,7 @@ import java.util.TimeZone;
 
 import javax.xml.bind.Unmarshaller;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypso.commons.parser.IParser;

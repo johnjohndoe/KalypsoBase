@@ -44,72 +44,42 @@ import java.io.File;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWizard;
-import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypso.ogc.gml.selection.IFeatureSelection;
-import org.kalypso.ui.editor.gmleditor.part.FeatureAssociationTypeElement;
+import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 
 /**
- * A wizard to import profile data (right now just as tripple) into a WSPM Model.
+ * A wizard to import profile data (right now just as trippel) into a WSPM Model.
  * 
  * @author Thomas Jung
  */
-public class ImportProfileWizard extends Wizard implements IWorkbenchWizard
+public class ImportProfileWizard extends Wizard implements IWizard
 {
-  public static final String PROFIL_TYPE_PASCHE = "org.kalypso.model.wspm.tuhh.profiletype"; //$NON-NLS-1$
+  public static String PROFIL_TYPE_PASCHE = "org.kalypso.model.wspm.tuhh.profiletype"; //$NON-NLS-1$
 
   protected ImportProfilePage m_profilePage;
 
-  private CommandableWorkspace m_workspace;
+  private final CommandableWorkspace m_workspace;
 
-  private WspmWaterBody m_water;
+  private final WspmWaterBody m_water;
 
-  public ImportProfileWizard( )
+  public ImportProfileWizard( final FeatureAssociationTypeElement fate, final CommandableWorkspace workspace )
   {
-    setWindowTitle( Messages.getString( "ImportProfileWizard.1" ) ); //$NON-NLS-1$
+    m_water = (WspmWaterBody) fate.getParentFeature();
+    m_workspace = workspace;
+    setWindowTitle( "Kalypso Profil Import" ); //$NON-NLS-1$
 
     setNeedsProgressMonitor( true );
-    setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
   }
 
-  @Override
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
-  {
-    if( !(selection instanceof IFeatureSelection) )
-      throw new IllegalStateException();
-
-    final IFeatureSelection featureSelection = (IFeatureSelection) selection;
-    m_water = findWater( featureSelection );
-    m_workspace = featureSelection.getWorkspace( m_water );
-  }
-
-  public static WspmWaterBody findWater( final IFeatureSelection featureSelection )
-  {
-    final Object firstElement = featureSelection.getFirstElement();
-    if( firstElement instanceof FeatureAssociationTypeElement )
-    {
-      final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) firstElement;
-      return (WspmWaterBody) fate.getOwner();
-    }
-
-    if( firstElement instanceof WspmWaterBody )
-      return (WspmWaterBody) firstElement;
-
-    if( firstElement instanceof IProfileFeature )
-      return ((IProfileFeature) firstElement).getWater();
-
-    throw new IllegalStateException();
-  }
-
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#addPages()
+   */
   @Override
   public void addPages( )
   {
@@ -135,10 +105,8 @@ public class ImportProfileWizard extends Wizard implements IWorkbenchWizard
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
     if( !status.isOK() )
-    {
       KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
-    }
-    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "ImportProfileWizard.0" ), status ); //$NON-NLS-1$
+    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("ImportProfileWizard.0"), status ); //$NON-NLS-1$
 
     return !status.matches( IStatus.ERROR );
   }

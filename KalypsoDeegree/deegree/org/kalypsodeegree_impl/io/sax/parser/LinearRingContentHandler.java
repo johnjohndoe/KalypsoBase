@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- *
+ * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- *
+ * 
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -51,7 +51,7 @@ import org.xml.sax.XMLReader;
 
 /**
  * A content handler which parses a gml:LinearRing element.<br>
- *
+ * 
  * @author Gernot Belger
  */
 public class LinearRingContentHandler extends GMLElementContentHandler implements IPositionHandler, ICoordinatesHandler
@@ -75,9 +75,9 @@ public class LinearRingContentHandler extends GMLElementContentHandler implement
   @Override
   public void doStartElement( final String uri, final String localName, final String name, final Attributes attributes )
   {
-    m_srs = ContentHandlerUtils.parseSrsFromAttributes( attributes, getDefaultSrs() );
+    m_srs = ContentHandlerUtils.parseSrsFromAttributes( attributes, m_defaultSrs );
 
-    final GMLPropertyChoiceContentHandler choiceContentHandler = new GMLPropertyChoiceContentHandler( getXMLReader(), this, this, m_srs, new LinearRingSpecification() );
+    final GMLPropertyChoiceContentHandler choiceContentHandler = new GMLPropertyChoiceContentHandler( getXMLReader(), this, this, m_defaultSrs, new LinearRingSpecification() );
     choiceContentHandler.activate();
   }
 
@@ -139,7 +139,7 @@ public class LinearRingContentHandler extends GMLElementContentHandler implement
         position = GeometryFactory.createGM_Position( tuple[0], tuple[1] );
       }
       else
-      // >2
+        // >2
       {
         position = GeometryFactory.createGM_Position( tuple[0], tuple[1], tuple[2] );
       }

@@ -97,10 +97,10 @@ public class Pnt
     if( !(other instanceof Pnt) )
       return false;
     final Pnt p = (Pnt) other;
-    if( coordinates.length != p.coordinates.length )
+    if( this.coordinates.length != p.coordinates.length )
       return false;
-    for( int i = 0; i < coordinates.length; i++ )
-      if( coordinates[i] != p.coordinates[i] )
+    for( int i = 0; i < this.coordinates.length; i++ )
+      if( this.coordinates[i] != p.coordinates[i] )
         return false;
     return true;
   }
@@ -114,10 +114,10 @@ public class Pnt
   public int hashCode( )
   {
     int hash = 0;
-    for( final double coordinate : coordinates )
+    for( int i = 0; i < this.coordinates.length; i++ )
     {
-      final long bits = Double.doubleToLongBits( coordinate );
-      hash = 31 * hash ^ (int) (bits ^ bits >> 32);
+      final long bits = Double.doubleToLongBits( this.coordinates[i] );
+      hash = (31 * hash) ^ (int) (bits ^ (bits >> 32));
     }
     return hash;
   }
@@ -134,7 +134,7 @@ public class Pnt
     if( i > coordinates.length - 1 )
       return Double.NaN;
     else
-      return coordinates[i];
+      return this.coordinates[i];
   }
 
   /**
@@ -156,7 +156,7 @@ public class Pnt
    */
   public int dimCheck( final Pnt p )
   {
-    final int len = coordinates.length;
+    final int len = this.coordinates.length;
     if( len != p.coordinates.length )
       throw new IllegalArgumentException( "Dimension mismatch" );
     return len;
@@ -189,7 +189,7 @@ public class Pnt
     final int len = dimCheck( p );
     double sum = 0;
     for( int i = 0; i < len; i++ )
-      sum += coordinates[i] * p.coordinates[i];
+      sum += this.coordinates[i] * p.coordinates[i];
     return sum;
   }
 
@@ -200,7 +200,7 @@ public class Pnt
    */
   public double magnitude( )
   {
-    return Math.sqrt( dot( this ) );
+    return Math.sqrt( this.dot( this ) );
   }
 
   /**
@@ -215,7 +215,7 @@ public class Pnt
     final int len = dimCheck( p );
     final double[] coords = new double[len];
     for( int i = 0; i < len; i++ )
-      coords[i] = coordinates[i] - p.coordinates[i];
+      coords[i] = this.coordinates[i] - p.coordinates[i];
     return new Pnt( coords );
   }
 
@@ -231,7 +231,7 @@ public class Pnt
     final int len = dimCheck( p );
     final double[] coords = new double[len];
     for( int i = 0; i < len; i++ )
-      coords[i] = coordinates[i] + p.coordinates[i];
+      coords[i] = this.coordinates[i] + p.coordinates[i];
     return new Pnt( coords );
   }
 
@@ -244,7 +244,7 @@ public class Pnt
    */
   public double angle( final Pnt p )
   {
-    return Math.acos( dot( p ) / (magnitude() * p.magnitude()) );
+    return Math.acos( this.dot( p ) / (this.magnitude() * p.magnitude()) );
   }
 
   /**
@@ -258,8 +258,8 @@ public class Pnt
   public Pnt bisector( final Pnt point )
   {
     final int dim = dimCheck( point );
-    final Pnt diff = subtract( point );
-    final Pnt sum = add( point );
+    final Pnt diff = this.subtract( point );
+    final Pnt sum = this.add( point );
     final double dot = diff.dot( sum );
     return diff.extend( new double[] { -dot / 2 } );
   }
@@ -276,8 +276,8 @@ public class Pnt
   public static String toString( final Pnt[] matrix )
   {
     final StringBuffer buf = new StringBuffer( "{" );
-    for( final Pnt element : matrix )
-      buf.append( " " + element );
+    for( int i = 0; i < matrix.length; i++ )
+      buf.append( " " + matrix[i] );
     buf.append( " }" );
     return buf.toString();
   }
@@ -422,7 +422,7 @@ public class Pnt
      * simplices in which p is substituted for each of the vertices. Analogous results occur in higher dimensions.
      */
     final int dim = simplex.length - 1;
-    if( dimension() != dim )
+    if( this.dimension() != dim )
       throw new IllegalArgumentException( "Dimension mismatch" );
 
     /* Create and load the matrix */
@@ -435,7 +435,7 @@ public class Pnt
     /* Other rows */
     for( int i = 0; i < dim; i++ )
     {
-      coords[0] = coordinates[i];
+      coords[0] = this.coordinates[i];
       for( int j = 0; j < simplex.length; j++ )
         coords[j + 1] = simplex[j].coordinates[i];
       matrix[i + 1] = new Pnt( coords );
@@ -477,7 +477,7 @@ public class Pnt
    */
   public Pnt isOutside( final Pnt[] simplex )
   {
-    final int[] result = relation( simplex );
+    final int[] result = this.relation( simplex );
     for( int i = 0; i < result.length; i++ )
     {
       if( result[i] > 0 )
@@ -495,7 +495,7 @@ public class Pnt
    */
   public Pnt isOn( final Pnt[] simplex )
   {
-    final int[] result = relation( simplex );
+    final int[] result = this.relation( simplex );
     Pnt witness = null;
     for( int i = 0; i < result.length; i++ )
     {
@@ -516,9 +516,9 @@ public class Pnt
    */
   public boolean isInside( final Pnt[] simplex )
   {
-    final int[] result = relation( simplex );
-    for( final int element : result )
-      if( element >= 0 )
+    final int[] result = this.relation( simplex );
+    for( int i = 0; i < result.length; i++ )
+      if( result[i] >= 0 )
         return false;
     return true;
   }
@@ -535,9 +535,9 @@ public class Pnt
     final Pnt[] matrix = new Pnt[simplex.length + 1];
     for( int i = 0; i < simplex.length; i++ )
       matrix[i] = simplex[i].extend( new double[] { 1, simplex[i].dot( simplex[i] ) } );
-    matrix[simplex.length] = extend( new double[] { 1, dot( this ) } );
+    matrix[simplex.length] = this.extend( new double[] { 1, this.dot( this ) } );
     final double d = determinant( matrix );
-    int result = d < 0 ? -1 : d > 0 ? +1 : 0;
+    int result = (d < 0) ? -1 : ((d > 0) ? +1 : 0);
     if( content( simplex ) < 0 )
       result = -result;
     return result;

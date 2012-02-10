@@ -69,14 +69,14 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * Changes the contents of a gml file. Loads (ant-)properties from a gml.
- *
+ * 
  * <pre>
  *  &lt;kalypso.changeGml gmlURL=&quot;${calc.url}/.calculation&quot;&gt;
  *     &lt;property featurepath=&quot;&quot; featureProperty=&quot;scenarioId&quot; value=&quot;a&quot;/&gt;
  *     &lt;property featurepath=&quot;&quot; featureProperty=&quot;scenarioName&quot; value=&quot;b&quot;/&gt;
  *   &lt;/kalypso.changeGml&gt;
  * </pre>
- *
+ * 
  * @author Gernot Belger
  */
 public class ChangeGmlTask extends Task
@@ -110,7 +110,7 @@ public class ChangeGmlTask extends Task
    * @see org.apache.tools.ant.Task#execute()
    */
   @Override
-  public void execute( ) throws BuildException
+  public void execute( )
   {
     // validieren
     if( m_gmlURL == null )
@@ -212,11 +212,11 @@ public class ChangeGmlTask extends Task
     try
     {
       final Object valueObject = parseType( ftp, value );
-      f.setProperty( ftp, valueObject );
+      f.setProperty( featureProperty, valueObject );
     }
     catch( final Throwable e )
     {
-      throw new BuildException( "Unparsable value: " + value + " (" + ftp.getName() + ")", e );
+      throw new BuildException( "Unparsable value: " + value + " (" + ftp.getQName() + ")", e );
     }
   }
 
@@ -234,7 +234,7 @@ public class ChangeGmlTask extends Task
     return typeHandler.parseType( value );
   }
 
-  public final static class Property
+  public static final class Property
   {
     /** The value which will be set into the property. */
     private String m_value;
@@ -250,42 +250,42 @@ public class ChangeGmlTask extends Task
     /** Name of Property in Feature. */
     private String m_featureProperty;
 
-    public final String getFeatureID( )
+    public String getFeatureID( )
     {
       return m_featureID;
     }
 
-    public final void setFeatureID( final String featureID )
+    public void setFeatureID( final String featureID )
     {
       m_featureID = featureID;
     }
 
-    public final String getFeaturePath( )
+    public String getFeaturePath( )
     {
       return m_featurePath;
     }
 
-    public final void setFeaturePath( final String featurePath )
+    public void setFeaturePath( final String featurePath )
     {
       m_featurePath = featurePath;
     }
 
-    public final String getFeatureProperty( )
+    public String getFeatureProperty( )
     {
       return m_featureProperty;
     }
 
-    public final void setFeatureProperty( final String featureProperty )
+    public void setFeatureProperty( final String featureProperty )
     {
       m_featureProperty = featureProperty;
     }
 
-    public final String getValue( )
+    public String getValue( )
     {
       return m_value;
     }
 
-    public final void setValue( final String value )
+    public void setValue( final String value )
     {
       m_value = value;
     }

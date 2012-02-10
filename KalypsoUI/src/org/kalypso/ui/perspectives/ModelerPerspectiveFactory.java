@@ -90,7 +90,6 @@ public class ModelerPerspectiveFactory implements IPerspectiveFactory
     layout.addNewWizardShortcut( BasicNewFolderResourceWizard.WIZARD_ID );
     layout.addNewWizardShortcut( BasicNewFileResourceWizard.WIZARD_ID );
     layout.addNewWizardShortcut( NewGMLFileWizard.WIZARD_ID );
-// layout.addNewWizardShortcut( CreateGisMapViewWizard.WIZARD_ID );
 
     layout.addActionSet( "org.kalypso.simulation.ui.actionSet" ); //$NON-NLS-1$
   }
@@ -111,9 +110,7 @@ public class ModelerPerspectiveFactory implements IPerspectiveFactory
     topLeft.addView( IPageLayout.ID_RES_NAV );
 
     // Bottom left.
-    final IFolderLayout bottomLeft = layout.createFolder( "bottomLeft", IPageLayout.BOTTOM, (float) 0.50,//$NON-NLS-1$
-        "topLeft" );//$NON-NLS-1$
+    final IFolderLayout bottomLeft = layout.createFolder( "bottomLeft", IPageLayout.BOTTOM, (float) 0.50, "topLeft" );//$NON-NLS-1$ //$NON-NLS-2$
     bottomLeft.addView( IPageLayout.ID_OUTLINE );
   }
-
 }

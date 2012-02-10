@@ -40,39 +40,31 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.imports;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
-import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Point;
 
 /**
- * small refactoring - projects Lanu and nofdp uses this helper!
+ * small refactoring Lanu and nofdp uses this helper!
  * 
  * @author Dirk Kuch
  */
@@ -84,119 +76,142 @@ public final class ImportTrippleHelper
   }
 
   /**
-   * Imports the profile trippel data and converts it into IProfils
+   * imports the profile trippel data and converts it into IProfils
    * 
    * @param trippleFile
    *          file with profile tripples
    */
-  public static IProfil[] importTrippelData( final File trippleFile, final String separator, final String profileType, final String crs ) throws CoreException
+  public static List<IProfil> importTrippelData( final File trippleFile, final String separator, final String profileType, final String crs )
   {
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profileType );
 
-    final IComponent rechtswert = provider.getPointProperty( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT );
-    final IComponent hochwert = provider.getPointProperty( IWspmPointProperties.POINT_PROPERTY_HOCHWERT );
+    final IComponent rechtswert = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    final IComponent hochwert = provider.getPointProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+
+    IProfil profile = ProfilFactory.createProfil( profileType );
+
+    profile.addPointProperty( rechtswert );
+    profile.addPointProperty( hochwert );
 
     if( trippleFile == null )
-      return new IProfil[0];
+      return new ArrayList<IProfil>();
 
     /* read profiles, show warnings */
     final List<IProfil> profiles = new ArrayList<IProfil>();
-    IProfil currentProfile = null;
+    final List<IRecord> profilPointList = new ArrayList<IRecord>();
 
     /* file loading */
-    LineNumberReader fileReader = null;
+    BufferedReader fileReader = null;
     try
     {
-      fileReader = new LineNumberReader( new InputStreamReader( new FileInputStream( trippleFile ) ) );
+      fileReader = new BufferedReader( new InputStreamReader( new FileInputStream( trippleFile ) ) );
+
+      String line = null;
+      StringTokenizer tokenizer;
+
+      /* parameter */
+      double station = 0;
+
+      double currentStation = Double.NaN;
+      int numStations = 0;
 
       /* File Header */
       fileReader.readLine();
-
-      IProfileRecord lastPoint = null;
-      while( fileReader.ready() )
+      int count = 1;
+      while( (line = fileReader.readLine()) != null )
       {
-        final String line = fileReader.readLine();
-        if( line == null )
-        {
-          break;
-        }
+        count++;
 
         /* ignore empty lines */
-        if( StringUtils.isBlank( line ) )
-        {
+        if( line.length() == 0 )
           continue;
-        }
 
         /* trippel-format should be: station, x, y, z */
-        final String[] tokens = StringUtils.split( line, separator );
+        tokenizer = new StringTokenizer( line, separator );
 
         /* continue just if there are enough values in the trippel file */
-        if( tokens.length != 4 )
+        if( tokenizer.countTokens() == 4 )
         {
-          // FIXME: better error handling
-          // inform the user that his profile has not enough values...
-          final String message = Messages.getString( "org.kalypso.model.wspm.core.imports.ImportTrippleHelper.0", fileReader.getLineNumber() ); //$NON-NLS-1$
-          final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), message );
-          throw new CoreException( status );
-        }
 
-        try
-        {
           /* first value = profile station */
-          final double station = NumberUtils.parseDouble( tokens[0] );
-          final BigDecimal currentStation = ProfilUtil.stationToBigDecimal( station );
+          station = Double.parseDouble( tokenizer.nextToken() );
 
-          final BigDecimal currentProfileStation = currentProfile == null ? null : ProfilUtil.stationToBigDecimal( currentProfile.getStation() );
-
-          if( !ObjectUtils.equals( currentStation, currentProfileStation ) )
+          if( station != currentStation )
           {
-            lastPoint = null;
+            if( !Double.isNaN( currentStation ) )
+            {
+              // store current profile points as IProfil
+              finishProfile( profile, profilPointList, currentStation, crs );
+              profiles.add( profile );
 
-            currentProfile = ProfilFactory.createProfil( profileType );
+              profilPointList.clear();
+              numStations++;
+            }
 
-            currentProfile.setStation( station );
-            currentProfile.setName( Messages.getString( "org.kalypso.model.wspm.core.imports.ImportTrippleHelper.1" ) ); //$NON-NLS-1$
-            currentProfile.setDescription( Messages.getString( "org.kalypso.model.wspm.core.imports.ImportTrippleHelper.2" ) ); //$NON-NLS-1$
-            currentProfile.setProperty( IWspmConstants.PROFIL_PROPERTY_CRS, crs );
+            profile = ProfilFactory.createProfil( profileType );
 
-            currentProfile.addPointProperty( rechtswert );
-            currentProfile.addPointProperty( hochwert );
+            profile.addPointProperty( rechtswert );
+            profile.addPointProperty( hochwert );
 
-            profiles.add( currentProfile );
+            // update profile station
+            currentStation = station;
           }
 
-          final IProfileRecord point = ImportTrippleHelper.createProfilePoint( currentProfile, tokens, lastPoint );
+          final IRecord point = ImportTrippleHelper.createProfilePoint( profile, profilPointList, tokenizer );
           if( point != null )
-          {
-            currentProfile.addPoint( point );
-          }
-
-          lastPoint = point;
+            profilPointList.add( point );
         }
-        catch( final NumberFormatException e )
+        else
         {
-          e.printStackTrace();
-          final String message = Messages.getString( "org.kalypso.model.wspm.core.imports.ImportTrippleHelper.3", fileReader.getLineNumber() ); //$NON-NLS-1$
-          final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), message, e );
-          throw new CoreException( status );
+          // inform the user that his profile has not enough values...
+          final String message = Messages.getString( "org.kalypso.model.wspm.core.imports.ImportTrippleHelper.0", count ); //$NON-NLS-1$
+          throw new Exception( message );
+          // continue;
         }
       }
 
       fileReader.close();
+
+      /* store the last profile */
+      finishProfile( profile, profilPointList, station, crs );
+      profiles.add( profile );
+
+      profilPointList.clear();
+      numStations = numStations + 1;
     }
-    catch( final IOException e )
+    catch( final Exception e )
     {
       e.printStackTrace();
-      final String message = Messages.getString( "org.kalypso.model.wspm.core.imports.ImportTrippleHelper.4", fileReader.getLineNumber() ); //$NON-NLS-1$
-      final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), message, e );
-      throw new CoreException( status );
+      throw new IllegalStateException( e.getMessage() );
+      // return new ArrayList<IProfil>();
     }
     finally
     {
       IOUtils.closeQuietly( fileReader );
     }
 
-    return profiles.toArray( new IProfil[profiles.size()] );
+    return profiles;
+  }
+
+  /**
+   * stores all gathered profile points in a new profile and adds it to the profile list
+   * 
+   * @param profilPointList
+   *          the list of the profile points of one profile
+   * @param station
+   *          the current profile station
+   * @param profiles
+   *          the list of the already imported profiles
+   */
+  private static void finishProfile( final IProfil profile, final List<IRecord> profilPointList, final double station, final String crs )
+  {
+    for( final IRecord point : profilPointList )
+      profile.addPoint( point );
+
+    profile.setStation( station );
+    profile.setName( Messages.getString( "org.kalypso.model.wspm.core.imports.ImportTrippleHelper.1" ) ); //$NON-NLS-1$
+    profile.setDescription( Messages.getString( "org.kalypso.model.wspm.core.imports.ImportTrippleHelper.2" ) ); //$NON-NLS-1$
+    profile.setProperty( IWspmConstants.PROFIL_PROPERTY_CRS, crs );
   }
 
   /**
@@ -207,30 +222,44 @@ public final class ImportTrippleHelper
    * @param tokenizer
    *          holds the point data (x, y, z)
    */
-  private static IProfileRecord createProfilePoint( final IProfil profile, final String[] tokens, final IProfileRecord lastPoint )
+  private static IRecord createProfilePoint( final IProfil profile, final List<IRecord> profilPointList, final StringTokenizer tokenizer )
   {
-    final IProfileRecord point = profile.createProfilPoint();
+    final IRecord record = profile.createProfilPoint();
 
     /* observation of profile */
-    final int iRechtswert = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT );
-    final int iHochwert = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_HOCHWERT );
-    final int iBreite = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE );
-    final int iHoehe = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_HOEHE );
+    final int iRechtswert = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    final int iHochwert = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+    final int iBreite = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+    final int iHoehe = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
 
-    final double x = NumberUtils.parseDouble( tokens[1] );
-    point.setValue( iRechtswert, x );
+    if( !tokenizer.hasMoreElements() )
+      return null;
 
-    final double y = NumberUtils.parseDouble( tokens[2] );
-    point.setValue( iHochwert, y );
+    final double x = Double.parseDouble( tokenizer.nextToken() );
+    record.setValue( iRechtswert, x );
 
-    final double z = NumberUtils.parseDouble( tokens[3] );
-    point.setValue( iHoehe, z );
+    if( !tokenizer.hasMoreElements() )
+      return null;
 
+    final double y = Double.parseDouble( tokenizer.nextToken() );
+    record.setValue( iHochwert, y );
+
+    if( !tokenizer.hasMoreElements() )
+      return null;
+
+    final double z = Double.parseDouble( tokenizer.nextToken() );
+    record.setValue( iHoehe, z );
+
+    final double width;
     /* calculate width coordinate */
-    final double width = ImportTrippleHelper.calculateSegmentLength( x, y, lastPoint );
-    point.setValue( iBreite, width );
+    if( profilPointList.size() > 0 )
+      width = ImportTrippleHelper.calculateSegmentLength( profilPointList, record );
+    else
+      width = 0;
 
-    return point;
+    record.setValue( iBreite, width );
+
+    return record;
   }
 
   /**
@@ -239,21 +268,29 @@ public final class ImportTrippleHelper
    * @param profilPointList
    *          point list of the current profile
    */
-  private static double calculateSegmentLength( final double xPoint, final double yPoint, final IRecord previousPoint )
+  private static double calculateSegmentLength( final List<IRecord> profilPointList, final IRecord profilPoint )
   {
-    if( previousPoint == null )
-      return 0.0;
+    double distance = 0;
+    final GeometryFactory factory = new GeometryFactory();
 
     /* get the segment length of the already imported profile points */
-    final double previousWidth = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, previousPoint );
+    final IRecord last = profilPointList.get( profilPointList.size() - 1 );
+    distance = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, last );
 
     /* add the segment length of the segment defined by the last imported profile point and the new to add profile point */
-    final double xPrevious = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT, previousPoint );
-    final double yPrevious = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOCHWERT, previousPoint );
+    final Double x1 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, last );
+    final Double y1 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, last );
+    final Double x2 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, profilPoint );
+    final Double y2 = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, profilPoint );
 
-    final Coordinate posPrevious = new Coordinate( xPrevious, yPrevious );
-    final Coordinate posPoint = new Coordinate( xPoint, yPoint );
+    final Coordinate coordinates1 = new Coordinate( x1, y1 );
+    final Coordinate coordinates2 = new Coordinate( x2, y2 );
 
-    return previousWidth + posPrevious.distance( posPoint );
+    final Point point1 = factory.createPoint( coordinates1 );
+    final Point point2 = factory.createPoint( coordinates2 );
+
+    distance = distance + point1.distance( point2 );
+
+    return distance;
   }
 }

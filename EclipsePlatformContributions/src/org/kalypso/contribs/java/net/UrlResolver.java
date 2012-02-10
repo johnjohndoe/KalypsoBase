@@ -58,7 +58,6 @@ import org.eclipse.core.internal.resources.PlatformURLResourceConnection;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -72,14 +71,12 @@ import org.kalypso.contribs.java.io.RunAfterCloseOutputStream;
  * Davor kann noch eine Token-Ersetzung stattfinden
  * </p>
  * TODO: untersuchen warum es auch org.kalypso.contribs.java.net.UrlUtilities gibt??? Marc.
- *
+ * 
  * @author belger
  */
 @SuppressWarnings("restriction")
 public class UrlResolver implements IUrlResolver
 {
-  public static final String PROJECT_PROTOCOLL = "project:"; //$NON-NLS-1$
-
   private final Properties m_replaceTokenMap = new Properties();
 
   private final UrlUtilities m_urlUtilities = new UrlUtilities();
@@ -93,7 +90,7 @@ public class UrlResolver implements IUrlResolver
    * project from the baseURL (e.g. the baseURL must be of the form platfrom:/resource/). It then replaces project: by
    * 'platform:/resource/ <projectname>/
    * </p>
-   *
+   * 
    * @param baseURL
    * @param relativeURL
    * @throws MalformedURLException
@@ -101,18 +98,22 @@ public class UrlResolver implements IUrlResolver
   @Override
   public URL resolveURL( final URL baseURL, final String relativeURL ) throws MalformedURLException
   {
-    if( relativeURL.startsWith( PROJECT_PROTOCOLL ) )
+    if( relativeURL.startsWith( "project:" ) ) //$NON-NLS-1$
     {
       if( baseURL == null )
+      {
         throw new MalformedURLException( "Cannot process protocol 'project:' without a valid base URL as context" ); //$NON-NLS-1$
+      }
+
+      if( !baseURL.toString().startsWith( PlatformURLResourceConnection.RESOURCE_URL_STRING ) )
+      {
+        throw new MalformedURLException( "Protocol 'project:' need a resource url as context" + "\n\turl=" + baseURL + "\n\trelativeURL=" + relativeURL ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      }
 
       final IProject project = ResourceUtilities.findProjectFromURL( baseURL );
-      if( project == null )
-        throw new MalformedURLException( "Protocol 'project:' need a resource url as context" + "\n\turl=" + baseURL + "\n\trelativeURL=" + relativeURL ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
       final String projectURL = PlatformURLResourceConnection.RESOURCE_URL_STRING + "/" + project.getName(); //$NON-NLS-1$
-      final String relPath = relativeURL.substring( PROJECT_PROTOCOLL.length() + 1 ); //$NON-NLS-1$
 
+      final String relPath = relativeURL.substring( "project:".length() + 1 ); //$NON-NLS-1$
       return new URL( projectURL + "/" + relPath ); //$NON-NLS-1$
     }
     else if( relativeURL.startsWith( "REMOTE=" ) ) //$NON-NLS-1$
@@ -129,11 +130,6 @@ public class UrlResolver implements IUrlResolver
       }
 
       return new URL( relativeURL.substring( 7 ) );
-    }
-
-    if( relativeURL.startsWith( "/" ) )
-    {
-      return new URL( baseURL, relativeURL.substring( 1 ) );
     }
 
     return new URL( baseURL, relativeURL );
@@ -159,7 +155,7 @@ public class UrlResolver implements IUrlResolver
 
   /**
    * If URL denotes a location within the workspace, special handling is done. Else, we rely on {@link UrlUtilities}.
-   *
+   * 
    * @throws IOException
    * @see org.kalypso.contribs.java.net.IUrlResolver#createWriter(java.net.URL)
    */
@@ -223,7 +219,7 @@ public class UrlResolver implements IUrlResolver
 
   /**
    * Ausnahmebehandlung von Platform URLs. In diesem Fall anhand der Workbench das encoding bestimmen.
-   *
+   * 
    * @see org.kalypso.contribs.java.net.IUrlResolver#createReader(java.net.URL)
    */
   @Override
@@ -246,16 +242,5 @@ public class UrlResolver implements IUrlResolver
 
     // wenn alles nichts hilfe, auf Standardzeug zurückgreifen
     return m_urlUtilities.createReader( url );
-  }
-
-  /**
-   * Builds a path of the form 'project:/<projectRelativePath>'
-   */
-  public static String createProjectPath( final IPath absolutePath )
-  {
-    Assert.isTrue( absolutePath.isAbsolute() );
-
-    final IPath pathWithoutProject = absolutePath.removeFirstSegments( 1 );
-    return UrlResolver.PROJECT_PROTOCOLL + IPath.SEPARATOR + pathWithoutProject.toPortableString(); //$NON-NLS-1$
   }
 }

@@ -69,13 +69,13 @@ public interface IZmlModel
 
   void accept( IZmlModelRowVisitor visitor );
 
-  void add( IZmlModelColumn column );
+  void dispose( );
 
   IZmlMemento getMemento( );
+
+  void add( IZmlModelColumn column );
 
   AbstractColumnType getColumnType( String identifier );
 
   String[] getIgnoreTypes( );
-
-  void doClean( );
 }

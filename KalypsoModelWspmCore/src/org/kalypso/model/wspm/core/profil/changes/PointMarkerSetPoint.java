@@ -42,31 +42,41 @@ package org.kalypso.model.wspm.core.profil.changes;
 
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.observation.result.IRecord;
 
 public class PointMarkerSetPoint implements IProfilChange
 {
   private final IProfilPointMarker m_pointMarker;
 
-  private final IProfileRecord m_newPosition;
+  private final IRecord m_newPosition;
 
-  private IProfileRecord m_oldPosition;
+  private IRecord m_oldPosition;
 
-  public PointMarkerSetPoint( final IProfilPointMarker pointMarker, final IProfileRecord newPosition )
+  public PointMarkerSetPoint( final IProfilPointMarker pointMarker, final IRecord newPosition )
   {
     m_pointMarker = pointMarker;
     m_newPosition = newPosition;
     m_oldPosition = pointMarker.getPoint();
   }
 
+  /**
+   * @throws IllegalProfileOperationException
+   * @see org.kalypso.model.wspm.core.profil.changes.AbstractChange#doChange(PlainProfil)
+   */
   @Override
-  public IProfilChange doChange( )
+  public IProfilChange doChange( final ProfilChangeHint hint )
   {
+    if( hint != null )
+      hint.setMarkerMoved();
+
     m_oldPosition = m_pointMarker.setPoint( m_newPosition );
 
     return new PointMarkerSetPoint( m_pointMarker, m_oldPosition );
   }
 
+  /**
+   * @see java.lang.Object#toString()
+   */
   @Override
   public String toString( )
   {

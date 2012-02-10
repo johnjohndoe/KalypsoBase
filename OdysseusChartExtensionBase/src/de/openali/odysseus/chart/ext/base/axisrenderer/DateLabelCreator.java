@@ -55,7 +55,7 @@ public class DateLabelCreator implements ILabelCreator
 
   /**
    * @param formatString
-   *          z.B. "yyyy-MM-dd\nHH:mm:ss"
+   *          z.B. "yyyy-MM-dd\nhh:mm:ss"
    */
   public DateLabelCreator( final String formatString )
   {

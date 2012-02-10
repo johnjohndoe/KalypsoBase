@@ -46,7 +46,7 @@ import java.util.Iterator;
 /**
  * @author doemming
  */
-public class CalendarIterator implements Iterator<Calendar>
+public class CalendarIterator implements Iterator<Calendar>, Iterable<Calendar>
 {
   private final Calendar m_end;
 
@@ -111,5 +111,14 @@ public class CalendarIterator implements Iterator<Calendar>
       result++;
 
     return result;
+  }
+
+  /**
+   * @see java.lang.Iterable#iterator()
+   */
+  @Override
+  public Iterator<Calendar> iterator( )
+  {
+    return this;
   }
 }

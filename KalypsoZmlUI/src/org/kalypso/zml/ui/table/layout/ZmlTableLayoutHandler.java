@@ -48,25 +48,27 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.IZmlTableCompositeListener;
 import org.kalypso.zml.ui.table.IZmlTableListener;
-import org.kalypso.zml.ui.table.ZmlTableComposite;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
-import org.kalypso.zml.ui.table.model.ZmlTableColumns;
+import org.kalypso.zml.ui.table.ZmlMainTable;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.columns.ZmlTableColumns;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlTableLayoutHandler implements IZmlTableListener
 {
-  protected final ZmlTableComposite m_table;
+  protected final IZmlTable m_table;
 
   final Set<IZmlTableColumn> m_stack = Collections.synchronizedSet( new LinkedHashSet<IZmlTableColumn>() );
 
   private final MutexRule m_rule = new MutexRule( "updating column layout of zml table" );
 
-  private UIJob m_job;
+  UIJob m_job;
 
-  public ZmlTableLayoutHandler( final ZmlTableComposite table )
+  public ZmlTableLayoutHandler( final IZmlTable table )
   {
     m_table = table;
   }
@@ -74,11 +76,11 @@ public class ZmlTableLayoutHandler implements IZmlTableListener
   @Override
   public void eventTableChanged( final String type, final IZmlModelColumn... columns )
   {
-    if( IZmlTableListener.TYPE_REFRESH.equals( type ) )
+    if( IZmlTableCompositeListener.TYPE_REFRESH.equals( type ) )
     {
       doRefreshColumns( ZmlTableColumns.toTableColumns( m_table, true, columns ) );
     }
-    else if( IZmlTableListener.TYPE_ACTIVE_RULE_CHANGED.equals( type ) )
+    else if( IZmlTableCompositeListener.TYPE_ACTIVE_RULE_CHANGED.equals( type ) )
     {
       doRefreshColumns( ZmlTableColumns.toTableColumns( m_table, false, columns ) );
     }
@@ -93,7 +95,7 @@ public class ZmlTableLayoutHandler implements IZmlTableListener
       if( Objects.isNotNull( m_job ) )
         m_job.cancel();
 
-      m_job = new ZmlTableLayoutJob( m_table, m_stack );
+      m_job = new ZmlTableLayoutJob( (ZmlMainTable) m_table, m_stack );
 
       m_job.setRule( m_rule );
       m_job.schedule( 100 );

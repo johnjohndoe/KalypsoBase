@@ -47,16 +47,27 @@ package org.kalypso.observation.result;
  */
 public class TupleResultChangeAdapter implements ITupleResultChangedListener
 {
+  /**
+   * @see org.kalypso.observation.result.ITupleResultChangedListener#valuesChanged(org.kalypso.observation.result.ITupleResultChangedListener.ValueChange[])
+   */
   @Override
   public void valuesChanged( final ValueChange[] changes )
   {
   }
 
+  /**
+   * @see org.kalypso.observation.result.ITupleResultChangedListener#recordsChanged(org.kalypso.observation.result.IRecord[],
+   *      org.kalypso.observation.result.ITupleResultChangedListener.TYPE)
+   */
   @Override
   public void recordsChanged( final IRecord[] records, final TYPE type )
   {
   }
 
+  /**
+   * @see org.kalypso.observation.result.ITupleResultChangedListener#componentsChanged(org.kalypso.observation.result.IComponent[],
+   *      org.kalypso.observation.result.ITupleResultChangedListener.TYPE)
+   */
   @Override
   public void componentsChanged( final IComponent[] components, final TYPE type )
   {

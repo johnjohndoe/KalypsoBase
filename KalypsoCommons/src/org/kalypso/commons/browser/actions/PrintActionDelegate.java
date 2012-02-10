@@ -81,9 +81,9 @@ public class PrintActionDelegate implements IViewActionDelegate, IEditorActionDe
   {
     if( m_part == null )
       return; // should not happen, because in this case the action should be disabled
-
+    
     final Browser browser = (Browser) m_part.getAdapter( Browser.class );
-// javascript:window.print()
+//    javascript:window.print()
     browser.execute( "window.print()" ); //$NON-NLS-1$
   }
 

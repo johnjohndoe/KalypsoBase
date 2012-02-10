@@ -66,17 +66,8 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
 /**
  * @author kimwerner
  */
-public abstract class AbstractChartModelViewPart extends ViewPart implements IAdapterEater<IChartPart>, IChartModelView
+public abstract class AbstractChartModelViewPart extends ViewPart implements IAdapterEater<IChartPart>, IChartModelEventListener, IChartModelView
 {
-  private final IChartModelEventListener m_chartListener = new IChartModelEventListener()
-  {
-    @Override
-    public void onModelChanged( final IChartModel oldModel, final IChartModel newModel )
-    {
-      handleModelChanged( oldModel, newModel );
-    }
-  };
-
   private final AdapterPartListener<IChartPart> m_chartProviderListener = new AdapterPartListener<IChartPart>( IChartPart.class, this, EditorFirstAdapterFinder.<IChartPart> instance(), EditorFirstAdapterFinder.<IChartPart> instance() );
 
   private IChartPart m_chartPart;
@@ -114,13 +105,8 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
   public void dispose( )
   {
     getSite().setSelectionProvider( null );
-
     if( m_chartPart != null )
-    {
-      final IChartComposite chart = m_chartPart.getChartComposite();
-      if( chart != null )
-        chart.removeListener( m_chartListener );
-    }
+      m_chartPart.removeListener( this );
 
     super.dispose();
   }
@@ -184,53 +170,14 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
     updateControl();
   }
 
-  @Override
-  public void setAdapter( final IWorkbenchPart part, final IChartPart adapter )
-  {
-    if( adapter == m_chartPart )
-      return;
-
-    final IChartModel oldModel = m_chartModel;
-
-    if( m_chartPart != null )
-    {
-      final IChartComposite chartComposite = m_chartPart.getChartComposite();
-      if( chartComposite != null )
-        chartComposite.removeListener( m_chartListener );
-    }
-
-    m_chartPart = adapter;
-
-    if( adapter != null )
-    {
-      final IChartComposite chart = adapter.getChartComposite();
-      if( chart == null )
-        m_chartModel = null;
-      else
-      {
-        m_chartModel = chart.getChartModel();
-        chart.addListener( m_chartListener );
-      }
-    }
-
-    handleModelChanged( oldModel, m_chartModel );
-
-    // updateControl();
-  }
+  protected abstract void modelChanged( final IChartModel oldModel );
 
   /**
-   * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
+   * @see de.openali.odysseus.chart.framework.model.event.IChartModelEventListener#onModelChanged(de.openali.odysseus.chart.framework.model.IChartModel,
+   *      de.openali.odysseus.chart.framework.model.IChartModel)
    */
   @Override
-  public void setFocus( )
-  {
-    if( m_control != null && !m_control.isDisposed() )
-    {
-      m_control.setFocus();
-    }
-  }
-
-  protected void handleModelChanged( final IChartModel oldModel, final IChartModel newModel )
+  public void onModelChanged( final IChartModel oldModel, final IChartModel newModel )
   {
     m_chartModel = newModel;
 
@@ -244,9 +191,39 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
     };
 
     ControlUtils.asyncExec( m_control, runnable );
+
   }
 
-  protected abstract void modelChanged( final IChartModel oldModel );
+  /**
+   * @see org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater#setAdapter(java.lang.Object)
+   */
+
+  @Override
+  public void setAdapter( final IWorkbenchPart part, final IChartPart adapter )
+  {
+    if( adapter == m_chartPart )
+      return;
+    if( m_chartPart != null )
+      m_chartPart.removeListener( this );
+    m_chartPart = adapter;
+    if( adapter != null )
+    {
+      adapter.addListener( this );
+      final IChartComposite chart = adapter.getChartComposite();
+      m_chartModel = chart == null ? null : chart.getChartModel();
+    }
+    updateControl();
+  }
+
+  /**
+   * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
+   */
+  @Override
+  public void setFocus( )
+  {
+    if( m_control != null && !m_control.isDisposed() )
+      m_control.setFocus();
+  }
 
   /** Must be called in SWT thread */
   protected abstract void updateControl( );

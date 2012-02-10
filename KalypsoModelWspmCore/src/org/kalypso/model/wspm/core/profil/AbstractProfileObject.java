@@ -129,9 +129,7 @@ public abstract class AbstractProfileObject implements IProfileObject
     if( result.size() > 1 )
       throw new IllegalStateException( "Profile object always consists of one IRecord-Set row" ); //$NON-NLS-1$
     else if( result.size() == 0 )
-    {
       result.add( result.createRecord() );
-    }
 
     return result.get( 0 ).getValue( index );
   }
@@ -166,9 +164,7 @@ public abstract class AbstractProfileObject implements IProfileObject
       result.add( record );
     }
     else
-    {
       record = result.get( 0 );
-    }
     record.setValue( index, value );
   }
 
@@ -181,10 +177,9 @@ public abstract class AbstractProfileObject implements IProfileObject
     setValue( getObjectProperty( componentID ), value );
   }
 
-  @Override
   public void cloneValuesFrom( final IProfileObject other )
   {
-    for( final IComponent cmp : getObjectProperties() )
+    for( final IComponent cmp : this.getObjectProperties() )
     {
       try
       {

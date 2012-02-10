@@ -22,11 +22,11 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Event;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.binding.BaseColumn;
-import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
-import org.kalypso.zml.ui.table.provider.ZmlTableCellPainter;
+import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
+import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
+import org.kalypso.zml.ui.table.provider.rendering.cell.IZmlTableCellPainter;
 
 public class ZmlTableCursor extends AbstractZmlCellCursor
 {
@@ -49,7 +49,7 @@ public class ZmlTableCursor extends AbstractZmlCellCursor
     if( Objects.isNull( cell ) || cell.getControl().isDisposed() )
       return;
 
-    final ZmlTableCellPainter painter = getPainter( cell );
+    final IZmlTableCellPainter painter = getPainter( cell );
     if( Objects.isNull( painter ) )
       return;
 
@@ -103,10 +103,10 @@ public class ZmlTableCursor extends AbstractZmlCellCursor
     bounds.height = Math.max( bounds.height, extend.y );
   }
 
-  private ZmlTableCellPainter getPainter( final ViewerCell cell )
+  private IZmlTableCellPainter getPainter( final ViewerCell cell )
   {
-    final IZmlModelRow row = (IZmlModelRow) cell.getElement();
-    final IZmlTableColumn[] columns = m_table.getColumns();
+    final IZmlTableRow row = (IZmlTableRow) cell.getElement();
+    final IZmlTableColumn[] columns = row.getColumns();
     final int index = cell.getVisualIndex() - 1; // table rendering offset ("windows layout bug")
     if( index < 0 )
       return null;

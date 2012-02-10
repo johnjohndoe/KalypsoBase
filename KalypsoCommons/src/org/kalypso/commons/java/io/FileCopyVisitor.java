@@ -96,7 +96,7 @@ public class FileCopyVisitor implements FileVisitor
       if( m_excludeDirWithFile != null && isDir )
       {
         /* If one of the exclude files exists, return false. */
-        for( final String excludeDirWithFile : m_excludeDirWithFile )
+        for( String excludeDirWithFile : m_excludeDirWithFile )
         {
           final File excludeFile = new File( file, excludeDirWithFile );
           if( excludeFile.exists() )

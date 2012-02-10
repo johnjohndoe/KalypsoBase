@@ -58,7 +58,7 @@ public class NumberAxisW extends NumberAxis
     setAutoRangeStickyZero( false );
 
     setAutoRangeMinimumSize( 50 );
-
+    
     setUpperMargin( 0.25 );
     setLowerMargin( 0.10 );
   }

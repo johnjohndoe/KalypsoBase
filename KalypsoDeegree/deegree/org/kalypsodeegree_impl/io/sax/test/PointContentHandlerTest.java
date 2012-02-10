@@ -2,46 +2,48 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.test;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+
+import junit.framework.TestCase;
 
 import org.junit.Test;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
@@ -56,8 +58,10 @@ import org.xml.sax.XMLReader;
 /**
  * @author Felipe Maximino
  */
-public class PointContentHandlerTest extends AssertGeometry
+public class PointContentHandlerTest extends TestCase
 {
+  private static double DELTA = 0.01;
+
   private static final GM_Point POINT2D = GeometryFactory.createGM_Point( 0.0, 1.0, "EPSG:31467" );
 
   private static final GM_Point POINT3D = GeometryFactory.createGM_Point( 0.0, 1.0, 2.0, "EPSG:31467" );
@@ -66,6 +70,15 @@ public class PointContentHandlerTest extends AssertGeometry
 
   private static final String ERROR_TUPLES = "One point must have exactly one tuple of coordinates.";
 
+  private final SAXParserFactory m_saxFactory = SAXParserFactory.newInstance();
+
+  @Override
+  protected void setUp( ) throws Exception
+  {
+    super.setUp();
+    m_saxFactory.setNamespaceAware( true );
+  }
+
   /**
    * tests a 3 dimensional GM_Point.
    */
@@ -73,7 +86,7 @@ public class PointContentHandlerTest extends AssertGeometry
   public void testPoint1( ) throws Exception
   {
     final GM_Point point = parsePoint( "resources/point1.gml" );
-    assertPoint( POINT3D, point );
+    assertPoint( point, POINT3D );
   }
 
   /**
@@ -99,7 +112,7 @@ public class PointContentHandlerTest extends AssertGeometry
   public void testPoint3( ) throws Exception
   {
     final GM_Point point = parsePoint( "resources/point3.gml" );
-    assertPoint( POINT2D, point );
+    assertPoint( point, POINT2D );
   }
 
   /**
@@ -109,7 +122,7 @@ public class PointContentHandlerTest extends AssertGeometry
   public void testPoint4( ) throws Exception
   {
     final GM_Point point = parsePoint( "resources/point4.gml" );
-    assertPoint( POINT3D, point );
+    assertPoint( point, POINT3D );
   }
 
   /**
@@ -137,7 +150,7 @@ public class PointContentHandlerTest extends AssertGeometry
   public void testPoint6( ) throws Exception
   {
     final GM_Point point = parsePoint( "resources/point6.gml" );
-    assertPoint( POINT3D, point );
+    assertPoint( point, POINT3D );
   }
 
   /**
@@ -147,7 +160,7 @@ public class PointContentHandlerTest extends AssertGeometry
   public void testPoint7( ) throws Exception
   {
     final GM_Point point = parsePoint( "resources/point7.gml" );
-    assertPoint( POINT2D, point );
+    assertPoint( point, POINT2D );
   }
 
   /**
@@ -192,17 +205,26 @@ public class PointContentHandlerTest extends AssertGeometry
   public void testPoint10( ) throws Exception
   {
     final GM_Point point = parsePoint( "resources/point10.gml" );
-    assertPoint( POINT3D, point );
+    assertPoint( point, POINT3D );
+  }
+
+  private void assertPoint( final GM_Point parsed, final GM_Point expected )
+  {
+    assertNotNull( parsed );
+    assertEquals( expected.getCoordinateSystem(), parsed.getCoordinateSystem() );
+    assertTrue( expected.distance( parsed ) < DELTA );
+
+    if( expected.getDimension() == 3 )
+    {
+      assertEquals( expected.getZ(), parsed.getZ(), DELTA );
+    }
   }
 
   private GM_Point parsePoint( final String name ) throws Exception
   {
     final InputSource is = new InputSource( getClass().getResourceAsStream( name ) );
 
-    final SAXParserFactory saxFactory = SAXParserFactory.newInstance();
-    saxFactory.setNamespaceAware( true );
-
-    final SAXParser parser = saxFactory.newSAXParser();
+    final SAXParser parser = m_saxFactory.newSAXParser();
     final XMLReader reader = parser.getXMLReader();
 
     final GM_Point[] result = new GM_Point[1];

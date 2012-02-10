@@ -5,8 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Comparator;
 
-import org.kalypso.commons.java.lang.Strings;
-
 import de.openali.odysseus.chart.factory.config.parameters.impl.CalendarParser;
 import de.openali.odysseus.chart.framework.exception.MalformedValueException;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -89,9 +87,14 @@ public class CalendarDataOperator extends AbstractDataOperator<Calendar>
   @Override
   public Calendar stringToLogical( final String value ) throws MalformedValueException
   {
-    if( Strings.isEmpty( value ) )
+    if( value == null )
+    {
       return null;
-
+    }
+    if( value.trim().equals( "" ) )
+    {
+      return null;
+    }
     final Calendar cal = m_stringParser.stringToLogical( value );
     return cal;
   }
@@ -99,7 +102,7 @@ public class CalendarDataOperator extends AbstractDataOperator<Calendar>
   @Override
   public String getFormatHint( )
   {
-    return "yyyy-MM-dd (HH:mm)"; //$NON-NLS-1$
+    return "yyyy-MM-dd (HH:mm)";
   }
 
   /**

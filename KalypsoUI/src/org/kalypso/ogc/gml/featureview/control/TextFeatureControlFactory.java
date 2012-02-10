@@ -83,7 +83,7 @@ public class TextFeatureControlFactory implements IFeatureControlFactory
       return (String) objFormat;
 
     if( objFormat instanceof Node )
-      return XMLTools.getStringValue( (Node) objFormat );
+      return XMLTools.getStringValue( ((Node) objFormat) );
 
     return null;
   }

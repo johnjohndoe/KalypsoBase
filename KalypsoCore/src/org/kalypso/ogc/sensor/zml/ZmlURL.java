@@ -32,7 +32,7 @@ package org.kalypso.ogc.sensor.zml;
 import java.net.URL;
 import java.util.Calendar;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.RequestFactory;
@@ -74,6 +74,29 @@ public final class ZmlURL
   public static String getIdentifierPart( final String strUrl )
   {
     final int ix = strUrl.indexOf( '?' );
+    if( ix != -1 )
+      return strUrl.substring( 0, ix );
+
+    return strUrl;
+  }
+
+  /**
+   * Returns the scheme part of the given url
+   */
+  public static String getSchemePart( final URL url )
+  {
+    return getSchemePart( url.toExternalForm() );
+  }
+
+  /**
+   * Returns the scheme part of the given url
+   */
+  public static String getSchemePart( final String strUrl )
+  {
+    // TODO test if this is correct since only the first ':' found
+    // will be returned here. But the url might contain something like
+    // foo:bar://stuff hence results might not be correct!!!
+    final int ix = strUrl.indexOf( ":" ); //$NON-NLS-1$
     if( ix != -1 )
       return strUrl.substring( 0, ix );
 

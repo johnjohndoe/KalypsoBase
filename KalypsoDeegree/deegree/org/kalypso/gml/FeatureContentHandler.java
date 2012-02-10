@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml;
 
@@ -55,8 +55,8 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.types.AbstractGmlContentHandler;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -64,7 +64,7 @@ import org.xml.sax.XMLReader;
 /**
  * A {@link org.xml.sax.ContentHandler} implementation which parses GML Features. This content handler delegates the
  * parsing of any (non-feature) property-values of this feature to a {@link org.kalypso.gml.PropertyTypeHandler}s.
- *
+ * 
  * @author Andreas von Doemming
  * @author Felipe Maximino - Refaktoring
  */
@@ -181,13 +181,7 @@ public class FeatureContentHandler extends AbstractGmlContentHandler implements 
     final Feature childFE = FeatureFactory.createFeature( m_parentFeature, (IRelationType) m_scopeProperty, fid, featureType, false );
     if( m_scopeFeature != null )
     {
-      if( m_scopeProperty.isList() )
-      {
-        final FeatureList list = (FeatureList) m_scopeFeature.getProperty( m_scopeProperty );
-        list.add( childFE );
-      }
-      else
-        m_scopeFeature.setProperty( m_scopeProperty, childFE );
+      FeatureHelper.addChild( m_scopeFeature, (IRelationType) m_scopeProperty, childFE );
     }
 
     m_scopeFeature = childFE;
@@ -219,11 +213,5 @@ public class FeatureContentHandler extends AbstractGmlContentHandler implements 
   public void setPropertyAsScope( final IPropertyType property )
   {
     m_scopeProperty = property;
-  }
-
-  @Override
-  public String getLocalName( )
-  {
-    throw new UnsupportedOperationException();
   }
 }

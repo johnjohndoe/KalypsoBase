@@ -44,7 +44,7 @@ package org.kalypso.ogc.sensor.request;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.Period;
 import org.kalypso.commons.time.PeriodUtils;
 import org.kalypso.contribs.java.util.CalendarUtilities;
