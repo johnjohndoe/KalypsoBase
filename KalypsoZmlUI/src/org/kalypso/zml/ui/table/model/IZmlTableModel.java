@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.model;
 
+import java.util.List;
+
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableColumnVisitor;
@@ -66,7 +68,7 @@ public interface IZmlTableModel
 
   IZmlTableRow getRow( int index );
 
-  IZmlTableRow[] getRows( );
+  List<IZmlTableRow> getRows( );
 
   IZmlTable getTable( );
 

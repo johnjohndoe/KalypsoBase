@@ -40,4 +40,5 @@ Export-Package: org.kalypso.zml.ui,
  org.kalypso.zml.ui.table.provider,
  org.kalypso.zml.ui.table.provider.strategy,
  org.kalypso.zml.ui.table.update
-Bundle-ClassPath: .
+Bundle-ClassPath: lib/nattable/net.sourceforge.nattable.core-2.3.1.1.jar,
+ .

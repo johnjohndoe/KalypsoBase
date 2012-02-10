@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.model.cells;
 
+import java.util.List;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.jface.viewers.TableViewer;
@@ -126,9 +128,9 @@ public class ZmlTableValueCell extends AbstractZmlTableCell implements IZmlTable
     final IZmlTableModel model = getModel();
 
     final int index = getIndex();
-    final IZmlTableRow[] rows = model.getRows();
+    final List<IZmlTableRow> rows = model.getRows();
 
-    if( rows.length <= index )
+    if( rows.size() <= index )
       return null;
 
     final IZmlTableRow nextRow = model.getRow( index + 1 );
