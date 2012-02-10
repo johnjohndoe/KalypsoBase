@@ -70,6 +70,40 @@ public final class ZmlTableColumns
   {
   }
 
+  public static synchronized void buildTableColumns( final IZmlTableComposite base, final BaseColumn... columns )
+  {
+    final IZmlModel model = base.getModel();
+    final IZmlTable main = base.getMainTable();
+    final IZmlTable[] tables = base.getTables();
+
+    for( final BaseColumn column : columns )
+    {
+      final AbstractColumnType columnType = column.getType();
+      if( Objects.isNull( columnType ) )
+        return;
+
+      if( columnType instanceof DataColumnType )
+      {
+        final DataColumnType dataColumnType = (DataColumnType) columnType;
+
+        /** index axis exists? */
+        final String indexAxis = dataColumnType.getIndexAxis();
+        if( !ZmlTableColumns.hasColumn( main, indexAxis ) )
+        {
+          final AbstractColumnType indexColumnType = model.getColumnType( indexAxis );
+          final ZmlTablesIndexColumnBuilder builder = new ZmlTablesIndexColumnBuilder( tables, new BaseColumn( indexColumnType ) );
+          builder.execute( new NullProgressMonitor() );
+        }
+
+        if( !ZmlTableColumns.hasColumn( main, column.getIdentifier() ) )
+        {
+          final ZmlTablesValueColumnBuilder builder = new ZmlTablesValueColumnBuilder( tables, column );
+          builder.execute( new NullProgressMonitor() );
+        }
+      }
+    }
+  }
+
   public static IZmlTableColumn[] toTableColumns( final IZmlTable table, final boolean index, final IZmlModelColumn[] modelColumns )
   {
     final Set<IZmlTableColumn> columns = new HashSet<IZmlTableColumn>();
@@ -179,34 +213,19 @@ public final class ZmlTableColumns
     return null;
   }
 
-  public static void addTableColumn( final IZmlTableComposite table, final BaseColumn column )
+  public static BaseColumn[] toBaseColumns( final IZmlModelColumn... columns )
   {
+    if( ArrayUtils.isEmpty( columns ) )
+      return new BaseColumn[] {};
 
-    final IZmlModel model = table.getModel();
-
-    final AbstractColumnType columnType = column.getType();
-    if( Objects.isNull( columnType ) )
-      return;
-
-    if( columnType instanceof DataColumnType )
+    final Set<BaseColumn> base = new LinkedHashSet<BaseColumn>();
+    for( final IZmlModelColumn column : columns )
     {
-      final DataColumnType dataColumnType = (DataColumnType) columnType;
-
-      /** index axis exists? */
-      final String indexAxis = dataColumnType.getIndexAxis();
-      if( !hasColumn( table.getMainTable(), indexAxis ) ) // FIXME two table models!!!
-      {
-        final AbstractColumnType indexColumnType = model.getColumnType( indexAxis );
-        final ZmlTableIndexColumnBuilder builder = new ZmlTableIndexColumnBuilder( table, new BaseColumn( indexColumnType ) );
-        builder.execute( new NullProgressMonitor() );
-      }
+      if( Objects.isNotNull( column ) )
+        base.add( column.getDataColumn() );
     }
 
-    if( !hasColumn( table.getMainTable(), column.getIdentifier() ) ) // FIXME
-    {
-      final ZmlTableValueColumnBuilder builder = new ZmlTableValueColumnBuilder( table, column );
-      builder.execute( new NullProgressMonitor() );
-    }
+    return base.toArray( new BaseColumn[] {} );
   }
 
 }

@@ -63,7 +63,6 @@ import org.eclipse.ui.services.IServiceWithSources;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.ui.commands.CommandUtilities;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.IZmlTableComposite;
 import org.kalypso.zml.ui.table.IZmlTableCompositeListener;
 
@@ -90,7 +89,7 @@ public class TableSourceProvider extends AbstractSourceProvider
   private final IZmlTableCompositeListener m_listener = new IZmlTableCompositeListener()
   {
     @Override
-    public void eventTableChanged( final String type, final IZmlModelColumn... columns )
+    public void eventTableChanged( final String type )
     {
       if( IZmlTableCompositeListener.TYPE_REFRESH.equals( type ) )
         refreshUIelements();

@@ -194,7 +194,8 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
       // FIXME stack columns in table model
       Collections.addAll( m_stackColumns, cols );
 
-      addMissingColumns();
+      final IZmlModelColumn[] missing = ZmlTableColumns.findMissingColumns( getMainTable(), getModel().getColumns() );
+      ZmlTableColumns.buildTableColumns( this, ZmlTableColumns.toBaseColumns( missing ) );
 
       for( final IZmlTable table : tables )
       {
@@ -205,25 +206,13 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
     }
   }
 
-  protected void addMissingColumns( )
-  {
-    synchronized( this )
-    {
-      final IZmlModelColumn[] missing = ZmlTableColumns.findMissingColumns( getMainTable(), m_model.getColumns() );
-      for( final IZmlModelColumn column : missing )
-      {
-        ZmlTableColumns.addTableColumn( this, column.getDataColumn() );
-      }
-    }
-  }
-
   @Override
-  public void fireTableChanged( final String type, final IZmlModelColumn... columns )
+  public void fireTableSourceChanged( final String type )
   {
     final IZmlTableCompositeListener[] listeners = m_listeners.toArray( new IZmlTableCompositeListener[] {} );
     for( final IZmlTableCompositeListener listener : listeners )
     {
-      listener.eventTableChanged( type, columns );
+      listener.eventTableChanged( type );
     }
   }
 

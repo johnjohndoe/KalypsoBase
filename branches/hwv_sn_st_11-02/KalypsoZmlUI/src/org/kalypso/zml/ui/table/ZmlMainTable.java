@@ -243,6 +243,9 @@ public class ZmlMainTable extends Composite implements IZmlTable
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
+        if( monitor.isCanceled() )
+          return Status.CANCEL_STATUS;
+
         if( ZmlMainTable.this.getViewer().getTable().isDisposed() )
           return Status.OK_STATUS;
 

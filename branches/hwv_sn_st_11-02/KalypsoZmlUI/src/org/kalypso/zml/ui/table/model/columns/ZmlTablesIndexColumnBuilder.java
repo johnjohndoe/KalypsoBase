@@ -52,31 +52,28 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.TableTypes;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.IZmlTableComposite;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
 import org.kalypso.zml.ui.table.provider.ZmlTooltipProvider;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableIndexColumnBuilder implements ICoreRunnableWithProgress
+public class ZmlTablesIndexColumnBuilder implements ICoreRunnableWithProgress
 {
-  protected final IZmlTableComposite m_table;
+  protected final IZmlTable[] m_tables;
 
   private final BaseColumn m_column;
 
-  public ZmlTableIndexColumnBuilder( final IZmlTableComposite table, final BaseColumn column )
+  public ZmlTablesIndexColumnBuilder( final IZmlTable[] tables, final BaseColumn column )
   {
-    m_table = table;
+    m_tables = tables;
     m_column = column;
   }
 
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
-    final IZmlTable[] tables = m_table.getTables();
-
-    for( final IZmlTable table : tables )
+    for( final IZmlTable table : m_tables )
     {
       final TableViewer viewer = table.getViewer();
       final int index = viewer.getTable().getColumnCount();
