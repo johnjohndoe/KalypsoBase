@@ -40,31 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import net.sourceforge.nattable.NatTable;
+import net.sourceforge.nattable.data.IColumnAccessor;
 import net.sourceforge.nattable.data.IDataProvider;
-import net.sourceforge.nattable.data.ListDataProvider;
-import net.sourceforge.nattable.data.ReflectiveColumnPropertyAccessor;
-import net.sourceforge.nattable.grid.data.DefaultColumnHeaderDataProvider;
-import net.sourceforge.nattable.grid.data.DefaultCornerDataProvider;
-import net.sourceforge.nattable.grid.data.DefaultRowHeaderDataProvider;
-import net.sourceforge.nattable.grid.layer.ColumnHeaderLayer;
-import net.sourceforge.nattable.grid.layer.CornerLayer;
-import net.sourceforge.nattable.grid.layer.GridLayer;
-import net.sourceforge.nattable.grid.layer.RowHeaderLayer;
-import net.sourceforge.nattable.hideshow.ColumnHideShowLayer;
+import net.sourceforge.nattable.data.IRowDataProvider;
 import net.sourceforge.nattable.layer.AbstractLayerTransform;
 import net.sourceforge.nattable.layer.DataLayer;
-import net.sourceforge.nattable.reorder.ColumnReorderLayer;
-import net.sourceforge.nattable.selection.SelectionLayer;
 import net.sourceforge.nattable.viewport.ViewportLayer;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -78,15 +65,16 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.core.table.model.references.IZmlModelIndexCell;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
 import org.kalypso.zml.ui.table.focus.ZmlTableFocusCellHandler;
-import org.kalypso.zml.ui.table.layout.ZmlTablePager;
 import org.kalypso.zml.ui.table.model.IZmlTableModel;
-import org.kalypso.zml.ui.table.model.ZmlMainTableModel;
-import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
-import org.kalypso.zml.ui.table.model.columns.ZmlTableColumns;
 import org.kalypso.zml.ui.table.provider.rendering.cell.ZmlTableCellCache;
 import org.kalypso.zml.ui.table.selection.ZmlTableSelectionHandler;
 
@@ -107,23 +95,19 @@ public class ZmlMainTable extends Composite implements IZmlTable
 
   private ZmlTableSelectionHandler m_selection;
 
-  final ZmlTablePager m_pager = new ZmlTablePager( this ); // only for main table
-
-  private final ZmlMainTableModel m_model;
-
-  private HashMap<String, String> propertyToLabels;
-
-  private String[] propertyNames;
+// final ZmlTablePager m_pager = new ZmlTablePager( this ); // only for main table
 
   private BodyLayerStack bodyLayer;
 
   private IDataProvider bodyDataProvider;
 
+  protected final IZmlModel m_model;
+
   public ZmlMainTable( final ZmlTableComposite table, final IZmlModel model, final FormToolkit toolkit )
   {
     super( table, SWT.NULL );
     m_table = table;
-    m_model = new ZmlMainTableModel( this, model );
+    m_model = model;
 
     final GridLayout layout = LayoutHelper.createGridLayout();
     layout.verticalSpacing = 0;
@@ -142,53 +126,106 @@ public class ZmlMainTable extends Composite implements IZmlTable
   private void doInit( )
   {
 
-// final ListDataProvider<IZmlTableRow> provider = new ListDataProvider<IZmlTableRow>( m_model.getRows(), new
-// IColumnPropertyAccessor<IZmlTableRow>()
-// {
-// @Override
-// public Object getDataValue( final IZmlTableRow rowObject, final int columnIndex )
-// {
-// throw new UnsupportedOperationException();
-// }
-//
-// @Override
-// public void setDataValue( final IZmlTableRow rowObject, final int columnIndex, final Object newValue )
-// {
-// throw new UnsupportedOperationException();
-// }
-//
-// @Override
-// public int getColumnCount( )
-// {
-// throw new UnsupportedOperationException();
-// }
-//
-// @Override
-// public String getColumnProperty( final int columnIndex )
-// {
-// throw new UnsupportedOperationException();
-// }
-//
-// @Override
-// public int getColumnIndex( final String propertyName )
-// {
-// throw new UnsupportedOperationException();
-// }
-// } );
+    final IColumnAccessor<IZmlModelRow> accessor = new IColumnAccessor<IZmlModelRow>()
+    {
+      @Override
+      public Object getDataValue( final IZmlModelRow row, final int columnIndex )
+      {
+        final IZmlModelCell[] cells = row.getCells();
+        if( columnIndex < ArrayUtils.getLength( cells ) )
+        {
+          final IZmlModelCell cell = cells[columnIndex];
 
-    bodyDataProvider = setupBodyDataProvider();
-    final DefaultColumnHeaderDataProvider colHeaderDataProvider = new DefaultColumnHeaderDataProvider( propertyNames, propertyToLabels );
-    final DefaultRowHeaderDataProvider rowHeaderDataProvider = new DefaultRowHeaderDataProvider( bodyDataProvider );
+          if( cell instanceof IZmlModelIndexCell )
+          {
+            return cell.getIndexValue();
+          }
+          else if( cell instanceof IZmlModelValueCell )
+          {
+            try
+            {
+              final IZmlModelValueCell valueCell = (IZmlModelValueCell) cell;
+
+              return valueCell.getValue();
+            }
+            catch( final SensorException e )
+            {
+              e.printStackTrace();
+            }
+          }
+        }
+
+        return "n / a";
+      }
+
+      @Override
+      public void setDataValue( final IZmlModelRow row, final int columnIndex, final Object newValue )
+      {
+        throw new UnsupportedOperationException();
+      }
+
+      @Override
+      public int getColumnCount( )
+      {
+        return 0;
+      }
+    };
+
+    bodyDataProvider = new IRowDataProvider<IZmlModelRow>()
+    {
+
+      @Override
+      public Object getDataValue( final int columnIndex, final int rowIndex )
+      {
+        return accessor.getDataValue( getRowObject( rowIndex ), columnIndex );
+
+      }
+
+      @Override
+      public void setDataValue( final int columnIndex, final int rowIndex, final Object newValue )
+      {
+        accessor.setDataValue( getRowObject( rowIndex ), columnIndex, newValue );
+      }
+
+      @Override
+      public int getColumnCount( )
+      {
+        int count = 0;
+        final IZmlModelColumn[] columns = m_model.getColumns();
+        for( final IZmlModelColumn column : columns )
+        {
+          if( column.isActive() )
+            count += 1;
+        }
+
+        return count;
+      }
+
+      @Override
+      public int getRowCount( )
+      {
+        final IZmlModelRow[] rows = m_model.getRows();
+        return ArrayUtils.getLength( rows );
+      }
+
+      @Override
+      public IZmlModelRow getRowObject( final int rowIndex )
+      {
+        return m_model.getRowAt( rowIndex );
+      }
+
+      @Override
+      public int indexOfRowObject( final IZmlModelRow rowObject )
+      {
+        return ArrayUtils.indexOf( m_model.getRows(), rowObject );
+      }
+    };
 
     bodyLayer = new BodyLayerStack( bodyDataProvider );
-    final ColumnHeaderLayerStack columnHeaderLayer = new ColumnHeaderLayerStack( colHeaderDataProvider );
-    final RowHeaderLayerStack rowHeaderLayer = new RowHeaderLayerStack( rowHeaderDataProvider );
-    final DefaultCornerDataProvider cornerDataProvider = new DefaultCornerDataProvider( colHeaderDataProvider, rowHeaderDataProvider );
-    final CornerLayer cornerLayer = new CornerLayer( new DataLayer( cornerDataProvider ), rowHeaderLayer, columnHeaderLayer );
 
-    final GridLayer gridLayer = new GridLayer( bodyLayer, columnHeaderLayer, rowHeaderLayer, cornerLayer );
-    final NatTable natTable = new NatTable( this, gridLayer );
-    natTable.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+    m_natTable = new NatTable( this, bodyLayer );
+
+    m_natTable.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
 // m_tableViewer = new TableViewer( this, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION );
 // m_tableViewer.getTable().setLinesVisible( true );
@@ -238,96 +275,40 @@ public class ZmlMainTable extends Composite implements IZmlTable
 // table.setHeaderVisible( true );
   }
 
-  private IDataProvider setupBodyDataProvider( )
-  {
-    final List<Person> people = Arrays.asList( new Person( 100, "Mickey Mouse", new Date( 1000000 ) ), new Person( 110, "Batman", new Date( 2000000 ) ), new Person( 120, "Bender", new Date( 3000000 ) ), new Person( 130, "Cartman", new Date( 4000000 ) ), new Person( 140, "Dogbert", new Date( 5000000 ) ) );
-
-    propertyToLabels = new HashMap<String, String>();
-    propertyToLabels.put( "id", "ID" );
-    propertyToLabels.put( "name", "First Name" );
-    propertyToLabels.put( "birthDate", "DOB" );
-
-    propertyNames = new String[] { "id", "name", "birthDate" };
-    return new ListDataProvider<Person>( people, new ReflectiveColumnPropertyAccessor<Person>( propertyNames ) );
-
-  }
-
   public class BodyLayerStack extends AbstractLayerTransform
   {
 
-    private final SelectionLayer selectionLayer;
-
     public BodyLayerStack( final IDataProvider dataProvider )
     {
-      final DataLayer bodyDataLayer = new DataLayer( dataProvider );
-      final ColumnReorderLayer columnReorderLayer = new ColumnReorderLayer( bodyDataLayer );
-      final ColumnHideShowLayer columnHideShowLayer = new ColumnHideShowLayer( columnReorderLayer );
-      selectionLayer = new SelectionLayer( columnHideShowLayer );
-      final ViewportLayer viewportLayer = new ViewportLayer( selectionLayer );
+
+      final ViewportLayer viewportLayer = new ViewportLayer( new DataLayer( dataProvider ) );
       setUnderlyingLayer( viewportLayer );
     }
 
-    public SelectionLayer getSelectionLayer( )
-    {
-      return selectionLayer;
-    }
   }
 
-  public class ColumnHeaderLayerStack extends AbstractLayerTransform
-  {
-
-    public ColumnHeaderLayerStack( final IDataProvider dataProvider )
-    {
-      final DataLayer dataLayer = new DataLayer( dataProvider );
-      final ColumnHeaderLayer colHeaderLayer = new ColumnHeaderLayer( dataLayer, bodyLayer, bodyLayer.getSelectionLayer() );
-      setUnderlyingLayer( colHeaderLayer );
-    }
-  }
-
-  public class RowHeaderLayerStack extends AbstractLayerTransform
-  {
-
-    public RowHeaderLayerStack( final IDataProvider dataProvider )
-    {
-      final DataLayer dataLayer = new DataLayer( dataProvider, 50, 20 );
-      final RowHeaderLayer rowHeaderLayer = new RowHeaderLayer( dataLayer, bodyLayer, bodyLayer.getSelectionLayer() );
-      setUnderlyingLayer( rowHeaderLayer );
-    }
-  }
-
-  /**
-   * Object representation of a row in the table
-   */
-  public class Person
-  {
-    private final int id;
-
-    private final String name;
-
-    private final Date birthDate;
-
-    public Person( final int id, final String name, final Date birthDate )
-    {
-      this.id = id;
-      this.name = name;
-      this.birthDate = birthDate;
-    }
-
-    public int getId( )
-    {
-      return id;
-    }
-
-    public String getName( )
-    {
-      return name;
-    }
-
-    public Date getBirthDate( )
-    {
-      return birthDate;
-    }
-  }
+// public class ColumnHeaderLayerStack extends AbstractLayerTransform
+// {
+//
+// public ColumnHeaderLayerStack( final IDataProvider dataProvider )
+// {
+// final DataLayer dataLayer = new DataLayer( dataProvider );
+// final ColumnHeaderLayer colHeaderLayer = new ColumnHeaderLayer( dataLayer, bodyLayer, bodyLayer.getSelectionLayer()
+// );
+// setUnderlyingLayer( colHeaderLayer );
+// }
+// }
+//
+// public class RowHeaderLayerStack extends AbstractLayerTransform
+// {
+//
+// public RowHeaderLayerStack( final IDataProvider dataProvider )
+// {
+// final DataLayer dataLayer = new DataLayer( dataProvider, 50, 20 );
+// final RowHeaderLayer rowHeaderLayer = new RowHeaderLayer( dataLayer, bodyLayer, bodyLayer.getSelectionLayer() );
+// setUnderlyingLayer( rowHeaderLayer );
+// }
+// }
 
   @Override
   public void dispose( )
@@ -339,7 +320,8 @@ public class ZmlMainTable extends Composite implements IZmlTable
 
   public void refresh( )
   {
-    throw new UnsupportedOperationException();
+    m_natTable.update(); // TODO perhaps some other update event
+// throw new UnsupportedOperationException();
 // m_tableViewer.refresh( true, true );
   }
 
@@ -381,6 +363,8 @@ public class ZmlMainTable extends Composite implements IZmlTable
 
   private static final MutexRule MUTEX_TABLE_UPDATE = new MutexRule( "Aktualisiere Tabelle" ); // $NON-NLS-1$
 
+  private NatTable m_natTable;
+
   @Override
   public synchronized void refresh( final IZmlModelColumn... columns )
   {
@@ -395,21 +379,21 @@ public class ZmlMainTable extends Composite implements IZmlTable
         if( monitor.isCanceled() )
           return Status.CANCEL_STATUS;
 
-        if( ZmlMainTable.this.getViewer().getTable().isDisposed() )
+        if( ZmlMainTable.this.isDisposed() )
           return Status.OK_STATUS;
 
         synchronized( this )
         {
-          m_pager.update();
+// m_pager.update();
 
-          final IZmlTableColumn[] tableColumns = ZmlTableColumns.toTableColumns( ZmlMainTable.this, true, columns );
-          for( final IZmlTableColumn column : tableColumns )
-          {
-            column.reset();
-          }
+// final IZmlTableColumn[] tableColumns = ZmlTableColumns.toTableColumns( ZmlMainTable.this, true, columns );
+// for( final IZmlTableColumn column : tableColumns )
+// {
+// column.reset();
+// }
 
           ZmlMainTable.this.refresh();
-          m_pager.reveal();
+// m_pager.reveal();
 
           fireTableChanged( IZmlTableCompositeListener.TYPE_REFRESH, columns );
         }
@@ -445,6 +429,7 @@ public class ZmlMainTable extends Composite implements IZmlTable
   @Override
   public IZmlTableModel getModel( )
   {
-    return m_model;
+    return null;
+// return m_model;
   }
 }

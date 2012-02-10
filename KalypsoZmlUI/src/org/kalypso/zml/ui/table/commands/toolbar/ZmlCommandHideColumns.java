@@ -61,6 +61,7 @@ import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableColumnVisitor;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
+import org.kalypso.zml.ui.table.model.IZmlTableModel;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableValueColumn;
 
@@ -95,7 +96,11 @@ public class ZmlCommandHideColumns extends AbstractHandler implements IElementUp
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        table.getModel().accept( new IZmlTableColumnVisitor()
+        final IZmlTableModel model = table.getModel();
+        if( Objects.isNull( model ) )
+          return Status.CANCEL_STATUS;
+
+        model.accept( new IZmlTableColumnVisitor()
         {
           @Override
           public void visit( final IZmlTableColumn column )
