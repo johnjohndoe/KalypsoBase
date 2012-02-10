@@ -69,7 +69,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 
 /**
  * Guess vegatation classes from existing ax,ay,dp values
- * 
+ *
  * @author Dirk Kuch
  */
 public class GuessVegetationClassesRunnable implements ICoreRunnableWithProgress
@@ -96,7 +96,7 @@ public class GuessVegetationClassesRunnable implements ICoreRunnableWithProgress
 
     final IWspmClassification clazzes = WspmClassifications.getClassification( m_profile );
     if( Objects.isNull( clazzes ) )
-      throw new CoreException( new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( Messages.getString("GuessVegetationClassesRunnable_0"), m_profile.getStation() ) ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( Messages.getString( "GuessVegetationClassesRunnable_0" ), m_profile.getStation() ) ) ); //$NON-NLS-1$
 
     final List<IStatus> statis = new ArrayList<IStatus>();
 
@@ -112,7 +112,7 @@ public class GuessVegetationClassesRunnable implements ICoreRunnableWithProgress
 
       if( Objects.isNull( ax, ay, dp ) )
       {
-        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( Messages.getString("GuessVegetationClassesRunnable_1"), point.getBreite() ) ); //$NON-NLS-1$
+        final IStatus status = new Status( IStatus.INFO, KalypsoModelWspmCorePlugin.getID(), String.format( Messages.getString( "GuessVegetationClassesRunnable_1" ), point.getBreite() ) ); //$NON-NLS-1$
         statis.add( status );
 
         continue;
@@ -121,7 +121,7 @@ public class GuessVegetationClassesRunnable implements ICoreRunnableWithProgress
       final IVegetationClass clazz = findMatchingClass( clazzes, ax, ax, dp );
       if( Objects.isNull( clazz ) )
       {
-        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( Messages.getString("GuessVegetationClassesRunnable_2"), point.getBreite() ) ); //$NON-NLS-1$
+        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( Messages.getString( "GuessVegetationClassesRunnable_2" ), point.getBreite() ) ); //$NON-NLS-1$
         statis.add( status );
 
         continue;
@@ -130,7 +130,7 @@ public class GuessVegetationClassesRunnable implements ICoreRunnableWithProgress
       m_changes.add( new PointPropertyEdit( point, propertyClazz, clazz.getName() ) );
     }
 
-    return StatusUtilities.createStatus( statis, String.format( Messages.getString("GuessVegetationClassesRunnable_3"), m_profile.getStation() ) ); //$NON-NLS-1$
+    return StatusUtilities.createStatus( statis, String.format( Messages.getString( "GuessVegetationClassesRunnable_3" ), m_profile.getStation() ) ); //$NON-NLS-1$
   }
 
   private IVegetationClass findMatchingClass( final IWspmClassification clazzes, final Double ax, final Double ay, final Double dp )

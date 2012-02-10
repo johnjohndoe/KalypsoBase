@@ -64,10 +64,12 @@ import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.vegetation.UpdateVegetationProperties;
+import org.kalypso.observation.result.ComponentUtilities;
+import org.kalypso.observation.result.IComponent;
 
 /**
  * Guess roughness class from existing ks / kst value
- * 
+ *
  * @author Dirk Kuch
  */
 public class GuessRoughessClassesRunnable implements ICoreRunnableWithProgress
@@ -98,7 +100,10 @@ public class GuessRoughessClassesRunnable implements ICoreRunnableWithProgress
 
     final IWspmClassification clazzes = WspmClassifications.getClassification( m_profile );
     if( Objects.isNull( clazzes ) )
-      throw new CoreException( new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( Messages.getString("GuessRoughessClassesRunnable_0"), m_profile.getStation() ) ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( Messages.getString( "GuessRoughessClassesRunnable_0" ), m_profile.getStation() ) ) ); //$NON-NLS-1$
+
+    final IComponent component = m_profile.getPointPropertyFor( m_property );
+    final String componentLabel = ComponentUtilities.getComponentLabel( component );
 
     final List<IStatus> statis = new ArrayList<IStatus>();
 
@@ -111,8 +116,9 @@ public class GuessRoughessClassesRunnable implements ICoreRunnableWithProgress
       final Double value = (Double) point.getValue( property );
       if( Objects.isNull( value ) )
       {
+
         final Double width = (Double) point.getValue( m_profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE ) );
-        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( Messages.getString("GuessRoughessClassesRunnable_1"), width ) ); //$NON-NLS-1$
+        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( Messages.getString( "GuessRoughessClassesRunnable_1" ), width, componentLabel ) ); //$NON-NLS-1$
         statis.add( status );
 
         continue;
@@ -121,7 +127,7 @@ public class GuessRoughessClassesRunnable implements ICoreRunnableWithProgress
       final IRoughnessClass clazz = findMatchingClass( clazzes, value );
       if( Objects.isNull( clazz ) )
       {
-        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( Messages.getString("GuessRoughessClassesRunnable_2"), m_property, value, point.getBreite() ) ); //$NON-NLS-1$
+        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( Messages.getString( "GuessRoughessClassesRunnable_2" ), componentLabel, value, point.getBreite() ) ); //$NON-NLS-1$
         statis.add( status );
 
         continue;
@@ -130,7 +136,7 @@ public class GuessRoughessClassesRunnable implements ICoreRunnableWithProgress
       m_changes.add( new PointPropertyEdit( point, propertyClazz, clazz.getName() ) );
     }
 
-    return StatusUtilities.createStatus( statis, String.format( Messages.getString("GuessRoughessClassesRunnable_3"), m_profile.getStation() ) ); //$NON-NLS-1$
+    return StatusUtilities.createStatus( statis, String.format( Messages.getString( "GuessRoughessClassesRunnable_3" ), m_profile.getStation() ) ); //$NON-NLS-1$
   }
 
   private IRoughnessClass findMatchingClass( final IWspmClassification clazzes, final Double value )
