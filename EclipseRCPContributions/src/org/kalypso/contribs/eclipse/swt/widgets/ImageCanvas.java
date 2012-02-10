@@ -147,14 +147,14 @@ public class ImageCanvas extends Canvas
       {
         /* Draw according to scroll */
         int x;
-        final ScrollBar horizontalBar = getHorizontalBar();
+        ScrollBar horizontalBar = getHorizontalBar();
         if( bounds.width < clientArea.width || horizontalBar == null )
           x = (clientArea.width - bounds.width) / 2;
         else
           x = -horizontalBar.getSelection();
 
         int y;
-        final ScrollBar verticalBar = getVerticalBar();
+        ScrollBar verticalBar = getVerticalBar();
         if( bounds.height < clientArea.height || verticalBar == null )
           y = (clientArea.height - bounds.height) / 2;
         else
@@ -218,7 +218,7 @@ public class ImageCanvas extends Canvas
       else
       {
         horizontal.setPageIncrement( clientArea.width - horizontal.getIncrement() );
-        final int max = bounds.width + size.x - clientArea.width;
+        final int max = bounds.width + (size.x - clientArea.width);
         horizontal.setMaximum( max );
         horizontal.setThumb( size.x > max ? max : size.x );
         horizontal.setVisible( true );
@@ -236,7 +236,7 @@ public class ImageCanvas extends Canvas
       else
       {
         vertical.setPageIncrement( clientArea.height - vertical.getIncrement() );
-        final int max = bounds.height + size.y - clientArea.height;
+        final int max = bounds.height + (size.y - clientArea.height);
         vertical.setMaximum( max );
         vertical.setThumb( size.y > max ? max : size.y );
         vertical.setVisible( true );

@@ -63,7 +63,7 @@ import org.eclipse.ui.IWorkbenchPartReference;
  * What to do when the curent part we are adapting to is closed.
  * </p>
  * </p>
- * 
+ *
  * @author Gernot Belger
  */
 public class AdapterPartListener<C> implements IPartListener2
@@ -105,17 +105,27 @@ public class AdapterPartListener<C> implements IPartListener2
     }
   }
 
+  /**
+   * @see org.eclipse.ui.IPartListener2#partActivated(org.eclipse.ui.IWorkbenchPartReference)
+   */
   @Override
   public void partActivated( final IWorkbenchPartReference partRef )
   {
     adaptPartReference( partRef );
   }
 
+  /**
+   * @see org.eclipse.ui.IPartListener2#partBroughtToTop(org.eclipse.ui.IWorkbenchPartReference)
+   */
   @Override
   public void partBroughtToTop( final IWorkbenchPartReference partRef )
   {
   }
+  
 
+  /**
+   * @see org.eclipse.ui.IPartListener2#partClosed(org.eclipse.ui.IWorkbenchPartReference)
+   */
   @Override
   public void partClosed( final IWorkbenchPartReference partRef )
   {
@@ -129,6 +139,9 @@ public class AdapterPartListener<C> implements IPartListener2
     }
   }
 
+  /**
+   * @see org.eclipse.ui.IPartListener2#partDeactivated(org.eclipse.ui.IWorkbenchPartReference)
+   */
   @Override
   public void partDeactivated( final IWorkbenchPartReference partRef )
   {
@@ -169,7 +182,7 @@ public class AdapterPartListener<C> implements IPartListener2
 
   /**
    * Tries to find the adapter for the given part. If one is found, return true.
-   * 
+   *
    * @return If an adapter for this partRef is found return true, false otherwise.
    */
   public boolean adaptPartReference( final IWorkbenchPartReference partRef )
@@ -186,18 +199,13 @@ public class AdapterPartListener<C> implements IPartListener2
     if( part == null )
       return false;
 
-    final C adapter = doAdaptPart( part );
+    final C adapter = (C) part.getAdapter( m_adapter );
     if( adapter == null )
       return false;
 
     setAdapter( part, adapter );
 
     return true;
-  }
-
-  protected C doAdaptPart( final IWorkbenchPart part )
-  {
-    return (C) part.getAdapter( m_adapter );
   }
 
   public void setAdapter( final IWorkbenchPart part, final C adapter )

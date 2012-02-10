@@ -38,17 +38,30 @@
  v.doemming@tuhh.de
  
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.contribs.eclipse.ui;
+package org.kalypso.contribs.eclipse;
+
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
+
 
 /**
- * IViewable defines common methods for objects that can be 'viewed'
- * 
- * @author schlienger
+ * Convenience class for storing references to image descriptors used by the readme tool.
  */
-public interface IViewable
+public class ImageProvider
 {
-  /**
-   * @return true when object is shown
-   */
-  public boolean isShown();
+  public static final ImageDescriptor id( final String pluginID, final String location )
+  {
+    return AbstractUIPlugin.imageDescriptorFromPlugin( pluginID, location );
+  }
+
+  public static final ImageDescriptor id( final String location )
+  {
+    return id( EclipseRCPContributionsPlugin.ID, location );
+  }
+
+  public static final ImageDescriptor ID_SORT_DOWN = id( "icons/elcl16/sort_down.gif" );
+
+  public static final ImageDescriptor ID_SORT_UP = id( "icons/elcl16/sort_up.gif" );
+
+  public static final ImageDescriptor ID_EMPTY = id( "icons/elcl16/empty.gif" );
 }

@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,22 +36,19 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.viewers;
 
-import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.ViewerColumn;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TreeColumn;
-import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 
 /**
  * Utilities for {@link org.eclipse.jface.viewers.ColumnViewer}'s.
@@ -76,7 +73,7 @@ public final class ColumnViewerUtil
     throw new IllegalArgumentException( String.format( "Unknown item type for sorting %s", item.getClass().getName() ) );
   }
 
-  public static Item itemForColumn( final ViewerColumn column )
+  public static Item itemForColumn( final ViewerColumn column ) throws IllegalArgumentException
   {
     if( column instanceof TableViewerColumn )
       return ((TableViewerColumn) column).getColumn();
@@ -101,31 +98,13 @@ public final class ColumnViewerUtil
       column.pack();
   }
 
-  public static ViewerColumn createViewerColumn( final ColumnViewer viewer, final int style )
+  public static ViewerColumn createViewerColumn( final ColumnViewer viewer, final int center )
   {
     if( viewer instanceof TreeViewer )
-      return new TreeViewerColumn( (TreeViewer) viewer, style );
+      return new TreeViewerColumn( (TreeViewer) viewer, center );
     if( viewer instanceof TableViewer )
-      return new TableViewerColumn( (TableViewer) viewer, style );
+      return new TableViewerColumn( (TableViewer) viewer, center );
 
     throw new IllegalArgumentException();
-  }
-
-  public static ViewerColumn createEmptyColumn( final ColumnViewer viewer )
-  {
-    final ViewerColumn nullColumn = createViewerColumn( viewer, SWT.NONE );
-    final ViewerColumnItem nullItem = new ViewerColumnItem( nullColumn );
-
-    nullItem.setResizable( false );
-    nullItem.setMoveable( false );
-    nullItem.setWidth( 0 );
-
-    final Item column = nullItem.getColumn();
-    ColumnsResizeControlListener.setWidthInfo( column, 0, false );
-
-    /* Empty label provider, else jface whines */
-    nullColumn.setLabelProvider( new ColumnLabelProvider() );
-
-    return nullColumn;
   }
 }
