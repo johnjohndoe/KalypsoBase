@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ftp="schema.service.ftp.kalypso.org" targetNamespace="schema.service.ftp.kalypso.org" elementFormDefault="qualified">
+
+	<!-- elements -->
+	<xs:element name="FtpService" type="ftp:FtpServiceType" />
+
+	<!-- types -->
+	<xs:complexType name="FtpServiceType">
+		<xs:sequence>
+			<xs:element name="port" type="xs:integer" default="21" />
+			<xs:element name="userFile" type="xs:string" nillable="false" />
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
