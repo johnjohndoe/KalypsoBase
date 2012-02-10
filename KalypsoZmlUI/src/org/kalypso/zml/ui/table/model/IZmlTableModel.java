@@ -38,27 +38,39 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.model.rows;
+package org.kalypso.zml.ui.table.model;
 
+import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.model.cells.AbstractZmlTableCell;
-import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
+import org.kalypso.zml.ui.table.IZmlTableColumnVisitor;
+import org.kalypso.zml.ui.table.IZmlTableRowVisitor;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableHeaderRow extends AbstractZmlTableRow implements IZmlTableHeaderRow
+public interface IZmlTableModel
 {
-  public ZmlTableHeaderRow( final IZmlTable table )
-  {
-    super( table );
-  }
+  void accept( IZmlTableColumnVisitor visitor );
 
-  @Override
-  public IZmlTableCell getCell( final IZmlTableColumn column )
-  {
-    return AbstractZmlTableCell.create( getTable(), this, column );
-  }
+  void accept( IZmlTableRowVisitor visitor );
 
+  void add( IZmlTableColumn column );
+
+  IZmlTableColumn findColumn( int columnIndex );
+
+  IZmlTableColumn[] getColumns( );
+
+  IZmlModel getModel( );
+
+  IZmlTableRow getRow( int index );
+
+  IZmlTableRow[] getRows( );
+
+  IZmlTable getTable( );
+
+  void reset( );
+
+  boolean isEmpty( );
 }

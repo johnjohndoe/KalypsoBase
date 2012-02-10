@@ -65,12 +65,11 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.viewers.table.Tables;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.schema.DataColumnType;
-import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.IZmlTableComposite;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.ZmlMainTable;
 import org.kalypso.zml.ui.table.menu.ZmlTableContextMenuProvider;
 import org.kalypso.zml.ui.table.menu.ZmlTableHeaderContextMenuProvider;
+import org.kalypso.zml.ui.table.model.IZmlTableModel;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
@@ -200,7 +199,9 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
     if( columnIndex == -1 )
       return null;
 
-    return m_table.findColumn( columnIndex );
+    final IZmlTableModel model = m_table.getModel();
+
+    return model.findColumn( columnIndex );
   }
 
   private int findColumnIndex( final int x )
@@ -300,24 +301,24 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
 
   private ViewerCell findCell( final IZmlTableColumn column, final int y )
   {
-    final IZmlTableComposite table = column.getTable();
     final TableViewer viewer = m_table.getViewer();
 
     /** focus on the same row and column of the old table cell */
-    final int ptrX = Tables.getX( viewer.getTable(), column.getTableViewerColumn( m_table ).getColumn() );
+    final int ptrX = Tables.getX( viewer.getTable(), column.getTableViewerColumn().getColumn() );
     final ViewerCell cell = viewer.getCell( new Point( ptrX, y ) );
     if( Objects.isNotNull( cell ) )
       return cell;
 
     /** if not, focus on the same row */
-    final IZmlTableColumn[] columns = m_table.getColumns();
+    final IZmlTableModel model = m_table.getModel();
+    final IZmlTableColumn[] columns = model.getColumns();
     for( final IZmlTableColumn col : columns )
     {
       final BaseColumn type = col.getColumnType();
       if( !(type.getType() instanceof DataColumnType) )
         continue;
 
-      final int x = Tables.getX( viewer.getTable(), col.getTableViewerColumn( m_table ).getColumn() );
+      final int x = Tables.getX( viewer.getTable(), col.getTableViewerColumn().getColumn() );
       final ViewerCell c = viewer.getCell( new Point( x, y ) );
       if( Objects.isNotNull( c ) )
         return c;
@@ -327,14 +328,10 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
     return viewer.getCell( new Point( 1, y ) );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.provider.IZmlTableSelectionHandler#findViewerCell(org.kalypso.zml.ui.table.model.IZmlTableCell)
-   */
   @Override
   public ViewerCell toViewerCell( final IZmlTableCell cell )
   {
-    final IZmlTable zml = cell.getTable();
-    final Table table = zml.getViewer().getTable();
+    final Table table = m_table.getViewer().getTable();
     final TableItem[] items = table.getItems();
     for( final TableItem item : items )
     {

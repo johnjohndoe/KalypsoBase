@@ -41,6 +41,7 @@
 package org.kalypso.zml.ui.table.model.cells;
 
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableHeaderRow;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
@@ -51,15 +52,14 @@ import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
 public class ZmlTableHeaderCell extends AbstractZmlTableCell implements IZmlTableHeaderCell
 {
 
-  protected ZmlTableHeaderCell( final IZmlTableRow row, final IZmlTableColumn column )
+  protected ZmlTableHeaderCell( final IZmlTable table, final IZmlTableRow row, final IZmlTableColumn column )
   {
-    super( row, column );
+    super( table, row, column );
   }
 
   @Override
   public IZmlTableHeaderRow getRow( )
   {
-    // TODO Auto-generated method stub
     return (IZmlTableHeaderRow) super.getRow();
   }
 

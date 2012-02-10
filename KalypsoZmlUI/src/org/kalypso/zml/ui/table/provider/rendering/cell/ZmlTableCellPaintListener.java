@@ -178,13 +178,13 @@ public class ZmlTableCellPaintListener implements Listener
   private int getTableColumnWidth( final IZmlTableCellPainter renderer )
   {
     final IZmlTableCell cell = renderer.getCell();
-    return cell.getColumn().getTableViewerColumn( cell.getTable() ).getColumn().getWidth();
+    return cell.getColumn().getTableViewerColumn().getColumn().getWidth();
   }
 
   private IZmlTableCellPainter findCellPainter( final Event event )
   {
     final IZmlTableRow row = (IZmlTableRow) event.item.getData();
-    final IZmlTableColumn[] columns = m_table.getColumns();
+    final IZmlTableColumn[] columns = m_table.getModel().getColumns();
     final int index = event.index - 1; // table rendering offset ("windows layout bug")
     if( index < 0 )
       return null;

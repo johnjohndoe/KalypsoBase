@@ -42,37 +42,13 @@ package org.kalypso.zml.ui.table;
 
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
-import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
-import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
 
 /**
  * @author Dirk Kuch
  */
 public interface IZmlTableComposite
 {
-  void accept( IZmlTableColumnVisitor visitor );
-
-  void accept( IZmlTableRowVisitor visitor );
-
   void addListener( IZmlTableCompositeListener listener );
-
-  void add( IZmlTableColumn column );
-
-  IZmlTableColumn findColumn( int columnIndex );
-
-  IZmlTableColumn[] getColumns( );
-
-  IZmlModel getModel( );
-
-  /**
-   * @return time resolution of displayed time series (one hour spacing or six hour spacing, aso)
-   */
-  int getResolution( );
-
-  IZmlTableRow getRow( int index );
-
-  IZmlTableRow[] getRows( );
 
   IZmlTable[] getTables( );
 
@@ -85,7 +61,7 @@ public interface IZmlTableComposite
 
   void fireTableChanged( String type, IZmlModelColumn... columns );
 
-  ZmlViewResolutionFilter getResulutionFilter( );
-
   IZmlTable getMainTable( );
+
+  IZmlModel getModel( );
 }

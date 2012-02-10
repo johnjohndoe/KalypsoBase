@@ -178,7 +178,7 @@ public class ZmlTablePager
       return;
 
     final FindClosestDateVisitor visitor = new FindClosestDateVisitor( m_index );
-    m_table.accept( visitor );
+    m_table.getModel().accept( visitor );
 
     final IZmlModelRow row = visitor.getModelRow();
     if( Objects.isNull( row ) )
@@ -205,7 +205,7 @@ public class ZmlTablePager
 
   private Date findForecastDate( )
   {
-    final IZmlModel model = m_table.getModel();
+    final IZmlModel model = m_table.getModel().getModel();
     final IZmlModelColumn[] columns = model.getColumns();
     for( final IZmlModelColumn column : columns )
     {

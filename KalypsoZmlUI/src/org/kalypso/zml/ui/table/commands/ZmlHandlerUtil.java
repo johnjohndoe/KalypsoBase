@@ -80,6 +80,8 @@ public final class ZmlHandlerUtil
     final IEvaluationContext context = service.getCurrentState();
 
     final IZmlTableComposite table = getTable( context );
+    if( table == null )
+      return null;
 
     return table.getMainTable();
   }

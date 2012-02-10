@@ -61,7 +61,6 @@ public class ZmlTableRow extends AbstractZmlTableRow implements IZmlTableValueRo
   public ZmlTableRow( final IZmlTable table, final IZmlModelRow row )
   {
     super( table );
-
     m_row = row;
   }
 
@@ -130,7 +129,7 @@ public class ZmlTableRow extends AbstractZmlTableRow implements IZmlTableValueRo
   @Override
   public IZmlTableCell getCell( final IZmlTableColumn column )
   {
-    return AbstractZmlTableCell.create( this, column );
+    return AbstractZmlTableCell.create( getTable(), this, column );
   }
 
 }

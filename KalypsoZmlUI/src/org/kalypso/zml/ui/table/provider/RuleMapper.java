@@ -59,7 +59,7 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.rules.IZmlCellRuleImplementation;
 import org.kalypso.zml.core.table.rules.IZmlColumnRuleImplementation;
-import org.kalypso.zml.ui.table.IZmlTableComposite;
+import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableCompositeListener;
 
 /**
@@ -75,9 +75,9 @@ public class RuleMapper
 
   private IZmlModelCell m_lastReference;
 
-  private final IZmlTableComposite m_table;
+  private final IZmlTable m_table;
 
-  public RuleMapper( final IZmlTableComposite table, final BaseColumn column )
+  public RuleMapper( final IZmlTable table, final BaseColumn column )
   {
     m_table = table;
     m_column = column;
@@ -146,7 +146,7 @@ public class RuleMapper
 
   private IZmlModelColumn getModelColumn( )
   {
-    return m_table.getModel().getColumn( m_column.getIdentifier() );
+    return m_table.getModel().getModel().getColumn( m_column.getIdentifier() );
   }
 
   public void reset( )

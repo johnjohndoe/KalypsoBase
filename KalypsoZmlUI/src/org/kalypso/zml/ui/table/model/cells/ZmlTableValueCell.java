@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.model.IZmlTableModel;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableValueColumn;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableHeaderRow;
@@ -60,9 +61,9 @@ import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
 public class ZmlTableValueCell extends AbstractZmlTableCell implements IZmlTableValueCell
 {
 
-  protected ZmlTableValueCell( final IZmlTableRow row, final IZmlTableColumn column )
+  protected ZmlTableValueCell( final IZmlTable table, final IZmlTableRow row, final IZmlTableColumn column )
   {
-    super( row, column );
+    super( table, row, column );
   }
 
   @Override
@@ -111,8 +112,8 @@ public class ZmlTableValueCell extends AbstractZmlTableCell implements IZmlTable
     if( index <= 0 )
       return null;
 
-    final IZmlTable table = getTable();
-    final IZmlTableRow previousRow = table.getRow( index - 1 );
+    final IZmlTableModel model = getModel();
+    final IZmlTableRow previousRow = model.getRow( index - 1 );
     if( previousRow instanceof IZmlTableHeaderRow )
       return null;
 
@@ -122,15 +123,15 @@ public class ZmlTableValueCell extends AbstractZmlTableCell implements IZmlTable
   @Override
   public IZmlTableValueCell findNextCell( )
   {
-    final IZmlTable table = getTable();
+    final IZmlTableModel model = getModel();
 
     final int index = getIndex();
-    final IZmlTableRow[] rows = table.getRows();
+    final IZmlTableRow[] rows = model.getRows();
 
     if( rows.length <= index )
       return null;
 
-    final IZmlTableRow nextRow = table.getRow( index + 1 );
+    final IZmlTableRow nextRow = model.getRow( index + 1 );
     if( nextRow == null )
       return null;
     else if( nextRow instanceof IZmlTableHeaderRow )
@@ -142,7 +143,8 @@ public class ZmlTableValueCell extends AbstractZmlTableCell implements IZmlTable
   @Override
   public int findIndex( )
   {
-    final TableColumn base = getColumn().getTableViewerColumn( getTable() ).getColumn();
+
+    final TableColumn base = getColumn().getTableViewerColumn().getColumn();
 
     final TableViewer tableViewer = getTable().getViewer();
     final Table table = tableViewer.getTable();

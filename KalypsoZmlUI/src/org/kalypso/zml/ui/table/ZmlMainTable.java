@@ -60,6 +60,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
+import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
@@ -67,10 +68,10 @@ import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
 import org.kalypso.zml.ui.table.focus.ZmlTableFocusCellHandler;
 import org.kalypso.zml.ui.table.layout.ZmlTableLayoutHandler;
 import org.kalypso.zml.ui.table.layout.ZmlTablePager;
+import org.kalypso.zml.ui.table.model.IZmlTableModel;
+import org.kalypso.zml.ui.table.model.ZmlMainTableModel;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.columns.ZmlTableColumns;
-import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
-import org.kalypso.zml.ui.table.provider.ZmlTableContentProvider;
 import org.kalypso.zml.ui.table.provider.rendering.cell.ZmlTableCellCache;
 import org.kalypso.zml.ui.table.provider.rendering.cell.ZmlTableCellPaintListener;
 import org.kalypso.zml.ui.table.selection.ZmlTableSelectionHandler;
@@ -88,8 +89,6 @@ public class ZmlMainTable extends Composite implements IZmlTable
 
   private final ZmlTableComposite m_table;
 
-  private ZmlTableContentProvider m_contentProvider;
-
   private ZmlViewResolutionFilter m_filter;
 
   private ZmlTableFocusCellHandler m_focus;
@@ -98,10 +97,13 @@ public class ZmlMainTable extends Composite implements IZmlTable
 
   final ZmlTablePager m_pager = new ZmlTablePager( this ); // only for main table
 
-  public ZmlMainTable( final ZmlTableComposite table, final FormToolkit toolkit )
+  private final ZmlMainTableModel m_model;
+
+  public ZmlMainTable( final ZmlTableComposite table, final IZmlModel model, final FormToolkit toolkit )
   {
     super( table, SWT.NULL );
     m_table = table;
+    m_model = new ZmlMainTableModel( this, model );
 
     final GridLayout layout = LayoutHelper.createGridLayout();
     layout.verticalSpacing = 0;
@@ -125,15 +127,29 @@ public class ZmlMainTable extends Composite implements IZmlTable
 
     ColumnViewerToolTipSupport.enableFor( m_tableViewer, ToolTip.NO_RECREATE );
 
-    m_contentProvider = new ZmlTableContentProvider( this );
-    m_tableViewer.setContentProvider( m_contentProvider );
+    m_tableViewer.setContentProvider( new ArrayTreeContentProvider()
+    {
+      @Override
+      public Object[] getElements( final Object inputElement )
+      {
+
+        if( inputElement instanceof IZmlTableModel )
+        {
+          final IZmlTableModel model = (IZmlTableModel) inputElement;
+          return model.getRows();
+        }
+        else
+          throw new UnsupportedOperationException();
+
+      }
+    } );
 
     addEmptyColumn();
 
     m_filter = new ZmlViewResolutionFilter( this );
     m_tableViewer.addFilter( m_filter );
 
-    m_tableViewer.setInput( m_table.getModel() );
+    m_tableViewer.setInput( m_model );
 
     m_selection = new ZmlTableSelectionHandler( this );
 
@@ -191,12 +207,6 @@ public class ZmlMainTable extends Composite implements IZmlTable
   }
 
   @Override
-  public IZmlTableRow[] getRows( )
-  {
-    return m_contentProvider.getRows();
-  }
-
-  @Override
   public ZmlTableCellCache getCache( )
   {
     return m_cache;
@@ -209,59 +219,12 @@ public class ZmlMainTable extends Composite implements IZmlTable
   }
 
   @Override
-  public IZmlTableColumn[] getColumns( )
-  {
-    // FIXME table model!!!!
-    return m_table.getColumns();
-  }
-
-  public boolean isEmpty( )
-  {
-    // FIXME table model!!!!
-    return m_table.isEmpty();
-  }
-
-  @Override
-  public IZmlTableColumn findColumn( final int columnIndex )
-  {
-    // FIXME table model!!!!
-    return m_table.findColumn( columnIndex );
-  }
-
   public void fireTableChanged( final String type, final IZmlModelColumn... columns )
   {
     for( final IZmlTableListener listener : m_listeners )
     {
       listener.eventTableChanged( type, columns );
     }
-  }
-
-  @Override
-  public void accept( final IZmlTableColumnVisitor visitor )
-  {
-    // FIXME table model!!!!
-    m_table.accept( visitor );
-  }
-
-  @Override
-  public void accept( final IZmlTableRowVisitor visitor )
-  {
-    // FIXME table model!!!!
-    m_table.accept( visitor );
-  }
-
-  @Override
-  public IZmlModel getModel( )
-  {
-    // FIXME table model!!!!
-    return m_table.getModel();
-  }
-
-  @Override
-  public IZmlTableRow getRow( final int index )
-  {
-    // FIXME table model!!!!
-    return m_table.getRow( index );
   }
 
   private UIJob m_updateJob;
@@ -327,5 +290,11 @@ public class ZmlMainTable extends Composite implements IZmlTable
   public ZmlViewResolutionFilter getResulutionFilter( )
   {
     return m_filter;
+  }
+
+  @Override
+  public IZmlTableModel getModel( )
+  {
+    return m_model;
   }
 }

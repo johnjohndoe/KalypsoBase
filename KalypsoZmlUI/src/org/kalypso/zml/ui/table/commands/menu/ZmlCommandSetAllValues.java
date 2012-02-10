@@ -86,7 +86,7 @@ public class ZmlCommandSetAllValues extends AbstractHandler
         final ZmlLabelProvider provider = new ZmlLabelProvider( base.getRow(), column, new ZmlCellRule[] {} );
         final String targetValue = provider.getText();
 
-        final IZmlTableCell[] visibleCells = column.getCells( table );
+        final IZmlTableCell[] visibleCells = column.getCells();
         for( final IZmlTableCell cell : visibleCells )
         {
           if( cell instanceof IZmlTableValueCell )

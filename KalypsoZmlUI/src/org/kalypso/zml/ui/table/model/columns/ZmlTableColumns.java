@@ -58,6 +58,7 @@ import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableComposite;
+import org.kalypso.zml.ui.table.model.IZmlTableModel;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
 
 /**
@@ -75,7 +76,8 @@ public final class ZmlTableColumns
 
     final String[] modelIds = toIdentifiers( modelColumns );
 
-    final IZmlTableColumn[] tableColumns = table.getColumns();
+    final IZmlTableModel model = table.getModel();
+    final IZmlTableColumn[] tableColumns = model.getColumns();
     for( final IZmlTableColumn tableColumn : tableColumns )
     {
       if( tableColumn instanceof IZmlTableIndexColumn && index )
@@ -133,9 +135,10 @@ public final class ZmlTableColumns
    * @param identifier
    *          column identifier
    */
-  public static boolean hasColumn( final IZmlTableComposite table, final String identifier )
+  public static boolean hasColumn( final IZmlTable table, final String identifier )
   {
-    final IZmlTableColumn[] columns = table.getColumns();
+    final IZmlTableModel model = table.getModel();
+    final IZmlTableColumn[] columns = model.getColumns();
     for( final IZmlTableColumn column : columns )
     {
       if( StringUtils.equals( column.getColumnType().getIdentifier(), identifier ) )
@@ -145,7 +148,7 @@ public final class ZmlTableColumns
     return false;
   }
 
-  public static IZmlModelColumn[] findMissingColumns( final IZmlTableComposite table, final IZmlModelColumn[] modelColumns )
+  public static IZmlModelColumn[] findMissingColumns( final IZmlTable table, final IZmlModelColumn[] modelColumns )
   {
     final Set<IZmlModelColumn> missing = new LinkedHashSet<IZmlModelColumn>();
     for( final IZmlModelColumn modelColumn : modelColumns )
@@ -160,9 +163,10 @@ public final class ZmlTableColumns
     return missing.toArray( new IZmlModelColumn[] {} );
   }
 
-  private static IZmlTableColumn findTableColumn( final IZmlTableComposite table, final IZmlModelColumn modelColumn )
+  private static IZmlTableColumn findTableColumn( final IZmlTable table, final IZmlModelColumn modelColumn )
   {
-    final IZmlTableColumn[] columns = table.getColumns();
+    final IZmlTableModel model = table.getModel();
+    final IZmlTableColumn[] columns = model.getColumns();
     for( final IZmlTableColumn column : columns )
     {
       final IZmlModelColumn m = column.getModelColumn();
@@ -177,6 +181,7 @@ public final class ZmlTableColumns
 
   public static void addTableColumn( final IZmlTableComposite table, final BaseColumn column )
   {
+
     final IZmlModel model = table.getModel();
 
     final AbstractColumnType columnType = column.getType();
@@ -189,7 +194,7 @@ public final class ZmlTableColumns
 
       /** index axis exists? */
       final String indexAxis = dataColumnType.getIndexAxis();
-      if( !hasColumn( table, indexAxis ) )
+      if( !hasColumn( table.getMainTable(), indexAxis ) ) // FIXME two table models!!!
       {
         final AbstractColumnType indexColumnType = model.getColumnType( indexAxis );
         final ZmlTableIndexColumnBuilder builder = new ZmlTableIndexColumnBuilder( table, new BaseColumn( indexColumnType ) );
@@ -197,7 +202,7 @@ public final class ZmlTableColumns
       }
     }
 
-    if( !hasColumn( table, column.getIdentifier() ) )
+    if( !hasColumn( table.getMainTable(), column.getIdentifier() ) ) // FIXME
     {
       final ZmlTableValueColumnBuilder builder = new ZmlTableValueColumnBuilder( table, column );
       builder.execute( new NullProgressMonitor() );

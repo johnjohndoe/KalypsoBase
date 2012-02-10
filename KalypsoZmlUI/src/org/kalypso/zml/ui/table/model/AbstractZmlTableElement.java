@@ -55,8 +55,15 @@ public abstract class AbstractZmlTableElement implements IZmlTableObject
   }
 
   @Override
+  public IZmlTableModel getModel( )
+  {
+    return m_table.getModel();
+  }
+
+  @Override
   public IZmlTable getTable( )
   {
     return m_table;
   }
+
 }

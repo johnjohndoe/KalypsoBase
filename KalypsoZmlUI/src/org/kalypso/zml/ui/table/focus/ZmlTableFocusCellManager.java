@@ -31,7 +31,7 @@ public final class ZmlTableFocusCellManager extends TableViewerFocusCellManager
       return null;
 
     final IZmlTableValueRow row = ZmlTableColumns.toTableRow( cell );
-    final IZmlTableColumn column = m_table.findColumn( cell.getColumnIndex() );
+    final IZmlTableColumn column = m_table.getModel().findColumn( cell.getColumnIndex() );
     if( Objects.isNull( row, column ) )
       return null;
 

@@ -75,15 +75,16 @@ public class ZmlTableValueColumnBuilder implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
-    final ZmlTableValueColumn column = new ZmlTableValueColumn( m_table, m_column );
 
     final IZmlTable[] tables = m_table.getTables();
     for( final IZmlTable table : tables )
     {
+
       final TableViewer viewer = table.getViewer();
-// final int index = viewer.getTable().getColumnCount();
+      final int index = viewer.getTable().getColumnCount();
       final TableViewerColumn viewerColumn = new TableViewerColumn( viewer, TableTypes.toSWT( m_column.getAlignment() ) );
-      column.addColumn( table, viewerColumn );
+
+      final ZmlTableValueColumn column = new ZmlTableValueColumn( table, m_column, viewerColumn, index );
 
       viewerColumn.setLabelProvider( new ZmlTooltipProvider( table, column ) );
       viewerColumn.getColumn().setText( m_column.getLabel() );
@@ -92,7 +93,7 @@ public class ZmlTableValueColumnBuilder implements ICoreRunnableWithProgress
       if( m_column.isEditable() )
       {
         final ZmlTableEditingSupport editingSupport = new ZmlTableEditingSupport( column, table );
-        column.setEditingSupport( table, editingSupport );
+        column.setEditingSupport( editingSupport );
       }
 
       viewerColumn.getColumn().addControlListener( new ControlListener()
@@ -119,9 +120,9 @@ public class ZmlTableValueColumnBuilder implements ICoreRunnableWithProgress
             table.getFocusHandler().getCursor().redraw();
         }
       } );
-    }
 
-    m_table.add( column );
+      table.getModel().add( column );
+    }
 
     return Status.OK_STATUS;
   }

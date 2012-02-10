@@ -47,6 +47,8 @@ import org.kalypso.zml.ui.table.IZmlTable;
  */
 public interface IZmlTableObject
 {
+  IZmlTableModel getModel( );
+
   IZmlTable getTable( );
 
 }

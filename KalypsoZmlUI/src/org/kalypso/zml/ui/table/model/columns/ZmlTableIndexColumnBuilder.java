@@ -75,15 +75,14 @@ public class ZmlTableIndexColumnBuilder implements ICoreRunnableWithProgress
   public IStatus execute( final IProgressMonitor monitor )
   {
     final IZmlTable[] tables = m_table.getTables();
-    final ZmlTableIndexColumn column = new ZmlTableIndexColumn( m_table, m_column );
 
     for( final IZmlTable table : tables )
     {
       final TableViewer viewer = table.getViewer();
       final int index = viewer.getTable().getColumnCount();
-
       final TableViewerColumn viewerColumn = new TableViewerColumn( viewer, TableTypes.toSWT( m_column.getAlignment() ) );
-      column.addColumn( table, viewerColumn );
+
+      final ZmlTableIndexColumn column = new ZmlTableIndexColumn( table, m_column, viewerColumn, index );
 
       viewerColumn.setLabelProvider( new ZmlTooltipProvider( table, column ) );
       viewerColumn.getColumn().setText( m_column.getLabel() );
@@ -113,9 +112,8 @@ public class ZmlTableIndexColumnBuilder implements ICoreRunnableWithProgress
         }
       } );
 
+      table.getModel().add( column );
     }
-
-    m_table.add( column );
 
     return Status.OK_STATUS;
   }

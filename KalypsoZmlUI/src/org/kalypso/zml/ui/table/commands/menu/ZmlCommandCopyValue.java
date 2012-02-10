@@ -71,13 +71,13 @@ public class ZmlCommandCopyValue extends AbstractHandler
 
       final StringBuffer buffer = new StringBuffer();
 
-      final IZmlTableColumn[] columns = table.getColumns();
+      final IZmlTableColumn[] columns = table.getModel().getColumns();
       for( final IZmlTableColumn column : columns )
       {
         if( !column.isVisible() )
           continue;
 
-        final String text = column.getTableViewerColumn( table ).getColumn().getText();
+        final String text = column.getTableViewerColumn().getColumn().getText();
         buffer.append( text );
 
         if( !Arrays.isLastItem( columns, column ) )

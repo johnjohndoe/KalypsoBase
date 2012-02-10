@@ -51,6 +51,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.zml.ui.table.ZmlMainTable;
+import org.kalypso.zml.ui.table.model.IZmlTableModel;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableIndexColumn;
 
@@ -88,11 +89,12 @@ public class ZmlTableLayoutJob extends UIJob
       doVisitIndex();
 
       /** iterate over all columns because of multiple selection support (cloned columns will not be removed from table) */
-      doVisitHide( m_table.getColumns() );
+      final IZmlTableModel model = m_table.getModel();
+      doVisitHide( model.getColumns() );
       doVisitPack( stack );
 
       final TableViewer viewer = m_table.getViewer();
-      if( m_table.isEmpty() )
+      if( model.isEmpty() )
       {
         viewer.getControl().setBackground( COLOR_TABLE_DISABLED );
       }
@@ -107,9 +109,11 @@ public class ZmlTableLayoutJob extends UIJob
 
   private void doVisitIndex( )
   {
-    final PackIndexColumnsVisitor visitor = new PackIndexColumnsVisitor( m_table, !ArrayUtils.isEmpty( m_table.getRows() ) );
+    final IZmlTableModel model = m_table.getModel();
 
-    final IZmlTableColumn[] columns = m_table.getColumns();
+    final PackIndexColumnsVisitor visitor = new PackIndexColumnsVisitor( !ArrayUtils.isEmpty( model.getRows() ) );
+
+    final IZmlTableColumn[] columns = model.getColumns();
     for( final IZmlTableColumn column : columns )
     {
       if( column instanceof IZmlTableIndexColumn )
@@ -119,7 +123,7 @@ public class ZmlTableLayoutJob extends UIJob
 
   private void doVisitHide( final IZmlTableColumn[] columns )
   {
-    final HideInactiveColumnsVisitor visitor = new HideInactiveColumnsVisitor( m_table );
+    final HideInactiveColumnsVisitor visitor = new HideInactiveColumnsVisitor();
 
     for( final IZmlTableColumn column : columns )
     {
@@ -131,7 +135,7 @@ public class ZmlTableLayoutJob extends UIJob
 
   private void doVisitPack( final IZmlTableColumn[] columns )
   {
-    final PackTableColumnVisitor visitor = new PackTableColumnVisitor( m_table );
+    final PackTableColumnVisitor visitor = new PackTableColumnVisitor();
     for( final IZmlTableColumn column : columns )
     {
       if( column instanceof IZmlTableIndexColumn )
