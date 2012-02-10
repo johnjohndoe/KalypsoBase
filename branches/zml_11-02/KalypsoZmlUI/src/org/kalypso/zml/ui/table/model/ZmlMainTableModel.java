@@ -40,10 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.model;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.List;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.IZmlTable;
@@ -62,23 +60,19 @@ public class ZmlMainTableModel extends AbstractZmlTableModel
   }
 
   @Override
-  public IZmlTableRow[] getRows( )
+  public List<IZmlTableRow> getRows( )
   {
     synchronized( this )
     {
-      if( ArrayUtils.isEmpty( m_rows ) )
+      if( m_rows.isEmpty() )
       {
-        final Set<IZmlTableRow> collection = new LinkedHashSet<IZmlTableRow>();
 
         final IZmlModelRow[] rows = getModel().getRows();
         for( final IZmlModelRow row : rows )
         {
-          collection.add( new ZmlTableRow( getTable(), row ) );
+          m_rows.add( new ZmlTableRow( getTable(), row ) );
         }
-
-        m_rows = collection.toArray( new IZmlTableRow[] {} );
       }
-
     }
 
     return m_rows;

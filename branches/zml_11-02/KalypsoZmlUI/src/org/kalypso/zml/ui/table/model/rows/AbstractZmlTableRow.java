@@ -40,7 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.model.rows;
 
-import org.apache.commons.lang.ArrayUtils;
+import java.util.List;
+
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.model.AbstractZmlTableElement;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
@@ -59,8 +60,8 @@ public abstract class AbstractZmlTableRow extends AbstractZmlTableElement implem
   @Override
   public final int getIndex( )
   {
-    final IZmlTableRow[] rows = getModel().getRows();
-    return ArrayUtils.indexOf( rows, this );
+    final List<IZmlTableRow> rows = getModel().getRows();
+    return rows.indexOf( this );
   }
 
   @Override

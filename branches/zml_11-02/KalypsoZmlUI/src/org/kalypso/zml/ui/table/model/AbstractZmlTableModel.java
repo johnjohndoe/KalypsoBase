@@ -40,7 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.model;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -60,7 +62,7 @@ public abstract class AbstractZmlTableModel implements IZmlTableModel
 {
   protected final Set<IZmlTableColumn> m_columns = new LinkedHashSet<IZmlTableColumn>();
 
-  protected IZmlTableRow[] m_rows;
+  protected List<IZmlTableRow> m_rows = new ArrayList<IZmlTableRow>();
 
   private final IZmlModel m_model;
 
@@ -141,9 +143,9 @@ public abstract class AbstractZmlTableModel implements IZmlTableModel
     if( index < 0 )
       return null;
 
-    final IZmlTableRow[] rows = getRows();
-    if( index < rows.length )
-      return rows[index];
+    final List<IZmlTableRow> rows = getRows();
+    if( index < rows.size() )
+      return rows.get( index );
 
     return null;
   }

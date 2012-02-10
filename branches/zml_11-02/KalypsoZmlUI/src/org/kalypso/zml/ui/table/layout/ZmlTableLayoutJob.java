@@ -42,7 +42,6 @@ package org.kalypso.zml.ui.table.layout;
 
 import java.util.Set;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -111,7 +110,7 @@ public class ZmlTableLayoutJob extends UIJob
   {
     final IZmlTableModel model = m_table.getModel();
 
-    final PackIndexColumnsVisitor visitor = new PackIndexColumnsVisitor( !ArrayUtils.isEmpty( model.getRows() ) );
+    final PackIndexColumnsVisitor visitor = new PackIndexColumnsVisitor( !model.getRows().isEmpty() );
 
     final IZmlTableColumn[] columns = model.getColumns();
     for( final IZmlTableColumn column : columns )
