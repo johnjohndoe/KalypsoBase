@@ -55,6 +55,7 @@ import org.kalypso.zml.core.table.model.references.ZmlValues;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.IZmlTableCompositeListener;
 import org.kalypso.zml.ui.table.ZmlMainTable;
+import org.kalypso.zml.ui.table.model.IZmlTableModel;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableHeaderRow;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
 
@@ -124,9 +125,9 @@ public class ZmlViewResolutionFilter extends ViewerFilter
   {
     if( element instanceof IZmlTableHeaderRow )
       return true;
-    else if( parentElement instanceof IZmlModel && element instanceof IZmlTableValueRow )
+    else if( parentElement instanceof IZmlTableModel && element instanceof IZmlTableValueRow )
     {
-      final IZmlModel model = (IZmlModel) parentElement;
+      final IZmlTableModel model = (IZmlTableModel) parentElement;
       final IZmlTableValueRow row = (IZmlTableValueRow) element;
       final IZmlModelRow modelRow = row.getModelRow();
 
@@ -144,7 +145,7 @@ public class ZmlViewResolutionFilter extends ViewerFilter
       final Date index = modelRow.getIndex();
       final int ticks = ticksInHours( index );
 
-      final int base = m_base.getBaseIndex( model );
+      final int base = m_base.getBaseIndex( model.getModel() );
       final int diff = Math.abs( base + m_offset - ticks );
 
       final int mod = diff % m_resolution;

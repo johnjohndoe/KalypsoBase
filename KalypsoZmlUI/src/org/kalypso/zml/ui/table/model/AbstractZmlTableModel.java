@@ -152,12 +152,18 @@ public abstract class AbstractZmlTableModel implements IZmlTableModel
   public void reset( )
   {
     m_rows = null;
-
   }
 
   @Override
   public IZmlTableColumn findColumn( final int columnIndex )
   {
-    throw new UnsupportedOperationException();
+    final IZmlTableColumn[] columns = getColumns();
+    for( final IZmlTableColumn column : columns )
+    {
+      if( column.getIndex() == columnIndex )
+        return column;
+    }
+
+    return null;
   }
 }

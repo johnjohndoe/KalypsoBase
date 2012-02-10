@@ -69,8 +69,6 @@ public abstract class AbstractZmlTableColumn extends AbstractZmlTableElement imp
 
   private final RuleMapper m_mapper;
 
-  private final IZmlTable m_table;
-
   private final TableViewerColumn m_viewerColumn;
 
   private final int m_index;
@@ -78,7 +76,6 @@ public abstract class AbstractZmlTableColumn extends AbstractZmlTableElement imp
   public AbstractZmlTableColumn( final IZmlTable table, final BaseColumn type, final TableViewerColumn viewerColumn, final int index )
   {
     super( table );
-    m_table = table;
 
     m_type = type;
     m_viewerColumn = viewerColumn;
@@ -90,6 +87,11 @@ public abstract class AbstractZmlTableColumn extends AbstractZmlTableElement imp
   protected RuleMapper getMapper( )
   {
     return m_mapper;
+  }
+
+  public int getIndex( )
+  {
+    return m_index;
   }
 
   @Override
@@ -130,7 +132,7 @@ public abstract class AbstractZmlTableColumn extends AbstractZmlTableElement imp
     return m_viewerColumn;
   }
 
-  public TableColumn getTableColumn( final IZmlTable table )
+  public TableColumn getTableColumn( )
   {
     final TableViewerColumn column = getTableViewerColumn();
     if( Objects.isNotNull( column ) )

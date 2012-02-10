@@ -72,6 +72,7 @@ import org.kalypso.zml.ui.table.model.IZmlTableModel;
 import org.kalypso.zml.ui.table.model.ZmlMainTableModel;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.columns.ZmlTableColumns;
+import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
 import org.kalypso.zml.ui.table.provider.rendering.cell.ZmlTableCellCache;
 import org.kalypso.zml.ui.table.provider.rendering.cell.ZmlTableCellPaintListener;
 import org.kalypso.zml.ui.table.selection.ZmlTableSelectionHandler;
@@ -136,7 +137,9 @@ public class ZmlMainTable extends Composite implements IZmlTable
         if( inputElement instanceof IZmlTableModel )
         {
           final IZmlTableModel model = (IZmlTableModel) inputElement;
-          return model.getRows();
+          final IZmlTableRow[] rows = model.getRows();
+
+          return rows;
         }
         else
           throw new UnsupportedOperationException();
@@ -148,7 +151,6 @@ public class ZmlMainTable extends Composite implements IZmlTable
 
     m_filter = new ZmlViewResolutionFilter( this );
     m_tableViewer.addFilter( m_filter );
-
     m_tableViewer.setInput( m_model );
 
     m_selection = new ZmlTableSelectionHandler( this );
@@ -234,7 +236,6 @@ public class ZmlMainTable extends Composite implements IZmlTable
   @Override
   public synchronized void refresh( final IZmlModelColumn... columns )
   {
-
     if( Objects.isNotNull( m_updateJob ) )
       m_updateJob.cancel();
 
@@ -252,8 +253,6 @@ public class ZmlMainTable extends Composite implements IZmlTable
         synchronized( this )
         {
           m_pager.update();
-
-// addMissingColumns();
 
           final IZmlTableColumn[] tableColumns = ZmlTableColumns.toTableColumns( ZmlMainTable.this, true, columns );
           for( final IZmlTableColumn column : tableColumns )

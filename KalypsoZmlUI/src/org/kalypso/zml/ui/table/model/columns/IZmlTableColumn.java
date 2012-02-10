@@ -78,4 +78,6 @@ public interface IZmlTableColumn
 
   void reset( );
 
+  int getIndex( );
+
 }
