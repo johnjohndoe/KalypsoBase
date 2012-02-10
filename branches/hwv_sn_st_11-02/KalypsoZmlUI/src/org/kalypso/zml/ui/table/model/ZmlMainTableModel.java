@@ -64,7 +64,6 @@ public class ZmlMainTableModel extends AbstractZmlTableModel
   @Override
   public IZmlTableRow[] getRows( )
   {
-
     synchronized( this )
     {
       if( ArrayUtils.isEmpty( m_rows ) )
