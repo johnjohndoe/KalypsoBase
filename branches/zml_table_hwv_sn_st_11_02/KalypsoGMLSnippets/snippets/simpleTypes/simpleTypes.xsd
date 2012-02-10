@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+	targetNamespace="org.kalypso.gml.snippets.simpleTypes"
+	xmlns="org.kalypso.gml.snippets.simpleTypes"
+	xmlns:gml="http://www.opengis.net/gml" elementFormDefault="qualified"
+	attributeFormDefault="unqualified"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:annotation>
+		<xs:appinfo xmlns:kapp="org.kalypso.appinfo">
+			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
+
+	<xs:import namespace="http://www.opengis.net/gml" />
+
+	<xs:element name="FeatureWithSimpleTypes" substitutionGroup="gml:_Feature">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="gml:AbstractFeatureType">
+					<xs:sequence>
+						<!-- Basic types -->
+						<xs:element name="string" type="xs:string" default="Hi There!"/>
+						<xs:element name="int" type="xs:int" default="123"/>
+						<xs:element name="double" type="xs:double" default="1.11"/>
+						<xs:element name="optionalDate" type="xs:dateTime" minOccurs="0"/>
+
+						<!-- Facets -->
+						<xs:element name="doubleEnum" default="1.11">
+							<xs:simpleType>
+								<xs:restriction base="xs:double" >
+									<xs:enumeration value="1.11"/>
+									<xs:enumeration value="2.22"/>
+									<xs:enumeration value="3.33"/>
+									<xs:enumeration value="4.44"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						
+						<!-- Combinations -->
+						<xs:element name="inlineDefinedStringList"  >
+							<xs:simpleType  >
+								<xs:list itemType="xs:string" ></xs:list>
+							</xs:simpleType>
+						</xs:element>
+
+						<xs:element name="namedTypeFloatList" type="floatListType" />
+						
+						<!-- Inheritance -->
+						<xs:element name="doubleBiggerThanOne">
+							<xs:simpleType>
+								<xs:restriction base="xs:double">
+									<xs:minExclusive value="1.0"></xs:minExclusive>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:simpleType name="floatListType">
+		<xs:list itemType="xs:float"></xs:list>
+	</xs:simpleType>
+
+</xs:schema>
