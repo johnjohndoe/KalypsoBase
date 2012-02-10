@@ -153,7 +153,7 @@ public abstract class AbstractZmlTableModel implements IZmlTableModel
   @Override
   public void reset( )
   {
-    m_rows = null;
+    m_rows.clear();
   }
 
   @Override

@@ -61,7 +61,6 @@ import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 import org.kalypso.zml.ui.debug.KalypsoZmlUiDebug;
-import org.kalypso.zml.ui.table.model.columns.ZmlTableColumns;
 
 /**
  * @author Dirk Kuch
@@ -188,14 +187,14 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
       for( final IZmlTable table : tables )
       {
         // FIXME move to getModel().refresh()?
-        table.getModel().reset();
+// table.getModel().reset();
       }
 
       // FIXME stack columns in table model
       Collections.addAll( m_stackColumns, cols );
 
-      final IZmlModelColumn[] missing = ZmlTableColumns.findMissingColumns( getMainTable(), getModel().getColumns() );
-      ZmlTableColumns.buildTableColumns( this, ZmlTableColumns.toBaseColumns( missing ) );
+// final IZmlModelColumn[] missing = ZmlTableColumns.findMissingColumns( getMainTable(), getModel().getColumns() );
+// ZmlTableColumns.buildTableColumns( this, ZmlTableColumns.toBaseColumns( missing ) );
 
       for( final IZmlTable table : tables )
       {
