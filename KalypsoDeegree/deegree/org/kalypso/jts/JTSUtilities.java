@@ -682,10 +682,10 @@ public final class JTSUtilities
 
       area += (b.y - a.y) * (a.x - c.x) // bounding rectangle
 
-          - ((a.x - b.x) * (b.y - a.y)//
-              + (b.x - c.x) * (b.y - c.y)//
+      - ((a.x - b.x) * (b.y - a.y)//
+          + (b.x - c.x) * (b.y - c.y)//
           + (a.x - c.x) * (c.y - a.y)//
-          ) / 2d;
+      ) / 2d;
     }
 
     return area;
@@ -821,6 +821,7 @@ public final class JTSUtilities
    *          The definition at what length along the curve a point should be inserted.
    * @return The coordinates of the calculated points on the line.
    */
+  // TODO: check: probably we could use Densify of JTS instead
   public static Coordinate[] calculatePointsOnLine( final LineString curve, final double distance )
   {
     /* The length of the line. */
