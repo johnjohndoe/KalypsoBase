@@ -66,7 +66,7 @@ import org.kalypso.model.wspm.core.util.vegetation.UpdateVegetationProperties;
 
 /**
  * updates a "simple" ks / kst value from roughness class
- * 
+ *
  * @author Dirk Kuch
  */
 public class UpdateSimpleRoughnessProperty implements ICoreRunnableWithProgress
@@ -94,7 +94,7 @@ public class UpdateSimpleRoughnessProperty implements ICoreRunnableWithProgress
 
     final IWspmClassification clazzes = WspmClassifications.getClassification( m_profile );
     if( Objects.isNull( clazzes ) )
-      throw new CoreException( new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( Messages.getString("UpdateSimpleRoughnessProperty_0"), m_profile.getStation() ) ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( Messages.getString( "UpdateSimpleRoughnessProperty_0" ), m_profile.getStation() ) ) ); //$NON-NLS-1$
 
     final List<IStatus> statis = new ArrayList<IStatus>();
 
@@ -106,7 +106,7 @@ public class UpdateSimpleRoughnessProperty implements ICoreRunnableWithProgress
 
       if( Objects.isNull( roughness ) )
       {
-        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( Messages.getString("UpdateSimpleRoughnessProperty_1"), point.getBreite() ) ); //$NON-NLS-1$
+        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( Messages.getString( "UpdateSimpleRoughnessProperty_1" ), point.getBreite() ) ); //$NON-NLS-1$
         statis.add( status );
 
         continue;
@@ -116,7 +116,7 @@ public class UpdateSimpleRoughnessProperty implements ICoreRunnableWithProgress
         m_changes.add( new PointPropertyEdit( point, property, roughness.getValue( m_property ).doubleValue() ) );
     }
 
-    return StatusUtilities.createStatus( statis, String.format( Messages.getString("UpdateSimpleRoughnessProperty_2"), m_profile.getStation() ) ); //$NON-NLS-1$
+    return StatusUtilities.createStatus( statis, String.format( Messages.getString( "UpdateSimpleRoughnessProperty_2" ), m_profile.getStation() ) ); //$NON-NLS-1$
   }
 
   public IProfilChange[] getChanges( )
