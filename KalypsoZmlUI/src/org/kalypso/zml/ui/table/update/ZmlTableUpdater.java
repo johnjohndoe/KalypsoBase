@@ -105,7 +105,8 @@ public class ZmlTableUpdater implements Runnable
       final BaseColumn column = (BaseColumn) values[1];
 
       doLoadModelColumn( link );
-      ZmlTableColumns.addTableColumn( m_part.getTable(), column );
+
+      ZmlTableColumns.buildTableColumns( m_part.getTable(), column );
     }
   }
 

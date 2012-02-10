@@ -59,7 +59,7 @@ public interface IZmlTableComposite
 
   void removeListener( IZmlTableCompositeListener mListener );
 
-  void fireTableChanged( String type, IZmlModelColumn... columns );
+  void fireTableSourceChanged( String type );
 
   IZmlTable getMainTable( );
 
