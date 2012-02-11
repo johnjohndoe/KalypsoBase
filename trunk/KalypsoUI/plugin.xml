@@ -26,7 +26,7 @@
       </page>
 	</extension>
 	<extension id="editors" name="editors" point="org.eclipse.ui.editors">
-		<editor class="org.kalypso.ui.editor.mapeditor.GisMapEditor" icon="icons/kalypso_gmt.gif" default="true"  name="%org.kalypso.ui.editor.mapeditor.GisMapEditor" id="org.kalypso.ui.editor.mapeditor.GisMapEditor" extensions="gmt">
+		<editor class="org.kalypso.ui.editor.mapeditor.GisMapEditor" icon="icons/kalypso_gmt.gif" default="true"  name="%org.kalypso.ui.editor.mapeditor.GisMapEditor" id="org.kalypso.ui.editor.mapeditor.GisMapEditor" extensions="gmt" contributorClass="org.kalypso.ui.editor.mapeditor.GisMapEditorActionBarContributor">
 		</editor>
 		<editor default="true" name="%org.kalypso.ui.editor.gistableeditor.GisTableEditor" icon="icons/kalypso_gtt.gif" extensions="gtt" class="org.kalypso.ui.editor.gistableeditor.GisTableEditor" contributorClass="org.kalypso.ui.editor.gistableeditor.GisTableEditorActionBarContributor" id="org.kalypso.ui.editor.gistableeditor.GisTableEditor">
 		</editor>

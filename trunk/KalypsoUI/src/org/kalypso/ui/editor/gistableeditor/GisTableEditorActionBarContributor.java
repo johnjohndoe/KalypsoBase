@@ -43,6 +43,7 @@ package org.kalypso.ui.editor.gistableeditor;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -69,6 +70,7 @@ import org.kalypso.ui.editor.actions.NewScopeFactory;
 import org.kalypso.ui.editor.actions.SelectionManagedMenu;
 import org.kalypso.ui.editor.gistableeditor.actions.CopyEditorPartAction;
 import org.kalypso.ui.editor.gistableeditor.actions.PasteEditorPartAction;
+import org.kalypso.ui.editor.gmleditor.part.ShowDescriptionStatusLineItem;
 import org.kalypsodeegree.model.feature.FeatureList;
 
 /**
@@ -92,6 +94,8 @@ public class GisTableEditorActionBarContributor extends AbstractEditorActionBarC
 
   private final SelectionManagedMenu m_selectionManagedMenu = new SelectionManagedMenu( GIS_TABLE_MENU_ID ); //$NON-NLS-1$
 
+  private ShowDescriptionStatusLineItem m_statusLineItem;
+
   public GisTableEditorActionBarContributor( )
   {
     final RetargetInfo copyInfo = new RetargetInfo( ActionFactory.COPY.getId(), null, SWT.NONE );
@@ -103,9 +107,6 @@ public class GisTableEditorActionBarContributor extends AbstractEditorActionBarC
     m_retargetManager.addRetargetInfo( pasteInfo );
   }
 
-  /**
-   * @see org.eclipse.ui.part.EditorActionBarContributor#init(org.eclipse.ui.IActionBars)
-   */
   @Override
   public void init( final IActionBars bars )
   {
@@ -182,9 +183,6 @@ public class GisTableEditorActionBarContributor extends AbstractEditorActionBarC
     scope.addMenuItems( newFeatureMenu );
   }
 
-  /**
-   * @see org.eclipse.ui.part.EditorActionBarContributor#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -201,9 +199,6 @@ public class GisTableEditorActionBarContributor extends AbstractEditorActionBarC
     super.dispose();
   }
 
-  /**
-   * @see org.eclipse.ui.IEditorActionBarContributor#setActiveEditor(org.eclipse.ui.IEditorPart)
-   */
   @Override
   public void setActiveEditor( final IEditorPart targetEditor )
   {
@@ -234,8 +229,10 @@ public class GisTableEditorActionBarContributor extends AbstractEditorActionBarC
       }
     }
 
-    m_featureSelectionActionGroup.updateActionBars();
+    if( m_statusLineItem != null )
+      m_statusLineItem.setActiveEditor( targetEditor );
 
+    m_featureSelectionActionGroup.updateActionBars();
   }
 
   @Override
@@ -245,4 +242,10 @@ public class GisTableEditorActionBarContributor extends AbstractEditorActionBarC
     m_featureSelectionActionGroup.updateActionBars();
   }
 
+  @Override
+  public void contributeToStatusLine( final IStatusLineManager statusLineManager )
+  {
+    m_statusLineItem = new ShowDescriptionStatusLineItem( "descriptionItem", 70 ); //$NON-NLS-1$
+    statusLineManager.add( m_statusLineItem );
+  }
 }

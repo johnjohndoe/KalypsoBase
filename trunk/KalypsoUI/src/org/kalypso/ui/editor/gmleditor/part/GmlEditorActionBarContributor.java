@@ -49,7 +49,6 @@ import org.eclipse.ui.actions.ActionContext;
 import org.kalypso.ui.editor.AbstractEditorActionBarContributor;
 import org.kalypso.ui.editor.actions.FeatureSelectionActionGroup;
 import org.kalypso.ui.editor.actions.NewFeatureManagedMenu;
-import org.kalypso.ui.editor.actions.SelectionManagedMenu;
 
 /**
  * Contributes to the actions bars of the {@link org.kalypso.ui.editor.gmleditor.GmlEditor}.
@@ -64,9 +63,6 @@ public class GmlEditorActionBarContributor extends AbstractEditorActionBarContri
 
   private ShowDescriptionStatusLineItem m_statusLineItem;
 
-  /**
-   * @see org.eclipse.ui.part.EditorActionBarContributor#init(org.eclipse.ui.IActionBars)
-   */
   @Override
   public void init( final IActionBars bars )
   {
@@ -79,9 +75,6 @@ public class GmlEditorActionBarContributor extends AbstractEditorActionBarContri
     m_featureSelectionActionGroup.fillActionBars( bars );
   }
 
-  /**
-   * @see org.eclipse.ui.part.EditorActionBarContributor#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -90,9 +83,6 @@ public class GmlEditorActionBarContributor extends AbstractEditorActionBarContri
     super.dispose();
   }
 
-  /**
-   * @see org.eclipse.ui.part.EditorActionBarContributor#contributeToStatusLine(org.eclipse.jface.action.IStatusLineManager)
-   */
   @Override
   public void contributeToStatusLine( final IStatusLineManager statusLineManager )
   {
@@ -100,9 +90,6 @@ public class GmlEditorActionBarContributor extends AbstractEditorActionBarContri
     statusLineManager.add( m_statusLineItem );
   }
 
-  /**
-   * @see org.eclipse.ui.part.EditorActionBarContributor#setActiveEditor(org.eclipse.ui.IEditorPart)
-   */
   @Override
   public void setActiveEditor( final IEditorPart targetEditor )
   {

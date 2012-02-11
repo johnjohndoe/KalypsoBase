@@ -65,9 +65,6 @@ public abstract class AbstractEditorActionBarContributor extends EditorActionBar
 
   private IEditorPart m_targetEditor;
 
-  /**
-   * @see org.eclipse.ui.part.EditorActionBarContributor#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -81,9 +78,6 @@ public abstract class AbstractEditorActionBarContributor extends EditorActionBar
     return m_targetEditor;
   }
 
-  /**
-   * @see org.eclipse.ui.part.EditorActionBarContributor#setActiveEditor(org.eclipse.ui.IEditorPart)
-   */
   @Override
   public void setActiveEditor( final IEditorPart targetEditor )
   {
@@ -117,5 +111,4 @@ public abstract class AbstractEditorActionBarContributor extends EditorActionBar
   }
 
   protected abstract void handleEditorSelectionChanged( ISelectionProvider selectionProvider );
-
 }
