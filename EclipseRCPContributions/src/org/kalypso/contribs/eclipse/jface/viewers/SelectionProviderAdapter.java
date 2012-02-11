@@ -129,7 +129,6 @@ public class SelectionProviderAdapter implements IPostSelectionProvider
         @Override
         public void run( )
         {
-          final ISelectionChangedListener l = listener;
           listener.selectionChanged( event );
         }
       };

@@ -63,7 +63,7 @@ import org.eclipse.ui.IWorkbenchPartReference;
  * What to do when the curent part we are adapting to is closed.
  * </p>
  * </p>
- * 
+ *
  * @author Gernot Belger
  */
 public class AdapterPartListener<C> implements IPartListener2
@@ -169,7 +169,7 @@ public class AdapterPartListener<C> implements IPartListener2
 
   /**
    * Tries to find the adapter for the given part. If one is found, return true.
-   * 
+   *
    * @return If an adapter for this partRef is found return true, false otherwise.
    */
   public boolean adaptPartReference( final IWorkbenchPartReference partRef )
@@ -180,7 +180,6 @@ public class AdapterPartListener<C> implements IPartListener2
     return adaptPart( partRef.getPart( false ) );
   }
 
-  @SuppressWarnings("unchecked")
   public boolean adaptPart( final IWorkbenchPart part )
   {
     if( part == null )
@@ -195,6 +194,7 @@ public class AdapterPartListener<C> implements IPartListener2
     return true;
   }
 
+  @SuppressWarnings("unchecked")
   protected C doAdaptPart( final IWorkbenchPart part )
   {
     return (C) part.getAdapter( m_adapter );

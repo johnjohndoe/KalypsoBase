@@ -59,8 +59,6 @@ public class StatusCollector implements IStatusCollector
 
   private final String m_pluginID;
 
-  private IStatus m_status;
-
   /**
    * @param pluginID
    *          All convenience methods (like {@link #addError(String, String)}) will use this plug-in id to create a
