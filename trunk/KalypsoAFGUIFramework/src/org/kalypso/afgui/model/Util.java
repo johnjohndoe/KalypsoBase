@@ -118,18 +118,16 @@ public class Util
   /**
    * Gets the szenario model
    */
-  @SuppressWarnings("unchecked")
-  public static final <T extends IModel> T getModel( final Class<T> modelClass )
+  public static final <T extends IModel> T getModel( final String modelId, final Class<T> modelClass )
   {
     try
     {
       final IWorkbench workbench = PlatformUI.getWorkbench();
       final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
       final IEvaluationContext currentState = service.getCurrentState();
+      @SuppressWarnings("unchecked")
       final ICaseDataProvider<IModel> caseDataProvider = (ICaseDataProvider<IModel>) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
-      final T model = caseDataProvider.getModel( modelClass );
-
-      return model;
+      return caseDataProvider.getModel( modelId, modelClass );
     }
     catch( final Throwable th )
     {
