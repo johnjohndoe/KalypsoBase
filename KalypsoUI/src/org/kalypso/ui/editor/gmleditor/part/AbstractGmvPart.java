@@ -96,10 +96,6 @@ public class AbstractGmvPart extends AbstractWorkbenchPart implements IGmvPart
     return input;
   }
 
-  /**
-   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor,
-   *      org.eclipse.core.resources.IFile)
-   */
   @Override
   protected void doSaveInternal( final IProgressMonitor monitor, final IFile file ) throws CoreException
   {
@@ -292,9 +288,6 @@ public class AbstractGmvPart extends AbstractWorkbenchPart implements IGmvPart
     manager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
   }
 
-  /**
-   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-   */
   @Override
   public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
