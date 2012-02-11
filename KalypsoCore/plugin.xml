@@ -6,7 +6,6 @@
    <extension-point id="observationImporter" name="Zeitreihen Importer" schema="schema/observationImporter.exsd"/>
    <extension-point id="featureVisitor" name="featureVisitor" schema="schema/featureVisitor.exsd"/>
    <extension-point id="catalogContribution" name="add or extend catalogs" schema="schema/catalogContribution.exsd"/>
-   <extension-point id="componentHandler" name="componentHandler" schema="schema/componentHandler.exsd"/>
    <extension-point id="featureviewComparator" name="featureviewComparator" schema="schema/featureviewComparator.exsd"/>
    <extension-point id="themeInfo" name="Kalypso Theme Info" schema="schema/themeInfo.exsd"/>
    <extension-point id="gmlSourceProvider" name="GML Source Provider" schema="schema/gmlSourceProvider.exsd"/>

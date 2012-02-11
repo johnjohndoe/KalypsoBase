@@ -42,7 +42,6 @@ package org.kalypso.core.catalog;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
@@ -156,29 +155,7 @@ public abstract class ObjectCatalog<O> extends Storage
     return file.toURI();
   }
 
-  private URI store( final O object, final URI locationURI )
-  {
-    FileOutputStream outStream = null;
-    try
-    {
-      final File file = new File( locationURI );
-      outStream = new FileOutputStream( file );
-      write( object, outStream );
-      return file.toURI();
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      return null;
-    }
-    finally
-    {
-      IOUtils.closeQuietly( outStream );
-    }
-  }
-
   protected abstract O read( IUrlResolver2 catalogResolver, InputStream stream );
 
   protected abstract void write( O object, OutputStream os );
-
 }

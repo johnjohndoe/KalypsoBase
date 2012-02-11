@@ -67,7 +67,6 @@ import org.kalypso.core.gml.provider.IGmlSourceProvider;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeInfo;
-import org.kalypso.ogc.gml.om.IComponentHandler;
 import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.IPropertiesFeatureVisitor;
@@ -85,12 +84,6 @@ public final class KalypsoCoreExtensions
 
   /** id -> config-element */
   private static Map<String, IConfigurationElement> THE_VISITOR_MAP = null;
-
-  /* extension-point 'componentHandler' */
-
-  private static final String COMPONENT_HANDLER_EXTENSION_POINT = "org.kalypso.core.componentHandler"; //$NON-NLS-1$
-
-  private static Map<String, IComponentHandler> THE_COMPONENT_MAP = null;
 
   /* Theme-Info Extension-Point */
   private static final String THEME_INFO_EXTENSION_POINT = "org.kalypso.core.themeInfo"; //$NON-NLS-1$
@@ -171,36 +164,6 @@ public final class KalypsoCoreExtensions
         KalypsoCorePlugin.getDefault().getLog().log( status );
       }
     }
-  }
-
-  /**
-   * @return The handler whichs id-attribute equals the given id. Null if no such handler was found.
-   */
-  public static IComponentHandler findComponentHandler( final String id )
-  {
-    if( THE_COMPONENT_MAP == null )
-    {
-      final IExtensionRegistry registry = Platform.getExtensionRegistry();
-      final IExtensionPoint extensionPoint = registry.getExtensionPoint( COMPONENT_HANDLER_EXTENSION_POINT );
-      final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
-      THE_COMPONENT_MAP = new HashMap<String, IComponentHandler>( configurationElements.length );
-      for( final IConfigurationElement element : configurationElements )
-      {
-        try
-        {
-          // TODO: anti-eclipse! do not instantiate exension before they are REALLY needed
-          final String configid = element.getAttribute( "id" ); //$NON-NLS-1$
-          final IComponentHandler handler = (IComponentHandler) element.createExecutableExtension( "class" ); //$NON-NLS-1$
-          THE_COMPONENT_MAP.put( configid, handler );
-        }
-        catch( final CoreException e )
-        {
-          KalypsoCorePlugin.getDefault().getLog().log( e.getStatus() );
-        }
-      }
-    }
-
-    return THE_COMPONENT_MAP.get( id );
   }
 
   /**

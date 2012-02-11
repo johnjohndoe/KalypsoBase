@@ -126,8 +126,6 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    */
   private String m_id;
 
-  private GM_Envelope m_activeEnvelope;
-
   /**
    * The constructor.
    * 
@@ -548,31 +546,15 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     fireStatusChanged( this );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#setId(java.lang.String)
-   */
   @Override
   public void setId( final String id )
   {
     m_id = id;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#getId()
-   */
   @Override
   public String getId( )
   {
     return m_id;
-  }
-
-  /**
-   * TODO bad idea - handling an envelope from the outside of a theme. must be part of the implementing theme
-   * (encapsulation of classes!)
-   */
-  @Override
-  public void setActiveEnvelope( final GM_Envelope boundingBox )
-  {
-    m_activeEnvelope = boundingBox;
   }
 }

@@ -2,28 +2,28 @@ package org.openjump.core.graph.delauneySimplexInsert;
 
 /*
  * Copyright (c) 2005 by L. Paul Chew.
- * 
+ *
  * Permission is hereby granted, without written agreement and without
  * license or royalty fees, to use, copy, modify, and distribute this
- * software and its documentation for any purpose, subject to the following 
+ * software and its documentation for any purpose, subject to the following
  * conditions:
  *
- * The above copyright notice and this permission notice shall be included 
+ * The above copyright notice and this permission notice shall be included
  * in all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
 
 /**
  * Points in Euclidean space, implemented as double[]. Includes simple geometric operations. Uses matrices; a matrix is
  * represented as an array of Pnts. Uses simplices; a simplex is represented as an array of Pnts.
- * 
+ *
  * @author Paul Chew Created July 2005. Derived from an earlier, messier version.
  */
 public class Pnt
@@ -33,7 +33,7 @@ public class Pnt
 
   /**
    * Constructor.
-   * 
+   *
    * @param coords
    *          the coordinates
    */
@@ -46,7 +46,7 @@ public class Pnt
 
   /**
    * Constructor.
-   * 
+   *
    * @param coordA
    * @param coordB
    */
@@ -57,7 +57,7 @@ public class Pnt
 
   /**
    * Constructor.
-   * 
+   *
    * @param coordA
    * @param coordB
    * @param coordC
@@ -69,7 +69,7 @@ public class Pnt
 
   /**
    * Create a String for this Pnt.
-   * 
+   *
    * @return a String representation of this Pnt.
    */
   @Override
@@ -86,7 +86,7 @@ public class Pnt
 
   /**
    * Equality.
-   * 
+   *
    * @param other
    *          the other Object to compare to
    * @return true iff the Pnts have the same coordinates
@@ -107,7 +107,7 @@ public class Pnt
 
   /**
    * HashCode.
-   * 
+   *
    * @return the hashCode for this Pnt
    */
   @Override
@@ -147,7 +147,7 @@ public class Pnt
 
   /**
    * Check that dimensions match.
-   * 
+   *
    * @param p
    *          the Pnt to check (against this Pnt)
    * @return the dimension of the Pnts
@@ -164,7 +164,7 @@ public class Pnt
 
   /**
    * Create a new Pnt by adding additional coordinates to this Pnt.
-   * 
+   *
    * @param coords
    *          the new coordinates (added on the right end)
    * @return a new Pnt with the additional coordinates
@@ -179,7 +179,7 @@ public class Pnt
 
   /**
    * Dot product.
-   * 
+   *
    * @param p
    *          the other Pnt
    * @return dot product of this Pnt and p
@@ -195,7 +195,7 @@ public class Pnt
 
   /**
    * Magnitude (as a vector).
-   * 
+   *
    * @return the Euclidean length of this vector
    */
   public double magnitude( )
@@ -205,7 +205,7 @@ public class Pnt
 
   /**
    * Subtract.
-   * 
+   *
    * @param p
    *          the other Pnt
    * @return a new Pnt = this - p
@@ -221,7 +221,7 @@ public class Pnt
 
   /**
    * Add.
-   * 
+   *
    * @param p
    *          the other Pnt
    * @return a new Pnt = this + p
@@ -237,7 +237,7 @@ public class Pnt
 
   /**
    * Angle (in radians) between two Pnts (treated as vectors).
-   * 
+   *
    * @param p
    *          the other Pnt
    * @return the angle (in radians) between the two Pnts
@@ -250,14 +250,14 @@ public class Pnt
   /**
    * Perpendicular bisector of two Pnts. Works in any dimension. The coefficients are returned as a Pnt of one higher
    * dimension (e.g., (A,B,C,D) for an equation of the form Ax + By + Cz + D = 0).
-   * 
+   *
    * @param point
    *          the other point
    * @return the coefficients of the perpendicular bisector
    */
   public Pnt bisector( final Pnt point )
   {
-    final int dim = dimCheck( point );
+    dimCheck( point );
     final Pnt diff = subtract( point );
     final Pnt sum = add( point );
     final double dot = diff.dot( sum );
@@ -268,7 +268,7 @@ public class Pnt
 
   /**
    * Create a String for a matrix.
-   * 
+   *
    * @param matrix
    *          the matrix (an array of Pnts)
    * @return a String represenation of the matrix
@@ -285,7 +285,7 @@ public class Pnt
   /**
    * Compute the determinant of a matrix (array of Pnts). This is not an efficient implementation, but should be
    * adequate for low dimension.
-   * 
+   *
    * @param matrix
    *          the matrix as an array of Pnts
    * @return the determinnant of the input matrix
@@ -311,7 +311,7 @@ public class Pnt
 
   /**
    * Compute the determinant of a submatrix specified by starting row and by "active" columns.
-   * 
+   *
    * @param matrix
    *          the matrix as an array of Pnts
    * @param row
@@ -343,7 +343,7 @@ public class Pnt
   /**
    * Compute generalized cross-product of the rows of a matrix. The result is a Pnt perpendicular (as a vector) to each
    * row of the matrix. This is not an efficient implementation, but should be adequate for low dimension.
-   * 
+   *
    * @param matrix
    *          the matrix of Pnts (one less row than the Pnt dimension)
    * @return a Pnt perpendicular to each row Pnt
@@ -381,7 +381,7 @@ public class Pnt
 
   /**
    * Determine the signed content (i.e., area or volume, etc.) of a simplex.
-   * 
+   *
    * @param simplex
    *          the simplex (as an array of Pnts)
    * @return the signed content of the simplex
@@ -400,13 +400,13 @@ public class Pnt
   /**
    * Relation between this Pnt and a simplex (represented as an array of Pnts). Result is an array of signs, one for
    * each vertex of the simplex, indicating the relation between the vertex, the vertex's opposite facet, and this Pnt.
-   * 
+   *
    * <pre>
    *   -1 means Pnt is on same side of facet
    *    0 means Pnt is on the facet
    *   +1 means Pnt is on opposite side of facet
    * </pre>
-   * 
+   *
    * @param simplex
    *          an array of Pnts representing a simplex
    * @return an array of signs showing relation between this Pnt and the simplex
@@ -470,7 +470,7 @@ public class Pnt
 
   /**
    * Test if this Pnt is outside of simplex.
-   * 
+   *
    * @param simplex
    *          the simplex (an array of Pnts)
    * @return the simplex Pnt that "witnesses" outsideness (or null if not outside)
@@ -488,7 +488,7 @@ public class Pnt
 
   /**
    * Test if this Pnt is on a simplex.
-   * 
+   *
    * @param simplex
    *          the simplex (an array of Pnts)
    * @return the simplex Pnt that "witnesses" on-ness (or null if not on)
@@ -509,7 +509,7 @@ public class Pnt
 
   /**
    * Test if this Pnt is inside a simplex.
-   * 
+   *
    * @param simplex
    *          the simplex (an arary of Pnts)
    * @return true iff this Pnt is inside simplex.
@@ -525,7 +525,7 @@ public class Pnt
 
   /**
    * Test relation between this Pnt and circumcircle of a simplex.
-   * 
+   *
    * @param simplex
    *          the simplex (as an array of Pnts)
    * @return -1, 0, or +1 for inside, on, or outside of circumcircle
@@ -545,7 +545,7 @@ public class Pnt
 
   /**
    * Circumcenter of a simplex.
-   * 
+   *
    * @param simplex
    *          the simplex (as an array of Pnts)
    * @return the circumcenter (a Pnt) of simplex

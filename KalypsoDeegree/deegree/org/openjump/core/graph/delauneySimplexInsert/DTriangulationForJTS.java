@@ -51,8 +51,6 @@ public class DTriangulationForJTS
 
   private double dy = 0;
 
-  private Pnt lowerLeftPnt = null;
-
   public boolean debug = false; // True iff printing info for debugging
 
   private final Geometry m_thiessenBoundary;
@@ -143,7 +141,6 @@ public class DTriangulationForJTS
         new Pnt( argmaxx + 1.5 * dx, argminy - dy ), // lower right
         new Pnt( argminx + dx / 2.0, argmaxy + 1.5 * dy ) } ); // center, top
 
-    lowerLeftPnt = new Pnt( argminx - 1.5 * dx, argminy - dy, 0 );
     dt = new DelaunayTriangulation( initialTriangle );
     addPoints( pointList );
   }
