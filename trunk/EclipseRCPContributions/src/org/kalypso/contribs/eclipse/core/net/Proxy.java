@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.core.net;
 
@@ -67,7 +67,7 @@ import org.osgi.framework.ServiceReference;
  * <strong>Hint:</strong><br>
  * The Eclipse preference page will set the java system properties as well.<br>
  * <br>
- * 
+ *
  * @author Holger Albert
  */
 public class Proxy
@@ -81,7 +81,7 @@ public class Proxy
 
   /**
    * This function returns the password.
-   * 
+   *
    * @return The password.
    */
   public String getPassword( )
@@ -95,7 +95,7 @@ public class Proxy
 
   /**
    * This function returns the proxy host.
-   * 
+   *
    * @return The proxy host.
    */
   public String getProxyHost( )
@@ -109,7 +109,7 @@ public class Proxy
 
   /**
    * This function returns the proxy port.
-   * 
+   *
    * @return The proxy port If none is set, it defaults to 8080.
    */
   public int getProxyPort( )
@@ -123,7 +123,7 @@ public class Proxy
 
   /**
    * This function is true, if a proxy should be used.
-   * 
+   *
    * @return True, if a proxy should be used.
    */
   public boolean useProxy( )
@@ -137,7 +137,7 @@ public class Proxy
 
   /**
    * This function returns the user.
-   * 
+   *
    * @return The user.
    */
   public String getUser( )
@@ -151,7 +151,7 @@ public class Proxy
 
   /**
    * This function returns a list of hosts, that should use no proxy.
-   * 
+   *
    * @return A list of hosts, that should use no proxy, or an empty list, if none are set.
    */
   public List<String> getNonProxyHosts( )
@@ -175,7 +175,7 @@ public class Proxy
   /**
    * This function returns the proxy service of the Eclipse platform.<br>
    * The service will use the settings of the preference page in Eclipse.
-   * 
+   *
    * @param plugin
    *          The plugin, over which context the service will be taken.
    * @return The proxy service.
@@ -185,7 +185,7 @@ public class Proxy
     final BundleContext bundleContext = plugin.getBundle().getBundleContext();
 
     /* Get the reference to the proxy service. */
-    final ServiceReference serviceReference = bundleContext.getServiceReference( IProxyService.class.getName() );
+    final ServiceReference< ? > serviceReference = bundleContext.getServiceReference( IProxyService.class.getName() );
     if( serviceReference == null )
       return null;
 
