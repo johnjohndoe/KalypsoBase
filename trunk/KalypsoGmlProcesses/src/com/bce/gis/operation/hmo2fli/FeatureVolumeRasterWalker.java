@@ -16,7 +16,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 
 /**
  * Summiert das Gesamtvolumen des Rasters sowie die Einzelvolumina der Features.
- * 
+ *
  * @author belger
  */
 public class FeatureVolumeRasterWalker implements IGeoGridWalker
@@ -26,8 +26,6 @@ public class FeatureVolumeRasterWalker implements IGeoGridWalker
   private final FeatureList m_featureIndex;
 
   private double m_cellArea = 0.0;
-
-  private int m_count = 0;
 
   /**
    * @param featureIndex
@@ -79,10 +77,10 @@ public class FeatureVolumeRasterWalker implements IGeoGridWalker
               newVolume = new Double( cellVolume );
             else
             {
-              if( Math.signum( oldVolume ) != Math.signum( cellVolume ) )
-              {
-                m_count++;
-              }
+              // if( Math.signum( oldVolume ) != Math.signum( cellVolume ) )
+              // {
+                // m_count++;
+              // }
 
               newVolume = new Double( oldVolume + cellVolume );
             }

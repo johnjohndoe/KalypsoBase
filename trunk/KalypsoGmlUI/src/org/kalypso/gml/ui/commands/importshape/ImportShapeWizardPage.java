@@ -153,7 +153,8 @@ public class ImportShapeWizardPage extends WizardPage
   /**
    * ancestors may override this for extended functionality
    */
-  protected void addCustomControls(final Composite container){
+  protected void addCustomControls( @SuppressWarnings("unused") final Composite container )
+  {
   }
 
   protected void handleShapeFileChanged( final File file )

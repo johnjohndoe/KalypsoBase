@@ -49,7 +49,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.gml.ui.commands.exportshape.ExportShapeUtils;
 import org.kalypso.gml.ui.extensions.FeatureSelectionTester;
 import org.kalypso.gml.ui.i18n.Messages;
@@ -113,7 +113,7 @@ public class ExportHMOWizard extends Wizard implements IWorkbenchWizard
     final ExportHMOOperation operation = new ExportHMOOperation( m_data );
     final IStatus result = RunnableContextHelper.execute( getContainer(), true, false, operation );
     if( !result.isOK() )
-      new StatusDialog2( getShell(), result, getWindowTitle() ).open();
+      StatusDialog.open( getShell(), result, getWindowTitle() );
 
     return true;
   }

@@ -388,7 +388,7 @@ public class TestInundationFrequenciesGrid2Shp
 
   private static RectifiedGridDomain importAsBinaryRaster( final File srcFile, final File dstFile, final String sourceCRS, final IProgressMonitor monitor ) throws IOException, CoreException
   {
-    final ConvertAscii2Binary ascii2Binary = new ConvertAscii2Binary( srcFile.toURL(), dstFile, 2, sourceCRS );
+    final ConvertAscii2Binary ascii2Binary = new ConvertAscii2Binary( srcFile.toURI().toURL(), dstFile, 2, sourceCRS );
     ascii2Binary.doConvert( monitor );
     final RectifiedGridDomain gridDomain = ascii2Binary.getGridDomain();
     return gridDomain;
