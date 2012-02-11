@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- * 
+ *
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -83,9 +83,6 @@ public abstract class AbstractArrowGeometry implements IArrowGeometry
     return m_points;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.graphics.displayelements.strokearrow.IArrowGeometry#paint()
-   */
   @Override
   public void paint( final Double size )
   {
@@ -102,7 +99,7 @@ public abstract class AbstractArrowGeometry implements IArrowGeometry
       return;
 
     // setTransform
-    setAffineTransformation( p1, p2 );
+    setAffineTransformation( p1 );
 
     draw( size.intValue(), m_uom, m_projection );
 
@@ -117,7 +114,7 @@ public abstract class AbstractArrowGeometry implements IArrowGeometry
 
   }
 
-  private void setAffineTransformation( final int[] p1, final int[] p2 )
+  private void setAffineTransformation( final int[] p1 )
   {
     m_savedAT = getGraphic().getTransform();
     final AffineTransform transform = new AffineTransform();

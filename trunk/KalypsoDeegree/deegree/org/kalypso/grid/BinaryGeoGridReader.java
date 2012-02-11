@@ -77,8 +77,6 @@ public class BinaryGeoGridReader extends AbstractDelegatingGeoGrid
 
   private int m_linesInBlock;
 
-  private int m_amountBlocks;
-
   public BinaryGeoGridReader( final IGeoGrid inputGrid, final URL pUrl ) throws IOException
   {
     super( inputGrid );
@@ -115,10 +113,6 @@ public class BinaryGeoGridReader extends AbstractDelegatingGeoGrid
 
     if( m_linesInBlock == 0 )
       m_linesInBlock = 1;
-
-    m_amountBlocks = m_linesTotal / m_linesInBlock;
-    if( m_linesTotal % m_linesInBlock != 0 )
-      m_amountBlocks++;
 
     BLOCK_SIZE = m_linesInBlock * m_lineLen;
 

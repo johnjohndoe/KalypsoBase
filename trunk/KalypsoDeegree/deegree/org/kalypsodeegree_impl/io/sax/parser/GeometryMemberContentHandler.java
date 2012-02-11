@@ -42,7 +42,6 @@ package org.kalypsodeegree_impl.io.sax.parser;
 
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.types.IGMLElementHandler;
-import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_MultiGeometry;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.xml.sax.Attributes;
@@ -58,23 +57,10 @@ public class GeometryMemberContentHandler extends GMLElementContentHandler imple
 {
   private final IGMLElementHandler<GM_Object> m_geometryHandler;
 
-  private final UnmarshallResultEater m_resultEater;
-
   public GeometryMemberContentHandler( final XMLReader reader, final IGMLElementHandler<GM_Object> geometryHandler, final String defaultSrs )
-  {
-    this( reader, null, geometryHandler, defaultSrs );
-  }
-
-  public GeometryMemberContentHandler( final XMLReader reader, final UnmarshallResultEater resultEater, final String defaultSrs )
-  {
-    this( reader, resultEater, null, defaultSrs );
-  }
-
-  public GeometryMemberContentHandler( final XMLReader reader, final UnmarshallResultEater resultEater, final IGMLElementHandler<GM_Object> geometryHandler, final String defaultSrs )
   {
     super( reader, NS.GML3, GM_MultiGeometry.MEMBER_GEOMETRY.getLocalPart(), defaultSrs, geometryHandler );
 
-    m_resultEater = resultEater;
     m_geometryHandler = geometryHandler;
   }
 

@@ -69,9 +69,6 @@ public abstract class AbstractComponent implements IComponent
     return 0.0000;
   }
 
-  /**
-   * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-   */
   @Override
   public int compare( final Object objFirst, final Object objSecond )
   {

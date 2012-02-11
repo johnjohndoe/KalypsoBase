@@ -70,7 +70,7 @@ import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 
 /**
  * Utility class for handling with the 'template' binding schemata.
- * 
+ *
  * @author Gernot Belger
  */
 public final class TemplateUtilities
@@ -221,12 +221,9 @@ public final class TemplateUtilities
     {
       final ITranslatorContext translatorContext = new ITranslatorContext()
       {
-
         @Override
-        public Object getAdapter( final Class adapter )
+        public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
         {
-          // TODO Auto-generated method stub
-
           return null;
         }
 

@@ -44,8 +44,6 @@ import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowH
  */
 public abstract class AbstractStrokeArrowPaintDelegate implements IStrokeArrowPaintDelegate
 {
-  private final ARROW_TYPE m_arrowType;
-
   private final ARROW_ALIGNMENT m_arrowAlignment;
 
   private final Double m_arrowSize;
@@ -54,7 +52,6 @@ public abstract class AbstractStrokeArrowPaintDelegate implements IStrokeArrowPa
 
   public AbstractStrokeArrowPaintDelegate( final ARROW_TYPE arrowType, final ARROW_WIDGET arrowWidget, final ARROW_ALIGNMENT arrowAlignment, final Double arrowSize )
   {
-    m_arrowType = arrowType;
     m_arrowWidget = arrowWidget;
     m_arrowAlignment = arrowAlignment;
     m_arrowSize = arrowSize;

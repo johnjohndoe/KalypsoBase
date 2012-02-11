@@ -54,7 +54,6 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.commons.xml.XmlTypes;
-import org.kalypso.core.KalypsoCoreExtensions;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -285,14 +284,6 @@ public class ObservationFeatureFactory implements IAdapterFactory
   public static final XsdBaseTypeHandler< ? > typeHanderForComponent( final IComponent component )
   {
     final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-
-    /*
-     * Get the marshaller via the component handler mechanism. Only take a default handler based on the type if no such
-     * handler was found.
-     */
-    final IComponentHandler compHandler = KalypsoCoreExtensions.findComponentHandler( component.getId() );
-    if( compHandler != null )
-      return compHandler.getTypeHandler();
 
     final QName valueTypeName = component.getValueTypeName();
 
@@ -586,7 +577,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     return buffer.toString();
   }
 
-  private static String recordValueToString( final Object value, final XsdBaseTypeHandler handler )
+  private static String recordValueToString( final Object value, @SuppressWarnings("rawtypes") final XsdBaseTypeHandler handler )
   {
     if( value == null )
       return "null"; //$NON-NLS-1$
@@ -609,7 +600,9 @@ public class ObservationFeatureFactory implements IAdapterFactory
         return URLEncoder.encode( myHandler.convertToXMLString( cal ), "UTF-8" ); //$NON-NLS-1$
       }
 
-      return handler.convertToXMLString( value );
+      @SuppressWarnings("unchecked")
+      final String xmlString = handler.convertToXMLString( value );
+      return xmlString;
     }
     catch( final UnsupportedEncodingException e )
     {
