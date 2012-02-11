@@ -40,17 +40,10 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.commons.java.io;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -69,12 +62,10 @@ import org.kalypso.commons.KalypsoCommonsPlugin;
 import org.kalypso.commons.internal.i18n.Messages;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.io.FileVisitor;
-import org.kalypso.contribs.java.io.StreamUtilities;
-import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
 
 /**
  * Utility class for io and files
- * 
+ *
  * @author schlienger
  */
 public class FileUtilities
@@ -90,169 +81,8 @@ public class FileUtilities
   public static final File TMP_DIR = new File( System.getProperty( JAVA_IO_TMPDIR ) );
 
   /**
-   * See makeFileFromStream(). this method calls makeFileFromStream with url.openStream() as parameter.
-   * 
-   * @param charMode
-   * @param prefix
-   *          prefix of new file name
-   * @param suffix
-   *          suffix of new file name
-   * @param url
-   *          data is read from this url
-   * @param useCache
-   *          if true tries to use an existing file with these prefix/suffix
-   * @return newly created file
-   * @throws IOException
-   *           there are problems!
-   */
-  public static File makeFileFromUrl( final boolean charMode, final String prefix, final String suffix, final URL url, final boolean useCache ) throws IOException
-  {
-    InputStream is = null;
-    try
-    {
-      is = url.openStream();
-      final File result = makeFileFromStream( charMode, prefix, suffix, is, useCache );
-      is.close();
-      return result;
-    }
-    finally
-    {
-      IOUtils.closeQuietly( is );
-    }
-  }
-
-  /**
-   * See makeFileFromStream(). this method calls makeFileFromStream with url.openStream() as parameter.
-   * 
-   * @param charMode
-   * @param url
-   *          data is read from this url
-   * @param the
-   *          content of the url is written into this file
-   * @throws IOException
-   *           there are problems!
-   */
-  public static void makeFileFromUrl( final URL url, final File file, final boolean charMode ) throws IOException
-  {
-    InputStream is = null;
-    try
-    {
-      is = url.openStream();
-      makeFileFromStream( charMode, file, is );
-      is.close();
-    }
-    finally
-    {
-      IOUtils.closeQuietly( is );
-    }
-  }
-
-  /**
-   * Creates a new temporary file given its pathName and an InputStream. The content from the InputStream is written
-   * into the file. The file will be deleted after the VM shuts down
-   * 
-   * @param charMode
-   * @param prefix
-   *          prefix of file name
-   * @param suffix
-   *          suffix of file name
-   * @param ins
-   *          the input stream, that is the source
-   * @param useCache
-   *          if true tries to use an existing file with these prefix/suffix
-   * @return the newly created file or null if an exception was thrown.
-   * @throws IOException
-   *           problems reading from stream or writing to temp. file
-   */
-  public static File makeFileFromStream( final boolean charMode, final String prefix, final String suffix, final InputStream ins, final boolean useCache ) throws IOException
-  {
-    if( useCache )
-    {
-      try
-      {
-        final File existingFile = fileExistsInDir( prefix, suffix, System.getProperty( JAVA_IO_TMPDIR ) );
-        return existingFile;
-      }
-      catch( final FileNotFoundException ignored )
-      {
-        // ignored
-        // ignored.printStackTrace();
-      }
-    }
-
-    final File tmp = File.createTempFile( prefix, suffix );
-    tmp.deleteOnExit();
-
-    makeFileFromStream( charMode, tmp, ins );
-
-    return tmp;
-
-  }
-
-  /**
-   * Wie {@link #makeFileFromStream(boolean, String, String, InputStream, boolean)}, benutzt aber eine vorgegebene
-   * Dateiposition
-   * 
-   * @param charMode
-   * @param file
-   * @param ins
-   * @throws IOException
-   */
-  public static void makeFileFromStream( final boolean charMode, final File file, final InputStream ins ) throws IOException
-  {
-    if( charMode )
-    {
-      final BufferedReader br = new BufferedReader( new InputStreamReader( ins ) );
-      final PrintWriter pw = new PrintWriter( new FileOutputStream( file ) );
-
-      ReaderUtilities.readerCopy( br, pw );
-    }
-    else
-    {
-      final BufferedOutputStream out = new BufferedOutputStream( new FileOutputStream( file ) );
-      // Call this after the file-access, as this one will seldom throw an exception; if we put it first,
-      // the stream wil not be closed in case of errors.
-      final BufferedInputStream in = new BufferedInputStream( ins );
-
-      StreamUtilities.streamCopy( in, out );
-    }
-
-  }
-
-  /**
-   * Looks in the given path if a file with the given prefix and suffix exists. Returns the file in the positive. If
-   * more than one such file is found, returns the first of them.
-   * 
-   * @param prefix
-   *          name of the file should begin with this prefix
-   * @param suffix
-   *          name of the file should end with this suffix
-   * @param path
-   * @return the (first) File found
-   * @throws FileNotFoundException
-   *           when file was not found or path does not denote a directory
-   * @see PrefixSuffixFilter
-   */
-  public static File fileExistsInDir( final String prefix, final String suffix, final String path ) throws FileNotFoundException
-  {
-    final File dir = new File( path );
-
-    if( dir.isDirectory() )
-    {
-      final PrefixSuffixFilter filter = new PrefixSuffixFilter( prefix, suffix );
-
-      final File[] files = dir.listFiles( filter );
-
-      if( files.length > 0 )
-        return files[0];
-    }
-
-    throw new FileNotFoundException( Messages.getString( "org.kalypso.commons.java.io.FileUtilities.0", prefix, suffix, path ) ); //$NON-NLS-1$
-  }
-
-  /**
    * Rekursives löschen von Dateien und Verzeichnissen
-   * 
+   *
    * @param file
    *          Falls das Argument eine Datei ist, wird diese gelöscht. Ist es ein Verzeichnis, wird dieses mitsamt aller
    *          darin liegenden Verzeichnisse und Dateien gelöscht.
@@ -284,7 +114,7 @@ public class FileUtilities
 
   /**
    * This function creates a file handle in the temporary directory. It ensures, that the file does not exist already.
-   * 
+   *
    * @param prefix
    *          The prefix will be used in front of the generated name. If empty or null it will be <xode>tmp</code>.
    * @param extension
@@ -311,7 +141,7 @@ public class FileUtilities
 
   /**
    * Creates a temp directory in java.io.tmpdir.
-   * 
+   *
    * @param prefix
    * @return temporary directory
    * @see FileUtilities#createNewTempDir(String, File )
@@ -324,7 +154,7 @@ public class FileUtilities
   /**
    * Creates a temp directory inside the given one. It uses <code>System.currentTimeMillis</code> for naming the new
    * temp dir. This method can hang a little while in the case the directory it tries to create already exist.
-   * 
+   *
    * @param prefix
    * @param parentDir
    * @return temporary directory
@@ -342,7 +172,7 @@ public class FileUtilities
   /**
    * Creates a temp file inside the given folder. It uses <code>System.currentTimeMillis</code> for naming the new temp
    * file. This method can hang a little while in the case the file it tries to create already exist.
-   * 
+   *
    * @param prefix
    * @param parentDir
    * @return unique file
@@ -359,7 +189,7 @@ public class FileUtilities
   /**
    * Creates a unique file name inside the given folder. It uses <code>System.currentTimeMillis</code> for creating the
    * new file name. This method can hang a little while in the case the file it tries to create already exist.
-   * 
+   *
    * @param prefix
    * @param extension
    * @param parentDir
@@ -381,7 +211,7 @@ public class FileUtilities
    * Creates a unique file name inside the given folder. It adds a counter between prefix and extension for creating the
    * new file name.<br>
    * First try is parent/prefix.extension
-   * 
+   *
    * @param prefix
    * @param extension
    * @param parentDir
@@ -402,7 +232,7 @@ public class FileUtilities
 
   /**
    * Macht aus einer absoluten Dateiangabe eine relative
-   * 
+   *
    * @param basedir
    * @param absoluteFile
    * @return Ein File-Object, welches einen relativen Pfad enth?lt; null, wenn <code>basedir</code> kein Parent-Dir von
@@ -420,7 +250,7 @@ public class FileUtilities
    * Returns the relative path, without any reserved characters such as '.'. This is meant to be used without string
    * concatenation function to reproduce an absolute path again. Directly creating a File object on the path returned by
    * this method won't produce a good result. Use the <code>getRelativeFileTo()</code> method instead.
-   * 
+   *
    * @param basedir
    *          if null, the absolute path of absoluteFile is returned.
    * @param absoluteFile
@@ -472,7 +302,7 @@ public class FileUtilities
 
   /**
    * Returns true if childCandidate is stored under the path of parent, either directly or in a sub directory.
-   * 
+   *
    * @param parent
    * @param childCandidate
    * @return true if childCandidate is a child of the given parent.
@@ -518,12 +348,12 @@ public class FileUtilities
    * Returns only the name part of the given file name removing the extension part.
    * <p>
    * Example:
-   * 
+   *
    * <pre>
    *     test.foo -- test
    *     robert.tt -- robert
    * </pre>
-   * 
+   *
    * @param fileName
    * @return fileName without the last '.???' extension part (NOTE: the extension part is not limited to 3 chars)
    */
@@ -538,7 +368,7 @@ public class FileUtilities
 
   /**
    * Lässt den FileVisitor die angegebene Datei bzw. Verzeichnis und alle darin enthaltenen Dateien besuchen.
-   * 
+   *
    * @param recurse
    *          Falls true, werden auch Unterverzeichnisse besucht
    * @throws IOException
@@ -611,7 +441,7 @@ public class FileUtilities
 
   /**
    * Replaces all invalid characters from the given fileName so that it is valid against the OS-rules for naming files.
-   * 
+   *
    * @return a valid filename that can be used to create a new file, special (invalid) characters are removed and
    *         replaced by the given replacement-string
    */
@@ -655,7 +485,7 @@ public class FileUtilities
   /**
    * Sets a certain suffix to the given file name. If the file name already has a suffix (that is a non-empty string
    * after the last '.') it will be replaced.
-   * 
+   *
    * @param suffix
    *          The suffix without the point '.'
    */
@@ -670,7 +500,7 @@ public class FileUtilities
 
   /**
    * Copies the content of a url into a string.
-   * 
+   *
    * @param encoding
    *          The encoding to read the content, if <code>null</code> the platforms default encoding will be used.
    */
@@ -695,7 +525,7 @@ public class FileUtilities
   /**
    * Replaces all invalid characters from the given fileName so that it is valid against the OS-rules for naming files.
    * and looks if file already exists in baseFolder
-   * 
+   *
    * @return a valid filename that can be used to create a new file, special (invalid) characters are removed and
    *         replaced by the given replacement-string
    */
@@ -719,7 +549,7 @@ public class FileUtilities
    * Be aware, that it <strong>deletes all directories recursively</strong>.<br />
    * So if one directory contains files, you want to keep, do not add this directory, but only the child
    * files/directories you realy want to delete.
-   * 
+   *
    * @param files
    *          The files/directories to check for deletion. All files/directories older than 'days' days will be deleted.
    * @param days
