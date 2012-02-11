@@ -428,11 +428,11 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
   }
 
   /**
-   * @see de.renew.workflow.connector.cases.ICaseDataProvider#getModel(java.lang.Class) Returns the feature wrapper
-   *      corresponding to the given key. The class must be one of the known classes by this data provider.
-   *      <p>
-   *      This method blocks until the gml is loaded, which may take some time!
-   *      </p>
+   * Returns the feature wrapper corresponding to the given key. The class must be one of the known classes by this data
+   * provider.
+   * <p>
+   * This method blocks until the gml is loaded, which may take some time!
+   * </p>
    */
   @Override
   @Deprecated
@@ -442,9 +442,6 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     return adaptModel( modelClass, workspace );
   }
 
-  /**
-   * @see de.renew.workflow.connector.cases.ICaseDataProvider#getModel(java.lang.String)
-   */
   @Override
   public <D extends IModel> D getModel( final String id, final Class<D> modelClass ) throws CoreException
   {
@@ -465,10 +462,6 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     return (T) rootFeature.getAdapter( modelClass );
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.ICommandPoster#postCommand(java.lang.String,
-   *      org.kalypso.commons.command.ICommand)
-   */
   @Override
   public void postCommand( final String id, final ICommand command ) throws InvocationTargetException
   {
@@ -500,19 +493,6 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     return false;
   }
 
-  /**
-   * @see de.renew.workflow.connector.cases.ICaseDataProvider#isDirty(java.lang.Class)
-   */
-  @Override
-  @Deprecated
-  public boolean isDirty( final Class< ? extends IModel> modelClass )
-  {
-    return isDirty( modelClass.getName() );
-  }
-
-  /**
-   * @see de.renew.workflow.connector.cases.ICaseDataProvider#isDirty(java.lang.String)
-   */
   @Override
   public boolean isDirty( final String id )
   {
@@ -535,21 +515,6 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     return infoForKey.isDirty();
   }
 
-  /**
-   * @see de.renew.workflow.connector.cases.ICaseDataProvider#saveModel(java.lang.Class,
-   *      org.eclipse.core.runtime.IProgressMonitor)
-   */
-  @Override
-  @Deprecated
-  public synchronized void saveModel( final Class< ? extends IModel> modelClass, final IProgressMonitor monitor ) throws CoreException
-  {
-    saveModel( modelClass.getName(), monitor );
-  }
-
-  /**
-   * @see de.renew.workflow.connector.cases.ICaseDataProvider#saveModel(java.lang.String,
-   *      org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public synchronized void saveModel( final String id, final IProgressMonitor monitor ) throws CoreException
   {

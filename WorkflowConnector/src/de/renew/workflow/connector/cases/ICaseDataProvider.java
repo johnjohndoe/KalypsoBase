@@ -46,7 +46,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 /**
  * The case data provider functions as a bridge between the abstract case data model and actual data objects. Generics
  * provide a way to create data providers that return data objects of a type more specific than {@link Object}.
- * 
+ *
  * @author Gernot Belger
  * @author Stefan Kurzbach
  */
@@ -54,62 +54,47 @@ public interface ICaseDataProvider<T extends Object>
 {
   /**
    * Returns the data object corresponding to the given case data key.
-   * 
+   *
    * @deprecated Use {@link #getModel(String)} instead.
    */
   @Deprecated
-  public <D extends T> D getModel( final Class<D> modelClass ) throws CoreException;
+  <D extends T> D getModel( Class<D> modelClass ) throws CoreException;
 
   /**
    * Returns the data object corresponding to the given case data key.
-   * 
+   *
    * @param id
    *          Id of the queried data (probably the extension-id with which this data was registered)
    * @param modelClass
    *          The root feature of the gml-workspace must either adapt to or inherit from this class.
    */
-  public <D extends T> D getModel( final String id, final Class<D> modelClass ) throws CoreException;
+  <D extends T> D getModel( String id, Class<D> modelClass ) throws CoreException;
 
   /**
    * Saves all model data
    */
-  public void saveModel( final IProgressMonitor monitor ) throws CoreException;
-
-  /**
-   * @deprecated Use {@link #saveModel(String, IProgressMonitor)} instead.
-   */
-  @Deprecated
-  public void saveModel( final Class< ? extends T> modelClass, final IProgressMonitor monitor ) throws CoreException;
+  void saveModel( IProgressMonitor monitor ) throws CoreException;
 
   /**
    * Saves the data object corresponding to the given case data key
-   * 
+   *
    * @param id
    *          Id of the queried data (probably the extension-id with which this data was registered)
    */
-  public void saveModel( final String id, final IProgressMonitor monitor ) throws CoreException;
+  void saveModel( String id, IProgressMonitor monitor ) throws CoreException;
 
   /**
    * Returns <code>true</code> if the data object corresponding to the given case data key has been modified since it
    * was retrieved.
-   * 
-   * @deprecated Use {@link #isDirty(String)} instead.
-   */
-  @Deprecated
-  public boolean isDirty( final Class< ? extends T> modelClass );
-
-  /**
-   * Returns <code>true</code> if the data object corresponding to the given case data key has been modified since it
-   * was retrieved.
-   * 
+   *
    * @param id
    *          Id of the queried data (probably the extension-id with which this data was registered)
    */
-  public boolean isDirty( final String id );
+  boolean isDirty( String id );
 
-  public boolean isDirty( );
+  boolean isDirty( );
 
-  public void reloadModel( );
+  void reloadModel( );
 
-  public void setCurrent( final IScenario scenario );
+  void setCurrent( IScenario scenario );
 }

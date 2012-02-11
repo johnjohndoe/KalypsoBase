@@ -302,7 +302,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     // Then execute default task
     final IWorkflow workflow = ScenarioHelper.findWorkflow( caze, nature );
     // lazy check and insurance for backwards compatibility
-    ScenarioHelper.ensureBackwardsCompatibility( caze, nature );
+    ScenarioHelper.ensureBackwardsCompatibility( nature );
 
     final ITask defaultTask = workflow == null ? null : workflow.getDefaultTask();
     if( defaultTask != null )
