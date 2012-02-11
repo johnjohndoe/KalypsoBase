@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- * 
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.newfeature;
 
@@ -52,8 +52,9 @@ import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.menus.CommandContributionItem;
+import org.eclipse.ui.menus.CommandContributionItemParameter;
 import org.eclipse.ui.services.IServiceLocator;
-import org.kalypso.contribs.eclipse.ui.actions.CommandContributionItem;
 import org.kalypso.contribs.eclipse.ui.actions.DropDownToolbarItem;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
@@ -75,7 +76,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * contains commands to add new features of all available feature types. The command
  * "org.kalypso.gis.newFeature.command" is called with a different command parameter for each feature type. The command
  * parameter is the QName of the feature type in its String representation.
- * 
+ *
  * @author kurzbach
  */
 public class NewFeatureToolbarContribution extends DropDownToolbarItem
@@ -91,9 +92,6 @@ public class NewFeatureToolbarContribution extends DropDownToolbarItem
     registerCommandListeners( new Command[] { m_rootCommand } );
   }
 
-  /**
-   * @see org.eclipse.ui.actions.CompoundContributionItem#getContributionItems()
-   */
   @Override
   protected CommandContributionItem[] getContributionItems( )
   {
@@ -178,7 +176,8 @@ public class NewFeatureToolbarContribution extends DropDownToolbarItem
       final String parameterValue = ft.getQName().toString();
       map.put( parameter.getId(), parameterValue );
 
-      items[i++] = new CommandContributionItem( locator, m_rootCommand.getId(), m_rootCommand.getId(), map, featureNewImg, null, null, parameterLabel, null, tooltip, CommandContributionItem.STYLE_PUSH );
+      final CommandContributionItemParameter data = new CommandContributionItemParameter( locator, m_rootCommand.getId(), m_rootCommand.getId(), map, featureNewImg, null, null, parameterLabel, null, tooltip, CommandContributionItem.STYLE_PUSH, null, false );
+      items[i++] = new CommandContributionItem( data );
     }
     return items;
   }
