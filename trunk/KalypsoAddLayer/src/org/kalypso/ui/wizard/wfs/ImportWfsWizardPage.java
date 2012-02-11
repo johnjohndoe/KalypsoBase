@@ -47,10 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.namespace.QName;
-
 import org.apache.commons.lang3.ObjectUtils;
-import org.deegree.datatypes.QualifiedName;
 import org.deegree.ogcwebservices.wfs.capabilities.WFSFeatureType;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -88,11 +85,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusComposite;
-import org.kalypso.gmlschema.GMLSchemaCatalog;
-import org.kalypso.gmlschema.GMLSchemaException;
-import org.kalypso.gmlschema.IGMLSchema;
-import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog;
 import org.kalypso.ogc.wfs.IWFSLayer;
 import org.kalypso.ogc.wfs.WFSClient;
@@ -482,31 +474,23 @@ public class ImportWfsWizardPage extends WizardPage
 
   protected void filterPressed( )
   {
-    try
-    {
-      // the add filter button is only enabled if the selection size == 1, hence there is only one selected element
-      final IStructuredSelection selection = (IStructuredSelection) m_listRightSide.getSelection();
-      final WFSFeatureType wfsFT = (WFSFeatureType) selection.getFirstElement();
-      final Filter oldFilter = m_filter.get( wfsFT );
+    // the add filter button is only enabled if the selection size == 1, hence there is only one selected element
+    final IStructuredSelection selection = (IStructuredSelection) m_listRightSide.getSelection();
+    final WFSFeatureType wfsFT = (WFSFeatureType) selection.getFirstElement();
+    final Filter oldFilter = m_filter.get( wfsFT );
 
-      final QualifiedName name = wfsFT.getName();
-      final GMLSchemaCatalog catalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-      final String namespace = name.getNamespace().toString();
-      final IGMLSchema schema = catalog.getSchema( namespace, "3.1.1" ); //$NON-NLS-1$
-      final IFeatureType ft = schema.getFeatureType( new QName( namespace, name.getLocalName() ) );
+    // final QualifiedName name = wfsFT.getName();
+    // final GMLSchemaCatalog catalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+    // final String namespace = name.getNamespace().toString();
+    // final IGMLSchema schema = catalog.getSchema( namespace, "3.1.1" ); //$NON-NLS-1$
+    // final IFeatureType ft = schema.getFeatureType( new QName( namespace, name.getLocalName() ) );
 
-      final String[] supportedOperations = m_wfsClient.getAllFilterCapabilitesOperations();
-      final FilterDialog dialog = new FilterDialog( getShell(), null, oldFilter, null, supportedOperations, false );
-      final int open = dialog.open();
-      if( open == Window.OK )
-        m_filter.put( wfsFT, dialog.getFilter() );
-      revalidatePage();
-    }
-    catch( final GMLSchemaException e )
-    {
-      e.printStackTrace();
-      setErrorMessage( e.toString() );
-    }
+    final String[] supportedOperations = m_wfsClient.getAllFilterCapabilitesOperations();
+    final FilterDialog dialog = new FilterDialog( getShell(), null, oldFilter, null, supportedOperations, false );
+    final int open = dialog.open();
+    if( open == Window.OK )
+      m_filter.put( wfsFT, dialog.getFilter() );
+    revalidatePage();
   }
 
   protected void revalidatePage( )

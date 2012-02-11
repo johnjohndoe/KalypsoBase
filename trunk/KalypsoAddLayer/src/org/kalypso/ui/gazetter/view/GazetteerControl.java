@@ -61,7 +61,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.ogc.wfs.WFService;
+import org.kalypso.ogc.wfs.WFSClient;
 import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.i18n.Messages;
 import org.kalypso.view.gazetter.GazetterLocationType;
@@ -102,9 +102,9 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
       return;
     }
     final QName featureTypeToLoad = m_gazetteerLocation.getFeatureType();
-    final String targetCRS = null;
     final String filter;
-    final String maxFeatureAsString = "100"; //$NON-NLS-1$
+    final Integer maxFeatures = 100; //$NON-NLS-1$
+
     // no parent and nothing seleced
     if( parent == null && selectedFeature == null )
     {
@@ -154,8 +154,9 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
       {
         try
         {
-          final WFService service = new WFService( m_baseURL.toExternalForm() );
-          final GMLWorkspace workspace = service.createGMLWorkspaceFromGetFeature( featureTypeToLoad, targetCRS, filter, maxFeatureAsString );
+          final WFSClient wfsClient = new WFSClient( m_baseURL );
+          final GMLWorkspace workspace = wfsClient.operationGetFeature( featureTypeToLoad, filter, maxFeatures );
+
           setContent( workspace );
           setEnable( true );
         }
