@@ -45,7 +45,6 @@ import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
 import org.kalypsodeegree.graphics.sld.UserLayer;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.xml.Marshallable;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * StyledLayerDescriptor: This is a sequence of styled layers, represented at the first level by Layer and UserLayer
@@ -292,8 +291,6 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
   @Override
   public String exportAsXML( )
   {
-    Debug.debugMethodBegin();
-
     final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<StyledLayerDescriptor version='" ).append( m_version ).append( "' " );
     sb.append( "xmlns='http://www.opengis.net/sld' " );
@@ -311,13 +308,9 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
 
     sb.append( "</StyledLayerDescriptor>" );
 
-    Debug.debugMethodEnd();
     return sb.toString();
   }
 
-  /**
-   * @see org.kalypsodeegree.graphics.sld.StyledLayerDescriptor#findUserStyle(java.lang.String)
-   */
   @Override
   public UserStyle findUserStyle( final String name )
   {

@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -44,7 +44,6 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.tools.Debug;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.TopologyException;
@@ -53,7 +52,7 @@ import com.vividsolutions.jts.geom.TopologyException;
  * Default implementation of the GM_Object interface from package deegree.model. The implementation is abstract because
  * only the management of the spatial reference system is unique for all geometries.
  * <p>
- * 
+ *
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
@@ -75,7 +74,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
 
   /**
    * constructor that sets the spatial reference system
-   * 
+   *
    * @param crs
    *          new spatial reference system
    */
@@ -95,7 +94,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
 
   /**
    * sets the spatial reference system
-   * 
+   *
    * @param crs
    *          new spatial reference system
    */
@@ -274,18 +273,15 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    * <p>
    * </p>
    * dummy implementation
-   * 
+   *
    * @throws GM_Exception
    */
   @Override
   public GM_Object getConvexHull( ) throws GM_Exception
   {
-    // let JTS do this stuff (doemming)
     final Geometry geometry = JTSAdapter.export( this );
     final Geometry convexHull = geometry.convexHull();
-    final GM_Object result = JTSAdapter.wrap( convexHull );
-    ((GM_Object_Impl) result).setCoordinateSystem( getCoordinateSystem() );
-    return result;
+    return JTSAdapter.wrap( convexHull, getCoordinateSystem() );
   }
 
   /**
@@ -305,7 +301,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
     {
       final Geometry export = JTSAdapter.export( this );
       final Geometry poly = export.buffer( distance );
-      return JTSAdapter.wrap( poly );
+      return JTSAdapter.wrap( poly, getCoordinateSystem() );
     }
     catch( final GM_Exception e )
     {
@@ -317,7 +313,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
   /**
    * The Boolean valued operation "contains" shall return TRUE if this GM_Object contains another GM_Object.
    * <p>
-   * 
+   *
    * @param that
    *          the GM_Object to test (whether is is contained)
    * @return true if the given object is contained, else false
@@ -343,7 +339,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    * The Boolean valued operation "contains" shall return TRUE if this GM_Object contains a single point given by a
    * coordinate.
    * <p>
-   * 
+   *
    * @param position
    *          GM_Position to test (whether is is contained)
    * @return true if the given object is contained, else false
@@ -358,7 +354,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    * The Boolean valued operation "intersects" shall return TRUE if this GM_Object intersects another GM_Object. Within
    * a GM_Complex, the GM_Primitives do not intersect one another. In general, topologically structured data uses shared
    * geometric objects to capture intersection information.
-   * 
+   *
    * @param that
    *          the GM_Object to intersect with
    * @return true if the objects intersects, else false
@@ -383,7 +379,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
   /**
    * The "union" operation shall return the set theoretic union of this GM_Object and the passed GM_Object.
    * <p>
-   * 
+   *
    * @param that
    *          the GM_Object to unify
    * @return intersection or null, if computation failed
@@ -402,8 +398,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
 
       if( !jtsUnion.isEmpty() )
       {
-        union = JTSAdapter.wrap( jtsUnion );
-        ((GM_Object_Impl) union).setCoordinateSystem( getCoordinateSystem() );
+        union = JTSAdapter.wrap( jtsUnion, getCoordinateSystem() );
       }
     }
     catch( final GM_Exception e )
@@ -417,7 +412,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    * The "intersection" operation shall return the set theoretic intersection of this <tt>GM_Object</tt> and the passed
    * <tt>GM_Object</tt>.
    * <p>
-   * 
+   *
    * @param that
    *          the GM_Object to intersect with
    * @return intersection or null, if it is empty (or computation failed)
@@ -436,8 +431,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
 
       if( !jtsIntersection.isEmpty() )
       {
-        intersection = JTSAdapter.wrap( jtsIntersection );
-        ((GM_Object_Impl) intersection).setCoordinateSystem( getCoordinateSystem() );
+        intersection = JTSAdapter.wrap( jtsIntersection, getCoordinateSystem() );
       }
     }
     catch( final GM_Exception e )
@@ -456,7 +450,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
   /**
    * The "difference" operation shall return the set theoretic difference of this GM_Object and the passed GM_Object.
    * <p>
-   * 
+   *
    * @param that
    *          the GM_Object to calculate the difference with
    * @return difference or null, if it is empty (or computation failed)
@@ -476,8 +470,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
 
       if( !jtsDifference.isEmpty() )
       {
-        difference = JTSAdapter.wrap( jtsDifference );
-        ((GM_Object_Impl) difference).setCoordinateSystem( getCoordinateSystem() );
+        difference = JTSAdapter.wrap( jtsDifference, getCoordinateSystem() );
       }
     }
     catch( final GM_Exception e )
@@ -495,7 +488,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
   /**
    * Compares the GM_Object to be equal to another GM_Object.
    * <p>
-   * 
+   *
    * @param that
    *          the GM_Object to test for equality
    * @return true if the objects are equal, else false
@@ -553,10 +546,9 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
     }
     catch( final GM_Exception e )
     {
-      Debug.debugException( e, "" );
+      e.printStackTrace();
       return false;
     }
-
   }
 
   /**

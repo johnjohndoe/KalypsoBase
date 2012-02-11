@@ -38,7 +38,6 @@ package org.kalypsodeegree_impl.graphics.sld;
 import org.kalypsodeegree.graphics.sld.Graphic;
 import org.kalypsodeegree.graphics.sld.GraphicFill;
 import org.kalypsodeegree.xml.Marshallable;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * The GraphicFill element both indicates that a stipple-fill repeated graphic will be used and specifies the fill
@@ -88,14 +87,10 @@ public class GraphicFill_Impl implements GraphicFill, Marshallable
   @Override
   public String exportAsXML( )
   {
-    Debug.debugMethodBegin();
-
     final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<GraphicFill>" );
     sb.append( ((Marshallable) m_graphic).exportAsXML() );
     sb.append( "</GraphicFill>" );
-
-    Debug.debugMethodEnd();
     return sb.toString();
   }
 

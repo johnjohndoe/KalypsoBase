@@ -46,6 +46,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -622,7 +623,7 @@ public final class SLDFactory
   {
     // optional: <CssParameter>s
     final ElementList nl = XMLTools.getChildElementsByName( "CssParameter", CommonNamespaces.SLDNS.toString(), element );//$NON-NLS-1$
-    final HashMap<String, CssParameter> cssParams = new HashMap<String, CssParameter>( nl.getLength() );
+    final Map<String, CssParameter> cssParams = new HashMap<String, CssParameter>( nl.getLength() );
 
     for( int i = 0; i < nl.getLength(); i++ )
     {

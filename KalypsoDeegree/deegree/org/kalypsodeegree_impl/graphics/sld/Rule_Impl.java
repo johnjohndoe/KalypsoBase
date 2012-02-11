@@ -42,7 +42,6 @@ import org.kalypsodeegree.graphics.sld.LegendGraphic;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.xml.Marshallable;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * A rule is used to attach a condition to and group the individual symbolizers used for rendering. The Title and
@@ -376,8 +375,6 @@ public class Rule_Impl implements Rule, Marshallable
   @Override
   public String exportAsXML( )
   {
-    Debug.debugMethodBegin();
-
     final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<Rule>" );
     if( m_name != null && !m_name.equals( "" ) )
@@ -415,8 +412,6 @@ public class Rule_Impl implements Rule, Marshallable
     }
     sb.append( "</Rule>" );
 
-    Debug.debugMethodEnd();
     return sb.toString();
   }
-
 }

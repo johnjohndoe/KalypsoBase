@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -44,11 +44,10 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * Helper class for ocnversion beetween GM_Object and awt-Shapes.
- * 
+ *
  * @author Gernot Belger
  */
 public final class SldAwtUtilities
@@ -63,7 +62,7 @@ public final class SldAwtUtilities
    * <p>
    * For perfomance reasons, points which cannot be distuingished on the screen are filtered out.
    * </p>
-   * 
+   *
    * @param strokeWidth
    *          : Width in screen units: any adjacent points which are within this distance are filtered out.
    */
@@ -153,7 +152,7 @@ public final class SldAwtUtilities
     }
     catch( final Exception e )
     {
-      Debug.debugException( e, "" );
+      e.printStackTrace();
     }
 
     return null;

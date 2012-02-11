@@ -60,7 +60,7 @@ public class NamedFeatureHelper
 
   /**
    * Gets the 'gml:name' property which all (normal) feature have. Handles the undbounded and restricted case.
-   * 
+   *
    * @return null, if the given feature has no 'gml:name' property. The empty string if the property is not set.
    */
   public static String getName( final Feature namedFeature )
@@ -76,7 +76,7 @@ public class NamedFeatureHelper
       return (String) value;
     else if( value instanceof List )
     {
-      final List nameList = (List) value;
+      final List< ? > nameList = (List< ? >) value;
       if( nameList == null || nameList.isEmpty() )
         return "";
 

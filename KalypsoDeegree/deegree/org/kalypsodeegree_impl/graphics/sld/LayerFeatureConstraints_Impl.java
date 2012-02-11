@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -36,11 +36,11 @@
 package org.kalypsodeegree_impl.graphics.sld;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.kalypsodeegree.graphics.sld.FeatureTypeConstraint;
 import org.kalypsodeegree.graphics.sld.LayerFeatureConstraints;
 import org.kalypsodeegree.xml.Marshallable;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * The LayerFeatureConstraints element is optional in a NamedLayer and allows the user to specify constraints on what
@@ -49,38 +49,37 @@ import org.kalypsodeegree_impl.tools.Debug;
  * <p>
  * ----------------------------------------------------------------------
  * </p>
- * 
+ *
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @version $Revision$ $Date$
  */
 public class LayerFeatureConstraints_Impl implements LayerFeatureConstraints, Marshallable
 {
-  private ArrayList m_featureTypeConstraint = null;
+  private final List<FeatureTypeConstraint> m_featureTypeConstraint = new ArrayList<>();
 
   /**
    * constructor initializing the class with the <LayerFeatureConstraints>
    */
   LayerFeatureConstraints_Impl( final FeatureTypeConstraint[] featureTypeConstraint )
   {
-    m_featureTypeConstraint = new ArrayList();
     setFeatureTypeConstraint( featureTypeConstraint );
   }
 
   /**
    * A FeatureTypeConstraint element is used to identify a feature type by a well-known name, using the FeatureTypeName
    * element.
-   * 
+   *
    * @return the FeatureTypeConstraints as Array
    */
   @Override
   public FeatureTypeConstraint[] getFeatureTypeConstraint( )
   {
-    return (FeatureTypeConstraint[]) m_featureTypeConstraint.toArray( new FeatureTypeConstraint[m_featureTypeConstraint.size()] );
+    return m_featureTypeConstraint.toArray( new FeatureTypeConstraint[m_featureTypeConstraint.size()] );
   }
 
   /**
    * sets the <FeatureTypeConstraint>
-   * 
+   *
    * @param featureTypeConstraint
    *          the <FeatureTypeConstraint>
    */
@@ -100,7 +99,7 @@ public class LayerFeatureConstraints_Impl implements LayerFeatureConstraints, Ma
 
   /**
    * adds the <FeatureTypeConstraint>
-   * 
+   *
    * @param featureTypeConstraint
    *          the <FeatureTypeConstraint>
    */
@@ -112,7 +111,7 @@ public class LayerFeatureConstraints_Impl implements LayerFeatureConstraints, Ma
 
   /**
    * Removes a FeatureTypeConstraint.
-   * 
+   *
    * @param featureTypeConstraint
    *          the <FeatureTypeConstraint>
    */
@@ -124,7 +123,7 @@ public class LayerFeatureConstraints_Impl implements LayerFeatureConstraints, Ma
 
   /**
    * returns the LayerFeatureConstraints as String.
-   * 
+   *
    * @return the LayerFeatureConstraints as String
    */
   @Override
@@ -138,14 +137,12 @@ public class LayerFeatureConstraints_Impl implements LayerFeatureConstraints, Ma
 
   /**
    * exports the content of the Font as XML formated String
-   * 
+   *
    * @return xml representation of the Font
    */
   @Override
   public String exportAsXML( )
   {
-    Debug.debugMethodBegin();
-
     final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<LayerFeatureConstraints>" );
     for( int i = 0; i < m_featureTypeConstraint.size(); i++ )
@@ -154,7 +151,6 @@ public class LayerFeatureConstraints_Impl implements LayerFeatureConstraints, Ma
     }
     sb.append( "</LayerFeatureConstraints>" );
 
-    Debug.debugMethodEnd();
     return sb.toString();
   }
 

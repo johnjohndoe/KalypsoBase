@@ -51,7 +51,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.Marshallable;
 import org.kalypsodeegree_impl.graphics.sld.awt.FillPainter;
 import org.kalypsodeegree_impl.graphics.sld.awt.StrokePainter;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * A Mark takes a "shape" and applies coloring to it. The shape can be derived either from a well-known name (such as
@@ -566,8 +565,6 @@ public class Mark_Impl implements Mark, Marshallable
   @Override
   public String exportAsXML( )
   {
-    Debug.debugMethodBegin();
-
     final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<Mark>" );
     if( m_wellKnownName != null && !m_wellKnownName.equals( "" ) )
@@ -582,7 +579,6 @@ public class Mark_Impl implements Mark, Marshallable
 
     sb.append( "</Mark>" );
 
-    Debug.debugMethodEnd();
     return sb.toString();
   }
 }

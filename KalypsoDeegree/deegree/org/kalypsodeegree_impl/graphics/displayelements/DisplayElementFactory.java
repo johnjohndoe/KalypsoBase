@@ -78,7 +78,6 @@ import org.kalypsodeegree_impl.graphics.sld.PointSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.PolygonColorMap;
 import org.kalypsodeegree_impl.graphics.sld.PolygonSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
-import org.kalypsodeegree_impl.tools.Debug;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -243,8 +242,6 @@ public final class DisplayElementFactory
    */
   public static DisplayElement buildDisplayElement( final Object o ) throws IncompatibleGeometryTypeException
   {
-    Debug.debugMethodBegin( "DisplayElementFactory", "buildDisplayElement(Object)" );
-
     DisplayElement displayElement = null;
 
     final Feature feature = (Feature) o;
@@ -278,7 +275,6 @@ public final class DisplayElementFactory
       throw new IncompatibleGeometryTypeException( "not a valid geometry type" );
     }
 
-    Debug.debugMethodEnd();
     return displayElement;
   }
 

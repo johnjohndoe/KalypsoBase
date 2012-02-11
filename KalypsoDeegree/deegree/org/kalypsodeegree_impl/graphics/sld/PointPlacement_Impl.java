@@ -40,7 +40,6 @@ import org.kalypsodeegree.graphics.sld.ParameterValueType;
 import org.kalypsodeegree.graphics.sld.PointPlacement;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.Marshallable;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * Incarnation of a sld:PointPlacement-element. For a PointPlacement, the anchor point of the label and a linear
@@ -244,8 +243,6 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
   @Override
   public String exportAsXML( )
   {
-    Debug.debugMethodBegin();
-
     final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<PointPlacement" );
     if( m_auto )
@@ -284,7 +281,6 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
 
     sb.append( "</PointPlacement>" );
 
-    Debug.debugMethodEnd();
     return sb.toString();
   }
 }

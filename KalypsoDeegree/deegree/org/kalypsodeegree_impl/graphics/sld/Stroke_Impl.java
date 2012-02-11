@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -51,7 +51,6 @@ import org.kalypsodeegree.graphics.sld.GraphicStroke;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.Marshallable;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * A Stroke allows a string of line segments (or any linear geometry) to be rendered. There are three basic types of
@@ -75,7 +74,7 @@ import org.kalypsodeegree_impl.tools.Debug;
  * <p>
  * <h1>stroke-arrow-type</h1> An Arrow will be placed on a line or its line segments
  * <h1>stroke-arrow-alignment</h1> where on a line or its line segments the arrow will be placed: start, middle, end
- * 
+ *
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
@@ -109,7 +108,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
   /**
    * Constructs a new <tt>Stroke_Impl<tt>.
    * <p>
-   * 
+   *
    * @param cssParams
    *          keys are <tt>Strings<tt> (see above), values are <tt>CssParameters</tt>
    */
@@ -352,7 +351,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
   /**
    * The GraphicStroke element both indicates that a repeated-linear-graphic stroke type will be used.
    * <p>
-   * 
+   *
    * @returns the underlying <tt>GraphicStroke</tt> instance (may be null)
    */
   @Override
@@ -363,7 +362,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
 
   /**
    * The GraphicStroke element both indicates that a repeated-linear-graphic stroke type will be used.
-   * 
+   *
    * @param graphicStroke
    *          the graphicStroke element
    *          <p>
@@ -381,7 +380,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    * red is encoded as #ff0000 (with no quotation marks). The default color is defined to be black (#000000) in the
    * context of the LineSymbolizer, if the stroke CssParameter element is absent.
    * <p>
-   * 
+   *
    * @param feature
    *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
@@ -437,7 +436,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    * and 1.0 representing completely opaque, with a linear scale of translucency for intermediate values. For example,
    * 0.65 would represent 65% opacity. The default value is 1.0 (opaque).
    * <p>
-   * 
+   *
    * @param feature
    *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
@@ -498,7 +497,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    * default is 1.0. Fractional numbers are allowed (with a system-dependent interpretation) but negative numbers are
    * not.
    * <p>
-   * 
+   *
    * @param feature
    *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
@@ -558,7 +557,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    * (between line segments). The values are represented as content strings. The allowed values for line join are mitre,
    * round, and bevel.
    * <p>
-   * 
+   *
    * @param feature
    *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
@@ -625,7 +624,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    * two ends of the line string). The values are represented as content strings. The allowed values for line cap are
    * butt, round, and square. The default values are system-dependent.
    * <p>
-   * 
+   *
    * @param feature
    *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
@@ -696,7 +695,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    * system-dependent interpretation (usually depending on whether antialiasing is being used). The default is to draw
    * an unbroken line.
    * <p>
-   * 
+   *
    * @param feature
    *          the encoded pattern
    * @throws FilterEvaluationException
@@ -773,7 +772,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    * The stroke-dashoffset CssParameter element specifies the distance as a float into the stroke-dasharray pattern at
    * which to start drawing.
    * <p>
-   * 
+   *
    * @param feature
    *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
@@ -812,7 +811,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
    * The stroke-dashoffset CssParameter element specifies the distance as a float into the stroke-dasharray pattern at
    * which to start drawing.
    * <p>
-   * 
+   *
    * @param dashOffset
    *          the dashOffset to be set for the Stroke
    */
@@ -823,20 +822,17 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
       dashOffset = 0;
     smplDashOffset = dashOffset;
     final CssParameter strokeDashOff = StyleFactory.createCssParameter( CSS_DASHOFFSET, "" + dashOffset );
-    final Map<String, CssParameter> cssParams = getCssParameters();
-    cssParams.put( CSS_DASHOFFSET, strokeDashOff );
+    addCssParameter( CSS_DASHOFFSET, strokeDashOff );
   }
 
   /**
    * exports the content of the Stroke as XML formated String
-   * 
+   *
    * @return xml representation of the Stroke
    */
   @Override
   public String exportAsXML( )
   {
-    Debug.debugMethodBegin();
-
     final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<Stroke>" );
 
@@ -853,8 +849,6 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
 
     sb.append( "</Stroke>" );
 
-    Debug.debugMethodEnd();
     return sb.toString();
   }
-
 }

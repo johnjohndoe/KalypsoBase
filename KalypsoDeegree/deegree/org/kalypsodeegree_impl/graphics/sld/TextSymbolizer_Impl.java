@@ -45,7 +45,6 @@ import org.kalypsodeegree.graphics.sld.ParameterValueType;
 import org.kalypsodeegree.graphics.sld.TextSymbolizer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.Marshallable;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * Used to render a text label, according to the parameters. A missing Geometry, Label, Font, or LabelPlacement element
@@ -217,8 +216,6 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
   @Override
   public String exportAsXML( )
   {
-    Debug.debugMethodBegin();
-
     final StringBuffer sb = new StringBuffer( 1000 );
 
     sb.append( "<TextSymbolizer" );
@@ -260,14 +257,9 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
     }
     sb.append( "</TextSymbolizer>" );
 
-    Debug.debugMethodEnd();
     return sb.toString();
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl#paint(org.eclipse.swt.graphics.GC,
-   *      org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
   public void paint( final GC gc, final Feature feature )
   {

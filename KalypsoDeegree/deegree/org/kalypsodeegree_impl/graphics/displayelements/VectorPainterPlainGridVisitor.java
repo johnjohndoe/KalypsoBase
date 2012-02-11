@@ -79,26 +79,6 @@ public class VectorPainterPlainGridVisitor<T extends GM_Curve> implements IPlain
     m_feature = pFeature;
   }
 
-  @SuppressWarnings("unchecked")
-  public VectorPainterPlainGridVisitor( final Graphics gc, final GeoTransform projection, final Feature pFeature, final Map pMapCssParams )
-  {
-    m_gc = gc;
-    m_projection = projection;
-    m_feature = pFeature;
-    try
-    {
-      m_cssParams = pMapCssParams;
-    }
-    catch( final Exception e )
-    {
-
-    }
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.geometry.IPlainGridVisitor#visit(org.kalypsodeegree.model.geometry.GM_MultiCurve,
-   *      int)
-   */
   @Override
   public boolean visit( final T actualGridNode )
   {

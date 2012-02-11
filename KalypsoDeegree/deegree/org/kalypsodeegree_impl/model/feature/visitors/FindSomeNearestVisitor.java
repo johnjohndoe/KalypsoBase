@@ -65,7 +65,7 @@ public class FindSomeNearestVisitor implements FeatureVisitor
   private GM_Point point = null;
 
   /** the neares features so for */
-  private final SortedMap m_result = new TreeMap();
+  private final SortedMap<Double, Feature> m_result = new TreeMap<Double, Feature>();
 
   /** minimum distance so far */
   private double m_minDist = Double.MAX_VALUE;
@@ -99,7 +99,7 @@ public class FindSomeNearestVisitor implements FeatureVisitor
 
   public Feature[] getResult( )
   {
-    return (Feature[]) m_result.values().toArray( new Feature[m_result.size()] );
+    return m_result.values().toArray( new Feature[m_result.size()] );
   }
 
   private GM_Object getGeometry( final Feature feature )
@@ -142,7 +142,7 @@ public class FindSomeNearestVisitor implements FeatureVisitor
       if( size > m_number )
       {
         m_result.remove( m_result.lastKey() );
-        m_minDist = ((Double) m_result.lastKey()).doubleValue();
+        m_minDist = m_result.lastKey().doubleValue();
       }
     }
     return true;

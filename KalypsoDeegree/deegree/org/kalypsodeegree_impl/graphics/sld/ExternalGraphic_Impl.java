@@ -65,7 +65,6 @@ import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.sld.ExternalGraphic;
 import org.kalypsodeegree.xml.Marshallable;
-import org.kalypsodeegree_impl.tools.Debug;
 import org.kalypsodeegree_impl.tools.NetWorker;
 
 import com.sun.media.jai.codec.MemoryCacheSeekableStream;
@@ -366,8 +365,6 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
   @Override
   public String exportAsXML( )
   {
-    Debug.debugMethodBegin();
-
     final StringBuffer sb = new StringBuffer( 200 );
     sb.append( "<ExternalGraphic>" );
     sb.append( "<OnlineResource xmlns:xlink='http://www.w3.org/1999/xlink' " );
@@ -377,13 +374,9 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
     sb.append( "<Format>" ).append( m_format ).append( "</Format>" );
     sb.append( "</ExternalGraphic>" );
 
-    Debug.debugMethodEnd();
     return sb.toString();
   }
 
-  /**
-   * @see org.kalypsodeegree.graphics.sld.ExternalGraphic#getResolver()
-   */
   @Override
   public IUrlResolver2 getResolver( )
   {

@@ -304,6 +304,7 @@ public class StatusCollection extends Feature_Impl implements IStatusCollection
       addToMultiGeoStatus( multiGeoStatus, (IGeoStatus) element );
   }
 
+  @Override
   public final IStatus toStatus( )
   {
     final List<IStatus> children = new ArrayList<IStatus>();

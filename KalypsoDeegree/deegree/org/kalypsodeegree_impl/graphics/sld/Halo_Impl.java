@@ -42,7 +42,6 @@ import org.kalypsodeegree.graphics.sld.ParameterValueType;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.Marshallable;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * Incarnation of a sld:Halo-element. A Halo is a type of Fill that is applied to the backgrounds of font glyphs. The
@@ -214,8 +213,6 @@ public class Halo_Impl implements Halo, Marshallable
   @Override
   public String exportAsXML( )
   {
-    Debug.debugMethodBegin();
-
     final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<Halo>" );
     if( m_radius != null )
@@ -234,8 +231,6 @@ public class Halo_Impl implements Halo, Marshallable
     }
     sb.append( "</Halo>" );
 
-    Debug.debugMethodEnd();
     return sb.toString();
   }
-
 }

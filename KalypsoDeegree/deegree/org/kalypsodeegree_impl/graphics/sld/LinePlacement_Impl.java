@@ -40,7 +40,6 @@ import org.kalypsodeegree.graphics.sld.LinePlacement;
 import org.kalypsodeegree.graphics.sld.ParameterValueType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.Marshallable;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * Incarnation of an sld:LinePlacement-element.
@@ -227,8 +226,6 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
   @Override
   public String exportAsXML( )
   {
-    Debug.debugMethodBegin();
-
     final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<LinePlacement>" );
     if( m_perpendicularOffset != null )
@@ -251,7 +248,6 @@ public class LinePlacement_Impl implements LinePlacement, Marshallable
     }
     sb.append( "</LinePlacement>" );
 
-    Debug.debugMethodEnd();
     return sb.toString();
   }
 }
