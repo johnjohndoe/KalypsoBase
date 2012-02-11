@@ -151,10 +151,9 @@ final public class TriangulationDT
 
   void addTriangle( final int s, final int t, final int u )
   {
-    int lIntTmpRes = 0;
-    lIntTmpRes += addEdge( s, t );
-    lIntTmpRes += addEdge( t, u );
-    lIntTmpRes += addEdge( u, s );
+    addEdge( s, t );
+    addEdge( t, u );
+    addEdge( u, s );
     addTriangleToList( s, t, u );
   }
 
