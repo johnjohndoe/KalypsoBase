@@ -72,29 +72,18 @@ public class MsgGetStringTranslator implements ITranslator, IExecutableExtension
 
   private List<Element> m_configuration;
 
-  /**
-   * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
-   *      java.lang.String, java.lang.Object)
-   */
   @Override
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
     m_id = config.getAttribute( "id" ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.contribs.java.lang.I10nTranslator#getId()
-   */
   @Override
   public String getId( )
   {
     return m_id;
   }
 
-  /**
-   * @see org.kalypso.commons.i18n.ITranslator#configure(org.kalypso.commons.i18n.ITranslatorContext, java.util.List)
-   */
-  @SuppressWarnings("unchecked")
   @Override
   public void configure( final ITranslatorContext context, final List<Element> configuration )
   {
@@ -121,9 +110,6 @@ public class MsgGetStringTranslator implements ITranslator, IExecutableExtension
 
   }
 
-  /**
-   * @see org.kalypso.contribs.java.lang.I10nTranslator#getConfiguration()
-   */
   @Override
   public List<Element> getConfiguration( )
   {

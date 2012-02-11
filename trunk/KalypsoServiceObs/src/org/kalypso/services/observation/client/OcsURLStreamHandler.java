@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.observation.client;
 
@@ -47,6 +47,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.logging.Logger;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -67,7 +68,7 @@ import org.osgi.service.url.AbstractURLStreamHandlerService;
  * <p>
  * It extends the <code>AbstractURLStreamHandlerService</code> of the OSGI-Platform in order to be registered as a
  * URLStreamHandler since Eclipse manages the handlers this way.
- * 
+ *
  * @author schlienger
  */
 public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
@@ -131,10 +132,9 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
       // create a local temp file for storing the zml
       file = FileUtilities.createNewUniqueFile( "zml", FileUtilities.TMP_DIR ); //$NON-NLS-1$
       file.deleteOnExit();
-      // TODO: dirty.... the stream to file never gets closed
 
       ins = data.getDataHandler().getInputStream();
-      FileUtilities.makeFileFromStream( false, file, ins );
+      FileUtils.copyInputStreamToFile( ins, file );
       ins.close();
 
       srv.clearTempData( data.getId() );
@@ -169,7 +169,7 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
 
   /**
    * Helper that tries to load the observation from its optional request
-   * 
+   *
    * @param file
    *          temp file where to store the observation locally. Can be null, in that case a temp file is created
    */
@@ -186,7 +186,7 @@ public class OcsURLStreamHandler extends AbstractURLStreamHandlerService
     // a request, let create a default observation according to it.
     final IObservation obs = RequestFactory.createDefaultObservation( href );
 
-    m_logger.info( Messages.getString( "org.kalypso.services.observation.client.OcsURLStreamHandler.9", obs.getName() ) ); //$NON-NLS-1$ 
+    m_logger.info( Messages.getString( "org.kalypso.services.observation.client.OcsURLStreamHandler.9", obs.getName() ) ); //$NON-NLS-1$
 
     ZmlFactory.writeToFile( obs, file );
 

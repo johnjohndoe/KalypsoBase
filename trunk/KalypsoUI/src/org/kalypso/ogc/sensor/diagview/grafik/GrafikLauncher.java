@@ -40,8 +40,10 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview.grafik;
 
-import java.awt.Color;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -78,6 +80,7 @@ import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.util.DoubleComparator;
@@ -106,7 +109,7 @@ import org.xml.sax.InputSource;
 
 /**
  * GrafikLauncher
- * 
+ *
  * @author schlienger
  */
 public class GrafikLauncher
@@ -136,7 +139,7 @@ public class GrafikLauncher
   /**
    * Opens the grafik tool using an observation template file. Note: this method should be called using a
    * WorkspaceModifyOperation.
-   * 
+   *
    * @return the created tpl file
    * @throws SensorException
    */
@@ -189,7 +192,7 @@ public class GrafikLauncher
   /**
    * Opens the grafik tool using an observation template xml object. Note: this method should be called using a
    * WorkspaceModifyOperation.
-   * 
+   *
    * @param fileName
    *          the filename to use for the grafik template file
    * @param odt
@@ -251,12 +254,12 @@ public class GrafikLauncher
 
   /**
    * Starts the grafik.exe with an eclipse IFile tpl-File.
-   * 
+   *
    * @param tplFile
    *          the Grafik-Vorlage
    * @throws SensorException
    */
-  public static IStatus startGrafikTPL( final IFile tplFile, final List sync ) throws SensorException
+  public static IStatus startGrafikTPL( final IFile tplFile, final List<RememberForSync> sync ) throws SensorException
   {
     final File file = ResourceUtilities.makeFileFromPath( tplFile.getFullPath() );
 
@@ -266,7 +269,7 @@ public class GrafikLauncher
   /**
    * Starts the grafik with a java.lang.File tpl-File.
    */
-  private static IStatus startGrafikTPL( final File tplFile, final List< ? > sync ) throws SensorException
+  private static IStatus startGrafikTPL( final File tplFile, final List<RememberForSync> sync ) throws SensorException
   {
     try
     {
@@ -292,10 +295,8 @@ public class GrafikLauncher
 
         private void synchroniseZml( )
         {
-          for( final Object element : sync )
+          for( final RememberForSync rfs : sync )
           {
-            final RememberForSync rfs = (RememberForSync) element;
-
             try
             {
               rfs.synchronizeZml();
@@ -329,7 +330,7 @@ public class GrafikLauncher
   public static File getGrafikProgramPath( ) throws IOException
   {
     // create the grafik exe
-    final File grafikExe = FileUtilities.makeFileFromStream( false, "grafik", ".exe", GrafikLauncher.class.getResourceAsStream( "/org/kalypso/ui/resources/exe/grafik.exe_" ), true ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    final File grafikExe = makeFileFromStream( "grafik", ".exe", GrafikLauncher.class.getResourceAsStream( "/org/kalypso/ui/resources/exe/grafik.exe_" ), true ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     grafikExe.deleteOnExit();
 
     // also create the help file if not already existing
@@ -337,7 +338,7 @@ public class GrafikLauncher
     grafikHelp.deleteOnExit();
     if( !grafikHelp.exists() )
     {
-      final File tmp = FileUtilities.makeFileFromStream( false, "grafik", ".hlp", GrafikLauncher.class.getResourceAsStream( "/org/kalypso/ui/resources/exe/grafik.hlp" ), true ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      final File tmp = makeFileFromStream( "grafik", ".hlp", GrafikLauncher.class.getResourceAsStream( "/org/kalypso/ui/resources/exe/grafik.hlp" ), true ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
       // the help must have the same name as the exe (except file-extension)
       FileUtils.copyFile( tmp, grafikHelp );
@@ -345,6 +346,79 @@ public class GrafikLauncher
     }
 
     return grafikExe;
+  }
+
+  /**
+   * Creates a new temporary file given its pathName and an InputStream. The content from the InputStream is written
+   * into the file. The file will be deleted after the VM shuts down
+   *
+   * @param charMode
+   * @param prefix
+   *          prefix of file name
+   * @param suffix
+   *          suffix of file name
+   * @param ins
+   *          the input stream, that is the source
+   * @param useCache
+   *          if true tries to use an existing file with these prefix/suffix
+   * @return the newly created file or null if an exception was thrown.
+   * @throws IOException
+   *           problems reading from stream or writing to temp. file
+   */
+  private static File makeFileFromStream( final String prefix, final String suffix, final InputStream ins, final boolean useCache ) throws IOException
+  {
+    if( useCache )
+    {
+      try
+      {
+        final File existingFile = fileExistsInDir( prefix, suffix, System.getProperty( FileUtilities.JAVA_IO_TMPDIR ) );
+        return existingFile;
+      }
+      catch( final FileNotFoundException ignored )
+      {
+        // ignored
+        // ignored.printStackTrace();
+      }
+    }
+
+    final File tmp = File.createTempFile( prefix, suffix );
+    tmp.deleteOnExit();
+
+    final BufferedOutputStream out = new BufferedOutputStream( new FileOutputStream( tmp ) );
+    IOUtils.copy( ins, out );
+
+    return tmp;
+  }
+
+  /**
+   * Looks in the given path if a file with the given prefix and suffix exists. Returns the file in the positive. If
+   * more than one such file is found, returns the first of them.
+   *
+   * @param prefix
+   *          name of the file should begin with this prefix
+   * @param suffix
+   *          name of the file should end with this suffix
+   * @param path
+   * @return the (first) File found
+   * @throws FileNotFoundException
+   *           when file was not found or path does not denote a directory
+   * @see PrefixSuffixFilter
+   */
+  private static File fileExistsInDir( final String prefix, final String suffix, final String path ) throws FileNotFoundException
+  {
+    final File dir = new File( path );
+
+    if( dir.isDirectory() )
+    {
+      final PrefixSuffixFilter filter = new PrefixSuffixFilter( prefix, suffix );
+
+      final File[] files = dir.listFiles( filter );
+
+      if( files.length > 0 )
+        return files[0];
+    }
+
+    throw new FileNotFoundException( Messages.getString( "org.kalypso.commons.java.io.FileUtilities.0", prefix, suffix, path ) ); //$NON-NLS-1$
   }
 
   /**
@@ -524,7 +598,7 @@ public class GrafikLauncher
         {
           final String alarmLevel = mdl.getProperty( element2 );
           final Double value = NumberUtils.parseQuietDouble( alarmLevel );
-          yLines.put( value, new ValueAndColor( element2 + " (" + GRAFIK_NF_W.format( value ) + ")", value.doubleValue(), null ) ); //$NON-NLS-1$ //$NON-NLS-2$
+          yLines.put( value, new ValueAndColor( element2 + " (" + GRAFIK_NF_W.format( value ) + ")", value.doubleValue() ) ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
       catch( final NoSuchElementException e )
@@ -595,22 +669,19 @@ public class GrafikLauncher
 
   /**
    * mini helper class for storing a value and a color
-   * 
+   *
    * @author schlienger
    */
   private final static class ValueAndColor
   {
     final double value;
 
-    final Color color;
-
     final String label;
 
-    public ValueAndColor( final String lbl, final double val, final Color col )
+    public ValueAndColor( final String lbl, final double val )
     {
       label = lbl;
       value = val;
-      color = col;
     }
   }
 
