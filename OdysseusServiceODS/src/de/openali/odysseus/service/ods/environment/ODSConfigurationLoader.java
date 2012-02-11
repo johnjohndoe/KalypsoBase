@@ -22,7 +22,7 @@ import de.openali.odysseus.service.odsimpl.x020.ServiceParametersType;
 /**
  * Class which handles the configurations for the service and the individual scenes; if a scene does not define its own
  * ServiceProvider- and ServiceIdentification-Elements, they are inherited from the global configuration.
- * 
+ *
  * @author Alexander Burtscher
  */
 public class ODSConfigurationLoader
@@ -80,11 +80,11 @@ public class ODSConfigurationLoader
 
   /**
    * initializes (resets) the scenes map and fills it with ODSScene-objects generated from ScenesType references
-   * 
+   *
    * @param scenes
    * @throws ConfigurationException
    */
-  private void createODSScenes( final ScenesType scenes ) throws ConfigurationException
+  private void createODSScenes( final ScenesType scenes )
   {
     m_scenes = new HashMap<String, ChartConfigurationDocument>();
     final SceneType defaultScene = scenes.getDefaultScene();
@@ -98,11 +98,11 @@ public class ODSConfigurationLoader
   /**
    * adds one ODSScene to the Scenes-Map; if a scene does not have its own ServiceProvider and ServiceIdentifier, the
    * ones from the global configuration are used
-   * 
+   *
    * @param sceneRef
    * @throws ConfigurationException
    */
-  private void createODSScene( final SceneType sceneRef ) throws ConfigurationException
+  private void createODSScene( final SceneType sceneRef )
   {
     final String sceneId = sceneRef.getId();
     ChartConfigurationDocument chartConfigDoc = null;
@@ -126,7 +126,7 @@ public class ODSConfigurationLoader
 
   /**
    * rereads the configuration files
-   * 
+   *
    * @throws ConfigurationException
    * @throws IOException
    * @throws XmlException
