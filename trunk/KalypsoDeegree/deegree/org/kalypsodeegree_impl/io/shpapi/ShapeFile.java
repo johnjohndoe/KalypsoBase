@@ -62,8 +62,6 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree_impl.io.rtree.RTree;
-import org.kalypsodeegree_impl.io.rtree.RTreeException;
 import org.kalypsodeegree_impl.io.shpapi.dataprovider.IShapeDataProvider;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
@@ -95,17 +93,10 @@ public class ShapeFile
    */
   private MainFile m_shp = null;
 
-  private RTree m_rti = null;
-
   /*
    * indicates if a dBase-file is associated to the shape-file
    */
   private boolean m_hasDBaseFile = true;
-
-  /*
-   * indicates if an R-tree index is associated to the shape-file
-   */
-  private boolean m_hasRTreeIndex = true;
 
   private Charset m_charset;
 
@@ -147,18 +138,6 @@ public class ShapeFile
 
       e.printStackTrace();
     }
-
-    /*
-     * initialize the RTreeIndex
-     */
-    try
-    {
-      m_rti = new RTree( filePath + ".rti" );
-    }
-    catch( final RTreeException e )
-    {
-      m_hasRTreeIndex = false;
-    }
   }
 
   /**
@@ -172,7 +151,6 @@ public class ShapeFile
 
     // TODO: initialize dbf, rti (at the moment they are created during the call to writeShape)
     m_hasDBaseFile = false;
-    m_hasRTreeIndex = false;
   }
 
   public void close( ) throws IOException
@@ -181,18 +159,6 @@ public class ShapeFile
 
     if( m_dbf != null )
       m_dbf.close();
-
-    if( m_rti != null )
-    {
-      try
-      {
-        m_rti.close();
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-      }
-    }
   }
 
   /**
@@ -201,14 +167,6 @@ public class ShapeFile
   public boolean hasDBaseFile( )
   {
     return m_hasDBaseFile;
-  }
-
-  /**
-   * returns true if an R-tree index is associated to the shape-file <BR>
-   */
-  public boolean hasRTreeIndex( )
-  {
-    return m_hasRTreeIndex;
   }
 
   /**

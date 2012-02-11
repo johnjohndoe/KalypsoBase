@@ -45,7 +45,6 @@ import org.kalypsodeegree.graphics.sld.PointSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.Marshallable;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * Used to render a "graphic" at a point. If a line-string or polygon geometry is used with this symbol, then the
@@ -142,8 +141,6 @@ public class PointSymbolizer_Impl extends Symbolizer_Impl implements PointSymbol
   @Override
   public String exportAsXML( )
   {
-    Debug.debugMethodBegin();
-
     final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<PointSymbolizer" );
 
@@ -166,7 +163,6 @@ public class PointSymbolizer_Impl extends Symbolizer_Impl implements PointSymbol
     }
     sb.append( "</PointSymbolizer>" );
 
-    Debug.debugMethodEnd();
     return sb.toString();
   }
 }

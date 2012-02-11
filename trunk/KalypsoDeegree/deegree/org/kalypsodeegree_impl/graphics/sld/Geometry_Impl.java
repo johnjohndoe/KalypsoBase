@@ -38,7 +38,6 @@ package org.kalypsodeegree_impl.graphics.sld;
 import org.kalypsodeegree.graphics.sld.Geometry;
 import org.kalypsodeegree.xml.Marshallable;
 import org.kalypsodeegree_impl.filterencoding.PropertyName;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * The Geometry element is optional and if it is absent then the default geometry property of the feature type that is
@@ -116,8 +115,6 @@ public class Geometry_Impl implements Geometry, Marshallable
   @Override
   public String exportAsXML( )
   {
-    Debug.debugMethodBegin();
-
     final StringBuffer sb = new StringBuffer( 1000 );
     if( m_propertyName != null && !m_propertyName.equals( "" ) )
     {
@@ -132,7 +129,6 @@ public class Geometry_Impl implements Geometry, Marshallable
     // sb.append( s );
     // }
 
-    Debug.debugMethodEnd();
     return sb.toString();
   }
 }

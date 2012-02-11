@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -53,12 +53,11 @@ import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 import org.kalypsodeegree_impl.graphics.sld.awt.FillPainter;
 import org.kalypsodeegree_impl.graphics.sld.awt.SldAwtUtilities;
 import org.kalypsodeegree_impl.graphics.sld.awt.StrokePainter;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * DisplayElement for handling polygons
  * <p>
- * 
+ *
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  */
@@ -69,7 +68,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
 
   /**
    * Creates a new PolygonDisplayElement_Impl object.
-   * 
+   *
    * @param feature
    * @param geometry
    */
@@ -80,7 +79,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
 
   /**
    * Creates a new PolygonDisplayElement_Impl object.
-   * 
+   *
    * @param feature
    * @param geometry
    * @param symbolizer
@@ -125,11 +124,11 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
     }
     catch( final FilterEvaluationException e )
     {
-      Debug.debugException( e, "FilterEvaluationException caught evaluating an Expression!" );
+      e.printStackTrace();
     }
     catch( final Exception ex )
     {
-      Debug.debugException( ex, "Exception caught evaluating an Expression!" );
+      ex.printStackTrace();
     }
 
     g2.setColor( oColor );

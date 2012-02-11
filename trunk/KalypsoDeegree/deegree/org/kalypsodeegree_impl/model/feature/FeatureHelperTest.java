@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -35,9 +35,8 @@
  */
 package org.kalypsodeegree_impl.model.feature;
 
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -101,11 +100,11 @@ public final class FeatureHelperTest extends TestCase
 
   private void compareByMapping( final Feature sourcefeature, final Feature targetfeature, final Properties mapping )
   {
-    for( final Object element : mapping.entrySet() )
+    final Set<String> keys = mapping.stringPropertyNames();
+    for( final String key : keys )
     {
-      final Map.Entry entry = (Entry) element;
-      final String sourceProp = (String) entry.getKey();
-      final String targetProp = (String) entry.getValue();
+      final String sourceProp = key;
+      final String targetProp = mapping.getProperty( key );
 
       // TODO: was ist mit deep-copy?
 

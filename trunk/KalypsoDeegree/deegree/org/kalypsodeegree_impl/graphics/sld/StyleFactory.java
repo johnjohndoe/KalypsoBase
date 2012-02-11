@@ -38,6 +38,7 @@ package org.kalypsodeegree_impl.graphics.sld;
 import java.awt.Color;
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.TreeMap;
 
 import javax.xml.namespace.QName;
@@ -77,7 +78,7 @@ import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 
 /**
  * An utility class designed to easy creation of style by convinience methods.
- * 
+ *
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  */
 public final class StyleFactory
@@ -88,7 +89,7 @@ public final class StyleFactory
 
   /**
    * creates a <tt>ParameterValueType</tt> instance with a <tt>String</tt> as value
-   * 
+   *
    * @param value
    *          value of the <tt>ParameterValueType</tt>
    * @return the ParameterValueType created
@@ -100,7 +101,7 @@ public final class StyleFactory
 
   /**
    * creates a <tt>ParameterValueType</tt> instance with a <tt>int</tt> as value
-   * 
+   *
    * @param value
    *          value of the <tt>ParameterValueType</tt>
    * @return the ParameterValueType created
@@ -112,7 +113,7 @@ public final class StyleFactory
 
   /**
    * creates a <tt>ParameterValueType</tt> instance with a <tt>String</tt> as value
-   * 
+   *
    * @param value
    *          value of the <tt>ParameterValueType</tt>
    * @return the ParameterValueType created
@@ -124,7 +125,7 @@ public final class StyleFactory
 
   /**
    * creates a <tt>ParameterValueType</tt> instance with an array of <tt>Expression</tt> s as value
-   * 
+   *
    * @param expressions
    * @return the the ParameterValueType created
    */
@@ -135,7 +136,7 @@ public final class StyleFactory
 
   /**
    * creates a <tt>ParameterValueType</tt> instance with an array of <tt>Expression</tt> or <tt>String</tt>s as value
-   * 
+   *
    * @param expressions
    * @return the the ParameterValueType created
    */
@@ -146,7 +147,7 @@ public final class StyleFactory
 
   /**
    * creates a CssParameter with a name and a value
-   * 
+   *
    * @param name
    *          name of the css parameter
    * @param value
@@ -161,7 +162,7 @@ public final class StyleFactory
 
   /**
    * creates a CssParameter with a name and a value
-   * 
+   *
    * @param name
    *          name of the css parameter
    * @param value
@@ -176,7 +177,7 @@ public final class StyleFactory
 
   /**
    * creates a CssParameter with a name and a value
-   * 
+   *
    * @param name
    *          name of the css parameter
    * @param value
@@ -191,7 +192,7 @@ public final class StyleFactory
 
   /**
    * creates a <tt>GraphicStroke</tt> from a <tt>Graphic</tt> object
-   * 
+   *
    * @param graphic
    *          <tt>Graphic</tt object
    * @return the GraphicStroke created
@@ -203,7 +204,7 @@ public final class StyleFactory
 
   /**
    * creates a <tt>GraphicFill</tt> from a <tt>Graphic</tt> object
-   * 
+   *
    * @param graphic
    *          <tt>Graphic</tt object
    * @return the GraphicFill created
@@ -215,7 +216,7 @@ public final class StyleFactory
 
   /**
    * create a default Stroke that black, 1 pixel width, complete opaque, with round linejoin and square line cap
-   * 
+   *
    * @return the Stroke created
    */
   public static Stroke createStroke( )
@@ -225,7 +226,7 @@ public final class StyleFactory
 
   /**
    * create a default stroke with the supplied width
-   * 
+   *
    * @param width
    *          the width of the line
    * @return the stroke created
@@ -237,7 +238,7 @@ public final class StyleFactory
 
   /**
    * Create a default stroke with the supplied color
-   * 
+   *
    * @param color
    *          the color of the line
    * @return the created stroke
@@ -249,7 +250,7 @@ public final class StyleFactory
 
   /**
    * create a stroke with the passed width and color
-   * 
+   *
    * @param color
    *          the color of the line
    * @param width
@@ -263,7 +264,7 @@ public final class StyleFactory
 
   /**
    * create a stroke with color, width, linejoin type and lineCap type.
-   * 
+   *
    * @param color
    *          the color of the line
    * @param width
@@ -281,7 +282,7 @@ public final class StyleFactory
 
   /**
    * create a stroke with color, width, linejoin type and lineCap type.
-   * 
+   *
    * @param color
    *          the color of the line
    * @param width
@@ -326,7 +327,7 @@ public final class StyleFactory
 
   /**
    * create a dashed line of color and width
-   * 
+   *
    * @param color
    *          the color of the line
    * @param width
@@ -367,7 +368,7 @@ public final class StyleFactory
 
   /**
    * create a stroke with color, width and opacity supplied
-   * 
+   *
    * @param color
    *          the color of the line
    * @param width
@@ -383,7 +384,7 @@ public final class StyleFactory
 
   /**
    * create a default fill 50% gray
-   * 
+   *
    * @return the fill created
    */
   public static Fill createFill( )
@@ -393,7 +394,7 @@ public final class StyleFactory
 
   /**
    * create a fill of color
-   * 
+   *
    * @param color
    *          the color of the fill
    * @return the fill created
@@ -405,7 +406,7 @@ public final class StyleFactory
 
   /**
    * create a fill with the supplied color and opacity
-   * 
+   *
    * @param color
    *          the color to fill with
    * @param opacity
@@ -419,7 +420,7 @@ public final class StyleFactory
 
   /**
    * create a fill with color and opacity supplied and uses the graphic fill supplied for the fill
-   * 
+   *
    * @param color
    *          the foreground color
    * @param opacity
@@ -440,7 +441,7 @@ public final class StyleFactory
 
   /**
    * create the named mark
-   * 
+   *
    * @param wellKnownName
    *          the wellknown name of the mark
    * @return the mark created
@@ -452,7 +453,7 @@ public final class StyleFactory
 
   /**
    * create the named mark with the colors etc supplied
-   * 
+   *
    * @param wellKnownName
    *          the well known name of the mark
    * @param fillColor
@@ -472,7 +473,7 @@ public final class StyleFactory
 
   /**
    * create a mark with default fill (50% gray) and the supplied outline
-   * 
+   *
    * @param wellKnownName
    *          the well known name of the mark
    * @param borderColor
@@ -490,7 +491,7 @@ public final class StyleFactory
 
   /**
    * create a mark of the supplied color and a default outline (black)
-   * 
+   *
    * @param wellKnownName
    *          the well known name of the mark
    * @param fillColor
@@ -506,7 +507,7 @@ public final class StyleFactory
 
   /**
    * create a mark with the supplied fill and stroke
-   * 
+   *
    * @param wellKnownName
    *          the well known name of the mark
    * @param fill
@@ -522,7 +523,7 @@ public final class StyleFactory
 
   /**
    * wrapper for stylefactory method
-   * 
+   *
    * @param url
    *          the url of the image
    * @param format
@@ -536,7 +537,7 @@ public final class StyleFactory
 
   /**
    * creates a graphic object
-   * 
+   *
    * @param externalGraphic
    *          an external graphic to use if displayable
    * @param mark
@@ -572,7 +573,7 @@ public final class StyleFactory
 
   /**
    * wrapper round Stylefactory Method
-   * 
+   *
    * @return the default pointplacement
    */
   public static PointPlacement createPointPlacement( )
@@ -582,7 +583,7 @@ public final class StyleFactory
 
   /**
    * wrapper round Stylefactory Method
-   * 
+   *
    * @param anchorX
    *          - the X coordinate
    * @param anchorY
@@ -602,7 +603,7 @@ public final class StyleFactory
 
   /**
    * wrapper round Stylefactory Method
-   * 
+   *
    * @param anchorX
    *          - the X coordinate
    * @param anchorY
@@ -662,7 +663,7 @@ public final class StyleFactory
    * creates a <tt>LinePlacement</tt> with a user defined distance between the labels and the lines. A positive value
    * indicates a position above the line, a negative value indicates a position below. The line width is asumed to be 2
    * pixel and the gap between the labels is set to factor 10 of the label width.
-   * 
+   *
    * @param offset
    *          - the distance between the line and the label
    * @return the LinePlacement created
@@ -680,7 +681,7 @@ public final class StyleFactory
   /**
    * creates a <tt>LinePlacement</tt> with a relative position of the label according to the line the lines. The line
    * width is asumed to be 2 pixel and the gap between the labels is set to factor 10 of the label width.
-   * 
+   *
    * @param position
    *          of the label relative to the line
    * @return the LinePlacement created
@@ -697,7 +698,7 @@ public final class StyleFactory
   /**
    * creates a <tt>LinePlacement</tt> with a user defined distance between the labels and the lines. A positive value
    * indicates a position above the line, a negative value indicates a position below.
-   * 
+   *
    * @param offset
    *          - the distance between the line and the label
    * @param lineWidth
@@ -718,7 +719,7 @@ public final class StyleFactory
   /**
    * creates a <tt>LinePlacement</tt> with a user defined distance between the labels and the lines. A positive value
    * indicates a position above the line, a negative value indicates a position below.
-   * 
+   *
    * @param position
    *          - relative position of the label to the line
    * @param lineWidth
@@ -738,7 +739,7 @@ public final class StyleFactory
 
   /**
    * creates a label placement that is orientated on a line
-   * 
+   *
    * @param linePlacement
    *          description of the line where the lable will be orientated on
    * @return created LabelPlacement
@@ -750,7 +751,7 @@ public final class StyleFactory
 
   /**
    * creates a label placement that is orientated on a point
-   * 
+   *
    * @param pointPlacement
    *          description of the point where the lable will be orientated on
    * @return created LabelPlacement
@@ -762,7 +763,7 @@ public final class StyleFactory
 
   /**
    * create a geotools font object from a java font
-   * 
+   *
    * @param font
    *          - the font to be converted
    * @return - the deegree sld font
@@ -774,7 +775,7 @@ public final class StyleFactory
 
   /**
    * create font of supplied family and size
-   * 
+   *
    * @param fontFamily
    *          - the font family
    * @param fontSize
@@ -788,7 +789,7 @@ public final class StyleFactory
 
   /**
    * create font of supplied family, size and weight/style
-   * 
+   *
    * @param fontFamily
    *          - the font family
    * @param italic
@@ -801,7 +802,7 @@ public final class StyleFactory
    */
   public static Font createFont( final String fontFamily, final boolean italic, final boolean bold, final double fontSize )
   {
-    final HashMap<String, CssParameter> cssParams = new HashMap<String, CssParameter>();
+    final Map<String, CssParameter> cssParams = new HashMap<String, CssParameter>();
 
     cssParams.put( "font-family", createCssParameter( "font-family", fontFamily ) );
     cssParams.put( "font-size", createCssParameter( "font-size", "" + fontSize ) );
@@ -827,7 +828,7 @@ public final class StyleFactory
 
   /**
    * wrapper round StyleFactory method to create default halo
-   * 
+   *
    * @return the new halo
    */
   public static Halo createHalo( )
@@ -837,7 +838,7 @@ public final class StyleFactory
 
   /**
    * wrapper round StyleFactory method to create halo
-   * 
+   *
    * @param color
    *          - the color of the halo
    * @param radius
@@ -851,7 +852,7 @@ public final class StyleFactory
 
   /**
    * wrapper round StyleFactory method to create halo
-   * 
+   *
    * @param fillColor
    *          - the fill color of the halo
    * @param opacity
@@ -871,7 +872,7 @@ public final class StyleFactory
 
   /**
    * wrapper round StyleFactory method to create halo
-   * 
+   *
    * @param fill
    *          - the fill of the halo
    * @param stroke
@@ -891,7 +892,7 @@ public final class StyleFactory
 
   /**
    * create a default line symboliser
-   * 
+   *
    * @return the new line symbolizer
    */
   public static LineSymbolizer createLineSymbolizer( )
@@ -901,7 +902,7 @@ public final class StyleFactory
 
   /**
    * create a new line symbolizer
-   * 
+   *
    * @param width
    *          the width of the line
    * @return the new line symbolizer
@@ -913,7 +914,7 @@ public final class StyleFactory
 
   /**
    * create a LineSymbolizer
-   * 
+   *
    * @param color
    *          - the color of the line
    * @return the new line symbolizer
@@ -925,7 +926,7 @@ public final class StyleFactory
 
   /**
    * create a LineSymbolizer
-   * 
+   *
    * @param color
    *          - the color of the line
    * @param width
@@ -939,7 +940,7 @@ public final class StyleFactory
 
   /**
    * create a LineSymbolizer
-   * 
+   *
    * @param color
    *          - the color of the line
    * @param width
@@ -955,7 +956,7 @@ public final class StyleFactory
 
   /**
    * create a LineSymbolizer
-   * 
+   *
    * @param stroke
    *          - the stroke to be used to draw the line
    * @return the new line symbolizer
@@ -967,7 +968,7 @@ public final class StyleFactory
 
   /**
    * create a LineSymbolizer
-   * 
+   *
    * @param stroke
    *          - the stroke to be used to draw the line
    * @param geometryPropertyName
@@ -982,7 +983,7 @@ public final class StyleFactory
 
   /**
    * create a default polygon symbolizer
-   * 
+   *
    * @return the new polygon symbolizer
    */
   public static PolygonSymbolizer createPolygonSymbolizer( )
@@ -992,7 +993,7 @@ public final class StyleFactory
 
   /**
    * create a polygon symbolizer
-   * 
+   *
    * @param fillColor
    *          - the color to fill the polygon
    * @return the new polygon symbolizer
@@ -1004,7 +1005,7 @@ public final class StyleFactory
 
   /**
    * create a polygon symbolizer
-   * 
+   *
    * @param fillColor
    *          - the color to fill the polygon
    * @param borderColor
@@ -1020,7 +1021,7 @@ public final class StyleFactory
 
   /**
    * create a polygon symbolizer
-   * 
+   *
    * @param borderColor
    *          - the outline color of the polygon
    * @param borderWidth
@@ -1035,7 +1036,7 @@ public final class StyleFactory
 
   /**
    * create a polygon symbolizer
-   * 
+   *
    * @param stroke
    *          - the stroke to use to outline the polygon
    * @param fill
@@ -1049,7 +1050,7 @@ public final class StyleFactory
 
   /**
    * create a polygon symbolizer
-   * 
+   *
    * @param stroke
    *          - the stroke to use to outline the polygon
    * @param fill
@@ -1066,7 +1067,7 @@ public final class StyleFactory
 
   /**
    * create a default raster symbolizer with one colorMap entry for noData values
-   * 
+   *
    * @return the new raster symbolizer
    */
   public static RasterSymbolizer createRasterSymbolizer( )
@@ -1079,7 +1080,7 @@ public final class StyleFactory
 
   /**
    * create a default point symbolizer
-   * 
+   *
    * @return the new point symbolizer
    */
   public static PointSymbolizer createPointSymbolizer( final PropertyName propertyName )
@@ -1096,7 +1097,7 @@ public final class StyleFactory
 
   /**
    * create a default point symbolizer
-   * 
+   *
    * @return the new point symbolizer
    */
   public static PointSymbolizer createPointSymbolizer( )
@@ -1107,7 +1108,7 @@ public final class StyleFactory
 
   /**
    * create a point symbolizer
-   * 
+   *
    * @param graphic
    *          - the graphic object to draw at the point
    * @return the new point symbolizer
@@ -1119,7 +1120,7 @@ public final class StyleFactory
 
   /**
    * create a point symbolizer
-   * 
+   *
    * @param graphic
    *          - the graphic object to draw at the point
    * @param geometryPropertyName
@@ -1134,7 +1135,7 @@ public final class StyleFactory
 
   /**
    * create a textsymbolizer
-   * 
+   *
    * @param color
    *          the color of the text
    * @param font
@@ -1153,7 +1154,7 @@ public final class StyleFactory
 
   /**
    * create a textsymbolizer
-   * 
+   *
    * @param geometryPropertyName
    *          geometry assigned to the TextSymbolizer
    * @param attribute
@@ -1170,7 +1171,7 @@ public final class StyleFactory
 
   /**
    * create a textsymbolizer
-   * 
+   *
    * @param geometryPropertyName
    *          geometry assigned to the TextSymbolizer
    * @param attribute
@@ -1198,7 +1199,7 @@ public final class StyleFactory
 
   /**
    * create a textsymbolizer
-   * 
+   *
    * @param geometry
    *          geometry assigned to the TextSymbolizer
    * @param label
@@ -1224,7 +1225,7 @@ public final class StyleFactory
 
   /**
    * create a simple styling rule
-   * 
+   *
    * @param symbolizer
    *          - the symbolizer to use
    * @return the new rule
@@ -1236,7 +1237,7 @@ public final class StyleFactory
 
   /**
    * reate a simple styling rule
-   * 
+   *
    * @param symbolizers
    *          - an array of symbolizers to use
    * @return the new rule
@@ -1248,7 +1249,7 @@ public final class StyleFactory
 
   /**
    * create a simple styling rule, see the SLD Spec for more details of scaleDenominators
-   * 
+   *
    * @param symbolizer
    *          - the symbolizer to use
    * @param minScaleDenominator
@@ -1264,7 +1265,7 @@ public final class StyleFactory
 
   /**
    * create a simple styling rule, see the SLD Spec for more details of scaleDenominators
-   * 
+   *
    * @param symbolizers
    *          - an array of symbolizers to use
    * @param minScaleDenominator
@@ -1280,7 +1281,7 @@ public final class StyleFactory
 
   /**
    * create a simple styling rule, see the SLD Spec for more details of scaleDenominators
-   * 
+   *
    * @param symbolizers
    *          - an array of symbolizers to use
    * @param name
@@ -1302,7 +1303,7 @@ public final class StyleFactory
 
   /**
    * create a complex styling rule, see the SLD Spec for more details of scaleDenominators
-   * 
+   *
    * @param symbolizers
    *          - an array of symbolizers to use
    * @param name
@@ -1328,7 +1329,7 @@ public final class StyleFactory
 
   /**
    * create a Feature type styler
-   * 
+   *
    * @param symbolizer
    *          - the symbolizer to use
    * @return the new feature type styler
@@ -1341,7 +1342,7 @@ public final class StyleFactory
 
   /**
    * create a Feature type styler
-   * 
+   *
    * @param symbolizer
    *          - the symbolizer to use
    * @return the new feature type styler
@@ -1353,7 +1354,7 @@ public final class StyleFactory
 
   /**
    * create a Feature type styler see the SLD Spec for more details of scaleDenominators
-   * 
+   *
    * @param symbolizer
    *          - the symbolizer to use
    * @param minScaleDenominator
@@ -1369,7 +1370,7 @@ public final class StyleFactory
 
   /**
    * create a Feature type styler see the SLD Spec for more details of scaleDenominators
-   * 
+   *
    * @param symbolizers
    *          - an array of symbolizers to use
    * @param minScaleDenominator
@@ -1385,7 +1386,7 @@ public final class StyleFactory
 
   /**
    * create a Feature type styler
-   * 
+   *
    * @param featureTypeStyleName
    *          - name for the feature type styler
    * @param symbolizer
@@ -1399,7 +1400,7 @@ public final class StyleFactory
 
   /**
    * create a Feature type styler
-   * 
+   *
    * @param featureTypeStyleName
    *          - name for the feature type styler
    * @param symbolizers
@@ -1413,7 +1414,7 @@ public final class StyleFactory
 
   /**
    * create a Feature type styler see the SLD Spec for more details of scaleDenominators
-   * 
+   *
    * @param featureTypeStyleName
    *          - name for the feature type styler
    * @param symbolizer
@@ -1431,7 +1432,7 @@ public final class StyleFactory
 
   /**
    * create a Feature type styler see the SLD Spec for more details of scaleDenominators
-   * 
+   *
    * @param featureTypeStyleName
    *          - name for the feature type styler
    * @param symbolizers
@@ -1451,7 +1452,7 @@ public final class StyleFactory
 
   /**
    * create a Feature type styler
-   * 
+   *
    * @param rule
    *          - rule contained in the featureTypeStyle
    * @return the new feature type styler
@@ -1463,7 +1464,7 @@ public final class StyleFactory
 
   /**
    * create a Feature type styler
-   * 
+   *
    * @param rules
    *          - rules contained in the featureTypeStyle
    * @return the new feature type styler
@@ -1475,7 +1476,7 @@ public final class StyleFactory
 
   /**
    * create a Feature type styler
-   * 
+   *
    * @param featureTypeStyleName
    *          - name for the feature type styler
    * @param rule
@@ -1489,7 +1490,7 @@ public final class StyleFactory
 
   /**
    * create a Feature type styler
-   * 
+   *
    * @param featureTypeStyleName
    *          - name for the feature type styler
    * @param rules
@@ -1503,7 +1504,7 @@ public final class StyleFactory
 
   /**
    * create a Feature type styler
-   * 
+   *
    * @param featureTypeStyleName
    *          - name for the feature type styler
    * @param featureTypeName
@@ -1523,7 +1524,7 @@ public final class StyleFactory
 
   /**
    * create a Feature type styler
-   * 
+   *
    * @param featureTypeStyleName
    *          - name for the feature type styler
    * @param featureTypeName
@@ -1543,7 +1544,7 @@ public final class StyleFactory
 
   /**
    * create a new style
-   * 
+   *
    * @param symbolizer
    *          - the symbolizer to use
    * @return the new style
@@ -1555,7 +1556,7 @@ public final class StyleFactory
 
   /**
    * create a new style with name 'default'
-   * 
+   *
    * @param symbolizer
    *          - the symbolizer to use
    * @param minScaleDenominator
@@ -1571,7 +1572,7 @@ public final class StyleFactory
 
   /**
    * create a new style
-   * 
+   *
    * @param name
    *          - the name of the style
    * @param symbolizer
@@ -1585,7 +1586,7 @@ public final class StyleFactory
 
   /**
    * create a new style
-   * 
+   *
    * @param name
    *          - the name of the style
    * @param symbolizer
@@ -1606,7 +1607,7 @@ public final class StyleFactory
 
   /**
    * create a style
-   * 
+   *
    * @param name
    *          - the name of the style
    * @param featureTypeName
@@ -1627,7 +1628,7 @@ public final class StyleFactory
 
   /**
    * create a new style
-   * 
+   *
    * @param name
    *          - the name of the style
    * @param title
@@ -1645,7 +1646,7 @@ public final class StyleFactory
 
   /**
    * create a new style
-   * 
+   *
    * @param name
    *          - the name of the style
    * @param title
@@ -1663,7 +1664,7 @@ public final class StyleFactory
 
   /**
    * create a new style
-   * 
+   *
    * @param name
    *          - the name of the style
    * @param title
@@ -1681,7 +1682,7 @@ public final class StyleFactory
 
   /**
    * creates a style with name 'defaultPoint' for rendering point geometries
-   * 
+   *
    * @param wellKnownName
    *          the well known name of the mark
    * @param fillColor
@@ -1712,7 +1713,7 @@ public final class StyleFactory
 
   /**
    * creates a style with name 'defaultLine' for rendering line geometries
-   * 
+   *
    * @param color
    *          the line color
    * @param width
@@ -1734,7 +1735,7 @@ public final class StyleFactory
 
   /**
    * creates a style with name 'defaultPolygon' for rendering polygon geometries
-   * 
+   *
    * @param fillColor
    *          - the fill color of the polygon
    * @param fillOpacity
@@ -1925,7 +1926,7 @@ public final class StyleFactory
   /**
    * transforms the color of the request from java.awt.Color to the hexadecimal representation as in an OGC conform
    * WMS-GetMap request (e.g. white == "#ffffff").
-   * 
+   *
    * @return the color as hexadecimal representation
    */
   public static String getColorAsHex( final Color color )
@@ -1944,7 +1945,7 @@ public final class StyleFactory
 
   /**
    * creates a PolygonColorMapEntry
-   * 
+   *
    * @param fillColor
    *          fill color
    * @param strokeColor

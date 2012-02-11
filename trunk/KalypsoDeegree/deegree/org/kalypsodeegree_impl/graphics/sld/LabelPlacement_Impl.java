@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -39,7 +39,6 @@ import org.kalypsodeegree.graphics.sld.LabelPlacement;
 import org.kalypsodeegree.graphics.sld.LinePlacement;
 import org.kalypsodeegree.graphics.sld.PointPlacement;
 import org.kalypsodeegree.xml.Marshallable;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * Used to position a label relative to a point or a line string. For a point, you can specify the anchor point of the
@@ -47,16 +46,16 @@ import org.kalypsodeegree_impl.tools.Debug;
  * line-string placement, you can specify a perpendicular offset (so you can draw a stroke on the line). MORE PARAMETERS
  * ARE PROBABLY NEEDED HERE.
  * <p>
- * 
+ *
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
  */
 public class LabelPlacement_Impl implements LabelPlacement, Marshallable
 {
-  private LinePlacement linePlacement = null;
+  private LinePlacement m_linePlacement = null;
 
-  private PointPlacement pointPlacement = null;
+  private PointPlacement m_pointPlacement = null;
 
   /**
    * constructor initializing the class with the <LabelPlacement>
@@ -77,77 +76,73 @@ public class LabelPlacement_Impl implements LabelPlacement, Marshallable
   /**
    * For a PointPlacement, the anchor point of the label and a linear displacement from the point can be specified, to
    * allow a graphic symbol to be plotted directly at the point. This might be useful to label a city, for example.
-   * 
+   *
    * @return the pointplacement for the label
    */
   @Override
   public PointPlacement getPointPlacement( )
   {
-    return pointPlacement;
+    return m_pointPlacement;
   }
 
   /**
    * sets <PointPlacement>
-   * 
+   *
    * @param pointPlacement
    *          the pointplacement for the label
    */
   @Override
   public void setPointPlacement( final PointPlacement pointPlacement )
   {
-    this.pointPlacement = pointPlacement;
-    linePlacement = null;
+    this.m_pointPlacement = pointPlacement;
+    m_linePlacement = null;
   }
 
   /**
    * For a LinePlacement, a perpendicular offset can be specified, to allow the line itself to be plotted also. This
    * might be useful for labelling a road or a river, for example.
-   * 
+   *
    * @return the lineplacement for the label
    */
   @Override
   public LinePlacement getLinePlacement( )
   {
-    return linePlacement;
+    return m_linePlacement;
   }
 
   /**
    * sets <LinePlacement>
-   * 
+   *
    * @param linePlacement
    *          the lineplacement for the label
    */
   @Override
   public void setLinePlacement( final LinePlacement linePlacement )
   {
-    this.linePlacement = linePlacement;
-    pointPlacement = null;
+    this.m_linePlacement = linePlacement;
+    m_pointPlacement = null;
   }
 
   /**
    * exports the content of the Font as XML formated String
-   * 
+   *
    * @return xml representation of the Font
    */
   @Override
   public String exportAsXML( )
   {
-    Debug.debugMethodBegin();
-
     final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<LabelPlacement>" );
-    if( pointPlacement != null )
+    if( m_pointPlacement != null )
     {
-      sb.append( ((Marshallable) pointPlacement).exportAsXML() );
+      sb.append( ((Marshallable) m_pointPlacement).exportAsXML() );
     }
-    else if( linePlacement != null )
+    else if( m_linePlacement != null )
     {
-      sb.append( ((Marshallable) linePlacement).exportAsXML() );
+      sb.append( ((Marshallable) m_linePlacement).exportAsXML() );
     }
     sb.append( "</LabelPlacement>" );
 
-    Debug.debugMethodEnd();
     return sb.toString();
   }
-
 }

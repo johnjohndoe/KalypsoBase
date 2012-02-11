@@ -39,7 +39,6 @@ import java.util.List;
 import java.util.Stack;
 
 import org.kalypsodeegree.filterencoding.Operation;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * @version $Revision$
@@ -59,8 +58,6 @@ public class FilterTools
    */
   public static Object[] extractFirstBBOX( final ComplexFilter filter ) throws Exception
   {
-    Debug.debugMethodBegin();
-
     // [0]: GM_Envelope, [1]: Filter
     final Object[] objects = new Object[2];
     objects[1] = filter;
@@ -121,7 +118,6 @@ public class FilterTools
       // objects[1] = null;
     }
 
-    Debug.debugMethodEnd();
     return objects;
   }
 }

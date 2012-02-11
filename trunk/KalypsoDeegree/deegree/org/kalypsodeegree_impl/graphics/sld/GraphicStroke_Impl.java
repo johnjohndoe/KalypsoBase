@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -38,7 +38,6 @@ package org.kalypsodeegree_impl.graphics.sld;
 import org.kalypsodeegree.graphics.sld.Graphic;
 import org.kalypsodeegree.graphics.sld.GraphicStroke;
 import org.kalypsodeegree.xml.Marshallable;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * The GraphicStroke element both indicates that a repeated-linear-graphic stroke type will be used.
@@ -51,13 +50,13 @@ import org.kalypsodeegree_impl.tools.Debug;
  * <p>
  * ----------------------------------------------------------------------
  * </p>
- * 
+ *
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @version $Revision$ $Date$
  */
 public class GraphicStroke_Impl implements GraphicStroke, Marshallable
 {
-  private Graphic graphic = null;
+  private Graphic m_graphic = null;
 
   /**
    * constructor initializing the class with the <GraphicStroke>
@@ -71,43 +70,38 @@ public class GraphicStroke_Impl implements GraphicStroke, Marshallable
    * A Graphic is a graphic symbol with an inherent shape, color(s), and possibly size. A graphic can be very informally
    * defined as a little picture and can be of either a raster or vector-graphic source type. The term graphic is used
    * since the term symbol is similar to symbolizer which is used in a different context in SLD.
-   * 
+   *
    * @return graphic
    */
   @Override
   public Graphic getGraphic( )
   {
-    return graphic;
+    return m_graphic;
   }
 
   /**
    * sets <Graphic>
-   * 
+   *
    * @param graphic
    */
   @Override
   public void setGraphic( final Graphic graphic )
   {
-    this.graphic = graphic;
+    this.m_graphic = graphic;
   }
 
   /**
    * exports the content of the GraphicStroke as XML formated String
-   * 
+   *
    * @return xml representation of the GraphicStroke
    */
   @Override
   public String exportAsXML( )
   {
-    Debug.debugMethodBegin();
-
     final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<GraphicStroke>" );
-    sb.append( ((Marshallable) graphic).exportAsXML() );
+    sb.append( ((Marshallable) m_graphic).exportAsXML() );
     sb.append( "</GraphicStroke>" );
-
-    Debug.debugMethodEnd();
     return sb.toString();
   }
-
 }

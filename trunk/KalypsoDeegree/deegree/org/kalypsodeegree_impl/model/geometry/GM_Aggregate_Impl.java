@@ -48,7 +48,6 @@ import org.kalypsodeegree.model.geometry.GM_Boundary;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * default implementierung of the GM_Aggregate interface ------------------------------------------------------------
@@ -204,7 +203,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
     }
     catch( final GM_Exception e )
     {
-      Debug.debugException( e, "" );
+      e.printStackTrace();
     }
 
     invalidate();
@@ -333,7 +332,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
     }
     catch( final Exception e )
     {
-      Debug.debugException( e, "" );
+      e.printStackTrace();
     }
     invalidate();
   }

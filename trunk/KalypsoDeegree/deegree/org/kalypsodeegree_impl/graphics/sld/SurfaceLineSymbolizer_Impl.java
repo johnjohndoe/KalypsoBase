@@ -46,7 +46,6 @@ import org.kalypsodeegree.graphics.sld.LineColorMapEntry;
 import org.kalypsodeegree.graphics.sld.SurfaceLineSymbolizer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.Marshallable;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * Used to render the isolines of triangulated surface geometry.
@@ -164,8 +163,6 @@ public class SurfaceLineSymbolizer_Impl extends Symbolizer_Impl implements Surfa
   @Override
   public String exportAsXML( )
   {
-    Debug.debugMethodBegin();
-
     final StringBuffer sb = new StringBuffer( 1000 );
 
     sb.append( "<SurfaceLineSymbolizer xmlns:sldExt=\"" + SLDFactory.SLDNS_EXT + "\"" );
@@ -190,7 +187,6 @@ public class SurfaceLineSymbolizer_Impl extends Symbolizer_Impl implements Surfa
     }
     sb.append( "</SurfaceLineSymbolizer>" );
 
-    Debug.debugMethodEnd();
     return sb.toString();
   }
 }

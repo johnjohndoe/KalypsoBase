@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -39,7 +39,6 @@ import java.net.URL;
 
 import org.kalypsodeegree.graphics.sld.RemoteOWS;
 import org.kalypsodeegree.xml.Marshallable;
-import org.kalypsodeegree_impl.tools.Debug;
 import org.kalypsodeegree_impl.tools.NetWorker;
 
 /**
@@ -52,19 +51,19 @@ import org.kalypsodeegree_impl.tools.NetWorker;
  * <p>
  * ----------------------------------------------------------------------
  * </p>
- * 
+ *
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  */
 class RemoteOWS_Impl implements RemoteOWS, Marshallable
 {
-  private String service = null;
+  private String m_service = null;
 
-  private URL onlineResource = null;
+  private URL m_onlineResource = null;
 
   /**
    * Creates a new RemoteOWS_Impl object.
-   * 
+   *
    * @param service
    * @param onlineResource
    */
@@ -77,13 +76,13 @@ class RemoteOWS_Impl implements RemoteOWS, Marshallable
   /**
    * type of service that is represented by the remote ows. at the moment <tt>WFS</tt> and <tt>WCS</tt> are possible
    * values.
-   * 
+   *
    * @return the type of the services
    */
   @Override
   public String getService( )
   {
-    return service;
+    return m_service;
   }
 
   /**
@@ -94,18 +93,18 @@ class RemoteOWS_Impl implements RemoteOWS, Marshallable
   @Override
   public void setService( final String service )
   {
-    this.service = service;
+    this.m_service = service;
   }
 
   /**
    * address of the the ows as URL
-   * 
+   *
    * @return the adress of the ows as URL
    */
   @Override
   public URL getOnlineResource( )
   {
-    return onlineResource;
+    return m_onlineResource;
   }
 
   /**
@@ -116,28 +115,25 @@ class RemoteOWS_Impl implements RemoteOWS, Marshallable
   @Override
   public void setOnlineResource( final URL onlineResource )
   {
-    this.onlineResource = onlineResource;
+    this.m_onlineResource = onlineResource;
   }
 
   /**
    * exports the content of the RemoteOWS as XML formated String
-   * 
+   *
    * @return xml representation of the RemoteOWS
    */
   @Override
   public String exportAsXML( )
   {
-    Debug.debugMethodBegin();
-
     final StringBuffer sb = new StringBuffer( 200 );
     sb.append( "<RemoteOWS>" );
-    sb.append( "<Service>" ).append( service ).append( "</Service>" );
+    sb.append( "<Service>" ).append( m_service ).append( "</Service>" );
     sb.append( "<OnlineResource xmlns:xlink='http://www.w3.org/1999/xlink' " );
     sb.append( "xlink:type='simple' xlink:href='" );
-    sb.append( NetWorker.url2String( onlineResource ) + "'/>" );
+    sb.append( NetWorker.url2String( m_onlineResource ) + "'/>" );
     sb.append( "</RemoteOWS>" );
 
-    Debug.debugMethodEnd();
     return sb.toString();
   }
 }

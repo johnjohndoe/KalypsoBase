@@ -37,7 +37,6 @@ package org.kalypsodeegree_impl.graphics.sld;
 
 import org.kalypsodeegree.graphics.sld.NamedStyle;
 import org.kalypsodeegree.xml.Marshallable;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * A NamedStyle uses the "name" attribute to identify a style known to the WMS
@@ -68,14 +67,11 @@ class NamedStyle_Impl extends Style_Impl implements NamedStyle, Marshallable
   @Override
   public String exportAsXML( )
   {
-    Debug.debugMethodBegin();
-
     final StringBuffer sb = new StringBuffer( 100 );
     sb.append( "<NamedStyle>" );
     sb.append( "<Name>" ).append( getName() ).append( "</Name>" );
     sb.append( "</NamedStyle>" );
 
-    Debug.debugMethodEnd();
     return sb.toString();
   }
 }

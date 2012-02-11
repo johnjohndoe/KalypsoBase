@@ -47,7 +47,6 @@ import org.kalypsodeegree.graphics.sld.PolygonColorMapEntry;
 import org.kalypsodeegree.graphics.sld.SurfacePolygonSymbolizer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.Marshallable;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * @author Thomas Jung
@@ -184,8 +183,6 @@ public class SurfacePolygonSymbolizer_Impl extends Symbolizer_Impl implements Su
   @Override
   public String exportAsXML( )
   {
-    Debug.debugMethodBegin();
-
     final StringBuffer sb = new StringBuffer( 1000 );
 
     sb.append( "<SurfacePolygonSymbolizer xmlns:sldExt=\"" + SLDFactory.SLDNS_EXT + "\"" );
@@ -210,8 +207,6 @@ public class SurfacePolygonSymbolizer_Impl extends Symbolizer_Impl implements Su
     }
     sb.append( "</SurfacePolygonSymbolizer>" );
 
-    Debug.debugMethodEnd();
     return sb.toString();
   }
-
 }

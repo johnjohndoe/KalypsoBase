@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -40,11 +40,10 @@ import org.kalypsodeegree.graphics.sld.CssParameter;
 import org.kalypsodeegree.graphics.sld.ParameterValueType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.Marshallable;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * The simple SVG/CSS2 styling parameters are given with the CssParameter element, which is defined as follows:
- * 
+ *
  * <pre>
  *  <xs:element name="CssParameter" type="sld:ParameterValueType"/>
  *     <xs:complexType name="ParameterValueType" mixed="true">
@@ -53,14 +52,14 @@ import org.kalypsodeegree_impl.tools.Debug;
  *         </xs:choice>
  *  </xs:complexType>
  * </pre>
- * 
+ *
  * The parameter values are allowed to be complex expressions for maximum flexibility. The mixed="true" definition means
  * that regular text may be mixed in with various sub-expressions, implying a text-substitution model for parameter
  * values. Numeric and character-string data types are not distinguished, which may cause some complications.
  * <p>
  * </p>
  * Here are some usage examples:
- * 
+ *
  * <pre>
  * 1. <CssParameter name="stroke-width">3</CssParameter>
  * 2. <CssParameter name="stroke-width">
@@ -75,12 +74,12 @@ import org.kalypsodeegree_impl.tools.Debug;
  * 4. <Label>This is city "<wfs:PropertyName>/NAME</wfs:PropertyName>"
  * of state <wfs:PropertyName>/STATE</wfs:PropertyName></Label>
  * </pre>
- * 
+ *
  * The allowed SVG/CSS styling parameters for a stroke are: stroke (color), stroke-opacity, stroke-width,
  * stroke-linejoin, stroke-linecap, stroke-dasharray, and stroke-dashoffset. The chosen parameter is given by the name
  * attribute of the CssParameter element.
  * <p>
- * 
+ *
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
@@ -103,7 +102,7 @@ class CssParameter_Impl implements CssParameter, Marshallable
   /**
    * Returns the name attribute's value of the CssParameter.
    * <p>
-   * 
+   *
    * @return the value of the name attribute of the CssParameter
    */
   @Override
@@ -115,7 +114,7 @@ class CssParameter_Impl implements CssParameter, Marshallable
   /**
    * Sets the name attribute's value of the CssParameter.
    * <p>
-   * 
+   *
    * @param name
    *          the value of the name attribute of the CssParameter
    */
@@ -128,7 +127,7 @@ class CssParameter_Impl implements CssParameter, Marshallable
   /**
    * Returns the value of the CssParameter as an <tt>ParameterValueType</tt>.
    * <p>
-   * 
+   *
    * @return the mixed content of the element
    */
   @Override
@@ -140,7 +139,7 @@ class CssParameter_Impl implements CssParameter, Marshallable
   /**
    * Sets the value of the CssParameter as an <tt>ParameterValueType</tt>.
    * <p>
-   * 
+   *
    * @param value
    *          the mixed content of the element
    */
@@ -153,7 +152,7 @@ class CssParameter_Impl implements CssParameter, Marshallable
   /**
    * Returns the (evaluated) value of the CssParameter as a simple <tt>String</tt>.
    * <p>
-   * 
+   *
    * @param feature
    *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) <tt>String</tt> value of the parameter
@@ -169,7 +168,7 @@ class CssParameter_Impl implements CssParameter, Marshallable
   /**
    * Sets the value of the CssParameter as a simple <tt>String</tt>.
    * <p>
-   * 
+   *
    * @param value
    *          CssParameter-Value to be set
    */
@@ -183,20 +182,18 @@ class CssParameter_Impl implements CssParameter, Marshallable
 
   /**
    * exports the content of the CssParameter as XML formated String
-   * 
+   *
    * @return xml representation of the CssParameter
    */
   @Override
   public String exportAsXML( )
   {
-    Debug.debugMethodBegin();
-
     final StringBuffer sb = new StringBuffer( "<CssParameter name=" );
+
     sb.append( "'" + m_name + "'>" );
     sb.append( ((Marshallable) m_pvt).exportAsXML() );
     sb.append( "</CssParameter>" );
 
-    Debug.debugMethodEnd();
     return sb.toString();
   }
 }

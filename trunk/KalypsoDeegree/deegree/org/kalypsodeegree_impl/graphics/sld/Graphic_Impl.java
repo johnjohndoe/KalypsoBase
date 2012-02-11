@@ -52,7 +52,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.xml.Marshallable;
 import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * A Graphic is a "graphic symbol" with an inherent shape, color, and size. Graphics can either be referenced from an
@@ -499,8 +498,6 @@ public class Graphic_Impl implements Graphic, Marshallable
   @Override
   public String exportAsXML( )
   {
-    Debug.debugMethodBegin();
-
     final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<Graphic>" );
     for( int i = 0; i < m_marksAndExtGraphics.size(); i++ )
@@ -527,8 +524,6 @@ public class Graphic_Impl implements Graphic, Marshallable
     }
     sb.append( "</Graphic>" );
 
-    Debug.debugMethodEnd();
     return sb.toString();
   }
-
 }

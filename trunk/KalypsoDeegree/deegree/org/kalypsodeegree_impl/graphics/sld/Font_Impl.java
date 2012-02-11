@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -36,15 +36,15 @@
 package org.kalypsodeegree_impl.graphics.sld;
 
 import java.awt.Color;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Map;
 
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.CssParameter;
 import org.kalypsodeegree.graphics.sld.Font;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.Marshallable;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * The Font element identifies a font of a certain family, style, weight, size and color.
@@ -57,31 +57,31 @@ import org.kalypsodeegree_impl.tools.Debug;
  * <li>font-size
  * <li>font-color
  * <p>
- * 
+ *
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
  */
 public class Font_Impl implements Font, Marshallable
 {
-  private HashMap cssParams = null;
+  private final Map<String, CssParameter> m_cssParams = new HashMap<>();
 
   /**
    * Constructs a new <tt>Font_Impl<tt>.
    * <p>
-   * 
+   *
    * @param cssParams
    *          keys are <tt>Strings<tt> (see above), values are <tt>CssParameters</tt>
    */
-  protected Font_Impl( final HashMap cssParams )
+  protected Font_Impl( final Map<String, CssParameter> cssParams )
   {
-    this.cssParams = cssParams;
+    this.m_cssParams.putAll( cssParams );
   }
 
   /**
    * Returns the (evaluated) value of the font's CssParameter 'font-family'.
    * <p>
-   * 
+   *
    * @param feature
    *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) <tt>String</tt> value of the parameter
@@ -91,7 +91,7 @@ public class Font_Impl implements Font, Marshallable
   @Override
   public String getFamily( final Feature feature ) throws FilterEvaluationException
   {
-    final CssParameter cssParam = (CssParameter) cssParams.get( "font-family" );
+    final CssParameter cssParam = m_cssParams.get( "font-family" );
 
     if( cssParam == null )
     {
@@ -104,7 +104,7 @@ public class Font_Impl implements Font, Marshallable
   /**
    * Sets the value of the font's CssParameter 'font-family'.
    * <p>
-   * 
+   *
    * @param family
    *          font family to be set
    */
@@ -112,13 +112,13 @@ public class Font_Impl implements Font, Marshallable
   public void setFamily( final String family )
   {
     final CssParameter fontFamily = StyleFactory.createCssParameter( "font-family", "" + family );
-    cssParams.put( "font-family", fontFamily );
+    m_cssParams.put( "font-family", fontFamily );
   }
 
   /**
    * Returns the (evaluated) value of the font's CssParameter 'font-style'.
    * <p>
-   * 
+   *
    * @param feature
    *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
@@ -129,7 +129,7 @@ public class Font_Impl implements Font, Marshallable
   @Override
   public int getStyle( final Feature feature ) throws FilterEvaluationException
   {
-    final CssParameter cssParam = (CssParameter) cssParams.get( "font-style" );
+    final CssParameter cssParam = m_cssParams.get( "font-style" );
 
     if( cssParam == null )
     {
@@ -157,7 +157,7 @@ public class Font_Impl implements Font, Marshallable
   /**
    * Sets the value of the font's CssParameter 'font-style'.
    * <p>
-   * 
+   *
    * @param style
    *          font-style to be set
    */
@@ -174,7 +174,7 @@ public class Font_Impl implements Font, Marshallable
   /**
    * Returns the (evaluated) value of the font's CssParameter 'font-weight' as a <tt>ParameterValueType</tt>.
    * <p>
-   * 
+   *
    * @param feature
    *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
@@ -184,7 +184,7 @@ public class Font_Impl implements Font, Marshallable
   @Override
   public int getWeight( final Feature feature ) throws FilterEvaluationException
   {
-    final CssParameter cssParam = (CssParameter) cssParams.get( "font-weight" );
+    final CssParameter cssParam = m_cssParams.get( "font-weight" );
 
     if( cssParam == null )
     {
@@ -208,7 +208,7 @@ public class Font_Impl implements Font, Marshallable
   /**
    * Sets the value of the font's CssParameter 'font-weight'.
    * <p>
-   * 
+   *
    * @param weight
    *          font-weight to be set
    */
@@ -216,13 +216,13 @@ public class Font_Impl implements Font, Marshallable
   public void setWeight( final int weight )
   {
     final CssParameter fontWeight = StyleFactory.createCssParameter( "font-weight", "" + weight );
-    cssParams.put( "font-weight", fontWeight );
+    m_cssParams.put( "font-weight", fontWeight );
   }
 
   /**
    * Returns the (evaluated) value of the font's CssParameter 'font-size'.
    * <p>
-   * 
+   *
    * @param feature
    *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
@@ -233,7 +233,7 @@ public class Font_Impl implements Font, Marshallable
   @Override
   public int getSize( final Feature feature ) throws FilterEvaluationException
   {
-    final CssParameter cssParam = (CssParameter) cssParams.get( "font-size" );
+    final CssParameter cssParam = m_cssParams.get( "font-size" );
     int sizeInt = SIZE_DEFAULT;
 
     if( cssParam != null )
@@ -261,7 +261,7 @@ public class Font_Impl implements Font, Marshallable
   /**
    * Returns the (evaluated) value of the font's CssParameter 'font-size'.
    * <p>
-   * 
+   *
    * @param size
    *          font-size to be set
    */
@@ -269,13 +269,13 @@ public class Font_Impl implements Font, Marshallable
   public void setSize( final int size )
   {
     final CssParameter fontSize = StyleFactory.createCssParameter( "font-size", "" + size );
-    cssParams.put( "font-size", fontSize );
+    m_cssParams.put( "font-size", fontSize );
   }
 
   /**
    * Returns the (evaluated) value of the font's CssParameter 'font-color'.
    * <p>
-   * 
+   *
    * @param feature
    *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
@@ -285,7 +285,7 @@ public class Font_Impl implements Font, Marshallable
   @Override
   public Color getColor( final Feature feature ) throws FilterEvaluationException
   {
-    final CssParameter cssParam = (CssParameter) cssParams.get( "font-color" );
+    final CssParameter cssParam = m_cssParams.get( "font-color" );
     Color awtColor = COLOR_DEFAULT;
 
     if( cssParam != null )
@@ -308,7 +308,7 @@ public class Font_Impl implements Font, Marshallable
   /**
    * Sets the value of the font's CssParameter 'font-color'.
    * <p>
-   * 
+   *
    * @param color
    *          the font-color to be set
    */
@@ -317,31 +317,28 @@ public class Font_Impl implements Font, Marshallable
   {
     final String hex = StyleFactory.getColorAsHex( color );
     final CssParameter fontColor = StyleFactory.createCssParameter( "font-color", hex );
-    cssParams.put( "font-color", fontColor );
+    m_cssParams.put( "font-color", fontColor );
   }
 
   /**
    * exports the content of the Font as XML formated String
-   * 
+   *
    * @return xml representation of the Font
    */
   @Override
   public String exportAsXML( )
   {
-    Debug.debugMethodBegin();
-
     final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<Font>" );
-    final Iterator iterator = cssParams.values().iterator();
-    while( iterator.hasNext() )
+
+    final Collection<CssParameter> values = m_cssParams.values();
+    for( final CssParameter param : values )
     {
-      sb.append( ((Marshallable) iterator.next()).exportAsXML() );
+      sb.append( ((Marshallable) param).exportAsXML() );
     }
 
     sb.append( "</Font>" );
 
-    Debug.debugMethodEnd();
     return sb.toString();
   }
-
 }

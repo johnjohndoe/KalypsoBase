@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- * 
+ *
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -76,15 +76,11 @@ public class KalypsoDeegreePlugin extends Plugin
     TransformationFactory.getInstance();
   }
 
-  /**
-   * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
-   */
   @Override
   public void stop( final BundleContext context ) throws Exception
   {
     /* Save the plug-in preferences. */
-    final InstanceScope instanceScope = new InstanceScope();
-    final IEclipsePreferences instanceNode = instanceScope.getNode( getBundle().getSymbolicName() );
+    final IEclipsePreferences instanceNode = InstanceScope.INSTANCE.getNode( getBundle().getSymbolicName() );
     instanceNode.flush();
 
     PLUGIN = null;
@@ -102,7 +98,7 @@ public class KalypsoDeegreePlugin extends Plugin
 
   /**
    * This function returns the coordinate system set in the preferences.
-   * 
+   *
    * @return The coordinate system.
    */
   public String getCoordinateSystem( )

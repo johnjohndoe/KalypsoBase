@@ -51,7 +51,7 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 /**
  * default implementierung of the GM_Polygon interface from package jago.model.
  * ------------------------------------------------------------
- * 
+ *
  * @version 11.6.2001
  * @author Andreas Poth
  */
@@ -62,7 +62,7 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
 
   /**
    * Creates a new GM_Polygon_Impl object.
-   * 
+   *
    * @param interpolation
    * @param exteriorRing
    * @param interiorRings
@@ -76,7 +76,7 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
 
   /**
    * checks if this curve is completly equal to the submitted geometry
-   * 
+   *
    * @param other
    *          object to compare to
    */
@@ -156,11 +156,11 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
       }
       else if( gmo instanceof GM_Curve )
       {
-        inter = LinearIntersects.intersects( (GM_Curve) gmo, new GM_Surface_Impl( this ) );
+        inter = LinearIntersects.intersects( (GM_Curve) gmo, new GM_Surface_Impl<GM_Polygon>( this ) );
       }
       else if( gmo instanceof GM_Surface )
       {
-        inter = LinearIntersects.intersects( (GM_Surface< ? >) gmo, new GM_Surface_Impl( this ) );
+        inter = LinearIntersects.intersects( (GM_Surface< ? >) gmo, new GM_Surface_Impl<GM_Polygon>( this ) );
       }
       else if( gmo instanceof GM_Aggregate )
       {
@@ -211,7 +211,7 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
       }
       else if( gmo instanceof GM_Surface )
       {
-        contain = LinearContains.contains( new GM_Surface_Impl( this ), (GM_Surface< ? >) gmo );
+        contain = LinearContains.contains( new GM_Surface_Impl<GM_Polygon>( this ), (GM_Surface< ? >) gmo );
       }
       else if( gmo instanceof GM_Aggregate )
       {

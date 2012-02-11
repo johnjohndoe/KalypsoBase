@@ -44,7 +44,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
@@ -58,7 +57,7 @@ import com.vividsolutions.jts.geom.LineString;
 /**
  * buffers line and returns a polygon <br>
  * accepts GMLXPathes <br>
- * 
+ *
  * @author thuel2
  * @param lineProperty
  * @param widthProperty
@@ -352,10 +351,7 @@ public class LineBufferAsPolygon extends FeaturePropertyFunction
           return null;
       }
 
-      final GM_Surface< ? > polygon = (GM_Surface< ? >) JTSAdapter.wrap( geometry );
-      polygon.setCoordinateSystem( lineValue.getCoordinateSystem() );
-
-      return polygon;
+      return JTSAdapter.wrap( geometry, lineValue.getCoordinateSystem() );
     }
     catch( final GM_Exception e )
     {

@@ -45,7 +45,6 @@ import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.Marshallable;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * Used to render a "stroke" along a linear geometry. If a point geometry is used, it should be interpreted as a line of
@@ -117,8 +116,6 @@ public class LineSymbolizer_Impl extends Symbolizer_Impl implements LineSymboliz
   @Override
   public String exportAsXML( )
   {
-    Debug.debugMethodBegin();
-
     final Geometry geometry = getGeometry();
 
     final StringBuffer sb = new StringBuffer( 1000 );
@@ -142,7 +139,6 @@ public class LineSymbolizer_Impl extends Symbolizer_Impl implements LineSymboliz
     }
     sb.append( "</LineSymbolizer>" );
 
-    Debug.debugMethodEnd();
     return sb.toString();
   }
 

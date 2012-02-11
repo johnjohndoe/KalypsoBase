@@ -41,7 +41,6 @@ import java.util.List;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.xml.Marshallable;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * A user-defined allows map styling to be defined externally from a system and to be passed around in an interoperable
@@ -233,8 +232,6 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
   @Override
   public String exportAsXML( )
   {
-    Debug.debugMethodBegin();
-
     final StringBuffer sb = new StringBuffer( 100 );
     sb.append( "<UserStyle>" );
     final String name = getName();
@@ -260,8 +257,6 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
     }
     sb.append( "</UserStyle>" );
 
-    Debug.debugMethodEnd();
     return sb.toString();
   }
-
 }

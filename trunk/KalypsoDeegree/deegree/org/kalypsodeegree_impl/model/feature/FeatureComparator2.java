@@ -86,9 +86,6 @@ public class FeatureComparator2 implements Comparator<Feature>
     m_propertyValueComparator = propertyValueComparator;
   }
 
-  /**
-   * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-   */
   @Override
   public int compare( final Feature f1, final Feature f2 )
   {

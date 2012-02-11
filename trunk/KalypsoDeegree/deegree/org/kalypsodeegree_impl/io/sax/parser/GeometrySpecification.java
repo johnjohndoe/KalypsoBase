@@ -56,7 +56,7 @@ import org.xml.sax.XMLReader;
  */
 public class GeometrySpecification implements IGeometrySpecification
 {
-  private final GeometryContentHandler m_geometryContentHandler;
+  final GeometryContentHandler m_geometryContentHandler;
 
   public GeometrySpecification( final GeometryContentHandler geometryContentHandler )
   {

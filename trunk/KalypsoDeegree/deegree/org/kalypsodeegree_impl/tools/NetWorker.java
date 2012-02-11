@@ -75,11 +75,9 @@ public class NetWorker
    */
   public NetWorker( final URL url )
   {
-    Debug.debugMethodBegin( this, "NetWorker(String strUrl)" );
     m_reqType = GET;
     m_url = url;
     m_encoding = "UTF-8";
-    Debug.debugMethodEnd();
   }
 
   /**
@@ -92,11 +90,9 @@ public class NetWorker
    */
   public NetWorker( final String encoding, final URL url )
   {
-    Debug.debugMethodBegin( this, "NetWorker(String strUrl)" );
     m_reqType = GET;
     m_url = url;
     m_encoding = encoding;
-    Debug.debugMethodEnd();
   }
 
   /**
@@ -109,12 +105,10 @@ public class NetWorker
    */
   public NetWorker( final URL url, final String request )
   {
-    Debug.debugMethodBegin( this, "NetWorker(String strUrl)" );
     m_reqType = POST;
     m_url = url;
     m_request = request;
     m_encoding = "UTF-8";
-    Debug.debugMethodEnd();
   }
 
   /**
@@ -129,12 +123,10 @@ public class NetWorker
    */
   public NetWorker( final String encoding, final URL url, final String request )
   {
-    Debug.debugMethodBegin( this, "NetWorker(String strUrl)" );
     m_reqType = POST;
     m_url = url;
     m_request = request;
     m_encoding = encoding;
-    Debug.debugMethodEnd();
   }
 
   /**
@@ -151,8 +143,6 @@ public class NetWorker
    */
   public void sendRequest( ) throws IOException
   {
-    Debug.debugMethodBegin( this, "getInputStream" );
-
     // open connection to the requested host
     final URLConnection connection = m_url.openConnection();
 
@@ -177,8 +167,6 @@ public class NetWorker
     {
       connection.setDoOutput( false );
     }
-
-    Debug.debugMethodEnd();
   }
 
   /**
@@ -189,8 +177,6 @@ public class NetWorker
    */
   public InputStream getInputStream( ) throws IOException
   {
-    Debug.debugMethodBegin( this, "getInputStream" );
-
     // open connection to the requested host
     final URLConnection connection = m_url.openConnection();
     configureProxy( connection );
@@ -239,7 +225,6 @@ public class NetWorker
       throw new IOException( "could not provide data: " + e );
     }
 
-    Debug.debugMethodEnd();
     return is;
   }
 
@@ -283,8 +268,6 @@ public class NetWorker
    */
   public byte[] getDataAsByteArr( int expectedDataSize ) throws IOException
   {
-    Debug.debugMethodBegin( this, "getDataAsByteArr" );
-
     final InputStream is = getInputStream();
 
     if( expectedDataSize <= 0 )
@@ -306,8 +289,6 @@ public class NetWorker
     bos.close();
 
     is.close();
-
-    Debug.debugMethodEnd();
 
     // return result as byte array
     return bos.toByteArray();

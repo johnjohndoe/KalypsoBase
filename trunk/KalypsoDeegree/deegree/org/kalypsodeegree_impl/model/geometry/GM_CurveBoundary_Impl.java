@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -51,7 +51,7 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
  * <p>
  * ------------------------------------------------------------
  * </p>
- * 
+ *
  * @version 10.6.2001
  * @author Andreas Poth
  */
@@ -132,7 +132,7 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
 
   /**
    * checks if this curve is completly equal to the submitted geometry
-   * 
+   *
    * @param other
    *          object to compare to
    */
@@ -186,11 +186,11 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
       }
       else if( gmo instanceof GM_Surface )
       {
-        inter = LinearIntersects.intersects( p1, (GM_Surface) gmo );
+        inter = LinearIntersects.intersects( p1, (GM_Surface< ? >) gmo );
 
         if( !inter )
         {
-          inter = LinearIntersects.intersects( p2, (GM_Surface) gmo );
+          inter = LinearIntersects.intersects( p2, (GM_Surface< ? >) gmo );
         }
       }
       else if( gmo instanceof GM_MultiPrimitive )

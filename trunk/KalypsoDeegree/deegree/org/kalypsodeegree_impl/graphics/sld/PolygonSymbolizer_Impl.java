@@ -45,7 +45,6 @@ import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.Marshallable;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * Used to render an interior "fill" and an outlining "stroke" for a polygon or other 2D-area geometry. If a point or
@@ -178,8 +177,6 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
   @Override
   public String exportAsXML( )
   {
-    Debug.debugMethodBegin();
-
     final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<PolygonSymbolizer" );
 
@@ -206,7 +203,6 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
     }
     sb.append( "</PolygonSymbolizer>" );
 
-    Debug.debugMethodEnd();
     return sb.toString();
   }
 
