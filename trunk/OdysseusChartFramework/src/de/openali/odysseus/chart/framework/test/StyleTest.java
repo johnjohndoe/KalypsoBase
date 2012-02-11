@@ -28,7 +28,6 @@ import de.openali.odysseus.chart.framework.model.style.impl.ImageMarker;
 import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.OvalMarker;
 import de.openali.odysseus.chart.framework.model.style.impl.PolygonMarker;
-import de.openali.odysseus.chart.framework.util.Sleak;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
@@ -48,10 +47,6 @@ public class StyleTest implements PaintListener
     data.tracking = true;
 
     final Display d = new Display( data );
-
-    final Sleak sleak = new Sleak();
-
-    sleak.open();
 
     m_shell = new Shell( d );
     m_shell.setSize( 500, 400 );

@@ -16,11 +16,7 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
  */
 public class MaximizeViewHandler extends AbstractHandler
 {
-  /**
-   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
-  @SuppressWarnings("unchecked")
   public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();

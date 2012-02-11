@@ -91,7 +91,7 @@ public class ChartPainter
   public ChartPainter( final IChartModel model, final Rectangle size, final Insets chartInsets )
   {
     m_model = model;
-    final boolean i = model.getBehaviour().isHideUnusedAxes();
+    // model.getBehaviour().isHideUnusedAxes();
     m_size = size;
     m_chartInsets = chartInsets;
     m_clientRect = RectangleUtils.inflateRect( m_size, m_chartInsets );
