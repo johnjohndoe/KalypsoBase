@@ -61,7 +61,8 @@ public abstract class AbstractChartHandler implements IChartHandler
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
         final Composite composite = (Composite) getChart();
-        composite.redraw();
+        if( !composite.isDisposed() )
+          composite.redraw();
 
         return Status.OK_STATUS;
       }
