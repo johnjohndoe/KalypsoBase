@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoProjectDatabaseClient Plug-in
 Bundle-SymbolicName: org.kalypso.project.database.client;singleton:=true
-Bundle-Version: 11.6.4.qualifier
+Bundle-Version: 11.6.5.qualifier
 Bundle-Activator: org.kalypso.project.database.client.KalypsoProjectDatabaseClient
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui.navigator,
