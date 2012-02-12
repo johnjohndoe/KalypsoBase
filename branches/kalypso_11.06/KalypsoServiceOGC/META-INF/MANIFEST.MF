@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoServiceOGC Plug-in
 Bundle-SymbolicName: org.kalypso.service.ogc;singleton:=true
-Bundle-Version: 11.6.4.qualifier
+Bundle-Version: 11.6.5.qualifier
 Bundle-Activator: org.kalypso.service.ogc.Activator
 Require-Bundle: org.eclipse.core.runtime,
  org.kalypso.commons;visibility:=reexport,
