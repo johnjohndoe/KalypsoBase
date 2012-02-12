@@ -231,17 +231,20 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
       final Point textExtent = getTextExtent( gc, axis.getLabel(), getLabelStyle() );
       final Point tickLabelExtent = calcTickLabelSize( gc, axis );
 
-      int x = 0;
-      int y = 0;
-      int rotation = 0;
-
       final Insets labelInsets = getLabelInsets();
       final int tickLength = getTickLength();
       final int lineWidth = getLineStyle().getWidth();
 
+      final Transform oldTransform = new Transform( gc.getDevice() );
       final Transform tr = new Transform( gc.getDevice() );
       try
       {
+        gc.getTransform( oldTransform );
+
+        int x = 0;
+        int y = 0;
+        int rotation = 0;
+
         if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
         {
           x = Math.abs( endX - startX ) / 2 - textExtent.x / 2 + offset;
@@ -270,25 +273,23 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
             y -= textExtent.x / 2;
           }
         }
+
         gc.getTransform( tr );
         tr.translate( x, y );
         tr.rotate( rotation );
         tr.translate( -x, -y );
         gc.setTransform( tr );
+
         getLabelStyle().apply( gc );
         drawText( gc, axis.getLabel(), x, y, getLabelStyle() );
       }
       finally
       {
-        tr.translate( -x, -y );
-        tr.rotate( -rotation );
-        tr.translate( x, y );
-        gc.setTransform( tr );
+        gc.setTransform( oldTransform );
+        oldTransform.dispose();
         tr.dispose();
-
       }
     }
-
   }
 
   protected void drawAxisLine( final GC gc, final int x1, final int y1, final int x2, final int y2 )

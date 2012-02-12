@@ -365,7 +365,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
   }
 
   private boolean isImageURL( final String text )
-  {
+  {// FIXME: WHAT IS THIS?!
     return text.startsWith( "URL:" );
   }
 
@@ -410,21 +410,12 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
     return null;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#paint(org.eclipse.swt.graphics.GC,
-   *      java.lang.String, org.eclipse.swt.graphics.Point)
-   */
   @Override
   public void paint( final GC gc, final Point textAnchor )
   {
-
     paint( gc, new Rectangle( textAnchor.x, textAnchor.y, -1, -1 ) );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#paint(org.eclipse.swt.graphics.GC,
-   *      org.eclipse.swt.graphics.Rectangle)
-   */
   @Override
   public void paint( final GC gc, final Rectangle boundsRect )
   {
@@ -522,27 +513,17 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
       oldTransform.dispose();
       newTransform.dispose();
     }
-
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#setBorderLine(de.openali.odysseus.chart.framework.model.style.ILineStyle)
-   */
   @Override
   public void setBorderStyle( final IAreaStyle borderStyle )
   {
     m_borderStyle = borderStyle;
-
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#setTitleTypeBean(de.openali.odysseus.chart.framework.util.img.TitleTypeBean)
-   */
   @Override
   public void setTitleTypeBean( final TitleTypeBean titleTypeBean )
   {
     m_titleBean = titleTypeBean;
-
   }
-
 }

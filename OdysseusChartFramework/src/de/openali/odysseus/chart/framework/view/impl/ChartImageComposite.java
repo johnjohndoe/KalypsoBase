@@ -129,8 +129,11 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   public void dispose( )
   {
     unregisterListener();
+
     if( m_image != null )
       m_image.dispose();
+
+    m_plotHandler.dispose();
 
     super.dispose();
   }
@@ -199,11 +202,19 @@ public class ChartImageComposite extends Canvas implements IChartComposite
 
     final GC gc = paintEvent.gc;
     gc.drawImage( m_image, 0, 0 );// -m_panOffset.x, -m_panOffset.y );
+
+    final Transform oldTransform = new Transform( gc.getDevice() );
     final Transform newTransform = new Transform( gc.getDevice() );
-    gc.getTransform( newTransform );
-    newTransform.translate( m_plotRect.x, m_plotRect.y );
+
     try
     {
+      gc.getTransform( oldTransform );
+      gc.getTransform( newTransform );
+
+      // FIXME: makes no sense: why is there a transformation for the drag area and edit info?
+      // Same for handlers: why should they paint with an active transformation?
+
+      newTransform.translate( m_plotRect.x, m_plotRect.y );
       gc.setTransform( newTransform );
 
       paintDragArea( gc );
@@ -212,15 +223,13 @@ public class ChartImageComposite extends Canvas implements IChartComposite
       final IChartHandlerManager manager = getPlotHandler();
       final IChartHandler[] handlers = manager.getActiveHandlers();
       for( final IChartHandler handler : handlers )
-      {
         handler.paintControl( paintEvent );
-      }
-
     }
     finally
     {
-      newTransform.translate( -m_plotRect.x, -m_plotRect.y );
-      gc.setTransform( newTransform );
+      gc.setTransform( oldTransform );
+
+      oldTransform.dispose();
       newTransform.dispose();
     }
   }

@@ -140,5 +140,4 @@ public class ChartTooltipPainter
   {
     getLabelRenderer().getTitleTypeBean().setLabel( tooltip );
   }
-
 }
