@@ -63,7 +63,6 @@ import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.ui.dialog.EnhancedTitleAreaDialog;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -76,13 +75,15 @@ public class ZmlEinzelwertDialog extends EnhancedTitleAreaDialog implements IZml
 
   private ZmlEinzelwertComposite m_composite;
 
-  private final IZmlTableColumn m_column;
+  private final IZmlModelColumn m_column;
 
-  public ZmlEinzelwertDialog( final Shell shell, final IZmlTableColumn column )
+// private final IZmlTableColumn m_column;
+
+  public ZmlEinzelwertDialog( final Shell shell, final IZmlModelColumn column )
   {
     super( shell );
     m_column = column;
-    m_model = new ZmlEinzelwertModel( column );
+    m_model = new ZmlEinzelwertModel( m_column );
 
     setShellStyle( SWT.CLOSE | SWT.MAX | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE );
 
@@ -153,15 +154,14 @@ public class ZmlEinzelwertDialog extends EnhancedTitleAreaDialog implements IZml
 
   private void saveChanges( )
   {
-    final IZmlModelColumn modelColumn = m_column.getModelColumn();
 
     final ZmlEinzelwert[] rows = m_model.getRows();
     for( final ZmlEinzelwert row : rows )
     {
       try
       {
-        final int index = findIndex( row, modelColumn );
-        modelColumn.doUpdate( index, row.getValue(), IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
+        final int index = findIndex( row, m_column );
+        m_column.doUpdate( index, row.getValue(), IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
       }
       catch( final Throwable t )
       {

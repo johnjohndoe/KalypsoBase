@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands.menu.adjust.pages;
 
-import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 
 /**
  * @author Dirk Kuch
@@ -48,6 +48,6 @@ import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 public interface IAdjustmentPageProvider
 {
 
-  IZmlTableColumn getColumn( );
+  IZmlModelColumn getColumn( );
 
 }

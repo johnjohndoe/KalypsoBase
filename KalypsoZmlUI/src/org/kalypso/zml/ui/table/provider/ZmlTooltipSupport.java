@@ -49,6 +49,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.ZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
@@ -58,8 +59,6 @@ import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.toolbar.view.AbstractHourViewCommand;
 import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
-import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
-import org.kalypso.zml.ui.table.model.columns.IZmlTableValueColumn;
 
 import com.google.common.base.Strings;
 
@@ -70,13 +69,13 @@ public class ZmlTooltipSupport
 {
   private static final Image IMG = new Image( null, ZmlTooltipProvider.class.getResourceAsStream( "icons/help_hint_48.png" ) ); //$NON-NLS-1$
 
-  private final IZmlTableColumn m_column;
+  private final IZmlModelColumn m_column;
 
   private static boolean SHOW_TOOLTIPS = true;
 
   private final IZmlTable m_table;
 
-  public ZmlTooltipSupport( final IZmlTable table, final IZmlTableColumn column )
+  public ZmlTooltipSupport( final IZmlTable table, final IZmlModelColumn column )
   {
     m_table = table;
     m_column = column;
@@ -94,7 +93,7 @@ public class ZmlTooltipSupport
 
   public String getToolTipText( final ZmlModelRow row )
   {
-    final AbstractColumnType type = m_column.getColumnType().getType();
+    final AbstractColumnType type = m_column.getDataColumn().getType();
     if( !type.isTooltip() )
       return null;
 
@@ -126,7 +125,7 @@ public class ZmlTooltipSupport
 
   private String getRuleTooltip( final IZmlModelRow row, final IZmlModelValueCell reference )
   {
-    final ZmlCellRule[] activeRules = ((IZmlTableValueColumn) m_column).findActiveRules( row );
+    final ZmlCellRule[] activeRules = (m_column).findActiveRules( reference );
     if( ArrayUtils.isEmpty( activeRules ) )
       return null;
 
@@ -216,10 +215,9 @@ public class ZmlTooltipSupport
 
   public Image getToolTipImage( )
   {
-    if( m_column.getColumnType().getType() instanceof DataColumnType )
+    if( m_column.getDataColumn().getType() instanceof DataColumnType )
       return IMG;
 
     return null;
   }
-
 }

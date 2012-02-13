@@ -40,11 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands.menu;
 
-import java.util.Date;
-
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.ogc.sensor.DateRange;
-import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
 
 /**
  * @author Dirk Kuch
@@ -55,43 +50,43 @@ public final class ZmlCommandUtils
   {
   }
 
-  public static IZmlTableValueCell[] findIntervall( final IZmlTableValueCell[] cells )
-  {
-    IZmlTableValueCell start = cells[0];
-    IZmlTableValueCell end = cells[0];
-
-    for( final IZmlTableValueCell cell : cells )
-    {
-      if( cell.getIndex() < start.getIndex() )
-        start = cell;
-
-      if( cell.getIndex() > end.getIndex() )
-        end = cell;
-    }
-
-    return new IZmlTableValueCell[] { start, end };
-
-  }
-
-  public static DateRange findDateRange( final IZmlTableValueCell[] cells )
-  {
-    Date min = null;
-    Date max = null;
-
-    for( final IZmlTableValueCell cell : cells )
-    {
-      final Date date = cell.getRow().getModelRow().getIndex();
-      if( Objects.isNull( min ) )
-        min = date;
-      else if( date.before( min ) )
-        min = date;
-
-      if( Objects.isNull( max ) )
-        max = date;
-      else if( date.after( max ) )
-        max = date;
-    }
-
-    return new DateRange( min, max );
-  }
+// public static IZmlTableValueCell[] findIntervall( final IZmlTableValueCell[] cells )
+// {
+// IZmlTableValueCell start = cells[0];
+// IZmlTableValueCell end = cells[0];
+//
+// for( final IZmlTableValueCell cell : cells )
+// {
+// if( cell.getIndex() < start.getIndex() )
+// start = cell;
+//
+// if( cell.getIndex() > end.getIndex() )
+// end = cell;
+// }
+//
+// return new IZmlTableValueCell[] { start, end };
+//
+// }
+//
+// public static DateRange findDateRange( final IZmlTableValueCell[] cells )
+// {
+// Date min = null;
+// Date max = null;
+//
+// for( final IZmlTableValueCell cell : cells )
+// {
+// final Date date = cell.getRow().getModelRow().getIndex();
+// if( Objects.isNull( min ) )
+// min = date;
+// else if( date.before( min ) )
+// min = date;
+//
+// if( Objects.isNull( max ) )
+// max = date;
+// else if( date.after( max ) )
+// max = date;
+// }
+//
+// return new DateRange( min, max );
+// }
 }

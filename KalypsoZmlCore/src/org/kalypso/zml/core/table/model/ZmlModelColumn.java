@@ -547,4 +547,13 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
     return m_styleProvider;
   }
 
+  /**
+   * @see org.kalypso.zml.core.table.model.IZmlModelColumn#getCells()
+   */
+  @Override
+  public IZmlModelValueCell[] getCells( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
 }

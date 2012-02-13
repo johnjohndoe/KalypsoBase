@@ -53,7 +53,6 @@ import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
-import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
 
 /**
  * @author Dirk Kuch
@@ -64,20 +63,19 @@ public class ShiftDateValuesVisitor implements IZmlModelColumnVisitor
 
   ZmlModelTransaction m_transaction = new ZmlModelTransaction();
 
-  public ShiftDateValuesVisitor( final IZmlTableValueCell[] selected, final Integer offset )
+  public ShiftDateValuesVisitor( final IZmlModelValueCell[] selected, final Integer offset )
   {
-    for( final IZmlTableValueCell cell : selected )
+    for( final IZmlModelValueCell cell : selected )
     {
       try
       {
-        final IZmlModelValueCell reference = cell.getValueReference();
-        final Date date = reference.getIndexValue();
+        final Date date = cell.getIndexValue();
 
         final Calendar calendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
         calendar.setTime( date );
         calendar.add( Calendar.MINUTE, offset );
 
-        m_shift.put( calendar.getTime(), reference.getValue() );
+        m_shift.put( calendar.getTime(), cell.getValue() );
       }
       catch( final Exception e )
       {

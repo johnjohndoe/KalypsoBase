@@ -52,14 +52,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
-import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
-import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
-import org.kalypso.zml.ui.table.model.columns.IZmlTableIndexColumn;
-import org.kalypso.zml.ui.table.model.columns.IZmlTableValueColumn;
-import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
 
 import au.com.bytecode.opencsv.CSVReader;
 
@@ -71,36 +63,36 @@ public class ZmlCommandPasteValue extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    try
-    {
-      final IZmlTable table = ZmlHandlerUtil.getTable( event );
-      final IZmlTableSelectionHandler selection = table.getSelectionHandler();
-      final IZmlTableValueCell cell = (IZmlTableValueCell) selection.findActiveCellByPosition();
-      if( cell.getColumn() instanceof IZmlTableIndexColumn )
-        throw new ExecutionException( "Aktualisierung von Index-Spalten nicht möglich!" );
-
-      IZmlTableValueCell ptr = cell;
-
-      final IZmlTableValueColumn column = cell.getColumn();
-      final IZmlEditingStrategy strategy = column.getEditingStrategy();
-
-      final String[] data = getData();
-      for( final String value : data )
-      {
-        if( Objects.isNull( ptr ) )
-          break;
-
-        strategy.setValue( ptr.getRow().getModelRow(), value );
-
-        ptr = ptr.findNextCell();
-      }
-
-      return Status.OK_STATUS;
-    }
-    catch( final Exception ex )
-    {
-      throw new ExecutionException( "Einfügen des Wertes aus der Zwischenablage fehlgeschlagen.", ex );
-    }
+// try
+// {
+// final IZmlTable table = ZmlHandlerUtil.getTable( event );
+// final IZmlTableSelectionHandler selection = table.getSelectionHandler();
+// final IZmlTableValueCell cell = (IZmlTableValueCell) selection.findActiveCellByPosition();
+// if( cell.getColumn() instanceof IZmlTableIndexColumn )
+// throw new ExecutionException( "Aktualisierung von Index-Spalten nicht möglich!" );
+//
+// IZmlTableValueCell ptr = cell;
+//
+// final IZmlTableValueColumn column = cell.getColumn();
+// final IZmlEditingStrategy strategy = column.getEditingStrategy();
+//
+// final String[] data = getData();
+// for( final String value : data )
+// {
+// if( Objects.isNull( ptr ) )
+// break;
+//
+// strategy.setValue( ptr.getRow().getModelRow(), value );
+//
+// ptr = ptr.findNextCell();
+// }
+//
+    return Status.OK_STATUS;
+// }
+// catch( final Exception ex )
+// {
+// throw new ExecutionException( "Einfügen des Wertes aus der Zwischenablage fehlgeschlagen.", ex );
+// }
 
   }
 

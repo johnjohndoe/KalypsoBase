@@ -54,9 +54,6 @@ import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.references.ZmlValues;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.IZmlTableCompositeListener;
-import org.kalypso.zml.ui.table.model.IZmlTableModel;
-import org.kalypso.zml.ui.table.model.rows.IZmlTableHeaderRow;
-import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
 import org.kalypso.zml.ui.table.nat.ZmlTable;
 
 /**
@@ -124,43 +121,45 @@ public class ZmlViewResolutionFilter extends ViewerFilter
   @Override
   public boolean select( final Viewer viewer, final Object parentElement, final Object element )
   {
-    if( element instanceof IZmlTableHeaderRow )
-      return true;
-    else if( parentElement instanceof IZmlTableModel && element instanceof IZmlTableValueRow )
-    {
-      final IZmlTableModel model = (IZmlTableModel) parentElement;
-      final IZmlTableValueRow row = (IZmlTableValueRow) element;
-      final IZmlModelRow modelRow = row.getModelRow();
+// if( element instanceof IZmlTableHeaderRow )
+// return true;
+// else if( parentElement instanceof IZmlTableModel && element instanceof IZmlTableValueRow )
+// {
+// final IZmlTableModel model = (IZmlTableModel) parentElement;
+// final IZmlTableValueRow row = (IZmlTableValueRow) element;
+// final IZmlModelRow modelRow = row.getModelRow();
+//
+// if( m_resolution == 0 )
+// {
+// if( m_stuetzstellenMode )
+// {
+//
+// return hasStuetzstelle( modelRow );
+// }
+//
+// return true;
+// }
+//
+// final Date index = modelRow.getIndex();
+// final int ticks = ticksInHours( index );
+//
+// final int base = m_base.getBaseIndex( model.getModel() );
+// final int diff = Math.abs( base + m_offset - ticks );
+//
+// final int mod = diff % m_resolution;
+//
+// if( m_stuetzstellenMode )
+// {
+// if( hasStuetzstelle( modelRow ) && mod == 0 )
+// return true;
+// }
+//
+// return mod == 0;
+// }
+//
+// return false;
 
-      if( m_resolution == 0 )
-      {
-        if( m_stuetzstellenMode )
-        {
-
-          return hasStuetzstelle( modelRow );
-        }
-
-        return true;
-      }
-
-      final Date index = modelRow.getIndex();
-      final int ticks = ticksInHours( index );
-
-      final int base = m_base.getBaseIndex( model.getModel() );
-      final int diff = Math.abs( base + m_offset - ticks );
-
-      final int mod = diff % m_resolution;
-
-      if( m_stuetzstellenMode )
-      {
-        if( hasStuetzstelle( modelRow ) && mod == 0 )
-          return true;
-      }
-
-      return mod == 0;
-    }
-
-    return false;
+    throw new UnsupportedOperationException();
   }
 
   private boolean hasStuetzstelle( final IZmlModelRow row )

@@ -44,19 +44,19 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.zml.core.table.binding.BaseColumn;
-import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlTableContextMenuProvider
 {
-  public void fillMenu( final IZmlTableColumn column, final MenuManager menuManager )
+  public void fillMenu( final IZmlModelColumn column, final MenuManager menuManager )
   {
     if( column == null )
       return;
 
-    final BaseColumn columnType = column.getColumnType();
+    final BaseColumn columnType = column.getDataColumn();
     final String uri = columnType.getUriContextMenu();
     if( uri == null )
       return;

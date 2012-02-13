@@ -41,11 +41,9 @@
 package org.kalypso.zml.ui.table;
 
 import org.eclipse.jface.viewers.TableViewer;
+import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
-import org.kalypso.zml.ui.table.focus.IZmlTableFocusHandler;
-import org.kalypso.zml.ui.table.model.IZmlTableModel;
-import org.kalypso.zml.ui.table.provider.rendering.cell.ZmlTableCellCache;
 
 /**
  * @author Dirk Kuch
@@ -55,17 +53,10 @@ public interface IZmlTable
   @Deprecated
   TableViewer getViewer( );
 
-  @Deprecated
-  ZmlTableCellCache getCache( );
-
   // FIXME remove from interface!
   void dispose( );
 
-  @Deprecated
-  IZmlTableModel getModel( );
-
-  @Deprecated
-  IZmlTableFocusHandler getFocusHandler( );
+  IZmlModel getModel( );
 
   @Deprecated
   int getResolution( );
@@ -74,9 +65,6 @@ public interface IZmlTable
 
   @Deprecated
   ZmlViewResolutionFilter getResulutionFilter( );
-
-  @Deprecated
-  IZmlTableSelectionHandler getSelectionHandler( );
 
   void fireTableChanged( String type, IZmlModelColumn... columns );
 

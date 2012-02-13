@@ -40,21 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands.menu;
 
-import java.awt.Toolkit;
-import java.awt.datatransfer.StringSelection;
-
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.commons.java.lang.Arrays;
-import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
-import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
-import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
-import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
 
 /**
  * @author Dirk Kuch
@@ -67,62 +58,62 @@ public class ZmlCommandCopyValue extends AbstractHandler
     try
     {
       final IZmlTable table = ZmlHandlerUtil.getTable( event );
-      final IZmlTableSelectionHandler selection = table.getSelectionHandler();
-
-      final StringBuffer buffer = new StringBuffer();
-
-      final IZmlTableColumn[] columns = table.getModel().getColumns();
-      for( final IZmlTableColumn column : columns )
-      {
-        if( !column.isVisible() )
-          continue;
-
-        final String text = column.getTableViewerColumn().getColumn().getText();
-        buffer.append( text );
-
-        if( !Arrays.isLastItem( columns, column ) )
-          buffer.append( "\t" );
-      }
-      buffer.append( "\n" );
-
-      final IZmlTableValueRow[] rows = selection.getSelectedRows();
-      for( final IZmlTableValueRow row : rows )
-      {
-        for( final IZmlTableColumn column : columns )
-        {
-          if( !column.isVisible() )
-            continue;
-
-          final ZmlLabelProvider provider = new ZmlLabelProvider( row.getModelRow(), null, new ZmlCellRule[] {} );
-          buffer.append( provider.getText( null ) );
-
-// if( column.isIndexColumn() )
+// final IZmlTableSelectionHandler selection = table.getSelectionHandler();
+//
+// final StringBuffer buffer = new StringBuffer();
+//
+// final IZmlTableColumn[] columns = table.getModel().getColumns();
+// for( final IZmlTableColumn column : columns )
 // {
-// final Date date = row.getModelRow().getIndexValue();
-//            final SimpleDateFormat sdf = new SimpleDateFormat( "dd.MM.yyyy HH:mm" ); //$NON-NLS-1$
-// sdf.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
+// if( !column.isVisible() )
+// continue;
 //
-// buffer.append( sdf.format( date ) );
-// }
-// else
-// {
-//
-// final IZmlValueReference reference = row.getValueReference( column );
-// final Number value = reference.getValue();
-// final String text = String.format( "%.3f", value.doubleValue() );
-//
+// final String text = column.getTableViewerColumn().getColumn().getText();
 // buffer.append( text );
+//
+// if( !Arrays.isLastItem( columns, column ) )
+// buffer.append( "\t" );
 // }
-
-          if( !Arrays.isLastItem( columns, column ) )
-            buffer.append( "\t" );
-        }
-
-        buffer.append( "\n" );
-      }
-
-      final StringSelection clipboardSelection = new StringSelection( buffer.toString() );
-      Toolkit.getDefaultToolkit().getSystemClipboard().setContents( clipboardSelection, clipboardSelection );
+// buffer.append( "\n" );
+//
+// final IZmlTableValueRow[] rows = selection.getSelectedRows();
+// for( final IZmlTableValueRow row : rows )
+// {
+// for( final IZmlTableColumn column : columns )
+// {
+// if( !column.isVisible() )
+// continue;
+//
+// final ZmlLabelProvider provider = new ZmlLabelProvider( row.getModelRow(), null, new ZmlCellRule[] {} );
+// buffer.append( provider.getText( null ) );
+//
+// // if( column.isIndexColumn() )
+// // {
+// // final Date date = row.getModelRow().getIndexValue();
+////            final SimpleDateFormat sdf = new SimpleDateFormat( "dd.MM.yyyy HH:mm" ); //$NON-NLS-1$
+// // sdf.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
+// //
+// // buffer.append( sdf.format( date ) );
+// // }
+// // else
+// // {
+// //
+// // final IZmlValueReference reference = row.getValueReference( column );
+// // final Number value = reference.getValue();
+// // final String text = String.format( "%.3f", value.doubleValue() );
+// //
+// // buffer.append( text );
+// // }
+//
+// if( !Arrays.isLastItem( columns, column ) )
+// buffer.append( "\t" );
+// }
+//
+// buffer.append( "\n" );
+// }
+//
+// final StringSelection clipboardSelection = new StringSelection( buffer.toString() );
+// Toolkit.getDefaultToolkit().getSystemClipboard().setContents( clipboardSelection, clipboardSelection );
 
       return Status.OK_STATUS;
     }

@@ -43,7 +43,6 @@ package org.kalypso.zml.ui.table.commands.toolbar;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -55,15 +54,8 @@ import org.eclipse.ui.menus.UIElement;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
-import org.kalypso.zml.core.table.binding.DataColumn;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.IZmlTableColumnVisitor;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
-import org.kalypso.zml.ui.table.model.IZmlTableModel;
-import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
-import org.kalypso.zml.ui.table.model.columns.IZmlTableValueColumn;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
@@ -96,33 +88,33 @@ public class ZmlCommandHideColumns extends AbstractHandler implements IElementUp
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        final IZmlTableModel model = table.getModel();
-        if( Objects.isNull( model ) )
-          return Status.CANCEL_STATUS;
-
-        model.accept( new IZmlTableColumnVisitor()
-        {
-          @Override
-          public void visit( final IZmlTableColumn column )
-          {
-            if( !(column instanceof IZmlTableValueColumn) )
-              return;
-
-            final IZmlModelColumn modelColumn = column.getModelColumn();
-            if( Objects.isNull( modelColumn ) )
-              return;
-
-            final DataColumn dataColumn = modelColumn.getDataColumn();
-
-            final DataColumnType dataColumnType = dataColumn.getType();
-            final String columnTypeId = dataColumnType.getId();
-
-            if( ArrayUtils.contains( columnTypes, columnTypeId ) )
-            {
-              ((IZmlTableValueColumn) column).setVisible( !hide );
-            }
-          }
-        } );
+// final IZmlTableModel model = table.getModel();
+// if( Objects.isNull( model ) )
+// return Status.CANCEL_STATUS;
+//
+// model.accept( new IZmlTableColumnVisitor()
+// {
+// @Override
+// public void visit( final IZmlTableColumn column )
+// {
+// if( !(column instanceof IZmlTableValueColumn) )
+// return;
+//
+// final IZmlModelColumn modelColumn = column.getModelColumn();
+// if( Objects.isNull( modelColumn ) )
+// return;
+//
+// final DataColumn dataColumn = modelColumn.getDataColumn();
+//
+// final DataColumnType dataColumnType = dataColumn.getType();
+// final String columnTypeId = dataColumnType.getId();
+//
+// if( ArrayUtils.contains( columnTypes, columnTypeId ) )
+// {
+// ((IZmlTableValueColumn) column).setVisible( !hide );
+// }
+// }
+// } );
 
         return Status.OK_STATUS;
       }

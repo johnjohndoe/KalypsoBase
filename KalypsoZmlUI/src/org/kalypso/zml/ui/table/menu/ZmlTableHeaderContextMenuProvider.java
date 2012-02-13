@@ -51,21 +51,21 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.ColumnHeader;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.rules.AppliedRule;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlTableHeaderContextMenuProvider
 {
-  public void fillMenu( final IZmlTableColumn column, final MenuManager menuManager )
+  public void fillMenu( final IZmlModelColumn column, final MenuManager menuManager )
   {
     if( column == null )
       return;
 
-    final BaseColumn columnType = column.getColumnType();
+    final BaseColumn columnType = column.getDataColumn();
     final String uri = columnType.getUriHeaderContextMenu();
     if( uri != null )
     {
@@ -77,7 +77,7 @@ public class ZmlTableHeaderContextMenuProvider
     addAdditionalItems( column, menuManager );
   }
 
-  private void addAdditionalItems( final IZmlTableColumn column, final MenuManager menuManager )
+  private void addAdditionalItems( final IZmlModelColumn column, final MenuManager menuManager )
   {
     menuManager.add( new Separator() );
 
@@ -96,17 +96,19 @@ public class ZmlTableHeaderContextMenuProvider
       }
     } );
 
-    final ColumnHeader[] headers = column.getColumnType().getHeaders();
+    final ColumnHeader[] headers = column.getDataColumn().getHeaders();
     for( final ColumnHeader header : headers )
     {
       addAdditionalItem( header, menuManager );
     }
 
-    final AppliedRule[] rules = column.getAppliedRules();
-    for( final AppliedRule rule : rules )
-    {
-      addAditionalItem( rule, menuManager );
-    }
+    throw new UnsupportedOperationException();
+// final AppliedRule[] rules = column.getAppliedRules();
+// for( final AppliedRule rule : rules )
+// {
+//
+// addAditionalItem( rule, menuManager );
+// }
   }
 
   private void addAdditionalItem( final ColumnHeader header, final MenuManager menuManager )
