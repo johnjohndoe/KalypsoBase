@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraﬂe 22
+ *  Denickestra√üe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,29 +38,15 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.model.columns;
+package org.kalypso.zml.core.table.model.references;
 
-import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
-import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.references.IZmlLabelStrategy;
-import org.kalypso.zml.ui.table.focus.ZmlTableEditingSupport;
-import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
-import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.ogc.sensor.SensorException;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTableValueColumn extends IZmlTableColumn
+public interface IZmlLabelStrategy
 {
-  IZmlTableValueCell findCell( IZmlModelRow row );
-
-  IZmlLabelStrategy getLabelingStrategy( );
-
-  ZmlTableEditingSupport getEditingSupport( );
-
-  ZmlCellRule[] findActiveRules( IZmlModelRow row );
-
-  IZmlEditingStrategy getEditingStrategy( );
-
-  void setVisible( boolean visibility );
+  String getText( final IZmlModelCell cell ) throws SensorException, CoreException;
 }

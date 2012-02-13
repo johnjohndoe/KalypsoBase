@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider;
+package org.kalypso.zml.core.table.rules;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,17 +50,12 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.rule.AbstractZmlRule;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.binding.rule.ZmlColumnRule;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
-import org.kalypso.zml.core.table.rules.IZmlCellRuleImplementation;
-import org.kalypso.zml.core.table.rules.IZmlColumnRuleImplementation;
-import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.IZmlTableCompositeListener;
 
 /**
  * @author Dirk Kuch
@@ -71,15 +66,12 @@ public class RuleMapper
 
   private final Map<AbstractZmlRule, AppliedRule> m_applied = new LinkedHashMap<AbstractZmlRule, AppliedRule>();
 
-  private final BaseColumn m_column;
+  private final IZmlModelColumn m_column;
 
   private IZmlModelCell m_lastReference;
 
-  private final IZmlTable m_table;
-
-  public RuleMapper( final IZmlTable table, final BaseColumn column )
+  public RuleMapper( final IZmlModelColumn column )
   {
-    m_table = table;
     m_column = column;
   }
 
@@ -91,7 +83,7 @@ public class RuleMapper
     final List<AbstractZmlRule> rules = new ArrayList<AbstractZmlRule>();
     if( Objects.isNotNull( reference ) )
     {
-      final ZmlCellRule[] columnRules = m_column.getCellRules();
+      final ZmlCellRule[] columnRules = m_column.getDataColumn().getCellRules();
       for( final ZmlCellRule rule : columnRules )
       {
         final IZmlCellRuleImplementation impl = rule.getImplementation();
@@ -123,7 +115,7 @@ public class RuleMapper
 
         m_applied.put( rule, new AppliedRule( style, label, severity, rule.hasHeaderIcon() ) );
 
-        m_table.fireTableChanged( IZmlTableCompositeListener.TYPE_ACTIVE_RULE_CHANGED, getModelColumn() );
+// m_table.fireTableChanged( IZmlTableCompositeListener.TYPE_ACTIVE_RULE_CHANGED, getModelColumn() ); //TODO
       }
       else
       {
@@ -135,7 +127,7 @@ public class RuleMapper
 
         m_applied.put( rule, new AppliedRule( style, label, severity, rule.hasHeaderIcon() ) );
 
-        m_table.fireTableChanged( IZmlTableCompositeListener.TYPE_ACTIVE_RULE_CHANGED, getModelColumn() );
+// m_table.fireTableChanged( IZmlTableCompositeListener.TYPE_ACTIVE_RULE_CHANGED, getModelColumn() ); //TODO
       }
     }
     catch( final Throwable t )
@@ -146,7 +138,7 @@ public class RuleMapper
 
   private IZmlModelColumn getModelColumn( )
   {
-    return m_table.getModel().getModel().getColumn( m_column.getIdentifier() );
+    return m_column;
   }
 
   public void reset( )
@@ -160,7 +152,7 @@ public class RuleMapper
     final Set<AppliedRule> applied = new LinkedHashSet<AppliedRule>();
 
     final IZmlModelColumn column = getModelColumn();
-    final ZmlColumnRule[] rules = m_column.getColumnRules();
+    final ZmlColumnRule[] rules = m_column.getDataColumn().getColumnRules();
     for( final ZmlColumnRule rule : rules )
     {
       final IZmlColumnRuleImplementation impl = rule.getImplementation();

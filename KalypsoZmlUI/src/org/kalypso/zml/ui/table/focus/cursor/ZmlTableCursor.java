@@ -57,13 +57,13 @@ public class ZmlTableCursor extends AbstractZmlCellCursor
     {
       drawBackground( event );
 
-      painter.initGc( event );
+      painter.initGc( event.gc );
 
       final Rectangle bounds = event.getBounds();
       apply( bounds, painter.drawImage( event.gc, bounds ) );
       apply( bounds, painter.drawText( event.gc, bounds ) );
 
-      painter.resetGc( event );
+      painter.resetGc( event.gc );
 
       event.detail &= ~SWT.SELECTED;
       event.detail &= ~SWT.FOREGROUND;

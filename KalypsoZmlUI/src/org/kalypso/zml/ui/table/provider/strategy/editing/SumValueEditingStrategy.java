@@ -75,7 +75,7 @@ public class SumValueEditingStrategy extends AbstractEditingStrategy
   {
     try
     {
-      final ZmlLabelProvider provider = new ZmlLabelProvider( row, getColumn(), new ZmlCellRule[] {} );
+      final ZmlLabelProvider provider = new ZmlLabelProvider( row, null, new ZmlCellRule[] {} );
       final Object plain = provider.getPlainValue();
       if( Objects.isNull( plain ) )
         return null;

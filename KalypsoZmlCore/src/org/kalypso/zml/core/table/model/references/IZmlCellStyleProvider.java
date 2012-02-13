@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraﬂe 22
+ *  Denickestra√üe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,30 +38,23 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider.strategy.labeling;
+package org.kalypso.zml.core.table.model.references;
 
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
-import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.kalypso.zml.core.table.binding.CellStyle;
+import org.kalypso.zml.core.table.model.IZmlModelRow;
 
 /**
  * @author Dirk Kuch
  */
-public class SumValuesVisitor implements IZmlModelColumnVisitor
+public interface IZmlCellStyleProvider
 {
-  private double m_sum = 0;
+  CellStyle findStyle( IZmlModelRow row );
 
-  @Override
-  public void visit( final IZmlModelValueCell reference ) throws SensorException
-  {
-    final Number value = reference.getValue();
-    if( Objects.isNotNull( value ) )
-      m_sum += value.doubleValue();
-  }
+  Font getFont( );
 
-  public Double getValue( )
-  {
-    return m_sum;
-  }
+  Color getBackground( );
+
+  Color getForeground( );
 }

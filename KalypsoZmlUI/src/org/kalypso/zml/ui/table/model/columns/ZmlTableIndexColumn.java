@@ -48,15 +48,15 @@ import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.references.IZmlLabelStrategy;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.core.table.model.references.IndexValueLabelingStrategy;
+import org.kalypso.zml.core.table.rules.AppliedRule;
 import org.kalypso.zml.core.table.schema.CellStyleType;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableIndexCell;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
 import org.kalypso.zml.ui.table.model.visitors.FindTableRowVisitor;
-import org.kalypso.zml.ui.table.provider.AppliedRule;
-import org.kalypso.zml.ui.table.provider.strategy.labeling.IZmlLabelStrategy;
-import org.kalypso.zml.ui.table.provider.strategy.labeling.IndexValueLabelingStrategy;
 
 /**
  * @author Dirk Kuch
@@ -68,12 +68,11 @@ public class ZmlTableIndexColumn extends AbstractZmlTableColumn implements IZmlT
 
   private IZmlModelRow m_lastRow;
 
-  private final IZmlLabelStrategy m_labeling = new IndexValueLabelingStrategy( this );
+  private final IZmlLabelStrategy m_labeling = new IndexValueLabelingStrategy();
 
   public ZmlTableIndexColumn( final IZmlTable table, final BaseColumn type, final TableViewerColumn viewerColumn, final int index )
   {
     super( table, type, viewerColumn, index );
-
   }
 
   @Override

@@ -44,20 +44,20 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Event;
-import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 
 /**
  * @author Dirk Kuch
  */
 public interface IZmlTableCellPainter
 {
-  void initGc( Event event );
+  void initGc( GC gc );
 
-  void drawBackground( Event event );
+  void drawBackground( final GC gc, final Rectangle bounds );
 
-  void resetGc( Event event );
+  void resetGc( GC gc );
 
-  IZmlTableCell getCell( );
+  IZmlModelCell getCell( );
 
   Point drawImage( GC gc, Rectangle bounds );
 

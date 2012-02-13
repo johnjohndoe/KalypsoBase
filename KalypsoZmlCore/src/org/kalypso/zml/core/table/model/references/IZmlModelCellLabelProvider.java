@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,29 +38,25 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.model.columns;
+package org.kalypso.zml.core.table.model.references;
 
-import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
-import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.references.IZmlLabelStrategy;
-import org.kalypso.zml.ui.table.focus.ZmlTableEditingSupport;
-import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
-import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTableValueColumn extends IZmlTableColumn
+public interface IZmlModelCellLabelProvider
 {
-  IZmlTableValueCell findCell( IZmlModelRow row );
+  Image[] getImages( final IZmlModelCell cell );
 
-  IZmlLabelStrategy getLabelingStrategy( );
+  String getText( IZmlModelCell cell );
 
-  ZmlTableEditingSupport getEditingSupport( );
+  Font getFont( );
 
-  ZmlCellRule[] findActiveRules( IZmlModelRow row );
+  Color getBackground( );
 
-  IZmlEditingStrategy getEditingStrategy( );
+  Color getForeground( );
 
-  void setVisible( boolean visibility );
 }

@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,63 +38,61 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider.strategy.labeling;
+package org.kalypso.zml.ui.table.nat.painter;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.zml.core.table.binding.CellStyle;
-import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
-import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.core.table.model.references.IZmlCellStyleProvider;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.core.table.model.references.IZmlModelCellLabelProvider;
 
 /**
  * @author Dirk Kuch
  */
-public abstract class AbstractValueLabelingStrategy implements IZmlLabelStrategy
+public class ZmlIndexLabelProvider implements IZmlModelCellLabelProvider
 {
-  private final IZmlTableColumn m_column;
+  private final IZmlCellStyleProvider m_styleProvider;
 
-  public AbstractValueLabelingStrategy( final IZmlTableColumn column )
+  public ZmlIndexLabelProvider( final IZmlCellStyleProvider styleProvider )
   {
-    m_column = column;
+    m_styleProvider = styleProvider;
   }
 
-  protected String format( final IZmlModelRow row, final Object value ) throws CoreException
+  @Override
+  public Image[] getImages( final IZmlModelCell cell )
   {
-
-    final CellStyle style = m_column.findStyle( row );
-    final String format = style.getTextFormat();
-    if( value instanceof Date )
-    {
-      final SimpleDateFormat sdf = new SimpleDateFormat( format == null ? "dd.MM.yyyy HH:mm" : format );
-      sdf.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
-
-      return sdf.format( value );
-    }
-
-    return String.format( format == null ? "%s" : format, value );
+    return new Image[] {};
   }
 
-  protected IZmlModelValueCell getReference( final IZmlModelRow row )
+  @Override
+  public String getText( final IZmlModelCell cell )
   {
-    if( row == null )
-      return null;
+    final SimpleDateFormat sdf = new SimpleDateFormat();
+    sdf.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
 
-    return row.get( m_column.getModelColumn() );
+    return sdf.format( cell.getIndexValue() );
   }
 
-  protected IZmlTable getTable( )
+  @Override
+  public Font getFont( )
   {
-    return m_column.getTable();
+    return null;
   }
 
-  protected IZmlTableColumn getColumn( )
+  @Override
+  public Color getBackground( )
   {
-    return m_column;
+    return null;
+  }
+
+  @Override
+  public Color getForeground( )
+  {
+    return null;
   }
 
 }

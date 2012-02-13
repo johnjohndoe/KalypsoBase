@@ -53,9 +53,13 @@ import org.kalypso.zml.core.table.binding.DataColumn;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.references.IZmlLabelStrategy;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import org.kalypso.zml.core.table.model.references.InstantaneousValueLabelingStrategy;
+import org.kalypso.zml.core.table.model.references.SumValueLabelingStrategy;
 import org.kalypso.zml.core.table.model.references.ZmlDataValueReference;
+import org.kalypso.zml.core.table.rules.AppliedRule;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.CellStyleType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
@@ -66,15 +70,11 @@ import org.kalypso.zml.ui.table.focus.ZmlTableEditingSupport;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
 import org.kalypso.zml.ui.table.model.visitors.FindTableRowVisitor;
-import org.kalypso.zml.ui.table.provider.AppliedRule;
 import org.kalypso.zml.ui.table.provider.strategy.ZmlCollectRulesVisitor;
 import org.kalypso.zml.ui.table.provider.strategy.editing.ContinuedInterpolatedValueEditingStrategy;
 import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
 import org.kalypso.zml.ui.table.provider.strategy.editing.InterpolatedValueEditingStrategy;
 import org.kalypso.zml.ui.table.provider.strategy.editing.SumValueEditingStrategy;
-import org.kalypso.zml.ui.table.provider.strategy.labeling.IZmlLabelStrategy;
-import org.kalypso.zml.ui.table.provider.strategy.labeling.InstantaneousValueLabelingStrategy;
-import org.kalypso.zml.ui.table.provider.strategy.labeling.SumValueLabelingStrategy;
 
 /**
  * @author Dirk Kuch
@@ -156,9 +156,9 @@ public class ZmlTableValueColumn extends AbstractZmlTableColumn implements IZmlT
 
     final DataColumnType dataColumnType = (DataColumnType) getColumnType().getType();
     if( ITimeseriesConstants.TYPE_RAINFALL.equals( dataColumnType.getValueAxis() ) )
-      m_labeling = new SumValueLabelingStrategy( this );
+      m_labeling = new SumValueLabelingStrategy();
     else
-      m_labeling = new InstantaneousValueLabelingStrategy( this );
+      m_labeling = new InstantaneousValueLabelingStrategy();
 
     return m_labeling;
   }

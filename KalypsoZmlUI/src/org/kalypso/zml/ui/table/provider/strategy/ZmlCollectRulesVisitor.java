@@ -47,7 +47,7 @@ import java.util.Set;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
-import org.kalypso.zml.ui.table.provider.RuleMapper;
+import org.kalypso.zml.core.table.rules.RuleMapper;
 
 /**
  * @author Dirk Kuch

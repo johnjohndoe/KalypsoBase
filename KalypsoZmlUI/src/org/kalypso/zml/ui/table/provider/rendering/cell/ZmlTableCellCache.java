@@ -40,10 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider.rendering.cell;
 
-import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.cells.IZmlTableHeaderCell;
-import org.kalypso.zml.ui.table.model.cells.IZmlTableIndexCell;
-import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
 
@@ -65,16 +61,16 @@ public class ZmlTableCellCache
     synchronized( this )
     {
       // FIXME do some caching
-
-      final IZmlTableCell cell = row.getCell( column );
-      if( cell == null )
-        return null;
-      else if( cell instanceof IZmlTableHeaderCell )
-        return new ZmlTableHeaderCellPainter( (IZmlTableHeaderCell) cell );
-      else if( cell instanceof IZmlTableIndexCell )
-        return new ZmlTableIndexCellPainter( (IZmlTableIndexCell) cell );
-      else if( cell instanceof IZmlTableValueCell )
-        return new ZmlTableValueCellPainter( (IZmlTableValueCell) cell );
+//
+// final IZmlTableCell cell = row.getCell( column );
+// if( cell == null )
+// return null;
+// else if( cell instanceof IZmlTableHeaderCell )
+// return new ZmlTableHeaderCellPainter( (IZmlTableHeaderCell) cell );
+// else if( cell instanceof IZmlTableIndexCell )
+// return new ZmlTableIndexCellPainter( (IZmlTableIndexCell) cell );
+// else if( cell instanceof IZmlTableValueCell )
+// return new ZmlTableValueCellPainter( (IZmlTableValueCell) cell );
 
       throw new UnsupportedOperationException();
     }

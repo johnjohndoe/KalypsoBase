@@ -38,60 +38,58 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider.strategy.labeling;
+package org.kalypso.zml.core.table.model.references;
 
-import org.eclipse.core.runtime.CoreException;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
+import org.kalypso.zml.core.table.model.IZmlModel;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
-import org.kalypso.zml.core.table.rules.IZmlCellRuleImplementation;
-import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.model.columns.IZmlTableValueColumn;
-import org.kalypso.zml.ui.table.model.columns.ZmlTableValueColumn;
 
 /**
- * @author Dirk Kuch
+ * @author kuch
  */
-public class InstantaneousValueLabelingStrategy extends AbstractValueLabelingStrategy
+public abstract class AbstractZmlCell implements IZmlModelCell
 {
+  private final IZmlModelRow m_row;
 
-  public InstantaneousValueLabelingStrategy( final ZmlTableValueColumn column )
+  private final IZmlModelColumn m_column;
+
+  private final int m_tupleModelIndex;
+
+  public AbstractZmlCell( final IZmlModelRow row, final IZmlModelColumn column, final int tupleModelIndex )
   {
-    super( column );
+    m_row = row;
+    m_column = column;
+    m_tupleModelIndex = tupleModelIndex;
   }
 
   @Override
-  protected IZmlTableValueColumn getColumn( )
+  public IZmlModelRow getRow( )
   {
-    return (IZmlTableValueColumn) super.getColumn();
+    return m_row;
   }
 
   @Override
-  public String getText( final IZmlModelRow row ) throws SensorException, CoreException
+  public IZmlModel getModel( )
   {
-    final IZmlModelValueCell reference = getReference( row );
-    if( reference == null )
-      return "";
+    return m_row.getModel();
+  }
 
-    String text = format( row, reference.getValue() );
+  public IZmlModelColumn getColumn( )
+  {
+    return m_column;
+  }
 
-    final ZmlCellRule[] rules = getColumn().findActiveRules( row );
-    for( final ZmlCellRule rule : rules )
-    {
-      try
-      {
-        final IZmlCellRuleImplementation impl = rule.getImplementation();
-        text = impl.update( rule, reference, text );
-      }
-      catch( final SensorException e )
-      {
-        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-      }
-    }
+  @Override
+  public Integer getModelIndex( )
+  {
+    return m_tupleModelIndex;
+  }
 
-    return text;
+  @Override
+  public ZmlCellRule[] findActiveRules( )
+  {
+    return getColumn().findActiveRules( this );
   }
 
 }

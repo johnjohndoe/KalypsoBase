@@ -40,14 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model;
 
+import org.eclipse.core.runtime.CoreException;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.DataColumn;
+import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.core.table.model.references.IZmlModelCellLabelProvider;
 import org.kalypso.zml.core.table.model.transaction.IZmlModelUpdateCommand;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 
@@ -56,6 +61,9 @@ import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
  */
 public interface IZmlModelColumn
 {
+
+  ZmlCellRule[] findActiveRules( IZmlModelCell cell );
+
   void accept( IZmlModelColumnVisitor visitor, DateRange daterange ) throws SensorException;
 
   void accept( IZmlModelColumnVisitor visitor ) throws SensorException;
@@ -111,4 +119,8 @@ public interface IZmlModelColumn
   void removeListener( IZmlModelColumnListener listener );
 
   void dispose( );
+
+  IZmlModelCellLabelProvider getStyleProvider( );
+
+  CellStyle findStyle( IZmlModelCell cell ) throws CoreException;
 }

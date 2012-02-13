@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestra�e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,30 +38,29 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider.strategy.labeling;
+package org.kalypso.zml.core.table.model.references;
 
-import org.eclipse.core.runtime.CoreException;
-import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.ui.table.model.columns.ZmlTableIndexColumn;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public class IndexValueLabelingStrategy extends AbstractValueLabelingStrategy implements IZmlLabelStrategy
+public class SumValuesVisitor implements IZmlModelColumnVisitor
 {
+  private double m_sum = 0;
 
-  public IndexValueLabelingStrategy( final ZmlTableIndexColumn column )
-  {
-    super( column );
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.provider.strategy.IZmlLabelStrategy#getText()
-   */
   @Override
-  public String getText( final IZmlModelRow row ) throws CoreException
+  public void visit( final IZmlModelValueCell reference ) throws SensorException
   {
-    return format( row, row.getIndex() );
+    final Number value = reference.getValue();
+    if( Objects.isNotNull( value ) )
+      m_sum += value.doubleValue();
   }
 
+  public Double getValue( )
+  {
+    return m_sum;
+  }
 }

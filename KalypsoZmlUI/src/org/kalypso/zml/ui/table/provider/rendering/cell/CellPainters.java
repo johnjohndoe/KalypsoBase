@@ -40,13 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider.rendering.cell;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
@@ -81,14 +76,18 @@ public final class CellPainters
     return column.findActiveRules( modelRow );
   }
 
+  @Deprecated
   public static ZmlLabelProvider getLabelProivder( final IZmlTableValueCell cell, final ZmlCellRule[] activeRules )
   {
-    return new ZmlLabelProvider( cell.getRow().getModelRow(), cell.getColumn(), activeRules );
+    throw new UnsupportedOperationException();
+// return new ZmlLabelProvider( cell.getRow().getModelRow(), cell.getColumn(), activeRules );
   }
 
+  @Deprecated
   public static ZmlLabelProvider getLabelProivder( final IZmlTableIndexCell cell, final ZmlCellRule[] activeRules )
   {
-    return new ZmlLabelProvider( cell.getRow().getModelRow(), cell.getColumn(), activeRules );
+    throw new UnsupportedOperationException();
+// return new ZmlLabelProvider( cell.getRow().getModelRow(), cell.getColumn(), activeRules );
   }
 
   public static Image[] findImages( final IZmlTableValueCell cell, final ZmlLabelProvider provider, final ZmlCellRule[] rules )
@@ -113,28 +112,29 @@ public final class CellPainters
 
   public static Image[] findImages( final IZmlModelValueCell reference, final ZmlLabelProvider provider, final ZmlCellRule[] rules )
   {
-    final List<Image> images = new ArrayList<Image>();
-    for( final ZmlCellRule rule : rules )
-    {
-      try
-      {
-        final CellStyle style = provider.resolveRuleStyle( rule, reference );
-        if( Objects.isNull( style ) )
-          continue;
-
-        final Image image = style.getImage();
-        if( Objects.isNull( image ) )
-          continue;
-
-        images.add( image );
-      }
-      catch( final IOException e )
-      {
-        e.printStackTrace();
-      }
-    }
-
-    return images.toArray( new Image[] {} );
+    return null;
+// final List<Image> images = new ArrayList<Image>();
+// for( final ZmlCellRule rule : rules )
+// {
+// try
+// {
+// final CellStyle style = provider.resolveRuleStyle( rule, reference );
+// if( Objects.isNull( style ) )
+// continue;
+//
+// final Image image = style.getImage();
+// if( Objects.isNull( image ) )
+// continue;
+//
+// images.add( image );
+// }
+// catch( final IOException e )
+// {
+// e.printStackTrace();
+// }
+// }
+//
+// return images.toArray( new Image[] {} );
   }
 
 }

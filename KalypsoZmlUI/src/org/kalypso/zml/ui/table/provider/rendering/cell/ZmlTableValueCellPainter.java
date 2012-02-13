@@ -51,34 +51,33 @@ import org.eclipse.swt.widgets.Event;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
+import org.kalypso.zml.core.table.model.references.IZmlModelCellLabelProvider;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.schema.AlignmentType;
-import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
-import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
-import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlTableValueCellPainter extends AbstractZmlTableCellPainter
 {
-  private final ZmlLabelProvider m_provider;
 
   private final ZmlCellRule[] m_activeRules;
 
   private Point m_ptr;
 
-  public ZmlTableValueCellPainter( final IZmlTableValueCell cell )
+  private final IZmlModelCellLabelProvider m_provider;
+
+  public ZmlTableValueCellPainter( final IZmlModelValueCell cell )
   {
     super( cell );
-
-    m_activeRules = CellPainters.getActiveRules( cell );
-    m_provider = CellPainters.getLabelProivder( cell, m_activeRules );
+    m_activeRules = cell.getColumn().findActiveRules( cell );
+    m_provider = cell.getColumn().getStyleProvider();
   }
 
   @Override
-  public IZmlTableValueCell getCell( )
+  public IZmlModelValueCell getCell( )
   {
-    return (IZmlTableValueCell) super.getCell();
+    return (IZmlModelValueCell) super.getCell();
   }
 
   @Override
@@ -89,13 +88,13 @@ public class ZmlTableValueCellPainter extends AbstractZmlTableCellPainter
 
     try
     {
-      final String text = m_provider.getText();
-      initGc( event );
+      final String text = "";// m_provider.getText();
+      initGc( event.gc );
 
       final Point ptr = drawImage( event.gc, new Rectangle( 0, 0, 1, 1 ) );
       add( ptr, event.gc.textExtent( text ) );
 
-      resetGc( event );
+      resetGc( event.gc );
 
       m_ptr = ptr;
       return m_ptr;
@@ -119,7 +118,7 @@ public class ZmlTableValueCellPainter extends AbstractZmlTableCellPainter
   {
     final Point ptr = new Point( 0, 0 );
     if( getImages() == null ) // not initialized?
-      setImages( CellPainters.findImages( getCell(), m_provider, m_activeRules ) );
+      setImages( m_provider.getImages( getCell() ) );
 
     final Image[] images = getImages();
     if( ArrayUtils.isEmpty( images ) )
@@ -143,13 +142,13 @@ public class ZmlTableValueCellPainter extends AbstractZmlTableCellPainter
   {
     try
     {
-      final String label = m_provider.getText();
+      final String label = m_provider.getText( getCell() );
       if( Strings.isEmpty( label ) )
         return new Point( 0, 0 );
 
       final Point extend = gc.textExtent( label );
 
-      final AlignmentType alignment = getCell().getColumn().getColumnType().getAlignment();
+      final AlignmentType alignment = getCell().getColumn().getDataColumn().getAlignment();
       if( AlignmentType.LEFT.equals( alignment ) )
         return drawLeftText( gc, label, bounds, extend );
       else if( AlignmentType.CENTER.equals( alignment ) )
@@ -211,15 +210,13 @@ public class ZmlTableValueCellPainter extends AbstractZmlTableCellPainter
   @Override
   public boolean isVisble( )
   {
-    final IZmlTableColumn column = getCell().getColumn();
-
-    return column.isVisible();
+    return getCell().getColumn().isActive();
   }
 
   @Override
-  public void drawBackground( final Event event )
+  public void drawBackground( final GC gc, final Rectangle bounds )
   {
-    event.gc.fillRectangle( new Rectangle( event.x, event.y, event.width, event.height ) );
+    gc.fillRectangle( bounds );
   }
 
   @Override

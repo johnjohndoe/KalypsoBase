@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraﬂe 22
+ *  Denickestra√üe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,29 +38,54 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.model.columns;
+package org.kalypso.zml.core.table.model.references;
 
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.zml.core.KalypsoZmlCore;
+import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
-import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.references.IZmlLabelStrategy;
-import org.kalypso.zml.ui.table.focus.ZmlTableEditingSupport;
-import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
-import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.rules.IZmlCellRuleImplementation;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTableValueColumn extends IZmlTableColumn
+public class InstantaneousValueLabelingStrategy extends AbstractValueLabelingStrategy
 {
-  IZmlTableValueCell findCell( IZmlModelRow row );
 
-  IZmlLabelStrategy getLabelingStrategy( );
+  public InstantaneousValueLabelingStrategy( )
+  {
+  }
 
-  ZmlTableEditingSupport getEditingSupport( );
+  @Override
+  public String getText( final IZmlModelCell c ) throws SensorException, CoreException
+  {
+    if( c == null )
+      return "";
 
-  ZmlCellRule[] findActiveRules( IZmlModelRow row );
+    final IZmlModelValueCell cell = (IZmlModelValueCell) c;
+    final IZmlModelColumn column = cell.getColumn();
 
-  IZmlEditingStrategy getEditingStrategy( );
+    final CellStyle style = column.findStyle( cell );
+    String text = String.format( style.getTextFormat(), cell.getValue() );
 
-  void setVisible( boolean visibility );
+    final ZmlCellRule[] rules = column.findActiveRules( cell );
+    for( final ZmlCellRule rule : rules )
+    {
+      try
+      {
+        final IZmlCellRuleImplementation impl = rule.getImplementation();
+        text = impl.update( rule, cell, text );
+      }
+      catch( final SensorException e )
+      {
+        KalypsoZmlCore.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      }
+    }
+
+    return text;
+  }
+
 }

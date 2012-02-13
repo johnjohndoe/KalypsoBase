@@ -42,8 +42,8 @@ package org.kalypso.zml.ui.table.model.columns;
 
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.references.IZmlLabelStrategy;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableIndexCell;
-import org.kalypso.zml.ui.table.provider.strategy.labeling.IZmlLabelStrategy;
 
 /**
  * @author Dirk Kuch
