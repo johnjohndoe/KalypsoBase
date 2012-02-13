@@ -38,62 +38,37 @@
  v.doemming@tuhh.de
 
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.simulation.core.internal.local;
+package org.kalypso.simulation.core.calccase;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.eclipse.core.runtime.IStatus;
-import org.kalypso.contribs.java.net.IUrlCatalog;
-import org.kalypso.contribs.java.net.MultiUrlCatalog;
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.KalypsoSimulationCoreExtensions;
-import org.kalypso.simulation.core.KalypsoSimulationCorePlugin;
+import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.simulation.core.i18n.Messages;
 
 /**
  * Lädt alle als EclipsePlugins geladenen Calculation-Plugins anhand des Extension-Points.
  * 
  * @author belger
  */
-public class LocalURLCatalog implements IUrlCatalog
+public class LocalSimulationFactory implements ISimulationFactory
 {
-  private final MultiUrlCatalog m_catalog;
-
-  public LocalURLCatalog( )
+  @Override
+  public String[] getSupportedTypes( )
   {
-    final List<IUrlCatalog> catalogs = new ArrayList<IUrlCatalog>();
-    final IStatus status = KalypsoSimulationCoreExtensions.createCatalogs( catalogs );
-    if( !status.isOK() )
-      KalypsoSimulationCorePlugin.getDefault().getLog().log( status );
-
-    m_catalog = new MultiUrlCatalog( catalogs.toArray( new IUrlCatalog[catalogs.size()] ) );
+    return KalypsoSimulationCoreExtensions.getRegisteredTypeIDs();
   }
 
-  /**
-   * @see org.kalypso.contribs.java.net.IUrlCatalog#getURL(java.lang.String)
-   */
   @Override
-  public URL getURL( final String namespace )
+  public ISimulation createJob( final String typeID ) throws SimulationException
   {
-    return m_catalog.getURL( namespace );
-  }
-
-  /**
-   * @see org.kalypso.contribs.java.net.IUrlCatalog#getPreferedNamespacePrefix(java.lang.String)
-   */
-  @Override
-  public String getPreferedNamespacePrefix( final String namespace )
-  {
-    return m_catalog.getPreferedNamespacePrefix( namespace );
-  }
-
-  /**
-   * @see org.kalypso.contribs.java.net.IUrlCatalog#getCatalog()
-   */
-  @Override
-  public Map<String, URL> getCatalog( )
-  {
-    return m_catalog.getCatalog();
+    try
+    {
+      return KalypsoSimulationCoreExtensions.createSimulation( typeID );
+    }
+    catch( final CoreException e )
+    {
+      throw new SimulationException( Messages.getString( "org.kalypso.simulation.core.internal.local.LocalSimulationFactory.0" ) + typeID, e ); //$NON-NLS-1$
+    }
   }
 }

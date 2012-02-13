@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
-
+ 
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,46 +36,19 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
-
+ 
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.simulation.core.internal.local;
+package org.kalypso.simulation.core.calccase;
 
-import org.eclipse.core.runtime.CoreException;
 import org.kalypso.simulation.core.ISimulation;
-import org.kalypso.simulation.core.KalypsoSimulationCoreExtensions;
 import org.kalypso.simulation.core.SimulationException;
-import org.kalypso.simulation.core.i18n.Messages;
-import org.kalypso.simulation.core.internal.queued.ISimulationFactory;
 
 /**
- * Lädt alle als EclipsePlugins geladenen Calculation-Plugins anhand des Extension-Points.
- * 
  * @author belger
  */
-public class LocalSimulationFactory implements ISimulationFactory
+public interface ISimulationFactory
 {
-  /**
-   * @see org.kalypso.services.calculation.service.impl.ICalcJobFactory#getSupportedTypes()
-   */
-  @Override
-  public String[] getSupportedTypes( )
-  {
-    return KalypsoSimulationCoreExtensions.getRegisteredTypeIDs();
-  }
+  public String[] getSupportedTypes( );
 
-  /**
-   * @see org.kalypso.services.calculation.service.impl.ICalcJobFactory#createJob(java.lang.String)
-   */
-  @Override
-  public ISimulation createJob( final String typeID ) throws SimulationException
-  {
-    try
-    {
-      return KalypsoSimulationCoreExtensions.createSimulation( typeID );
-    }
-    catch( final CoreException e )
-    {
-      throw new SimulationException( Messages.getString( "org.kalypso.simulation.core.internal.local.LocalSimulationFactory.0" ) + typeID, e ); //$NON-NLS-1$
-    }
-  }
+  public ISimulation createJob( final String typeID ) throws SimulationException;
 }

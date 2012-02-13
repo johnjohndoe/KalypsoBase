@@ -57,17 +57,6 @@ import org.eclipse.core.resources.IContainer;
  */
 public interface ISimulationService
 {
-  // TODO: remove unused methods
-  public long getSchemaValidity( final String namespace ) throws SimulationException;
-
-  public String[] getSupportedSchemata( ) throws SimulationException;
-
-  /**
-   * Katalog-Service des Rechendienstes. Gibt für einen Namespace ein Schema zurück. Sollte alle Schemata der von der
-   * jeweiligen Konfiguration unterstüzten Modelle kennen.
-   */
-  public DataHandler getSchema( final String namespace ) throws SimulationException;
-
   /**
    * Gibt die IDs aller unterstützten JobTypen zurück.
    * 

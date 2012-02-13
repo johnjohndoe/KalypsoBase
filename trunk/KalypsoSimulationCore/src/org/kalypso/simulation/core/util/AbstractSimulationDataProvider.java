@@ -60,8 +60,8 @@ import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.simulation.core.ISimulationDataProvider;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.simulation.core.calccase.ModelspecData;
 import org.kalypso.simulation.core.i18n.Messages;
-import org.kalypso.simulation.core.internal.queued.ModelspecData;
 import org.kalypso.simulation.core.simspec.DataType;
 
 /**

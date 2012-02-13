@@ -57,6 +57,7 @@ import org.kalypso.simulation.core.KalypsoSimulationCoreDebug;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationInfo;
+import org.kalypso.simulation.core.calccase.ModelspecData;
 import org.kalypso.simulation.core.util.UnzippedJarSimulationDataProvider;
 
 public class SimulationThread extends Thread

@@ -55,13 +55,15 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.java.net.IUrlCatalog;
+import org.kalypso.simulation.core.calccase.ISimulationRunner;
 import org.kalypso.simulation.core.i18n.Messages;
 import org.kalypso.simulation.core.internal.FailureService;
 
 /**
  * Helper class to read extension points from registry.
- * 
+ *
  * @author Belger
  */
 public class KalypsoSimulationCoreExtensions
@@ -80,12 +82,18 @@ public class KalypsoSimulationCoreExtensions
 
   private final static String EXT_ATTRIB_CATALOGCLASS = "catalogClass"; //$NON-NLS-1$
 
+  private static final Object EXT_NAME_SIMULATION = "simulation"; //$NON-NLS-1$
+
+  private static final Object EXT_NAME_SIMULATION_RUNNER = "simulationRunner"; //$NON-NLS-1$
+
+  private final static String EXT_ATTRIB_ID = "id"; //$NON-NLS-1$
+
+  private final static String EXT_ATTRIB_CLASS = "class"; //$NON-NLS-1$
+
   /**
-   * Reads the extension point.
-   * <p>
+   * Reads the extension point.<br/>
    * REMARK: we hash with the typeID, so if anyone tries to register another simulation for the same typeID, only one
-   * survives.
-   * </p>
+   * survives. </p>
    * <p>
    * Maybe it is better not to hash, and let the user decide which implementation to use.
    * </p>
@@ -104,18 +112,48 @@ public class KalypsoSimulationCoreExtensions
       final IConfigurationElement[] configurationElements = extension.getConfigurationElements();
       for( final IConfigurationElement element : configurationElements )
       {
-        final String typeID = element.getAttribute( EXT_ATTRIB_SIMULATIONID );
-        elements.put( typeID, element );
+        if( EXT_NAME_SIMULATION.equals( element.getName() ) )
+        {
+          final String typeID = element.getAttribute( EXT_ATTRIB_SIMULATIONID );
+          elements.put( typeID, element );
+        }
       }
     }
 
     return elements;
   }
 
+  public static ISimulationRunner createSimulationRunner( final String id ) throws CoreException
+  {
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+
+    final IExtensionPoint point = registry.getExtensionPoint( KalypsoSimulationCorePlugin.getID(), EXT_ELEMENT_SIMULATION );
+
+    final IExtension[] extensions = point.getExtensions();
+
+    for( final IExtension extension : extensions )
+    {
+      final IConfigurationElement[] configurationElements = extension.getConfigurationElements();
+      for( final IConfigurationElement element : configurationElements )
+      {
+        if( EXT_NAME_SIMULATION_RUNNER.equals( element.getName() ) )
+        {
+          final String elementId = element.getAttribute( EXT_ATTRIB_ID );
+          if( elementId.equals( id ) )
+            return (ISimulationRunner) element.createExecutableExtension( EXT_ATTRIB_CLASS );
+        }
+      }
+    }
+
+    final String messsage = String.format( "Failed to instantiate simulation runner with id '%s'", id ); //$NON-NLS-1$
+    final IStatus status = new Status( IStatus.ERROR, KalypsoSimulationCorePlugin.getID(), messsage );
+    throw new CoreException( status );
+  }
+
   /**
    * Adds all defined {@link IUrlCatalog}s to the given list.
-   * 
-   * @return A status indicating the succes of the process.
+   *
+   * @return A status indicating the success of the process.
    */
   public static IStatus createCatalogs( final List<IUrlCatalog> catalogs )
   {
@@ -162,7 +200,7 @@ public class KalypsoSimulationCoreExtensions
 
   /**
    * This function creates a linked list with all simulations.
-   * 
+   *
    * @return All simulations.
    */
   public static List<ISimulation> createSimulations( ) throws CoreException

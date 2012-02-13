@@ -55,9 +55,10 @@ import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationDescription;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationInfo;
+import org.kalypso.simulation.core.calccase.ISimulationFactory;
+import org.kalypso.simulation.core.calccase.LocalSimulationFactory;
+import org.kalypso.simulation.core.calccase.ModelspecData;
 import org.kalypso.simulation.core.i18n.Messages;
-import org.kalypso.simulation.core.internal.queued.ISimulationFactory;
-import org.kalypso.simulation.core.internal.queued.ModelspecData;
 import org.kalypso.simulation.core.internal.queued.SimulationThread;
 import org.kalypso.simulation.core.util.SimulationUtilitites;
 
@@ -206,53 +207,15 @@ public class SingleSimulationService implements ISimulationService
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.kalypso.simulation.core.ISimulationService#getRequiredInput(java. lang.String)
-   */
   @Override
   public SimulationDescription[] getRequiredInput( final String typeID ) throws SimulationException
   {
     return getModelspec( typeID ).getInput();
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.kalypso.simulation.core.ISimulationService#getDeliveringResults(java .lang.String)
-   */
   @Override
   public SimulationDescription[] getDeliveringResults( final String typeID ) throws SimulationException
   {
     return getModelspec( typeID ).getOutput();
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see org.kalypso.simulation.core.ISimulationService#getSchema(java.lang.String )
-   */
-  @Override
-  public DataHandler getSchema( final String namespace )
-  {
-    return null;
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see org.kalypso.simulation.core.ISimulationService#getSchemaValidity(java .lang.String)
-   */
-  @Override
-  public long getSchemaValidity( final String namespace )
-  {
-    return 0;
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see org.kalypso.simulation.core.ISimulationService#getSupportedSchemata()
-   */
-  @Override
-  public String[] getSupportedSchemata( )
-  {
-    return null;
   }
 }

@@ -50,7 +50,7 @@ import javax.activation.DataHandler;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.simulation.core.SimulationDataPath;
-import org.kalypso.simulation.core.internal.queued.ModelspecData;
+import org.kalypso.simulation.core.calccase.ModelspecData;
 
 /**
  * @author belger
