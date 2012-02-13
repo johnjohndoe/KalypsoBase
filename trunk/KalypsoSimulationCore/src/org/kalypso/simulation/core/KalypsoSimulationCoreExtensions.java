@@ -57,9 +57,9 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.java.net.IUrlCatalog;
-import org.kalypso.simulation.core.calccase.ISimulationRunner;
 import org.kalypso.simulation.core.i18n.Messages;
 import org.kalypso.simulation.core.internal.FailureService;
+import org.kalypso.simulation.core.refactoring.ISimulationRunner;
 
 /**
  * Helper class to read extension points from registry.
@@ -69,8 +69,6 @@ import org.kalypso.simulation.core.internal.FailureService;
 public class KalypsoSimulationCoreExtensions
 {
   private final static String EXT_ELEMENT_SERVICE = "simulationService"; //$NON-NLS-1$
-
-  // private final static String EXT_ATTRIB_SERVICEID = "id";
 
   private final static String EXT_ATTRIB_SERVICECLASS = "class"; //$NON-NLS-1$
 
@@ -121,33 +119,6 @@ public class KalypsoSimulationCoreExtensions
     }
 
     return elements;
-  }
-
-  public static ISimulationRunner createSimulationRunner( final String id ) throws CoreException
-  {
-    final IExtensionRegistry registry = Platform.getExtensionRegistry();
-
-    final IExtensionPoint point = registry.getExtensionPoint( KalypsoSimulationCorePlugin.getID(), EXT_ELEMENT_SIMULATION );
-
-    final IExtension[] extensions = point.getExtensions();
-
-    for( final IExtension extension : extensions )
-    {
-      final IConfigurationElement[] configurationElements = extension.getConfigurationElements();
-      for( final IConfigurationElement element : configurationElements )
-      {
-        if( EXT_NAME_SIMULATION_RUNNER.equals( element.getName() ) )
-        {
-          final String elementId = element.getAttribute( EXT_ATTRIB_ID );
-          if( elementId.equals( id ) )
-            return (ISimulationRunner) element.createExecutableExtension( EXT_ATTRIB_CLASS );
-        }
-      }
-    }
-
-    final String messsage = String.format( "Failed to instantiate simulation runner with id '%s'", id ); //$NON-NLS-1$
-    final IStatus status = new Status( IStatus.ERROR, KalypsoSimulationCorePlugin.getID(), messsage );
-    throw new CoreException( status );
   }
 
   /**
@@ -219,6 +190,33 @@ public class KalypsoSimulationCoreExtensions
     }
 
     return simulations;
+  }
+
+  public static ISimulationRunner createSimulationRunner( final String id ) throws CoreException
+  {
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+
+    final IExtensionPoint point = registry.getExtensionPoint( KalypsoSimulationCorePlugin.getID(), EXT_ELEMENT_SIMULATION );
+
+    final IExtension[] extensions = point.getExtensions();
+
+    for( final IExtension extension : extensions )
+    {
+      final IConfigurationElement[] configurationElements = extension.getConfigurationElements();
+      for( final IConfigurationElement element : configurationElements )
+      {
+        if( EXT_NAME_SIMULATION_RUNNER.equals( element.getName() ) )
+        {
+          final String elementId = element.getAttribute( EXT_ATTRIB_ID );
+          if( elementId.equals( id ) )
+            return (ISimulationRunner) element.createExecutableExtension( EXT_ATTRIB_CLASS );
+        }
+      }
+    }
+
+    final String messsage = String.format( "Failed to instantiate simulation runner with id '%s'", id ); //$NON-NLS-1$
+    final IStatus status = new Status( IStatus.ERROR, KalypsoSimulationCorePlugin.getID(), messsage );
+    throw new CoreException( status );
   }
 
   public static String[] getRegisteredTypeIDs( )
