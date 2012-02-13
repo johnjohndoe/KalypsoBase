@@ -40,13 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model.references;
 
-
 /**
  * @author Dirk Kuch
  */
 public interface IZmlModelIndexCell extends IZmlModelCell
 {
-
-  IZmlCellStyleProvider getStyleProvider( );
 
 }

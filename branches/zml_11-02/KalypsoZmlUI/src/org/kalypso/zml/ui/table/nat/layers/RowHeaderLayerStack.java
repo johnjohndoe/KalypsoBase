@@ -6,13 +6,14 @@ import net.sourceforge.nattable.layer.AbstractLayerTransform;
 import net.sourceforge.nattable.layer.DataLayer;
 
 import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.references.ZmlIndexValueReference;
 
 public class RowHeaderLayerStack extends AbstractLayerTransform
 {
 
   private final IDataProvider m_provider;
 
-  private final BodyLayerStack m_bodyLayer;
+  protected final BodyLayerStack m_bodyLayer;
 
   public RowHeaderLayerStack( final BodyLayerStack body )
   {
@@ -36,7 +37,7 @@ public class RowHeaderLayerStack extends AbstractLayerTransform
       {
         final IZmlModelRow row = m_bodyLayer.getModel().getRowAt( rowIndex );
 
-        return row.getIndex();
+        return new ZmlIndexValueReference( row );
       }
 
       @Override
@@ -46,7 +47,7 @@ public class RowHeaderLayerStack extends AbstractLayerTransform
       }
     };
 
-    final DataLayer dataLayer = new DataLayer( getProvider(), 200, 20 );
+    final DataLayer dataLayer = new DataLayer( getProvider() );
     final RowHeaderLayer rowHeaderLayer = new RowHeaderLayer( dataLayer, m_bodyLayer, m_bodyLayer.getSelectionLayer() );
     setUnderlyingLayer( rowHeaderLayer );
   }

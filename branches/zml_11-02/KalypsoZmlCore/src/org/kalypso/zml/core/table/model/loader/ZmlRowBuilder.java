@@ -74,11 +74,8 @@ public class ZmlRowBuilder
   {
     final Map<Date, IZmlModelRow> rows = Collections.synchronizedMap( new TreeMap<Date, IZmlModelRow>() );
 
-    for( final IZmlModelColumn column : m_model.getColumns() )
+    for( final IZmlModelColumn column : m_model.getActiveColumns() )
     {
-      if( !column.isActive() )
-        continue;
-
       final DataColumn type = column.getDataColumn();
       final IAxis[] axes = column.getAxes();
       final IAxis indexAxis = AxisUtils.findAxis( axes, type.getIndexAxis() );

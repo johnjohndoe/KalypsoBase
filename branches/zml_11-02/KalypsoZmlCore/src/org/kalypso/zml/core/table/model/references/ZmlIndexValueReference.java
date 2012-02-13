@@ -89,9 +89,4 @@ public class ZmlIndexValueReference extends AbstractZmlCell implements IZmlModel
     return builder.toHashCode();
   }
 
-  @Override
-  public IZmlCellStyleProvider getStyleProvider( )
-  {
-    return ZmlIndexCellStyleProvider.getInstance();
-  }
 }

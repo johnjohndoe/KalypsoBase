@@ -44,6 +44,7 @@ import net.sourceforge.nattable.data.convert.DisplayConverter;
 
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlModelCellLabelProvider;
+import org.kalypso.zml.core.table.model.references.IZmlModelIndexCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 
 /**
@@ -54,13 +55,25 @@ public class ZmlModelCellDisplayConverter extends DisplayConverter
   @Override
   public Object canonicalToDisplayValue( final Object canonicalValue )
   {
-    if( canonicalValue instanceof IZmlModelValueCell )
+    if( canonicalValue instanceof IZmlModelIndexCell )
+    {
+      final ZmlIndexLabelProvider provider = new ZmlIndexLabelProvider();
+
+      return provider.getText( (IZmlModelIndexCell) canonicalValue );
+    }
+    else if( canonicalValue instanceof IZmlModelValueCell )
     {
       final IZmlModelValueCell cell = (IZmlModelValueCell) canonicalValue;
       final IZmlModelColumn column = cell.getColumn();
       final IZmlModelCellLabelProvider provider = column.getStyleProvider();
 
       return provider.getText( cell );
+    }
+    else if( canonicalValue instanceof IZmlModelColumn )
+    {
+      final IZmlModelColumn column = (IZmlModelColumn) canonicalValue;
+
+      return column.getLabel();
     }
 
     return canonicalValue.toString();

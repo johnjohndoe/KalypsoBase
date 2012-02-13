@@ -46,7 +46,6 @@ import net.sourceforge.nattable.style.Style;
 
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.zml.core.table.model.references.IZmlCellStyleProvider;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelCellLabelProvider;
 
@@ -55,12 +54,6 @@ import org.kalypso.zml.core.table.model.references.IZmlModelCellLabelProvider;
  */
 public class ZmlIndexLabelProvider implements IZmlModelCellLabelProvider
 {
-  private final IZmlCellStyleProvider m_styleProvider;
-
-  public ZmlIndexLabelProvider( final IZmlCellStyleProvider styleProvider )
-  {
-    m_styleProvider = styleProvider;
-  }
 
   @Override
   public Image[] getImages( final IZmlModelCell cell )

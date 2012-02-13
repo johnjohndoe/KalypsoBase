@@ -55,6 +55,7 @@ import net.sourceforge.nattable.style.Style;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlModelCellLabelProvider;
 import org.kalypso.zml.core.table.model.references.IZmlModelIndexCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
@@ -71,22 +72,21 @@ public class ZmlModelCellPainter extends AbstractCellPainter
     final Object object = cell.getDataValue();
     if( object instanceof IZmlModelIndexCell )
     {
-      final IZmlModelIndexCell index = (IZmlModelIndexCell) object;
-      final ZmlIndexLabelProvider provider = new ZmlIndexLabelProvider( index.getStyleProvider() );
+      final Style style = new Style();
+      style.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, HorizontalAlignmentEnum.LEFT );
 
-      final Image[] images = provider.getImages( index );
-      final String text = provider.getText( index );
+      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, style, DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
 
+      final TextPainter painter = new TextPainter();
+      painter.paintCell( cell, gc, bounds, configRegistry );
     }
     else if( object instanceof IZmlModelValueCell )
     {
-
       final IZmlModelValueCell value = (IZmlModelValueCell) object;
       final IZmlModelCellLabelProvider provider = value.getColumn().getStyleProvider();
 
       final Style imageCellStyle = new Style();
       imageCellStyle.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, HorizontalAlignmentEnum.LEFT );
-
       configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, imageCellStyle, DisplayMode.NORMAL, GridRegion.BODY.toString() );
 
       Rectangle ptr = new Rectangle( bounds.x, bounds.y, bounds.width, bounds.height );
@@ -107,7 +107,18 @@ public class ZmlModelCellPainter extends AbstractCellPainter
       painter.paintCell( cell, gc, ptr, configRegistry );
 
     }
+    else if( object instanceof IZmlModelColumn )
+    {
+      final Style style = new Style();
+      style.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, HorizontalAlignmentEnum.LEFT );
 
+      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, style, DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
+
+      final TextPainter painter = new TextPainter();
+      painter.paintCell( cell, gc, bounds, configRegistry );
+    }
+    else
+      throw new UnsupportedOperationException();
   }
 
   private Rectangle move( final Rectangle ptr, final Rectangle bounds )
@@ -121,13 +132,12 @@ public class ZmlModelCellPainter extends AbstractCellPainter
     final Object object = cell.getDataValue();
     if( object instanceof IZmlModelIndexCell )
     {
-      final IZmlModelIndexCell index = (IZmlModelIndexCell) object;
-      final ZmlIndexLabelProvider provider = new ZmlIndexLabelProvider( index.getStyleProvider() );
+      final Style style = new Style();
+      style.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, HorizontalAlignmentEnum.LEFT );
+      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, style, DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
 
-      final Image[] images = provider.getImages( index );
-      final String text = provider.getText( index );
-
-      throw new UnsupportedOperationException();
+      final TextPainter painter = new TextPainter();
+      return painter.getPreferredWidth( cell, gc, configRegistry );
     }
     else if( object instanceof IZmlModelValueCell )
     {
@@ -147,6 +157,16 @@ public class ZmlModelCellPainter extends AbstractCellPainter
 
       return width;
     }
+    else if( object instanceof IZmlModelColumn )
+    {
+      final Style style = new Style();
+      style.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, HorizontalAlignmentEnum.LEFT );
+
+      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, style, DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
+
+      final TextPainter painter = new TextPainter();
+      return painter.getPreferredWidth( cell, gc, configRegistry );
+    }
 
     throw new UnsupportedOperationException();
   }
@@ -157,13 +177,12 @@ public class ZmlModelCellPainter extends AbstractCellPainter
     final Object object = cell.getDataValue();
     if( object instanceof IZmlModelIndexCell )
     {
-      final IZmlModelIndexCell index = (IZmlModelIndexCell) object;
-      final ZmlIndexLabelProvider provider = new ZmlIndexLabelProvider( index.getStyleProvider() );
+      final Style style = new Style();
+      style.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, HorizontalAlignmentEnum.LEFT );
+      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, style, DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
 
-      final Image[] images = provider.getImages( index );
-      final String text = provider.getText( index );
-
-      throw new UnsupportedOperationException();
+      final TextPainter painter = new TextPainter();
+      return painter.getPreferredHeight( cell, gc, configRegistry );
     }
     else if( object instanceof IZmlModelValueCell )
     {
@@ -183,6 +202,16 @@ public class ZmlModelCellPainter extends AbstractCellPainter
       height = Math.max( painter.getPreferredHeight( cell, gc, configRegistry ), height );
 
       return height;
+    }
+    else if( object instanceof IZmlModelColumn )
+    {
+      final Style style = new Style();
+      style.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, HorizontalAlignmentEnum.LEFT );
+
+      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, style, DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
+
+      final TextPainter painter = new TextPainter();
+      return painter.getPreferredHeight( cell, gc, configRegistry );
     }
 
     throw new UnsupportedOperationException();

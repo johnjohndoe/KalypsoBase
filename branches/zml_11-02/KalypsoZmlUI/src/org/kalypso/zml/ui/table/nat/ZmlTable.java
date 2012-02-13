@@ -56,7 +56,6 @@ import net.sourceforge.nattable.style.DisplayMode;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -130,8 +129,15 @@ public class ZmlTable extends Composite implements IZmlTable
 
     final IConfigRegistry registry = m_natTable.getConfigRegistry();
 
-    registry.registerConfigAttribute( CellConfigAttributes.DISPLAY_CONVERTER, new ZmlModelCellDisplayConverter(), DisplayMode.NORMAL, GridRegion.BODY.toString() );
-    registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new ZmlModelCellPainter(), DisplayMode.NORMAL, GridRegion.BODY.toString() );
+    final ZmlModelCellDisplayConverter converter = new ZmlModelCellDisplayConverter();
+    registry.registerConfigAttribute( CellConfigAttributes.DISPLAY_CONVERTER, converter, DisplayMode.NORMAL, GridRegion.BODY.toString() );
+    registry.registerConfigAttribute( CellConfigAttributes.DISPLAY_CONVERTER, converter, DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
+    registry.registerConfigAttribute( CellConfigAttributes.DISPLAY_CONVERTER, converter, DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
+
+    final ZmlModelCellPainter painter = new ZmlModelCellPainter();
+    registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, painter, DisplayMode.NORMAL, GridRegion.BODY.toString() );
+    registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, painter, DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
+    registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, painter, DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
 
 // registry.registerConfigAttribute( configAttribute, attributeValue, targetDisplayMode, configLabel )
 
@@ -149,13 +155,6 @@ public class ZmlTable extends Composite implements IZmlTable
     m_natTable.update(); // TODO perhaps some other update event
 // throw new UnsupportedOperationException();
 // m_tableViewer.refresh( true, true );
-  }
-
-  @Override
-  public TableViewer getViewer( )
-  {
-    return null;
-// return m_tableViewer;
   }
 
   @Override
