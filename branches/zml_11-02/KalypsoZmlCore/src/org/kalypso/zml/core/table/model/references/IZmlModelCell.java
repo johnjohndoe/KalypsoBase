@@ -42,6 +42,7 @@ package org.kalypso.zml.core.table.model.references;
 
 import java.util.Date;
 
+import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 
@@ -50,6 +51,7 @@ import org.kalypso.zml.core.table.model.IZmlModelRow;
  */
 public interface IZmlModelCell
 {
+
   Date getIndexValue( );
 
   IZmlModel getModel( );
@@ -57,4 +59,6 @@ public interface IZmlModelCell
   IZmlModelRow getRow( );
 
   Integer getModelIndex( );
+
+  ZmlCellRule[] findActiveRules( );
 }

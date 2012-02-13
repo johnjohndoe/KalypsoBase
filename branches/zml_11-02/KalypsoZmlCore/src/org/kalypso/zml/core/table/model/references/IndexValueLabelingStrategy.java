@@ -38,16 +38,30 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider.strategy.labeling;
+package org.kalypso.zml.core.table.model.references;
 
-import org.eclipse.core.runtime.CoreException;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.core.table.model.IZmlModelRow;
+import java.text.SimpleDateFormat;
+
+import org.kalypso.core.KalypsoCorePlugin;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlLabelStrategy
+@Deprecated
+public class IndexValueLabelingStrategy extends AbstractValueLabelingStrategy implements IZmlLabelStrategy
 {
-  String getText( final IZmlModelRow row ) throws SensorException, CoreException;
+
+  public IndexValueLabelingStrategy( )
+  {
+  }
+
+  @Override
+  public String getText( final IZmlModelCell cell )
+  {
+    final SimpleDateFormat sdf = new SimpleDateFormat();
+    sdf.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
+
+    return sdf.format( cell.getIndexValue() );
+  }
+
 }

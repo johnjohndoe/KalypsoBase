@@ -44,37 +44,17 @@ import java.util.Date;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlIndexValueReference implements IZmlModelIndexCell
+public class ZmlIndexValueReference extends AbstractZmlCell implements IZmlModelIndexCell
 {
-  private final IZmlModelRow m_row;
 
   public ZmlIndexValueReference( final IZmlModelRow row )
   {
-    m_row = row;
-  }
-
-  @Override
-  public IZmlModelRow getRow( )
-  {
-    return m_row;
-  }
-
-  @Override
-  public IZmlModel getModel( )
-  {
-    return m_row.getModel();
-  }
-
-  @Override
-  public Integer getModelIndex( )
-  {
-    throw new UnsupportedOperationException();
+    super( row, null, -1 );
   }
 
   @Override
@@ -107,5 +87,11 @@ public class ZmlIndexValueReference implements IZmlModelIndexCell
     builder.append( getIndexValue() );
 
     return builder.toHashCode();
+  }
+
+  @Override
+  public IZmlCellStyleProvider getStyleProvider( )
+  {
+    return ZmlIndexCellStyleProvider.getInstance();
   }
 }

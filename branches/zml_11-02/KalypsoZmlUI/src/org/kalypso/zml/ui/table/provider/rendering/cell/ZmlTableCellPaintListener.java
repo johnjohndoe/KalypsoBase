@@ -50,7 +50,6 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableValueColumn;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
@@ -133,12 +132,12 @@ public class ZmlTableCellPaintListener implements Listener
     if( Objects.isNull( renderer ) )
       return;
 
-    renderer.initGc( event );
+    renderer.initGc( event.gc );
 
     if( (event.detail & SWT.SELECTED) == 0 )
-      renderer.drawBackground( event );
+      renderer.drawBackground( event.gc, null );
 
-    renderer.resetGc( event );
+    renderer.resetGc( event.gc );
 
     event.detail &= ~SWT.BACKGROUND; // default cell background should not be drawn
 // event.detail &= ~SWT.SELECTED; // default swt selection style should not be drawn
@@ -153,7 +152,7 @@ public class ZmlTableCellPaintListener implements Listener
     if( Objects.isNull( renderer ) )
       return;
 
-    renderer.initGc( event );
+    renderer.initGc( event.gc );
 
     final Rectangle bounds = event.getBounds();
     bounds.width = getTableColumnWidth( renderer );
@@ -161,7 +160,7 @@ public class ZmlTableCellPaintListener implements Listener
     apply( bounds, renderer.drawImage( event.gc, bounds ) );
     apply( bounds, renderer.drawText( event.gc, bounds ) );
 
-    renderer.resetGc( event );
+    renderer.resetGc( event.gc );
 
     event.detail &= ~SWT.FOREGROUND;
 
@@ -177,8 +176,10 @@ public class ZmlTableCellPaintListener implements Listener
 
   private int getTableColumnWidth( final IZmlTableCellPainter renderer )
   {
-    final IZmlTableCell cell = renderer.getCell();
-    return cell.getColumn().getTableViewerColumn().getColumn().getWidth();
+// final IZmlTableCell cell = renderer.getCell();
+// return cell.getColumn().getTableViewerColumn().getColumn().getWidth();
+
+    throw new UnsupportedOperationException();
   }
 
   private IZmlTableCellPainter findCellPainter( final Event event )

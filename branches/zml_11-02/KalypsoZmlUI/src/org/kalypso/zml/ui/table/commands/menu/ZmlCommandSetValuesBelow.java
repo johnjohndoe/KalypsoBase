@@ -85,8 +85,8 @@ public class ZmlCommandSetValuesBelow extends AbstractHandler
       final IZmlEditingStrategy strategy = column.getEditingStrategy();
       if( strategy.isAggregated() )
       {
-        final ZmlLabelProvider provider = new ZmlLabelProvider( active.getRow().getModelRow(), column, new ZmlCellRule[] {} );
-        final String targetValue = provider.getText();
+        final ZmlLabelProvider provider = new ZmlLabelProvider( active.getRow().getModelRow(), null, new ZmlCellRule[] {} );
+        final String targetValue = provider.getText( null );
 
         IZmlTableValueCell ptr = active.findNextCell();
         while( ptr != null )

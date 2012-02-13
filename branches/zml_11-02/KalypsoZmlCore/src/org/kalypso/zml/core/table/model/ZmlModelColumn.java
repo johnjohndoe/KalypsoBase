@@ -44,6 +44,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.lang.Strings;
@@ -58,12 +59,18 @@ import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 import org.kalypso.repository.IDataSourceItem;
+import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.DataColumn;
+import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataListener;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.core.table.model.references.IZmlModelCellLabelProvider;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.transaction.IZmlModelUpdateCommand;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
+import org.kalypso.zml.core.table.rules.RuleMapper;
+import org.kalypso.zml.core.table.schema.CellStyleType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 
 /**
@@ -85,11 +92,78 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
 
   private String m_labelTokenizer;
 
+  private final RuleMapper m_mapper;
+
+  private final ZmlValueLabelProvider m_styleProvider;
+
+  private IZmlModelCell m_lastCell;
+
+  private CellStyle m_lastCellStyle;
+
   public ZmlModelColumn( final IZmlModel model, final String identifier, final DataColumn type )
   {
     m_model = model;
     m_identifier = identifier;
     m_type = type;
+
+    m_mapper = new RuleMapper( this );
+    m_styleProvider = new ZmlValueLabelProvider( this );
+  }
+
+  @Override
+  public CellStyle findStyle( final IZmlModelCell cell ) throws CoreException
+  {
+    if( m_lastCell == cell )
+      return m_lastCellStyle;
+
+    final IZmlModelValueCell valueCell = (IZmlModelValueCell) cell;
+
+    final ZmlCellRule[] rules = findActiveRules( cell );
+    if( ArrayUtils.isNotEmpty( rules ) )
+    {
+      CellStyleType baseType = getDataColumn().getDefaultStyle().getType();
+      for( final ZmlCellRule rule : rules )
+      {
+
+        final CellStyle style = rule.getStyle( cell.getRow(), valueCell.getColumn().getDataColumn() );
+        baseType = CellStyle.merge( baseType, style.getType() );
+      }
+
+      m_lastCellStyle = new CellStyle( baseType );
+    }
+    else
+    {
+      m_lastCellStyle = valueCell.getColumn().getDataColumn().getDefaultStyle();
+    }
+
+    m_lastCell = cell;
+
+    return m_lastCellStyle;
+  }
+
+  @Override
+  public ZmlCellRule[] findActiveRules( final IZmlModelCell cell )
+  { // TODO
+// final int resolution = getTable().getResolution();
+//
+// if( resolution == 0 )
+// return findSimpleActiveRules( row );
+// else
+// {
+// final DataColumn type = getModelColumn().getDataColumn();
+// if( ITimeseriesConstants.TYPE_RAINFALL.equals( type.getValueAxis() ) )
+// return findAggregatedActiveRules( row );
+//
+// return findSimpleActiveRules( row );
+// }
+
+    final IZmlModelRow row = cell.getRow();
+
+    final IZmlModelCell reference = row.get( getDataColumn().getType() );
+    if( Objects.isNull( reference ) )
+      return new ZmlCellRule[] {};
+
+    return m_mapper.findActiveRules( reference );
   }
 
   public ZmlModelColumn( final IZmlModel model, final DataColumn column )
@@ -465,6 +539,12 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   public String getLabelTokenizer( )
   {
     return m_labelTokenizer;
+  }
+
+  @Override
+  public IZmlModelCellLabelProvider getStyleProvider( )
+  {
+    return m_styleProvider;
   }
 
 }

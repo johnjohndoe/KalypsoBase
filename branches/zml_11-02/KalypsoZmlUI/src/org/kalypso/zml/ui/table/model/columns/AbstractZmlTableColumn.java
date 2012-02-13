@@ -52,13 +52,13 @@ import org.eclipse.swt.widgets.TableItem;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.rules.RuleMapper;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.model.AbstractZmlTableElement;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableRow;
 import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
-import org.kalypso.zml.ui.table.provider.RuleMapper;
 
 /**
  * @author Dirk Kuch
@@ -67,7 +67,7 @@ public abstract class AbstractZmlTableColumn extends AbstractZmlTableElement imp
 {
   private final BaseColumn m_type;
 
-  private final RuleMapper m_mapper;
+  private final RuleMapper m_mapper = null;
 
   private final TableViewerColumn m_viewerColumn;
 
@@ -81,7 +81,7 @@ public abstract class AbstractZmlTableColumn extends AbstractZmlTableElement imp
     m_viewerColumn = viewerColumn;
     m_index = index;
 
-    m_mapper = new RuleMapper( table, type );
+// m_mapper = new RuleMapper( table.get );
   }
 
   protected RuleMapper getMapper( )
@@ -89,6 +89,7 @@ public abstract class AbstractZmlTableColumn extends AbstractZmlTableElement imp
     return m_mapper;
   }
 
+  @Override
   public int getIndex( )
   {
     return m_index;

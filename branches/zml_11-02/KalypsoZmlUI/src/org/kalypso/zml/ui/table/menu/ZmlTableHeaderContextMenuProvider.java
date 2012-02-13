@@ -51,9 +51,9 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.ColumnHeader;
+import org.kalypso.zml.core.table.rules.AppliedRule;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
-import org.kalypso.zml.ui.table.provider.AppliedRule;
 
 /**
  * @author Dirk Kuch

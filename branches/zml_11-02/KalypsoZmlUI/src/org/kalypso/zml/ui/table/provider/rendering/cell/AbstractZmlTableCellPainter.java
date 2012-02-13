@@ -40,13 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider.rendering.cell;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Event;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 
 /**
  * @author Dirk Kuch
@@ -59,17 +58,17 @@ public abstract class AbstractZmlTableCellPainter implements IZmlTableCellPainte
 
   private Font m_font;
 
-  private final IZmlTableCell m_cell;
+  private final IZmlModelCell m_cell;
 
   private Image[] m_images;
 
-  public AbstractZmlTableCellPainter( final IZmlTableCell cell )
+  public AbstractZmlTableCellPainter( final IZmlModelCell cell )
   {
     m_cell = cell;
   }
 
   @Override
-  public IZmlTableCell getCell( )
+  public IZmlModelCell getCell( )
   {
     return m_cell;
   }
@@ -85,23 +84,23 @@ public abstract class AbstractZmlTableCellPainter implements IZmlTableCellPainte
   }
 
   @Override
-  public void initGc( final Event event )
+  public void initGc( final GC gc )
   {
-    m_background = event.gc.getBackground();
-    m_foreground = event.gc.getForeground();
-    m_font = event.gc.getFont();
+    m_background = gc.getBackground();
+    m_foreground = gc.getForeground();
+    m_font = gc.getFont();
 
     final Color background = getBackground();
-    if( Objects.isNotNull( background ) && (event.detail & SWT.SELECTED) == 0 )
-      event.gc.setBackground( background );
+    if( Objects.isNotNull( background ) ) // TODO && (event.detail & SWT.SELECTED) == 0 )
+      gc.setBackground( background );
 
     final Color foreground = getForeground();
     if( Objects.isNotNull( foreground ) )
-      event.gc.setForeground( foreground );
+      gc.setForeground( foreground );
 
     final Font font = getFont();
     if( Objects.isNotNull( font ) )
-      event.gc.setFont( font );
+      gc.setFont( font );
   }
 
   protected abstract Font getFont( );
@@ -111,10 +110,10 @@ public abstract class AbstractZmlTableCellPainter implements IZmlTableCellPainte
   protected abstract Color getForeground( );
 
   @Override
-  public void resetGc( final Event event )
+  public void resetGc( final GC gc )
   {
-    event.gc.setBackground( m_background );
-    event.gc.setForeground( m_foreground );
-    event.gc.setFont( m_font );
+    gc.setBackground( m_background );
+    gc.setForeground( m_foreground );
+    gc.setFont( m_font );
   }
 }

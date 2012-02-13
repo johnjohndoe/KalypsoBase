@@ -44,10 +44,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sourceforge.nattable.NatTable;
+import net.sourceforge.nattable.config.CellConfigAttributes;
+import net.sourceforge.nattable.config.IConfigRegistry;
+import net.sourceforge.nattable.grid.GridRegion;
 import net.sourceforge.nattable.grid.data.DefaultCornerDataProvider;
 import net.sourceforge.nattable.grid.layer.CornerLayer;
 import net.sourceforge.nattable.grid.layer.GridLayer;
 import net.sourceforge.nattable.layer.DataLayer;
+import net.sourceforge.nattable.style.DisplayMode;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -75,6 +79,7 @@ import org.kalypso.zml.ui.table.model.IZmlTableModel;
 import org.kalypso.zml.ui.table.nat.layers.BodyLayerStack;
 import org.kalypso.zml.ui.table.nat.layers.ColumnHeaderLayerStack;
 import org.kalypso.zml.ui.table.nat.layers.RowHeaderLayerStack;
+import org.kalypso.zml.ui.table.nat.painter.ZmlModelCellPainter;
 import org.kalypso.zml.ui.table.provider.rendering.cell.ZmlTableCellCache;
 import org.kalypso.zml.ui.table.selection.ZmlTableSelectionHandler;
 
@@ -122,6 +127,7 @@ public class ZmlTable extends Composite implements IZmlTable
   private void doInit( )
   {
     final BodyLayerStack bodyLayer = new BodyLayerStack( m_model );
+
     final ColumnHeaderLayerStack columnHeaderLayer = new ColumnHeaderLayerStack( bodyLayer );
     final RowHeaderLayerStack rowHeaderLayer = new RowHeaderLayerStack( bodyLayer );
 
@@ -131,6 +137,10 @@ public class ZmlTable extends Composite implements IZmlTable
     final GridLayer gridLayer = new GridLayer( bodyLayer, columnHeaderLayer, rowHeaderLayer, cornerLayer );
     m_natTable = new NatTable( this, gridLayer );
     m_natTable.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+
+    final IConfigRegistry registry = m_natTable.getConfigRegistry();
+    registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new ZmlModelCellPainter(), DisplayMode.NORMAL, GridRegion.BODY.toString() );
+
   }
 
   @Override

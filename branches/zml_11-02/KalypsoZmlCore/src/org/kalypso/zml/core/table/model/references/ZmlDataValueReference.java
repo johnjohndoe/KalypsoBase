@@ -54,26 +54,18 @@ import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 import org.kalypso.zml.core.table.binding.DataColumn;
-import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlDataValueReference implements IZmlModelValueCell
+public class ZmlDataValueReference extends AbstractZmlCell implements IZmlModelValueCell
 {
-  private final IZmlModelColumn m_column;
-
-  private final int m_tupleModelIndex;
-
-  private final IZmlModelRow m_row;
 
   public ZmlDataValueReference( final IZmlModelRow row, final IZmlModelColumn column, final int tupleModelIndex )
   {
-    m_row = row;
-    m_column = column;
-    m_tupleModelIndex = tupleModelIndex;
+    super( row, column, tupleModelIndex );
   }
 
   @Override
@@ -81,11 +73,11 @@ public class ZmlDataValueReference implements IZmlModelValueCell
   {
     try
     {
-      final DataColumn type = m_column.getDataColumn();
-      final IAxis[] axes = m_column.getAxes();
+      final DataColumn type = getColumn().getDataColumn();
+      final IAxis[] axes = getColumn().getAxes();
       final IAxis axis = AxisUtils.findAxis( axes, type.getIndexAxis() );
 
-      return (Date) m_column.get( m_tupleModelIndex, axis );
+      return (Date) getColumn().get( getModelIndex(), axis );
     }
     catch( final SensorException e )
     {
@@ -98,28 +90,28 @@ public class ZmlDataValueReference implements IZmlModelValueCell
   @Override
   public Number getValue( ) throws SensorException
   {
-    return (Number) m_column.get( m_tupleModelIndex, m_column.getValueAxis() );
+    return (Number) getColumn().get( getModelIndex(), getColumn().getValueAxis() );
   }
 
   @Override
   public void doUpdate( final Number value, final String source, final Integer status ) throws SensorException
   {
-    m_column.doUpdate( m_tupleModelIndex, value, source, status );
+    getColumn().doUpdate( getModelIndex(), value, source, status );
   }
 
   public String getIdentifier( )
   {
-    return m_column.getIdentifier();
+    return getColumn().getIdentifier();
   }
 
   @Override
   public Integer getStatus( ) throws SensorException
   {
-    final IAxis axis = m_column.getStatusAxis();
+    final IAxis axis = getColumn().getStatusAxis();
     if( axis == null )
       return null;
 
-    final Object value = m_column.get( m_tupleModelIndex, axis );
+    final Object value = getColumn().get( getModelIndex(), axis );
     if( value instanceof Number )
       return ((Number) value).intValue();
 
@@ -127,36 +119,12 @@ public class ZmlDataValueReference implements IZmlModelValueCell
   }
 
   @Override
-  public IZmlModelColumn getColumn( )
-  {
-    return m_column;
-  }
-
-  @Override
-  public IZmlModelRow getRow( )
-  {
-    return m_row;
-  }
-
-  @Override
-  public Integer getModelIndex( )
-  {
-    return m_tupleModelIndex;
-  }
-
-  @Override
-  public IZmlModel getModel( )
-  {
-    return m_row.getModel();
-  }
-
-  @Override
   public String getDataSource( ) throws SensorException
   {
-    final MetadataList metadata = m_column.getMetadata();
-    final IAxis axis = AxisUtils.findDataSourceAxis( m_column.getAxes(), m_column.getValueAxis() );
+    final MetadataList metadata = getColumn().getMetadata();
+    final IAxis axis = AxisUtils.findDataSourceAxis( getColumn().getAxes(), getColumn().getValueAxis() );
 
-    final Object objIndex = m_column.get( m_tupleModelIndex, axis );
+    final Object objIndex = getColumn().get( getModelIndex(), axis );
     if( objIndex instanceof Number )
     {
       final Number index = (Number) objIndex;
@@ -171,7 +139,7 @@ public class ZmlDataValueReference implements IZmlModelValueCell
   @Override
   public String getHref( )
   {
-    final IObservation observation = m_column.getObservation();
+    final IObservation observation = getColumn().getObservation();
     final String href = observation.getHref();
 
     try

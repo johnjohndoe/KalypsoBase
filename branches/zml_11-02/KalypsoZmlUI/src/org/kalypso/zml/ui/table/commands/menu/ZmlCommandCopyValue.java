@@ -93,8 +93,8 @@ public class ZmlCommandCopyValue extends AbstractHandler
           if( !column.isVisible() )
             continue;
 
-          final ZmlLabelProvider provider = new ZmlLabelProvider( row.getModelRow(), column, new ZmlCellRule[] {} );
-          buffer.append( provider.getText() );
+          final ZmlLabelProvider provider = new ZmlLabelProvider( row.getModelRow(), null, new ZmlCellRule[] {} );
+          buffer.append( provider.getText( null ) );
 
 // if( column.isIndexColumn() )
 // {

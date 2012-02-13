@@ -49,10 +49,10 @@ import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.rule.AbstractZmlRule;
 import org.kalypso.zml.core.table.binding.rule.instructions.AbstractZmlRuleInstructionType;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.rules.AppliedRule;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.RuleRefernceType;
 import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
-import org.kalypso.zml.ui.table.provider.AppliedRule;
 
 /**
  * @author Dirk Kuch

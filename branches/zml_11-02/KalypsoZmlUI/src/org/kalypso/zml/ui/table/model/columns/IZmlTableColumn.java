@@ -46,9 +46,9 @@ import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.rules.AppliedRule;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
-import org.kalypso.zml.ui.table.provider.AppliedRule;
 
 /**
  * @author Dirk Kuch

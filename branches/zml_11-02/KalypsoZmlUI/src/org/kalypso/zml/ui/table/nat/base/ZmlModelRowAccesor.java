@@ -43,11 +43,8 @@ package org.kalypso.zml.ui.table.nat.base;
 import net.sourceforge.nattable.data.IColumnAccessor;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
-import org.kalypso.zml.core.table.model.references.IZmlModelIndexCell;
-import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 
 /**
  * @author Dirk Kuch
@@ -62,24 +59,25 @@ public class ZmlModelRowAccesor implements IColumnAccessor<IZmlModelRow>
     if( columnIndex < ArrayUtils.getLength( cells ) )
     {
       final IZmlModelCell cell = cells[columnIndex];
+      return cell;
 
-      if( cell instanceof IZmlModelIndexCell )
-      {
-        return cell.getIndexValue();
-      }
-      else if( cell instanceof IZmlModelValueCell )
-      {
-        try
-        {
-          final IZmlModelValueCell valueCell = (IZmlModelValueCell) cell;
-
-          return valueCell.getValue();
-        }
-        catch( final SensorException e )
-        {
-          e.printStackTrace();
-        }
-      }
+// if( cell instanceof IZmlModelIndexCell )
+// {
+// return cell.getIndexValue();
+// }
+// else if( cell instanceof IZmlModelValueCell )
+// {
+// try
+// {
+// final IZmlModelValueCell valueCell = (IZmlModelValueCell) cell;
+//
+// return valueCell.getValue();
+// }
+// catch( final SensorException e )
+// {
+// e.printStackTrace();
+// }
+// }
     }
 
     return "n / a";
