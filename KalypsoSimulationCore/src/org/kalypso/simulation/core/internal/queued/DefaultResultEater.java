@@ -57,6 +57,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationException;
+import org.kalypso.simulation.core.calccase.ModelspecData;
 import org.kalypso.simulation.core.i18n.Messages;
 
 /**

@@ -51,7 +51,7 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.simulation.core.SimulationDataPath;
-import org.kalypso.simulation.core.internal.queued.ModelspecData;
+import org.kalypso.simulation.core.calccase.ModelspecData;
 
 /**
  * @author belger

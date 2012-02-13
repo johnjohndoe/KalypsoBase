@@ -66,92 +66,42 @@ public class FailureService implements ISimulationService
     m_se = se;
   }
 
-  /**
-   * @see org.kalypso.simulation.core.ISimulationService#getSchemaValidity(java.lang.String)
-   */
-  @Override
-  public long getSchemaValidity( final String namespace ) throws SimulationException
-  {
-    throw m_se;
-  }
-
-  /**
-   * @see org.kalypso.simulation.core.ISimulationService#getSupportedSchemata()
-   */
-  @Override
-  public String[] getSupportedSchemata( ) throws SimulationException
-  {
-    throw m_se;
-  }
-
-  /**
-   * @see org.kalypso.simulation.core.ISimulationService#getSchema(java.lang.String)
-   */
-  @Override
-  public DataHandler getSchema( final String namespace ) throws SimulationException
-  {
-    throw m_se;
-  }
-
-  /**
-   * @see org.kalypso.simulation.core.ISimulationService#getJobTypes()
-   */
   @Override
   public String[] getJobTypes( ) throws SimulationException
   {
     throw m_se;
   }
 
-  /**
-   * @see org.kalypso.simulation.core.ISimulationService#getRequiredInput(java.lang.String)
-   */
   @Override
   public SimulationDescription[] getRequiredInput( final String typeID ) throws SimulationException
   {
     throw m_se;
   }
 
-  /**
-   * @see org.kalypso.simulation.core.ISimulationService#getDeliveringResults(java.lang.String)
-   */
   @Override
   public SimulationDescription[] getDeliveringResults( final String typeID ) throws SimulationException
   {
     throw m_se;
   }
 
-  /**
-   * @see org.kalypso.simulation.core.ISimulationService#getJobs()
-   */
   @Override
   public SimulationInfo[] getJobs( ) throws SimulationException
   {
     throw m_se;
   }
 
-  /**
-   * @see org.kalypso.simulation.core.ISimulationService#getJob(java.lang.String)
-   */
   @Override
   public SimulationInfo getJob( final String jobID ) throws SimulationException
   {
     throw m_se;
   }
 
-  /**
-   * @see org.kalypso.simulation.core.ISimulationService#startJob(java.lang.String, java.lang.String,
-   *      javax.activation.DataHandler, org.kalypso.simulation.core.SimulationDataPath[],
-   *      org.kalypso.simulation.core.SimulationDataPath[])
-   */
   @Override
   public SimulationInfo startJob( final String typeID, final String description, final DataHandler zipHandler, final SimulationDataPath[] input, final SimulationDataPath[] output ) throws SimulationException
   {
     throw m_se;
   }
 
-  /**
-   * @see org.kalypso.simulation.core.ISimulationService#cancelJob(java.lang.String)
-   */
   @Override
   public void cancelJob( final String jobID ) throws SimulationException
   {
@@ -165,18 +115,12 @@ public class FailureService implements ISimulationService
     throw m_se;
   }
 
-  /**
-   * @see org.kalypso.simulation.core.ISimulationService#getCurrentResults(java.lang.String)
-   */
   @Override
   public String[] getCurrentResults( final String jobID ) throws SimulationException
   {
     throw m_se;
   }
 
-  /**
-   * @see org.kalypso.simulation.core.ISimulationService#disposeJob(java.lang.String)
-   */
   @Override
   public void disposeJob( final String jobID ) throws SimulationException
   {

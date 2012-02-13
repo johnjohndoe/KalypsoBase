@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
 
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.simulation.core.internal.queued;
+package org.kalypso.simulation.core.calccase;
 
 import java.net.URL;
 import java.util.Collection;

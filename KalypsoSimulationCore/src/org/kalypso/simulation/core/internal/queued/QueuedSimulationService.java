@@ -43,7 +43,6 @@ package org.kalypso.simulation.core.internal.queued;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -53,11 +52,9 @@ import java.util.Vector;
 import java.util.logging.Logger;
 
 import javax.activation.DataHandler;
-import javax.activation.URLDataSource;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.Platform;
-import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationConstants;
 import org.kalypso.simulation.core.ISimulationService;
@@ -65,13 +62,15 @@ import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationDescription;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationInfo;
+import org.kalypso.simulation.core.calccase.ISimulationFactory;
+import org.kalypso.simulation.core.calccase.ModelspecData;
 import org.kalypso.simulation.core.i18n.Messages;
 import org.kalypso.simulation.core.util.SimulationUtilitites;
 
 /**
  * A straight forward {@link org.kalypso.services.calculation.service.ICalculationService}-Implementation. All jobs go
  * in one fifo-queue. Support parallel processing of jobs.
- * 
+ *
  * @author Belger
  */
 public class QueuedSimulationService implements ISimulationService
@@ -103,12 +102,9 @@ public class QueuedSimulationService implements ISimulationService
 
   private final Map<String, ModelspecData> m_modelspecMap = new HashMap<String, ModelspecData>();
 
-  private final IUrlCatalog m_catalog;
-
-  public QueuedSimulationService( final ISimulationFactory factory, final IUrlCatalog catalog, final int maxThreads, final long schedulingPeriod )
+  public QueuedSimulationService( final ISimulationFactory factory, final int maxThreads, final long schedulingPeriod )
   {
     m_calcJobFactory = factory;
-    m_catalog = catalog;
     m_maxThreads = maxThreads;
     m_schedulingPeriod = schedulingPeriod;
   }
@@ -360,7 +356,7 @@ public class QueuedSimulationService implements ISimulationService
   /**
    * Falls dieses Objekt wirklich mal zerstört wird und wir es mitkriegen, dann alle restlichen Jobs zerstören und
    * insbesondere alle Dateien löschen
-   * 
+   *
    * @see java.lang.Object#finalize()
    */
   @Override
@@ -424,76 +420,15 @@ public class QueuedSimulationService implements ISimulationService
     return data;
   }
 
-  /**
-   * @throws CalcJobServiceException
-   * @see org.kalypso.services.calculation.service.ICalculationService#getRequiredInput(java.lang.String)
-   */
   @Override
   public SimulationDescription[] getRequiredInput( final String typeID ) throws SimulationException
   {
     return getModelspec( typeID ).getInput();
   }
 
-  /**
-   * @throws CalcJobServiceException
-   * @see org.kalypso.services.calculation.service.ICalculationService#getDeliveringResults(java.lang.String)
-   */
   @Override
   public SimulationDescription[] getDeliveringResults( final String typeID ) throws SimulationException
   {
     return getModelspec( typeID ).getOutput();
-  }
-
-  /**
-   * @see org.kalypso.services.calculation.service.ICalculationService#getSchema(java.lang.String)
-   */
-  @Override
-  public DataHandler getSchema( final String namespace )
-  {
-    final URL url = m_catalog.getURL( namespace );
-    if( url == null )
-      return null;
-
-    return new DataHandler( new URLDataSource( url ) );
-  }
-
-  /**
-   * @see org.kalypso.services.calculation.service.ICalculationService#getSchemaValidity(java.lang.String)
-   */
-  @Override
-  public long getSchemaValidity( final String namespace ) throws SimulationException
-  {
-    try
-    {
-      final URL url = m_catalog.getURL( namespace );
-      if( url == null )
-        throw new SimulationException( Messages.getString( "org.kalypso.simulation.core.internal.queued.QueuedSimulationService.6" ) + namespace, null ); //$NON-NLS-1$
-
-      final URLConnection connection = url.openConnection();
-      return connection.getLastModified();
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-
-      throw new SimulationException( Messages.getString( "org.kalypso.simulation.core.internal.queued.QueuedSimulationService.7" ) + namespace, e ); //$NON-NLS-1$
-    }
-  }
-
-  /**
-   * @see org.kalypso.services.calculation.service.ICalculationService#getSupportedSchemata()
-   */
-  @Override
-  public String[] getSupportedSchemata( )
-  {
-    final Map<String, URL> catalog = m_catalog.getCatalog();
-    final String[] namespaces = new String[catalog.size()];
-    int count = 0;
-    for( final String string : catalog.keySet() )
-    {
-      namespaces[count++] = string;
-    }
-
-    return namespaces;
   }
 }
