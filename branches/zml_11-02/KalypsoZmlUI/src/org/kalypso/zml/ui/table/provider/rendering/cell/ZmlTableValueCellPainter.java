@@ -219,22 +219,34 @@ public class ZmlTableValueCellPainter extends AbstractZmlTableCellPainter
     gc.fillRectangle( bounds );
   }
 
+  /**
+   * @see org.kalypso.zml.ui.table.provider.rendering.cell.AbstractZmlTableCellPainter#getFont()
+   */
   @Override
   protected Font getFont( )
   {
-    return m_provider.getFont();
+    // TODO Auto-generated method stub
+    return null;
   }
 
+  /**
+   * @see org.kalypso.zml.ui.table.provider.rendering.cell.AbstractZmlTableCellPainter#getBackground()
+   */
   @Override
   protected Color getBackground( )
   {
-    return m_provider.getBackground();
+    // TODO Auto-generated method stub
+    return null;
   }
 
+  /**
+   * @see org.kalypso.zml.ui.table.provider.rendering.cell.AbstractZmlTableCellPainter#getForeground()
+   */
   @Override
   protected Color getForeground( )
   {
-    return m_provider.getForeground();
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }

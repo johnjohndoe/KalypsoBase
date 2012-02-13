@@ -44,7 +44,10 @@ import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.eclipse.core.runtime.CoreException;
+import net.sourceforge.nattable.style.CellStyleAttributes;
+import net.sourceforge.nattable.style.HorizontalAlignmentEnum;
+import net.sourceforge.nattable.style.Style;
+
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
@@ -60,6 +63,7 @@ import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.references.InstantaneousValueLabelingStrategy;
 import org.kalypso.zml.core.table.model.references.SumValueLabelingStrategy;
 import org.kalypso.zml.core.table.rules.IZmlCellRuleImplementation;
+import org.kalypso.zml.core.table.schema.AlignmentType;
 
 /**
  * @author Dirk Kuch
@@ -149,50 +153,43 @@ public class ZmlValueLabelProvider implements IZmlModelCellLabelProvider
   }
 
   @Override
-  public Font getFont( )
+  public Style getStyle( )
   {
+    final DataColumn column = m_column.getDataColumn();
+
+    final Style style = new Style();
+
     try
     {
-      return m_column.getDataColumn().getDefaultStyle().getFont();
+      final CellStyle defaultStyle = column.getDefaultStyle();
+      final Color background = defaultStyle.getBackgroundColor();
+      if( Objects.isNotNull( background ) )
+        style.setAttributeValue( CellStyleAttributes.BACKGROUND_COLOR, background );
+
+      final Color foreground = defaultStyle.getForegroundColor();
+      if( Objects.isNotNull( foreground ) )
+        style.setAttributeValue( CellStyleAttributes.FOREGROUND_COLOR, foreground );
+
+      final Font font = defaultStyle.getFont();
+      if( Objects.isNotNull( font ) )
+        style.setAttributeValue( CellStyleAttributes.FONT, font );
     }
-    catch( final CoreException e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
 
-    return null;
+    final AlignmentType alignment = column.getAlignment();
+    if( Objects.isNotNull( alignment ) )
+    {
+      if( AlignmentType.LEFT.equals( alignment ) )
+        style.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, HorizontalAlignmentEnum.LEFT );
+      else if( AlignmentType.CENTER.equals( alignment ) )
+        style.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, HorizontalAlignmentEnum.CENTER );
+      else if( AlignmentType.RIGHT.equals( alignment ) )
+        style.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, HorizontalAlignmentEnum.RIGHT );
+    }
+
+    return style;
   }
-
-  @Override
-  public Color getBackground( )
-  {
-    try
-    {
-      return m_column.getDataColumn().getDefaultStyle().getBackgroundColor();
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-    }
-
-    return null;
-
-  }
-
-  @Override
-  public Color getForeground( )
-  {
-    try
-    {
-      return m_column.getDataColumn().getDefaultStyle().getForegroundColor();
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-    }
-
-    return null;
-
-  }
-
 }

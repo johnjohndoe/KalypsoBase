@@ -40,23 +40,29 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.nat.painter;
 
+import net.sourceforge.nattable.config.CellConfigAttributes;
 import net.sourceforge.nattable.config.IConfigRegistry;
+import net.sourceforge.nattable.grid.GridRegion;
 import net.sourceforge.nattable.layer.cell.LayerCell;
 import net.sourceforge.nattable.painter.cell.AbstractCellPainter;
-import net.sourceforge.nattable.painter.cell.ICellPainter;
+import net.sourceforge.nattable.painter.cell.ImagePainter;
+import net.sourceforge.nattable.painter.cell.TextPainter;
+import net.sourceforge.nattable.style.CellStyleAttributes;
+import net.sourceforge.nattable.style.DisplayMode;
+import net.sourceforge.nattable.style.HorizontalAlignmentEnum;
+import net.sourceforge.nattable.style.Style;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.zml.core.table.model.references.IZmlModelCellLabelProvider;
 import org.kalypso.zml.core.table.model.references.IZmlModelIndexCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
-import org.kalypso.zml.ui.table.provider.rendering.cell.ZmlTableValueCellPainter;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlModelCellPainter extends AbstractCellPainter implements ICellPainter
+public class ZmlModelCellPainter extends AbstractCellPainter
 {
 
   @Override
@@ -74,38 +80,112 @@ public class ZmlModelCellPainter extends AbstractCellPainter implements ICellPai
     }
     else if( object instanceof IZmlModelValueCell )
     {
+
       final IZmlModelValueCell value = (IZmlModelValueCell) object;
+      final IZmlModelCellLabelProvider provider = value.getColumn().getStyleProvider();
 
-      final ZmlTableValueCellPainter painter = new ZmlTableValueCellPainter( value );
-      painter.initGc( gc );
-      painter.drawBackground( gc, bounds );
-      apply( bounds, painter.drawImage( gc, bounds ) );
-      apply( bounds, painter.drawText( gc, bounds ) );
+      final Style imageCellStyle = new Style();
+      imageCellStyle.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, HorizontalAlignmentEnum.LEFT );
 
-      painter.resetGc( gc );
+      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, imageCellStyle, DisplayMode.NORMAL, GridRegion.BODY.toString() );
+
+      Rectangle ptr = new Rectangle( bounds.x, bounds.y, bounds.width, bounds.height );
+
+      final Image[] images = provider.getImages( value );
+      for( final Image image : images )
+      {
+        final ImagePainter imgPainter = new ImagePainter( image );
+        imgPainter.paintCell( cell, gc, ptr, configRegistry );
+
+        ptr = move( ptr, image.getBounds() );
+      }
+
+      final Style cellStyle = provider.getStyle();
+      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, cellStyle, DisplayMode.NORMAL, GridRegion.BODY.toString() );
+
+      final TextPainter painter = new TextPainter();
+      painter.paintCell( cell, gc, ptr, configRegistry );
+
     }
 
   }
 
-  private void apply( final Rectangle bounds, final Point extend )
+  private Rectangle move( final Rectangle ptr, final Rectangle bounds )
   {
-    bounds.width -= extend.x;
-    bounds.x += extend.x;
-    bounds.height = Math.max( bounds.height, extend.y );
+    return new Rectangle( ptr.x + bounds.width, ptr.y, ptr.width - bounds.width, ptr.height );
   }
 
   @Override
   public int getPreferredWidth( final LayerCell cell, final GC gc, final IConfigRegistry configRegistry )
   {
-    // TODO Auto-generated method stub
-    return 0;
+    final Object object = cell.getDataValue();
+    if( object instanceof IZmlModelIndexCell )
+    {
+      final IZmlModelIndexCell index = (IZmlModelIndexCell) object;
+      final ZmlIndexLabelProvider provider = new ZmlIndexLabelProvider( index.getStyleProvider() );
+
+      final Image[] images = provider.getImages( index );
+      final String text = provider.getText( index );
+
+      throw new UnsupportedOperationException();
+    }
+    else if( object instanceof IZmlModelValueCell )
+    {
+      final IZmlModelValueCell value = (IZmlModelValueCell) object;
+      final IZmlModelCellLabelProvider provider = value.getColumn().getStyleProvider();
+
+      final Image[] images = provider.getImages( value );
+
+      int width = 0;
+      for( final Image image : images )
+      {
+        width += image.getBounds().width;
+      }
+
+      final TextPainter painter = new TextPainter();
+      width += painter.getPreferredWidth( cell, gc, configRegistry );
+
+      return width;
+    }
+
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public int getPreferredHeight( final LayerCell cell, final GC gc, final IConfigRegistry configRegistry )
   {
-    // TODO Auto-generated method stub
-    return 0;
+    final Object object = cell.getDataValue();
+    if( object instanceof IZmlModelIndexCell )
+    {
+      final IZmlModelIndexCell index = (IZmlModelIndexCell) object;
+      final ZmlIndexLabelProvider provider = new ZmlIndexLabelProvider( index.getStyleProvider() );
+
+      final Image[] images = provider.getImages( index );
+      final String text = provider.getText( index );
+
+      throw new UnsupportedOperationException();
+    }
+    else if( object instanceof IZmlModelValueCell )
+    {
+      final IZmlModelValueCell value = (IZmlModelValueCell) object;
+      final IZmlModelCellLabelProvider provider = value.getColumn().getStyleProvider();
+
+      final Image[] images = provider.getImages( value );
+
+      int height = 0;
+      for( final Image image : images )
+      {
+        final Rectangle bounds = image.getBounds();
+        height = Math.max( bounds.height, height );
+      }
+
+      final TextPainter painter = new TextPainter();
+      height = Math.max( painter.getPreferredHeight( cell, gc, configRegistry ), height );
+
+      return height;
+    }
+
+    throw new UnsupportedOperationException();
   }
 
 }

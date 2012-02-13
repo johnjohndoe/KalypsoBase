@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model.references;
 
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
+import net.sourceforge.nattable.style.Style;
+
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -53,10 +53,5 @@ public interface IZmlModelCellLabelProvider
 
   String getText( IZmlModelCell cell );
 
-  Font getFont( );
-
-  Color getBackground( );
-
-  Color getForeground( );
-
+  Style getStyle( );
 }
