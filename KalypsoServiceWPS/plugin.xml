@@ -27,6 +27,10 @@
             simulationClass="org.kalypso.service.calcjobs.complex.ComplexJob"
             typeID="org.kalypso.service.wps.complexJob">
       </simulation>
+      <simulationRunner
+            class="org.kalypso.service.wps.client.simulation.WpsSimulationRunner"
+            id="wps">
+      </simulationRunner>
    </extension>
    <extension
          point="org.kalypso.contribs.java.urlCatalog">
