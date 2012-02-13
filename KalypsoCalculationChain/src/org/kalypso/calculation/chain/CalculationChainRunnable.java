@@ -2,7 +2,6 @@ package org.kalypso.calculation.chain;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -22,8 +21,6 @@ import org.kalypso.simulation.core.SimulationJobSpecification;
 import org.kalypso.simulation.core.refactoring.ISimulationRunner;
 import org.kalypso.simulation.core.refactoring.SimulationRunnerFactory;
 import org.kalypso.simulation.core.simspec.Modeldata;
-import org.kalypso.simulation.core.simspec.Modeldata.Input;
-import org.kalypso.simulation.core.simspec.Modeldata.Output;
 
 public class CalculationChainRunnable implements ICoreRunnableWithProgress
 {
@@ -115,10 +112,10 @@ public class CalculationChainRunnable implements ICoreRunnableWithProgress
 
           final Modeldata modeldata = job.getModeldata( m_context );
 
-          final Map<String, Object> inputs = resolveInputs( modeldata.getInput() );
-          final List<String> outputs = resolveOutputs( modeldata.getOutput() );
+          final Map<String, Object> inputs = SimulationRunnerFactory.resolveInputs( modeldata.getInput() );
+          final List<String> outputs = SimulationRunnerFactory.resolveOutputs( modeldata.getOutput() );
 
-          final ISimulationRunner runner = SimulationRunnerFactory.createRunner( job.getCalculationTypeID(), modeldata, context );
+          final ISimulationRunner runner = SimulationRunnerFactory.createRunner( modeldata, context );
           runner.run( inputs, outputs, monitor );
         }
       }
@@ -143,28 +140,5 @@ public class CalculationChainRunnable implements ICoreRunnableWithProgress
     {
       monitor.setTaskName( message );
     }
-  }
-
-  private List<String> resolveOutputs( final List<Output> output )
-  {
-    final List<String> myOutputs = new ArrayList<String>();
-    for( final Output o : output )
-    {
-      myOutputs.add( o.getId() );
-    }
-
-    return myOutputs;
-  }
-
-  private Map<String, Object> resolveInputs( final List<Input> input )
-  {
-    final Map<String, Object> myInputs = new HashMap<String, Object>();
-
-    for( final Input i : input )
-    {
-      myInputs.put( i.getId(), i.getPath() );
-    }
-
-    return myInputs;
   }
 }
