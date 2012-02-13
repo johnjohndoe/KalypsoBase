@@ -779,21 +779,21 @@
           point="org.eclipse.ui.commands"> 
       <command
             categoryId="org.kalypso.chart.ui.commands.category"
-            description="Einen neuen Profilpunkt ins Profil einfügen"
+            description="%org.kalypso.chart.ui.commands.insert.profile.point.description"
             id="org.kalypso.chart.ui.commands.insert.profile.point"
-            name="Profilpunkt einfügen">
+            name="%org.kalypso.chart.ui.commands.insert.profile.point.name">
       </command>
       <command
             categoryId="org.kalypso.chart.ui.commands.category"
-            description="Selektion und Abgleich der Selektion zwischen Profildiagramm, Karte und Tabelle"
+            description="%org.kalypso.chart.ui.commands.profile.selection.description"
             id="org.kalypso.chart.ui.commands.profile.selection"
-            name="Selektiere Profilpunkt">
+            name="%org.kalypso.chart.ui.commands.profile.selection.name">
       </command>
       <command
             categoryId="org.kalypso.chart.ui.commands.category"
-            description="Aktualisiere Profil-Cursor"
+            description="%org.kalypso.chart.ui.commands.profile.update.cursor.description"
             id="org.kalypso.chart.ui.commands.profile.update.cursor"
-            name="Aktualisiere Profil-Cursor">
+            name="%org.kalypso.chart.ui.commands.profile.update.cursor.name">
       </command>
     </extension>
     <extension
@@ -831,21 +831,21 @@
           point="org.eclipse.ui.commands">
        <command
              categoryId="org.kalypso.ogc.gml.map.category"
-             description="Selektion von Profilpunkten"
+             description="%org.kalypso.ogc.gml.map.widgets.select.profile.point.description"
              id="org.kalypso.ogc.gml.map.widgets.select.profile.point"
-             name="Profilpunktselektion">
+             name="%org.kalypso.ogc.gml.map.widgets.select.profile.point.name">
        </command>
        <command
              categoryId="org.kalypso.ogc.gml.map.category"
-             description="Anzeige der Profilselektion und Aktulaisierung des Profil-Cursors"
+             description="%org.kalypso.ogc.gml.map.widgets.display.profile.selection.description"
              id="org.kalypso.ogc.gml.map.widgets.display.profile.selection"
-             name="Anzeige Profilpunktselektion">
+             name="%org.kalypso.ogc.gml.map.widgets.display.profile.selection.name">
        </command>
        <command
              categoryId="org.kalypso.ogc.gml.map.category"
-             description="Einfügen von Profilpunkten"
+             description="%org.kalypso.ogc.gml.map.widgets.insert.profile.point.description"
              id="org.kalypso.ogc.gml.map.widgets.insert.profile.point"
-             name="Profilpunkt einfügen">
+             name="%org.kalypso.ogc.gml.map.widgets.insert.profile.point.name">
        </command>
     </extension>
     <extension
