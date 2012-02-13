@@ -43,9 +43,9 @@ package org.kalypso.simulation.core.internal.queued;
 import java.io.File;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
-public class SimulationResult
+class SimulationResult
 {
   private final String m_id;
 

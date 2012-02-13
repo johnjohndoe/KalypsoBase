@@ -45,6 +45,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.simulation.core.calccase.ISimulationRunner;
+import org.kalypso.simulation.core.calccase.LocalSimulationFactory;
 import org.kalypso.simulation.core.simspec.Modeldata;
 
 /**
@@ -66,8 +67,9 @@ public class LocalSimulationRunner implements ISimulationRunner
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    final LocalSimulationService calcService = new LocalSimulationService();
-    final CalcJobHandler cjHandler = new CalcJobHandler( m_modelspec, calcService );
+    final QueuedSimulationService service = new QueuedSimulationService( new LocalSimulationFactory(), 2, 1000 );
+
+    final CalcJobHandler cjHandler = new CalcJobHandler( m_modelspec, service );
     return cjHandler.runJob( m_calcCaseFolder, monitor );
   }
 }

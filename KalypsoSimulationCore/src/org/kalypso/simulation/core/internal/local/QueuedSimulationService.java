@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
 
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.simulation.core.internal.queued;
+package org.kalypso.simulation.core.internal.local;
 
 import java.io.File;
 import java.io.IOException;
@@ -73,7 +73,7 @@ import org.kalypso.simulation.core.util.SimulationUtilitites;
  *
  * @author Belger
  */
-public class QueuedSimulationService implements ISimulationService
+class QueuedSimulationService implements ISimulationService
 {
   private static final Logger LOGGER = Logger.getLogger( QueuedSimulationService.class.getName() );
 

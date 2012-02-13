@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
 
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.simulation.core.internal.queued;
+package org.kalypso.simulation.core.internal.local;
 
 import java.io.File;
 import java.util.logging.Logger;
@@ -58,9 +58,10 @@ import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationInfo;
 import org.kalypso.simulation.core.calccase.ModelspecData;
+import org.kalypso.simulation.core.internal.queued.DefaultResultEater;
 import org.kalypso.simulation.core.util.UnzippedJarSimulationDataProvider;
 
-public class SimulationThread extends Thread
+class SimulationThread extends Thread
 {
   private static final Logger LOGGER = Logger.getLogger( SimulationThread.class.getName() );
 
