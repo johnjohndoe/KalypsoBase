@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.java.i18n;
 
@@ -53,7 +53,7 @@ import java.util.ResourceBundle;
 
 /**
  * Helper class for I81N stuff.
- * 
+ *
  * @author Gernot Belger
  */
 public final class I18nUtils
@@ -73,7 +73,7 @@ public final class I18nUtils
    * <li><code>baseNamesuffixSuffix</code></li>
    * </ul>
    * Where lanugage, country and variant correspond to the current language settings.
-   * 
+   *
    * @return The first suitable file, or <code>null</code>, if nothing could be found.
    */
   public static File getLocaleFile( final File dir, final String baseName, final String suffix )
@@ -102,7 +102,7 @@ public final class I18nUtils
    * <li><code>resourceBaseNameresourceSuffix</code></li>
    * </ul>
    * Where lanugage, country and variant correspond to the current language settings.
-   * 
+   *
    * @see Class#getResource(String)
    */
   public static URL getLocaleResource( final Class< ? > clazz, final String resourceBaseName, final String resourceSuffix )
@@ -130,7 +130,7 @@ public final class I18nUtils
    * <li><code>resourceBaseNameresourceSuffix</code></li>
    * </ul>
    * Where lanugage, country and variant correspond to the current language settings.<br>
-   * 
+   *
    * @return An open stream. Must be closed by the caller.
    * @see Class#getResourceAsStream(String)
    */
@@ -201,5 +201,4 @@ public final class I18nUtils
       return '!' + key + '!';
     }
   }
-
 }
