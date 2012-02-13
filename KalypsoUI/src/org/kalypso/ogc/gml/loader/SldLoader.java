@@ -44,7 +44,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ResourceBundle;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.CharEncoding;
@@ -58,6 +57,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.i18n.ResourceBundleUtils;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.java.i18n.I18NBundle;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
@@ -84,7 +84,7 @@ public class SldLoader extends AbstractLoader implements ISaveUrnLoader
 
   private final UrlResolver m_urlResolver = new UrlResolver();
 
-  private ResourceBundle m_resourceBundle;
+  private I18NBundle m_resourceBundle;
 
   private IResource[] m_resources = new IResource[] {};
 
@@ -274,7 +274,7 @@ public class SldLoader extends AbstractLoader implements ISaveUrnLoader
       throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.SldLoader.6" ) + styleURL ); //$NON-NLS-1$
 
     final String charset = sldFile.getCharset();
-    final String sldXMLwithHeader = marshallObject( data, charset );
+    final String sldXMLwithHeader = SLDFactory.marshallObject( data, charset );
 
     sldFile.setContents( new StringInputStream( sldXMLwithHeader, charset ), true, false, monitor );
   }
@@ -286,7 +286,7 @@ public class SldLoader extends AbstractLoader implements ISaveUrnLoader
       userFile.getParentFile().mkdirs();
 
       /* Really save to this location */
-      final String sldXMLwithHeader = marshallObject( data, CharEncoding.UTF_8 );
+      final String sldXMLwithHeader = SLDFactory.marshallObject( data, CharEncoding.UTF_8 );
       FileUtils.writeStringToFile( userFile, sldXMLwithHeader, CharEncoding.UTF_8 );
 
       /* Just for formal reasons, should already be empty */
@@ -317,22 +317,15 @@ public class SldLoader extends AbstractLoader implements ISaveUrnLoader
 
   private void loadResourceBundle( final URL resourceLocation )
   {
-    m_resourceBundle = ResourceBundleUtils.loadResourceBundle( resourceLocation );
+    m_resourceBundle = new I18NBundle( ResourceBundleUtils.loadResourceBundle( resourceLocation ) );
   }
 
   /**
    * Try to find a resource bundle for the styled layer descriptor.
    */
-  public ResourceBundle getResourceBundle( )
+  public I18NBundle getResourceBundle( )
   {
     return m_resourceBundle;
-  }
-
-  protected String marshallObject( final Marshallable marshallable, final String charset )
-  {
-    final String sldXML = marshallable.exportAsXML();
-    final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"" + charset + "\"?>" + sldXML; //$NON-NLS-1$ //$NON-NLS-2$
-    return sldXMLwithHeader;
   }
 
   @Override

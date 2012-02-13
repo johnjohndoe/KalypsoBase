@@ -36,8 +36,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.commons.i18n.ResourceBundleUtils;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PathUtils;
+import org.kalypso.contribs.java.i18n.I18NBundle;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.CatalogSLD;
@@ -54,6 +56,11 @@ import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.addlayer.internal.util.AddLayerUtils;
 import org.kalypso.ui.wizard.shape.ImportShapeFileData.StyleImport;
+import org.kalypsodeegree.xml.Marshallable;
+import org.kalypsodeegree.xml.XMLParsingException;
+import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
+
+import com.google.common.base.Charsets;
 
 /**
  * Imports an external file into the workspace and adds it to a map modell.
@@ -121,7 +128,7 @@ public class ImportShapeOperation
     }
   }
 
-  private boolean addStyleCommand( final IPath mapPath, final IPath shapePath, final AddThemeCommand command ) throws CoreException, IOException, DBaseException
+  private boolean addStyleCommand( final IPath mapPath, final IPath shapePath, final AddThemeCommand command ) throws CoreException, IOException, DBaseException, XMLParsingException
   {
     final StyleImport styleImportType = m_data.getStyleImportType();
     switch( styleImportType )
@@ -148,7 +155,7 @@ public class ImportShapeOperation
   /**
    * Copies a registered default style into the workspace under the name of the shape file.
    */
-  private boolean generateDefaultStyle( final IPath mapPath, final IPath shapePath, final AddThemeCommand command ) throws CoreException, IOException, DBaseException
+  private boolean generateDefaultStyle( final IPath mapPath, final IPath shapePath, final AddThemeCommand command ) throws CoreException, IOException, DBaseException, XMLParsingException
   {
     ShapeFile shpFile = null;
     try
@@ -178,12 +185,23 @@ public class ImportShapeOperation
 
       final URL ftsURL = styleCatalog.getURL( resolver, ftsURN, ftsURN );
 
-      final IFile sldFile = PathUtils.toFile( m_sldPath );
+      /* load and replace translation strings with their content */
+      final Object sld = SLDFactory.readSLD( ftsURL );
+      final I18NBundle translation = readTranslationBundle( ftsURL );
+      final SLDTranslationResolver sldResolver = new SLDTranslationResolver( translation );
+      sldResolver.resolve( sld );
 
+      /* marshall as xml */
+      final String charset = Charsets.UTF_8.name();
+      final IFile sldFile = PathUtils.toFile( m_sldPath );
+      final String sldXml = SLDFactory.marshallObject( (Marshallable) sld, charset );
+
+      /* Save to file */
       final File sldLocalFile = sldFile.getLocation().toFile();
-      FileUtils.copyURLToFile( ftsURL, sldLocalFile );
+      FileUtils.writeStringToFile( sldLocalFile, sldXml, charset );
       sldFile.refreshLocal( IResource.DEPTH_ZERO, null );
 
+      /* add style to map */
       final String relativeSldPath = AddLayerUtils.makeRelativeOrProjectRelative( mapPath, sldPath );
       command.addStyle( null, relativeSldPath );
       return true;
@@ -192,5 +210,10 @@ public class ImportShapeOperation
     {
       ShapeFileUtils.closeQuiet( shpFile );
     }
+  }
+
+  private I18NBundle readTranslationBundle( final URL ftsURL )
+  {
+    return new I18NBundle( ResourceBundleUtils.loadResourceBundle( ftsURL ) );
   }
 }
