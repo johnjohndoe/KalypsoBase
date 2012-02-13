@@ -293,7 +293,7 @@ public final class JTSUtilities
    * @param lineJTS
    *          The line string on which the point has to be.
    * @param percent
-   *          The distance in percent at which the point should be placed on the line.
+   *          The distance in percent at which the point should be placed on the line as Int(!)
    * @return The newly created point on the line or null, if something was wrong. Returns the start point or the end
    *         point if percentage is 0 or 100.
    */
@@ -314,6 +314,34 @@ public final class JTSUtilities
     return pointOnLine( lineJTS, distance );
   }
 
+  
+  /**
+   * This function calculates a point at a specific length of a line.
+   * 
+   * @param lineJTS
+   *          The line string on which the point has to be.
+   * @param percent
+   *          The distance in percent at which the point should be placed on the line as Int(!)
+   * @return The newly created point on the line or null, if something was wrong. Returns the start point or the end
+   *         point if percentage is 0 or 100.
+   */
+  public static Point pointOnLinePercentAsDouble( final LineString lineJTS, final double percent )
+  {
+    if( percent < 0 || percent > 100 )
+      return null;
+    
+    if( percent == 0 )
+      return lineJTS.getPointN( 0 );
+    
+    if( percent == 100 )
+      return lineJTS.getPointN( lineJTS.getNumPoints() - 1 );
+    
+    final double length = lineJTS.getLength();
+    final double distance = length / 100.0 * percent;
+    
+    return pointOnLine( lineJTS, distance );
+  }
+  
   /**
    * This function creates a line segment (JTS) of a line from a given start point to an end point, including all points
    * on the given line.<br>
