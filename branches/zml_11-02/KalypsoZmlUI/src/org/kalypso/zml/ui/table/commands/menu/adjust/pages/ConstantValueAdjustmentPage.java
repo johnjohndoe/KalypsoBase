@@ -46,11 +46,10 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedTextBox;
 import org.kalypso.zml.ui.table.base.widgets.IEnhancedTextBoxListener;
 import org.kalypso.zml.ui.table.base.widgets.rules.DoubeValueWidgetRule;
-import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
-import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -97,12 +96,14 @@ public class ConstantValueAdjustmentPage extends AbstractAdjustmentPage implemen
     if( Objects.isNotNull( m_constantValue ) )
       return m_constantValue;
 
-    final IZmlTableColumn column = getColumn();
-    final IZmlTableValueCell[] cells = (IZmlTableValueCell[]) column.getSelectedCells();
-    final Number value = cells[0].getValueReference().getValue();
+    final IZmlModelColumn column = getColumn();
+// final IZmlModelValueCell[] cells = (IZmlModelValueCell[]) column.getSelectedCells();
+// final Number value = cells[0].getValueReference().getValue();
+//
+// m_constantValue = value.doubleValue();
+// return m_constantValue;
 
-    m_constantValue = value.doubleValue();
-    return m_constantValue;
+    throw new UnsupportedOperationException();
   }
 
   @Override
@@ -121,7 +122,8 @@ public class ConstantValueAdjustmentPage extends AbstractAdjustmentPage implemen
   @Override
   public ICoreRunnableWithProgress getRunnable( )
   {
-    return new ConstantValueRunnable( (IZmlTableValueCell[]) getColumn().getSelectedCells(), m_constantValue );
+// return new ConstantValueRunnable( (IZmlTableValueCell[]) getColumn().getSelectedCells(), m_constantValue );
+    throw new UnsupportedOperationException();
   }
 
   @Override

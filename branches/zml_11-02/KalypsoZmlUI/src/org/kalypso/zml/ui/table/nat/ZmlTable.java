@@ -44,14 +44,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sourceforge.nattable.NatTable;
-import net.sourceforge.nattable.config.CellConfigAttributes;
 import net.sourceforge.nattable.config.IConfigRegistry;
-import net.sourceforge.nattable.grid.GridRegion;
 import net.sourceforge.nattable.grid.data.DefaultCornerDataProvider;
 import net.sourceforge.nattable.grid.layer.CornerLayer;
 import net.sourceforge.nattable.grid.layer.GridLayer;
 import net.sourceforge.nattable.layer.DataLayer;
-import net.sourceforge.nattable.style.DisplayMode;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -71,17 +68,11 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableCompositeListener;
 import org.kalypso.zml.ui.table.IZmlTableListener;
-import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
 import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
-import org.kalypso.zml.ui.table.focus.ZmlTableFocusCellHandler;
-import org.kalypso.zml.ui.table.model.IZmlTableModel;
 import org.kalypso.zml.ui.table.nat.layers.BodyLayerStack;
 import org.kalypso.zml.ui.table.nat.layers.ColumnHeaderLayerStack;
 import org.kalypso.zml.ui.table.nat.layers.RowHeaderLayerStack;
-import org.kalypso.zml.ui.table.nat.painter.ZmlModelCellPainter;
-import org.kalypso.zml.ui.table.provider.rendering.cell.ZmlTableCellCache;
-import org.kalypso.zml.ui.table.selection.ZmlTableSelectionHandler;
 
 /**
  * @author Dirk Kuch
@@ -90,15 +81,9 @@ public class ZmlTable extends Composite implements IZmlTable
 {
   private final Set<IZmlTableListener> m_listeners = new HashSet<IZmlTableListener>();
 
-  private final ZmlTableCellCache m_cache = new ZmlTableCellCache();
-
   private final ZmlTableComposite m_table;
 
   private ZmlViewResolutionFilter m_filter;
-
-  private ZmlTableFocusCellHandler m_focus;
-
-  private ZmlTableSelectionHandler m_selection;
 
 // final ZmlTablePager m_pager = new ZmlTablePager( this ); // only for main table
 
@@ -139,14 +124,17 @@ public class ZmlTable extends Composite implements IZmlTable
     m_natTable.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     final IConfigRegistry registry = m_natTable.getConfigRegistry();
-    registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new ZmlModelCellPainter(), DisplayMode.NORMAL, GridRegion.BODY.toString() );
+
+// registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new ZmlModelCellPainter(), DisplayMode.NORMAL,
+// GridRegion.BODY.toString() );
+
+// registry.registerConfigAttribute( configAttribute, attributeValue, targetDisplayMode, configLabel )
 
   }
 
   @Override
   public void dispose( )
   {
-    m_cache.clear();
 
     super.dispose();
   }
@@ -169,18 +157,6 @@ public class ZmlTable extends Composite implements IZmlTable
   public int getResolution( )
   {
     return m_filter.getResolution();
-  }
-
-  @Override
-  public ZmlTableCellCache getCache( )
-  {
-    return m_cache;
-  }
-
-  @Override
-  public ZmlTableFocusCellHandler getFocusHandler( )
-  {
-    return m_focus;
   }
 
   @Override
@@ -248,21 +224,15 @@ public class ZmlTable extends Composite implements IZmlTable
   }
 
   @Override
-  public IZmlTableSelectionHandler getSelectionHandler( )
-  {
-    return m_selection;
-  }
-
-  @Override
   public ZmlViewResolutionFilter getResulutionFilter( )
   {
     return m_filter;
   }
 
   @Override
-  public IZmlTableModel getModel( )
+  public IZmlModel getModel( )
   {
-    return null;
-// return m_model;
+    return m_model;
   }
+
 }

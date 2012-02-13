@@ -53,6 +53,7 @@ import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelCellLabelProvider;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.transaction.IZmlModelUpdateCommand;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 
@@ -123,4 +124,6 @@ public interface IZmlModelColumn
   IZmlModelCellLabelProvider getStyleProvider( );
 
   CellStyle findStyle( IZmlModelCell cell ) throws CoreException;
+
+  IZmlModelValueCell[] getCells( );
 }

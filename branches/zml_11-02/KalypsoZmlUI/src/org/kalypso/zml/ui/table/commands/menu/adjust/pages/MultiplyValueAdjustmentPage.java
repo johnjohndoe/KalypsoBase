@@ -48,7 +48,6 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedTextBox;
 import org.kalypso.zml.ui.table.base.widgets.IEnhancedTextBoxListener;
 import org.kalypso.zml.ui.table.base.widgets.rules.DoubeValueWidgetRule;
-import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
 
 /**
  * @author Dirk Kuch
@@ -105,7 +104,8 @@ public class MultiplyValueAdjustmentPage extends AbstractAdjustmentPage implemen
   @Override
   public ICoreRunnableWithProgress getRunnable( )
   {
-    return new MultiplyValueRunnable( (IZmlTableValueCell[]) getColumn().getSelectedCells(), m_multiplier );
+// return new MultiplyValueRunnable( (IZmlModelValueCell[]) getColumn().getSelectedCells(), m_multiplier );
+    throw new UnsupportedOperationException();
   }
 
   @Override

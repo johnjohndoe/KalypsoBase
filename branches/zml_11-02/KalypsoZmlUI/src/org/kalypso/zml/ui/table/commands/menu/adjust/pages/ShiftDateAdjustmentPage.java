@@ -47,10 +47,10 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedSpinner;
 import org.kalypso.zml.ui.table.base.widgets.IEnhancedTextBoxListener;
-import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
-import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -190,11 +190,11 @@ public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage
     if( Objects.isNotNull( m_offset ) )
       return m_offset;
 
-    final IZmlTableColumn column = getColumn();
-    final IZmlTableValueCell[] cells = (IZmlTableValueCell[]) column.getCells();
+    final IZmlModelColumn column = getColumn();
+    final IZmlModelValueCell[] cells = column.getCells();
 
-    final long t1 = cells[0].getValueReference().getIndexValue().getTime();
-    final long t2 = cells[1].getValueReference().getIndexValue().getTime();
+    final long t1 = cells[0].getIndexValue().getTime();
+    final long t2 = cells[1].getIndexValue().getTime();
 
     final double minutes = Long.valueOf( t2 - t1 ).doubleValue() / 1000 / 60;
 
@@ -211,7 +211,8 @@ public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage
   @Override
   public ICoreRunnableWithProgress getRunnable( )
   {
-    return new ShiftDateRunnable( getColumn().getModelColumn(), (IZmlTableValueCell[]) getColumn().getSelectedCells(), getMinutes() );
+// return new ShiftDateRunnable( getColumn(), (IZmlTableValueCell[]) getColumn().getSelectedCells(), getMinutes() );
+    throw new UnsupportedOperationException();
   }
 
   @Override

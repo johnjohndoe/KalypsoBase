@@ -43,25 +43,6 @@ package org.kalypso.zml.ui.table.commands.menu;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITupleModel;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.status.KalypsoStati;
-import org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilter;
-import org.kalypso.repository.IDataSourceItem;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.interpolation.ZmlInterpolationWorker;
-import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
-import org.kalypso.zml.core.table.model.references.ZmlValues;
-import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
-import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
-import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
-import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
-import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -71,51 +52,53 @@ public class ZmlCommandDeleteStuetzstellen extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event )
   {
-    try
-    {
-      final IZmlTable table = ZmlHandlerUtil.getTable( event );
-      final IZmlTableSelectionHandler selection = table.getSelectionHandler();
-      final IZmlTableColumn column = selection.findActiveColumnByPosition();
-      if( column == null )
-        throw new IllegalStateException( "Konnte aktive Spalte nicht ermitteln. Bitte Linkklick in der zu bearbeitenden Spalte ausführen und Aktion erneut versuchen." );
-
-      final IZmlModelColumn modelColumn = column.getModelColumn();
-      final ITupleModel model = modelColumn.getTupleModel();
-
-      final String src = String.format( "%s%s", IDataSourceItem.FILTER_SOURCE, InterpolationFilter.FILTER_ID ); //$NON-NLS-1$
-
-      final ZmlModelTransaction transaction = new ZmlModelTransaction();
-
-      final IZmlTableValueCell[] cells = (IZmlTableValueCell[]) column.getSelectedCells();
-      for( final IZmlTableValueCell cell : cells )
-      {
-        try
-        {
-          final IZmlModelValueCell reference = cell.getValueReference();
-          if( ZmlValues.isStuetzstelle( reference ) )
-          {
-            transaction.add( reference, reference.getValue(), src, KalypsoStati.BIT_OK );
-          }
-        }
-        catch( final Throwable t )
-        {
-          KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
-        }
-      }
-
-      transaction.execute();
-
-      ProgressUtilities.busyCursorWhile( new ZmlInterpolationWorker( modelColumn ) );
-
-      // FIXME improve update value handling
-      final IObservation observation = modelColumn.getObservation();
-      observation.setValues( model );
-      observation.fireChangedEvent( this );
-    }
-    catch( final SensorException e )
-    {
-      KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-    }
+// try
+// {
+// final IZmlTable table = ZmlHandlerUtil.getTable( event );
+// final IZmlTableSelectionHandler selection = table.getSelectionHandler();
+// final IZmlTableColumn column = selection.findActiveColumnByPosition();
+// if( column == null )
+// throw new IllegalStateException(
+// "Konnte aktive Spalte nicht ermitteln. Bitte Linkklick in der zu bearbeitenden Spalte ausführen und Aktion erneut versuchen."
+// );
+//
+// final IZmlModelColumn modelColumn = column.getModelColumn();
+// final ITupleModel model = modelColumn.getTupleModel();
+//
+//      final String src = String.format( "%s%s", IDataSourceItem.FILTER_SOURCE, InterpolationFilter.FILTER_ID ); //$NON-NLS-1$
+//
+// final ZmlModelTransaction transaction = new ZmlModelTransaction();
+//
+// final IZmlTableValueCell[] cells = (IZmlTableValueCell[]) column.getSelectedCells();
+// for( final IZmlTableValueCell cell : cells )
+// {
+// try
+// {
+// final IZmlModelValueCell reference = cell.getValueReference();
+// if( ZmlValues.isStuetzstelle( reference ) )
+// {
+// transaction.add( reference, reference.getValue(), src, KalypsoStati.BIT_OK );
+// }
+// }
+// catch( final Throwable t )
+// {
+// KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
+// }
+// }
+//
+// transaction.execute();
+//
+// ProgressUtilities.busyCursorWhile( new ZmlInterpolationWorker( modelColumn ) );
+//
+// // FIXME improve update value handling
+// final IObservation observation = modelColumn.getObservation();
+// observation.setValues( model );
+// observation.fireChangedEvent( this );
+// }
+// catch( final SensorException e )
+// {
+// KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+// }
 
     return Status.OK_STATUS;
 

@@ -44,16 +44,8 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.ZmlModelRow;
-import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.model.cells.IZmlTableIndexCell;
-import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
-import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
-import org.kalypso.zml.ui.table.model.columns.IZmlTableIndexColumn;
-import org.kalypso.zml.ui.table.model.columns.IZmlTableValueColumn;
 
 /**
  * @author Dirk Kuch
@@ -62,7 +54,7 @@ public class ZmlTooltipProvider extends ColumnLabelProvider
 {
   private final ZmlTooltipSupport m_tooltip;
 
-  private final IZmlTableColumn m_column;
+  private final IZmlModelColumn m_column;
 
   private final IZmlTable m_table;
 
@@ -72,7 +64,7 @@ public class ZmlTooltipProvider extends ColumnLabelProvider
     return null;
   }
 
-  public ZmlTooltipProvider( final IZmlTable table, final IZmlTableColumn column )
+  public ZmlTooltipProvider( final IZmlTable table, final IZmlModelColumn column )
   {
     m_table = table;
     m_column = column;
@@ -88,39 +80,39 @@ public class ZmlTooltipProvider extends ColumnLabelProvider
   @Override
   public Image getToolTipImage( final Object object )
   {
-    if( !m_column.getColumnType().isTooltip() )
-      return null;
-
-    if( !ZmlTooltipSupport.isShowTooltips() )
-      return null;
-
-    if( !m_column.isVisible() )
-      return null;
-    else if( object instanceof IZmlModelRow )
-    {
-      if( m_column instanceof IZmlTableIndexColumn )
-      {
-        final IZmlTableIndexColumn indexColumn = (IZmlTableIndexColumn) m_column;
-        final IZmlTableIndexCell cell = indexColumn.findCell( (IZmlModelRow) object );
-        if( Objects.isNotNull( cell ) )
-        {
-          final IZmlModelCell reference = cell.getValueReference();
-          if( Objects.isNotNull( reference ) )
-            return m_tooltip.getToolTipImage();
-        }
-      }
-      else if( m_column instanceof IZmlTableValueColumn )
-      {
-        final IZmlTableValueColumn valueCell = (IZmlTableValueColumn) m_column;
-        final IZmlTableValueCell cell = valueCell.findCell( (IZmlModelRow) object );
-        if( Objects.isNotNull( cell ) )
-        {
-          final IZmlModelCell reference = cell.getValueReference();
-          if( Objects.isNotNull( reference ) )
-            return m_tooltip.getToolTipImage();
-        }
-      }
-    }
+// if( !m_column.getColumnType().isTooltip() )
+// return null;
+//
+// if( !ZmlTooltipSupport.isShowTooltips() )
+// return null;
+//
+// if( !m_column.isVisible() )
+// return null;
+// else if( object instanceof IZmlModelRow )
+// {
+// if( m_column instanceof IZmlTableIndexColumn )
+// {
+// final IZmlTableIndexColumn indexColumn = (IZmlTableIndexColumn) m_column;
+// final IZmlTableIndexCell cell = indexColumn.findCell( (IZmlModelRow) object );
+// if( Objects.isNotNull( cell ) )
+// {
+// final IZmlModelCell reference = cell.getValueReference();
+// if( Objects.isNotNull( reference ) )
+// return m_tooltip.getToolTipImage();
+// }
+// }
+// else if( m_column instanceof IZmlTableValueColumn )
+// {
+// final IZmlTableValueColumn valueCell = (IZmlTableValueColumn) m_column;
+// final IZmlTableValueCell cell = valueCell.findCell( (IZmlModelRow) object );
+// if( Objects.isNotNull( cell ) )
+// {
+// final IZmlModelCell reference = cell.getValueReference();
+// if( Objects.isNotNull( reference ) )
+// return m_tooltip.getToolTipImage();
+// }
+// }
+// }
 
     return super.getToolTipImage( object );
   }
@@ -128,19 +120,19 @@ public class ZmlTooltipProvider extends ColumnLabelProvider
   @Override
   public String getToolTipText( final Object element )
   {
-    if( !ZmlTooltipSupport.isShowTooltips() )
-      return null;
-
-    if( !m_column.getColumnType().isTooltip() )
-      return null;
-
-    if( !m_column.isVisible() )
-      return null;
-
-    if( element instanceof ZmlModelRow )
-    {
-      return m_tooltip.getToolTipText( (ZmlModelRow) element );
-    }
+// if( !ZmlTooltipSupport.isShowTooltips() )
+// return null;
+//
+// if( !m_column.getColumnType().isTooltip() )
+// return null;
+//
+// if( !m_column.isVisible() )
+// return null;
+//
+// if( element instanceof ZmlModelRow )
+// {
+// return m_tooltip.getToolTipText( (ZmlModelRow) element );
+// }
 
     return super.getToolTipText( element );
   }
