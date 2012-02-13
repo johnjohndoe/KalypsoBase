@@ -46,6 +46,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -222,6 +223,21 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
 
       return null;
     }
+  }
+
+  public ZmlModelColumn[] getActiveColumns( )
+  {
+    final Set<ZmlModelColumn> active = new LinkedHashSet<ZmlModelColumn>();
+
+    final ZmlModelColumn[] columns = getColumns();
+    for( final ZmlModelColumn column : columns )
+    {
+      if( column.isActive() )
+        active.add( column );
+    }
+
+    return active.toArray( new ZmlModelColumn[] {} );
+
   }
 
   @Override

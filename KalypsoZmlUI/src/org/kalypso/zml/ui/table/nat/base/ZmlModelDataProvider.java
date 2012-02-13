@@ -45,7 +45,6 @@ import net.sourceforge.nattable.data.IRowDataProvider;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.zml.core.table.model.IZmlModel;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 
 /**
@@ -79,15 +78,7 @@ public class ZmlModelDataProvider implements IRowDataProvider<IZmlModelRow>
   @Override
   public int getColumnCount( )
   {
-    int count = 0;
-    final IZmlModelColumn[] columns = m_model.getColumns();
-    for( final IZmlModelColumn column : columns )
-    {
-      if( column.isActive() )
-        count += 1;
-    }
-
-    return count;
+    return ArrayUtils.getLength( m_model.getActiveColumns() );
   }
 
   @Override

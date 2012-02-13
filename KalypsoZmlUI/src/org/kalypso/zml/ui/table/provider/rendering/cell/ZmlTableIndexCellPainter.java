@@ -59,7 +59,7 @@ import org.kalypso.zml.core.table.model.references.IZmlModelIndexCell;
  */
 public class ZmlTableIndexCellPainter extends AbstractZmlTableCellPainter
 {
-  private final IZmlCellStyleProvider m_provider;
+  private final IZmlCellStyleProvider m_provider = null;
 
   private final ZmlCellRule[] m_activeRules = new ZmlCellRule[] {};
 
@@ -69,7 +69,7 @@ public class ZmlTableIndexCellPainter extends AbstractZmlTableCellPainter
   {
     super( cell );
 
-    m_provider = cell.getStyleProvider();
+// m_provider = cell.getStyleProvider();
   }
 
   @Override

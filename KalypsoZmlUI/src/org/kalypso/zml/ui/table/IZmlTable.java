@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table;
 
-import org.eclipse.jface.viewers.TableViewer;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
@@ -50,9 +49,6 @@ import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
  */
 public interface IZmlTable
 {
-  @Deprecated
-  TableViewer getViewer( );
-
   // FIXME remove from interface!
   void dispose( );
 
