@@ -71,6 +71,7 @@ import org.kalypso.commons.java.util.zip.ZipResourceVisitor.PATH_TYPE;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.simulation.core.ISimulationService;
 import org.kalypso.simulation.core.KalypsoSimulationCoreDebug;
 import org.kalypso.simulation.core.KalypsoSimulationCorePlugin;
 import org.kalypso.simulation.core.SimulationDataPath;
@@ -94,11 +95,11 @@ class CalcJobHandler
 
   private String m_jobID = null;
 
-  private final LocalSimulationService m_calcService;
+  private final ISimulationService m_calcService;
 
   private File m_zipFile = null;
 
-  public CalcJobHandler( final Modeldata modelspec, final LocalSimulationService calcService )
+  public CalcJobHandler( final Modeldata modelspec, final ISimulationService calcService )
   {
     m_modelspec = modelspec;
     m_calcService = calcService;
@@ -372,7 +373,6 @@ class CalcJobHandler
           }
 
           inputResource.accept( zipper );
-// beanValue = projectRelativePath.toString();
           beanValue = platformRelativePath.toString();
         }
         else
