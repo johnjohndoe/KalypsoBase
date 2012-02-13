@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraï¿½e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,20 +38,38 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model.references;
+package org.kalypso.zml.ui.table.nat.painter;
 
-import net.sourceforge.nattable.style.Style;
+import net.sourceforge.nattable.data.convert.DisplayConverter;
 
-import org.eclipse.swt.graphics.Image;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.references.IZmlModelCellLabelProvider;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlModelCellLabelProvider
+public class ZmlModelCellDisplayConverter extends DisplayConverter
 {
-  Image[] getImages( final IZmlModelCell cell );
+  @Override
+  public Object canonicalToDisplayValue( final Object canonicalValue )
+  {
+    if( canonicalValue instanceof IZmlModelValueCell )
+    {
+      final IZmlModelValueCell cell = (IZmlModelValueCell) canonicalValue;
+      final IZmlModelColumn column = cell.getColumn();
+      final IZmlModelCellLabelProvider provider = column.getStyleProvider();
 
-  String getText( IZmlModelCell cell );
+      return provider.getText( cell );
+    }
 
-  Style getStyle( );
+    return canonicalValue.toString();
+  }
+
+  @Override
+  public Object displayToCanonicalValue( final Object displayValue )
+  {
+    throw new UnsupportedOperationException();
+  }
+
 }

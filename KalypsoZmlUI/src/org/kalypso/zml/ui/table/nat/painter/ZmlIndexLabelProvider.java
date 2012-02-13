@@ -42,8 +42,8 @@ package org.kalypso.zml.ui.table.nat.painter;
 
 import java.text.SimpleDateFormat;
 
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
+import net.sourceforge.nattable.style.Style;
+
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.zml.core.table.model.references.IZmlCellStyleProvider;
@@ -78,21 +78,10 @@ public class ZmlIndexLabelProvider implements IZmlModelCellLabelProvider
   }
 
   @Override
-  public Font getFont( )
+  public Style getStyle( )
   {
-    return null;
-  }
-
-  @Override
-  public Color getBackground( )
-  {
-    return null;
-  }
-
-  @Override
-  public Color getForeground( )
-  {
-    return null;
+    // TODO
+    return new Style();
   }
 
 }

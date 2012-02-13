@@ -44,11 +44,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.sourceforge.nattable.NatTable;
+import net.sourceforge.nattable.config.CellConfigAttributes;
 import net.sourceforge.nattable.config.IConfigRegistry;
+import net.sourceforge.nattable.grid.GridRegion;
 import net.sourceforge.nattable.grid.data.DefaultCornerDataProvider;
 import net.sourceforge.nattable.grid.layer.CornerLayer;
 import net.sourceforge.nattable.grid.layer.GridLayer;
 import net.sourceforge.nattable.layer.DataLayer;
+import net.sourceforge.nattable.style.DisplayMode;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -73,6 +76,8 @@ import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
 import org.kalypso.zml.ui.table.nat.layers.BodyLayerStack;
 import org.kalypso.zml.ui.table.nat.layers.ColumnHeaderLayerStack;
 import org.kalypso.zml.ui.table.nat.layers.RowHeaderLayerStack;
+import org.kalypso.zml.ui.table.nat.painter.ZmlModelCellDisplayConverter;
+import org.kalypso.zml.ui.table.nat.painter.ZmlModelCellPainter;
 
 /**
  * @author Dirk Kuch
@@ -125,8 +130,8 @@ public class ZmlTable extends Composite implements IZmlTable
 
     final IConfigRegistry registry = m_natTable.getConfigRegistry();
 
-// registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new ZmlModelCellPainter(), DisplayMode.NORMAL,
-// GridRegion.BODY.toString() );
+    registry.registerConfigAttribute( CellConfigAttributes.DISPLAY_CONVERTER, new ZmlModelCellDisplayConverter(), DisplayMode.NORMAL, GridRegion.BODY.toString() );
+    registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new ZmlModelCellPainter(), DisplayMode.NORMAL, GridRegion.BODY.toString() );
 
 // registry.registerConfigAttribute( configAttribute, attributeValue, targetDisplayMode, configLabel )
 
