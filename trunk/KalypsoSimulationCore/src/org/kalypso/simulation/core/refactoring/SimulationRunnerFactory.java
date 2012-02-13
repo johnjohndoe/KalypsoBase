@@ -46,7 +46,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.kalypso.simulation.core.refactoring.local.LocalSimulationRunner;
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.simulation.core.KalypsoSimulationCoreExtensions;
 import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.core.simspec.Modeldata.Input;
 import org.kalypso.simulation.core.simspec.Modeldata.Output;
@@ -56,6 +58,11 @@ import org.kalypso.simulation.core.simspec.Modeldata.Output;
  */
 public class SimulationRunnerFactory
 {
+  // FIXME: do not belong here
+  public static final String WPS_ENDPOINT_PROPERTY = "org.kalypso.service.wps.service"; //$NON-NLS-1$
+
+  // FIXME: do not belong here
+  public static final String WPS_USE_ENDPOINT_PROPERTY = "org.kalypso.hwv.use.wps"; //$NON-NLS-1$
 
   /**
    * FIXME refactoring
@@ -80,10 +87,53 @@ public class SimulationRunnerFactory
    * </pre>
    */
 
-  public static ISimulationRunner createRunner( final Modeldata modeldata, final URL inputDir )
+  /**
+   * Always creates a local runner
+   */
+  public static ISimulationRunner createRunner( final Modeldata modeldata, final URL inputDir ) throws CoreException
   {
-    // FIXME atm only local simulation runner will be returned...
-    return new LocalSimulationRunner( modeldata, inputDir );
+    return createRunner( modeldata, inputDir, null, null );
+  }
+
+  /**
+   * Create a remote runner, if an endpoint is set and is configured to be used, depending on the given system
+   * properties.<br/>
+   * If no endpoint is found, return a local runner.
+   */
+  public static ISimulationRunner createRunner( final Modeldata modeldata, final URL inputDir, final String endpointProperty, final String useEndpointProperty ) throws CoreException
+  {
+    final ISimulationRunner runner = createRunner( endpointProperty, useEndpointProperty );
+    runner.init( modeldata, inputDir );
+    return runner;
+  }
+
+  private static ISimulationRunner createRunner( final String endpointProperty, final String useEndpointProperty ) throws CoreException
+  {
+    final boolean remoteCalculation = useEndpoint(endpointProperty, useEndpointProperty);
+    if( remoteCalculation )
+      return KalypsoSimulationCoreExtensions.createSimulationRunner( "wps" ); //$NON-NLS-1$
+    else
+      return KalypsoSimulationCoreExtensions.createSimulationRunner( "local" ); //$NON-NLS-1$
+  }
+
+  private static boolean useEndpoint( final String endpointProperty, final String useEndpointProperty )
+  {
+    /* endpoint not configured: cannot execute remote */
+    if( StringUtils.isBlank( endpointProperty ) )
+      return false;
+
+    // REMARK: very crude: If no WPS-Endpoint is configured, we try to start the calculation locally
+    final String serviceEndpoint = System.getProperty( endpointProperty );
+
+    /* If use property is not set, use wps if endpoint is defined */
+    if( StringUtils.isBlank( useEndpointProperty ) )
+      return !StringUtils.isBlank( serviceEndpoint );
+
+    // REMARK: Instead of the WPS-Endpoint a different system property is checked...
+    // TODO: We should introduce an abstraction for all available WPS (including a 'fake' local one)
+    // and find out, which ones are available for calculation this typeID.
+    // If more than one is available, the user should be able to choose.
+    return Boolean.parseBoolean( System.getProperty( useEndpointProperty, Boolean.FALSE.toString() ) ); //$NON-NLS-1$
   }
 
   public static List<String> resolveOutputs( final List<Output> output )
@@ -109,4 +159,8 @@ public class SimulationRunnerFactory
     return myInputs;
   }
 
+  public static String getServiceEndpoint( )
+  {
+    return System.getProperty( "org.kalypso.service.wps.service" ); //$NON-NLS-1$
+  }
 }

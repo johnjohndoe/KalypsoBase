@@ -13,7 +13,7 @@
    <extension
          point="org.kalypso.simulation.core.simulation">
       <simulationRunner
-            class="org.kalypso.simulation.core.internal.local.LocalSimulationRunner"
+            class="org.kalypso.simulation.core.refactoring.local.LocalSimulationRunner"
             id="local">
       </simulationRunner>
    </extension>

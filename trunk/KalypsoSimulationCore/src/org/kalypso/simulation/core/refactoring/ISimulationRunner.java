@@ -40,17 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.simulation.core.refactoring;
 
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.simulation.core.simspec.Modeldata;
 
 /**
  * @author Dirk Kuch
  */
 public interface ISimulationRunner
 {
+  void init( Modeldata modeldata, URL inputDir );
+
   IStatus run( Map<String, Object> inputs, List<String> outputs, final IProgressMonitor monitor ) throws CoreException;
 }

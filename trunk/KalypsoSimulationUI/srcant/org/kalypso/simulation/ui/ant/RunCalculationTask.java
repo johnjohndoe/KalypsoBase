@@ -59,14 +59,13 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.simulation.core.simspec.Modeldata;
-import org.kalypso.simulation.ui.calccase.simulation.SimulationFactory;
+import org.kalypso.simulation.ui.inernal.simulation.RunCalculationTaskOperation;
 
 /**
  * This ant task starts the calculation of a kalypso calcCase.
- * 
+ *
  * @author belger
  */
 public class RunCalculationTask extends Task
@@ -140,16 +139,8 @@ public class RunCalculationTask extends Task
     final Hashtable< ? , ? > references = antProject == null ? null : antProject.getReferences();
     final IProgressMonitor monitor = references == null ? null : (IProgressMonitor) references.get( AntCorePlugin.ECLIPSE_PROGRESS_MONITOR );
 
-    IStatus status = null;
-    try
-    {
-      status = SimulationFactory.runCalculation( m_calcCaseFolder, new SubProgressMonitor( monitor, 1 ), m_modeldata );
-    }
-    catch( final Throwable t )
-    {
-      t.printStackTrace();
-      status = StatusUtilities.statusFromThrowable( t );
-    }
+    final RunCalculationTaskOperation operation = new RunCalculationTaskOperation(m_calcCaseFolder, m_modeldata);
+    final IStatus status = operation.execute(new SubProgressMonitor( monitor, 1 ));
 
     if( PlatformUI.isWorkbenchRunning() )
     {
