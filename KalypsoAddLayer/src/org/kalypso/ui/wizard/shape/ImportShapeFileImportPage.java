@@ -78,6 +78,7 @@ import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypso.transformation.ui.validators.CRSInputValidator;
 import org.kalypso.ui.i18n.Messages;
+import org.kalypso.ui.wizard.shape.ImportShapeFileData.StyleImport;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 
 /**
@@ -92,34 +93,6 @@ import org.kalypsodeegree.graphics.sld.UserStyle;
  */
 public class ImportShapeFileImportPage extends WizardPage
 {
-  enum StyleImport
-  {
-    useDefault("Use default", "Use a style from the default style registry. You will be not able to change this style later on."),
-    generateDefault(Messages.getString( "org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.9" ), "Copy a style from the default style registry next to the shape file."), //$NON-NLS-1$
-    selectExisting("Select existing", "Select an existing SLD-File from your project.");
-
-    private final String m_label;
-
-    private final String m_tooltip;
-
-    private StyleImport( final String label, final String tooltip )
-    {
-      m_label = label;
-      m_tooltip = tooltip;
-    }
-
-    public String getTooltip( )
-    {
-      return m_tooltip;
-    }
-
-    @Override
-    public String toString( )
-    {
-      return m_label;
-    }
-  }
-
   private CRSSelectionPanel m_crsPanel;
 
   private IProject m_project;

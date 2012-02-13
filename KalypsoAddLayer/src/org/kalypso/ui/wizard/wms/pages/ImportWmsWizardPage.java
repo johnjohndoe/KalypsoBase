@@ -97,7 +97,7 @@ import org.kalypso.ui.wizard.wms.utils.WMSCapabilitiesLabelProvider;
 
 /**
  * This is a page for importing a WMS Layer.
- * 
+ *
  * @author Kuepferle, Doemming (original)
  * @author Holger Albert
  */
@@ -200,7 +200,7 @@ public class ImportWmsWizardPage extends WizardPage
 
   /**
    * The constructor.
-   * 
+   *
    * @param pageName
    *          The name of the page.
    */
@@ -211,7 +211,7 @@ public class ImportWmsWizardPage extends WizardPage
 
   /**
    * The constructor.
-   * 
+   *
    * @param pageName
    *          The name of the page.
    * @param title
@@ -687,7 +687,7 @@ public class ImportWmsWizardPage extends WizardPage
 
   /**
    * This function updates the capabilities tree and the rest of the UI.
-   * 
+   *
    * @param urlText
    *          The typed URL.
    */
@@ -752,7 +752,7 @@ public class ImportWmsWizardPage extends WizardPage
 
   /**
    * This function updates the error text, if the typed URL is not valid.
-   * 
+   *
    * @param url
    *          The typed URL.
    */
@@ -789,7 +789,7 @@ public class ImportWmsWizardPage extends WizardPage
 
   /**
    * This function loads the capabilities of the given service. It caches the capabilities, if they are loaded once.
-   * 
+   *
    * @param service
    *          The URL to the service.
    */
@@ -823,7 +823,7 @@ public class ImportWmsWizardPage extends WizardPage
 
   /**
    * This function returns the selected layers.
-   * 
+   *
    * @return The selected layers.
    */
   public Layer[] getLayersList( )
@@ -835,7 +835,7 @@ public class ImportWmsWizardPage extends WizardPage
 
   /**
    * For casting the input to List<Layer>.
-   * 
+   *
    * @return The layer list.
    */
   @SuppressWarnings("unchecked")
@@ -899,7 +899,7 @@ public class ImportWmsWizardPage extends WizardPage
 
   /**
    * This function adds the selection to the selected layers.
-   * 
+   *
    * @param selection
    *          The current selection.
    */
@@ -935,7 +935,7 @@ public class ImportWmsWizardPage extends WizardPage
 
   /**
    * This function returns all selectable layers.
-   * 
+   *
    * @return All selectable layers.
    */
   private List<Layer> getSelectableLayer( final List<Layer> resultCollector, final Layer layer )
@@ -960,7 +960,7 @@ public class ImportWmsWizardPage extends WizardPage
 
   /**
    * This function returns the selected base URL.
-   * 
+   *
    * @return The selected base URL.
    */
   public URL getBaseURL( )
@@ -970,7 +970,7 @@ public class ImportWmsWizardPage extends WizardPage
 
   /**
    * This function returns true, if the checkbox for multi layer is selected.
-   * 
+   *
    * @return True, if multilayer is wanted.
    */
   public boolean isMultiLayer( )
@@ -980,7 +980,7 @@ public class ImportWmsWizardPage extends WizardPage
 
   /**
    * This function returns the selected image provider id, or null, if not available.
-   * 
+   *
    * @return The selected image provider id or null, if not available.
    */
   public String getProviderID( )
