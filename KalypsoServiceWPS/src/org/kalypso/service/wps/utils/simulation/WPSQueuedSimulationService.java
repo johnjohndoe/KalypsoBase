@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,12 +36,10 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.service.wps.utils.simulation;
 
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -49,13 +47,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
 
-import javax.activation.DataHandler;
-import javax.activation.URLDataSource;
-
 import org.apache.commons.vfs2.FileObject;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
-import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.service.wps.i18n.Messages;
 import org.kalypso.service.wps.internal.KalypsoServiceWPSDebug;
 import org.kalypso.service.wps.utils.WPSUtilities.WPS_VERSION;
@@ -64,15 +58,14 @@ import org.kalypso.service.wps.utils.ogc.ProcessDescriptionMediator;
 import org.kalypso.simulation.core.ISimulation;
 import org.kalypso.simulation.core.ISimulationConstants;
 import org.kalypso.simulation.core.SimulationException;
-import org.kalypso.simulation.core.internal.queued.ISimulationFactory;
+import org.kalypso.simulation.core.calccase.ISimulationFactory;
 
 /**
  * A straight forward {@link org.kalypso.services.calculation.service.ICalculationService}-Implementation. All jobs go
  * in one fifo-queue. Support parallel processing of jobs.
- * 
+ *
  * @author Gernot Belger (original), Holger Albert (changes for WPS)
  */
-@SuppressWarnings("restriction")
 public class WPSQueuedSimulationService
 {
   /**
@@ -115,18 +108,13 @@ public class WPSQueuedSimulationService
   private final long m_schedulingPeriod;
 
   /**
-   * The URL catalog.
-   */
-  private final IUrlCatalog m_catalog;
-
-  /**
    * URL to space, where the jobs can put their results, so that the client can read them.
    */
   private final String m_resultSpace;
 
   /**
    * The constructor.
-   * 
+   *
    * @param factory
    *          Retrieves the simulation.
    * @param catalog
@@ -138,10 +126,9 @@ public class WPSQueuedSimulationService
    * @param tmpDir
    *          The temporary directory will be used by the jobs to copy their running data.
    */
-  public WPSQueuedSimulationService( final ISimulationFactory factory, final IUrlCatalog catalog, final int maxThreads, final long schedulingPeriod )
+  public WPSQueuedSimulationService( final ISimulationFactory factory, final int maxThreads, final long schedulingPeriod )
   {
     m_calcJobFactory = factory;
-    m_catalog = catalog;
     m_maxThreads = maxThreads;
     m_schedulingPeriod = schedulingPeriod;
 
@@ -325,7 +312,7 @@ public class WPSQueuedSimulationService
   /**
    * Falls dieses Objekt wirklich mal zerstört wird und wir es mitkriegen, dann alle restlichen Jobs zerstören und
    * insbesondere alle Dateien löschen
-   * 
+   *
    * @see java.lang.Object#finalize()
    */
   @Override
@@ -340,45 +327,6 @@ public class WPSQueuedSimulationService
       }
     }
     super.finalize();
-  }
-
-  public DataHandler getSchema( final String namespace )
-  {
-    final URL url = m_catalog.getURL( namespace );
-    if( url == null )
-      return null;
-
-    return new DataHandler( new URLDataSource( url ) );
-  }
-
-  public long getSchemaValidity( final String namespace ) throws SimulationException
-  {
-    try
-    {
-      final URL url = m_catalog.getURL( namespace );
-      if( url == null )
-        throw new SimulationException( "Unknown schema namespace: " + namespace, null ); //$NON-NLS-1$
-
-      final URLConnection connection = url.openConnection();
-      return connection.getLastModified();
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-
-      throw new SimulationException( "Unknown schema namespace: " + namespace, e ); //$NON-NLS-1$
-    }
-  }
-
-  public String[] getSupportedSchemata( )
-  {
-    final Map<String, URL> catalog = m_catalog.getCatalog();
-    final String[] namespaces = new String[catalog.size()];
-    int count = 0;
-    for( final Iterator<String> mapIt = catalog.keySet().iterator(); mapIt.hasNext(); )
-      namespaces[count++] = mapIt.next();
-
-    return namespaces;
   }
 
   public FileObject getResultDir( final String jobID ) throws SimulationException
