@@ -19,7 +19,7 @@
 package org.kalypso.ui.wizard.shape;
 
 import org.kalypso.commons.databinding.conversion.TypedConverter;
-import org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.StyleImport;
+import org.kalypso.ui.wizard.shape.ImportShapeFileData.StyleImport;
 
 /**
  * @author Gernot Belger

@@ -28,7 +28,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.kalypso.commons.databinding.swt.FileAndHistoryData;
 import org.kalypso.commons.java.util.AbstractModelObject;
-import org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.StyleImport;
+import org.kalypso.ui.i18n.Messages;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 
@@ -37,6 +37,34 @@ import org.kalypsodeegree.graphics.sld.UserStyle;
  */
 public class ImportShapeFileData extends AbstractModelObject
 {
+  public enum StyleImport
+  {
+    useDefault("Use default", "Use a style from the default style registry. You will be not able to change this style later on."),
+    generateDefault(Messages.getString( "org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.9" ), "Copy a style from the default style registry next to the shape file."), //$NON-NLS-1$
+    selectExisting("Select existing", "Select an existing SLD-File from your project.");
+
+    private final String m_label;
+
+    private final String m_tooltip;
+
+    private StyleImport( final String label, final String tooltip )
+    {
+      m_label = label;
+      m_tooltip = tooltip;
+    }
+
+    public String getTooltip( )
+    {
+      return m_tooltip;
+    }
+
+    @Override
+    public String toString( )
+    {
+      return m_label;
+    }
+  }
+
   static final String EXTENSIONS_SLD = "sld"; //$NON-NLS-1$
 
   static final String[] EMPTY_STYLES = new String[] { "<No style file selected>" };
@@ -91,6 +119,7 @@ public class ImportShapeFileData extends AbstractModelObject
 
   private StyleImport m_styleImportType = StyleImport.generateDefault;
 
+  private int m_insertionIndex;
 
   public ImportShapeFileData( )
   {
@@ -234,5 +263,15 @@ public class ImportShapeFileData extends AbstractModelObject
       return ((UserStyle) m_style).getName();
 
     return null;
+  }
+
+  public void setInsertionIndex( final int insertionIndex )
+  {
+    m_insertionIndex = insertionIndex;
+  }
+
+  public int getInsertionIndex( )
+  {
+    return m_insertionIndex;
   }
 }
