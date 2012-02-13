@@ -344,7 +344,6 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
       {
         m_it.remove();
       }
-
     };
   }
 
@@ -449,6 +448,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
       boolean removed = getFeatureList().remove( o );
       if( !removed )
       {
+        // FIXME: does not make sense
         removed = getFeatureList().remove( o );
       }
       return removed;
