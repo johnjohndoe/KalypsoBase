@@ -20,7 +20,6 @@
          <sequence>
             <choice minOccurs="1" maxOccurs="unbounded">
                <element ref="simulation"/>
-               <element ref="simulationRunner"/>
             </choice>
          </sequence>
          <attribute name="point" type="string" use="required">
@@ -79,40 +78,6 @@
       </complexType>
    </element>
 
-   <element name="simulationRunner">
-      <complexType>
-         <attribute name="id" type="string" use="required">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-               <appinfo>
-                  <meta.attribute kind="identifier"/>
-               </appinfo>
-            </annotation>
-         </attribute>
-         <attribute name="class" type="string" use="required">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-               <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.kalypso.simulation.core.calccase.ISimulationRunner"/>
-               </appinfo>
-            </annotation>
-         </attribute>
-      </complexType>
-   </element>
-
-   <annotation>
-      <appinfo>
-         <meta.section type="apiInfo"/>
-      </appinfo>
-      <documentation>
-         [Enter API information here.]
-      </documentation>
-   </annotation>
-
    <annotation>
       <appinfo>
          <meta.section type="since"/>
@@ -140,5 +105,14 @@
       </documentation>
    </annotation>
 
+
+   <annotation>
+      <appinfo>
+         <meta.section type="apiInfo"/>
+      </appinfo>
+      <documentation>
+         [Enter API information here.]
+      </documentation>
+   </annotation>
 
 </schema>

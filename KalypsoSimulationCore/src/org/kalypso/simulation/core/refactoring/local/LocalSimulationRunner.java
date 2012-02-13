@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.simulation.core.refactoring.local;
 
@@ -49,6 +49,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -72,44 +73,51 @@ import org.kalypso.simulation.core.util.SimulationUtilitites;
  */
 public class LocalSimulationRunner implements ISimulationRunner
 {
-  private final String m_calculationTypeId;
-
   private final Modeldata m_modeldata;
 
   private final URL m_inputDir;
 
-  public LocalSimulationRunner( final String calculationTypeId, final Modeldata modeldata, final URL inputDir )
+  public LocalSimulationRunner( final Modeldata modeldata, final URL inputDir )
   {
-    m_calculationTypeId = calculationTypeId;
     m_modeldata = modeldata;
     m_inputDir = inputDir;
   }
 
   @Override
-  public void run( final Map<String, Object> inputs, final List<String> outputs, final IProgressMonitor monitor ) throws CoreException
+  public IStatus run( final Map<String, Object> inputs, final List<String> outputs, final IProgressMonitor monitor ) throws CoreException
   {
+    File tmpDir = null;
+
     try
     {
       final SimulationDataPath[] inputPaths = resolveInputs( inputs );
       final SimulationDataPath[] outputPaths = resolveOutputs( outputs );
 
-      final File tmpDir = SimulationUtilitites.createSimulationTmpDir( m_calculationTypeId );
+      tmpDir = SimulationUtilitites.createSimulationTmpDir( m_modeldata.getTypeID() );
 
-      /* FIXME - ask gernot, we really need to move inputs to simulation tempDir? */
       final LocalSimulationFactory factory = new LocalSimulationFactory();
-      final ISimulation job = factory.createJob( m_calculationTypeId );
+      final ISimulation job = factory.createJob( m_modeldata.getTypeID() );
       final ModelspecData modelspec = new ModelspecData( job.getSpezifikation() );
 
       final LocalSimulationDataProvider inputProvider = new LocalSimulationDataProvider( modelspec, inputPaths, m_inputDir );
       final DefaultResultEater resultEater = new DefaultResultEater( modelspec, outputPaths );
 
-      job.run( tmpDir, inputProvider, resultEater, new LocalSimulationMonitor( monitor ) );
+      final LocalSimulationMonitor simulationMonitor = new LocalSimulationMonitor( monitor );
+      job.run( tmpDir, inputProvider, resultEater, simulationMonitor );
 
       final IFolder resultFolder = ResourceUtilities.findFolderFromURL( m_inputDir );
       if( resultFolder != null )
         resultEater.transferCurrentResults( resultFolder );
       else
         resultEater.transferCurrentResults( FileUtils.toFile( m_inputDir ) );
+
+      /* Return status according to simulation monitor */
+      final int finishStatus = simulationMonitor.getFinishStatus();
+      final String finishMessage = simulationMonitor.getFinishText();
+      if( StringUtils.isBlank( finishMessage ) )
+        return new Status( IStatus.OK, KalypsoSimulationCorePlugin.getID(), "Operation successfully terminated" );
+
+      return new Status( finishStatus, KalypsoSimulationCorePlugin.getID(), finishMessage );
     }
     catch( final Exception e )
     {
@@ -118,8 +126,7 @@ public class LocalSimulationRunner implements ISimulationRunner
     }
     finally
     {
-      // FIXME delete tmpDir
-      // tmpDir.delete();
+      FileUtils.deleteQuietly( tmpDir );
     }
   }
 
