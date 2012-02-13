@@ -73,11 +73,12 @@ import org.kalypso.simulation.core.util.SimulationUtilitites;
  */
 public class LocalSimulationRunner implements ISimulationRunner
 {
-  private final Modeldata m_modeldata;
+  private Modeldata m_modeldata;
 
-  private final URL m_inputDir;
+  private URL m_inputDir;
 
-  public LocalSimulationRunner( final Modeldata modeldata, final URL inputDir )
+  @Override
+  public void init( final Modeldata modeldata, final URL inputDir )
   {
     m_modeldata = modeldata;
     m_inputDir = inputDir;
@@ -159,5 +160,4 @@ public class LocalSimulationRunner implements ISimulationRunner
 
     return myPaths.toArray( new SimulationDataPath[] {} );
   }
-
 }

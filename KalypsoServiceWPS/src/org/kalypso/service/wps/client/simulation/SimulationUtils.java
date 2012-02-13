@@ -38,23 +38,53 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.simulation.core.refactoring;
+package org.kalypso.service.wps.client.simulation;
 
-import java.net.URL;
 import java.util.List;
-import java.util.Map;
 
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.simulation.core.simspec.Modeldata;
+import org.kalypso.simulation.core.simspec.Modeldata.ClearAfterCalc;
 
 /**
- * @author Dirk Kuch
+ * @author Gernot Belger
+ *
  */
-public interface ISimulationRunner
+public final class SimulationUtils
 {
-  void init( Modeldata modeldata, URL inputDir );
+  private SimulationUtils( )
+  {
+    throw new UnsupportedOperationException( "Helper class, do not instantiate" );
+  }
 
-  IStatus run( Map<String, Object> inputs, List<String> outputs, final IProgressMonitor monitor ) throws CoreException;
+  public static void clearResultsAfterCalculation( final Modeldata modelspec, final IContainer calcCaseFolder, final IProgressMonitor monitor ) throws CoreException
+  {
+    try
+    {
+      final IProject project = calcCaseFolder.getProject();
+
+      final List<ClearAfterCalc> clearList = modelspec.getClearAfterCalc();
+      monitor.beginTask( "Alte Ergebnisse werden gelöscht", clearList.size() ); //$NON-NLS-1$
+
+      for( final ClearAfterCalc clearAfterCalc : clearList )
+      {
+        final Modeldata.ClearAfterCalc clearType = clearAfterCalc;
+
+        final boolean relToCalc = clearType.isRelativeToCalcCase();
+        final String path = clearType.getPath();
+        final IResource resource = relToCalc ? calcCaseFolder.findMember( path ) : project.findMember( path );
+        if( resource != null )
+          resource.delete( false, new SubProgressMonitor( monitor, 1 ) );
+      }
+    }
+    finally
+    {
+      monitor.done();
+    }
+  }
 }

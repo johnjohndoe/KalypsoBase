@@ -38,23 +38,52 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.simulation.core.refactoring;
+package org.kalypso.simulation.ui.inernal.simulation;
 
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.simulation.core.refactoring.ISimulationRunner;
+import org.kalypso.simulation.core.refactoring.SimulationRunnerFactory;
 import org.kalypso.simulation.core.simspec.Modeldata;
 
 /**
- * @author Dirk Kuch
+ * @author Gernot Belger
  */
-public interface ISimulationRunner
+public class RunCalculationTaskOperation
 {
-  void init( Modeldata modeldata, URL inputDir );
+  private final IContainer m_simulationFolder;
 
-  IStatus run( Map<String, Object> inputs, List<String> outputs, final IProgressMonitor monitor ) throws CoreException;
+  private final Modeldata m_modeldata;
+
+  public RunCalculationTaskOperation( final IContainer simulationFolder, final Modeldata modeldata )
+  {
+    m_simulationFolder = simulationFolder;
+    m_modeldata = modeldata;
+  }
+
+  public IStatus execute( final IProgressMonitor monitor )
+  {
+    try
+    {
+      final URL scenarioURL = ResourceUtilities.createQuietURL( m_simulationFolder );
+
+      final Map<String, Object> inputs = SimulationRunnerFactory.resolveInputs( m_modeldata.getInput() );
+      final List<String> outputs = SimulationRunnerFactory.resolveOutputs( m_modeldata.getOutput() );
+
+      /* Create runner and look for endpoint properties, maybe a WPS should be used */
+      final ISimulationRunner runner = SimulationRunnerFactory.createRunner( m_modeldata, scenarioURL, SimulationRunnerFactory.WPS_ENDPOINT_PROPERTY, SimulationRunnerFactory.WPS_USE_ENDPOINT_PROPERTY );
+      return runner.run( inputs, outputs, monitor );
+    }
+    catch( final CoreException e )
+    {
+      return e.getStatus();
+    }
+  }
 }

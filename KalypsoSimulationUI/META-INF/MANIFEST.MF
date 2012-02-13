@@ -7,9 +7,7 @@ Bundle-Activator: org.kalypso.simulation.ui.KalypsoSimulationUIPlugin
 Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-Localization: plugin
 Bundle-ActivationPolicy: lazy
-Export-Package: org.kalypso.compare,
- org.kalypso.simulation.modellist,
- org.kalypso.simulation.ui,
+Export-Package: org.kalypso.simulation.ui,
  org.kalypso.simulation.ui.actions,
  org.kalypso.simulation.ui.calccase,
  org.kalypso.simulation.ui.calccase.jface,
