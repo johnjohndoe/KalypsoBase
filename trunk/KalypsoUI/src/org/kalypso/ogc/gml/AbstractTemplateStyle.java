@@ -45,8 +45,6 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -60,6 +58,7 @@ import org.kalypso.contribs.eclipse.core.runtime.SafeRunnable;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.contribs.java.i18n.I18NBundle;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.CatalogUtilities;
@@ -94,7 +93,7 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
 
   private boolean m_loaded = false;
 
-  private ResourceBundle m_resourceBundle = null;
+  private I18NBundle m_resourceBundle = null;
 
   public AbstractTemplateStyle( final PoolableObjectType poolableStyleKey, final boolean usedForSelection )
   {
@@ -373,41 +372,16 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
 
   /**
    * Resolves an international string against the (possibly existing) internal resource bundle of this style.<br>
-   * 
+   *
    * @return If <code>text</code> startswith '%', the text is assumed to be a key of the internal resource bundle and is
    *         resolved against it. Else, <code>text</code> is returned.
    */
   @Override
   public String resolveI18nString( final String text )
   {
-    if( text == null )
-      return null;
-
-    if( text.isEmpty() )
-      return text;
-
-    if( text.charAt( 0 ) == '%' )
-    {
-      final String key = text.substring( 1 );
-      if( m_resourceBundle == null )
-        return Messages.getString( "org.kalypso.ogc.gml.GisTemplateUserStyle.7", key ); //$NON-NLS-1$
-
-      try
-      {
-        return m_resourceBundle.getString( key );
-      }
-      catch( final MissingResourceException e )
-      {
-        return String.format( "!%s!", key ); //$NON-NLS-1$
-      }
-    }
-
-    return text;
+    return m_resourceBundle.translate( text );
   }
 
-  /**
-   * @param styleType
-   */
   @Override
   public void fillStyleType( final List<Style> stylesList, final Style styleType )
   {
@@ -426,9 +400,6 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
     stylesList.add( styleType );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoStyle#getContext()
-   */
   @Override
   public URL getContext( )
   {

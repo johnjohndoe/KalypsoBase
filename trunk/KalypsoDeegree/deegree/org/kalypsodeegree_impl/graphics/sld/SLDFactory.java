@@ -110,6 +110,7 @@ import org.kalypsodeegree.graphics.sld.TextSymbolizer;
 import org.kalypsodeegree.graphics.sld.UserLayer;
 import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.xml.ElementList;
+import org.kalypsodeegree.xml.Marshallable;
 import org.kalypsodeegree.xml.XMLParsingException;
 import org.kalypsodeegree.xml.XMLTools;
 import org.kalypsodeegree_impl.filterencoding.AbstractFilter;
@@ -2063,5 +2064,15 @@ public final class SLDFactory
       return createPolygonSymbolizer( urlResolver, polygonSymbolizerElement, uom );
 
     return null;
+  }
+
+  /**
+   * Marshalls an sld element as xml-string, including a xml header
+   */
+  public static String marshallObject( final Marshallable marshallable, final String charset )
+  {
+    final String sldXML = marshallable.exportAsXML();
+    //$NON-NLS-1$ //$NON-NLS-2$
+    return "<?xml version=\"1.0\" encoding=\"" + charset + "\"?>" + sldXML;
   }
 }
