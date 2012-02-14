@@ -64,7 +64,6 @@ public class SimpleEditingStrategy extends AbstractEditingStrategy
     try
     {
       final Number targetValue = getTargetValue( cell, value );
-
       cell.doUpdate( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
     }
     catch( final SensorException e )

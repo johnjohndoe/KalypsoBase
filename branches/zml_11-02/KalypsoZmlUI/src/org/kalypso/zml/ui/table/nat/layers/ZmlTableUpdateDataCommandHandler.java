@@ -41,6 +41,7 @@
 package org.kalypso.zml.ui.table.nat.layers;
 
 import net.sourceforge.nattable.command.ILayerCommandHandler;
+import net.sourceforge.nattable.data.IDataProvider;
 import net.sourceforge.nattable.edit.command.UpdateDataCommand;
 import net.sourceforge.nattable.edit.command.UpdateDataCommandHandler;
 import net.sourceforge.nattable.layer.DataLayer;
@@ -68,7 +69,9 @@ public class ZmlTableUpdateDataCommandHandler extends UpdateDataCommandHandler i
       final int columnPosition = command.getColumnPosition();
       final int rowPosition = command.getRowPosition();
 
-      m_dataLayer.getDataProvider().setDataValue( columnPosition, rowPosition, command.getNewValue() );
+      final IDataProvider provider = m_dataLayer.getDataProvider();
+      provider.setDataValue( columnPosition, rowPosition, command.getNewValue() );
+
       m_dataLayer.fireLayerEvent( new CellVisualChangeEvent( m_dataLayer, columnPosition, rowPosition ) );
 
       return true;

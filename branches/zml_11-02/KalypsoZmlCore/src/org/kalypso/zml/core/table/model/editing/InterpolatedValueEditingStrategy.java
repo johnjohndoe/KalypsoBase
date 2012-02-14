@@ -82,6 +82,9 @@ public class InterpolatedValueEditingStrategy extends AbstractEditingStrategy
       /** update current cell */
 
       final Number targetValue = getTargetValue( cell, value );
+      if( Objects.equal( cell.getValue(), targetValue ) )
+        return;
+
       cell.doUpdate( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
 
       /** update interpolated values before and after */

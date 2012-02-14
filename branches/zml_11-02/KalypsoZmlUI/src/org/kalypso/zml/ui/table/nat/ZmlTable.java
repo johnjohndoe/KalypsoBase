@@ -80,7 +80,6 @@ import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.IZmlTableCompositeListener;
 import org.kalypso.zml.ui.table.IZmlTableListener;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
 import org.kalypso.zml.ui.table.menu.ZmlTableContextMenuProvider;
@@ -162,6 +161,9 @@ public class ZmlTable extends Composite implements IZmlTable
 
     registry.registerConfigAttribute( EditConfigAttributes.CELL_EDITABLE_RULE, IEditableRule.ALWAYS_EDITABLE, DisplayMode.EDIT, GridRegion.BODY.toString() );
 
+// configRegistry.registerConfigAttribute( EditConfigAttributes.CELL_EDITOR, comboBoxCellEditor, DisplayMode.EDIT,
+// "myCellLabel" );
+
     final DefaultToolTip toolTip = new ZmlTableTooltip( m_natTable, getModel() );
     toolTip.setBackgroundColor( m_natTable.getDisplay().getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
     toolTip.setPopupDelay( 500 );
@@ -241,18 +243,12 @@ public class ZmlTable extends Composite implements IZmlTable
         {
 // m_pager.update();
 
-// final IZmlTableColumn[] tableColumns = ZmlTableColumns.toTableColumns( ZmlMainTable.this, true, columns );
-// for( final IZmlTableColumn column : tableColumns )
-// {
-// column.reset();
-// }
-
 // ZmlTable.this.refresh();
 // m_pager.reveal();
 
           m_natTable.redraw();
 
-          fireTableChanged( IZmlTableCompositeListener.TYPE_REFRESH, columns );
+// fireTableChanged( IZmlTableCompositeListener.TYPE_REFRESH, columns );
         }
 
         return Status.OK_STATUS;
