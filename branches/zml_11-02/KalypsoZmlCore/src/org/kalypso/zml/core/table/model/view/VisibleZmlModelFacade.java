@@ -86,6 +86,9 @@ public class VisibleZmlModelFacade
 
   public IZmlModelCell getCell( final IZmlModelRow row, final int columnIndex )
   {
+    if( columnIndex == -1 )
+      return null;
+
     final ZmlModelColumn[] columns = m_model.getActiveColumns();
     if( ArrayUtils.getLength( columns ) < columnIndex )
       return null;
@@ -101,6 +104,9 @@ public class VisibleZmlModelFacade
 
   public IZmlModelColumn getColum( final int index )
   {
+    if( index == -1 )
+      return null;
+
     final ZmlModelColumn[] columns = getColumns();
     if( ArrayUtils.getLength( columns ) < index )
       return null;
@@ -122,11 +128,13 @@ public class VisibleZmlModelFacade
     return collection.toArray( new IZmlModelRow[] {} );
   }
 
-  public IZmlModelCell getCell( final int rowPosition, final int columnPosition )
+  public IZmlModelCell getCell( final int rowIndex, final int columnIndex )
   {
+    if( rowIndex == -1 || columnIndex == -1 )
+      return null;
 
-    final IZmlModelRow row = getRow( rowPosition );
-    final IZmlModelColumn column = getColum( columnPosition );
+    final IZmlModelRow row = getRow( rowIndex );
+    final IZmlModelColumn column = getColum( columnIndex );
 
     if( Objects.isNotNull( row, column ) )
       return row.get( column );
@@ -136,6 +144,9 @@ public class VisibleZmlModelFacade
 
   public IZmlModelRow getRow( final int rowIndex )
   {
+    if( rowIndex == -1 )
+      return null;
+
     final IZmlModelRow[] rows = getRows();
 
     if( ArrayUtils.getLength( rows ) < rowIndex )
