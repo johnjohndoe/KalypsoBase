@@ -71,11 +71,11 @@ import org.kalypso.zml.core.table.schema.AlignmentType;
 public class ZmlValueLabelProvider implements IZmlModelCellLabelProvider
 {
 
-  private final ZmlModelColumn m_column;
+  private final IZmlModelColumn m_column;
 
   private IZmlLabelStrategy m_labeling;
 
-  public ZmlValueLabelProvider( final ZmlModelColumn column )
+  public ZmlValueLabelProvider( final IZmlModelColumn column )
   {
     m_column = column;
 
