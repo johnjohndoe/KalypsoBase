@@ -77,8 +77,6 @@ public class ZmlEinzelwertDialog extends EnhancedTitleAreaDialog implements IZml
 
   private final IZmlModelColumn m_column;
 
-// private final IZmlTableColumn m_column;
-
   public ZmlEinzelwertDialog( final Shell shell, final IZmlModelColumn column )
   {
     super( shell );
@@ -90,9 +88,6 @@ public class ZmlEinzelwertDialog extends EnhancedTitleAreaDialog implements IZml
     setHelpAvailable( false );
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   protected final Control createDialogArea( final Composite parent )
   {
@@ -115,9 +110,6 @@ public class ZmlEinzelwertDialog extends EnhancedTitleAreaDialog implements IZml
 
     base.addControlListener( new ControlAdapter()
     {
-      /**
-       * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
-       */
       @Override
       public void controlResized( final ControlEvent e )
       {
@@ -135,9 +127,6 @@ public class ZmlEinzelwertDialog extends EnhancedTitleAreaDialog implements IZml
     return super.createDialogArea( parent );
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.Dialog#okPressed()
-   */
   @Override
   protected void okPressed( )
   {
@@ -198,9 +187,6 @@ public class ZmlEinzelwertDialog extends EnhancedTitleAreaDialog implements IZml
     return -1;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.dialogs.input.IZmlEinzelwertCompositeListener#inputChanged(boolean)
-   */
   @Override
   public void inputChanged( final boolean valid )
   {

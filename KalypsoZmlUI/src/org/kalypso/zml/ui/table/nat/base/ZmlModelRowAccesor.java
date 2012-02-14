@@ -64,19 +64,19 @@ public class ZmlModelRowAccesor implements IColumnAccessor<IZmlModelRow>
   }
 
   @Override
-  public Object getDataValue( final IZmlModelRow row, final int columnIndex )
+  public IZmlModelValueCell getDataValue( final IZmlModelRow row, final int columnIndex )
   {
     final IZmlModelColumn column = m_model.getColum( columnIndex );
     if( Objects.isNotNull( row, column ) )
       return row.get( column );
 
-    return "n / a";
+    return null;
   }
 
   @Override
   public void setDataValue( final IZmlModelRow row, final int columnIndex, final Object newValue )
   {
-    final Object oldValue = getDataValue( row, columnIndex );
+    final IZmlModelValueCell oldValue = getDataValue( row, columnIndex );
     if( Objects.equal( oldValue, newValue ) )
       return;
 

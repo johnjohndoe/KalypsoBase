@@ -440,9 +440,6 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
     return true;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.base.widgets.IAbstractEnhancedWidgetChangeListener#widgetChanged(org.kalypso.zml.ui.table.base.widgets.IAbstractEnhancedWidget)
-   */
   @Override
   public void widgetChanged( final IAbstractEnhancedWidget widget )
   {
