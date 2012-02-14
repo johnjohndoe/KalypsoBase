@@ -49,7 +49,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
@@ -107,7 +106,7 @@ public class ZmlCommandSetValuesAbove extends AbstractHandler
         column.accept( new IZmlModelColumnVisitor()
         {
           @Override
-          public void visit( final IZmlModelValueCell ref ) throws SensorException, CancelVisitorException
+          public void visit( final IZmlModelValueCell ref ) throws CancelVisitorException
           {
             final Date current = ref.getIndexValue();
             if( current.after( base ) || current.equals( base ) )

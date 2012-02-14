@@ -94,7 +94,7 @@ public class ApplySplineValuesVisior implements IZmlModelColumnVisitor
     m_transaction.add( reference, value, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
   }
 
-  private boolean isAfter( final Date index ) throws SensorException
+  private boolean isAfter( final Date index )
   {
     final Date date = m_s2.getIndexValue();
 
@@ -106,7 +106,7 @@ public class ApplySplineValuesVisior implements IZmlModelColumnVisitor
     return false;
   }
 
-  private boolean isBefore( final Date index ) throws SensorException
+  private boolean isBefore( final Date index )
   {
     final Date date = m_s1.getIndexValue();
 
