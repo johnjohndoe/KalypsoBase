@@ -38,11 +38,20 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model;
+package org.kalypso.zml.core.table.model.view;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.kalypso.zml.core.table.model.IZmlColumnModelListener;
+import org.kalypso.zml.core.table.model.IZmlModel;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.IZmlModelColumnListener;
+import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.ZmlModelColumn;
 import org.kalypso.zml.core.table.model.editing.ContinuedInterpolatedValueEditingStrategy;
 import org.kalypso.zml.core.table.model.editing.IZmlEditingStrategy;
 import org.kalypso.zml.core.table.model.editing.InterpolatedValueEditingStrategy;
@@ -57,16 +66,22 @@ import org.kalypso.zml.core.table.schema.IndexColumnType;
  */
 public class VisibleZmlModelFacade
 {
+  Set<IZmlColumnModelListener> m_listeners = new LinkedHashSet<IZmlColumnModelListener>();
+
   // FIXME set as zml table base
-  // FIXME zml model change listener
+  // FIXME IZmlModelListener change listener
   // FIXME caching
   // FIXME zml time filter
 
   private final IZmlModel m_model;
 
+  private final ZmlViewResolutionFilter m_filter;
+
   public VisibleZmlModelFacade( final IZmlModel model )
   {
     m_model = model;
+
+    m_filter = new ZmlViewResolutionFilter( this );
   }
 
   public IZmlModelCell getCell( final IZmlModelRow row, final int columnIndex )
@@ -95,9 +110,16 @@ public class VisibleZmlModelFacade
 
   public IZmlModelRow[] getRows( )
   {
-    // TODO return only visible rows
+    final Set<IZmlModelRow> collection = new LinkedHashSet<IZmlModelRow>();
 
-    return m_model.getRows();
+    final IZmlModelRow[] rows = m_model.getRows();
+    for( final IZmlModelRow row : rows )
+    {
+      if( m_filter.select( row ) )
+        collection.add( row );
+    }
+
+    return collection.toArray( new IZmlModelRow[] {} );
   }
 
   public IZmlModelCell getCell( final int rowPosition, final int columnPosition )
@@ -151,6 +173,25 @@ public class VisibleZmlModelFacade
         return new ContinuedInterpolatedValueEditingStrategy( this );
       else
         return new InterpolatedValueEditingStrategy( this );
+    }
+  }
+
+  public ZmlViewResolutionFilter getFilter( )
+  {
+    return m_filter;
+  }
+
+  public void addListener( final IZmlColumnModelListener listener )
+  {
+    m_listeners.add( listener );
+  }
+
+  public void fireModelChanged( )
+  {
+    final IZmlModelColumnListener[] listeners = m_listeners.toArray( new IZmlModelColumnListener[] {} );
+    for( final IZmlModelColumnListener listener : listeners )
+    {
+      listener.modelColumnChangedEvent( null );
     }
   }
 }

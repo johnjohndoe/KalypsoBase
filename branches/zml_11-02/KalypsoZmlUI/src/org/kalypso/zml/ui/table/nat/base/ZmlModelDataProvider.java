@@ -45,7 +45,8 @@ import net.sourceforge.nattable.data.IRowDataProvider;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.VisibleZmlModelFacade;
+import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
+import org.kalypso.zml.core.table.model.view.ZmlViewResolutionFilter;
 
 /**
  * @author Dirk Kuch
@@ -55,6 +56,8 @@ public class ZmlModelDataProvider implements IRowDataProvider<IZmlModelRow>
   private final VisibleZmlModelFacade m_model;
 
   private final IColumnAccessor<IZmlModelRow> m_accessor;
+
+  private ZmlViewResolutionFilter m_filter;
 
   public ZmlModelDataProvider( final VisibleZmlModelFacade model, final IColumnAccessor<IZmlModelRow> accessor )
   {
@@ -66,7 +69,6 @@ public class ZmlModelDataProvider implements IRowDataProvider<IZmlModelRow>
   public Object getDataValue( final int columnIndex, final int rowIndex )
   {
     return m_accessor.getDataValue( getRowObject( rowIndex ), columnIndex );
-
   }
 
   @Override

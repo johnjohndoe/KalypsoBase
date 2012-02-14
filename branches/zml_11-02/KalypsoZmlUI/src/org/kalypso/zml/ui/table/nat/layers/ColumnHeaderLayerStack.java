@@ -6,7 +6,7 @@ import net.sourceforge.nattable.layer.AbstractLayerTransform;
 import net.sourceforge.nattable.layer.DataLayer;
 
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.VisibleZmlModelFacade;
+import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
 
 public class ColumnHeaderLayerStack extends AbstractLayerTransform
 {

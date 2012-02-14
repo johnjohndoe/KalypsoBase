@@ -38,29 +38,24 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.commands.toolbar.view;
+package org.kalypso.zml.core.table.model.view;
 
 import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.references.ZmlValues;
-import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.IZmlTableCompositeListener;
-import org.kalypso.zml.ui.table.nat.ZmlTable;
 
 /**
  * @author Dirk Kuch
  */
-@Deprecated
-public class ZmlViewResolutionFilter extends ViewerFilter
+public class ZmlViewResolutionFilter
 {
   private int m_resolution = 0;
 
@@ -104,11 +99,11 @@ public class ZmlViewResolutionFilter extends ViewerFilter
 
   private boolean m_stuetzstellenMode;
 
-  private final ZmlTable m_table;
+  private final VisibleZmlModelFacade m_model;
 
-  public ZmlViewResolutionFilter( final ZmlTable table )
+  public ZmlViewResolutionFilter( final VisibleZmlModelFacade model )
   {
-    m_table = table;
+    m_model = model;
   }
 
   protected static int ticksInHours( final Date date )
@@ -118,48 +113,35 @@ public class ZmlViewResolutionFilter extends ViewerFilter
     return (int) (time / 1000 / 60 / 60);
   }
 
-  @Override
-  public boolean select( final Viewer viewer, final Object parentElement, final Object element )
+  public boolean select( final IZmlModelRow row )
   {
-// if( element instanceof IZmlTableHeaderRow )
-// return true;
-// else if( parentElement instanceof IZmlTableModel && element instanceof IZmlTableValueRow )
-// {
-// final IZmlTableModel model = (IZmlTableModel) parentElement;
-// final IZmlTableValueRow row = (IZmlTableValueRow) element;
-// final IZmlModelRow modelRow = row.getModelRow();
-//
-// if( m_resolution == 0 )
-// {
-// if( m_stuetzstellenMode )
-// {
-//
-// return hasStuetzstelle( modelRow );
-// }
-//
-// return true;
-// }
-//
-// final Date index = modelRow.getIndex();
-// final int ticks = ticksInHours( index );
-//
-// final int base = m_base.getBaseIndex( model.getModel() );
-// final int diff = Math.abs( base + m_offset - ticks );
-//
-// final int mod = diff % m_resolution;
-//
-// if( m_stuetzstellenMode )
-// {
-// if( hasStuetzstelle( modelRow ) && mod == 0 )
-// return true;
-// }
-//
-// return mod == 0;
-// }
-//
-// return false;
 
-    throw new UnsupportedOperationException();
+    if( m_resolution == 0 )
+    {
+      if( m_stuetzstellenMode )
+      {
+
+        return hasStuetzstelle( row );
+      }
+
+      return true;
+    }
+
+    final Date index = row.getIndex();
+    final int ticks = ticksInHours( index );
+
+    final int base = m_base.getBaseIndex( row.getModel() );
+    final int diff = Math.abs( base + m_offset - ticks );
+
+    final int mod = diff % m_resolution;
+
+    if( m_stuetzstellenMode )
+    {
+      if( hasStuetzstelle( row ) && mod == 0 )
+        return true;
+    }
+
+    return mod == 0;
   }
 
   private boolean hasStuetzstelle( final IZmlModelRow row )
@@ -177,7 +159,7 @@ public class ZmlViewResolutionFilter extends ViewerFilter
       }
       catch( final Throwable t )
       {
-        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
+        KalypsoZmlCore.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
       }
     }
 
@@ -200,7 +182,7 @@ public class ZmlViewResolutionFilter extends ViewerFilter
     m_resolution = resolution;
     m_stuetzstellenMode = mode;
 
-    m_table.fireTableChanged( IZmlTableCompositeListener.TYPE_REFRESH );
+    m_model.fireModelChanged();
   }
 
   public int getResolution( )

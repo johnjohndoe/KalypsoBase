@@ -45,11 +45,11 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.KalypsoZmlCore;
-import org.kalypso.zml.core.table.model.VisibleZmlModelFacade;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.references.ZmlValues;
 import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
+import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
 
 /**
  * updated value will be a new st�tzstelle. update all values between s_new and s_next. set updated values to s_new
