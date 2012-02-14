@@ -75,8 +75,10 @@ import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
 import org.kalypso.zml.ui.table.nat.layers.BodyLayerStack;
 import org.kalypso.zml.ui.table.nat.layers.ColumnHeaderLayerStack;
 import org.kalypso.zml.ui.table.nat.layers.RowHeaderLayerStack;
+import org.kalypso.zml.ui.table.nat.painter.ZmlColumnHeaderCellPainter;
 import org.kalypso.zml.ui.table.nat.painter.ZmlModelCellDisplayConverter;
 import org.kalypso.zml.ui.table.nat.painter.ZmlModelCellPainter;
+import org.kalypso.zml.ui.table.nat.painter.ZmlRowHeaderCellPainter;
 
 /**
  * @author Dirk Kuch
@@ -134,10 +136,9 @@ public class ZmlTable extends Composite implements IZmlTable
     registry.registerConfigAttribute( CellConfigAttributes.DISPLAY_CONVERTER, converter, DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
     registry.registerConfigAttribute( CellConfigAttributes.DISPLAY_CONVERTER, converter, DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
 
-    final ZmlModelCellPainter painter = new ZmlModelCellPainter();
-    registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, painter, DisplayMode.NORMAL, GridRegion.BODY.toString() );
-    registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, painter, DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
-    registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, painter, DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
+    registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new ZmlModelCellPainter(), DisplayMode.NORMAL, GridRegion.BODY.toString() );
+    registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new ZmlRowHeaderCellPainter(), DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
+    registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new ZmlColumnHeaderCellPainter(), DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
 
 // registry.registerConfigAttribute( configAttribute, attributeValue, targetDisplayMode, configLabel )
 
