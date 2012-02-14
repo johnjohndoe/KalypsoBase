@@ -47,9 +47,9 @@ import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.VisibleZmlModelFacade;
 import org.kalypso.zml.core.table.model.interpolation.ZmlInterpolation;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
 import org.kalypso.zml.core.table.model.visitor.FindNeighbourStuetzstellenVisitor;
 
 /**
@@ -74,31 +74,6 @@ public class InterpolatedValueEditingStrategy extends AbstractEditingStrategy
     super( model );
   }
 
-// @Override
-// public String getValue( final IZmlModelRow row )
-// {
-// try
-// {
-// final IZmlModelCell reference = row.get( getColumn().getColumnType().getType() );
-// if( Objects.isNull( reference ) )
-//        return ""; //$NON-NLS-1$
-// else if( !(reference instanceof IZmlModelValueCell) )
-// return "";
-//
-// final IZmlModelValueCell cell = (IZmlModelValueCell) reference;
-// final Object value = cell.getValue();
-//
-// final CellStyle style = getStyle();
-//      return String.format( style.getTextFormat() == null ? "%s" : style.getTextFormat(), value ); //$NON-NLS-1$
-// }
-// catch( final Throwable t )
-// {
-// t.printStackTrace();
-// }
-//
-// return null;
-// }
-
   @Override
   public void setValue( final IZmlModelValueCell cell, final String value )
   {
@@ -115,7 +90,6 @@ public class InterpolatedValueEditingStrategy extends AbstractEditingStrategy
 
       interpolate( visitor.getBefore(), cell, -1 );
       interpolate( cell, visitor.getAfter(), 1 );
-
     }
     catch( final SensorException e )
     {

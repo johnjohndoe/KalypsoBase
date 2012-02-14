@@ -51,6 +51,8 @@ import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
 import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
+import org.kalypso.zml.core.table.model.view.ZmlViewResolutionFilter;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 
@@ -64,7 +66,8 @@ public abstract class AbstractHourViewCommand extends AbstractHandler implements
   {
     final IZmlTable table = ZmlHandlerUtil.getTable( event );
 
-    final ZmlViewResolutionFilter filter = table.getResulutionFilter();
+    final VisibleZmlModelFacade model = table.getModel();
+    final ZmlViewResolutionFilter filter = model.getFilter();
     doOffsetAdjustment( table, filter );
 
     filter.setParameters( resultion, mode );
@@ -85,8 +88,7 @@ public abstract class AbstractHourViewCommand extends AbstractHandler implements
   protected IStatus updateOffset( final ExecutionEvent event, final int number )
   {
     final IZmlTable table = ZmlHandlerUtil.getTable( event );
-
-    final ZmlViewResolutionFilter filter = table.getResulutionFilter();
+    final ZmlViewResolutionFilter filter = table.getModel().getFilter();
     filter.add2Offset( number );
 
     table.refresh();

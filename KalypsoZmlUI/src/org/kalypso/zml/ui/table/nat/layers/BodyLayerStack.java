@@ -9,7 +9,7 @@ import net.sourceforge.nattable.layer.DataLayer;
 import net.sourceforge.nattable.viewport.ViewportLayer;
 
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.VisibleZmlModelFacade;
+import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
 import org.kalypso.zml.ui.table.nat.base.ZmlModelDataProvider;
 import org.kalypso.zml.ui.table.nat.base.ZmlModelRowAccesor;
 

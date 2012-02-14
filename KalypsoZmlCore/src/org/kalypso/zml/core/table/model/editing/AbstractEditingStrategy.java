@@ -43,8 +43,8 @@ package org.kalypso.zml.core.table.model.editing;
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.zml.core.table.model.VisibleZmlModelFacade;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
 
 /**
  * @author Dirk Kuch

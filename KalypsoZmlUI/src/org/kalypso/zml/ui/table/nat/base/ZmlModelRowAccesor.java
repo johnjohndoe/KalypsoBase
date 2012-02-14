@@ -45,10 +45,10 @@ import net.sourceforge.nattable.data.IColumnAccessor;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.VisibleZmlModelFacade;
 import org.kalypso.zml.core.table.model.editing.IZmlEditingStrategy;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
 
 /**
  * @author Dirk Kuch

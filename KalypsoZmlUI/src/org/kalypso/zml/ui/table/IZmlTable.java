@@ -41,8 +41,7 @@
 package org.kalypso.zml.ui.table;
 
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.VisibleZmlModelFacade;
-import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
+import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
 
 /**
  * @author Dirk Kuch
@@ -54,14 +53,7 @@ public interface IZmlTable
 
   VisibleZmlModelFacade getModel( );
 
-  @Deprecated
-  int getResolution( );
-
   void refresh( IZmlModelColumn... columns );
 
-  @Deprecated
-  ZmlViewResolutionFilter getResulutionFilter( );
-
   void fireTableChanged( String type, IZmlModelColumn... columns );
-
 }

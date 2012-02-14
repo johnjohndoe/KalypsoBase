@@ -71,16 +71,16 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
+import org.kalypso.zml.core.table.model.IZmlColumnModelListener;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.VisibleZmlModelFacade;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableCompositeListener;
 import org.kalypso.zml.ui.table.IZmlTableListener;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
-import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
 import org.kalypso.zml.ui.table.menu.ZmlTableContextMenuProvider;
 import org.kalypso.zml.ui.table.nat.layers.BodyLayerStack;
 import org.kalypso.zml.ui.table.nat.layers.ColumnHeaderLayerStack;
@@ -98,11 +98,7 @@ public class ZmlTable extends Composite implements IZmlTable
 {
   private final Set<IZmlTableListener> m_listeners = new HashSet<IZmlTableListener>();
 
-  private final ZmlTableComposite m_table;
-
   protected final MenuManager m_contextMenuManager = new MenuManager();
-
-  private ZmlViewResolutionFilter m_filter;
 
 // final ZmlTablePager m_pager = new ZmlTablePager( this ); // only for main table
 
@@ -111,8 +107,16 @@ public class ZmlTable extends Composite implements IZmlTable
   public ZmlTable( final ZmlTableComposite table, final IZmlModel model, final FormToolkit toolkit )
   {
     super( table, SWT.NULL );
-    m_table = table;
     m_model = new VisibleZmlModelFacade( model );
+
+    m_model.addListener( new IZmlColumnModelListener()
+    {
+      @Override
+      public void modelChanged( final IZmlModelColumn... columns )
+      {
+        refresh();
+      }
+    } );
 
     final GridLayout layout = LayoutHelper.createGridLayout();
     layout.verticalSpacing = 0;
@@ -186,21 +190,9 @@ public class ZmlTable extends Composite implements IZmlTable
   @Override
   public void dispose( )
   {
+    m_natTable.dispose();
 
     super.dispose();
-  }
-
-  public void refresh( )
-  {
-    m_natTable.redraw();
-// throw new UnsupportedOperationException();
-// m_tableViewer.refresh( true, true );
-  }
-
-  @Override
-  public int getResolution( )
-  {
-    return m_filter.getResolution();
   }
 
   @Override
@@ -245,8 +237,10 @@ public class ZmlTable extends Composite implements IZmlTable
 // column.reset();
 // }
 
-          ZmlTable.this.refresh();
+// ZmlTable.this.refresh();
 // m_pager.reveal();
+
+          m_natTable.redraw();
 
           fireTableChanged( IZmlTableCompositeListener.TYPE_REFRESH, columns );
         }
@@ -260,17 +254,6 @@ public class ZmlTable extends Composite implements IZmlTable
     m_updateJob.setRule( MUTEX_TABLE_UPDATE );
     m_updateJob.schedule( 150 );
 
-  }
-
-  public ZmlViewResolutionFilter getResolutionFilter( )
-  {
-    return m_filter;
-  }
-
-  @Override
-  public ZmlViewResolutionFilter getResulutionFilter( )
-  {
-    return m_filter;
   }
 
   @Override

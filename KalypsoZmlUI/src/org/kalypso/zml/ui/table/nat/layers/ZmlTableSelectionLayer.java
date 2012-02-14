@@ -51,8 +51,8 @@ import net.sourceforge.nattable.selection.SelectionLayer;
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.VisibleZmlModelFacade;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
 
 /**
  * @author Dirk Kuch
