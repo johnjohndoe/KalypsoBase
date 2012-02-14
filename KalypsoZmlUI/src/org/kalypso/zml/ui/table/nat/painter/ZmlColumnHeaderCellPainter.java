@@ -60,7 +60,6 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
  */
 public class ZmlColumnHeaderCellPainter extends AbstractCellPainter
 {
-
   @Override
   public void paintCell( final LayerCell cell, final GC gc, final Rectangle bounds, final IConfigRegistry configRegistry )
   {

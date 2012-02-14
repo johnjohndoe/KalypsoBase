@@ -56,10 +56,14 @@ import net.sourceforge.nattable.style.DisplayMode;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MenuDetectEvent;
+import org.eclipse.swt.events.MenuDetectListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.lang.Objects;
@@ -67,13 +71,18 @@ import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableCompositeListener;
 import org.kalypso.zml.ui.table.IZmlTableListener;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
 import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
+import org.kalypso.zml.ui.table.menu.ZmlTableContextMenuProvider;
 import org.kalypso.zml.ui.table.nat.layers.BodyLayerStack;
 import org.kalypso.zml.ui.table.nat.layers.ColumnHeaderLayerStack;
+import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
 import org.kalypso.zml.ui.table.nat.layers.RowHeaderLayerStack;
 import org.kalypso.zml.ui.table.nat.painter.ZmlColumnHeaderCellPainter;
 import org.kalypso.zml.ui.table.nat.painter.ZmlModelCellDisplayConverter;
@@ -88,6 +97,8 @@ public class ZmlTable extends Composite implements IZmlTable
   private final Set<IZmlTableListener> m_listeners = new HashSet<IZmlTableListener>();
 
   private final ZmlTableComposite m_table;
+
+  protected final MenuManager m_contextMenuManager = new MenuManager();
 
   private ZmlViewResolutionFilter m_filter;
 
@@ -140,8 +151,34 @@ public class ZmlTable extends Composite implements IZmlTable
     registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new ZmlRowHeaderCellPainter(), DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
     registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new ZmlColumnHeaderCellPainter(), DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
 
-// registry.registerConfigAttribute( configAttribute, attributeValue, targetDisplayMode, configLabel )
+    final Menu contextMenu = m_contextMenuManager.createContextMenu( m_natTable );
+    m_natTable.setMenu( contextMenu );
 
+    m_natTable.addMenuDetectListener( new MenuDetectListener()
+    {
+      @Override
+      public void menuDetected( final MenuDetectEvent e )
+      {
+        final IZmlTableSelection selection = bodyLayer.getSelection();
+        final IZmlModelColumn[] columns = selection.getSelectedColumns();
+        final IZmlModelRow[] rows = selection.getSelectedRows();
+        final IZmlModelCell[] cells = selection.getSelectedCells();
+
+        final IZmlModelCell cell = selection.getFocusCell();
+
+        if( cell instanceof IZmlModelValueCell )
+        {
+          final IZmlModelValueCell value = (IZmlModelValueCell) cell;
+
+          final ZmlTableContextMenuProvider menuProvider = new ZmlTableContextMenuProvider();
+          menuProvider.fillMenu( value.getColumn(), m_contextMenuManager );
+          m_contextMenuManager.update( true );
+
+          contextMenu.setVisible( true );
+        }
+
+      }
+    } );
   }
 
   @Override
@@ -153,7 +190,7 @@ public class ZmlTable extends Composite implements IZmlTable
 
   public void refresh( )
   {
-    m_natTable.update(); // TODO perhaps some other update event
+    m_natTable.redraw();
 // throw new UnsupportedOperationException();
 // m_tableViewer.refresh( true, true );
   }
