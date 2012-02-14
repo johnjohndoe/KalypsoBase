@@ -43,14 +43,13 @@ package org.kalypso.zml.ui.table.commands.menu;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.repository.IDataSourceItem;
-import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.ZmlValueLabelProvider;
 import org.kalypso.zml.core.table.model.editing.IZmlEditingStrategy;
 import org.kalypso.zml.core.table.model.interpolation.ZmlInterpolationWorker;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
@@ -61,7 +60,6 @@ import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
-import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
 
 /**
  * @author Dirk Kuch
@@ -88,8 +86,8 @@ public class ZmlCommandSetAllValues extends AbstractHandler
 
       if( strategy.isAggregated() )
       {
-        final ZmlLabelProvider provider = new ZmlLabelProvider( current.getRow(), null, new ZmlCellRule[] {} );
-        final String targetValue = provider.getText( null );
+        final ZmlValueLabelProvider provider = new ZmlValueLabelProvider( column );
+        final String targetValue = provider.getText( current );
 
         final IZmlModelCell[] visibleCells = model.getCells( column );
         for( final IZmlModelCell cell : visibleCells )
@@ -115,19 +113,14 @@ public class ZmlCommandSetAllValues extends AbstractHandler
         transaction.execute();
       }
 
-      try
-      {
-        /**
-         * re-interpolate complete observation because of table view filter (like 12h view, stueztstellen ansicht, etc)
-         */
-        final IObservation observation = column.getObservation();
-        final ZmlInterpolationWorker interpolationWorker = new ZmlInterpolationWorker( observation );
-        interpolationWorker.execute( new NullProgressMonitor() );
-      }
-      catch( final CoreException e )
-      {
-        e.printStackTrace();
-      }
+      /**
+       * re-interpolate complete observation because of table view filter (like 12h view, stueztstellen ansicht, etc)
+       */
+      final IObservation observation = column.getObservation();
+      final ZmlInterpolationWorker interpolationWorker = new ZmlInterpolationWorker( observation );
+      interpolationWorker.execute( new NullProgressMonitor() );
+
+      // TODO status handling of interpolation worker
 
       return Status.OK_STATUS;
     }
