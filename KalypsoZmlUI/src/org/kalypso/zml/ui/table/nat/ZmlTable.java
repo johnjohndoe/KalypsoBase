@@ -218,7 +218,7 @@ public class ZmlTable extends Composite implements IZmlTable
 
   protected NatTable m_natTable;
 
-  private BodyLayerStack m_bodyLayer;
+  protected BodyLayerStack m_bodyLayer;
 
   @Override
   public synchronized void refresh( final IZmlModelColumn... columns )
