@@ -9,6 +9,13 @@
 		systemId="urn:ogc:gml:featuretype:http___www.opengis.net_gml:_Coverage:uiproperties:default"
 		uri="http___www.opengis.net_gml._Coverage.properties" />
 
+	<catalog:system
+		systemId="urn:ogc:gml:featuretype:http___www.opengis.net_gml:_Coverage:swtimage:default"
+		uri="http___www.opengis.net_gml._Coverage.gif" />
+
+	<catalog:system
+		systemId="urn:ogc:gml:featuretype:http___www.opengis.net_gml:RectifiedGridCoverage:swtimage:default"
+		uri="http___www.opengis.net_gml._Coverage.gif" />
 
 </catalog:catalog>
 
