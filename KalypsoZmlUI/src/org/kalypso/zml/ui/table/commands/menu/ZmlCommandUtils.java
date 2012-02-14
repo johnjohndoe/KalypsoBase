@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands.menu;
 
+import java.util.Date;
+
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 
 /**
@@ -68,26 +72,27 @@ public final class ZmlCommandUtils
     return new IZmlModelCell[] { start, end };
 
   }
-//
-// public static DateRange findDateRange( final IZmlTableValueCell[] cells )
-// {
-// Date min = null;
-// Date max = null;
-//
-// for( final IZmlTableValueCell cell : cells )
-// {
-// final Date date = cell.getRow().getModelRow().getIndex();
-// if( Objects.isNull( min ) )
-// min = date;
-// else if( date.before( min ) )
-// min = date;
-//
-// if( Objects.isNull( max ) )
-// max = date;
-// else if( date.after( max ) )
-// max = date;
-// }
-//
-// return new DateRange( min, max );
-// }
+
+  public static DateRange findDateRange( final IZmlModelCell[] cells )
+  {
+    Date min = null;
+    Date max = null;
+
+    for( final IZmlModelCell cell : cells )
+    {
+      final Date date = cell.getRow().getIndex();
+      if( Objects.isNull( min ) )
+        min = date;
+      else if( date.before( min ) )
+        min = date;
+
+      if( Objects.isNull( max ) )
+        max = date;
+      else if( date.after( max ) )
+        max = date;
+    }
+
+    return new DateRange( min, max );
+  }
+
 }
