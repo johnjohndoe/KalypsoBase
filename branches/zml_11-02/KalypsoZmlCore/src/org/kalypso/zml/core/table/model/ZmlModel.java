@@ -225,6 +225,11 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
     }
   }
 
+  /**
+   * @deprecated {@link org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade} should handle visiblity
+   */
+  @Override
+  @Deprecated
   public ZmlModelColumn[] getActiveColumns( )
   {
     final Set<ZmlModelColumn> active = new LinkedHashSet<ZmlModelColumn>();

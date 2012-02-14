@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model.view;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -66,7 +68,9 @@ import org.kalypso.zml.core.table.schema.IndexColumnType;
  */
 public class VisibleZmlModelFacade
 {
-  Set<IZmlColumnModelListener> m_listeners = new LinkedHashSet<IZmlColumnModelListener>();
+  Set<IZmlColumnModelListener> m_listeners = Collections.synchronizedSet( new LinkedHashSet<IZmlColumnModelListener>() );
+
+  protected final Set<String> m_hiddenTypes = Collections.synchronizedSet( new HashSet<String>() ); // FIXME
 
   // FIXME set as zml table base
   // FIXME IZmlModelListener change listener
@@ -97,9 +101,20 @@ public class VisibleZmlModelFacade
     return row.get( column );
   }
 
-  public ZmlModelColumn[] getColumns( )
+  public IZmlModelColumn[] getColumns( )
   {
-    return m_model.getActiveColumns();
+    final Set<IZmlModelColumn> collection = new LinkedHashSet<IZmlModelColumn>();
+    final ZmlModelColumn[] columns = m_model.getActiveColumns();
+    for( final ZmlModelColumn column : columns )
+    {
+      final DataColumnType type = column.getDataColumn().getType();
+      if( m_hiddenTypes.contains( type.getValueAxis() ) )
+        continue;
+
+      collection.add( column );
+    }
+
+    return collection.toArray( new IZmlModelColumn[] {} );
   }
 
   public IZmlModelColumn getColum( final int index )
@@ -107,7 +122,7 @@ public class VisibleZmlModelFacade
     if( index == -1 )
       return null;
 
-    final ZmlModelColumn[] columns = getColumns();
+    final IZmlModelColumn[] columns = getColumns();
     if( ArrayUtils.getLength( columns ) < index )
       return null;
 
@@ -222,5 +237,15 @@ public class VisibleZmlModelFacade
   public IZmlModel getModel( )
   {
     return m_model;
+  }
+
+  public void setVisible( final String type, final boolean hide )
+  {
+    if( hide )
+      m_hiddenTypes.remove( type );
+    else
+      m_hiddenTypes.add( type );
+
+    // TODO model change event
   }
 }

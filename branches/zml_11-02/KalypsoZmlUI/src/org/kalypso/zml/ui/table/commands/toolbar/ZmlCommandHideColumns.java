@@ -40,20 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands.toolbar;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
-import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
+import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 
@@ -65,7 +63,8 @@ import com.google.common.collect.Iterables;
  */
 public class ZmlCommandHideColumns extends AbstractHandler implements IElementUpdater
 {
-  protected static final Map<String, Boolean> STATES = new HashMap<String, Boolean>(); // FIXME
+  // @hack for updateElement()
+  private static final Map<String, Boolean> LAST_STATE = new LinkedHashMap<String, Boolean>();
 
   @Override
   public Object execute( final ExecutionEvent event )
@@ -77,53 +76,13 @@ public class ZmlCommandHideColumns extends AbstractHandler implements IElementUp
     final Map parameters = event.getParameters();
     final String[] columnTypes = getColumnTypes( parameters );
     final boolean hide = HandlerUtils.isSelected( event );
+
+    final VisibleZmlModelFacade model = table.getModel();
     for( final String type : columnTypes )
     {
-      STATES.put( type, hide );
+      model.setVisible( type, hide );
+      LAST_STATE.put( type, hide );
     }
-
-    final UIJob job = new UIJob( "Aktualisiere Sichtbarkeit" )
-    {
-
-      @Override
-      public IStatus runInUIThread( final IProgressMonitor monitor )
-      {
-// final IZmlTableModel model = table.getModel();
-// if( Objects.isNull( model ) )
-// return Status.CANCEL_STATUS;
-//
-// model.accept( new IZmlTableColumnVisitor()
-// {
-// @Override
-// public void visit( final IZmlTableColumn column )
-// {
-// if( !(column instanceof IZmlTableValueColumn) )
-// return;
-//
-// final IZmlModelColumn modelColumn = column.getModelColumn();
-// if( Objects.isNull( modelColumn ) )
-// return;
-//
-// final DataColumn dataColumn = modelColumn.getDataColumn();
-//
-// final DataColumnType dataColumnType = dataColumn.getType();
-// final String columnTypeId = dataColumnType.getId();
-//
-// if( ArrayUtils.contains( columnTypes, columnTypeId ) )
-// {
-// ((IZmlTableValueColumn) column).setVisible( !hide );
-// }
-// }
-// } );
-
-        return Status.OK_STATUS;
-      }
-    };
-
-    job.setUser( false );
-    job.setSystem( false );
-
-    job.schedule( 250 );
 
     return Status.OK_STATUS;
   }
@@ -147,7 +106,7 @@ public class ZmlCommandHideColumns extends AbstractHandler implements IElementUp
     final String[] types = getColumnTypes( parameters );
     for( final String type : types )
     {
-      final Boolean state = STATES.get( type );
+      final Boolean state = LAST_STATE.get( type );
       if( Objects.isNotNull( state ) )
       {
         element.setChecked( state );
