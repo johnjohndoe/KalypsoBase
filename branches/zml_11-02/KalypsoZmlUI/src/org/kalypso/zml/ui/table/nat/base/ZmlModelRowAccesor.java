@@ -42,9 +42,12 @@ package org.kalypso.zml.ui.table.nat.base;
 
 import net.sourceforge.nattable.data.IColumnAccessor;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.VisibleZmlModelFacade;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 
 /**
  * @author Dirk Kuch
@@ -52,33 +55,19 @@ import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 public class ZmlModelRowAccesor implements IColumnAccessor<IZmlModelRow>
 {
 
+  private final VisibleZmlModelFacade m_model;
+
+  public ZmlModelRowAccesor( final VisibleZmlModelFacade model )
+  {
+    m_model = model;
+  }
+
   @Override
   public Object getDataValue( final IZmlModelRow row, final int columnIndex )
   {
-    final IZmlModelCell[] cells = row.getCells();
-    if( columnIndex < ArrayUtils.getLength( cells ) )
-    {
-      final IZmlModelCell cell = cells[columnIndex];
-      return cell;
-
-// if( cell instanceof IZmlModelIndexCell )
-// {
-// return cell.getIndexValue();
-// }
-// else if( cell instanceof IZmlModelValueCell )
-// {
-// try
-// {
-// final IZmlModelValueCell valueCell = (IZmlModelValueCell) cell;
-//
-// return valueCell.getValue();
-// }
-// catch( final SensorException e )
-// {
-// e.printStackTrace();
-// }
-// }
-    }
+    final IZmlModelColumn column = m_model.getColum( columnIndex );
+    if( Objects.isNotNull( row, column ) )
+      return row.get( column );
 
     return "n / a";
   }
@@ -86,6 +75,16 @@ public class ZmlModelRowAccesor implements IColumnAccessor<IZmlModelRow>
   @Override
   public void setDataValue( final IZmlModelRow row, final int columnIndex, final Object newValue )
   {
+    final IZmlModelCell cell = m_model.getCell( row, columnIndex );
+
+    if( cell instanceof IZmlModelValueCell )
+    {
+      final IZmlModelValueCell valueCell = (IZmlModelValueCell) cell;
+      final IZmlModelColumn column = valueCell.getColumn();
+
+      throw new UnsupportedOperationException();
+    }
+
     throw new UnsupportedOperationException();
   }
 

@@ -82,7 +82,7 @@ public class ZmlModelCellDisplayConverter extends DisplayConverter
   @Override
   public Object displayToCanonicalValue( final Object displayValue )
   {
-    throw new UnsupportedOperationException();
+    return displayValue;
   }
 
 }

@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table;
 
-import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.VisibleZmlModelFacade;
 import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
 
 /**
@@ -52,7 +52,7 @@ public interface IZmlTable
   // FIXME remove from interface!
   void dispose( );
 
-  IZmlModel getModel( );
+  VisibleZmlModelFacade getModel( );
 
   @Deprecated
   int getResolution( );

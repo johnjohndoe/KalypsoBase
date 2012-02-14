@@ -3,12 +3,13 @@ package org.kalypso.zml.ui.table.nat.layers;
 import net.sourceforge.nattable.data.IColumnAccessor;
 import net.sourceforge.nattable.data.IDataProvider;
 import net.sourceforge.nattable.data.IRowDataProvider;
+import net.sourceforge.nattable.edit.command.UpdateDataCommand;
 import net.sourceforge.nattable.layer.AbstractLayerTransform;
 import net.sourceforge.nattable.layer.DataLayer;
 import net.sourceforge.nattable.viewport.ViewportLayer;
 
-import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.VisibleZmlModelFacade;
 import org.kalypso.zml.ui.table.nat.base.ZmlModelDataProvider;
 import org.kalypso.zml.ui.table.nat.base.ZmlModelRowAccesor;
 
@@ -20,18 +21,22 @@ public class BodyLayerStack extends AbstractLayerTransform
 
   private final IColumnAccessor<IZmlModelRow> m_accessor;
 
-  private final IZmlModel m_model;
+  private final VisibleZmlModelFacade m_model;
 
-  public BodyLayerStack( final IZmlModel model )
+  public BodyLayerStack( final VisibleZmlModelFacade model )
   {
     m_model = model;
-    m_accessor = new ZmlModelRowAccesor();
+    m_accessor = new ZmlModelRowAccesor( model );
     m_provider = new ZmlModelDataProvider( model, m_accessor );
 
     final DataLayer dataLayer = new DataLayer( m_provider );
     m_selectionLayer = new ZmlTableSelectionLayer( model, dataLayer );
     final ViewportLayer viewportLayer = new ViewportLayer( getSelectionLayer() );
     setUnderlyingLayer( viewportLayer );
+
+    dataLayer.unregisterCommandHandler( UpdateDataCommand.class );
+    dataLayer.registerCommandHandler( new ZmlTableUpdateDataCommandHandler( dataLayer ) );
+
   }
 
   public ZmlTableSelectionLayer getSelectionLayer( )
@@ -49,7 +54,7 @@ public class BodyLayerStack extends AbstractLayerTransform
     return m_provider;
   }
 
-  public IZmlModel getModel( )
+  public VisibleZmlModelFacade getModel( )
   {
     return m_model;
   }

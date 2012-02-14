@@ -44,19 +44,19 @@ import net.sourceforge.nattable.data.IColumnAccessor;
 import net.sourceforge.nattable.data.IRowDataProvider;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.VisibleZmlModelFacade;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlModelDataProvider implements IRowDataProvider<IZmlModelRow>
 {
-  private final IZmlModel m_model;
+  private final VisibleZmlModelFacade m_model;
 
   private final IColumnAccessor<IZmlModelRow> m_accessor;
 
-  public ZmlModelDataProvider( final IZmlModel model, final IColumnAccessor<IZmlModelRow> accessor )
+  public ZmlModelDataProvider( final VisibleZmlModelFacade model, final IColumnAccessor<IZmlModelRow> accessor )
   {
     m_model = model;
     m_accessor = accessor;
@@ -78,7 +78,7 @@ public class ZmlModelDataProvider implements IRowDataProvider<IZmlModelRow>
   @Override
   public int getColumnCount( )
   {
-    return ArrayUtils.getLength( m_model.getActiveColumns() );
+    return ArrayUtils.getLength( m_model.getColumns() );
   }
 
   @Override
@@ -91,7 +91,7 @@ public class ZmlModelDataProvider implements IRowDataProvider<IZmlModelRow>
   @Override
   public IZmlModelRow getRowObject( final int rowIndex )
   {
-    return m_model.getRowAt( rowIndex );
+    return m_model.getRow( rowIndex );
   }
 
   @Override

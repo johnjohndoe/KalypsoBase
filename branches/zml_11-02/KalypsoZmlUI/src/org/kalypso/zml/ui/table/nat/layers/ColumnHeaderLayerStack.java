@@ -5,8 +5,8 @@ import net.sourceforge.nattable.grid.layer.ColumnHeaderLayer;
 import net.sourceforge.nattable.layer.AbstractLayerTransform;
 import net.sourceforge.nattable.layer.DataLayer;
 
-import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.VisibleZmlModelFacade;
 
 public class ColumnHeaderLayerStack extends AbstractLayerTransform
 {
@@ -34,8 +34,8 @@ public class ColumnHeaderLayerStack extends AbstractLayerTransform
       @Override
       public Object getDataValue( final int columnIndex, final int rowIndex )
       {
-        final IZmlModel model = m_bodyLayer.getModel();
-        final IZmlModelColumn[] columns = model.getActiveColumns();
+        final VisibleZmlModelFacade model = m_bodyLayer.getModel();
+        final IZmlModelColumn[] columns = model.getColumns();
 
         return columns[columnIndex];
       }

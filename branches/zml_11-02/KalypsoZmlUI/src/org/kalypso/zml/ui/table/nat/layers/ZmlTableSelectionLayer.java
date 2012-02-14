@@ -49,10 +49,9 @@ import net.sourceforge.nattable.layer.IUniqueIndexLayer;
 import net.sourceforge.nattable.selection.SelectionLayer;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.ZmlModelColumn;
+import org.kalypso.zml.core.table.model.VisibleZmlModelFacade;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 
 /**
@@ -61,9 +60,9 @@ import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 public class ZmlTableSelectionLayer extends SelectionLayer implements IZmlTableSelection
 {
 
-  private final IZmlModel m_model;
+  private final VisibleZmlModelFacade m_model;
 
-  public ZmlTableSelectionLayer( final IZmlModel model, final IUniqueIndexLayer layer )
+  public ZmlTableSelectionLayer( final VisibleZmlModelFacade model, final IUniqueIndexLayer layer )
   {
     super( layer );
     m_model = model;
@@ -75,12 +74,10 @@ public class ZmlTableSelectionLayer extends SelectionLayer implements IZmlTableS
     final Set<IZmlModelColumn> selection = new LinkedHashSet<IZmlModelColumn>();
 
     final int[] columns = getSelectedColumnPositions();
-    final ZmlModelColumn[] active = m_model.getActiveColumns();
-
-    for( final int columnIndex : columns )
+    for( final int index : columns )
     {
-      if( ArrayUtils.getLength( active ) > columnIndex )
-        selection.add( active[columnIndex] );
+      final IZmlModelColumn column = m_model.getColum( index );
+      selection.add( column );
     }
 
     return selection.toArray( new IZmlModelColumn[] {} );
@@ -90,6 +87,7 @@ public class ZmlTableSelectionLayer extends SelectionLayer implements IZmlTableS
   public IZmlModelRow[] getSelectedRows( )
   {
     final Set<IZmlModelRow> selection = new LinkedHashSet<IZmlModelRow>();
+
     final IZmlModelRow[] modelRows = m_model.getRows();
 
     final Set<Range> selectedRowPositions = getSelectedRowPositions();
@@ -128,17 +126,7 @@ public class ZmlTableSelectionLayer extends SelectionLayer implements IZmlTableS
   public IZmlModelCell getFocusCell( )
   {
     final PositionCoordinate position = getLastSelectedCellPosition();
-    final IZmlModelRow[] rows = m_model.getRows();
-    final IZmlModelColumn[] columns = m_model.getActiveColumns();
 
-    if( ArrayUtils.getLength( rows ) > position.getRowPosition() && ArrayUtils.getLength( columns ) > position.getColumnPosition() )
-    {
-      final IZmlModelRow row = rows[position.getRowPosition()];
-      final IZmlModelColumn column = columns[position.getColumnPosition()];
-
-      return row.get( column );
-    }
-
-    return null;
+    return m_model.getCell( position.getRowPosition(), position.getColumnPosition() );
   }
 }
