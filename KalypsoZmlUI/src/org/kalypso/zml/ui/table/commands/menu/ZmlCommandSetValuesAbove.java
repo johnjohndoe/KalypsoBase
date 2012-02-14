@@ -40,10 +40,30 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands.menu;
 
+import java.util.Date;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.exception.CancelVisitorException;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.repository.IDataSourceItem;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.ZmlValueLabelProvider;
+import org.kalypso.zml.core.table.model.editing.IZmlEditingStrategy;
+import org.kalypso.zml.core.table.model.interpolation.ZmlInterpolationWorker;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
+import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
+import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
+import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
+import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
 
 /**
  * @author Dirk Kuch
@@ -54,70 +74,66 @@ public class ZmlCommandSetValuesAbove extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-// try
-// {
-// final IZmlTable table = ZmlHandlerUtil.getTable( event );
-// final IZmlTableSelectionHandler selection = table.getSelectionHandler();
-// final IZmlTableValueCell active = (IZmlTableValueCell) selection.findActiveCellByPosition();
-//
-// final IZmlTableValueColumn column = active.getColumn();
-// final IZmlEditingStrategy strategy = column.getEditingStrategy();
-// if( strategy.isAggregated() )
-// {
-// final ZmlLabelProvider provider = new ZmlLabelProvider( active.getRow().getModelRow(), null, new ZmlCellRule[] {} );
-// final String targetValue = provider.getText( null );
-//
-// IZmlTableValueCell ptr = active.findPreviousCell();
-// while( ptr != null )
-// {
-// strategy.setValue( ptr.getRow().getModelRow(), targetValue );
-// ptr = ptr.findPreviousCell();
-// }
-// }
-// else
-// {
-// final IZmlModelValueCell reference = active.getValueReference();
-// final Number targetValue = reference.getValue();
-// final Date base = reference.getIndexValue();
-//
-// final ZmlModelTransaction transaction = new ZmlModelTransaction();
-//
-// final IZmlModelColumn modelColumn = column.getModelColumn();
-// modelColumn.accept( new IZmlModelColumnVisitor()
-// {
-// @Override
-// public void visit( final IZmlModelValueCell ref ) throws SensorException, CancelVisitorException
-// {
-// final Date current = ref.getIndexValue();
-// if( current.after( base ) || current.equals( base ) )
-// throw new CancelVisitorException();
-//
-// transaction.add( ref, targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
-// }
-// } );
-//
-// transaction.execute();
-// }
-//
-// try
-// {
-// /**
-// * reinterpolate complete observation because of table view filter (like 12h view, stueztstellen ansicht, etc)
-// */
-// final IObservation observation = column.getModelColumn().getObservation();
-// final ZmlInterpolationWorker interpolationWorker = new ZmlInterpolationWorker( observation );
-// interpolationWorker.execute( new NullProgressMonitor() );
-// }
-// catch( final CoreException e )
-// {
-// e.printStackTrace();
-// }
-//
-    return Status.OK_STATUS;
-// }
-// catch( final Exception e )
-// {
-// throw new ExecutionException( "Aktualisieren der Werte fehlgeschlagen.", e );
-// }
+    try
+    {
+      final IZmlTable table = ZmlHandlerUtil.getTable( event );
+      final VisibleZmlModelFacade model = table.getModel();
+      final IZmlTableSelection selection = table.getSelection();
+      final IZmlModelValueCell active = (IZmlModelValueCell) selection.getFocusCell();
+      final IZmlModelColumn column = active.getColumn();
+      final IZmlEditingStrategy strategy = model.getEditingStrategy( column );
+
+      if( strategy.isAggregated() )
+      {
+        final ZmlValueLabelProvider provider = new ZmlValueLabelProvider( column );
+        final String targetValue = provider.getText( active );
+
+        IZmlModelCell ptr = model.findPreviousCell( active );
+        while( ptr != null )
+        {
+          if( ptr instanceof IZmlModelValueCell )
+            strategy.setValue( (IZmlModelValueCell) ptr, targetValue );
+
+          ptr = model.findPreviousCell( ptr );
+        }
+      }
+      else
+      {
+        final Number targetValue = active.getValue();
+        final Date base = active.getIndexValue();
+
+        final ZmlModelTransaction transaction = new ZmlModelTransaction();
+
+        column.accept( new IZmlModelColumnVisitor()
+        {
+          @Override
+          public void visit( final IZmlModelValueCell ref ) throws SensorException, CancelVisitorException
+          {
+            final Date current = ref.getIndexValue();
+            if( current.after( base ) || current.equals( base ) )
+              throw new CancelVisitorException();
+
+            transaction.add( ref, targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
+          }
+        } );
+
+        transaction.execute();
+      }
+
+      /**
+       * reinterpolate complete observation because of table view filter (like 12h view, stueztstellen ansicht, etc)
+       */
+      final IObservation observation = column.getObservation();
+      final ZmlInterpolationWorker interpolationWorker = new ZmlInterpolationWorker( observation );
+      interpolationWorker.execute( new NullProgressMonitor() );
+
+      // TODO status handling
+
+      return Status.OK_STATUS;
+    }
+    catch( final Exception e )
+    {
+      throw new ExecutionException( "Aktualisieren der Werte fehlgeschlagen.", e );
+    }
   }
 }
