@@ -38,27 +38,25 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.nat.editing;
+package org.kalypso.zml.core.table.model.editing;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.VisibleZmlModelFacade;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 
 /**
  * @author Dirk Kuch
  */
 public abstract class AbstractEditingStrategy implements IZmlEditingStrategy
 {
-  private final IZmlModelColumn m_column;
 
   private final VisibleZmlModelFacade m_model;
 
-  public AbstractEditingStrategy( final VisibleZmlModelFacade model, final IZmlModelColumn column )
+  public AbstractEditingStrategy( final VisibleZmlModelFacade model )
   {
     m_model = model;
-    m_column = column;
   }
 
   protected VisibleZmlModelFacade getModel( )
@@ -66,14 +64,9 @@ public abstract class AbstractEditingStrategy implements IZmlEditingStrategy
     return m_model;
   }
 
-  protected IZmlModelColumn getColumn( )
+  protected Number getTargetValue( final IZmlModelValueCell cell, final String value )
   {
-    return m_column;
-  }
-
-  protected Number getTargetValue( final String value )
-  {
-    final IAxis axis = m_column.getValueAxis();
+    final IAxis axis = cell.getColumn().getValueAxis();
     final Class< ? > clazz = axis.getDataClass();
 
     if( Double.class == clazz )

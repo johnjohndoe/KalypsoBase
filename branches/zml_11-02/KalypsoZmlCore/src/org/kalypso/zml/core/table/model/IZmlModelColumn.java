@@ -126,4 +126,5 @@ public interface IZmlModelColumn
   CellStyle findStyle( IZmlModelCell cell ) throws CoreException;
 
   IZmlModelValueCell[] getCells( );
+
 }

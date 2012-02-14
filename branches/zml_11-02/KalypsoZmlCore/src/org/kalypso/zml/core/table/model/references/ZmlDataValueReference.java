@@ -46,6 +46,7 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Path;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -96,6 +97,10 @@ public class ZmlDataValueReference extends AbstractZmlCell implements IZmlModelV
   @Override
   public void doUpdate( final Number value, final String source, final Integer status ) throws SensorException
   {
+    final Number oldValue = getValue();
+    if( Objects.equal( value, oldValue ) )
+      return;
+
     getColumn().doUpdate( getModelIndex(), value, source, status );
   }
 

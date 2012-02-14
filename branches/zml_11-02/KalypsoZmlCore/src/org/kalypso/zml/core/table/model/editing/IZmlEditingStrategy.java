@@ -38,18 +38,17 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.nat.editing;
+package org.kalypso.zml.core.table.model.editing;
 
-import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 
 /**
  * @author Dirk Kuch
  */
 public interface IZmlEditingStrategy
 {
-// String getValue( IZmlModelRow row );
 
-  void setValue( IZmlModelRow row, String value );
+  void setValue( IZmlModelValueCell cell, String value );
 
   boolean isAggregated( );
 }
