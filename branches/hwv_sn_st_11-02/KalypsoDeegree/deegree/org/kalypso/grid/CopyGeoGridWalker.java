@@ -85,7 +85,6 @@ public class CopyGeoGridWalker implements IGeoGridWalker
     final BigDecimal value = new BigDecimal( c.z ).setScale( 4, BigDecimal.ROUND_HALF_UP );
     m_min = m_min.min( value );
     m_max = m_max.max( value );
-
   }
 
   /**

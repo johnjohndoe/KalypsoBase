@@ -184,6 +184,7 @@ public class TIFFUtilities
     }
 
     /* Save the file. */
-    JAI.create( "filestore", image, file.getAbsolutePath(), "TIFF", tep );
+    RenderedOp renderedOp = JAI.create( "filestore", image, file.getAbsolutePath(), "TIFF", tep );
+    renderedOp.dispose();
   }
 }
