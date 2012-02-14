@@ -42,6 +42,7 @@ package org.kalypso.zml.ui.table;
 
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
+import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
 
 /**
  * @author Dirk Kuch
@@ -56,4 +57,6 @@ public interface IZmlTable
   void refresh( IZmlModelColumn... columns );
 
   void fireTableChanged( String type, IZmlModelColumn... columns );
+
+  IZmlTableSelection getSelection( );
 }

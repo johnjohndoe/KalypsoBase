@@ -59,9 +59,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.window.DefaultToolTip;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MenuDetectEvent;
 import org.eclipse.swt.events.MenuDetectListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -90,6 +92,7 @@ import org.kalypso.zml.ui.table.nat.painter.ZmlColumnHeaderCellPainter;
 import org.kalypso.zml.ui.table.nat.painter.ZmlModelCellDisplayConverter;
 import org.kalypso.zml.ui.table.nat.painter.ZmlModelCellPainter;
 import org.kalypso.zml.ui.table.nat.painter.ZmlRowHeaderCellPainter;
+import org.kalypso.zml.ui.table.nat.tooltip.ZmlTableTooltip;
 
 /**
  * @author Dirk Kuch
@@ -134,15 +137,15 @@ public class ZmlTable extends Composite implements IZmlTable
 
   private void doInit( )
   {
-    final BodyLayerStack bodyLayer = new BodyLayerStack( m_model );
+    m_bodyLayer = new BodyLayerStack( m_model );
 
-    final ColumnHeaderLayerStack columnHeaderLayer = new ColumnHeaderLayerStack( bodyLayer );
-    final RowHeaderLayerStack rowHeaderLayer = new RowHeaderLayerStack( bodyLayer );
+    final ColumnHeaderLayerStack columnHeaderLayer = new ColumnHeaderLayerStack( m_bodyLayer );
+    final RowHeaderLayerStack rowHeaderLayer = new RowHeaderLayerStack( m_bodyLayer );
 
     final DefaultCornerDataProvider cornerDataProvider = new DefaultCornerDataProvider( columnHeaderLayer.getProvider(), rowHeaderLayer.getProvider() );
     final CornerLayer cornerLayer = new CornerLayer( new DataLayer( cornerDataProvider ), rowHeaderLayer, columnHeaderLayer );
 
-    final GridLayer gridLayer = new GridLayer( bodyLayer, columnHeaderLayer, rowHeaderLayer, cornerLayer );
+    final GridLayer gridLayer = new GridLayer( m_bodyLayer, columnHeaderLayer, rowHeaderLayer, cornerLayer );
     m_natTable = new NatTable( this, gridLayer );
     m_natTable.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
@@ -159,8 +162,13 @@ public class ZmlTable extends Composite implements IZmlTable
 
     registry.registerConfigAttribute( EditConfigAttributes.CELL_EDITABLE_RULE, IEditableRule.ALWAYS_EDITABLE, DisplayMode.EDIT, GridRegion.BODY.toString() );
 
-    /** context menu */
+    final DefaultToolTip toolTip = new ZmlTableTooltip( m_natTable, getModel() );
+    toolTip.setBackgroundColor( m_natTable.getDisplay().getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
+    toolTip.setPopupDelay( 500 );
+    toolTip.activate();
+    toolTip.setShift( new Point( 10, 10 ) );
 
+    /** context menu */
     final Menu contextMenu = m_contextMenuManager.createContextMenu( m_natTable );
     m_natTable.setMenu( contextMenu );
 
@@ -169,7 +177,7 @@ public class ZmlTable extends Composite implements IZmlTable
       @Override
       public void menuDetected( final MenuDetectEvent e )
       {
-        final IZmlTableSelection selection = bodyLayer.getSelection();
+        final IZmlTableSelection selection = m_bodyLayer.getSelection();
         final IZmlModelCell cell = selection.getFocusCell();
 
         if( cell instanceof IZmlModelValueCell )
@@ -209,6 +217,8 @@ public class ZmlTable extends Composite implements IZmlTable
   private static final MutexRule MUTEX_TABLE_UPDATE = new MutexRule( "Aktualisiere Tabelle" ); // $NON-NLS-1$
 
   protected NatTable m_natTable;
+
+  private BodyLayerStack m_bodyLayer;
 
   @Override
   public synchronized void refresh( final IZmlModelColumn... columns )
@@ -260,6 +270,12 @@ public class ZmlTable extends Composite implements IZmlTable
   public VisibleZmlModelFacade getModel( )
   {
     return m_model;
+  }
+
+  @Override
+  public IZmlTableSelection getSelection( )
+  {
+    return m_bodyLayer.getSelection();
   }
 
 }

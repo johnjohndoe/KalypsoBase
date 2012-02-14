@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
 import org.eclipse.ui.services.IServiceLocator;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
 import org.kalypso.zml.core.table.model.view.ZmlViewResolutionFilter;
@@ -98,20 +99,8 @@ public abstract class AbstractHourViewCommand extends AbstractHandler implements
 
   public static ZmlViewResolutionFilter resolveFilter( final IZmlTable table )
   {
-// final TableViewer viewer = table.getViewer();
-// if( Objects.isNull( viewer ) )
-// return null;
-//
-// final ViewerFilter[] filters = viewer.getFilters();
-// for( final ViewerFilter filter : filters )
-// {
-// if( filter instanceof ZmlViewResolutionFilter )
-// {
-// return (ZmlViewResolutionFilter) filter;
-// }
-// }
-
-    return null;
+    final VisibleZmlModelFacade model = table.getModel();
+    return model.getFilter();
   }
 
   @Override
@@ -120,7 +109,7 @@ public abstract class AbstractHourViewCommand extends AbstractHandler implements
     final IServiceLocator locator = element.getServiceLocator();
     final IZmlTable table = ZmlHandlerUtil.getTable( locator );
 
-    if( table != null )
+    if( Objects.isNotNull( table ) )
     {
       final ZmlViewResolutionFilter filter = resolveFilter( table );
       element.setChecked( isActive( filter ) );
