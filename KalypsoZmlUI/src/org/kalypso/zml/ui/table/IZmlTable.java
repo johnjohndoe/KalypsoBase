@@ -56,7 +56,5 @@ public interface IZmlTable
 
   void refresh( IZmlModelColumn... columns );
 
-  void fireTableChanged( String type, IZmlModelColumn... columns );
-
   IZmlTableSelection getSelection( );
 }

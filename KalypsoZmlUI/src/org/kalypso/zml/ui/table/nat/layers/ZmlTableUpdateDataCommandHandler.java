@@ -45,7 +45,6 @@ import net.sourceforge.nattable.data.IDataProvider;
 import net.sourceforge.nattable.edit.command.UpdateDataCommand;
 import net.sourceforge.nattable.edit.command.UpdateDataCommandHandler;
 import net.sourceforge.nattable.layer.DataLayer;
-import net.sourceforge.nattable.layer.event.CellVisualChangeEvent;
 
 /**
  * @author Dirk Kuch
@@ -72,7 +71,7 @@ public class ZmlTableUpdateDataCommandHandler extends UpdateDataCommandHandler i
       final IDataProvider provider = m_dataLayer.getDataProvider();
       provider.setDataValue( columnPosition, rowPosition, command.getNewValue() );
 
-      m_dataLayer.fireLayerEvent( new CellVisualChangeEvent( m_dataLayer, columnPosition, rowPosition ) );
+// m_dataLayer.fireLayerEvent( new CellVisualChangeEvent( m_dataLayer, columnPosition, rowPosition ) );
 
       return true;
     }
