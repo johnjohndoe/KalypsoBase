@@ -218,4 +218,9 @@ public class VisibleZmlModelFacade
 
     return cells.toArray( new IZmlModelCell[] {} );
   }
+
+  public IZmlModel getModel( )
+  {
+    return m_model;
+  }
 }

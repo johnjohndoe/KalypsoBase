@@ -132,4 +132,18 @@ public class ZmlTableSelectionLayer extends SelectionLayer implements IZmlTableS
 
     return m_model.getCell( position.getRowPosition(), position.getColumnPosition() );
   }
+
+  @Override
+  public IZmlModelCell[] getSelectedCells( final IZmlModelColumn column )
+  {
+    final Set<IZmlModelCell> selection = new LinkedHashSet<IZmlModelCell>();
+
+    final IZmlModelRow[] rows = getSelectedRows();
+    for( final IZmlModelRow row : rows )
+    {
+      selection.add( row.get( column ) );
+    }
+
+    return selection.toArray( new IZmlModelCell[] {} );
+  }
 }

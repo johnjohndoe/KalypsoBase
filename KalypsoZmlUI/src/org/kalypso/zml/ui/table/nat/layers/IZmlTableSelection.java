@@ -53,7 +53,10 @@ public interface IZmlTableSelection
 
   IZmlModelRow[] getSelectedRows( );
 
+  IZmlModelCell getFocusCell( );
+
   IZmlModelCell[] getSelectedCells( );
 
-  IZmlModelCell getFocusCell( );
+  IZmlModelCell[] getSelectedCells( IZmlModelColumn column );
+
 }
