@@ -184,10 +184,6 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
     }
   }
 
-  /**
-   * @see de.renew.workflow.connector.worklist.ITaskExecutionListener#handleTaskExecuted(org.eclipse.core.runtime.IStatus,
-   *      de.renew.workflow.base.ITask)
-   */
   @Override
   public void handleTaskExecuted( final IStatus result, final ITask task )
   {
@@ -217,9 +213,6 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
     }.schedule();
   }
 
-  /**
-   * @see de.renew.workflow.connector.worklist.ITaskExecutionListener#handleTaskStopped(de.renew.workflow.base.ITask)
-   */
   @Override
   public void handleTaskStopped( final ITask task )
   {

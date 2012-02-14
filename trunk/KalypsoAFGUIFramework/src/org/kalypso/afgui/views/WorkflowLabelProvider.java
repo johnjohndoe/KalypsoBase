@@ -1,5 +1,8 @@
 package org.kalypso.afgui.views;
 
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.resource.JFaceResources;
@@ -8,6 +11,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandImageService;
+import org.eclipse.ui.commands.ICommandService;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 
 import de.renew.workflow.base.ITask;
@@ -54,9 +58,6 @@ public class WorkflowLabelProvider extends ColumnLabelProvider
 
       final ICommandImageService cis = (ICommandImageService) PlatformUI.getWorkbench().getService( ICommandImageService.class );
       final ImageDescriptor imageDescriptor = cis.getImageDescriptor( uri );
-
-      // http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ActivateScenario
-
       if( imageDescriptor == null )
         return m_imageRegistry.get( IMAGE_TASK );
 
@@ -72,7 +73,36 @@ public class WorkflowLabelProvider extends ColumnLabelProvider
   public String getText( final Object element )
   {
     if( element instanceof ITask )
-      return ((ITask) element).getName();
+    {
+      final String taskName = ((ITask) element).getName();
+      if( !StringUtils.isBlank( taskName ) )
+        return taskName;
+
+      try
+      {
+        final Command command = findCommand( (ITask) element );
+        if( command.isDefined() )
+          return command.getName();
+      }
+      catch( final NotDefinedException e )
+      {
+        // will not happen, we just checked
+      }
+
+      return taskName;
+    }
+
+    return null;
+  }
+
+  /* tries to find a command for the given taks. Only defined commands get returned. */
+  private Command findCommand( final ITask element )
+  {
+    final String commandID = element.getURI();
+    final ICommandService cs = (ICommandService) PlatformUI.getWorkbench().getService( ICommandService.class );
+    final Command command = cs.getCommand( commandID );
+    if( command.isDefined() )
+      return command;
 
     return null;
   }
@@ -110,7 +140,23 @@ public class WorkflowLabelProvider extends ColumnLabelProvider
     if( element instanceof ITask )
     {
       final ITask task = (ITask) element;
-      return task.getTooltip();
+      final String tooltip = task.getTooltip();
+      if( StringUtils.isBlank( tooltip ) )
+      {
+        /* Try to get description of command instead */
+        try
+        {
+          final Command command = findCommand( (ITask) element );
+          if( command.isDefined() )
+            return command.getDescription();
+        }
+        catch( final NotDefinedException e )
+        {
+          // will not happen, we just checked
+        }
+      }
+
+      return tooltip;
     }
 
     return null;
