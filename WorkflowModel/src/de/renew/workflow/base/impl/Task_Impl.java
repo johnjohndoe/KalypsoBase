@@ -104,9 +104,6 @@ public class Task_Impl implements ITask
     return getTask().getType();
   }
 
-  /**
-   * @see de.renew.workflow.base.ITask#getName()
-   */
   @Override
   public String getName( )
   {
@@ -114,9 +111,6 @@ public class Task_Impl implements ITask
     return ResourceBundleUtils.getI18NString( name, m_resourceBundle );
   }
 
-  /**
-   * @see de.renew.workflow.base.ITask#getTooltip()
-   */
   @Override
   public String getTooltip( )
   {
