@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands.menu;
 
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 
 /**
  * @author Dirk Kuch
@@ -50,23 +51,23 @@ public final class ZmlCommandUtils
   {
   }
 
-// public static IZmlTableValueCell[] findIntervall( final IZmlTableValueCell[] cells )
-// {
-// IZmlTableValueCell start = cells[0];
-// IZmlTableValueCell end = cells[0];
-//
-// for( final IZmlTableValueCell cell : cells )
-// {
-// if( cell.getIndex() < start.getIndex() )
-// start = cell;
-//
-// if( cell.getIndex() > end.getIndex() )
-// end = cell;
-// }
-//
-// return new IZmlTableValueCell[] { start, end };
-//
-// }
+  public static IZmlModelCell[] findIntervall( final IZmlModelCell[] cells )
+  {
+    IZmlModelCell start = cells[0];
+    IZmlModelCell end = cells[0];
+
+    for( final IZmlModelCell cell : cells )
+    {
+      if( cell.getModelIndex() < start.getModelIndex() )
+        start = cell;
+
+      if( cell.getModelIndex() > end.getModelIndex() )
+        end = cell;
+    }
+
+    return new IZmlModelCell[] { start, end };
+
+  }
 //
 // public static DateRange findDateRange( final IZmlTableValueCell[] cells )
 // {
