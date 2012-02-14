@@ -42,8 +42,15 @@ package org.kalypso.zml.ui.table.commands.toolbar.input.dialog;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
+import org.kalypso.zml.ui.table.dialogs.input.ZmlEinzelwertDialog;
+import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
 
 /**
  * @author Dirk Kuch
@@ -58,19 +65,18 @@ public class ZmlCommandOpenValueInputDialog extends AbstractHandler
   public Object execute( final ExecutionEvent event )
   {
     final IZmlTable table = ZmlHandlerUtil.getTable( event );
-// final IZmlTableSelectionHandler selection = table.getSelectionHandler();
-// final IZmlTableColumn column = selection.findActiveColumnByPosition();
-// if( column == null )
-// throw new IllegalStateException(
-// "Konnte aktive Spalte nicht ermitteln. Bitte Linkklick in der zu bearbeitenden Spalte ausführen und Aktion erneut versuchen."
-// );
-//
-// final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-// final ZmlEinzelwertDialog dialog = new ZmlEinzelwertDialog( shell, column );
-// dialog.open();
-//
-// return Status.OK_STATUS;
+    final IZmlTableSelection selection = table.getSelection();
+    final IZmlModelValueCell active = (IZmlModelValueCell) selection.getFocusCell();
+    if( active == null )
+      throw new IllegalStateException( "Konnte aktive Spalte nicht ermitteln. Bitte Linkklick in der zu bearbeitenden Spalte ausführen und Aktion erneut versuchen." );
 
-    throw new UnsupportedOperationException();
+    final IZmlModelColumn column = active.getColumn();
+
+    final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+    final ZmlEinzelwertDialog dialog = new ZmlEinzelwertDialog( shell, column );
+    dialog.open();
+
+    return Status.OK_STATUS;
+
   }
 }

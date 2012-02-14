@@ -68,6 +68,7 @@ import org.kalypso.zml.ui.table.commands.menu.adjust.pages.MultiplyValueAdjustme
 import org.kalypso.zml.ui.table.commands.menu.adjust.pages.ShiftDateAdjustmentPage;
 import org.kalypso.zml.ui.table.commands.menu.adjust.pages.ShiftValueAdjustmentPage;
 import org.kalypso.zml.ui.table.dialogs.input.IZmlEinzelwertCompositeListener;
+import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
 
 /**
  * @author Dirk Kuch
@@ -80,9 +81,12 @@ public class ZmlAdjustSelectionDialog extends EnhancedTitleAreaDialog implements
 
   private ElementsComposite m_composite;
 
-  public ZmlAdjustSelectionDialog( final Shell shell, final IZmlModelColumn column )
+  private final IZmlTableSelection m_selection;
+
+  public ZmlAdjustSelectionDialog( final Shell shell, final IZmlTableSelection selection, final IZmlModelColumn column )
   {
     super( shell );
+    m_selection = selection;
     m_column = column;
 
     setShellStyle( SWT.CLOSE | SWT.MAX | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE );
@@ -175,5 +179,11 @@ public class ZmlAdjustSelectionDialog extends EnhancedTitleAreaDialog implements
   public IZmlModelColumn getColumn( )
   {
     return m_column;
+  }
+
+  @Override
+  public IZmlTableSelection getSelectionHandler( )
+  {
+    return m_selection;
   }
 }

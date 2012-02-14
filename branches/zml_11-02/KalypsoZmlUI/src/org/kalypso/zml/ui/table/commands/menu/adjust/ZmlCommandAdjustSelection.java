@@ -65,7 +65,7 @@ public class ZmlCommandAdjustSelection extends AbstractHandler
     final IZmlModelColumn column = cell.getColumn();
 
     final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-    final ZmlAdjustSelectionDialog dialog = new ZmlAdjustSelectionDialog( shell, column );
+    final ZmlAdjustSelectionDialog dialog = new ZmlAdjustSelectionDialog( shell, table.getSelection(), column );
     dialog.open();
 
     return Status.OK_STATUS;

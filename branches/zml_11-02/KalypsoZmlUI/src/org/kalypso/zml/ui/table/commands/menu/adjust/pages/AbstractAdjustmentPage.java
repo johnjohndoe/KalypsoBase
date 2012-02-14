@@ -46,6 +46,7 @@ import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.pager.IElementPage;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
 
 /**
  * @author Dirk Kuch
@@ -64,6 +65,11 @@ public abstract class AbstractAdjustmentPage implements IElementPage
   protected IZmlModelColumn getColumn( )
   {
     return m_provider.getColumn();
+  }
+
+  protected IZmlTableSelection getSelection( )
+  {
+    return m_provider.getSelectionHandler();
   }
 
   public abstract ICoreRunnableWithProgress getRunnable( );

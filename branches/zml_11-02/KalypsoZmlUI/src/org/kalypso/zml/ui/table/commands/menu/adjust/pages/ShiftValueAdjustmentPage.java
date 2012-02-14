@@ -104,8 +104,7 @@ public class ShiftValueAdjustmentPage extends AbstractAdjustmentPage implements 
   @Override
   public ICoreRunnableWithProgress getRunnable( )
   {
-// return new ShiftValueRunnable( (IZmlTableValueCell[]) getColumn().getSelectedCells(), m_shiftValue );
-    throw new UnsupportedOperationException();
+    return new ShiftValueRunnable( getSelection().getSelectedCells( getColumn() ), m_shiftValue );
   }
 
   @Override
