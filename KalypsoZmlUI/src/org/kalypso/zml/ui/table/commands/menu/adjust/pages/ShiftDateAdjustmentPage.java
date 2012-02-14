@@ -211,8 +211,7 @@ public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage
   @Override
   public ICoreRunnableWithProgress getRunnable( )
   {
-// return new ShiftDateRunnable( getColumn(), (IZmlTableValueCell[]) getColumn().getSelectedCells(), getMinutes() );
-    throw new UnsupportedOperationException();
+    return new ShiftDateRunnable( getColumn(), getSelection().getSelectedCells( getColumn() ), getMinutes() );
   }
 
   @Override
