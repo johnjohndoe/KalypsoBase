@@ -49,6 +49,7 @@ import net.sourceforge.nattable.layer.IUniqueIndexLayer;
 import net.sourceforge.nattable.selection.SelectionLayer;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
@@ -126,6 +127,8 @@ public class ZmlTableSelectionLayer extends SelectionLayer implements IZmlTableS
   public IZmlModelCell getFocusCell( )
   {
     final PositionCoordinate position = getLastSelectedCellPosition();
+    if( Objects.isNull( position ) )
+      return null;
 
     return m_model.getCell( position.getRowPosition(), position.getColumnPosition() );
   }

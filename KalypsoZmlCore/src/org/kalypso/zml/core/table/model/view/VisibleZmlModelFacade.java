@@ -205,4 +205,17 @@ public class VisibleZmlModelFacade
       listener.modelColumnChangedEvent( null );
     }
   }
+
+  public IZmlModelCell[] getCells( final IZmlModelColumn column )
+  {
+    final Set<IZmlModelCell> cells = new LinkedHashSet<IZmlModelCell>();
+
+    final IZmlModelRow[] rows = getRows();
+    for( final IZmlModelRow row : rows )
+    {
+      cells.add( row.get( column ) );
+    }
+
+    return cells.toArray( new IZmlModelCell[] {} );
+  }
 }
