@@ -48,10 +48,13 @@ import java.util.List;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
+import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
 
 import au.com.bytecode.opencsv.CSVReader;
 
@@ -63,11 +66,13 @@ public class ZmlCommandPasteValue extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-// try
-// {
-// final IZmlTable table = ZmlHandlerUtil.getTable( event );
-// final IZmlTableSelectionHandler selection = table.getSelectionHandler();
-// final IZmlTableValueCell cell = (IZmlTableValueCell) selection.findActiveCellByPosition();
+    try
+    {
+      final IZmlTable table = ZmlHandlerUtil.getTable( event );
+      final IZmlTableSelection selection = table.getSelection();
+      final IZmlModelCell cell = selection.getFocusCell();
+
+      throw new UnsupportedOperationException();
 // if( cell.getColumn() instanceof IZmlTableIndexColumn )
 // throw new ExecutionException( "Aktualisierung von Index-Spalten nicht möglich!" );
 //
@@ -86,13 +91,13 @@ public class ZmlCommandPasteValue extends AbstractHandler
 //
 // ptr = ptr.findNextCell();
 // }
-//
-    return Status.OK_STATUS;
-// }
-// catch( final Exception ex )
-// {
-// throw new ExecutionException( "Einfügen des Wertes aus der Zwischenablage fehlgeschlagen.", ex );
-// }
+
+// return Status.OK_STATUS;
+    }
+    catch( final Exception ex )
+    {
+      throw new ExecutionException( "Einfügen des Wertes aus der Zwischenablage fehlgeschlagen.", ex );
+    }
 
   }
 
