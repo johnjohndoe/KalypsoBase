@@ -35,7 +35,7 @@ public class RowHeaderLayerStack extends AbstractLayerTransform
       @Override
       public Object getDataValue( final int columnIndex, final int rowIndex )
       {
-        final IZmlModelRow row = m_bodyLayer.getModel().getRowAt( rowIndex );
+        final IZmlModelRow row = m_bodyLayer.getModel().getRow( rowIndex );
 
         return new ZmlIndexValueReference( row );
       }

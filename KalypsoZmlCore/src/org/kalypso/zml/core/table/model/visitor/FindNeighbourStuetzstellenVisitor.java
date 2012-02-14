@@ -2,96 +2,85 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.nat.base;
+package org.kalypso.zml.core.table.model.visitor;
 
-import net.sourceforge.nattable.data.IColumnAccessor;
-
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.VisibleZmlModelFacade;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import org.kalypso.zml.core.table.model.references.ZmlValues;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlModelRowAccesor implements IColumnAccessor<IZmlModelRow>
+public class FindNeighbourStuetzstellenVisitor implements IZmlModelColumnVisitor
 {
+  private final Integer m_modelIndex;
 
-  private final VisibleZmlModelFacade m_model;
+  private IZmlModelValueCell m_after;
 
-  public ZmlModelRowAccesor( final VisibleZmlModelFacade model )
+  private IZmlModelValueCell m_before;
+
+  public FindNeighbourStuetzstellenVisitor( final IZmlModelCell base )
   {
-    m_model = model;
+    m_modelIndex = base.getModelIndex();
   }
 
   @Override
-  public Object getDataValue( final IZmlModelRow row, final int columnIndex )
+  public void visit( final IZmlModelValueCell reference ) throws SensorException
   {
-    final IZmlModelColumn column = m_model.getColum( columnIndex );
-    if( Objects.isNotNull( row, column ) )
-      return row.get( column );
+    if( !ZmlValues.isStuetzstelle( reference ) )
+      return;
 
-    return "n / a";
+    if( reference.getModelIndex() < m_modelIndex )
+      m_before = reference;
+    else if( reference.getModelIndex() > m_modelIndex && m_after == null )
+      m_after = reference;
   }
 
-  @Override
-  public void setDataValue( final IZmlModelRow row, final int columnIndex, final Object newValue )
+  public IZmlModelValueCell getBefore( )
   {
-    final IZmlModelCell cell = m_model.getCell( row, columnIndex );
-
-    if( cell instanceof IZmlModelValueCell )
-    {
-      final IZmlModelValueCell valueCell = (IZmlModelValueCell) cell;
-      final IZmlModelColumn column = valueCell.getColumn();
-
-      throw new UnsupportedOperationException();
-    }
-
-    throw new UnsupportedOperationException();
+    return m_before;
   }
 
-  @Override
-  public int getColumnCount( )
+  public IZmlModelValueCell getAfter( )
   {
-    throw new UnsupportedOperationException();
+    return m_after;
   }
 
 }

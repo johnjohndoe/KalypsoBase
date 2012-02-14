@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraﬂe 22
+ *  Denickestra√üe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,60 +38,18 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.nat.base;
+package org.kalypso.zml.ui.table.nat.editing;
 
-import net.sourceforge.nattable.data.IColumnAccessor;
-
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.VisibleZmlModelFacade;
-import org.kalypso.zml.core.table.model.references.IZmlModelCell;
-import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlModelRowAccesor implements IColumnAccessor<IZmlModelRow>
+public interface IZmlEditingStrategy
 {
+// String getValue( IZmlModelRow row );
 
-  private final VisibleZmlModelFacade m_model;
+  void setValue( IZmlModelRow row, String value );
 
-  public ZmlModelRowAccesor( final VisibleZmlModelFacade model )
-  {
-    m_model = model;
-  }
-
-  @Override
-  public Object getDataValue( final IZmlModelRow row, final int columnIndex )
-  {
-    final IZmlModelColumn column = m_model.getColum( columnIndex );
-    if( Objects.isNotNull( row, column ) )
-      return row.get( column );
-
-    return "n / a";
-  }
-
-  @Override
-  public void setDataValue( final IZmlModelRow row, final int columnIndex, final Object newValue )
-  {
-    final IZmlModelCell cell = m_model.getCell( row, columnIndex );
-
-    if( cell instanceof IZmlModelValueCell )
-    {
-      final IZmlModelValueCell valueCell = (IZmlModelValueCell) cell;
-      final IZmlModelColumn column = valueCell.getColumn();
-
-      throw new UnsupportedOperationException();
-    }
-
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public int getColumnCount( )
-  {
-    throw new UnsupportedOperationException();
-  }
-
+  boolean isAggregated( );
 }

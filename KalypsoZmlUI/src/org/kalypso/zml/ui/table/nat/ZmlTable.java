@@ -46,6 +46,8 @@ import java.util.Set;
 import net.sourceforge.nattable.NatTable;
 import net.sourceforge.nattable.config.CellConfigAttributes;
 import net.sourceforge.nattable.config.IConfigRegistry;
+import net.sourceforge.nattable.config.IEditableRule;
+import net.sourceforge.nattable.edit.EditConfigAttributes;
 import net.sourceforge.nattable.grid.GridRegion;
 import net.sourceforge.nattable.grid.data.DefaultCornerDataProvider;
 import net.sourceforge.nattable.grid.layer.CornerLayer;
@@ -71,7 +73,7 @@ import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.VisibleZmlModelFacade;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.ui.table.IZmlTable;
@@ -104,13 +106,13 @@ public class ZmlTable extends Composite implements IZmlTable
 
 // final ZmlTablePager m_pager = new ZmlTablePager( this ); // only for main table
 
-  protected final IZmlModel m_model;
+  protected final VisibleZmlModelFacade m_model;
 
   public ZmlTable( final ZmlTableComposite table, final IZmlModel model, final FormToolkit toolkit )
   {
     super( table, SWT.NULL );
     m_table = table;
-    m_model = model;
+    m_model = new VisibleZmlModelFacade( model );
 
     final GridLayout layout = LayoutHelper.createGridLayout();
     layout.verticalSpacing = 0;
@@ -151,6 +153,10 @@ public class ZmlTable extends Composite implements IZmlTable
     registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new ZmlRowHeaderCellPainter(), DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
     registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new ZmlColumnHeaderCellPainter(), DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
 
+    registry.registerConfigAttribute( EditConfigAttributes.CELL_EDITABLE_RULE, IEditableRule.ALWAYS_EDITABLE, DisplayMode.EDIT, GridRegion.BODY.toString() );
+
+    /** context menu */
+
     final Menu contextMenu = m_contextMenuManager.createContextMenu( m_natTable );
     m_natTable.setMenu( contextMenu );
 
@@ -160,10 +166,6 @@ public class ZmlTable extends Composite implements IZmlTable
       public void menuDetected( final MenuDetectEvent e )
       {
         final IZmlTableSelection selection = bodyLayer.getSelection();
-        final IZmlModelColumn[] columns = selection.getSelectedColumns();
-        final IZmlModelRow[] rows = selection.getSelectedRows();
-        final IZmlModelCell[] cells = selection.getSelectedCells();
-
         final IZmlModelCell cell = selection.getFocusCell();
 
         if( cell instanceof IZmlModelValueCell )
@@ -272,7 +274,7 @@ public class ZmlTable extends Composite implements IZmlTable
   }
 
   @Override
-  public IZmlModel getModel( )
+  public VisibleZmlModelFacade getModel( )
   {
     return m_model;
   }

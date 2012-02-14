@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraﬂe 22
+ *  Denickestra√üe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,60 +38,94 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.nat.base;
+package org.kalypso.zml.core.table.model;
 
-import net.sourceforge.nattable.data.IColumnAccessor;
-
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.VisibleZmlModelFacade;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
-import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlModelRowAccesor implements IColumnAccessor<IZmlModelRow>
+public class VisibleZmlModelFacade
 {
+  // FIXME set as zml table base
+  // FIXME zml model change listener
+  // FIXME caching
+  // FIXME zml time filter
 
-  private final VisibleZmlModelFacade m_model;
+  private final IZmlModel m_model;
 
-  public ZmlModelRowAccesor( final VisibleZmlModelFacade model )
+  public VisibleZmlModelFacade( final IZmlModel model )
   {
     m_model = model;
   }
 
-  @Override
-  public Object getDataValue( final IZmlModelRow row, final int columnIndex )
+  public IZmlModelCell getCell( final IZmlModelRow row, final int columnIndex )
   {
-    final IZmlModelColumn column = m_model.getColum( columnIndex );
+    final ZmlModelColumn[] columns = m_model.getActiveColumns();
+    if( ArrayUtils.getLength( columns ) < columnIndex )
+      return null;
+
+    final ZmlModelColumn column = columns[columnIndex];
+    return row.get( column );
+  }
+
+  public ZmlModelColumn[] getColumns( )
+  {
+    return m_model.getActiveColumns();
+  }
+
+  public IZmlModelColumn getColum( final int index )
+  {
+    final ZmlModelColumn[] columns = getColumns();
+    if( ArrayUtils.getLength( columns ) < index )
+      return null;
+
+    return columns[index];
+  }
+
+  public IZmlModelRow[] getRows( )
+  {
+    // TODO return only visible rows
+
+    return m_model.getRows();
+  }
+
+  public IZmlModelCell getCell( final int rowPosition, final int columnPosition )
+  {
+
+    final IZmlModelRow row = getRow( rowPosition );
+    final IZmlModelColumn column = getColum( columnPosition );
+
     if( Objects.isNotNull( row, column ) )
       return row.get( column );
 
-    return "n / a";
+    return null;
   }
 
-  @Override
-  public void setDataValue( final IZmlModelRow row, final int columnIndex, final Object newValue )
+  public IZmlModelRow getRow( final int rowIndex )
   {
-    final IZmlModelCell cell = m_model.getCell( row, columnIndex );
+    final IZmlModelRow[] rows = getRows();
 
-    if( cell instanceof IZmlModelValueCell )
-    {
-      final IZmlModelValueCell valueCell = (IZmlModelValueCell) cell;
-      final IZmlModelColumn column = valueCell.getColumn();
+    if( ArrayUtils.getLength( rows ) < rowIndex )
+      return null;
 
-      throw new UnsupportedOperationException();
-    }
-
-    throw new UnsupportedOperationException();
+    return rows[rowIndex];
   }
 
-  @Override
-  public int getColumnCount( )
+  public IZmlModelCell findPreviousCell( final IZmlModelCell current )
   {
     throw new UnsupportedOperationException();
   }
 
+  public IZmlModelCell findNextCell( final IZmlModelCell current )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  public int getResolution( )
+  {
+    throw new UnsupportedOperationException();
+  }
 }

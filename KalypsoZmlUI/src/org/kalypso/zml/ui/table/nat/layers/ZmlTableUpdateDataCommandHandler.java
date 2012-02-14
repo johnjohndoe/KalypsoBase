@@ -38,60 +38,47 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.nat.base;
+package org.kalypso.zml.ui.table.nat.layers;
 
-import net.sourceforge.nattable.data.IColumnAccessor;
-
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.VisibleZmlModelFacade;
-import org.kalypso.zml.core.table.model.references.IZmlModelCell;
-import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import net.sourceforge.nattable.command.ILayerCommandHandler;
+import net.sourceforge.nattable.edit.command.UpdateDataCommand;
+import net.sourceforge.nattable.edit.command.UpdateDataCommandHandler;
+import net.sourceforge.nattable.layer.DataLayer;
+import net.sourceforge.nattable.layer.event.CellVisualChangeEvent;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlModelRowAccesor implements IColumnAccessor<IZmlModelRow>
+public class ZmlTableUpdateDataCommandHandler extends UpdateDataCommandHandler implements ILayerCommandHandler<UpdateDataCommand>
 {
 
-  private final VisibleZmlModelFacade m_model;
+  private final DataLayer m_dataLayer;
 
-  public ZmlModelRowAccesor( final VisibleZmlModelFacade model )
+  public ZmlTableUpdateDataCommandHandler( final DataLayer dataLayer )
   {
-    m_model = model;
+    super( dataLayer );
+    m_dataLayer = dataLayer;
   }
 
   @Override
-  public Object getDataValue( final IZmlModelRow row, final int columnIndex )
+  protected boolean doCommand( final UpdateDataCommand command )
   {
-    final IZmlModelColumn column = m_model.getColum( columnIndex );
-    if( Objects.isNotNull( row, column ) )
-      return row.get( column );
-
-    return "n / a";
-  }
-
-  @Override
-  public void setDataValue( final IZmlModelRow row, final int columnIndex, final Object newValue )
-  {
-    final IZmlModelCell cell = m_model.getCell( row, columnIndex );
-
-    if( cell instanceof IZmlModelValueCell )
+    try
     {
-      final IZmlModelValueCell valueCell = (IZmlModelValueCell) cell;
-      final IZmlModelColumn column = valueCell.getColumn();
+      final int columnPosition = command.getColumnPosition();
+      final int rowPosition = command.getRowPosition();
 
-      throw new UnsupportedOperationException();
+      m_dataLayer.getDataProvider().setDataValue( columnPosition, rowPosition, command.getNewValue() );
+      m_dataLayer.fireLayerEvent( new CellVisualChangeEvent( m_dataLayer, columnPosition, rowPosition ) );
+
+      return true;
     }
-
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public int getColumnCount( )
-  {
-    throw new UnsupportedOperationException();
+    catch( final UnsupportedOperationException e )
+    {
+      e.printStackTrace( System.err );
+      System.err.println( "Failed to update value to: " + command.getNewValue() );
+      return false;
+    }
   }
 
 }
