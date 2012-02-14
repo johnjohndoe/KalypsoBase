@@ -169,6 +169,11 @@ public final class GmlSerializer
     serializeWorkspace( writer, gmlWorkspace, charsetEncoding, true );
   }
 
+  /**
+   * @deprecated Do not usae writer to write xml. The caller(!) always must close the writer. Use
+   *             {@link #serializeWorkspace(OutputStreamWriter, GMLWorkspace)}
+   */
+  @Deprecated
   public static void serializeWorkspace( final Writer writer, final GMLWorkspace gmlWorkspace, final String charsetEncoding, final boolean closeWriter ) throws GmlSerializeException
   {
     final GMLWorkspaceInputSource inputSource = new GMLWorkspaceInputSource( gmlWorkspace );
