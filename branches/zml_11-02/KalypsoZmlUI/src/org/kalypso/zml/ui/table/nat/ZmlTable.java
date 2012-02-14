@@ -116,7 +116,7 @@ public class ZmlTable extends Composite implements IZmlTable
       @Override
       public void modelChanged( final IZmlModelColumn... columns )
       {
-        refresh();
+        refresh( columns );
       }
     } );
 
@@ -205,15 +205,6 @@ public class ZmlTable extends Composite implements IZmlTable
     super.dispose();
   }
 
-  @Override
-  public void fireTableChanged( final String type, final IZmlModelColumn... columns )
-  {
-    for( final IZmlTableListener listener : m_listeners )
-    {
-      listener.eventTableChanged( type, columns );
-    }
-  }
-
   private UIJob m_updateJob;
 
   private static final MutexRule MUTEX_TABLE_UPDATE = new MutexRule( "Aktualisiere Tabelle" ); // $NON-NLS-1$
@@ -239,17 +230,14 @@ public class ZmlTable extends Composite implements IZmlTable
         if( ZmlTable.this.isDisposed() )
           return Status.OK_STATUS;
 
-        synchronized( this )
-        {
 // m_pager.update();
 
 // ZmlTable.this.refresh();
 // m_pager.reveal();
 
-          m_natTable.redraw();
+        m_natTable.redraw();
 
 // fireTableChanged( IZmlTableCompositeListener.TYPE_REFRESH, columns );
-        }
 
         return Status.OK_STATUS;
       }
