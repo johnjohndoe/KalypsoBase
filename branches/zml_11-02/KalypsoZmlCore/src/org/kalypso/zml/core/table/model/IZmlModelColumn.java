@@ -62,7 +62,6 @@ import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
  */
 public interface IZmlModelColumn
 {
-
   ZmlCellRule[] findActiveRules( IZmlModelCell cell );
 
   void accept( IZmlModelColumnVisitor visitor, DateRange daterange ) throws SensorException;
