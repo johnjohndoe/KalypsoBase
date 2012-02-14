@@ -38,73 +38,38 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.nat.editing;
+package org.kalypso.zml.core.table.model.editing;
 
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.repository.IDataSourceItem;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.table.model.VisibleZmlModelFacade;
-import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
-import org.kalypso.zml.ui.KalypsoZmlUI;
 
 /**
  * @author Dirk Kuch
  */
 public class SimpleEditingStrategy extends AbstractEditingStrategy
 {
-  public SimpleEditingStrategy( final VisibleZmlModelFacade model, final IZmlModelColumn column )
+  public SimpleEditingStrategy( final VisibleZmlModelFacade model )
   {
-    super( model, column );
+    super( model );
   }
 
-// /**
-// * @see org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy#getValue(java.lang.Object)
-// */
-// @Override
-// public String getValue( final IZmlModelRow row )
-// {
-// try
-// {
-// final IZmlModelCell reference = row.get( getColumn().getColumnType().getType() );
-// if( reference == null )
-// return "";
-// else if( !(reference instanceof IZmlModelValueCell) )
-// return "";
-//
-// final IZmlModelValueCell cell = (IZmlModelValueCell) reference;
-// final Object value = cell.getValue();
-//
-// final CellStyle style = getStyle();
-// return String.format( style.getTextFormat() == null ? "%s" : style.getTextFormat(), value );
-// }
-// catch( final Throwable t )
-// {
-// t.printStackTrace();
-// }
-//
-// return null;
-// }
-
   @Override
-  public void setValue( final IZmlModelRow row, final String value )
+  public void setValue( final IZmlModelValueCell cell, final String value )
   {
     try
     {
-      final IZmlModelCell reference = row.get( getColumn() );
-      if( !(reference instanceof IZmlModelValueCell) )
-        return;
-      final IZmlModelValueCell cell = (IZmlModelValueCell) reference;
+      final Number targetValue = getTargetValue( cell, value );
 
-      final Number targetValue = getTargetValue( value );
       cell.doUpdate( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
     }
     catch( final SensorException e )
     {
-      KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      KalypsoZmlCore.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
   }
 

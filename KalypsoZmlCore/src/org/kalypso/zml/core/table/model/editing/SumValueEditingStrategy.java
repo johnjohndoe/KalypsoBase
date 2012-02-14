@@ -38,61 +38,37 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.nat.editing;
+package org.kalypso.zml.core.table.model.editing;
 
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.filters.interval.IntervalSourceHandler;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.repository.IDataSourceItem;
+import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.VisibleZmlModelFacade;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
-import org.kalypso.zml.ui.KalypsoZmlUI;
 
 /**
  * @author Dirk Kuch
  */
 public class SumValueEditingStrategy extends AbstractEditingStrategy
 {
-  public SumValueEditingStrategy( final VisibleZmlModelFacade model, final IZmlModelColumn column )
+  public SumValueEditingStrategy( final VisibleZmlModelFacade model )
   {
-    super( model, column );
+    super( model );
   }
 
-// @Override
-// public String getValue( final IZmlModelRow row )
-// {
-// try
-// {
-// final ZmlLabelProvider provider = new ZmlLabelProvider( row, getColumn(), new ZmlCellRule[] {} );
-// final Object plain = provider.getPlainValue();
-// if( Objects.isNull( plain ) )
-// return null;
-//
-// final double value = NumberUtils.parseDouble( plain.toString() );
-//
-// final CellStyle style = getStyle();
-// return String.format( style.getTextFormat() == null ? "%s" : style.getTextFormat(), value );
-// }
-// catch( final Throwable t )
-// {
-// KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
-// }
-//
-// return null;
-// }
-
   @Override
-  public void setValue( final IZmlModelRow row, final String value )
+  public void setValue( final IZmlModelValueCell cell, final String value )
   {
     try
     {
-      final IZmlModelValueCell cell = row.get( getColumn() );
-      final Number targetValue = getTargetValue( value );
+      final Number targetValue = getTargetValue( cell, value );
 
       final IZmlModelCell previousCell = getModel().findPreviousCell( cell );
 
@@ -103,27 +79,27 @@ public class SumValueEditingStrategy extends AbstractEditingStrategy
       else if( previousCell == null )
       {
         /* get first invisible value (first value will is not part of the table!) */
-        final IZmlModel model = row.getModel();
+        final IZmlModel model = cell.getModel();
         final IZmlModelRow baseRow = model.getRowAt( 0 );
-        final IZmlModelValueCell previousReference = baseRow.get( getColumn() );
+        final IZmlModelValueCell previousReference = baseRow.get( cell.getColumn() );
 
         updateAggregatedValue( previousReference, cell, targetValue );
       }
       else
       {
-        updateAggregatedValue( getStartReference( previousCell ), cell, targetValue );
+        updateAggregatedValue( getStartReference( (IZmlModelValueCell) previousCell ), cell, targetValue );
       }
     }
     catch( final SensorException e )
     {
-      KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      KalypsoZmlCore.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
   }
 
-  private IZmlModelValueCell getStartReference( final IZmlModelCell previousCell )
+  private IZmlModelValueCell getStartReference( final IZmlModelValueCell previousCell )
   {
     final Integer index = previousCell.getModelIndex();
-    final IZmlModelValueCell[] cells = getColumn().getCells();
+    final IZmlModelValueCell[] cells = previousCell.getColumn().getCells();
 
     return cells[index + 1];
   }
@@ -136,7 +112,7 @@ public class SumValueEditingStrategy extends AbstractEditingStrategy
 
     final double stepping = targetValue.doubleValue() / steps;
 
-    final IZmlModelColumn modelColumn = getColumn();
+    final IZmlModelColumn modelColumn = start.getColumn();
 
     for( int index = startIndex; index <= endIndex; index++ )
     {

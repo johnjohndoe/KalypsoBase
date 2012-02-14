@@ -46,6 +46,7 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.VisibleZmlModelFacade;
+import org.kalypso.zml.core.table.model.editing.IZmlEditingStrategy;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 
@@ -75,17 +76,21 @@ public class ZmlModelRowAccesor implements IColumnAccessor<IZmlModelRow>
   @Override
   public void setDataValue( final IZmlModelRow row, final int columnIndex, final Object newValue )
   {
-    final IZmlModelCell cell = m_model.getCell( row, columnIndex );
+    final Object oldValue = getDataValue( row, columnIndex );
+    if( Objects.equal( oldValue, newValue ) )
+      return;
 
+    final IZmlModelCell cell = m_model.getCell( row, columnIndex );
     if( cell instanceof IZmlModelValueCell )
     {
       final IZmlModelValueCell valueCell = (IZmlModelValueCell) cell;
       final IZmlModelColumn column = valueCell.getColumn();
 
-      throw new UnsupportedOperationException();
+      final IZmlEditingStrategy strategy = m_model.getEditingStrategy( column );
+      strategy.setValue( valueCell, newValue.toString() );
     }
-
-    throw new UnsupportedOperationException();
+    else
+      throw new UnsupportedOperationException();
   }
 
   @Override

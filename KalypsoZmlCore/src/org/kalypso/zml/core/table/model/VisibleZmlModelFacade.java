@@ -42,7 +42,15 @@ package org.kalypso.zml.core.table.model;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.kalypso.zml.core.table.model.editing.ContinuedInterpolatedValueEditingStrategy;
+import org.kalypso.zml.core.table.model.editing.IZmlEditingStrategy;
+import org.kalypso.zml.core.table.model.editing.InterpolatedValueEditingStrategy;
+import org.kalypso.zml.core.table.model.editing.SumValueEditingStrategy;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.core.table.schema.AbstractColumnType;
+import org.kalypso.zml.core.table.schema.DataColumnType;
+import org.kalypso.zml.core.table.schema.IndexColumnType;
 
 /**
  * @author Dirk Kuch
@@ -127,5 +135,22 @@ public class VisibleZmlModelFacade
   public int getResolution( )
   {
     throw new UnsupportedOperationException();
+  }
+
+  public IZmlEditingStrategy getEditingStrategy( final IZmlModelColumn column )
+  {
+    final AbstractColumnType type = column.getDataColumn().getType();
+    if( type instanceof IndexColumnType )
+      return null;
+    else
+    {
+      final DataColumnType dataColumnType = (DataColumnType) type;
+      if( ITimeseriesConstants.TYPE_RAINFALL.equals( dataColumnType.getValueAxis() ) )
+        return new SumValueEditingStrategy( this );
+      else if( ITimeseriesConstants.TYPE_WECHMANN_E.equals( dataColumnType.getValueAxis() ) )
+        return new ContinuedInterpolatedValueEditingStrategy( this );
+      else
+        return new InterpolatedValueEditingStrategy( this );
+    }
   }
 }

@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -38,23 +38,21 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.nat.editing;
+package org.kalypso.zml.core.table.model.editing;
 
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.repository.IDataSourceItem;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.table.model.VisibleZmlModelFacade;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.references.ZmlValues;
 import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
-import org.kalypso.zml.ui.KalypsoZmlUI;
 
 /**
- * updated value will be a new stützstelle. update all values between s_new and s_next. set updated values to s_new
+ * updated value will be a new stï¿½tzstelle. update all values between s_new and s_next. set updated values to s_new
  * value
  * 
  * <pre>
@@ -71,58 +69,27 @@ import org.kalypso.zml.ui.KalypsoZmlUI;
 public class ContinuedInterpolatedValueEditingStrategy extends AbstractEditingStrategy
 {
 
-  public ContinuedInterpolatedValueEditingStrategy( final VisibleZmlModelFacade facade, final IZmlModelColumn column )
+  public ContinuedInterpolatedValueEditingStrategy( final VisibleZmlModelFacade facade )
   {
-    super( facade, column );
+    super( facade );
   }
 
-// @Override
-// public String getValue( final IZmlModelRow row )
-// {
-// try
-// {
-// final IZmlModelCell reference = row.get( getColumn() );
-// if( Objects.isNull( reference ) )
-//        return ""; //$NON-NLS-1$
-// else if( !(reference instanceof IZmlModelValueCell) )
-// return "";
-//
-// final IZmlModelValueCell cell = (IZmlModelValueCell) reference;
-// final Object value = cell.getValue();
-//
-// //
-//      return String.format( style.getTextFormat() == null ? "%s" : style.getTextFormat(), value ); //$NON-NLS-1$
-// }
-// catch( final Throwable t )
-// {
-// t.printStackTrace();
-// }
-//
-// return null;
-// }
-
   @Override
-  public void setValue( final IZmlModelRow row, final String value )
+  public void setValue( final IZmlModelValueCell cell, final String value )
   {
     try
     {
       /** update current cell */
-      final IZmlModelCell reference = row.get( getColumn() );
-      if( !(reference instanceof IZmlModelValueCell) )
-        return;
 
-      final IZmlModelValueCell current = (IZmlModelValueCell) reference;
-
-      final Number targetValue = getTargetValue( value );
+      final Number targetValue = getTargetValue( cell, value );
 
       final ZmlModelTransaction transaction = new ZmlModelTransaction();
 
       try
       {
-        transaction.add( current, targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
+        transaction.add( cell, targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
 
-        IZmlModelCell next = getModel().findNextCell( current );
-
+        IZmlModelCell next = getModel().findNextCell( cell );
         while( next instanceof IZmlModelValueCell )
         {
           final IZmlModelValueCell ref = (IZmlModelValueCell) next;
@@ -141,7 +108,7 @@ public class ContinuedInterpolatedValueEditingStrategy extends AbstractEditingSt
     }
     catch( final SensorException e )
     {
-      KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      KalypsoZmlCore.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
   }
 
