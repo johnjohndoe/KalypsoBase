@@ -52,7 +52,7 @@ public interface IZmlTable
   // FIXME remove from interface!
   void dispose( );
 
-  ZmlModelViewport getModel( );
+  ZmlModelViewport getModelViewport( );
 
   void refresh( IZmlModelColumn... columns );
 

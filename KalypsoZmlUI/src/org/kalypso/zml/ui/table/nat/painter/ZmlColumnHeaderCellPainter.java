@@ -40,11 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.nat.painter;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import net.sourceforge.nattable.config.CellConfigAttributes;
 import net.sourceforge.nattable.config.IConfigRegistry;
 import net.sourceforge.nattable.grid.GridRegion;
 import net.sourceforge.nattable.layer.cell.LayerCell;
 import net.sourceforge.nattable.painter.cell.AbstractCellPainter;
+import net.sourceforge.nattable.painter.cell.ImagePainter;
 import net.sourceforge.nattable.painter.cell.TextPainter;
 import net.sourceforge.nattable.style.CellStyleAttributes;
 import net.sourceforge.nattable.style.DisplayMode;
@@ -52,7 +56,10 @@ import net.sourceforge.nattable.style.HorizontalAlignmentEnum;
 import net.sourceforge.nattable.style.Style;
 
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.zml.core.table.binding.rule.AbstractZmlRule;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 
 /**
@@ -60,22 +67,81 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
  */
 public class ZmlColumnHeaderCellPainter extends AbstractCellPainter
 {
+
+  public ZmlColumnHeaderCellPainter( )
+  {
+  }
+
   @Override
   public void paintCell( final LayerCell cell, final GC gc, final Rectangle bounds, final IConfigRegistry configRegistry )
   {
     final Object object = cell.getDataValue();
     if( object instanceof IZmlModelColumn )
     {
-      final Style style = new Style();
-      style.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, HorizontalAlignmentEnum.LEFT );
+      final IZmlModelColumn column = (IZmlModelColumn) object;
 
-      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, style, DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
+      final Style imageCellStyle = new Style();
+      imageCellStyle.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, HorizontalAlignmentEnum.LEFT );
+      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, imageCellStyle, DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
+
+      Rectangle ptr = new Rectangle( bounds.x, bounds.y, bounds.width, bounds.height );
+
+      final Image[] images = getImages( column );
+      for( final Image image : images )
+      {
+        final ImagePainter imgPainter = new ImagePainter( image );
+        imgPainter.paintCell( cell, gc, ptr, configRegistry );
+
+        ptr = move( ptr, image.getBounds() );
+      }
+
+      final Style cellStyle = getStyle();
+      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, cellStyle, DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
 
       final TextPainter painter = new TextPainter( true, false );
-      painter.paintCell( cell, gc, bounds, configRegistry );
+      painter.paintCell( cell, gc, ptr, configRegistry );
     }
     else
       throw new UnsupportedOperationException();
+  }
+
+  private Rectangle move( final Rectangle ptr, final Rectangle bounds )
+  {
+    return new Rectangle( ptr.x + bounds.width, ptr.y, ptr.width - bounds.width, ptr.height );
+  }
+
+  private Style getStyle( )
+  {
+    final Style style = new Style();
+
+// style.setAttributeValue( CellStyleAttributes.BACKGROUND_COLOR, background );
+// style.setAttributeValue( CellStyleAttributes.FOREGROUND_COLOR, foreground );
+// style.setAttributeValue( CellStyleAttributes.FONT, font );
+    style.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, HorizontalAlignmentEnum.RIGHT );
+
+    return style;
+  }
+
+  private Image[] getImages( final IZmlModelColumn column )
+  {
+    final Set<Image> images = new LinkedHashSet<Image>();
+
+    final AbstractZmlRule[] rules = column.getActiveRules();
+    for( final AbstractZmlRule rule : rules )
+    {
+      try
+      {
+        final Image img = rule.getBaseStyle().getImage();
+        if( Objects.isNotNull( img ) )
+          images.add( img );
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+      }
+    }
+
+    return images.toArray( new Image[] {} );
   }
 
   @Override
@@ -84,31 +150,44 @@ public class ZmlColumnHeaderCellPainter extends AbstractCellPainter
     final Object object = cell.getDataValue();
     if( object instanceof IZmlModelColumn )
     {
-      final Style style = new Style();
-      style.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, HorizontalAlignmentEnum.LEFT );
+      final IZmlModelColumn column = (IZmlModelColumn) object;
+      final Image[] images = getImages( column );
 
-      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, style, DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
+      int width = 0;
+      for( final Image image : images )
+      {
+        width += image.getBounds().width;
+      }
 
       final TextPainter painter = new TextPainter();
-      return painter.getPreferredWidth( cell, gc, configRegistry );
+      width += painter.getPreferredWidth( cell, gc, configRegistry );
+
+      return width;
     }
 
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public int getPreferredHeight( final LayerCell cell, final GC gc, final IConfigRegistry registry )
+  public int getPreferredHeight( final LayerCell cell, final GC gc, final IConfigRegistry configRegistry )
   {
     final Object object = cell.getDataValue();
     if( object instanceof IZmlModelColumn )
     {
-      final Style style = new Style();
-      style.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, HorizontalAlignmentEnum.LEFT );
+      final IZmlModelColumn column = (IZmlModelColumn) object;
+      final Image[] images = getImages( column );
 
-      registry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, style, DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
+      int height = 0;
+      for( final Image image : images )
+      {
+        final Rectangle bounds = image.getBounds();
+        height = Math.max( bounds.height, height );
+      }
 
       final TextPainter painter = new TextPainter();
-      return painter.getPreferredHeight( cell, gc, registry );
+      height = Math.max( painter.getPreferredHeight( cell, gc, configRegistry ), height );
+
+      return height;
     }
 
     throw new UnsupportedOperationException();

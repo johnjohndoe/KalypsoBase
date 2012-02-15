@@ -66,6 +66,7 @@ import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.ZmlValueLabelProvider;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.core.table.rules.IZmlCellRuleImplementation;
 import org.kalypso.zml.core.table.schema.CellStyleType;
@@ -80,9 +81,13 @@ public class ZmlModelValueCell extends AbstractZmlCell implements IZmlModelValue
 
   private ZmlCellRule[] m_rules;
 
+  private final ZmlValueLabelProvider m_styleProvider;
+
   public ZmlModelValueCell( final IZmlModelRow row, final IZmlModelColumn column, final int tupleModelIndex )
   {
     super( row, column, tupleModelIndex );
+
+    m_styleProvider = new ZmlValueLabelProvider( column );
   }
 
   @Override
@@ -102,6 +107,12 @@ public class ZmlModelValueCell extends AbstractZmlCell implements IZmlModelValue
     }
 
     return getRow().getIndex();
+  }
+
+  @Override
+  public IZmlModelCellLabelProvider getStyleProvider( )
+  {
+    return m_styleProvider;
   }
 
   @Override
@@ -268,7 +279,6 @@ public class ZmlModelValueCell extends AbstractZmlCell implements IZmlModelValue
 
   private ZmlCellRule[] findAggregatedActiveRules( final ZmlModelViewport viewport )
   {
-    final DataColumn column = getColumn().getDataColumn();
     final IZmlModel zml = viewport.getModel();
 
     IZmlModelValueCell previous = viewport.findPreviousCell( this );

@@ -104,14 +104,14 @@ public class ZmlTable extends Composite implements IZmlTable
 
 // final ZmlTablePager m_pager = new ZmlTablePager( this ); // only for main table
 
-  protected final ZmlModelViewport m_model;
+  protected final ZmlModelViewport m_viewport;
 
   public ZmlTable( final ZmlTableComposite table, final IZmlModel model, final FormToolkit toolkit )
   {
     super( table, SWT.NULL );
-    m_model = new ZmlModelViewport( model );
+    m_viewport = new ZmlModelViewport( model );
 
-    m_model.addListener( new IZmlColumnModelListener()
+    m_viewport.addListener( new IZmlColumnModelListener()
     {
       @Override
       public void modelChanged( final IZmlModelColumn... columns )
@@ -136,7 +136,7 @@ public class ZmlTable extends Composite implements IZmlTable
 
   private void doInit( )
   {
-    m_bodyLayer = new BodyLayerStack( m_model );
+    m_bodyLayer = new BodyLayerStack( m_viewport );
 
     final ColumnHeaderLayerStack columnHeaderLayer = new ColumnHeaderLayerStack( m_bodyLayer );
     final RowHeaderLayerStack rowHeaderLayer = new RowHeaderLayerStack( m_bodyLayer );
@@ -150,13 +150,13 @@ public class ZmlTable extends Composite implements IZmlTable
 
     final IConfigRegistry registry = m_natTable.getConfigRegistry();
 
-    final ZmlModelCellDisplayConverter converter = new ZmlModelCellDisplayConverter( m_model );
+    final ZmlModelCellDisplayConverter converter = new ZmlModelCellDisplayConverter( m_viewport );
     registry.registerConfigAttribute( CellConfigAttributes.DISPLAY_CONVERTER, converter, DisplayMode.NORMAL, GridRegion.BODY.toString() );
     registry.registerConfigAttribute( CellConfigAttributes.DISPLAY_CONVERTER, new ZmlModelRowHeaderDisplayConverter(), DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
     registry.registerConfigAttribute( CellConfigAttributes.DISPLAY_CONVERTER, converter, DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
 
-    registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new ZmlModelCellPainter( m_model ), DisplayMode.NORMAL, GridRegion.BODY.toString() );
-    registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new ZmlRowHeaderCellPainter(), DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
+    registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new ZmlModelCellPainter( m_viewport ), DisplayMode.NORMAL, GridRegion.BODY.toString() );
+    registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new ZmlRowHeaderCellPainter( m_viewport ), DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
     registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new ZmlColumnHeaderCellPainter(), DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
 
     registry.registerConfigAttribute( EditConfigAttributes.CELL_EDITABLE_RULE, IEditableRule.ALWAYS_EDITABLE, DisplayMode.EDIT, GridRegion.BODY.toString() );
@@ -164,7 +164,7 @@ public class ZmlTable extends Composite implements IZmlTable
 // configRegistry.registerConfigAttribute( EditConfigAttributes.CELL_EDITOR, comboBoxCellEditor, DisplayMode.EDIT,
 // "myCellLabel" );
 
-    final DefaultToolTip toolTip = new ZmlTableTooltip( m_natTable, getModel() );
+    final DefaultToolTip toolTip = new ZmlTableTooltip( m_natTable, getModelViewport() );
     toolTip.setBackgroundColor( m_natTable.getDisplay().getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
     toolTip.setPopupDelay( 500 );
     toolTip.activate();
@@ -247,9 +247,9 @@ public class ZmlTable extends Composite implements IZmlTable
   }
 
   @Override
-  public ZmlModelViewport getModel( )
+  public ZmlModelViewport getModelViewport( )
   {
-    return m_model;
+    return m_viewport;
   }
 
   @Override

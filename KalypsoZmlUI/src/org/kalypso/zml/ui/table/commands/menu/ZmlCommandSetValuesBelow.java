@@ -74,7 +74,7 @@ public class ZmlCommandSetValuesBelow extends AbstractHandler
     try
     {
       final IZmlTable table = ZmlHandlerUtil.getTable( event );
-      final ZmlModelViewport model = table.getModel();
+      final ZmlModelViewport model = table.getModelViewport();
       final IZmlTableSelection selection = table.getSelection();
       final IZmlModelValueCell active = selection.getFocusCell();
       final IZmlModelColumn column = active.getColumn();
@@ -83,7 +83,7 @@ public class ZmlCommandSetValuesBelow extends AbstractHandler
       if( strategy.isAggregated() )
       {
         final ZmlValueLabelProvider provider = new ZmlValueLabelProvider( column );
-        final String targetValue = provider.getText( table.getModel(), active );
+        final String targetValue = provider.getText( table.getModelViewport(), active );
 
         IZmlModelValueCell ptr = model.findNextCell( active );
         while( ptr != null )

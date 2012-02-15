@@ -76,8 +76,7 @@ public class ZmlModelCellDisplayConverter extends DisplayConverter
     else if( canonicalValue instanceof IZmlModelValueCell )
     {
       final IZmlModelValueCell cell = (IZmlModelValueCell) canonicalValue;
-      final IZmlModelColumn column = cell.getColumn();
-      final IZmlModelCellLabelProvider provider = column.getStyleProvider();
+      final IZmlModelCellLabelProvider provider = cell.getStyleProvider();
 
       return provider.getText( m_model, cell );
     }
