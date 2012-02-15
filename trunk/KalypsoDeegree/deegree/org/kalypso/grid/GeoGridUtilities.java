@@ -372,7 +372,10 @@ public final class GeoGridUtilities
   public static IGeoGrid toGrid( final ICoverage coverage )
   {
     // REMARK: at the moment, only RectifiedGridCoverages are supported
-    return new RectifiedGridCoverageGeoGrid( coverage );
+    if( coverage instanceof RectifiedGridCoverage )
+      return new RectifiedGridCoverageGeoGrid( (RectifiedGridCoverage) coverage );
+
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -382,7 +385,10 @@ public final class GeoGridUtilities
   public static IWriteableGeoGrid toWriteableGrid( final ICoverage coverage ) throws Exception
   {
     // REMARK: at the moment, only RectifiedGridCoverages are supported
-    return new WriteableRectifiedGridCoverageGeoGrid( coverage, null );
+    if( coverage instanceof RectifiedGridCoverage )
+      return new WriteableRectifiedGridCoverageGeoGrid( (RectifiedGridCoverage) coverage, null );
+
+    throw new UnsupportedOperationException();
   }
 
   /**

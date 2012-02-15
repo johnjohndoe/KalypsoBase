@@ -51,7 +51,7 @@ import com.vividsolutions.jts.geom.Envelope;
  * Essentially holds the geo-coordinates (origin, offset, bbox) and provides a primitive (i.e. non-optimized)
  * implementation of the walk-method.
  * </p>
- * 
+ *
  * @author Gernot Belger
  */
 public abstract class AbstractGeoGrid implements IGeoGrid
@@ -78,7 +78,7 @@ public abstract class AbstractGeoGrid implements IGeoGrid
 
   /**
    * The constructor.
-   * 
+   *
    * @param origin
    *          The origin coordinates.
    * @param offsetX
@@ -161,7 +161,7 @@ public abstract class AbstractGeoGrid implements IGeoGrid
 
   /**
    * Wie getValue, gibt nur Double.NaN zurück für Punkte ausserhalb des Raster
-   * 
+   *
    * @see IGeoGrid#getValueChecked(int, int)
    */
   @Override
@@ -185,7 +185,7 @@ public abstract class AbstractGeoGrid implements IGeoGrid
 
   /**
    * This function returns the value of the given cell.
-   * 
+   *
    * @param cell
    *          The cell.
    * @return The value.
@@ -205,7 +205,7 @@ public abstract class AbstractGeoGrid implements IGeoGrid
 
   /**
    * Overridden in order to make sure that dispose is called as soon as object is recollected.
-   * 
+   *
    * @see java.lang.Object#finalize()
    */
   @Override
@@ -223,5 +223,11 @@ public abstract class AbstractGeoGrid implements IGeoGrid
   public IGeoWalkingStrategy getWalkingStrategy( )
   {
     return new DefaultWalkingStrategy();
+  }
+
+  @Override
+  public void close( ) throws Exception
+  {
+    // nothing to do here
   }
 }

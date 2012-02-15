@@ -15,7 +15,7 @@ import com.vividsolutions.jts.geom.Envelope;
  *
  * @author Gernot Belger
  */
-public interface IGeoGrid extends IGeoValueProvider
+public interface IGeoGrid extends IGeoValueProvider, AutoCloseable
 {
   /**
    * Call this after this grid is nor more used. Disposes of any use resources.

@@ -43,14 +43,14 @@ package org.kalypso.grid;
 import java.math.BigDecimal;
 import java.net.URL;
 
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 
 /**
  * @author Dirk Kuch
  */
 public class WriteableRectifiedGridCoverageGeoGrid extends RectifiedGridCoverageGeoGrid implements IWriteableGeoGrid
 {
-  public WriteableRectifiedGridCoverageGeoGrid( final Feature rgcFeature, final URL context ) throws Exception
+  public WriteableRectifiedGridCoverageGeoGrid( final RectifiedGridCoverage rgcFeature, final URL context ) throws Exception
   {
     super( rgcFeature, context, true );
   }
