@@ -62,7 +62,6 @@ import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.binding.DataColumn;
 import org.kalypso.zml.core.table.binding.rule.ZmlColumnRule;
-import org.kalypso.zml.core.table.model.IZmlModelColumnListener.MODEL_COLUMN_CHANGE;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataListener;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
@@ -189,7 +188,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
 
       m_handler = null;
 
-      fireColumnChanged(  );
+      fireColumnChanged();
     }
 
   }
@@ -212,21 +211,21 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   @Override
   public void eventObservationChanged( )
   {
-    fireColumnChanged(  );
+    fireColumnChanged();
   }
 
   @Override
   public void eventObservationLoaded( )
   {
-    fireColumnChanged(  );
+    fireColumnChanged();
   }
 
-  public void fireColumnChanged(  )
+  public void fireColumnChanged( )
   {
     final IZmlModelColumnListener[] listeners = m_listeners.toArray( new IZmlModelColumnListener[] {} );
     for( final IZmlModelColumnListener listener : listeners )
     {
-      listener.modelColumnChangedEvent(  this );
+      listener.modelColumnChangedEvent( this );
     }
   }
 
@@ -441,7 +440,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
       m_handler.addListener( this );
     }
 
-    fireColumnChanged(  );
+    fireColumnChanged();
   }
 
   @Override
