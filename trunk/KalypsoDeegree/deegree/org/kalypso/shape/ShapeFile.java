@@ -58,7 +58,7 @@ import org.kalypso.shape.shx.SHXRecord;
  * <p>
  * ------------------------------------------------------------------------
  * </p>
- * 
+ *
  * @version 17.10.2001
  * @author Andreas Poth
  */
@@ -97,7 +97,7 @@ public class ShapeFile
 
   /**
    * Open ShapeFile for reading.
-   * 
+   *
    * @param filePath
    *          absolute filePath to the .shp file.
    */
@@ -208,6 +208,11 @@ public class ShapeFile
   public IDBFField[] getFields( )
   {
     return m_dbf.getFields();
+  }
+
+  public Object getRowValue( final int rowNo, final String fieldName ) throws DBaseException, IOException
+  {
+    return m_dbf.getValue( rowNo, fieldName );
   }
 
   public void addFeature( final ISHPGeometry shape, final Object[] data ) throws IOException, DBaseException, SHPException
