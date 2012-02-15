@@ -53,34 +53,37 @@ import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.grid.AbstractDelegatingGeoGrid;
+import org.kalypso.grid.AbstractGeoGrid;
 import org.kalypso.grid.BinaryGeoGrid;
+import org.kalypso.grid.BinaryGeoGridHeader;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.IGeoGrid;
+import org.kalypso.grid.IGeoWalkingStrategy;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
 /**
  * @author barbarins
  */
-public abstract class SequentialBinaryGeoGridReader extends AbstractDelegatingGeoGrid implements Closeable
+public abstract class SequentialBinaryGeoGridReader extends AbstractGeoGrid implements Closeable, IGeoGrid
 {
+  private static final String ERROR_RANDOM_ACCESS = "Random access not supported by this grid implementation"; //$NON-NLS-1$;
+
   /* Number of values per block */
-  private final Integer m_blockSize = 1024 * 2;
+  private final Integer m_blockSize = 1024 * 1024;
 
   private final DataInputStream m_gridStream;
-
-  private final int m_scale;
 
   private long m_currentPosition = 0;
 
   private final long m_blockAmount;
 
-  public SequentialBinaryGeoGridReader( final IGeoGrid inputGrid, final URL pUrl ) throws IOException, GeoGridException
+  private final BinaryGeoGridHeader m_header;
+
+  // TODO: replace templateGrid with something that only provides origin etc; just like RectifiedGridDomain...
+  public SequentialBinaryGeoGridReader( final IGeoGrid templateGrid, final URL pUrl ) throws IOException, GeoGridException
   {
-    // FIXME: why the input grid here?! it is never accessed, but the value are read from the url!
-    // TODO: we should not inherit form iGeoGrid at all, this is a different API completely
-    super( inputGrid );
+    super( templateGrid.getOrigin(), templateGrid.getOffsetX(), templateGrid.getOffsetY(), templateGrid.getSourceCRS() );
 
     /* Tries to find a file from the given url. */
     File gridFile = ResourceUtilities.findJavaFileFromURL( pUrl );
@@ -89,14 +92,22 @@ public abstract class SequentialBinaryGeoGridReader extends AbstractDelegatingGe
 
     m_gridStream = new DataInputStream( new BufferedInputStream( new FileInputStream( gridFile ) ) );
 
-    // skip header
-    m_gridStream.skipBytes( 12 );
-
-    /* Read header */
-    m_scale = m_gridStream.readInt();
+    m_header = BinaryGeoGridHeader.read( m_gridStream );
 
     final long length = getSizeX() * getSizeY();
     m_blockAmount = (length / m_blockSize) + 1;
+  }
+
+  @Override
+  public int getSizeX( )
+  {
+    return m_header.getSizeX();
+  }
+
+  @Override
+  public int getSizeY( )
+  {
+    return m_header.getSizeY();
   }
 
   int getBlocksAmount( )
@@ -134,12 +145,12 @@ public abstract class SequentialBinaryGeoGridReader extends AbstractDelegatingGe
     if( rawValue == BinaryGeoGrid.NO_DATA )
       return null;
 
-    return new BigDecimal( BigInteger.valueOf( rawValue ), m_scale ).doubleValue();
+    return new BigDecimal( BigInteger.valueOf( rawValue ), getScale() ).doubleValue();
   }
 
   public int getScale( )
   {
-    return m_scale;
+    return m_header.getScale();
   }
 
   @Override
@@ -153,8 +164,6 @@ public abstract class SequentialBinaryGeoGridReader extends AbstractDelegatingGe
     {
       e.printStackTrace();
     }
-
-    super.dispose();
   }
 
   @Override
@@ -185,15 +194,10 @@ public abstract class SequentialBinaryGeoGridReader extends AbstractDelegatingGe
   {
     final long globalPosition = k + bean.getStartPosition();
 
-    final int sizeX = getDelegate().getSizeX();
+    final int sizeX = getSizeX();
 
     final int x = (int) (globalPosition % sizeX);
     final int y = (int) (globalPosition / sizeX);
-
-    if( y > 0 )
-    {
-      System.out.println();
-    }
 
     final Coordinate origin = getOrigin();
     final Coordinate offsetX = getOffsetX();
@@ -210,4 +214,40 @@ public abstract class SequentialBinaryGeoGridReader extends AbstractDelegatingGe
 
   // FIXME: ugly, we should not give the bean to outsiders
   protected abstract double getValue( int x, int y, Coordinate crd, ParallelBinaryGridProcessorBean bean ) throws GeoGridException;
+
+  @Override
+  public double getValue( final int x, final int y )
+  {
+    throw new UnsupportedOperationException( ERROR_RANDOM_ACCESS );
+  }
+
+  @Override
+  public IGeoWalkingStrategy getWalkingStrategy( )
+  {
+    return new SequentialBinaryGeoGridWalkingStrategy( this );
+  }
+
+  @Override
+  public BigDecimal getMin( )
+  {
+    throw new UnsupportedOperationException( ERROR_RANDOM_ACCESS );
+  }
+
+  @Override
+  public BigDecimal getMax( )
+  {
+    throw new UnsupportedOperationException( ERROR_RANDOM_ACCESS );
+  }
+
+  @Override
+  public void setMin( final BigDecimal minValue )
+  {
+    throw new UnsupportedOperationException( ERROR_RANDOM_ACCESS );
+  }
+
+  @Override
+  public void setMax( final BigDecimal maxValue )
+  {
+    throw new UnsupportedOperationException( ERROR_RANDOM_ACCESS );
+  }
 }
