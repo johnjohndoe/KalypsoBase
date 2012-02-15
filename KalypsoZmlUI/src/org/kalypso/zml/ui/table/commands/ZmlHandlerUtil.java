@@ -64,7 +64,7 @@ public final class ZmlHandlerUtil
     if( Objects.isNull( composite ) )
       return null;
 
-    return composite.getMainTable();
+    return composite.getTable();
   }
 
   public static IZmlTableComposite getTableComposite( final ExecutionEvent event )
@@ -83,7 +83,7 @@ public final class ZmlHandlerUtil
     if( table == null )
       return null;
 
-    return table.getMainTable();
+    return table.getTable();
   }
 
   public static IZmlTableComposite getTable( final IEvaluationContext context )
