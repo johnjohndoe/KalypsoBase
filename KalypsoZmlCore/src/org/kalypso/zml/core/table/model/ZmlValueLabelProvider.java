@@ -89,11 +89,11 @@ public class ZmlValueLabelProvider implements IZmlModelCellLabelProvider
   }
 
   @Override
-  public String getText( final ZmlModelViewport model, final IZmlModelValueCell cell )
+  public String getText( final ZmlModelViewport viewport, final IZmlModelValueCell cell )
   {
     try
     {
-      return m_labeling.getText( model, cell );
+      return m_labeling.getText( viewport, cell );
     }
     catch( final Exception e )
     {
@@ -104,9 +104,9 @@ public class ZmlValueLabelProvider implements IZmlModelCellLabelProvider
   }
 
   @Override
-  public Image[] getImages( final IZmlModelCell cell )
+  public Image[] getImages( final ZmlModelViewport viewport, final IZmlModelCell cell )
   {
-    final ZmlCellRule[] rules = cell.findActiveRules();
+    final ZmlCellRule[] rules = cell.findActiveRules( viewport );
     final Set<Image> images = new LinkedHashSet<Image>();
 
     for( final ZmlCellRule rule : rules )

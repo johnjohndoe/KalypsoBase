@@ -49,8 +49,8 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.model.references.IZmlModelIndexCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
-import org.kalypso.zml.core.table.model.references.ZmlDataValueReference;
-import org.kalypso.zml.core.table.model.references.ZmlIndexValueReference;
+import org.kalypso.zml.core.table.model.references.ZmlModelValueCell;
+import org.kalypso.zml.core.table.model.references.ZmlModelIndexCell;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 
 /**
@@ -65,7 +65,7 @@ public class ZmlModelRow implements IZmlModelRow
 
   private final IZmlModel m_model;
 
-  private ZmlIndexValueReference m_indexCell;
+  private ZmlModelIndexCell m_indexCell;
 
   public ZmlModelRow( final IZmlModel model, final Date index )
   {
@@ -73,7 +73,7 @@ public class ZmlModelRow implements IZmlModelRow
     m_index = index;
   }
 
-  public void add( final ZmlDataValueReference reference )
+  public void add( final ZmlModelValueCell reference )
   {
     m_valueCells.put( reference.getIdentifier(), reference );
   }
@@ -97,7 +97,7 @@ public class ZmlModelRow implements IZmlModelRow
   public IZmlModelIndexCell getIndexCell( )
   {
     if( Objects.isNull( m_indexCell ) )
-      m_indexCell = new ZmlIndexValueReference( this );
+      m_indexCell = new ZmlModelIndexCell( this );
 
     return m_indexCell;
   }

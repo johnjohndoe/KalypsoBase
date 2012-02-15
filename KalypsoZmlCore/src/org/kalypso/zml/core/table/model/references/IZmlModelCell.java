@@ -42,9 +42,12 @@ package org.kalypso.zml.core.table.model.references;
 
 import java.util.Date;
 
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 
 /**
  * @author Dirk Kuch
@@ -60,5 +63,7 @@ public interface IZmlModelCell
 
   Integer getModelIndex( );
 
-  ZmlCellRule[] findActiveRules( );
+  ZmlCellRule[] findActiveRules( ZmlModelViewport viewport );
+
+  CellStyle getStyle( ZmlModelViewport viewport ) throws CoreException;
 }

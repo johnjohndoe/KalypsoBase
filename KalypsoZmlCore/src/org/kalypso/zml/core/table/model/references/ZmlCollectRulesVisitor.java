@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,16 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider.strategy;
+package org.kalypso.zml.core.table.model.references;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
-import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
-import org.kalypso.zml.core.table.rules.RuleMapper;
 
 /**
  * @author Dirk Kuch
@@ -56,17 +54,14 @@ public class ZmlCollectRulesVisitor implements IZmlModelColumnVisitor
 {
   private final Set<ZmlCellRule> m_rules = new LinkedHashSet<ZmlCellRule>();
 
-  private final RuleMapper m_mapper;
-
-  public ZmlCollectRulesVisitor( final RuleMapper mapper )
+  public ZmlCollectRulesVisitor( )
   {
-    m_mapper = mapper;
   }
 
   @Override
-  public void visit( final IZmlModelValueCell reference )
+  public void visit( final IZmlModelValueCell cell )
   {
-    Collections.addAll( m_rules, m_mapper.findActiveRules( reference ) );
+    Collections.addAll( m_rules, cell.findActiveRules( null ) );
   }
 
   public ZmlCellRule[] getRules( )

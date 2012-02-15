@@ -50,9 +50,9 @@ import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
  */
 public interface IZmlModelCellLabelProvider
 {
-  Image[] getImages( final IZmlModelCell cell );
+  Image[] getImages( ZmlModelViewport viewport, final IZmlModelCell cell );
 
-  String getText( ZmlModelViewport model, IZmlModelValueCell cell );
+  String getText( ZmlModelViewport viewport, IZmlModelValueCell cell );
 
   Style getStyle( );
 }

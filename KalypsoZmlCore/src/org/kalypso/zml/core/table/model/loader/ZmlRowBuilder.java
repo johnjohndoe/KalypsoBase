@@ -56,7 +56,7 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.ZmlModel;
 import org.kalypso.zml.core.table.model.ZmlModelRow;
-import org.kalypso.zml.core.table.model.references.ZmlDataValueReference;
+import org.kalypso.zml.core.table.model.references.ZmlModelValueCell;
 
 /**
  * @author Dirk Kuch
@@ -93,7 +93,7 @@ public class ZmlRowBuilder
             rows.put( indexValue, row );
           }
 
-          ((ZmlModelRow) row).add( new ZmlDataValueReference( row, column, modelIndex ) );
+          ((ZmlModelRow) row).add( new ZmlModelValueCell( row, column, modelIndex ) );
         }
       }
       catch( final SensorException e )

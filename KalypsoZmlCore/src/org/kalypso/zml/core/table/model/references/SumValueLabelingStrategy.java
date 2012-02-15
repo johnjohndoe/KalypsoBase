@@ -56,7 +56,7 @@ import org.kalypso.zml.core.table.rules.IZmlCellRuleImplementation;
 /**
  * @author Dirk Kuch
  */
-public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy implements IZmlLabelStrategy
+public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy
 {
 
   public SumValueLabelingStrategy( )
@@ -64,23 +64,23 @@ public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy impl
   }
 
   @Override
-  public String getText( final ZmlModelViewport model, final IZmlModelValueCell cell ) throws SensorException, CoreException
+  public String getText( final ZmlModelViewport viewport, final IZmlModelValueCell cell ) throws SensorException, CoreException
   {
-    final int resolution = model.getResolution();
+    final int resolution = viewport.getResolution();
     if( resolution == 0 )
     {
-      return getAsOriginValue( cell );
+      return getAsOriginValue( viewport, cell );
     }
 
-    return getAsAggregatedValue( model, cell );
+    return getAsAggregatedValue( viewport, cell );
   }
 
-  private String getAsAggregatedValue( final ZmlModelViewport model, final IZmlModelValueCell current ) throws CoreException, SensorException
+  private String getAsAggregatedValue( final ZmlModelViewport viewport, final IZmlModelValueCell current ) throws CoreException, SensorException
   {
-    final IZmlModel zml = model.getModel();
+    final IZmlModel zml = viewport.getModel();
     final IZmlModelColumn column = current.getColumn();
 
-    IZmlModelValueCell previous = model.findPreviousCell( current );
+    IZmlModelValueCell previous = viewport.findPreviousCell( current );
     if( previous == null )
     {
       /* get first invisible value (first value will is not part of the table!) */
@@ -105,10 +105,10 @@ public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy impl
 
     final Double value = visitor.getValue();
 
-    final CellStyle style = column.findStyle( current );
+    final CellStyle style = current.getStyle( viewport );
     String text = String.format( style.getTextFormat(), value );
 
-    final ZmlCellRule[] rules = column.findActiveRules( current );
+    final ZmlCellRule[] rules = current.findActiveRules( viewport );
     for( final ZmlCellRule rule : rules )
     {
       try
@@ -125,17 +125,13 @@ public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy impl
     return text;
   }
 
-  private String getAsOriginValue( final IZmlModelValueCell cell ) throws CoreException, SensorException
+  private String getAsOriginValue( final ZmlModelViewport viewport, final IZmlModelValueCell cell ) throws CoreException, SensorException
   {
-    if( cell == null )
-      return "";
-
-    final IZmlModelColumn column = cell.getColumn();
-    final CellStyle style = column.findStyle( cell );
+    final CellStyle style = cell.getStyle( viewport );
 
     String text = String.format( style.getTextFormat(), cell.getValue() );
 
-    final ZmlCellRule[] rules = column.findActiveRules( cell );
+    final ZmlCellRule[] rules = cell.findActiveRules( viewport );
     for( final ZmlCellRule rule : rules )
     {
       try

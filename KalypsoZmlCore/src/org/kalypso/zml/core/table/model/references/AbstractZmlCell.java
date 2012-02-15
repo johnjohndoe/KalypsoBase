@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model.references;
 
-import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
@@ -84,12 +83,6 @@ public abstract class AbstractZmlCell implements IZmlModelCell
   public Integer getModelIndex( )
   {
     return m_tupleModelIndex;
-  }
-
-  @Override
-  public ZmlCellRule[] findActiveRules( )
-  {
-    return getColumn().findActiveRules( this );
   }
 
 }

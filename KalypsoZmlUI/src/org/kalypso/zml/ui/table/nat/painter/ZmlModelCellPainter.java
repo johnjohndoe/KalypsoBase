@@ -57,12 +57,20 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.zml.core.table.model.references.IZmlModelCellLabelProvider;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlModelCellPainter extends AbstractCellPainter
 {
+  private final ZmlModelViewport m_viewport;
+
+  public ZmlModelCellPainter( final ZmlModelViewport viewport )
+  {
+    m_viewport = viewport;
+
+  }
 
   @Override
   public void paintCell( final LayerCell cell, final GC gc, final Rectangle bounds, final IConfigRegistry configRegistry )
@@ -79,7 +87,7 @@ public class ZmlModelCellPainter extends AbstractCellPainter
 
       Rectangle ptr = new Rectangle( bounds.x, bounds.y, bounds.width, bounds.height );
 
-      final Image[] images = provider.getImages( value );
+      final Image[] images = provider.getImages( m_viewport, value );
       for( final Image image : images )
       {
         final ImagePainter imgPainter = new ImagePainter( image );
@@ -112,7 +120,7 @@ public class ZmlModelCellPainter extends AbstractCellPainter
       final IZmlModelValueCell value = (IZmlModelValueCell) object;
       final IZmlModelCellLabelProvider provider = value.getColumn().getStyleProvider();
 
-      final Image[] images = provider.getImages( value );
+      final Image[] images = provider.getImages( m_viewport, value );
 
       int width = 0;
       for( final Image image : images )
@@ -138,7 +146,7 @@ public class ZmlModelCellPainter extends AbstractCellPainter
       final IZmlModelValueCell value = (IZmlModelValueCell) object;
       final IZmlModelCellLabelProvider provider = value.getColumn().getStyleProvider();
 
-      final Image[] images = provider.getImages( value );
+      final Image[] images = provider.getImages( m_viewport, value );
 
       int height = 0;
       for( final Image image : images )

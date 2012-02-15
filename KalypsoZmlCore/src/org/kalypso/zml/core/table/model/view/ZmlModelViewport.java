@@ -185,7 +185,7 @@ public class ZmlModelViewport
 
   public int getResolution( )
   {
-    throw new UnsupportedOperationException();
+    return getFilter().getResolution();
   }
 
   public IZmlEditingStrategy getEditingStrategy( final IZmlModelColumn column )
