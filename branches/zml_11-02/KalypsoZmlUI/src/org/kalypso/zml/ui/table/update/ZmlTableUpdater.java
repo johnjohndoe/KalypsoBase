@@ -101,11 +101,7 @@ public class ZmlTableUpdater implements Runnable
       final Object[] values = entry.getValue();
 
       final IndexedTsLink link = (IndexedTsLink) values[0];
-      final BaseColumn column = (BaseColumn) values[1];
-
       doLoadModelColumn( link );
-
-// ZmlTableColumns.buildTableColumns( m_part.getTable(), column );
     }
   }
 
