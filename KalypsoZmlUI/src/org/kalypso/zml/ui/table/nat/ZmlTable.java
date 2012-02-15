@@ -53,23 +53,18 @@ import net.sourceforge.nattable.grid.data.DefaultCornerDataProvider;
 import net.sourceforge.nattable.grid.layer.CornerLayer;
 import net.sourceforge.nattable.grid.layer.GridLayer;
 import net.sourceforge.nattable.layer.DataLayer;
-import net.sourceforge.nattable.layer.cell.LayerCell;
 import net.sourceforge.nattable.painter.cell.decorator.BeveledBorderDecorator;
 import net.sourceforge.nattable.style.DisplayMode;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.window.DefaultToolTip;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.lang.Objects;
@@ -78,15 +73,13 @@ import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.zml.core.table.model.IZmlColumnModelListener;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableListener;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
-import org.kalypso.zml.ui.table.menu.ZmlTableContextMenuProvider;
-import org.kalypso.zml.ui.table.menu.ZmlTableHeaderContextMenuProvider;
 import org.kalypso.zml.ui.table.nat.base.ZmlModelCellDisplayConverter;
 import org.kalypso.zml.ui.table.nat.base.ZmlModelRowHeaderDisplayConverter;
+import org.kalypso.zml.ui.table.nat.context.menu.NatTableContextMenuSupport;
 import org.kalypso.zml.ui.table.nat.layers.BodyLayerStack;
 import org.kalypso.zml.ui.table.nat.layers.ColumnHeaderLayerStack;
 import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
@@ -103,7 +96,13 @@ public class ZmlTable extends Composite implements IZmlTable
 {
   private final Set<IZmlTableListener> m_listeners = new HashSet<IZmlTableListener>();
 
-  protected final MenuManager m_contextMenuManager = new MenuManager();
+  private UIJob m_updateJob;
+
+  private static final MutexRule MUTEX_TABLE_UPDATE = new MutexRule( "Aktualisiere Tabelle" ); // $NON-NLS-1$
+
+  protected NatTable m_table;
+
+  protected BodyLayerStack m_bodyLayer;
 
 // final ZmlTablePager m_pager = new ZmlTablePager( this ); // only for main table
 
@@ -148,10 +147,10 @@ public class ZmlTable extends Composite implements IZmlTable
     final CornerLayer cornerLayer = new CornerLayer( new DataLayer( cornerDataProvider ), rowHeaderLayer, columnHeaderLayer );
 
     final GridLayer gridLayer = new GridLayer( m_bodyLayer, columnHeaderLayer, rowHeaderLayer, cornerLayer );
-    m_natTable = new NatTable( this, gridLayer );
-    m_natTable.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+    m_table = new NatTable( this, gridLayer );
+    m_table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
-    final IConfigRegistry registry = m_natTable.getConfigRegistry();
+    final IConfigRegistry registry = m_table.getConfigRegistry();
 
     final ZmlModelCellDisplayConverter converter = new ZmlModelCellDisplayConverter( m_viewport );
     registry.registerConfigAttribute( CellConfigAttributes.DISPLAY_CONVERTER, converter, DisplayMode.NORMAL, GridRegion.BODY.toString() );
@@ -164,87 +163,28 @@ public class ZmlTable extends Composite implements IZmlTable
 
     registry.registerConfigAttribute( EditConfigAttributes.CELL_EDITABLE_RULE, IEditableRule.ALWAYS_EDITABLE, DisplayMode.EDIT, GridRegion.BODY.toString() );
 
-    final DefaultToolTip toolTip = new ZmlTableTooltip( m_natTable, getModelViewport() );
-    toolTip.setBackgroundColor( m_natTable.getDisplay().getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
-    toolTip.setPopupDelay( 500 );
-    toolTip.activate();
-    toolTip.setShift( new Point( 10, 10 ) );
+    addTooltipSupport();
 
-    /** context menu */
-    addContextMenuSupport();
+    m_table.addMouseListener( new NatTableContextMenuSupport( m_table, m_viewport ) );
 
   }
 
-  private void addContextMenuSupport( )
+  private void addTooltipSupport( )
   {
-    final Menu contextMenu = m_contextMenuManager.createContextMenu( m_natTable );
-    m_natTable.setMenu( contextMenu );
-
-    m_natTable.addMouseListener( new MouseAdapter()
-    {
-      @Override
-      public void mouseDown( final MouseEvent e )
-      {
-        if( e.button == 3 )
-        {
-          m_contextMenuManager.removeAll();
-
-          final int column = m_natTable.getColumnPositionByX( e.x );
-          final int row = m_natTable.getRowPositionByY( e.y );
-
-          if( column == -1 || row == -1 )
-            return;
-
-          if( row == 0 )
-          {
-            /** table header selection */
-            final IZmlModelColumn colum = m_viewport.getColum( column - 1 );
-            if( Objects.isNull( colum ) )
-              return;
-
-            final ZmlTableHeaderContextMenuProvider menuProvider = new ZmlTableHeaderContextMenuProvider();
-            menuProvider.fillMenu( colum, m_contextMenuManager );
-            m_contextMenuManager.update( true );
-
-            contextMenu.setVisible( true );
-          }
-          else
-          {
-            /** table cell was selected */
-            final LayerCell cell = m_natTable.getCellByPosition( column, row );
-            final IZmlModelValueCell modelCell = (IZmlModelValueCell) cell.getDataValue();
-            if( Objects.isNull( modelCell ) )
-              return;
-
-            final ZmlTableContextMenuProvider menuProvider = new ZmlTableContextMenuProvider();
-            menuProvider.fillMenu( modelCell.getColumn(), m_contextMenuManager );
-            m_contextMenuManager.update( true );
-
-            contextMenu.setVisible( true );
-          }
-
-        }
-      }
-
-    } );
-
+    final DefaultToolTip toolTip = new ZmlTableTooltip( m_table, getModelViewport() );
+    toolTip.setBackgroundColor( m_table.getDisplay().getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
+    toolTip.setPopupDelay( 500 );
+    toolTip.activate();
+    toolTip.setShift( new Point( 10, 10 ) );
   }
 
   @Override
   public void dispose( )
   {
-    m_natTable.dispose();
+    m_table.dispose();
 
     super.dispose();
   }
-
-  private UIJob m_updateJob;
-
-  private static final MutexRule MUTEX_TABLE_UPDATE = new MutexRule( "Aktualisiere Tabelle" ); // $NON-NLS-1$
-
-  protected NatTable m_natTable;
-
-  protected BodyLayerStack m_bodyLayer;
 
   @Override
   public synchronized void refresh( final IZmlModelColumn... columns )
@@ -268,7 +208,7 @@ public class ZmlTable extends Composite implements IZmlTable
 // ZmlTable.this.refresh();
 // m_pager.reveal();
 
-        m_natTable.redraw();
+        m_table.redraw();
 
 // fireTableChanged( IZmlTableCompositeListener.TYPE_REFRESH, columns );
 
