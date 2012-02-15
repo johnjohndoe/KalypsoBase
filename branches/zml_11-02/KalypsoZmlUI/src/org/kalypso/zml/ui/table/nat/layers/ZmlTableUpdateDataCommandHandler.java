@@ -71,7 +71,7 @@ public class ZmlTableUpdateDataCommandHandler extends UpdateDataCommandHandler i
       final IDataProvider provider = m_dataLayer.getDataProvider();
       provider.setDataValue( columnPosition, rowPosition, command.getNewValue() );
 
-// m_dataLayer.fireLayerEvent( new CellVisualChangeEvent( m_dataLayer, columnPosition, rowPosition ) );
+      // m_dataLayer.fireLayerEvent( new CellVisualChangeEvent( m_dataLayer, columnPosition, rowPosition ) );
 
       return true;
     }
