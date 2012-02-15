@@ -47,6 +47,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 
 import org.deegree.model.spatialschema.ByteUtils;
+import org.kalypso.grid.BinaryGeoGrid;
 
 /**
  * @author barbarins
@@ -79,22 +80,31 @@ public class SequentialBinaryGeoGridWriter implements Closeable
     writeInt( scale );
   }
 
-  public final void writeInt( final int v ) throws IOException
+  public void write( final ParallelBinaryGridProcessorBean bean ) throws IOException
+  {
+    final Double[] data = bean.getData();
+    for( final Double value : data )
+    {
+      final int rawValue = rescaleValue( value );
+      writeInt( rawValue );
+    }
+  }
+
+  private int rescaleValue( final Double value )
+  {
+    if( value == null || value.isNaN() )
+      return BinaryGeoGrid.NO_DATA;
+
+    final BigDecimal rescaledValue = new BigDecimal( value ).setScale( m_scale, BigDecimal.ROUND_HALF_UP );
+    return rescaledValue.unscaledValue().intValue();
+  }
+
+  private final void writeInt( final int v ) throws IOException
   {
     final byte[] lBuff = new byte[4];
 
     ByteUtils.writeBEInt( lBuff, 0, v );
     m_gridStream.write( lBuff, 0, 4 ); // Version number
-  }
-
-  public void write( final byte[] blockData, final int items ) throws IOException
-  {
-    m_gridStream.write( blockData, 0, items * 4 );
-  }
-
-  public void write( final ParallelBinaryGridProcessorBean bean ) throws IOException
-  {
-    write( bean.m_blockData, bean.m_itemsInBlock );
   }
 
   @Override

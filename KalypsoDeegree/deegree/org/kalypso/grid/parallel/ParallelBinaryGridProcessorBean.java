@@ -40,76 +40,59 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.grid.parallel;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-
-import org.deegree.model.spatialschema.ByteUtils;
-import org.kalypso.grid.BinaryGeoGrid;
-
 /**
  * @author barbarins
  */
 public class ParallelBinaryGridProcessorBean
 {
-  private final int m_readScale;
-
-  public ParallelBinaryGridProcessorBean( final int blockSize, final int readScale )
-  {
-    m_readScale = readScale;
-    m_blockData = new byte[blockSize];
-  }
-
-  public byte[] m_blockData;
-
   public boolean m_done = false;
 
-  public int m_startPosY = 0;
+  public double m_max = -Double.MAX_VALUE;
 
-  public int m_itemsInBlock = 0;
+  public double m_min = Double.MAX_VALUE;
 
-  public BigDecimal m_max = BigDecimal.valueOf( -Double.MAX_VALUE );
+  private final Double[] m_data;
 
-  public BigDecimal m_min = BigDecimal.valueOf( Double.MAX_VALUE );
+  private final long m_startPosition;
 
-  void setValue( final double value, final int k, final int scale )
+  public ParallelBinaryGridProcessorBean( final Double[] data, final long position )
   {
-    final int intVal = scaleValue( value, m_readScale );
-
-    // write the result back into the buffer
-    ByteUtils.writeBEInt( m_blockData, k * 4, intVal );
+    m_data = data;
+    m_startPosition = position;
   }
 
-  private int scaleValue( final double value, final int scale )
+  void setValue( final int k, final Double value )
   {
-    if( Double.isNaN( value ) != true )
+    m_data[k] = value;
+
+    if( value != null && !value.isNaN() )
     {
-      // TODO: slow
-      final BigDecimal scaled = BigDecimal.valueOf( value ).setScale( scale, BigDecimal.ROUND_HALF_UP );
-
-      final BigDecimal currentValue = new BigDecimal( value ).setScale( 4, BigDecimal.ROUND_HALF_UP );
-
-      m_max = m_max.max( currentValue );
-      m_min = m_min.min( currentValue );
-
-      return scaled.unscaledValue().intValue();
-    }
-    else
-    {
-      return BinaryGeoGrid.NO_DATA;
+      m_max = Math.max( m_max, value );
+      m_min = Math.min( m_min, value );
     }
   }
 
   double getValue( final int k )
   {
-    /* convert 4 bytes to integer */
-    final int value = ByteUtils.readBEInt( m_blockData, k * 4 );
 
-    if( value == Integer.MIN_VALUE /* NO_DATA */)
+    if( m_data[k] == null )
       return Double.NaN;
 
-    /* Unscale value */
-    // FIXME: slow
-    final BigDecimal zDecimal = new BigDecimal( BigInteger.valueOf( value ), m_readScale );
-    return zDecimal.doubleValue();
+    return m_data[k].doubleValue();
+  }
+
+  public Double[] getData( )
+  {
+    return m_data;
+  }
+
+  public long getStartPosition( )
+  {
+    return m_startPosition;
+  }
+
+  public int getSize( )
+  {
+    return m_data.length;
   }
 }

@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.grid.parallel;
 
+import java.io.IOException;
+
 import org.kalypso.grid.GeoGridException;
 
 class ReaderThread extends Thread
@@ -47,6 +49,8 @@ class ReaderThread extends Thread
   private final ParallelBinaryGridProcessor m_manager;
 
   private ParallelBinaryGridProcessorBean m_bean;
+
+  private GeoGridException m_exception;
 
   public ReaderThread( final ParallelBinaryGridProcessor manager )
   {
@@ -58,33 +62,42 @@ class ReaderThread extends Thread
   {
     while( true )
     {
-      m_bean = m_manager.getNextDatasetForReading();
-      if( m_bean == null )
-        return;
-
       try
       {
+        m_bean = m_manager.getNextDatasetForReading();
+        if( m_bean == null )
+          return;
+
         operate();
       }
+      // FIXME: error handling!
       catch( final GeoGridException e )
       {
         e.printStackTrace();
+        m_exception = e;
       }
-      catch( final Exception e )
+      catch( final IOException e )
       {
         e.printStackTrace();
+        m_exception = new GeoGridException( e.getLocalizedMessage(), e );
       }
     }
   }
 
   private final void operate( ) throws GeoGridException
   {
-    for( int k = 0; k < m_bean.m_itemsInBlock; k++ )
+    final int size = m_bean.getSize();
+    for( int i = 0; i < size; i++ )
     {
-      final double value = m_manager.getValue( k, m_bean );
-      m_manager.setValue( value, k, m_bean );
+      final double value = m_manager.getValue( i, m_bean );
+      m_bean.setValue( i, value );
     }
 
     m_manager.beanFinished( m_bean );
+  }
+
+  public GeoGridException getException( )
+  {
+    return m_exception;
   }
 }
