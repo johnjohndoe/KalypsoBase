@@ -42,6 +42,7 @@ package org.kalypso.zml.core.table.model;
 
 import java.util.Date;
 
+import org.kalypso.zml.core.table.model.references.IZmlModelIndexCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 
@@ -59,5 +60,7 @@ public interface IZmlModelRow
   IZmlModel getModel( );
 
   IZmlModelValueCell[] getCells( );
+
+  IZmlModelIndexCell getIndexCell( );
 
 }

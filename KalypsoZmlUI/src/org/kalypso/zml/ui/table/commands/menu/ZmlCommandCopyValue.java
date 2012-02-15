@@ -83,7 +83,7 @@ public class ZmlCommandCopyValue extends AbstractHandler
           final IZmlModelValueCell cell = row.get( column );
 
           final ZmlValueLabelProvider provider = new ZmlValueLabelProvider( column );
-          buffer.append( provider.getText( cell ) );
+          buffer.append( provider.getText( table.getModel(), cell ) );
 
           if( !Arrays.isLastItem( columns, column ) )
             buffer.append( "\t" );

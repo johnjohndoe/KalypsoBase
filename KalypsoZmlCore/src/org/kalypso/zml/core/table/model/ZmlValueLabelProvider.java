@@ -62,6 +62,7 @@ import org.kalypso.zml.core.table.model.references.IZmlModelCellLabelProvider;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.references.InstantaneousValueLabelingStrategy;
 import org.kalypso.zml.core.table.model.references.SumValueLabelingStrategy;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.core.table.rules.IZmlCellRuleImplementation;
 import org.kalypso.zml.core.table.schema.AlignmentType;
 
@@ -70,7 +71,6 @@ import org.kalypso.zml.core.table.schema.AlignmentType;
  */
 public class ZmlValueLabelProvider implements IZmlModelCellLabelProvider
 {
-
   private final IZmlModelColumn m_column;
 
   private IZmlLabelStrategy m_labeling;
@@ -89,11 +89,11 @@ public class ZmlValueLabelProvider implements IZmlModelCellLabelProvider
   }
 
   @Override
-  public String getText( final IZmlModelCell cell )
+  public String getText( final ZmlModelViewport model, final IZmlModelValueCell cell )
   {
     try
     {
-      return m_labeling.getText( cell );
+      return m_labeling.getText( model, cell );
     }
     catch( final Exception e )
     {

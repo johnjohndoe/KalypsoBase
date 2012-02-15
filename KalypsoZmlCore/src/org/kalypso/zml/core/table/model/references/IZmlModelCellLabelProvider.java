@@ -43,6 +43,7 @@ package org.kalypso.zml.core.table.model.references;
 import net.sourceforge.nattable.style.Style;
 
 import org.eclipse.swt.graphics.Image;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 
 /**
  * @author Dirk Kuch
@@ -51,7 +52,7 @@ public interface IZmlModelCellLabelProvider
 {
   Image[] getImages( final IZmlModelCell cell );
 
-  String getText( IZmlModelCell cell );
+  String getText( ZmlModelViewport model, IZmlModelValueCell cell );
 
   Style getStyle( );
 }

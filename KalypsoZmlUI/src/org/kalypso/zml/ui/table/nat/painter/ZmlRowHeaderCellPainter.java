@@ -53,6 +53,7 @@ import net.sourceforge.nattable.style.Style;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlModelIndexCell;
 
 /**
@@ -65,8 +66,10 @@ public class ZmlRowHeaderCellPainter extends AbstractCellPainter
   public void paintCell( final LayerCell cell, final GC gc, final Rectangle bounds, final IConfigRegistry configRegistry )
   {
     final Object object = cell.getDataValue();
-    if( object instanceof IZmlModelIndexCell )
+    if( object instanceof IZmlModelRow )
     {
+      final IZmlModelRow row = (IZmlModelRow) object;
+
       final Style style = new Style();
       style.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, HorizontalAlignmentEnum.LEFT );
 

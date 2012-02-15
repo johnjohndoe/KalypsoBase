@@ -42,11 +42,15 @@ package org.kalypso.zml.core.table.model.references;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
+import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.core.table.rules.IZmlCellRuleImplementation;
 
 /**
@@ -60,71 +64,66 @@ public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy impl
   }
 
   @Override
-  public String getText( final IZmlModelCell cell ) throws SensorException, CoreException
+  public String getText( final ZmlModelViewport model, final IZmlModelValueCell cell ) throws SensorException, CoreException
   {
-// final IZmlTable table = getTable();
-// final int resolution = table.getResolution();
-// if( resolution == 0 )
-// {
-    return getAsOriginValue( (IZmlModelValueCell) cell );
-// }
-//
-// return getAsAggregatedValue( row );
+    final int resolution = model.getResolution();
+    if( resolution == 0 )
+    {
+      return getAsOriginValue( cell );
+    }
+
+    return getAsAggregatedValue( model, cell );
   }
 
-// private String getAsAggregatedValue( final IZmlModelRow row ) throws CoreException, SensorException
-// {
-// final IZmlTableValueColumn column = getColumn();
-//
-// final IZmlTableValueCell current = column.findCell( row );
-// final IZmlTableValueCell previous = current.findPreviousCell();
-//
-// final IZmlModelValueCell previousReference;
-// if( previous == null )
-// {
-// /* get first invisible value (first value will is not part of the table!) */
-// final IZmlModel model = row.getModel();
-// final IZmlModelRow baseRow = model.getRowAt( 0 );
-// previousReference = baseRow.get( column.getModelColumn() );
-// }
-// else
-// {
-// final Integer index = previous.getValueReference().getModelIndex();
-// final IZmlModel model = row.getModel();
-// final IZmlModelRow baseRow = model.getRowAt( index + 1 );
-// previousReference = baseRow.get( column.getModelColumn() );
-// }
-//
-// final IZmlModelValueCell currentReference = current.getValueReference();
-// if( previousReference == null || currentReference == null )
-// return null;
-//
-// final DateRange daterange = new DateRange( previousReference.getIndexValue(), currentReference.getIndexValue() );
-//
-// final IZmlModelColumn modelColumn = column.getModelColumn();
-// final SumValuesVisitor visitor = new SumValuesVisitor();
-// modelColumn.accept( visitor, daterange );
-//
-// final Double value = visitor.getValue();
-//
-// String text = format( row, value );
-//
-// final ZmlCellRule[] rules = column.findActiveRules( row );
-// for( final ZmlCellRule rule : rules )
-// {
-// try
-// {
-// final IZmlCellRuleImplementation impl = rule.getImplementation();
-// text = impl.update( rule, currentReference, text );
-// }
-// catch( final SensorException e )
-// {
-// KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-// }
-// }
-//
-// return text;
-// }
+  private String getAsAggregatedValue( final ZmlModelViewport model, final IZmlModelValueCell current ) throws CoreException, SensorException
+  {
+    final IZmlModel zml = model.getModel();
+    final IZmlModelColumn column = current.getColumn();
+
+    IZmlModelValueCell previous = model.findPreviousCell( current );
+    if( previous == null )
+    {
+      /* get first invisible value (first value will is not part of the table!) */
+
+      final IZmlModelRow baseRow = zml.getRowAt( 0 );
+      previous = baseRow.get( column );
+    }
+    else
+    {
+      final Integer index = previous.getModelIndex();
+      final IZmlModelRow baseRow = zml.getRowAt( index + 1 );
+      previous = baseRow.get( column );
+    }
+
+    if( previous == null || current == null )
+      return null;
+
+    final DateRange daterange = new DateRange( previous.getIndexValue(), current.getIndexValue() );
+
+    final SumValuesVisitor visitor = new SumValuesVisitor();
+    column.accept( visitor, daterange );
+
+    final Double value = visitor.getValue();
+
+    final CellStyle style = column.findStyle( current );
+    String text = String.format( style.getTextFormat(), value );
+
+    final ZmlCellRule[] rules = column.findActiveRules( current );
+    for( final ZmlCellRule rule : rules )
+    {
+      try
+      {
+        final IZmlCellRuleImplementation impl = rule.getImplementation();
+        text = impl.update( rule, current, text );
+      }
+      catch( final SensorException e )
+      {
+        KalypsoZmlCore.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      }
+    }
+
+    return text;
+  }
 
   private String getAsOriginValue( final IZmlModelValueCell cell ) throws CoreException, SensorException
   {
