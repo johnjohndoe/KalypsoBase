@@ -101,8 +101,7 @@ public class ZmlModelCellPainter extends AbstractCellPainter
       final TextPainter painter = new TextPainter();
       painter.paintCell( cell, gc, ptr, configRegistry );
     }
-    else
-      throw new UnsupportedOperationException();
+
   }
 
   private Rectangle move( final Rectangle ptr, final Rectangle bounds )
@@ -160,7 +159,7 @@ public class ZmlModelCellPainter extends AbstractCellPainter
       return height;
     }
 
-    throw new UnsupportedOperationException();
+    return -1;
   }
 
 }
