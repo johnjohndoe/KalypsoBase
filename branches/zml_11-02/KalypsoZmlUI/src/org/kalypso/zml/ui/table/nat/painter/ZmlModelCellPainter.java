@@ -133,7 +133,7 @@ public class ZmlModelCellPainter extends AbstractCellPainter
       return width;
     }
 
-    throw new UnsupportedOperationException();
+    return -1;
   }
 
   @Override
