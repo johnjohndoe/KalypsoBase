@@ -86,7 +86,8 @@ public class ParallelBinaryGridProcessor
     try
     {
       /* Start reader and writer threads */
-      final ReaderThread[] readerWorkers = new ReaderThread[THREADS_AMOUNT];
+      // REMARK: keep one thread free for the writer
+      final ReaderThread[] readerWorkers = new ReaderThread[Math.max( 1, THREADS_AMOUNT - 1 )];
       for( int i = 0; i < readerWorkers.length; i++ )
       {
         readerWorkers[i] = new ReaderThread( this );
@@ -169,6 +170,8 @@ public class ParallelBinaryGridProcessor
 
     if( m_beans.get( m_nextBlockToBeWritten ).m_done == false )
       return null;
+
+    System.out.println( "Fetching block for writing: " + m_nextBlockToBeWritten );
 
     final ParallelBinaryGridProcessorBean toBeWritten = m_beans.get( m_nextBlockToBeWritten );
     // REMARK: set to null, so not all blocks are in memory
