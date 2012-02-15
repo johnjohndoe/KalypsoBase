@@ -204,7 +204,7 @@ public class ZmlColumnHeaderCellPainter extends AbstractCellPainter
       final TextPainter painter = new TextPainter();
       height = Math.max( painter.getPreferredHeight( cell, gc, configRegistry ), height );
 
-      return height + 4;
+      return height;
     }
 
     throw new UnsupportedOperationException();
