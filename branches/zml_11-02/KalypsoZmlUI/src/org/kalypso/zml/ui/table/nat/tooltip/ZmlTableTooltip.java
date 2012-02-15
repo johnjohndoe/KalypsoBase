@@ -75,15 +75,15 @@ public class ZmlTableTooltip extends DefaultToolTip
 
   private final NatTable m_table;
 
-  private final ZmlModelViewport m_model;
+  private final ZmlModelViewport m_viewport;
 
   private static boolean SHOW_TOOLTIP = true;
 
-  public ZmlTableTooltip( final NatTable table, final ZmlModelViewport model )
+  public ZmlTableTooltip( final NatTable table, final ZmlModelViewport viewport )
   {
     super( table );
     m_table = table;
-    m_model = model;
+    m_viewport = viewport;
   }
 
   /*
@@ -107,7 +107,7 @@ public class ZmlTableTooltip extends DefaultToolTip
     final int col = m_table.getColumnPositionByX( event.x ) - 1;
     final int row = m_table.getRowPositionByY( event.y ) - 1;
 
-    final IZmlModelValueCell cell = m_model.getCell( row, col );
+    final IZmlModelValueCell cell = m_viewport.getCell( row, col );
     if( Objects.isNull( cell ) )
       return null;
 
@@ -141,7 +141,7 @@ public class ZmlTableTooltip extends DefaultToolTip
 
   private boolean isAggregated( )
   {
-    final ZmlViewResolutionFilter filter = m_model.getFilter();
+    final ZmlViewResolutionFilter filter = m_viewport.getFilter();
     if( Objects.isNull( filter ) )
       return false;
 
@@ -150,14 +150,14 @@ public class ZmlTableTooltip extends DefaultToolTip
 
   private String getRuleTooltip( final IZmlModelValueCell cell )
   {
-    final ZmlCellRule[] activeRules = cell.getColumn().findActiveRules( cell );
-    if( ArrayUtils.isEmpty( activeRules ) )
+    final ZmlCellRule[] rules = cell.findActiveRules( m_viewport );
+    if( ArrayUtils.isEmpty( rules ) )
       return null;
 
     final StringBuffer buffer = new StringBuffer();
     buffer.append( "Anmerkung(en):\n" );
 
-    for( final ZmlCellRule rule : activeRules )
+    for( final ZmlCellRule rule : rules )
     {
       buffer.append( String.format( "    - %s\n", rule.getLabel( cell ) ) );//$NON-NLS-1$
     }

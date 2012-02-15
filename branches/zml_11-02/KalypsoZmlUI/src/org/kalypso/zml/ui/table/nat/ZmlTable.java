@@ -155,7 +155,7 @@ public class ZmlTable extends Composite implements IZmlTable
     registry.registerConfigAttribute( CellConfigAttributes.DISPLAY_CONVERTER, new ZmlModelRowHeaderDisplayConverter(), DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
     registry.registerConfigAttribute( CellConfigAttributes.DISPLAY_CONVERTER, converter, DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
 
-    registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new ZmlModelCellPainter(), DisplayMode.NORMAL, GridRegion.BODY.toString() );
+    registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new ZmlModelCellPainter( m_model ), DisplayMode.NORMAL, GridRegion.BODY.toString() );
     registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new ZmlRowHeaderCellPainter(), DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
     registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new ZmlColumnHeaderCellPainter(), DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
 

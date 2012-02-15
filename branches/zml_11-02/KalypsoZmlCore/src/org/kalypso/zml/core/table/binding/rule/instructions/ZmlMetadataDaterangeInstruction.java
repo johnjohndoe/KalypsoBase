@@ -51,8 +51,8 @@ import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
-import org.kalypso.zml.core.table.model.references.ZmlDataValueReference;
-import org.kalypso.zml.core.table.model.references.ZmlIndexValueReference;
+import org.kalypso.zml.core.table.model.references.ZmlModelValueCell;
+import org.kalypso.zml.core.table.model.references.ZmlModelIndexCell;
 import org.kalypso.zml.core.table.schema.AbstractRuleInstructionType;
 import org.kalypso.zml.core.table.schema.MetadataDateRangeInstructionType;
 
@@ -109,13 +109,13 @@ public class ZmlMetadataDaterangeInstruction extends AbstractZmlRuleInstructionT
 
   private MetadataList resolveMetadata( final IZmlModelValueCell reference )
   {
-    if( reference instanceof ZmlDataValueReference )
+    if( reference instanceof ZmlModelValueCell )
     {
       final IZmlModelColumn column = reference.getColumn();
 
       return column.getMetadata();
     }
-    else if( reference instanceof ZmlIndexValueReference )
+    else if( reference instanceof ZmlModelIndexCell )
     {
       final IZmlModel model = reference.getModel();
       final IZmlModelColumn[] columns = model.getColumns();

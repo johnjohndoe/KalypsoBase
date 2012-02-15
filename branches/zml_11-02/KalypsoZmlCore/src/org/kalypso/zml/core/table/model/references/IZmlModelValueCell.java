@@ -59,4 +59,5 @@ public interface IZmlModelValueCell extends IZmlModelCell
   Number getValue( ) throws SensorException;
 
   void doUpdate( final Number value, final String source, final Integer status ) throws SensorException;
+
 }

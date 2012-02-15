@@ -40,31 +40,47 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model.references;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
+import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.DataColumn;
+import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
+import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
+import org.kalypso.zml.core.table.rules.IZmlCellRuleImplementation;
+import org.kalypso.zml.core.table.schema.CellStyleType;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlDataValueReference extends AbstractZmlCell implements IZmlModelValueCell
+public class ZmlModelValueCell extends AbstractZmlCell implements IZmlModelValueCell
 {
 
-  public ZmlDataValueReference( final IZmlModelRow row, final IZmlModelColumn column, final int tupleModelIndex )
+  private CellStyle m_style;
+
+  private ZmlCellRule[] m_rules;
+
+  public ZmlModelValueCell( final IZmlModelRow row, final IZmlModelColumn column, final int tupleModelIndex )
   {
     super( row, column, tupleModelIndex );
   }
@@ -164,11 +180,11 @@ public class ZmlDataValueReference extends AbstractZmlCell implements IZmlModelV
   @Override
   public boolean equals( final Object obj )
   {
-    if( obj instanceof ZmlDataValueReference )
+    if( obj instanceof ZmlModelValueCell )
     {
       try
       {
-        final ZmlDataValueReference other = (ZmlDataValueReference) obj;
+        final ZmlModelValueCell other = (ZmlModelValueCell) obj;
 
         final EqualsBuilder builder = new EqualsBuilder();
         builder.append( getColumn().getIdentifier(), other.getColumn().getIdentifier() );
@@ -195,5 +211,118 @@ public class ZmlDataValueReference extends AbstractZmlCell implements IZmlModelV
     builder.append( getModelIndex() );
 
     return builder.toHashCode();
+  }
+
+  @Override
+  public CellStyle getStyle( final ZmlModelViewport viewport ) throws CoreException
+  {
+    if( Objects.isNotNull( m_style ) )
+      return m_style;
+
+    final ZmlCellRule[] rules = findActiveRules( viewport );
+    final DataColumn column = getColumn().getDataColumn();
+
+    if( ArrayUtils.isNotEmpty( rules ) )
+    {
+
+      CellStyleType baseType = column.getDefaultStyle().getType();
+      for( final ZmlCellRule rule : rules )
+      {
+
+        final CellStyle style = rule.getStyle( getRow(), column );
+        baseType = CellStyle.merge( baseType, style.getType() );
+      }
+
+      m_style = new CellStyle( baseType );
+    }
+    else
+    {
+      m_style = column.getDefaultStyle();
+    }
+
+    return m_style;
+  }
+
+  @Override
+  public ZmlCellRule[] findActiveRules( final ZmlModelViewport viewport )
+  {
+    if( m_rules != null )
+      return m_rules;
+
+    final DataColumn column = getColumn().getDataColumn();
+
+    if( Objects.isNull( viewport ) || viewport.getResolution() == 0 )
+      m_rules = findSimpleActiveRules();
+    else
+    {
+      if( ITimeseriesConstants.TYPE_RAINFALL.equals( column.getValueAxis() ) )
+        m_rules = findAggregatedActiveRules( viewport );
+      else
+        m_rules = findSimpleActiveRules();
+    }
+
+    getColumn().addAppliedRules( m_rules );
+
+    return m_rules;
+  }
+
+  private ZmlCellRule[] findAggregatedActiveRules( final ZmlModelViewport viewport )
+  {
+    final DataColumn column = getColumn().getDataColumn();
+    final IZmlModel zml = viewport.getModel();
+
+    IZmlModelValueCell previous = viewport.findPreviousCell( this );
+    if( previous == null )
+    {
+      final IZmlModelRow row = zml.getRowAt( 0 );
+      previous = row.get( getColumn() );
+    }
+    else
+    {
+      final IZmlModelRow row = zml.getRowAt( previous.getModelIndex() + 1 );
+      previous = row.get( getColumn() );
+    }
+
+    try
+    {
+      final DateRange daterange = new DateRange( previous.getIndexValue(), getIndexValue() );
+      final ZmlCollectRulesVisitor visitor = new ZmlCollectRulesVisitor();
+      getColumn().accept( visitor, daterange );
+
+      return visitor.getRules();
+    }
+    catch( final SensorException e )
+    {
+      e.printStackTrace();
+    }
+
+    return new ZmlCellRule[] {};
+
+  }
+
+  private ZmlCellRule[] findSimpleActiveRules( )
+  {
+    final IZmlModelRow row = getRow();
+    final DataColumn column = getColumn().getDataColumn();
+
+    final IZmlModelValueCell reference = row.get( column.getType() );
+    if( Objects.isNull( reference ) )
+      return new ZmlCellRule[] {};
+
+    final List<ZmlCellRule> rules = new ArrayList<ZmlCellRule>();
+    if( Objects.isNotNull( reference ) )
+    {
+      final ZmlCellRule[] columnRules = column.getCellRules();
+      for( final ZmlCellRule rule : columnRules )
+      {
+        final IZmlCellRuleImplementation impl = rule.getImplementation();
+        if( impl.apply( rule, reference ) )
+        {
+          rules.add( rule );
+        }
+      }
+    }
+
+    return rules.toArray( new ZmlCellRule[] {} );
   }
 }
