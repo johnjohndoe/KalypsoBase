@@ -174,12 +174,30 @@ public class ZmlModelViewport
 
   public IZmlModelValueCell findPreviousCell( final IZmlModelValueCell current )
   {
-    throw new UnsupportedOperationException();
+    final IZmlModelRow row = current.getRow();
+    final IZmlModelRow[] rows = getRows();
+
+    final int index = ArrayUtils.indexOf( rows, row );
+    if( index <= 0 )
+      return null;
+
+    final IZmlModelRow previous = rows[index - 1];
+    return previous.get( current.getColumn() );
   }
 
   public IZmlModelValueCell findNextCell( final IZmlModelValueCell current )
   {
-    throw new UnsupportedOperationException();
+    final IZmlModelRow row = current.getRow();
+    final IZmlModelRow[] rows = getRows();
+
+    final int index = ArrayUtils.indexOf( rows, row );
+    if( index < 0 )
+      return null;
+    else if( index == ArrayUtils.getLength( rows ) - 1 )
+      return null;
+
+    final IZmlModelRow next = rows[index + 1];
+    return next.get( current.getColumn() );
   }
 
   public int getResolution( )

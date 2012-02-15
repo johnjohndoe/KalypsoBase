@@ -62,6 +62,7 @@ import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.binding.DataColumn;
 import org.kalypso.zml.core.table.binding.rule.ZmlColumnRule;
+import org.kalypso.zml.core.table.model.IZmlModelColumnListener.MODEL_COLUMN_CHANGE;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataListener;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
@@ -92,6 +93,8 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
 
   private final DataColumn m_type;
 
+  final Set<IZmlModelValueCell> m_cells = new LinkedHashSet<IZmlModelValueCell>();
+
   public ZmlModelColumn( final IZmlModel model, final DataColumn column )
   {
     this( model, column.getIdentifier(), column );
@@ -102,6 +105,13 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
     m_model = model;
     m_identifier = identifier;
     m_type = type;
+  }
+
+  private synchronized void doReset( )
+  {
+    m_type.reset();
+    m_cells.clear();
+    m_applied.clear();
   }
 
   @Override
@@ -179,7 +189,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
 
       m_handler = null;
 
-      fireColumnChanged();
+      fireColumnChanged(  );
     }
 
   }
@@ -202,21 +212,21 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   @Override
   public void eventObservationChanged( )
   {
-    fireColumnChanged();
+    fireColumnChanged(  );
   }
 
   @Override
   public void eventObservationLoaded( )
   {
-    fireColumnChanged();
+    fireColumnChanged(  );
   }
 
-  public void fireColumnChanged( )
+  public void fireColumnChanged(  )
   {
     final IZmlModelColumnListener[] listeners = m_listeners.toArray( new IZmlModelColumnListener[] {} );
     for( final IZmlModelColumnListener listener : listeners )
     {
-      listener.modelColumnChangedEvent( this );
+      listener.modelColumnChangedEvent(  this );
     }
   }
 
@@ -266,9 +276,20 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   }
 
   @Override
-  public IZmlModelValueCell[] getCells( )
+  public synchronized IZmlModelValueCell[] getCells( )
   {
-    throw new UnsupportedOperationException();
+    if( !m_cells.isEmpty() )
+      return m_cells.toArray( new IZmlModelValueCell[] {} );
+
+    final IZmlModelRow[] rows = getModel().getRows();
+    for( final IZmlModelRow row : rows )
+    {
+      final IZmlModelValueCell cell = row.get( this );
+      if( Objects.isNotNull( cell ) )
+        m_cells.add( cell );
+    }
+
+    return m_cells.toArray( new IZmlModelValueCell[] {} );
   }
 
   @Override
@@ -408,7 +429,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   {
     synchronized( this )
     {
-      m_type.reset();
+      doReset();
 
       if( Objects.isNotNull( m_handler ) )
       {
@@ -420,7 +441,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
       m_handler.addListener( this );
     }
 
-    fireColumnChanged();
+    fireColumnChanged(  );
   }
 
   @Override
