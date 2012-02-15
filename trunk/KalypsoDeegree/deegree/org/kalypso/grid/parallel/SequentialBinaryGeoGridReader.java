@@ -42,15 +42,19 @@ package org.kalypso.grid.parallel;
 
 import java.io.BufferedInputStream;
 import java.io.Closeable;
+import java.io.DataInputStream;
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
-import org.deegree.model.spatialschema.ByteUtils;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.grid.AbstractDelegatingGeoGrid;
+import org.kalypso.grid.BinaryGeoGrid;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.IGeoGrid;
 
@@ -61,79 +65,76 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public abstract class SequentialBinaryGeoGridReader extends AbstractDelegatingGeoGrid implements Closeable
 {
-  private Integer m_blockSize = 1024 * 1024 / 2;
+  /* Number of values per block */
+  private final Integer m_blockSize = 1024 * 2;
 
-  protected BufferedInputStream m_gridStream;
+  private final DataInputStream m_gridStream;
 
   private final int m_scale;
 
-  private int m_linesTotal;
+  private long m_currentPosition = 0;
 
-  private int m_amountBlocks;
+  private final long m_blockAmount;
 
-  private int m_linesInBlock;
-
-  private int m_linesRead = 0;
-
-  private long m_lineLen = 0;
-
-  public SequentialBinaryGeoGridReader( final IGeoGrid inputGrid, final URL pUrl ) throws IOException
+  public SequentialBinaryGeoGridReader( final IGeoGrid inputGrid, final URL pUrl ) throws IOException, GeoGridException
   {
     // FIXME: why the input grid here?! it is never accessed, but the value are read from the url!
+    // TODO: we should not inherit form iGeoGrid at all, this is a different API completely
     super( inputGrid );
 
     /* Tries to find a file from the given url. */
-    File fileFromUrl = ResourceUtilities.findJavaFileFromURL( pUrl );
-    if( fileFromUrl == null )
-      fileFromUrl = FileUtils.toFile( pUrl );
+    File gridFile = ResourceUtilities.findJavaFileFromURL( pUrl );
+    if( gridFile == null )
+      gridFile = FileUtils.toFile( pUrl );
 
-    m_gridStream = new BufferedInputStream( new FileInputStream( fileFromUrl ) );
+    m_gridStream = new DataInputStream( new BufferedInputStream( new FileInputStream( gridFile ) ) );
 
     // skip header
+    m_gridStream.skipBytes( 12 );
+
     /* Read header */
-    m_gridStream.skip( 12 );
-    final byte[] lScaleBuff = new byte[4];
-    read( lScaleBuff, 1 );
-    m_scale = ByteUtils.readBEInt( lScaleBuff, 0 );
+    m_scale = m_gridStream.readInt();
 
-    m_linesRead = 0;
-
-    try
-    {
-      m_linesTotal = getSizeY();
-
-      final long linesPerThread = m_linesTotal / 8;
-      m_lineLen = getSizeX() * 4;
-
-      // block_size is set to "optimal" size of the buffer from start on
-      m_linesInBlock = (int) (m_blockSize / m_lineLen);
-
-      if( m_linesInBlock >= m_linesTotal )
-        m_linesInBlock = (int) linesPerThread;
-
-      if( m_linesInBlock == 0 )
-        m_linesInBlock = 1;
-
-      m_amountBlocks = m_linesTotal / m_linesInBlock;
-      if( m_linesTotal % m_linesInBlock != 0 )
-        m_amountBlocks++;
-
-      m_blockSize = m_linesInBlock * (int) m_lineLen;
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
+    final long length = getSizeX() * getSizeY();
+    m_blockAmount = (length / m_blockSize) + 1;
   }
 
-  public int getBlocksAmount( )
+  int getBlocksAmount( )
   {
-    return m_amountBlocks;
+    return (int) m_blockAmount;
   }
 
-  private void read( final byte[] blockData, final int items ) throws IOException
+  private Double[] read( final int items ) throws IOException
   {
-    m_gridStream.read( blockData, 0, items * 4 );
+    final Double[] data = new Double[items];
+    for( int i = 0; i < data.length; i++ )
+    {
+      try
+      {
+        final int rawValue = m_gridStream.readInt();
+        data[i] = unscaleValue( rawValue );
+      }
+      catch( final EOFException e )
+      {
+        /* EOF: shorten block to real size */
+        if( i == 0 )
+          return null;
+
+        final Double[] lastBlock = new Double[i];
+        System.arraycopy( data, 0, lastBlock, 0, i );
+        return lastBlock;
+      }
+    }
+    return data;
+  }
+
+  private Double unscaleValue( final int rawValue )
+  {
+    /* NO_DATA */
+    if( rawValue == BinaryGeoGrid.NO_DATA )
+      return null;
+
+    return new BigDecimal( BigInteger.valueOf( rawValue ), m_scale ).doubleValue();
   }
 
   public int getScale( )
@@ -162,47 +163,37 @@ public abstract class SequentialBinaryGeoGridReader extends AbstractDelegatingGe
     m_gridStream.close();
   }
 
-  protected ParallelBinaryGridProcessorBean createNewBean( final int blockSize, final int scale )
+  ParallelBinaryGridProcessorBean getNextBlock( ) throws IOException
   {
-    return new ParallelBinaryGridProcessorBean( blockSize, scale );
+    final Double[] data = read( m_blockSize );
+    if( data == null )
+      return null;
+
+    final ParallelBinaryGridProcessorBean bean = createNewBean( data, m_currentPosition );
+
+    m_currentPosition += data.length;
+
+    return bean;
   }
 
-  public ParallelBinaryGridProcessorBean getNextBlock( final int scale )
+  protected ParallelBinaryGridProcessorBean createNewBean( final Double[] data, final long startPosition )
   {
-    if( m_linesRead >= m_linesTotal )
-    {
-      return null;
-    }
-
-    final ParallelBinaryGridProcessorBean lBean = createNewBean( m_blockSize, scale );
-
-    if( m_linesRead + m_linesInBlock <= m_linesTotal )
-    {
-      lBean.m_itemsInBlock = (int) (m_linesInBlock * m_lineLen) / 4;
-    }
-    else
-    {
-      lBean.m_itemsInBlock = (int) ((m_linesTotal - m_linesRead) * m_lineLen) / 4;
-    }
-    lBean.m_startPosY = m_linesRead;
-    try
-    {
-      read( lBean.m_blockData, lBean.m_itemsInBlock );
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-      return null;
-    }
-    m_linesRead += m_linesInBlock;
-    return lBean;
+    return new ParallelBinaryGridProcessorBean( data, startPosition );
   }
 
   double getValue( final int k, final ParallelBinaryGridProcessorBean bean ) throws GeoGridException
   {
+    final long globalPosition = k + bean.getStartPosition();
+
     final int sizeX = getDelegate().getSizeX();
-    final int x = k % sizeX;
-    final int y = k / sizeX + bean.m_startPosY;
+
+    final int x = (int) (globalPosition % sizeX);
+    final int y = (int) (globalPosition / sizeX);
+
+    if( y > 0 )
+    {
+      System.out.println();
+    }
 
     final Coordinate origin = getOrigin();
     final Coordinate offsetX = getOffsetX();

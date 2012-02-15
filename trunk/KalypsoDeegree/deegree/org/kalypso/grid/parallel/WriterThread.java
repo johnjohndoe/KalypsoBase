@@ -61,7 +61,7 @@ class WriterThread extends Thread
   {
     try
     {
-      while( true )
+      while( !isInterrupted() )
       {
         final ParallelBinaryGridProcessorBean bean = m_manager.getNextDatasetForWriting();
         if( bean == null )

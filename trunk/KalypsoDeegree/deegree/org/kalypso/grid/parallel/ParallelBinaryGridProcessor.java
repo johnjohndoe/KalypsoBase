@@ -62,15 +62,13 @@ public class ParallelBinaryGridProcessor
   private final SequentialBinaryGeoGridWriter m_writer;
 
   // FIXME: probably this should be a queue
-  private List<ParallelBinaryGridProcessorBean> m_beans;
+  private final List<ParallelBinaryGridProcessorBean> m_beans;
 
   private int m_nextBlockToBeWritten = 0;
 
   private int m_lastBlockToBeWritten = 0;
 
-  private final ReaderThread[] m_jobs = new ReaderThread[THREADS_AMOUNT];
-
-  private final WriterThread m_writer_thread;
+  private final WriterThread m_writerWorker;
 
   private final Object m_lock = new Object();
 
@@ -78,40 +76,55 @@ public class ParallelBinaryGridProcessor
   {
     m_reader = inputGridReader;
     m_writer = outputGridWriter;
-    m_writer_thread = new WriterThread( this, m_lock );
+    m_writerWorker = new WriterThread( this, m_lock );
+    m_beans = new ArrayList<ParallelBinaryGridProcessorBean>( m_reader.getBlocksAmount() + 1 );
   }
 
   // FIXME: implement progress monitor for this operation
-  public void calculate( ) throws IOException
+  public void calculate( ) throws IOException, GeoGridException
   {
-    m_beans = new ArrayList<ParallelBinaryGridProcessorBean>( m_reader.getBlocksAmount() + 1 );
-
     try
     {
-      for( int i = 0; i < m_jobs.length; i++ )
+      /* Start reader and writer threads */
+      final ReaderThread[] readerWorkers = new ReaderThread[THREADS_AMOUNT];
+      for( int i = 0; i < readerWorkers.length; i++ )
       {
-        m_jobs[i] = new ReaderThread( this );
-        m_jobs[i].start();
+        readerWorkers[i] = new ReaderThread( this );
+        readerWorkers[i].start();
       }
 
-      m_writer_thread.start();
+      m_writerWorker.start();
 
-      for( final ReaderThread m_job : m_jobs )
+      /* Wait for all reader threads to end */
+      for( final ReaderThread job : readerWorkers )
+        job.join();
+
+      /* Check for exception in worker */
+      for( final ReaderThread job : readerWorkers )
       {
-        m_job.join();
+        job.join();
+        if( job.getException() != null )
+        {
+          // TODO: check: does interrupt always clear the writer-thread?
+          m_writerWorker.interrupt();
+          throw job.getException();
+        }
       }
 
-      synchronized( m_writer_thread )
+      /* Wait for writer to end its work */
+      synchronized( m_writerWorker )
       {
-        m_writer_thread.notify();
-        m_writer_thread.join();
+        m_writerWorker.notify();
+        m_writerWorker.join();
       }
-
-      m_writer.close();
     }
     catch( final InterruptedException e )
     {
       e.printStackTrace();
+    }
+    finally
+    {
+      m_writer.close();
     }
   }
 
@@ -119,10 +132,10 @@ public class ParallelBinaryGridProcessor
    * Called from reader thread to work on the next dataset. The read thread is responsible for the bean until it it
    * finished.
    */
-  synchronized ParallelBinaryGridProcessorBean getNextDatasetForReading( )
+  synchronized ParallelBinaryGridProcessorBean getNextDatasetForReading( ) throws IOException
   {
     // REMARK: using scale of written-grid here
-    final ParallelBinaryGridProcessorBean bean = m_reader.getNextBlock( m_writer.getScale() );
+    final ParallelBinaryGridProcessorBean bean = m_reader.getNextBlock();
 
     if( bean != null )
     {
@@ -136,11 +149,6 @@ public class ParallelBinaryGridProcessor
       }
     }
     return bean;
-  }
-
-  double getValue( final int k, final ParallelBinaryGridProcessorBean bean ) throws GeoGridException
-  {
-    return m_reader.getValue( k, bean );
   }
 
   void write( final ParallelBinaryGridProcessorBean bean ) throws IOException
@@ -179,8 +187,9 @@ public class ParallelBinaryGridProcessor
     }
   }
 
-  public void setValue( final double value, final int k, final ParallelBinaryGridProcessorBean bean )
+
+  double getValue( final int k, final ParallelBinaryGridProcessorBean bean ) throws GeoGridException
   {
-    bean.setValue( value, k, m_writer.getScale() );
+    return m_reader.getValue( k, bean );
   }
 }

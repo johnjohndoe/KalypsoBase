@@ -376,10 +376,6 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
     m_randomAccessFile.seek( pos );
   }
 
-  /**
-   * @see org.kalypso.gis.doubleraster.grid.DoubleGrid#dispose()
-   */
-
   @Override
   public void dispose( )
   {
