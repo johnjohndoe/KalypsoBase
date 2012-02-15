@@ -90,6 +90,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.graphics.sld.PointSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.PolygonSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.ShadedRelief;
@@ -152,8 +153,8 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     if( feature.getWorkspace() == null )
       return null;
 
-// return new RectifiedGridCoverageGeoGrid( feature );
-    return new CachingGeoGrid( new RectifiedGridCoverageGeoGrid( feature ) );
+    // return new RectifiedGridCoverageGeoGrid( feature );
+    return new CachingGeoGrid( new RectifiedGridCoverageGeoGrid( (RectifiedGridCoverage) feature ) );
   }
 
   /**
