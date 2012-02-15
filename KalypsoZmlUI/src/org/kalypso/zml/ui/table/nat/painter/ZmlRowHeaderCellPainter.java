@@ -46,11 +46,18 @@ import net.sourceforge.nattable.grid.GridRegion;
 import net.sourceforge.nattable.layer.cell.LayerCell;
 import net.sourceforge.nattable.painter.cell.AbstractCellPainter;
 import net.sourceforge.nattable.painter.cell.TextPainter;
+import net.sourceforge.nattable.style.BorderStyle;
 import net.sourceforge.nattable.style.CellStyleAttributes;
 import net.sourceforge.nattable.style.DisplayMode;
 import net.sourceforge.nattable.style.HorizontalAlignmentEnum;
 import net.sourceforge.nattable.style.Style;
+import net.sourceforge.nattable.style.VerticalAlignmentEnum;
+import net.sourceforge.nattable.util.GUIHelper;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
@@ -76,9 +83,8 @@ public class ZmlRowHeaderCellPainter extends AbstractCellPainter
     final Object object = cell.getDataValue();
     if( object instanceof IZmlModelRow )
     {
-      final IZmlModelRow row = (IZmlModelRow) object;
 
-      final Style style = new Style();
+      final Style style = getStyle();
       style.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, HorizontalAlignmentEnum.LEFT );
 
       configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, style, DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
@@ -86,7 +92,27 @@ public class ZmlRowHeaderCellPainter extends AbstractCellPainter
       final TextPainter painter = new TextPainter();
       painter.paintCell( cell, gc, bounds, configRegistry );
     }
+  }
 
+  private Style getStyle( )
+  {
+
+    final Font font = GUIHelper.getFont( new FontData( "Verdana", 10, SWT.NORMAL ) );
+    final Color bgColor = GUIHelper.COLOR_WIDGET_BACKGROUND;
+    final Color fgColor = GUIHelper.COLOR_WIDGET_FOREGROUND;
+    final HorizontalAlignmentEnum hAlign = HorizontalAlignmentEnum.RIGHT;
+    final VerticalAlignmentEnum vAlign = VerticalAlignmentEnum.MIDDLE;
+    final BorderStyle borderStyle = null;
+
+    final Style cellStyle = new Style();
+    cellStyle.setAttributeValue( CellStyleAttributes.BACKGROUND_COLOR, bgColor );
+    cellStyle.setAttributeValue( CellStyleAttributes.FOREGROUND_COLOR, fgColor );
+    cellStyle.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, hAlign );
+    cellStyle.setAttributeValue( CellStyleAttributes.VERTICAL_ALIGNMENT, vAlign );
+    cellStyle.setAttributeValue( CellStyleAttributes.BORDER_STYLE, borderStyle );
+    cellStyle.setAttributeValue( CellStyleAttributes.FONT, font );
+
+    return cellStyle;
   }
 
   @Override
