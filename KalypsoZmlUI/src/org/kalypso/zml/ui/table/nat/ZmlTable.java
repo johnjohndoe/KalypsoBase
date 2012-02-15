@@ -47,6 +47,7 @@ import net.sourceforge.nattable.NatTable;
 import net.sourceforge.nattable.config.CellConfigAttributes;
 import net.sourceforge.nattable.config.IConfigRegistry;
 import net.sourceforge.nattable.config.IEditableRule;
+import net.sourceforge.nattable.data.validate.DefaultNumericDataValidator;
 import net.sourceforge.nattable.edit.EditConfigAttributes;
 import net.sourceforge.nattable.grid.GridRegion;
 import net.sourceforge.nattable.grid.data.DefaultCornerDataProvider;
@@ -152,21 +153,24 @@ public class ZmlTable extends Composite implements IZmlTable
 
     final IConfigRegistry registry = m_table.getConfigRegistry();
 
+    /** value converters */
     final ZmlModelCellDisplayConverter converter = new ZmlModelCellDisplayConverter( m_viewport );
     registry.registerConfigAttribute( CellConfigAttributes.DISPLAY_CONVERTER, converter, DisplayMode.NORMAL, GridRegion.BODY.toString() );
     registry.registerConfigAttribute( CellConfigAttributes.DISPLAY_CONVERTER, new ZmlModelRowHeaderDisplayConverter(), DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
     registry.registerConfigAttribute( CellConfigAttributes.DISPLAY_CONVERTER, converter, DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
 
+    /** cell painters */
     registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new ZmlModelCellPainter( m_viewport ), DisplayMode.NORMAL, GridRegion.BODY.toString() );
     registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new ZmlRowHeaderCellPainter( m_viewport ), DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
     registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new BeveledBorderDecorator( new ZmlColumnHeaderCellPainter() ), DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
 
+    /** editing support */
     registry.registerConfigAttribute( EditConfigAttributes.CELL_EDITABLE_RULE, IEditableRule.ALWAYS_EDITABLE, DisplayMode.EDIT, GridRegion.BODY.toString() );
+    registry.registerConfigAttribute( EditConfigAttributes.DATA_VALIDATOR, new DefaultNumericDataValidator(), DisplayMode.EDIT, "myCellLabel" );
 
     addTooltipSupport();
 
     m_table.addMouseListener( new NatTableContextMenuSupport( m_table, m_viewport ) );
-
   }
 
   private void addTooltipSupport( )
