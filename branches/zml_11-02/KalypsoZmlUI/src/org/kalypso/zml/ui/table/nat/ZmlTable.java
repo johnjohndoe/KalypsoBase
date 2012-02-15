@@ -167,6 +167,7 @@ public class ZmlTable extends Composite implements IZmlTable
     registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new BeveledBorderDecorator( new ZmlColumnHeaderCellPainter() ), DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
 
     /** editing support */
+    // FIXME implement IEdiableRule
     registry.registerConfigAttribute( EditConfigAttributes.CELL_EDITABLE_RULE, IEditableRule.ALWAYS_EDITABLE, DisplayMode.EDIT, GridRegion.BODY.toString() );
     registry.registerConfigAttribute( EditConfigAttributes.DATA_VALIDATOR, new DefaultNumericDataValidator(), DisplayMode.EDIT, "myCellLabel" );
 
