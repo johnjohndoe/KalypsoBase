@@ -90,7 +90,7 @@ public class ZmlCommandInterpolateValues extends AbstractHandler
 
       final ZmlModelTransaction transaction = new ZmlModelTransaction();
 
-      final ZmlModelViewport viewModel = table.getModel();
+      final ZmlModelViewport viewModel = table.getModelViewport();
       final IZmlModel model = viewModel.getModel();
 
       for( int index = intervallStart.getModelIndex() + 1; index < intervallEnd.getModelIndex(); index++ )

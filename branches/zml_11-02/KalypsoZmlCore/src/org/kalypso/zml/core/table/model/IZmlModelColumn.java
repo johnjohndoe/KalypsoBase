@@ -47,9 +47,9 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.core.table.binding.DataColumn;
+import org.kalypso.zml.core.table.binding.rule.AbstractZmlRule;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler;
-import org.kalypso.zml.core.table.model.references.IZmlModelCellLabelProvider;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.transaction.IZmlModelUpdateCommand;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
@@ -60,15 +60,29 @@ import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 public interface IZmlModelColumn
 {
 
+  void accept( IZmlModelColumnVisitor visitor ) throws SensorException;
+
   void accept( IZmlModelColumnVisitor visitor, DateRange daterange ) throws SensorException;
 
-  void accept( IZmlModelColumnVisitor visitor ) throws SensorException;
+  void addAppliedRules( ZmlCellRule[] rules );
 
   void addListener( IZmlModelColumnListener listener );
 
+  void dispose( );
+
+  void doExecute( IZmlModelUpdateCommand command ) throws SensorException;
+
+  void doUpdate( int index, Object value, final String source, final Integer status ) throws SensorException;
+
+  void fireColumnChangedEvent( );
+
   Object get( int i, IAxis axis ) throws SensorException;
 
+  AbstractZmlRule[] getActiveRules( );
+
   IAxis[] getAxes( );
+
+  IZmlModelValueCell[] getCells( );
 
   DataColumn getDataColumn( );
 
@@ -79,6 +93,8 @@ public interface IZmlModelColumn
   IAxis getIndexAxis( );
 
   String getLabel( );
+
+  String getLabelTokenizer( );
 
   MetadataList getMetadata( );
 
@@ -92,33 +108,17 @@ public interface IZmlModelColumn
 
   IAxis getValueAxis( );
 
+  boolean isActive( );
+
   boolean isMetadataSource( );
 
-  int size( ) throws SensorException;
-
-  void doUpdate( int index, Object value, final String source, final Integer status ) throws SensorException;
-
-  void doExecute( IZmlModelUpdateCommand command ) throws SensorException;
-
-  void fireColumnChangedEvent( );
+  void removeListener( IZmlModelColumnListener listener );
 
   void setDataHandler( IZmlModelColumnDataHandler dataHandler );
 
   void setLabel( String label );
 
-  boolean isActive( );
-
   void setLableTokenizer( String titleTokenizer );
 
-  String getLabelTokenizer( );
-
-  void removeListener( IZmlModelColumnListener listener );
-
-  void dispose( );
-
-  IZmlModelCellLabelProvider getStyleProvider( );
-
-  IZmlModelValueCell[] getCells( );
-
-  void addAppliedRules( ZmlCellRule[] rules );
+  int size( ) throws SensorException;
 }

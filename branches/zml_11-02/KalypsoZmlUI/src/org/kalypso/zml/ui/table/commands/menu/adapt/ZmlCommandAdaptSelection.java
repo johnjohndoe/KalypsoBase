@@ -101,7 +101,7 @@ public class ZmlCommandAdaptSelection extends AbstractHandler
 
       final IAxis axis = findTransformAxisType( column );
 
-      final IObservation transformed = transform( table.getModel(), column, selected, range, axis );
+      final IObservation transformed = transform( table.getModelViewport(), column, selected, range, axis );
 
       final DateRange dateRange = new DateRange( begin, end );
 

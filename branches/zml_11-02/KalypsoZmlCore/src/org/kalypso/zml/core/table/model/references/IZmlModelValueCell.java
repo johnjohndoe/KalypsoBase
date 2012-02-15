@@ -60,4 +60,6 @@ public interface IZmlModelValueCell extends IZmlModelCell
 
   void doUpdate( final Number value, final String source, final Integer status ) throws SensorException;
 
+  IZmlModelCellLabelProvider getStyleProvider( );
+
 }

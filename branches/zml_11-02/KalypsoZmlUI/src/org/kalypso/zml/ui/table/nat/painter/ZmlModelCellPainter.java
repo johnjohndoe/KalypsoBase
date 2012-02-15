@@ -69,7 +69,6 @@ public class ZmlModelCellPainter extends AbstractCellPainter
   public ZmlModelCellPainter( final ZmlModelViewport viewport )
   {
     m_viewport = viewport;
-
   }
 
   @Override
@@ -78,8 +77,8 @@ public class ZmlModelCellPainter extends AbstractCellPainter
     final Object object = cell.getDataValue();
     if( object instanceof IZmlModelValueCell )
     {
-      final IZmlModelValueCell value = (IZmlModelValueCell) object;
-      final IZmlModelCellLabelProvider provider = value.getColumn().getStyleProvider();
+      final IZmlModelValueCell modelCell = (IZmlModelValueCell) object;
+      final IZmlModelCellLabelProvider provider = modelCell.getStyleProvider();
 
       final Style imageCellStyle = new Style();
       imageCellStyle.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, HorizontalAlignmentEnum.LEFT );
@@ -87,7 +86,7 @@ public class ZmlModelCellPainter extends AbstractCellPainter
 
       Rectangle ptr = new Rectangle( bounds.x, bounds.y, bounds.width, bounds.height );
 
-      final Image[] images = provider.getImages( m_viewport, value );
+      final Image[] images = provider.getImages( m_viewport, modelCell );
       for( final Image image : images )
       {
         final ImagePainter imgPainter = new ImagePainter( image );
@@ -118,7 +117,7 @@ public class ZmlModelCellPainter extends AbstractCellPainter
     if( object instanceof IZmlModelValueCell )
     {
       final IZmlModelValueCell value = (IZmlModelValueCell) object;
-      final IZmlModelCellLabelProvider provider = value.getColumn().getStyleProvider();
+      final IZmlModelCellLabelProvider provider = value.getStyleProvider();
 
       final Image[] images = provider.getImages( m_viewport, value );
 
@@ -144,7 +143,7 @@ public class ZmlModelCellPainter extends AbstractCellPainter
     if( object instanceof IZmlModelValueCell )
     {
       final IZmlModelValueCell value = (IZmlModelValueCell) object;
-      final IZmlModelCellLabelProvider provider = value.getColumn().getStyleProvider();
+      final IZmlModelCellLabelProvider provider = value.getStyleProvider();
 
       final Image[] images = provider.getImages( m_viewport, value );
 

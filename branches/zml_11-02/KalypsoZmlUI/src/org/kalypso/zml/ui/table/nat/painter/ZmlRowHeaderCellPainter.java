@@ -55,12 +55,20 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlModelIndexCell;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlRowHeaderCellPainter extends AbstractCellPainter
 {
+
+  private final ZmlModelViewport m_viewport;
+
+  public ZmlRowHeaderCellPainter( final ZmlModelViewport viewport )
+  {
+    m_viewport = viewport;
+  }
 
   @Override
   public void paintCell( final LayerCell cell, final GC gc, final Rectangle bounds, final IConfigRegistry configRegistry )
