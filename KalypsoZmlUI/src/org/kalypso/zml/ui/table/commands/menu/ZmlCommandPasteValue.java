@@ -51,7 +51,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
@@ -70,7 +70,7 @@ public class ZmlCommandPasteValue extends AbstractHandler
     {
       final IZmlTable table = ZmlHandlerUtil.getTable( event );
       final IZmlTableSelection selection = table.getSelection();
-      final IZmlModelCell cell = selection.getFocusCell();
+      final IZmlModelValueCell cell = selection.getFocusCell();
 
       throw new UnsupportedOperationException();
 // if( cell.getColumn() instanceof IZmlTableIndexColumn )

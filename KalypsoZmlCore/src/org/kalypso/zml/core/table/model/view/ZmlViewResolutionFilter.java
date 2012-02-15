@@ -99,9 +99,9 @@ public class ZmlViewResolutionFilter
 
   private boolean m_stuetzstellenMode;
 
-  private final VisibleZmlModelFacade m_model;
+  private final ZmlModelViewport m_model;
 
-  public ZmlViewResolutionFilter( final VisibleZmlModelFacade model )
+  public ZmlViewResolutionFilter( final ZmlModelViewport model )
   {
     m_model = model;
   }

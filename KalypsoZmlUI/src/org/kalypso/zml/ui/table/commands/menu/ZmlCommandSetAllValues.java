@@ -52,10 +52,9 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.ZmlValueLabelProvider;
 import org.kalypso.zml.core.table.model.editing.IZmlEditingStrategy;
 import org.kalypso.zml.core.table.model.interpolation.ZmlInterpolationWorker;
-import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
-import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
@@ -71,13 +70,9 @@ public class ZmlCommandSetAllValues extends AbstractHandler
   {
     final IZmlTable table = ZmlHandlerUtil.getTable( event );
     final IZmlTableSelection selection = table.getSelection();
-    final VisibleZmlModelFacade model = table.getModel();
+    final ZmlModelViewport model = table.getModel();
 
-    final IZmlModelCell selected = selection.getFocusCell();
-    if( !(selected instanceof IZmlModelValueCell) )
-      return Status.CANCEL_STATUS;
-
-    final IZmlModelValueCell current = (IZmlModelValueCell) selected;
+    final IZmlModelValueCell current = selection.getFocusCell();
 
     try
     {
@@ -89,11 +84,10 @@ public class ZmlCommandSetAllValues extends AbstractHandler
         final ZmlValueLabelProvider provider = new ZmlValueLabelProvider( column );
         final String targetValue = provider.getText( current );
 
-        final IZmlModelCell[] visibleCells = model.getCells( column );
-        for( final IZmlModelCell cell : visibleCells )
+        final IZmlModelValueCell[] visibleCells = model.getCells( column );
+        for( final IZmlModelValueCell cell : visibleCells )
         {
-          if( cell instanceof IZmlModelValueCell )
-            strategy.setValue( (IZmlModelValueCell) cell, targetValue );
+          strategy.setValue( cell, targetValue );
         }
       }
       else

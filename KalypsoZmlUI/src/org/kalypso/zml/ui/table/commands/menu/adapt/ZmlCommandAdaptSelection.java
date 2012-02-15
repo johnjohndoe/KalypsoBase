@@ -58,7 +58,7 @@ import org.kalypso.ogc.sensor.timeseries.wq.WQTimeserieProxy;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
-import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
@@ -87,13 +87,13 @@ public class ZmlCommandAdaptSelection extends AbstractHandler
     {
       final IZmlTable table = ZmlHandlerUtil.getTable( event );
       final IZmlTableSelection selection = table.getSelection();
-      final IZmlModelValueCell focus = (IZmlModelValueCell) selection.getFocusCell();
+      final IZmlModelValueCell focus = selection.getFocusCell();
       final IZmlModelColumn column = focus.getColumn();
-      final IZmlModelCell[] selected = selection.getSelectedCells( column );
+      final IZmlModelValueCell[] selected = selection.getSelectedCells( column );
       if( ArrayUtils.getLength( selected ) < 2 )
         throw new ExecutionException( "Anschmiegen fehlgeschlagen - selektieren Sie eine zweite Zelle!" );
 
-      final IZmlModelValueCell base = (IZmlModelValueCell) selected[0];
+      final IZmlModelValueCell base = selected[0];
 
       final Date begin = base.getIndexValue();
       final Date end = selected[selected.length - 1].getIndexValue();
@@ -120,7 +120,7 @@ public class ZmlCommandAdaptSelection extends AbstractHandler
 
   }
 
-  private IObservation transform( final VisibleZmlModelFacade model, final IZmlModelColumn column, final IZmlModelCell[] selected, final DateRange range, final IAxis axis ) throws SensorException
+  private IObservation transform( final ZmlModelViewport model, final IZmlModelColumn column, final IZmlModelCell[] selected, final DateRange range, final IAxis axis ) throws SensorException
   {
     final IObservation observation = column.getObservation();
 
@@ -152,10 +152,10 @@ public class ZmlCommandAdaptSelection extends AbstractHandler
     return null;
   }
 
-  private double getDifference( final VisibleZmlModelFacade model, final IZmlModelCell[] cells, final IAxis axis ) throws SensorException
+  private double getDifference( final ZmlModelViewport model, final IZmlModelCell[] cells, final IAxis axis ) throws SensorException
   {
     final IZmlModelValueCell base = (IZmlModelValueCell) cells[0];
-    final IZmlModelValueCell prev = (IZmlModelValueCell) model.findPreviousCell( base );
+    final IZmlModelValueCell prev = model.findPreviousCell( base );
 
     final ITupleModel tupleModel1 = base.getColumn().getTupleModel();
     final ITupleModel tupleModel2 = prev.getColumn().getTupleModel();

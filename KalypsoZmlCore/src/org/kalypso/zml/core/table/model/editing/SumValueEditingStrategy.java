@@ -49,16 +49,15 @@ import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
-import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 
 /**
  * @author Dirk Kuch
  */
 public class SumValueEditingStrategy extends AbstractEditingStrategy
 {
-  public SumValueEditingStrategy( final VisibleZmlModelFacade model )
+  public SumValueEditingStrategy( final ZmlModelViewport model )
   {
     super( model );
   }
@@ -70,7 +69,7 @@ public class SumValueEditingStrategy extends AbstractEditingStrategy
     {
       final Number targetValue = getTargetValue( cell, value );
 
-      final IZmlModelCell previousCell = getModel().findPreviousCell( cell );
+      final IZmlModelValueCell previousCell = getModel().findPreviousCell( cell );
 
       if( getModel().getResolution() == 0 )
       {
@@ -87,7 +86,7 @@ public class SumValueEditingStrategy extends AbstractEditingStrategy
       }
       else
       {
-        updateAggregatedValue( getStartReference( (IZmlModelValueCell) previousCell ), cell, targetValue );
+        updateAggregatedValue( getStartReference( previousCell ), cell, targetValue );
       }
     }
     catch( final SensorException e )

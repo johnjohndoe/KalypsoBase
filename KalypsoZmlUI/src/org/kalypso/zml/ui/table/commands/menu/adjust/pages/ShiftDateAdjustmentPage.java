@@ -46,7 +46,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
-import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedSpinner;
@@ -72,43 +71,28 @@ public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage
     super( provider );
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.pager.IElementPage#getLabel()
-   */
   @Override
   public String getLabel( )
   {
     return "Datum verschieben (->)";
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.pager.IElementPage#render(org.eclipse.swt.widgets.Composite,
-   *      org.eclipse.ui.forms.widgets.FormToolkit)
-   */
   @Override
   public void render( final Composite body, final FormToolkit toolkit )
   {
-    try
-    {
-      toolkit.createLabel( body, "" ); // spacer
-      final Integer offset = getOffset();
+    toolkit.createLabel( body, "" ); // spacer
+    final Integer offset = getOffset();
 
-      toolkit.createLabel( body, "Verschieben, um:" ).setFont( HEADING );
+    toolkit.createLabel( body, "Verschieben, um:" ).setFont( HEADING );
 
-      final Composite control = toolkit.createComposite( body );
-      control.setLayout( LayoutHelper.createGridLayout( 3 ) );
-      control.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    final Composite control = toolkit.createComposite( body );
+    control.setLayout( LayoutHelper.createGridLayout( 3 ) );
+    control.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
-      if( offset < 60 )
-        renderMinutedBased( control, toolkit );
-      else
-        renderHourBased( control, toolkit );
-    }
-    catch( final SensorException e )
-    {
-      e.printStackTrace();
-    }
-
+    if( offset < 60 )
+      renderMinutedBased( control, toolkit );
+    else
+      renderHourBased( control, toolkit );
   }
 
   private void renderHourBased( final Composite control, final FormToolkit toolkit )
@@ -121,7 +105,7 @@ public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage
 
   }
 
-  private void renderMinutedBased( final Composite control, final FormToolkit toolkit ) throws SensorException
+  private void renderMinutedBased( final Composite control, final FormToolkit toolkit )
   {
     addDaySpinner( control, toolkit );
     addHourSpinner( control, toolkit );

@@ -48,6 +48,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 
 /**
  * @author Dirk Kuch
@@ -60,7 +61,7 @@ public class ShiftDateRunnable implements ICoreRunnableWithProgress
 
   private final IZmlModelCell[] m_cells;
 
-  public ShiftDateRunnable( final IZmlModelColumn column, final IZmlModelCell[] cells, final Integer offset )
+  public ShiftDateRunnable( final IZmlModelColumn column, final IZmlModelValueCell[] cells, final Integer offset )
   {
     m_column = column;
     m_cells = cells;

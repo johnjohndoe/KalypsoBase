@@ -58,7 +58,7 @@ import org.kalypso.zml.core.table.binding.DataColumn;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
-import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.core.table.model.view.ZmlViewResolutionFilter;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
@@ -75,11 +75,11 @@ public class ZmlTableTooltip extends DefaultToolTip
 
   private final NatTable m_table;
 
-  private final VisibleZmlModelFacade m_model;
+  private final ZmlModelViewport m_model;
 
   private static boolean SHOW_TOOLTIP = true;
 
-  public ZmlTableTooltip( final NatTable table, final VisibleZmlModelFacade model )
+  public ZmlTableTooltip( final NatTable table, final ZmlModelViewport model )
   {
     super( table );
     m_table = table;
@@ -107,7 +107,7 @@ public class ZmlTableTooltip extends DefaultToolTip
     final int col = m_table.getColumnPositionByX( event.x ) - 1;
     final int row = m_table.getRowPositionByY( event.y ) - 1;
 
-    final IZmlModelValueCell cell = (IZmlModelValueCell) m_model.getCell( row, col );
+    final IZmlModelValueCell cell = m_model.getCell( row, col );
     if( Objects.isNull( cell ) )
       return null;
 

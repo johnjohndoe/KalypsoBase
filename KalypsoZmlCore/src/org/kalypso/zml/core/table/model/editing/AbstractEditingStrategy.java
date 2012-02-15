@@ -44,7 +44,7 @@ import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
-import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 
 /**
  * @author Dirk Kuch
@@ -52,14 +52,14 @@ import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
 public abstract class AbstractEditingStrategy implements IZmlEditingStrategy
 {
 
-  private final VisibleZmlModelFacade m_model;
+  private final ZmlModelViewport m_model;
 
-  public AbstractEditingStrategy( final VisibleZmlModelFacade model )
+  public AbstractEditingStrategy( final ZmlModelViewport model )
   {
     m_model = model;
   }
 
-  protected VisibleZmlModelFacade getModel( )
+  protected ZmlModelViewport getModel( )
   {
     return m_model;
   }

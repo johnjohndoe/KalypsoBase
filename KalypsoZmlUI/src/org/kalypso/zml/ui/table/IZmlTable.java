@@ -41,7 +41,7 @@
 package org.kalypso.zml.ui.table;
 
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
 
 /**
@@ -52,7 +52,7 @@ public interface IZmlTable
   // FIXME remove from interface!
   void dispose( );
 
-  VisibleZmlModelFacade getModel( );
+  ZmlModelViewport getModel( );
 
   void refresh( IZmlModelColumn... columns );
 

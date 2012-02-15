@@ -49,7 +49,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.repository.IDataSourceItem;
-import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
 
@@ -59,9 +58,9 @@ import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
 public abstract class AbstractValueRunnable implements ICoreRunnableWithProgress
 {
 
-  private final IZmlModelCell[] m_cells;
+  private final IZmlModelValueCell[] m_cells;
 
-  public AbstractValueRunnable( final IZmlModelCell[] cells )
+  public AbstractValueRunnable( final IZmlModelValueCell[] cells )
   {
     m_cells = cells;
   }
@@ -73,12 +72,9 @@ public abstract class AbstractValueRunnable implements ICoreRunnableWithProgress
 
     final ZmlModelTransaction transaction = new ZmlModelTransaction();
 
-    for( final IZmlModelCell cell : m_cells )
+    for( final IZmlModelValueCell cell : m_cells )
     {
-      if( !(cell instanceof IZmlModelValueCell) )
-        continue;
-
-      final IZmlModelValueCell reference = (IZmlModelValueCell) cell;
+      final IZmlModelValueCell reference = cell;
 
       try
       {

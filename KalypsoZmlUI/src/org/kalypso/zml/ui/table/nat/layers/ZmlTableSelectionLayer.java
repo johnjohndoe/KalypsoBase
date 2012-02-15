@@ -53,7 +53,8 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
-import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 
 /**
  * @author Dirk Kuch
@@ -61,9 +62,9 @@ import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
 public class ZmlTableSelectionLayer extends SelectionLayer implements IZmlTableSelection
 {
 
-  private final VisibleZmlModelFacade m_model;
+  private final ZmlModelViewport m_model;
 
-  public ZmlTableSelectionLayer( final VisibleZmlModelFacade model, final IUniqueIndexLayer layer )
+  public ZmlTableSelectionLayer( final ZmlModelViewport model, final IUniqueIndexLayer layer )
   {
     super( layer );
     m_model = model;
@@ -106,7 +107,7 @@ public class ZmlTableSelectionLayer extends SelectionLayer implements IZmlTableS
   }
 
   @Override
-  public IZmlModelCell[] getSelectedCells( )
+  public IZmlModelValueCell[] getSelectedCells( )
   {
     final Set<IZmlModelCell> selection = new LinkedHashSet<IZmlModelCell>();
 
@@ -120,11 +121,11 @@ public class ZmlTableSelectionLayer extends SelectionLayer implements IZmlTableS
       }
     }
 
-    return selection.toArray( new IZmlModelCell[] {} );
+    return selection.toArray( new IZmlModelValueCell[] {} );
   }
 
   @Override
-  public IZmlModelCell getFocusCell( )
+  public IZmlModelValueCell getFocusCell( )
   {
     final PositionCoordinate position = getLastSelectedCellPosition();
     if( Objects.isNull( position ) )
@@ -134,7 +135,7 @@ public class ZmlTableSelectionLayer extends SelectionLayer implements IZmlTableS
   }
 
   @Override
-  public IZmlModelCell[] getSelectedCells( final IZmlModelColumn column )
+  public IZmlModelValueCell[] getSelectedCells( final IZmlModelColumn column )
   {
     final Set<IZmlModelCell> selection = new LinkedHashSet<IZmlModelCell>();
 
@@ -144,6 +145,6 @@ public class ZmlTableSelectionLayer extends SelectionLayer implements IZmlTableS
       selection.add( row.get( column ) );
     }
 
-    return selection.toArray( new IZmlModelCell[] {} );
+    return selection.toArray( new IZmlModelValueCell[] {} );
   }
 }

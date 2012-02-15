@@ -66,7 +66,7 @@ public class ZmlCommandOpenValueInputDialog extends AbstractHandler
   {
     final IZmlTable table = ZmlHandlerUtil.getTable( event );
     final IZmlTableSelection selection = table.getSelection();
-    final IZmlModelValueCell active = (IZmlModelValueCell) selection.getFocusCell();
+    final IZmlModelValueCell active = selection.getFocusCell();
     if( active == null )
       throw new IllegalStateException( "Konnte aktive Spalte nicht ermitteln. Bitte Linkklick in der zu bearbeitenden Spalte ausführen und Aktion erneut versuchen." );
 

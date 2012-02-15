@@ -61,7 +61,7 @@ public class ZmlCommandAdjustSelection extends AbstractHandler
   {
     final IZmlTable table = ZmlHandlerUtil.getTable( event );
     final IZmlTableSelection selection = table.getSelection();
-    final IZmlModelValueCell cell = (IZmlModelValueCell) selection.getFocusCell();
+    final IZmlModelValueCell cell = selection.getFocusCell();
     final IZmlModelColumn column = cell.getColumn();
 
     final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();

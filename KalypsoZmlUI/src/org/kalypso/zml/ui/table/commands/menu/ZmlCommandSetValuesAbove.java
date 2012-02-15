@@ -55,10 +55,9 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.ZmlValueLabelProvider;
 import org.kalypso.zml.core.table.model.editing.IZmlEditingStrategy;
 import org.kalypso.zml.core.table.model.interpolation.ZmlInterpolationWorker;
-import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
-import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
@@ -76,9 +75,9 @@ public class ZmlCommandSetValuesAbove extends AbstractHandler
     try
     {
       final IZmlTable table = ZmlHandlerUtil.getTable( event );
-      final VisibleZmlModelFacade model = table.getModel();
+      final ZmlModelViewport model = table.getModel();
       final IZmlTableSelection selection = table.getSelection();
-      final IZmlModelValueCell active = (IZmlModelValueCell) selection.getFocusCell();
+      final IZmlModelValueCell active = selection.getFocusCell();
       final IZmlModelColumn column = active.getColumn();
       final IZmlEditingStrategy strategy = model.getEditingStrategy( column );
 
@@ -87,11 +86,10 @@ public class ZmlCommandSetValuesAbove extends AbstractHandler
         final ZmlValueLabelProvider provider = new ZmlValueLabelProvider( column );
         final String targetValue = provider.getText( active );
 
-        IZmlModelCell ptr = model.findPreviousCell( active );
+        IZmlModelValueCell ptr = model.findPreviousCell( active );
         while( ptr != null )
         {
-          if( ptr instanceof IZmlModelValueCell )
-            strategy.setValue( (IZmlModelValueCell) ptr, targetValue );
+          strategy.setValue( ptr, targetValue );
 
           ptr = model.findPreviousCell( ptr );
         }
