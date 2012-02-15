@@ -172,6 +172,8 @@ public class ZmlViewResolutionFilter
       resetOffset();
     else
       m_offset += number;
+
+    m_model.fireModelChanged();
   }
 
   public void setParameters( final int resolution, final boolean mode )

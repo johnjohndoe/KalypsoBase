@@ -67,8 +67,8 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.zml.core.table.binding.rule.AbstractZmlRule;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.rules.AppliedRule;
 
 /**
  * @author Dirk Kuch
@@ -143,12 +143,12 @@ public class ZmlColumnHeaderCellPainter extends AbstractCellPainter
   {
     final Set<Image> images = new LinkedHashSet<Image>();
 
-    final AbstractZmlRule[] rules = column.getActiveRules();
-    for( final AbstractZmlRule rule : rules )
+    final AppliedRule[] rules = column.getActiveRules();
+    for( final AppliedRule rule : rules )
     {
       try
       {
-        final Image img = rule.getBaseStyle().getImage();
+        final Image img = rule.getCellStyle().getImage();
         if( Objects.isNotNull( img ) )
           images.add( img );
       }

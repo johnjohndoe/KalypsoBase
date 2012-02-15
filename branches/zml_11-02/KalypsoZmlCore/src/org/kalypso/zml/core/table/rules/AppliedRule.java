@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.rules;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.zml.core.table.binding.CellStyle;
 
 /**
@@ -81,5 +83,30 @@ public class AppliedRule
   public boolean hasHeaderIcon( )
   {
     return m_headerIcon;
+  }
+
+  @Override
+  public boolean equals( final Object obj )
+  {
+    if( obj instanceof AppliedRule )
+    {
+      final AppliedRule other = (AppliedRule) obj;
+
+      final EqualsBuilder builder = new EqualsBuilder();
+      builder.append( getLabel(), other.getLabel() );
+
+      return builder.isEquals();
+    }
+    return super.equals( obj );
+  }
+
+  @Override
+  public int hashCode( )
+  {
+    final HashCodeBuilder builder = new HashCodeBuilder();
+    builder.append( getClass().getName() );
+    builder.append( getLabel() );
+
+    return builder.toHashCode();
   }
 }

@@ -129,7 +129,9 @@ public class ZmlTableSelectionLayer extends SelectionLayer implements IZmlTableS
   {
     final PositionCoordinate position = getLastSelectedCellPosition();
     if( Objects.isNull( position ) )
+    {
       return null;
+    }
 
     return m_model.getCell( position.getRowPosition(), position.getColumnPosition() );
   }
