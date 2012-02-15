@@ -99,10 +99,8 @@ public class CoverageManagementHelper
       final URL url = new URL( workspace.getContext(), fileName );
       final File gridFile = getGridFile( url );
       if( gridFile != null )
-      {
-        gridFile.deleteOnExit();
         gridFile.delete();
-      }
+
       final IFile eclipseFile = ResourceUtilities.findFileFromURL( url );
       if( eclipseFile != null )
         eclipseFile.getParent().refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
