@@ -159,7 +159,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
 
     final IZmlModelRow row = cell.getRow();
 
-    final IZmlModelCell reference = row.get( getDataColumn().getType() );
+    final IZmlModelValueCell reference = row.get( getDataColumn().getType() );
     if( Objects.isNull( reference ) )
       return new ZmlCellRule[] {};
 

@@ -45,11 +45,10 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.KalypsoZmlCore;
-import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.references.ZmlValues;
 import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
-import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 
 /**
  * updated value will be a new st�tzstelle. update all values between s_new and s_next. set updated values to s_new
@@ -69,7 +68,7 @@ import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
 public class ContinuedInterpolatedValueEditingStrategy extends AbstractEditingStrategy
 {
 
-  public ContinuedInterpolatedValueEditingStrategy( final VisibleZmlModelFacade facade )
+  public ContinuedInterpolatedValueEditingStrategy( final ZmlModelViewport facade )
   {
     super( facade );
   }
@@ -89,10 +88,10 @@ public class ContinuedInterpolatedValueEditingStrategy extends AbstractEditingSt
       {
         transaction.add( cell, targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
 
-        IZmlModelCell next = getModel().findNextCell( cell );
-        while( next instanceof IZmlModelValueCell )
+        IZmlModelValueCell next = getModel().findNextCell( cell );
+        while( next != null )
         {
-          final IZmlModelValueCell ref = (IZmlModelValueCell) next;
+          final IZmlModelValueCell ref = next;
           if( ZmlValues.isStuetzstelle( ref ) )
             break;
 

@@ -223,6 +223,7 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
       @Override
       protected IStatus run( final IProgressMonitor monitor )
       {
+
         if( monitor.isCanceled() )
           return Status.CANCEL_STATUS;
 

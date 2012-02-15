@@ -76,9 +76,8 @@ import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.zml.core.table.model.IZmlColumnModelListener;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
-import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableListener;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
@@ -104,12 +103,12 @@ public class ZmlTable extends Composite implements IZmlTable
 
 // final ZmlTablePager m_pager = new ZmlTablePager( this ); // only for main table
 
-  protected final VisibleZmlModelFacade m_model;
+  protected final ZmlModelViewport m_model;
 
   public ZmlTable( final ZmlTableComposite table, final IZmlModel model, final FormToolkit toolkit )
   {
     super( table, SWT.NULL );
-    m_model = new VisibleZmlModelFacade( model );
+    m_model = new ZmlModelViewport( model );
 
     m_model.addListener( new IZmlColumnModelListener()
     {
@@ -180,19 +179,15 @@ public class ZmlTable extends Composite implements IZmlTable
       public void menuDetected( final MenuDetectEvent e )
       {
         final IZmlTableSelection selection = m_bodyLayer.getSelection();
-        final IZmlModelCell cell = selection.getFocusCell();
+        final IZmlModelValueCell cell = selection.getFocusCell();
 
-        if( cell instanceof IZmlModelValueCell )
-        {
-          final IZmlModelValueCell value = (IZmlModelValueCell) cell;
+        final IZmlModelValueCell value = cell;
 
-          final ZmlTableContextMenuProvider menuProvider = new ZmlTableContextMenuProvider();
-          menuProvider.fillMenu( value.getColumn(), m_contextMenuManager );
-          m_contextMenuManager.update( true );
+        final ZmlTableContextMenuProvider menuProvider = new ZmlTableContextMenuProvider();
+        menuProvider.fillMenu( value.getColumn(), m_contextMenuManager );
+        m_contextMenuManager.update( true );
 
-          contextMenu.setVisible( true );
-        }
-
+        contextMenu.setVisible( true );
       }
     } );
   }
@@ -251,7 +246,7 @@ public class ZmlTable extends Composite implements IZmlTable
   }
 
   @Override
-  public VisibleZmlModelFacade getModel( )
+  public ZmlModelViewport getModel( )
   {
     return m_model;
   }

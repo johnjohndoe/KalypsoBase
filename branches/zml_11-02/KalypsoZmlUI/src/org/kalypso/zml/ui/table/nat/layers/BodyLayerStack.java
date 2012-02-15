@@ -9,7 +9,7 @@ import net.sourceforge.nattable.layer.DataLayer;
 import net.sourceforge.nattable.viewport.ViewportLayer;
 
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.ui.table.nat.base.ZmlModelDataProvider;
 import org.kalypso.zml.ui.table.nat.base.ZmlModelRowAccesor;
 
@@ -21,9 +21,9 @@ public class BodyLayerStack extends AbstractLayerTransform
 
   private final IColumnAccessor<IZmlModelRow> m_accessor;
 
-  private final VisibleZmlModelFacade m_model;
+  private final ZmlModelViewport m_model;
 
-  public BodyLayerStack( final VisibleZmlModelFacade model )
+  public BodyLayerStack( final ZmlModelViewport model )
   {
     m_model = model;
     m_accessor = new ZmlModelRowAccesor( model );
@@ -54,7 +54,7 @@ public class BodyLayerStack extends AbstractLayerTransform
     return m_provider;
   }
 
-  public VisibleZmlModelFacade getModel( )
+  public ZmlModelViewport getModel( )
   {
     return m_model;
   }

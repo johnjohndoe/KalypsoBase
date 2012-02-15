@@ -58,7 +58,6 @@ import org.kalypso.zml.core.table.binding.rule.instructions.AbstractZmlRuleInstr
 import org.kalypso.zml.core.table.binding.rule.instructions.ZmlMetadataBoundaryInstruction;
 import org.kalypso.zml.core.table.binding.rule.instructions.ZmlMetadataDaterangeInstruction;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.rules.IZmlCellRuleImplementation;
 import org.kalypso.zml.core.table.schema.AbstractRuleInstructionType;
@@ -137,23 +136,19 @@ public class ZmlCellRule extends AbstractZmlRule
 
   public CellStyle getStyle( final IZmlModelRow row, final BaseColumn column ) throws CoreException
   {
-    final IZmlModelCell reference = row.get( column.getType() );
+    final IZmlModelValueCell reference = row.get( column.getType() );
     if( Objects.isNull( reference ) )
       return getBaseStyle();
 
-    else if( !(reference instanceof IZmlModelValueCell) )
-      return getBaseStyle();
-
     CellStyleType base = getBaseStyle().getType();
-
     final AbstractZmlRuleInstructionType[] instructions = getInstructions();
     for( final AbstractZmlRuleInstructionType instruction : instructions )
     {
       try
       {
-        if( instruction.matches( (IZmlModelValueCell) reference ) )
+        if( instruction.matches( reference ) )
         {
-          final CellStyle style = instruction.getStyle( (IZmlModelValueCell) reference );
+          final CellStyle style = instruction.getStyle( reference );
           if( style != null )
             base = CellStyle.merge( base, style.getType() );
         }

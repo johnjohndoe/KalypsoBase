@@ -46,9 +46,8 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.editing.IZmlEditingStrategy;
-import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
-import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 
 /**
  * @author Dirk Kuch
@@ -56,9 +55,9 @@ import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
 public class ZmlModelRowAccesor implements IColumnAccessor<IZmlModelRow>
 {
 
-  private final VisibleZmlModelFacade m_model;
+  private final ZmlModelViewport m_model;
 
-  public ZmlModelRowAccesor( final VisibleZmlModelFacade model )
+  public ZmlModelRowAccesor( final ZmlModelViewport model )
   {
     m_model = model;
   }
@@ -80,17 +79,12 @@ public class ZmlModelRowAccesor implements IColumnAccessor<IZmlModelRow>
     if( Objects.equal( oldValue, newValue ) )
       return;
 
-    final IZmlModelCell cell = m_model.getCell( row, columnIndex );
-    if( cell instanceof IZmlModelValueCell )
-    {
-      final IZmlModelValueCell valueCell = (IZmlModelValueCell) cell;
-      final IZmlModelColumn column = valueCell.getColumn();
+    final IZmlModelValueCell cell = m_model.getCell( row, columnIndex );
+    final IZmlModelValueCell valueCell = cell;
+    final IZmlModelColumn column = valueCell.getColumn();
 
-      final IZmlEditingStrategy strategy = m_model.getEditingStrategy( column );
-      strategy.setValue( valueCell, newValue.toString() );
-    }
-    else
-      throw new UnsupportedOperationException();
+    final IZmlEditingStrategy strategy = m_model.getEditingStrategy( column );
+    strategy.setValue( valueCell, newValue.toString() );
   }
 
   @Override

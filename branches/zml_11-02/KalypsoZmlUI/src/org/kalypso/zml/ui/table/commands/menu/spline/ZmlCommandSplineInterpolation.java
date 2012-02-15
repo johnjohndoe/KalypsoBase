@@ -86,9 +86,9 @@ public class ZmlCommandSplineInterpolation extends AbstractHandler
     {
       final IZmlTable table = ZmlHandlerUtil.getTable( event );
       final IZmlTableSelection selection = table.getSelection();
-      final IZmlModelValueCell focus = (IZmlModelValueCell) selection.getFocusCell();
+      final IZmlModelValueCell focus = selection.getFocusCell();
       final IZmlModelColumn column = focus.getColumn();
-      final IZmlModelCell[] selected = selection.getSelectedCells( column );
+      final IZmlModelValueCell[] selected = selection.getSelectedCells( column );
       if( ArrayUtils.getLength( selected ) < 2 )
         throw new ExecutionException( "Spline-Interpolation fehlgeschlagen - selektieren Sie eine zweite Zelle!" );
 

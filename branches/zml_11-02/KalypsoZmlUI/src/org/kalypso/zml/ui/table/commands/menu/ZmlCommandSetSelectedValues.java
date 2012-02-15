@@ -56,7 +56,7 @@ import org.kalypso.zml.core.table.model.interpolation.ZmlInterpolationWorker;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
-import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
@@ -73,10 +73,10 @@ public class ZmlCommandSetSelectedValues extends AbstractHandler
     try
     {
       final IZmlTable table = ZmlHandlerUtil.getTable( event );
-      final VisibleZmlModelFacade model = table.getModel();
+      final ZmlModelViewport model = table.getModel();
       final IZmlTableSelection selection = table.getSelection();
-      final IZmlModelValueCell active = (IZmlModelValueCell) selection.getFocusCell();
-      final IZmlModelCell[] cells = selection.getSelectedCells( active.getColumn() );
+      final IZmlModelValueCell active = selection.getFocusCell();
+      final IZmlModelValueCell[] cells = selection.getSelectedCells( active.getColumn() );
 
       final IZmlModelColumn column = active.getColumn();
       final IZmlEditingStrategy strategy = model.getEditingStrategy( column );

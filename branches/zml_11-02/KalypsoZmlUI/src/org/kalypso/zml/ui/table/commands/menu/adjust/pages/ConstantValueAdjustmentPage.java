@@ -47,7 +47,6 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedTextBox;
 import org.kalypso.zml.ui.table.base.widgets.IEnhancedTextBoxListener;
@@ -99,8 +98,7 @@ public class ConstantValueAdjustmentPage extends AbstractAdjustmentPage implemen
     if( Objects.isNotNull( m_constantValue ) )
       return m_constantValue;
 
-    final IZmlModelColumn column = getColumn();
-    final IZmlModelValueCell cell = (IZmlModelValueCell) getSelection().getFocusCell();
+    final IZmlModelValueCell cell = getSelection().getFocusCell();
     final Number value = cell.getValue();
 
     m_constantValue = value.doubleValue();
@@ -125,7 +123,7 @@ public class ConstantValueAdjustmentPage extends AbstractAdjustmentPage implemen
     final IZmlTableSelection selection = getSelection();
     final IZmlModelColumn column = getColumn();
 
-    final IZmlModelCell[] cells = selection.getSelectedCells( column );
+    final IZmlModelValueCell[] cells = selection.getSelectedCells( column );
 
     return new ConstantValueRunnable( cells, m_constantValue );
   }

@@ -42,7 +42,7 @@ package org.kalypso.zml.ui.table.nat.layers;
 
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 
 /**
  * @author Dirk Kuch
@@ -53,10 +53,10 @@ public interface IZmlTableSelection
 
   IZmlModelRow[] getSelectedRows( );
 
-  IZmlModelCell getFocusCell( );
+  IZmlModelValueCell getFocusCell( );
 
-  IZmlModelCell[] getSelectedCells( );
+  IZmlModelValueCell[] getSelectedCells( );
 
-  IZmlModelCell[] getSelectedCells( IZmlModelColumn column );
+  IZmlModelValueCell[] getSelectedCells( IZmlModelColumn column );
 
 }

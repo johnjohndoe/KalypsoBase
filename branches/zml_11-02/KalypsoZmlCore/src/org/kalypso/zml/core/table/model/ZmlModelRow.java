@@ -46,12 +46,9 @@ import java.util.Map;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.references.ZmlDataValueReference;
-import org.kalypso.zml.core.table.model.references.ZmlIndexValueReference;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
-import org.kalypso.zml.core.table.schema.IndexColumnType;
 
 /**
  * @author Dirk Kuch
@@ -77,13 +74,8 @@ public class ZmlModelRow implements IZmlModelRow
   }
 
   @Override
-  public IZmlModelCell get( final AbstractColumnType type )
+  public IZmlModelValueCell get( final AbstractColumnType type )
   {
-    if( type instanceof IndexColumnType )
-    {
-      return new ZmlIndexValueReference( this );
-    }
-
     return m_valueCells.get( type.getId() );
   }
 

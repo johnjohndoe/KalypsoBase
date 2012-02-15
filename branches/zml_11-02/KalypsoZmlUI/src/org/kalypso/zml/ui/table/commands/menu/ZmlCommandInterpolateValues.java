@@ -53,7 +53,7 @@ import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
-import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
@@ -71,13 +71,8 @@ public class ZmlCommandInterpolateValues extends AbstractHandler
       final IZmlTable table = ZmlHandlerUtil.getTable( event );
       final IZmlTableSelection selection = table.getSelection();
 
-      final IZmlModelCell focus = selection.getFocusCell();
-      if( !(focus instanceof IZmlModelValueCell) )
-        return Status.CANCEL_STATUS;
-
-      final IZmlModelValueCell current = (IZmlModelValueCell) focus;
-
-      final IZmlModelCell[] cells = selection.getSelectedCells( current.getColumn() );
+      final IZmlModelValueCell current = selection.getFocusCell();
+      final IZmlModelValueCell[] cells = selection.getSelectedCells( current.getColumn() );
       if( ArrayUtils.getLength( cells ) < 2 )
         throw new ExecutionException( "Interpolation fehlgeschlagen - selektieren Sie eine zweite Zelle!" );
 
@@ -95,7 +90,7 @@ public class ZmlCommandInterpolateValues extends AbstractHandler
 
       final ZmlModelTransaction transaction = new ZmlModelTransaction();
 
-      final VisibleZmlModelFacade viewModel = table.getModel();
+      final ZmlModelViewport viewModel = table.getModel();
       final IZmlModel model = viewModel.getModel();
 
       for( int index = intervallStart.getModelIndex() + 1; index < intervallEnd.getModelIndex(); index++ )

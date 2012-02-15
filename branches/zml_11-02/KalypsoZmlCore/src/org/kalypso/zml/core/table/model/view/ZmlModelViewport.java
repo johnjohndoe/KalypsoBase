@@ -58,7 +58,7 @@ import org.kalypso.zml.core.table.model.editing.ContinuedInterpolatedValueEditin
 import org.kalypso.zml.core.table.model.editing.IZmlEditingStrategy;
 import org.kalypso.zml.core.table.model.editing.InterpolatedValueEditingStrategy;
 import org.kalypso.zml.core.table.model.editing.SumValueEditingStrategy;
-import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.core.table.schema.IndexColumnType;
@@ -66,7 +66,7 @@ import org.kalypso.zml.core.table.schema.IndexColumnType;
 /**
  * @author Dirk Kuch
  */
-public class VisibleZmlModelFacade
+public class ZmlModelViewport
 {
   Set<IZmlColumnModelListener> m_listeners = Collections.synchronizedSet( new LinkedHashSet<IZmlColumnModelListener>() );
 
@@ -81,14 +81,17 @@ public class VisibleZmlModelFacade
 
   private final ZmlViewResolutionFilter m_filter;
 
-  public VisibleZmlModelFacade( final IZmlModel model )
+  public ZmlModelViewport( final IZmlModel model )
   {
     m_model = model;
-
     m_filter = new ZmlViewResolutionFilter( this );
+
+    // dirty only for visible columns
+    // row caching
+// m_model.addListener( IZmlColumnModelListener(){} );
   }
 
-  public IZmlModelCell getCell( final IZmlModelRow row, final int columnIndex )
+  public IZmlModelValueCell getCell( final IZmlModelRow row, final int columnIndex )
   {
     if( columnIndex == -1 )
       return null;
@@ -143,7 +146,7 @@ public class VisibleZmlModelFacade
     return collection.toArray( new IZmlModelRow[] {} );
   }
 
-  public IZmlModelCell getCell( final int rowIndex, final int columnIndex )
+  public IZmlModelValueCell getCell( final int rowIndex, final int columnIndex )
   {
     if( rowIndex == -1 || columnIndex == -1 )
       return null;
@@ -170,12 +173,12 @@ public class VisibleZmlModelFacade
     return rows[rowIndex];
   }
 
-  public IZmlModelCell findPreviousCell( final IZmlModelCell current )
+  public IZmlModelValueCell findPreviousCell( final IZmlModelValueCell current )
   {
     throw new UnsupportedOperationException();
   }
 
-  public IZmlModelCell findNextCell( final IZmlModelCell current )
+  public IZmlModelValueCell findNextCell( final IZmlModelValueCell current )
   {
     throw new UnsupportedOperationException();
   }
@@ -221,9 +224,9 @@ public class VisibleZmlModelFacade
     }
   }
 
-  public IZmlModelCell[] getCells( final IZmlModelColumn column )
+  public IZmlModelValueCell[] getCells( final IZmlModelColumn column )
   {
-    final Set<IZmlModelCell> cells = new LinkedHashSet<IZmlModelCell>();
+    final Set<IZmlModelValueCell> cells = new LinkedHashSet<IZmlModelValueCell>();
 
     final IZmlModelRow[] rows = getRows();
     for( final IZmlModelRow row : rows )
@@ -231,7 +234,7 @@ public class VisibleZmlModelFacade
       cells.add( row.get( column ) );
     }
 
-    return cells.toArray( new IZmlModelCell[] {} );
+    return cells.toArray( new IZmlModelValueCell[] {} );
   }
 
   public IZmlModel getModel( )

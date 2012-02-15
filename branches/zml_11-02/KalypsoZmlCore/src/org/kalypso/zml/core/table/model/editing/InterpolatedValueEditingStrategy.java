@@ -49,7 +49,7 @@ import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.interpolation.ZmlInterpolation;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
-import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.core.table.model.visitor.FindNeighbourStuetzstellenVisitor;
 
 /**
@@ -69,7 +69,7 @@ import org.kalypso.zml.core.table.model.visitor.FindNeighbourStuetzstellenVisito
 public class InterpolatedValueEditingStrategy extends AbstractEditingStrategy
 {
 
-  public InterpolatedValueEditingStrategy( final VisibleZmlModelFacade model )
+  public InterpolatedValueEditingStrategy( final ZmlModelViewport model )
   {
     super( model );
   }

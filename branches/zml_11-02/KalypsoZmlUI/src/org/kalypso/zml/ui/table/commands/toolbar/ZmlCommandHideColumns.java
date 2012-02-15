@@ -51,7 +51,7 @@ import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
-import org.kalypso.zml.core.table.model.view.VisibleZmlModelFacade;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 
@@ -77,7 +77,7 @@ public class ZmlCommandHideColumns extends AbstractHandler implements IElementUp
     final String[] columnTypes = getColumnTypes( parameters );
     final boolean hide = HandlerUtils.isSelected( event );
 
-    final VisibleZmlModelFacade model = table.getModel();
+    final ZmlModelViewport model = table.getModel();
     for( final String type : columnTypes )
     {
       model.setVisible( type, hide );
