@@ -67,7 +67,7 @@ import com.vividsolutions.jts.geom.Coordinate;
  * <p>
  * Format description:
  * </p>
- * 
+ *
  * <pre>
  *  Version:        Version Number (Currently 0)
  *  SizeX:          Grid Size in horizontal direction
@@ -80,7 +80,7 @@ import com.vividsolutions.jts.geom.Coordinate;
  * <p>
  * All values are encoded as lower endian integers (4 bytes).
  * </p>
- * 
+ *
  * @author Dejan Antanaskovic
  * @author Thomas Jung
  * @author Gernot Belger
@@ -99,20 +99,17 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
   /* If set, this file will be deleted on dispose. Used if grid is hold in temporary file. */
   private final File m_binFile;
 
-  private final int m_sizeX;
-
-  private final int m_sizeY;
-
-  private final int m_scale;
+  private final BinaryGeoGridHeader m_header;
 
   private BigDecimal m_min;
 
   private BigDecimal m_max;
 
+
   /**
    * Opens an existing grid for read-only access.<br>
    * Dispose the grid after it is no more needed in order to release the given resource.
-   * 
+   *
    * @param writeable
    *          If <code>true</code>, the grid is opened for writing and a {@link IWriteableGeoGrid} is returned.
    */
@@ -146,7 +143,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
    * Crates a new grid file with the given size and scale.<br>
    * The grid is then opened in write mode, so its values can then be set.<br>
    * The grid must be disposed afterwards in order to flush the written information. *
-   * 
+   *
    * @param fillGrid
    *          If set to <code>true</code>, the grid will be initially filled with no-data values. Else, the grid values
    *          are undetermined.
@@ -178,16 +175,11 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
 
     /* Read header */
     m_randomAccessFile.seek( 0 );
-    final int version = readInt();
-    Assert.isTrue( version == 0, "Unknwon binary file format version: " + version );
 
-    m_sizeX = readInt();
-    m_sizeY = readInt();
-    m_scale = readInt();
+    m_header = BinaryGeoGridHeader.read( m_randomAccessFile );
 
     /* Read statistical data */
     getStatistically();
-
   }
 
   /**
@@ -204,9 +196,8 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
       m_randomAccessFile = randomAccessFile;
       m_binFile = null;
 
-      m_sizeX = sizeX;
-      m_sizeY = sizeY;
-      m_scale = scale;
+      m_header = new BinaryGeoGridHeader( sizeX, sizeY, scale );
+
       m_min = BigDecimal.valueOf( Double.MAX_VALUE );
       m_max = BigDecimal.valueOf( -Double.MAX_VALUE );
 
@@ -233,8 +224,6 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
 
       /* Read statistical data */
       saveStatistically();
-// writeBigDecimal( m_min );
-// writeBigDecimal( m_max );
     }
     catch( final IOException e )
     {
@@ -245,7 +234,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
   private BigDecimal readBigDecimal( ) throws IOException
   {
     final int intVal = readInt();
-    return new BigDecimal( BigInteger.valueOf( intVal ), m_scale );
+    return new BigDecimal( BigInteger.valueOf( intVal ), m_header.getScale() );
   }
 
   private int readInt( ) throws IOException
@@ -260,7 +249,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
       writeInt( NO_DATA );
     else
     {
-      final BigDecimal scaled = value.setScale( m_scale, BigDecimal.ROUND_HALF_UP );
+      final BigDecimal scaled = value.setScale( m_header.getScale(), BigDecimal.ROUND_HALF_UP );
       writeInt( scaled.unscaledValue().intValue() );
     }
   }
@@ -271,27 +260,18 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
     m_randomAccessFile.write( m_intBuffer );
   }
 
-  /**
-   * @see org.kalypso.gis.doubleraster.grid.DoubleGrid#getSizeX()
-   */
   @Override
   public int getSizeX( )
   {
-    return m_sizeX;
+    return m_header.getSizeX();
   }
 
-  /**
-   * @see org.kalypso.gis.doubleraster.grid.DoubleGrid#getSizeY()
-   */
   @Override
   public int getSizeY( )
   {
-    return m_sizeY;
+    return m_header.getSizeY();
   }
 
-  /**
-   * @see org.kalypso.gis.doubleraster.grid.DoubleGrid#getValue(int, int)
-   */
   @Override
   public double getValue( final int x, final int y ) throws GeoGridException
   {
@@ -307,7 +287,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
       if( intVal == NO_DATA )
         return Double.NaN;
 
-      final BigDecimal decimal = new BigDecimal( BigInteger.valueOf( intVal ), m_scale );
+      final BigDecimal decimal = new BigDecimal( BigInteger.valueOf( intVal ), m_header.getScale() );
       return decimal.doubleValue();
     }
     catch( final IOException e )
@@ -319,7 +299,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
 
   /**
    * Sets the value of a grid cell. The given value is scaled to the scale of this grid.
-   * 
+   *
    * @throws DoubleGridException
    *           If the grid is not opened for write access.
    * @see org.kalypso.gis.doubleraster.grid.DoubleGrid#getValue(int, int)
@@ -343,7 +323,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
 
   /**
    * Sets the value of a grid cell. The given value is rescaled to the scale of this grid.
-   * 
+   *
    * @throws DoubleGridException
    *           If the grid is not opened for write access.
    */
@@ -369,10 +349,10 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
 
   private void seekValue( final int x, final int y ) throws IOException
   {
-    Assert.isTrue( x >= 0 && x < m_sizeX );
-    Assert.isTrue( y >= 0 && y < m_sizeY );
+    Assert.isTrue( x >= 0 && x < getSizeX() );
+    Assert.isTrue( y >= 0 && y < getSizeY() );
 
-    final long pos = y * m_sizeX * 4 + x * 4 + HEADER_SIZE;
+    final long pos = y * getSizeX() * 4 + x * 4 + HEADER_SIZE;
     m_randomAccessFile.seek( pos );
   }
 
@@ -381,11 +361,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
   {
     try
     {
-      if( m_randomAccessFile != null )
-      {
-        m_randomAccessFile.close();
-        m_randomAccessFile = null;
-      }
+      close();
     }
     catch( final IOException e )
     {
@@ -393,8 +369,19 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
       e.printStackTrace();
     }
 
+    // TODO: why delete, should this happen on close?
     if( m_binFile != null )
       m_binFile.delete();
+  }
+
+  @Override
+  public void close( ) throws IOException
+  {
+    if( m_randomAccessFile != null )
+    {
+      m_randomAccessFile.close();
+      m_randomAccessFile = null;
+    }
   }
 
   /**
@@ -417,13 +404,13 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
 
   /**
    * Gets the statistically values of this grid.
-   * 
+   *
    * @throws IOException
    *           If the file position is not valid.
    */
   public void getStatistically( ) throws IOException
   {
-    final long pos = HEADER_SIZE + m_sizeY * m_sizeX * 4;
+    final long pos = HEADER_SIZE + getSizeX() * getSizeY() * 4;
     m_randomAccessFile.seek( pos );
     m_min = readBigDecimal();
     m_max = readBigDecimal();
@@ -431,7 +418,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
 
   /**
    * Sets the statistically values of this grid.
-   * 
+   *
    * @throws IOException
    *           If the grid is not opened for write access.
    */
@@ -440,7 +427,7 @@ public class BinaryGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
   {
     try
     {
-      final long pos = HEADER_SIZE + m_sizeY * m_sizeX * 4;
+      final long pos = HEADER_SIZE + getSizeX() * getSizeY() * 4;
       m_randomAccessFile.seek( pos );
       writeBigDecimal( min );
       writeBigDecimal( max );

@@ -92,9 +92,6 @@ public class CachingGeoGrid extends AbstractDelegatingGeoGrid
     return m_cacheMap;
   }
 
-  /**
-   * @see org.kalypso.grid.AbstractDelegatingGeoGrid#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -110,9 +107,6 @@ public class CachingGeoGrid extends AbstractDelegatingGeoGrid
     }
   }
 
-  /**
-   * @see org.kalypso.grid.AbstractDelegatingGeoGrid#getValue(int, int)
-   */
   @Override
   public double getValue( final int x, final int y ) throws GeoGridException
   {

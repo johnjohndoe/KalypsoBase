@@ -8,9 +8,9 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
 import org.kalypsodeegree.model.coverage.RangeSetFile;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -44,17 +44,17 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
 
   private final boolean m_writeable;
 
-  public RectifiedGridCoverageGeoGrid( final Feature rgcFeature )
+  public RectifiedGridCoverageGeoGrid( final RectifiedGridCoverage rgcFeature )
   {
     this( rgcFeature, null );
   }
 
-  public RectifiedGridCoverageGeoGrid( final Feature rgcFeature, final URL context )
+  public RectifiedGridCoverageGeoGrid( final RectifiedGridCoverage rgcFeature, final URL context )
   {
     this( rgcFeature, context, false );
   }
 
-  protected RectifiedGridCoverageGeoGrid( final Feature rgcFeature, final URL context, final boolean writeable )
+  protected RectifiedGridCoverageGeoGrid( final RectifiedGridCoverage rgcFeature, final URL context, final boolean writeable )
   {
     m_writeable = writeable;
     if( context == null )
@@ -62,7 +62,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
     else
       m_context = context;
 
-    final RectifiedGridDomain domain = (RectifiedGridDomain) rgcFeature.getProperty( new QName( NS.GML3, "rectifiedGridDomain" ) );
+    final RectifiedGridDomain domain = rgcFeature.getGridDomain();
     m_rangeSet = rgcFeature.getProperty( new QName( NS.GML3, "rangeSet" ) );
     GM_Point origin = null;
     try
@@ -202,9 +202,16 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   @Override
   public void dispose( )
   {
-    // do not dispose the grid, we access it via the weak-cache
     if( m_grid != null )
       m_grid.dispose();
+  }
+
+  @Override
+  public void close( ) throws Exception
+  {
+    // do not dispose the grid, we access it via the weak-cache
+    if( m_grid != null )
+      m_grid.close();
   }
 
   /**
