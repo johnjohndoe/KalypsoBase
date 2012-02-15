@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.menu;
+package org.kalypso.zml.ui.table.nat.context.menu;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
