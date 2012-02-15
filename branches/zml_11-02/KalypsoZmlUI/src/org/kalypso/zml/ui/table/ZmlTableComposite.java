@@ -73,7 +73,7 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
 
   private final FormToolkit m_toolkit;
 
-  protected ZmlTable m_main;
+  protected ZmlTable m_table;
 
   private IZmlModel m_model;
 
@@ -105,8 +105,8 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
         toolbar.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
       }
 
-      m_main = new ZmlTable( this, m_model, m_toolkit );
-      m_main.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+      m_table = new ZmlTable( this, m_model, m_toolkit );
+      m_table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
       if( hasToolbar( tableType ) )
         initToolbar( tableType, toolbar, m_toolkit );
@@ -116,20 +116,9 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
   }
 
   @Override
-  public IZmlTable[] getTables( )
-  {
-    // FIXME add header table
-    return new IZmlTable[] { m_main };
-  }
-
-  @Override
   public void dispose( )
   {
-    final IZmlTable[] tables = getTables();
-    for( final IZmlTable table : tables )
-    {
-      table.dispose();
-    }
+    m_table.dispose();
 
     super.dispose();
   }
@@ -184,24 +173,17 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
   {
     synchronized( this )
     {
-      final IZmlTable[] tables = getTables();
-      for( final IZmlTable table : tables )
-      {
-        // FIXME move to getModel().refresh()?
-// table.getModel().reset();
-      }
 
+      // FIXME move to getModel().refresh()?
+// table.getModel().reset();
       // FIXME stack columns in table model
       Collections.addAll( m_stackColumns, cols );
 
 // final IZmlModelColumn[] missing = ZmlTableColumns.findMissingColumns( getMainTable(), getModel().getColumns() );
 // ZmlTableColumns.buildTableColumns( this, ZmlTableColumns.toBaseColumns( missing ) );
 
-      for( final IZmlTable table : tables )
-      {
-        // FIXME don't refresh all columns!!!!
-        table.refresh( new IZmlModelColumn[] {} );
-      }
+      // FIXME don't refresh all columns!!!!
+      m_table.refresh( new IZmlModelColumn[] {} );
 
     }
   }
@@ -229,15 +211,9 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
   }
 
   @Override
-  public IZmlTable getMainTable( )
+  public IZmlTable getTable( )
   {
-    return m_main;
-  }
-
-  @Override
-  public IZmlModel getModel( )
-  {
-    return m_model;
+    return m_table;
   }
 
 }
