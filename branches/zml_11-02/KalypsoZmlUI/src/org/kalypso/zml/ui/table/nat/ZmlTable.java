@@ -55,7 +55,9 @@ import net.sourceforge.nattable.grid.layer.CornerLayer;
 import net.sourceforge.nattable.grid.layer.GridLayer;
 import net.sourceforge.nattable.layer.DataLayer;
 import net.sourceforge.nattable.painter.cell.decorator.BeveledBorderDecorator;
+import net.sourceforge.nattable.resize.command.InitializeAutoResizeColumnsCommand;
 import net.sourceforge.nattable.style.DisplayMode;
+import net.sourceforge.nattable.util.GCFactory;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -213,6 +215,13 @@ public class ZmlTable extends Composite implements IZmlTable
 // m_pager.reveal();
 
         m_table.redraw();
+
+        final int count = m_table.getColumnCount();
+        for( int index = 1; index < count; index++ )
+        {
+          final InitializeAutoResizeColumnsCommand command = new InitializeAutoResizeColumnsCommand( m_table, count, m_table.getConfigRegistry(), new GCFactory( m_table ) );
+          m_table.doCommand( command );
+        }
 
 // fireTableChanged( IZmlTableCompositeListener.TYPE_REFRESH, columns );
 
