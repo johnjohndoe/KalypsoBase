@@ -41,6 +41,7 @@
 package org.kalypso.zml.ui.table.nat.tooltip;
 
 import net.sourceforge.nattable.NatTable;
+import net.sourceforge.nattable.layer.cell.LayerCell;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -104,10 +105,7 @@ public class ZmlTableTooltip extends DefaultToolTip
   @Override
   protected String getText( final Event event )
   {
-    final int col = m_table.getColumnPositionByX( event.x ) - 1;
-    final int row = m_table.getRowPositionByY( event.y ) - 1;
-
-    final IZmlModelValueCell cell = m_viewport.getCell( row, col );
+    final IZmlModelValueCell cell = findCell( event );
     if( Objects.isNull( cell ) )
       return null;
 
@@ -127,6 +125,22 @@ public class ZmlTableTooltip extends DefaultToolTip
     }
 
     return null;
+  }
+
+  private IZmlModelValueCell findCell( final Event event )
+  {
+    final int col = m_table.getColumnPositionByX( event.x );
+    final int row = m_table.getRowPositionByY( event.y );
+
+    final LayerCell layerCell = m_table.getCellByPosition( col, row );
+    if( Objects.isNull( layerCell ) )
+      return null;
+
+    final Object objCell = layerCell.getDataValue();
+    if( !(objCell instanceof IZmlModelValueCell) )
+      return null;
+
+    return (IZmlModelValueCell) objCell;
   }
 
   @Override
@@ -244,6 +258,10 @@ public class ZmlTableTooltip extends DefaultToolTip
   @Override
   protected Image getImage( final Event event )
   {
+    final IZmlModelValueCell cell = findCell( event );
+    if( Objects.isNull( cell ) )
+      return null;
+
     return IMG;
   }
 
