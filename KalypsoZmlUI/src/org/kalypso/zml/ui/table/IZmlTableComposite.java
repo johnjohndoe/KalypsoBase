@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table;
 
-import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 
 /**
@@ -49,8 +48,6 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
 public interface IZmlTableComposite
 {
   void addListener( IZmlTableCompositeListener listener );
-
-  IZmlTable[] getTables( );
 
   /**
    * columns = null means 'refresh all columns'
@@ -61,7 +58,5 @@ public interface IZmlTableComposite
 
   void fireTableSourceChanged( String type );
 
-  IZmlTable getMainTable( );
-
-  IZmlModel getModel( );
+  IZmlTable getTable( );
 }
