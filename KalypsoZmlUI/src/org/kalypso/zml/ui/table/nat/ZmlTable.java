@@ -53,6 +53,7 @@ import net.sourceforge.nattable.grid.data.DefaultCornerDataProvider;
 import net.sourceforge.nattable.grid.layer.CornerLayer;
 import net.sourceforge.nattable.grid.layer.GridLayer;
 import net.sourceforge.nattable.layer.DataLayer;
+import net.sourceforge.nattable.layer.cell.LayerCell;
 import net.sourceforge.nattable.painter.cell.decorator.BeveledBorderDecorator;
 import net.sourceforge.nattable.style.DisplayMode;
 
@@ -62,8 +63,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.window.DefaultToolTip;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MenuDetectEvent;
-import org.eclipse.swt.events.MenuDetectListener;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -83,6 +84,7 @@ import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableListener;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
 import org.kalypso.zml.ui.table.menu.ZmlTableContextMenuProvider;
+import org.kalypso.zml.ui.table.menu.ZmlTableHeaderContextMenuProvider;
 import org.kalypso.zml.ui.table.nat.base.ZmlModelCellDisplayConverter;
 import org.kalypso.zml.ui.table.nat.base.ZmlModelRowHeaderDisplayConverter;
 import org.kalypso.zml.ui.table.nat.layers.BodyLayerStack;
@@ -162,9 +164,6 @@ public class ZmlTable extends Composite implements IZmlTable
 
     registry.registerConfigAttribute( EditConfigAttributes.CELL_EDITABLE_RULE, IEditableRule.ALWAYS_EDITABLE, DisplayMode.EDIT, GridRegion.BODY.toString() );
 
-// configRegistry.registerConfigAttribute( EditConfigAttributes.CELL_EDITOR, comboBoxCellEditor, DisplayMode.EDIT,
-// "myCellLabel" );
-
     final DefaultToolTip toolTip = new ZmlTableTooltip( m_natTable, getModelViewport() );
     toolTip.setBackgroundColor( m_natTable.getDisplay().getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
     toolTip.setPopupDelay( 500 );
@@ -172,26 +171,63 @@ public class ZmlTable extends Composite implements IZmlTable
     toolTip.setShift( new Point( 10, 10 ) );
 
     /** context menu */
+    addContextMenuSupport();
+
+  }
+
+  private void addContextMenuSupport( )
+  {
     final Menu contextMenu = m_contextMenuManager.createContextMenu( m_natTable );
     m_natTable.setMenu( contextMenu );
 
-    m_natTable.addMenuDetectListener( new MenuDetectListener()
+    m_natTable.addMouseListener( new MouseAdapter()
     {
       @Override
-      public void menuDetected( final MenuDetectEvent e )
+      public void mouseDown( final MouseEvent e )
       {
-        final IZmlTableSelection selection = m_bodyLayer.getSelection();
-        final IZmlModelValueCell cell = selection.getFocusCell();
+        if( e.button == 3 )
+        {
+          m_contextMenuManager.removeAll();
 
-        final IZmlModelValueCell value = cell;
+          final int column = m_natTable.getColumnPositionByX( e.x );
+          final int row = m_natTable.getRowPositionByY( e.y );
 
-        final ZmlTableContextMenuProvider menuProvider = new ZmlTableContextMenuProvider();
-        menuProvider.fillMenu( value.getColumn(), m_contextMenuManager );
-        m_contextMenuManager.update( true );
+          if( column == -1 || row == -1 )
+            return;
 
-        contextMenu.setVisible( true );
+          if( row == 0 )
+          {
+            /** table header selection */
+            final IZmlModelColumn colum = m_viewport.getColum( column - 1 );
+            if( Objects.isNull( colum ) )
+              return;
+
+            final ZmlTableHeaderContextMenuProvider menuProvider = new ZmlTableHeaderContextMenuProvider();
+            menuProvider.fillMenu( colum, m_contextMenuManager );
+            m_contextMenuManager.update( true );
+
+            contextMenu.setVisible( true );
+          }
+          else
+          {
+            /** table cell was selected */
+            final LayerCell cell = m_natTable.getCellByPosition( column, row );
+            final IZmlModelValueCell modelCell = (IZmlModelValueCell) cell.getDataValue();
+            if( Objects.isNull( modelCell ) )
+              return;
+
+            final ZmlTableContextMenuProvider menuProvider = new ZmlTableContextMenuProvider();
+            menuProvider.fillMenu( modelCell.getColumn(), m_contextMenuManager );
+            m_contextMenuManager.update( true );
+
+            contextMenu.setVisible( true );
+          }
+
+        }
       }
+
     } );
+
   }
 
   @Override

@@ -51,7 +51,6 @@ import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.zml.core.table.model.IZmlColumnModelListener;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.IZmlModelColumnListener;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.ZmlModelColumn;
 import org.kalypso.zml.core.table.model.editing.ContinuedInterpolatedValueEditingStrategy;
@@ -217,10 +216,10 @@ public class ZmlModelViewport
 
   public void fireModelChanged( )
   {
-    final IZmlModelColumnListener[] listeners = m_listeners.toArray( new IZmlModelColumnListener[] {} );
-    for( final IZmlModelColumnListener listener : listeners )
+    final IZmlColumnModelListener[] listeners = m_listeners.toArray( new IZmlColumnModelListener[] {} );
+    for( final IZmlColumnModelListener listener : listeners )
     {
-      listener.modelColumnChangedEvent( null );
+      listener.modelChanged();
     }
   }
 

@@ -45,7 +45,7 @@ public class RowHeaderLayerStack extends AbstractLayerTransform
       }
     };
 
-    final DataLayer dataLayer = new DataLayer( getProvider() );
+    final DataLayer dataLayer = new DataLayer( getProvider(), 150, 10 );
     final RowHeaderLayer rowHeaderLayer = new RowHeaderLayer( dataLayer, m_bodyLayer, m_bodyLayer.getSelectionLayer() );
     setUnderlyingLayer( rowHeaderLayer );
   }

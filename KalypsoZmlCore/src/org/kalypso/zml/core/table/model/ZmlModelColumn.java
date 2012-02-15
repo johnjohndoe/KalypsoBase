@@ -45,6 +45,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.lang.Strings;
@@ -60,14 +61,13 @@ import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.binding.DataColumn;
-import org.kalypso.zml.core.table.binding.rule.AbstractZmlRule;
-import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.binding.rule.ZmlColumnRule;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataListener;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.transaction.IZmlModelUpdateCommand;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
+import org.kalypso.zml.core.table.rules.AppliedRule;
 import org.kalypso.zml.core.table.rules.IZmlColumnRuleImplementation;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 
@@ -76,7 +76,7 @@ import org.kalypso.zml.core.table.schema.DataColumnType;
  */
 public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListener
 {
-  Set<ZmlCellRule> m_applied = new LinkedHashSet<ZmlCellRule>();
+  Set<AppliedRule> m_applied = new LinkedHashSet<AppliedRule>();
 
   private IZmlModelColumnDataHandler m_handler;
 
@@ -157,7 +157,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   }
 
   @Override
-  public void addAppliedRules( final ZmlCellRule[] rules )
+  public void addAppliedRules( final AppliedRule[] rules )
   {
     if( ArrayUtils.isNotEmpty( rules ) )
       Collections.addAll( m_applied, rules );
@@ -488,20 +488,27 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   }
 
   @Override
-  public AbstractZmlRule[] getActiveRules( )
+  public AppliedRule[] getActiveRules( )
   {
-    final Set<AbstractZmlRule> active = new LinkedHashSet<AbstractZmlRule>();
+    final Set<AppliedRule> active = new LinkedHashSet<AppliedRule>();
 
     final ZmlColumnRule[] columnRules = getDataColumn().getColumnRules();
     for( final ZmlColumnRule rule : columnRules )
     {
-      final IZmlColumnRuleImplementation impl = rule.getImplementation();
-      if( impl.doApply( this ) )
-        active.add( rule );
+      try
+      {
+        final IZmlColumnRuleImplementation impl = rule.getImplementation();
+        if( impl.doApply( this ) )
+          active.add( new AppliedRule( rule.getBaseStyle(), rule.getRuleType().getLabel(), 1.0, true ) );
+      }
+      catch( final CoreException e )
+      {
+        e.printStackTrace();
+      }
     }
 
     active.addAll( m_applied );
 
-    return active.toArray( new AbstractZmlRule[] {} );
+    return active.toArray( new AppliedRule[] {} );
   }
 }

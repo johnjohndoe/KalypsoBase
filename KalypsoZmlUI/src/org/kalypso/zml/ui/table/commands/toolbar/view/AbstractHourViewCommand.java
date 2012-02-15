@@ -67,16 +67,13 @@ public abstract class AbstractHourViewCommand extends AbstractHandler implements
   {
     final IZmlTable table = ZmlHandlerUtil.getTable( event );
 
-    final ZmlModelViewport model = table.getModelViewport();
-    final ZmlViewResolutionFilter filter = model.getFilter();
+    final ZmlModelViewport viewport = table.getModelViewport();
+    final ZmlViewResolutionFilter filter = viewport.getFilter();
     doOffsetAdjustment( table, filter );
 
     filter.setParameters( resultion, mode );
 
-    // TODO model update
-    throw new UnsupportedOperationException();
-
-// return Status.OK_STATUS;
+    return Status.OK_STATUS;
   }
 
   private void doOffsetAdjustment( final IZmlTable table, final ZmlViewResolutionFilter filter )
@@ -93,8 +90,6 @@ public abstract class AbstractHourViewCommand extends AbstractHandler implements
     final IZmlTable table = ZmlHandlerUtil.getTable( event );
     final ZmlViewResolutionFilter filter = table.getModelViewport().getFilter();
     filter.add2Offset( number );
-
-    table.refresh();
 
     return Status.OK_STATUS;
   }

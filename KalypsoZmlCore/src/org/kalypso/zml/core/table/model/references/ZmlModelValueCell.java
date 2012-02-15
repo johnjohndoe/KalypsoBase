@@ -42,7 +42,9 @@ package org.kalypso.zml.core.table.model.references;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -68,6 +70,7 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.ZmlValueLabelProvider;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
+import org.kalypso.zml.core.table.rules.AppliedRule;
 import org.kalypso.zml.core.table.rules.IZmlCellRuleImplementation;
 import org.kalypso.zml.core.table.schema.CellStyleType;
 
@@ -272,9 +275,32 @@ public class ZmlModelValueCell extends AbstractZmlCell implements IZmlModelValue
         m_rules = findSimpleActiveRules();
     }
 
-    getColumn().addAppliedRules( m_rules );
+    getColumn().addAppliedRules( toApplied( m_rules ) );
 
     return m_rules;
+  }
+
+  private AppliedRule[] toApplied( final ZmlCellRule[] rules )
+  {
+    final Set<AppliedRule> applied = new LinkedHashSet<AppliedRule>();
+
+    for( final ZmlCellRule rule : rules )
+    {
+      try
+      {
+        final String label = rule.getLabel( this );
+        final IZmlCellRuleImplementation impl = rule.getImplementation();
+        final CellStyle style = impl.getCellStyle( rule, this );
+        final Double severity = impl.getSeverity( rule, this );
+
+        applied.add( new AppliedRule( style, label, severity, rule.hasHeaderIcon() ) );
+      }
+      catch( final CoreException e )
+      {
+        e.printStackTrace();
+      }
+    }
+    return applied.toArray( new AppliedRule[] {} );
   }
 
   private ZmlCellRule[] findAggregatedActiveRules( final ZmlModelViewport viewport )

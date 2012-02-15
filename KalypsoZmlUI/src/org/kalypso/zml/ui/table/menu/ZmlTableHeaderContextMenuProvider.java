@@ -102,13 +102,11 @@ public class ZmlTableHeaderContextMenuProvider
       addAdditionalItem( header, menuManager );
     }
 
-    throw new UnsupportedOperationException();
-// final AppliedRule[] rules = column.getAppliedRules();
-// for( final AppliedRule rule : rules )
-// {
-//
-// addAditionalItem( rule, menuManager );
-// }
+    final AppliedRule[] rules = column.getActiveRules();
+    for( final AppliedRule rule : rules )
+    {
+      addAditionalItem( rule, menuManager );
+    }
   }
 
   private void addAdditionalItem( final ColumnHeader header, final MenuManager menuManager )

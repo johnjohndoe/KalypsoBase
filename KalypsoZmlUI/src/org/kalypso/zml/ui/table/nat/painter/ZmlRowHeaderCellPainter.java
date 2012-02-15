@@ -83,11 +83,7 @@ public class ZmlRowHeaderCellPainter extends AbstractCellPainter
     final Object object = cell.getDataValue();
     if( object instanceof IZmlModelRow )
     {
-
-      final Style style = getStyle();
-      style.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, HorizontalAlignmentEnum.LEFT );
-
-      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, style, DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
+      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, getStyle(), DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
 
       final TextPainter painter = new TextPainter();
       painter.paintCell( cell, gc, bounds, configRegistry );
@@ -100,7 +96,7 @@ public class ZmlRowHeaderCellPainter extends AbstractCellPainter
     final Font font = GUIHelper.getFont( new FontData( "Verdana", 10, SWT.NORMAL ) );
     final Color bgColor = GUIHelper.COLOR_WIDGET_BACKGROUND;
     final Color fgColor = GUIHelper.COLOR_WIDGET_FOREGROUND;
-    final HorizontalAlignmentEnum hAlign = HorizontalAlignmentEnum.RIGHT;
+    final HorizontalAlignmentEnum hAlign = HorizontalAlignmentEnum.LEFT;
     final VerticalAlignmentEnum vAlign = VerticalAlignmentEnum.MIDDLE;
     final BorderStyle borderStyle = null;
 
@@ -121,9 +117,7 @@ public class ZmlRowHeaderCellPainter extends AbstractCellPainter
     final Object object = cell.getDataValue();
     if( object instanceof IZmlModelIndexCell )
     {
-      final Style style = new Style();
-      style.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, HorizontalAlignmentEnum.LEFT );
-      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, style, DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
+      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, getStyle(), DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
 
       final TextPainter painter = new TextPainter();
       return painter.getPreferredWidth( cell, gc, configRegistry );
@@ -138,9 +132,7 @@ public class ZmlRowHeaderCellPainter extends AbstractCellPainter
     final Object object = cell.getDataValue();
     if( object instanceof IZmlModelIndexCell )
     {
-      final Style style = new Style();
-      style.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, HorizontalAlignmentEnum.LEFT );
-      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, style, DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
+      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, getStyle(), DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
 
       final TextPainter painter = new TextPainter();
       return painter.getPreferredHeight( cell, gc, configRegistry );
