@@ -65,8 +65,8 @@ import org.kalypso.contribs.eclipse.jface.wizard.SaveFileWizardPage;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.grid.AscGridExporter;
+import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
-import org.kalypso.grid.RectifiedGridCoverageGeoGrid;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 
 /**
@@ -149,10 +149,8 @@ public class RectifiedGridCoverageExportWizard extends Wizard implements IImport
         @Override
         public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
         {
-          try
+          try (IGeoGrid grid = GeoGridUtilities.toGrid( coverage ))
           {
-            final IGeoGrid grid = new RectifiedGridCoverageGeoGrid( coverage );
-
             final AscGridExporter gridExporter = new AscGridExporter( -9999, 2 );
             monitor.beginTask( Messages.getString( "org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageExportWizard.3" ), 100 ); //$NON-NLS-1$
 
