@@ -82,7 +82,7 @@ public class ZmlCommandSetAllValues extends AbstractHandler
       if( strategy.isAggregated() )
       {
         final ZmlValueLabelProvider provider = new ZmlValueLabelProvider( column );
-        final String targetValue = provider.getText( current );
+        final String targetValue = provider.getText( table.getModel(), current );
 
         final IZmlModelValueCell[] visibleCells = model.getCells( column );
         for( final IZmlModelValueCell cell : visibleCells )

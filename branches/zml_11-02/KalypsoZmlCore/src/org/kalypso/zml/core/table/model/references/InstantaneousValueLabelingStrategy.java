@@ -47,6 +47,7 @@ import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.core.table.rules.IZmlCellRuleImplementation;
 
 /**
@@ -60,12 +61,12 @@ public class InstantaneousValueLabelingStrategy extends AbstractValueLabelingStr
   }
 
   @Override
-  public String getText( final IZmlModelCell c ) throws SensorException, CoreException
+  public String getText( final ZmlModelViewport model, final IZmlModelValueCell c ) throws SensorException, CoreException
   {
     if( c == null )
       return "";
 
-    final IZmlModelValueCell cell = (IZmlModelValueCell) c;
+    final IZmlModelValueCell cell = c;
     final IZmlModelColumn column = cell.getColumn();
 
     final CellStyle style = column.findStyle( cell );

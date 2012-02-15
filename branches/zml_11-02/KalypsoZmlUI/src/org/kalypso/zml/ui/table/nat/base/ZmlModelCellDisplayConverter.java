@@ -38,43 +38,63 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.nat.painter;
+package org.kalypso.zml.ui.table.nat.base;
 
 import java.text.SimpleDateFormat;
 
-import net.sourceforge.nattable.style.Style;
+import net.sourceforge.nattable.data.convert.DisplayConverter;
 
-import org.eclipse.swt.graphics.Image;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlModelCellLabelProvider;
+import org.kalypso.zml.core.table.model.references.IZmlModelIndexCell;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlIndexLabelProvider implements IZmlModelCellLabelProvider
+public class ZmlModelCellDisplayConverter extends DisplayConverter
 {
+  private final ZmlModelViewport m_model;
 
-  @Override
-  public Image[] getImages( final IZmlModelCell cell )
+  public ZmlModelCellDisplayConverter( final ZmlModelViewport model )
   {
-    return new Image[] {};
+    m_model = model;
   }
 
   @Override
-  public String getText( final IZmlModelCell cell )
+  public Object canonicalToDisplayValue( final Object canonicalValue )
   {
-    final SimpleDateFormat sdf = new SimpleDateFormat();
-    sdf.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
+    if( canonicalValue instanceof IZmlModelIndexCell )
+    {
+      final SimpleDateFormat sdf = new SimpleDateFormat();
+      sdf.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
 
-    return sdf.format( cell.getIndexValue() );
+      return sdf.format( ((IZmlModelIndexCell) canonicalValue).getIndexValue() );
+    }
+    else if( canonicalValue instanceof IZmlModelValueCell )
+    {
+      final IZmlModelValueCell cell = (IZmlModelValueCell) canonicalValue;
+      final IZmlModelColumn column = cell.getColumn();
+      final IZmlModelCellLabelProvider provider = column.getStyleProvider();
+
+      return provider.getText( m_model, cell );
+    }
+    else if( canonicalValue instanceof IZmlModelColumn )
+    {
+      final IZmlModelColumn column = (IZmlModelColumn) canonicalValue;
+
+      return column.getLabel();
+    }
+
+    return canonicalValue.toString();
   }
 
   @Override
-  public Style getStyle( )
+  public Object displayToCanonicalValue( final Object displayValue )
   {
-    // TODO
-    return new Style();
+    return displayValue;
   }
 
 }

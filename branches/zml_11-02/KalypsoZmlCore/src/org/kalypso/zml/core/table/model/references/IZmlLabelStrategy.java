@@ -42,11 +42,12 @@ package org.kalypso.zml.core.table.model.references;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 
 /**
  * @author Dirk Kuch
  */
 public interface IZmlLabelStrategy
 {
-  String getText( final IZmlModelCell cell ) throws SensorException, CoreException;
+  String getText( ZmlModelViewport model, final IZmlModelValueCell cell ) throws SensorException, CoreException;
 }

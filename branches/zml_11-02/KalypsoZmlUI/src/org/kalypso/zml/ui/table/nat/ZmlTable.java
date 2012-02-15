@@ -82,12 +82,13 @@ import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableListener;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
 import org.kalypso.zml.ui.table.menu.ZmlTableContextMenuProvider;
+import org.kalypso.zml.ui.table.nat.base.ZmlModelCellDisplayConverter;
+import org.kalypso.zml.ui.table.nat.base.ZmlModelRowHeaderDisplayConverter;
 import org.kalypso.zml.ui.table.nat.layers.BodyLayerStack;
 import org.kalypso.zml.ui.table.nat.layers.ColumnHeaderLayerStack;
 import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
 import org.kalypso.zml.ui.table.nat.layers.RowHeaderLayerStack;
 import org.kalypso.zml.ui.table.nat.painter.ZmlColumnHeaderCellPainter;
-import org.kalypso.zml.ui.table.nat.painter.ZmlModelCellDisplayConverter;
 import org.kalypso.zml.ui.table.nat.painter.ZmlModelCellPainter;
 import org.kalypso.zml.ui.table.nat.painter.ZmlRowHeaderCellPainter;
 import org.kalypso.zml.ui.table.nat.tooltip.ZmlTableTooltip;
@@ -149,9 +150,9 @@ public class ZmlTable extends Composite implements IZmlTable
 
     final IConfigRegistry registry = m_natTable.getConfigRegistry();
 
-    final ZmlModelCellDisplayConverter converter = new ZmlModelCellDisplayConverter();
+    final ZmlModelCellDisplayConverter converter = new ZmlModelCellDisplayConverter( m_model );
     registry.registerConfigAttribute( CellConfigAttributes.DISPLAY_CONVERTER, converter, DisplayMode.NORMAL, GridRegion.BODY.toString() );
-    registry.registerConfigAttribute( CellConfigAttributes.DISPLAY_CONVERTER, converter, DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
+    registry.registerConfigAttribute( CellConfigAttributes.DISPLAY_CONVERTER, new ZmlModelRowHeaderDisplayConverter(), DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
     registry.registerConfigAttribute( CellConfigAttributes.DISPLAY_CONVERTER, converter, DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
 
     registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new ZmlModelCellPainter(), DisplayMode.NORMAL, GridRegion.BODY.toString() );

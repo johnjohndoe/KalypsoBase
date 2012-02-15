@@ -6,7 +6,6 @@ import net.sourceforge.nattable.layer.AbstractLayerTransform;
 import net.sourceforge.nattable.layer.DataLayer;
 
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.references.ZmlIndexValueReference;
 
 public class RowHeaderLayerStack extends AbstractLayerTransform
 {
@@ -36,8 +35,7 @@ public class RowHeaderLayerStack extends AbstractLayerTransform
       public Object getDataValue( final int columnIndex, final int rowIndex )
       {
         final IZmlModelRow row = m_bodyLayer.getModel().getRow( rowIndex );
-
-        return new ZmlIndexValueReference( row );
+        return row;
       }
 
       @Override

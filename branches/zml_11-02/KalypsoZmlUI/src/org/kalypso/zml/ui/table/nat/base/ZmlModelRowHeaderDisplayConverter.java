@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,30 +38,43 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model.references;
+package org.kalypso.zml.ui.table.nat.base;
 
 import java.text.SimpleDateFormat;
 
+import net.sourceforge.nattable.data.convert.DisplayConverter;
+
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.references.IZmlModelIndexCell;
 
 /**
  * @author Dirk Kuch
  */
-@Deprecated
-public class IndexValueLabelingStrategy extends AbstractValueLabelingStrategy implements IZmlLabelStrategy
+public class ZmlModelRowHeaderDisplayConverter extends DisplayConverter
 {
-
-  public IndexValueLabelingStrategy( )
+  @Override
+  public Object canonicalToDisplayValue( final Object canonicalValue )
   {
+    if( canonicalValue instanceof IZmlModelRow )
+    {
+      final IZmlModelRow row = (IZmlModelRow) canonicalValue;
+      final IZmlModelIndexCell index = row.getIndexCell();
+
+      // TODO label provider / styling
+      final SimpleDateFormat sdf = new SimpleDateFormat();
+      sdf.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
+
+      return sdf.format( index.getIndexValue() );
+    }
+
+    return canonicalValue.toString();
   }
 
   @Override
-  public String getText( final IZmlModelCell cell )
+  public Object displayToCanonicalValue( final Object displayValue )
   {
-    final SimpleDateFormat sdf = new SimpleDateFormat();
-    sdf.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
-
-    return sdf.format( cell.getIndexValue() );
+    return displayValue;
   }
 
 }
