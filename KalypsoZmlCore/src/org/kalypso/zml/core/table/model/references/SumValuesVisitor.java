@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestra�e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,46 +38,29 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model;
+package org.kalypso.zml.core.table.model.references;
 
-import java.util.Date;
-
-import org.kalypso.zml.core.table.model.memento.IZmlMemento;
-import org.kalypso.zml.core.table.schema.AbstractColumnType;
-import org.kalypso.zml.core.table.schema.ZmlTableType;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlModel
+public class SumValuesVisitor implements IZmlModelColumnVisitor
 {
-  ZmlTableType getTableType( );
+  private double m_sum = 0;
 
-  void addListener( IZmlColumnModelListener listener );
+  @Override
+  public void visit( final IZmlModelValueCell reference ) throws SensorException
+  {
+    final Number value = reference.getValue();
+    if( Objects.isNotNull( value ) )
+      m_sum += value.doubleValue();
+  }
 
-  void fireModelChanged( final IZmlModelColumn... columns );
-
-  IZmlModelColumn getColumn( String id );
-
-  IZmlModelColumn[] getColumns( );
-
-  IZmlModelRow getRow( final Date index );
-
-  IZmlModelRow getRowAt( final int index );
-
-  IZmlModelRow[] getRows( );
-
-  void accept( IZmlModelRowVisitor visitor );
-
-  void dispose( );
-
-  IZmlMemento getMemento( );
-
-  void add( IZmlModelColumn column );
-
-  AbstractColumnType getColumnType( String identifier );
-
-  String[] getIgnoreTypes( );
-
-  ZmlModelColumn[] getActiveColumns( );
+  public Double getValue( )
+  {
+    return m_sum;
+  }
 }

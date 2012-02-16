@@ -46,12 +46,12 @@ import java.util.Map;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.zml.core.table.model.references.IZmlModelIndexCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
-import org.kalypso.zml.core.table.model.references.ZmlDataValueReference;
-import org.kalypso.zml.core.table.model.references.ZmlIndexValueReference;
+import org.kalypso.zml.core.table.model.references.ZmlModelValueCell;
+import org.kalypso.zml.core.table.model.references.ZmlModelIndexCell;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
-import org.kalypso.zml.core.table.schema.IndexColumnType;
 
 /**
  * @author Dirk Kuch
@@ -65,25 +65,22 @@ public class ZmlModelRow implements IZmlModelRow
 
   private final IZmlModel m_model;
 
+  private ZmlModelIndexCell m_indexCell;
+
   public ZmlModelRow( final IZmlModel model, final Date index )
   {
     m_model = model;
     m_index = index;
   }
 
-  public void add( final ZmlDataValueReference reference )
+  public void add( final ZmlModelValueCell reference )
   {
     m_valueCells.put( reference.getIdentifier(), reference );
   }
 
   @Override
-  public IZmlModelCell get( final AbstractColumnType type )
+  public IZmlModelValueCell get( final AbstractColumnType type )
   {
-    if( type instanceof IndexColumnType )
-    {
-      return new ZmlIndexValueReference( this );
-    }
-
     return m_valueCells.get( type.getId() );
   }
 
@@ -94,6 +91,15 @@ public class ZmlModelRow implements IZmlModelRow
       return null;
 
     return m_valueCells.get( column.getIdentifier() );
+  }
+
+  @Override
+  public IZmlModelIndexCell getIndexCell( )
+  {
+    if( Objects.isNull( m_indexCell ) )
+      m_indexCell = new ZmlModelIndexCell( this );
+
+    return m_indexCell;
   }
 
   @Override

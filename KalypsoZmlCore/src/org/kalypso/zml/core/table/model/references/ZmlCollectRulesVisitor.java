@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestra�e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,46 +38,35 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model;
+package org.kalypso.zml.core.table.model.references;
 
-import java.util.Date;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
-import org.kalypso.zml.core.table.model.memento.IZmlMemento;
-import org.kalypso.zml.core.table.schema.AbstractColumnType;
-import org.kalypso.zml.core.table.schema.ZmlTableType;
+import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
+import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlModel
+public class ZmlCollectRulesVisitor implements IZmlModelColumnVisitor
 {
-  ZmlTableType getTableType( );
+  private final Set<ZmlCellRule> m_rules = new LinkedHashSet<ZmlCellRule>();
 
-  void addListener( IZmlColumnModelListener listener );
+  public ZmlCollectRulesVisitor( )
+  {
+  }
 
-  void fireModelChanged( final IZmlModelColumn... columns );
+  @Override
+  public void visit( final IZmlModelValueCell cell )
+  {
+    Collections.addAll( m_rules, cell.findActiveRules( null ) );
+  }
 
-  IZmlModelColumn getColumn( String id );
+  public ZmlCellRule[] getRules( )
+  {
+    return m_rules.toArray( new ZmlCellRule[] {} );
+  }
 
-  IZmlModelColumn[] getColumns( );
-
-  IZmlModelRow getRow( final Date index );
-
-  IZmlModelRow getRowAt( final int index );
-
-  IZmlModelRow[] getRows( );
-
-  void accept( IZmlModelRowVisitor visitor );
-
-  void dispose( );
-
-  IZmlMemento getMemento( );
-
-  void add( IZmlModelColumn column );
-
-  AbstractColumnType getColumnType( String identifier );
-
-  String[] getIgnoreTypes( );
-
-  ZmlModelColumn[] getActiveColumns( );
 }

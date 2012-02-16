@@ -42,28 +42,71 @@ package org.kalypso.zml.core.table.model.references;
 
 import java.util.Date;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
-import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlModelCell
+public class ZmlModelIndexCell extends AbstractZmlCell implements IZmlModelIndexCell
 {
 
-  Date getIndexValue( );
+  public ZmlModelIndexCell( final IZmlModelRow row )
+  {
+    super( row, null, -1 );
+  }
 
-  IZmlModel getModel( );
+  @Override
+  public Date getIndexValue( )
+  {
+    return getRow().getIndex();
+  }
 
-  IZmlModelRow getRow( );
+  @Override
+  public boolean equals( final Object obj )
+  {
+    if( obj instanceof ZmlModelIndexCell )
+    {
+      final ZmlModelIndexCell other = (ZmlModelIndexCell) obj;
 
-  Integer getModelIndex( );
+      final EqualsBuilder builder = new EqualsBuilder();
+      builder.append( getIndexValue(), other.getIndexValue() );
 
-  ZmlCellRule[] findActiveRules( ZmlModelViewport viewport );
+      return builder.isEquals();
+    }
 
-  CellStyle getStyle( ZmlModelViewport viewport ) throws CoreException;
+    return super.equals( obj );
+  }
+
+  @Override
+  public int hashCode( )
+  {
+    final HashCodeBuilder builder = new HashCodeBuilder();
+    builder.append( getClass().getName() );
+    builder.append( getIndexValue() );
+
+    return builder.toHashCode();
+  }
+
+  @Override
+  public ZmlCellRule[] findActiveRules( final ZmlModelViewport viewport )
+  {
+    // FIXME
+
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public CellStyle getStyle( final ZmlModelViewport viewport ) throws CoreException
+  {
+    // FIXME
+
+    throw new UnsupportedOperationException();
+  }
+
 }

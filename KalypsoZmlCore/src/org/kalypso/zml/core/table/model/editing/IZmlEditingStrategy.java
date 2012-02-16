@@ -38,46 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model;
+package org.kalypso.zml.core.table.model.editing;
 
-import java.util.Date;
-
-import org.kalypso.zml.core.table.model.memento.IZmlMemento;
-import org.kalypso.zml.core.table.schema.AbstractColumnType;
-import org.kalypso.zml.core.table.schema.ZmlTableType;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlModel
+public interface IZmlEditingStrategy
 {
-  ZmlTableType getTableType( );
+  void setValue( IZmlModelValueCell cell, String value );
 
-  void addListener( IZmlColumnModelListener listener );
-
-  void fireModelChanged( final IZmlModelColumn... columns );
-
-  IZmlModelColumn getColumn( String id );
-
-  IZmlModelColumn[] getColumns( );
-
-  IZmlModelRow getRow( final Date index );
-
-  IZmlModelRow getRowAt( final int index );
-
-  IZmlModelRow[] getRows( );
-
-  void accept( IZmlModelRowVisitor visitor );
-
-  void dispose( );
-
-  IZmlMemento getMemento( );
-
-  void add( IZmlModelColumn column );
-
-  AbstractColumnType getColumnType( String identifier );
-
-  String[] getIgnoreTypes( );
-
-  ZmlModelColumn[] getActiveColumns( );
+  boolean isAggregated( );
 }

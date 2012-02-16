@@ -38,46 +38,12 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model;
-
-import java.util.Date;
-
-import org.kalypso.zml.core.table.model.memento.IZmlMemento;
-import org.kalypso.zml.core.table.schema.AbstractColumnType;
-import org.kalypso.zml.core.table.schema.ZmlTableType;
+package org.kalypso.zml.core.table.model.references;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlModel
+public abstract class AbstractValueLabelingStrategy implements IZmlLabelStrategy
 {
-  ZmlTableType getTableType( );
 
-  void addListener( IZmlColumnModelListener listener );
-
-  void fireModelChanged( final IZmlModelColumn... columns );
-
-  IZmlModelColumn getColumn( String id );
-
-  IZmlModelColumn[] getColumns( );
-
-  IZmlModelRow getRow( final Date index );
-
-  IZmlModelRow getRowAt( final int index );
-
-  IZmlModelRow[] getRows( );
-
-  void accept( IZmlModelRowVisitor visitor );
-
-  void dispose( );
-
-  IZmlMemento getMemento( );
-
-  void add( IZmlModelColumn column );
-
-  AbstractColumnType getColumnType( String identifier );
-
-  String[] getIgnoreTypes( );
-
-  ZmlModelColumn[] getActiveColumns( );
 }

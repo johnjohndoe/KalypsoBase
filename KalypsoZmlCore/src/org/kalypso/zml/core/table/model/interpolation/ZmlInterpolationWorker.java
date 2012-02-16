@@ -40,8 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model.interpolation;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.apache.commons.lang.ArrayUtils;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -58,79 +60,110 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
  */
 public class ZmlInterpolationWorker implements ICoreRunnableWithProgress
 {
-  private final ITimeseriesObservation m_observation;
+  private final ITimeseriesObservation[] m_observations;
 
-  public ZmlInterpolationWorker( final IObservation observation )
+  public ZmlInterpolationWorker( final IObservation... observation )
   {
-    this( new TimeseriesObservation( observation, AxisUtils.findValueAxis( observation.getAxes() ) ) );
+    this( toTimeSeriesObservations( observation ) );
   }
 
-  public ZmlInterpolationWorker( final IZmlModelColumn column )
+  private static TimeseriesObservation[] toTimeSeriesObservations( final IObservation... observations )
   {
-    this( new TimeseriesObservation( column.getObservation(), column.getValueAxis() ) );
+    final Set<TimeseriesObservation> collection = new LinkedHashSet<TimeseriesObservation>();
+    for( final IObservation observation : observations )
+    {
+      collection.add( new TimeseriesObservation( observation, AxisUtils.findValueAxis( observation.getAxes() ) ) );
+    }
+
+    return collection.toArray( new TimeseriesObservation[] {} );
   }
 
-  public ZmlInterpolationWorker( final ITimeseriesObservation observation )
+  public ZmlInterpolationWorker( final IZmlModelColumn... columns )
   {
-    m_observation = observation;
+
+    this( toObservations( columns ) );
+  }
+
+  private static IObservation[] toObservations( final IZmlModelColumn[] columns )
+  {
+    final Set<IObservation> observations = new LinkedHashSet<IObservation>();
+
+    for( final IZmlModelColumn column : columns )
+    {
+      observations.add( column.getObservation() );
+    }
+
+    return observations.toArray( new IObservation[] {} );
+  }
+
+  public ZmlInterpolationWorker( final ITimeseriesObservation... observation )
+  {
+    m_observations = observation;
   }
 
   @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
+  public IStatus execute( final IProgressMonitor monitor )
   {
-    try
+    final Set<IStatus> stati = new LinkedHashSet<IStatus>();
+
+    for( final ITimeseriesObservation observation : m_observations )
     {
-      final ITupleModel values = m_observation.getValues( null );
-      final int size = values.size();
-
-      m_observation.startTransaction();
-
-      final boolean setLastValidValue = ZmlInterpolation.isSetLastValidValue( m_observation.getMetadataList() );
-      final Double defaultValue = ZmlInterpolation.getDefaultValue( m_observation.getMetadataList() );
-
-      final FindStuetzstellenVisitor visitor = new FindStuetzstellenVisitor();
-      m_observation.accept( visitor, null, 1 );
-
-      final Integer[] stuetzstellen = visitor.getStuetzstellen();
-      if( ArrayUtils.isEmpty( stuetzstellen ) )
+      try
       {
-        ZmlInterpolation.fillValue( m_observation, 0, size, defaultValue );
-        return Status.OK_STATUS;
-      }
 
-      // set all values 0 before first stuetzstelle
-      if( stuetzstellen[0] > 0 )
-        ZmlInterpolation.fillValue( m_observation, 0, stuetzstellen[0], defaultValue );
+        final ITupleModel values = observation.getValues( null );
+        final int size = values.size();
 
-      for( int index = 0; index < stuetzstellen.length - 1; index++ )
-      {
-        final Integer stuetzstelle1 = stuetzstellen[index];
-        final Integer stuetzstelle2 = stuetzstellen[index + 1];
-        ZmlInterpolation.interpolate( m_observation, stuetzstelle1, stuetzstelle2 );
-      }
+        observation.startTransaction();
 
-      // set all values 0 after last stuetzstelle
-      final Integer last = stuetzstellen[stuetzstellen.length - 1];
-      if( last != size - 1 )
-      {
-        if( setLastValidValue )
+        final boolean setLastValidValue = ZmlInterpolation.isSetLastValidValue( observation.getMetadataList() );
+        final Double defaultValue = ZmlInterpolation.getDefaultValue( observation.getMetadataList() );
+
+        final FindStuetzstellenVisitor visitor = new FindStuetzstellenVisitor();
+        observation.accept( visitor, null, 1 );
+
+        final Integer[] stuetzstellen = visitor.getStuetzstellen();
+        if( ArrayUtils.isEmpty( stuetzstellen ) )
         {
-          final Object lastValue = m_observation.getValue( last );
-          ZmlInterpolation.fillValue( m_observation, last + 1, size, (Double) lastValue );
+          ZmlInterpolation.fillValue( observation, 0, size, defaultValue );
+          return Status.OK_STATUS;
         }
-        else
-          ZmlInterpolation.fillValue( m_observation, last + 1, size, defaultValue );
+
+        // set all values 0 before first stuetzstelle
+        if( stuetzstellen[0] > 0 )
+          ZmlInterpolation.fillValue( observation, 0, stuetzstellen[0], defaultValue );
+
+        for( int index = 0; index < stuetzstellen.length - 1; index++ )
+        {
+          final Integer stuetzstelle1 = stuetzstellen[index];
+          final Integer stuetzstelle2 = stuetzstellen[index + 1];
+          ZmlInterpolation.interpolate( observation, stuetzstelle1, stuetzstelle2 );
+        }
+
+        // set all values 0 after last stuetzstelle
+        final Integer last = stuetzstellen[stuetzstellen.length - 1];
+        if( last != size - 1 )
+        {
+          if( setLastValidValue )
+          {
+            final Object lastValue = observation.getValue( last );
+            ZmlInterpolation.fillValue( observation, last + 1, size, (Double) lastValue );
+          }
+          else
+            ZmlInterpolation.fillValue( observation, last + 1, size, defaultValue );
+        }
+
+        observation.stopTransaction();
+
       }
+      catch( final SensorException e )
+      {
+        e.printStackTrace();
 
-      m_observation.stopTransaction();
-
-      return Status.OK_STATUS;
+        stati.add( StatusUtilities.createExceptionalErrorStatus( "(Re)Interpolating values failed", e ) );
+      }
     }
-    catch( final SensorException e )
-    {
-      e.printStackTrace();
 
-      throw new CoreException( StatusUtilities.createExceptionalErrorStatus( "(Re)Interpolating values failed", e ) );
-    }
+    return StatusUtilities.createStatus( stati, "ZML Interpolation Worker" );
   }
 }

@@ -38,46 +38,51 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model;
+package org.kalypso.zml.core.table.model.references;
 
-import java.util.Date;
-
-import org.kalypso.zml.core.table.model.memento.IZmlMemento;
-import org.kalypso.zml.core.table.schema.AbstractColumnType;
-import org.kalypso.zml.core.table.schema.ZmlTableType;
+import org.kalypso.zml.core.table.model.IZmlModel;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.IZmlModelRow;
 
 /**
- * @author Dirk Kuch
+ * @author kuch
  */
-public interface IZmlModel
+public abstract class AbstractZmlCell implements IZmlModelCell
 {
-  ZmlTableType getTableType( );
+  private final IZmlModelRow m_row;
 
-  void addListener( IZmlColumnModelListener listener );
+  private final IZmlModelColumn m_column;
 
-  void fireModelChanged( final IZmlModelColumn... columns );
+  private final int m_tupleModelIndex;
 
-  IZmlModelColumn getColumn( String id );
+  public AbstractZmlCell( final IZmlModelRow row, final IZmlModelColumn column, final int tupleModelIndex )
+  {
+    m_row = row;
+    m_column = column;
+    m_tupleModelIndex = tupleModelIndex;
+  }
 
-  IZmlModelColumn[] getColumns( );
+  @Override
+  public IZmlModelRow getRow( )
+  {
+    return m_row;
+  }
 
-  IZmlModelRow getRow( final Date index );
+  @Override
+  public IZmlModel getModel( )
+  {
+    return m_row.getModel();
+  }
 
-  IZmlModelRow getRowAt( final int index );
+  public IZmlModelColumn getColumn( )
+  {
+    return m_column;
+  }
 
-  IZmlModelRow[] getRows( );
+  @Override
+  public Integer getModelIndex( )
+  {
+    return m_tupleModelIndex;
+  }
 
-  void accept( IZmlModelRowVisitor visitor );
-
-  void dispose( );
-
-  IZmlMemento getMemento( );
-
-  void add( IZmlModelColumn column );
-
-  AbstractColumnType getColumnType( String identifier );
-
-  String[] getIgnoreTypes( );
-
-  ZmlModelColumn[] getActiveColumns( );
 }

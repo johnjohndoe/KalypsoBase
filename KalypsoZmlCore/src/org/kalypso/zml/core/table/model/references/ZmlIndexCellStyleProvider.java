@@ -38,46 +38,58 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model;
+package org.kalypso.zml.core.table.model.references;
 
-import java.util.Date;
-
-import org.kalypso.zml.core.table.model.memento.IZmlMemento;
-import org.kalypso.zml.core.table.schema.AbstractColumnType;
-import org.kalypso.zml.core.table.schema.ZmlTableType;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.zml.core.table.binding.CellStyle;
+import org.kalypso.zml.core.table.model.IZmlModelRow;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlModel
+public final class ZmlIndexCellStyleProvider implements IZmlCellStyleProvider
 {
-  ZmlTableType getTableType( );
+  private static ZmlIndexCellStyleProvider INSTANCE;
 
-  void addListener( IZmlColumnModelListener listener );
+  private ZmlIndexCellStyleProvider( )
+  {
+  }
 
-  void fireModelChanged( final IZmlModelColumn... columns );
+  public static IZmlCellStyleProvider getInstance( )
+  {
+    if( Objects.isNull( INSTANCE ) )
+      INSTANCE = new ZmlIndexCellStyleProvider();
 
-  IZmlModelColumn getColumn( String id );
+    return INSTANCE;
+  }
 
-  IZmlModelColumn[] getColumns( );
+  @Override
+  public CellStyle findStyle( final IZmlModelRow row )
+  {
+    return null;
+  }
 
-  IZmlModelRow getRow( final Date index );
+  @Override
+  public Font getFont( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
-  IZmlModelRow getRowAt( final int index );
+  @Override
+  public Color getBackground( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
-  IZmlModelRow[] getRows( );
+  @Override
+  public Color getForeground( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
-  void accept( IZmlModelRowVisitor visitor );
-
-  void dispose( );
-
-  IZmlMemento getMemento( );
-
-  void add( IZmlModelColumn column );
-
-  AbstractColumnType getColumnType( String identifier );
-
-  String[] getIgnoreTypes( );
-
-  ZmlModelColumn[] getActiveColumns( );
 }

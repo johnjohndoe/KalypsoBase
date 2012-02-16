@@ -38,46 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model;
+package org.kalypso.zml.core.table.model.references;
 
-import java.util.Date;
-
-import org.kalypso.zml.core.table.model.memento.IZmlMemento;
-import org.kalypso.zml.core.table.schema.AbstractColumnType;
-import org.kalypso.zml.core.table.schema.ZmlTableType;
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlModel
+public interface IZmlLabelStrategy
 {
-  ZmlTableType getTableType( );
-
-  void addListener( IZmlColumnModelListener listener );
-
-  void fireModelChanged( final IZmlModelColumn... columns );
-
-  IZmlModelColumn getColumn( String id );
-
-  IZmlModelColumn[] getColumns( );
-
-  IZmlModelRow getRow( final Date index );
-
-  IZmlModelRow getRowAt( final int index );
-
-  IZmlModelRow[] getRows( );
-
-  void accept( IZmlModelRowVisitor visitor );
-
-  void dispose( );
-
-  IZmlMemento getMemento( );
-
-  void add( IZmlModelColumn column );
-
-  AbstractColumnType getColumnType( String identifier );
-
-  String[] getIgnoreTypes( );
-
-  ZmlModelColumn[] getActiveColumns( );
+  String getText( ZmlModelViewport viewport, final IZmlModelValueCell cell ) throws SensorException, CoreException;
 }

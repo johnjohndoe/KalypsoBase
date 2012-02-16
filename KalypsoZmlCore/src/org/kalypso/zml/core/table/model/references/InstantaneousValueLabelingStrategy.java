@@ -38,46 +38,48 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model;
+package org.kalypso.zml.core.table.model.references;
 
-import java.util.Date;
-
-import org.kalypso.zml.core.table.model.memento.IZmlMemento;
-import org.kalypso.zml.core.table.schema.AbstractColumnType;
-import org.kalypso.zml.core.table.schema.ZmlTableType;
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.zml.core.KalypsoZmlCore;
+import org.kalypso.zml.core.table.binding.CellStyle;
+import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
+import org.kalypso.zml.core.table.rules.IZmlCellRuleImplementation;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlModel
+public class InstantaneousValueLabelingStrategy extends AbstractValueLabelingStrategy
 {
-  ZmlTableType getTableType( );
 
-  void addListener( IZmlColumnModelListener listener );
+  public InstantaneousValueLabelingStrategy( )
+  {
+  }
 
-  void fireModelChanged( final IZmlModelColumn... columns );
+  @Override
+  public String getText( final ZmlModelViewport viewport, final IZmlModelValueCell cell ) throws SensorException, CoreException
+  {
+    final CellStyle style = cell.getStyle( viewport );
+    String text = String.format( style.getTextFormat(), cell.getValue() );
 
-  IZmlModelColumn getColumn( String id );
+    final ZmlCellRule[] rules = cell.findActiveRules( viewport );
+    for( final ZmlCellRule rule : rules )
+    {
+      try
+      {
+        final IZmlCellRuleImplementation impl = rule.getImplementation();
+        text = impl.update( rule, cell, text );
+      }
+      catch( final SensorException e )
+      {
+        KalypsoZmlCore.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      }
+    }
 
-  IZmlModelColumn[] getColumns( );
+    return text;
+  }
 
-  IZmlModelRow getRow( final Date index );
-
-  IZmlModelRow getRowAt( final int index );
-
-  IZmlModelRow[] getRows( );
-
-  void accept( IZmlModelRowVisitor visitor );
-
-  void dispose( );
-
-  IZmlMemento getMemento( );
-
-  void add( IZmlModelColumn column );
-
-  AbstractColumnType getColumnType( String identifier );
-
-  String[] getIgnoreTypes( );
-
-  ZmlModelColumn[] getActiveColumns( );
 }
