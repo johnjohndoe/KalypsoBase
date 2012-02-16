@@ -57,6 +57,8 @@ import org.kalypso.zml.core.table.model.editing.ContinuedInterpolatedValueEditin
 import org.kalypso.zml.core.table.model.editing.IZmlEditingStrategy;
 import org.kalypso.zml.core.table.model.editing.InterpolatedValueEditingStrategy;
 import org.kalypso.zml.core.table.model.editing.SumValueEditingStrategy;
+import org.kalypso.zml.core.table.model.event.IZmlModelColumnEvent;
+import org.kalypso.zml.core.table.model.event.ZmlModelColumnChangeType;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
@@ -232,17 +234,27 @@ public class ZmlModelViewport
     m_listeners.add( listener );
   }
 
-  public void fireModelChanged( )
+  public void fireModelChanged( final int type )
   {
+    if( type == IZmlModelColumnEvent.RESULUTION_CHANGED )
+    {
+      throw new UnsupportedOperationException();
+      // FIXME cache and clean
+      // FIXME structure changed too
+    }
+
+    final ZmlModelColumnChangeType event = new ZmlModelColumnChangeType( type );
+
     final IZmlColumnModelListener[] listeners = m_listeners.toArray( new IZmlColumnModelListener[] {} );
     for( final IZmlColumnModelListener listener : listeners )
     {
-      listener.modelChanged();
+      listener.modelChanged( event );
     }
   }
 
   public IZmlModelValueCell[] getCells( final IZmlModelColumn column )
   {
+
     final Set<IZmlModelValueCell> cells = new LinkedHashSet<IZmlModelValueCell>();
 
     final IZmlModelRow[] rows = getRows();

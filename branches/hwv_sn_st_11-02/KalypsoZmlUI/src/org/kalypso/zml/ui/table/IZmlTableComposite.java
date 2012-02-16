@@ -41,6 +41,7 @@
 package org.kalypso.zml.ui.table;
 
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.event.ZmlModelColumnChangeType;
 
 /**
  * @author Dirk Kuch
@@ -52,7 +53,7 @@ public interface IZmlTableComposite
   /**
    * columns = null means 'refresh all columns'
    */
-  void refresh( final IZmlModelColumn... columns );
+  void refresh( ZmlModelColumnChangeType type, final IZmlModelColumn... columns );
 
   void removeListener( IZmlTableCompositeListener mListener );
 

@@ -38,12 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model;
+package org.kalypso.zml.core.table.model.event;
+
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlModelColumnListener
+public interface IZmlModelColumnListener extends IZmlModelColumnEvent
 {
-  void modelColumnChangedEvent( IZmlModelColumn changed );
+  void modelColumnChangedEvent( IZmlModelColumn changed, ZmlModelColumnChangeType event );
 }

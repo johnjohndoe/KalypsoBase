@@ -41,6 +41,7 @@
 package org.kalypso.zml.ui.table;
 
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.event.ZmlModelColumnChangeType;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
 
@@ -54,7 +55,7 @@ public interface IZmlTable
 
   ZmlModelViewport getModelViewport( );
 
-  void refresh( IZmlModelColumn... columns );
+  void refresh( ZmlModelColumnChangeType type, IZmlModelColumn... columns );
 
   IZmlTableSelection getSelection( );
 }

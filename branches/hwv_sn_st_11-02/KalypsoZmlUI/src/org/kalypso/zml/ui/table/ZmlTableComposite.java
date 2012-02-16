@@ -59,6 +59,7 @@ import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.event.ZmlModelColumnChangeType;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 import org.kalypso.zml.ui.debug.KalypsoZmlUiDebug;
 import org.kalypso.zml.ui.table.nat.ZmlTable;
@@ -169,7 +170,7 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
   final Set<IZmlModelColumn> m_stackColumns = Collections.synchronizedSet( new LinkedHashSet<IZmlModelColumn>() );
 
   @Override
-  public void refresh( final IZmlModelColumn... cols )
+  public void refresh( final ZmlModelColumnChangeType type, final IZmlModelColumn... cols )
   {
     synchronized( this )
     {
@@ -183,7 +184,7 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
 // ZmlTableColumns.buildTableColumns( this, ZmlTableColumns.toBaseColumns( missing ) );
 
       // FIXME don't refresh all columns!!!!
-      m_table.refresh( new IZmlModelColumn[] {} );
+      m_table.refresh( type, new IZmlModelColumn[] {} );
 
     }
   }

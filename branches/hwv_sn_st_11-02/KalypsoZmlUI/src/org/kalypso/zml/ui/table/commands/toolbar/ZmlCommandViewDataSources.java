@@ -51,6 +51,8 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.zml.core.table.binding.ZmlRuleResolver;
 import org.kalypso.zml.core.table.binding.rule.AbstractZmlRule;
+import org.kalypso.zml.core.table.model.event.IZmlModelColumnEvent;
+import org.kalypso.zml.core.table.model.event.ZmlModelColumnChangeType;
 import org.kalypso.zml.core.table.schema.RuleRefernceType;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
@@ -74,7 +76,7 @@ public class ZmlCommandViewDataSources extends AbstractHandler implements IEleme
     rule.setEnabled( HandlerUtils.isSelected( event ) );
 
     final IZmlTable table = ZmlHandlerUtil.getTable( event );
-    table.refresh();
+    table.refresh( new ZmlModelColumnChangeType( IZmlModelColumnEvent.COLUMN_RULES_CHANGED ) );
 
     return Status.OK_STATUS;
   }
