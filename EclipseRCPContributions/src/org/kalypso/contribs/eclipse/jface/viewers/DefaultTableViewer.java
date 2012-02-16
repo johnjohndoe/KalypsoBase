@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.TableColumn;
 
 /**
  * DefaultTableViewer handles common functionality that you wish you had when working with a TableViewer.
- * 
+ *
  * @author Marc Schlienger
  */
 public class DefaultTableViewer extends TableViewer
@@ -89,15 +89,13 @@ public class DefaultTableViewer extends TableViewer
     super( table );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.AbstractTableViewer#hookControl(org.eclipse.swt.widgets.Control)
-   */
   @Override
   protected void hookControl( final Control control )
   {
     super.hookControl( control );
 
     // After resize, adjust the columns according to the percent settings.
+    // TODO: ugly, this is not what the users wants...
     control.addControlListener( new ControlAdapter()
     {
       @Override
