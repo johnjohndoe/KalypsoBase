@@ -45,6 +45,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -52,12 +53,11 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
-import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
-import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
 
 import com.mxgraph.util.mxPoint;
 import com.mxgraph.util.mxSpline;
@@ -85,20 +85,19 @@ public class ZmlCommandSplineInterpolation extends AbstractHandler
     try
     {
       final IZmlTable table = ZmlHandlerUtil.getTable( event );
-      final IZmlTableSelectionHandler selection = table.getSelectionHandler();
-      final IZmlTableColumn column = selection.findActiveColumnByPosition();
-      final IZmlTableValueCell[] selected = (IZmlTableValueCell[]) column.getSelectedCells();
-      if( selected.length < 2 )
+      final IZmlTableSelection selection = table.getSelection();
+      final IZmlModelValueCell focus = selection.getFocusCell();
+      final IZmlModelColumn column = focus.getColumn();
+      final IZmlModelValueCell[] selected = selection.getSelectedCells( column );
+      if( ArrayUtils.getLength( selected ) < 2 )
         throw new ExecutionException( "Spline-Interpolation fehlgeschlagen - selektieren Sie eine zweite Zelle!" );
-
-      final IZmlModelColumn model = column.getModelColumn();
 
       final IZmlModelValueCell[] intervall = findIntervall( selected );
       final IZmlModelValueCell s1 = intervall[0];
       final IZmlModelValueCell s2 = intervall[1];
 
       final ZmlStuetstellenVisitor visitor = new ZmlStuetstellenVisitor( s1, s2 );
-      model.accept( visitor );
+      column.accept( visitor );
 
       final IZmlModelValueCell[] stuetzstellen = visitor.getStuetzstellen();
 
@@ -114,13 +113,16 @@ public class ZmlCommandSplineInterpolation extends AbstractHandler
       splines.apply( mxSpline );
 
       final ApplySplineValuesVisior applySplineVisitor = new ApplySplineValuesVisior( splines, s1, s2 );
-      model.accept( applySplineVisitor );
+      column.accept( applySplineVisitor );
 
       applySplineVisitor.getTransaction().execute();
     }
     catch( final SensorException e )
     {
       throw new ExecutionException( "Spline-Interpolation fehlgeschlagen.", e );
+    }
+    finally
+    {
     }
 
     return Status.OK_STATUS;
@@ -142,21 +144,20 @@ public class ZmlCommandSplineInterpolation extends AbstractHandler
     return points.toArray( new mxPoint[] {} );
   }
 
-  private IZmlModelValueCell[] findIntervall( final IZmlTableValueCell[] cells )
+  private IZmlModelValueCell[] findIntervall( final IZmlModelCell[] cells )
   {
-    IZmlTableValueCell start = cells[0];
-    IZmlTableValueCell end = cells[0];
+    IZmlModelValueCell start = (IZmlModelValueCell) cells[0];
+    IZmlModelValueCell end = (IZmlModelValueCell) cells[0];
 
-    for( final IZmlTableValueCell cell : cells )
+    for( final IZmlModelCell cell : cells )
     {
-      if( cell.getIndex() < start.getIndex() )
-        start = cell;
+      if( cell.getModelIndex() < start.getModelIndex() )
+        start = (IZmlModelValueCell) cell;
 
-      if( cell.getIndex() > end.getIndex() )
-        end = cell;
+      if( cell.getModelIndex() > end.getModelIndex() )
+        end = (IZmlModelValueCell) cell;
     }
 
-    return new IZmlModelValueCell[] { start.getValueReference(), end.getValueReference() };
-
+    return new IZmlModelValueCell[] { start, end };
   }
 }

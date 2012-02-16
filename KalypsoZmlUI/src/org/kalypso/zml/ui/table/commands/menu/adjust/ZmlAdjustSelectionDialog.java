@@ -60,6 +60,7 @@ import org.kalypso.contribs.eclipse.ui.pager.ElementsComposite;
 import org.kalypso.contribs.eclipse.ui.pager.IElementPage;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.ui.dialog.EnhancedTitleAreaDialog;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.commands.menu.adjust.pages.AbstractAdjustmentPage;
 import org.kalypso.zml.ui.table.commands.menu.adjust.pages.ConstantValueAdjustmentPage;
 import org.kalypso.zml.ui.table.commands.menu.adjust.pages.IAdjustmentPageProvider;
@@ -67,7 +68,7 @@ import org.kalypso.zml.ui.table.commands.menu.adjust.pages.MultiplyValueAdjustme
 import org.kalypso.zml.ui.table.commands.menu.adjust.pages.ShiftDateAdjustmentPage;
 import org.kalypso.zml.ui.table.commands.menu.adjust.pages.ShiftValueAdjustmentPage;
 import org.kalypso.zml.ui.table.dialogs.input.IZmlEinzelwertCompositeListener;
-import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
 
 /**
  * @author Dirk Kuch
@@ -76,13 +77,16 @@ public class ZmlAdjustSelectionDialog extends EnhancedTitleAreaDialog implements
 {
   private static final String SCREEN_SIZE = "zml.adjust.selection.dialog.screen.size"; // $NON-NLS-1$
 
-  private final IZmlTableColumn m_column;
+  private final IZmlModelColumn m_column;
 
   private ElementsComposite m_composite;
 
-  public ZmlAdjustSelectionDialog( final Shell shell, final IZmlTableColumn column )
+  private final IZmlTableSelection m_selection;
+
+  public ZmlAdjustSelectionDialog( final Shell shell, final IZmlTableSelection selection, final IZmlModelColumn column )
   {
     super( shell );
+    m_selection = selection;
     m_column = column;
 
     setShellStyle( SWT.CLOSE | SWT.MAX | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE );
@@ -98,7 +102,7 @@ public class ZmlAdjustSelectionDialog extends EnhancedTitleAreaDialog implements
   {
     getShell().setText( "Werkzeug Anpassen" );
 
-    setTitle( String.format( "Anpassen der selektierten Werte der Zeitreihe: \"%s\"", m_column.getModelColumn().getLabel() ) );
+    setTitle( String.format( "Anpassen der selektierten Werte der Zeitreihe: \"%s\"", m_column.getLabel() ) );
     setMessage( "In diesem Dialog können Sie Änderungen an den selektierten Werten vornehmen." );
 
     final FormToolkit toolkit = new FormToolkit( parent.getDisplay() );
@@ -171,12 +175,15 @@ public class ZmlAdjustSelectionDialog extends EnhancedTitleAreaDialog implements
       button.setEnabled( valid );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.commands.menu.adjust.pages.IAdjustmentPageProvider#getColumn()
-   */
   @Override
-  public IZmlTableColumn getColumn( )
+  public IZmlModelColumn getColumn( )
   {
     return m_column;
+  }
+
+  @Override
+  public IZmlTableSelection getSelectionHandler( )
+  {
+    return m_selection;
   }
 }

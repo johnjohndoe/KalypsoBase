@@ -47,13 +47,12 @@ import java.util.Map;
 
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.repository.IDataSourceItem;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
-import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
 
 /**
  * @author Dirk Kuch
@@ -64,14 +63,18 @@ public class ShiftDateValuesVisitor implements IZmlModelColumnVisitor
 
   ZmlModelTransaction m_transaction = new ZmlModelTransaction();
 
-  public ShiftDateValuesVisitor( final IZmlTableValueCell[] selected, final Integer offset )
+  public ShiftDateValuesVisitor( final IZmlModelCell[] selected, final Integer offset )
   {
-    for( final IZmlTableValueCell cell : selected )
+    for( final IZmlModelCell cell : selected )
     {
+      if( !(cell instanceof IZmlModelValueCell) )
+        continue;
+
+      final IZmlModelValueCell reference = (IZmlModelValueCell) cell;
+
       try
       {
-        final IZmlModelValueCell reference = cell.getValueReference();
-        final Date date = reference.getIndexValue();
+        final Date date = cell.getIndexValue();
 
         final Calendar calendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
         calendar.setTime( date );
@@ -88,7 +91,7 @@ public class ShiftDateValuesVisitor implements IZmlModelColumnVisitor
   }
 
   @Override
-  public void visit( final IZmlModelValueCell reference ) throws SensorException
+  public void visit( final IZmlModelValueCell reference )
   {
     final Number value = m_shift.get( reference.getIndexValue() );
     if( Objects.isNotNull( value ) )

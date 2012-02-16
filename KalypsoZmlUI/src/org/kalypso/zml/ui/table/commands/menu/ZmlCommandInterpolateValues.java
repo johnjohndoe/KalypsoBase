@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands.menu;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -48,16 +49,14 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.model.IZmlModel;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
-import org.kalypso.zml.ui.table.model.cells.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
-import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
 
 /**
  * @author Dirk Kuch
@@ -70,16 +69,16 @@ public class ZmlCommandInterpolateValues extends AbstractHandler
     try
     {
       final IZmlTable table = ZmlHandlerUtil.getTable( event );
-      final IZmlTableSelectionHandler selection = table.getSelectionHandler();
-      final IZmlTableCell active = selection.findActiveCellByPosition();
-      final IZmlTableColumn column = active.getColumn();
-      final IZmlTableValueCell[] selected = (IZmlTableValueCell[]) column.getSelectedCells();
-      if( selected.length < 2 )
+      final IZmlTableSelection selection = table.getSelection();
+
+      final IZmlModelValueCell current = selection.getFocusCell();
+      final IZmlModelValueCell[] cells = selection.getSelectedCells( current.getColumn() );
+      if( ArrayUtils.getLength( cells ) < 2 )
         throw new ExecutionException( "Interpolation fehlgeschlagen - selektieren Sie eine zweite Zelle!" );
 
-      final IZmlTableValueCell[] intervall = ZmlCommandUtils.findIntervall( selected );
-      final IZmlModelValueCell intervallStart = intervall[0].getValueReference();
-      final IZmlModelValueCell intervallEnd = intervall[1].getValueReference();
+      final IZmlModelCell[] intervall = ZmlCommandUtils.findIntervall( cells );
+      final IZmlModelValueCell intervallStart = (IZmlModelValueCell) intervall[0];
+      final IZmlModelValueCell intervallEnd = (IZmlModelValueCell) intervall[1];
 
       final int indexDifference = Math.abs( intervallEnd.getModelIndex() - intervallStart.getModelIndex() );
       final double valueDifference = getValueDifference( intervallStart, intervallEnd );
@@ -89,16 +88,15 @@ public class ZmlCommandInterpolateValues extends AbstractHandler
       final int baseIndex = intervallStart.getModelIndex();
       final double baseValue = intervallStart.getValue().doubleValue();
 
-      final IZmlModelColumn modelColumn = column.getModelColumn();
-
-      final IZmlModel model = table.getModel().getModel();
-
       final ZmlModelTransaction transaction = new ZmlModelTransaction();
+
+      final ZmlModelViewport viewModel = table.getModelViewport();
+      final IZmlModel model = viewModel.getModel();
 
       for( int index = intervallStart.getModelIndex() + 1; index < intervallEnd.getModelIndex(); index++ )
       {
         final IZmlModelRow row = model.getRowAt( index );
-        final IZmlModelValueCell cell = row.get( modelColumn );
+        final IZmlModelValueCell cell = row.get( current.getColumn() );
 
         final int step = cell.getModelIndex() - baseIndex;
         final double value = baseValue + step * stepValue;

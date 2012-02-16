@@ -1,6 +1,7 @@
 package org.kalypso.zml.ui.table.commands.toolbar.view;
 
 import org.eclipse.core.expressions.PropertyTester;
+import org.kalypso.zml.core.table.model.view.ZmlViewResolutionFilter;
 import org.kalypso.zml.ui.table.IZmlTable;
 
 public class ZmlPropertyTesterHourShiftCommand extends PropertyTester

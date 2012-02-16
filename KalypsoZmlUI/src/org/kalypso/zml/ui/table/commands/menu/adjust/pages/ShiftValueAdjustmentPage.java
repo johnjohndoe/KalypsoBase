@@ -48,7 +48,6 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedTextBox;
 import org.kalypso.zml.ui.table.base.widgets.IEnhancedTextBoxListener;
 import org.kalypso.zml.ui.table.base.widgets.rules.DoubeValueWidgetRule;
-import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
 
 /**
  * @author Dirk Kuch
@@ -105,7 +104,7 @@ public class ShiftValueAdjustmentPage extends AbstractAdjustmentPage implements 
   @Override
   public ICoreRunnableWithProgress getRunnable( )
   {
-    return new ShiftValueRunnable( (IZmlTableValueCell[]) getColumn().getSelectedCells(), m_shiftValue );
+    return new ShiftValueRunnable( getSelection().getSelectedCells( getColumn() ), m_shiftValue );
   }
 
   @Override
