@@ -80,6 +80,34 @@ public class CoverageManagementHelper
   }
 
   /**
+   * Returns the underlying grid file for a given coverage as {@link URL}.
+   *
+   * @return <code>null</code> of no underlying file is defined.
+   */
+  public static URL getGridLocation( final ICoverage coverageToDelete )
+  {
+    final RectifiedGridCoverage coverage = (RectifiedGridCoverage) coverageToDelete;
+    final Feature feature = coverage;
+    final GMLWorkspace workspace = feature.getWorkspace();
+
+    final Object rangeSet = coverage.getRangeSet();
+    if( !(rangeSet instanceof RangeSetFile) )
+      return null;
+
+    final String fileName = ((RangeSetFile) rangeSet).getFileName();
+
+    try
+    {
+      return new URL( workspace.getContext(), fileName );
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  /**
    * Deletes the referenced file of a coverage, if it exists.
    */
   public static IStatus deleteGridFile( final ICoverage coverageToDelete )
@@ -97,13 +125,7 @@ public class CoverageManagementHelper
     try
     {
       final URL url = new URL( workspace.getContext(), fileName );
-      final File gridFile = getGridFile( url );
-      if( gridFile != null )
-        gridFile.delete();
-
-      final IFile eclipseFile = ResourceUtilities.findFileFromURL( url );
-      if( eclipseFile != null )
-        eclipseFile.getParent().refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
+      deleteGridFile( url );
     }
     catch( final MalformedURLException e )
     {
@@ -119,4 +141,17 @@ public class CoverageManagementHelper
     return Status.OK_STATUS;
   }
 
+  /**
+   * Deletes a file given by a URL. Usefull for grid locations.
+   */
+  public static void deleteGridFile( final URL url ) throws CoreException
+  {
+    final File gridFile = getGridFile( url );
+    if( gridFile != null )
+      gridFile.delete();
+
+    final IFile eclipseFile = ResourceUtilities.findFileFromURL( url );
+    if( eclipseFile != null )
+      eclipseFile.getParent().refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
+  }
 }
