@@ -121,10 +121,6 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
     // empty
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
-   */
   @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
@@ -192,9 +188,6 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
     tc.setData( handler );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
-   */
   @Override
   public Object[] getElements( final Object inputElement )
   {
@@ -213,9 +206,6 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
     return m_result;
   }
 
-  /**
-   * @see org.kalypso.observation.result.ITupleResultChangedListener#valuesChanged(org.kalypso.observation.result.ITupleResultChangedListener.ValueChange[])
-   */
   @Override
   public void valuesChanged( final ValueChange[] changes )
   {
@@ -241,10 +231,6 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
     ViewerUtilities.update( m_tableViewer, records, props, true );
   }
 
-  /**
-   * @see org.kalypso.observation.result.ITupleResultChangedListener#recordsChanged(org.kalypso.observation.result.IRecord[],
-   *      org.kalypso.observation.result.ITupleResultChangedListener.TYPE)
-   */
   @Override
   public void recordsChanged( final IRecord[] records, final TYPE type )
   {
@@ -264,8 +250,8 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
               case ADDED:
                 // TODO: optimize, depending on event (events must deliver more information)
                 // we need the insert positions here... or the viewer should have an sorter?
-// tableViewer.add( records );
-// tableViewer.reveal( records[records.length - 1] );
+                // tableViewer.add( records );
+                // tableViewer.reveal( records[records.length - 1] );
                 tableViewer.refresh();
                 /* Total Refresh may shift the table, so current selection is no more visible */
                 // TODO: how to fix this?
@@ -293,10 +279,6 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
       } );
   }
 
-  /**
-   * @see org.kalypso.observation.result.ITupleResultChangedListener#componentsChanged(org.kalypso.observation.result.IComponent[],
-   *      org.kalypso.observation.result.ITupleResultChangedListener.TYPE)
-   */
   @Override
   public void componentsChanged( final IComponent[] components, final TYPE type )
   {
