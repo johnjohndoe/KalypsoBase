@@ -45,11 +45,9 @@ import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -79,17 +77,6 @@ public class DebugZmlModelContentProvider extends ArrayTreeContentProvider
       final ZmlCellRule rule = (ZmlCellRule) parentElement;
       return rule.getInstructions();
     }
-    else if( parentElement instanceof IZmlTableColumn )
-    {
-      final IZmlTableColumn column = (IZmlTableColumn) parentElement;
-
-      final List<Object> children = new ArrayList<Object>();
-      children.add( String.format( "Visibility: %s", Boolean.valueOf( column.isVisible() ).toString() ) ); //$NON-NLS-1$
-      children.add( column.getModelColumn() );
-      CollectionUtils.addAll( children, column.getAppliedRules() );
-
-      return children.toArray();
-    }
 
     return super.getChildren( parentElement );
   }
@@ -104,12 +91,6 @@ public class DebugZmlModelContentProvider extends ArrayTreeContentProvider
       final ZmlCellRule rule = (ZmlCellRule) element;
 
       return ArrayUtils.isNotEmpty( rule.getInstructions() );
-    }
-    else if( element instanceof IZmlTableColumn )
-    {
-      final IZmlTableColumn tableColumn = (IZmlTableColumn) element;
-
-      return Objects.isNotNull( tableColumn.getModelColumn() );
     }
 
     return super.hasChildren( element );
