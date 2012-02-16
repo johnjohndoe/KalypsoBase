@@ -40,72 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model.references;
 
-import java.util.Date;
-
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.kalypso.zml.core.table.model.IZmlModel;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlIndexValueReference implements IZmlModelIndexCell
+public interface IZmlCellStyleProvider
 {
-  private final IZmlModelRow m_row;
+  CellStyle findStyle( IZmlModelRow row );
 
-  public ZmlIndexValueReference( final IZmlModelRow row )
-  {
-    m_row = row;
-  }
+  Font getFont( );
 
-  @Override
-  public IZmlModelRow getRow( )
-  {
-    return m_row;
-  }
+  Color getBackground( );
 
-  @Override
-  public IZmlModel getModel( )
-  {
-    return m_row.getModel();
-  }
-
-  @Override
-  public Integer getModelIndex( )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public Date getIndexValue( )
-  {
-    return getRow().getIndex();
-  }
-
-  @Override
-  public boolean equals( final Object obj )
-  {
-    if( obj instanceof ZmlIndexValueReference )
-    {
-      final ZmlIndexValueReference other = (ZmlIndexValueReference) obj;
-
-      final EqualsBuilder builder = new EqualsBuilder();
-      builder.append( getIndexValue(), other.getIndexValue() );
-
-      return builder.isEquals();
-    }
-
-    return super.equals( obj );
-  }
-
-  @Override
-  public int hashCode( )
-  {
-    final HashCodeBuilder builder = new HashCodeBuilder();
-    builder.append( getClass().getName() );
-    builder.append( getIndexValue() );
-
-    return builder.toHashCode();
-  }
+  Color getForeground( );
 }

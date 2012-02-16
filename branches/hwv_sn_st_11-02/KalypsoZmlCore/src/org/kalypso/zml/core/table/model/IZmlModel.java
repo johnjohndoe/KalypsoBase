@@ -78,4 +78,6 @@ public interface IZmlModel
   AbstractColumnType getColumnType( String identifier );
 
   String[] getIgnoreTypes( );
+
+  ZmlModelColumn[] getActiveColumns( );
 }
