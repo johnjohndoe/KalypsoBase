@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands.menu.adjust.pages;
 
-import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 
 /**
  * @author Dirk Kuch
@@ -50,15 +50,12 @@ public class ShiftValueRunnable extends AbstractValueRunnable
 
   private final Double m_shiftValue;
 
-  public ShiftValueRunnable( final IZmlTableValueCell[] cells, final Double shiftValue )
+  public ShiftValueRunnable( final IZmlModelValueCell[] cells, final Double shiftValue )
   {
     super( cells );
     m_shiftValue = shiftValue;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.commands.menu.adjust.pages.AbstractValueRunnable#getValue(java.lang.Number)
-   */
   @Override
   protected Number getValue( final Number value )
   {

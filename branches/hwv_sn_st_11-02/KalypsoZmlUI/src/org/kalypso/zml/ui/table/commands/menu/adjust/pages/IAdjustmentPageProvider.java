@@ -40,14 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands.menu.adjust.pages;
 
-import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
 
 /**
  * @author Dirk Kuch
  */
 public interface IAdjustmentPageProvider
 {
+  IZmlTableSelection getSelectionHandler( );
 
-  IZmlTableColumn getColumn( );
+  IZmlModelColumn getColumn( );
 
 }

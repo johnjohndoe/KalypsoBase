@@ -48,13 +48,13 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.lang.Arrays;
-import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.ZmlValueLabelProvider;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
-import org.kalypso.zml.ui.table.model.columns.IZmlTableColumn;
-import org.kalypso.zml.ui.table.model.rows.IZmlTableValueRow;
-import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
+import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
 
 /**
  * @author Dirk Kuch
@@ -67,58 +67,29 @@ public class ZmlCommandCopyValue extends AbstractHandler
     try
     {
       final IZmlTable table = ZmlHandlerUtil.getTable( event );
-      final IZmlTableSelectionHandler selection = table.getSelectionHandler();
+      final IZmlTableSelection selection = table.getSelection();
 
       final StringBuffer buffer = new StringBuffer();
 
-      final IZmlTableColumn[] columns = table.getModel().getColumns();
-      for( final IZmlTableColumn column : columns )
+      // FIXME header
+      // FIXME index column
+      final IZmlModelColumn[] columns = selection.getSelectedColumns();
+      final IZmlModelRow[] rows = selection.getSelectedRows();
+
+      for( final IZmlModelRow row : rows )
       {
-        if( !column.isVisible() )
-          continue;
-
-        final String text = column.getTableViewerColumn().getColumn().getText();
-        buffer.append( text );
-
-        if( !Arrays.isLastItem( columns, column ) )
-          buffer.append( "\t" );
-      }
-      buffer.append( "\n" );
-
-      final IZmlTableValueRow[] rows = selection.getSelectedRows();
-      for( final IZmlTableValueRow row : rows )
-      {
-        for( final IZmlTableColumn column : columns )
+        for( final IZmlModelColumn column : columns )
         {
-          if( !column.isVisible() )
-            continue;
+          final IZmlModelValueCell cell = row.get( column );
 
-          final ZmlLabelProvider provider = new ZmlLabelProvider( row.getModelRow(), column, new ZmlCellRule[] {} );
-          buffer.append( provider.getText() );
-
-// if( column.isIndexColumn() )
-// {
-// final Date date = row.getModelRow().getIndexValue();
-//            final SimpleDateFormat sdf = new SimpleDateFormat( "dd.MM.yyyy HH:mm" ); //$NON-NLS-1$
-// sdf.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
-//
-// buffer.append( sdf.format( date ) );
-// }
-// else
-// {
-//
-// final IZmlValueReference reference = row.getValueReference( column );
-// final Number value = reference.getValue();
-// final String text = String.format( "%.3f", value.doubleValue() );
-//
-// buffer.append( text );
-// }
+          final ZmlValueLabelProvider provider = new ZmlValueLabelProvider( column );
+          buffer.append( provider.getText( table.getModelViewport(), cell ) );
 
           if( !Arrays.isLastItem( columns, column ) )
             buffer.append( "\t" );
+          else
+            buffer.append( "\n" );
         }
-
-        buffer.append( "\n" );
       }
 
       final StringSelection clipboardSelection = new StringSelection( buffer.toString() );

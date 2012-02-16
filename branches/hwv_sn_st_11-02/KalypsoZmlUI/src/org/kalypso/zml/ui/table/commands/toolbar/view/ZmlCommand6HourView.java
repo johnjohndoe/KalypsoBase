@@ -43,6 +43,7 @@ package org.kalypso.zml.ui.table.commands.toolbar.view;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
+import org.kalypso.zml.core.table.model.view.ZmlViewResolutionFilter;
 
 /**
  * @author Dirk Kuch

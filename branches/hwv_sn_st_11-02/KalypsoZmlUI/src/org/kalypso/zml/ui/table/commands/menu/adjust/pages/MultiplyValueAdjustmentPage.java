@@ -45,10 +45,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedTextBox;
 import org.kalypso.zml.ui.table.base.widgets.IEnhancedTextBoxListener;
 import org.kalypso.zml.ui.table.base.widgets.rules.DoubeValueWidgetRule;
-import org.kalypso.zml.ui.table.model.cells.IZmlTableValueCell;
+import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
 
 /**
  * @author Dirk Kuch
@@ -105,7 +106,10 @@ public class MultiplyValueAdjustmentPage extends AbstractAdjustmentPage implemen
   @Override
   public ICoreRunnableWithProgress getRunnable( )
   {
-    return new MultiplyValueRunnable( (IZmlTableValueCell[]) getColumn().getSelectedCells(), m_multiplier );
+    final IZmlTableSelection selection = getSelection();
+    final IZmlModelColumn column = getColumn();
+
+    return new MultiplyValueRunnable( selection.getSelectedCells( column ), m_multiplier );
   }
 
   @Override
