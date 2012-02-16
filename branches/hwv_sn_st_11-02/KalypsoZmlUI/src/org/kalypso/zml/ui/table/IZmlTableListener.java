@@ -47,7 +47,5 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
  */
 public interface IZmlTableListener
 {
-
   void eventTableChanged( String type, IZmlModelColumn... columns );
-
 }

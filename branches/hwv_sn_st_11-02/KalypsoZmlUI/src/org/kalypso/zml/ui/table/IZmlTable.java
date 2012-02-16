@@ -40,37 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table;
 
-import org.eclipse.jface.viewers.TableViewer;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
-import org.kalypso.zml.ui.table.focus.IZmlTableFocusHandler;
-import org.kalypso.zml.ui.table.model.IZmlTableModel;
-import org.kalypso.zml.ui.table.provider.rendering.cell.ZmlTableCellCache;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
+import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
 
 /**
  * @author Dirk Kuch
  */
 public interface IZmlTable
 {
-  TableViewer getViewer( );
-
-  ZmlTableCellCache getCache( );
-
   // FIXME remove from interface!
   void dispose( );
 
-  IZmlTableModel getModel( );
-
-  IZmlTableFocusHandler getFocusHandler( );
-
-  int getResolution( );
+  ZmlModelViewport getModelViewport( );
 
   void refresh( IZmlModelColumn... columns );
 
-  ZmlViewResolutionFilter getResulutionFilter( );
-
-  IZmlTableSelectionHandler getSelectionHandler( );
-
-  void fireTableChanged( String type, IZmlModelColumn... columns );
-
+  IZmlTableSelection getSelection( );
 }
