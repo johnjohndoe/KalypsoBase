@@ -48,9 +48,12 @@ import java.math.BigDecimal;
 import javax.media.jai.RenderedOp;
 import javax.media.jai.TiledImage;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.grid.tiff.TIFFUtilities;
 
+import com.sun.media.jai.codec.FileSeekableStream;
+import com.sun.media.jai.codec.SeekableStream;
 import com.vividsolutions.jts.geom.Coordinate;
 
 /**
@@ -74,6 +77,11 @@ public class TiffGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
    * The y dimension.
    */
   private int m_sizeY;
+
+  /**
+   * The input stream of the TIFF.
+   */
+  private SeekableStream m_inputStream;
 
   /**
    * The tiled image.
@@ -108,7 +116,7 @@ public class TiffGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
    * @param sizeY
    *          The y dimension.
    */
-  public TiffGeoGrid( Coordinate origin, Coordinate offsetX, Coordinate offsetY, String sourceCRS, File imageFile, int sizeX, int sizeY )
+  public TiffGeoGrid( final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS, final File imageFile, final int sizeX, final int sizeY ) throws GeoGridException
   {
     super( origin, offsetX, offsetY, sourceCRS );
 
@@ -116,6 +124,7 @@ public class TiffGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
     m_sizeX = sizeX;
     m_sizeY = sizeY;
 
+    m_inputStream = null;
     m_image = createTIFF( imageFile, sizeX, sizeY );
     m_min = null;
     m_max = null;
@@ -149,15 +158,15 @@ public class TiffGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
    * @see org.kalypso.grid.IGeoGrid#getValue(int, int)
    */
   @Override
-  public double getValue( int x, int y )
+  public double getValue( final int x, final int y )
   {
     if( m_image == null )
       return Double.NaN;
 
-    int tileX = m_image.XToTileX( x );
-    int tileY = m_image.YToTileY( y );
+    final int tileX = m_image.XToTileX( x );
+    final int tileY = m_image.YToTileY( y );
 
-    Raster tile = m_image.getTile( tileX, tileY );
+    final Raster tile = m_image.getTile( tileX, tileY );
 
     return tile.getSampleDouble( x, y, 0 );
   }
@@ -190,7 +199,7 @@ public class TiffGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
    * @see org.kalypso.grid.IGeoGrid#setMin(java.math.BigDecimal)
    */
   @Override
-  public void setMin( BigDecimal minValue )
+  public void setMin( final BigDecimal minValue )
   {
     m_min = minValue;
   }
@@ -199,7 +208,7 @@ public class TiffGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
    * @see org.kalypso.grid.IGeoGrid#setMax(java.math.BigDecimal)
    */
   @Override
-  public void setMax( BigDecimal maxValue )
+  public void setMax( final BigDecimal maxValue )
   {
     m_max = maxValue;
   }
@@ -208,7 +217,7 @@ public class TiffGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
    * @see org.kalypso.grid.IWriteableGeoGrid#setValue(int, int, double)
    */
   @Override
-  public void setValue( int x, int y, double value ) throws GeoGridException
+  public void setValue( final int x, final int y, final double value ) throws GeoGridException
   {
     /* Was the TIFF created/loaded? */
     if( m_image == null )
@@ -226,7 +235,7 @@ public class TiffGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
    * @see org.kalypso.grid.IWriteableGeoGrid#setStatistically(java.math.BigDecimal, java.math.BigDecimal)
    */
   @Override
-  public void setStatistically( BigDecimal min, BigDecimal max )
+  public void setStatistically( final BigDecimal min, final BigDecimal max )
   {
   }
 
@@ -244,12 +253,18 @@ public class TiffGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
   @Override
   public void dispose( )
   {
+    /* Close the input Stream. */
+    IOUtils.closeQuietly( m_inputStream );
+
+    /* Dispose the image. */
     if( m_image != null )
       m_image.dispose();
 
+    /* Discard the references. */
     m_imageFile = null;
     m_sizeX = -1;
     m_sizeY = -1;
+    m_inputStream = null;
     m_image = null;
     m_min = null;
     m_max = null;
@@ -257,28 +272,38 @@ public class TiffGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
     super.dispose();
   }
 
-  private TiledImage createTIFF( File imageFile, int sizeX, int sizeY )
+  private TiledImage createTIFF( final File imageFile, final int sizeX, final int sizeY ) throws GeoGridException
   {
-    /* Store the image file. */
-    m_imageFile = imageFile;
-
-    /* Create the TIFF, using the given dimensions. */
-    if( !imageFile.exists() )
+    try
     {
-      m_sizeX = sizeX;
-      m_sizeY = sizeY;
+      /* Store the image file. */
+      m_imageFile = imageFile;
 
-      return TIFFUtilities.createTiff( DataBuffer.TYPE_FLOAT, sizeX, sizeY );
+      /* Create the TIFF, using the given dimensions. */
+      if( !imageFile.exists() )
+      {
+        m_sizeX = sizeX;
+        m_sizeY = sizeY;
+
+        return TIFFUtilities.createTiff( DataBuffer.TYPE_FLOAT, sizeX, sizeY );
+      }
+
+      /* Create the input stream. */
+      m_inputStream = new FileSeekableStream( imageFile );
+
+      /* Load the TIFF. */
+      final RenderedOp renderedOp = TIFFUtilities.loadTiff( m_inputStream );
+
+      /* The dimensions should be automatically calculated. */
+      m_sizeX = -1;
+      m_sizeY = -1;
+
+      return new TiledImage( renderedOp, false );
     }
-
-    /* Load the TIFF. */
-    RenderedOp renderedOp = TIFFUtilities.loadTiff( imageFile );
-
-    /* The dimensions should be automatically calculated. */
-    m_sizeX = -1;
-    m_sizeY = -1;
-
-    return new TiledImage( renderedOp, false );
+    catch( final Exception ex )
+    {
+      throw new GeoGridException( "Error while creating/loading the tiff image...", ex );
+    }
   }
 
   private void calculateMinMax( )
@@ -286,15 +311,15 @@ public class TiffGeoGrid extends AbstractGeoGrid implements IWriteableGeoGrid
     try
     {
       /* Calculate the min/max values. */
-      IGeoWalkingStrategy walkingStrategy = getWalkingStrategy();
-      MinMaxRasterWalker walker = new MinMaxRasterWalker();
+      final IGeoWalkingStrategy walkingStrategy = getWalkingStrategy();
+      final MinMaxRasterWalker walker = new MinMaxRasterWalker();
       walkingStrategy.walk( this, walker, null, new NullProgressMonitor() );
 
       /* Set the min/max values. */
       m_min = BigDecimal.valueOf( walker.getMin() );
       m_max = BigDecimal.valueOf( walker.getMax() );
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       ex.printStackTrace();
     }

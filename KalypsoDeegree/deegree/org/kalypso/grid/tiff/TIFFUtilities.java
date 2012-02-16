@@ -56,6 +56,7 @@ import javax.media.jai.TiledImage;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.IGeoGrid;
 
+import com.sun.media.jai.codec.SeekableStream;
 import com.sun.media.jai.codec.TIFFEncodeParam;
 
 /**
@@ -83,19 +84,19 @@ public class TIFFUtilities
    *          The height of the TIFF.
    * @return The empty TIFF.
    */
-  public static TiledImage createTiff( int dataType, int width, int height )
+  public static TiledImage createTiff( final int dataType, final int width, final int height )
   {
     /* Create a float data sample model. */
-    SampleModel sampleModel = RasterFactory.createBandedSampleModel( dataType, width, height, 1 );
+    final SampleModel sampleModel = RasterFactory.createBandedSampleModel( dataType, width, height, 1 );
 
     /* Create a compatible color model. */
-    ColorModel colorModel = PlanarImage.createColorModel( sampleModel );
+    final ColorModel colorModel = PlanarImage.createColorModel( sampleModel );
 
     /* Create a writable raster. */
-    Raster raster = RasterFactory.createWritableRaster( sampleModel, new Point( 0, 0 ) );
+    final Raster raster = RasterFactory.createWritableRaster( sampleModel, new Point( 0, 0 ) );
 
     /* Create a tiled image. */
-    TiledImage tiledImage = new TiledImage( 0, 0, width, height, 0, 0, sampleModel, colorModel );
+    final TiledImage tiledImage = new TiledImage( 0, 0, width, height, 0, 0, sampleModel, colorModel );
     tiledImage.setData( raster );
 
     return tiledImage;
@@ -112,27 +113,49 @@ public class TIFFUtilities
    *          The height of the TIFF.
    * @return The TIFF.
    */
-  public static TiledImage createTiff( DataBuffer dataBuffer, int width, int height )
+  public static TiledImage createTiff( final DataBuffer dataBuffer, final int width, final int height )
   {
     /* Create a float data sample model. */
-    SampleModel sampleModel = RasterFactory.createBandedSampleModel( dataBuffer.getDataType(), width, height, 1 );
+    final SampleModel sampleModel = RasterFactory.createBandedSampleModel( dataBuffer.getDataType(), width, height, 1 );
 
     /* Create a compatible color model. */
-    ColorModel colorModel = PlanarImage.createColorModel( sampleModel );
+    final ColorModel colorModel = PlanarImage.createColorModel( sampleModel );
 
     /* Create a writable raster. */
-    Raster raster = RasterFactory.createWritableRaster( sampleModel, dataBuffer, new Point( 0, 0 ) );
+    final Raster raster = RasterFactory.createWritableRaster( sampleModel, dataBuffer, new Point( 0, 0 ) );
 
     /* Create a tiled image. */
-    TiledImage tiledImage = new TiledImage( 0, 0, width, height, 0, 0, sampleModel, colorModel );
+    final TiledImage tiledImage = new TiledImage( 0, 0, width, height, 0, 0, sampleModel, colorModel );
     tiledImage.setData( raster );
 
     return tiledImage;
   }
 
-  public static RenderedOp loadTiff( File file )
+  /**
+   * This function loads the TIFF. <br/>
+   * <br/>
+   * HINT:<br/>
+   * This function has issues with closing the unerlying stream.
+   * 
+   * @param file
+   *          The path of the source file.
+   * @return The TIFF.
+   */
+  public static RenderedOp loadTiff( final File file )
   {
     return JAI.create( "fileload", file.getAbsolutePath() );
+  }
+
+  /**
+   * This function loads the TIFF.
+   * 
+   * @param stream
+   *          The stream of the TIFF.
+   * @return The TIFF.
+   */
+  public static RenderedOp loadTiff( final SeekableStream stream )
+  {
+    return JAI.create( "stream", stream );
   }
 
   /**
@@ -144,10 +167,10 @@ public class TIFFUtilities
    * @param image
    *          The TIFF. To it the values will be copied.
    */
-  public static void copyGeoGridToTiff( IGeoGrid grid, TiledImage image ) throws GeoGridException
+  public static void copyGeoGridToTiff( final IGeoGrid grid, final TiledImage image ) throws GeoGridException
   {
-    int sizeY = grid.getSizeY();
-    int sizeX = grid.getSizeX();
+    final int sizeY = grid.getSizeY();
+    final int sizeX = grid.getSizeX();
     if( sizeX != image.getMaxX() || sizeY != image.getMaxY() )
       throw new GeoGridException( "The size of the geo grid does not match the size of the TIFF...", null );
 
@@ -170,10 +193,10 @@ public class TIFFUtilities
    * @param file
    *          The path of the target file.
    */
-  public static void saveTiff( TiledImage image, int tileWidth, int tileHeight, File file )
+  public static void saveTiff( final TiledImage image, final int tileWidth, final int tileHeight, final File file )
   {
     /* Save the image on a file. */
-    TIFFEncodeParam tep = new TIFFEncodeParam();
+    final TIFFEncodeParam tep = new TIFFEncodeParam();
     tep.setCompression( TIFFEncodeParam.COMPRESSION_PACKBITS );
 
     /* Set tile options, if wanted. */
@@ -184,7 +207,7 @@ public class TIFFUtilities
     }
 
     /* Save the file. */
-    RenderedOp renderedOp = JAI.create( "filestore", image, file.getAbsolutePath(), "TIFF", tep );
+    final RenderedOp renderedOp = JAI.create( "filestore", image, file.getAbsolutePath(), "TIFF", tep );
     renderedOp.dispose();
   }
 }
