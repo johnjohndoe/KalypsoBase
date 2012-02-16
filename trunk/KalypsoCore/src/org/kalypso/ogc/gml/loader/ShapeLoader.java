@@ -53,6 +53,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -162,6 +164,10 @@ public class ShapeLoader extends WorkspaceLoader
         ProgressUtilities.worked( moni, 1 ); // check cancel
         workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
         ProgressUtilities.worked( moni, 18 ); // check cancel
+      }
+      catch( final OperationCanceledException e )
+      {
+        throw new CoreException( Status.CANCEL_STATUS );
       }
       catch( final Exception e1 )
       {
