@@ -134,9 +134,8 @@ public final class ProgressUtilities
    * Calls {@link IProgressMonitor#worked(int)} on the given monitor.
    * <p>
    * In addition, it checks if the monitor is canceled and throws an CoreException with CANCEL_STATUS if this is the
-   * cae.
-   * </p>
-   *
+   * case.
+   * 
    * @see IProgressMonitor#worked(int)
    */
   public static void worked( final IProgressMonitor monitor, final int work )
