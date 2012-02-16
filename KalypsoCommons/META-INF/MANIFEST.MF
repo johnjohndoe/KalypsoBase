@@ -36,8 +36,6 @@ Bundle-ClassPath: lib/apache/lang/commons-lang-2.6.jar,
  lib/poi-2.6/poi-bin-3.6-20091214/poi-3.6/poi-ooxml-schemas-3.6-20091214.jar,
  lib/poi-2.6/poi-bin-3.6-20091214/poi-3.6/poi-scratchpad-3.6-20091214.jar,
  lib/jregex/jregex1.2_01.jar,
- lib/jai-1_1_3/jai-1_1_3/lib/jai_codec.jar,
- lib/jai-1_1_3/jai-1_1_3/lib/jai_core.jar,
  lib/jts-1.11/jts-1.11/jts-1.11.jar,
  lib/jts-1.11/jts-1.11/jtsio-1.11.jar,
  lib/j3d-1_5_2/j3d-1_5_2/lib/ext/j3dcore.jar,
@@ -59,6 +57,8 @@ Bundle-ClassPath: lib/apache/lang/commons-lang-2.6.jar,
  lib/jgraph/jgraphx_1_5_1_11.jar,
  lib/guava/guava-r09.jar,
  lib/nattable/net.sourceforge.nattable.core-2.3.1.1.jar,
+ lib/jai-1_1_3/jai-1_1_3/lib/jai_codec.jar,
+ lib/jai-1_1_3/jai-1_1_3/lib/jai_core.jar,
  .
 Bundle-Activator: org.kalypso.commons.KalypsoCommonsPlugin
 Bundle-Vendor: kalypsobase.sourceforge.net
