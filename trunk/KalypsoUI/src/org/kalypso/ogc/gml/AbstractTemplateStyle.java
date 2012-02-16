@@ -155,11 +155,12 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
 
     if( KeyComparator.getInstance().compare( m_styleKey, key ) == 0 && newValue != null )
     {
+      KeyInfo info = null;
       try
       {
         handleObjectLoaded( newValue );
 
-        final KeyInfo info = getPoolInfo();
+        info = getPoolInfo();
         final ILoader loader = info == null ? null : info.getLoader();
         if( loader instanceof SldLoader )
           m_resourceBundle = ((SldLoader) loader).getResourceBundle();
@@ -171,6 +172,9 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
 
       fireStyleChanged();
       setDirty( false );
+      // fireStyleChanged will set the info to dirty, but it was just loaded -> reset dirty to false
+      if( info != null )
+        info.setDirty( false );
     }
   }
 
