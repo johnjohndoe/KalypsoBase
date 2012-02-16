@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,24 +38,22 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table;
-
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.event.ZmlModelColumnChangeType;
-import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
-import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
+package org.kalypso.zml.core.table.model.event;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTable
+public interface IZmlModelColumnEvent
 {
-  // FIXME remove from interface!
-  void dispose( );
+  int STRUCTURE_CHANGE = 1;
 
-  ZmlModelViewport getModelViewport( );
+  int VALUE_CHANGED = 2;
 
-  void refresh( ZmlModelColumnChangeType type, IZmlModelColumn... columns );
+  int COLUMN_RULES_CHANGED = 4;
 
-  IZmlTableSelection getSelection( );
+  int COLUMN_DISPOSED = 8;
+
+  int IGNORE_TYPES_CHANGED = 16;
+
+  int RESULUTION_CHANGED = 32;
 }

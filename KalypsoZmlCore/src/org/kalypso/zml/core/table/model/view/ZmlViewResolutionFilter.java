@@ -48,6 +48,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.event.IZmlModelColumnEvent;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.references.ZmlValues;
@@ -173,7 +174,7 @@ public class ZmlViewResolutionFilter
     else
       m_offset += number;
 
-    m_model.fireModelChanged();
+    m_model.fireModelChanged( IZmlModelColumnEvent.RESULUTION_CHANGED );
   }
 
   public void setParameters( final int resolution, final boolean mode )
@@ -184,7 +185,7 @@ public class ZmlViewResolutionFilter
     m_resolution = resolution;
     m_stuetzstellenMode = mode;
 
-    m_model.fireModelChanged();
+    m_model.fireModelChanged( IZmlModelColumnEvent.RESULUTION_CHANGED );
   }
 
   public int getResolution( )

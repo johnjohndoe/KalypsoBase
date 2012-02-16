@@ -64,6 +64,9 @@ import org.kalypso.zml.core.table.binding.DataColumn;
 import org.kalypso.zml.core.table.binding.rule.ZmlColumnRule;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnObservationListener;
+import org.kalypso.zml.core.table.model.event.IZmlModelColumnEvent;
+import org.kalypso.zml.core.table.model.event.IZmlModelColumnListener;
+import org.kalypso.zml.core.table.model.event.ZmlModelColumnChangeType;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.transaction.IZmlModelUpdateCommand;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
@@ -169,7 +172,13 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnObservati
   public void addAppliedRules( final AppliedRule[] rules )
   {
     if( ArrayUtils.isNotEmpty( rules ) )
+    {
+      final int oldSize = m_applied.size();
       Collections.addAll( m_applied, rules );
+
+      if( Objects.notEqual( oldSize, m_applied.size() ) )
+        fireColumnChanged( IZmlModelColumnEvent.COLUMN_RULES_CHANGED );
+    }
   }
 
   @Override
@@ -188,7 +197,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnObservati
 
       m_handler = null;
 
-      fireColumnChanged();
+      fireColumnChanged( IZmlModelColumnEvent.COLUMN_DISPOSED );
     }
 
   }
@@ -211,21 +220,23 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnObservati
   @Override
   public void eventObservationChanged( )
   {
-    fireColumnChanged();
+    fireColumnChanged( IZmlModelColumnEvent.VALUE_CHANGED );
   }
 
   @Override
   public void eventObservationLoaded( )
   {
-    fireColumnChanged();
+    fireColumnChanged( IZmlModelColumnEvent.STRUCTURE_CHANGE );
   }
 
-  public void fireColumnChanged( )
+  public void fireColumnChanged( final int type )
   {
+    final ZmlModelColumnChangeType event = new ZmlModelColumnChangeType( type );
+
     final IZmlModelColumnListener[] listeners = m_listeners.toArray( new IZmlModelColumnListener[] {} );
     for( final IZmlModelColumnListener listener : listeners )
     {
-      listener.modelColumnChangedEvent( this );
+      listener.modelColumnChangedEvent( this, event );
     }
   }
 
@@ -417,7 +428,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnObservati
       m_handler.addListener( this );
     }
 
-    fireColumnChanged();
+    fireColumnChanged( IZmlModelColumnEvent.STRUCTURE_CHANGE );
   }
 
   @Override

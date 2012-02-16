@@ -56,6 +56,8 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.ZmlModelColumn;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler;
 import org.kalypso.zml.core.table.model.data.ObsProviderZmlColumnDataHandler;
+import org.kalypso.zml.core.table.model.event.IZmlModelColumnEvent;
+import org.kalypso.zml.core.table.model.event.ZmlModelColumnChangeType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 
 /**
@@ -126,7 +128,7 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
   {
     KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlColumnLoadCommand.observationChanged(): %s\n", m_source.getIdentifier() );
 
-    m_model.fireModelChanged();
+    m_model.fireModelChanged( new ZmlModelColumnChangeType( IZmlModelColumnEvent.STRUCTURE_CHANGE ) );
   }
 
   private void doExcecute( )

@@ -76,6 +76,7 @@ import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.zml.core.table.model.IZmlColumnModelListener;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.event.ZmlModelColumnChangeType;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableListener;
@@ -119,9 +120,9 @@ public class ZmlTable extends Composite implements IZmlTable
     m_viewport.addListener( new IZmlColumnModelListener()
     {
       @Override
-      public void modelChanged( final IZmlModelColumn... columns )
+      public void modelChanged( final ZmlModelColumnChangeType event, final IZmlModelColumn... columns )
       {
-        refresh( columns );
+        refresh( event, columns );
       }
     } );
 
@@ -194,7 +195,7 @@ public class ZmlTable extends Composite implements IZmlTable
   }
 
   @Override
-  public synchronized void refresh( final IZmlModelColumn... columns )
+  public synchronized void refresh( final ZmlModelColumnChangeType event, final IZmlModelColumn... columns )
   {
     if( Objects.isNotNull( m_updateJob ) )
       m_updateJob.cancel();
