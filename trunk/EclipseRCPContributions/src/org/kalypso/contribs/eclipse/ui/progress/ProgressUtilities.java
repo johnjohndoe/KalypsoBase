@@ -45,6 +45,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.PlatformUI;
@@ -56,7 +57,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 
 /**
  * Helper class with utility methods to handle progress.
- * 
+ *
  * @author Gernot Belger
  */
 public final class ProgressUtilities
@@ -123,9 +124,7 @@ public final class ProgressUtilities
     }
     catch( final InterruptedException e )
     {
-      final IStatus status = StatusUtilities.statusFromThrowable( e, errorMessage );
-      EclipseRCPContributionsPlugin.getDefault().getLog().log( status );
-      return status;
+      return new Status( IStatus.CANCEL, EclipseRCPContributionsPlugin.ID, "Operation cancelled by user", e );
     }
   }
 
@@ -135,17 +134,17 @@ public final class ProgressUtilities
    * In addition, it checks if the monitor is canceled and throws an CoreException with CANCEL_STATUS if this is the
    * cae.
    * </p>
-   * 
+   *
    * @see IProgressMonitor#worked(int)
    */
-  public static void worked( final IProgressMonitor monitor, final int work ) throws CoreException
+  public static void worked( final IProgressMonitor monitor, final int work )
   {
     if( monitor == null )
       return;
 
     monitor.worked( work );
     if( monitor.isCanceled() )
-      throw new CoreException( Status.CANCEL_STATUS );
+      throw new OperationCanceledException();
   }
 
   /**
@@ -154,7 +153,7 @@ public final class ProgressUtilities
    * In addition, it checks if the monitor is canceled and throws an CoreException with CANCEL_STATUS if this is the
    * cae.
    * </p>
-   * 
+   *
    * @see IProgressMonitor#done())
    */
   public static void done( final IProgressMonitor monitor ) throws CoreException
