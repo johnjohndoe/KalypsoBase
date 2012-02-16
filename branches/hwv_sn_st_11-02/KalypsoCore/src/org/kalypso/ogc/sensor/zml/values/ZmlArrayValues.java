@@ -69,9 +69,6 @@ public class ZmlArrayValues implements IZmlValues
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.zml.values.IZmlValues#getElement(int)
-   */
   @Override
   public Object getElement( final int index )
   {
@@ -82,27 +79,18 @@ public class ZmlArrayValues implements IZmlValues
     return m_values.get( index );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.zml.values.IZmlValues#setElement(int, java.lang.Object)
-   */
   @Override
   public void setElement( final int index, final Object element )
   {
     m_values.set( index, element );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.zml.values.IZmlValues#getCount()
-   */
   @Override
   public int getCount( )
   {
     return m_values.size();
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.zml.values.IZmlValues#indexOf(java.lang.Object)
-   */
   @Override
   public int indexOf( final Object obj )
   {

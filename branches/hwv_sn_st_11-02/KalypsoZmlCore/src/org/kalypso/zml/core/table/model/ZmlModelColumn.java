@@ -63,7 +63,7 @@ import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.binding.DataColumn;
 import org.kalypso.zml.core.table.binding.rule.ZmlColumnRule;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler;
-import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataListener;
+import org.kalypso.zml.core.table.model.data.IZmlModelColumnObservationListener;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.transaction.IZmlModelUpdateCommand;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
@@ -74,7 +74,7 @@ import org.kalypso.zml.core.table.schema.DataColumnType;
 /**
  * @author Dirk Kuch
  */
-public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListener
+public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnObservationListener
 {
   Set<AppliedRule> m_applied = new LinkedHashSet<AppliedRule>();
 
@@ -205,7 +205,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   {
     update( index, value, source, status );
 
-    fireColumnChangedEvent();
+// fireColumnChanged();
   }
 
   @Override
@@ -226,29 +226,6 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
     for( final IZmlModelColumnListener listener : listeners )
     {
       listener.modelColumnChangedEvent( this );
-    }
-  }
-
-  @Override
-  public void fireColumnChangedEvent( )
-  {
-    try
-    {
-      if( Objects.isNull( m_handler ) )
-        return;
-
-      // FIXME improve update value handling
-      final IObservation observation = m_handler.getObservation();
-      if( Objects.isNull( observation ) )
-        return;
-
-      observation.setValues( getTupleModel() );
-      observation.fireChangedEvent( this );
-
-    }
-    catch( final Exception ex )
-    {
-      ex.printStackTrace();
     }
   }
 

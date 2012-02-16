@@ -42,12 +42,15 @@ package org.kalypso.zml.core.table.model.editing;
 
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.TupleModelDataSet;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.transaction.TupleModelTransaction;
+import org.kalypso.ogc.sensor.transaction.UpdateTupleModelDataSetCommand;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.KalypsoZmlCore;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.references.ZmlValues;
-import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 
 /**
@@ -82,11 +85,13 @@ public class ContinuedInterpolatedValueEditingStrategy extends AbstractEditingSt
 
       final Number targetValue = getTargetValue( cell, value );
 
-      final ZmlModelTransaction transaction = new ZmlModelTransaction();
+      final IZmlModelColumn column = cell.getColumn();
+      final TupleModelTransaction transaction = new TupleModelTransaction( column.getTupleModel(), column.getMetadata() );
 
       try
       {
-        transaction.add( cell, targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
+        final TupleModelDataSet dataset = new TupleModelDataSet( column.getValueAxis(), targetValue, KalypsoStati.BIT_USER_MODIFIED, IDataSourceItem.SOURCE_MANUAL_CHANGED );
+        transaction.add( new UpdateTupleModelDataSetCommand( cell.getModelIndex(), dataset, true ) );
 
         IZmlModelValueCell next = getModel().findNextCell( cell );
         while( next != null )
@@ -95,13 +100,15 @@ public class ContinuedInterpolatedValueEditingStrategy extends AbstractEditingSt
           if( ZmlValues.isStuetzstelle( ref ) )
             break;
 
-          transaction.add( ref, targetValue, IDataSourceItem.SOURCE_INTERPOLATED_WECHMANN_VALUE, KalypsoStati.BIT_OK );
+          final TupleModelDataSet dataset2 = new TupleModelDataSet( column.getValueAxis(), targetValue, KalypsoStati.BIT_USER_MODIFIED, IDataSourceItem.SOURCE_INTERPOLATED_WECHMANN_VALUE );
+          transaction.add( new UpdateTupleModelDataSetCommand( ref.getModelIndex(), dataset2, true ) );
+
           next = getModel().findNextCell( next );
         }
       }
       finally
       {
-        transaction.execute();
+        column.getTupleModel().execute( transaction );
       }
 
     }

@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,14 +38,15 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model.data;
+package org.kalypso.ogc.sensor.impl;
+
+import org.kalypso.ogc.sensor.event.ObservationChangeType;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlModelColumnDataListener
+public interface ITupleModelChangeListener
 {
-  void eventObservationChanged( );
 
-  void eventObservationLoaded( );
+  void modelChangedEvent( ObservationChangeType type );
 }

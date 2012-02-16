@@ -146,6 +146,9 @@ public class ZmlColumnHeaderCellPainter extends AbstractCellPainter
     final AppliedRule[] rules = column.getActiveRules();
     for( final AppliedRule rule : rules )
     {
+      if( !rule.hasHeaderIcon() )
+        continue;
+
       try
       {
         final Image img = rule.getCellStyle().getImage();

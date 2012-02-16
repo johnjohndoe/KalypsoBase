@@ -7,7 +7,6 @@ import org.eclipse.core.runtime.Status;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.util.ChartUtilities;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**

@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,58 +38,22 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model.references;
+package org.kalypso.ogc.sensor.transaction;
 
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.zml.core.table.binding.CellStyle;
-import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.ogc.sensor.ITupleModel;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 
 /**
  * @author Dirk Kuch
  */
-public final class ZmlIndexCellStyleProvider implements IZmlCellStyleProvider
+public interface ITupleModelTransaction
 {
-  private static ZmlIndexCellStyleProvider INSTANCE;
+  void add( ITupleModelCommand command );
 
-  private ZmlIndexCellStyleProvider( )
-  {
-  }
+  ITupleModelCommand[] getCommands( );
 
-  public static IZmlCellStyleProvider getInstance( )
-  {
-    if( Objects.isNull( INSTANCE ) )
-      INSTANCE = new ZmlIndexCellStyleProvider();
+  MetadataList getMetadata( );
 
-    return INSTANCE;
-  }
-
-  @Override
-  public CellStyle findStyle( final IZmlModelRow row )
-  {
-    return null;
-  }
-
-  @Override
-  public Font getFont( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public Color getBackground( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public Color getForeground( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
+  ITupleModel getModel( );
 
 }

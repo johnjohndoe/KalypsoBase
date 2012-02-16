@@ -49,8 +49,8 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.model.references.IZmlModelIndexCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
-import org.kalypso.zml.core.table.model.references.ZmlModelValueCell;
 import org.kalypso.zml.core.table.model.references.ZmlModelIndexCell;
+import org.kalypso.zml.core.table.model.references.ZmlModelValueCell;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 
 /**

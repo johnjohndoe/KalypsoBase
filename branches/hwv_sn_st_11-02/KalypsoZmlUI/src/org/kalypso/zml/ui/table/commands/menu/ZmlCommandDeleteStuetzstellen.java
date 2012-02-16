@@ -40,24 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands.menu;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.TupleModelDataSet;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilter;
+import org.kalypso.ogc.sensor.transaction.TupleModelTransaction;
+import org.kalypso.ogc.sensor.transaction.UpdateTupleModelDataSetCommand;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.interpolation.ZmlInterpolationWorker;
-import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.references.ZmlValues;
-import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
@@ -71,59 +69,54 @@ public class ZmlCommandDeleteStuetzstellen extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event )
   {
-    final IZmlTable table = ZmlHandlerUtil.getTable( event );
-    final IZmlTableSelection selection = table.getSelection();
-
-    final String src = String.format( "%s%s", IDataSourceItem.FILTER_SOURCE, InterpolationFilter.FILTER_ID ); //$NON-NLS-1$
-
-    final ZmlModelTransaction transaction = new ZmlModelTransaction();
-
-    final IZmlModelCell[] cells = selection.getSelectedCells();
-
-    for( final IZmlModelCell cell : cells )
+    try
     {
-      try
-      {
-        if( !(cell instanceof IZmlModelValueCell) )
-          continue;
+      final IZmlTable table = ZmlHandlerUtil.getTable( event );
+      final IZmlTableSelection selection = table.getSelection();
 
-        final IZmlModelValueCell reference = (IZmlModelValueCell) cell;
-        if( ZmlValues.isStuetzstelle( reference ) )
+      final String src = String.format( "%s%s", IDataSourceItem.FILTER_SOURCE, InterpolationFilter.FILTER_ID ); //$NON-NLS-1$
+
+      final IZmlModelValueCell current = selection.getFocusCell();
+      final IZmlModelColumn column = current.getColumn();
+
+      final TupleModelTransaction transaction = new TupleModelTransaction( column.getTupleModel(), column.getMetadata() );
+
+      final IZmlModelValueCell[] cells = selection.getSelectedCells( column );
+      for( final IZmlModelValueCell cell : cells )
+      {
+        try
         {
-          transaction.add( reference, reference.getValue(), src, KalypsoStati.BIT_OK );
+          final IZmlModelValueCell reference = cell;
+          if( ZmlValues.isStuetzstelle( reference ) )
+          {
+            final TupleModelDataSet dataset = new TupleModelDataSet( column.getValueAxis(), cell.getValue(), KalypsoStati.BIT_OK, src );
+            transaction.add( new UpdateTupleModelDataSetCommand( cell.getModelIndex(), dataset, true ) );
+          }
+        }
+        catch( final Throwable t )
+        {
+          KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
         }
       }
-      catch( final Throwable t )
+
+      try
       {
-        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
+        column.getTupleModel().execute( transaction );
       }
+      catch( final SensorException e )
+      {
+        e.printStackTrace();
+      }
+
+      final ZmlInterpolationWorker worker = new ZmlInterpolationWorker( column );
+      ProgressUtilities.busyCursorWhile( worker );
     }
-
-    final IZmlModelColumn[] columns = selection.getSelectedColumns();
-    final IObservation[] observations = toObservations( columns );
-    final ZmlInterpolationWorker worker = new ZmlInterpolationWorker( observations );
-
-    transaction.execute();
-    ProgressUtilities.busyCursorWhile( worker );
-
-    for( final IObservation observation : observations )
+    catch( final SensorException e )
     {
-      observation.fireChangedEvent( this );
+      e.printStackTrace();
     }
 
     return Status.OK_STATUS;
 
-  }
-
-  private static IObservation[] toObservations( final IZmlModelColumn[] columns )
-  {
-    final Set<IObservation> observations = new LinkedHashSet<IObservation>();
-
-    for( final IZmlModelColumn column : columns )
-    {
-      observations.add( column.getObservation() );
-    }
-
-    return observations.toArray( new IObservation[] {} );
   }
 }

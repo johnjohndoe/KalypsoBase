@@ -125,7 +125,7 @@ public class ConstantValueAdjustmentPage extends AbstractAdjustmentPage implemen
 
     final IZmlModelValueCell[] cells = selection.getSelectedCells( column );
 
-    return new ConstantValueRunnable( cells, m_constantValue );
+    return new ConstantValueRunnable( column, cells, m_constantValue );
   }
 
   @Override

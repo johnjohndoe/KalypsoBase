@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,43 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model.interpolation;
-
-import java.util.Date;
-
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.SensorException;
+package org.kalypso.ogc.sensor.event;
 
 /**
- * @author Gernot Belger
+ * @author Dirk Kuch
  */
-public interface ITimeseriesObservation extends IObservation
+public interface IObservationChangeEvent
 {
-  IAxis getDateAxis( );
+  int STRUCTURE_CHANGE = 1;
 
-  IAxis getValueAxis( );
-
-  IAxis getStatusAxis( );
-
-  IAxis getSourceAxis( );
-
-  Date getDate( int row ) throws SensorException;
-
-  Number getValue( int row ) throws SensorException;
-
-  int getStatus( int row ) throws SensorException;
-
-  String getSource( int row ) throws SensorException;
-
-  // TODO: instead: give a list of commands that will be executed inside the transaction... or something similar.
-  // Alternative: run a 'runnable' as transaction, hide start and stop inside the runner
-  void startTransaction( ) throws SensorException;
-
-  // Stops the transaction, commits all changed value to the model and fire a change event
-  void stopTransaction( ) throws SensorException;
-
-  boolean inTransaction( );
-
-  void update( int index, double value, String dataSource, int status ) throws SensorException;
+  int VALUE_CHANGED = 2;
 }

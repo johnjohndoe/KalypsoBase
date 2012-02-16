@@ -52,6 +52,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.transaction.TupleModelTransaction;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
@@ -92,6 +93,8 @@ public class ZmlCommandSplineInterpolation extends AbstractHandler
       if( ArrayUtils.getLength( selected ) < 2 )
         throw new ExecutionException( "Spline-Interpolation fehlgeschlagen - selektieren Sie eine zweite Zelle!" );
 
+      final TupleModelTransaction transaction = new TupleModelTransaction( column.getTupleModel(), column.getMetadata() );
+
       final IZmlModelValueCell[] intervall = findIntervall( selected );
       final IZmlModelValueCell s1 = intervall[0];
       final IZmlModelValueCell s2 = intervall[1];
@@ -112,10 +115,10 @@ public class ZmlCommandSplineInterpolation extends AbstractHandler
       final mxSpline mxSpline = new mxSpline( mxPoints );
       splines.apply( mxSpline );
 
-      final ApplySplineValuesVisior applySplineVisitor = new ApplySplineValuesVisior( splines, s1, s2 );
+      final ApplySplineValuesVisior applySplineVisitor = new ApplySplineValuesVisior( splines, s1, s2, transaction );
       column.accept( applySplineVisitor );
 
-      applySplineVisitor.getTransaction().execute();
+      column.getTupleModel().execute( transaction );
     }
     catch( final SensorException e )
     {

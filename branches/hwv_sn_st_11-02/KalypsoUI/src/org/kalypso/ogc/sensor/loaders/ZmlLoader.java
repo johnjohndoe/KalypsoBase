@@ -58,7 +58,8 @@ import org.kalypso.i18n.Messages;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.IObservationListener;
+import org.kalypso.ogc.sensor.event.IObservationListener;
+import org.kalypso.ogc.sensor.event.ObservationChangeType;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 
 /**
@@ -73,9 +74,9 @@ public class ZmlLoader extends AbstractLoader
   private final IObservationListener m_observationListener = new IObservationListener()
   {
     @Override
-    public void observationChanged( final IObservation obs, final Object eventSource )
+    public void observationChanged( final IObservation obs, final Object eventSource, final ObservationChangeType type )
     {
-      handleObservationChanged( obs );
+      handleObservationChanged( obs, type );
     }
   };
 
@@ -187,7 +188,7 @@ public class ZmlLoader extends AbstractLoader
     obs.removeListener( m_observationListener );
   }
 
-  protected void handleObservationChanged( final IObservation obs )
+  protected void handleObservationChanged( final IObservation obs, final ObservationChangeType type )
   {
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
     final KeyInfo info = pool.getInfo( obs );

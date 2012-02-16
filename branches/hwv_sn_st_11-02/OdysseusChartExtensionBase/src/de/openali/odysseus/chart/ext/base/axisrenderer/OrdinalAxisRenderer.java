@@ -40,24 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.ext.base.axisrenderer;
 
-import java.awt.Insets;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Rectangle;
-
 import de.openali.odysseus.chart.ext.base.data.IAxisContentProvider;
-import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
-import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.ITextStyle;
-import de.openali.odysseus.chart.framework.util.StyleUtils;
 import de.openali.odysseus.chart.framework.util.img.GenericChartLabelRenderer;
 import de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer;
 

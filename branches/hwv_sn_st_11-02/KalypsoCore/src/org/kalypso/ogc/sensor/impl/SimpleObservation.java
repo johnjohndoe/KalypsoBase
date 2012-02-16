@@ -49,10 +49,11 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.IObservationListener;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.event.IObservationListener;
+import org.kalypso.ogc.sensor.event.ObservationChangeType;
 import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
@@ -71,6 +72,15 @@ public class SimpleObservation implements IObservation
   private final MetadataList m_metadata;
 
   private ITupleModel m_model = null;
+
+  private final ITupleModelChangeListener m_listener = new ITupleModelChangeListener()
+  {
+    @Override
+    public void modelChangedEvent( final ObservationChangeType type )
+    {
+      fireChangedEvent( this, type );
+    }
+  };
 
   private final ObservationEventAdapter m_evtPrv = new ObservationEventAdapter( this );
 
@@ -97,6 +107,8 @@ public class SimpleObservation implements IObservation
     m_name = name;
     m_metadata = metadata;
     m_model = model;
+
+    m_model.addChangeListener( m_listener );
   }
 
   /**
@@ -144,26 +156,34 @@ public class SimpleObservation implements IObservation
     // (real) model isn't changed, just the copy of it (see setFrom and the calling
     // constructors in SimpleTuppleModel).
     if( Objects.isNotNull( request ) && Objects.isNotNull( request.getDateRange() ) )
-      return new SimpleTupleModel( m_model, request.getDateRange() );
+    {
+      final SimpleTupleModel model = new SimpleTupleModel( m_model, request.getDateRange() );
+      model.addChangeListener( m_listener );
+
+      return model;
+    }
 
     return m_model;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#setValues(org.kalypso.ogc.sensor.ITuppleModel)
-   */
   @Override
   public void setValues( final ITupleModel values ) throws SensorException
   {
-    if( values == null )
+    if( Objects.isNull( values ) )
     {
       m_model = new SimpleTupleModel( m_model.getAxes() );
+      m_model.addChangeListener( m_listener );
+
+      m_evtPrv.fireChangedEvent( null, new ObservationChangeType( IObservationListener.STRUCTURE_CHANGE ) );
       return;
     }
 
     if( m_model == null )
     {
       m_model = values;
+      m_model.addChangeListener( m_listener );
+
+      m_evtPrv.fireChangedEvent( null, new ObservationChangeType( IObservationListener.STRUCTURE_CHANGE ) );
       return;
     }
 
@@ -235,7 +255,7 @@ public class SimpleObservation implements IObservation
       }
     }
 
-    m_evtPrv.fireChangedEvent( null );
+    m_evtPrv.fireChangedEvent( null, new ObservationChangeType( IObservationListener.STRUCTURE_CHANGE ) );
   }
 
   /**
@@ -263,27 +283,18 @@ public class SimpleObservation implements IObservation
     m_evtPrv.addListener( listener );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservationEventProvider#removeListener(org.kalypso.ogc.sensor.IObservationListener)
-   */
   @Override
   public void removeListener( final IObservationListener listener )
   {
     m_evtPrv.removeListener( listener );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservationEventProvider#fireChangedEvent(java.lang.Object)
-   */
   @Override
-  public void fireChangedEvent( final Object source )
+  public void fireChangedEvent( final Object source, final ObservationChangeType type )
   {
-    m_evtPrv.fireChangedEvent( source );
+    m_evtPrv.fireChangedEvent( source, type );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#getHref()
-   */
   @Override
   public String getHref( )
   {

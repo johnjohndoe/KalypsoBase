@@ -109,7 +109,7 @@ public class MultiplyValueAdjustmentPage extends AbstractAdjustmentPage implemen
     final IZmlTableSelection selection = getSelection();
     final IZmlModelColumn column = getColumn();
 
-    return new MultiplyValueRunnable( selection.getSelectedCells( column ), m_multiplier );
+    return new MultiplyValueRunnable( column, selection.getSelectedCells( column ), m_multiplier );
   }
 
   @Override

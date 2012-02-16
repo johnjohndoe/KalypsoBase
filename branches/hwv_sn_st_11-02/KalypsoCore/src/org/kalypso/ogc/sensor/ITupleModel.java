@@ -40,6 +40,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor;
 
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.ogc.sensor.impl.ITupleModelChangeListener;
+import org.kalypso.ogc.sensor.transaction.ITupleModelTransaction;
 import org.kalypso.ogc.sensor.visitor.ITupleModelVisitor;
 
 /**
@@ -102,4 +105,7 @@ public interface ITupleModel
 
   boolean isEmpty( ) throws SensorException;
 
+  void addChangeListener( ITupleModelChangeListener listener );
+
+  IStatus execute( ITupleModelTransaction transaction );
 }

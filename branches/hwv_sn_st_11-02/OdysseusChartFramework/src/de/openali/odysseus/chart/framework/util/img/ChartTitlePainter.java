@@ -43,8 +43,6 @@ package de.openali.odysseus.chart.framework.util.img;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.GroupLayout.Alignment;
-
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;

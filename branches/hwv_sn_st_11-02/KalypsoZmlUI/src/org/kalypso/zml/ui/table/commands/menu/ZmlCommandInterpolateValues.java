@@ -46,13 +46,16 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.TupleModelDataSet;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.transaction.TupleModelTransaction;
+import org.kalypso.ogc.sensor.transaction.UpdateTupleModelDataSetCommand;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.model.IZmlModel;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
-import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
@@ -88,7 +91,8 @@ public class ZmlCommandInterpolateValues extends AbstractHandler
       final int baseIndex = intervallStart.getModelIndex();
       final double baseValue = intervallStart.getValue().doubleValue();
 
-      final ZmlModelTransaction transaction = new ZmlModelTransaction();
+      final IZmlModelColumn column = intervallStart.getColumn();
+      final TupleModelTransaction transaction = new TupleModelTransaction( column.getTupleModel(), column.getMetadata() );
 
       final ZmlModelViewport viewModel = table.getModelViewport();
       final IZmlModel model = viewModel.getModel();
@@ -101,10 +105,11 @@ public class ZmlCommandInterpolateValues extends AbstractHandler
         final int step = cell.getModelIndex() - baseIndex;
         final double value = baseValue + step * stepValue;
 
-        transaction.add( cell, value, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_OK );
+        final TupleModelDataSet dataset = new TupleModelDataSet( column.getValueAxis(), value, KalypsoStati.BIT_OK, IDataSourceItem.SOURCE_MANUAL_CHANGED );
+        transaction.add( new UpdateTupleModelDataSetCommand( cell.getModelIndex(), dataset, true ) );
       }
 
-      transaction.execute();
+      column.getTupleModel().execute( transaction );
 
       return Status.OK_STATUS;
     }

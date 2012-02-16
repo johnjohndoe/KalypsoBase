@@ -53,6 +53,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.event.IObservationChangeEvent;
 
 /**
  * Simple implementation of the {@link ITuppleModel} interface.
@@ -61,6 +62,7 @@ import org.kalypso.ogc.sensor.SensorException;
  */
 public class SimpleTupleModel extends AbstractTupleModel
 {
+
   /**
    * An empty tuple model.
    */
@@ -137,18 +139,12 @@ public class SimpleTupleModel extends AbstractTupleModel
     m_tuples.addAll( Arrays.asList( values ) );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#getCount()
-   */
   @Override
   public int size( )
   {
     return m_tuples.size();
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#getElement(int, org.kalypso.ogc.sensor.IAxis)
-   */
   @Override
   public Object get( final int index, final IAxis axis ) throws SensorException
   {
@@ -158,9 +154,6 @@ public class SimpleTupleModel extends AbstractTupleModel
     return row[columnIndex];
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object, org.kalypso.ogc.sensor.IAxis)
-   */
   @Override
   public void set( final int index, final IAxis axis, final Object element ) throws SensorException
   {
@@ -171,11 +164,10 @@ public class SimpleTupleModel extends AbstractTupleModel
     final Object[] row = m_tuples.get( index );
     final int columnIndex = getPosition( axis );
     row[columnIndex] = element;
+
+    fireModelChanged( IObservationChangeEvent.VALUE_CHANGED );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object, org.kalypso.ogc.sensor.IAxis)
-   */
   @Override
   public int indexOf( final Object element, final IAxis axis ) throws SensorException
   {
@@ -203,6 +195,8 @@ public class SimpleTupleModel extends AbstractTupleModel
   public void addTuple( final Object[] tupple )
   {
     m_tuples.add( tupple );
+
+    fireModelChanged( IObservationChangeEvent.STRUCTURE_CHANGE );
   }
 
   /**
@@ -214,6 +208,8 @@ public class SimpleTupleModel extends AbstractTupleModel
   public void addTuple( final Vector<Object> tupple )
   {
     addTuple( tupple.toArray( new Object[] {} ) );
+
+    fireModelChanged( IObservationChangeEvent.STRUCTURE_CHANGE );
   }
 
   /**
@@ -244,6 +240,8 @@ public class SimpleTupleModel extends AbstractTupleModel
 
       m_tuples.add( row );
     }
+
+    fireModelChanged( IObservationChangeEvent.STRUCTURE_CHANGE );
   }
 
   /**
@@ -288,5 +286,8 @@ public class SimpleTupleModel extends AbstractTupleModel
         m_tuples.add( row );
       }
     }
+
+    fireModelChanged( IObservationChangeEvent.STRUCTURE_CHANGE );
   }
+
 }

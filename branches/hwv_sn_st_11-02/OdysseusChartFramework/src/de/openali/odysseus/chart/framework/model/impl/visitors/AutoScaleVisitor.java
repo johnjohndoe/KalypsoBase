@@ -43,8 +43,6 @@ package de.openali.odysseus.chart.framework.model.impl.visitors;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.commons.java.lang.Objects;
-
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
