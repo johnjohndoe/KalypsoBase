@@ -47,15 +47,16 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.TupleModelDataSet;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.transaction.TupleModelTransaction;
+import org.kalypso.ogc.sensor.transaction.UpdateTupleModelDataSetCommand;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.ZmlValueLabelProvider;
 import org.kalypso.zml.core.table.model.editing.IZmlEditingStrategy;
 import org.kalypso.zml.core.table.model.interpolation.ZmlInterpolationWorker;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
-import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 import org.kalypso.zml.ui.table.IZmlTable;
@@ -98,7 +99,7 @@ public class ZmlCommandSetValuesBelow extends AbstractHandler
         final Number targetValue = active.getValue();
         final Date base = active.getIndexValue();
 
-        final ZmlModelTransaction transaction = new ZmlModelTransaction();
+        final TupleModelTransaction transaction = new TupleModelTransaction( column.getTupleModel(), column.getMetadata() );
 
         column.accept( new IZmlModelColumnVisitor()
         {
@@ -109,18 +110,18 @@ public class ZmlCommandSetValuesBelow extends AbstractHandler
             if( current.before( base ) || current.equals( base ) )
               return;
 
-            transaction.add( ref, targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
+            final TupleModelDataSet dataset = new TupleModelDataSet( column.getValueAxis(), targetValue, KalypsoStati.BIT_USER_MODIFIED, IDataSourceItem.SOURCE_MANUAL_CHANGED );
+            transaction.add( new UpdateTupleModelDataSetCommand( ref.getModelIndex(), dataset, true ) );
           }
         } );
 
-        transaction.execute();
+        column.getTupleModel().execute( transaction );
       }
 
       /**
        * re-interpolate complete observation because of table view filter (like 12h view, stueztstellen view, etc)
        */
-      final IObservation observation = column.getObservation();
-      final ZmlInterpolationWorker interpolationWorker = new ZmlInterpolationWorker( observation );
+      final ZmlInterpolationWorker interpolationWorker = new ZmlInterpolationWorker( column );
       interpolationWorker.execute( new NullProgressMonitor() );
 
       // TODO status handling

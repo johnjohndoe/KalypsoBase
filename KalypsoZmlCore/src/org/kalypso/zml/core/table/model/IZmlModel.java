@@ -69,6 +69,7 @@ public interface IZmlModel
 
   void accept( IZmlModelRowVisitor visitor );
 
+  // FIXME is never called
   void dispose( );
 
   IZmlMemento getMemento( );

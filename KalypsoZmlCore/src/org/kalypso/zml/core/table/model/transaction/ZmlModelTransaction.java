@@ -48,7 +48,9 @@ import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 
 /**
  * @author Dirk Kuch
+ * @deprecated use {@link org.kalypso.ogc.sensor.transaction.TupleModelTransaction}
  */
+@Deprecated
 public class ZmlModelTransaction
 {
   Set<IZmlModelUpdateCommand> m_commands = new LinkedHashSet<IZmlModelUpdateCommand>();
@@ -80,7 +82,8 @@ public class ZmlModelTransaction
 
     for( final IZmlModelColumn column : updated )
     {
-      column.fireColumnChangedEvent();
+      throw new UnsupportedOperationException();
+// column.fireColumnChangedEvent();
     }
   }
 

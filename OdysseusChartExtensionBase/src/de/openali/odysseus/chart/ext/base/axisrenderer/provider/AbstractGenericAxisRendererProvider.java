@@ -44,7 +44,6 @@ import java.awt.Insets;
 
 import de.openali.odysseus.chart.ext.base.axisrenderer.AxisRendererConfig;
 import de.openali.odysseus.chart.ext.base.axisrenderer.ExtendedAxisRenderer;
-import de.openali.odysseus.chart.ext.base.axisrenderer.GenericAxisRenderer;
 import de.openali.odysseus.chart.ext.base.axisrenderer.ILabelCreator;
 import de.openali.odysseus.chart.ext.base.axisrenderer.ITickCalculator;
 import de.openali.odysseus.chart.factory.config.parameters.impl.BooleanParser;

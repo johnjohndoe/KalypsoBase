@@ -40,13 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.ext.base.axisrenderer;
 
-import java.util.TimeZone;
-
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.joda.time.DurationField;
-import org.joda.time.chrono.GregorianChronology;
-import org.joda.time.tz.FixedDateTimeZone;
 import org.kalypso.core.KalypsoCorePlugin;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;

@@ -49,7 +49,7 @@ import org.kalypso.ogc.sensor.SensorException;
  */
 public interface IZmlModelColumnDataHandler
 {
-  void addListener( IZmlModelColumnDataListener listener );
+  void addListener( IZmlModelColumnObservationListener listener );
 
   void dispose( );
 
@@ -57,5 +57,5 @@ public interface IZmlModelColumnDataHandler
 
   IObservation getObservation( );
 
-  void removeListener( IZmlModelColumnDataListener listener );
+  void removeListener( IZmlModelColumnObservationListener listener );
 }

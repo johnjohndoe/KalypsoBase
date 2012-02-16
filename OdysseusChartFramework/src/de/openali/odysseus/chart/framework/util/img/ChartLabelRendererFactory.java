@@ -42,14 +42,11 @@ package de.openali.odysseus.chart.framework.util.img;
 
 import java.awt.Insets;
 
-import org.eclipse.swt.graphics.RGB;
-
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
-import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
 
 /**
  * @author kimwerner

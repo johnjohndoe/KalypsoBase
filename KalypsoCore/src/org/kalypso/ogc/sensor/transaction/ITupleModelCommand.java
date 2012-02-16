@@ -38,31 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.commands.menu.adjust.pages;
+package org.kalypso.ogc.sensor.transaction;
 
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.ogc.sensor.ITupleModel;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 
 /**
  * @author Dirk Kuch
  */
-public class ConstantValueRunnable extends AbstractValueRunnable
+public interface ITupleModelCommand
 {
-  private final Double m_constantValue;
-
-  public ConstantValueRunnable( final IZmlModelColumn column, final IZmlModelValueCell[] cells, final Double constantValue )
-  {
-    super( column, cells );
-    m_constantValue = constantValue;
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.commands.menu.adjust.pages.AbstractValueRunnable#getValue(java.lang.Number)
-   */
-  @Override
-  protected Number getValue( final Number value )
-  {
-    return m_constantValue;
-  }
-
+  IStatus execute( ITupleModel simpleTupleModel, MetadataList metadata );
 }

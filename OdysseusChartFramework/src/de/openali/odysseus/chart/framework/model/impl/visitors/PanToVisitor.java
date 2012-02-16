@@ -41,7 +41,6 @@
 package de.openali.odysseus.chart.framework.model.impl.visitors;
 
 import org.eclipse.swt.graphics.Point;
-import org.kalypso.commons.java.lang.Objects;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;

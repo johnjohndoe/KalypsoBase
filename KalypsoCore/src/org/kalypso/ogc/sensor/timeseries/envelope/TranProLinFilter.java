@@ -68,7 +68,6 @@ import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
-import org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilter;
 import org.kalypso.repository.IDataSourceItem;
 
 /**

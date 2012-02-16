@@ -44,6 +44,7 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.transaction.TupleModelTransaction;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
@@ -104,24 +105,33 @@ public class InterpolatedValueEditingStrategy extends AbstractEditingStrategy
   {
     final IZmlModelValueCell base = (IZmlModelValueCell) Objects.firstNonNull( before, current );
     final IZmlModelColumn column = base.getColumn();
-    final Double defaultValue = ZmlInterpolation.getDefaultValue( column.getMetadata() );
 
-    if( direction < 0 && before == null )
+    final TupleModelTransaction transaction = new TupleModelTransaction( column.getTupleModel(), column.getMetadata() );
+    try
     {
-      ZmlInterpolation.fillValue( column, 0, current.getModelIndex(), defaultValue );
-    }
-    else if( direction > 0 && current == null )
-    {
-      if( ZmlInterpolation.isSetLastValidValue( column.getMetadata() ) )
+      final Double defaultValue = ZmlInterpolation.getDefaultValue( column.getMetadata() );
+
+      if( direction < 0 && before == null )
       {
-        final Double value = (Double) before.getValue();
-        ZmlInterpolation.fillValue( column, before.getModelIndex() + 1, column.size(), value );
+        ZmlInterpolation.fillValue( transaction, column.getValueAxis(), 0, current.getModelIndex(), defaultValue );
+      }
+      else if( direction > 0 && current == null )
+      {
+        if( ZmlInterpolation.isSetLastValidValue( column.getMetadata() ) )
+        {
+          final Double value = (Double) before.getValue();
+          ZmlInterpolation.fillValue( transaction, column.getValueAxis(), before.getModelIndex() + 1, column.size(), value );
+        }
+        else
+          ZmlInterpolation.fillValue( transaction, column.getValueAxis(), before.getModelIndex() + 1, column.size(), defaultValue );
       }
       else
-        ZmlInterpolation.fillValue( column, before.getModelIndex() + 1, column.size(), defaultValue );
+        ZmlInterpolation.interpolate( column.getTupleModel(), transaction, column.getValueAxis(), before.getModelIndex(), current.getModelIndex() );
     }
-    else
-      ZmlInterpolation.interpolate( column, before, current );
+    finally
+    {
+      column.getTupleModel().execute( transaction );
+    }
   }
 
   @Override

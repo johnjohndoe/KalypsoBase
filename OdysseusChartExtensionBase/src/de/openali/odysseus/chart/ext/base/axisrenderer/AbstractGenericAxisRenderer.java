@@ -14,10 +14,7 @@ import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
-import de.openali.odysseus.chart.framework.util.img.ChartLabelRendererFactory;
-import de.openali.odysseus.chart.framework.util.img.GenericChartLabelRenderer;
 import de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer;
-import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 
 /**
  * @author alibu

@@ -44,9 +44,10 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.IObservationListener;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.event.IObservationListener;
+import org.kalypso.ogc.sensor.event.ObservationChangeType;
 import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
@@ -208,9 +209,9 @@ public class WQTimeserieProxy implements IObservation
   }
 
   @Override
-  public void fireChangedEvent( final Object source )
+  public void fireChangedEvent( final Object source, final ObservationChangeType type )
   {
-    m_eventAdapter.fireChangedEvent( source );
+    m_eventAdapter.fireChangedEvent( source, type );
   }
 
   @Override

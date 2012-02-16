@@ -141,7 +141,6 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
 
     /** base observation will be disposed by NewZmlTableLayoutPart (save table) */
     final IObsProvider base = m_source.getObsProvider();
-
     final DataColumnType type = (DataColumnType) TableTypes.findColumnType( m_model.getTableType(), m_source.getIdentifier() );
     if( Objects.isNull( type ) )
       return;
@@ -150,7 +149,6 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
     final IAxis[] axes = Objects.isNotNull( observation ) ? observation.getAxes() : new IAxis[] {};
 
     final IZmlModelColumnDataHandler handler = new ObsProviderZmlColumnDataHandler( base.copy() );
-
     final DataColumn data = new DataColumn( type );
 
     IZmlModelColumn column = m_model.getColumn( m_source.getIdentifier() );

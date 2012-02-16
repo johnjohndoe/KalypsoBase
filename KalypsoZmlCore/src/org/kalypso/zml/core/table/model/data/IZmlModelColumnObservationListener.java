@@ -38,23 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model.references;
-
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
-import org.kalypso.zml.core.table.binding.CellStyle;
-import org.kalypso.zml.core.table.model.IZmlModelRow;
+package org.kalypso.zml.core.table.model.data;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlCellStyleProvider
+public interface IZmlModelColumnObservationListener
 {
-  CellStyle findStyle( IZmlModelRow row );
 
-  Font getFont( );
+  void eventObservationChanged( );
 
-  Color getBackground( );
-
-  Color getForeground( );
+  // FIXME never called
+  void eventObservationLoaded( );
 }

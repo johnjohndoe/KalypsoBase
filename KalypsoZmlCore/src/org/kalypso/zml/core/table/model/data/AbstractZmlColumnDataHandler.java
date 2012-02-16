@@ -44,30 +44,38 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.kalypso.ogc.sensor.event.ObservationChangeType;
+
 /**
  * @author Dirk Kuch
  */
 public abstract class AbstractZmlColumnDataHandler implements IZmlModelColumnDataHandler
 {
-  private final Set<IZmlModelColumnDataListener> m_listeners = Collections.synchronizedSet( new LinkedHashSet<IZmlModelColumnDataListener>() );
+  private final Set<IZmlModelColumnObservationListener> m_listeners = Collections.synchronizedSet( new LinkedHashSet<IZmlModelColumnObservationListener>() );
 
-  protected final void fireObservationChanged( )
+  protected final void fireObservationChanged( final ObservationChangeType type )
   {
-    final IZmlModelColumnDataListener[] listeners = m_listeners.toArray( new IZmlModelColumnDataListener[] {} );
-    for( final IZmlModelColumnDataListener listener : listeners )
+
+    final IZmlModelColumnObservationListener[] listeners = m_listeners.toArray( new IZmlModelColumnObservationListener[] {} );
+    for( final IZmlModelColumnObservationListener listener : listeners )
     {
-      listener.eventObservationChanged();
+      if( type.isStructureChanged() )
+        listener.eventObservationLoaded();
+      else if( type.isValuesChanged() )
+        listener.eventObservationChanged();
+      else
+        throw new UnsupportedOperationException();
     }
   }
 
   @Override
-  public final void addListener( final IZmlModelColumnDataListener listener )
+  public final void addListener( final IZmlModelColumnObservationListener listener )
   {
     m_listeners.add( listener );
   }
 
   @Override
-  public final void removeListener( final IZmlModelColumnDataListener listener )
+  public final void removeListener( final IZmlModelColumnObservationListener listener )
   {
     m_listeners.remove( listener );
   }

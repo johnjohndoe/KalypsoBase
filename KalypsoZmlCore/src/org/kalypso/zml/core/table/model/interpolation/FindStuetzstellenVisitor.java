@@ -46,29 +46,32 @@ import java.util.Set;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
-import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
-import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
+import org.kalypso.ogc.sensor.visitor.ITupleModelValueContainer;
+import org.kalypso.ogc.sensor.visitor.ITupleModelVisitor;
 import org.kalypso.zml.core.table.model.references.ZmlValues;
 
 /**
  * @author Dirk Kuch
  */
-public class FindStuetzstellenVisitor implements IObservationVisitor
+public class FindStuetzstellenVisitor implements ITupleModelVisitor
 {
   private final Set<Integer> m_references = new LinkedHashSet<Integer>();
 
   private DataSourceHandler m_dataSourceHandler;
 
-  public FindStuetzstellenVisitor( )
-  {
+  private final MetadataList m_metadata;
 
+  public FindStuetzstellenVisitor( final MetadataList metadata )
+  {
+    m_metadata = metadata;
   }
 
   @Override
-  public void visit( final IObservationValueContainer container )
+  public void visit( final ITupleModelValueContainer container )
   {
     try
     {
@@ -80,7 +83,7 @@ public class FindStuetzstellenVisitor implements IObservationVisitor
         if( Objects.isNotNull( sourceAxis ) )
         {
           final int sourceIndex = getSourceIndex( container, sourceAxis );
-          source = getDataSourceHandler( container ).getDataSourceIdentifier( sourceIndex );
+          source = getDataSourceHandler().getDataSourceIdentifier( sourceIndex );
         }
 
         final IAxis statusAxis = AxisUtils.findStatusAxis( container.getAxes(), valueAxis );
@@ -106,7 +109,7 @@ public class FindStuetzstellenVisitor implements IObservationVisitor
     }
   }
 
-  private Integer getSourceIndex( final IObservationValueContainer container, final IAxis sourceAxis ) throws SensorException
+  private Integer getSourceIndex( final ITupleModelValueContainer container, final IAxis sourceAxis ) throws SensorException
   {
     final Object sourceIndex = container.get( sourceAxis );
     if( sourceIndex instanceof Number )
@@ -120,10 +123,10 @@ public class FindStuetzstellenVisitor implements IObservationVisitor
     return m_references.toArray( new Integer[] {} );
   }
 
-  private DataSourceHandler getDataSourceHandler( final IObservationValueContainer container )
+  private DataSourceHandler getDataSourceHandler( )
   {
     if( Objects.isNull( m_dataSourceHandler ) )
-      m_dataSourceHandler = new DataSourceHandler( container.getMetaData() );
+      m_dataSourceHandler = new DataSourceHandler( m_metadata );
 
     return m_dataSourceHandler;
   }

@@ -73,8 +73,6 @@ public interface IZmlModelColumn
 
   void doUpdate( int index, Object value, final String source, final Integer status ) throws SensorException;
 
-  void fireColumnChangedEvent( );
-
   Object get( int i, IAxis axis ) throws SensorException;
 
   AppliedRule[] getActiveRules( );
@@ -93,6 +91,7 @@ public interface IZmlModelColumn
 
   String getLabel( );
 
+  // FIXME never called
   String getLabelTokenizer( );
 
   MetadataList getMetadata( );

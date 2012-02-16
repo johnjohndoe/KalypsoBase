@@ -5,8 +5,6 @@ import org.apache.poi.ss.formula.eval.NotImplementedException;
 import de.openali.odysseus.chart.ext.base.axisrenderer.AxisRendererConfig;
 import de.openali.odysseus.chart.ext.base.axisrenderer.OrdinalAxisRenderer;
 import de.openali.odysseus.chart.ext.base.data.IAxisContentProvider;
-import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 

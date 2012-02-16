@@ -49,10 +49,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.transaction.ITupleModelTransaction;
+import org.kalypso.ogc.sensor.transaction.TupleModelTransaction;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 
 /**
@@ -60,45 +62,23 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
  */
 public class ZmlInterpolationWorker implements ICoreRunnableWithProgress
 {
-  private final ITimeseriesObservation[] m_observations;
 
-  public ZmlInterpolationWorker( final IObservation... observation )
+  private final IAxis m_valueAxis;
+
+  private final ITupleModel m_model;
+
+  private final MetadataList m_metadata;
+
+  public ZmlInterpolationWorker( final ITupleModel model, final MetadataList metadata, final IAxis valueAxis )
   {
-    this( toTimeSeriesObservations( observation ) );
+    m_model = model;
+    m_metadata = metadata;
+    m_valueAxis = valueAxis;
   }
 
-  private static TimeseriesObservation[] toTimeSeriesObservations( final IObservation... observations )
+  public ZmlInterpolationWorker( final IZmlModelColumn column ) throws SensorException
   {
-    final Set<TimeseriesObservation> collection = new LinkedHashSet<TimeseriesObservation>();
-    for( final IObservation observation : observations )
-    {
-      collection.add( new TimeseriesObservation( observation, AxisUtils.findValueAxis( observation.getAxes() ) ) );
-    }
-
-    return collection.toArray( new TimeseriesObservation[] {} );
-  }
-
-  public ZmlInterpolationWorker( final IZmlModelColumn... columns )
-  {
-
-    this( toObservations( columns ) );
-  }
-
-  private static IObservation[] toObservations( final IZmlModelColumn[] columns )
-  {
-    final Set<IObservation> observations = new LinkedHashSet<IObservation>();
-
-    for( final IZmlModelColumn column : columns )
-    {
-      observations.add( column.getObservation() );
-    }
-
-    return observations.toArray( new IObservation[] {} );
-  }
-
-  public ZmlInterpolationWorker( final ITimeseriesObservation... observation )
-  {
-    m_observations = observation;
+    this( column.getTupleModel(), column.getMetadata(), column.getValueAxis() );
   }
 
   @Override
@@ -106,38 +86,37 @@ public class ZmlInterpolationWorker implements ICoreRunnableWithProgress
   {
     final Set<IStatus> stati = new LinkedHashSet<IStatus>();
 
-    for( final ITimeseriesObservation observation : m_observations )
+    try
     {
+      final ITupleModelTransaction transaction = new TupleModelTransaction( m_model, m_metadata );
+
       try
       {
+        final boolean setLastValidValue = ZmlInterpolation.isSetLastValidValue( m_metadata );
+        final Double defaultValue = ZmlInterpolation.getDefaultValue( m_metadata );
+        final int size = m_model.size();
 
-        final ITupleModel values = observation.getValues( null );
-        final int size = values.size();
-
-        observation.startTransaction();
-
-        final boolean setLastValidValue = ZmlInterpolation.isSetLastValidValue( observation.getMetadataList() );
-        final Double defaultValue = ZmlInterpolation.getDefaultValue( observation.getMetadataList() );
-
-        final FindStuetzstellenVisitor visitor = new FindStuetzstellenVisitor();
-        observation.accept( visitor, null, 1 );
+        final FindStuetzstellenVisitor visitor = new FindStuetzstellenVisitor( m_metadata );
+        m_model.accept( visitor, 1 );
 
         final Integer[] stuetzstellen = visitor.getStuetzstellen();
+
         if( ArrayUtils.isEmpty( stuetzstellen ) )
         {
-          ZmlInterpolation.fillValue( observation, 0, size, defaultValue );
+          ZmlInterpolation.fillValue( transaction, m_valueAxis, 0, size, defaultValue );
+
           return Status.OK_STATUS;
         }
 
         // set all values 0 before first stuetzstelle
         if( stuetzstellen[0] > 0 )
-          ZmlInterpolation.fillValue( observation, 0, stuetzstellen[0], defaultValue );
+          ZmlInterpolation.fillValue( transaction, m_valueAxis, 0, stuetzstellen[0], defaultValue );
 
         for( int index = 0; index < stuetzstellen.length - 1; index++ )
         {
           final Integer stuetzstelle1 = stuetzstellen[index];
           final Integer stuetzstelle2 = stuetzstellen[index + 1];
-          ZmlInterpolation.interpolate( observation, stuetzstelle1, stuetzstelle2 );
+          ZmlInterpolation.interpolate( m_model, transaction, m_valueAxis, stuetzstelle1, stuetzstelle2 );
         }
 
         // set all values 0 after last stuetzstelle
@@ -146,22 +125,23 @@ public class ZmlInterpolationWorker implements ICoreRunnableWithProgress
         {
           if( setLastValidValue )
           {
-            final Object lastValue = observation.getValue( last );
-            ZmlInterpolation.fillValue( observation, last + 1, size, (Double) lastValue );
+            final Object lastValue = m_model.get( last, m_valueAxis );
+
+            ZmlInterpolation.fillValue( transaction, m_valueAxis, last + 1, size, (Double) lastValue );
           }
           else
-            ZmlInterpolation.fillValue( observation, last + 1, size, defaultValue );
+            ZmlInterpolation.fillValue( transaction, m_valueAxis, last + 1, size, defaultValue );
         }
-
-        observation.stopTransaction();
-
       }
-      catch( final SensorException e )
+      finally
       {
-        e.printStackTrace();
-
-        stati.add( StatusUtilities.createExceptionalErrorStatus( "(Re)Interpolating values failed", e ) );
+        m_model.execute( transaction );
       }
+    }
+    catch( final SensorException e )
+    {
+      e.printStackTrace();
+      stati.add( StatusUtilities.createExceptionalErrorStatus( "(Re)Interpolating values failed", e ) );
     }
 
     return StatusUtilities.createStatus( stati, "ZML Interpolation Worker" );

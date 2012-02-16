@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands.menu.adjust.pages;
 
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 
 /**
@@ -50,9 +51,9 @@ public class MultiplyValueRunnable extends AbstractValueRunnable
 
   private final Double m_multiplier;
 
-  public MultiplyValueRunnable( final IZmlModelValueCell[] selectedCells, final Double multiplier )
+  public MultiplyValueRunnable( final IZmlModelColumn column, final IZmlModelValueCell[] selectedCells, final Double multiplier )
   {
-    super( selectedCells );
+    super( column, selectedCells );
     m_multiplier = multiplier;
   }
 
