@@ -52,6 +52,7 @@ import javax.media.jai.TiledImage;
 import ogc31.www.opengis.net.gml.FileType;
 import ogc31.www.opengis.net.gml.FileValueModelType;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.math.Range;
 import org.eclipse.core.runtime.Assert;
@@ -198,7 +199,7 @@ public final class GeoGridUtilities
    * Opens a {@link IGeoGrid} for a resource of a given mime-type.<br/>
    * The grid is opened read-only.
    */
-  public static IGeoGrid openGrid( final String mimeType, final URL url, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS ) throws IOException
+  public static IGeoGrid openGrid( final String mimeType, final URL url, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS ) throws IOException, GeoGridException
   {
     return openGrid( mimeType, url, origin, offsetX, offsetY, sourceCRS, false );
   }
@@ -212,11 +213,20 @@ public final class GeoGridUtilities
    * @throws UnsupportedOperationException
    *           If a grid is opened for write access that does not support it.
    */
-  public static IGeoGrid openGrid( final String mimeType, final URL url, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS, final boolean writeable ) throws IOException
+  public static IGeoGrid openGrid( final String mimeType, final URL url, final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS, final boolean writeable ) throws IOException, GeoGridException
   {
     // HACK: internal binary grid
     if( mimeType.endsWith( "/bin" ) )
       return BinaryGeoGrid.openGrid( url, origin, offsetX, offsetY, sourceCRS, writeable );
+
+    if( mimeType.endsWith( "/tiff" ) )
+    {
+      /* If it is a tiff, it may be opened writable, but this works only with a file. */
+      /* If the URL cannot be converted to a file, fall through and use the image geo grid instead. */
+      final File file = FileUtils.toFile( url );
+      if( file != null )
+        return new TiffGeoGrid( origin, offsetX, offsetY, sourceCRS, file, -1, -1 );
+    }
 
     if( writeable )
       throw new UnsupportedOperationException( "Cannot open this grid for write access." );

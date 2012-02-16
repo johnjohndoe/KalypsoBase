@@ -61,7 +61,8 @@ import com.vividsolutions.jts.geom.Coordinate;
  * noticed.
  * </p>
  * 
- * @author Dejan
+ * @author Dejan (original)
+ * @author Holger Albert (modifications)
  */
 public class ImageGeoGrid extends AbstractGeoGrid
 {
@@ -85,8 +86,6 @@ public class ImageGeoGrid extends AbstractGeoGrid
     m_sizeY = -1;
     m_min = null;
     m_max = null;
-
-    // initialize();
   }
 
   /**
@@ -190,14 +189,14 @@ public class ImageGeoGrid extends AbstractGeoGrid
   {
     try
     {
-      IGeoWalkingStrategy walkingStrategy = getWalkingStrategy();
-      MinMaxRasterWalker walker = new MinMaxRasterWalker();
+      final IGeoWalkingStrategy walkingStrategy = getWalkingStrategy();
+      final MinMaxRasterWalker walker = new MinMaxRasterWalker();
       walkingStrategy.walk( this, walker, null, new NullProgressMonitor() );
 
       m_min = BigDecimal.valueOf( walker.getMin() );
       m_max = BigDecimal.valueOf( walker.getMax() );
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       ex.printStackTrace();
     }

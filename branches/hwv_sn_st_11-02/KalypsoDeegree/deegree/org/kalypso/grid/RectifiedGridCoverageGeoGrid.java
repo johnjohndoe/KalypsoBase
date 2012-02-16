@@ -209,6 +209,8 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
     // do not dispose the grid, we access it via the weak-cache
     if( m_grid != null )
       m_grid.dispose();
+
+    m_grid = null;
   }
 
   /**
