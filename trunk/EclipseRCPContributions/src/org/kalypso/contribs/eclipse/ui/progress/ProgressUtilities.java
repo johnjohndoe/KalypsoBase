@@ -62,6 +62,8 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
  */
 public final class ProgressUtilities
 {
+  public static final IStatus STATUS_OPERATION_CANCELLED = new Status( IStatus.CANCEL, EclipseRCPContributionsPlugin.ID, "Operation cancelled by user" );
+
   private ProgressUtilities( )
   {
     // helper class, do not instantiate
@@ -124,7 +126,7 @@ public final class ProgressUtilities
     }
     catch( final InterruptedException e )
     {
-      return new Status( IStatus.CANCEL, EclipseRCPContributionsPlugin.ID, "Operation cancelled by user", e );
+      return STATUS_OPERATION_CANCELLED;
     }
   }
 

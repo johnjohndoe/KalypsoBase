@@ -48,6 +48,7 @@ import java.awt.image.BufferedImage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.Job;
@@ -58,7 +59,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 /**
  * A {@link Job} that paints a IPaintable onto a {@link BufferedImage}.<br>
  * Its own paint method, paints the current state of the {@link BufferedImage}.<br>
- * 
+ *
  * @author Gernot Belger
  */
 public class BufferPaintJob extends Job
@@ -92,7 +93,7 @@ public class BufferPaintJob extends Job
 
   /**
    * Needed because we use {@link java.lang.ref.SoftReference}'s.
-   * 
+   *
    * @see java.lang.Object#finalize()
    */
   @Override
@@ -125,7 +126,7 @@ public class BufferPaintJob extends Job
 
   /**
    * Returns the current state of the buffered image.
-   * 
+   *
    * @return The buffered image; <code>null</code>, if the job has not yet started.
    */
   public synchronized BufferedImage getImage( )
@@ -186,6 +187,10 @@ public class BufferPaintJob extends Job
         return StatusUtilities.cloneStatus( status, IStatus.WARNING );
 
       return ce.getStatus();
+    }
+    catch( final OperationCanceledException e )
+    {
+      return Status.CANCEL_STATUS;
     }
     catch( final Throwable t )
     {
