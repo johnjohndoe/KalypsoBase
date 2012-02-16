@@ -42,7 +42,6 @@ package org.kalypso.ogc.gml.map.layer;
 
 import java.awt.Graphics;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -76,12 +75,8 @@ public class SelectionMapLayer implements IMapLayer
     // Nothing to do
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.IMapLayer#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
-  public void paint( final Graphics g, final GeoTransform world2screen, final IProgressMonitor monitor ) throws CoreException
+  public void paint( final Graphics g, final GeoTransform world2screen, final IProgressMonitor monitor )
   {
     monitor.beginTask( getLabel(), m_selectionThemes.length );
     for( final IKalypsoFeatureTheme theme : m_selectionThemes )
@@ -91,22 +86,15 @@ public class SelectionMapLayer implements IMapLayer
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.IMapLayer#getLabel()
-   */
   @Override
   public String getLabel( )
   {
     return Messages.getString( "org.kalypso.ogc.gml.map.layer.SelectionMapLayer.0" ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.IMapLayer#getMapPanel()
-   */
   @Override
   public IMapPanel getMapPanel( )
   {
     return m_panel;
   }
-
 }

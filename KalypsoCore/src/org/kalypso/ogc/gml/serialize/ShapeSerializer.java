@@ -47,9 +47,9 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.commons.xml.XmlTypes;
@@ -261,7 +261,7 @@ public final class ShapeSerializer
 
       return workspace;
     }
-    catch( final CoreException e )
+    catch( final OperationCanceledException e )
     {
       throw new GmlSerializeException( "Abbruch durch Benutzer", e );
     }

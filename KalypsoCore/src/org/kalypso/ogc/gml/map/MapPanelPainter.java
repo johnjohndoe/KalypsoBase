@@ -108,10 +108,6 @@ public class MapPanelPainter implements IPaintable
     return new Point( (int) m_world2screen.getDestWidth(), (int) m_world2screen.getDestHeight() );
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jobs.BufferPaintJob.IPaintable#paint(java.awt.Graphics2D,
-   *      org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public void paint( final Graphics2D g, final IProgressMonitor monitor ) throws CoreException
   {
