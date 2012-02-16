@@ -54,7 +54,6 @@ import org.kalypso.zml.core.table.binding.TableTypes;
 import org.kalypso.zml.core.table.model.ZmlModel;
 import org.kalypso.zml.core.table.model.utils.IClonedColumn;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
-import org.kalypso.zml.ui.table.model.columns.ZmlTableColumns;
 
 /**
  * @author Dirk Kuch
@@ -102,11 +101,7 @@ public class ZmlTableUpdater implements Runnable
       final Object[] values = entry.getValue();
 
       final IndexedTsLink link = (IndexedTsLink) values[0];
-      final BaseColumn column = (BaseColumn) values[1];
-
       doLoadModelColumn( link );
-
-      ZmlTableColumns.buildTableColumns( m_part.getTable(), column );
     }
   }
 
