@@ -163,12 +163,7 @@ public class ShapeLoader extends WorkspaceLoader
         workspace.accept( new TransformVisitor( targetCRS ), workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
         ProgressUtilities.worked( moni, 18 ); // check cancel
       }
-      catch( final CoreException ce )
-      {
-        if( !ce.getStatus().matches( IStatus.CANCEL ) )
-          ce.printStackTrace();
-      }
-      catch( final Throwable e1 )
+      catch( final Exception e1 )
       {
         e1.printStackTrace();
       }
