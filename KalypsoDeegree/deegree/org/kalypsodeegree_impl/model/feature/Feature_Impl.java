@@ -720,6 +720,9 @@ public class Feature_Impl extends PlatformObject implements Feature
 
   private void unregisterSubFeature( final Object oldValue )
   {
+    if( oldValue == null )
+      return;
+
     /* Nothing to do for linked featrues */
     if( oldValue instanceof String || oldValue instanceof IXLinkedFeature )
       return;
