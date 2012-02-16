@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- * 
+ *
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -215,7 +215,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
 
   /**
    * TODO: if this surface is changed via this iterator, the index does not gets updated<br>
-   * 
+   *
    * @see java.util.List#iterator()
    */
   @Override
@@ -238,7 +238,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
 
   /**
    * TODO: if this surface is changed via this iterator, the index does not gets updated
-   * 
+   *
    * @see java.util.List#listIterator()
    */
   @Override
@@ -250,7 +250,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
 
   /**
    * TODO: if this surface is changed via this iterator, the index does not gets updated
-   * 
+   *
    * @see java.util.List#listIterator(int)
    */
   @Override
@@ -609,15 +609,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
       {
         final T t = (T) item;
         surfacePatchVisitor.visit( t, Double.NaN );
-        try
-        {
-          ProgressUtilities.worked( monitor, 1 );
-        }
-        catch( final CoreException e )
-        {
-          // We cannot throw a CoreException here, so we just throw to an runtime-exception....
-          throw new OperationCanceledException();
-        }
+        ProgressUtilities.worked( monitor, 1 );
       }
     };
 
