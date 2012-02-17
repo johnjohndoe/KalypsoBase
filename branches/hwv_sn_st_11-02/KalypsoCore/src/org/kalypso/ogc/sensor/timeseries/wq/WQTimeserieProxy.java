@@ -50,6 +50,7 @@ import org.kalypso.ogc.sensor.event.IObservationListener;
 import org.kalypso.ogc.sensor.event.ObservationChangeType;
 import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
+import org.kalypso.ogc.sensor.impl.ITupleModelChangeListener;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
@@ -155,6 +156,15 @@ public class WQTimeserieProxy implements IObservation
 
     m_cachedModel = new WQTuppleModel( m_obs.getValues( args ), m_axes, m_dateAxis, m_srcAxis, m_srcStatusAxis, m_destAxis, m_destStatusAxis, getWQConverter(), m_destAxisPos, m_destStatusAxisPos );
     m_cachedArgs = args;
+
+    m_cachedModel.addChangeListener( new ITupleModelChangeListener()
+    {
+      @Override
+      public void modelChangedEvent( final ObservationChangeType type )
+      {
+        fireChangedEvent( this, type );
+      }
+    } );
 
     return m_cachedModel;
   }

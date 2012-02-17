@@ -64,8 +64,6 @@ public interface IZmlModelColumn
 
   void accept( IZmlModelColumnVisitor visitor, DateRange daterange ) throws SensorException;
 
-  void addAppliedRules( AppliedRule[] rules );
-
   void addListener( IZmlModelColumnListener listener );
 
   void dispose( );
@@ -76,7 +74,7 @@ public interface IZmlModelColumn
 
   Object get( int i, IAxis axis ) throws SensorException;
 
-  AppliedRule[] getActiveRules( );
+  AppliedRule[] getColumnRules( );
 
   IAxis[] getAxes( );
 

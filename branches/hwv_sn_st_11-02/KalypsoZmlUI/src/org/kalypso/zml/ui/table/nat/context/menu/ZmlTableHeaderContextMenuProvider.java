@@ -52,6 +52,8 @@ import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.ColumnHeader;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.utils.ZmlModelColumns;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.core.table.rules.AppliedRule;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
@@ -60,7 +62,7 @@ import org.kalypso.zml.ui.KalypsoZmlUI;
  */
 public class ZmlTableHeaderContextMenuProvider
 {
-  public void fillMenu( final IZmlModelColumn column, final MenuManager menuManager )
+  public void fillMenu( final ZmlModelViewport viewport, final IZmlModelColumn column, final MenuManager menuManager )
   {
     if( column == null )
       return;
@@ -74,10 +76,10 @@ public class ZmlTableHeaderContextMenuProvider
     }
 
     // add additional info items
-    addAdditionalItems( column, menuManager );
+    addAdditionalItems( viewport, column, menuManager );
   }
 
-  private void addAdditionalItems( final IZmlModelColumn column, final MenuManager menuManager )
+  private void addAdditionalItems( final ZmlModelViewport viewport, final IZmlModelColumn column, final MenuManager menuManager )
   {
     menuManager.add( new Separator() );
 
@@ -102,11 +104,12 @@ public class ZmlTableHeaderContextMenuProvider
       addAdditionalItem( header, menuManager );
     }
 
-    final AppliedRule[] rules = column.getActiveRules();
+    final AppliedRule[] rules = ZmlModelColumns.findRules( viewport, column );
     for( final AppliedRule rule : rules )
     {
       addAditionalItem( rule, menuManager );
     }
+
   }
 
   private void addAdditionalItem( final ColumnHeader header, final MenuManager menuManager )
