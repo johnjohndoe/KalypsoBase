@@ -46,6 +46,7 @@ import net.sourceforge.nattable.layer.cell.LayerCell;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.window.DefaultToolTip;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
@@ -85,6 +86,11 @@ public class ZmlTableTooltip extends DefaultToolTip
     super( table );
     m_table = table;
     m_viewport = viewport;
+
+    setBackgroundColor( m_table.getDisplay().getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
+    setPopupDelay( 500 );
+    activate();
+    setShift( new Point( 10, 10 ) );
   }
 
   @Override

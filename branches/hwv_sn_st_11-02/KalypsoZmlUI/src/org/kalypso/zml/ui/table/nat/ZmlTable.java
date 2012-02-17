@@ -63,9 +63,7 @@ import net.sourceforge.nattable.util.GCFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.window.DefaultToolTip;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -186,25 +184,19 @@ public class ZmlTable extends Composite implements IZmlTable
     registry.registerConfigAttribute( EditConfigAttributes.CELL_EDITABLE_RULE, new ZmlModelColumnEditingRule( m_viewport ), DisplayMode.EDIT, GridRegion.BODY.toString() );
     registry.registerConfigAttribute( EditConfigAttributes.DATA_VALIDATOR, new DefaultNumericDataValidator(), DisplayMode.EDIT, "myCellLabel" );
 
-    addTooltipSupport();
+    new ZmlTableTooltip( m_table, getModelViewport() );
+
     m_table.addMouseListener( new NatTableContextMenuSupport( m_table, m_viewport ) );
     m_table.addLayerListener( new UpdateChartSelectionListener( getSelection() ) );
-    m_pager = new ZmlTablePager( m_viewport, m_table, m_bodyLayer );
-  }
 
-  private void addTooltipSupport( )
-  {
-    final DefaultToolTip toolTip = new ZmlTableTooltip( m_table, getModelViewport() );
-    toolTip.setBackgroundColor( m_table.getDisplay().getSystemColor( SWT.COLOR_INFO_BACKGROUND ) );
-    toolTip.setPopupDelay( 500 );
-    toolTip.activate();
-    toolTip.setShift( new Point( 10, 10 ) );
+    m_pager = new ZmlTablePager( m_viewport, m_table, m_bodyLayer );
   }
 
   @Override
   public void dispose( )
   {
     m_table.dispose();
+// m_viewport.dispose(); TODO
 
     super.dispose();
   }
