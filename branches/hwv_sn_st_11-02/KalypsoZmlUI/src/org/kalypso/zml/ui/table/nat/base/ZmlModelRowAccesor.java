@@ -46,6 +46,7 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.editing.IZmlEditingStrategy;
+import org.kalypso.zml.core.table.model.references.IZmlModelCellLabelProvider;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 
@@ -75,13 +76,14 @@ public class ZmlModelRowAccesor implements IColumnAccessor<IZmlModelRow>
   @Override
   public void setDataValue( final IZmlModelRow row, final int columnIndex, final Object newValue )
   {
-    final IZmlModelValueCell oldValue = getDataValue( row, columnIndex );
-    if( Objects.equal( oldValue, newValue ) )
-      return;
-
     final IZmlModelValueCell cell = m_model.getCell( row, columnIndex );
     final IZmlModelValueCell valueCell = cell;
     final IZmlModelColumn column = valueCell.getColumn();
+
+    final IZmlModelCellLabelProvider provider = cell.getStyleProvider();
+    final String oldValue = provider.getText( m_model, cell );
+    if( Objects.equal( oldValue, newValue ) )
+      return;
 
     final IZmlEditingStrategy strategy = m_model.getEditingStrategy( column );
     strategy.setValue( valueCell, newValue.toString() );
