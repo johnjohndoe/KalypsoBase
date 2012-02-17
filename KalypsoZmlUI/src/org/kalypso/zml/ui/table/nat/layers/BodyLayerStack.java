@@ -22,6 +22,8 @@ public class BodyLayerStack extends AbstractLayerTransform
 
   private final ZmlModelViewport m_model;
 
+  private final ViewportLayer m_viewportLayer;
+
   public BodyLayerStack( final ZmlModelViewport model )
   {
     m_model = model;
@@ -31,12 +33,17 @@ public class BodyLayerStack extends AbstractLayerTransform
     final DataLayer dataLayer = new DataLayer( m_provider );
     m_selectionLayer = new ZmlTableSelectionLayer( model, dataLayer );
 
-    final ViewportLayer viewportLayer = new ViewportLayer( getSelectionLayer() );
-    setUnderlyingLayer( viewportLayer );
+    m_viewportLayer = new ViewportLayer( getSelectionLayer() );
+    setUnderlyingLayer( m_viewportLayer );
 
     dataLayer.unregisterCommandHandler( UpdateDataCommand.class );
     dataLayer.registerCommandHandler( new ZmlTableUpdateDataCommandHandler( dataLayer ) );
 
+  }
+
+  public ViewportLayer getViewportLayer( )
+  {
+    return m_viewportLayer;
   }
 
   public ZmlTableSelectionLayer getSelectionLayer( )

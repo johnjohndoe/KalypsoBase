@@ -38,31 +38,54 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table;
+package org.kalypso.zml.ui.table.nat.pager;
 
-import net.sourceforge.nattable.NatTable;
+import java.util.Date;
+import java.util.Map;
+import java.util.TreeMap;
 
-import org.kalypso.zml.core.table.model.event.ZmlModelColumnChangeType;
-import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
-import org.kalypso.zml.ui.table.nat.layers.BodyLayerStack;
-import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
+import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.IZmlModelRowVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTable
+public class DateRangeVisitor implements IZmlModelRowVisitor
 {
-  // FIXME remove from interface!
-  void dispose( );
+  Map<Date, IZmlModelRow> m_rows = new TreeMap<Date, IZmlModelRow>();
 
-  ZmlModelViewport getModelViewport( );
+  private final DateRange m_dateRange;
 
-  void refresh( ZmlModelColumnChangeType type );
+  public DateRangeVisitor( final DateRange dateRange )
+  {
+    m_dateRange = dateRange;
+  }
 
-  IZmlTableSelection getSelection( );
+  /**
+   * @see org.kalypso.zml.ui.table.IZmlTableRowVisitor#accept(org.kalypso.zml.ui.table.model.IZmlTableRow)
+   */
+  @Override
+  public void visit( final IZmlModelRow row )
+  {
+    final Date index = row.getIndex();
 
-  BodyLayerStack getBodyLayer( );
+    if( m_dateRange.containsLazyInclusive( index ) )
+      m_rows.put( index, row );
+  }
 
-  NatTable getTable( );
+  public IZmlModelRow[] getRows( )
+  {
+    return m_rows.values().toArray( new IZmlModelRow[] {} );
+  }
 
+  public DateRange getDateRange( )
+  {
+    final Date[] dates = m_rows.keySet().toArray( new Date[] {} );
+    if( ArrayUtils.isEmpty( dates ) )
+      return null;
+
+    return new DateRange( dates[0], dates[dates.length - 1] );
+  }
 }

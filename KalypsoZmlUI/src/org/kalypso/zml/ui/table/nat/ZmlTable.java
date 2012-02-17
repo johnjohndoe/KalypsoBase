@@ -88,6 +88,7 @@ import org.kalypso.zml.ui.table.nat.layers.BodyLayerStack;
 import org.kalypso.zml.ui.table.nat.layers.ColumnHeaderLayerStack;
 import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
 import org.kalypso.zml.ui.table.nat.layers.RowHeaderLayerStack;
+import org.kalypso.zml.ui.table.nat.pager.UpdateChartSelectionListener;
 import org.kalypso.zml.ui.table.nat.pager.ZmlTablePager;
 import org.kalypso.zml.ui.table.nat.painter.ZmlColumnHeaderCellPainter;
 import org.kalypso.zml.ui.table.nat.painter.ZmlModelCellPainter;
@@ -181,6 +182,8 @@ public class ZmlTable extends Composite implements IZmlTable
 
     m_table.addMouseListener( new NatTableContextMenuSupport( m_table, m_viewport ) );
 
+    m_table.addLayerListener( new UpdateChartSelectionListener( getSelection() ) );
+
     m_pager = new ZmlTablePager( m_viewport, m_table, m_bodyLayer );
   }
 
@@ -232,7 +235,6 @@ public class ZmlTable extends Composite implements IZmlTable
 
         return Status.OK_STATUS;
       }
-
     };
 
     m_updateJob.setUser( false );
@@ -241,6 +243,18 @@ public class ZmlTable extends Composite implements IZmlTable
     m_updateJob.setRule( MUTEX_TABLE_UPDATE );
     m_updateJob.schedule( 150 );
 
+  }
+
+  @Override
+  public BodyLayerStack getBodyLayer( )
+  {
+    return m_bodyLayer;
+  }
+
+  @Override
+  public NatTable getTable( )
+  {
+    return m_table;
   }
 
   protected void doResizeColumns( )
