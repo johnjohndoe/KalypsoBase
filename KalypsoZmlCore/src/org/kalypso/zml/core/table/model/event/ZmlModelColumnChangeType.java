@@ -77,6 +77,11 @@ public class ZmlModelColumnChangeType implements IZmlModelColumnEvent
     return (m_type & IZmlModelColumnEvent.IGNORE_TYPES_CHANGED) != 0;
   }
 
+  public boolean resultionChanged( )
+  {
+    return (m_type & IZmlModelColumnEvent.RESULUTION_CHANGED) != 0;
+  }
+
   public void append( final int change )
   {
     m_type |= change;

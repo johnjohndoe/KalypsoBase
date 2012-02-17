@@ -213,8 +213,6 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnObservati
   public void doUpdate( final int index, final Object value, final String source, final Integer status ) throws SensorException
   {
     update( index, value, source, status );
-
-// fireColumnChanged();
   }
 
   @Override
@@ -232,7 +230,6 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnObservati
   public void fireColumnChanged( final int type )
   {
     final ZmlModelColumnChangeType event = new ZmlModelColumnChangeType( type );
-
     final IZmlModelColumnListener[] listeners = m_listeners.toArray( new IZmlModelColumnListener[] {} );
     for( final IZmlModelColumnListener listener : listeners )
     {

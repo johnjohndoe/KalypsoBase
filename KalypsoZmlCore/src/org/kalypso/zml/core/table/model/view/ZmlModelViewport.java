@@ -57,7 +57,6 @@ import org.kalypso.zml.core.table.model.editing.ContinuedInterpolatedValueEditin
 import org.kalypso.zml.core.table.model.editing.IZmlEditingStrategy;
 import org.kalypso.zml.core.table.model.editing.InterpolatedValueEditingStrategy;
 import org.kalypso.zml.core.table.model.editing.SumValueEditingStrategy;
-import org.kalypso.zml.core.table.model.event.IZmlModelColumnEvent;
 import org.kalypso.zml.core.table.model.event.ZmlModelColumnChangeType;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
@@ -82,14 +81,48 @@ public class ZmlModelViewport
 
   private final ZmlViewResolutionFilter m_filter;
 
+  private IZmlModelRow[] m_rows;
+
+  private IZmlModelColumn[] m_columns;
+
   public ZmlModelViewport( final IZmlModel model )
   {
     m_model = model;
     m_filter = new ZmlViewResolutionFilter( this );
 
-    // dirty only for visible columns
-    // row caching
-// m_model.addListener( IZmlColumnModelListener(){} );
+    m_model.addListener( new IZmlColumnModelListener()
+    {
+      @Override
+      public void modelChanged( final ZmlModelColumnChangeType type, final IZmlModelColumn... columns )
+      {
+        doClean( type );
+      }
+    } );
+
+    addListener( new IZmlColumnModelListener()
+    {
+      @Override
+      public void modelChanged( final ZmlModelColumnChangeType type, final IZmlModelColumn... columns )
+      {
+        // triggered from filter
+        if( type.resultionChanged() )
+          doClean( type );
+      }
+    } );
+
+  }
+
+  protected void doClean( final ZmlModelColumnChangeType type )
+  {
+    if( type.doForceChange() )
+    {
+      m_rows = null;
+      m_columns = null;
+    }
+    else if( type.resultionChanged() )
+      m_rows = null;
+    else if( type.ignoreTypeChanged() )
+      m_columns = null;
   }
 
   public IZmlModelValueCell getCell( final IZmlModelRow row, final int columnIndex )
@@ -107,9 +140,12 @@ public class ZmlModelViewport
 
   public IZmlModelColumn[] getColumns( )
   {
+    if( ArrayUtils.isNotEmpty( m_columns ) )
+      return m_columns;
+
     final Set<IZmlModelColumn> collection = new LinkedHashSet<IZmlModelColumn>();
-    final ZmlModelColumn[] columns = m_model.getActiveColumns();
-    for( final ZmlModelColumn column : columns )
+    final ZmlModelColumn[] modelColumns = m_model.getActiveColumns();
+    for( final ZmlModelColumn column : modelColumns )
     {
       final DataColumnType type = column.getDataColumn().getType();
       if( m_hiddenTypes.contains( type.getValueAxis() ) )
@@ -118,7 +154,8 @@ public class ZmlModelViewport
       collection.add( column );
     }
 
-    return collection.toArray( new IZmlModelColumn[] {} );
+    m_columns = collection.toArray( new IZmlModelColumn[] {} );
+    return m_columns;
   }
 
   public IZmlModelColumn getColum( final int index )
@@ -135,16 +172,20 @@ public class ZmlModelViewport
 
   public IZmlModelRow[] getRows( )
   {
+    if( ArrayUtils.isNotEmpty( m_rows ) )
+      return m_rows;
+
     final Set<IZmlModelRow> collection = new LinkedHashSet<IZmlModelRow>();
 
-    final IZmlModelRow[] rows = m_model.getRows();
-    for( final IZmlModelRow row : rows )
+    final IZmlModelRow[] modelRows = m_model.getRows();
+    for( final IZmlModelRow row : modelRows )
     {
       if( m_filter.select( row ) )
         collection.add( row );
     }
 
-    return collection.toArray( new IZmlModelRow[] {} );
+    m_rows = collection.toArray( new IZmlModelRow[] {} );
+    return m_rows;
   }
 
   public IZmlModelValueCell getCell( final int rowIndex, final int columnIndex )
@@ -236,13 +277,6 @@ public class ZmlModelViewport
 
   public void fireModelChanged( final int type )
   {
-    if( type == IZmlModelColumnEvent.RESULUTION_CHANGED )
-    {
-      throw new UnsupportedOperationException();
-      // FIXME cache and clean
-      // FIXME structure changed too
-    }
-
     final ZmlModelColumnChangeType event = new ZmlModelColumnChangeType( type );
 
     final IZmlColumnModelListener[] listeners = m_listeners.toArray( new IZmlColumnModelListener[] {} );
