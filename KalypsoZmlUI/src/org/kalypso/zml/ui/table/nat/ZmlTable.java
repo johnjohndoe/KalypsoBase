@@ -52,6 +52,7 @@ import net.sourceforge.nattable.grid.GridRegion;
 import net.sourceforge.nattable.grid.data.DefaultCornerDataProvider;
 import net.sourceforge.nattable.grid.layer.CornerLayer;
 import net.sourceforge.nattable.grid.layer.GridLayer;
+import net.sourceforge.nattable.grid.layer.config.DefaultGridLayerConfiguration;
 import net.sourceforge.nattable.layer.DataLayer;
 import net.sourceforge.nattable.layer.event.VisualRefreshEvent;
 import net.sourceforge.nattable.painter.cell.decorator.BeveledBorderDecorator;
@@ -156,7 +157,14 @@ public class ZmlTable extends Composite implements IZmlTable
     final DefaultCornerDataProvider cornerDataProvider = new DefaultCornerDataProvider( m_columnHeaderLayer.getProvider(), rowHeaderLayer.getProvider() );
     final CornerLayer cornerLayer = new CornerLayer( new DataLayer( cornerDataProvider ), rowHeaderLayer, m_columnHeaderLayer );
 
-    m_gridLayer = new GridLayer( m_bodyLayer, m_columnHeaderLayer, rowHeaderLayer, cornerLayer );
+    m_gridLayer = new GridLayer( m_bodyLayer, m_columnHeaderLayer, rowHeaderLayer, cornerLayer, false );
+    m_gridLayer.addConfiguration( new DefaultGridLayerConfiguration( m_gridLayer )
+    {
+      @Override
+      protected void addAlternateRowColoringConfig( final GridLayer gridLayer )
+      {
+      }
+    } );
 
     m_table = new NatTable( this, m_gridLayer ); // no default style because of cell backgrounds
     m_table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
@@ -179,11 +187,8 @@ public class ZmlTable extends Composite implements IZmlTable
     registry.registerConfigAttribute( EditConfigAttributes.DATA_VALIDATOR, new DefaultNumericDataValidator(), DisplayMode.EDIT, "myCellLabel" );
 
     addTooltipSupport();
-
     m_table.addMouseListener( new NatTableContextMenuSupport( m_table, m_viewport ) );
-
     m_table.addLayerListener( new UpdateChartSelectionListener( getSelection() ) );
-
     m_pager = new ZmlTablePager( m_viewport, m_table, m_bodyLayer );
   }
 
