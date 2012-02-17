@@ -46,7 +46,6 @@ import java.util.Set;
 import net.sourceforge.nattable.NatTable;
 import net.sourceforge.nattable.config.CellConfigAttributes;
 import net.sourceforge.nattable.config.IConfigRegistry;
-import net.sourceforge.nattable.config.IEditableRule;
 import net.sourceforge.nattable.data.validate.DefaultNumericDataValidator;
 import net.sourceforge.nattable.edit.EditConfigAttributes;
 import net.sourceforge.nattable.grid.GridRegion;
@@ -84,6 +83,7 @@ import org.kalypso.zml.ui.table.ZmlTableComposite;
 import org.kalypso.zml.ui.table.nat.base.ZmlModelCellDisplayConverter;
 import org.kalypso.zml.ui.table.nat.base.ZmlModelRowHeaderDisplayConverter;
 import org.kalypso.zml.ui.table.nat.context.menu.NatTableContextMenuSupport;
+import org.kalypso.zml.ui.table.nat.editing.ZmlModelColumnEditingRule;
 import org.kalypso.zml.ui.table.nat.layers.BodyLayerStack;
 import org.kalypso.zml.ui.table.nat.layers.ColumnHeaderLayerStack;
 import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
@@ -153,7 +153,8 @@ public class ZmlTable extends Composite implements IZmlTable
     final CornerLayer cornerLayer = new CornerLayer( new DataLayer( cornerDataProvider ), rowHeaderLayer, m_columnHeaderLayer );
 
     m_gridLayer = new GridLayer( m_bodyLayer, m_columnHeaderLayer, rowHeaderLayer, cornerLayer );
-    m_table = new NatTable( this, m_gridLayer );
+
+    m_table = new NatTable( this, m_gridLayer ); // no default style because of cell backgrounds
     m_table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     final IConfigRegistry registry = m_table.getConfigRegistry();
@@ -170,8 +171,7 @@ public class ZmlTable extends Composite implements IZmlTable
     registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new BeveledBorderDecorator( new ZmlColumnHeaderCellPainter( m_viewport ) ), DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
 
     /** editing support */
-    // FIXME implement IEdiableRule
-    registry.registerConfigAttribute( EditConfigAttributes.CELL_EDITABLE_RULE, IEditableRule.ALWAYS_EDITABLE, DisplayMode.EDIT, GridRegion.BODY.toString() );
+    registry.registerConfigAttribute( EditConfigAttributes.CELL_EDITABLE_RULE, new ZmlModelColumnEditingRule( m_viewport ), DisplayMode.EDIT, GridRegion.BODY.toString() );
     registry.registerConfigAttribute( EditConfigAttributes.DATA_VALIDATOR, new DefaultNumericDataValidator(), DisplayMode.EDIT, "myCellLabel" );
 
     addTooltipSupport();

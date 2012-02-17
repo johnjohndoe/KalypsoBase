@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraï¿½e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,22 +38,34 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model.references;
+package org.kalypso.zml.ui.table.nat.editing;
 
-import net.sourceforge.nattable.style.Style;
+import net.sourceforge.nattable.config.EditableRule;
 
-import org.eclipse.swt.graphics.Image;
-import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlModelCellLabelProvider
+public class ZmlModelColumnEditingRule extends EditableRule
 {
-  Image[] getImages( ZmlModelViewport viewport, final IZmlModelCell cell ) throws SensorException;
 
-  String getText( ZmlModelViewport viewport, IZmlModelValueCell cell );
+  private final ZmlModelViewport m_viewport;
 
-  Style getStyle( final ZmlModelViewport viewport, IZmlModelValueCell modelCell );
+  public ZmlModelColumnEditingRule( final ZmlModelViewport viewport )
+  {
+    m_viewport = viewport;
+  }
+
+  @Override
+  public boolean isEditable( final int columnIndex, final int rowIndex )
+  {
+    final IZmlModelColumn column = m_viewport.getColum( columnIndex );
+    if( Objects.isNull( column ) )
+      return false;
+
+    return column.getDataColumn().isEditable();
+  }
 }

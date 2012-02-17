@@ -154,7 +154,7 @@ public class ZmlValueLabelProvider implements IZmlModelCellLabelProvider
   }
 
   @Override
-  public Style getStyle( )
+  public Style getStyle( final ZmlModelViewport viewport, final IZmlModelValueCell cell )
   {
     final DataColumn column = m_column.getDataColumn();
 
@@ -162,7 +162,8 @@ public class ZmlValueLabelProvider implements IZmlModelCellLabelProvider
 
     try
     {
-      final CellStyle defaultStyle = column.getDefaultStyle();
+      final CellStyle defaultStyle = cell.getStyle( viewport );
+
       final Color background = defaultStyle.getBackgroundColor();
       if( Objects.isNotNull( background ) )
         style.setAttributeValue( CellStyleAttributes.BACKGROUND_COLOR, background );
