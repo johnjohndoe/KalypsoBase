@@ -69,7 +69,7 @@ public abstract class AbstractKeyListenerWidget extends AbstractWidget
 {
   private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
 
-  private Point m_currentPoint = null;
+  protected Point m_currentPoint = null;
 
   public AbstractKeyListenerWidget( final String name )
   {
