@@ -54,8 +54,11 @@ import net.sourceforge.nattable.grid.data.DefaultCornerDataProvider;
 import net.sourceforge.nattable.grid.layer.CornerLayer;
 import net.sourceforge.nattable.grid.layer.GridLayer;
 import net.sourceforge.nattable.layer.DataLayer;
+import net.sourceforge.nattable.layer.event.VisualRefreshEvent;
 import net.sourceforge.nattable.painter.cell.decorator.BeveledBorderDecorator;
+import net.sourceforge.nattable.resize.command.InitializeAutoResizeColumnsCommand;
 import net.sourceforge.nattable.style.DisplayMode;
+import net.sourceforge.nattable.util.GCFactory;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -105,9 +108,11 @@ public class ZmlTable extends Composite implements IZmlTable
 
   protected BodyLayerStack m_bodyLayer;
 
-// final ZmlTablePager m_pager = new ZmlTablePager( this ); // only for main table
-
   protected final ZmlModelViewport m_viewport;
+
+  private ColumnHeaderLayerStack m_columnHeaderLayer;
+
+  private GridLayer m_gridLayer;
 
   public ZmlTable( final ZmlTableComposite table, final IZmlModel model, final FormToolkit toolkit )
   {
@@ -141,14 +146,14 @@ public class ZmlTable extends Composite implements IZmlTable
   {
     m_bodyLayer = new BodyLayerStack( m_viewport );
 
-    final ColumnHeaderLayerStack columnHeaderLayer = new ColumnHeaderLayerStack( m_bodyLayer );
+    m_columnHeaderLayer = new ColumnHeaderLayerStack( m_bodyLayer );
     final RowHeaderLayerStack rowHeaderLayer = new RowHeaderLayerStack( m_bodyLayer );
 
-    final DefaultCornerDataProvider cornerDataProvider = new DefaultCornerDataProvider( columnHeaderLayer.getProvider(), rowHeaderLayer.getProvider() );
-    final CornerLayer cornerLayer = new CornerLayer( new DataLayer( cornerDataProvider ), rowHeaderLayer, columnHeaderLayer );
+    final DefaultCornerDataProvider cornerDataProvider = new DefaultCornerDataProvider( m_columnHeaderLayer.getProvider(), rowHeaderLayer.getProvider() );
+    final CornerLayer cornerLayer = new CornerLayer( new DataLayer( cornerDataProvider ), rowHeaderLayer, m_columnHeaderLayer );
 
-    final GridLayer gridLayer = new GridLayer( m_bodyLayer, columnHeaderLayer, rowHeaderLayer, cornerLayer );
-    m_table = new NatTable( this, gridLayer );
+    m_gridLayer = new GridLayer( m_bodyLayer, m_columnHeaderLayer, rowHeaderLayer, cornerLayer );
+    m_table = new NatTable( this, m_gridLayer );
     m_table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     final IConfigRegistry registry = m_table.getConfigRegistry();
@@ -208,26 +213,14 @@ public class ZmlTable extends Composite implements IZmlTable
         if( ZmlTable.this.isDisposed() )
           return Status.OK_STATUS;
 
-        // TOOD event based table refresh
+        m_table.fireLayerEvent( new VisualRefreshEvent( m_bodyLayer ) );
 
-// if( event.doForceChange() )
-        m_table.redraw();
-// m_pager.update();
-
-// m_pager.reveal();
-// m_table.fireLayerEvent( new RowUpdateEvent( m_bodyLayer, 0 ) );
-// m_table.redraw();
-
-// final int count = m_table.getColumnCount();
-// for( int index = 1; index < count; index++ )
-// {
-// final InitializeAutoResizeColumnsCommand command = new InitializeAutoResizeColumnsCommand( m_table, count,
-// m_table.getConfigRegistry(), new GCFactory( m_table ) );
-// m_table.doCommand( command );
-// }
+        doResizeColumns();
+        // TODO table pager
 
         return Status.OK_STATUS;
       }
+
     };
 
     m_updateJob.setUser( false );
@@ -236,6 +229,16 @@ public class ZmlTable extends Composite implements IZmlTable
     m_updateJob.setRule( MUTEX_TABLE_UPDATE );
     m_updateJob.schedule( 150 );
 
+  }
+
+  protected void doResizeColumns( )
+  {
+    final int count = m_table.getColumnCount();
+    for( int index = 1; index <= count; index++ )
+    {
+      final InitializeAutoResizeColumnsCommand command = new InitializeAutoResizeColumnsCommand( m_gridLayer, index, m_table.getConfigRegistry(), new GCFactory( m_table ) );
+      m_gridLayer.doCommand( command );
+    }
   }
 
   @Override
