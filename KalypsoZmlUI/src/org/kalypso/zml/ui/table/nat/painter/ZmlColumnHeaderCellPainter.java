@@ -97,7 +97,7 @@ public class ZmlColumnHeaderCellPainter extends AbstractCellPainter
       imageCellStyle.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, HorizontalAlignmentEnum.LEFT );
       configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, imageCellStyle, DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
 
-      Rectangle ptr = new Rectangle( bounds.x + 2, bounds.y + 2, bounds.width - 4, bounds.height - 4 );
+      Rectangle ptr = new Rectangle( bounds.x + 2, bounds.y, bounds.width - 4, bounds.height );
 
       final Image[] images = getImages( column );
       for( final Image image : images )
@@ -111,7 +111,8 @@ public class ZmlColumnHeaderCellPainter extends AbstractCellPainter
       final Style cellStyle = getStyle();
       configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, cellStyle, DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
 
-      final ICellPainter painter = new TextPainter( true, true );
+      // TODO wrapped text painters increases column header size - how to shrink column header?
+      final ICellPainter painter = new TextPainter();
       painter.paintCell( cell, gc, ptr, configRegistry );
     }
     else

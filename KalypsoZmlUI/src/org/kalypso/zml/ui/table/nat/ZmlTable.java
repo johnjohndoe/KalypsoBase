@@ -239,6 +239,10 @@ public class ZmlTable extends Composite implements IZmlTable
       final InitializeAutoResizeColumnsCommand command = new InitializeAutoResizeColumnsCommand( m_gridLayer, index, m_table.getConfigRegistry(), new GCFactory( m_table ) );
       m_gridLayer.doCommand( command );
     }
+
+// final AutoResizeRowsCommand command = new AutoResizeRowsCommand( new InitializeAutoResizeRowsCommand( m_table, 1,
+// m_table.getConfigRegistry(), new GCFactory( m_table ) ) );
+// m_table.doCommand( command );
   }
 
   @Override
