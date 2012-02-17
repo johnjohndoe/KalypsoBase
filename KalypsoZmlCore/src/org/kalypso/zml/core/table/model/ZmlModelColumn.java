@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model;
 
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -81,7 +80,6 @@ import org.kalypso.zml.core.table.schema.DataColumnType;
  */
 public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnObservationListener
 {
-  Set<AppliedRule> m_applied = new LinkedHashSet<AppliedRule>();
 
   private IZmlModelColumnDataHandler m_handler;
 
@@ -115,7 +113,6 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnObservati
   {
     m_type.reset();
     m_cells.clear();
-    m_applied.clear();
   }
 
   @Override
@@ -167,19 +164,6 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnObservati
           return;
         }
       }
-    }
-  }
-
-  @Override
-  public void addAppliedRules( final AppliedRule[] rules )
-  {
-    if( ArrayUtils.isNotEmpty( rules ) )
-    {
-      final int oldSize = m_applied.size();
-      Collections.addAll( m_applied, rules );
-
-      if( Objects.notEqual( oldSize, m_applied.size() ) )
-        fireColumnChanged( IZmlModelColumnEvent.COLUMN_RULES_CHANGED );
     }
   }
 
@@ -469,7 +453,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnObservati
   }
 
   @Override
-  public AppliedRule[] getActiveRules( )
+  public AppliedRule[] getColumnRules( )
   {
     final Set<AppliedRule> active = new LinkedHashSet<AppliedRule>();
 
@@ -487,8 +471,6 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnObservati
         e.printStackTrace();
       }
     }
-
-    active.addAll( m_applied );
 
     return active.toArray( new AppliedRule[] {} );
   }

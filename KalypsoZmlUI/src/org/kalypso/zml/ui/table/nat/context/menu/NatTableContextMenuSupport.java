@@ -95,7 +95,7 @@ public class NatTableContextMenuSupport extends MouseAdapter
           return;
 
         final ZmlTableHeaderContextMenuProvider menuProvider = new ZmlTableHeaderContextMenuProvider();
-        menuProvider.fillMenu( colum, m_manager );
+        menuProvider.fillMenu( m_viewport, colum, m_manager );
       }
       else
       {

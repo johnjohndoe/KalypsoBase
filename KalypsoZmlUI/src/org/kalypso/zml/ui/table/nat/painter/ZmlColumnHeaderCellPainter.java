@@ -68,6 +68,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.utils.ZmlModelColumns;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.core.table.rules.AppliedRule;
 
 /**
@@ -76,8 +78,11 @@ import org.kalypso.zml.core.table.rules.AppliedRule;
 public class ZmlColumnHeaderCellPainter extends AbstractCellPainter
 {
 
-  public ZmlColumnHeaderCellPainter( )
+  private final ZmlModelViewport m_viewport;
+
+  public ZmlColumnHeaderCellPainter( final ZmlModelViewport viewport )
   {
+    m_viewport = viewport;
   }
 
   @Override
@@ -143,7 +148,7 @@ public class ZmlColumnHeaderCellPainter extends AbstractCellPainter
   {
     final Set<Image> images = new LinkedHashSet<Image>();
 
-    final AppliedRule[] rules = column.getActiveRules();
+    final AppliedRule[] rules = ZmlModelColumns.findRules( m_viewport, column );
     for( final AppliedRule rule : rules )
     {
       if( !rule.hasHeaderIcon() )

@@ -162,7 +162,7 @@ public class ZmlTable extends Composite implements IZmlTable
     /** cell painters */
     registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new ZmlModelCellPainter( m_viewport ), DisplayMode.NORMAL, GridRegion.BODY.toString() );
     registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new ZmlRowHeaderCellPainter( m_viewport ), DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
-    registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new BeveledBorderDecorator( new ZmlColumnHeaderCellPainter() ), DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
+    registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new BeveledBorderDecorator( new ZmlColumnHeaderCellPainter( m_viewport ) ), DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
 
     /** editing support */
     // FIXME implement IEdiableRule

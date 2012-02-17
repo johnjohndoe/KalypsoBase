@@ -40,8 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model.utils;
 
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.zml.core.table.binding.CellStyle;
+import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
+import org.kalypso.zml.core.table.rules.AppliedRule;
+import org.kalypso.zml.core.table.rules.IZmlCellRuleImplementation;
 
 /**
  * @author Dirk Kuch
@@ -57,5 +69,52 @@ public final class ZmlModelColumns
     final String identifier = column.getIdentifier();
 
     return StringUtils.contains( identifier, IClonedColumn.CLONED_COLUMN_POSTFIX );
+  }
+
+  public static AppliedRule[] findRules( final ZmlModelViewport viewport, final IZmlModelColumn column )
+  {
+    final Set<AppliedRule> rules = new LinkedHashSet<AppliedRule>();
+    Collections.addAll( rules, column.getColumnRules() );
+
+    /** applied cell rules */
+    final IZmlModelValueCell[] cells = viewport.getCells( column );
+
+    for( final IZmlModelValueCell cell : cells )
+    {
+      try
+      {
+        final ZmlCellRule[] cellRules = cell.findActiveRules( viewport );
+        Collections.addAll( rules, toApplied( cell, cellRules ) );
+      }
+      catch( final SensorException e )
+      {
+        e.printStackTrace();
+      }
+    }
+
+    return rules.toArray( new AppliedRule[] {} );
+  }
+
+  public static AppliedRule[] toApplied( final IZmlModelValueCell cell, final ZmlCellRule[] rules )
+  {
+    final Set<AppliedRule> applied = new LinkedHashSet<AppliedRule>();
+
+    for( final ZmlCellRule rule : rules )
+    {
+      try
+      {
+        final String label = rule.getLabel( cell );
+        final IZmlCellRuleImplementation impl = rule.getImplementation();
+        final CellStyle style = impl.getCellStyle( rule, cell );
+        final Double severity = impl.getSeverity( rule, cell );
+
+        applied.add( new AppliedRule( style, label, severity, rule.hasHeaderIcon() ) );
+      }
+      catch( final CoreException e )
+      {
+        e.printStackTrace();
+      }
+    }
+    return applied.toArray( new AppliedRule[] {} );
   }
 }
