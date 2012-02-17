@@ -72,7 +72,7 @@ public class ZmlTablePager
 
   private final BodyLayerStack m_bodyLayer;
 
-  private Date m_lastRow;
+  protected Date m_lastRow;
 
   public ZmlTablePager( final ZmlModelViewport viewport, final NatTable table, final BodyLayerStack bodyLayer )
   {
@@ -87,7 +87,6 @@ public class ZmlTablePager
       {
         if( event instanceof ScrollEvent )
         {
-          final ScrollEvent scroll = (ScrollEvent) event;
           final LayerCell cell = m_table.getCellByPosition( 1, 1 );
           final Object dataValue = cell.getDataValue();
           if( dataValue instanceof IZmlModelCell )
