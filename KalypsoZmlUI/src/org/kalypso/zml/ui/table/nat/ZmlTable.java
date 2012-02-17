@@ -208,6 +208,8 @@ public class ZmlTable extends Composite implements IZmlTable
         if( ZmlTable.this.isDisposed() )
           return Status.OK_STATUS;
 
+        // TOOD event based table refresh
+
 // if( event.doForceChange() )
         m_table.redraw();
 // m_pager.update();
