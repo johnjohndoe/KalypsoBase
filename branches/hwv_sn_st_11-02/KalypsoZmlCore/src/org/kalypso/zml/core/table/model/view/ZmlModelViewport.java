@@ -52,6 +52,7 @@ import org.kalypso.zml.core.table.model.IZmlColumnModelListener;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.IZmlModelRowVisitor;
 import org.kalypso.zml.core.table.model.ZmlModelColumn;
 import org.kalypso.zml.core.table.model.editing.ContinuedInterpolatedValueEditingStrategy;
 import org.kalypso.zml.core.table.model.editing.IZmlEditingStrategy;
@@ -112,6 +113,15 @@ public class ZmlModelViewport
       }
     } );
 
+  }
+
+  public void accept( final IZmlModelRowVisitor visitor )
+  {
+    final IZmlModelRow[] rows = getRows();
+    for( final IZmlModelRow row : rows )
+    {
+      visitor.visit( row );
+    }
   }
 
   protected void doClean( final ZmlModelColumnChangeType type )
