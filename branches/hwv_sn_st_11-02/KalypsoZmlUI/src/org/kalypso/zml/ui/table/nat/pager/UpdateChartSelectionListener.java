@@ -61,7 +61,7 @@ import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
-import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
+import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLayerVisitor;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
@@ -105,7 +105,7 @@ public class UpdateChartSelectionListener implements ILayerListener
 
   private void doResetSelection( final ILayerManager layerManager )
   {
-    layerManager.accept( new IChartLayerVisitor()
+    layerManager.accept( new AbstractChartLayerVisitor()
     {
       @Override
       public void visit( final IChartLayer layer )
@@ -118,18 +118,13 @@ public class UpdateChartSelectionListener implements ILayerListener
 
         layer.getLayerManager().accept( this );
       }
-
-      @Override
-      public void doFinialize( )
-      {
-      }
     } );
 
   }
 
   private void doSingleSelection( final ILayerManager layerManager, final Date selected )
   {
-    layerManager.accept( new IChartLayerVisitor()
+    layerManager.accept( new AbstractChartLayerVisitor()
     {
       @Override
       public void visit( final IChartLayer layer )
@@ -142,17 +137,12 @@ public class UpdateChartSelectionListener implements ILayerListener
 
         layer.getLayerManager().accept( this );
       }
-
-      @Override
-      public void doFinialize( )
-      {
-      }
     } );
   }
 
   private void doMultiSelection( final ILayerManager layerManager, final Date[] selected )
   {
-    layerManager.accept( new IChartLayerVisitor()
+    layerManager.accept( new AbstractChartLayerVisitor()
     {
       @Override
       public void visit( final IChartLayer layer )
@@ -164,11 +154,6 @@ public class UpdateChartSelectionListener implements ILayerListener
         }
 
         layer.getLayerManager().accept( this );
-      }
-
-      @Override
-      public void doFinialize( )
-      {
       }
     } );
   }
