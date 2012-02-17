@@ -80,10 +80,6 @@ public class ZmlLoader extends AbstractLoader
     }
   };
 
-  /**
-   * @see org.kalypso.loader.ILoader#load(org.kalypso.core.util.pool.IPoolableObjectType,
-   *      org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public Object load( final IPoolableObjectType key, final IProgressMonitor monitor ) throws LoaderException
   {
@@ -98,12 +94,12 @@ public class ZmlLoader extends AbstractLoader
 
       final IObservation observation = ZmlFactory.parseXML( url );
       observation.addListener( m_observationListener );
+
       return observation;
     }
     catch( final Exception e ) // generic exception caught for simplicity
     {
-// e.printStackTrace();
-// TODO wenn resource geloescht wurde, wird hier ein fehler geworfen
+      // TODO wenn resource geloescht wurde, wird hier ein fehler geworfen
       throw new LoaderException( e );
     }
     finally
@@ -112,10 +108,6 @@ public class ZmlLoader extends AbstractLoader
     }
   }
 
-  /**
-   * @see org.kalypso.loader.ILoader#save(org.kalypso.core.util.pool.IPoolableObjectType,
-   *      org.eclipse.core.runtime.IProgressMonitor, java.lang.Object)
-   */
   @Override
   public void save( final IPoolableObjectType key, final IProgressMonitor monitor, final Object data ) throws LoaderException
   {

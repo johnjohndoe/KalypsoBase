@@ -66,4 +66,9 @@ public class ObservationChangeType implements IObservationChangeEvent
   {
     m_type |= change;
   }
+
+  public int getEvent( )
+  {
+    return m_type;
+  }
 }

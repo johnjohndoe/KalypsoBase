@@ -279,7 +279,10 @@ public abstract class AbstractTupleModel implements ITupleModel
       return;
 
     if( Objects.isNotNull( m_transactionLock ) )
+    {
+      m_event |= changeType;
       return;
+    }
 
     final ITupleModelChangeListener[] listeners = m_listeners.toArray( new ITupleModelChangeListener[] {} );
     for( final ITupleModelChangeListener listener : listeners )
