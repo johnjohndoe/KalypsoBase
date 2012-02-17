@@ -96,6 +96,8 @@ public class ZmlModelViewport
       public void modelChanged( final ZmlModelColumnChangeType type )
       {
         doClean( type );
+
+        fireModelChanged( type.getEvent() );
       }
     } );
 
