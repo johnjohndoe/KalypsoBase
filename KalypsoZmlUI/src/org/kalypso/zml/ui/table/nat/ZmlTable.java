@@ -73,7 +73,6 @@ import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.zml.core.table.model.IZmlColumnModelListener;
 import org.kalypso.zml.core.table.model.IZmlModel;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.event.ZmlModelColumnChangeType;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.ui.table.IZmlTable;
@@ -118,9 +117,9 @@ public class ZmlTable extends Composite implements IZmlTable
     m_viewport.addListener( new IZmlColumnModelListener()
     {
       @Override
-      public void modelChanged( final ZmlModelColumnChangeType event, final IZmlModelColumn... columns )
+      public void modelChanged( final ZmlModelColumnChangeType event )
       {
-        refresh( event, columns );
+        refresh( event );
       }
     } );
 
@@ -193,7 +192,7 @@ public class ZmlTable extends Composite implements IZmlTable
   }
 
   @Override
-  public synchronized void refresh( final ZmlModelColumnChangeType event, final IZmlModelColumn... columns )
+  public synchronized void refresh( final ZmlModelColumnChangeType event )
   {
     if( Objects.isNotNull( m_updateJob ) )
       m_updateJob.cancel();
@@ -209,8 +208,8 @@ public class ZmlTable extends Composite implements IZmlTable
         if( ZmlTable.this.isDisposed() )
           return Status.OK_STATUS;
 
-        if( event.doForceChange() )
-          m_table.redraw();
+// if( event.doForceChange() )
+        m_table.redraw();
 // m_pager.update();
 
 // m_pager.reveal();

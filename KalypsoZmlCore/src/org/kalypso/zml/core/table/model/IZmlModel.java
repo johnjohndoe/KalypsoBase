@@ -56,7 +56,7 @@ public interface IZmlModel
 
   void addListener( IZmlColumnModelListener listener );
 
-  void fireModelChanged( final ZmlModelColumnChangeType event, final IZmlModelColumn... columns );
+  void fireModelChanged( final ZmlModelColumnChangeType event );
 
   IZmlModelColumn getColumn( String id );
 

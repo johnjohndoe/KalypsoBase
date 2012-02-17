@@ -113,6 +113,15 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
     {
       doExcecute();
     }
+
+    m_model.fireModelChanged( new ZmlModelColumnChangeType( IZmlModelColumnEvent.STRUCTURE_CHANGE ) );
+  }
+
+  @Override
+  public void observationChanged( final Object source )
+  {
+    KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlColumnLoadCommand.observationChanged(): %s\n", m_source.getIdentifier() );
+    m_model.fireModelChanged( new ZmlModelColumnChangeType( IZmlModelColumnEvent.VALUE_CHANGED ) );
   }
 
   public synchronized void cancel( )
@@ -121,14 +130,6 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
 
     m_canceled = true;
 // m_source.getObsProvider().dispose();
-  }
-
-  @Override
-  public void observationChanged( final Object source )
-  {
-    KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlColumnLoadCommand.observationChanged(): %s\n", m_source.getIdentifier() );
-
-    m_model.fireModelChanged( new ZmlModelColumnChangeType( IZmlModelColumnEvent.STRUCTURE_CHANGE ) );
   }
 
   private void doExcecute( )

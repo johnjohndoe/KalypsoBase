@@ -61,7 +61,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.zml.core.debug.KalypsoZmlCoreDebug;
 import org.kalypso.zml.core.table.model.event.IZmlModelColumnListener;
@@ -154,7 +153,7 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
     column.addListener( this );
     m_columns.add( column );
 
-    fireModelChanged( new ZmlModelColumnChangeType( STRUCTURE_CHANGE ), column );
+    fireModelChanged( new ZmlModelColumnChangeType( STRUCTURE_CHANGE ) );
   }
 
   @Override
@@ -212,15 +211,15 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
   private static final MutexRule MUTEX_FIRE_MODEL_CHANGED = new MutexRule( "mutex - fire zml model changed" );
 
   @Override
-  public synchronized void fireModelChanged( final ZmlModelColumnChangeType event, final IZmlModelColumn... columns )
+  public synchronized void fireModelChanged( final ZmlModelColumnChangeType event )
   {
     if( m_fireModelChangedJob != null )
       m_fireModelChangedJob.cancel();
 
-    if( Arrays.isEmpty( columns ) )
-      Collections.addAll( m_stack, getColumns() );
-    else
-      Collections.addAll( m_stack, columns );
+// if( Arrays.isEmpty( columns ) )
+// Collections.addAll( m_stack, getColumns() );
+// else
+// Collections.addAll( m_stack, columns );
 
     m_stackEvent |= event.getEvent();
 
@@ -242,7 +241,7 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
         final IZmlColumnModelListener[] listeners = m_listeners.toArray( new IZmlColumnModelListener[] {} );
         for( final IZmlColumnModelListener listener : listeners )
         {
-          listener.modelChanged( new ZmlModelColumnChangeType( e ), changed );
+          listener.modelChanged( new ZmlModelColumnChangeType( e ) );
         }
 
         return Status.OK_STATUS;
@@ -348,7 +347,7 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
     if( event.doForceChange() )
       m_rows.clear();
 
-    fireModelChanged( event, column );
+    fireModelChanged( event );
   }
 
   public URL getContext( )
