@@ -44,6 +44,7 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 
@@ -61,7 +62,14 @@ public class ZmlCollectRulesVisitor implements IZmlModelColumnVisitor
   @Override
   public void visit( final IZmlModelValueCell cell )
   {
-    Collections.addAll( m_rules, cell.findActiveRules( null ) );
+    try
+    {
+      Collections.addAll( m_rules, cell.findActiveRules( null ) );
+    }
+    catch( final SensorException e )
+    {
+      e.printStackTrace();
+    }
   }
 
   public ZmlCellRule[] getRules( )

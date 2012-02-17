@@ -86,6 +86,8 @@ public class ZmlModelValueCell extends AbstractZmlCell implements IZmlModelValue
 
   private final ZmlValueLabelProvider m_styleProvider;
 
+  private Number m_oldRuleValue;
+
   public ZmlModelValueCell( final IZmlModelRow row, final IZmlModelColumn column, final int tupleModelIndex )
   {
     super( row, column, tupleModelIndex );
@@ -228,7 +230,7 @@ public class ZmlModelValueCell extends AbstractZmlCell implements IZmlModelValue
   }
 
   @Override
-  public CellStyle getStyle( final ZmlModelViewport viewport ) throws CoreException
+  public CellStyle getStyle( final ZmlModelViewport viewport ) throws CoreException, SensorException
   {
     if( Objects.isNotNull( m_style ) )
       return m_style;
@@ -258,26 +260,39 @@ public class ZmlModelValueCell extends AbstractZmlCell implements IZmlModelValue
   }
 
   @Override
-  public ZmlCellRule[] findActiveRules( final ZmlModelViewport viewport )
+  public ZmlCellRule[] findActiveRules( final ZmlModelViewport viewport ) throws SensorException
   {
-    if( m_rules != null )
-      return m_rules;
-
     final DataColumn column = getColumn().getDataColumn();
+    if( isSimple( viewport, column ) )
+    {
+      final Number value = getValue();
+      if( Objects.notEqual( value, m_oldRuleValue ) )
+        m_rules = null;
 
-    if( Objects.isNull( viewport ) || viewport.getResolution() == 0 )
+      if( m_rules != null )
+        return m_rules;
+
       m_rules = findSimpleActiveRules();
+      m_oldRuleValue = value;
+    }
     else
     {
-      if( ITimeseriesConstants.TYPE_RAINFALL.equals( column.getValueAxis() ) )
-        m_rules = findAggregatedActiveRules( viewport );
-      else
-        m_rules = findSimpleActiveRules();
+      m_rules = findAggregatedActiveRules( viewport );
     }
 
     getColumn().addAppliedRules( toApplied( m_rules ) );
 
     return m_rules;
+  }
+
+  private boolean isSimple( final ZmlModelViewport viewport, final DataColumn column )
+  {
+    if( viewport.getResolution() == 0 )
+      return true;
+    else if( ITimeseriesConstants.TYPE_RAINFALL.equals( column.getValueAxis() ) )
+      return false;
+
+    return true;
   }
 
   private AppliedRule[] toApplied( final ZmlCellRule[] rules )
@@ -338,24 +353,16 @@ public class ZmlModelValueCell extends AbstractZmlCell implements IZmlModelValue
 
   private ZmlCellRule[] findSimpleActiveRules( )
   {
-    final IZmlModelRow row = getRow();
     final DataColumn column = getColumn().getDataColumn();
 
-    final IZmlModelValueCell reference = row.get( column.getType() );
-    if( Objects.isNull( reference ) )
-      return new ZmlCellRule[] {};
-
     final List<ZmlCellRule> rules = new ArrayList<ZmlCellRule>();
-    if( Objects.isNotNull( reference ) )
+    final ZmlCellRule[] columnRules = column.getCellRules();
+    for( final ZmlCellRule rule : columnRules )
     {
-      final ZmlCellRule[] columnRules = column.getCellRules();
-      for( final ZmlCellRule rule : columnRules )
+      final IZmlCellRuleImplementation impl = rule.getImplementation();
+      if( impl.apply( rule, this ) )
       {
-        final IZmlCellRuleImplementation impl = rule.getImplementation();
-        if( impl.apply( rule, reference ) )
-        {
-          rules.add( rule );
-        }
+        rules.add( rule );
       }
     }
 

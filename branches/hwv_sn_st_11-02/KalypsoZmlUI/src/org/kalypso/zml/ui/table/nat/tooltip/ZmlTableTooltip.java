@@ -105,23 +105,30 @@ public class ZmlTableTooltip extends DefaultToolTip
   @Override
   protected String getText( final Event event )
   {
-    final IZmlModelValueCell cell = findCell( event );
-    if( Objects.isNull( cell ) )
-      return null;
-
-    final IZmlModelColumn column = cell.getColumn();
-
-    final AbstractColumnType type = column.getDataColumn().getType();
-    if( !type.isTooltip() )
-      return null;
-
-    if( type instanceof DataColumnType )
+    try
     {
-      final String tip1 = getSourceTooltip( cell );
-      final String tip2 = getRuleTooltip( cell );
-      final String tip3 = getModelTooltip( cell );
+      final IZmlModelValueCell cell = findCell( event );
+      if( Objects.isNull( cell ) )
+        return null;
 
-      return StringUtilities.concat( tip1, Strings.repeat( "\n", 2 ), tip2, Strings.repeat( "\n", 2 ), tip3 ); //$NON-NLS-1$ //$NON-NLS-2$
+      final IZmlModelColumn column = cell.getColumn();
+
+      final AbstractColumnType type = column.getDataColumn().getType();
+      if( !type.isTooltip() )
+        return null;
+
+      if( type instanceof DataColumnType )
+      {
+        final String tip1 = getSourceTooltip( cell );
+        final String tip2 = getRuleTooltip( cell );
+        final String tip3 = getModelTooltip( cell );
+
+        return StringUtilities.concat( tip1, Strings.repeat( "\n", 2 ), tip2, Strings.repeat( "\n", 2 ), tip3 ); //$NON-NLS-1$ //$NON-NLS-2$
+      }
+    }
+    catch( final SensorException e )
+    {
+      e.printStackTrace();
     }
 
     return null;
@@ -162,7 +169,7 @@ public class ZmlTableTooltip extends DefaultToolTip
     return filter.getResolution() > 1;
   }
 
-  private String getRuleTooltip( final IZmlModelValueCell cell )
+  private String getRuleTooltip( final IZmlModelValueCell cell ) throws SensorException
   {
     final ZmlCellRule[] rules = cell.findActiveRules( m_viewport );
     if( ArrayUtils.isEmpty( rules ) )
