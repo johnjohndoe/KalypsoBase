@@ -87,6 +87,12 @@ public class ZmlTableTooltip extends DefaultToolTip
     m_viewport = viewport;
   }
 
+  @Override
+  protected boolean shouldCreateToolTip( final Event event )
+  {
+    return getText( event ) != null;
+  }
+
   /*
    * (non-Javadoc)
    * @see org.eclipse.jface.window.ToolTip#getToolTipArea(org.eclipse.swt.widgets.Event) Implementation here means the
