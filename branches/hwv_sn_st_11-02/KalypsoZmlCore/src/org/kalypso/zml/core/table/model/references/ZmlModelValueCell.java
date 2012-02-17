@@ -88,6 +88,8 @@ public class ZmlModelValueCell extends AbstractZmlCell implements IZmlModelValue
 
   private Number m_oldRuleValue;
 
+  private String m_oldRuleSource;
+
   public ZmlModelValueCell( final IZmlModelRow row, final IZmlModelColumn column, final int tupleModelIndex )
   {
     super( row, column, tupleModelIndex );
@@ -269,11 +271,17 @@ public class ZmlModelValueCell extends AbstractZmlCell implements IZmlModelValue
       if( Objects.notEqual( value, m_oldRuleValue ) )
         m_rules = null;
 
+      final String source = getDataSource();
+      if( Objects.notEqual( source, m_oldRuleSource ) )
+        m_rules = null;
+
       if( m_rules != null )
         return m_rules;
 
       m_rules = findSimpleActiveRules();
+
       m_oldRuleValue = value;
+      m_oldRuleSource = source;
     }
     else
     {
