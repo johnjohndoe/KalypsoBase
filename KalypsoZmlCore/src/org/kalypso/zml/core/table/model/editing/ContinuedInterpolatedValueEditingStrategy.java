@@ -93,7 +93,7 @@ public class ContinuedInterpolatedValueEditingStrategy extends AbstractEditingSt
         final TupleModelDataSet dataset = new TupleModelDataSet( column.getValueAxis(), targetValue, KalypsoStati.BIT_USER_MODIFIED, IDataSourceItem.SOURCE_MANUAL_CHANGED );
         transaction.add( new UpdateTupleModelDataSetCommand( cell.getModelIndex(), dataset, true ) );
 
-        IZmlModelValueCell next = getModel().findNextCell( cell );
+        IZmlModelValueCell next = getViewport().findNextCell( cell );
         while( next != null )
         {
           final IZmlModelValueCell ref = next;
@@ -103,7 +103,7 @@ public class ContinuedInterpolatedValueEditingStrategy extends AbstractEditingSt
           final TupleModelDataSet dataset2 = new TupleModelDataSet( column.getValueAxis(), targetValue, KalypsoStati.BIT_USER_MODIFIED, IDataSourceItem.SOURCE_INTERPOLATED_WECHMANN_VALUE );
           transaction.add( new UpdateTupleModelDataSetCommand( ref.getModelIndex(), dataset2, true ) );
 
-          next = getModel().findNextCell( next );
+          next = getViewport().findNextCell( next );
         }
       }
       finally

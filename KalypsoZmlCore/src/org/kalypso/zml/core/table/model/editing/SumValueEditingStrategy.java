@@ -69,9 +69,9 @@ public class SumValueEditingStrategy extends AbstractEditingStrategy
     {
       final Number targetValue = getTargetValue( cell, value );
 
-      final IZmlModelValueCell previousCell = getModel().findPreviousCell( cell );
+      final IZmlModelValueCell previousCell = getViewport().findPreviousCell( cell );
 
-      if( getModel().getResolution() == 0 )
+      if( getViewport().getResolution() == 0 )
       {
         updateOriginValue( cell, targetValue );
       }

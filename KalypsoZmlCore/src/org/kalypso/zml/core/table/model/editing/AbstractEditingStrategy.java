@@ -52,16 +52,16 @@ import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 public abstract class AbstractEditingStrategy implements IZmlEditingStrategy
 {
 
-  private final ZmlModelViewport m_model;
+  private final ZmlModelViewport m_viewport;
 
-  public AbstractEditingStrategy( final ZmlModelViewport model )
+  public AbstractEditingStrategy( final ZmlModelViewport viewport )
   {
-    m_model = model;
+    m_viewport = viewport;
   }
 
-  protected ZmlModelViewport getModel( )
+  protected ZmlModelViewport getViewport( )
   {
-    return m_model;
+    return m_viewport;
   }
 
   protected Number getTargetValue( final IZmlModelValueCell cell, final String value )
