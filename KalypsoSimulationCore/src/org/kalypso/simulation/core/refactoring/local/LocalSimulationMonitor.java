@@ -54,95 +54,67 @@ public class LocalSimulationMonitor implements ISimulationMonitor
 
   private String m_finishText;
 
+  private int m_progress;
+
   public LocalSimulationMonitor( final IProgressMonitor monitor )
   {
     m_monitor = monitor;
+    // TODO: get message from outside?
+    m_monitor.beginTask( "Running simulation", 100 );
   }
 
-  /**
-   * @see org.kalypso.simulation.core.ISimulationMonitor#getFinishStatus()
-   */
   @Override
   public int getFinishStatus( )
   {
     return m_finishStatus;
   }
 
-  /**
-   * @see org.kalypso.simulation.core.ISimulationMonitor#getFinishText()
-   */
   @Override
   public String getFinishText( )
   {
     return m_finishText;
   }
 
-  /**
-   * @see org.kalypso.simulation.core.ISimulationMonitor#getMessage()
-   */
   @Override
   public String getMessage( )
   {
     return null;
   }
 
-  /**
-   * @see org.kalypso.simulation.core.ISimulationMonitor#getProgress()
-   */
   @Override
   public int getProgress( )
   {
-    return 0;
+    return Math.min( 100 - m_progress, 100 );
   }
 
-  /**
-   * @see org.kalypso.simulation.core.ISimulationMonitor#setFinishInfo(int, java.lang.String)
-   */
   @Override
   public void setFinishInfo( final int status, final String text )
   {
     m_finishStatus = status;
     m_finishText = text;
-
-    m_monitor.setTaskName( text );
-
   }
 
-  /**
-   * @see org.kalypso.simulation.core.ISimulationMonitor#setMessage(java.lang.String)
-   */
   @Override
   public void setMessage( final String message )
   {
-    m_monitor.setTaskName( message );
-
+    m_monitor.subTask( message );
   }
 
-  /**
-   * @see org.kalypso.simulation.core.ISimulationMonitor#setProgress(int)
-   */
   @Override
   public void setProgress( final int progress )
   {
-    m_monitor.worked( progress );
+    m_progress = progress;
   }
 
-  /**
-   * @see org.kalypso.contribs.java.lang.ICancelable#cancel()
-   */
   @Override
   public void cancel( )
   {
     m_monitor.setCanceled( true );
   }
 
-  /**
-   * @see org.kalypso.contribs.java.lang.ICancelable#isCanceled()
-   */
   @Override
   public boolean isCanceled( )
   {
     return m_monitor.isCanceled();
   }
-
 }
