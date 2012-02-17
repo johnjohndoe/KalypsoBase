@@ -70,9 +70,9 @@ import org.kalypso.zml.core.table.model.visitor.FindNeighbourStuetzstellenVisito
 public class InterpolatedValueEditingStrategy extends AbstractEditingStrategy
 {
 
-  public InterpolatedValueEditingStrategy( final ZmlModelViewport model )
+  public InterpolatedValueEditingStrategy( final ZmlModelViewport viewport )
   {
-    super( model );
+    super( viewport );
   }
 
   @Override
@@ -81,10 +81,7 @@ public class InterpolatedValueEditingStrategy extends AbstractEditingStrategy
     try
     {
       /** update current cell */
-
       final Number targetValue = getTargetValue( cell, value );
-      if( Objects.equal( cell.getValue(), targetValue ) )
-        return;
 
       cell.doUpdate( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
 
