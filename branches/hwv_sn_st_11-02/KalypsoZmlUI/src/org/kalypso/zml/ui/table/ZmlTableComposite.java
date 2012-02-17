@@ -184,7 +184,7 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
 // ZmlTableColumns.buildTableColumns( this, ZmlTableColumns.toBaseColumns( missing ) );
 
       // FIXME don't refresh all columns!!!!
-      m_table.refresh( type, new IZmlModelColumn[] {} );
+      m_table.refresh( type );
 
     }
   }

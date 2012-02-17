@@ -93,7 +93,7 @@ public class ZmlModelViewport
     m_model.addListener( new IZmlColumnModelListener()
     {
       @Override
-      public void modelChanged( final ZmlModelColumnChangeType type, final IZmlModelColumn... columns )
+      public void modelChanged( final ZmlModelColumnChangeType type )
       {
         doClean( type );
       }
@@ -102,7 +102,7 @@ public class ZmlModelViewport
     addListener( new IZmlColumnModelListener()
     {
       @Override
-      public void modelChanged( final ZmlModelColumnChangeType type, final IZmlModelColumn... columns )
+      public void modelChanged( final ZmlModelColumnChangeType type )
       {
         // triggered from filter
         if( type.resultionChanged() )

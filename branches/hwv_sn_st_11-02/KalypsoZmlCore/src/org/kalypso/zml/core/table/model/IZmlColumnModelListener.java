@@ -47,6 +47,6 @@ import org.kalypso.zml.core.table.model.event.ZmlModelColumnChangeType;
  */
 public interface IZmlColumnModelListener
 {
-  void modelChanged( ZmlModelColumnChangeType type, final IZmlModelColumn... columns );
+  void modelChanged( ZmlModelColumnChangeType type );
 
 }

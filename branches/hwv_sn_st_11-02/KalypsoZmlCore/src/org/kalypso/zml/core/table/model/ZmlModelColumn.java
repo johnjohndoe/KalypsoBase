@@ -54,11 +54,13 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.TupleModelDataSet;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
-import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
+import org.kalypso.ogc.sensor.transaction.TupleModelTransaction;
+import org.kalypso.ogc.sensor.transaction.UpdateTupleModelDataSetCommand;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.binding.DataColumn;
 import org.kalypso.zml.core.table.binding.rule.ZmlColumnRule;
@@ -454,42 +456,16 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnObservati
 
   private void update( final int index, final Object value, final String source, final Integer status ) throws SensorException
   {
-    final ITupleModel model = getTupleModel();
-    final IAxis[] axes = model.getAxes();
+    final Object val = Objects.firstNonNull( value, Double.NaN );
+    final Integer stat = (Integer) Objects.firstNonNull( status, KalypsoStati.BIT_OK );
+    final String src = (String) Objects.firstNonNull( source, IDataSourceItem.SOURCE_UNKNOWN );
 
-    final IAxis valueAxis = AxisUtils.findAxis( axes, m_type.getValueAxis() );
-    final IAxis statusAxis = AxisUtils.findStatusAxis( axes, valueAxis );
-    final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( axes, valueAxis );
+    final TupleModelTransaction transaction = new TupleModelTransaction( getTupleModel(), getMetadata() );
 
-    /** update value */
-    if( Objects.isNull( value ) )
-      model.set( index, valueAxis, Double.NaN );
-    else
-      model.set( index, valueAxis, value );
+    final TupleModelDataSet dataset = new TupleModelDataSet( getValueAxis(), val, stat, src );
+    transaction.add( new UpdateTupleModelDataSetCommand( index, dataset, true ) );
 
-    /** update status */
-    if( Objects.isNotNull( statusAxis ) )
-    {
-      if( Objects.isNull( status ) )
-        model.set( index, statusAxis, KalypsoStati.BIT_OK );
-      else
-        model.set( index, statusAxis, status );
-    }
-
-    /** update data source */
-    if( Objects.isNotNull( dataSourceAxis ) )
-    {
-      // FIXME - user modified triggered interpolated state?!?
-      final DataSourceHandler handler = new DataSourceHandler( getMetadata() );
-      final int sourceIndex;
-      if( Objects.isNull( source ) )
-        sourceIndex = handler.addDataSource( IDataSourceItem.SOURCE_UNKNOWN, IDataSourceItem.SOURCE_UNKNOWN );
-      else
-        sourceIndex = handler.addDataSource( source, source );
-
-      model.set( index, dataSourceAxis, sourceIndex );
-    }
-
+    getTupleModel().execute( transaction );
   }
 
   @Override
