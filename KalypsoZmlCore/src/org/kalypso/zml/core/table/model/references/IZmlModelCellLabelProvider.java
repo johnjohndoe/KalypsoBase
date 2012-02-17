@@ -43,6 +43,7 @@ package org.kalypso.zml.core.table.model.references;
 import net.sourceforge.nattable.style.Style;
 
 import org.eclipse.swt.graphics.Image;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 
 /**
@@ -50,7 +51,7 @@ import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
  */
 public interface IZmlModelCellLabelProvider
 {
-  Image[] getImages( ZmlModelViewport viewport, final IZmlModelCell cell );
+  Image[] getImages( ZmlModelViewport viewport, final IZmlModelCell cell ) throws SensorException;
 
   String getText( ZmlModelViewport viewport, IZmlModelValueCell cell );
 

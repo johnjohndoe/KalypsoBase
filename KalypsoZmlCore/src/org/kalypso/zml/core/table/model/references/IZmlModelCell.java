@@ -43,6 +43,7 @@ package org.kalypso.zml.core.table.model.references;
 import java.util.Date;
 
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModel;
@@ -63,7 +64,7 @@ public interface IZmlModelCell
 
   Integer getModelIndex( );
 
-  ZmlCellRule[] findActiveRules( ZmlModelViewport viewport );
+  ZmlCellRule[] findActiveRules( ZmlModelViewport viewport ) throws SensorException;
 
-  CellStyle getStyle( ZmlModelViewport viewport ) throws CoreException;
+  CellStyle getStyle( ZmlModelViewport viewport ) throws CoreException, SensorException;
 }

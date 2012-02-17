@@ -55,6 +55,7 @@ import net.sourceforge.nattable.style.Style;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.model.references.IZmlModelCellLabelProvider;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
@@ -86,13 +87,20 @@ public class ZmlModelCellPainter extends AbstractCellPainter
 
       Rectangle ptr = new Rectangle( bounds.x, bounds.y, bounds.width, bounds.height );
 
-      final Image[] images = provider.getImages( m_viewport, modelCell );
-      for( final Image image : images )
+      try
       {
-        final ImagePainter imgPainter = new ImagePainter( image );
-        imgPainter.paintCell( cell, gc, ptr, configRegistry );
+        final Image[] images = provider.getImages( m_viewport, modelCell );
+        for( final Image image : images )
+        {
+          final ImagePainter imgPainter = new ImagePainter( image );
+          imgPainter.paintCell( cell, gc, ptr, configRegistry );
 
-        ptr = move( ptr, image.getBounds() );
+          ptr = move( ptr, image.getBounds() );
+        }
+      }
+      catch( final SensorException e )
+      {
+        e.printStackTrace();
       }
 
       final Style cellStyle = provider.getStyle();
@@ -118,12 +126,18 @@ public class ZmlModelCellPainter extends AbstractCellPainter
       final IZmlModelValueCell value = (IZmlModelValueCell) object;
       final IZmlModelCellLabelProvider provider = value.getStyleProvider();
 
-      final Image[] images = provider.getImages( m_viewport, value );
-
       int width = 0;
-      for( final Image image : images )
+      try
       {
-        width += image.getBounds().width;
+        final Image[] images = provider.getImages( m_viewport, value );
+        for( final Image image : images )
+        {
+          width += image.getBounds().width;
+        }
+      }
+      catch( final SensorException e )
+      {
+        e.printStackTrace();
       }
 
       final TextPainter painter = new TextPainter();
@@ -144,13 +158,20 @@ public class ZmlModelCellPainter extends AbstractCellPainter
       final IZmlModelValueCell value = (IZmlModelValueCell) object;
       final IZmlModelCellLabelProvider provider = value.getStyleProvider();
 
-      final Image[] images = provider.getImages( m_viewport, value );
-
       int height = 0;
-      for( final Image image : images )
+
+      try
       {
-        final Rectangle bounds = image.getBounds();
-        height = Math.max( bounds.height, height );
+        final Image[] images = provider.getImages( m_viewport, value );
+        for( final Image image : images )
+        {
+          final Rectangle bounds = image.getBounds();
+          height = Math.max( bounds.height, height );
+        }
+      }
+      catch( final SensorException e )
+      {
+        e.printStackTrace();
       }
 
       final TextPainter painter = new TextPainter();

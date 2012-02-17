@@ -52,6 +52,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.DataColumn;
@@ -104,7 +105,7 @@ public class ZmlValueLabelProvider implements IZmlModelCellLabelProvider
   }
 
   @Override
-  public Image[] getImages( final ZmlModelViewport viewport, final IZmlModelCell cell )
+  public Image[] getImages( final ZmlModelViewport viewport, final IZmlModelCell cell ) throws SensorException
   {
     final ZmlCellRule[] rules = cell.findActiveRules( viewport );
     final Set<Image> images = new LinkedHashSet<Image>();
