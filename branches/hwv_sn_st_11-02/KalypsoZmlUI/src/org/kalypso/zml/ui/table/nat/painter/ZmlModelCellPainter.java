@@ -81,7 +81,8 @@ public class ZmlModelCellPainter extends AbstractCellPainter
       final IZmlModelValueCell modelCell = (IZmlModelValueCell) object;
       final IZmlModelCellLabelProvider provider = modelCell.getStyleProvider();
 
-      final Style imageCellStyle = new Style();
+      final Style imageCellStyle = provider.getStyle( m_viewport, modelCell );
+
       imageCellStyle.setAttributeValue( CellStyleAttributes.HORIZONTAL_ALIGNMENT, HorizontalAlignmentEnum.LEFT );
       configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, imageCellStyle, DisplayMode.NORMAL, GridRegion.BODY.toString() );
 
@@ -103,7 +104,7 @@ public class ZmlModelCellPainter extends AbstractCellPainter
         e.printStackTrace();
       }
 
-      final Style cellStyle = provider.getStyle();
+      final Style cellStyle = provider.getStyle( m_viewport, modelCell );
       configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, cellStyle, DisplayMode.NORMAL, GridRegion.BODY.toString() );
 
       final TextPainter painter = new TextPainter();

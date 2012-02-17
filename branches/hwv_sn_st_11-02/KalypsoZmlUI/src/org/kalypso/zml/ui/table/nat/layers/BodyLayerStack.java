@@ -1,7 +1,6 @@
 package org.kalypso.zml.ui.table.nat.layers;
 
 import net.sourceforge.nattable.data.IColumnAccessor;
-import net.sourceforge.nattable.data.IDataProvider;
 import net.sourceforge.nattable.data.IRowDataProvider;
 import net.sourceforge.nattable.edit.command.UpdateDataCommand;
 import net.sourceforge.nattable.layer.AbstractLayerTransform;
@@ -31,6 +30,7 @@ public class BodyLayerStack extends AbstractLayerTransform
 
     final DataLayer dataLayer = new DataLayer( m_provider );
     m_selectionLayer = new ZmlTableSelectionLayer( model, dataLayer );
+
     final ViewportLayer viewportLayer = new ViewportLayer( getSelectionLayer() );
     setUnderlyingLayer( viewportLayer );
 
@@ -49,7 +49,7 @@ public class BodyLayerStack extends AbstractLayerTransform
     return m_selectionLayer;
   }
 
-  public IDataProvider getProvider( )
+  public IRowDataProvider<IZmlModelRow> getProvider( )
   {
     return m_provider;
   }

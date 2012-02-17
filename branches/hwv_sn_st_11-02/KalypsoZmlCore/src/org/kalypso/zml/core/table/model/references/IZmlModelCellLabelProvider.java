@@ -55,5 +55,5 @@ public interface IZmlModelCellLabelProvider
 
   String getText( ZmlModelViewport viewport, IZmlModelValueCell cell );
 
-  Style getStyle( );
+  Style getStyle( final ZmlModelViewport viewport, IZmlModelValueCell modelCell );
 }
