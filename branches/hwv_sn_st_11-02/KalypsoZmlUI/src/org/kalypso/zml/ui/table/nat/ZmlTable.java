@@ -55,9 +55,7 @@ import net.sourceforge.nattable.grid.layer.CornerLayer;
 import net.sourceforge.nattable.grid.layer.GridLayer;
 import net.sourceforge.nattable.layer.DataLayer;
 import net.sourceforge.nattable.painter.cell.decorator.BeveledBorderDecorator;
-import net.sourceforge.nattable.resize.command.InitializeAutoResizeColumnsCommand;
 import net.sourceforge.nattable.style.DisplayMode;
-import net.sourceforge.nattable.util.GCFactory;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -211,25 +209,26 @@ public class ZmlTable extends Composite implements IZmlTable
         if( ZmlTable.this.isDisposed() )
           return Status.OK_STATUS;
 
+        if( event.doForceChange() )
+          m_table.redraw();
 // m_pager.update();
 
-// ZmlTable.this.refresh();
 // m_pager.reveal();
+// m_table.fireLayerEvent( new RowUpdateEvent( m_bodyLayer, 0 ) );
+// m_table.redraw();
 
-        m_table.redraw();
-
-        final int count = m_table.getColumnCount();
-        for( int index = 1; index < count; index++ )
-        {
-          final InitializeAutoResizeColumnsCommand command = new InitializeAutoResizeColumnsCommand( m_table, count, m_table.getConfigRegistry(), new GCFactory( m_table ) );
-          m_table.doCommand( command );
-        }
-
-// fireTableChanged( IZmlTableCompositeListener.TYPE_REFRESH, columns );
+// final int count = m_table.getColumnCount();
+// for( int index = 1; index < count; index++ )
+// {
+// final InitializeAutoResizeColumnsCommand command = new InitializeAutoResizeColumnsCommand( m_table, count,
+// m_table.getConfigRegistry(), new GCFactory( m_table ) );
+// m_table.doCommand( command );
+// }
 
         return Status.OK_STATUS;
       }
     };
+
     m_updateJob.setUser( false );
     m_updateJob.setSystem( true );
 
