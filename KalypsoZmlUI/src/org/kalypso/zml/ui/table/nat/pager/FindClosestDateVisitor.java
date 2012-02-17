@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,12 +38,46 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model;
+package org.kalypso.zml.ui.table.nat.pager;
+
+import java.util.Date;
+
+import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.IZmlModelRowVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlModelRowVisitor
+public class FindClosestDateVisitor implements IZmlModelRowVisitor
 {
-  void visit( IZmlModelRow row );
+  private Long m_diff = Long.MAX_VALUE;
+
+  private final Long m_base;
+
+  private IZmlModelRow m_row;
+
+  public FindClosestDateVisitor( final Date base )
+  {
+    m_base = base.getTime();
+
+  }
+
+  @Override
+  public void visit( final IZmlModelRow row )
+  {
+    final Date index = row.getIndex();
+
+    final long diff = Math.abs( m_base - index.getTime() );
+    if( diff < m_diff )
+    {
+      m_row = row;
+      m_diff = diff;
+    }
+  }
+
+  public IZmlModelRow getRow( )
+  {
+    return m_row;
+  }
+
 }

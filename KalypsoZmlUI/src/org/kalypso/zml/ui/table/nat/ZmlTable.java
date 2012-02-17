@@ -88,6 +88,7 @@ import org.kalypso.zml.ui.table.nat.layers.BodyLayerStack;
 import org.kalypso.zml.ui.table.nat.layers.ColumnHeaderLayerStack;
 import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
 import org.kalypso.zml.ui.table.nat.layers.RowHeaderLayerStack;
+import org.kalypso.zml.ui.table.nat.pager.ZmlTablePager;
 import org.kalypso.zml.ui.table.nat.painter.ZmlColumnHeaderCellPainter;
 import org.kalypso.zml.ui.table.nat.painter.ZmlModelCellPainter;
 import org.kalypso.zml.ui.table.nat.painter.ZmlRowHeaderCellPainter;
@@ -113,6 +114,8 @@ public class ZmlTable extends Composite implements IZmlTable
   private ColumnHeaderLayerStack m_columnHeaderLayer;
 
   private GridLayer m_gridLayer;
+
+  protected ZmlTablePager m_pager;
 
   public ZmlTable( final ZmlTableComposite table, final IZmlModel model, final FormToolkit toolkit )
   {
@@ -177,6 +180,8 @@ public class ZmlTable extends Composite implements IZmlTable
     addTooltipSupport();
 
     m_table.addMouseListener( new NatTableContextMenuSupport( m_table, m_viewport ) );
+
+    m_pager = new ZmlTablePager( m_viewport, m_table, m_bodyLayer );
   }
 
   private void addTooltipSupport( )
@@ -196,11 +201,15 @@ public class ZmlTable extends Composite implements IZmlTable
     super.dispose();
   }
 
+  protected int m_event = 0;
+
   @Override
   public synchronized void refresh( final ZmlModelColumnChangeType event )
   {
     if( Objects.isNotNull( m_updateJob ) )
       m_updateJob.cancel();
+
+    m_event |= event.getEvent();
 
     m_updateJob = new UIJob( "Zeitreihen-Tabelle wird aktualisiert" )
     {
@@ -213,10 +222,13 @@ public class ZmlTable extends Composite implements IZmlTable
         if( ZmlTable.this.isDisposed() )
           return Status.OK_STATUS;
 
+        final ZmlModelColumnChangeType change = new ZmlModelColumnChangeType( m_event );
+        m_event = 0;
+
         m_table.fireLayerEvent( new VisualRefreshEvent( m_bodyLayer ) );
 
         doResizeColumns();
-        // TODO table pager
+        m_pager.update( change );
 
         return Status.OK_STATUS;
       }
@@ -239,10 +251,6 @@ public class ZmlTable extends Composite implements IZmlTable
       final InitializeAutoResizeColumnsCommand command = new InitializeAutoResizeColumnsCommand( m_gridLayer, index, m_table.getConfigRegistry(), new GCFactory( m_table ) );
       m_gridLayer.doCommand( command );
     }
-
-// final AutoResizeRowsCommand command = new AutoResizeRowsCommand( new InitializeAutoResizeRowsCommand( m_table, 1,
-// m_table.getConfigRegistry(), new GCFactory( m_table ) ) );
-// m_table.doCommand( command );
   }
 
   @Override
