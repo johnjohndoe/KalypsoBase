@@ -40,8 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table;
 
+import net.sourceforge.nattable.NatTable;
+
 import org.kalypso.zml.core.table.model.event.ZmlModelColumnChangeType;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
+import org.kalypso.zml.ui.table.nat.layers.BodyLayerStack;
 import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
 
 /**
@@ -57,4 +60,9 @@ public interface IZmlTable
   void refresh( ZmlModelColumnChangeType type );
 
   IZmlTableSelection getSelection( );
+
+  BodyLayerStack getBodyLayer( );
+
+  NatTable getTable( );
+
 }
