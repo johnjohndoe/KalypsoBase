@@ -159,4 +159,9 @@ public interface IMapPanel extends ISelectionProvider
   // However, we use this flag for the moment to keep this backwards compatible and avoid side effekt.
   // TODO: try this out when we are fare from deploying
   void setUseFullSelection( boolean useFullSelection );
+
+  public Object getMTObject( );
+
+  public boolean isMultitouchEnabled( );
+
 }

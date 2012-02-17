@@ -225,6 +225,7 @@ Require-Bundle: org.eclipse.compare;visibility:=reexport,
  org.kalypso.auth,
  org.kalypso.core;visibility:=reexport,
  org.kalypso.metadoc;visibility:=reexport,
- org.kalypso.services.observation;resolution:=optional
+ org.kalypso.services.observation;resolution:=optional,
+ org.kalypso.mt
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.widgets;
 
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -140,7 +141,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
           else if( e.getClickCount() == 2 )
             actualWidget.doubleClickedLeft( e.getPoint() );
         }
-        break;
+          break;
 
         case MouseEvent.BUTTON2:
           m_middleWidget.leftClicked( e.getPoint() );
@@ -200,6 +201,15 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
   public void mouseEntered( final MouseEvent e )
   {
     final IWidget actualWidget = getActualWidget();
+    
+    // so, if the mouse enter event happens already somewhere inside the mappanel frame - it's actually a finger tap event
+    if (isInsideMapFrame( e.getPoint() ) ) {
+      if( actualWidget != null )
+        actualWidget.leftPressed( e.getPoint() );
+      
+      return;
+    }
+    
     if( actualWidget instanceof MouseListener )
       ((MouseListener) actualWidget).mouseEntered( e );
   }
@@ -208,6 +218,15 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
   public void mouseExited( final MouseEvent e )
   {
     final IWidget actualWidget = getActualWidget();
+    
+    // so, if the mouse enter event happens already somewhere inside the mappanel frame - it's actually a finger tap event
+    if (isInsideMapFrame( e.getPoint() ) ) {
+      if( actualWidget != null )
+        actualWidget.leftReleased( e.getPoint() );
+      
+      return;
+    }
+
     if( actualWidget instanceof MouseListener )
       ((MouseListener) actualWidget).mouseExited( e );
   }
@@ -418,4 +437,13 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
       m_actualWidget.setSelection( selection );
   }
 
+  protected boolean isInsideMapFrame( Point p )
+  {
+    final int THRESHOLD = 35; // pixel
+
+    if( p.getX() < THRESHOLD || p.getX() > m_mapPanel.getHeight() - THRESHOLD || p.getY() < THRESHOLD || p.getY() > m_mapPanel.getWidth() - THRESHOLD )
+      return false;
+
+    return true;
+  }
 }

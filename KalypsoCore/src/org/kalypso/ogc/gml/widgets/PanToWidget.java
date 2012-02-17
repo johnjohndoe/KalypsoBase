@@ -118,6 +118,12 @@ public class PanToWidget extends AbstractWidget
     if( m_world2screen == null )
       return;
 
+    if( p == null )
+    {
+      m_startPoint = null;
+      return;
+    }
+
     final GM_Position pixelPos = GeometryFactory.createGM_Position( p.getX(), p.getY() );
     m_startPoint = m_world2screen.getSourcePoint( pixelPos );
 
@@ -129,6 +135,12 @@ public class PanToWidget extends AbstractWidget
   {
     if( m_world2screen == null )
       return;
+
+    if( p == null )
+    {
+      m_endPoint = null;
+      return;
+    }
 
     final GM_Position pixelPos = GeometryFactory.createGM_Position( p.getX(), p.getY() );
     m_endPoint = m_world2screen.getSourcePoint( pixelPos );
