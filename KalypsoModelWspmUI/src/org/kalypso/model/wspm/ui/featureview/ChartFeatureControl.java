@@ -133,7 +133,7 @@ public class ChartFeatureControl extends AbstractFeatureControl
   public ChartFeatureControl( final String featureKeyName, final Feature feature, final IPropertyType ftp, final ChartConfigurationLoader ccl, final ChartType[] chartTypes, final URL context, final Map<String, Integer> commands, final String chartProviderID )
   {
     super( feature, ftp );
-    
+
     m_featureKeyName = featureKeyName;
     m_ccl = ccl;
     m_chartTypes = chartTypes;
@@ -144,9 +144,6 @@ public class ChartFeatureControl extends AbstractFeatureControl
     m_charts = null;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
-   */
   @Override
   public Control createControl( final Composite parent, final int style )
   {

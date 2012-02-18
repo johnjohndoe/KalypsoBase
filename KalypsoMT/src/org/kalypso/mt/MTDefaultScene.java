@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 import org.kalypso.mt.input.MTMouseInput;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
-import org.kalypso.ogc.gml.widgets.PanToWidget;
+import org.kalypso.ogc.gml.widgets.base.PanToWidget;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -51,8 +51,7 @@ public class MTDefaultScene extends AbstractScene
 
   private TapAndHoldVisualizer m_tapAndHoldVisualizer;
 
-  @SuppressWarnings("synthetic-access")
-  public MTDefaultScene( AbstractMTApplication mtApplication, String name )
+  public MTDefaultScene( final AbstractMTApplication mtApplication, final String name )
   {
     super( mtApplication, name );
     this.mtApp = (MTMapPanelApp) mtApplication;
@@ -77,8 +76,8 @@ public class MTDefaultScene extends AbstractScene
     cursorTracer = new CursorTracer( mtApp, this, mtApp.getMouseInput() );
     this.registerGlobalInputProcessor( cursorTracer );
 
-    int w = MT4jSettings.getInstance().windowWidth;
-    int h = MT4jSettings.getInstance().windowHeight;
+    final int w = MT4jSettings.getInstance().windowWidth;
+    final int h = MT4jSettings.getInstance().windowHeight;
 
     m_rect = new MTRectangle( mtApp, 0, 0, w, h );
     m_rect.setNoFill( true ); // Make it invisible -> only used for dragging
@@ -92,11 +91,11 @@ public class MTDefaultScene extends AbstractScene
     m_rect.addGestureListener( DragProcessor.class, new IGestureEventListener()
     {
       @Override
-      public boolean processGestureEvent( MTGestureEvent ge )
+      public boolean processGestureEvent( final MTGestureEvent ge )
       {
-        DragEvent e = (DragEvent) ge;
-        Vector3D v = e.getTo();
-        MTMouseInput m_mouse = mtApp.getMouseInput();
+        final DragEvent e = (DragEvent) ge;
+        final Vector3D v = e.getTo();
+        final MTMouseInput m_mouse = mtApp.getMouseInput();
         if( e.getId() == MTGestureEvent.GESTURE_STARTED )
         {
           m_mouse.fakeMousePress( v );
@@ -123,11 +122,11 @@ public class MTDefaultScene extends AbstractScene
     m_rect.addGestureListener( TapAndHoldProcessor.class, new IGestureEventListener()
     {
       @Override
-      public boolean processGestureEvent( MTGestureEvent ge )
+      public boolean processGestureEvent( final MTGestureEvent ge )
       {
-        TapAndHoldEvent e = (TapAndHoldEvent) ge;
-        Vector3D v = e.getLocationOnScreen();
-        MTMouseInput m_mouse = mtApp.getMouseInput();
+        final TapAndHoldEvent e = (TapAndHoldEvent) ge;
+        // final Vector3D v = e.getLocationOnScreen();
+        final MTMouseInput m_mouse = mtApp.getMouseInput();
 
         if( e.getId() == MTGestureEvent.GESTURE_ENDED && e.isHoldComplete() )
         {
@@ -143,6 +142,7 @@ public class MTDefaultScene extends AbstractScene
     m_rect.addGestureListener( PanProcessorTwoFingers.class, new MapDrag() );
 
     m_rect.registerInputProcessor( new ZoomProcessor( mtApplication ) );
+    // TODO: suppress warnings is not the solution....
     m_rect.addGestureListener( ZoomProcessor.class, new MapScale() );
 
     resetCam();
@@ -168,6 +168,7 @@ public class MTDefaultScene extends AbstractScene
 
   }
 
+  // TODO: move into own file
   private class MapDrag implements IGestureEventListener
   {
     PanToWidget widget;
@@ -180,17 +181,16 @@ public class MTDefaultScene extends AbstractScene
     {
       widget = new PanToWidget();
       widget.activate( mtApp.getCommandTarget(), m_mapPanel );
-
     }
 
     @Override
-    public boolean processGestureEvent( MTGestureEvent g )
+    public boolean processGestureEvent( final MTGestureEvent g )
     {
       if( g instanceof PanEvent )
       {
-        PanEvent dragEvent = (PanEvent) g;
+        final PanEvent dragEvent = (PanEvent) g;
 
-        Vector3D tVect = dragEvent.getTranslationVector();
+        final Vector3D tVect = dragEvent.getTranslationVector();
 
         if( dragEvent.getId() == MTGestureEvent.GESTURE_STARTED )
         {
@@ -205,7 +205,7 @@ public class MTDefaultScene extends AbstractScene
         }
         else
         {
-          Point newPoint = new Point( originalPoint.x + translationVect.x, originalPoint.y + translationVect.y );
+          final Point newPoint = new Point( originalPoint.x + translationVect.x, originalPoint.y + translationVect.y );
           widget.leftReleased( newPoint );
         }
 
@@ -222,30 +222,30 @@ public class MTDefaultScene extends AbstractScene
     double zoomValueAccum;
 
     @Override
-    public boolean processGestureEvent( MTGestureEvent g )
+    public boolean processGestureEvent( final MTGestureEvent g )
     {
       if( g instanceof ZoomEvent )
       {
-        ZoomEvent se = (ZoomEvent) g;
-        float scale = se.getCamZoomAmount();
+        final ZoomEvent se = (ZoomEvent) g;
+        final float scale = se.getCamZoomAmount();
         // System.out.println("X:" + x + " Y:" +y);
 
         // Add a little panning to scale, so if we can pan while we scale
-        InputCursor c1 = se.getFirstCursor();
-        InputCursor c2 = se.getSecondCursor();
+        final InputCursor c1 = se.getFirstCursor();
+        final InputCursor c2 = se.getSecondCursor();
         if( se.getId() == MTGestureEvent.GESTURE_STARTED )
         {
-          Vector3D i1 = c1.getPosition();
-          Vector3D i2 = c2.getPosition();
+          final Vector3D i1 = c1.getPosition();
+          final Vector3D i2 = c2.getPosition();
           lastMiddle = i1.getAdded( i2.getSubtracted( i1 ).scaleLocal( 0.5f ) );
           zoomValueAccum = 0;
         }
         else if( se.getId() == MTGestureEvent.GESTURE_UPDATED )
         {
-          Vector3D i1 = c1.getPosition();
-          Vector3D i2 = c2.getPosition();
-          Vector3D middle = i1.getAdded( i2.getSubtracted( i1 ).scaleLocal( 0.5f ) );
-          Vector3D middleDiff = middle.getSubtracted( lastMiddle );
+          final Vector3D i1 = c1.getPosition();
+          final Vector3D i2 = c2.getPosition();
+          final Vector3D middle = i1.getAdded( i2.getSubtracted( i1 ).scaleLocal( 0.5f ) );
+          // final Vector3D middleDiff = middle.getSubtracted( lastMiddle );
           // moveMap((int)middleDiff.x, (int)middleDiff.y);
           lastMiddle = middle;
           zoomValueAccum += scale;
@@ -281,9 +281,9 @@ public class MTDefaultScene extends AbstractScene
           final double gisY1 = gisMY - gisDY;
           final double gisY2 = gisMY + gisDY;
 
-          GM_Envelope zoomBox = GeometryFactory.createGM_Envelope( gisX1, gisY1, gisX2, gisY2, m_mapPanel.getMapModell().getCoordinatesSystem() );
+          final GM_Envelope zoomBox = GeometryFactory.createGM_Envelope( gisX1, gisY1, gisX2, gisY2, m_mapPanel.getMapModell().getCoordinatesSystem() );
 
-          ChangeExtentCommand command = new ChangeExtentCommand( m_mapPanel, zoomBox );
+          final ChangeExtentCommand command = new ChangeExtentCommand( m_mapPanel, zoomBox );
           mtApp.getCommandTarget().postCommand( command, null );
           return true;
 
@@ -295,11 +295,11 @@ public class MTDefaultScene extends AbstractScene
 
   public void resetCam( )
   {
-    float w = MT4jSettings.getInstance().windowWidth;
-    float h = MT4jSettings.getInstance().windowHeight;
+    final float w = MT4jSettings.getInstance().windowWidth;
+    final float h = MT4jSettings.getInstance().windowHeight;
 
-    Vector3D camPos = new Vector3D( w / 2.0f, h / 2.0f, (h / 2.0f) / PApplet.tan( PApplet.PI * 60.0f / 360.0f ) );
-    Vector3D viewCenterPos = new Vector3D( w / 2.0f, h / 2.0f, 0 );
+    final Vector3D camPos = new Vector3D( w / 2.0f, h / 2.0f, (h / 2.0f) / PApplet.tan( PApplet.PI * 60.0f / 360.0f ) );
+    final Vector3D viewCenterPos = new Vector3D( w / 2.0f, h / 2.0f, 0 );
 
     getSceneCam().setPosition( camPos );
     getSceneCam().setViewCenterPos( viewCenterPos );
@@ -315,8 +315,8 @@ public class MTDefaultScene extends AbstractScene
 
   public void resizeComponents( )
   {
-    float w = MT4jSettings.getInstance().windowWidth;
-    float h = MT4jSettings.getInstance().windowHeight;
+    final float w = MT4jSettings.getInstance().windowWidth;
+    final float h = MT4jSettings.getInstance().windowHeight;
 
     m_rect.setSizeLocal( w, h );
   }

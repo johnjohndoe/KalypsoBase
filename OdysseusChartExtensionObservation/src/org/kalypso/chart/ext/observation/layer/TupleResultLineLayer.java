@@ -95,17 +95,10 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
     return RectangleUtils.buffer( screen );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getLegendEntries()
-   */
   @Override
   public synchronized ILegendEntry[] getLegendEntries( )
   {
-    // supress PointStyle LegendEntry if LineStyle is visible
-    final ILegendEntry[] le = super.getLegendEntries();
-    if( le.length < 2 )
-      return le;
-    return new ILegendEntry[] { le[0] };
+    return super.getLegendEntries();
   }
 
   public IObservation<TupleResult> getObservation( )
@@ -115,9 +108,6 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
     return getValueData().getObservation();
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
-   */
   @Override
   public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
   {

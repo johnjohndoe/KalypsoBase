@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.ui.view.chart;
 
 import java.awt.geom.Point2D;
 
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.java.lang.Objects;
@@ -456,12 +455,6 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     {
       getEventHandler().fireLayerContentChanged( this );
     }
-  }
-
-  @Override
-  public void paint( final GC gc )
-  {
-    // override this method
   }
 
   @Override

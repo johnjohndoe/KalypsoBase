@@ -86,8 +86,6 @@ public class SldLoader extends AbstractLoader implements ISaveUrnLoader
 
   private I18NBundle m_resourceBundle;
 
-  private IResource[] m_resources = new IResource[] {};
-
   @Override
   public String getDescription( )
   {
@@ -218,18 +216,8 @@ public class SldLoader extends AbstractLoader implements ISaveUrnLoader
   private Object loadFromUrl( final URL sldLocation, final URL resourceLocation ) throws IOException, XMLParsingException
   {
     final Object element = SLDFactory.readSLD( sldLocation );
-    setResources( sldLocation );
     loadResourceBundle( resourceLocation );
     return element;
-  }
-
-  private void setResources( final URL sldLocation )
-  {
-    final IResource resource = ResourceUtilities.findFileFromURL( sldLocation );
-    if( resource == null )
-      m_resources = new IResource[] {};
-    else
-      m_resources = new IResource[] { resource };
   }
 
   @Override
@@ -288,9 +276,6 @@ public class SldLoader extends AbstractLoader implements ISaveUrnLoader
       /* Really save to this location */
       final String sldXMLwithHeader = SLDFactory.marshallObject( data, CharEncoding.UTF_8 );
       FileUtils.writeStringToFile( userFile, sldXMLwithHeader, CharEncoding.UTF_8 );
-
-      /* Just for formal reasons, should already be empty */
-      setResources( null );
     }
     catch( final IOException e )
     {
@@ -305,9 +290,18 @@ public class SldLoader extends AbstractLoader implements ISaveUrnLoader
   }
 
   @Override
-  public IResource[] getResourcesInternal( final IPoolableObjectType key )
+  public IResource[] getResourcesInternal( final IPoolableObjectType key ) throws MalformedURLException
   {
-    return m_resources;
+    final String source = key.getLocation();
+    final URL context = key.getContext();
+
+    if( CatalogUtilities.isCatalogResource( source ) )
+      return new IResource[0];
+
+    /* Local url */
+    final URL sldLocation = m_urlResolver.resolveURL( context, source );
+    final IResource resource = ResourceUtilities.findFileFromURL( sldLocation );
+    return new IResource[] { resource };
   }
 
   @Override

@@ -1,6 +1,7 @@
 package de.openali.odysseus.chart.ext.base.layer;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.swt.graphics.GC;
@@ -11,6 +12,7 @@ import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
+import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
@@ -22,47 +24,64 @@ import de.openali.odysseus.chart.framework.model.style.IStyleSet;
  */
 public abstract class AbstractLineLayer extends AbstractChartLayer
 {
+  /**
+   * Layer parameter selecting the mode how the legend symbol is painted. LEGEND_MODE_ constants for possible values.
+   */
+  private static final String PARAMETER_LEGEND_MODE = "legendMode"; //$NON-NLS-1$
+
+  /** Possible value for for parameter 'legendMode': only draw the line symbol (default) */
+  static final String LEGEND_MODE_LINE = "line";
+
+  /** Possible value for for parameter 'legendMode': only draw the point symbol */
+  static final String LEGEND_MODE_POINT = "point";
+
+  /** Possible value for for parameter 'legendMode': draw both (line and point) symbols */
+  static final String LEGEND_MODE_BOTH = "line&point";
+
   private ILegendEntry[] m_legendEntries;
+
+  private final String m_legendMode;
 
   public AbstractLineLayer( final ILayerProvider provider, final IStyleSet styleSet )
   {
     super( provider, styleSet );
+
+    final IParameterContainer parameterContainer = provider.getParameterContainer();
+    m_legendMode = parameterContainer.getParameterValue( PARAMETER_LEGEND_MODE, LEGEND_MODE_LINE );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.factory.layer.AbstractChartLayer#getLegendEntries()
-   */
   @Override
   public synchronized ILegendEntry[] getLegendEntries( )
   {
-
     if( ArrayUtils.isEmpty( m_legendEntries ) )
-    {
       m_legendEntries = createLegendEntries();
-    }
+
     return m_legendEntries;
   }
 
   private ILegendEntry[] createLegendEntries( )
   {
-    final ArrayList<ILegendEntry> entries = new ArrayList<ILegendEntry>();
     final ILineStyle ls = getLineStyle();
     final IPointStyle ps = getPointStyle();
 
-    if( ls == null || ps == null || ls.isVisible() || ps.isVisible() )
+    // REMARK: backwards compatibility: no legend entry if no visible style is present.
+    if( (ls == null || !ls.isVisible()) && (ps == null || !ps.isVisible()) )
+      return new ILegendEntry[0];
+
+    final String legendMode = m_legendMode;
+
+    final LegendEntry le = new LegendEntry( this, getTitle() )
     {
-
-      final LegendEntry le = new LegendEntry( this, getTitle() )
+      @Override
+      public void paintSymbol( final GC gc, final Point size )
       {
-
-        @Override
-        @SuppressWarnings("synthetic-access")
-        public void paintSymbol( final GC gc, final Point size )
+        /* Line Symbol */
+        if( ls.isVisible() && legendMode.contains( LEGEND_MODE_LINE ) )
         {
           final int sizeX = size.x;
           final int sizeY = size.y;
 
-          final ArrayList<Point> path = new ArrayList<Point>();
+          final List<Point> path = new ArrayList<Point>();
           path.add( new Point( 0, sizeX / 2 ) );
           path.add( new Point( sizeX / 5, sizeY / 2 ) );
           path.add( new Point( sizeX / 5 * 2, sizeY / 4 ) );
@@ -70,32 +89,45 @@ public abstract class AbstractLineLayer extends AbstractChartLayer
           path.add( new Point( sizeX / 5 * 4, sizeY / 2 ) );
           path.add( new Point( sizeX, sizeY / 2 ) );
 
-          drawIcon( gc, size );
+          drawLine( gc, path );
         }
 
-      };
-      entries.add( le );
+        if( ps.isVisible() && legendMode.contains( LEGEND_MODE_POINT ) )
+        {
+          final List<Point> path = new ArrayList<Point>();
+          path.add( new Point( size.x / 2, size.y / 2 ) );
 
-    }
+          drawPoints( gc, path );
+        }
+      }
+    };
 
-    return entries.toArray( new ILegendEntry[] {} );
+    return new ILegendEntry[] { le };
   }
 
-  private void drawIcon( final GC gc, final Point size )
+  // FIXME: give Point[] instead of List<Point>
+  protected void drawLine( final GC gc, final List<Point> path )
   {
-    final ArrayList<Point> path = new ArrayList<Point>();
+    drawLine( gc, path.toArray( new Point[] {} ) );
+  }
 
-    path.add( new Point( 0, size.y / 2 ) );
-    path.add( new Point( size.x / 5, size.y / 2 ) );
-    path.add( new Point( size.x / 5 * 2, size.y / 4 ) );
-    path.add( new Point( size.x / 5 * 3, size.y / 4 * 3 ) );
-    path.add( new Point( size.x / 5 * 4, size.y / 2 ) );
-    path.add( new Point( size.x, size.y / 2 ) );
-    final ILineStyle ls = getLineStyle();
-    final PolylineFigure lf = new PolylineFigure();
-    lf.setStyle( ls );
-    lf.setPoints( path.toArray( new Point[] {} ) );
+  protected void drawLine( final GC gc, final Point... paths )
+  {
+    final PolylineFigure lf = getPolyLineFigure();
+    lf.setPoints( paths );
     lf.paint( gc );
+  }
+
+  protected void drawPoints( final GC gc, final List<Point> path )
+  {
+    drawPoints( gc, path.toArray( new Point[] {} ) );
+  }
+
+  protected void drawPoints( final GC gc, final Point... paths )
+  {
+    final PointFigure pf = getPointFigure();
+    pf.setPoints( paths );
+    pf.paint( gc );
   }
 
   protected final ILineStyle getLineStyle( )
@@ -143,5 +175,4 @@ public abstract class AbstractLineLayer extends AbstractChartLayer
     pf.setPoints( points );
     pf.paint( gc );
   }
-
 }
