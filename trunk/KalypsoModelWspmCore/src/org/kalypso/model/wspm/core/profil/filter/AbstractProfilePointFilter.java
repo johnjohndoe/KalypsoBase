@@ -60,46 +60,30 @@ public abstract class AbstractProfilePointFilter implements IProfilePointFilter,
 
   private String m_usageHint;
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#getId()
-   */
   @Override
   public String getId( )
   {
     return m_id;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#getName()
-   */
   @Override
   public String getName( )
   {
     return m_name;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#getDescription()
-   */
   @Override
   public String getDescription( )
   {
     return m_description;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter#getUsageHint()
-   */
   @Override
   public String getUsageHint( )
   {
     return m_usageHint;
   }
 
-  /**
-   * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
-   *      java.lang.String, java.lang.Object)
-   */
   @Override
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
@@ -120,6 +104,10 @@ public abstract class AbstractProfilePointFilter implements IProfilePointFilter,
 
     final int leftPointIndex = ArrayUtils.indexOf( points, leftPoint );
     final int rightPointIndex = ArrayUtils.indexOf( points, rightPoint );
+
+    /** Never accepts points if left and right marker are at the same position. There is no 'between' then */
+    if( leftPointIndex == rightPointIndex )
+      return false;
 
     final int index = ArrayUtils.indexOf( points, point );
 

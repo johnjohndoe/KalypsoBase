@@ -63,6 +63,7 @@ import org.eclipse.ui.internal.ObjectActionContributorManager;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.swt.events.SWTAWT_ContextMenuMouseAdapter;
 import org.kalypso.i18n.Messages;
+import org.kalypso.mt.MTMapPanelApp;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -91,6 +92,20 @@ public class MapPartHelper
     final Composite mapComposite = new Composite( parent, style | SWT.EMBEDDED | SWT.NO_BACKGROUND );
     mapComposite.setLayoutData( layoutData );
     final Frame virtualFrame = SWT_AWT.new_Frame( mapComposite );
+
+    if( mapPanel.isMultitouchEnabled() )
+    {
+      MTMapPanelApp mtApp = new MTMapPanelApp( virtualFrame, mapPanel, mapComposite.handle, commandTarget );
+      mtApp.init();
+
+      mapPanel.setMTObject( mtApp );
+
+      virtualFrame.add( mtApp );
+    }
+
+    // the order of addition of the frames is very important
+    // the virtual "old" mapPanel has to be added after the
+    // multitouch renderer, otherwise it will not work
     virtualFrame.add( mapPanel );
     return mapPanel;
   }

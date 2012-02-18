@@ -6,6 +6,10 @@ import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.swt.graphics.Point;
 
+import com.vividsolutions.jts.geom.Coordinate;
+
+import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
+
 public final class FigureUtilities
 {
   private FigureUtilities( )
@@ -172,4 +176,16 @@ public final class FigureUtilities
     return new Point( maxX, maxY );
   }
 
+  public static Point[] numericToScreen( final ICoordinateMapper coordinateMapper, final Coordinate[] coords )
+  {
+    final Point[] points = new Point[coords.length];
+
+    for( int i = 0; i < points.length; i++ )
+    {
+      final Coordinate crd = coords[i];
+      points[i] = coordinateMapper.numericToScreen( crd.x, crd.y );
+    }
+
+    return points;
+  }
 }

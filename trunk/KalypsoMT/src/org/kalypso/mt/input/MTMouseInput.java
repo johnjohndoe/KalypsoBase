@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.mt.input;
 
@@ -71,15 +71,15 @@ public class MTMouseInput extends AbstractInputSource implements MouseMotionList
 
   private static final double MT_FAKE_MOUSE_CLICK_DISTANCE = 20;
 
-  private ArrayDeque<MTMouseEventData> eventQueue = new ArrayDeque<MTMouseInput.MTMouseEventData>();
+  private final ArrayDeque<MTMouseEventData> eventQueue = new ArrayDeque<MTMouseInput.MTMouseEventData>();
 
-  private WidgetManager m_mgr;
+  private final WidgetManager m_mgr;
 
   int m_mouseBlocks = 0;
 
   int invocCounter = 0;
 
-  private AbstractMTApplication mtApp;
+  private final AbstractMTApplication mtApp;
 
   boolean m_fakeMousePressed = false;
 
@@ -90,11 +90,11 @@ public class MTMouseInput extends AbstractInputSource implements MouseMotionList
   // make singleton
   /**
    * Instantiates a new mouse input source.
-   * 
+   *
    * @param pa
    *          the pa
    */
-  public MTMouseInput( AbstractMTApplication pa, WidgetManager mgr )
+  public MTMouseInput( final AbstractMTApplication pa, final WidgetManager mgr )
   {
     super( pa );
     mtApp = pa;
@@ -109,11 +109,11 @@ public class MTMouseInput extends AbstractInputSource implements MouseMotionList
 
   /**
    * Mouse event.
-   * 
+   *
    * @param event
    *          the event
    */
-  public void mouseEvent( MouseEvent event )
+  public void mouseEvent( final MouseEvent event )
   {
 // /*
     if( isMouseBlocked() )
@@ -121,7 +121,7 @@ public class MTMouseInput extends AbstractInputSource implements MouseMotionList
       return;
     }
 
-    MTMouseEventData qEv = new MTMouseEventData();
+    final MTMouseEventData qEv = new MTMouseEventData();
     qEv.event = event;
     qEv.timestamp = System.currentTimeMillis();
 
@@ -142,15 +142,15 @@ public class MTMouseInput extends AbstractInputSource implements MouseMotionList
     }
 
     // otherwise process events
-    long time = System.currentTimeMillis();
+    final long time = System.currentTimeMillis();
     while( !eventQueue.isEmpty() )
     {
-      long dist = time - eventQueue.peekFirst().timestamp;
+      final long dist = time - eventQueue.peekFirst().timestamp;
 
       if( dist > 200 )
       {
         // ok, process this one
-        MTMouseEventData e = eventQueue.pollFirst();
+        final MTMouseEventData e = eventQueue.pollFirst();
         switch( e.event.getID() )
         {
           case MouseEvent.MOUSE_PRESSED:
@@ -185,7 +185,7 @@ public class MTMouseInput extends AbstractInputSource implements MouseMotionList
    * @see java.awt.event.MouseMotionListener#mouseDragged(java.awt.event.MouseEvent)
    */
   @Override
-  public void mouseDragged( MouseEvent e )
+  public void mouseDragged( final MouseEvent e )
   {
     m_mgr.mouseDragged( e );
   }
@@ -194,7 +194,7 @@ public class MTMouseInput extends AbstractInputSource implements MouseMotionList
    * @see java.awt.event.MouseMotionListener#mouseMoved(java.awt.event.MouseEvent)
    */
   @Override
-  public void mouseMoved( MouseEvent e )
+  public void mouseMoved( final MouseEvent e )
   {
     m_mgr.mouseMoved( e );
   }
@@ -203,7 +203,7 @@ public class MTMouseInput extends AbstractInputSource implements MouseMotionList
    * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
    */
   @Override
-  public void mouseClicked( MouseEvent e )
+  public void mouseClicked( final MouseEvent e )
   {
     m_mgr.mouseClicked( e );
   }
@@ -212,7 +212,7 @@ public class MTMouseInput extends AbstractInputSource implements MouseMotionList
    * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
    */
   @Override
-  public void mouseEntered( MouseEvent e )
+  public void mouseEntered( final MouseEvent e )
   {
     m_mgr.mouseEntered( e );
   }
@@ -221,7 +221,7 @@ public class MTMouseInput extends AbstractInputSource implements MouseMotionList
    * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
    */
   @Override
-  public void mouseExited( MouseEvent e )
+  public void mouseExited( final MouseEvent e )
   {
     m_mgr.mouseExited( e );
   }
@@ -230,7 +230,7 @@ public class MTMouseInput extends AbstractInputSource implements MouseMotionList
    * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
    */
   @Override
-  public void mousePressed( MouseEvent e )
+  public void mousePressed( final MouseEvent e )
   {
     m_mgr.mousePressed( e );
   }
@@ -239,12 +239,12 @@ public class MTMouseInput extends AbstractInputSource implements MouseMotionList
    * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
    */
   @Override
-  public void mouseReleased( MouseEvent e )
+  public void mouseReleased( final MouseEvent e )
   {
     m_mgr.mouseReleased( e );
   }
 
-  public void setMouseBlocked( boolean blockMouse )
+  public void setMouseBlocked( final boolean blockMouse )
   {
     if( blockMouse )
       m_mouseBlocks++;
@@ -263,13 +263,16 @@ public class MTMouseInput extends AbstractInputSource implements MouseMotionList
     return false;
   }
 
-  public void fakeMousePress( Vector3D position )
+  public void fakeMousePress( final Vector3D position )
   {
     m_fakeMousePressed = true;
 
+    // FIXME: currently, the active widget is not known, but there is a list of active widgets instead. discuss with
+    // Dirk how to handle this
+
     if( m_mgr.getActualWidget() != null )
     {
-      Point p = new Point( (int) position.x, (int) position.y );
+      final Point p = new Point( (int) position.x, (int) position.y );
       m_fakeMousePressPos = p;
       m_mgr.getActualWidget().leftPressed( p );
     }
@@ -279,31 +282,31 @@ public class MTMouseInput extends AbstractInputSource implements MouseMotionList
     }
   }
 
-  public void fakeMouseMove( Vector3D position )
+  public void fakeMouseMove( final Vector3D position )
   {
     if( m_mgr.getActualWidget() != null )
     {
       if (m_fakeDrag)
           m_mgr.getActualWidget().dragged( new Point( (int) position.x, (int) position.y ) );
-        else 
+        else
           m_mgr.getActualWidget().moved( new Point( (int) position.x, (int) position.y ) );
     }
   }
 
-  public void fakeMouseRelease( Vector3D position )
+  public void fakeMouseRelease( final Vector3D position )
   {
     setFakeDrag( false );
-    
+
     if( !m_fakeMousePressed )
       return;
 
     if( m_mgr.getActualWidget() != null )
     {
-      Point p = new Point( (int) position.x, (int) position.y );
+      final Point p = new Point( (int) position.x, (int) position.y );
       m_mgr.getActualWidget().leftReleased( p );
 
       if ( m_fakeMousePressPos != null ) {
-        double dist = m_fakeMousePressPos.distance( p );
+        final double dist = m_fakeMousePressPos.distance( p );
         if( dist < MT_FAKE_MOUSE_CLICK_DISTANCE )
         {
           m_mgr.getActualWidget().leftClicked( p );
@@ -324,14 +327,14 @@ public class MTMouseInput extends AbstractInputSource implements MouseMotionList
         m_mgr.getActualWidget().leftReleased( null );
 
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
 //        System.out.println( "WIDGET CANCELATION FAILED " + m_mgr.getActualWidget() );
       }
     }
   }
 
-  public void fakeKeyReleased( KeyEvent keyEvent )
+  public void fakeKeyReleased( final KeyEvent keyEvent )
   {
     if( m_mgr.getActualWidget() != null )
     {
@@ -340,7 +343,7 @@ public class MTMouseInput extends AbstractInputSource implements MouseMotionList
         m_mgr.getActualWidget().keyReleased( keyEvent );
         m_mgr.getActualWidget().keyPressed( keyEvent );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
 //        System.out.println( "WIDGET FAKE KEY PRESS FAILED " + m_mgr.getActualWidget() );
       }
@@ -351,7 +354,7 @@ public class MTMouseInput extends AbstractInputSource implements MouseMotionList
 
   }
 
-  public void setFakeDrag( boolean b )
+  public void setFakeDrag( final boolean b )
   {
     m_fakeDrag = b;
   }
