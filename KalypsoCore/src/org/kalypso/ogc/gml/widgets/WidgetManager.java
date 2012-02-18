@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.widgets;
 
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -67,7 +68,7 @@ import org.kalypso.ogc.gml.widgets.base.MouseWheelZoomWidget;
 
 /**
  * widget controller of map view
- * 
+ *
  * @author vdoemming
  * @author Dirk Kuch
  */
@@ -193,9 +194,19 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
   public void mouseEntered( final MouseEvent e )
   {
     final IWidget[] widgets = getWidgets();
+
     for( final IWidget widget : widgets )
     {
-      widget.mouseEntered( e );
+      // so, if the mouse enter event happens already somewhere inside the map panel frame - it's actually a finger tap
+      // event
+      if( isInsideMapFrame( e.getPoint() ) )
+      {
+        // FIXME: leftPressed does not exist any more
+        // if( widget != null )
+        // widget.leftPressed( e.getPoint() );
+      }
+      else
+        widget.mouseEntered( e );
 
       if( e.isConsumed() )
         return;
@@ -206,9 +217,19 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
   public void mouseExited( final MouseEvent e )
   {
     final IWidget[] widgets = getWidgets();
+
     for( final IWidget widget : widgets )
     {
-      widget.mouseExited( e );
+      // so, if the mouse enter event happens already somewhere inside the map panel frame - it's actually a finger tap
+      // event
+      if( isInsideMapFrame( e.getPoint() ) )
+      {
+        // FIXME: leftReleased does not exist any more
+        // if( widget != null )
+        // widget.leftReleased( e.getPoint() );
+      }
+      else
+        widget.mouseExited( e );
 
       if( e.isConsumed() )
         return;
@@ -400,5 +421,16 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
     }
 
     fireWidgetChangeEvent( null );
+  }
+
+  protected boolean isInsideMapFrame( final Point p )
+  {
+    // FIXME: at least comment: where does this THRESHOLD come from?
+    final int THRESHOLD = 35; // pixel
+
+    if( p.getX() < THRESHOLD || p.getX() > m_mapPanel.getHeight() - THRESHOLD || p.getY() < THRESHOLD || p.getY() > m_mapPanel.getWidth() - THRESHOLD )
+      return false;
+
+    return true;
   }
 }
