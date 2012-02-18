@@ -76,6 +76,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.services.IDisposable;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
@@ -95,6 +96,7 @@ import org.kalypso.ogc.gml.map.layer.CacscadingMapLayer;
 import org.kalypso.ogc.gml.map.layer.DirectMapLayer;
 import org.kalypso.ogc.gml.map.layer.SelectionMapLayer;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
+import org.kalypso.ogc.gml.map.listeners.IMapPanelMTPaintListener;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelPaintListener;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -115,7 +117,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * AWT canvas that displays a {@link org.kalypso.ogc.gml.mapmodel.MapModell}.
- * 
+ *
  * @author Andreas von Dömming
  * @author Gernot Belger
  */
@@ -126,7 +128,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   /**
    * Maximum delay by which repaints to the map are produced.
-   * 
+   *
    * @see java.awt.Component#repaint(long)
    */
   private static final long LAYER_REPAINT_MILLIS = 500;
@@ -137,6 +139,8 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   }
 
   private static final long serialVersionUID = 1L;
+
+  private final boolean m_isMultitouchEnabled;
 
   static
   {
@@ -167,6 +171,8 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   private final Collection<IMapPanelListener> m_mapPanelListeners = Collections.synchronizedSet( new LinkedHashSet<IMapPanelListener>() );
 
   private final Collection<IMapPanelPaintListener> m_paintListeners = Collections.synchronizedSet( new LinkedHashSet<IMapPanelPaintListener>() );
+
+  private final Collection<IMapPanelMTPaintListener> m_postPaintListeners = new HashSet<IMapPanelMTPaintListener>();
 
   private final Map<IKalypsoTheme, IMapLayer> m_layers = Collections.synchronizedMap( new HashMap<IKalypsoTheme, IMapLayer>() );
 
@@ -235,8 +241,24 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   private boolean m_useFullSelection = false;
 
+  private BufferedImage m_imageBuffer = null;
+
+  private IDisposable m_mtObject;
+
+  public BufferedImage getBufferedImage( )
+  {
+    if( m_imageBuffer == null )
+      paint( null );
+    return m_imageBuffer;
+  }
+
   public MapPanel( final ICommandTarget viewCommandTarget, final IFeatureSelectionManager manager )
   {
+    if( "true".equals( System.getProperty( "org.kalypso.ogc.gml.mappanel.multitouch" ) ) )
+      m_isMultitouchEnabled = true;
+    else
+      m_isMultitouchEnabled = false;
+
     m_selectionManager = manager;
     m_selectionManager.addSelectionListener( m_globalSelectionListener );
 
@@ -294,6 +316,11 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     m_mapPanelListeners.add( l );
   }
 
+  public void addPostPaintListener( final IMapPanelMTPaintListener pl )
+  {
+    m_postPaintListeners.add( pl );
+  }
+
   @Override
   public void addPaintListener( final IMapPanelPaintListener pl )
   {
@@ -334,10 +361,14 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
      * Bugfix: this prohibits a repaint, if the window is minimized: we do not repaint, and keep the old size. When the
      * component is shown again, the new size is the old size and we also do not need to paint.
      */
-    final Point locationOnScreen = getLocationOnScreen();
-    // TRICKY: we are minimized, iff the location is lesser than zero. Is there another way to find this out?
-    if( locationOnScreen.x < 0 && locationOnScreen.y < 0 )
-      return;
+
+    // TRICKY: we are minimized, if the location is lesser than zero. Is there another way to find this out?
+    if( !m_isMultitouchEnabled )
+    {
+      final Point locationOnScreen = getLocationOnScreen();
+      if( locationOnScreen.x < 0 && locationOnScreen.y < 0 )
+        return;
+    }
 
     /* Only resize, if size really changed. */
     final Dimension size = getSize();
@@ -370,6 +401,8 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     m_selectionManager.removeSelectionListener( m_globalSelectionListener );
 
     m_widgetManager.dispose();
+
+    m_mtObject.dispose();
 
     setMapModell( null );
 
@@ -464,7 +497,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
           {
             /**
              * Overwritten because opening the message dialog here results in a NPE
-             * 
+             *
              * @see org.eclipse.jface.util.SafeRunnable#handleException(java.lang.Throwable)
              */
             @Override
@@ -503,7 +536,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   /**
    * calculates the current map scale (denominator) as defined in the OGC SLD 1.0.0 specification
-   * 
+   *
    * @return scale of the map
    */
   @Override
@@ -650,7 +683,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
    * <li>all 'paint-listeners'</li>
    * <li>the current widget</li>
    * </ul>
-   * 
+   *
    * @see java.awt.Component#paint(java.awt.Graphics)
    */
   @Override
@@ -661,11 +694,11 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     if( height == 0 || width == 0 )
       return;
 
-    final BufferedImage buffer = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
+    m_imageBuffer = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
     Graphics2D bufferGraphics = null;
     try
     {
-      bufferGraphics = buffer.createGraphics();
+      bufferGraphics = m_imageBuffer.createGraphics();
       bufferGraphics.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
       bufferGraphics.setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
 
@@ -691,7 +724,16 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
         bufferGraphics.dispose();
     }
 
-    g.drawImage( buffer, 0, 0, null );
+    if( m_isMultitouchEnabled )
+    {
+      final IMapPanelMTPaintListener[] postls = m_postPaintListeners.toArray( new IMapPanelMTPaintListener[] {} );
+      for( final IMapPanelMTPaintListener pl : postls )
+        pl.paint( m_imageBuffer );
+    }
+    else
+    {
+      g.drawImage( m_imageBuffer, 0, 0, null );
+    }
   }
 
   private void paintBufferedMap( final Graphics2D bufferGraphics, final BufferPaintJob bufferPaintJob )
@@ -795,7 +837,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   /**
    * This function sets the bounding box to this map panel and all its themes.
-   * 
+   *
    * @param wishBBox
    *          The new extent, will be adapted so it fits into the current size of the panel.
    */
@@ -1119,5 +1161,22 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
       setBoundingBox( m_wishBBox, false, true );
 
     updateStatus();
+  }
+
+  @Override
+  public boolean isMultitouchEnabled( )
+  {
+    return m_isMultitouchEnabled;
+  }
+
+  public void setMTObject( final IDisposable mtApp )
+  {
+    m_mtObject = mtApp;
+  }
+
+  @Override
+  public Object getMTObject( )
+  {
+    return m_mtObject;
   }
 }

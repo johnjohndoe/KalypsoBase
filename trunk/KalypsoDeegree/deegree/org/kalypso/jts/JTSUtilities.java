@@ -300,11 +300,11 @@ public final class JTSUtilities
    * @param lineJTS
    *          The line string on which the point has to be.
    * @param percent
-   *          The distance in percent at which the point should be placed on the line.
+   *          The distance in percent at which the point should be placed on the line as Int(!)
    * @return The newly created point on the line or null, if something was wrong. Returns the start point or the end
    *         point if percentage is 0 or 100.
    */
-  public static Point pointOnLinePercent( final LineString lineJTS, final int percent )
+  public static Point pointOnLinePercent( final LineString lineJTS, final double percent )
   {
     if( percent < 0 || percent > 100 )
       return null;
@@ -321,6 +321,7 @@ public final class JTSUtilities
     return pointOnLine( lineJTS, distance );
   }
 
+  
   /**
    * This function creates a line segment (JTS) of a line from a given start point to an end point, including all points
    * on the given line.<br>
@@ -702,10 +703,10 @@ public final class JTSUtilities
 
       area += (b.y - a.y) * (a.x - c.x) // bounding rectangle
 
-          - ((a.x - b.x) * (b.y - a.y)//
-              + (b.x - c.x) * (b.y - c.y)//
+      - ((a.x - b.x) * (b.y - a.y)//
+          + (b.x - c.x) * (b.y - c.y)//
           + (a.x - c.x) * (c.y - a.y)//
-          ) / 2d;
+      ) / 2d;
     }
 
     return area;
@@ -833,6 +834,7 @@ public final class JTSUtilities
    *          The definition at what length along the curve a point should be inserted.
    * @return The coordinates of the calculated points on the line.
    */
+  // TODO: check: probably we could use Densify of JTS instead
   public static Coordinate[] calculatePointsOnLine( final LineString curve, final double distance )
   {
     /* The length of the line. */

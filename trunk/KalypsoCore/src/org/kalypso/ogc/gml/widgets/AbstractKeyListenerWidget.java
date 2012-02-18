@@ -57,12 +57,12 @@ import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 /**
  * Includes a MapView KeyListener
- * 
+ *
  * <pre>
  * Actions:
  *  ESCAPE - Deactivate current widget
  * </pre>
- * 
+ *
  * @author Dirk Kuch
  */
 public abstract class AbstractKeyListenerWidget extends DeprecatedMouseWidget
@@ -90,7 +90,7 @@ public abstract class AbstractKeyListenerWidget extends DeprecatedMouseWidget
 
   /**
    * Resets the widget, must be reinitialized before it can be used again.
-   * 
+   *
    * @see #init(Feature, CommandableWorkspace)
    */
   protected void reset( )
