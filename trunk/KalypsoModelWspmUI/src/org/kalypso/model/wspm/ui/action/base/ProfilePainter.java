@@ -101,7 +101,10 @@ public final class ProfilePainter
       try
       {
         final URL sld = provider.getSld( marker.getComponent().getId() );
-        painter.paint( g, sld, marker.getPoint().getCoordinate() );
+        final Coordinate coordinate = marker.getPoint().getCoordinate();
+        if( coordinate != null )
+          painter.paint( g, sld, coordinate );
+        // TODO: interpolate coordinate if coordinate of marker point is not there
       }
       catch( final CoreException e )
       {
@@ -125,6 +128,8 @@ public final class ProfilePainter
         return;
 
       final Coordinate position = Profiles.getJtsPosition( profile, cursor );
+      if( position == null )
+        return;
 
       if( isVertexPoint( profileFeature.getJtsLine(), position ) )
         painter.paint( g, sldVertexPoint, position ); //$NON-NLS-1$

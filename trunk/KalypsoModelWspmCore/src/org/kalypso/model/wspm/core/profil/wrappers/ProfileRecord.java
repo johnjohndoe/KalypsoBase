@@ -207,6 +207,9 @@ public class ProfileRecord extends AbstractRecordWrapper implements IProfileReco
     if( Doubles.isNaN( x, y ) )
       return null;
 
+    if( z == null )
+      return new Coordinate( x, y, Double.NaN );
+
     return new Coordinate( x, y, z );
   }
 

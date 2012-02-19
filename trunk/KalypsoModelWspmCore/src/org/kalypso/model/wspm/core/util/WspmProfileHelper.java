@@ -90,7 +90,7 @@ public final class WspmProfileHelper
    * <li>The points of the segment with the lowest distance will be used for projection.</li>
    * </ol>
    * </p>
-   * 
+   *
    * @param point
    *          The geo point, must be in the same coordinate system as the profile is. It does not have to lie on the
    *          profile.
@@ -154,7 +154,7 @@ public final class WspmProfileHelper
    * <li>The points of the segment with the lowest distance will be used for projection.</li>
    * </ol>
    * </p>
-   * 
+   *
    * @param geoPoint
    *          The geo point. It does not have to lie on the profile.
    * @param profile
@@ -277,7 +277,7 @@ public final class WspmProfileHelper
 
   /**
    * returns the geographic coordinates (x, y, z) for a given width coordinate as GM_Point.
-   * 
+   *
    * @param width
    *          width coordinate
    * @param profile
@@ -298,7 +298,7 @@ public final class WspmProfileHelper
 
   /**
    * This function returns the geographic coordinates (x, y, z) for a given width coordinate as GM_Point.
-   * 
+   *
    * @param width
    *          The width coordinate.
    * @param profile
@@ -325,13 +325,17 @@ public final class WspmProfileHelper
       /* We need a line string of the two neighbouring points. */
       final IRecord tempPointOne = geoReferencedPoints[i];
       final Double widthValueOne = (Double) tempPointOne.getValue( iBreite );
-      final Double heigthValueOne = (Double) tempPointOne.getValue( iHoehe );
+      final Double heightValueOne = (Double) tempPointOne.getValue( iHoehe );
+      final double heightOne = heightValueOne == null ? Double.NaN : heightValueOne;
+
       final Double rechtsWertOne = (Double) tempPointOne.getValue( iRechtswert );
       final Double hochWertOne = (Double) tempPointOne.getValue( iHochwert );
 
       final IRecord tempPointTwo = geoReferencedPoints[i + 1];
       final Double widthValueTwo = (Double) tempPointTwo.getValue( iBreite );
-      final Double heigthValueTwo = (Double) tempPointTwo.getValue( iHoehe );
+      final Double heightValueTwo = (Double) tempPointTwo.getValue( iHoehe );
+      final double heightTwo = heightValueTwo == null ? Double.NaN : heightValueTwo;
+
       final Double rechtsWertTwo = (Double) tempPointTwo.getValue( iRechtswert );
       final Double hochWertTwo = (Double) tempPointTwo.getValue( iHochwert );
 
@@ -343,16 +347,17 @@ public final class WspmProfileHelper
         final double delta = widthValueTwo - widthValueOne;
         final double x = deltaOne * (rechtsWertTwo - rechtsWertOne) / delta + rechtsWertOne;
         final double y = deltaOne * (hochWertTwo - hochWertOne) / delta + hochWertOne;
-        final double z = deltaOne * (heigthValueTwo - heigthValueOne) / delta + heigthValueOne;
+
+        final double z = deltaOne * (heightTwo - heightOne) / delta + heightOne;
 
         return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( x, y, z, srsName );
       }
 
       /* If the point is lying on the start point of the segment. */
       else if( widthValueOne == width )
-        return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( rechtsWertOne, hochWertOne, heigthValueOne, srsName );
+        return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( rechtsWertOne, hochWertOne, heightOne, srsName );
       else if( widthValueTwo == width )
-        return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( rechtsWertTwo, hochWertTwo, heigthValueTwo, srsName );
+        return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Point( rechtsWertTwo, hochWertTwo, heightTwo, srsName );
     }
 
     return null;
@@ -362,7 +367,7 @@ public final class WspmProfileHelper
    * Returns the corresponding height for an given width coordinate. if the width is outside of the profile points, the
    * first / last point height is returned. Else the height is obtained by linear interpolation between the adjacent
    * profile points.
-   * 
+   *
    * @param width
    *          width coordinate
    * @param profile
@@ -378,7 +383,7 @@ public final class WspmProfileHelper
    * Returns the corresponding value for an given width coordinate. if the width is outside the valid range of profile
    * points, the first / last value is returned. Else the value is obtained by linear interpolation between the adjacent
    * profile points.
-   * 
+   *
    * @param width
    *          width coordinate
    * @param profile
@@ -466,7 +471,7 @@ public final class WspmProfileHelper
 
   /**
    * gets the geo-points of the intersect between profile and water level
-   * 
+   *
    * @param profil
    *          input profile
    * @param wspHoehe
@@ -509,7 +514,7 @@ public final class WspmProfileHelper
 
   /**
    * calculates the water level segments as pairs of x-coordinates.
-   * 
+   *
    * @deprecated does not always return correct results. Use {@link WaterlevelIntersectionWorker} instead.
    */
   @Deprecated
@@ -615,7 +620,7 @@ public final class WspmProfileHelper
 
   /**
    * cuts an IProfil at defined geo-points, that have to lie on the profile-line.
-   * 
+   *
    * @param profile
    *          the profile
    * @param firstPoint

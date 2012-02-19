@@ -129,17 +129,22 @@ public final class Profiles
   public static double getHoehe( final IProfil profile, final Double width )
   {
     final IProfileRecord before = profile.findPreviousPoint( width );
-    final IProfileRecord after = profile.findNextPoint( width );
-    if( Objects.isNull( before, after ) )
+    final IProfileRecord next = profile.findNextPoint( width );
+    if( Objects.isNull( before, next ) )
       return 0.0;
 
-    final double deltaH = after.getHoehe() - before.getHoehe();
-    final double distanceDeltaH = Math.abs( before.getBreite() - after.getBreite() );
+    final Double hoeheBefore = before.getHoehe();
+    final Double hoeheNext = next.getHoehe();
+    if( Objects.isNull( hoeheBefore, hoeheNext ) )
+      return 0.0;
+
+    final double deltaH = hoeheNext - hoeheBefore;
+    final double distanceDeltaH = Math.abs( before.getBreite() - next.getBreite() );
 
     final double distance = Math.abs( before.getBreite() - width );
     final double hoehe = deltaH / distanceDeltaH * distance;
 
-    return before.getHoehe() + hoehe;
+    return hoeheBefore + hoehe;
   }
 
   public static double getWidth( final IProfil profile, final Point point ) throws GM_Exception
