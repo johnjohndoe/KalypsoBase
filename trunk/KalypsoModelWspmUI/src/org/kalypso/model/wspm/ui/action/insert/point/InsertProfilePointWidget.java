@@ -61,7 +61,7 @@ import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.model.wspm.ui.action.base.AbstractProfileWidget;
 import org.kalypso.model.wspm.ui.action.base.ProfilePainter;
 import org.kalypso.model.wspm.ui.action.base.ProfileWidgetMapPanelListener;
-import org.kalypso.model.wspm.ui.i18n.Messages;
+import org.kalypso.model.wspm.ui.i18n.CommonMessages;
 import org.kalypso.observation.result.IInterpolationHandler;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -135,8 +135,8 @@ public class InsertProfilePointWidget extends AbstractProfileWidget
       if( Objects.isNull( before, next ) )
         return;
 
-      final String message = String.format( Messages.INSERT_POINT_CONFIRM, cursor );
-      if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( Messages.INSERT_POINT_TITLE, message ) )
+      final String message = String.format( CommonMessages.INSERT_POINT_CONFIRM, cursor );
+      if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( CommonMessages.INSERT_POINT_TITLE, message ) )
         return;
 
       final double distance = (cursor - before.getBreite()) / (next.getBreite() - before.getBreite());
@@ -223,7 +223,7 @@ public class InsertProfilePointWidget extends AbstractProfileWidget
       return null;
 
     final double hoehe = Profiles.getHoehe( profile, cursor );
-    return String.format( Messages.INSERT_POINT_TOOLTIP, cursor, hoehe ); //$NON-NLS-1$
+    return String.format( CommonMessages.INSERT_POINT_TOOLTIP, cursor, hoehe ); //$NON-NLS-1$
   }
 
   @Override

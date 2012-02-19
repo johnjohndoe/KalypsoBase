@@ -59,7 +59,7 @@ import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.core.profil.visitors.FindClosestPointVisitor;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
-import org.kalypso.model.wspm.ui.i18n.Messages;
+import org.kalypso.model.wspm.ui.i18n.CommonMessages;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.observation.result.IInterpolationHandler;
 import org.kalypso.observation.result.TupleResult;
@@ -109,7 +109,7 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
       final double hoehe = Profiles.getHoehe( getProfile(), getBreite() );
       position.y = mapper.getTargetAxis().numericToScreen( hoehe );
 
-      final String msg = String.format( Messages.INSERT_POINT_TOOLTIP, getBreite(), hoehe ); //$NON-NLS-1$
+      final String msg = String.format( CommonMessages.INSERT_POINT_TOOLTIP, getBreite(), hoehe ); //$NON-NLS-1$
 
       // TODO: hide tooltip if mouse is not in chart
 
@@ -163,8 +163,8 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
 
     /* Ask user */
     final Shell shell = ((Composite) getChart()).getShell();
-    final String message = String.format( Messages.INSERT_POINT_CONFIRM, cursor );
-    if( !MessageDialog.openConfirm( shell, Messages.INSERT_POINT_TITLE, message ) )
+    final String message = String.format( CommonMessages.INSERT_POINT_CONFIRM, cursor );
+    if( !MessageDialog.openConfirm( shell, CommonMessages.INSERT_POINT_TITLE, message ) )
       return;
 
     final double distance = (cursor - before.getBreite()) / (next.getBreite() - before.getBreite());

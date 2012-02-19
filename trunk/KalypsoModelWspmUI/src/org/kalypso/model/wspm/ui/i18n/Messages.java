@@ -55,13 +55,6 @@ public final class Messages
 
   private static final Object[] NO_ARGS = new Object[0];
 
-  /* Some commonly used string */
-  public static final String INSERT_POINT_TITLE = "Insert Point";
-
-  public static final String INSERT_POINT_CONFIRM = "Insert point at width = %.4f m?";
-
-  public static final String INSERT_POINT_TOOLTIP = getString( "InsertProfilePointChartHandler_0" );
-
   private Messages( )
   {
   }
