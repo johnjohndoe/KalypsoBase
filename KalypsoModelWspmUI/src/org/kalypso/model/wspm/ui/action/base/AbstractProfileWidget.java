@@ -178,7 +178,8 @@ public class AbstractProfileWidget extends AbstractWidget implements IProfilePro
   public final void onSelectionChange( final IProfileFeature[] profiles )
   {
     if( ArrayUtils.getLength( profiles ) > 1 )
-      throw new UnsupportedOperationException();
+      return;
+// throw new UnsupportedOperationException();
 
     if( ArrayUtils.isEmpty( profiles ) )
       doSelectionChange( null );
