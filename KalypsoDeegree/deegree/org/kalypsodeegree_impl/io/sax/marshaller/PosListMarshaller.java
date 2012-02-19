@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.marshaller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
@@ -54,7 +57,9 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class PosListMarshaller extends AbstractMarshaller<GM_Position[]>
 {
-  public static final String ELEMENT_POS_LIST = "posList";
+  public static final String ELEMENT_POS_LIST = "posList"; //$NON-NLS-1$
+
+  private final Map<GM_Position[], Integer> m_dimensionHash = new HashMap<>();
 
   public PosListMarshaller( final XMLReader reader )
   {
@@ -66,6 +71,9 @@ public class PosListMarshaller extends AbstractMarshaller<GM_Position[]>
   {
     final int srsDimension = findSrsDimension( element );
 
+    // FIXED: remember dimension for later
+    m_dimensionHash.put( element, srsDimension );
+
     final AttributesImpl atts = new AttributesImpl();
 
     MarshallerUtils.addSrsDimensionAttributes( atts, srsDimension );
@@ -75,8 +83,6 @@ public class PosListMarshaller extends AbstractMarshaller<GM_Position[]>
 
   private int findSrsDimension( final GM_Position[] positions )
   {
-    // FIXME: mixed coordinate dimensions here will later result in problems later; we should check this and throw an
-    // exception
     int srsDim = 0;
     for( final GM_Position pos : positions )
       srsDim = Math.max( srsDim, pos.getCoordinateDimension() );
@@ -86,18 +92,21 @@ public class PosListMarshaller extends AbstractMarshaller<GM_Position[]>
   @Override
   protected void doMarshallContent( final GM_Position[] marshalledObject ) throws SAXException
   {
+    final Integer srsDimension = m_dimensionHash.get( marshalledObject );
+
     for( final GM_Position pos : marshalledObject )
-      marshallPosition( pos );
+      marshallPosition( pos, srsDimension );
   }
 
-  private void marshallPosition( final GM_Position pos ) throws SAXException
+  private void marshallPosition( final GM_Position pos, final int srsDimension ) throws SAXException
   {
     final ContentHandler contentHandler = getXMLReader().getContentHandler();
 
     final double[] asArray = pos.getAsArray();
 
-    // REMARK: make sure we write exactly srsDim count of values per position
-    for( int i = 0; i < pos.getCoordinateDimension(); i++ )
+    // REMARK: using the globally determined dimension: either all pos have 2 or 3 coordinates.
+    // If we write mixed lengths here, we get problems when reading this gml.
+    for( int i = 0; i < srsDimension; i++ )
     {
       final double value = i < asArray.length ? asArray[i] : Double.NaN;
       final String dString = Double.toString( value );
