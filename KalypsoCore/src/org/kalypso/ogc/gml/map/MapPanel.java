@@ -402,7 +402,8 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
     m_widgetManager.dispose();
 
-    m_mtObject.dispose();
+    if( m_mtObject != null )
+      m_mtObject.dispose();
 
     setMapModell( null );
 
