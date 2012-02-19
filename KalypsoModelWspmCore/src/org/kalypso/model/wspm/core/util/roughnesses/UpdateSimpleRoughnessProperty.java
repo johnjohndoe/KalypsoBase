@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.util.roughnesses;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -113,7 +114,11 @@ public class UpdateSimpleRoughnessProperty implements ICoreRunnableWithProgress
       }
 
       if( UpdateVegetationProperties.isWritable( m_overwrite, point, property ) )
-        m_changes.add( new PointPropertyEdit( point, property, roughness.getValue( m_property ).doubleValue() ) );
+      {
+        final BigDecimal value = roughness.getValue( m_property );
+        final Double dblValue = value == null ? null : value.doubleValue();
+        m_changes.add( new PointPropertyEdit( point, property, dblValue ) );
+      }
     }
 
     return StatusUtilities.createStatus( statis, String.format( Messages.getString( "UpdateSimpleRoughnessProperty_2" ), m_profile.getStation() ) ); //$NON-NLS-1$
