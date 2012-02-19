@@ -45,13 +45,14 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IRangeSelection;
@@ -73,8 +74,6 @@ import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINECAP;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINEJOIN;
 import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.PointStyle;
-import de.openali.odysseus.chart.framework.util.img.ChartTooltipPainter;
-import de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
@@ -110,7 +109,9 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
       final double hoehe = Profiles.getHoehe( getProfile(), getBreite() );
       position.y = mapper.getTargetAxis().numericToScreen( hoehe );
 
-      final String msg = String.format( Messages.getString("InsertProfilePointChartHandler_0"), getBreite(), hoehe ); //$NON-NLS-1$
+      final String msg = String.format( Messages.INSERT_POINT_TOOLTIP, getBreite(), hoehe ); //$NON-NLS-1$
+
+      // TODO: hide tooltip if mouse is not in chart
 
       final EditInfo info = new EditInfo( theme, null, null, getBreite(), msg, new Point( position.x + 5, position.y + 45 ) );
       setToolInfo( info );
@@ -151,15 +152,22 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
     if( !m_doMouseDown )
       return;
 
-    if( Objects.isNull( getBreite(), getProfile() ) )
+    final Double cursor = getBreite();
+    if( Objects.isNull( cursor, getProfile() ) )
       return;
 
-    final IProfileRecord before = getProfile().findPreviousPoint( getBreite() );
-    final IProfileRecord next = getProfile().findNextPoint( getBreite() );
+    final IProfileRecord before = getProfile().findPreviousPoint( cursor );
+    final IProfileRecord next = getProfile().findNextPoint( cursor );
     if( Objects.isNull( before, next ) )
       return;
 
-    final double distance = (getBreite() - before.getBreite()) / (next.getBreite() - before.getBreite());
+    /* Ask user */
+    final Shell shell = ((Composite) getChart()).getShell();
+    final String message = String.format( Messages.INSERT_POINT_CONFIRM, cursor );
+    if( !MessageDialog.openConfirm( shell, Messages.INSERT_POINT_TITLE, message ) )
+      return;
+
+    final double distance = (cursor - before.getBreite()) / (next.getBreite() - before.getBreite());
 
     final TupleResult result = getProfile().getResult();
     final IProfileRecord record = getProfile().createProfilPoint();
@@ -184,26 +192,6 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
     job.schedule();
 
     setBreite( null );
-  }
-
-  private Point calculatePosition( final IChartComposite composite, final String msg )
-  {
-    final Composite c = (Composite) composite;
-    final Rectangle bounds = c.getBounds();
-
-    final ChartTooltipPainter painter = getTooltipPainter();
-
-    final IChartLabelRenderer renderer = painter.getLabelRenderer();
-    renderer.getTitleTypeBean().setText( msg );
-
-// final Rectangle size = renderer.getSize();
-
-    // FIXME: ask kim
-
-    final int x = -50; // bounds.width - size.width;
-    final int y = bounds.y + bounds.height;
-
-    return new Point( x, y );
   }
 
   @Override
