@@ -40,35 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.i18n;
 
-import java.util.ResourceBundle;
-
-import org.kalypso.contribs.java.i18n.I18nUtils;
-
 /**
- * @author kimwerner
+ * @author Gernot Belger
  */
-public final class Messages
+public interface CommonMessages
 {
-  private static final String BUNDLE_NAME = "org.kalypso.model.wspm.ui.i18n.messages"; //$NON-NLS-1$
+  /* Some commonly used string */
+  String INSERT_POINT_TITLE = Messages.getString( "Messages.0" ); //$NON-NLS-1$
 
-  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
+  String INSERT_POINT_CONFIRM = Messages.getString( "Messages.1" ); //$NON-NLS-1$
 
-  private static final Object[] NO_ARGS = new Object[0];
-
-  private Messages( )
-  {
-  }
-
-/*
- * java reflections needs this method-signatur
- */
-  public static String getString( final String key )
-  {
-    return getString( key, NO_ARGS );
-  }
-
-  public static String getString( final String key, final Object... args )
-  {
-    return I18nUtils.formatMessage( RESOURCE_BUNDLE, key, args );
-  }
+  String INSERT_POINT_TOOLTIP = Messages.getString( "InsertProfilePointChartHandler_0" ); //$NON-NLS-1$
 }
