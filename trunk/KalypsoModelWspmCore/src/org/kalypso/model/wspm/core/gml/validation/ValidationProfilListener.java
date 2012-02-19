@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.core.gml.validation;
 import java.text.DateFormat;
 import java.util.Calendar;
 
+import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -67,9 +68,10 @@ import org.kalypso.model.wspm.core.profil.validator.ValidatorRuleSet;
 
 /**
  * Profil-listener which repairs and validates the profile, each time it changes.
- * 
- * @author belger
+ *
+ * @author Gernot Belger
  */
+@SuppressWarnings("restriction")
 public class ValidationProfilListener implements IProfilListener
 {
   private final IPropertyChangeListener m_propertyListener;
@@ -89,7 +91,7 @@ public class ValidationProfilListener implements IProfilListener
     final String profiletype = profile.getType();
     final ValidatorRuleSet rules = KalypsoModelWspmCorePlugin.getValidatorSet( profiletype );
 
-    m_validateJob = new WorkspaceJob( Messages.getString("ValidationProfilListener_0") ) //$NON-NLS-1$
+    m_validateJob = new WorkspaceJob( Messages.getString( "ValidationProfilListener_0" ) ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInWorkspace( final IProgressMonitor monitor )
@@ -105,27 +107,28 @@ public class ValidationProfilListener implements IProfilListener
 
         try
         {
-          // TODO: only reset markers of this profile
           collector.reset( featureID );
-
-          KalypsoModelWspmCoreDebug.DEBUG_VALIDATION_MARKER.printf( " (validation_performance_check)    startValidation : %s\n", DateFormat.getTimeInstance().format( Calendar.getInstance().getTime() ) ); //$NON-NLS-1$
-
-          // TODO: use monitor and check for cancel
-          final IStatus status = rules.validateProfile( profile, collector, validate, excludes.split( ";" ), monitor ); //$NON-NLS-1$
-
-          final IMarker[] markers = collector.getMarkers();
-          profile.setProblemMarker( markers );
-
-          KalypsoModelWspmCoreDebug.DEBUG_VALIDATION_MARKER.printf( " (validation_performance_check)    endValidation : %s\n", DateFormat.getTimeInstance().format( Calendar.getInstance().getTime() ) ); //$NON-NLS-1$
-
-          return status;
+        }
+        catch( final ResourceException e1 )
+        {
+          // ignore: this kind of exception is thrown, if the marker id to be deleted is already out of scope.
         }
         catch( final CoreException e )
         {
-          e.printStackTrace();
-
           return e.getStatus();
         }
+
+        KalypsoModelWspmCoreDebug.DEBUG_VALIDATION_MARKER.printf( " (validation_performance_check)    startValidation : %s\n", DateFormat.getTimeInstance().format( Calendar.getInstance().getTime() ) ); //$NON-NLS-1$
+
+        // TODO: use monitor and check for cancel
+        final IStatus status = rules.validateProfile( profile, collector, validate, excludes.split( ";" ), monitor ); //$NON-NLS-1$
+
+        final IMarker[] markers = collector.getMarkers();
+        profile.setProblemMarker( markers );
+
+        KalypsoModelWspmCoreDebug.DEBUG_VALIDATION_MARKER.printf( " (validation_performance_check)    endValidation : %s\n", DateFormat.getTimeInstance().format( Calendar.getInstance().getTime() ) ); //$NON-NLS-1$
+
+        return status;
       }
     };
 
