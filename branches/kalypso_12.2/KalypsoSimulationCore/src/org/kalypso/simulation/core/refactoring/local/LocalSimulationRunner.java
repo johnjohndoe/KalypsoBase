@@ -50,7 +50,7 @@ import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -106,7 +106,7 @@ public class LocalSimulationRunner implements ISimulationRunner
       final LocalSimulationMonitor simulationMonitor = new LocalSimulationMonitor( monitor );
       job.run( tmpDir, inputProvider, resultEater, simulationMonitor );
 
-      final IFolder resultFolder = ResourceUtilities.findFolderFromURL( m_inputDir );
+      final IContainer resultFolder = ResourceUtilities.findContainerFromURL( m_inputDir );
       if( resultFolder != null )
         resultEater.transferCurrentResults( resultFolder );
       else
