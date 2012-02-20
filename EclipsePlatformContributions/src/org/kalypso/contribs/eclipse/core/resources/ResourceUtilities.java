@@ -58,7 +58,7 @@ import org.kalypso.contribs.java.net.UrlUtilities;
 /**
  * ResourceUtilities
  * <p>
- * 
+ *
  * @author schlienger (14.06.2005)
  */
 @SuppressWarnings("restriction")
@@ -71,7 +71,7 @@ public final class ResourceUtilities
 
   /**
    * Gibt den IFile-Handler zurück, falls die URL eine Platform Url denotiert
-   * 
+   *
    * @see PlatformURLResourceConnection
    */
   public static IFile findFileFromURL( final URL u )
@@ -109,15 +109,32 @@ public final class ResourceUtilities
     return findFolderFromPath( path );
   }
 
+  public static IContainer findContainerFromURL( final URL url )
+  {
+    final IPath path = findPathFromURL( url );
+    if( path == null )
+      return null;
+    return findContainerFromPath( path );
+  }
+
   public static IFolder findFolderFromPath( final IPath path )
   {
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     return root.getFolder( path );
   }
 
+  public static IContainer findContainerFromPath( final IPath path )
+  {
+    final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+    if( path.segmentCount() == 1 )
+      return root.getProject( path.segment( 0 ) );
+
+    return root.getFolder( path );
+  }
+
   /**
    * Resolves an absolute path (i.e. relative to IWorkspaceRoot) and returns its real location.
-   * 
+   *
    * @return A Java-File representing the resource, or null if file does not exists.
    */
   public static File makeFileFromPath( final IPath resource )
@@ -197,7 +214,7 @@ public final class ResourceUtilities
       if( PlatformURLResourceConnection.RESOURCE.equals( type ) )
       {
         final String filePath = URLDecoder.decode( spec.substring( ix ), "UTF-8" ); //$NON-NLS-1$
-        return new Path( filePath ); //$NON-NLS-1$
+        return new Path( filePath.replaceAll( "//", "/" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
     else if( protocol.equals( "http" ) || protocol.equals( "file" ) ) //$NON-NLS-1$ //$NON-NLS-2$
@@ -253,7 +270,7 @@ public final class ResourceUtilities
   /**
    * Creates an URL given a resource. Uses the eclipse scheme defined in
    * PlatformURLResourceConnection.RESOURCE_URL_STRING.
-   * 
+   *
    * @see PlatformURLResourceConnection#RESOURCE_URL_STRING
    * @param resource
    * @return platform URL
@@ -295,7 +312,7 @@ public final class ResourceUtilities
 
   /**
    * Creates the string representation of an URL given an IPath.
-   * 
+   *
    * @param path
    * @return platform URL
    */
@@ -306,7 +323,7 @@ public final class ResourceUtilities
 
   /**
    * Tries to get the parent project of this container.
-   * 
+   *
    * @return the parent project of the start container or null if the container is the WorkspaceRoot or itself if start
    *         is a Project.
    */
@@ -326,7 +343,7 @@ public final class ResourceUtilities
    * <br/>
    * First it tries to find the project and then iterates over all segments, getting the IFolder for it. At the last
    * segment, you get an IFile.
-   * 
+   *
    * @param path
    *          The path of the file. It must be relative to the workspace.
    * @return The Eclipse-File representing the path.
@@ -357,7 +374,7 @@ public final class ResourceUtilities
 
   /**
    * Returns all children of the given container.
-   * 
+   *
    * @param depth
    *          See {@link org.eclipse.core.resources.IResource}
    */
@@ -372,7 +389,7 @@ public final class ResourceUtilities
    * Returns all children of the given container.
    * <p>
    * If any exception is thrown, it is suppressed and an empty array of files is returned.
-   * 
+   *
    * @param depth
    *          See {@link org.eclipse.core.resources.IResource}
    */
@@ -395,7 +412,7 @@ public final class ResourceUtilities
    * returned.
    * <p>
    * If any exception is thrown, it is suppressed and an empty array of files is returned.
-   * 
+   *
    * @param depth
    *          See {@link org.eclipse.core.resources.IResource}
    * @param extension
@@ -418,7 +435,7 @@ public final class ResourceUtilities
 
   /**
    * check if the child file can be expressed as a relative path regarding to the given parent folder.
-   * 
+   *
    * @return The relative path (possibly using '..' notation, or <code>terrainModelFile#toFullPath</code> an absolute
    *         path if this is not possible.
    */
