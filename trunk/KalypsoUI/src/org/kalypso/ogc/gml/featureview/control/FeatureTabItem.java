@@ -56,7 +56,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Helper class that wraps a tabItem as a feature conrol.
- * 
+ *
  * @author Gernot Belger
  */
 public class FeatureTabItem
@@ -121,23 +121,19 @@ public class FeatureTabItem
   public void updateControl( )
   {
     final Feature feature = getFeature();
-    // try to use feature name before annotation
-    // FIXME: makes no sense. The annotation should win, this is standard Kalypso behaviour.
-    // Instead we might implement a parameter on the feature control, that can override this behaviour.
-// final String name = feature.getName();
-// final String text;
-// if( name == null )
     final String text = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
-// else
-// text = name;
 
     /* Ensure minimum length */
-    final String paddedText = StringUtils.rightPad( text, 8 );
+    final int MIN_TITLE_LENGTH = 8;
+    final int MAX_TITLE_LENGTH = 30;
+
+    final String paddedText = StringUtils.rightPad( text, MIN_TITLE_LENGTH );
 
     /* Ensure maximum length */
-    final String abreviatedText = StringUtils.abbreviate( paddedText, 20 );
+    final String abreviatedText = StringUtils.abbreviate( paddedText, MAX_TITLE_LENGTH );
 
     m_item.setText( abreviatedText );
+    m_item.setToolTipText( text );
 
     m_fc.updateControl();
   }
