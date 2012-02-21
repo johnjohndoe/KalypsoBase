@@ -306,7 +306,9 @@ public class ZmlModelViewport
     final IZmlModelRow[] rows = getRows();
     for( final IZmlModelRow row : rows )
     {
-      cells.add( row.get( column ) );
+      final IZmlModelValueCell cell = row.get( column );
+      if( Objects.isNotNull( cell ) )
+        cells.add( cell );
     }
 
     return cells.toArray( new IZmlModelValueCell[] {} );
