@@ -110,6 +110,9 @@ public class ZmlModelViewport
         // triggered from filter
         if( type.resultionChanged() )
           doClean( type );
+        else if( type.rulesChanged() )
+          doClean( type );
+
       }
     } );
 
@@ -135,6 +138,8 @@ public class ZmlModelViewport
       m_rows = null;
     else if( type.ignoreTypeChanged() )
       m_columns = null;
+    else if( type.rulesChanged() )
+      accept( new ResetCellStylesVisitor() );
   }
 
   public IZmlModelValueCell getCell( final IZmlModelRow row, final int columnIndex )

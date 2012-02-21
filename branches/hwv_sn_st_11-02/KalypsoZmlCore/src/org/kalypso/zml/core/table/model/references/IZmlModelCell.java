@@ -55,6 +55,7 @@ import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
  */
 public interface IZmlModelCell
 {
+  void reset( );
 
   Date getIndexValue( );
 

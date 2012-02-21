@@ -98,6 +98,7 @@ public class ZmlModelCellPainter extends AbstractCellPainter
 
           ptr = move( ptr, image.getBounds() );
         }
+
       }
       catch( final SensorException e )
       {
