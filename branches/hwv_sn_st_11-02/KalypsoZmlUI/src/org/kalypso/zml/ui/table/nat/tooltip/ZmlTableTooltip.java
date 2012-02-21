@@ -96,6 +96,9 @@ public class ZmlTableTooltip extends DefaultToolTip
   @Override
   protected boolean shouldCreateToolTip( final Event event )
   {
+    if( !SHOW_TOOLTIP )
+      return false;
+
     return getText( event ) != null;
   }
 

@@ -65,14 +65,12 @@ public class ZmlRuleGrenzwerte extends AbstractZmlCellRuleImplementation
     if( !(reference instanceof IZmlModelValueCell) )
       return false;
 
-// System.out.println( rule.getIdentifier() );
-
     final AbstractZmlRuleInstructionType[] instructions = rule.getInstructions();
     for( final AbstractZmlRuleInstructionType instruction : instructions )
     {
       try
       {
-        if( instruction.matches( (IZmlModelValueCell) reference ) )
+        if( instruction.matches( reference ) )
           return true;
       }
       catch( final SensorException e )
@@ -95,7 +93,7 @@ public class ZmlRuleGrenzwerte extends AbstractZmlCellRuleImplementation
     {
       try
       {
-        if( instruction.matches( (IZmlModelValueCell) reference ) )
+        if( instruction.matches( reference ) )
           return instruction.getStyle( (IZmlModelValueCell) reference );
       }
       catch( final SensorException e )
@@ -118,7 +116,7 @@ public class ZmlRuleGrenzwerte extends AbstractZmlCellRuleImplementation
     {
       try
       {
-        if( instruction.matches( (IZmlModelValueCell) reference ) )
+        if( instruction.matches( reference ) )
 
           return instruction.getLabel( rule );
 
@@ -150,7 +148,7 @@ public class ZmlRuleGrenzwerte extends AbstractZmlCellRuleImplementation
       if( instruction instanceof ZmlMetadataBoundaryInstruction )
       {
         final ZmlMetadataBoundaryInstruction impl = (ZmlMetadataBoundaryInstruction) instruction;
-        if( instruction.matches( (IZmlModelValueCell) reference ) )
+        if( instruction.matches( reference ) )
           return impl.update( text );
       }
     }
@@ -169,7 +167,7 @@ public class ZmlRuleGrenzwerte extends AbstractZmlCellRuleImplementation
     {
       try
       {
-        if( instruction.matches( (IZmlModelValueCell) reference ) )
+        if( instruction.matches( reference ) )
 
           return instruction.getSeverity();
 
