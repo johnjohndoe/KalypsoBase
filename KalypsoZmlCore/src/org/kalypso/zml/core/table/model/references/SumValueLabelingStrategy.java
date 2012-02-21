@@ -95,7 +95,7 @@ public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy
       previous = baseRow.get( column );
     }
 
-    if( previous == null || current == null )
+    if( previous == null )
       return null;
 
     final DateRange daterange = new DateRange( previous.getIndexValue(), current.getIndexValue() );

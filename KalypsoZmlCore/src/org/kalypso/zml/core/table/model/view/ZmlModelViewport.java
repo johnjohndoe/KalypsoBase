@@ -149,11 +149,11 @@ public class ZmlModelViewport
     if( columnIndex == -1 )
       return null;
 
-    final ZmlModelColumn[] columns = m_model.getActiveColumns();
+    final IZmlModelColumn[] columns = getColumns();
     if( ArrayUtils.getLength( columns ) < columnIndex )
       return null;
 
-    final ZmlModelColumn column = columns[columnIndex];
+    final IZmlModelColumn column = columns[columnIndex];
     return row.get( column );
   }
 
@@ -163,7 +163,7 @@ public class ZmlModelViewport
       return m_columns;
 
     final Set<IZmlModelColumn> collection = new LinkedHashSet<IZmlModelColumn>();
-    final ZmlModelColumn[] modelColumns = m_model.getActiveColumns();
+    final ZmlModelColumn[] modelColumns = m_model.getAvailableColumns();
     for( final ZmlModelColumn column : modelColumns )
     {
       final DataColumnType type = column.getDataColumn().getType();

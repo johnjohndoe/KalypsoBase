@@ -81,5 +81,5 @@ public interface IZmlModel
 
   String[] getIgnoreTypes( );
 
-  ZmlModelColumn[] getActiveColumns( );
+  ZmlModelColumn[] getAvailableColumns( );
 }

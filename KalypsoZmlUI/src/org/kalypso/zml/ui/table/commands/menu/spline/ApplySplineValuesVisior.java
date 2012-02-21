@@ -78,7 +78,7 @@ public class ApplySplineValuesVisior implements IZmlModelColumnVisitor
     m_s1 = s1;
     m_s2 = s2;
     m_splines = splines;
-
+    m_transaction = transaction;
   }
 
   @Override
@@ -97,7 +97,6 @@ public class ApplySplineValuesVisior implements IZmlModelColumnVisitor
 
     final TupleModelDataSet dataset = new TupleModelDataSet( reference.getColumn().getValueAxis(), value, KalypsoStati.BIT_USER_MODIFIED, IDataSourceItem.SOURCE_MANUAL_CHANGED );
     m_transaction.add( new UpdateTupleModelDataSetCommand( reference.getModelIndex(), dataset, true ) );
-
   }
 
   private boolean isAfter( final Date index )
