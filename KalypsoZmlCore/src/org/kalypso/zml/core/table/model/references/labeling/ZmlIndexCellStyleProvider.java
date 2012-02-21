@@ -38,14 +38,18 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model.references;
+package org.kalypso.zml.core.table.model.references.labeling;
 
 import org.kalypso.zml.core.table.binding.BaseColumn;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlModelIndexCell extends IZmlModelCell
+public class ZmlIndexCellStyleProvider extends AbstractCellLabelProvider
 {
-  BaseColumn getBaseColumn( );
+  public ZmlIndexCellStyleProvider( final BaseColumn column )
+  {
+    super( column );
+  }
+
 }

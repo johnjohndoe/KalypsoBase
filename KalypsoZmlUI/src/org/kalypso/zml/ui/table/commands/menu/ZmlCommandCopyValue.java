@@ -50,8 +50,8 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.ZmlValueLabelProvider;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import org.kalypso.zml.core.table.model.references.labeling.ZmlModelCellLabelProvider;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
@@ -82,7 +82,7 @@ public class ZmlCommandCopyValue extends AbstractHandler
         {
           final IZmlModelValueCell cell = row.get( column );
 
-          final ZmlValueLabelProvider provider = new ZmlValueLabelProvider( column );
+          final ZmlModelCellLabelProvider provider = new ZmlModelCellLabelProvider( column );
           buffer.append( provider.getText( table.getModelViewport(), cell ) );
 
           if( !Arrays.isLastItem( columns, column ) )

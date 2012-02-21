@@ -66,7 +66,8 @@ import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.ZmlValueLabelProvider;
+import org.kalypso.zml.core.table.model.references.labeling.IZmlModelCellLabelProvider;
+import org.kalypso.zml.core.table.model.references.labeling.ZmlModelCellLabelProvider;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.core.table.rules.IZmlCellRuleImplementation;
 import org.kalypso.zml.core.table.schema.CellStyleType;
@@ -81,7 +82,7 @@ public class ZmlModelValueCell extends AbstractZmlCell implements IZmlModelValue
 
   private ZmlCellRule[] m_rules;
 
-  private final ZmlValueLabelProvider m_styleProvider;
+  private final ZmlModelCellLabelProvider m_styleProvider;
 
   private Number m_oldRuleValue;
 
@@ -91,7 +92,7 @@ public class ZmlModelValueCell extends AbstractZmlCell implements IZmlModelValue
   {
     super( row, column, tupleModelIndex );
 
-    m_styleProvider = new ZmlValueLabelProvider( column );
+    m_styleProvider = new ZmlModelCellLabelProvider( column );
   }
 
   @Override

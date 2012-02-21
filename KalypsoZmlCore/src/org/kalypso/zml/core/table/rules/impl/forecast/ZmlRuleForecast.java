@@ -40,14 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.rules.impl.forecast;
 
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.binding.rule.instructions.AbstractZmlRuleInstructionType;
 import org.kalypso.zml.core.table.binding.rule.instructions.ZmlMetadataDaterangeInstruction;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
-import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.rules.AbstractZmlCellRuleImplementation;
 
 /**
@@ -56,9 +52,6 @@ import org.kalypso.zml.core.table.rules.AbstractZmlCellRuleImplementation;
 public class ZmlRuleForecast extends AbstractZmlCellRuleImplementation
 {
 
-  /**
-   * @see org.kalypso.zml.core.table.rules.IZmlRuleImplementation#getIdentifier()
-   */
   @Override
   public String getIdentifier( )
   {
@@ -68,25 +61,15 @@ public class ZmlRuleForecast extends AbstractZmlCellRuleImplementation
   @Override
   protected boolean doApply( final ZmlCellRule rule, final IZmlModelCell reference )
   {
-    if( !(reference instanceof IZmlModelValueCell) )
-      return false;
-
     final AbstractZmlRuleInstructionType[] instructions = rule.getInstructions();
     for( final AbstractZmlRuleInstructionType instruction : instructions )
     {
       if( !(instruction instanceof ZmlMetadataDaterangeInstruction) )
         continue;
 
-      try
-      {
-        final ZmlMetadataDaterangeInstruction impl = (ZmlMetadataDaterangeInstruction) instruction;
-        if( impl.matches( (IZmlModelValueCell) reference ) )
-          return true;
-      }
-      catch( final SensorException e )
-      {
-        KalypsoZmlCore.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-      }
+      final ZmlMetadataDaterangeInstruction impl = (ZmlMetadataDaterangeInstruction) instruction;
+      if( impl.matches( reference ) )
+        return true;
     }
 
     return false;

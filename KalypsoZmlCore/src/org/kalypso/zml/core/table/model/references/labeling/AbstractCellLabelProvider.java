@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra�e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model;
+package org.kalypso.zml.core.table.model.references.labeling;
 
 import java.io.IOException;
 import java.util.LinkedHashSet;
@@ -53,16 +53,11 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.CellStyle;
-import org.kalypso.zml.core.table.binding.DataColumn;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
-import org.kalypso.zml.core.table.model.references.IZmlLabelStrategy;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
-import org.kalypso.zml.core.table.model.references.IZmlModelCellLabelProvider;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
-import org.kalypso.zml.core.table.model.references.InstantaneousValueLabelingStrategy;
-import org.kalypso.zml.core.table.model.references.SumValueLabelingStrategy;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.core.table.rules.IZmlCellRuleImplementation;
 import org.kalypso.zml.core.table.schema.AlignmentType;
@@ -70,38 +65,13 @@ import org.kalypso.zml.core.table.schema.AlignmentType;
 /**
  * @author Dirk Kuch
  */
-public class ZmlValueLabelProvider implements IZmlModelCellLabelProvider
+public abstract class AbstractCellLabelProvider implements IZmlCellLabelProvider
 {
-  private final IZmlModelColumn m_column;
+  private final BaseColumn m_column;
 
-  private IZmlLabelStrategy m_labeling;
-
-  public ZmlValueLabelProvider( final IZmlModelColumn column )
+  public AbstractCellLabelProvider( final BaseColumn column )
   {
     m_column = column;
-
-    final DataColumn datacolumn = column.getDataColumn();
-    final String type = datacolumn.getType().getValueAxis();
-
-    if( ITimeseriesConstants.TYPE_RAINFALL.equals( type ) )
-      m_labeling = new SumValueLabelingStrategy();
-    else
-      m_labeling = new InstantaneousValueLabelingStrategy();
-  }
-
-  @Override
-  public String getText( final ZmlModelViewport viewport, final IZmlModelValueCell cell )
-  {
-    try
-    {
-      return m_labeling.getText( viewport, cell );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-
-    return "error";
   }
 
   @Override
@@ -154,9 +124,8 @@ public class ZmlValueLabelProvider implements IZmlModelCellLabelProvider
   }
 
   @Override
-  public Style getStyle( final ZmlModelViewport viewport, final IZmlModelValueCell cell )
+  public Style getStyle( final ZmlModelViewport viewport, final IZmlModelCell cell )
   {
-    final DataColumn column = m_column.getDataColumn();
 
     final Style style = new Style();
 
@@ -181,7 +150,7 @@ public class ZmlValueLabelProvider implements IZmlModelCellLabelProvider
       e.printStackTrace();
     }
 
-    final AlignmentType alignment = column.getAlignment();
+    final AlignmentType alignment = m_column.getAlignment();
     if( Objects.isNotNull( alignment ) )
     {
       if( AlignmentType.LEFT.equals( alignment ) )

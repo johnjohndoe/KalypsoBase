@@ -42,6 +42,7 @@ package org.kalypso.zml.core.table.model.references;
 
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.references.labeling.IZmlModelCellLabelProvider;
 
 /**
  * @author Dirk Kuch

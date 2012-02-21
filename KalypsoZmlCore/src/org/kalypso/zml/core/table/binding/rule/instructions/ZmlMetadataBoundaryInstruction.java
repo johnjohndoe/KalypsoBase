@@ -53,6 +53,7 @@ import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.core.KalypsoZmlCoreExtensions;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.rules.impl.grenzwert.IZmlGrenzwertValue;
 import org.kalypso.zml.core.table.schema.AbstractRuleInstructionType;
@@ -85,14 +86,19 @@ public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionTy
   }
 
   @Override
-  public boolean matches( final IZmlModelValueCell reference ) throws SensorException
+  public boolean matches( final IZmlModelCell reference ) throws SensorException
   {
-    final MetadataBoundary metaFrom = getBoundaryFrom( reference );
-    final MetadataBoundary metaTo = getBoundaryTo( reference );
+    if( !(reference instanceof IZmlModelValueCell) )
+      return false;
+
+    final IZmlModelValueCell cell = (IZmlModelValueCell) reference;
+
+    final MetadataBoundary metaFrom = getBoundaryFrom( cell );
+    final MetadataBoundary metaTo = getBoundaryTo( cell );
 
     final String boundaryType = findBoundaryType( metaFrom, metaTo );
 
-    final double value = findValue( reference, boundaryType );
+    final double value = findValue( cell, boundaryType );
     if( Double.isNaN( value ) )
       return false;
 

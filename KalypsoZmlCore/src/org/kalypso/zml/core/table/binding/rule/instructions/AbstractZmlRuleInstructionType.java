@@ -47,6 +47,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.ZmlStyleResolver;
 import org.kalypso.zml.core.table.binding.rule.AbstractZmlRule;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.schema.AbstractRuleInstructionType;
 import org.kalypso.zml.core.table.schema.StyleReferenceType;
@@ -91,7 +92,7 @@ public abstract class AbstractZmlRuleInstructionType
     return String.format( format, rule.getRuleType().getLabel() );
   }
 
-  public abstract boolean matches( final IZmlModelValueCell reference ) throws SensorException;
+  public abstract boolean matches( final IZmlModelCell reference ) throws SensorException;
 
   public Double getSeverity( )
   {

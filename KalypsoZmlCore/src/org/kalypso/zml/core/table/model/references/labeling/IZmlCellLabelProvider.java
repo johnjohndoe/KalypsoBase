@@ -38,14 +38,21 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model.references;
+package org.kalypso.zml.core.table.model.references.labeling;
 
-import org.kalypso.zml.core.table.binding.BaseColumn;
+import net.sourceforge.nattable.style.Style;
+
+import org.eclipse.swt.graphics.Image;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlModelIndexCell extends IZmlModelCell
+public interface IZmlCellLabelProvider
 {
-  BaseColumn getBaseColumn( );
+  Image[] getImages( ZmlModelViewport viewport, final IZmlModelCell cell ) throws SensorException;
+
+  Style getStyle( final ZmlModelViewport viewport, IZmlModelCell modelCell );
 }

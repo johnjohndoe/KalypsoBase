@@ -46,10 +46,10 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.java.util.DateUtilities;
-import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.references.ZmlModelIndexCell;
 import org.kalypso.zml.core.table.model.references.ZmlModelValueCell;
@@ -74,7 +74,7 @@ public class ZmlMetadataDaterangeInstruction extends AbstractZmlRuleInstructionT
   }
 
   @Override
-  public boolean matches( final IZmlModelValueCell reference ) throws SensorException
+  public boolean matches( final IZmlModelCell reference )
   {
     final MetadataList metadata = resolveMetadata( reference );
     if( Objects.isNull( metadata ) )
@@ -107,11 +107,11 @@ public class ZmlMetadataDaterangeInstruction extends AbstractZmlRuleInstructionT
     return true;
   }
 
-  private MetadataList resolveMetadata( final IZmlModelValueCell reference )
+  private MetadataList resolveMetadata( final IZmlModelCell reference )
   {
     if( reference instanceof ZmlModelValueCell )
     {
-      final IZmlModelColumn column = reference.getColumn();
+      final IZmlModelColumn column = ((IZmlModelValueCell) reference).getColumn();
 
       return column.getMetadata();
     }

@@ -47,11 +47,14 @@ import java.util.Map;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.zml.core.table.binding.BaseColumn;
+import org.kalypso.zml.core.table.binding.TableTypes;
 import org.kalypso.zml.core.table.model.references.IZmlModelIndexCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.references.ZmlModelIndexCell;
 import org.kalypso.zml.core.table.model.references.ZmlModelValueCell;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
+import org.kalypso.zml.core.table.schema.IndexColumnType;
 
 /**
  * @author Dirk Kuch
@@ -97,7 +100,10 @@ public class ZmlModelRow implements IZmlModelRow
   public IZmlModelIndexCell getIndexCell( )
   {
     if( Objects.isNull( m_indexCell ) )
-      m_indexCell = new ZmlModelIndexCell( this );
+    {
+      final IndexColumnType base = TableTypes.findIndexColumn( getModel().getTableType() );
+      m_indexCell = new ZmlModelIndexCell( this, new BaseColumn( base ) );
+    }
 
     return m_indexCell;
   }

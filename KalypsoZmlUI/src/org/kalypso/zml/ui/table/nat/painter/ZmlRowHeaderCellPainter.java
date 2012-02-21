@@ -60,9 +60,13 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.zml.core.table.binding.TableTypes;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlModelIndexCell;
+import org.kalypso.zml.core.table.model.references.labeling.ZmlIndexCellStyleProvider;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
+import org.kalypso.zml.core.table.schema.IndexColumnType;
 
 /**
  * @author Dirk Kuch
@@ -83,16 +87,29 @@ public class ZmlRowHeaderCellPainter extends AbstractCellPainter
     final Object object = cell.getDataValue();
     if( object instanceof IZmlModelRow )
     {
-      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, getStyle(), DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
+      final Style style = getStyle( (IZmlModelRow) object );
+      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, style, DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
 
       final TextPainter painter = new TextPainter();
       painter.paintCell( cell, gc, bounds, configRegistry );
     }
   }
 
-  private Style getStyle( )
+  private Style getStyle( final IZmlModelRow row )
   {
+    final IndexColumnType base = TableTypes.findIndexColumn( m_viewport.getModel().getTableType() );
+    if( Objects.isNull( base ) )
+      return getDefaultStyle();
 
+    final IZmlModelIndexCell cell = row.getIndexCell();
+
+    final ZmlIndexCellStyleProvider provider = new ZmlIndexCellStyleProvider( cell.getBaseColumn() );
+
+    return provider.getStyle( m_viewport, cell );
+  }
+
+  private Style getDefaultStyle( )
+  {
     final Font font = GUIHelper.getFont( new FontData( "Verdana", 10, SWT.NORMAL ) );
     final Color bgColor = GUIHelper.COLOR_WIDGET_BACKGROUND;
     final Color fgColor = GUIHelper.COLOR_WIDGET_FOREGROUND;
@@ -117,7 +134,8 @@ public class ZmlRowHeaderCellPainter extends AbstractCellPainter
     final Object object = cell.getDataValue();
     if( object instanceof IZmlModelIndexCell )
     {
-      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, getStyle(), DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
+      final Style style = getStyle( (IZmlModelRow) object );
+      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, style, DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
 
       final TextPainter painter = new TextPainter();
       return painter.getPreferredWidth( cell, gc, configRegistry );
@@ -132,7 +150,8 @@ public class ZmlRowHeaderCellPainter extends AbstractCellPainter
     final Object object = cell.getDataValue();
     if( object instanceof IZmlModelIndexCell )
     {
-      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, getStyle(), DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
+      final Style style = getStyle( (IZmlModelRow) object );
+      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, style, DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
 
       final TextPainter painter = new TextPainter();
       return painter.getPreferredHeight( cell, gc, configRegistry );

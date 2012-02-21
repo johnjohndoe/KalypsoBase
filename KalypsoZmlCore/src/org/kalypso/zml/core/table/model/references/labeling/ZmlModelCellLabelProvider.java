@@ -38,22 +38,50 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model.references;
+package org.kalypso.zml.core.table.model.references.labeling;
 
-import net.sourceforge.nattable.style.Style;
-
-import org.eclipse.swt.graphics.Image;
-import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.kalypso.zml.core.table.binding.DataColumn;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.references.IZmlLabelStrategy;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import org.kalypso.zml.core.table.model.references.InstantaneousValueLabelingStrategy;
+import org.kalypso.zml.core.table.model.references.SumValueLabelingStrategy;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlModelCellLabelProvider
+public class ZmlModelCellLabelProvider extends AbstractCellLabelProvider implements IZmlModelCellLabelProvider
 {
-  Image[] getImages( ZmlModelViewport viewport, final IZmlModelCell cell ) throws SensorException;
+  private IZmlLabelStrategy m_labeling;
 
-  String getText( ZmlModelViewport viewport, IZmlModelValueCell cell );
+  public ZmlModelCellLabelProvider( final IZmlModelColumn column )
+  {
+    super( column.getDataColumn() );
 
-  Style getStyle( final ZmlModelViewport viewport, IZmlModelValueCell modelCell );
+    final DataColumn datacolumn = column.getDataColumn();
+    final String type = datacolumn.getType().getValueAxis();
+
+    if( ITimeseriesConstants.TYPE_RAINFALL.equals( type ) )
+      m_labeling = new SumValueLabelingStrategy();
+    else
+      m_labeling = new InstantaneousValueLabelingStrategy();
+  }
+
+  @Override
+  public String getText( final ZmlModelViewport viewport, final IZmlModelValueCell cell )
+  {
+    try
+    {
+      return m_labeling.getText( viewport, cell );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
+
+    return "error";
+  }
+
 }
