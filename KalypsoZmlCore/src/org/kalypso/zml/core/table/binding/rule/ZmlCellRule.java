@@ -141,6 +141,10 @@ public class ZmlCellRule extends AbstractZmlRule
       return getBaseStyle();
 
     CellStyleType base = getBaseStyle().getType();
+
+    final CellStyle implStyle = getImplementation().getCellStyle( this, reference );
+    base = CellStyle.merge( base, implStyle.getType() );
+
     final AbstractZmlRuleInstructionType[] instructions = getInstructions();
     for( final AbstractZmlRuleInstructionType instruction : instructions )
     {

@@ -96,6 +96,13 @@ public class ZmlModelValueCell extends AbstractZmlCell implements IZmlModelValue
   }
 
   @Override
+  public void reset( )
+  {
+    m_style = null;
+    m_rules = null;
+  }
+
+  @Override
   public Date getIndexValue( )
   {
     try
@@ -348,4 +355,5 @@ public class ZmlModelValueCell extends AbstractZmlCell implements IZmlModelValue
 
     return rules.toArray( new ZmlCellRule[] {} );
   }
+
 }

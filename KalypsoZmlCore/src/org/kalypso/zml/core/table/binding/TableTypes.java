@@ -73,7 +73,7 @@ import org.kalypso.zml.core.table.schema.ZmlTableType;
  */
 public final class TableTypes
 {
-  private static final QName PROPERTY_NAME = new QName( "name" ); //$NON-NLS-1$
+  public static final QName PROPERTY_NAME = new QName( "name" ); //$NON-NLS-1$
 
   private TableTypes( )
   {
@@ -217,7 +217,7 @@ public final class TableTypes
     for( final StylePropertyType prop : properties )
     {
       final String propertyName = TableTypes.getPropertyName( prop );
-      if( property.value().equals( propertyName ) )
+      if( property.value().equalsIgnoreCase( propertyName ) )
         return prop.getValue();
     }
 

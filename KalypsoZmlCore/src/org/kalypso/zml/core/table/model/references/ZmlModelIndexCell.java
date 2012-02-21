@@ -154,4 +154,10 @@ public class ZmlModelIndexCell extends AbstractZmlCell implements IZmlModelIndex
   {
     return m_base;
   }
+
+  @Override
+  public void reset( )
+  {
+    m_style = null;
+  }
 }

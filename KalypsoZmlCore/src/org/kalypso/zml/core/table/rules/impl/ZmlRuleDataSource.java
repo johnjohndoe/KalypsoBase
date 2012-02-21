@@ -43,7 +43,10 @@ package org.kalypso.zml.core.table.rules.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+
+import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.resource.ColorRegistry;
@@ -54,11 +57,14 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.table.binding.CellStyle;
+import org.kalypso.zml.core.table.binding.TableTypes;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.rules.AbstractZmlCellRuleImplementation;
 import org.kalypso.zml.core.table.schema.CellStyleType;
+import org.kalypso.zml.core.table.schema.StylePropertyName;
+import org.kalypso.zml.core.table.schema.StylePropertyType;
 
 /**
  * @author Dirk Kuch
@@ -101,27 +107,30 @@ public class ZmlRuleDataSource extends AbstractZmlCellRuleImplementation
   @Override
   public CellStyle getCellStyle( final ZmlCellRule rule, final IZmlModelCell reference )
   {
+
     if( !(reference instanceof IZmlModelValueCell) )
       return null;
 
-    return new CellStyle( new CellStyleType() )
+    final CellStyleType styleType = new CellStyleType();
+    styleType.setId( "RuleDataSourceBackgroundStyle" );
+
+    try
     {
-      @Override
-      public Color getBackgroundColor( )
-      {
-        try
-        {
-          return getBackground( (IZmlModelValueCell) reference );
-        }
-        catch( final SensorException e )
-        {
-          e.printStackTrace();
+      final Color background = getBackground( (IZmlModelValueCell) reference );
+      final List<StylePropertyType> properties = styleType.getProperty();
 
-          return null;
-        }
-      }
-    };
+      final StylePropertyType property = new StylePropertyType();
+      final Map<QName, String> attributes = property.getOtherAttributes();
+      attributes.put( TableTypes.PROPERTY_NAME, StylePropertyName.BACKGROUND_COLOR.value() );
+      property.setValue( String.format( "%2x%2x%2x", background.getRed(), background.getGreen(), background.getBlue() ) );
+      properties.add( property );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
 
+    return new CellStyle( styleType );
   }
 
   protected Color getBackground( final IZmlModelValueCell reference ) throws SensorException

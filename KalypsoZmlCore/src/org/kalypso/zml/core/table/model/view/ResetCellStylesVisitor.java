@@ -38,34 +38,26 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model.references;
+package org.kalypso.zml.core.table.model.view;
 
-import java.util.Date;
-
-import org.eclipse.core.runtime.CoreException;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.core.table.binding.CellStyle;
-import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
-import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
+import org.kalypso.zml.core.table.model.IZmlModelRowVisitor;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlModelCell
+public class ResetCellStylesVisitor implements IZmlModelRowVisitor
 {
-  void reset( );
 
-  Date getIndexValue( );
+  @Override
+  public void visit( final IZmlModelRow row )
+  {
+    final IZmlModelValueCell[] cells = row.getCells();
+    for( final IZmlModelValueCell cell : cells )
+    {
+      cell.reset();
+    }
+  }
 
-  IZmlModel getModel( );
-
-  IZmlModelRow getRow( );
-
-  Integer getModelIndex( );
-
-  ZmlCellRule[] findActiveRules( ZmlModelViewport viewport ) throws SensorException;
-
-  CellStyle getStyle( ZmlModelViewport viewport ) throws CoreException, SensorException;
 }
