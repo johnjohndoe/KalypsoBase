@@ -88,6 +88,9 @@ public class ZmlTablePager
         if( event instanceof ScrollEvent )
         {
           final LayerCell cell = m_table.getCellByPosition( 1, 1 );
+          if( Objects.isNull( cell ) )
+            return;
+
           final Object dataValue = cell.getDataValue();
           if( dataValue instanceof IZmlModelCell )
           {

@@ -65,6 +65,8 @@ public class NatTableContextMenuSupport extends MouseAdapter
 
   private final Menu m_contextMenu;
 
+  public static int SELECTED_COLUMN;
+
   public NatTableContextMenuSupport( final NatTable table, final ZmlModelViewport viewport )
   {
     m_table = table;
@@ -109,6 +111,8 @@ public class NatTableContextMenuSupport extends MouseAdapter
         menuProvider.fillMenu( modelCell.getColumn(), m_manager );
 
       }
+
+      SELECTED_COLUMN = column - 1;
 
       m_manager.update( true );
       m_contextMenu.setVisible( true );
