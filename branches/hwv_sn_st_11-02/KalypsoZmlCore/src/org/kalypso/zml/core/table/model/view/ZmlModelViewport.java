@@ -112,6 +112,8 @@ public class ZmlModelViewport
           doClean( type );
         else if( type.rulesChanged() )
           doClean( type );
+        else if( type.ignoreTypeChanged() )
+          doClean( type );
 
       }
     } );
@@ -331,6 +333,6 @@ public class ZmlModelViewport
     else
       m_hiddenTypes.add( type );
 
-    // TODO model change event
+    fireModelChanged( ZmlModelColumnChangeType.IGNORE_TYPES_CHANGED );
   }
 }
