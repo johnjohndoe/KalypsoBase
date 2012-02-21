@@ -75,7 +75,7 @@ public class ZmlCommandHideColumns extends AbstractHandler implements IElementUp
 
     final Map parameters = event.getParameters();
     final String[] columnTypes = getColumnTypes( parameters );
-    final boolean hide = HandlerUtils.isSelected( event );
+    final boolean hide = !HandlerUtils.isSelected( event );
 
     final ZmlModelViewport model = table.getModelViewport();
     for( final String type : columnTypes )

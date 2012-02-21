@@ -247,7 +247,6 @@ public class ZmlModelValueCell extends AbstractZmlCell implements IZmlModelValue
 
     if( ArrayUtils.isNotEmpty( rules ) )
     {
-
       CellStyleType baseType = column.getDefaultStyle().getType();
       for( final ZmlCellRule rule : rules )
       {
