@@ -106,7 +106,7 @@ public class ZmlTablePager
     if( m_firstRun )
       date = findForecastDate();
 
-    if( Objects.isNull( date ) && event.doForceChange() )
+    if( Objects.isNull( date ) )
       date = m_lastRow;
 
     if( Objects.isNull( date ) )
@@ -122,7 +122,6 @@ public class ZmlTablePager
     final int index = ArrayUtils.indexOf( m_viewport.getRows(), row );
     final ShowRowInViewportCommand command = new ShowRowInViewportCommand( m_bodyLayer, index );
     m_table.doCommand( command );
-
   }
 
   private Date findForecastDate( )
