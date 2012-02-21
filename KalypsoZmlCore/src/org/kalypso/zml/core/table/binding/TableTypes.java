@@ -54,7 +54,6 @@ import org.eclipse.swt.SWT;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.model.utils.IClonedColumn;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
-import org.kalypso.zml.core.table.schema.AlignmentType;
 import org.kalypso.zml.core.table.schema.CellStyleType;
 import org.kalypso.zml.core.table.schema.ColumnHeaderPropertyName;
 import org.kalypso.zml.core.table.schema.ColumnHeaderPropertyType;
@@ -77,21 +76,6 @@ public final class TableTypes
 
   private TableTypes( )
   {
-  }
-
-  public static int toSWT( final AlignmentType alignment )
-  {
-    if( alignment == null )
-      return SWT.LEFT;
-
-    if( AlignmentType.LEFT.toString().equals( alignment.toString() ) )
-      return SWT.LEFT;
-    else if( AlignmentType.CENTER.toString().equals( alignment.toString() ) )
-      return SWT.CENTER;
-    else if( AlignmentType.RIGHT.toString().equals( alignment.toString() ) )
-      return SWT.RIGHT;
-
-    return SWT.LEFT;
   }
 
   public static AbstractColumnType findColumn( final ZmlTableType tableType, final String identifier )
