@@ -40,25 +40,36 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model.references;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
+import org.kalypso.zml.core.table.rules.IZmlCellRuleImplementation;
+import org.kalypso.zml.core.table.schema.CellStyleType;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlModelIndexCell extends AbstractZmlCell implements IZmlModelIndexCell
 {
+  private CellStyle m_style;
 
-  public ZmlModelIndexCell( final IZmlModelRow row )
+  private final BaseColumn m_base;
+
+  public ZmlModelIndexCell( final IZmlModelRow row, final BaseColumn column )
   {
     super( row, null, -1 );
+    m_base = column;
   }
 
   @Override
@@ -96,17 +107,51 @@ public class ZmlModelIndexCell extends AbstractZmlCell implements IZmlModelIndex
   @Override
   public ZmlCellRule[] findActiveRules( final ZmlModelViewport viewport )
   {
-    // FIXME
+    final List<ZmlCellRule> rules = new ArrayList<ZmlCellRule>();
+    final ZmlCellRule[] columnRules = m_base.getCellRules();
+    for( final ZmlCellRule rule : columnRules )
+    {
+      final IZmlCellRuleImplementation impl = rule.getImplementation();
+      if( impl.apply( rule, this ) )
+      {
+        rules.add( rule );
+      }
+    }
 
-    throw new UnsupportedOperationException();
+    return rules.toArray( new ZmlCellRule[] {} );
   }
 
   @Override
   public CellStyle getStyle( final ZmlModelViewport viewport ) throws CoreException
   {
-    // FIXME
+    if( Objects.isNotNull( m_style ) )
+      return m_style;
 
-    throw new UnsupportedOperationException();
+    final ZmlCellRule[] rules = findActiveRules( viewport );
+
+    if( ArrayUtils.isNotEmpty( rules ) )
+    {
+
+      CellStyleType baseType = m_base.getDefaultStyle().getType();
+      for( final ZmlCellRule rule : rules )
+      {
+        final CellStyle style = rule.getStyle( getRow(), m_base );
+        baseType = CellStyle.merge( baseType, style.getType() );
+      }
+
+      m_style = new CellStyle( baseType );
+    }
+    else
+    {
+      m_style = m_base.getDefaultStyle();
+    }
+
+    return m_style;
   }
 
+  @Override
+  public BaseColumn getBaseColumn( )
+  {
+    return m_base;
+  }
 }

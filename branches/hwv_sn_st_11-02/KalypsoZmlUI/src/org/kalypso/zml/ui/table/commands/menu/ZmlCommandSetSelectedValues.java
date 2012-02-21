@@ -52,11 +52,11 @@ import org.kalypso.ogc.sensor.transaction.TupleModelTransaction;
 import org.kalypso.ogc.sensor.transaction.UpdateTupleModelDataSetCommand;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.ZmlValueLabelProvider;
 import org.kalypso.zml.core.table.model.editing.IZmlEditingStrategy;
 import org.kalypso.zml.core.table.model.interpolation.ZmlInterpolationWorker;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import org.kalypso.zml.core.table.model.references.labeling.ZmlModelCellLabelProvider;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 import org.kalypso.zml.ui.table.IZmlTable;
@@ -83,7 +83,7 @@ public class ZmlCommandSetSelectedValues extends AbstractHandler
       final IZmlEditingStrategy strategy = model.getEditingStrategy( column );
       if( strategy.isAggregated() )
       {
-        final ZmlValueLabelProvider provider = new ZmlValueLabelProvider( column );
+        final ZmlModelCellLabelProvider provider = new ZmlModelCellLabelProvider( column );
         final String targetValue = provider.getText( table.getModelViewport(), active );
 
         for( final IZmlModelCell cell : cells )

@@ -40,10 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model.references;
 
+import org.kalypso.zml.core.table.binding.BaseColumn;
+
 /**
  * @author Dirk Kuch
  */
 public interface IZmlModelIndexCell extends IZmlModelCell
 {
-
+  BaseColumn getBaseColumn( );
 }

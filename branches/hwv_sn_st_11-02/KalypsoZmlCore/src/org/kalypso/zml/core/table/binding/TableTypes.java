@@ -107,6 +107,19 @@ public final class TableTypes
     return null;
   }
 
+  public static IndexColumnType findIndexColumn( final ZmlTableType tableType )
+  {
+    final List<JAXBElement< ? extends AbstractColumnType>> columns = tableType.getColumns().getAbstractColumn();
+    for( final JAXBElement< ? extends AbstractColumnType> columnType : columns )
+    {
+      final AbstractColumnType column = columnType.getValue();
+      if( column instanceof IndexColumnType )
+        return (IndexColumnType) column;
+    }
+
+    return null;
+  }
+
   public static AbstractColumnType cloneColumn( final AbstractColumnType base )
   {
     if( base instanceof DataColumnType )

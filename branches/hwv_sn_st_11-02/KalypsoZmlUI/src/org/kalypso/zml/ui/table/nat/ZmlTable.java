@@ -190,6 +190,7 @@ public class ZmlTable extends Composite implements IZmlTable
     m_table.addLayerListener( new UpdateChartSelectionListener( getSelection() ) );
 
     m_pager = new ZmlTablePager( m_viewport, m_table, m_bodyLayer );
+
   }
 
   @Override
