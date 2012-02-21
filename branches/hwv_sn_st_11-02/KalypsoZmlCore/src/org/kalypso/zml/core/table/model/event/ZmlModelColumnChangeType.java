@@ -45,7 +45,7 @@ package org.kalypso.zml.core.table.model.event;
  */
 public class ZmlModelColumnChangeType implements IZmlModelColumnEvent
 {
-  private int m_type;
+  private final int m_type;
 
   public ZmlModelColumnChangeType( final int type )
   {
@@ -80,11 +80,6 @@ public class ZmlModelColumnChangeType implements IZmlModelColumnEvent
   public boolean resultionChanged( )
   {
     return (m_type & IZmlModelColumnEvent.RESULUTION_CHANGED) != 0;
-  }
-
-  public void append( final int change )
-  {
-    m_type |= change;
   }
 
   public boolean doForceChange( )
