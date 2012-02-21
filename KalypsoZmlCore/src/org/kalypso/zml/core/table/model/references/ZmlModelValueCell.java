@@ -296,6 +296,9 @@ public class ZmlModelValueCell extends AbstractZmlCell implements IZmlModelValue
 
   private boolean isSimple( final ZmlModelViewport viewport, final DataColumn column )
   {
+    if( viewport == null ) // viewport can be null for aggregated non visible cells
+      return true;
+
     if( viewport.getResolution() == 0 )
       return true;
     else if( ITimeseriesConstants.TYPE_RAINFALL.equals( column.getValueAxis() ) )
