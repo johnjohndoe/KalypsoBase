@@ -54,7 +54,7 @@ import javax.activation.URLDataSource;
 
 import org.apache.commons.vfs.FileObject;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
+import org.kalypso.contribs.eclipse.osgi.FrameworkUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
 import org.kalypso.service.wps.i18n.Messages;
 import org.kalypso.service.wps.internal.KalypsoServiceWPSDebug;
@@ -72,7 +72,6 @@ import org.kalypso.simulation.core.internal.queued.ISimulationFactory;
  * 
  * @author Gernot Belger (original), Holger Albert (changes for WPS)
  */
-@SuppressWarnings("restriction")
 public class WPSQueuedSimulationService
 {
   /**
@@ -145,7 +144,7 @@ public class WPSQueuedSimulationService
     m_maxThreads = maxThreads;
     m_schedulingPeriod = schedulingPeriod;
 
-    m_resultSpace = FrameworkProperties.getProperty( "org.kalypso.service.wps.results" ); //$NON-NLS-1$
+    m_resultSpace = FrameworkUtilities.getProperty( "org.kalypso.service.wps.results", null ); //$NON-NLS-1$
   }
 
   public int getServiceVersion( )
