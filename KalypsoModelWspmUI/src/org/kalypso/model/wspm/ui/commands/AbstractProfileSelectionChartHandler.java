@@ -173,6 +173,9 @@ public abstract class AbstractProfileSelectionChartHandler extends AbstractProfi
 
   private double snapToPoint( final IProfil profile, final int screenX )
   {
+    if( profile == null )
+      return Double.NaN;
+
     final AbstractProfilTheme theme = findProfileTheme( getChart() );
     if( theme == null )
       return Double.NaN;
