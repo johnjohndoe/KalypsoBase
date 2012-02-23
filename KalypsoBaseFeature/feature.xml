@@ -451,4 +451,11 @@
          version="11.6.5.qualifier"
          unpack="false"/>
 
+   <plugin
+         id="org.kalypso.mt"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
 </feature>
