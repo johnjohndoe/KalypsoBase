@@ -48,7 +48,6 @@ import java.util.TreeMap;
 import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
 import org.kalypso.zml.core.base.IZmlSourceElement;
-import org.kalypso.zml.core.base.IndexedTsLink;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.TableTypes;
 import org.kalypso.zml.core.table.model.IZmlModel;
@@ -108,8 +107,8 @@ public class ZmlTableUpdater implements Runnable
     {
       final Object[] values = entry.getValue();
 
-      final IndexedTsLink link = (IndexedTsLink) values[0];
-      doLoadModelColumn( link );
+      final IZmlSourceElement source = (IZmlSourceElement) values[0];
+      doLoadModelColumn( source );
     }
   }
 
