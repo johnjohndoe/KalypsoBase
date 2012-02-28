@@ -46,6 +46,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -55,9 +56,15 @@ import java.util.TreeMap;
 import javax.xml.bind.JAXBElement;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.kalypso.commons.java.lang.Arrays;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
+import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.zml.core.debug.KalypsoZmlCoreDebug;
+import org.kalypso.zml.core.table.model.event.IZmlModelColumnListener;
+import org.kalypso.zml.core.table.model.event.ZmlModelColumnChangeType;
 import org.kalypso.zml.core.table.model.loader.ZmlModelColumnLoader;
 import org.kalypso.zml.core.table.model.loader.ZmlRowBuilder;
 import org.kalypso.zml.core.table.model.memento.IZmlMemento;
@@ -75,7 +82,7 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
 
   private final List<IZmlModelColumn> m_columns = Collections.synchronizedList( new ArrayList<IZmlModelColumn>() );
 
-  private final Set<IZmlColumnModelListener> m_listeners = Collections.synchronizedSet( new HashSet<IZmlColumnModelListener>() );
+  protected final Set<IZmlColumnModelListener> m_listeners = Collections.synchronizedSet( new HashSet<IZmlColumnModelListener>() );
 
   private Map<Date, IZmlModelRow> m_rows = Collections.synchronizedMap( new TreeMap<Date, IZmlModelRow>() );
 
@@ -146,7 +153,7 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
     column.addListener( this );
     m_columns.add( column );
 
-    fireModelChanged( column );
+    fireModelChanged( new ZmlModelColumnChangeType( STRUCTURE_CHANGE ) );
   }
 
   @Override
@@ -175,7 +182,7 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
 
     m_rows.clear();
 
-    fireModelChanged();
+    fireModelChanged( new ZmlModelColumnChangeType( STRUCTURE_CHANGE ) );
   }
 
   public void dispose( )
@@ -194,17 +201,57 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
     m_rows.clear();
   }
 
+  final Set<IZmlModelColumn> m_stack = new LinkedHashSet<IZmlModelColumn>();
+
+  int m_stackEvent = 0;
+
+  private Job m_fireModelChangedJob;
+
+  private static final MutexRule MUTEX_FIRE_MODEL_CHANGED = new MutexRule( "mutex - fire zml model changed" );
+
   @Override
-  public void fireModelChanged( final IZmlModelColumn... columns )
+  public synchronized void fireModelChanged( final ZmlModelColumnChangeType event )
   {
-    final IZmlColumnModelListener[] listeners = m_listeners.toArray( new IZmlColumnModelListener[] {} );
-    for( final IZmlColumnModelListener listener : listeners )
+    if( m_fireModelChangedJob != null )
+      m_fireModelChangedJob.cancel();
+
+// if( Arrays.isEmpty( columns ) )
+// Collections.addAll( m_stack, getColumns() );
+// else
+// Collections.addAll( m_stack, columns );
+
+    m_stackEvent |= event.getEvent();
+
+    m_fireModelChangedJob = new Job( "firing zml model changes" )
     {
-      if( Arrays.isEmpty( columns ) )
-        listener.modelChanged( getColumns() );
-      else
-        listener.modelChanged( columns );
-    }
+      @Override
+      protected IStatus run( final IProgressMonitor monitor )
+      {
+        if( monitor.isCanceled() )
+          return Status.CANCEL_STATUS;
+
+        final IZmlModelColumn[] changed = m_stack.toArray( new IZmlModelColumn[] {} );
+        m_stack.clear();
+
+        final int e = m_stackEvent;
+        m_stackEvent = 0;
+
+        final IZmlColumnModelListener[] listeners = m_listeners.toArray( new IZmlColumnModelListener[] {} );
+        for( final IZmlColumnModelListener listener : listeners )
+        {
+          listener.modelChanged( new ZmlModelColumnChangeType( e ) );
+        }
+
+        return Status.OK_STATUS;
+      }
+    };
+
+    m_fireModelChangedJob.setUser( false );
+    m_fireModelChangedJob.setSystem( true );
+    m_fireModelChangedJob.setRule( MUTEX_FIRE_MODEL_CHANGED );
+
+    m_fireModelChangedJob.schedule( 150 );
+
   }
 
   @Override
@@ -221,6 +268,23 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
 
       return null;
     }
+  }
+
+  @Override
+  @Deprecated
+  public ZmlModelColumn[] getAvailableColumns( )
+  {
+    final Set<ZmlModelColumn> active = new LinkedHashSet<ZmlModelColumn>();
+
+    final ZmlModelColumn[] columns = getColumns();
+    for( final ZmlModelColumn column : columns )
+    {
+      if( column.isActive() )
+        active.add( column );
+    }
+
+    return active.toArray( new ZmlModelColumn[] {} );
+
   }
 
   @Override
@@ -273,11 +337,12 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
   }
 
   @Override
-  public void modelColumnChangedEvent( final IZmlModelColumn column )
+  public void modelColumnChangedEvent( final IZmlModelColumn column, final ZmlModelColumnChangeType event )
   {
-    m_rows.clear();
+    if( event.doForceChange() )
+      m_rows.clear();
 
-    fireModelChanged( column );
+    fireModelChanged( event );
   }
 
   public URL getContext( )
@@ -293,7 +358,7 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
     KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlTableModel - Setting ignore types\n" );
     m_ignoreTypes = ignoreTypes;
 
-    fireModelChanged();
+    fireModelChanged( new ZmlModelColumnChangeType( IGNORE_TYPES_CHANGED ) );
   }
 
   @Override

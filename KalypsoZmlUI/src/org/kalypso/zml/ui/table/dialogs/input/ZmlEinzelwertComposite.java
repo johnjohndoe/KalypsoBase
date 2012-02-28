@@ -72,7 +72,7 @@ import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedComboViewer;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedTextBox;
@@ -355,7 +355,7 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
           final FindNextValueVisitor visitor = new FindNextValueVisitor( row );
           column.accept( visitor );
 
-          final IZmlValueReference reference = visitor.getReference();
+          final IZmlModelValueCell reference = visitor.getReference();
           if( Objects.isNotNull( reference ) )
           {
             m_model.addRow( new ZmlEinzelwert( m_model, reference.getIndexValue(), reference.getValue().doubleValue() ) );
@@ -440,9 +440,6 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
     return true;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.base.widgets.IAbstractEnhancedWidgetChangeListener#widgetChanged(org.kalypso.zml.ui.table.base.widgets.IAbstractEnhancedWidget)
-   */
   @Override
   public void widgetChanged( final IAbstractEnhancedWidget widget )
   {

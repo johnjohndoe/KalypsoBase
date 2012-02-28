@@ -42,6 +42,7 @@ package org.kalypso.zml.core.table.model;
 
 import java.util.Date;
 
+import org.kalypso.zml.core.table.model.event.ZmlModelColumnChangeType;
 import org.kalypso.zml.core.table.model.memento.IZmlMemento;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
@@ -55,7 +56,7 @@ public interface IZmlModel
 
   void addListener( IZmlColumnModelListener listener );
 
-  void fireModelChanged( final IZmlModelColumn... columns );
+  void fireModelChanged( final ZmlModelColumnChangeType event );
 
   IZmlModelColumn getColumn( String id );
 
@@ -69,6 +70,9 @@ public interface IZmlModel
 
   void accept( IZmlModelRowVisitor visitor );
 
+  // FIXME is never called
+  void dispose( );
+
   void add( IZmlModelColumn column );
 
   IZmlMemento getMemento( );
@@ -77,5 +81,5 @@ public interface IZmlModel
 
   String[] getIgnoreTypes( );
 
-  void doClean( );
+  ZmlModelColumn[] getAvailableColumns( );
 }

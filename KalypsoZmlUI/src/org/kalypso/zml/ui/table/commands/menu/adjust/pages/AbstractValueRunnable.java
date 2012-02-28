@@ -47,11 +47,15 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.TupleModelDataSet;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.transaction.TupleModelTransaction;
+import org.kalypso.ogc.sensor.transaction.UpdateTupleModelDataSetCommand;
 import org.kalypso.repository.IDataSourceItem;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 
 /**
  * @author Dirk Kuch
@@ -59,10 +63,13 @@ import org.kalypso.zml.ui.table.model.IZmlTableCell;
 public abstract class AbstractValueRunnable implements ICoreRunnableWithProgress
 {
 
-  private final IZmlTableCell[] m_cells;
+  private final IZmlModelValueCell[] m_cells;
 
-  public AbstractValueRunnable( final IZmlTableCell[] cells )
+  private final IZmlModelColumn m_column;
+
+  public AbstractValueRunnable( final IZmlModelColumn column, final IZmlModelValueCell[] cells )
   {
+    m_column = column;
     m_cells = cells;
   }
 
@@ -70,25 +77,34 @@ public abstract class AbstractValueRunnable implements ICoreRunnableWithProgress
   public final IStatus execute( final IProgressMonitor monitor )
   {
     final List<IStatus> statis = new ArrayList<IStatus>();
-
-    final ZmlModelTransaction transaction = new ZmlModelTransaction();
-
-    for( final IZmlTableCell cell : m_cells )
+    try
     {
-      try
-      {
-        final IZmlValueReference reference = cell.getValueReference();
-        final Number value = getValue( reference.getValue() );
+      final IObservation observation = m_column.getObservation();
+      final TupleModelTransaction transaction = new TupleModelTransaction( observation.getValues( null ), observation.getMetadataList() );
 
-        transaction.add( reference, value, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
-      }
-      catch( final Exception e )
+      for( final IZmlModelValueCell cell : m_cells )
       {
-        statis.add( StatusUtilities.createExceptionalErrorStatus( "Anpassen eines Wertes fehlgeschlagen", e ) );
+
+        try
+        {
+          final Number value = getValue( cell.getValue() );
+
+          final TupleModelDataSet dataset = new TupleModelDataSet( m_column.getValueAxis(), value, KalypsoStati.BIT_USER_MODIFIED, IDataSourceItem.SOURCE_MANUAL_CHANGED );
+          transaction.add( new UpdateTupleModelDataSetCommand( cell.getModelIndex(), dataset, true ) );
+
+        }
+        catch( final Exception e )
+        {
+          statis.add( StatusUtilities.createExceptionalErrorStatus( "Anpassen eines Wertes fehlgeschlagen", e ) );
+        }
       }
+
+      m_column.getObservation().getValues( null ).execute( transaction );
     }
-
-    transaction.execute();
+    catch( final SensorException e )
+    {
+      e.printStackTrace();
+    }
 
     return StatusUtilities.createStatus( statis, "Anpassen" );
   }

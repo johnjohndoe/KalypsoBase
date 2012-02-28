@@ -43,7 +43,6 @@ package org.kalypso.zml.ui.table.view;
 import java.net.URL;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -51,17 +50,15 @@ import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.IObservationListener;
+import org.kalypso.ogc.sensor.event.IObservationListener;
+import org.kalypso.ogc.sensor.event.ObservationChangeType;
 import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
 import org.kalypso.zml.core.table.ZmlTableConfigurationLoader;
-import org.kalypso.zml.core.table.model.IZmlColumnModelListener;
-import org.kalypso.zml.core.table.model.IZmlModel;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.ZmlModel;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.IZmlTableComposite;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
-import org.kalypso.zml.ui.table.update.ZmlTableUpdater;
 
 /**
  * @author Dirk Kuch
@@ -110,32 +107,36 @@ public class TableComposite extends Composite implements IUpdateable, IObservati
   private void draw( final FormToolkit toolkit )
   {
 
-    m_table = new ZmlTableComposite( this, toolkit );
-    m_table.doInitialize( m_model );
+    throw new UnsupportedOperationException();
 
-    m_table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    final IZmlColumnModelListener listener = new IZmlColumnModelListener()
-    {
-      @Override
-      public void modelChanged( final IZmlModelColumn... columns )
-      {
-        m_table.refresh();
-      }
-    };
-
-    m_model.addListener( listener );
+// m_table = new ZmlTableComposite( this, toolkit );
+// m_table.doInitialize( m_model );
+//
+// m_table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+// final IZmlColumnModelListener listener = new IZmlColumnModelListener()
+// {
+// @Override
+// public void modelChanged( final IZmlModelColumn... columns )
+// {
+// m_table.refresh();
+// }
+// };
+//
+// m_model.addListener( listener );
 
   }
 
   public void setSelection( final IMultipleZmlSourceElement[] selection )
   {
-    final IZmlModel model = m_table.getModel();
-    model.doClean();
 
-    final ZmlTableUpdater updater = new ZmlTableUpdater( m_table, selection );
-    updater.setSingleSelectionMode( true );
-
-    updater.run();
+    throw new UnsupportedOperationException();
+// final IZmlModel model = m_table.getModel();
+// model.doClean();
+//
+// final ZmlTableUpdater updater = new ZmlTableUpdater( m_table, selection );
+// updater.setSingleSelectionMode( true );
+//
+// updater.run();
 
   }
 
@@ -149,8 +150,9 @@ public class TableComposite extends Composite implements IUpdateable, IObservati
   }
 
   @Override
-  public void observationChanged( final IObservation obs, final Object source )
+  public void observationChanged( final IObservation obs, final Object source, final ObservationChangeType type )
   {
+    // TODO Auto-generated method stub
 
     // TODO
 // final UIJob job = new UIJob( "Observation changed - invalidating diagram" )
@@ -171,6 +173,11 @@ public class TableComposite extends Composite implements IUpdateable, IObservati
   }
 
   public IZmlTable getTable( )
+  {
+    return m_table.getTable();
+  }
+
+  public IZmlTableComposite getTableComposite( )
   {
     return m_table;
   }

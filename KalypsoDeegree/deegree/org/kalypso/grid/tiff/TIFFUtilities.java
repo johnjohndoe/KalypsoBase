@@ -56,6 +56,7 @@ import javax.media.jai.TiledImage;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.IGeoGrid;
 
+import com.sun.media.jai.codec.SeekableStream;
 import com.sun.media.jai.codec.TIFFEncodeParam;
 
 /**
@@ -130,9 +131,31 @@ public final class TIFFUtilities
     return tiledImage;
   }
 
+  /**
+   * This function loads the TIFF. <br/>
+   * <br/>
+   * HINT:<br/>
+   * This function has issues with closing the unerlying stream.
+   * 
+   * @param file
+   *          The path of the source file.
+   * @return The TIFF.
+   */
   public static RenderedOp loadTiff( final File file )
   {
     return JAI.create( "fileload", file.getAbsolutePath() );
+  }
+
+  /**
+   * This function loads the TIFF.
+   * 
+   * @param stream
+   *          The stream of the TIFF.
+   * @return The TIFF.
+   */
+  public static RenderedOp loadTiff( final SeekableStream stream )
+  {
+    return JAI.create( "stream", stream );
   }
 
   /**
@@ -184,6 +207,7 @@ public final class TIFFUtilities
     }
 
     /* Save the file. */
-    JAI.create( "filestore", image, file.getAbsolutePath(), "TIFF", tep );
+    final RenderedOp renderedOp = JAI.create( "filestore", image, file.getAbsolutePath(), "TIFF", tep );
+    renderedOp.dispose();
   }
 }

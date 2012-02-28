@@ -45,9 +45,13 @@ import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.zml.core.KalypsoZmlCore;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.kalypso.zml.core.table.binding.rule.AbstractZmlRule;
+import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
+import org.kalypso.zml.core.table.binding.rule.ZmlColumnRule;
+import org.kalypso.zml.core.table.schema.ColumnRuleType;
 import org.kalypso.zml.core.table.schema.RuleRefernceType;
 import org.kalypso.zml.core.table.schema.RuleSetType;
 import org.kalypso.zml.core.table.schema.RuleType;
@@ -59,7 +63,7 @@ public class ZmlRuleSet
 {
   private final RuleSetType m_type;
 
-  private ZmlRule[] m_rules;
+  private AbstractZmlRule[] m_rules;
 
   public ZmlRuleSet( final RuleSetType type )
   {
@@ -71,33 +75,37 @@ public class ZmlRuleSet
     return m_type.getId();
   }
 
-  public ZmlRule[] getRules( )
+  public AbstractZmlRule[] getRules( )
   {
     if( ArrayUtils.isNotEmpty( m_rules ) )
       return m_rules;
 
-    final List<ZmlRule> rules = new ArrayList<ZmlRule>();
+    final List<AbstractZmlRule> rules = new ArrayList<AbstractZmlRule>();
     final ZmlRuleResolver resolver = ZmlRuleResolver.getInstance();
 
-    for( final Object objRule : m_type.getRuleOrRule() )
+    for( final Object objRule : m_type.getColumnRuleOrRuleOrRule() )
     {
-      if( objRule instanceof RuleType )
+      if( objRule instanceof ColumnRuleType )
+      {
+        final ColumnRuleType ruleType = (ColumnRuleType) objRule;
+        rules.add( new ZmlColumnRule( ruleType ) );
+      }
+      else if( objRule instanceof RuleType )
       {
         final RuleType ruleType = (RuleType) objRule;
-        final ZmlRule rule = new ZmlRule( ruleType );
-        rule.reset();
-
-        rules.add( rule );
+        rules.add( new ZmlCellRule( ruleType ) );
       }
       else if( objRule instanceof RuleRefernceType )
       {
         try
         {
           final RuleRefernceType reference = (RuleRefernceType) objRule;
-          final ZmlRule rule = resolver.findRule( null, reference );
-          if( rule != null )
+          final AbstractZmlRule rule = resolver.findRule( null, reference );
+          if( Objects.isNotNull( rule ) )
           {
-            rule.reset();
+            if( rule instanceof ZmlCellRule )
+              ((ZmlCellRule) rule).reset();
+
             rules.add( rule );
           }
         }
@@ -106,19 +114,22 @@ public class ZmlRuleSet
           KalypsoZmlCore.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
         }
       }
+      else
+        throw new UnsupportedOperationException();
     }
 
-    m_rules = rules.toArray( new ZmlRule[] {} );
+    m_rules = rules.toArray( new AbstractZmlRule[] {} );
 
     return m_rules;
   }
 
-  public ZmlRule find( final String identifier )
+  public AbstractZmlRule find( final String identifier )
   {
-    final ZmlRule[] rules = getRules();
-    for( final ZmlRule rule : rules )
+    final AbstractZmlRule[] rules = getRules();
+    for( final AbstractZmlRule rule : rules )
     {
-      if( rule.getIdentifier().equals( identifier ) )
+      final String id = rule.getIdentifier();
+      if( id.equals( identifier ) )
         return rule;
     }
 

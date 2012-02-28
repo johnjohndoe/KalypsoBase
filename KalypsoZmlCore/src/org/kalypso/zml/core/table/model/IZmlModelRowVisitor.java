@@ -45,5 +45,5 @@ package org.kalypso.zml.core.table.model;
  */
 public interface IZmlModelRowVisitor
 {
-  void visit( IZmlModelRow value );
+  void visit( IZmlModelRow row );
 }

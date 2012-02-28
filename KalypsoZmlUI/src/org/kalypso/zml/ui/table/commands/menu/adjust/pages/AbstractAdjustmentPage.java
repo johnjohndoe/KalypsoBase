@@ -45,7 +45,8 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.pager.AbstractElementPage;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
 
 /**
  * @author Dirk Kuch
@@ -63,9 +64,14 @@ public abstract class AbstractAdjustmentPage extends AbstractElementPage
     m_provider = provider;
   }
 
-  protected IZmlTableColumn getColumn( )
+  protected IZmlModelColumn getColumn( )
   {
     return m_provider.getColumn();
+  }
+
+  protected IZmlTableSelection getSelection( )
+  {
+    return m_provider.getSelectionHandler();
   }
 
   public abstract ICoreRunnableWithProgress getRunnable( );

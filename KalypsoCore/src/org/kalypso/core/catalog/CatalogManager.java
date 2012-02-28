@@ -79,7 +79,7 @@ import org.kalypso.core.i18n.Messages;
  * <p>
  * the default-catalog is dynamic, but changes will not be saved
  * </p>
- *
+ * 
  * @author doemming
  */
 @SuppressWarnings("restriction")
@@ -114,7 +114,7 @@ public class CatalogManager
     m_urnGenerators.put( key, urnGenerator );
   }
 
-  private synchronized ICatalog getBaseCatalog( )
+  public synchronized ICatalog getBaseCatalog( )
   {
     if( m_baseCatalog != null )
       return m_baseCatalog;

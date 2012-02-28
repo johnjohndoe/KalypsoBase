@@ -47,7 +47,8 @@ import java.util.Set;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.IObservationListener;
+import org.kalypso.ogc.sensor.event.IObservationListener;
+import org.kalypso.ogc.sensor.event.ObservationChangeType;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
@@ -149,12 +150,12 @@ public class ZmlObservationDataHandler implements IZmlLayerDataHandler, IObserva
   }
 
   @Override
-  public void observationChanged( final IObservation obs, final Object source )
+  public void observationChanged( final IObservation obs, final Object source, final ObservationChangeType type )
   {
     final IObservationListener[] listeners = m_listeners.toArray( new IObservationListener[] {} );
     for( final IObservationListener listener : listeners )
     {
-      listener.observationChanged( obs, source );
+      listener.observationChanged( obs, source, type );
     }
   }
 

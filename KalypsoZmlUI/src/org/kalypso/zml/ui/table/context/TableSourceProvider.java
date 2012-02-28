@@ -63,9 +63,8 @@ import org.eclipse.ui.services.IServiceWithSources;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.ui.commands.CommandUtilities;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.IZmlTableListener;
+import org.kalypso.zml.ui.table.IZmlTableComposite;
+import org.kalypso.zml.ui.table.IZmlTableCompositeListener;
 
 /**
  * Manages context and sources corresponding to the chart.<br>
@@ -87,12 +86,12 @@ public class TableSourceProvider extends AbstractSourceProvider
 
   private static final String[] PROVIDED_SOURCE_NAMES = new String[] { ACTIVE_TABLE_NAME };
 
-  private final IZmlTableListener m_listener = new IZmlTableListener()
+  private final IZmlTableCompositeListener m_listener = new IZmlTableCompositeListener()
   {
     @Override
-    public void eventTableChanged( final String type, final IZmlModelColumn... columns )
+    public void eventTableChanged( final String type )
     {
-      if( IZmlTableListener.TYPE_REFRESH.equals( type ) )
+      if( IZmlTableCompositeListener.TYPE_REFRESH.equals( type ) )
         refreshUIelements();
     }
   };
@@ -106,7 +105,7 @@ public class TableSourceProvider extends AbstractSourceProvider
   /** Ensures, that the context are activated in the same order as the themes are activated. */
   private final ISchedulingRule m_mutexRule = new MutexRule();
 
-  private final IZmlTableSource m_source;
+  private IZmlTableSource m_source;
 
   private final IContextActivation m_tableContext;
 
@@ -127,7 +126,7 @@ public class TableSourceProvider extends AbstractSourceProvider
     registerServiceWithSources( serviceLocator, IMenuService.class );
 
     m_tableContext = contextService.activateContext( TABLE_CONTEXT );
-    final IZmlTable table = source.getTable();
+    final IZmlTableComposite table = source.getComposite();
     if( Objects.isNotNull( table ) )
       table.addListener( m_listener );
   }
@@ -153,9 +152,11 @@ public class TableSourceProvider extends AbstractSourceProvider
       service.removeSourceProvider( this );
     }
 
-    final IZmlTable table = m_source.getTable();
+    final IZmlTableComposite table = m_source.getComposite();
     if( Objects.isNotNull( table ) )
       table.removeListener( m_listener );
+
+    m_source = null;
 
     if( m_tableContext != null )
       m_tableContext.getContextService().deactivateContext( m_tableContext );
@@ -164,9 +165,8 @@ public class TableSourceProvider extends AbstractSourceProvider
   @Override
   public Map< ? , ? > getCurrentState( )
   {
-
     final Map<String, Object> currentState = new TreeMap<String, Object>();
-    currentState.put( ACTIVE_TABLE_NAME, m_source.getTable() );
+    currentState.put( ACTIVE_TABLE_NAME, m_source.getComposite() );
 
     return currentState;
   }

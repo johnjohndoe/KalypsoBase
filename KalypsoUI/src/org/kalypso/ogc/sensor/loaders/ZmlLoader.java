@@ -56,7 +56,8 @@ import org.kalypso.i18n.Messages;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.IObservationListener;
+import org.kalypso.ogc.sensor.event.IObservationListener;
+import org.kalypso.ogc.sensor.event.ObservationChangeType;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 
 /**
@@ -71,16 +72,12 @@ public class ZmlLoader extends AbstractLoader
   private final IObservationListener m_observationListener = new IObservationListener()
   {
     @Override
-    public void observationChanged( final IObservation obs, final Object eventSource )
+    public void observationChanged( final IObservation obs, final Object eventSource, final ObservationChangeType type )
     {
-      handleObservationChanged( obs );
+      handleObservationChanged( obs, type );
     }
   };
 
-  /**
-   * @see org.kalypso.loader.ILoader#load(org.kalypso.core.util.pool.IPoolableObjectType,
-   *      org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public Object load( final IPoolableObjectType key, final IProgressMonitor monitor ) throws LoaderException
   {
@@ -95,12 +92,12 @@ public class ZmlLoader extends AbstractLoader
 
       final IObservation observation = ZmlFactory.parseXML( url );
       observation.addListener( m_observationListener );
+
       return observation;
     }
     catch( final Exception e ) // generic exception caught for simplicity
     {
-// e.printStackTrace();
-// TODO wenn resource geloescht wurde, wird hier ein fehler geworfen
+      // TODO wenn resource geloescht wurde, wird hier ein fehler geworfen
       throw new LoaderException( e );
     }
     finally
@@ -109,10 +106,6 @@ public class ZmlLoader extends AbstractLoader
     }
   }
 
-  /**
-   * @see org.kalypso.loader.ILoader#save(org.kalypso.core.util.pool.IPoolableObjectType,
-   *      org.eclipse.core.runtime.IProgressMonitor, java.lang.Object)
-   */
   @Override
   public void save( final IPoolableObjectType key, final IProgressMonitor monitor, final Object data ) throws LoaderException
   {
@@ -176,7 +169,7 @@ public class ZmlLoader extends AbstractLoader
     obs.removeListener( m_observationListener );
   }
 
-  protected void handleObservationChanged( final IObservation obs )
+  protected void handleObservationChanged( final IObservation obs, final ObservationChangeType type )
   {
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
     final KeyInfo info = pool.getInfo( obs );

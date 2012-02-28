@@ -51,10 +51,11 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.IObservationListener;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.TupleModelDataSet;
+import org.kalypso.ogc.sensor.event.IObservationListener;
+import org.kalypso.ogc.sensor.event.ObservationChangeType;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
@@ -232,9 +233,9 @@ public class DataSourceProxyObservation implements IObservation
   }
 
   @Override
-  public void fireChangedEvent( final Object source )
+  public void fireChangedEvent( final Object source, final ObservationChangeType type )
   {
-    m_observation.fireChangedEvent( source );
+    m_observation.fireChangedEvent( source, type );
   }
 
   @Override

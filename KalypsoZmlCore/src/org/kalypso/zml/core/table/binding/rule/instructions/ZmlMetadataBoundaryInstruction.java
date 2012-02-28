@@ -51,9 +51,10 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataBoundary;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
-import org.kalypso.zml.core.KalypsoZmlCore;
+import org.kalypso.zml.core.KalypsoZmlCoreExtensions;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.rules.impl.grenzwert.IZmlGrenzwertValue;
 import org.kalypso.zml.core.table.schema.AbstractRuleInstructionType;
 import org.kalypso.zml.core.table.schema.MetadataBoundaryInstructionType;
@@ -85,14 +86,19 @@ public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionTy
   }
 
   @Override
-  public boolean matches( final IZmlValueReference reference ) throws SensorException
+  public boolean matches( final IZmlModelCell reference ) throws SensorException
   {
-    final MetadataBoundary metaFrom = getBoundaryFrom( reference );
-    final MetadataBoundary metaTo = getBoundaryTo( reference );
+    if( !(reference instanceof IZmlModelValueCell) )
+      return false;
+
+    final IZmlModelValueCell cell = (IZmlModelValueCell) reference;
+
+    final MetadataBoundary metaFrom = getBoundaryFrom( cell );
+    final MetadataBoundary metaTo = getBoundaryTo( cell );
 
     final String boundaryType = findBoundaryType( metaFrom, metaTo );
 
-    final double value = findValue( reference, boundaryType );
+    final double value = findValue( cell, boundaryType );
     if( Double.isNaN( value ) )
       return false;
 
@@ -108,7 +114,7 @@ public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionTy
     return true;
   }
 
-  private MetadataBoundary getBoundaryFrom( final IZmlValueReference reference )
+  private MetadataBoundary getBoundaryFrom( final IZmlModelValueCell reference )
   {
     if( m_boundaryFrom == null || reference.getColumn() != m_lastFromColumn )
     {
@@ -131,7 +137,7 @@ public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionTy
       return boundary;
     }
 
-    final IZmlGrenzwertValue delegate = KalypsoZmlCore.getDefault().findGrenzwertDelegate( propertyExtensionPoint );
+    final IZmlGrenzwertValue delegate = KalypsoZmlCoreExtensions.getInstance().findGrenzwertDelegate( propertyExtensionPoint );
     if( Objects.isNull( delegate ) )
       return null;
 
@@ -144,7 +150,7 @@ public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionTy
     return new MetadataBoundary( property, BigDecimal.valueOf( value ) );
   }
 
-  private MetadataBoundary getBoundaryTo( final IZmlValueReference reference )
+  private MetadataBoundary getBoundaryTo( final IZmlModelValueCell reference )
   {
     if( m_boundaryTo == null || reference.getColumn() != m_lastToColumn )
     {
@@ -170,7 +176,7 @@ public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionTy
     return null;
   }
 
-  private double findValue( final IZmlValueReference reference, final String boundaryType ) throws SensorException
+  private double findValue( final IZmlModelValueCell reference, final String boundaryType ) throws SensorException
   {
     if( Objects.isNull( boundaryType ) )
       return getReferenceValue( reference );
@@ -203,7 +209,7 @@ public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionTy
   /**
    * Returns the value hold by the reference itself.
    */
-  private double getReferenceValue( final IZmlValueReference reference ) throws SensorException
+  private double getReferenceValue( final IZmlModelValueCell reference ) throws SensorException
   {
     final Number value = reference.getValue();
     if( Objects.isNull( value ) )

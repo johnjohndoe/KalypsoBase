@@ -65,7 +65,9 @@ public class DateTimeLabelCreator implements ILabelCreator
   @Override
   public String getLabel( final Number value, final IDataRange<Number> range )
   {
-// ChartLayerUtils.addTimezoneOffset(
+//    final TimeZone kalypsoTZ = KalypsoCorePlugin.getDefault().getTimeZone();
+//    final FixedDateTimeZone jodaTZ = new FixedDateTimeZone( kalypsoTZ.getID(), null, kalypsoTZ.getOffset(  value.longValue() ), kalypsoTZ.getOffset(  value.longValue() ) );
+//  
     final IDateTimeAxisField axisField = m_dateTimeFieldProvider.getDateTimeAxisField( range );
     final DateTimeZone zone = DateTimeZone.forTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
     final DateTime dateTime = new DateTime( value.longValue(), zone );

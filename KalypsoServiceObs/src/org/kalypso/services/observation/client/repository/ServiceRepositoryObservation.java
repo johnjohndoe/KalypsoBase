@@ -49,10 +49,11 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.IObservationListener;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.cache.ObservationCache;
+import org.kalypso.ogc.sensor.event.IObservationListener;
+import org.kalypso.ogc.sensor.event.ObservationChangeType;
 import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
@@ -208,9 +209,9 @@ public class ServiceRepositoryObservation implements IObservation
   }
 
   @Override
-  public final void fireChangedEvent( final Object source )
+  public final void fireChangedEvent( final Object source, final ObservationChangeType type )
   {
-    m_evtPrv.fireChangedEvent( source );
+    m_evtPrv.fireChangedEvent( source, type );
   }
 
   @Override

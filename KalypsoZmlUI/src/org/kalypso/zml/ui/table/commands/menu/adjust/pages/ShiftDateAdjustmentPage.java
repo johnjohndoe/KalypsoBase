@@ -46,11 +46,10 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
-import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedSpinner;
 import org.kalypso.zml.ui.table.base.widgets.IEnhancedTextBoxListener;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -88,26 +87,20 @@ public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage
   @Override
   public void render( final Composite body, final FormToolkit toolkit )
   {
-    try
-    {
-      toolkit.createLabel( body, "" ); // spacer
-      final Integer offset = getOffset();
 
-      toolkit.createLabel( body, "Verschieben, um:" ).setFont( HEADING );
+    toolkit.createLabel( body, "" ); // spacer
+    final Integer offset = getOffset();
 
-      final Composite control = toolkit.createComposite( body );
-      control.setLayout( Layouts.createGridLayout( 3 ) );
-      control.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    toolkit.createLabel( body, "Verschieben, um:" ).setFont( HEADING );
 
-      if( offset < 60 )
-        renderMinutedBased( control, toolkit );
-      else
-        renderHourBased( control, toolkit );
-    }
-    catch( final SensorException e )
-    {
-      e.printStackTrace();
-    }
+    final Composite control = toolkit.createComposite( body );
+    control.setLayout( Layouts.createGridLayout( 3 ) );
+    control.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+
+    if( offset < 60 )
+      renderMinutedBased( control, toolkit );
+    else
+      renderHourBased( control, toolkit );
 
   }
 
@@ -121,7 +114,7 @@ public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage
 
   }
 
-  private void renderMinutedBased( final Composite control, final FormToolkit toolkit ) throws SensorException
+  private void renderMinutedBased( final Composite control, final FormToolkit toolkit )
   {
     addDaySpinner( control, toolkit );
     addHourSpinner( control, toolkit );
@@ -185,16 +178,16 @@ public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage
     return spinner;
   }
 
-  private Integer getOffset( ) throws SensorException
+  private Integer getOffset( )
   {
     if( Objects.isNotNull( m_offset ) )
       return m_offset;
 
-    final IZmlTableColumn column = getColumn();
-    final IZmlTableCell[] cells = column.getCells();
+    final IZmlModelColumn column = getColumn();
+    final IZmlModelValueCell[] cells = column.getCells();
 
-    final long t1 = cells[0].getValueReference().getIndexValue().getTime();
-    final long t2 = cells[1].getValueReference().getIndexValue().getTime();
+    final long t1 = cells[0].getIndexValue().getTime();
+    final long t2 = cells[1].getIndexValue().getTime();
 
     final double minutes = Long.valueOf( t2 - t1 ).doubleValue() / 1000 / 60;
 
@@ -203,26 +196,17 @@ public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage
     return m_offset;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.pager.IElementPage#dispose()
-   */
   @Override
   public void dispose( )
   {
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.commands.menu.adjust.pages.AbstractAdjustmentPage#getRunnable()
-   */
   @Override
   public ICoreRunnableWithProgress getRunnable( )
   {
-    return new ShiftDateRunnable( getColumn().getModelColumn(), getColumn().getSelectedCells(), getMinutes() );
+    return new ShiftDateRunnable( getColumn(), getSelection().getSelectedCells( getColumn() ), getMinutes() );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.commands.menu.adjust.pages.AbstractAdjustmentPage#isValid()
-   */
   @Override
   public boolean isValid( )
   {

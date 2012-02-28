@@ -44,6 +44,7 @@ import java.net.URL;
 import java.util.Calendar;
 
 import org.eclipse.core.runtime.Assert;
+import org.joda.time.Period;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
@@ -54,6 +55,7 @@ import org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 import org.kalypso.zml.filters.IntervallFilterType;
 
 /**
@@ -127,7 +129,7 @@ public class IntervalFilter extends AbstractObservationFilter
   {
     final DateRange dateRange = request == null ? null : request.getDateRange();
 
-    // BUGIFX: fixes the problem with the first value:
+    // BUGFIX: fixes the problem with the first value:
     // the first value was always ignored, because the interval
     // filter cannot handle the first value of the source observation
     // FIX: we just make the request a big bigger in order to get a new first value
@@ -135,10 +137,17 @@ public class IntervalFilter extends AbstractObservationFilter
     // Maybe there should be one day a mean to determine, which is the right amount.
     final ITupleModel values = ObservationUtilities.requestBuffered( m_baseobservation, dateRange, Calendar.DAY_OF_MONTH, 2 );
 
-    m_metadata = MetadataHelper.clone( m_baseobservation.getMetadataList() );
+    MetadataList baseMetadata = m_baseobservation.getMetadataList();
+
+    m_metadata = MetadataHelper.clone( baseMetadata );
     m_definition.setTimestep( m_metadata );
 
-    final IntervalValuesOperation valuesOperation = new IntervalValuesOperation( values, m_metadata, m_definition );
+    final DataSourceHandler targetSourcesHandler = new DataSourceHandler( m_metadata );
+
+    // REMARK: Important: get timestep from base metadata, not from the copied and changed m_metadata
+    Period sourceTimstep = MetadataHelper.getTimestep( baseMetadata );
+
+    final IntervalValuesOperation valuesOperation = new IntervalValuesOperation( values, sourceTimstep, targetSourcesHandler, m_definition );
     valuesOperation.execute( dateRange );
     return valuesOperation.getModel();
   }

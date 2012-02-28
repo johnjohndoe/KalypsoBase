@@ -44,6 +44,8 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.event.IObservationListener;
+import org.kalypso.ogc.sensor.event.ObservationChangeType;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.provider.IObsProviderListener;
 
@@ -58,13 +60,13 @@ public class ObsProviderZmlColumnDataHandler extends AbstractZmlColumnDataHandle
     @Override
     public void observationReplaced( )
     {
-      fireObservationChanged();
+      fireObservationChanged( new ObservationChangeType( IObservationListener.STRUCTURE_CHANGE ) );
     }
 
     @Override
     public void observationChanged( final Object source )
     {
-      fireObservationChanged();
+      fireObservationChanged( new ObservationChangeType( IObservationListener.VALUE_CHANGED ) );
     }
   };
 

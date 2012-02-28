@@ -54,7 +54,9 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.zml.core.table.binding.ZmlRuleResolver;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.kalypso.zml.core.table.binding.rule.AbstractZmlRule;
+import org.kalypso.zml.core.table.model.event.IZmlModelColumnEvent;
+import org.kalypso.zml.core.table.model.event.ZmlModelColumnChangeType;
 import org.kalypso.zml.core.table.schema.RuleRefernceType;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.IZmlTable;
@@ -71,23 +73,23 @@ public class ZmlCommandViewBoundaries extends AbstractHandler implements IElemen
   @Override
   public Object execute( final ExecutionEvent event )
   {
-    final ZmlRule[] rules = findRules( event.getParameters() );
-    for( final ZmlRule rule : rules )
+    final AbstractZmlRule[] rules = findRules( event.getParameters() );
+    for( final AbstractZmlRule rule : rules )
     {
       rule.setEnabled( HandlerUtils.isSelected( event ) );
     }
 
     final IZmlTable table = ZmlHandlerUtil.getTable( event );
-    table.refresh();
+    table.refresh( new ZmlModelColumnChangeType( IZmlModelColumnEvent.COLUMN_RULES_CHANGED ) );
 
     return Status.OK_STATUS;
   }
 
-  private ZmlRule[] findRules( @SuppressWarnings("rawtypes") final Map parameters )
+  private AbstractZmlRule[] findRules( @SuppressWarnings("rawtypes") final Map parameters )
   {
     final String linkedRules = (String) parameters.get( "rules" ); // $NON-NLS-1$
 
-    final List<ZmlRule> myRules = new ArrayList<ZmlRule>();
+    final List<AbstractZmlRule> myRules = new ArrayList<AbstractZmlRule>();
     final ZmlRuleResolver resolver = ZmlRuleResolver.getInstance();
 
     final Iterable<String> rules = Splitter.on( ';' ).split( linkedRules );
@@ -98,7 +100,7 @@ public class ZmlCommandViewBoundaries extends AbstractHandler implements IElemen
         final RuleRefernceType reference = new RuleRefernceType();
         reference.setUrl( lnkRule );
 
-        final ZmlRule rule = resolver.findRule( null, reference );
+        final AbstractZmlRule rule = resolver.findRule( null, reference );
         if( Objects.isNotNull( rule ) )
           myRules.add( rule );
       }
@@ -108,14 +110,14 @@ public class ZmlCommandViewBoundaries extends AbstractHandler implements IElemen
       }
     }
 
-    return myRules.toArray( new ZmlRule[] {} );
+    return myRules.toArray( new AbstractZmlRule[] {} );
   }
 
   @Override
   public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
   {
-    final ZmlRule[] rules = findRules( parameters );
-    for( final ZmlRule rule : rules )
+    final AbstractZmlRule[] rules = findRules( parameters );
+    for( final AbstractZmlRule rule : rules )
     {
       if( rule.isEnabled() )
         element.setChecked( true );

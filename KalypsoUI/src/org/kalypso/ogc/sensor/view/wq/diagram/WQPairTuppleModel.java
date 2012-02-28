@@ -102,18 +102,12 @@ public class WQPairTuppleModel extends AbstractTupleModel
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object, org.kalypso.ogc.sensor.IAxis)
-   */
   @Override
   public void set( final int index, final IAxis axis, final Object element ) throws SensorException
   {
     throw new SensorException( Messages.getString( "org.kalypso.ogc.sensor.view.wq.diagram.WQPairTuppleModel.0" ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object, org.kalypso.ogc.sensor.IAxis)
-   */
   @Override
   public int indexOf( final Object element, final IAxis axis ) throws SensorException
   {

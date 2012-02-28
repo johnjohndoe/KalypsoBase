@@ -40,11 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model;
 
+import org.kalypso.zml.core.table.model.event.ZmlModelColumnChangeType;
+
 /**
  * @author Dirk Kuch
  */
 public interface IZmlColumnModelListener
 {
-  void modelChanged( final IZmlModelColumn... columns );
+  void modelChanged( ZmlModelColumnChangeType type );
 
 }

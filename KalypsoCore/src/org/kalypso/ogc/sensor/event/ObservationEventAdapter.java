@@ -44,8 +44,6 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.IObservationEventProvider;
-import org.kalypso.ogc.sensor.IObservationListener;
 
 /**
  * ObservationEventAdapter
@@ -63,18 +61,12 @@ public class ObservationEventAdapter implements IObservationEventProvider
     m_obs = obs;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservationEventProvider#addListener(org.kalypso.ogc.sensor.IObservationListener)
-   */
   @Override
   public void addListener( final IObservationListener listener )
   {
     m_listeners.add( listener );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservationEventProvider#removeListener(org.kalypso.ogc.sensor.IObservationListener)
-   */
   @Override
   public void removeListener( final IObservationListener listener )
   {
@@ -85,13 +77,12 @@ public class ObservationEventAdapter implements IObservationEventProvider
    * Fires obs changed event
    */
   @Override
-  public void fireChangedEvent( final Object source )
+  public void fireChangedEvent( final Object source, final ObservationChangeType type )
   {
-    final Object[] listeners = m_listeners.toArray();
-    for( final Object listener2 : listeners )
+    final IObservationListener[] listeners = m_listeners.toArray( new IObservationListener[] {} );
+    for( final IObservationListener listener : listeners )
     {
-      final IObservationListener listener = (IObservationListener) listener2;
-      listener.observationChanged( m_obs, source );
+      listener.observationChanged( m_obs, source, type );
     }
   }
 }

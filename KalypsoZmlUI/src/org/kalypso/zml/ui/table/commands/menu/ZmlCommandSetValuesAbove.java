@@ -45,27 +45,24 @@ import java.util.Date;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.exception.CancelVisitorException;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.TupleModelDataSet;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.transaction.TupleModelTransaction;
+import org.kalypso.ogc.sensor.transaction.UpdateTupleModelDataSetCommand;
 import org.kalypso.repository.IDataSourceItem;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.editing.IZmlEditingStrategy;
 import org.kalypso.zml.core.table.model.interpolation.ZmlInterpolationWorker;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import org.kalypso.zml.core.table.model.references.labeling.ZmlModelCellLabelProvider;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
-import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
-import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
+import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
 
 /**
  * @author Dirk Kuch
@@ -79,61 +76,56 @@ public class ZmlCommandSetValuesAbove extends AbstractHandler
     try
     {
       final IZmlTable table = ZmlHandlerUtil.getTable( event );
-      final IZmlTableSelectionHandler selection = table.getSelectionHandler();
-      final IZmlTableCell active = selection.findActiveCellByPosition();
+      final ZmlModelViewport model = table.getModelViewport();
+      final IZmlTableSelection selection = table.getSelection();
+      final IZmlModelValueCell active = selection.getFocusCell();
+      final IZmlModelColumn column = active.getColumn();
+      final IZmlEditingStrategy strategy = model.getEditingStrategy( column );
 
-      final IZmlTableColumn column = active.getColumn();
-      final IZmlEditingStrategy strategy = column.getEditingStrategy();
       if( strategy.isAggregated() )
       {
-        final ZmlLabelProvider provider = new ZmlLabelProvider( active.getRow().getModelRow(), column, new ZmlRule[] {} );
-        final String targetValue = provider.getText();
+        final ZmlModelCellLabelProvider provider = new ZmlModelCellLabelProvider( column );
+        final String targetValue = provider.getText( table.getModelViewport(), active );
 
-        IZmlTableCell ptr = active.findPreviousCell();
+        IZmlModelValueCell ptr = model.findPreviousCell( active );
         while( ptr != null )
         {
-          strategy.setValue( ptr.getRow().getModelRow(), targetValue );
-          ptr = ptr.findPreviousCell();
+          strategy.setValue( ptr, targetValue );
+
+          ptr = model.findPreviousCell( ptr );
         }
       }
       else
       {
-        final IZmlValueReference reference = active.getValueReference();
-        final Number targetValue = reference.getValue();
-        final Date base = reference.getIndexValue();
+        final Number targetValue = active.getValue();
+        final Date base = active.getIndexValue();
 
-        final ZmlModelTransaction transaction = new ZmlModelTransaction();
+        final TupleModelTransaction transaction = new TupleModelTransaction( column.getTupleModel(), column.getMetadata() );
 
-        final IZmlModelColumn modelColumn = column.getModelColumn();
-        modelColumn.accept( new IZmlModelColumnVisitor()
+        column.accept( new IZmlModelColumnVisitor()
         {
           @Override
-          public void visit( final IZmlValueReference ref ) throws SensorException, CancelVisitorException
+          public void visit( final IZmlModelValueCell ref ) throws CancelVisitorException
           {
             final Date current = ref.getIndexValue();
             if( current.after( base ) || current.equals( base ) )
               throw new CancelVisitorException();
 
-            transaction.add( ref, targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
+            final TupleModelDataSet dataset = new TupleModelDataSet( column.getValueAxis(), targetValue, KalypsoStati.BIT_USER_MODIFIED, IDataSourceItem.SOURCE_MANUAL_CHANGED );
+            transaction.add( new UpdateTupleModelDataSetCommand( ref.getModelIndex(), dataset, true ) );
           }
         } );
 
-        transaction.execute();
+        column.getTupleModel().execute( transaction );
       }
 
-      try
-      {
-        /**
-         * reinterpolate complete observation because of table view filter (like 12h view, stueztstellen ansicht, etc)
-         */
-        final IObservation observation = column.getModelColumn().getObservation();
-        final ZmlInterpolationWorker interpolationWorker = new ZmlInterpolationWorker( observation );
-        interpolationWorker.execute( new NullProgressMonitor() );
-      }
-      catch( final CoreException e )
-      {
-        e.printStackTrace();
-      }
+      /**
+       * reinterpolate complete observation because of table view filter (like 12h view, stueztstellen ansicht, etc)
+       */
+      final ZmlInterpolationWorker interpolationWorker = new ZmlInterpolationWorker( column );
+      interpolationWorker.execute( new NullProgressMonitor() );
+
+      // TODO status handling
 
       return Status.OK_STATUS;
     }

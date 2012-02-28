@@ -42,7 +42,7 @@ package org.kalypso.zml.core.table.model.visitor;
 
 import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 
 /**
  * @author Dirk Kuch
@@ -52,5 +52,5 @@ public interface IZmlModelColumnVisitor
   /**
    * @return continue search?
    */
-  void visit( IZmlValueReference reference ) throws SensorException, CancelVisitorException;
+  void visit( IZmlModelValueCell reference ) throws SensorException, CancelVisitorException;
 }

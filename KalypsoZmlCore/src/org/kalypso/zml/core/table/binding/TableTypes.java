@@ -51,7 +51,6 @@ import org.eclipse.swt.SWT;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.model.utils.ZmlModelColumns;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
-import org.kalypso.zml.core.table.schema.AlignmentType;
 import org.kalypso.zml.core.table.schema.CellStyleType;
 import org.kalypso.zml.core.table.schema.ColumnHeaderPropertyName;
 import org.kalypso.zml.core.table.schema.ColumnHeaderPropertyType;
@@ -70,26 +69,12 @@ import org.kalypso.zml.core.table.schema.ZmlTableType;
  */
 public final class TableTypes
 {
-  private static final QName PROPERTY_NAME = new QName( "name" ); //$NON-NLS-1$
+  public static final QName PROPERTY_NAME = new QName( "name" ); //$NON-NLS-1$
 
   private TableTypes( )
   {
   }
 
-  public static int toSWT( final AlignmentType alignment )
-  {
-    if( alignment == null )
-      return SWT.LEFT;
-
-    if( AlignmentType.LEFT.toString().equals( alignment.toString() ) )
-      return SWT.LEFT;
-    else if( AlignmentType.CENTER.toString().equals( alignment.toString() ) )
-      return SWT.CENTER;
-    else if( AlignmentType.RIGHT.toString().equals( alignment.toString() ) )
-      return SWT.RIGHT;
-
-    return SWT.LEFT;
-  }
 
   public static AbstractColumnType findColumn( final ZmlTableType tableType, final String identifier )
   {
@@ -99,6 +84,19 @@ public final class TableTypes
       final AbstractColumnType column = columnType.getValue();
       if( column.getId().equals( identifier ) )
         return column;
+    }
+
+    return null;
+  }
+
+  public static IndexColumnType findIndexColumn( final ZmlTableType tableType )
+  {
+    final List<JAXBElement< ? extends AbstractColumnType>> columns = tableType.getColumns().getAbstractColumn();
+    for( final JAXBElement< ? extends AbstractColumnType> columnType : columns )
+    {
+      final AbstractColumnType column = columnType.getValue();
+      if( column instanceof IndexColumnType )
+        return (IndexColumnType) column;
     }
 
     return null;
@@ -200,7 +198,7 @@ public final class TableTypes
     for( final StylePropertyType prop : properties )
     {
       final String propertyName = TableTypes.getPropertyName( prop );
-      if( property.value().equals( propertyName ) )
+      if( property.value().equalsIgnoreCase( propertyName ) )
         return prop.getValue();
     }
 

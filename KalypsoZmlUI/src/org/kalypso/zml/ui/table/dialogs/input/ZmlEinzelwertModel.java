@@ -55,14 +55,13 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlEinzelwertModel
 {
-  private final IZmlTableColumn m_column;
+  private final IZmlModelColumn m_column;
 
   Set<IZmlEinzelwertModelListener> m_listeners = new LinkedHashSet<IZmlEinzelwertModelListener>();
 
@@ -75,7 +74,7 @@ public class ZmlEinzelwertModel
     }
   } );
 
-  public ZmlEinzelwertModel( final IZmlTableColumn column )
+  public ZmlEinzelwertModel( final IZmlModelColumn column )
   {
     m_column = column;
 
@@ -84,7 +83,7 @@ public class ZmlEinzelwertModel
 
   public IZmlModelColumn getColumn( )
   {
-    return m_column.getModelColumn();
+    return m_column;
   }
 
   public void addListener( final IZmlEinzelwertModelListener listener )
@@ -103,7 +102,7 @@ public class ZmlEinzelwertModel
     calendar.add( Calendar.HOUR_OF_DAY, stepping );
     final Date base = calendar.getTime();
 
-    final IZmlModelColumn modelColumn = m_column.getModelColumn();
+    final IZmlModelColumn modelColumn = m_column;
     final ITupleModel model = modelColumn.getTupleModel();
     final IAxis indexAxis = modelColumn.getIndexAxis();
     final IAxis valueAxis = modelColumn.getValueAxis();
@@ -165,7 +164,7 @@ public class ZmlEinzelwertModel
   {
     final Set<Date> existing = new TreeSet<Date>();
 
-    final IZmlModelColumn columnModel = m_column.getModelColumn();
+    final IZmlModelColumn columnModel = m_column;
     final IAxis axis = columnModel.getIndexAxis();
     final ITupleModel model = columnModel.getTupleModel();
 
@@ -183,7 +182,7 @@ public class ZmlEinzelwertModel
 
   public String getLabel( )
   {
-    return m_column.getModelColumn().getLabel();
+    return m_column.getLabel();
   }
 
   public ZmlEinzelwert[] getRows( )
@@ -195,7 +194,7 @@ public class ZmlEinzelwertModel
   {
     try
     {
-      final IZmlModelColumn column = m_column.getModelColumn();
+      final IZmlModelColumn column = m_column;
       final ITupleModel model = column.getTupleModel();
       if( model.size() > 0 )
       {

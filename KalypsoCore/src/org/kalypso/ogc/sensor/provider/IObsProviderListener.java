@@ -1,5 +1,6 @@
 package org.kalypso.ogc.sensor.provider;
 
+
 /**
  * @author belger
  */
@@ -14,5 +15,5 @@ public interface IObsProviderListener
   /**
    * The contents of the current available observation has changed.
    */
-  void observationChanged( Object source );
+  void observationChanged( Object sourcee );
 }

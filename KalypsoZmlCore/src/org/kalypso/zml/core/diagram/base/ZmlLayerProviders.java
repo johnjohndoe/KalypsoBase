@@ -52,7 +52,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
-import org.kalypso.zml.core.KalypsoZmlCore;
+import org.kalypso.zml.core.KalypsoZmlCoreExtensions;
 import org.kalypso.zml.core.base.request.IRequestStrategy;
 
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
@@ -104,7 +104,7 @@ public final class ZmlLayerProviders
   public static IRequestStrategy getRequestStrategy( final IZmlLayer layer, final IParameterContainer container )
   {
     final String id = container.getParameterValue( "request.strategy", "request.strategy.prognose" ); //$NON-NLS-1$ //$NON-NLS-2$
-    final IRequestStrategy strategy = KalypsoZmlCore.getDefault().findStrategy( id );
+    final IRequestStrategy strategy = KalypsoZmlCoreExtensions.getInstance().findStrategy( id );
     strategy.init( layer, container );
 
     return strategy;

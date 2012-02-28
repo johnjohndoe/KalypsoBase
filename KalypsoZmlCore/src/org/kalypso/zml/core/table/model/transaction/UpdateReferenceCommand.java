@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model.transaction;
 
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 
 /**
  * @author Dirk Kuch
@@ -48,7 +48,7 @@ import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 public class UpdateReferenceCommand implements IZmlModelUpdateCommand
 {
 
-  private final IZmlValueReference m_target;
+  private final IZmlModelValueCell m_target;
 
   private final Number m_value;
 
@@ -56,7 +56,7 @@ public class UpdateReferenceCommand implements IZmlModelUpdateCommand
 
   private final int m_status;
 
-  protected UpdateReferenceCommand( final IZmlValueReference target, final Number value, final String source, final int status )
+  protected UpdateReferenceCommand( final IZmlModelValueCell target, final Number value, final String source, final int status )
   {
     m_target = target;
     m_value = value;
@@ -65,7 +65,7 @@ public class UpdateReferenceCommand implements IZmlModelUpdateCommand
   }
 
   @Override
-  public IZmlValueReference getTarget( )
+  public IZmlModelValueCell getTarget( )
   {
     return m_target;
   }

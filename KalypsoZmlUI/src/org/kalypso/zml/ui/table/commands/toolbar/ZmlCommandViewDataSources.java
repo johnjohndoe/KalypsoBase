@@ -50,7 +50,8 @@ import org.eclipse.ui.menus.UIElement;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.zml.core.table.binding.ZmlRuleResolver;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.kalypso.zml.core.table.binding.rule.AbstractZmlRule;
+import org.kalypso.zml.core.table.model.event.IZmlModelColumnEvent;
 import org.kalypso.zml.core.table.schema.RuleRefernceType;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
@@ -67,19 +68,19 @@ public class ZmlCommandViewDataSources extends AbstractHandler implements IEleme
   @Override
   public Object execute( final ExecutionEvent event )
   {
-    final ZmlRule rule = findRule();
+    final AbstractZmlRule rule = findRule();
     if( Objects.isNull( rule ) )
       return Status.CANCEL_STATUS;
 
     rule.setEnabled( HandlerUtils.isSelected( event ) );
 
     final IZmlTable table = ZmlHandlerUtil.getTable( event );
-    table.refresh();
+    table.getModelViewport().fireModelChanged( IZmlModelColumnEvent.COLUMN_RULES_CHANGED );
 
     return Status.OK_STATUS;
   }
 
-  private ZmlRule findRule( )
+  private AbstractZmlRule findRule( )
   {
     try
     {
@@ -103,7 +104,7 @@ public class ZmlCommandViewDataSources extends AbstractHandler implements IEleme
   @Override
   public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
   {
-    final ZmlRule rule = findRule();
+    final AbstractZmlRule rule = findRule();
     if( Objects.isNull( rule ) )
       element.setChecked( false );
     else

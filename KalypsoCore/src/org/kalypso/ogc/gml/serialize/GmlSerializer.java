@@ -171,6 +171,11 @@ public final class GmlSerializer
     serializeWorkspace( writer, gmlWorkspace, charsetEncoding, true );
   }
 
+  /**
+   * @deprecated Do not usae writer to write xml. The caller(!) always must close the writer. Use
+   *             {@link #serializeWorkspace(OutputStreamWriter, GMLWorkspace)}
+   */
+  @Deprecated
   public static void serializeWorkspace( final Writer writer, final GMLWorkspace gmlWorkspace, final String charsetEncoding, final boolean closeWriter ) throws GmlSerializeException
   {
     final GMLWorkspaceInputSource inputSource = new GMLWorkspaceInputSource( gmlWorkspace );
@@ -204,7 +209,13 @@ public final class GmlSerializer
   {
     try
     {
+      // TODO: error handling
       final XMLReader reader = new GMLWorkspaceReader();
+      // TODO: add an error handler that logs everything into a status
+      // reader.setErrorHandler( null );
+      // TODO: write gml to a temporary location and replace the target file later,
+      // in order to preserve the old version if anything goes wrong
+
       reader.setFeature( "http://xml.org/sax/features/namespaces", true ); //$NON-NLS-1$
       reader.setFeature( "http://xml.org/sax/features/namespace-prefixes", true ); //$NON-NLS-1$
 

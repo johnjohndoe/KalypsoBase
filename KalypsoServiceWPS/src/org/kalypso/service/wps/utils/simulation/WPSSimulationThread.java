@@ -214,16 +214,17 @@ public class WPSSimulationThread extends Thread
   @Override
   public void run( )
   {
-    //m_jobInfo.setState( ISimulationConstants.STATE.RUNNING );
-
     final String jobID = m_jobInfo.getId();
+
     try
     {
       LOGGER.info( "Calling run for ID: " + jobID ); //$NON-NLS-1$
+      System.out.println( String.format( "Executing WPS Thread '%s' with job id '%s'...", m_job.getClass().getCanonicalName(), jobID ) );
 
       m_job.run( m_tmpDir, m_inputData, m_resultEater, m_jobInfo );
 
       LOGGER.info( "Run finished for ID: " + jobID ); //$NON-NLS-1$
+      System.out.println( String.format( "Finished WPS Thread '%s' with job id '%s'...", m_job.getClass().getCanonicalName(), jobID ) );
 
       if( m_jobInfo.isCanceled() )
         LOGGER.info( "JOB exited because it was canceled: " + jobID ); //$NON-NLS-1$
