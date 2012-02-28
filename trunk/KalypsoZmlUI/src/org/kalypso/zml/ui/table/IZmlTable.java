@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -40,57 +40,29 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table;
 
-import org.eclipse.jface.viewers.TableViewer;
-import org.kalypso.zml.core.table.model.IZmlModel;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.ui.table.focus.IZmlTableFocusHandler;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
-import org.kalypso.zml.ui.table.model.IZmlTableRow;
-import org.kalypso.zml.ui.table.model.ZmlTableColumn;
-import org.kalypso.zml.ui.table.provider.cache.ZmlTableCellCache;
+import net.sourceforge.nattable.NatTable;
+
+import org.kalypso.zml.core.table.model.event.ZmlModelColumnChangeType;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
+import org.kalypso.zml.ui.table.nat.layers.BodyLayerStack;
+import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
 
 /**
  * @author Dirk Kuch
  */
 public interface IZmlTable
 {
-  void accept( IZmlTableColumnVisitor visitor );
+  // FIXME remove from interface!
+  void dispose( );
 
-  void accept( IZmlTableRowVisitor visitor );
+  ZmlModelViewport getModelViewport( );
 
-  void add( ZmlTableColumn column );
+  void refresh( ZmlModelColumnChangeType type );
 
-  void addListener( IZmlTableListener listener );
+  IZmlTableSelection getSelection( );
 
-  IZmlTableColumn findColumn( int columnIndex );
+  BodyLayerStack getBodyLayer( );
 
-  ZmlTableCellCache getCache( );
+  NatTable getTable( );
 
-  IZmlTableColumn[] getColumns( );
-
-  IZmlModel getModel( );
-
-  IZmlTableFocusHandler getFocusHandler( );
-
-  /**
-   * @return time resolution of displayed time series (one hour spacing or six hour spacing, aso)
-   */
-  int getResolution( );
-
-  IZmlTableRow getRow( int index );
-
-  IZmlTableRow[] getRows( );
-
-  IZmlTableSelectionHandler getSelectionHandler( );
-
-  TableViewer getViewer( );
-
-  /**
-   * columns = null means 'refresh all columns'
-   */
-  void refresh( final IZmlModelColumn... columns );
-
-  void removeListener( IZmlTableListener mListener );
-
-  void fireTableChanged( String type, IZmlModelColumn... columns );
 }

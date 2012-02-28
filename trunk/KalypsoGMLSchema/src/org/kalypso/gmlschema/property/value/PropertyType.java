@@ -177,6 +177,9 @@ public class PropertyType extends AbstractPropertyTypeFromElement implements IVa
   @Override
   public QName getValueQName( )
   {
+    if( m_propertyContentType == null )
+      return null;
+
     return m_propertyContentType.getValueQName();
   }
 

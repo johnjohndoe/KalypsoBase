@@ -204,6 +204,8 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   {
     if( m_grid != null )
       m_grid.dispose();
+
+    m_grid = null;
   }
 
   @Override

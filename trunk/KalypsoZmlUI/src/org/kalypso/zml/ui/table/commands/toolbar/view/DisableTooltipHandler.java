@@ -48,7 +48,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
 import org.kalypso.chart.ui.editor.commandhandler.utils.CommandHandlerUtils;
-import org.kalypso.zml.ui.table.provider.ZmlTooltipSupport;
+import org.kalypso.zml.ui.table.nat.tooltip.ZmlTableTooltip;
 
 /**
  * @author Dirk Kuch
@@ -59,7 +59,7 @@ public class DisableTooltipHandler extends AbstractHandler implements IElementUp
   @Override
   public Object execute( final ExecutionEvent event )
   {
-    ZmlTooltipSupport.setShowTooltips( !CommandHandlerUtils.isEnabled( event ) );
+    ZmlTableTooltip.setShowTooltips( !CommandHandlerUtils.isEnabled( event ) );
 
     return Status.OK_STATUS;
   }
@@ -67,7 +67,7 @@ public class DisableTooltipHandler extends AbstractHandler implements IElementUp
   @Override
   public void updateElement( final UIElement element, final Map parameters )
   {
-    element.setChecked( !ZmlTooltipSupport.isShowTooltips() );
+    element.setChecked( !ZmlTableTooltip.isShowTooltips() );
   }
 
 }

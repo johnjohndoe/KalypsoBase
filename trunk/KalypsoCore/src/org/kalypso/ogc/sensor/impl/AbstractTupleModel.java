@@ -40,17 +40,31 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.impl;
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.commons.exception.CancelVisitorException;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.DoubleComparator;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.event.ObservationChangeType;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.ogc.sensor.transaction.ITupleModelCommand;
+import org.kalypso.ogc.sensor.transaction.ITupleModelTransaction;
 import org.kalypso.ogc.sensor.visitor.ITupleModelValueContainer;
 import org.kalypso.ogc.sensor.visitor.ITupleModelVisitor;
 
@@ -72,6 +86,12 @@ public abstract class AbstractTupleModel implements ITupleModel
   private final Map<IAxis, Integer> m_axes2pos = new LinkedHashMap<IAxis, Integer>();
 
   private final IAxis[] m_axes;
+
+  Set<ITupleModelChangeListener> m_listeners = Collections.synchronizedSet( new LinkedHashSet<ITupleModelChangeListener>() );
+
+  private ITupleModelTransaction m_transactionLock;
+
+  private int m_event = 0;
 
   public AbstractTupleModel( final IAxis[] axes )
   {
@@ -256,5 +276,88 @@ public abstract class AbstractTupleModel implements ITupleModel
   public boolean isEmpty( ) throws SensorException
   {
     return size() == 0;
+  }
+
+  @Override
+  public void addChangeListener( final ITupleModelChangeListener listener )
+  {
+    m_listeners.add( listener );
+  }
+
+  protected void fireModelChanged( final int changeType )
+  {
+    if( changeType == 0 )
+      return;
+
+    if( Objects.isNotNull( m_transactionLock ) )
+    {
+      m_event |= changeType;
+      return;
+    }
+
+    final ITupleModelChangeListener[] listeners = m_listeners.toArray( new ITupleModelChangeListener[] {} );
+    for( final ITupleModelChangeListener listener : listeners )
+    {
+      listener.modelChangedEvent( new ObservationChangeType( changeType ) );
+    }
+  }
+
+  @Override
+  public synchronized IStatus execute( final ITupleModelTransaction transaction )
+  {
+    try
+    {
+      Assert.isTrue( Objects.equal( transaction.getModel(), this ) );
+
+      start( transaction );
+
+      final Set<IStatus> stati = new LinkedHashSet<IStatus>();
+      for( final ITupleModelCommand command : transaction.getCommands() )
+      {
+        try
+        {
+          stati.add( command.execute( this, transaction.getMetadata() ) );
+        }
+        catch( final Throwable t )
+        {
+          stati.add( new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), "Transaction command failed" ) );
+        }
+      }
+
+      return StatusUtilities.createStatus( stati, "ITupleModel Transaction" );
+    }
+    finally
+    {
+      stop( transaction );
+    }
+  }
+
+  private void start( final ITupleModelTransaction transaction )
+  {
+    Assert.isTrue( Objects.isNull( m_transactionLock ) );
+
+    m_transactionLock = transaction;
+  }
+
+  private void stop( final ITupleModelTransaction transaction )
+  {
+    Assert.isTrue( Objects.equal( m_transactionLock, transaction ) );
+    final int event = m_event;
+
+    m_transactionLock = null;
+    m_event = 0;
+
+    // because of synchronized block execute(transaction)
+    new Job( "fire tuple model changed" )
+    {
+      @Override
+      protected IStatus run( final IProgressMonitor monitor )
+      {
+        fireModelChanged( event );
+
+        return Status.OK_STATUS;
+      }
+    }.schedule();
+
   }
 }

@@ -45,17 +45,20 @@ package org.kalypso.repository;
  */
 public interface IDataSourceItem
 {
-  String FILTER_SOURCE = "filter://";
+  String FILTER_SOURCE = "filter://";//$NON-NLS-1$
 
-  String MD_DATA_SOURCE_ITEM = "Datenabruf_Quelle";
+  String MD_DATA_SOURCE_ITEM = "Datenabruf_Quelle";//$NON-NLS-1$
 
-  String MD_DATA_SOURCE_ITEM_REPOSITORY = "Datenabruf_Repository_Quelle";
+  String MD_DATA_SOURCE_ITEM_REPOSITORY = "Datenabruf_Repository_Quelle";//$NON-NLS-1$
 
-  String SOURCE_PREFIX = "source://";
+  String SOURCE_PREFIX = "source://";//$NON-NLS-1$
 
-  String SOURCE_UNKNOWN = SOURCE_PREFIX + "unknown";
+  String SOURCE_UNKNOWN = SOURCE_PREFIX + "unknown";//$NON-NLS-1$
 
-  String SOURCE_MISSING = SOURCE_PREFIX + "missing";
+  String SOURCE_MISSING = SOURCE_PREFIX + "missing";//$NON-NLS-1$
 
-  String SOURCE_MANUAL_CHANGED = SOURCE_PREFIX + "manually.changed";
+  String SOURCE_MANUAL_CHANGED = SOURCE_PREFIX + "manually.changed";//$NON-NLS-1$
+
+  String SOURCE_INTERPOLATED_WECHMANN_VALUE = IDataSourceItem.FILTER_SOURCE + "fill.empty.wechmann.value"; //$NON-NLS-1$
+
 }

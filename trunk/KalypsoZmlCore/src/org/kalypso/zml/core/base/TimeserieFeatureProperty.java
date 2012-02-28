@@ -187,7 +187,7 @@ public final class TimeserieFeatureProperty
     if( fname == null )
       return name;
 
-    return name.replaceAll( "%featureprop%", fname );
+    return name.replaceAll( "%featureprop%", fname ); //$NON-NLS-1$
   }
 
   private String getNameProperty( final Feature feature )

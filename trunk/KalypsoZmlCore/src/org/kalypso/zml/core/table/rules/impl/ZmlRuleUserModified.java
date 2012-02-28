@@ -46,14 +46,15 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.KalypsoZmlCore;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.core.table.rules.AbstractZmlTableRule;
+import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import org.kalypso.zml.core.table.rules.AbstractZmlCellRuleImplementation;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlRuleUserModified extends AbstractZmlTableRule
+public class ZmlRuleUserModified extends AbstractZmlCellRuleImplementation
 {
   public static final String ID = "org.kalypso.zml.ui.core.rule.user.modified"; //$NON-NLS-1$
 
@@ -64,18 +65,22 @@ public class ZmlRuleUserModified extends AbstractZmlTableRule
   }
 
   @Override
-  protected boolean doApply( final ZmlRule rule, final IZmlValueReference reference )
+  protected boolean doApply( final ZmlCellRule rule, final IZmlModelCell reference )
   {
+    if( !(reference instanceof IZmlModelValueCell) )
+      return false;
+
     try
     {
-      final Integer status = reference.getStatus();
+      final IZmlModelValueCell cell = (IZmlModelValueCell) reference;
+      final Integer status = cell.getStatus();
       if( Objects.isNotNull( status ) )
       {
         if( KalypsoStati.BIT_USER_MODIFIED == (KalypsoStati.BIT_USER_MODIFIED & status) )
           return true;
       }
 
-      final String dataSource = reference.getDataSource();
+      final String dataSource = cell.getDataSource();
       if( dataSource == null )
         return false;
 
@@ -88,5 +93,4 @@ public class ZmlRuleUserModified extends AbstractZmlTableRule
 
     return false;
   }
-
 }

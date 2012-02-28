@@ -45,10 +45,11 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
 
 /**
  * @author Dirk Kuch
@@ -59,15 +60,15 @@ public class ZmlCommandAdjustSelection extends AbstractHandler
   public Object execute( final ExecutionEvent event )
   {
     final IZmlTable table = ZmlHandlerUtil.getTable( event );
-    final IZmlTableSelectionHandler selection = table.getSelectionHandler();
-    final IZmlTableColumn column = selection.findActiveColumnByPosition();
+    final IZmlTableSelection selection = table.getSelection();
+    final IZmlModelValueCell cell = selection.getFocusCell();
+    final IZmlModelColumn column = cell.getColumn();
 
     final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-    final ZmlAdjustSelectionDialog dialog = new ZmlAdjustSelectionDialog( shell, column );
+    final ZmlAdjustSelectionDialog dialog = new ZmlAdjustSelectionDialog( shell, table.getSelection(), column );
     dialog.open();
 
     return Status.OK_STATUS;
-
   }
 
 }

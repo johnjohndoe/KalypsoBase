@@ -45,7 +45,7 @@ import java.util.Date;
 import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 import org.kalypso.zml.ui.table.dialogs.input.ZmlEinzelwert;
 
@@ -56,7 +56,7 @@ public class FindNextValueVisitor implements IZmlModelColumnVisitor
 {
   private final Date m_current;
 
-  private IZmlValueReference m_reference;
+  private IZmlModelValueCell m_reference;
 
   public FindNextValueVisitor( final ZmlEinzelwert current )
   {
@@ -67,7 +67,7 @@ public class FindNextValueVisitor implements IZmlModelColumnVisitor
    * @see org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor#visit(org.kalypso.zml.core.table.model.references.IZmlValueReference)
    */
   @Override
-  public void visit( final IZmlValueReference reference ) throws SensorException, CancelVisitorException
+  public void visit( final IZmlModelValueCell reference ) throws SensorException, CancelVisitorException
   {
     if( Objects.isNotNull( m_reference ) )
       throw new CancelVisitorException();
@@ -80,7 +80,7 @@ public class FindNextValueVisitor implements IZmlModelColumnVisitor
     }
   }
 
-  public IZmlValueReference getReference( )
+  public IZmlModelValueCell getReference( )
   {
     return m_reference;
   }

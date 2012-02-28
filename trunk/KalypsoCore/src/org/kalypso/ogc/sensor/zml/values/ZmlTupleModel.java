@@ -45,6 +45,7 @@ import java.util.Map;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.event.IObservationChangeEvent;
 import org.kalypso.ogc.sensor.impl.AbstractTupleModel;
 
 /**
@@ -68,9 +69,6 @@ public class ZmlTupleModel extends AbstractTupleModel
     m_valuesMap = valuesMap;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#getCount()
-   */
   @Override
   public int size( ) throws SensorException
   {
@@ -80,9 +78,6 @@ public class ZmlTupleModel extends AbstractTupleModel
     return m_valuesMap.values().iterator().next().getCount();
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object, org.kalypso.ogc.sensor.IAxis)
-   */
   @Override
   public int indexOf( final Object element, final IAxis axis ) throws SensorException
   {
@@ -96,9 +91,6 @@ public class ZmlTupleModel extends AbstractTupleModel
     return values.indexOf( element );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#getElement(int, org.kalypso.ogc.sensor.IAxis)
-   */
   @Override
   public Object get( final int index, final IAxis axis ) throws SensorException
   {
@@ -112,9 +104,6 @@ public class ZmlTupleModel extends AbstractTupleModel
     return values.getElement( index );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#setElement(int, java.lang.Object, org.kalypso.ogc.sensor.IAxis)
-   */
   @Override
   public void set( final int index, final IAxis axis, final Object element ) throws SensorException
   {
@@ -122,5 +111,7 @@ public class ZmlTupleModel extends AbstractTupleModel
       throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.sensor.zml.values.ZmlTuppleModel.2" ) ); //$NON-NLS-1$
 
     m_valuesMap.get( axis ).setElement( index, element );
+
+    fireModelChanged( IObservationChangeEvent.VALUE_CHANGED );
   }
 }

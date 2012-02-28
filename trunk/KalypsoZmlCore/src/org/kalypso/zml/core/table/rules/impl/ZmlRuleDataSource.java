@@ -43,7 +43,10 @@ package org.kalypso.zml.core.table.rules.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+
+import javax.xml.namespace.QName;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.resource.ColorRegistry;
@@ -54,15 +57,19 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.table.binding.CellStyle;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.core.table.rules.AbstractZmlTableRule;
+import org.kalypso.zml.core.table.binding.TableTypes;
+import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import org.kalypso.zml.core.table.rules.AbstractZmlCellRuleImplementation;
 import org.kalypso.zml.core.table.schema.CellStyleType;
+import org.kalypso.zml.core.table.schema.StylePropertyName;
+import org.kalypso.zml.core.table.schema.StylePropertyType;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlRuleDataSource extends AbstractZmlTableRule
+public class ZmlRuleDataSource extends AbstractZmlCellRuleImplementation
 {
   public static final String ID = "org.kalypso.zml.ui.core.rule.data.source"; //$NON-NLS-1$
 
@@ -70,24 +77,22 @@ public class ZmlRuleDataSource extends AbstractZmlTableRule
 
   private static List<Integer> COLORS = new ArrayList<Integer>();
 
-  /**
-   * @see org.kalypso.zml.ui.core.rules.IZmlTableRule#getIdentifier()
-   */
   @Override
   public String getIdentifier( )
   {
     return ID;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.core.rules.IZmlTableRule#apply(org.kalypso.zml.ui.table.provider.ZmlValueReference)
-   */
   @Override
-  protected boolean doApply( final ZmlRule rule, final IZmlValueReference reference )
+  protected boolean doApply( final ZmlCellRule rule, final IZmlModelCell reference )
   {
     try
     {
-      final String source = reference.getDataSource();
+      if( !(reference instanceof IZmlModelValueCell) )
+        return false;
+
+      final IZmlModelValueCell cell = (IZmlModelValueCell) reference;
+      final String source = cell.getDataSource();
 
       return StringUtils.isNotEmpty( source );
     }
@@ -99,79 +104,36 @@ public class ZmlRuleDataSource extends AbstractZmlTableRule
     return false;
   }
 
-// /**
-// * @see
-// org.kalypso.zml.core.table.rules.impl.AbstractZmlTableRule#update(org.kalypso.zml.core.table.binding.rule.ZmlRule,
-// * org.kalypso.zml.core.table.model.references.IZmlValueReference, java.lang.String)
-// */
-// @Override
-// public String update( final ZmlRule rule, final IZmlValueReference reference, final String text ) throws
-// SensorException
-// {
-// final String dataSource = reference.getDataSource();
-// final IRepositoryItem item = findItem( dataSource );
-// if( Objects.isNull( item ) )
-// return String.format( "%s (%s)", text, dataSource );
-//
-// final String name = item.getName();
-//
-// return String.format( "%s (%s)", text, name );
-// }
-
-// private IRepositoryItem findItem( final String dataSource )
-// {
-// final IRepositoryRegistry registry = KalypsoRepository.getDefault().getRepositoryRegistry();
-// final IRepository[] repositories = registry.getRepositories();
-//
-// for( final IRepository repository : repositories )
-// {
-// try
-// {
-// final IRepositoryItem item = RepositoryUtils.findEquivalentItem( repository, dataSource );
-// if( Objects.isNotNull( item ) )
-// return item;
-// }
-// catch( final RepositoryException e )
-// {
-// e.printStackTrace();
-// }
-// }
-//
-// return null;
-// }
-
-  /**
-   * @see org.kalypso.zml.core.table.rules.impl.AbstractZmlTableRule#getCellStyle(org.kalypso.zml.core.table.binding.rule.ZmlRule,
-   *      org.kalypso.zml.core.table.model.references.IZmlValueReference)
-   */
   @Override
-  public CellStyle getCellStyle( final ZmlRule rule, final IZmlValueReference reference )
+  public CellStyle getCellStyle( final ZmlCellRule rule, final IZmlModelCell reference )
   {
 
-    return new CellStyle( new CellStyleType() )
+    if( !(reference instanceof IZmlModelValueCell) )
+      return null;
+
+    final CellStyleType styleType = new CellStyleType();
+    styleType.setId( "RuleDataSourceBackgroundStyle" );
+
+    try
     {
-      /**
-       * @see org.kalypso.zml.core.table.binding.CellStyle#getBackgroundColor()
-       */
-      @Override
-      public Color getBackgroundColor( )
-      {
-        try
-        {
-          return getBackground( reference );
-        }
-        catch( final SensorException e )
-        {
-          e.printStackTrace();
+      final Color background = getBackground( (IZmlModelValueCell) reference );
+      final List<StylePropertyType> properties = styleType.getProperty();
 
-          return null;
-        }
-      }
-    };
+      final StylePropertyType property = new StylePropertyType();
+      final Map<QName, String> attributes = property.getOtherAttributes();
+      attributes.put( TableTypes.PROPERTY_NAME, StylePropertyName.BACKGROUND_COLOR.value() );
+      property.setValue( String.format( "%2x%2x%2x", background.getRed(), background.getGreen(), background.getBlue() ) );
+      properties.add( property );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
 
+    return new CellStyle( styleType );
   }
 
-  protected Color getBackground( final IZmlValueReference reference ) throws SensorException
+  protected Color getBackground( final IZmlModelValueCell reference ) throws SensorException
   {
     final String source = reference.getDataSource();
     if( StringUtils.isEmpty( source ) )

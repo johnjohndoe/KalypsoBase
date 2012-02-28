@@ -129,7 +129,6 @@ public class ZmlMemento implements IZmlMemento
   {
     synchronized( this )
     {
-
       final Set<Entry<IPoolableObjectType, List<IZmlSourceElement>>> entries = m_provider.entrySet();
       for( final Entry<IPoolableObjectType, List<IZmlSourceElement>> entry : entries )
       {

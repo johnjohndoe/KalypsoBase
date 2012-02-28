@@ -47,12 +47,13 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
 import org.eclipse.ui.services.IServiceLocator;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
+import org.kalypso.zml.core.table.model.view.ZmlViewResolutionFilter;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 
@@ -66,18 +67,18 @@ public abstract class AbstractHourViewCommand extends AbstractHandler implements
   {
     final IZmlTable table = ZmlHandlerUtil.getTable( event );
 
-    final ZmlViewResolutionFilter filter = resolveFilter( table );
+    final ZmlModelViewport viewport = table.getModelViewport();
+    final ZmlViewResolutionFilter filter = viewport.getFilter();
     doOffsetAdjustment( table, filter );
 
     filter.setParameters( resultion, mode );
-    table.refresh();
 
     return Status.OK_STATUS;
   }
 
   private void doOffsetAdjustment( final IZmlTable table, final ZmlViewResolutionFilter filter )
   {
-    final IZmlModelRow[] rows = table.getModel().getRows();
+    final IZmlModelRow[] rows = table.getModelViewport().getRows();
     if( ArrayUtils.isEmpty( rows ) )
       return;
 
@@ -87,28 +88,16 @@ public abstract class AbstractHourViewCommand extends AbstractHandler implements
   protected IStatus updateOffset( final ExecutionEvent event, final int number )
   {
     final IZmlTable table = ZmlHandlerUtil.getTable( event );
-
-    final ZmlViewResolutionFilter filter = resolveFilter( table );
+    final ZmlViewResolutionFilter filter = table.getModelViewport().getFilter();
     filter.add2Offset( number );
-
-    table.getViewer().refresh();
 
     return Status.OK_STATUS;
   }
 
   public static ZmlViewResolutionFilter resolveFilter( final IZmlTable table )
   {
-    final TableViewer viewer = table.getViewer();
-    final ViewerFilter[] filters = viewer.getFilters();
-    for( final ViewerFilter filter : filters )
-    {
-      if( filter instanceof ZmlViewResolutionFilter )
-      {
-        return (ZmlViewResolutionFilter) filter;
-      }
-    }
-
-    return null;
+    final ZmlModelViewport model = table.getModelViewport();
+    return model.getFilter();
   }
 
   @Override
@@ -117,7 +106,7 @@ public abstract class AbstractHourViewCommand extends AbstractHandler implements
     final IServiceLocator locator = element.getServiceLocator();
     final IZmlTable table = ZmlHandlerUtil.getTable( locator );
 
-    if( table != null )
+    if( Objects.isNotNull( table ) )
     {
       final ZmlViewResolutionFilter filter = resolveFilter( table );
       element.setChecked( isActive( filter ) );

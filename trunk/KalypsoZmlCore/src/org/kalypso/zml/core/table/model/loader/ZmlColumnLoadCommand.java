@@ -56,6 +56,8 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.ZmlModelColumn;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler;
 import org.kalypso.zml.core.table.model.data.ObsProviderZmlColumnDataHandler;
+import org.kalypso.zml.core.table.model.event.IZmlModelColumnEvent;
+import org.kalypso.zml.core.table.model.event.ZmlModelColumnChangeType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 
 /**
@@ -111,6 +113,15 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
     {
       doExcecute();
     }
+
+    m_model.fireModelChanged( new ZmlModelColumnChangeType( IZmlModelColumnEvent.STRUCTURE_CHANGE ) );
+  }
+
+  @Override
+  public void observationChanged( final Object source )
+  {
+    KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlColumnLoadCommand.observationChanged(): %s\n", m_source.getIdentifier() );
+    m_model.fireModelChanged( new ZmlModelColumnChangeType( IZmlModelColumnEvent.VALUE_CHANGED ) );
   }
 
   public synchronized void cancel( )
@@ -119,14 +130,6 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
 
     m_canceled = true;
 // m_source.getObsProvider().dispose();
-  }
-
-  @Override
-  public void observationChanged( final Object source )
-  {
-    KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlColumnLoadCommand.observationChanged(): %s\n", m_source.getIdentifier() );
-
-    m_model.fireModelChanged();
   }
 
   private void doExcecute( )
@@ -141,7 +144,6 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
 
     /** base observation will be disposed by NewZmlTableLayoutPart (save table) */
     final IObsProvider base = m_source.getObsProvider();
-
     final DataColumnType type = (DataColumnType) TableTypes.findColumnType( m_model.getTableType(), m_source.getIdentifier() );
     if( Objects.isNull( type ) )
       return;
@@ -150,7 +152,6 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
     final IAxis[] axes = Objects.isNotNull( observation ) ? observation.getAxes() : new IAxis[] {};
 
     final IZmlModelColumnDataHandler handler = new ObsProviderZmlColumnDataHandler( base.copy() );
-
     final DataColumn data = new DataColumn( type );
 
     IZmlModelColumn column = m_model.getColumn( m_source.getIdentifier() );

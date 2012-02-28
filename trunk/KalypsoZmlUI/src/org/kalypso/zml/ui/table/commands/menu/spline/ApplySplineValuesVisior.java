@@ -43,11 +43,13 @@ package org.kalypso.zml.ui.table.commands.menu.spline;
 import java.util.Date;
 
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.TupleModelDataSet;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.transaction.ITupleModelTransaction;
+import org.kalypso.ogc.sensor.transaction.UpdateTupleModelDataSetCommand;
 import org.kalypso.repository.IDataSourceItem;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.references.ZmlValues;
-import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 
 /**
@@ -55,13 +57,13 @@ import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
  */
 public class ApplySplineValuesVisior implements IZmlModelColumnVisitor
 {
-  private final IZmlValueReference m_s1;
+  private final IZmlModelValueCell m_s1;
 
-  private final IZmlValueReference m_s2;
+  private final IZmlModelValueCell m_s2;
 
   private final Splines m_splines;
 
-  ZmlModelTransaction m_transaction = new ZmlModelTransaction();
+  ITupleModelTransaction m_transaction;
 
   /**
    * @param s1
@@ -71,15 +73,16 @@ public class ApplySplineValuesVisior implements IZmlModelColumnVisitor
    * @param stuetzstellen
    *          don't overwrite stuetzstellen
    */
-  public ApplySplineValuesVisior( final Splines splines, final IZmlValueReference s1, final IZmlValueReference s2 )
+  public ApplySplineValuesVisior( final Splines splines, final IZmlModelValueCell s1, final IZmlModelValueCell s2, final ITupleModelTransaction transaction )
   {
     m_s1 = s1;
     m_s2 = s2;
     m_splines = splines;
+    m_transaction = transaction;
   }
 
   @Override
-  public void visit( final IZmlValueReference reference ) throws SensorException
+  public void visit( final IZmlModelValueCell reference ) throws SensorException
   {
     if( ZmlValues.isStuetzstelle( reference ) )
       return;
@@ -91,10 +94,12 @@ public class ApplySplineValuesVisior implements IZmlModelColumnVisitor
       return;
 
     final Double value = m_splines.getValue( index );
-    m_transaction.add( reference, value, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
+
+    final TupleModelDataSet dataset = new TupleModelDataSet( reference.getColumn().getValueAxis(), value, KalypsoStati.BIT_USER_MODIFIED, IDataSourceItem.SOURCE_MANUAL_CHANGED );
+    m_transaction.add( new UpdateTupleModelDataSetCommand( reference.getModelIndex(), dataset, true ) );
   }
 
-  private boolean isAfter( final Date index ) throws SensorException
+  private boolean isAfter( final Date index )
   {
     final Date date = m_s2.getIndexValue();
 
@@ -106,7 +111,7 @@ public class ApplySplineValuesVisior implements IZmlModelColumnVisitor
     return false;
   }
 
-  private boolean isBefore( final Date index ) throws SensorException
+  private boolean isBefore( final Date index )
   {
     final Date date = m_s1.getIndexValue();
 
@@ -116,11 +121,6 @@ public class ApplySplineValuesVisior implements IZmlModelColumnVisitor
       return true;
 
     return false;
-  }
-
-  public ZmlModelTransaction getTransaction( )
-  {
-    return m_transaction;
   }
 
 }

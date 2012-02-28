@@ -60,6 +60,7 @@ import org.kalypso.ui.repository.view.RepositoryExplorerPart;
 import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
 import org.kalypso.zml.core.base.selection.ZmlSelectionBuilder;
 import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.IZmlTableComposite;
 import org.kalypso.zml.ui.table.context.IZmlTableSource;
 
 /**
@@ -104,6 +105,12 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
       public IZmlTable getTable( )
       {
         return m_tableComposite.getTable();
+      }
+
+      @Override
+      public IZmlTableComposite getComposite( )
+      {
+        return m_tableComposite.getTableComposite();
       }
     } );
 

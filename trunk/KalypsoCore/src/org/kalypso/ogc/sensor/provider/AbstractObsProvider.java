@@ -45,7 +45,8 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.IObservationListener;
+import org.kalypso.ogc.sensor.event.IObservationListener;
+import org.kalypso.ogc.sensor.event.ObservationChangeType;
 import org.kalypso.ogc.sensor.request.IRequest;
 
 /**
@@ -62,9 +63,9 @@ public abstract class AbstractObsProvider implements IObsProvider
   private final IObservationListener m_observationListener = new IObservationListener()
   {
     @Override
-    public void observationChanged( final IObservation obs, final Object source )
+    public void observationChanged( final IObservation obs, final Object source, final ObservationChangeType type )
     {
-      fireObservationChanged( source );
+      fireObservationChanged( source, type );
     }
   };
 
@@ -125,12 +126,17 @@ public abstract class AbstractObsProvider implements IObsProvider
     m_listeners.remove( l );
   }
 
-  protected final void fireObservationChanged( final Object source )
+  protected final void fireObservationChanged( final Object source, final ObservationChangeType type )
   {
-    final Object[] listeners = m_listeners.toArray();
-    for( final Object listener : listeners )
+    final IObsProviderListener[] listeners = m_listeners.toArray( new IObsProviderListener[] {} );
+    for( final IObsProviderListener listener : listeners )
     {
-      ((IObsProviderListener) listener).observationChanged( source );
+      if( type.isStructureChanged() )
+        listener.observationReplaced();
+      else if( type.isValuesChanged() )
+        listener.observationChanged( source );
+      else
+        throw new UnsupportedOperationException();
     }
   }
 

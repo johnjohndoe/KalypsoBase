@@ -61,9 +61,10 @@ import com.vividsolutions.jts.geom.Coordinate;
  * noticed.
  * </p>
  * 
- * @author Dejan
+ * @author Dejan (original)
+ * @author Holger Albert (modifications)
  */
-public class ImageGeoGrid extends AbstractGeoGrid implements IGeoGrid
+public class ImageGeoGrid extends AbstractGeoGrid
 {
   private int m_sizeX;
 
@@ -85,8 +86,6 @@ public class ImageGeoGrid extends AbstractGeoGrid implements IGeoGrid
     m_sizeY = -1;
     m_min = null;
     m_max = null;
-
-    // initialize();
   }
 
   /**
@@ -182,6 +181,8 @@ public class ImageGeoGrid extends AbstractGeoGrid implements IGeoGrid
     m_image = null;
     m_min = null;
     m_max = null;
+
+    super.dispose();
   }
 
   private void initialize( )

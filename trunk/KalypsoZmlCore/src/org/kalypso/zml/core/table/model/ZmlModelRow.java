@@ -46,9 +46,13 @@ import java.util.Map;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.core.table.model.references.ZmlDataValueReference;
-import org.kalypso.zml.core.table.model.references.ZmlIndexValueReference;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.zml.core.table.binding.BaseColumn;
+import org.kalypso.zml.core.table.binding.TableTypes;
+import org.kalypso.zml.core.table.model.references.IZmlModelIndexCell;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import org.kalypso.zml.core.table.model.references.ZmlModelIndexCell;
+import org.kalypso.zml.core.table.model.references.ZmlModelValueCell;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.IndexColumnType;
 
@@ -60,9 +64,11 @@ public class ZmlModelRow implements IZmlModelRow
   private final Date m_index;
 
   /** Map<Reference (id), Reference> */
-  Map<String, IZmlValueReference> m_references = new HashMap<String, IZmlValueReference>();
+  Map<String, IZmlModelValueCell> m_valueCells = new HashMap<String, IZmlModelValueCell>();
 
   private final IZmlModel m_model;
+
+  private ZmlModelIndexCell m_indexCell;
 
   public ZmlModelRow( final IZmlModel model, final Date index )
   {
@@ -70,70 +76,62 @@ public class ZmlModelRow implements IZmlModelRow
     m_index = index;
   }
 
-  public void add( final ZmlDataValueReference reference )
+  public void add( final ZmlModelValueCell reference )
   {
-    m_references.put( reference.getIdentifier(), reference );
+    m_valueCells.put( reference.getIdentifier(), reference );
   }
 
   @Override
-  public IZmlValueReference get( final AbstractColumnType type )
+  public IZmlModelValueCell get( final AbstractColumnType type )
   {
-    if( type instanceof IndexColumnType )
-    {
-      return new ZmlIndexValueReference( this );
-    }
-
-    return m_references.get( type.getId() );
+    return m_valueCells.get( type.getId() );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.model.IZmlModelRow#get(org.kalypso.zml.ui.table.model.IZmlModelColumn)
-   */
   @Override
-  public IZmlValueReference get( final IZmlModelColumn column )
+  public IZmlModelValueCell get( final IZmlModelColumn column )
   {
     if( column == null )
       return null;
 
-    return m_references.get( column.getIdentifier() );
+    return m_valueCells.get( column.getIdentifier() );
   }
 
   @Override
-  public Date getIndexValue( )
+  public IZmlModelIndexCell getIndexCell( )
+  {
+    if( Objects.isNull( m_indexCell ) )
+    {
+      final IndexColumnType base = TableTypes.findIndexColumn( getModel().getTableType() );
+      m_indexCell = new ZmlModelIndexCell( this, new BaseColumn( base ) );
+    }
+
+    return m_indexCell;
+  }
+
+  @Override
+  public Date getIndex( )
   {
     return m_index;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.model.IZmlModelRow#getModel()
-   */
   @Override
   public IZmlModel getModel( )
   {
     return m_model;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.model.IZmlModelRow#getReferences()
-   */
   @Override
-  public IZmlValueReference[] getReferences( )
+  public IZmlModelValueCell[] getCells( )
   {
-    return m_references.values().toArray( new IZmlValueReference[] {} );
+    return m_valueCells.values().toArray( new IZmlModelValueCell[] {} );
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {
     return String.format( "%s, Index: %s", getClass().getName(), m_index.toString() );
   }
 
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals( final Object obj )
   {
@@ -142,22 +140,19 @@ public class ZmlModelRow implements IZmlModelRow
       final ZmlModelRow other = (ZmlModelRow) obj;
 
       final EqualsBuilder builder = new EqualsBuilder();
-      builder.append( getIndexValue(), other.getIndexValue() );
+      builder.append( getIndex(), other.getIndex() );
 
       return builder.isEquals();
     }
     return super.equals( obj );
   }
 
-  /**
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode( )
   {
     final HashCodeBuilder builder = new HashCodeBuilder();
     builder.append( getClass().getName() );
-    builder.append( getIndexValue() );
+    builder.append( getIndex() );
 
     return builder.toHashCode();
   }

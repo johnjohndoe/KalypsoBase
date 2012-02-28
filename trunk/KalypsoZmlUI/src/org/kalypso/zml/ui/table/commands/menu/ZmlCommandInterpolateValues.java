@@ -40,48 +40,48 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands.menu;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.TupleModelDataSet;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.transaction.TupleModelTransaction;
+import org.kalypso.ogc.sensor.transaction.UpdateTupleModelDataSetCommand;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.core.table.model.transaction.ZmlModelTransaction;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlCommandInterpolateValues extends AbstractHandler
 {
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     try
     {
       final IZmlTable table = ZmlHandlerUtil.getTable( event );
-      final IZmlTableSelectionHandler selection = table.getSelectionHandler();
-      final IZmlTableCell active = selection.findActiveCellByPosition();
-      final IZmlTableColumn column = active.getColumn();
-      final IZmlTableCell[] selected = column.getSelectedCells();
-      if( selected.length < 2 )
+      final IZmlTableSelection selection = table.getSelection();
+
+      final IZmlModelValueCell current = selection.getFocusCell();
+      final IZmlModelValueCell[] cells = selection.getSelectedCells( current.getColumn() );
+      if( ArrayUtils.getLength( cells ) < 2 )
         throw new ExecutionException( "Interpolation fehlgeschlagen - selektieren Sie eine zweite Zelle!" );
 
-      final IZmlTableCell[] intervall = ZmlCommandUtils.findIntervall( selected );
-      final IZmlValueReference intervallStart = intervall[0].getValueReference();
-      final IZmlValueReference intervallEnd = intervall[1].getValueReference();
+      final IZmlModelCell[] intervall = ZmlCommandUtils.findIntervall( cells );
+      final IZmlModelValueCell intervallStart = (IZmlModelValueCell) intervall[0];
+      final IZmlModelValueCell intervallEnd = (IZmlModelValueCell) intervall[1];
 
       final int indexDifference = Math.abs( intervallEnd.getModelIndex() - intervallStart.getModelIndex() );
       final double valueDifference = getValueDifference( intervallStart, intervallEnd );
@@ -91,24 +91,25 @@ public class ZmlCommandInterpolateValues extends AbstractHandler
       final int baseIndex = intervallStart.getModelIndex();
       final double baseValue = intervallStart.getValue().doubleValue();
 
-      final IZmlModelColumn modelColumn = column.getModelColumn();
+      final IZmlModelColumn column = intervallStart.getColumn();
+      final TupleModelTransaction transaction = new TupleModelTransaction( column.getTupleModel(), column.getMetadata() );
 
-      final IZmlModel model = table.getModel();
-
-      final ZmlModelTransaction transaction = new ZmlModelTransaction();
+      final ZmlModelViewport viewModel = table.getModelViewport();
+      final IZmlModel model = viewModel.getModel();
 
       for( int index = intervallStart.getModelIndex() + 1; index < intervallEnd.getModelIndex(); index++ )
       {
         final IZmlModelRow row = model.getRowAt( index );
-        final IZmlValueReference cell = row.get( modelColumn );
+        final IZmlModelValueCell cell = row.get( current.getColumn() );
 
         final int step = cell.getModelIndex() - baseIndex;
         final double value = baseValue + step * stepValue;
 
-        transaction.add( cell, value, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_OK );
+        final TupleModelDataSet dataset = new TupleModelDataSet( column.getValueAxis(), value, KalypsoStati.BIT_OK, IDataSourceItem.SOURCE_MANUAL_CHANGED );
+        transaction.add( new UpdateTupleModelDataSetCommand( cell.getModelIndex(), dataset, true ) );
       }
 
-      transaction.execute();
+      column.getTupleModel().execute( transaction );
 
       return Status.OK_STATUS;
     }
@@ -118,7 +119,7 @@ public class ZmlCommandInterpolateValues extends AbstractHandler
     }
   }
 
-  private double getValueDifference( final IZmlValueReference intervallStart, final IZmlValueReference intervallEnd ) throws SensorException
+  private double getValueDifference( final IZmlModelValueCell intervallStart, final IZmlModelValueCell intervallEnd ) throws SensorException
   {
     final Number valueStart = intervallStart.getValue();
     final Number valueEnd = intervallEnd.getValue();

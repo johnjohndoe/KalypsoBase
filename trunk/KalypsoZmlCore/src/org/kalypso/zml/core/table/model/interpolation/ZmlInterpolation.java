@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  DenickestraÃŸe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -42,15 +42,16 @@ package org.kalypso.zml.core.table.model.interpolation;
 
 import java.util.Date;
 
-import org.eclipse.core.runtime.Assert;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.TupleModelDataSet;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.interpolation.worker.IInterpolationFilter;
-import org.kalypso.zml.core.KalypsoZmlCore;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.ogc.sensor.transaction.ITupleModelTransaction;
+import org.kalypso.ogc.sensor.transaction.UpdateTupleModelDataSetCommand;
 
 /**
  * @author Dirk Kuch
@@ -61,28 +62,18 @@ public final class ZmlInterpolation
   {
   }
 
-  public static void interpolate( final IZmlModelColumn column, final IZmlValueReference before, final IZmlValueReference current ) throws SensorException
+  public static void interpolate( final ITupleModel model, final ITupleModelTransaction transaction, final IAxis valueAxis, final Integer before, final Integer current ) throws SensorException
   {
-    final ITimeseriesObservation timeseriesObservation = new TimeseriesObservation( column.getObservation(), column.getValueAxis() );
-    timeseriesObservation.startTransaction();
-
-    interpolate( timeseriesObservation, before.getModelIndex(), current.getModelIndex() );
-
-    timeseriesObservation.stopTransaction();
-  }
-
-  public static void interpolate( final ITimeseriesObservation observation, final Integer before, final Integer current ) throws SensorException
-  {
-    Assert.isTrue( observation.inTransaction() );
-
     if( current - before == 1 )
       return;
 
-    final Date baseDate = observation.getDate( current );
-    final Double baseValue = (Double) observation.getValue( current );
+    final IAxis dateAxis = AxisUtils.findDateAxis( model.getAxes() );
 
-    final Date beforeDate = observation.getDate( before );
-    final Double beforeValue = (Double) observation.getValue( before );
+    final Date baseDate = (Date) model.get( current, dateAxis );
+    final Double baseValue = (Double) model.get( current, valueAxis );
+
+    final Date beforeDate = (Date) model.get( before, dateAxis );
+    final Double beforeValue = (Double) model.get( before, valueAxis );
 
     final long timeDiff = baseDate.getTime() - beforeDate.getTime();
     final double valueDiff = baseValue - beforeValue;
@@ -91,56 +82,22 @@ public final class ZmlInterpolation
 
     for( int index = before + 1; index < current; index++ )
     {
-      final Date ptr = observation.getDate( index );
+      final Date ptr = (Date) model.get( index, dateAxis );
       final double ptrDiff = ptr.getTime() - beforeDate.getTime();
 
       final double value = beforeValue + diff * ptrDiff;
 
-      observation.update( index, value, IInterpolationFilter.DATA_SOURCE, KalypsoStati.BIT_OK );
+      final TupleModelDataSet dataset = new TupleModelDataSet( valueAxis, value, KalypsoStati.BIT_OK, IInterpolationFilter.DATA_SOURCE );
+      transaction.add( new UpdateTupleModelDataSetCommand( index, dataset, false ) );
     }
   }
 
-  public static void fillValue( final IZmlModelColumn column, final int start, final int end, final Double value )
+  public static void fillValue( final ITupleModelTransaction transaction, final IAxis valueAxis, final int start, final int end, final Double value )
   {
-    try
+    for( int index = start; index < end; index++ )
     {
-      final ITimeseriesObservation timeseriesObservation = new TimeseriesObservation( column.getObservation(), column.getValueAxis() );
-      timeseriesObservation.startTransaction();
-
-      fillValue( timeseriesObservation, start, end, value );
-
-      timeseriesObservation.stopTransaction();
-    }
-    catch( final SensorException e )
-    {
-      KalypsoZmlCore.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-    }
-
-// for( int index = start; index < end; index++ )
-// {
-// try
-// {
-// column.update( index, value, IInterpolationFilter.DATA_SOURCE, KalypsoStati.BIT_OK );
-// }
-// catch( final SensorException e )
-// {
-// KalypsoZmlCore.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-// }
-// }
-  }
-
-  public static void fillValue( final ITimeseriesObservation observation, final int start, final int end, final Double value )
-  {
-    try
-    {
-      Assert.isTrue( observation.inTransaction() );
-
-      for( int index = start; index < end; index++ )
-        observation.update( index, value, IInterpolationFilter.DATA_SOURCE, KalypsoStati.BIT_OK );
-    }
-    catch( final SensorException e )
-    {
-      KalypsoZmlCore.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      final TupleModelDataSet dataset = new TupleModelDataSet( valueAxis, value, KalypsoStati.BIT_OK, IInterpolationFilter.DATA_SOURCE );
+      transaction.add( new UpdateTupleModelDataSetCommand( index, dataset, false ) );
     }
   }
 

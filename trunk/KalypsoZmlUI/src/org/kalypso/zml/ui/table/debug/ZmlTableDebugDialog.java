@@ -44,13 +44,11 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.ui.dialog.EnhancedTitleAreaDialog;
@@ -61,7 +59,6 @@ import org.kalypso.zml.ui.table.IZmlTable;
  */
 public class ZmlTableDebugDialog extends EnhancedTitleAreaDialog
 {
-  public static final Font TXT_BOLD = new Font( Display.getDefault(), "Tahoma", 8, SWT.BOLD ); //$NON-NLS-1$
 
   private static final String DIALOG_SCREEN_SIZE = "debug.zml.table.dialog.screen.size"; //$NON-NLS-1$
 
@@ -108,10 +105,10 @@ public class ZmlTableDebugDialog extends EnhancedTitleAreaDialog
       }
     } );
 
-    final ZmlTableDebugComposite debugColumns = new ZmlTableDebugComposite( base, toolkit, m_table.getColumns() );
+    final ZmlTableDebugComposite debugColumns = new ZmlTableDebugComposite( base, toolkit, m_table.getModelViewport().getColumns() );
     debugColumns.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
-    final ZmlModelDebugComposite debugModel = new ZmlModelDebugComposite( base, toolkit, m_table.getModel() );
+    final ZmlModelDebugComposite debugModel = new ZmlModelDebugComposite( base, toolkit, m_table.getModelViewport().getModel() );
     debugModel.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     return super.createDialogArea( parent );

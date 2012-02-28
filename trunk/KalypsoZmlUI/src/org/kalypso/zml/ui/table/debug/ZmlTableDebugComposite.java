@@ -46,7 +46,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 
 /**
  * @author Dirk Kuch
@@ -54,7 +54,7 @@ import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 public class ZmlTableDebugComposite extends Composite
 {
 
-  public ZmlTableDebugComposite( final Composite parent, final FormToolkit toolkit, final IZmlTableColumn[] columns )
+  public ZmlTableDebugComposite( final Composite parent, final FormToolkit toolkit, final IZmlModelColumn[] columns )
   {
     super( parent, SWT.NULL );
 
@@ -64,7 +64,7 @@ public class ZmlTableDebugComposite extends Composite
     toolkit.adapt( this );
   }
 
-  private void print( final FormToolkit toolkit, final IZmlTableColumn[] columns )
+  private void print( final FormToolkit toolkit, final IZmlModelColumn[] columns )
   {
     toolkit.createLabel( this, "Table Viewer Columns" ); //$NON-NLS-1$
 

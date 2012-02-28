@@ -41,12 +41,15 @@
 package org.kalypso.zml.ui.table.context;
 
 import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.IZmlTableComposite;
 
 /**
  * @author Dirk Kuch
  */
 public interface IZmlTableSource
 {
+
+  IZmlTableComposite getComposite( );
 
   IZmlTable getTable( );
 

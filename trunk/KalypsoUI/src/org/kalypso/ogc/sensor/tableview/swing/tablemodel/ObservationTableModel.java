@@ -430,8 +430,6 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
 
             // then set value
             model.set( ix, valueAxis, changedValue );
-
-            observation.fireChangedEvent( this );
           }
         }
         else

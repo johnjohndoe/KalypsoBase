@@ -46,33 +46,28 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
 import org.kalypso.zml.core.base.IZmlSourceElement;
+import org.kalypso.zml.core.base.IndexedTsLink;
+import org.kalypso.zml.core.base.MultipleTsLink;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.TableTypes;
-import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.ZmlModel;
 import org.kalypso.zml.core.table.model.utils.IClonedColumn;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
-import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.base.helper.ZmlTables;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlTableUpdater implements Runnable
 {
-  private final IMultipleZmlSourceElement[] m_sources;
+  private final MultipleTsLink[] m_links;
 
-  private final IZmlTable m_table;
+  private final IZmlTableLayoutPart m_part;
 
-  private boolean m_singleSelect;
-
-  public ZmlTableUpdater( final IZmlTable table, final IMultipleZmlSourceElement[] sources )
+  public ZmlTableUpdater( final IZmlTableLayoutPart part, final MultipleTsLink[] links )
   {
-    m_table = table;
-    m_sources = sources;
+    m_part = part;
+    m_links = links;
   }
 
   @Override
@@ -81,9 +76,9 @@ public class ZmlTableUpdater implements Runnable
     /** tricky: map is used for restoring the order of columns from the underlying calcWizard.xml */
     final Map<Integer, Object[]> map = new TreeMap<Integer, Object[]>();
 
-    for( final IMultipleZmlSourceElement multipleLink : m_sources )
+    for( final MultipleTsLink multipleLink : m_links )
     {
-      final IZmlSourceElement[] links = multipleLink.getSources();
+      final IndexedTsLink[] links = multipleLink.getSources();
       if( ArrayUtils.isEmpty( links ) )
         continue;
 
@@ -91,18 +86,12 @@ public class ZmlTableUpdater implements Runnable
 
       for( int index = 0; index < links.length; index++ )
       {
-        if( m_singleSelect && index > 1 )
-          continue;
-
-        final IZmlSourceElement source = links[index];
+        final IndexedTsLink link = links[index];
         final BaseColumn column = toBaseColumn( baseTypeIdentifier, index );
-        if( Objects.isNull( column ) )
-          continue;
+        link.setIdentifier( column.getIdentifier() ); // update multiple selection index!
 
-        source.setIdentifier( column.getIdentifier() ); // update multiple selection index!
-
-        final int tableIndex = source.getIndex();
-        map.put( tableIndex, new Object[] { source, column } );
+        final int tableIndex = link.getIndex();
+        map.put( tableIndex, new Object[] { link, column } );
       }
     }
 
@@ -111,28 +100,23 @@ public class ZmlTableUpdater implements Runnable
     {
       final Object[] values = entry.getValue();
 
-      final IZmlSourceElement source = (IZmlSourceElement) values[0];
-      final BaseColumn column = (BaseColumn) values[1];
-
-      doLoadModelColumn( source );
-      ZmlTables.addTableColumn( m_table, column );
+      final IndexedTsLink link = (IndexedTsLink) values[0];
+      doLoadModelColumn( link );
     }
   }
 
   private void doLoadModelColumn( final IZmlSourceElement source )
   {
-    final ZmlModel model = (ZmlModel) m_table.getModel();
+    final ZmlModel model = m_part.getModel();
+
     model.getMemento().register( source );
     model.getLoader().load( source );
   }
 
   private BaseColumn toBaseColumn( final String baseTypeIdentifier, final int index )
   {
-    final IZmlModel model = m_table.getModel();
+    final ZmlModel model = m_part.getModel();
     final AbstractColumnType baseColumnType = model.getColumnType( baseTypeIdentifier );
-    if( Objects.isNull( baseColumnType ) )
-      return null;
-
     if( index == 0 )
     {
       return new BaseColumn( baseColumnType );
@@ -157,11 +141,6 @@ public class ZmlTableUpdater implements Runnable
         return clonedColumnType;
       }
     };
-  }
-
-  public void setSingleSelectionMode( final boolean single )
-  {
-    m_singleSelect = single;
   }
 
 }

@@ -42,9 +42,10 @@ package org.kalypso.zml.core.table.model.data;
 
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.IObservationListener;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.event.IObservationListener;
+import org.kalypso.ogc.sensor.event.ObservationChangeType;
 
 /**
  * @author Dirk Kuch
@@ -59,9 +60,6 @@ public class ObservationZmlColumnDataHandler extends AbstractZmlColumnDataHandle
     m_observation.addListener( this );
   }
 
-  /**
-   * @see org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -69,9 +67,6 @@ public class ObservationZmlColumnDataHandler extends AbstractZmlColumnDataHandle
     m_observation = null;
   }
 
-  /**
-   * @see org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler#getModel()
-   */
   @Override
   public ITupleModel getModel( ) throws SensorException
   {
@@ -88,26 +83,18 @@ public class ObservationZmlColumnDataHandler extends AbstractZmlColumnDataHandle
     if( Objects.isNotNull( m_observation ) )
       m_observation.addListener( this );
 
-    fireObservationChanged();
+    fireObservationChanged( new ObservationChangeType( STRUCTURE_CHANGE ) );
   }
 
-  /**
-   * @see org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler#getObservation()
-   */
   @Override
   public IObservation getObservation( )
   {
     return m_observation;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservationListener#observationChanged(org.kalypso.ogc.sensor.IObservation,
-   *      java.lang.Object)
-   */
   @Override
-  public void observationChanged( final IObservation obs, final Object source )
+  public void observationChanged( final IObservation obs, final Object source, final ObservationChangeType type )
   {
-    fireObservationChanged();
+    fireObservationChanged( type );
   }
-
 }

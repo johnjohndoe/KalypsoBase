@@ -56,7 +56,7 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.ZmlModel;
 import org.kalypso.zml.core.table.model.ZmlModelRow;
-import org.kalypso.zml.core.table.model.references.ZmlDataValueReference;
+import org.kalypso.zml.core.table.model.references.ZmlModelValueCell;
 
 /**
  * @author Dirk Kuch
@@ -74,11 +74,8 @@ public class ZmlRowBuilder
   {
     final Map<Date, IZmlModelRow> rows = Collections.synchronizedMap( new TreeMap<Date, IZmlModelRow>() );
 
-    for( final IZmlModelColumn column : m_model.getColumns() )
+    for( final IZmlModelColumn column : m_model.getAvailableColumns() )
     {
-      if( !column.isActive() )
-        continue;
-
       final DataColumn type = column.getDataColumn();
       final IAxis[] axes = column.getAxes();
       final IAxis indexAxis = AxisUtils.findAxis( axes, type.getIndexAxis() );
@@ -96,7 +93,7 @@ public class ZmlRowBuilder
             rows.put( indexValue, row );
           }
 
-          ((ZmlModelRow) row).add( new ZmlDataValueReference( row, column, modelIndex ) );
+          ((ZmlModelRow) row).add( new ZmlModelValueCell( row, column, modelIndex ) );
         }
       }
       catch( final SensorException e )

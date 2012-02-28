@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -47,10 +47,5 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
  */
 public interface IZmlTableListener
 {
-  String TYPE_REFRESH = "refresh";
-
-  String TYPE_ACTIVE_RULE_CHANGED = "rule";
-
   void eventTableChanged( String type, IZmlModelColumn... columns );
-
 }

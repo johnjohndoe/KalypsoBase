@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension-point id="tableRule" name="tableRule" schema="schema/tableRule.exsd"/>
+      <extension-point id="tableCellRule" name="tableCellRule" schema="schema/tableCellRule.exsd"/>
    <extension-point id="metaDataBoundaryValue" name="metaDataBoundaryValue" schema="schema/metaDataBoundaryValue.exsd"/>
+   <extension-point id="tableColumnRule" name="tableColumnRule" schema="schema/tableColumnRule.exsd"/>
    <extension-point id="requestStrategy" name="requestStrategy" schema="schema/requestStrategy.exsd"/>
  <extension
        point="org.kalypso.contribs.java.urlCatalog">
@@ -27,7 +28,7 @@
       </feature>
    </extension>
   	<extension
-       point="org.kalypso.zml.core.tableRule">
+       point="org.kalypso.zml.core.tableCellRule">
     <rule
           id="org.kalypso.zml.ui.core.rule.user.modified"
           rule="org.kalypso.zml.core.table.rules.impl.ZmlRuleUserModified">

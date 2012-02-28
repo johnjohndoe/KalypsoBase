@@ -44,6 +44,7 @@ import java.util.Map;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.ui.menus.UIElement;
+import org.kalypso.zml.core.table.model.view.ZmlViewResolutionFilter;
 
 /**
  * @author Dirk Kuch

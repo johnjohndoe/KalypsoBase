@@ -40,36 +40,26 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.rules.impl.forecast;
 
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.core.KalypsoZmlCore;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.binding.rule.instructions.AbstractZmlRuleInstructionType;
 import org.kalypso.zml.core.table.binding.rule.instructions.ZmlMetadataDaterangeInstruction;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.core.table.rules.AbstractZmlTableRule;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
+import org.kalypso.zml.core.table.rules.AbstractZmlCellRuleImplementation;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlRuleForecast extends AbstractZmlTableRule
+public class ZmlRuleForecast extends AbstractZmlCellRuleImplementation
 {
 
-  /**
-   * @see org.kalypso.zml.core.table.rules.IZmlRuleImplementation#getIdentifier()
-   */
   @Override
   public String getIdentifier( )
   {
     return "org.kalypso.zml.ui.core.rule.forecast.value"; //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.zml.core.table.rules.impl.AbstractZmlTableRule#doApply(org.kalypso.zml.core.table.binding.rule.ZmlRule,
-   *      org.kalypso.zml.core.table.model.references.IZmlValueReference)
-   */
   @Override
-  protected boolean doApply( final ZmlRule rule, final IZmlValueReference reference )
+  protected boolean doApply( final ZmlCellRule rule, final IZmlModelCell reference )
   {
     final AbstractZmlRuleInstructionType[] instructions = rule.getInstructions();
     for( final AbstractZmlRuleInstructionType instruction : instructions )
@@ -77,16 +67,9 @@ public class ZmlRuleForecast extends AbstractZmlTableRule
       if( !(instruction instanceof ZmlMetadataDaterangeInstruction) )
         continue;
 
-      try
-      {
-        final ZmlMetadataDaterangeInstruction impl = (ZmlMetadataDaterangeInstruction) instruction;
-        if( impl.matches( reference ) )
-          return true;
-      }
-      catch( final SensorException e )
-      {
-        KalypsoZmlCore.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-      }
+      final ZmlMetadataDaterangeInstruction impl = (ZmlMetadataDaterangeInstruction) instruction;
+      if( impl.matches( reference ) )
+        return true;
     }
 
     return false;

@@ -63,19 +63,12 @@ public class ShiftValueAdjustmentPage extends AbstractAdjustmentPage implements 
     super( provider, ShiftValueAdjustmentPage.class.getName() );
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.pager.IElementPage#getLabel()
-   */
   @Override
   public String getLabel( )
   {
     return "Werte um festen Wert verschieben (+/-)";
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.pager.IElementPage#render(org.eclipse.swt.widgets.Composite,
-   *      org.eclipse.ui.forms.widgets.FormToolkit)
-   */
   @Override
   public void render( final Composite body, final FormToolkit toolkit )
   {
@@ -97,35 +90,23 @@ public class ShiftValueAdjustmentPage extends AbstractAdjustmentPage implements 
     return m_shiftValue;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.pager.IElementPage#dispose()
-   */
   @Override
   public void dispose( )
   {
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.base.widgets.IEnhancedTextBoxListener#valueChanged(java.lang.Object)
-   */
   @Override
   public void valueChanged( final Double value )
   {
     m_shiftValue = value;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.commands.menu.adjust.pages.AbstractAdjustmentPage#getRunnable()
-   */
   @Override
   public ICoreRunnableWithProgress getRunnable( )
   {
-    return new ShiftValueRunnable( getColumn().getSelectedCells(), m_shiftValue );
+    return new ShiftValueRunnable( getColumn(), getSelection().getSelectedCells( getColumn() ), m_shiftValue );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.commands.menu.adjust.pages.AbstractAdjustmentPage#isValid()
-   */
   @Override
   public boolean isValid( )
   {

@@ -46,11 +46,12 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedTextBox;
 import org.kalypso.zml.ui.table.base.widgets.IEnhancedTextBoxListener;
 import org.kalypso.zml.ui.table.base.widgets.rules.DoubeValueWidgetRule;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
 
 /**
  * @author Dirk Kuch
@@ -66,19 +67,12 @@ public class ConstantValueAdjustmentPage extends AbstractAdjustmentPage implemen
     super( provider, ConstantValueAdjustmentPage.class.getName() );
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.pager.IElementPage#getLabel()
-   */
   @Override
   public String getLabel( )
   {
     return "Konstanten Wert setzen (=)";
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.pager.IElementPage#render(org.eclipse.swt.widgets.Composite,
-   *      org.eclipse.ui.forms.widgets.FormToolkit)
-   */
   @Override
   public void render( final Composite body, final FormToolkit toolkit )
   {
@@ -104,45 +98,36 @@ public class ConstantValueAdjustmentPage extends AbstractAdjustmentPage implemen
     if( Objects.isNotNull( m_constantValue ) )
       return m_constantValue;
 
-    final IZmlTableColumn column = getColumn();
-    final IZmlTableCell[] cells = column.getSelectedCells();
-    final Number value = cells[0].getValueReference().getValue();
+    final IZmlModelValueCell cell = getSelection().getFocusCell();
+    final Number value = cell.getValue();
 
     m_constantValue = value.doubleValue();
     return m_constantValue;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.pager.IElementPage#dispose()
-   */
   @Override
   public void dispose( )
   {
-    // TODO Auto-generated method stub
 
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.base.widgets.IEnhancedTextBoxListener#valueChanged(java.lang.Object)
-   */
   @Override
   public void valueChanged( final Double value )
   {
     m_constantValue = value;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.commands.menu.adjust.pages.AbstractAdjustmentPage#getRunnable()
-   */
   @Override
   public ICoreRunnableWithProgress getRunnable( )
   {
-    return new ConstantValueRunnable( getColumn().getSelectedCells(), m_constantValue );
+    final IZmlTableSelection selection = getSelection();
+    final IZmlModelColumn column = getColumn();
+
+    final IZmlModelValueCell[] cells = selection.getSelectedCells( column );
+
+    return new ConstantValueRunnable( column, cells, m_constantValue );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.commands.menu.adjust.pages.AbstractAdjustmentPage#isValid()
-   */
   @Override
   public boolean isValid( )
   {

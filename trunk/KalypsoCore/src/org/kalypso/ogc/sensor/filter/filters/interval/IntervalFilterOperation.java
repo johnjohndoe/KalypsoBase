@@ -42,6 +42,7 @@ package org.kalypso.ogc.sensor.filter.filters.interval;
 
 import java.util.Calendar;
 
+import org.joda.time.Period;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -50,6 +51,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 
 /**
  * @author Gernot Belger
@@ -60,14 +62,21 @@ public class IntervalFilterOperation
 
   private final IntervalDefinition m_definition;
 
-  private final MetadataList m_metadata;
+  private final MetadataList m_targetMetadata;
+
+  private Period m_sourceTimestep;
 
   public IntervalFilterOperation( final IObservation input, final IntervalDefinition definition )
   {
     m_input = input;
     m_definition = definition;
-    m_metadata = MetadataHelper.clone( m_input.getMetadataList() );
-    definition.setTimestep( m_metadata );
+
+    MetadataList sourceMetadata = m_input.getMetadataList();
+
+    m_sourceTimestep = MetadataHelper.getTimestep( sourceMetadata );
+
+    m_targetMetadata = MetadataHelper.clone( sourceMetadata );
+    definition.setTimestep( m_targetMetadata );
   }
 
   public IObservation execute( final DateRange range ) throws SensorException
@@ -75,7 +84,7 @@ public class IntervalFilterOperation
     final String href = m_input.getHref();
     final String name = m_input.getName();
 
-    // BUGIFX: fixes the problem with the first value:
+    // BUGFIX: fixes the problem with the first value:
     // the first value was always ignored, because the interval
     // filter cannot handle the first value of the source observation
     // FIX: we just make the request a big bigger in order to get a new first value
@@ -83,11 +92,13 @@ public class IntervalFilterOperation
     // Maybe there should be one day a mean to determine, which is the right amount.
     final ITupleModel sourceModel = ObservationUtilities.requestBuffered( m_input, range, Calendar.DAY_OF_MONTH, 2 );
 
-    final IntervalValuesOperation valuesOp = new IntervalValuesOperation( sourceModel, m_metadata, m_definition );
+    DataSourceHandler targetSourcesHandler = new DataSourceHandler( m_targetMetadata );
+
+    final IntervalValuesOperation valuesOp = new IntervalValuesOperation( sourceModel, m_sourceTimestep, targetSourcesHandler, m_definition );
     valuesOp.execute( range );
     final ITupleModel model = valuesOp.getModel();
 
-    return new SimpleObservation( href, name, m_metadata, model );
+    return new SimpleObservation( href, name, m_targetMetadata, model );
   }
 
 }
