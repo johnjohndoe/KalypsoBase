@@ -77,7 +77,6 @@ import org.kalypso.zml.core.table.schema.CellStyleType;
  */
 public class ZmlModelValueCell extends AbstractZmlCell implements IZmlModelValueCell
 {
-
   private CellStyle m_style;
 
   private ZmlCellRule[] m_rules;
