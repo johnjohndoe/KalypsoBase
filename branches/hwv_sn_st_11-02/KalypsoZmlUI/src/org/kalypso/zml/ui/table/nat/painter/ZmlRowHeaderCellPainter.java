@@ -102,7 +102,6 @@ public class ZmlRowHeaderCellPainter extends AbstractCellPainter
       return getDefaultStyle();
 
     final IZmlModelIndexCell cell = row.getIndexCell();
-
     final ZmlIndexCellStyleProvider provider = new ZmlIndexCellStyleProvider( cell.getBaseColumn() );
 
     return provider.getStyle( m_viewport, cell );
