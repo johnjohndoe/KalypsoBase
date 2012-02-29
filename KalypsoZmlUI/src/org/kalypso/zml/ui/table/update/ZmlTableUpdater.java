@@ -40,20 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.update;
 
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Comparator;
 import java.util.Set;
-import java.util.TreeMap;
+import java.util.TreeSet;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.zml.core.base.IZmlSourceElement;
 import org.kalypso.zml.core.base.IndexedTsLink;
 import org.kalypso.zml.core.base.MultipleTsLink;
-import org.kalypso.zml.core.table.binding.BaseColumn;
-import org.kalypso.zml.core.table.binding.TableTypes;
 import org.kalypso.zml.core.table.model.ZmlModel;
 import org.kalypso.zml.core.table.model.utils.IClonedColumn;
-import org.kalypso.zml.core.table.schema.AbstractColumnType;
 
 /**
  * @author Dirk Kuch
@@ -74,7 +70,14 @@ public class ZmlTableUpdater implements Runnable
   public void run( )
   {
     /** tricky: map is used for restoring the order of columns from the underlying calcWizard.xml */
-    final Map<Integer, Object[]> map = new TreeMap<Integer, Object[]>();
+    final Set<IndexedTsLink> indexList = new TreeSet<IndexedTsLink>( new Comparator<IndexedTsLink>()
+    {
+      @Override
+      public int compare( final IndexedTsLink l1, final IndexedTsLink l2 )
+      {
+        return Integer.valueOf( l1.getIndex() ).compareTo( Integer.valueOf( l2.getIndex() ) );
+      }
+    } );
 
     for( final MultipleTsLink multipleLink : m_links )
     {
@@ -87,22 +90,17 @@ public class ZmlTableUpdater implements Runnable
       for( int index = 0; index < links.length; index++ )
       {
         final IndexedTsLink link = links[index];
-        final BaseColumn column = toBaseColumn( baseTypeIdentifier, index );
-        link.setIdentifier( column.getIdentifier() ); // update multiple selection index!
-
-        final int tableIndex = link.getIndex();
-        map.put( tableIndex, new Object[] { link, column } );
+        link.setIdentifier( getColumnId( baseTypeIdentifier, index ) ); // update multiple selection index!
+        indexList.add( link );
       }
     }
 
-    final Set<Entry<Integer, Object[]>> entries = map.entrySet();
-    for( final Entry<Integer, Object[]> entry : entries )
+    final IndexedTsLink[] links = indexList.toArray( new IndexedTsLink[] {} );
+    for( final IndexedTsLink link : links )
     {
-      final Object[] values = entry.getValue();
-
-      final IndexedTsLink link = (IndexedTsLink) values[0];
       doLoadModelColumn( link );
     }
+
   }
 
   private void doLoadModelColumn( final IZmlSourceElement source )
@@ -113,34 +111,13 @@ public class ZmlTableUpdater implements Runnable
     model.getLoader().load( source );
   }
 
-  private BaseColumn toBaseColumn( final String baseTypeIdentifier, final int index )
+  private String getColumnId( final String baseTypeIdentifier, final int index )
   {
-    final ZmlModel model = m_part.getModel();
-    final AbstractColumnType baseColumnType = model.getColumnType( baseTypeIdentifier );
     if( index == 0 )
-    {
-      return new BaseColumn( baseColumnType );
-    }
+      return baseTypeIdentifier;
 
-    final String multipleIdentifier = String.format( IClonedColumn.CLONED_COLUMN_POSTFIX_FORMAT, baseTypeIdentifier, index );
+    return String.format( IClonedColumn.CLONED_COLUMN_POSTFIX_FORMAT, baseTypeIdentifier, index );
 
-    final AbstractColumnType clonedColumnType = TableTypes.cloneColumn( baseColumnType );
-    clonedColumnType.setId( multipleIdentifier );
-
-    return new BaseColumn( clonedColumnType )
-    {
-      @Override
-      public String getIdentifier( )
-      {
-        return multipleIdentifier;
-      }
-
-      @Override
-      public AbstractColumnType getType( )
-      {
-        return clonedColumnType;
-      }
-    };
   }
 
 }

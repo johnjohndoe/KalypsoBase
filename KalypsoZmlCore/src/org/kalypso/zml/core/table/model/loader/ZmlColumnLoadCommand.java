@@ -162,7 +162,7 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
       column = new ZmlModelColumn( m_model, m_source.getIdentifier(), data );
       column.setDataHandler( handler );
 
-      m_model.add( column );
+      m_model.add( m_source, column );
     }
     else
     {
