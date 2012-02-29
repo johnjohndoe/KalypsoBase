@@ -67,9 +67,6 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
 
   private int m_rows;
 
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegendRenderer#getIdentifier()
-   */
   @Override
   public String getIdentifier( )
   {
@@ -90,9 +87,6 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
     return new Point( x, y );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.ILegendStrategy#createImage(de.openali.odysseus.chart.framework.util.img.LegendImageCreator)
-   */
   @Override
   public Image createImage( final IChartLegendCanvas canvas, final IChartLegendConfig config )
   {
@@ -238,7 +232,7 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
   {
     final Point maxItemSize = calculateItemSize( layers, config );
     if( maxItemSize == null || maxItemSize.x == 0 || maxItemSize.y == 0 )
-      return new Rectangle(config.getMaximumWidth().x,config.getMaximumWidth().y, 1, 1 );
+      return new Rectangle( config.getMaximumWidth().x, config.getMaximumWidth().y, 1, 1 );
 
     final int legendEntries = calculateLegendEntries( layers );
     // never return 0 itemsperrow,
@@ -246,7 +240,7 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
 
     m_rows = calculateRowNumbers( legendEntries, itemsPerRow );
 
-    return new Rectangle(config.getMaximumWidth().x,config.getMaximumWidth().y, config.getMaximumWidth().width, Double.valueOf( m_rows ).intValue() * maxItemSize.y );
+    return new Rectangle( config.getMaximumWidth().x, config.getMaximumWidth().y, config.getMaximumWidth().width, Double.valueOf( m_rows ).intValue() * maxItemSize.y );
   }
 
   private int calculateRowNumbers( final int legendEntries, final int itemsPerRow )

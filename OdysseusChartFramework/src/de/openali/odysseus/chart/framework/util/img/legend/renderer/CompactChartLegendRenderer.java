@@ -67,9 +67,6 @@ public class CompactChartLegendRenderer implements IChartLegendRenderer
 
   public static final String ID = "de.openali.odysseus.chart.legend.render.compact"; //$NON-NLS-1$
 
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegendRenderer#getIdentifier()
-   */
   @Override
   public String getIdentifier( )
   {
@@ -90,9 +87,6 @@ public class CompactChartLegendRenderer implements IChartLegendRenderer
     return new Point( x, y );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.ILegendStrategy#createImage(de.openali.odysseus.chart.framework.util.img.LegendImageCreator)
-   */
   @Override
   public Image createImage( final IChartLegendCanvas canvas, final IChartLegendConfig config )
   {
