@@ -82,7 +82,6 @@ public class ContinuedInterpolatedValueEditingStrategy extends AbstractEditingSt
     try
     {
       /** update current cell */
-
       final Number targetValue = getTargetValue( cell, value );
 
       final IZmlModelColumn column = cell.getColumn();
@@ -100,7 +99,7 @@ public class ContinuedInterpolatedValueEditingStrategy extends AbstractEditingSt
           if( ZmlValues.isStuetzstelle( ref ) )
             break;
 
-          final TupleModelDataSet dataset2 = new TupleModelDataSet( column.getValueAxis(), targetValue, KalypsoStati.BIT_USER_MODIFIED, IDataSourceItem.SOURCE_INTERPOLATED_WECHMANN_VALUE );
+          final TupleModelDataSet dataset2 = new TupleModelDataSet( column.getValueAxis(), targetValue, KalypsoStati.BIT_OK, IDataSourceItem.SOURCE_INTERPOLATED_WECHMANN_VALUE );
           transaction.add( new UpdateTupleModelDataSetCommand( ref.getModelIndex(), dataset2, true ) );
 
           next = getViewport().findNextCell( next );

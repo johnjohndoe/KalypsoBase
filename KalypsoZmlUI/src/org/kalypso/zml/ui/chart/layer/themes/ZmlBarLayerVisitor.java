@@ -45,10 +45,12 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.swt.graphics.Point;
+import org.joda.time.Period;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
 import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
@@ -71,10 +73,14 @@ public class ZmlBarLayerVisitor implements IObservationVisitor
 
   List<Point[]> m_points = new ArrayList<Point[]>();
 
+  private final Point m_baseLine;
+
   public ZmlBarLayerVisitor( final ZmlBarLayer layer, final ZmlBarLayerRangeHandler range )
   {
     m_layer = layer;
     m_range = range;
+
+    m_baseLine = m_layer.getCoordinateMapper().numericToScreen( 0.0, 0.0 );
   }
 
   @Override
@@ -87,28 +93,27 @@ public class ZmlBarLayerVisitor implements IObservationVisitor
       if( Objects.isNull( domainValue, targetValue ) )
         return;
 
-      final Point base = m_layer.getCoordinateMapper().numericToScreen( 0.0, 0.0 );
-
       final Number logicalDomain = m_range.getDateDataOperator().logicalToNumeric( (Date) domainValue );
       final Number logicalTarget = m_range.getNumberDataOperator().logicalToNumeric( (Number) targetValue );
-      final Point screen = m_layer.getCoordinateMapper().numericToScreen( logicalDomain, logicalTarget );
+      final Point p1 = m_layer.getCoordinateMapper().numericToScreen( logicalDomain, logicalTarget );
 
       // don't draw empty lines only rectangles
-      if( screen.y != base.y )
+      if( p1.y != m_baseLine.y )
       {
+        final Period timestep = MetadataHelper.getTimestep( container.getMetaData() );
 
-        final int x = getX( m_lastScreen, screen );
+        final int x0 = getX( p1, logicalDomain, timestep );
 
         final List<Point> points = new ArrayList<Point>();
-        points.add( new Point( x, base.y ) );
-        points.add( new Point( x, screen.y ) );
-        points.add( screen );
-        points.add( new Point( screen.x, base.y ) );
+        points.add( new Point( x0, m_baseLine.y ) );
+        points.add( new Point( x0, p1.y ) );
+        points.add( p1 );
+        points.add( new Point( p1.x, m_baseLine.y ) );
 
         m_points.add( points.toArray( new Point[] {} ) );
       }
 
-      m_lastScreen = screen;
+      m_lastScreen = p1;
     }
     catch( final Throwable t )
     {
@@ -137,12 +142,21 @@ public class ZmlBarLayerVisitor implements IObservationVisitor
     return value;
   }
 
-  private int getX( final Point p1, final Point p2 )
+  private int getX( final Point point, final Number logicalTime, final Period timestep )
   {
-    if( p1 == null )
-      return p2.x;
+    if( Objects.isNotNull( timestep ) )
+    {
+      final long ms = timestep.toStandardSeconds().getSeconds() * 1000;
 
-    return p1.x;
+      final long x0 = logicalTime.longValue() - ms;
+      final Point screen = m_layer.getCoordinateMapper().numericToScreen( x0, 0 );
+
+      return screen.x;
+    }
+    else if( Objects.isNotNull( m_lastScreen ) )
+      return m_lastScreen.x;
+
+    return point.x;
   }
 
   private IAxis getValueAxis( final IObservationValueContainer container )
