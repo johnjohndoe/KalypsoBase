@@ -41,7 +41,6 @@
 package org.kalypso.zml.core.table.model;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -62,6 +61,8 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
+import org.kalypso.zml.core.base.IZmlSourceElement;
+import org.kalypso.zml.core.base.IndexedTsLink;
 import org.kalypso.zml.core.debug.KalypsoZmlCoreDebug;
 import org.kalypso.zml.core.table.model.event.IZmlModelColumnListener;
 import org.kalypso.zml.core.table.model.event.ZmlModelColumnChangeType;
@@ -80,7 +81,7 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
 {
   private final IZmlMemento m_memento = new ZmlMemento();
 
-  private final List<IZmlModelColumn> m_columns = Collections.synchronizedList( new ArrayList<IZmlModelColumn>() );
+  private final Map<Integer, IZmlModelColumn> m_columns = Collections.synchronizedMap( new TreeMap<Integer, IZmlModelColumn>() );
 
   protected final Set<IZmlColumnModelListener> m_listeners = Collections.synchronizedSet( new HashSet<IZmlColumnModelListener>() );
 
@@ -148,11 +149,27 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
   }
 
   @Override
-  public void add( final IZmlModelColumn column )
+  public void add( final IZmlSourceElement source, final IZmlModelColumn column )
   {
-    column.addListener( this );
-    m_columns.add( column );
+    synchronized( this )
+    {
+      int index;
+      if( source instanceof IndexedTsLink )
+        index = ((IndexedTsLink) source).getIndex();
+      else
+        index = m_columns.size();
 
+      if( m_columns.containsKey( index ) )
+      {
+        final IZmlModelColumn obsolete = m_columns.get( index );
+        obsolete.dispose();
+        obsolete.removeListener( this );
+      }
+
+      column.addListener( this );
+
+      m_columns.put( index, column );
+    }
     fireModelChanged( new ZmlModelColumnChangeType( STRUCTURE_CHANGE ) );
   }
 
@@ -168,15 +185,17 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
     m_loader.cancel();
 
     /** remove cloned columns */
-    final IZmlModelColumn[] columns = m_columns.toArray( new IZmlModelColumn[] {} );
-    for( final IZmlModelColumn column : columns )
+    final Object[] entries = m_columns.entrySet().toArray();
+    for( final Object objEntry : entries )
     {
+      final Map.Entry<Integer, IZmlModelColumn> entry = (Entry<Integer, IZmlModelColumn>) objEntry;
+      final IZmlModelColumn column = entry.getValue();
       column.dispose();
 
       if( ZmlModelColumns.isCloned( column ) )
       {
         column.removeListener( this );
-        m_columns.remove( column );
+        m_columns.remove( entry.getKey() );
       }
     }
 
@@ -190,7 +209,7 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
   {
     m_memento.dispose();
 
-    final ZmlModelColumn[] columns = m_columns.toArray( new ZmlModelColumn[] {} );
+    final ZmlModelColumn[] columns = m_columns.values().toArray( new ZmlModelColumn[] {} );
     m_columns.clear();
 
     for( final IZmlModelColumn column : columns )
@@ -260,7 +279,7 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
   {
     synchronized( this )
     {
-      final IZmlModelColumn[] columns = m_columns.toArray( new IZmlModelColumn[] {} );
+      final IZmlModelColumn[] columns = m_columns.values().toArray( new IZmlModelColumn[] {} );
       for( final IZmlModelColumn column : columns )
       {
         if( column.getIdentifier().equals( id ) )
@@ -291,7 +310,7 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
   @Override
   public ZmlModelColumn[] getColumns( )
   {
-    return m_columns.toArray( new ZmlModelColumn[] {} );
+    return m_columns.values().toArray( new ZmlModelColumn[] {} );
   }
 
   @Override
