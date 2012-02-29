@@ -157,7 +157,7 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
       if( source instanceof IndexedTsLink )
         index = ((IndexedTsLink) source).getIndex();
       else
-        index = m_columns.size();
+        index = findIndex();
 
       if( m_columns.containsKey( index ) )
       {
@@ -171,6 +171,16 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
       m_columns.put( index, column );
     }
     fireModelChanged( new ZmlModelColumnChangeType( STRUCTURE_CHANGE ) );
+  }
+
+  private int findIndex( )
+  {
+    int base = m_columns.size();
+
+    while( m_columns.containsKey( base ) )
+      base++;
+
+    return base;
   }
 
   @Override
