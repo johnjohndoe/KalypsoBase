@@ -53,9 +53,6 @@ public class LegendChartLayersVisitor extends AbstractChartLayerVisitor
 {
   private final Set<IChartLayer> m_layers = new LinkedHashSet<IChartLayer>();
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
   @Override
   public void visit( final IChartLayer layer )
   {
@@ -68,13 +65,7 @@ public class LegendChartLayersVisitor extends AbstractChartLayerVisitor
 
   private boolean isValid( final IChartLayer layer )
   {
-    if( !layer.isVisible() )
-      return false;
-
-    if( !layer.isLegend() )
-      return false;
-
-    return true;
+    return layer.isVisible() && layer.isLegend();
   }
 
   public IChartLayer[] getLayers( )
