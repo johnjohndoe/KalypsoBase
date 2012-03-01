@@ -42,12 +42,14 @@ package org.kalypso.zml.ui.chart.layer.themes;
 
 import java.util.Date;
 
+import org.joda.time.Period;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 import org.kalypso.zml.ui.KalypsoZmlUI;
@@ -87,8 +89,16 @@ public class ZmlBarLayerRangeHandler
       if( Objects.isNull( range ) )
         return null;
 
-      final Date min = (Date) range.getLower();
+      Date min = (Date) range.getLower();
       final Date max = (Date) range.getUpper();
+
+      // adjust min, because rainfalls time series values will be rendered int the past
+      final Period timestep = MetadataHelper.getTimestep( observation.getMetadataList() );
+      if( Objects.isNotNull( timestep ) )
+      {
+        final long ms = timestep.toStandardSeconds().getSeconds() * 1000;
+        min = new Date( min.getTime() - ms );
+      }
 
       return new DataRange<Number>( getDateDataOperator().logicalToNumeric( min ), getDateDataOperator().logicalToNumeric( max ) );
     }

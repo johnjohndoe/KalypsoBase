@@ -78,6 +78,9 @@ public class ZmlModelRowAccesor implements IColumnAccessor<IZmlModelRow>
   {
     final IZmlModelValueCell cell = m_model.getCell( row, columnIndex );
     final IZmlModelValueCell valueCell = cell;
+    if( Objects.isNull( valueCell ) )
+      return;
+
     final IZmlModelColumn column = valueCell.getColumn();
 
     final IZmlModelCellLabelProvider provider = cell.getStyleProvider();

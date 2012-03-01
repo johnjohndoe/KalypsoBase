@@ -82,7 +82,17 @@ public class ZmlChartLegendLayersVisitor extends AbstractChartLayerVisitor
       return false;
 
     if( !(layer instanceof IZmlLayer) )
-      return true;
+    {
+      final ILayerManager manager = layer.getLayerManager();
+      final IChartLayer[] children = manager.getLayers();
+      for( final IChartLayer child : children )
+      {
+        if( isValid( child ) )
+          return true;
+      }
+
+      return false;
+    }
 
     final IZmlLayer zml = (IZmlLayer) layer;
     final IZmlLayerDataHandler dataHandler = zml.getDataHandler();

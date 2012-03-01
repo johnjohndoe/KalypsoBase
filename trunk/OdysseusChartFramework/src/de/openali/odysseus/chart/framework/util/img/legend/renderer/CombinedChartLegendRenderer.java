@@ -53,25 +53,16 @@ import de.openali.odysseus.chart.framework.util.img.legend.config.IChartLegendCo
  */
 public class CombinedChartLegendRenderer implements IChartLegendRenderer
 {
-
   private static final String ID = "de.openali.odysseus.chart.legend.render.combined"; //$NON-NLS-1$
 
   private IChartLegendRenderer m_lastRenderer;
 
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegendRenderer#createImage(de.openali.odysseus.chart.framework.util.img.legend.IChartLegendCanvas,
-   *      de.openali.odysseus.chart.framework.util.img.legend.config.IChartLegendConfig)
-   */
   @Override
   public Image createImage( final IChartLegendCanvas canvas, final IChartLegendConfig config )
   {
     return m_lastRenderer.createImage( canvas, config );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegendRenderer#calculateSize(de.openali.odysseus.chart.framework.util.img.legend.IChartLegendCanvas,
-   *      de.openali.odysseus.chart.framework.util.img.legend.config.IChartLegendConfig)
-   */
   @Override
   public Rectangle calculateSize( final IChartLegendCanvas canvas, final IChartLegendConfig config )
   {
@@ -84,18 +75,12 @@ public class CombinedChartLegendRenderer implements IChartLegendRenderer
     return m_lastRenderer.calculateSize( canvas, config );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegendRenderer#getIdentifier()
-   */
   @Override
   public String getIdentifier( )
   {
     return ID;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegendRenderer#rowSize()
-   */
   @Override
   public int rowSize( )
   {

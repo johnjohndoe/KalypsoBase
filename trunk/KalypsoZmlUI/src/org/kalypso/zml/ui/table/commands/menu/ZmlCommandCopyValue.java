@@ -54,6 +54,7 @@ import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.references.labeling.ZmlModelCellLabelProvider;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
+import org.kalypso.zml.ui.table.nat.base.ZmlModelRowHeaderDisplayConverter;
 import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
 
 /**
@@ -71,13 +72,29 @@ public class ZmlCommandCopyValue extends AbstractHandler
 
       final StringBuffer buffer = new StringBuffer();
 
-      // FIXME header
-      // FIXME index column
       final IZmlModelColumn[] columns = selection.getSelectedColumns();
       final IZmlModelRow[] rows = selection.getSelectedRows();
 
+      /** table header */
+      buffer.append( "Datum" );
+      buffer.append( "\t" ); //$NON-NLS-1$
+
+      for( final IZmlModelColumn column : columns )
+      {
+        buffer.append( column.getLabel() );
+        if( !Arrays.isLastItem( columns, column ) )
+          buffer.append( "\t" ); //$NON-NLS-1$
+        else
+          buffer.append( "\n" );//$NON-NLS-1$
+      }
+
+      /** table body */
       for( final IZmlModelRow row : rows )
       {
+        final String date = ZmlModelRowHeaderDisplayConverter.toLabel( row.getIndexCell() );
+        buffer.append( date );
+        buffer.append( "\t" ); //$NON-NLS-1$
+
         for( final IZmlModelColumn column : columns )
         {
           final IZmlModelValueCell cell = row.get( column );
