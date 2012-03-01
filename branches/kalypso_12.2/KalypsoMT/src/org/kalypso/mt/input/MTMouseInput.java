@@ -46,6 +46,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.poi.util.ArrayUtil;
+import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ogc.gml.widgets.WidgetManager;
 import org.mt4j.AbstractMTApplication;
 import org.mt4j.input.inputSources.AbstractInputSource;
@@ -90,7 +93,7 @@ public class MTMouseInput extends AbstractInputSource implements MouseMotionList
   // make singleton
   /**
    * Instantiates a new mouse input source.
-   *
+   * 
    * @param pa
    *          the pa
    */
@@ -109,7 +112,7 @@ public class MTMouseInput extends AbstractInputSource implements MouseMotionList
 
   /**
    * Mouse event.
-   *
+   * 
    * @param event
    *          the event
    */
@@ -267,29 +270,40 @@ public class MTMouseInput extends AbstractInputSource implements MouseMotionList
   {
     m_fakeMousePressed = true;
 
-    // FIXME: currently, the active widget is not known, but there is a list of active widgets instead. discuss with
-    // Dirk how to handle this
-
-    if( m_mgr.getActualWidget() != null )
+    IWidget[] widgets = m_mgr.getWidgets();
+    if( ArrayUtils.isNotEmpty( widgets ) )
     {
       final Point p = new Point( (int) position.x, (int) position.y );
       m_fakeMousePressPos = p;
-      m_mgr.getActualWidget().leftPressed( p );
+
+      MouseEvent event = MouseEvents.toMouseEvent( p );
+      for( IWidget widget : widgets )
+      {
+        widget.mousePressed( event );
+        if( event.isConsumed() )
+          break;
+      }
     }
     else
     {
-//      System.out.println( "No widget selected" );
+// System.out.println( "No widget selected" );
     }
   }
 
   public void fakeMouseMove( final Vector3D position )
   {
-    if( m_mgr.getActualWidget() != null )
+    MouseEvent event = MouseEvents.toMouseEvent( new Point( (int) position.x, (int) position.y ) );
+
+    IWidget[] widgets = m_mgr.getWidgets();
+    for( IWidget widget : widgets )
     {
-      if (m_fakeDrag)
-          m_mgr.getActualWidget().dragged( new Point( (int) position.x, (int) position.y ) );
-        else
-          m_mgr.getActualWidget().moved( new Point( (int) position.x, (int) position.y ) );
+      if( m_fakeDrag )
+        widget.mouseDragged( event );
+      else
+        widget.mouseMoved( event );
+
+      if( event.isConsumed() )
+        break;
     }
   }
 
@@ -300,58 +314,48 @@ public class MTMouseInput extends AbstractInputSource implements MouseMotionList
     if( !m_fakeMousePressed )
       return;
 
-    if( m_mgr.getActualWidget() != null )
-    {
-      final Point p = new Point( (int) position.x, (int) position.y );
-      m_mgr.getActualWidget().leftReleased( p );
+    final Point point = new Point( (int) position.x, (int) position.y );
+    MouseEvent event = MouseEvents.toMouseEvent( point );
 
-      if ( m_fakeMousePressPos != null ) {
-        final double dist = m_fakeMousePressPos.distance( p );
+    IWidget[] widgets = m_mgr.getWidgets();
+    for( IWidget widget : widgets )
+    {
+      widget.mouseReleased( event );
+      if( m_fakeMousePressPos != null )
+      {
+        final double dist = m_fakeMousePressPos.distance( point );
         if( dist < MT_FAKE_MOUSE_CLICK_DISTANCE )
         {
-          m_mgr.getActualWidget().leftClicked( p );
+          widget.mouseClicked( event );
         }
       }
+
+      if( event.isConsumed() )
+        break;
     }
+
   }
 
   public void fakeMouseCancel( )
   {
     m_fakeMousePressed = false;
 
-    if( m_mgr.getActualWidget() != null )
+    IWidget[] widgets = m_mgr.getWidgets();
+    for( IWidget widget : widgets )
     {
-      try
-      {
-        m_mgr.getActualWidget().leftPressed( null );
-        m_mgr.getActualWidget().leftReleased( null );
-
-      }
-      catch( final Exception e )
-      {
-//        System.out.println( "WIDGET CANCELATION FAILED " + m_mgr.getActualWidget() );
-      }
+      widget.mousePressed( null );
+      widget.mouseReleased( null );
     }
   }
 
   public void fakeKeyReleased( final KeyEvent keyEvent )
   {
-    if( m_mgr.getActualWidget() != null )
+    IWidget[] widgets = m_mgr.getWidgets();
+    for( IWidget widget : widgets )
     {
-      try
-      {
-        m_mgr.getActualWidget().keyReleased( keyEvent );
-        m_mgr.getActualWidget().keyPressed( keyEvent );
-      }
-      catch( final Exception e )
-      {
-//        System.out.println( "WIDGET FAKE KEY PRESS FAILED " + m_mgr.getActualWidget() );
-      }
+      widget.keyReleased( keyEvent );
+      widget.keyPressed( keyEvent );
     }
-    else
-    {
-    }
-
   }
 
   public void setFakeDrag( final boolean b )
