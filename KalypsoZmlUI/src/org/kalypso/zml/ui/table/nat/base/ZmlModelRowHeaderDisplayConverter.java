@@ -61,14 +61,19 @@ public class ZmlModelRowHeaderDisplayConverter extends DisplayConverter
       final IZmlModelRow row = (IZmlModelRow) canonicalValue;
       final IZmlModelIndexCell index = row.getIndexCell();
 
-      // TODO label provider / styling
-      final SimpleDateFormat sdf = new SimpleDateFormat();
-      sdf.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
-
-      return sdf.format( index.getIndexValue() );
+      return toLabel( index );
     }
 
     return canonicalValue.toString();
+  }
+
+  public static String toLabel( final IZmlModelIndexCell index )
+  {
+    // TODO label provider / styling
+    final SimpleDateFormat sdf = new SimpleDateFormat();
+    sdf.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
+
+    return sdf.format( index.getIndexValue() );
   }
 
   @Override

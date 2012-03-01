@@ -42,6 +42,7 @@ package org.kalypso.zml.core.table.model;
 
 import java.util.Date;
 
+import org.kalypso.zml.core.base.IZmlSourceElement;
 import org.kalypso.zml.core.table.model.event.ZmlModelColumnChangeType;
 import org.kalypso.zml.core.table.model.memento.IZmlMemento;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
@@ -73,7 +74,11 @@ public interface IZmlModel
   // FIXME is never called
   void dispose( );
 
-  void add( IZmlModelColumn column );
+  /**
+   * @param source
+   *          can be null
+   */
+  void add( IZmlSourceElement source, IZmlModelColumn column );
 
   IZmlMemento getMemento( );
 

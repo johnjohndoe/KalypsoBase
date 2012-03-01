@@ -67,9 +67,6 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
 
   private int m_rows;
 
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegendRenderer#getIdentifier()
-   */
   @Override
   public String getIdentifier( )
   {
@@ -90,9 +87,6 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
     return new Point( x, y );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.ILegendStrategy#createImage(de.openali.odysseus.chart.framework.util.img.LegendImageCreator)
-   */
   @Override
   public Image createImage( final IChartLegendCanvas canvas, final IChartLegendConfig config )
   {

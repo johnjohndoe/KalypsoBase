@@ -41,7 +41,6 @@
 package org.kalypso.zml.core.table.model.memento;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -149,7 +148,7 @@ public class ZmlMemento implements IZmlMemento
   @Override
   public synchronized IZmlSourceElement[] findDirtyElements( )
   {
-    final Collection<IZmlSourceElement> result = new ArrayList<IZmlSourceElement>();
+    final Set<IZmlSourceElement> result = new LinkedHashSet<IZmlSourceElement>();
 
     final Set<Entry<IPoolableObjectType, List<IZmlSourceElement>>> entries = m_provider.entrySet();
     for( final Entry<IPoolableObjectType, List<IZmlSourceElement>> entry : entries )
@@ -160,6 +159,7 @@ public class ZmlMemento implements IZmlMemento
         if( source.isDirty() )
         {
           result.add( source );
+          break; // source points to IPoolableObjectType - so scan next entry!
         }
       }
     }
