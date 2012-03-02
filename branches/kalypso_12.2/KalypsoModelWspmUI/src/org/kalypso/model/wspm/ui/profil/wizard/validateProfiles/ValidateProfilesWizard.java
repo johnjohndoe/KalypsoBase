@@ -140,10 +140,6 @@ public class ValidateProfilesWizard extends Wizard implements IWorkbenchWizard
     m_quickFixChoosePage = new ArrayChooserPage( m_reparatorRules, new IProfilMarkerResolution[0], new IProfilMarkerResolution[0], 0, "quickFixChoosePage", Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard.5" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
     m_quickFixChoosePage.setLabelProvider( new LabelProvider()
     {
-
-      /**
-       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
-       */
       @Override
       public String getText( final Object element )
       {
@@ -157,26 +153,22 @@ public class ValidateProfilesWizard extends Wizard implements IWorkbenchWizard
 
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#canFinish()
-   */
   @Override
   public boolean canFinish( )
   {
     return m_validatorChooserPage.isPageComplete();
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#performFinish()
-   */
   @Override
   public boolean performFinish( )
   {
     final Object[] profilFeatures = m_profileChooserPage.getChoosen();
     final Object[] choosenRules = m_validatorChooserPage.getChoosen();
     final Object[] quickFixes = m_quickFixChoosePage.getChoosen();
+
     final IProfil[] profiles = new IProfil[profilFeatures.length];
     final String[] featureIDs = new String[profilFeatures.length];
+
     final ArrayList<FeatureChange> featureChanges = new ArrayList<FeatureChange>();
 
     final URL workspaceContext = m_workspace.getContext();
@@ -239,7 +231,7 @@ public class ValidateProfilesWizard extends Wizard implements IWorkbenchWizard
 
                 if( quickFixRes != null && quickFixes.length > 0 )
                 {
-                  final String[] resolutions = StringUtils.split( quickFixRes, '\u0000' );
+                  final String[] resolutions = StringUtils.split( quickFixRes, '\u0000' ); //$NON-NLS-1$
                   final IProfilMarkerResolution[] markerRes = new IProfilMarkerResolution[resolutions == null ? 0 : resolutions.length];
                   for( int j = 0; j < markerRes.length; j++ )
                   {
