@@ -92,7 +92,7 @@ public class UpdateVegetationProperties implements ICoreRunnableWithProgress
 
     final IWspmClassification clazzes = WspmClassifications.getClassification( m_profile );
     if( Objects.isNull( clazzes ) )
-      throw new CoreException( new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( Messages.getString("UpdateVegetationProperties_0"), m_profile.getStation() ) ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( Messages.getString( "UpdateVegetationProperties_0" ), m_profile.getStation() ) ) ); //$NON-NLS-1$
 
     final List<IStatus> statis = new ArrayList<IStatus>();
 
@@ -105,21 +105,21 @@ public class UpdateVegetationProperties implements ICoreRunnableWithProgress
       if( Objects.isNull( vegetation ) )
       {
         final Double width = (Double) point.getValue( m_profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE ) );
-        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( Messages.getString("UpdateVegetationProperties_1"), width ) ); //$NON-NLS-1$
+        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( Messages.getString( "UpdateVegetationProperties_1" ), width ) ); //$NON-NLS-1$
         statis.add( status );
 
         continue;
       }
 
       if( isWritable( m_overwrite, point, ax ) )
-        m_changes.add( new PointPropertyEdit( point, ax, vegetation.getAx().doubleValue() ) );
+        m_changes.add( new PointPropertyEdit( m_profile, point, ax, vegetation.getAx().doubleValue() ) );
       if( isWritable( m_overwrite, point, ay ) )
-        m_changes.add( new PointPropertyEdit( point, ay, vegetation.getAy().doubleValue() ) );
+        m_changes.add( new PointPropertyEdit( m_profile, point, ay, vegetation.getAy().doubleValue() ) );
       if( isWritable( m_overwrite, point, dp ) )
-        m_changes.add( new PointPropertyEdit( point, dp, vegetation.getDp().doubleValue() ) );
+        m_changes.add( new PointPropertyEdit( m_profile, point, dp, vegetation.getDp().doubleValue() ) );
     }
 
-    return StatusUtilities.createStatus( statis, String.format( Messages.getString("UpdateVegetationProperties_2"), m_profile.getStation() ) ); //$NON-NLS-1$
+    return StatusUtilities.createStatus( statis, String.format( Messages.getString( "UpdateVegetationProperties_2" ), m_profile.getStation() ) ); //$NON-NLS-1$
   }
 
   // FIXME move into helper
@@ -128,7 +128,7 @@ public class UpdateVegetationProperties implements ICoreRunnableWithProgress
     final int index = profile.indexOfProperty( property );
     if( index == -1 )
     {
-      final Status status = new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( Messages.getString("UpdateVegetationProperties_3"), profile.getStation(), property ) ); //$NON-NLS-1$
+      final Status status = new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( Messages.getString( "UpdateVegetationProperties_3" ), profile.getStation(), property ) ); //$NON-NLS-1$
       throw new CoreException( status );
     }
 

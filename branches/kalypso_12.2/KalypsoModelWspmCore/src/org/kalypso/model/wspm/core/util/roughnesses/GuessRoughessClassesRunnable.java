@@ -69,7 +69,7 @@ import org.kalypso.observation.result.IComponent;
 
 /**
  * Guess roughness class from existing ks / kst value
- *
+ * 
  * @author Dirk Kuch
  */
 public class GuessRoughessClassesRunnable implements ICoreRunnableWithProgress
@@ -133,7 +133,7 @@ public class GuessRoughessClassesRunnable implements ICoreRunnableWithProgress
         continue;
       }
 
-      m_changes.add( new PointPropertyEdit( point, propertyClazz, clazz.getName() ) );
+      m_changes.add( new PointPropertyEdit( m_profile, point, propertyClazz, clazz.getName() ) );
     }
 
     return StatusUtilities.createStatus( statis, String.format( Messages.getString( "GuessRoughessClassesRunnable_3" ), m_profile.getStation() ) ); //$NON-NLS-1$

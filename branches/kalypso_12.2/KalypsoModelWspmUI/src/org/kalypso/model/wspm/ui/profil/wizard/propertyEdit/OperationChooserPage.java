@@ -312,7 +312,7 @@ public class OperationChooserPage extends WizardPage
       }
     }
 
-    calculator.calculate( m_value, propertyIds, selectedPoints );
+    calculator.calculate( profil, m_value, propertyIds, selectedPoints );
   }
 
   protected void handleFocusLost( final String text )
