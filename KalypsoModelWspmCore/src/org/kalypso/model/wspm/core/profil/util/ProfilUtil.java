@@ -242,61 +242,6 @@ public final class ProfilUtil
     return Math.abs( x1 - x2 ) <= precision;
   }
 
-  /**
-   * mirror the profiles points (axis 0.0)
-   */
-  public static void flipProfile( final IProfil profile, final boolean fireNoEvent )
-  {
-    final IComponent[] components = profile.getPointProperties();
-    final IProfileRecord[] records = profile.getPoints();
-    final int len = records.length;
-    int iBreite = -1;
-    IProfileRecord lastRec = records[0];
-
-    for( int i = 0; i < len / 2; i++ )
-    {
-      final IProfileRecord currentRec = records[i].cloneRecord();
-      final int k = len - 1 - i;
-      for( int j = 0; j < components.length; j++ )
-      {
-        if( iBreite < 0 && components[j].getId().equals( IWspmPointProperties.POINT_PROPERTY_BREITE ) )
-        {
-          iBreite = j;
-        }
-        if( iBreite == j )
-        {
-          final Double value = (Double) records[i].getValue( j ) * -1;
-          records[i].setValue( j, (Double) records[k].getValue( j ) * -1, fireNoEvent );
-          records[k].setValue( j, value, fireNoEvent );
-        }
-        else if( components[j].getId().equals( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX ) //
-            || components[j].getId().equals( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY ) //
-            || components[j].getId().equals( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP ) //
-            || components[j].getId().equals( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS ) //
-            || components[j].getId().equals( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST ) )
-        {
-          final Object value = lastRec.getValue( j );
-          records[i].setValue( j, records[k - 1].getValue( j ), fireNoEvent );
-          records[k].setValue( j, value, fireNoEvent );
-        }
-        else
-        {
-          final Object value = records[i].getValue( j );
-          records[i].setValue( j, records[k].getValue( j ), fireNoEvent );
-          records[k].setValue( j, value, fireNoEvent );
-        }
-      }
-      lastRec = currentRec;
-    }
-
-    if( len / 2 * 2 < len )
-    {
-      final int mid = len / 2;
-      final Double dBreite = (Double) records[mid].getValue( iBreite );
-      records[mid].setValue( iBreite, dBreite * -1, fireNoEvent );
-    }
-  }
-
   public static IRecord splitSegment( final IProfil profile, final IProfileRecord startPoint, final IProfileRecord endPoint )
   {
     if( startPoint == null || endPoint == null )

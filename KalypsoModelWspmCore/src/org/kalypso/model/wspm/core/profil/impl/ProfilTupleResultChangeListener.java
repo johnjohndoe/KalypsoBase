@@ -58,7 +58,7 @@ import org.kalypso.observation.result.ITupleResultChangedListener;
 
 /**
  * Listens on the tuple result and translates its changes into profile change events.
- *
+ * 
  * @author Gernot Belger
  * @author kimwerner
  */
@@ -130,7 +130,7 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
         }
         if( marker == null )
         {
-          m_onMarkerMovedDelete = new PointPropertyEdit( change.getRecord(), component, change.getNewValue() );
+          m_onMarkerMovedDelete = new PointPropertyEdit( m_profil, change.getRecord(), component, change.getNewValue() );
         }
         else
         {
@@ -145,7 +145,7 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
       }
       else
       {
-        profChanges.add( new PointPropertyEdit( change.getRecord(), component, change.getNewValue() ) );
+        profChanges.add( new PointPropertyEdit( m_profil, change.getRecord(), component, change.getNewValue() ) );
         hint.setPointValuesChanged();
       }
     }
