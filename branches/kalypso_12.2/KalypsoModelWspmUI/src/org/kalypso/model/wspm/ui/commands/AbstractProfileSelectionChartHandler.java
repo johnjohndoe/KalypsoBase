@@ -156,7 +156,9 @@ public abstract class AbstractProfileSelectionChartHandler extends AbstractProfi
       m_p1 = breite;
 
     final IRangeSelection selection = profile.getSelection();
-    selection.setRange( Range.is( m_p0 ) );
+    selection.setRange( Range.is( snapToPoint( profile, position.x ) ) );
+
+    selection.setCursor( getBreite() );
   }
 
   private double getSelection( final IProfil profile, final int x )
@@ -276,13 +278,12 @@ public abstract class AbstractProfileSelectionChartHandler extends AbstractProfi
       return;
 
     if( range.getMinimum() == range.getMaximum() )
-      doPaintSinglePoint( range, e );
+      doPaintSinglePoint( range.getMinimum(), e );
     else
       doPaintRange( range, e );
-
   }
 
-  private void doPaintSinglePoint( final Range<Double> range, final PaintEvent e )
+  private void doPaintSinglePoint( final Double position, final PaintEvent e )
   {
     final IChartComposite chart = getChart();
     final AbstractProfilTheme theme = findProfileTheme( chart );
@@ -291,7 +292,7 @@ public abstract class AbstractProfileSelectionChartHandler extends AbstractProfi
 
     final ICoordinateMapper mapper = theme.getCoordinateMapper();
 
-    final Integer x = mapper.getDomainAxis().numericToScreen( range.getMinimum() );
+    final Integer x = mapper.getDomainAxis().numericToScreen( position );
     if( isOutOfRange( x ) )
       return;
 
