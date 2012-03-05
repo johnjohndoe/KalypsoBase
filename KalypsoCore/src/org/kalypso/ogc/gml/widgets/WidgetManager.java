@@ -154,7 +154,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
           else if( e.getClickCount() == 2 )
             actualWidget.doubleClickedRight( e.getPoint() );
         }
-        break;
+          break;
 
         default:
           break;
@@ -172,7 +172,8 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
     if( !e.isConsumed() && actualWidget != null )
       actualWidget.moved( e.getPoint() );
 
-    m_mapPanel.fireMouseMouveEvent( e.getX(), e.getY() );
+    if( m_mapPanel.isMultitouchEnabled() )
+      m_mapPanel.fireMouseMouveEvent( e.getX(), e.getY() );
   }
 
   // MouseMotionAdapter:
@@ -201,15 +202,17 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
   public void mouseEntered( final MouseEvent e )
   {
     final IWidget actualWidget = getActualWidget();
-    
-    // so, if the mouse enter event happens already somewhere inside the mappanel frame - it's actually a finger tap event
-    if (isInsideMapFrame( e.getPoint() ) ) {
+
+    // so, if the mouse enter event happens already somewhere inside the mappanel frame - it's actually a finger tap
+    // event
+    if( isInsideMapFrame( e.getPoint() ) )
+    {
       if( actualWidget != null )
         actualWidget.leftPressed( e.getPoint() );
-      
+
       return;
     }
-    
+
     if( actualWidget instanceof MouseListener )
       ((MouseListener) actualWidget).mouseEntered( e );
   }
@@ -218,12 +221,14 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
   public void mouseExited( final MouseEvent e )
   {
     final IWidget actualWidget = getActualWidget();
-    
-    // so, if the mouse enter event happens already somewhere inside the mappanel frame - it's actually a finger tap event
-    if (isInsideMapFrame( e.getPoint() ) ) {
+
+    // so, if the mouse enter event happens already somewhere inside the mappanel frame - it's actually a finger tap
+    // event
+    if( isInsideMapFrame( e.getPoint() ) )
+    {
       if( actualWidget != null )
         actualWidget.leftReleased( e.getPoint() );
-      
+
       return;
     }
 
@@ -437,11 +442,11 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
       m_actualWidget.setSelection( selection );
   }
 
-  protected boolean isInsideMapFrame( Point p )
+  protected boolean isInsideMapFrame( final Point p )
   {
     final int THRESHOLD = 35; // pixel
 
-    if( p.getX() < THRESHOLD || p.getX() > m_mapPanel.getHeight() - THRESHOLD || p.getY() < THRESHOLD || p.getY() > m_mapPanel.getWidth() - THRESHOLD )
+    if( p.getX() < THRESHOLD || p.getX() > m_mapPanel.getWidth() - THRESHOLD || p.getY() < THRESHOLD || p.getY() > m_mapPanel.getHeight() - THRESHOLD )
       return false;
 
     return true;
