@@ -99,20 +99,20 @@ public class AddRowHandler extends AbstractHandler
       final boolean success = tupleResult.doInterpolation( tupleResult, row, index, faktor );
       if( success )
         tupleResult.add( index + 1, row );
+
+      // select the new row; in ui job, as table is also updated in an ui event
+      new UIJob( "" ) //$NON-NLS-1$
+      {
+        @Override
+        public IStatus runInUIThread( final IProgressMonitor monitor )
+        {
+          viewer.setSelection( new StructuredSelection( row ) );
+          return Status.OK_STATUS;
+        }
+      }.schedule();
     }
     else
       tupleResult.add( row );
-
-    // select the new row; in ui job, as table is also updated in an ui event
-    new UIJob( "" ) //$NON-NLS-1$
-    {
-      @Override
-      public IStatus runInUIThread( final IProgressMonitor monitor )
-      {
-        viewer.setSelection( new StructuredSelection( row ) );
-        return Status.OK_STATUS;
-      }
-    }.schedule();
 
     return null;
   }

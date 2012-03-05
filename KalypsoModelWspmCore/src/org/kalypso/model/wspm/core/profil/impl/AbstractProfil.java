@@ -55,6 +55,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.lang.Strings;
@@ -68,6 +69,7 @@ import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.IProfileTransaction;
 import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.core.profil.MarkerIndex;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
@@ -120,7 +122,6 @@ public abstract class AbstractProfil implements IProfil
   private Object m_transactionLock;
 
   private int m_transactionHint;
-
 
   public AbstractProfil( final String type, final TupleResult result, final IProfileFeature source )
   {
@@ -404,7 +405,7 @@ public abstract class AbstractProfil implements IProfil
 
   /**
    * CREATES A NEW POINT PROPERTY.
-   *
+   * 
    * @return a pointProperty from PointPropertyProvider, see
    *         {@code IProfilPointPropertyProvider#getPointProperty(String)}
    *         <p>
@@ -830,6 +831,27 @@ public abstract class AbstractProfil implements IProfil
     m_transactionHint = 0;
 
     fireProfilChanged( new ProfilChangeHint( hint ) );
+  }
+
+  @Override
+  public IStatus doTransaction( final IProfileTransaction transaction )
+  {
+    startTransaction( transaction );
+    try
+    {
+      return transaction.execute( this );
+    }
+    catch( final Throwable t )
+    {
+      final String msg = String.format( "Performing profile transaction on profile %.3f km failed", getStation() );
+
+      return new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), msg, t );
+    }
+    finally
+    {
+      stopTransaction( transaction );
+    }
+
   }
 
   @Override

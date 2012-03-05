@@ -1,9 +1,14 @@
 package org.kalypso.mt;
 
+import java.awt.Component;
 import java.awt.Point;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.util.Calendar;
+import java.util.Date;
 
 import org.kalypso.mt.input.MTMouseInput;
+import org.kalypso.mt.input.MouseEvents;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.MapPanel;
 import org.kalypso.ogc.gml.widgets.base.PanToWidget;
@@ -172,7 +177,7 @@ public class MTDefaultScene extends AbstractScene
   private class MapDrag implements IGestureEventListener
   {
     PanToWidget widget;
-
+    
     Point originalPoint;
 
     Point translationVect;
@@ -195,7 +200,8 @@ public class MTDefaultScene extends AbstractScene
         if( dragEvent.getId() == MTGestureEvent.GESTURE_STARTED )
         {
           originalPoint = new Point( (int) dragEvent.getFirstCursor().getCurrentEvtPosX(), (int) dragEvent.getFirstCursor().getCurrentEvtPosY() );
-          widget.leftPressed( originalPoint );
+          
+          widget.mousePressed( MouseEvents.toMouseEvent(originalPoint ));
           translationVect = new Point( 0, 0 );
         }
         else if( dragEvent.getId() == MTGestureEvent.GESTURE_UPDATED )
@@ -206,12 +212,14 @@ public class MTDefaultScene extends AbstractScene
         else
         {
           final Point newPoint = new Point( originalPoint.x + translationVect.x, originalPoint.y + translationVect.y );
-          widget.leftReleased( newPoint );
+          widget.mouseReleased(  MouseEvents.toMouseEvent( newPoint ));
         }
 
       }
       return true;
     }
+
+    
 
   }
 

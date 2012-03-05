@@ -102,12 +102,6 @@ public class AbstractRecordWrapper implements IRecord
   }
 
   @Override
-  public void setValue( final int index, final Object value, final boolean fireNoEvent ) throws IndexOutOfBoundsException
-  {
-    m_record.setValue( index, value, fireNoEvent );
-  }
-
-  @Override
   public IRecord cloneRecord( )
   {
     return m_record.cloneRecord();

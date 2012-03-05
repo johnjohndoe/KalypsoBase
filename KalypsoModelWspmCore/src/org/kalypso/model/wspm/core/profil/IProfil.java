@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.core.profil;
 
 import org.apache.commons.lang3.Range;
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecordVisitor;
@@ -86,7 +87,7 @@ public interface IProfil extends IObservation<TupleResult>
 
   /**
    * remove the current ProfileObject and adds the given ProfileObject
-   *
+   * 
    * @return the oldObject
    * @param building
    *          must not be null, in this case use removeProfileObject()
@@ -170,7 +171,7 @@ public interface IProfil extends IObservation<TupleResult>
    * FIXME: make usable again:<br>
    * - use String/String instead of object/object<br/>
    * - make sure everything gets serialized automatically (feature <-> profile)
-   *
+   * 
    * @param key
    * @return the value from internal HashMap<Object,Object>
    * @deprecated caution: additional properties will not be serialized to profile features
@@ -271,12 +272,16 @@ public interface IProfil extends IObservation<TupleResult>
 
   IProfilPointMarker[] getPointMarkers( );
 
+  @Deprecated
   /**
+   * @deprecated use {@link IProfil#doTransaction(IProfileTransaction)}
    * Locks all change events until {@link #stopTransaction(Object, ProfilChangeHint)} is called.
    */
   void startTransaction( Object lock );
 
+  @Deprecated
   /**
+   * @deprecated use {@link IProfil#doTransaction(IProfileTransaction)}
    * Unlocks change events and fire one big event with the given hint.
    */
   void stopTransaction( Object lock );
@@ -284,4 +289,6 @@ public interface IProfil extends IObservation<TupleResult>
   String getSrsName( );
 
   void setSrsName( String srsName );
+
+  IStatus doTransaction( IProfileTransaction transaction );
 }

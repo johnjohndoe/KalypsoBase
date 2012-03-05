@@ -67,7 +67,7 @@ import org.kalypso.model.wspm.core.util.vegetation.UpdateVegetationProperties;
 
 /**
  * updates a "simple" ks / kst value from roughness class
- *
+ * 
  * @author Dirk Kuch
  */
 public class UpdateSimpleRoughnessProperty implements ICoreRunnableWithProgress
@@ -117,7 +117,7 @@ public class UpdateSimpleRoughnessProperty implements ICoreRunnableWithProgress
       {
         final BigDecimal value = roughness.getValue( m_property );
         final Double dblValue = value == null ? null : value.doubleValue();
-        m_changes.add( new PointPropertyEdit( point, property, dblValue ) );
+        m_changes.add( new PointPropertyEdit( m_profile, point, property, dblValue ) );
       }
     }
 

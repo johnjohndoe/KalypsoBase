@@ -724,14 +724,9 @@
        </wizardEnablement>
        <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.classification.ApplyClassificationsWizard">
           <enablement>
-             <and>
-                <reference
-                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
-                </reference>
-                <reference
-                      definitionId="org.kalypso.model.wspm.ui.definition.hasLanduseShape">
-                </reference>
-             </and>
+             <reference
+                   definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+             </reference>
           </enablement>
        </wizardEnablement>
        <wizardEnablement
@@ -749,14 +744,9 @@
        </wizardEnablement>
        <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.classification.GuessClassificationsWizard">
           <enablement>
-             <and>
-                <reference
-                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
-                </reference>
-                <reference
-                      definitionId="org.kalypso.model.wspm.ui.definition.hasLanduseShape">
-                </reference>
-             </and>
+             <reference
+                   definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+             </reference>
           </enablement>
        </wizardEnablement>
     </extension>
