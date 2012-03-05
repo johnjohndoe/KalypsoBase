@@ -242,8 +242,6 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   private BufferedImage m_imageBuffer = null;
 
-  private int m_flickFlag = 0;
-
   private IDisposable m_mtObject;
 
   public BufferedImage getBufferedImage( )
@@ -403,7 +401,8 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
     m_widgetManager.dispose();
     
-    ((IDisposable) m_mtObject).dispose();
+    if( m_mtObject != null )
+      m_mtObject.dispose();
 
     setMapModell( null );
 
@@ -1174,6 +1173,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     updateStatus();
   }
 
+  @Override
   public boolean isMultitouchEnabled( )
   {
     return m_isMultitouchEnabled;
@@ -1184,6 +1184,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     m_mtObject = mtApp;
   }
 
+  @Override
   public Object getMTObject( )
   {
     return m_mtObject;
