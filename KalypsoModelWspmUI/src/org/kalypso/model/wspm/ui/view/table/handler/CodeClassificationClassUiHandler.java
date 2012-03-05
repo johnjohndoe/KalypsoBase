@@ -57,7 +57,7 @@ import org.kalypso.ogc.gml.om.table.handlers.AbstractComponentUiHandler;
 
 /**
  * Handles profile point property "code" classifications
- * 
+ *
  * @author Dirk Kuch
  */
 public class CodeClassificationClassUiHandler extends AbstractComponentUiHandler
@@ -100,6 +100,9 @@ public class CodeClassificationClassUiHandler extends AbstractComponentUiHandler
   private ICodeClass[] getCodeClasses( )
   {
     final IWspmClassification classification = WspmClassifications.getClassification( m_profile );
+    if( classification == null )
+      return new ICodeClass[0];
+
     return classification.getCodeClasses();
   }
 
