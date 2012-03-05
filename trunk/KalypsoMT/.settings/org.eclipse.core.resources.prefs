@@ -1,3 +1,5 @@
-#Mon Oct 31 12:16:00 CET 2011
+#Mon Nov 23 16:55:52 CET 2009
 eclipse.preferences.version=1
-instance/org.eclipse.core.net/org.eclipse.core.net.hasMigrated=true
+encoding//etc/schemas/gazetter/gazetterView.xsd=UTF8
+encoding//etc/schemas/template/featureview.xsd=UTF8
+encoding//src/org/kalypso/core/resources/shape.xsd=UTF8

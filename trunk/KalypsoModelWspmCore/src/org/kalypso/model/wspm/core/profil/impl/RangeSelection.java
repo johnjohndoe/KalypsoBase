@@ -119,14 +119,25 @@ public class RangeSelection implements IRangeSelection
     else if( ArrayUtils.getLength( points ) == 1 )
     {
       final IProfileRecord point = points[0];
-      setRange( Range.is( point.getBreite() ) );
+      final Double width = point.getBreite();
+      if( Objects.isNull( width ) )
+        return;
+
+      setRange( Range.is( width ) );
     }
     else
     {
       final FindMinMaxVisitor visitor = new FindMinMaxVisitor( IWspmConstants.POINT_PROPERTY_BREITE );
       ProfileVisitors.visit( visitor, points );
 
-      setRange( Range.between( visitor.getMinimum().getBreite(), visitor.getMaximum().getBreite() ) );
+      final Double min = visitor.getMinimum().getBreite();
+      final Double max = visitor.getMaximum().getBreite();
+      if( Objects.allNull( min, max ) )
+        return;
+      else if( Objects.isNull( min, max ) )
+        setRange( Range.is( Objects.firstNonNull( min, max ) ) );
+      else
+        setRange( Range.between( min, max ) );
     }
   }
 

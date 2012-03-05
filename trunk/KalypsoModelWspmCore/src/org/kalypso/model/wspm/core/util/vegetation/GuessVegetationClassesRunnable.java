@@ -69,7 +69,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 
 /**
  * Guess vegatation classes from existing ax,ay,dp values
- *
+ * 
  * @author Dirk Kuch
  */
 public class GuessVegetationClassesRunnable implements ICoreRunnableWithProgress
@@ -127,7 +127,7 @@ public class GuessVegetationClassesRunnable implements ICoreRunnableWithProgress
         continue;
       }
 
-      m_changes.add( new PointPropertyEdit( point, propertyClazz, clazz.getName() ) );
+      m_changes.add( new PointPropertyEdit( m_profile, point, propertyClazz, clazz.getName() ) );
     }
 
     return StatusUtilities.createStatus( statis, String.format( Messages.getString( "GuessVegetationClassesRunnable_3" ), m_profile.getStation() ) ); //$NON-NLS-1$

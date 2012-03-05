@@ -138,6 +138,7 @@ public class XmlbeansParameterContainer implements IParameterContainer
     }
     if( value == null )
       Logger.logError( Logger.TOPIC_LOG_CONFIG, "No default parameter for " + m_ownerId + "/" + paramName + ";  I cannot continue normally" );
+
     return value;
   }
 

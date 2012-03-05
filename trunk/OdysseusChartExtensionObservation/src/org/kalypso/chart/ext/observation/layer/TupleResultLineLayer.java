@@ -34,7 +34,6 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
     m_valueData = data;
   }
 
- 
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
@@ -121,13 +120,9 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
     return dataRange;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getTitle()
-   */
   @Override
   public String getTitle( )
   {
-
     if( super.getTitle() == null && getValueData() != null )
     {
       getValueData().open();

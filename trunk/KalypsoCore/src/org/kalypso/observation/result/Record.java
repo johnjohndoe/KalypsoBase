@@ -116,8 +116,7 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
     setValue( index, value, false );
   }
 
-  @Override
-  public void setValue( final int index, final Object value, final boolean fireNoEvent ) throws IndexOutOfBoundsException
+  private void setValue( final int index, final Object value, final boolean purgeChangeEvent )
   {
     final Object oldValue = m_values.get( index );
     if( ObjectUtils.equals( value, oldValue ) )
@@ -125,18 +124,19 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
 
     m_values.set( index, value );
 
-    if( !fireNoEvent && m_owner != null )
-    {
-      if( m_owner.invalidateSort( index ) )
-        m_owner.fireRecordsChanged( null, TYPE.CHANGED );
-      else
-      {
-        final ValueChange[] changes = new ValueChange[] { new ValueChange( this, index, oldValue, value ) };
-        if( !fireNoEvent )
-          m_owner.fireValuesChanged( changes );
-      }
-    }
+    if( !purgeChangeEvent && Objects.isNotNull( m_owner ) )
+      fireRecordChanged( index, oldValue, value );
+  }
 
+  private void fireRecordChanged( final int index, final Object oldValue, final Object value )
+  {
+    if( m_owner.invalidateSort( index ) )
+      m_owner.fireRecordsChanged( null, TYPE.CHANGED );
+    else
+    {
+      final ValueChange[] changes = new ValueChange[] { new ValueChange( this, index, oldValue, value ) };
+      m_owner.fireValuesChanged( changes );
+    }
   }
 
   /* default */void remove( final int index )
@@ -158,7 +158,7 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
 
     final Record record = new Record( result, components );
     for( int i = 0; i < components.length; i++ )
-      record.setValue( i, getValue( i ), true );
+      record.setValue( i, getValue( i ), true ); // owner is null
 
     return record;
   }

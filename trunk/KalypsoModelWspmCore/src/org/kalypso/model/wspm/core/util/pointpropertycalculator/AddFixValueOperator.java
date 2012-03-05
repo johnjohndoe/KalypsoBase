@@ -46,6 +46,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.i18n.Messages;
+import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfileTransaction;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -56,24 +58,34 @@ import org.kalypso.observation.result.TupleResult;
 public class AddFixValueOperator implements IPointPropertyCalculator
 {
   @Override
-  public void calculate( final Double operand, final IComponent[] properties, final Collection<IRecord> points )
+  public void calculate( final IProfil profile, final Double operand, final IComponent[] properties, final Collection<IRecord> points )
   {
-    for( final IRecord point : points )
+    profile.doTransaction( new IProfileTransaction()
     {
-      final TupleResult result = point.getOwner();
-      for( final IComponent property : properties )
+      @Override
+      public IStatus execute( final IProfil p )
       {
-        final int i = result.indexOfComponent( property );
-        final Object oldVal = point.getValue( i );
-        if( i > 0 && oldVal instanceof Double )
+        for( final IRecord point : points )
         {
-          point.setValue( i, (Double) oldVal + operand, true );
+          final TupleResult result = point.getOwner();
+          for( final IComponent property : properties )
+          {
+            final int i = result.indexOfComponent( property );
+            final Object oldVal = point.getValue( i );
+            if( i > 0 && oldVal instanceof Double )
+            {
+              point.setValue( i, (Double) oldVal + operand );
+            }
+            else
+            {
+              KalypsoModelWspmCorePlugin.getDefault().getLog().log( new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), Messages.getString( "org.kalypso.model.wspm.core.util.pointpropertycalculator.AddFixValueOperator.0", property, point ) ) ); //$NON-NLS-1$
+            }
+          }
         }
-        else
-        {
-          KalypsoModelWspmCorePlugin.getDefault().getLog().log( new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), Messages.getString( "org.kalypso.model.wspm.core.util.pointpropertycalculator.AddFixValueOperator.0", property, point ) ) ); //$NON-NLS-1$
-        }
+
+        return Status.OK_STATUS;
       }
-    }
+    } );
+
   }
 }

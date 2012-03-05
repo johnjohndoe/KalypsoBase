@@ -47,7 +47,6 @@ package org.kalypso.observation.result;
  */
 public interface IRecord
 {
-
   int getIndex( );
 
   /**
@@ -87,8 +86,6 @@ public interface IRecord
    * Sets the value for the given index. Ask the owner (TupleResult) for the index of a certain component.
    */
   void setValue( int index, Object value ) throws IndexOutOfBoundsException;
-
-  void setValue( int index, Object value, boolean fireNoEvent ) throws IndexOutOfBoundsException;
 
   IRecord cloneRecord( );
 

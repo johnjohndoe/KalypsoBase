@@ -100,7 +100,7 @@ public class MousePositionChartHandler extends AbstractProfilePointHandler
     final ICoordinateMapper mapper = theme.getCoordinateMapper();
     final Number hoehe = mapper.getTargetAxis().screenToNumeric( position.y );
 
-    final String msg = String.format( Messages.getString("MousePositionChartHandler_0"), getBreite(), hoehe ); //$NON-NLS-1$
+    final String msg = String.format( Messages.getString( "MousePositionChartHandler_0" ), getBreite(), hoehe ); //$NON-NLS-1$
 
     m_labelRenderer.getTitleTypeBean().setLabel( msg );
 

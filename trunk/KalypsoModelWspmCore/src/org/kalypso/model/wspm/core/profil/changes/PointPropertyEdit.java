@@ -42,26 +42,50 @@ package org.kalypso.model.wspm.core.profil.changes;
 
 import java.util.Arrays;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfileTransaction;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
 public final class PointPropertyEdit implements IProfilChange
 {
-  private final IRecord[] m_points;
+  protected final IRecord[] m_points;
 
-  private final int m_index;
+  protected final int m_index;
 
-  private final Object[] m_newValues;
+  protected final Object[] m_newValues;
 
-  public PointPropertyEdit( final IRecord p, final IComponent property, final Object newValue )
+  protected final IProfil m_profile;
+
+  public PointPropertyEdit( final IProfil profile, final IRecord p, final IComponent property, final Object newValue )
   {
-    this( new IRecord[] { p }, property, new Object[] { newValue } );
+    this( profile, new IRecord[] { p }, property, new Object[] { newValue } );
   }
 
-  public PointPropertyEdit( final IRecord[] p, final IComponent property, final Object newValue )
+  public PointPropertyEdit( final IProfil profile, final IRecord[] p, final IComponent property, final Object newValue )
   {
-    this( p, property, fillValues( p, newValue ) );
+    this( profile, p, property, fillValues( p, newValue ) );
+  }
+
+  public PointPropertyEdit( final IProfil profile, final IRecord[] points, final IComponent property, final Object[] newValues )
+  {
+    this( profile, points, points[0].getOwner().indexOfComponent( property ), newValues );
+  }
+
+  public PointPropertyEdit( final IProfil profile, final IRecord point, final int component, final Object newValues )
+  {
+    this( profile, new IRecord[] { point }, component, new Object[] { newValues } );
+  }
+
+  public PointPropertyEdit( final IProfil profile, final IRecord[] points, final int component, final Object[] newValues )
+  {
+    m_profile = profile;
+    m_points = points;
+    m_newValues = newValues;
+    m_index = component;
   }
 
   private static Object[] fillValues( final IRecord[] p, final Object newValue )
@@ -71,38 +95,33 @@ public final class PointPropertyEdit implements IProfilChange
     return newValues;
   }
 
-  public PointPropertyEdit( final IRecord[] points, final IComponent property, final Object[] newValues )
-  {
-    this( points, points[0].getOwner().indexOfComponent( property ), newValues );
-  }
-
-  public PointPropertyEdit( final IRecord point, final int component, final Object newValues )
-  {
-    this( new IRecord[] { point }, component, new Object[] { newValues } );
-  }
-
-  public PointPropertyEdit( final IRecord[] points, final int component, final Object[] newValues )
-  {
-    m_points = points;
-    m_newValues = newValues;
-    m_index = component;
-  }
+  protected Object[] m_oldValues;
 
   @Override
   public IProfilChange doChange( )
   {
     if( m_points.length < 1 || m_index < 0 )
-      return new PointPropertyEdit( m_points, m_index, m_newValues );
+      return new PointPropertyEdit( m_profile, m_points, m_index, m_newValues );
 
-    final Object[] oldValues = new Object[m_points.length];
-
-    for( int i = 0; i < m_points.length; i++ )
+    m_profile.doTransaction( new IProfileTransaction()
     {
-      final IRecord point = m_points[i];
-      oldValues[i] = point.getValue( m_index );
-      point.setValue( m_index, i < m_newValues.length ? m_newValues[i] : Double.NaN, i < m_points.length - 1 );
-    }
 
-    return new PointPropertyEdit( m_points, m_index, oldValues );
+      @Override
+      public IStatus execute( final IProfil profile )
+      {
+        m_oldValues = new Object[m_points.length];
+
+        for( int i = 0; i < m_points.length; i++ )
+        {
+          final IRecord point = m_points[i];
+          m_oldValues[i] = point.getValue( m_index );
+          point.setValue( m_index, i < m_newValues.length ? m_newValues[i] : Double.NaN );
+        }
+
+        return Status.OK_STATUS;
+      }
+    } );
+
+    return new PointPropertyEdit( m_profile, m_points, m_index, m_oldValues );
   }
 }
