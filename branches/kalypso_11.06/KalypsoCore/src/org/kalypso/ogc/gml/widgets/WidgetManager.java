@@ -203,16 +203,18 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
   {
     final IWidget actualWidget = getActualWidget();
 
-    // so, if the mouse enter event happens already somewhere inside the mappanel frame - it's actually a finger tap
-    // event
-    if( isInsideMapFrame( e.getPoint() ) )
+    if( m_mapPanel.isMultitouchEnabled() )
     {
-      if( actualWidget != null )
-        actualWidget.leftPressed( e.getPoint() );
+      // so, if the mouse enter event happens already somewhere inside the mappanel frame - it's actually a finger tap
+      // event
+      if( isInsideMapFrame( e.getPoint() ) )
+      {
+        if( actualWidget != null )
+          actualWidget.leftPressed( e.getPoint() );
 
-      return;
+        return;
+      }
     }
-
     if( actualWidget instanceof MouseListener )
       ((MouseListener) actualWidget).mouseEntered( e );
   }
@@ -222,16 +224,18 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
   {
     final IWidget actualWidget = getActualWidget();
 
-    // so, if the mouse enter event happens already somewhere inside the mappanel frame - it's actually a finger tap
-    // event
-    if( isInsideMapFrame( e.getPoint() ) )
+    if( m_mapPanel.isMultitouchEnabled() )
     {
-      if( actualWidget != null )
-        actualWidget.leftReleased( e.getPoint() );
+      // so, if the mouse enter event happens already somewhere inside the mappanel frame - it's actually a finger tap
+      // event
+      if( isInsideMapFrame( e.getPoint() ) )
+      {
+        if( actualWidget != null )
+          actualWidget.leftReleased( e.getPoint() );
 
-      return;
+        return;
+      }
     }
-
     if( actualWidget instanceof MouseListener )
       ((MouseListener) actualWidget).mouseExited( e );
   }
@@ -444,11 +448,10 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
 
   protected boolean isInsideMapFrame( final Point p )
   {
-    final int THRESHOLD = 35; // pixel
+      final int THRESHOLD = 35; // pixel
+      if( p.getX() < THRESHOLD || p.getX() > m_mapPanel.getWidth() - THRESHOLD || p.getY() < THRESHOLD || p.getY() > m_mapPanel.getHeight() - THRESHOLD )
+        return false;
 
-    if( p.getX() < THRESHOLD || p.getX() > m_mapPanel.getWidth() - THRESHOLD || p.getY() < THRESHOLD || p.getY() > m_mapPanel.getHeight() - THRESHOLD )
-      return false;
-
-    return true;
+      return true;
   }
 }
