@@ -93,22 +93,15 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
     getPlotHandler().addPlotHandler( new MousePositionChartHandler( this ) );
   }
 
-  /**
-   * @see org.eclipse.swt.widgets.Widget#dispose()
-   */
   @Override
   public void dispose( )
   {
-    if( m_profilChartModel != null )
-    {
+    if( Objects.isNotNull( m_profilChartModel ) )
       m_profilChartModel.dispose();
-    }
+
     super.dispose();
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.view.impl.ChartImageComposite#doInvalidateChart()
-   */
   @Override
   protected IStatus doInvalidateChart( )
   {
@@ -129,9 +122,6 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
     return this;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartView#getProfil()
-   */
   @Override
   public IProfil getProfil( )
   {
@@ -159,13 +149,18 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
 
   final IProfileRecord getSelectedPoint( final IChartLayer layer )
   {
-    final ICoordinateMapper cm = layer == null ? null : layer.getCoordinateMapper();
-    final IAxis domAxis = cm == null ? null : cm.getDomainAxis();
-    final IAxis valAxis = cm == null ? null : cm.getTargetAxis();
-    final DataRange<Number> activeDom = domAxis == null ? null : domAxis.getSelection();
-    final DataRange<Number> activeVal = valAxis == null ? null : valAxis.getSelection();
+    if( Objects.isNull( layer, getProfil() ) )
+      return null;
 
-    if( activeDom == null || activeVal == null || getProfil() == null )
+    final ICoordinateMapper mapper = layer.getCoordinateMapper();
+    final IAxis domAxis = mapper.getDomainAxis();
+    final IAxis valAxis = mapper.getTargetAxis();
+    if( Objects.isNull( domAxis, valAxis ) )
+      return null;
+
+    final DataRange<Number> activeDom = domAxis.getSelection();
+    final DataRange<Number> activeVal = valAxis.getSelection();
+    if( Objects.isNull( activeDom, activeVal ) )
       return null;
 
     for( final IRecord point : getProfil().getPoints() )
@@ -180,13 +175,13 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
       final IProfileRecord record = ProfilUtil.findPoint( getProfil(), activeDom.getMin().doubleValue() + deltaX / 2, deltaX );
 
       final IProfileRecord[] selection = getProfil().getSelection().toPoints();
-
       if( record != null && !ArrayUtils.contains( selection, record ) )
       {
         if( hoehe > activeVal.getMin().doubleValue() && hoehe < activeVal.getMax().doubleValue() && breite > activeDom.getMin().doubleValue() && breite < activeDom.getMax().doubleValue() )
           return record;
       }
     }
+
     return null;
   }
 
@@ -199,7 +194,6 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
 
     final IChartModel oldModel = m_profilChartModel;
     final IProfil oldProfile = m_profilChartModel == null ? null : m_profilChartModel.getProfil();
-
     if( profile != null && profile == oldProfile )
       return;
 

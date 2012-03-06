@@ -437,4 +437,18 @@ public class ProfileRecord extends AbstractRecordWrapper implements IProfileReco
 
     return range.contains( getBreite() );
   }
+
+  @Override
+  public Double getRoughnessFactor( )
+  {
+    final IComponent componentFactor = m_profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_FACTOR );
+    if( Objects.isNull( componentFactor ) )
+      return 1.0;
+
+    final Double factor = (Double) getValue( componentFactor );
+    if( Objects.isNull( factor ) )
+      return 1.0;
+
+    return factor;
+  }
 }
