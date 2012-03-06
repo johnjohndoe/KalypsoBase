@@ -44,9 +44,9 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.ComponentLayer;
-import org.kalypso.observation.result.IRecord;
 
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
@@ -102,11 +102,11 @@ public class StationLineLayer extends ComponentLayer
 
     if( profil == null )
       return;
-    final IRecord[] profilPoints = profil.getPoints();
+    final IProfileRecord[] profilPoints = profil.getPoints();
 
     final IAxis targetAxis = getCoordinateMapper().getTargetAxis();
     final int baseLine = targetAxis.numericToScreen( targetAxis.getNumericRange().getMin() );
-    for( final IRecord profilPoint : profilPoints )
+    for( final IProfileRecord profilPoint : profilPoints )
     {
       final Point point = toScreen( profilPoint );
       if( point == null )

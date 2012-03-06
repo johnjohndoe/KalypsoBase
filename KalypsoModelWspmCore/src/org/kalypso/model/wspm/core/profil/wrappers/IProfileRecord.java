@@ -101,6 +101,8 @@ public interface IProfileRecord extends IRecord
 
   Double getKstValue( );
 
+  Double getRoughnessFactor( );
+
   /**
    * FIXME use BigDecimal
    */
