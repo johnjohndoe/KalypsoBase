@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.table.handler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
@@ -53,14 +56,13 @@ import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassification
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.gml.om.table.celleditor.ComboBoxViewerCellEditor;
-import org.kalypso.ogc.gml.om.table.handlers.AbstractComponentUiHandler;
 
 /**
  * Handles roughness class values.
  * 
  * @author Dirk Kuch
  */
-public class RoughnessClassUiHandler extends AbstractComponentUiHandler
+public class RoughnessClassUiHandler extends AbstractComponentClassUiHandler
 {
   private final IProfil m_profile;
 
@@ -79,9 +81,6 @@ public class RoughnessClassUiHandler extends AbstractComponentUiHandler
     return new ComboBoxViewerCellEditor( new ArrayContentProvider(), new ClassificationLabelProvider(), getRoughnessClasses(), table, SWT.READ_ONLY | SWT.DROP_DOWN );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getStringRepresentation(org.kalypso.observation.result.IRecord)
-   */
   @Override
   public String getStringRepresentation( final IRecord record )
   {
@@ -92,7 +91,13 @@ public class RoughnessClassUiHandler extends AbstractComponentUiHandler
     final IWspmClassification classification = WspmClassifications.getClassification( m_profile );
     final IRoughnessClass clazz = classification.findRoughnessClass( value.toString() );
     if( Objects.isNotNull( clazz ) )
-      return clazz.getDescription();
+    {
+      final List<String> parameters = new ArrayList<String>();
+      append( parameters, "ks=%.2f", clazz.getKsValue() );
+      append( parameters, "kst=%.2f", clazz.getKstValue() );
+
+      return getStringRepresentation( clazz.getDescription(), parameters );
+    }
 
     return super.getStringRepresentation( record );
   }
@@ -108,9 +113,6 @@ public class RoughnessClassUiHandler extends AbstractComponentUiHandler
     return roughnesses;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#formatValue(java.lang.Object)
-   */
   @Override
   public Object doGetValue( final IRecord record )
   {
@@ -122,10 +124,6 @@ public class RoughnessClassUiHandler extends AbstractComponentUiHandler
     return classification.findRoughnessClass( (String) value );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#setValue(org.kalypso.observation.result.IRecord,
-   *      java.lang.Object)
-   */
   @Override
   public void doSetValue( final IRecord record, final Object value )
   {
@@ -136,19 +134,12 @@ public class RoughnessClassUiHandler extends AbstractComponentUiHandler
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#parseValue(java.lang.String)
-   */
   @Override
   public Object parseValue( final String text )
   {
     return text;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#setValue(org.kalypso.observation.result.IRecord,
-   *      java.lang.Object)
-   */
   @Override
   public void setValue( final IRecord record, final Object value )
   {

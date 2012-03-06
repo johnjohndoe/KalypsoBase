@@ -155,6 +155,14 @@ public class LayerTableSorter extends ViewerSorter
       // hack: compare the first two items of the lists (e.g. for name or description properties)
       final List< ? > l1 = (List< ? >) o1;
       final List< ? > l2 = (List< ? >) o2;
+
+      if( l1.isEmpty() && l2.isEmpty() )
+        return 0;
+      else if( l2.isEmpty() )
+        return -1;
+      else if( l1.isEmpty() )
+        return 1;
+
       return compareObjects( l1.get( 0 ), l2.get( 0 ) );
     }
     else

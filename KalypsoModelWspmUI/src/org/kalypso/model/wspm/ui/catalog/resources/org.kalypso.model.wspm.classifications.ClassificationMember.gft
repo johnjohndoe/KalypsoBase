@@ -18,7 +18,7 @@
           <gistable:column alignment="SWT.RIGHT" editable="true" format="" name="color"  width="100" />
           <gistable:column alignment="SWT.RIGHT" editable="true" format="" name="ax"  width="75" />
           <gistable:column alignment="SWT.RIGHT" editable="true" format="" name="ay"  width="75" />
-          <gistable:column alignment="SWT.RIGHT" editable="true" format="" name="dx"  width="75" />
+          <gistable:column alignment="SWT.RIGHT" editable="true" format="" name="dp"  width="75" />
           
           <gistable:sort propertyName="name" />
         </gistable:layer>
