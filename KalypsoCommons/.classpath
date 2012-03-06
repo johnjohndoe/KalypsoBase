@@ -26,7 +26,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/poi-2.6/poi-bin-3.6-20091214/poi-3.6/poi-scratchpad-3.6-20091214.jar" sourcepath="lib/poi-2.6/poi-src-3.6-20091214.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/jregex/jregex1.2_01.jar" sourcepath="lib/jregex/jregex1.2_01-src.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jai-1_1_3/jai-1_1_3/lib/jai_codec.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jai-1_1_3/jai-1_1_3/lib/jai_core.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jai-1_1_3/jai-1_1_3/lib/jai_core.jar" sourcepath="lib/jai-1_1_3/jai-1_1_3/lib/jai_core_src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/j3d-1_5_2/j3d-1_5_2/lib/ext/j3dcore.jar" sourcepath="lib/j3d-1_5_2/j3d-1_5_2-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/j3d-1_5_2/j3d-1_5_2/lib/ext/j3dutils.jar" sourcepath="lib/j3d-1_5_2/j3d-1_5_2-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/j3d-1_5_2/j3d-1_5_2/lib/ext/vecmath.jar" sourcepath="lib/j3d-1_5_2/vecmath-1_5_2-src.zip"/>
