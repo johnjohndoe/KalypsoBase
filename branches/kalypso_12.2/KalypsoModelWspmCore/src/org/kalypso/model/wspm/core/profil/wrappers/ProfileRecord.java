@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.wrappers;
 
-import java.util.Comparator;
-
 import org.apache.commons.lang3.Range;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -64,20 +62,6 @@ import com.vividsolutions.jts.geom.Point;
  */
 public class ProfileRecord extends AbstractRecordWrapper implements IProfileRecord
 {
-
-  public static final Comparator<IProfileRecord> COMPARATOR = new Comparator<IProfileRecord>()
-  {
-
-    @Override
-    public int compare( final IProfileRecord o1, final IProfileRecord o2 )
-    {
-      final double b1 = o1.getBreite();
-      final double b2 = o2.getBreite();
-
-      return Double.valueOf( b1 ).compareTo( Double.valueOf( b2 ) );
-    }
-  };
-
   private IProfil m_profile;
 
   public ProfileRecord( final IProfil parent, final IRecord record )
