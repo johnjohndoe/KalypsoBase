@@ -40,15 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.datasource;
 
+import java.util.Collections;
 import java.util.Map;
+import java.util.SortedMap;
 import java.util.TreeMap;
 
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.repository.IRepositoryItem;
-import org.kalypso.repository.utils.RepositoryItems;
 
 /**
  * Handles data sources of meta data lists
@@ -57,6 +59,11 @@ import org.kalypso.repository.utils.RepositoryItems;
  */
 public class DataSourceHandler
 {
+  /**
+   * Cache of data sources
+   */
+  private Map<String, Integer> m_sources = null;
+
   private final MetadataList m_metadata;
 
   public DataSourceHandler( final MetadataList metadata )
@@ -64,51 +71,25 @@ public class DataSourceHandler
     m_metadata = metadata;
   }
 
-  public synchronized boolean hasDataSource( final IRepositoryItem repositoryItem )
+  private synchronized Map<String, Integer> getSources( )
   {
-    return hasDataSource( repositoryItem.getIdentifier() );
-  }
+    if( m_sources == null )
+      m_sources = initSources();
 
-  public synchronized boolean hasDataSource( final String identifier )
-  {
-    final int index = getDataSourceIndex( identifier );
-    if( index == -1 )
-      return false;
-
-    return true;
+    return m_sources;
   }
 
   /**
-   * @deprecated dangerous - addDataSource(String source, String source) will do the same and will create an entry if
-   *             data source not exists
-   * @return -1 if index not exists
+   * @return An unmodifiable map<src item index, src item identifier> of all known sources.
    */
-  @Deprecated
-  public synchronized int getDataSourceIndex( final String identifier )
+  public synchronized Map<String, Integer> getDataSources( )
   {
-    final String plainIdentifier = RepositoryItems.getPlainId( identifier );
-
-    for( final Object key : m_metadata.keySet() )
-    {
-      final String header = (String) key;
-      if( header.startsWith( IDataSourceItem.MD_DATA_SOURCE_ITEM ) )
-      {
-        final String value = m_metadata.getProperty( header );
-        final String plainSource = RepositoryItems.getPlainId( value );
-        if( plainIdentifier.equalsIgnoreCase( plainSource ) )
-          return MetadataHelper.getCount( header );
-      }
-    }
-
-    return -1;
+    return Collections.unmodifiableMap( getSources() );
   }
 
-  /**
-   * @return map<src item index, src item identifier>
-   */
-  public synchronized Map<Integer, String> getDataSources( )
+  private Map<String, Integer> initSources( )
   {
-    final Map<Integer, String> sources = new TreeMap<Integer, String>();
+    final SortedMap<String, Integer> sources = new TreeMap<String, Integer>();
 
     for( final Object key : m_metadata.keySet() )
     {
@@ -116,7 +97,8 @@ public class DataSourceHandler
       if( header.startsWith( IDataSourceItem.MD_DATA_SOURCE_ITEM ) )
       {
         final Integer count = MetadataHelper.getCount( header );
-        sources.put( count, m_metadata.getProperty( header ) );
+        final String identifier = m_metadata.getProperty( header );
+        sources.put( identifier, count );
       }
     }
 
@@ -130,10 +112,12 @@ public class DataSourceHandler
 
   public synchronized int addDataSource( final String identifier, final String repository )
   {
-    if( hasDataSource( identifier ) )
-      return getDataSourceIndex( identifier );
+    final Map<String, Integer> sources = getSources();
+    if( sources.containsKey( identifier ) )
+      return sources.get( identifier );
 
-    int count = getDataSources().size(); // append new items at the end of the list!
+    // TODO: performance
+    int count = getSources().size(); // append new items at the end of the list!
     while( m_metadata.getProperty( MetadataHelper.getCountedHeaderItem( IDataSourceItem.MD_DATA_SOURCE_ITEM, count ) ) != null )
     {
       count++;
@@ -144,6 +128,9 @@ public class DataSourceHandler
 
     m_metadata.put( sourceHeader, identifier );
     m_metadata.put( repositoryHeader, repository );
+
+    /* update cache */
+    sources.put( identifier, count );
 
     return count;
   }
@@ -162,7 +149,7 @@ public class DataSourceHandler
 
     if( containsFilter( source ) )
     {
-      final String[] parts = source.split( "\\?" );
+      final String[] parts = StringUtils.split( source, "\\?" );
       return parts[0];
     }
 
@@ -176,19 +163,19 @@ public class DataSourceHandler
   {
     if( source.contains( "?" ) )
     {
-      final String[] parts = source.split( "\\?" );
+      final String[] parts = StringUtils.split( source, "\\?" );
       return parts[1].startsWith( "<" );
     }
 
     return false;
   }
 
-  public String getDataSourceRepository( final int pos )
-  {
-    final String header = MetadataHelper.getCountedHeaderItem( IDataSourceItem.MD_DATA_SOURCE_ITEM_REPOSITORY, pos );
-
-    return m_metadata.getProperty( header );
-  }
+// public String getDataSourceRepository( final int pos )
+// {
+// final String header = MetadataHelper.getCountedHeaderItem( IDataSourceItem.MD_DATA_SOURCE_ITEM_REPOSITORY, pos );
+//
+// return m_metadata.getProperty( header );
+// }
 
   public synchronized void removeAllDataSources( )
   {
@@ -200,14 +187,10 @@ public class DataSourceHandler
       else if( key.startsWith( IDataSourceItem.MD_DATA_SOURCE_ITEM_REPOSITORY ) )
         m_metadata.remove( key );
     }
-  }
 
-// /* add virtual sources to meta data */
-// for( final IRepositoryItem item : m_items )
-// {
-// final IRepository repository = item.getRepository();
-// DatasourceItemHelper.addDataSource( mdl, item.getIdentifier(), repository.getLabel() );
-// }
+    /* also clear cache */
+    m_sources = null;
+  }
 
   public boolean containsDataSourceReferences( )
   {
@@ -220,5 +203,4 @@ public class DataSourceHandler
 
     return false;
   }
-
 }
