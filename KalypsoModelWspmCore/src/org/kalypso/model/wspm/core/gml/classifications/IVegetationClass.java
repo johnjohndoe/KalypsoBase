@@ -58,7 +58,7 @@ public interface IVegetationClass extends Feature, IClassificationClass
 
   QName PROPERTY_AY = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "ay" ); //$NON-NLS-1$
 
-  QName PROPERTY_DP = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "dx" ); //$NON-NLS-1$
+  QName PROPERTY_DP = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "dp" ); //$NON-NLS-1$
 
   BigDecimal getAx( );
 
