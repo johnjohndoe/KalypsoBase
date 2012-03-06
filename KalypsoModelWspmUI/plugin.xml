@@ -619,13 +619,6 @@
              <description>%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction.description</description>
        </wizard>
        <wizard
-             class="org.kalypso.model.wspm.ui.profil.wizard.centerline.DeriveCenterlineWizard"
-             id="org.kalypso.model.wspm.ui.profil.wizard.centerline.DeriveCenterlineWizard"
-             name="%org.kalypso.model.wspm.ui.profil.wizard.centerline.DeriveCenterlineWizard.name"
-             icon="icons/obj16/river.png">
-             <description>%org.kalypso.model.wspm.ui.profil.wizard.centerline.DeriveCenterlineWizard.description</description>
-       </wizard>
-       <wizard
              class="org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.ApplyLanduseShapeWizard"
              icon="icons/obj16/landuse.apply.png"
              id="org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.ApplyLanduseShapeWizard"
@@ -688,18 +681,6 @@
        <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.intersectRoughness.IntersectRoughnessWizard">
           <enablement>
                 <reference definitionId="org.kalypso.model.wspm.ui.definition.oneProfileThemeSelected"/>
-          </enablement>
-       </wizardEnablement>
-       <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.centerline.DeriveCenterlineWizard">
-          <enablement>
-             <with variable="selection">
-                <iterate operator="and" ifEmpty="false">
-                   <or>
-                      <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspm}WaterBody" />
-                      <test property="org.kalypso.gml.targetQName" value="{org.kalypso.model.wspm}WaterBody"/>
-                   </or>
-                </iterate>
-             </with>
           </enablement>
        </wizardEnablement>
        <wizardEnablement
