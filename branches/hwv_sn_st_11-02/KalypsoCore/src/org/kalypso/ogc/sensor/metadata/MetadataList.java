@@ -42,6 +42,8 @@ package org.kalypso.ogc.sensor.metadata;
 
 import java.util.Properties;
 
+import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
+
 /**
  * Metadata for Observations.
  * 
@@ -49,15 +51,30 @@ import java.util.Properties;
  */
 public class MetadataList extends Properties
 {
+  private final DataSourceHandler m_sourceHandler;
+
   public MetadataList( )
   {
     super();
+
+    m_sourceHandler = new DataSourceHandler( this );
   }
 
   /** REMARK: Sets the given properties as default values. It doesn't mean 'putAll'! */
   public MetadataList( final Properties arg0 )
   {
     super( arg0 );
+
+    m_sourceHandler = new DataSourceHandler( this );
+  }
+
+  /**
+   * Returns the source handler associated with this metadata list. All source modifications on this metadata should be
+   * made via this source handler.
+   */
+  public DataSourceHandler getSourceHandler( )
+  {
+    return m_sourceHandler;
   }
 
   /**

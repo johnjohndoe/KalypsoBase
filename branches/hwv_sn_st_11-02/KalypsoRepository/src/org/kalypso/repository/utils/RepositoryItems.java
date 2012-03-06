@@ -49,12 +49,9 @@ import org.kalypso.repository.IRepositoryItem;
  */
 public final class RepositoryItems
 {
-
   private RepositoryItems( )
   {
   }
-
-//  private static final Pattern PATTERN_PLAIN_ID_TOKENIZER = new Pattern( ".*\\://" ); //$NON-NLS-1$
 
   /**
    * @return "plain" item id without "protocol" (the original source, like zml-proxy://, datastore://)
