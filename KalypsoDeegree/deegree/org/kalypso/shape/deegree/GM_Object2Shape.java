@@ -265,10 +265,10 @@ public class GM_Object2Shape
     {
       try
       {
-        // TODO: really necessary? why not also force positive orientation for interior rings below?
-        final LinearRing exteriorRing = JTSAdapter.exportAsRing( element.getExteriorRing() );
-        if( !CGAlgorithms.isCCW( exteriorRing.getCoordinates() ) )
-          exteriorRing.reverse();
+        /* Outer rings are clockwise */
+        LinearRing exteriorRing = JTSAdapter.exportAsRing( element.getExteriorRing() );
+        if( CGAlgorithms.isCCW( exteriorRing.getCoordinates() ) )
+          exteriorRing = (LinearRing) exteriorRing.reverse();
 
         final GM_Position[] poses = JTSAdapter.wrap( exteriorRing.getCoordinates() );
 
@@ -282,7 +282,11 @@ public class GM_Object2Shape
           if( rings != null )
           {
             for( final GM_Curve ring : rings )
+            {
+              // FIXME: ensure interior rings are ccw
+
               curveList.add( ring );
+            }
           }
         }
       }
