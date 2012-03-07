@@ -106,7 +106,7 @@ public abstract class AbstractProfil implements IProfil
 
   private String m_description;
 
-  private final Set<IProfilListener> m_listeners = new LinkedHashSet<IProfilListener>( 10 );
+  private final Set<IProfilListener> m_listeners = Collections.synchronizedSet( new LinkedHashSet<IProfilListener>( 10 ) );
 
   private final Map<Object, Object> m_additionalProfileSettings = new HashMap<Object, Object>();
 
@@ -406,7 +406,7 @@ public abstract class AbstractProfil implements IProfil
 
   /**
    * CREATES A NEW POINT PROPERTY.
-   * 
+   *
    * @return a pointProperty from PointPropertyProvider, see
    *         {@code IProfilPointPropertyProvider#getPointProperty(String)}
    *         <p>
