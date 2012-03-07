@@ -237,6 +237,9 @@ public abstract class AbstractProfilePointHandler extends AbstractChartHandler
     final IProfileRecord p0 = getProfile().getFirstPoint();
     final IProfileRecord pn = getProfile().getLastPoint();
 
+    if( p0 == null || pn == null )
+      return true;
+
     if( Objects.isNull( p0.getBreite(), pn.getBreite(), getBreite() ) )
       return true;
 
