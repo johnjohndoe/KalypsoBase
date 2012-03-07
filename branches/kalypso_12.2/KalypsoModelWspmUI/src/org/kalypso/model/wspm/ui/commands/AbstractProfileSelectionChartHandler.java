@@ -323,11 +323,11 @@ public abstract class AbstractProfileSelectionChartHandler extends AbstractProfi
 
     final int yMax = bounds.y + bounds.height;
 
-    final RGB rgb = new RGB( 0x8D, 0xC3, 0xFC );
+    final RGB rgb = new RGB( 0x54, 0xA7, 0xF9 );
 
     final ILineStyle lineStyle = new LineStyle( 3, rgb, 180, 0F, new float[] { 2, 2, 2 }, LINEJOIN.MITER, LINECAP.ROUND, 1, true );
 
-    final AreaStyle areaStyle = new AreaStyle( new ColorFill( rgb ), 60, lineStyle, true );
+    final AreaStyle areaStyle = new AreaStyle( new ColorFill( rgb ), 40, lineStyle, true );
     final PolygonFigure figure = new PolygonFigure();
     figure.setStyle( areaStyle );
 
@@ -348,7 +348,7 @@ public abstract class AbstractProfileSelectionChartHandler extends AbstractProfi
     final Rectangle bounds = chart.getPlotRect();
 
     final PolylineFigure figure = new PolylineFigure();
-    final ILineStyle lineStyle = new LineStyle( 3, new RGB( 0x8D, 0xC3, 0xFC ), 180, 0F, null, LINEJOIN.MITER, LINECAP.ROUND, 1, true );
+    final ILineStyle lineStyle = new LineStyle( 3, new RGB( 0x54, 0xA7, 0xF9 ), 240, 0F, null, LINEJOIN.MITER, LINECAP.ROUND, 1, true );
     figure.setStyle( lineStyle );
 
     figure.setPoints( new Point[] { new Point( x0, 0 ), new Point( x0, bounds.y + bounds.height ) } );
