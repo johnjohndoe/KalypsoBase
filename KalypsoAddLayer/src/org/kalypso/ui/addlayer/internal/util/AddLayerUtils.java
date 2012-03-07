@@ -41,6 +41,9 @@ public final class AddLayerUtils
     if( path == null )
       return null;
 
+    if( mapPath == null )
+      return path.toPortableString();
+
     final IPath mapFolderPath = mapPath.removeLastSegments( 1 );
 
     final IPath relativeStylePath = path.makeRelativeTo( mapFolderPath );
@@ -62,6 +65,9 @@ public final class AddLayerUtils
   {
     final URL mapContext = mapModell.getContext();
     final IFile mapFile = ResourceUtilities.findFileFromURL( mapContext );
+    if( mapFile == null )
+      return null;
+
     return mapFile.getFullPath();
   }
 }
