@@ -64,7 +64,6 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorRule;
@@ -109,12 +108,8 @@ public class ValidateProfilesJob extends UIJob
 
     doInit();
 
-    for( final IProfileFeature profileFeature : m_profileFeatures )
+    for( final IProfileFeature profile : m_profileFeatures )
     {
-      if( Objects.isNull( profileFeature ) )
-        continue;
-
-      final IProfil profile = profileFeature.getProfil();
       if( Objects.isNull( profile ) )
         continue;
 
@@ -123,7 +118,7 @@ public class ValidateProfilesJob extends UIJob
         final IMarker[] markers = m_resource.findMarkers( KalypsoModelWspmUIPlugin.MARKER_ID, true, IResource.DEPTH_ZERO );
         for( final IMarker marker : markers )
         {
-          if( marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_PROFILE_ID ).equals( profileFeature.getId() ) )
+          if( marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_PROFILE_ID ).equals( profile.getId() ) )
           {
             marker.delete();
           }
@@ -134,12 +129,12 @@ public class ValidateProfilesJob extends UIJob
         stati.add( new Status( IStatus.ERROR, KalypsoModelWspmUIPlugin.ID, "Profile Valdiation Rule failed.", e1 ) );
       }
 
-      final IValidatorMarkerCollector collector = new ResourceValidatorMarkerCollector( m_resource, null, "" + profile.getStation(), profileFeature.getId() ); //$NON-NLS-1$
+      final IValidatorMarkerCollector collector = new ResourceValidatorMarkerCollector( m_resource, null, "" + profile.getStation(), profile.getId() ); //$NON-NLS-1$
       for( final IValidatorRule rule : m_rules )
       {
         try
         {
-          rule.validate( profile, collector );
+          rule.validate( profile.getProfil(), collector );
         }
         catch( final CoreException e )
         {
@@ -171,12 +166,12 @@ public class ValidateProfilesJob extends UIJob
                 if( uiResult == null )
                 {
                   final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-                  uiResults.put( quickFixClazz, resultion.getUIresult( shell, profile ) );
+                  uiResults.put( quickFixClazz, resultion.getUIresult( shell, profile.getProfil() ) );
                 }
                 resultion.setUIresult( uiResults.get( quickFixClazz ) );
               }
 
-              final boolean resolved = resultion.resolve( profile );
+              final boolean resolved = resultion.resolve( profile.getProfil() );
               if( resolved )
               {
                 try
