@@ -5,10 +5,10 @@ Bundle-SymbolicName: net.sourceforge.nattable;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: net.sourceforge.nattable.NatTableActivator
 Require-Bundle: org.eclipse.core.runtime;visibility:=reexport,
- org.eclipse.swt;bundle-version="3.7.2";visibility:=reexport,
- org.eclipse.jface;bundle-version="3.7.0";visibility:=reexport,
- org.eclipse.jface.databinding;bundle-version="1.5.0";visibility:=reexport,
- org.eclipse.jface.text;bundle-version="3.7.2";visibility:=reexport
+ org.eclipse.swt;visibility:=reexport,
+ org.eclipse.jface;visibility:=reexport,
+ org.eclipse.jface.databinding;visibility:=reexport,
+ org.eclipse.jface.text;visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: lib/org.apache.commons.lang/commons-lang-2.6.jar,
