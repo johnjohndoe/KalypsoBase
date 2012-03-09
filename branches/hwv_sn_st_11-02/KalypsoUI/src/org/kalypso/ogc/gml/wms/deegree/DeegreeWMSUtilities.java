@@ -65,6 +65,7 @@ import org.deegree.owscommon_new.Operation;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.net.Proxy;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.Arrays;
@@ -105,6 +106,9 @@ public class DeegreeWMSUtilities
     /* The input stream. */
     InputStream inputStream = null;
 
+    /* This is a capabilities document from deegree, which was overwritten by Kalypso. */
+    KalypsoWMSCapabilitiesDocument doc = null;
+
     try
     {
       /* FIXME: HACK: Initialize once, to init the java-proxy settings, in case they are not set. */
@@ -113,8 +117,8 @@ public class DeegreeWMSUtilities
       /* Get the input stream of the capabilities. */
       inputStream = loader.getCapabilitiesStream( monitor );
 
-      /* This is a capabilities document from deegree, which was overwritten by Kalypso. */
-      final KalypsoWMSCapabilitiesDocument doc = new KalypsoWMSCapabilitiesDocument();
+      /* Create the capabilities document. */
+      doc = new KalypsoWMSCapabilitiesDocument();
 
       /* Load the capabilities xml. */
       doc.load( inputStream, XMLFragment.DEFAULT_URL );
@@ -128,10 +132,19 @@ public class DeegreeWMSUtilities
     }
     catch( final Exception ex )
     {
-      throw new CoreException( StatusUtilities.statusFromThrowable( ex ) );
+      if( doc != null )
+      {
+        final String document = doc.getAsString();
+        final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), String.format( "Could not load the capabilities document. The server responded: %s", document ), ex );
+        throw new CoreException( status );
+      }
+
+      final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), "Could not load the capabilities document.", ex );
+      throw new CoreException( status );
     }
     finally
     {
+      /* Close the input stream. */
       IOUtils.closeQuietly( inputStream );
     }
   }
@@ -220,7 +233,7 @@ public class DeegreeWMSUtilities
       wmsParameter.put( "SRS", negotiatedSRS ); //$NON-NLS-1$
 
       final IGeoTransformer gt = GeoTransformerFactory.getGeoTransformer( negotiatedSRS );
-      GM_Envelope requestedEnvLocalCRS = GeometryFactory.createGM_Envelope( requestedEnvLocalSRS.getMinX(), requestedEnvLocalSRS.getMinY(), requestedEnvLocalSRS.getMaxX(), requestedEnvLocalSRS.getMaxY(), localSRS );
+      final GM_Envelope requestedEnvLocalCRS = GeometryFactory.createGM_Envelope( requestedEnvLocalSRS.getMinX(), requestedEnvLocalSRS.getMinY(), requestedEnvLocalSRS.getMaxX(), requestedEnvLocalSRS.getMaxY(), localSRS );
       final GM_Envelope targetEnvRemoteSRS = gt.transform( requestedEnvLocalCRS );
 
       if( targetEnvRemoteSRS.getMax().getX() - targetEnvRemoteSRS.getMin().getX() <= 0 )
