@@ -75,7 +75,7 @@ public final class DiagramCompositeSelection
   {
   }
 
-  public static void doApply( final IChartModel model, final IMultipleZmlSourceElement[] selection )
+  public static void doApply( final IChartModel model, final IMultipleZmlSourceElement... selection )
   {
     final ILayerManager manager = model.getLayerManager();
 
