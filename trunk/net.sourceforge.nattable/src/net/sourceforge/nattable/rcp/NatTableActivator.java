@@ -1,11 +1,10 @@
-package net.sourceforge.nattable;
+package net.sourceforge.nattable.rcp;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
 public class NatTableActivator implements BundleActivator
 {
-
   private static BundleContext CONTEXT;
 
   static BundleContext getContext( )
