@@ -8,7 +8,8 @@ Require-Bundle: org.eclipse.core.runtime;visibility:=reexport,
  org.eclipse.swt;visibility:=reexport,
  org.eclipse.jface;visibility:=reexport,
  org.eclipse.jface.databinding;visibility:=reexport,
- org.eclipse.jface.text;visibility:=reexport
+ org.eclipse.jface.text;visibility:=reexport,
+ org.apache.commons;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: lib/org.apache.commons.lang/commons-lang-2.6.jar,

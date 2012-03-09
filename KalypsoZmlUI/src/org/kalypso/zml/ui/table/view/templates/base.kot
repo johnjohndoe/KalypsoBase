@@ -175,7 +175,7 @@
       <property name="alignment">RIGHT</property>
 
       <defaultCellStyle>
-        <url>urn:org:kalypso:zml:ui:table:global#volumneBaseCellStyle</url>
+        <url>urn:org:kalypso:zml:ui:table:global#volumeBaseCellStyle</url>
       </defaultCellStyle>
 
       <ruleSetReference>warnings</ruleSetReference>
@@ -192,7 +192,7 @@
       <property name="alignment">RIGHT</property>
 
       <defaultCellStyle>
-        <url>urn:org:kalypso:zml:ui:table:global#volumneBaseCellStyle</url>
+        <url>urn:org:kalypso:zml:ui:table:global#volumeBaseCellStyle</url>
       </defaultCellStyle>
 
       <ruleSetReference>warnings</ruleSetReference>
