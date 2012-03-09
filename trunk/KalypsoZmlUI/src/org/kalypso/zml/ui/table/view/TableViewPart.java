@@ -40,6 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.view;
 
+import java.net.URL;
+
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
@@ -92,7 +94,9 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
     layout.verticalSpacing = 0;
     base.setLayout( layout );
 
-    m_tableComposite = new TableComposite( base, toolkit );
+    final URL template = getClass().getResource( "templates/base.kot" );
+
+    m_tableComposite = new TableComposite( base, toolkit, template );
     m_tableComposite.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     m_partListener.activate( new IZmlTableSource()

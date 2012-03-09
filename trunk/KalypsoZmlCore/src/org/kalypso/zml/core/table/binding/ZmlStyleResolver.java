@@ -118,7 +118,6 @@ public final class ZmlStyleResolver
 
       CellStyle style;
       if( plainUrl.startsWith( "urn:" ) ) //$NON-NLS-1$
-
         style = findUrnStyle( plainUrl, identifier );
       else
         style = findUrlStyle( plainUrl, identifier );

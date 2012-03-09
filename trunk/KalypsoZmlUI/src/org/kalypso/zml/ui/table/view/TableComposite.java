@@ -73,7 +73,7 @@ public class TableComposite extends Composite implements IUpdateable, IObservati
 
   protected ZmlTableComposite m_table;
 
-  public TableComposite( final Composite parent, final FormToolkit toolkit )
+  public TableComposite( final Composite parent, final FormToolkit toolkit, final URL template )
   {
     super( parent, SWT.BORDER );
 
@@ -81,17 +81,15 @@ public class TableComposite extends Composite implements IUpdateable, IObservati
     layout.verticalSpacing = 0;
     setLayout( layout );
 
-    init();
+    init( template );
 
     draw( toolkit );
   }
 
-  private void init( )
+  private void init( final URL template )
   {
     try
     {
-
-      final URL template = getClass().getResource( "templates/base.kot" );
       final ZmlTableConfigurationLoader loader = new ZmlTableConfigurationLoader( template );
       final ZmlTableType tableType = loader.getTableType();
 
@@ -106,7 +104,6 @@ public class TableComposite extends Composite implements IUpdateable, IObservati
 
   private void draw( final FormToolkit toolkit )
   {
-
     m_table = new ZmlTableComposite( this, toolkit );
     m_table.doInitialize( m_model );
 
@@ -122,7 +119,6 @@ public class TableComposite extends Composite implements IUpdateable, IObservati
     };
 
     m_model.addListener( listener );
-
   }
 
   public void setSelection( final IMultipleZmlSourceElement... selection )
