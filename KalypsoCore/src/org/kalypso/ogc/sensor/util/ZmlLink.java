@@ -64,6 +64,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.ogc.sensor.IObservation;
@@ -148,20 +149,16 @@ public class ZmlLink
   /**
    * Fetches the observation from the kalypso resource pool, using
    * {@link ResourcePool#getObject(org.kalypso.core.util.pool.IPoolableObjectType)}.
-   *
+   * 
    * @see ResourcePool#getObject(org.kalypso.core.util.pool.IPoolableObjectType.
    */
   public IObservation getObservationFromPool( )
   {
     try
     {
-      final TimeseriesLinkType timeseriesLink = getTimeseriesLink();
-      if( timeseriesLink == null )
-        return null;
-
-      final String href = timeseriesLink.getHref();
-      final PoolableObjectType key = new PoolableObjectType( "zml", href, m_context, false ); //$NON-NLS-1$
       final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
+      final IPoolableObjectType key = getPoolableObjectType();
+
       return (IObservation) pool.getObject( key );
     }
     catch( final CoreException e )
@@ -169,6 +166,18 @@ public class ZmlLink
       // Ignored, we already check via isLinkSet etc. if this obs is valid
       return null;
     }
+  }
+
+  public IPoolableObjectType getPoolableObjectType( )
+  {
+    final TimeseriesLinkType timeseriesLink = getTimeseriesLink();
+    if( timeseriesLink == null )
+      return null;
+
+    final String href = timeseriesLink.getHref();
+    final PoolableObjectType key = new PoolableObjectType( "zml", href, m_context, false ); //$NON-NLS-1$
+
+    return key;
   }
 
   /**

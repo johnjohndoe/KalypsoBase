@@ -48,10 +48,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
@@ -94,9 +92,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
     layout.verticalSpacing = 0;
     base.setLayout( layout );
 
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-
-    m_tableComposite = new TableComposite( base, toolkit, workbench );
+    m_tableComposite = new TableComposite( base, toolkit );
     m_tableComposite.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     m_partListener.activate( new IZmlTableSource()

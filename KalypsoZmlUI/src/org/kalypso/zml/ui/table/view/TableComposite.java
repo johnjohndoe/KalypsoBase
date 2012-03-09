@@ -47,7 +47,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.ogc.sensor.IObservation;
@@ -69,17 +68,14 @@ import org.kalypso.zml.ui.table.update.ZmlTableUpdater;
  */
 public class TableComposite extends Composite implements IUpdateable, IObservationListener
 {
-  private final IServiceLocator m_context;
 
   private ZmlModel m_model;
 
   protected ZmlTableComposite m_table;
 
-  public TableComposite( final Composite parent, final FormToolkit toolkit, final IServiceLocator context )
+  public TableComposite( final Composite parent, final FormToolkit toolkit )
   {
     super( parent, SWT.BORDER );
-
-    m_context = context;
 
     final GridLayout layout = Layouts.createGridLayout();
     layout.verticalSpacing = 0;
@@ -129,7 +125,7 @@ public class TableComposite extends Composite implements IUpdateable, IObservati
 
   }
 
-  public void setSelection( final IMultipleZmlSourceElement[] selection )
+  public void setSelection( final IMultipleZmlSourceElement... selection )
   {
     final ZmlTableUpdater updater = new ZmlTableUpdater( m_table.getTable(), selection );
     updater.setSingleSelectionMode( true );

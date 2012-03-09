@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: net.sourceforge.nattable
 Bundle-SymbolicName: net.sourceforge.nattable;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: net.sourceforge.nattable.NatTableActivator
+Bundle-Activator: net.sourceforge.nattable.rcp.NatTableActivator
 Require-Bundle: org.eclipse.core.runtime;visibility:=reexport,
  org.eclipse.swt;visibility:=reexport,
  org.eclipse.jface;visibility:=reexport,
@@ -89,6 +89,7 @@ Export-Package: net.sourceforge.nattable,
  net.sourceforge.nattable.print.action,
  net.sourceforge.nattable.print.command,
  net.sourceforge.nattable.print.config,
+ net.sourceforge.nattable.rcp,
  net.sourceforge.nattable.reorder,
  net.sourceforge.nattable.reorder.action,
  net.sourceforge.nattable.reorder.command,
