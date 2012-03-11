@@ -915,6 +915,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   public void setMapModell( final IKalypsoLayerModell modell )
   {
     final IKalypsoLayerModell oldModel;
+    IMapLayer[] oldLayers = new IMapLayer[0];
     synchronized( this )
     {
       oldModel = m_model;
@@ -922,12 +923,16 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
       {
         oldModel.removeMapModelListener( m_modellListener );
 
-        for( final IMapLayer layer : m_layers.values() )
-          layer.dispose();
+        oldLayers = m_layers.values().toArray( new IMapLayer[m_layers.values().size()] );
+
         m_layers.clear();
       }
       m_model = modell;
     }
+
+    // BUGFIX: dispose layers outside of sync block in order to avoid dead lock
+    for( final IMapLayer layer : oldLayers )
+      layer.dispose();
 
     if( modell != null )
       modell.addMapModelListener( m_modellListener );
